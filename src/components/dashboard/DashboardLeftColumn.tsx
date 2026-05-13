@@ -1,9 +1,9 @@
 import { memo } from "react";
 import { SocialFeed } from "@/components/SocialFeed";
-import DepartmentMissions from "@/components/DepartmentMissions";
-import { DailyQuests } from "@/components/DailyQuests";
-import { PeerRecognition } from "@/components/PeerRecognition";
-import { TeamChallenges } from "@/components/TeamChallenges";
+ import { DepartmentMissionsLazy } from "@/components/DepartmentMissions";
+ import { DailyQuestsLazy } from "@/components/DailyQuests";
+ import { PeerRecognitionLazy } from "@/components/PeerRecognition";
+ import { TeamChallengesLazy } from "@/components/TeamChallenges";
 import { GoalsWidget } from "@/components/GoalsWidget";
 import { CelebrationsBanner } from "@/components/CelebrationsBanner";
 import { PulseSurveyWidget } from "@/components/PulseSurveyWidget";
@@ -78,13 +78,6 @@ export const DashboardLeftColumn = memo(function DashboardLeftColumn() {
         </SectionErrorBoundary>
       </StaggeredItemLeft>
 
-      {/* Announcements Board - Important for communication */}
-      <StaggeredItemLeft>
-        <SectionErrorBoundary sectionName="Anúncios">
-          <AnnouncementsBoard />
-        </SectionErrorBoundary>
-      </StaggeredItemLeft>
-
       {/* Social Feed - Above the fold, render immediately */}
       <StaggeredItemLeft>
         <SectionErrorBoundary sectionName="Feed Social">
@@ -99,20 +92,6 @@ export const DashboardLeftColumn = memo(function DashboardLeftColumn() {
         </SectionErrorBoundary>
       </StaggeredItemLeft>
 
-      {/* Department Missions - Usually visible */}
-      <StaggeredItemLeft>
-        <SectionErrorBoundary sectionName="Missões do Departamento">
-          <DepartmentMissions />
-        </SectionErrorBoundary>
-      </StaggeredItemLeft>
-
-      {/* Daily Quests - Core feature, render immediately */}
-      <StaggeredItemLeft>
-        <SectionErrorBoundary sectionName="Quests Diárias">
-          <DailyQuests />
-        </SectionErrorBoundary>
-      </StaggeredItemLeft>
-
       {/* Pulse Survey Widget */}
       <StaggeredItemLeft>
         <LazyWidget fallbackHeight="200px">
@@ -122,23 +101,40 @@ export const DashboardLeftColumn = memo(function DashboardLeftColumn() {
         </LazyWidget>
       </StaggeredItemLeft>
 
-      {/* Peer Recognition - Below the fold on most devices */}
-      <StaggeredItemLeft>
-        <LazyWidget fallbackHeight="280px">
-          <SectionErrorBoundary sectionName="Reconhecimento">
-            <PeerRecognition />
-          </SectionErrorBoundary>
-        </LazyWidget>
-      </StaggeredItemLeft>
-
-      {/* Team Challenges - Below the fold */}
-      <StaggeredItemLeft>
-        <LazyWidget fallbackHeight="240px">
-          <SectionErrorBoundary sectionName="Desafios em Equipe">
-            <TeamChallenges />
-          </SectionErrorBoundary>
-        </LazyWidget>
-      </StaggeredItemLeft>
+       {/* Main Quests and Missions Group */}
+       <StaggeredItemLeft>
+         <div className="grid md:grid-cols-2 gap-4 md:gap-6">
+           <SectionErrorBoundary sectionName="Quests Diárias">
+             <DailyQuestsLazy />
+           </SectionErrorBoundary>
+           <SectionErrorBoundary sectionName="Missões do Departamento">
+             <DepartmentMissionsLazy />
+           </SectionErrorBoundary>
+         </div>
+       </StaggeredItemLeft>
+ 
+       {/* Announcements Board - Reduced prominence if many read */}
+       <StaggeredItemLeft>
+         <SectionErrorBoundary sectionName="Anúncios">
+           <AnnouncementsBoard />
+         </SectionErrorBoundary>
+       </StaggeredItemLeft>
+ 
+       {/* Peer Recognition and Team Challenges Group */}
+       <StaggeredItemLeft>
+         <div className="grid md:grid-cols-2 gap-4 md:gap-6">
+           <LazyWidget fallbackHeight="280px">
+             <SectionErrorBoundary sectionName="Reconhecimento">
+               <PeerRecognitionLazy />
+             </SectionErrorBoundary>
+           </LazyWidget>
+           <LazyWidget fallbackHeight="240px">
+             <SectionErrorBoundary sectionName="Desafios em Equipe">
+               <TeamChallengesLazy />
+             </SectionErrorBoundary>
+           </LazyWidget>
+         </div>
+       </StaggeredItemLeft>
     </StaggeredContainer>
   );
 });

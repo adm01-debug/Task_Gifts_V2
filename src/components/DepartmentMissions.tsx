@@ -130,7 +130,9 @@ function MissionCard({
   );
 }
 
-export default function DepartmentMissions() {
+ function DepartmentMissions() {
+ export const DepartmentMissionsLazy = memo(DepartmentMissions);
+ export default DepartmentMissionsLazy;
   const [selectedDepartment, setSelectedDepartment] = useState<string>("all");
   const [activeTab, setActiveTab] = useState<"daily" | "weekly" | "monthly">("daily");
   const [claimingIds, setClaimingIds] = useState<Set<string>>(new Set());

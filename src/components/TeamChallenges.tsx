@@ -9,7 +9,9 @@ import { SkeletonDuelList } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import { differenceInHours, differenceInMinutes } from "date-fns";
 
-export const TeamChallenges = () => {
+ const TeamChallengesComponent = () => {
+ export const TeamChallengesLazy = memo(TeamChallengesComponent);
+ export const TeamChallenges = TeamChallengesLazy;
   const [activeChallenge, setActiveChallenge] = useState<string | null>(null);
   const navigate = useNavigate();
   const { user } = useAuth();

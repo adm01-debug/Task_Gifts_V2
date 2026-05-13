@@ -8,7 +8,9 @@ import { SkeletonQuestList } from "@/components/ui/skeleton";
 import { EmptyState } from "@/components/ui/empty-state";
 import type { MissionWithProgress } from "@/services/missionsService";
 
-export const DailyQuests = () => {
+ const DailyQuestsComponent = () => {
+ export const DailyQuestsLazy = memo(DailyQuestsComponent);
+ export const DailyQuests = DailyQuestsLazy;
   const [hoveredQuest, setHoveredQuest] = useState<string | null>(null);
   const [claimingIds, setClaimingIds] = useState<Set<string>>(new Set());
   const { data: missions = [], isLoading } = useAllMissions();

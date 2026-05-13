@@ -282,7 +282,9 @@ const KudosItem = memo(({ kudos, index, getProfileName, getProfileInitial }: Kud
 
 KudosItem.displayName = "KudosItem";
 
-export const PeerRecognition = () => {
+ const PeerRecognitionComponent = () => {
+ export const PeerRecognitionLazy = memo(PeerRecognitionComponent);
+ export const PeerRecognition = PeerRecognitionLazy;
   const [dialogOpen, setDialogOpen] = useState(false);
   const { data: recentKudos = [], isLoading } = useRecentKudos(10);
   const { data: profiles = [] } = useProfiles();
