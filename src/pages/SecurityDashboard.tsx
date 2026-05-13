@@ -63,7 +63,7 @@ export default function SecurityDashboard() {
   const { data: devices, isLoading: devicesLoading } = useQuery({
     queryKey: ["user-devices", user?.id],
     queryFn: async () => {
-      const { data, error } = await supabase.from("user_devices").select("*").eq("user_id", user?.id).order("last_seen_at", { ascending: false });
+      const { data, error } = await supabase.from("user_devices").select("*").eq("user_id", user?.id as string).order("last_seen_at", { ascending: false });
       if (error) throw error;
       return data;
     },
@@ -73,7 +73,7 @@ export default function SecurityDashboard() {
   const { data: deviceAlerts } = useQuery({
     queryKey: ["device-alerts", user?.id],
     queryFn: async () => {
-      const { data, error } = await supabase.from("new_device_alerts").select("*").eq("user_id", user?.id).order("created_at", { ascending: false }).limit(5);
+      const { data, error } = await supabase.from("new_device_alerts").select("*").eq("user_id", user?.id as string).order("created_at", { ascending: false }).limit(5);
       if (error) throw error;
       return data;
     },
@@ -84,7 +84,7 @@ export default function SecurityDashboard() {
     mutationFn: async () => {
       const { data, error } = await supabase.rpc("cleanup_old_security_logs", { p_days_to_keep: 30 });
       if (error) throw error;
-      return data;
+      return data as { rate_limit_logs_deleted: number; login_attempts_deleted: number };
     },
     onSuccess: (data: { rate_limit_logs_deleted: number; login_attempts_deleted: number }) => {
       toast.success(`Limpeza concluída! Removidos: ${data.rate_limit_logs_deleted} logs de rate limit, ${data.login_attempts_deleted} tentativas de login.`);

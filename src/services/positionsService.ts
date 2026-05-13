@@ -362,8 +362,8 @@ export const positionsService = {
         p_penalty_type: penaltyType,
         p_xp_deducted: xpDeducted,
         p_coins_deducted: coinsDeducted,
-        p_reason: reason || null,
-        p_applied_by: user?.id || null
+        p_reason: (reason || null) as any,
+        p_applied_by: (user?.id || null) as any
       });
     
     if (error) throw error;
@@ -398,7 +398,7 @@ export const positionsService = {
       penalty_type: rule.penalty_type || "",
       name: rule.name || "",
       description: rule.description,
-      trigger_condition: rule.trigger_condition,
+      trigger_condition: rule.trigger_condition as any,
       xp_penalty_percent: rule.xp_penalty_percent,
       xp_penalty_fixed: rule.xp_penalty_fixed,
       coin_penalty_percent: rule.coin_penalty_percent,
