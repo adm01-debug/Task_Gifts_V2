@@ -123,7 +123,7 @@ export function DevelopmentPlanManager() {
           ) : (
             <AnimatePresence>
               {filteredPlans?.map((plan, index) => {
-                const profile = profiles?.find((p) => p.id === plan.user_id);
+               const profile = profiles?.find((p) => p.id === plan.user_id) as any;
                 const isExpanded = expandedPlans.has(plan.id);
                 return (
                   <motion.div key={plan.id} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ delay: index * 0.02 }}>

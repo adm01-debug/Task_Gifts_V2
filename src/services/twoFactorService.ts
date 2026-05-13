@@ -177,9 +177,9 @@ class TwoFactorService {
       .from("user_two_factor")
       .update({
         is_enabled: false,
-        totp_secret: null,
-        backup_codes: null,
-        verified_at: null,
+         totp_secret: "",
+         backup_codes: [],
+         verified_at: "",
       })
       .eq("user_id", userId);
 

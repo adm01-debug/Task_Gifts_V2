@@ -32,9 +32,9 @@ export interface BehavioralBadge {
   icon: string;
   category: string;
   rarity: 'common' | 'rare' | 'epic' | 'legendary';
-  xpReward: number;
-  coinReward: number;
-  condition: (metrics: BehaviorMetrics) => boolean;
+   xpReward: number;
+   coinReward: number;
+   condition: (metrics: BehaviorMetrics) => boolean;
 }
 
 // Definição de todos os badges comportamentais
@@ -475,10 +475,10 @@ export const behavioralBadgesService = {
         const weekEnd = new Date(weekStart);
         weekEnd.setDate(weekEnd.getDate() + 7);
         
-        const hasCheckinInWeek = checkins.some(c => {
-          const date = new Date(c.completed_at!);
-          return date >= weekStart && date < weekEnd;
-        });
+         const hasCheckinInWeek = (checkins as any[]).some(c => {
+           const date = new Date(c.completed_at);
+           return date >= weekStart && date < weekEnd;
+         });
         
         if (hasCheckinInWeek) {
           consecutiveCheckinsWeeks++;
@@ -501,10 +501,10 @@ export const behavioralBadgesService = {
         const weekEnd = new Date(weekStart);
         weekEnd.setDate(weekEnd.getDate() + 7);
         
-        const hasPulseInWeek = pulses.some(p => {
-          const date = new Date(p.created_at);
-          return date >= weekStart && date < weekEnd;
-        });
+         const hasPulseInWeek = (pulses as any[]).some(p => {
+           const date = new Date(p.created_at);
+           return date >= weekStart && date < weekEnd;
+         });
         
         if (hasPulseInWeek) {
           consecutivePulsesWeeks++;
@@ -515,17 +515,17 @@ export const behavioralBadgesService = {
     }
 
     // Goals analysis
-    const goals = goalsData.data || [];
-    const goalsCompleted = goals.filter(g => g.status === "completed").length;
-    const goalsOnTrack = goals.filter(g => g.status === "on_track" || g.status === "completed").length;
+     const goals = (goalsData.data || []) as any[];
+     const goalsCompleted = goals.filter(g => g.status === "completed").length;
+     const goalsOnTrack = goals.filter(g => g.status === "on_track" || g.status === "completed").length;
 
     // PDI actions
-    const pdiActions = pdiData.data || [];
-    const pdiActionsCompleted = pdiActions.filter(a => a.status === "completed").length;
+     const pdiActions = (pdiData.data || []) as any[];
+     const pdiActionsCompleted = pdiActions.filter(a => a.status === "completed").length;
 
     // Early check-ins (before 8am)
-    const attendance = attendanceData.data || [];
-    const earlyCheckins = attendance.filter(a => {
+     const attendance = (attendanceData.data || []) as any[];
+     const earlyCheckins = attendance.filter(a => {
       const hour = new Date(a.check_in).getHours();
       return hour < 8;
     }).length;
@@ -538,25 +538,25 @@ export const behavioralBadgesService = {
 
     return {
       userId,
-      feedbacksGiven: feedbacksGiven.count || 0,
-      feedbacksReceived: feedbacksReceived.count || 0,
-      checkinsCompleted: checkins.length,
+       feedbacksGiven: (feedbacksGiven as any).count || 0,
+       feedbacksReceived: (feedbacksReceived as any).count || 0,
+       checkinsCompleted: (checkins as any[]).length,
       consecutiveCheckinsWeeks,
-      pulsesResponded: pulses.length,
+       pulsesResponded: (pulses as any[]).length,
       consecutivePulsesWeeks,
-      oneOnOnesAttended: oneOnOnesData.count || 0,
+       oneOnOnesAttended: (oneOnOnesData as any).count || 0,
       goalsCompleted,
       goalsOnTrack,
-      totalGoals: goals.length,
-      coursesCompleted: coursesData.count || 0,
+       totalGoals: (goals as any[]).length,
+       coursesCompleted: (coursesData as any).count || 0,
       pdiActionsCompleted,
-      socialPostsCreated: socialData[0].count || 0,
-      socialReactionsGiven: socialData[1].count || 0,
+       socialPostsCreated: ((socialData as any)[0]).count || 0,
+       socialReactionsGiven: ((socialData as any)[1]).count || 0,
       earlyCheckins,
       lateNightActivity,
       weekendActivity: 0,
-      helpfulComments: commentsData.count || 0,
-      mentorSessions: mentorData.count || 0,
+       helpfulComments: (commentsData as any).count || 0,
+       mentorSessions: (mentorData as any).count || 0,
     };
   },
 

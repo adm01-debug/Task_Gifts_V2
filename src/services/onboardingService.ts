@@ -237,12 +237,12 @@ export const onboardingService = {
     return true;
   },
 
-  isOnboardingComplete(progress: OnboardingProgress | null): boolean {
+   isOnboardingComplete(progress: OnboardingProgress | null | undefined): boolean {
     if (!progress) return false;
     return progress.completed_at !== null;
   },
 
-  getCompletionPercentage(progress: OnboardingProgress | null): number {
+   getCompletionPercentage(progress: OnboardingProgress | null | undefined): number {
     if (!progress) return 0;
     return Math.round((progress.completed_steps.length / ONBOARDING_STEPS.length) * 100);
   },

@@ -27,7 +27,7 @@ export function useCurrentProfile() {
   
   return useQuery({
     queryKey: profileKeys.current(),
-    queryFn: () => profilesService.getById(user!.id),
+     queryFn: () => profilesService.getById(user?.id || ""),
     enabled: !!user?.id,
   });
 }

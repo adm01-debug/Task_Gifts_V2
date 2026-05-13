@@ -132,11 +132,11 @@ export default function SecurityDashboard() {
               is2FAEnabled={is2FAEnabled}
               is2FALoading={is2FALoading}
               hasPasskeys={hasPasskeys}
-              devices={devices}
-              devicesLoading={devicesLoading}
-              stats={stats}
-              statsLoading={statsLoading}
-              deviceAlerts={deviceAlerts}
+               devices={devices?.map(d => ({ ...d, is_trusted: !!d.is_trusted }))}
+               devicesLoading={devicesLoading}
+               stats={stats}
+               statsLoading={statsLoading}
+               deviceAlerts={deviceAlerts?.map(a => ({ ...a, is_acknowledged: !!a.is_acknowledged }))}
               setActiveTab={setActiveTab}
             />
           </TabsContent>
