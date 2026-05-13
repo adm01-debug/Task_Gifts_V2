@@ -104,7 +104,7 @@ export function RewardFormDialog({
             <Label htmlFor="description">Descrição</Label>
             <Textarea
               id="description"
-              value={formData.description}
+              value={formData.description || ""}
               onChange={(e) =>
                 setFormData({ ...formData, description: e.target.value })
               }
@@ -194,7 +194,7 @@ export function RewardFormDialog({
             <Input
               id="image"
               type="url"
-              value={formData.image_url}
+              value={formData.image_url || ""}
               onChange={(e) =>
                 setFormData({ ...formData, image_url: e.target.value })
               }
