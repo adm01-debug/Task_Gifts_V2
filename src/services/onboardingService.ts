@@ -134,7 +134,7 @@ export const onboardingService = {
       return null;
     }
 
-    return data;
+    return data as unknown as OnboardingProgress;
   },
 
   async initProgress(userId: string): Promise<OnboardingProgress | null> {
@@ -149,7 +149,7 @@ export const onboardingService = {
       return null;
     }
 
-    return data;
+    return data as unknown as OnboardingProgress;
   },
 
   async completeStep(userId: string, stepId: string): Promise<boolean> {
