@@ -78,11 +78,11 @@ export function ActivityItem({ activity, index, isLast, isLiked, onLike }: Activ
             </div>
           </div>
         </div>
-        {activity.metadata?.xp_amount && (
-          <Badge variant="outline" className="shrink-0 text-amber-500 border-amber-500/30 bg-amber-500/10">
-            +{activity.metadata.xp_amount as number} XP
-          </Badge>
-        )}
+         {activity.metadata?.xp_amount !== undefined && (
+           <Badge variant="outline" className="shrink-0 text-amber-500 border-amber-500/30 bg-amber-500/10">
+             +{String(activity.metadata.xp_amount)} XP
+           </Badge>
+         )}
       </div>
     </motion.div>
   );
