@@ -7,50 +7,29 @@ export type Profile = Tables<"profiles">;
 export type ProfileInsert = TablesInsert<"profiles">;
 export type ProfileUpdate = TablesUpdate<"profiles">;
 
-// Public-safe columns (no PII like cpf, phone, personal_email)
 const PUBLIC_PROFILE_COLUMNS = "id, display_name, avatar_url, level, xp, coins, streak, best_streak, quests_completed, status, created_at, updated_at, email, employee_id, hire_date, last_access_at, contract_type" as const;
 
 export const profilesService = {
   async getById(id: string): Promise<Profile | null> {
-    const { data, error } = await supabase
-      .from("profiles")
-      .select("*")
-      .eq("id", id)
-      .maybeSingle();
-    
+    const { data, error } = await supabase.from("profiles").select("*").eq("id", id).maybeSingle();
     if (error) throw error;
     return data;
   },
 
   async getAll(): Promise<Profile[]> {
-    const { data, error } = await supabase
-      .from("profiles")
-      .select(PUBLIC_PROFILE_COLUMNS)
-      .order("xp", { ascending: false });
-    
+    const { data, error } = await supabase.from("profiles").select(PUBLIC_PROFILE_COLUMNS).order("xp", { ascending: false });
     if (error) throw error;
-     return (data ?? []) as unknown as Profile[];
+    return (data ?? []) as unknown as Profile[];
   },
 
   async getLeaderboard(limit = 10): Promise<Profile[]> {
-    const { data, error } = await supabase
-      .from("profiles")
-      .select(PUBLIC_PROFILE_COLUMNS)
-      .order("xp", { ascending: false })
-      .limit(limit);
-    
+    const { data, error } = await supabase.from("profiles").select(PUBLIC_PROFILE_COLUMNS).order("xp", { ascending: false }).limit(limit);
     if (error) throw error;
-     return (data ?? []) as unknown as Profile[];
+    return (data ?? []) as unknown as Profile[];
   },
 
   async update(id: string, updates: ProfileUpdate): Promise<Profile> {
-    const { data, error } = await supabase
-      .from("profiles")
-      .update(updates)
-      .eq("id", id)
-      .select()
-      .single();
-    
+    const { data, error } = await supabase.from("profiles").update(updates).eq("id", id).select().single();
     if (error) throw error;
     return data;
   },
@@ -64,21 +43,20 @@ export const profilesService = {
     const newLevel = Math.floor(newXp / 1000) + 1;
     const leveledUp = newLevel > oldLevel;
 
-    const updatedProfile = await this.update(id, { 
-      xp: newXp, 
-      level: newLevel 
-    });
+    // Check for XP decay (Issue 15.2 Sugestão 1)
+    // If user hasn't logged in for 3+ days, we might apply a small penalty 
+    // but typically decay is a scheduled task. Here we just log gain.
 
-    // Audit XP gain (fire and forget - don't block main flow)
+    const updatedProfile = await this.update(id, { xp: newXp, level: newLevel });
+
     auditService.logXpGain(id, xpAmount, source || "atividade").catch(() => {});
-
-    // Create XP notification (fire and forget)
     notificationsService.notifyXpGain(id, xpAmount, source || "atividade").catch(() => {});
 
-    // Create level up notification and audit if leveled up
     if (leveledUp) {
       auditService.logLevelUp(id, oldLevel, newLevel).catch(() => {});
       notificationsService.notifyLevelUp(id, newLevel).catch(() => {});
+      
+      // Integration with sound effects or celebrations can be triggered in UI
     }
 
     return { profile: updatedProfile, leveledUp, newLevel: leveledUp ? newLevel : undefined };
@@ -87,37 +65,35 @@ export const profilesService = {
   async addCoins(id: string, coinsAmount: number): Promise<Profile> {
     const profile = await this.getById(id);
     if (!profile) throw new Error("Profile not found");
-
-    return this.update(id, { 
-      coins: profile.coins + coinsAmount 
-    });
+    return this.update(id, { coins: profile.coins + coinsAmount });
   },
 
   async incrementStreak(id: string): Promise<Profile> {
     const profile = await this.getById(id);
     if (!profile) throw new Error("Profile not found");
 
-    const oldStreak = profile.streak;
-    const newStreak = profile.streak + 1;
+    const now = new Date();
+    const lastAccess = profile.last_access_at ? new Date(profile.last_access_at) : null;
+    
+    let newStreak = profile.streak + 1;
+    
+    // Logic to reset streak if 24h+ gap (simple version)
+    if (lastAccess) {
+      const diffHours = (now.getTime() - lastAccess.getTime()) / (1000 * 60 * 60);
+      if (diffHours > 48) newStreak = 1; // More than 2 days gap
+      else if (diffHours < 12) newStreak = profile.streak; // Same day access
+    }
+
     const bestStreak = Math.max(profile.best_streak, newStreak);
+    const updatedProfile = await this.update(id, { streak: newStreak, best_streak: bestStreak, last_access_at: now.toISOString() });
 
-    const updatedProfile = await this.update(id, { 
-      streak: newStreak,
-      best_streak: bestStreak
-    });
-
-    // Audit streak update (fire and forget)
-    auditService.logStreakUpdate(id, oldStreak, newStreak).catch(() => {});
-
+    auditService.logStreakUpdate(id, profile.streak, newStreak).catch(() => {});
     return updatedProfile;
   },
 
   async incrementQuestsCompleted(id: string): Promise<Profile> {
     const profile = await this.getById(id);
     if (!profile) throw new Error("Profile not found");
-
-    return this.update(id, { 
-      quests_completed: profile.quests_completed + 1
-    });
+    return this.update(id, { quests_completed: profile.quests_completed + 1 });
   },
 };
