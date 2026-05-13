@@ -501,10 +501,10 @@ export const behavioralBadgesService = {
         const weekEnd = new Date(weekStart);
         weekEnd.setDate(weekEnd.getDate() + 7);
         
-        const hasPulseInWeek = pulses.some(p => {
-          const date = new Date(p.created_at);
-          return date >= weekStart && date < weekEnd;
-        });
+         const hasPulseInWeek = (pulses as any[]).some(p => {
+           const date = new Date(p.created_at);
+           return date >= weekStart && date < weekEnd;
+         });
         
         if (hasPulseInWeek) {
           consecutivePulsesWeeks++;
