@@ -32,9 +32,9 @@ export interface BehavioralBadge {
   icon: string;
   category: string;
   rarity: 'common' | 'rare' | 'epic' | 'legendary';
-  xpReward: number;
-  coinReward: number;
-  condition: (metrics: BehaviorMetrics) => boolean;
+   xpReward: number;
+   coinReward: number;
+   condition: (metrics: BehaviorMetrics) => boolean;
 }
 
 // Definição de todos os badges comportamentais
