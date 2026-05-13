@@ -63,7 +63,7 @@ export default function Goals() {
             newKeyResult={newKeyResult}
             setNewKeyResult={setNewKeyResult}
             onAddKeyResult={(goalId) => createKeyResult({ goal_id: goalId, ...newKeyResult })}
-            onUpdateGoal={({ goalId, updates }) => updateGoal({ goalId, updates })}
+            onUpdateGoal={({ goalId, updates }) => updateGoal({ goalId, updates: updates as any })}
             onDeleteGoal={deleteGoal}
           />
         ))}
