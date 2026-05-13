@@ -15,10 +15,10 @@ export function OnboardingWidget() {
 
   if (isLoading) return null;
 
-  const isComplete = onboardingService.isOnboardingComplete(progress);
+  const isComplete = onboardingService.isOnboardingComplete(progress || null);
   if (isComplete) return null;
 
-  const completionPercentage = onboardingService.getCompletionPercentage(progress);
+  const completionPercentage = onboardingService.getCompletionPercentage(progress || null);
   const completedCount = progress?.completed_steps.length || 0;
   const totalSteps = ONBOARDING_STEPS.length;
 
