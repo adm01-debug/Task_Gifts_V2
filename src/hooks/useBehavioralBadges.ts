@@ -31,7 +31,7 @@ export function useBehavioralBadges() {
 
         // Mostrar notificação para cada badge
         for (const badgeKey of awardedBadges) {
-          const badge = BEHAVIORAL_BADGES.find(b => b.key === badgeKey);
+          const badge = BEHAVIORAL_BADGES.find((b: any) => b.key === badgeKey);
           if (badge) {
             playAchievementSound();
             showAchievementNotification({
