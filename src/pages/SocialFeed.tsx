@@ -367,7 +367,7 @@ export default function SocialFeedPage() {
             ) : (
               <div className="space-y-1">
                 <AnimatePresence mode="popLayout">
-                  {filteredActivities.map((activity, index) => (
+                  {(filteredActivities as any[]).map((activity, index) => (
                     <motion.div
                       key={activity.id}
                       initial={{ opacity: 0, x: -20 }}

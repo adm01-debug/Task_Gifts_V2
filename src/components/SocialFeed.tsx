@@ -93,7 +93,7 @@ export const SocialFeed = memo(function SocialFeed({ limit = 30, compact = false
         <ScrollArea className={compact ? "h-[300px]" : "h-[500px]"}>
           <div className="px-4 pb-4">
             <AnimatePresence mode="popLayout">
-              {activities.map((activity, index) => (
+              {(activities as any[]).map((activity, index) => (
                 <motion.div
                   key={activity.id}
                   initial={{ opacity: 0, x: -20, scale: 0.95 }}
