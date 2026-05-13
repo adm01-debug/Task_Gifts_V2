@@ -121,7 +121,12 @@ export function NineBoxMatrix() {
           </Select>
           <Dialog open={showCreateDialog} onOpenChange={setShowCreateDialog}>
             <DialogTrigger asChild><Button><Plus className="w-4 h-4 mr-2" />Nova Avaliação</Button></DialogTrigger>
-            <DialogContent className="max-w-md"><CreateEvaluationForm profiles={profiles || []} onClose={() => setShowCreateDialog(false)} /></DialogContent>
+            <DialogContent className="max-w-md">
+              <CreateEvaluationForm 
+                profiles={(profiles || []) as any} 
+                onClose={() => setShowCreateDialog(false)} 
+              />
+            </DialogContent>
           </Dialog>
         </div>
       </div>

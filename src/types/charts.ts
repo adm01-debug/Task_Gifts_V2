@@ -9,8 +9,8 @@ export interface RechartsTooltipPayloadItem {
 
 export interface RechartsTooltipProps {
   active?: boolean;
-  payload?: RechartsTooltipPayloadItem[];
-  label?: string;
+  payload?: any[];
+  label?: string | number;
 }
 
 // BI Dashboard Types

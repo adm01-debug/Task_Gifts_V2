@@ -93,8 +93,8 @@ export function OnboardingModal({ open, onOpenChange }: OnboardingModalProps) {
     try {
       // Check if this will be the last reward to claim (all steps will be complete after this)
       const willCompleteAll = progress && 
-        progress.rewards_claimed.length === ONBOARDING_STEPS.length - 1 &&
-        !progress.rewards_claimed.includes(stepId);
+        (progress as any).rewards_claimed.length === ONBOARDING_STEPS.length - 1 &&
+        !(progress as any).rewards_claimed.includes(stepId);
       
       await claimReward.mutateAsync(stepId);
       

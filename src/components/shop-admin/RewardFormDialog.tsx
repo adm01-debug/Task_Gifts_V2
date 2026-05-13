@@ -65,7 +65,7 @@ export function RewardFormDialog({
           rarity: editingReward.rarity,
           is_active: editingReward.is_active,
           image_url: editingReward.image_url || "",
-        }
+        } as RewardFormData
       : emptyFormData
   );
 
@@ -103,7 +103,7 @@ export function RewardFormDialog({
             <Label htmlFor="description">Descrição</Label>
             <Textarea
               id="description"
-              value={formData.description}
+              value={formData.description || ""}
               onChange={(e) =>
                 setFormData({ ...formData, description: e.target.value })
               }
@@ -193,7 +193,7 @@ export function RewardFormDialog({
             <Input
               id="image"
               type="url"
-              value={formData.image_url}
+              value={formData.image_url || ""}
               onChange={(e) =>
                 setFormData({ ...formData, image_url: e.target.value })
               }

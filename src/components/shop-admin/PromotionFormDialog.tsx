@@ -134,7 +134,7 @@ export const PromotionFormDialog = forwardRef<HTMLDivElement, PromotionFormDialo
             <Label htmlFor="promo-desc">Descrição (opcional)</Label>
             <Textarea
               id="promo-desc"
-              value={formData.description}
+              value={formData.description || ""}
               onChange={(e) => setFormData({ ...formData, description: e.target.value })}
               rows={2}
               placeholder="Descreva os detalhes da promoção..."

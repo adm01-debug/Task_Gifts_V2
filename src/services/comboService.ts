@@ -37,7 +37,7 @@ export const comboService = {
       return null;
     }
 
-    return data;
+    return data as unknown as UserCombo;
   },
 
   async initTodayCombo(userId: string): Promise<UserCombo | null> {
@@ -61,7 +61,7 @@ export const comboService = {
       return null;
     }
 
-    return data;
+    return data as unknown as UserCombo;
   },
 
   getComboTier(actionsCount: number) {
@@ -130,7 +130,7 @@ export const comboService = {
       return { finalXp: baseXp, bonusXp: 0, combo, tierUp: false };
     }
 
-    return { finalXp, bonusXp, combo: updatedCombo, tierUp };
+    return { finalXp, bonusXp, combo: updatedCombo as unknown as UserCombo, tierUp };
   },
 
   async getComboHistory(userId: string, days: number = 7): Promise<UserCombo[]> {

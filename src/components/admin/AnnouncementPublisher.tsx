@@ -46,7 +46,7 @@ export function AnnouncementPublisher() {
         content: formData.content,
         category: formData.category as "general" | "urgent" | "event" | "policy" | "achievement",
         is_pinned: formData.is_pinned,
-        expires_at: formData.expires_at || null,
+        expires_at: formData.expires_at || undefined,
       },
       {
         onSuccess: () => {

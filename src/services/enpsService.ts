@@ -94,7 +94,7 @@ export const enpsService = {
         return {
           ...survey,
           response_count: count || 0,
-          enps_score: scoreData,
+          enps_score: scoreData as number | null,
         };
       })
     );

@@ -6,11 +6,7 @@ import {
   createRateLimitResponse,
   RATE_LIMITS 
 } from "../_shared/rate-limiter.ts";
-
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
-};
+import { corsHeaders, verifyUser } from "../_shared/security.ts";
 
 const SYSTEM_PROMPT = `Você é o AI Coach do Task Gifts, uma plataforma de gamificação corporativa da Promo Brindes.
 
@@ -64,6 +60,9 @@ serve(async (req) => {
   }
 
   try {
+    // Verify user JWT
+    const authenticatedUser = await verifyUser(req);
+    
     const { messages, userContext, generateSuggestions } = await req.json();
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     
