@@ -1,8 +1,8 @@
-import { useState } from "react";
+import { useState, useMemo, useCallback, memo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
-  Target, Star, Coins, CheckCircle2, Clock, 
-  Trophy, Flame, ChevronRight, Sparkles, Calendar
+  Target, Star, CheckCircle2, Clock, 
+  Trophy, Sparkles, Calendar
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -17,120 +17,40 @@ import { useDepartments } from "@/hooks/useDepartments";
 import type { MissionWithProgress } from "@/services/missionsService";
 
 const frequencyConfig = {
-  daily: { label: "Diária", icon: Clock, color: "text-blue-500", bgColor: "bg-blue-500/10" },
-  weekly: { label: "Semanal", icon: Calendar, color: "text-purple-500", bgColor: "bg-purple-500/10" },
-  monthly: { label: "Mensal", icon: Trophy, color: "text-amber-500", bgColor: "bg-amber-500/10" },
+  daily: { label: "Dia", icon: Clock, color: "text-blue-500", bgColor: "bg-blue-500/10" },
+  weekly: { label: "Sem", icon: Calendar, color: "text-purple-500", bgColor: "bg-purple-500/10" },
+  monthly: { label: "Mês", icon: Trophy, color: "text-amber-500", bgColor: "bg-amber-500/10" },
 };
 
-function MissionCard({ 
-  mission, 
-  onClaim,
-  isClaiming,
-}: { 
-  mission: MissionWithProgress;
-  onClaim: () => void;
-  isClaiming: boolean;
-}) {
+function MissionCard({ mission, onClaim, isClaiming }: { mission: MissionWithProgress; onClaim: () => void; isClaiming: boolean; }) {
   const progress = mission.progress;
   const currentValue = progress?.current_value || 0;
   const isCompleted = !!progress?.completed_at;
   const isClaimed = !!progress?.claimed;
   const progressPercent = Math.min((currentValue / mission.target_value) * 100, 100);
   
-  const freqConfig = frequencyConfig[mission.frequency];
-  const FreqIcon = freqConfig.icon;
-
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      whileHover={{ scale: 1.01 }}
-      className={`relative ${isClaimed ? "opacity-60" : ""}`}
-    >
-      <Card className={`overflow-hidden transition-all duration-300 card-shimmer ${
-        isCompleted && !isClaimed 
-          ? "border-emerald-500/50 bg-gradient-to-r from-emerald-500/10 to-transparent" 
-          : "border-border/50 hover:border-primary/30"
-      }`}>
-        <CardContent className="p-4">
-          <div className="flex items-start gap-4">
-            {/* Icon */}
-            <div className={`text-3xl p-2 rounded-xl ${freqConfig.bgColor}`}>
-              {mission.icon}
-            </div>
-
-            {/* Content */}
-            <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-2 mb-1">
-                <h4 className="font-semibold truncate">{mission.title}</h4>
-                <Badge variant="outline" className={`text-xs ${freqConfig.color}`}>
-                  <FreqIcon className="h-3 w-3 mr-1" />
-                  {freqConfig.label}
-                </Badge>
-              </div>
-              
-              {mission.description && (
-                <p className="text-sm text-muted-foreground mb-3 line-clamp-1">
-                  {mission.description}
-                </p>
-              )}
-
-              {/* Progress Bar */}
-              <div className="space-y-1.5">
-                <div className="flex justify-between text-xs">
-                  <span className="text-muted-foreground">Progresso</span>
-                  <span className={isCompleted ? "text-emerald-500 font-medium" : ""}>
-                    {currentValue}/{mission.target_value}
-                  </span>
-                </div>
-                <Progress 
-                  value={progressPercent} 
-                  className={`h-2 ${isCompleted ? "[&>div]:bg-emerald-500" : ""}`}
-                />
-              </div>
-            </div>
-
-            {/* Rewards & Action */}
-            <div className="flex flex-col items-end gap-2">
-              <div className="flex items-center gap-2">
-                <Badge variant="secondary" className="gap-1">
-                  <Star className="h-3 w-3 text-amber-400" />
-                  {mission.xp_reward}
-                </Badge>
-                {mission.coin_reward > 0 && (
-                  <Badge variant="secondary" className="gap-1">
-                    🪙 {mission.coin_reward}
-                  </Badge>
-                )}
-              </div>
-
-              {isCompleted && !isClaimed && (
-                <Button
-                  size="sm"
-                  className="gap-1 bg-emerald-500 hover:bg-emerald-600"
-                  onClick={onClaim}
-                  disabled={isClaiming}
-                >
-                  <Sparkles className="h-3 w-3" />
-                  Coletar
-                </Button>
-              )}
-
-              {isClaimed && (
-                <Badge className="bg-emerald-500/20 text-emerald-500 border-emerald-500/30">
-                  <CheckCircle2 className="h-3 w-3 mr-1" />
-                  Coletado
-                </Badge>
-              )}
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-    </motion.div>
+    <div className={`p-3 rounded-lg border border-border/50 ${isCompleted && !isClaimed ? "bg-emerald-500/5 border-emerald-500/30" : "bg-card"}`}>
+      <div className="flex items-center gap-2">
+        <div className="text-xl shrink-0">{mission.icon}</div>
+        <div className="flex-1 min-w-0">
+          <h4 className="font-semibold text-xs truncate">{mission.title}</h4>
+          <Progress value={progressPercent} className="h-1 mt-1" />
+        </div>
+        <div className="shrink-0 flex flex-col items-end">
+           <span className="text-[10px] font-bold">+{mission.xp_reward}XP</span>
+           {isCompleted && !isClaimed && (
+             <button onClick={onClaim} disabled={isClaiming} className="mt-1 px-2 py-0.5 bg-emerald-500 text-white text-[10px] rounded font-bold">
+               {isClaiming ? "..." : "✓"}
+             </button>
+           )}
+        </div>
+      </div>
+    </div>
   );
 }
 
-export default function DepartmentMissions() {
+function DepartmentMissions() {
   const [selectedDepartment, setSelectedDepartment] = useState<string>("all");
   const [activeTab, setActiveTab] = useState<"daily" | "weekly" | "monthly">("daily");
   const [claimingIds, setClaimingIds] = useState<Set<string>>(new Set());
@@ -141,13 +61,7 @@ export default function DepartmentMissions() {
   );
   const claimMutation = useClaimMissionReward();
 
-  // Filter by frequency
   const filteredMissions = missions.filter(m => m.frequency === activeTab);
-
-  // Stats
-  const completedToday = missions.filter(m => m.frequency === "daily" && m.progress?.completed_at).length;
-  const totalDaily = missions.filter(m => m.frequency === "daily").length;
-  const claimableMissions = missions.filter(m => m.progress?.completed_at && !m.progress?.claimed);
 
   const handleClaim = (progressId: string) => {
     setClaimingIds(prev => new Set(prev).add(progressId));
@@ -162,138 +76,54 @@ export default function DepartmentMissions() {
     });
   };
 
-  if (isLoading) {
-    return (
-      <Card variant="glass" className="border-border/50">
-        <CardHeader className="pb-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="p-2 rounded-xl bg-primary/10">
-                <Target className="h-5 w-5 text-primary" />
-              </div>
-              <div>
-                <CardTitle className="text-lg">Missões do Setor</CardTitle>
-                <p className="text-sm text-muted-foreground">Carregando...</p>
-              </div>
-            </div>
-          </div>
-        </CardHeader>
-        <CardContent>
-          <SkeletonMissionList items={3} />
-        </CardContent>
-      </Card>
-    );
-  }
+  if (isLoading) return <SkeletonMissionList items={3} />;
 
   return (
-    <Card variant="glass" className="border-border/50">
-      <CardHeader className="pb-4">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="p-2 rounded-xl bg-primary/10">
-              <Target className="h-5 w-5 text-primary" />
-            </div>
-            <div>
-              <CardTitle className="text-lg">Missões do Setor</CardTitle>
-              <p className="text-sm text-muted-foreground">
-                {completedToday}/{totalDaily} diárias concluídas
-              </p>
-            </div>
+    <Card variant="glass" className="border-border/50 h-full flex flex-col">
+      <CardHeader className="p-4 pb-2">
+        <div className="flex items-center justify-between gap-2">
+          <div className="flex items-center gap-2">
+            <Target className="h-4 w-4 text-primary" />
+            <CardTitle className="text-sm">Setor</CardTitle>
           </div>
-
           <Select value={selectedDepartment} onValueChange={setSelectedDepartment}>
-            <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Departamento" />
+            <SelectTrigger className="h-7 text-[10px] w-28">
+              <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              <AllSelectItem label="Todos / Geral" />
+              <AllSelectItem label="Geral" />
               {departments.map(dept => (
-                <SelectItem key={dept.id} value={dept.id}>
+                <SelectItem key={dept.id} value={dept.id} className="text-[10px]">
                   {dept.name}
                 </SelectItem>
               ))}
             </SelectContent>
           </Select>
         </div>
-
-        {claimableMissions.length > 0 && (
-          <motion.div
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="mt-4 p-3 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-between"
-          >
-            <div className="flex items-center gap-2">
-              <Sparkles className="h-5 w-5 text-emerald-500" />
-              <span className="text-sm font-medium">
-                {claimableMissions.length} recompensa{claimableMissions.length > 1 ? "s" : ""} disponível!
-              </span>
-            </div>
-            <Button
-              size="sm"
-              variant="outline"
-              className="border-emerald-500/30 text-emerald-500 hover:bg-emerald-500/10"
-              onClick={() => {
-                claimableMissions.forEach(m => {
-                  if (m.progress) handleClaim(m.progress.id);
-                });
-              }}
-            >
-              Coletar Todas
-            </Button>
-          </motion.div>
-        )}
       </CardHeader>
-
-      <CardContent>
-        <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as "daily" | "weekly" | "monthly")}>
-          <TabsList className="grid w-full grid-cols-3 mb-4">
-            <TabsTrigger value="daily" className="gap-1">
-              <Clock className="h-4 w-4" />
-              Diárias
-            </TabsTrigger>
-            <TabsTrigger value="weekly" className="gap-1">
-              <Calendar className="h-4 w-4" />
-              Semanais
-            </TabsTrigger>
-            <TabsTrigger value="monthly" className="gap-1">
-              <Trophy className="h-4 w-4" />
-              Mensais
-            </TabsTrigger>
+      <CardContent className="p-3 pt-0 flex-1 flex flex-col">
+        <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as any)} className="flex-1 flex flex-col">
+          <TabsList className="grid grid-cols-3 h-7 mb-2 p-0.5 bg-muted/50">
+            <TabsTrigger value="daily" className="text-[10px]">Dia</TabsTrigger>
+            <TabsTrigger value="weekly" className="text-[10px]">Sem</TabsTrigger>
+            <TabsTrigger value="monthly" className="text-[10px]">Mês</TabsTrigger>
           </TabsList>
-
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={activeTab}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              className="space-y-3"
-            >
-              {filteredMissions.length === 0 ? (
-                <div className="text-center py-8 text-muted-foreground">
-                  <Target className="h-12 w-12 mx-auto mb-3 opacity-50" />
-                  <p>Nenhuma missão {activeTab === "daily" ? "diária" : activeTab === "weekly" ? "semanal" : "mensal"} disponível</p>
-                </div>
-              ) : (
-                filteredMissions.map((mission, index) => (
-                  <motion.div
-                    key={mission.id}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: index * 0.05 }}
-                  >
-                    <MissionCard
-                      mission={mission}
-                      onClaim={() => mission.progress && handleClaim(mission.progress.id)}
-                      isClaiming={claimingIds.has(mission.progress?.id || "")}
-                    />
-                  </motion.div>
-                ))
-              )}
-            </motion.div>
-          </AnimatePresence>
+          <div className="space-y-2 overflow-y-auto max-h-[250px] pr-1">
+            {filteredMissions.map((mission) => (
+              <MissionCard
+                key={mission.id}
+                mission={mission}
+                onClaim={() => mission.progress && handleClaim(mission.progress.id)}
+                isClaiming={claimingIds.has(mission.progress?.id || "")}
+              />
+            ))}
+            {filteredMissions.length === 0 && <p className="text-[10px] text-center text-muted-foreground py-4">Sem missões</p>}
+          </div>
         </Tabs>
       </CardContent>
     </Card>
   );
 }
+
+export const DepartmentMissionsLazy = memo(DepartmentMissions);
+export default DepartmentMissionsLazy;

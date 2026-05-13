@@ -5936,6 +5936,63 @@ export type Database = {
           },
         ]
       }
+      user_challenges: {
+        Row: {
+          coin_reward: number
+          completed_at: string | null
+          created_at: string | null
+          current: number
+          description: string | null
+          difficulty: string
+          expires_at: string
+          icon: string | null
+          id: string
+          is_active: boolean
+          target: number
+          title: string
+          type: string
+          updated_at: string | null
+          user_id: string
+          xp_reward: number
+        }
+        Insert: {
+          coin_reward?: number
+          completed_at?: string | null
+          created_at?: string | null
+          current?: number
+          description?: string | null
+          difficulty?: string
+          expires_at: string
+          icon?: string | null
+          id?: string
+          is_active?: boolean
+          target?: number
+          title: string
+          type: string
+          updated_at?: string | null
+          user_id: string
+          xp_reward?: number
+        }
+        Update: {
+          coin_reward?: number
+          completed_at?: string | null
+          created_at?: string | null
+          current?: number
+          description?: string | null
+          difficulty?: string
+          expires_at?: string
+          icon?: string | null
+          id?: string
+          is_active?: boolean
+          target?: number
+          title?: string
+          type?: string
+          updated_at?: string | null
+          user_id?: string
+          xp_reward?: number
+        }
+        Relationships: []
+      }
       user_combos: {
         Row: {
           actions_count: number
