@@ -88,7 +88,7 @@ export function GoalCard({ goal, selectedGoal, setSelectedGoal, newKeyResult, se
                   </DialogContent>
                 </Dialog>
               </div>
-              {goal.key_results?.length > 0 ? (
+              {goal.key_results && goal.key_results.length > 0 ? (
                 <div className="space-y-2">
                   {goal.key_results.map((kr: KeyResult) => (
                     <div key={kr.id} className="flex items-center gap-2 text-sm">
