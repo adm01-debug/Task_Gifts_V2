@@ -852,11 +852,11 @@ describe("PDF export data formatting", () => {
     expect(row[7]).toBe("-");
   });
   it("handles rpc_name preference", () => {
-    const row = buildPDFRow({ ...sampleRow, rpc_name: "get_data" });
+    const row = buildPDFRow({ ...sampleRow, rpc_name: "get_data" } as any);
     expect(row[2]).toBe("get_data");
   });
   it("formats duration in seconds for slow queries", () => {
-    const row = buildPDFRow({ ...sampleRow, duration_ms: 8500 });
+    const row = buildPDFRow({ ...sampleRow, duration_ms: 8500 } as any);
     expect(row[3]).toBe("8.5s");
   });
   it("formats duration in ms for fast queries", () => {
