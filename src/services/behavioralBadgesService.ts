@@ -515,17 +515,17 @@ export const behavioralBadgesService = {
     }
 
     // Goals analysis
-    const goals = goalsData.data || [];
-    const goalsCompleted = goals.filter(g => g.status === "completed").length;
-    const goalsOnTrack = goals.filter(g => g.status === "on_track" || g.status === "completed").length;
+     const goals = (goalsData.data || []) as any[];
+     const goalsCompleted = goals.filter(g => g.status === "completed").length;
+     const goalsOnTrack = goals.filter(g => g.status === "on_track" || g.status === "completed").length;
 
     // PDI actions
-    const pdiActions = pdiData.data || [];
-    const pdiActionsCompleted = pdiActions.filter(a => a.status === "completed").length;
+     const pdiActions = (pdiData.data || []) as any[];
+     const pdiActionsCompleted = pdiActions.filter(a => a.status === "completed").length;
 
     // Early check-ins (before 8am)
-    const attendance = attendanceData.data || [];
-    const earlyCheckins = attendance.filter(a => {
+     const attendance = (attendanceData.data || []) as any[];
+     const earlyCheckins = attendance.filter(a => {
       const hour = new Date(a.check_in).getHours();
       return hour < 8;
     }).length;
