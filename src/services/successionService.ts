@@ -154,7 +154,7 @@ export const successionService = {
     if (!position) return [];
 
     // Get high potentials from the same or related department
-    const hiPos = await highPotentialService.identifyHighPotentials(position.department_id);
+     const hiPos = await highPotentialService.identifyHighPotentials(position.department_id || undefined);
 
     // Filter and score candidates
     const candidates: SuccessorCandidate[] = [];
@@ -171,7 +171,7 @@ export const successionService = {
       if (currentPosition?.position_id === positionId) continue;
 
       // Calculate match score based on various factors
-      const matchScore = this.calculateMatchScore(hipo, position);
+       const matchScore = this.calculateMatchScore(hipo, position as any);
       
       // Determine readiness
       const { readiness, readinessScore } = this.determineReadiness(hipo, matchScore);

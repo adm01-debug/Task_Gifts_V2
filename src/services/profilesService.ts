@@ -29,7 +29,7 @@ export const profilesService = {
       .order("xp", { ascending: false });
     
     if (error) throw error;
-    return (data ?? []) as Profile[];
+     return (data ?? []) as unknown as Profile[];
   },
 
   async getLeaderboard(limit = 10): Promise<Profile[]> {
@@ -40,7 +40,7 @@ export const profilesService = {
       .limit(limit);
     
     if (error) throw error;
-    return (data ?? []) as Profile[];
+     return (data ?? []) as unknown as Profile[];
   },
 
   async update(id: string, updates: ProfileUpdate): Promise<Profile> {
