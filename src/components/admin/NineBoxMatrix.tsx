@@ -82,7 +82,7 @@ export function NineBoxMatrix() {
         <p className="text-[10px] text-muted-foreground mb-2 line-clamp-1">{label.description}</p>
         <div className="flex flex-wrap gap-1">
           {people.slice(0, 5).map((evaluation) => {
-            const profile = profiles?.find((p) => p.id === evaluation.user_id);
+             const profile = profiles?.find((p) => p.id === evaluation.user_id) as any;
             return (
               <TooltipProvider key={evaluation.id}>
                 <Tooltip>

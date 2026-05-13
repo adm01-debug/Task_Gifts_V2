@@ -475,10 +475,10 @@ export const behavioralBadgesService = {
         const weekEnd = new Date(weekStart);
         weekEnd.setDate(weekEnd.getDate() + 7);
         
-        const hasCheckinInWeek = checkins.some(c => {
-          const date = new Date(c.completed_at!);
-          return date >= weekStart && date < weekEnd;
-        });
+         const hasCheckinInWeek = (checkins as any[]).some(c => {
+           const date = new Date(c.completed_at);
+           return date >= weekStart && date < weekEnd;
+         });
         
         if (hasCheckinInWeek) {
           consecutiveCheckinsWeeks++;
