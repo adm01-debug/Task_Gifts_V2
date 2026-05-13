@@ -173,11 +173,10 @@ export const announcementsService = {
         ignoreDuplicates: true,
       });
 
-    // Increment view count
-    await supabase
-      .from("announcements")
-      .update({ view_count: supabase.rpc ? 1 : 1 }) // View count handled separately
-      .eq("id", announcementId);
+    // Increment view count via RPC to ensure atomicity
+    await supabase.rpc('increment_announcement_views', { 
+      announcement_id: announcementId 
+    });
   },
 
   async addReaction(announcementId: string, emoji: string): Promise<void> {

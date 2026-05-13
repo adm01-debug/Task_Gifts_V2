@@ -248,10 +248,10 @@ export const enpsService = {
 
   async generateSnapshot(departmentId?: string, periodType = "weekly") {
     const { data, error } = await supabase
-      .rpc("generate_engagement_snapshot", {
-        p_department_id: departmentId || null,
+      .rpc("generate_engagement_snapshot", ({
+        p_department_id: departmentId,
         p_period_type: periodType,
-      });
+      } as any));
 
     if (error) throw error;
     return data;
