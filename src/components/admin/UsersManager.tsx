@@ -214,22 +214,33 @@ export function UsersManager() {
             <div className="col-span-2 text-right">Ações</div>
           </div>
           <AnimatePresence mode="popLayout">
-            {paginatedUsers.map((user, index) => (
-              <UserRow
-                key={user.id}
-                user={user}
-                index={index}
-                isSelected={selectedUsers.includes(user.id)}
-                onSelect={handleSelectUser}
-                userRoles={userRolesMap.get(user.id) || []}
-                userDepts={userDeptMap.get(user.id) || []}
-                onAssignRole={(id) => { setRoleDialogUser(id); setSelectedRole("employee"); }}
-                onAssignDept={(id) => { setDeptDialogUser(id); setSelectedDept(""); }}
-                onRemoveRole={(userId, role) => setRemoveRoleConfirm({ userId, role })}
-                onRemoveDeptMember={handleRemoveDepartmentMember}
-                removingDeptMemberId={removingDeptMemberId}
-              />
-            ))}
+            {paginatedUsers.map((user, index) => {
+              const userToRow = {
+                id: user.id,
+                display_name: user.display_name,
+                email: (user as any).email || "",
+                avatar_url: user.avatar_url,
+                level: user.level,
+                streak: (user as any).streak || 0,
+                coins: user.coins
+              };
+              return (
+                <UserRow
+                  key={user.id}
+                  user={userToRow}
+                  index={index}
+                  isSelected={selectedUsers.includes(user.id)}
+                  onSelect={handleSelectUser}
+                  userRoles={userRolesMap.get(user.id) || []}
+                  userDepts={userDeptMap.get(user.id) || []}
+                  onAssignRole={(id) => { setRoleDialogUser(id); setSelectedRole("employee"); }}
+                  onAssignDept={(id) => { setDeptDialogUser(id); setSelectedDept(""); }}
+                  onRemoveRole={(userId, role) => setRemoveRoleConfirm({ userId, role })}
+                  onRemoveDeptMember={handleRemoveDepartmentMember}
+                  removingDeptMemberId={removingDeptMemberId}
+                />
+              );
+            })}
           </AnimatePresence>
           {paginatedUsers.length === 0 && (
             <div className="p-8 text-center text-muted-foreground">
