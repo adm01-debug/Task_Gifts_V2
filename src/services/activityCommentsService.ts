@@ -33,10 +33,13 @@ export const activityCommentsService = {
 
     const profileMap = new Map(profiles?.map((p) => [p.id, p]) || []);
 
-    return comments.map((comment) => ({
-      ...comment,
-      user: profileMap.get(comment.user_id) || null,
-    }));
+    return comments.map((comment) => {
+      const user = profileMap.get(comment.user_id);
+      return {
+        ...comment,
+        user: user ? { display_name: user.display_name, avatar_url: user.avatar_url } : undefined,
+      };
+    });
   },
 
   async getCommentsCountByActivityIds(activityIds: string[]): Promise<Record<string, number>> {
