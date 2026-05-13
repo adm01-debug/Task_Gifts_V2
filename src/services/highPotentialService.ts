@@ -428,7 +428,7 @@ export const highPotentialService = {
         results.push({
           userId: profile.id,
           displayName: profile.display_name || profile.email?.split('@')[0] || 'Usuário',
-          avatarUrl: profile.avatar_url,
+          avatarUrl: profile.avatar_url || undefined,
           department: teamMembers?.[0]?.departments?.name,
           position: userPositions?.[0]?.positions?.name,
           level: profile.level || 1,

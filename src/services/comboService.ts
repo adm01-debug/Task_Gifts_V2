@@ -149,6 +149,6 @@ export const comboService = {
       return [];
     }
 
-    return data || [];
+    return (data || []) as UserCombo[];
   },
 };

@@ -140,14 +140,13 @@ const Profile = () => {
         </motion.div>
 
         {user?.id && profile && <SectionErrorBoundary sectionName="Coleção de Avatar"><ProfileAvatarSection userId={user.id} userLevel={profile.level} userStreak={profile.streak} userCoins={profile.coins} displayName={profile.display_name || "Jogador"} /></SectionErrorBoundary>}
-
         <SectionErrorBoundary sectionName="Conquistas"><ProfileAchievements /></SectionErrorBoundary>
         <SectionErrorBoundary sectionName="Competências"><CompetencyRadar /></SectionErrorBoundary>
         <SectionErrorBoundary sectionName="Certificações"><CertificationsPanel /></SectionErrorBoundary>
-        <SectionErrorBoundary sectionName="Kudos"><ProfileKudosSection userId={user?.id} /></SectionErrorBoundary>
+        <SectionErrorBoundary sectionName="Kudos"><ProfileKudosSection userId={user?.id as string} /></SectionErrorBoundary>
         <SectionErrorBoundary sectionName="9-Box"><MyNineBoxWidget /></SectionErrorBoundary>
         <SectionErrorBoundary sectionName="PDI"><MyDevelopmentPlanWidget /></SectionErrorBoundary>
-        <ProfileActivityTimeline userId={user?.id} />
+        <ProfileActivityTimeline userId={user?.id as string} />
         <SectionErrorBoundary sectionName="Segurança"><TwoFactorSetup /></SectionErrorBoundary>
         <SoundSettingsCard />
         <PushNotificationToggle />
