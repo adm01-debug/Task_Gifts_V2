@@ -181,61 +181,93 @@ export const autoChallengesService = {
     return selected;
   },
 
-  // Get user's current challenges from localStorage (for demo) or DB
-  async getCurrentChallenges(userId: string): Promise<AutoChallenge[]> {
-    const storageKey = `auto_challenges_${userId}`;
-    const stored = localStorage.getItem(storageKey);
-
-    if (stored) {
-      const parsed = JSON.parse(stored) as AutoChallenge[];
-      const now = new Date();
-
-      // Check if challenges are still valid
-      if (parsed.length > 0 && new Date(parsed[0].expires_at) > now) {
-        return parsed;
-      }
-    }
-
-    // Generate new challenges
-    const newChallenges = await this.generateWeeklyChallenges(userId);
-    localStorage.setItem(storageKey, JSON.stringify(newChallenges));
-    return newChallenges;
-  },
-
-  // Update challenge progress
-  async updateChallengeProgress(
-    userId: string,
-    challengeType: AutoChallenge["type"],
-    increment: number = 1
-  ): Promise<{ challenge: AutoChallenge | null; completed: boolean }> {
-    const storageKey = `auto_challenges_${userId}`;
-    const stored = localStorage.getItem(storageKey);
-
-    if (!stored) {
-      return { challenge: null, completed: false };
-    }
-
-    const challenges = JSON.parse(stored) as AutoChallenge[];
-    const challengeIndex = challenges.findIndex(
-      (c) => c.type === challengeType && c.is_active && c.current < c.target
-    );
-
-    if (challengeIndex === -1) {
-      return { challenge: null, completed: false };
-    }
-
-    const challenge = challenges[challengeIndex];
-    challenge.current = Math.min(challenge.current + increment, challenge.target);
-
-    const completed = challenge.current >= challenge.target;
-    if (completed) {
-      challenge.is_active = false;
-    }
-
-    localStorage.setItem(storageKey, JSON.stringify(challenges));
-
-    return { challenge, completed };
-  },
+   // Get user's current challenges from DB
+   async getCurrentChallenges(userId: string): Promise<AutoChallenge[]> {
+     const { data, error } = await supabase
+       .from("user_challenges")
+       .select("*")
+       .eq("user_id", userId)
+       .eq("is_active", true)
+       .gte("expires_at", new Date().toISOString());
+ 
+     if (error) {
+       logger.apiError("Error fetching challenges", error, "autoChallengesService");
+       return [];
+     }
+ 
+     if (data && data.length > 0) {
+       return data as AutoChallenge[];
+     }
+ 
+     // Generate new challenges if none found or expired
+     const newChallenges = await this.generateWeeklyChallenges(userId);
+     
+     // Clean up old active challenges first
+     await supabase
+       .from("user_challenges")
+       .update({ is_active: false })
+       .eq("user_id", userId)
+       .eq("is_active", true);
+ 
+     const { data: inserted, error: insertError } = await supabase
+       .from("user_challenges")
+       .insert(newChallenges.map(c => ({
+         ...c,
+         user_id: userId,
+         id: undefined // Let DB generate UUID if applicable or keep custom ID
+       })))
+       .select();
+ 
+     if (insertError) {
+       logger.apiError("Error inserting new challenges", insertError, "autoChallengesService");
+       return newChallenges; // Fallback to memory for session
+     }
+ 
+     return inserted as AutoChallenge[];
+   },
+ 
+   // Update challenge progress
+   async updateChallengeProgress(
+     userId: string,
+     challengeType: AutoChallenge["type"],
+     increment: number = 1
+   ): Promise<{ challenge: AutoChallenge | null; completed: boolean }> {
+     const { data: challenges, error } = await supabase
+       .from("user_challenges")
+       .select("*")
+       .eq("user_id", userId)
+       .eq("type", challengeType)
+       .eq("is_active", true)
+       .lt("current", supabase.raw("target")); // Use RAW or just fetch and filter
+ 
+     // Fallback to simpler query if target comparison is tricky
+     const activeChallenge = (challenges || []).find(c => c.current < c.target);
+ 
+     if (!activeChallenge) {
+       return { challenge: null, completed: false };
+     }
+ 
+     const newCurrent = Math.min(activeChallenge.current + increment, activeChallenge.target);
+     const completed = newCurrent >= activeChallenge.target;
+ 
+     const { data: updated, error: updateError } = await supabase
+       .from("user_challenges")
+       .update({
+         current: newCurrent,
+         is_active: !completed,
+         completed_at: completed ? new Date().toISOString() : null
+       })
+       .eq("id", activeChallenge.id)
+       .select()
+       .single();
+ 
+     if (updateError) {
+       logger.apiError("Error updating challenge progress", updateError, "autoChallengesService");
+       return { challenge: null, completed: false };
+     }
+ 
+     return { challenge: updated as AutoChallenge, completed };
+   },
 
   // Get challenge progress stats
   getChallengeStats(challenges: AutoChallenge[]): {
@@ -259,8 +291,11 @@ export const autoChallengesService = {
     };
   },
 
-  // Reset challenges (for testing)
-  resetChallenges(userId: string): void {
-    localStorage.removeItem(`auto_challenges_${userId}`);
-  },
+   // Reset challenges (for testing)
+   async resetChallenges(userId: string): Promise<void> {
+     await supabase
+       .from("user_challenges")
+       .update({ is_active: false })
+       .eq("user_id", userId);
+   },
 };
