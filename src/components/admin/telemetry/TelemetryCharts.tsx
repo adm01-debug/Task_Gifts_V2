@@ -72,8 +72,8 @@ export function TelemetryCharts({ rows, timeFilter }: TelemetryChartsProps) {
         key = d.toLocaleString("pt-BR", { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" });
       }
 
-      const prev = buckets.get(key) || { time: key, normal: 0, slow: 0, very_slow: 0, error: 0, avgMs: 0, maxMs: 0, totalMs: 0, count: 0 };
-      prev[r.severity as keyof typeof SEVERITY_COLORS] = (prev[r.severity as keyof typeof SEVERITY_COLORS] as number || 0) + 1;
+      const prev = buckets.get(key) || { time: key, normal: 0, slow: 0, very_slow: 0, error: 0, avgMs: 0, maxMs: 0, totalMs: 0, count: 0 } as any;
+      prev[r.severity] = (prev[r.severity] || 0) + 1;
       prev.count++;
       prev.totalMs += r.duration_ms;
       prev.maxMs = Math.max(prev.maxMs, r.duration_ms);
