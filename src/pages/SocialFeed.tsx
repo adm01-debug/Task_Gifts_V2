@@ -399,7 +399,7 @@ export default function SocialFeedPage() {
                             animate={{ scale: 1 }}
                             transition={{ delay: 0.1, type: "spring" }}
                           >
-                            {activity.icon}
+                             {activity.icon as any}
                           </motion.div>
                         </div>
 
