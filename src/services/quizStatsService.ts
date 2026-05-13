@@ -37,7 +37,7 @@ export const quizStatsService = {
         question_id: data.question_id,
         selected_option_id: data.selected_option_id || null,
         is_correct: data.is_correct,
-        time_spent_ms: data.time_spent_ms || 0,
+         time_spent_ms: data.time_spent_ms ?? 0,
       })
       .select()
       .single();
