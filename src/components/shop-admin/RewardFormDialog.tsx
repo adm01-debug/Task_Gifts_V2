@@ -58,7 +58,6 @@ export function RewardFormDialog({
     editingReward
       ? {
           name: editingReward.name,
-          name: editingReward.name,
           description: editingReward.description || "",
           category: editingReward.category,
           price_coins: editingReward.price_coins,
