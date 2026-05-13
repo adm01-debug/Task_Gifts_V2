@@ -1,2 +1,3 @@
-export * from "./behavioralBadges";
-export { behavioralBadgesService as default } from "./behavioralBadges";
+export * from "./behavioralBadges/types";
+export * from "./behavioralBadges/badges";
+export * from "./behavioralBadges/index";
