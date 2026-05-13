@@ -10,8 +10,6 @@ import { Button } from "@/components/ui/button";
 import { differenceInHours, differenceInMinutes } from "date-fns";
 
  const TeamChallengesComponent = () => {
- export const TeamChallengesLazy = memo(TeamChallengesComponent);
- export const TeamChallenges = TeamChallengesLazy;
   const [activeChallenge, setActiveChallenge] = useState<string | null>(null);
   const navigate = useNavigate();
   const { user } = useAuth();
@@ -229,4 +227,7 @@ import { differenceInHours, differenceInMinutes } from "date-fns";
       </div>
     </motion.div>
   );
-};
+ };
+ 
+ export const TeamChallengesLazy = memo(TeamChallengesComponent);
+ export const TeamChallenges = TeamChallengesLazy;

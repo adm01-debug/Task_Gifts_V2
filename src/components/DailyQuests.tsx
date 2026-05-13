@@ -8,9 +8,9 @@ import { SkeletonQuestList } from "@/components/ui/skeleton";
 import { EmptyState } from "@/components/ui/empty-state";
 import type { MissionWithProgress } from "@/services/missionsService";
 
+ import { memo } from "react";
+ 
  const DailyQuestsComponent = () => {
- export const DailyQuestsLazy = memo(DailyQuestsComponent);
- export const DailyQuests = DailyQuestsLazy;
   const [hoveredQuest, setHoveredQuest] = useState<string | null>(null);
   const [claimingIds, setClaimingIds] = useState<Set<string>>(new Set());
   const { data: missions = [], isLoading } = useAllMissions();
@@ -271,4 +271,7 @@ import type { MissionWithProgress } from "@/services/missionsService";
       )}
     </motion.div>
   );
-};
+ };
+ 
+ export const DailyQuestsLazy = memo(DailyQuestsComponent);
+ export const DailyQuests = DailyQuestsLazy;

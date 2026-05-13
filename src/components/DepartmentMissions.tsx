@@ -130,9 +130,9 @@ function MissionCard({
   );
 }
 
+ import { memo } from "react";
+ 
  function DepartmentMissions() {
- export const DepartmentMissionsLazy = memo(DepartmentMissions);
- export default DepartmentMissionsLazy;
   const [selectedDepartment, setSelectedDepartment] = useState<string>("all");
   const [activeTab, setActiveTab] = useState<"daily" | "weekly" | "monthly">("daily");
   const [claimingIds, setClaimingIds] = useState<Set<string>>(new Set());
@@ -185,7 +185,10 @@ function MissionCard({
         </CardContent>
       </Card>
     );
-  }
+ }
+ 
+ export const DepartmentMissionsLazy = memo(DepartmentMissions);
+ export default DepartmentMissionsLazy;
 
   return (
     <Card variant="glass" className="border-border/50">
