@@ -155,7 +155,7 @@ export function NineBoxMatrix() {
 
       <Dialog open={selectedBox !== null} onOpenChange={() => setSelectedBox(null)}>
         <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
-          {selectedBox && <BoxDetailView box={selectedBox} evaluations={evaluationsByBox[selectedBox] || []} profiles={profiles || []} />}
+          {selectedBox && <BoxDetailView box={selectedBox} evaluations={evaluationsByBox[selectedBox] || []} profiles={(profiles || []) as any} />}
         </DialogContent>
       </Dialog>
     </div>

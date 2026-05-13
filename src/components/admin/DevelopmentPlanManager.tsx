@@ -161,7 +161,7 @@ export function DevelopmentPlanManager() {
 
       <Dialog open={selectedPlan !== null} onOpenChange={() => setSelectedPlan(null)}>
         <DialogContent className="max-w-3xl max-h-[80vh] overflow-y-auto">
-          {selectedPlan && <PlanDetailView planId={selectedPlan} profiles={profiles || []} />}
+          {selectedPlan && <PlanDetailView planId={selectedPlan} profiles={(profiles || []) as any} />}
         </DialogContent>
       </Dialog>
     </div>

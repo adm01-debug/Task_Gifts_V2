@@ -47,7 +47,7 @@ export const quizStatsService = {
       return null;
     }
 
-    return answer;
+    return (answer as any) as QuizAnswer;
   },
 
   async getCategoryStats(): Promise<CategoryStats[]> {
