@@ -42,7 +42,7 @@ export function DevelopmentPlanManager() {
   const searchableItems = useMemo(() => {
     return (plans || []).map(plan => {
       const profile = profiles?.find(p => p.id === plan.user_id);
-      return { ...plan, _searchName: profile?.display_name || '', _searchEmail: profile?.email || '' };
+      return { ...plan, _searchName: profile?.display_name || '', _searchEmail: (profile as any)?.email || '' };
     });
   }, [plans, profiles]);
 
@@ -80,7 +80,12 @@ export function DevelopmentPlanManager() {
           </Select>
           <Dialog open={showCreateDialog} onOpenChange={setShowCreateDialog}>
             <DialogTrigger asChild><Button><Plus className="w-4 h-4 mr-2" />Novo PDI</Button></DialogTrigger>
-            <DialogContent className="max-w-md"><CreatePlanForm profiles={profiles || []} onClose={() => setShowCreateDialog(false)} /></DialogContent>
+            <DialogContent className="max-w-md">
+              <CreatePlanForm 
+                profiles={(profiles || []) as any} 
+                onClose={() => setShowCreateDialog(false)} 
+              />
+            </DialogContent>
           </Dialog>
         </div>
       </div>
