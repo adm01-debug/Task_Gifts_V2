@@ -115,7 +115,7 @@ export const successionService = {
         id: position.id,
         title: position.name,
         department: deptMap.get(position.department_id || '') || 'Geral',
-        departmentId: position.department_id,
+        departmentId: (position.department_id || undefined) as any,
         currentHolder: holderProfile ? {
           userId: holderProfile.id,
           name: holderProfile.display_name || 'Não definido',

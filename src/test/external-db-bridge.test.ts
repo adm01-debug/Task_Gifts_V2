@@ -428,8 +428,8 @@ describe("Query action auto-emit telemetry", () => {
 
 describe("Auth validation logic", () => {
   it("rejects missing Authorization header", () => {
-    const authHeader: string | null = null;
-    expect(authHeader?.startsWith("Bearer ")).toBeFalsy();
+    const authHeader: any = null;
+    expect(authHeader?.startsWith?.("Bearer ") || false).toBeFalsy();
   });
   it("rejects non-Bearer auth", () => {
     expect("Basic abc123".startsWith("Bearer ")).toBe(false);
@@ -831,7 +831,7 @@ describe("PDF export data formatting", () => {
       r.record_count != null ? String(r.record_count) : "-",
       r.query_limit != null ? String(r.query_limit) : "-",
       r.severity,
-      r.error_message ? r.error_message.substring(0, 40) : "-",
+      (r as any).error_message ? (r as any).error_message.substring(0, 40) : "-",
     ];
   }
 
@@ -844,7 +844,7 @@ describe("PDF export data formatting", () => {
   });
   it("truncates error message to 40 chars", () => {
     const longError = "A".repeat(100);
-    const row = buildPDFRow({ ...sampleRow, error_message: longError });
+    const row = buildPDFRow({ ...sampleRow, error_message: longError } as any);
     expect(row[7].length).toBe(40);
   });
   it("handles null error as dash", () => {
@@ -852,11 +852,11 @@ describe("PDF export data formatting", () => {
     expect(row[7]).toBe("-");
   });
   it("handles rpc_name preference", () => {
-    const row = buildPDFRow({ ...sampleRow, rpc_name: "get_data" });
+    const row = buildPDFRow({ ...sampleRow, rpc_name: "get_data" } as any);
     expect(row[2]).toBe("get_data");
   });
   it("formats duration in seconds for slow queries", () => {
-    const row = buildPDFRow({ ...sampleRow, duration_ms: 8500 });
+    const row = buildPDFRow({ ...sampleRow, duration_ms: 8500 } as any);
     expect(row[3]).toBe("8.5s");
   });
   it("formats duration in ms for fast queries", () => {
@@ -864,11 +864,11 @@ describe("PDF export data formatting", () => {
     expect(row[3]).toBe("200ms");
   });
   it("handles null record_count", () => {
-    const row = buildPDFRow({ ...sampleRow, record_count: null });
+    const row = buildPDFRow({ ...sampleRow, record_count: null } as any);
     expect(row[4]).toBe("-");
   });
   it("handles null query_limit", () => {
-    const row = buildPDFRow({ ...sampleRow, query_limit: null });
+    const row = buildPDFRow({ ...sampleRow, query_limit: null } as any);
     expect(row[5]).toBe("-");
   });
 });

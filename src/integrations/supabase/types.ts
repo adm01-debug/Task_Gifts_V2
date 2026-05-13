@@ -6759,6 +6759,10 @@ export type Database = {
         }
         Returns: boolean
       }
+      increment_announcement_views: {
+        Args: { announcement_id: string }
+        Returns: undefined
+      }
       is_country_allowed: { Args: { p_country_code: string }; Returns: boolean }
       is_department_manager: {
         Args: { _department_id: string; _user_id: string }

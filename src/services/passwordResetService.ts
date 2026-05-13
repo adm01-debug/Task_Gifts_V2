@@ -148,7 +148,7 @@ export const passwordResetService = {
   async approveRequest(requestId: string, notes?: string): Promise<{ success: boolean; reset_token?: string; error?: string }> {
     const { data, error } = await supabase.rpc('approve_password_reset', {
       p_request_id: requestId,
-      p_notes: notes || null
+      p_notes: (notes || null) as any
     });
 
     if (error) throw error;
@@ -161,7 +161,7 @@ export const passwordResetService = {
   async rejectRequest(requestId: string, notes?: string): Promise<{ success: boolean; error?: string }> {
     const { data, error } = await supabase.rpc('reject_password_reset', {
       p_request_id: requestId,
-      p_notes: notes || null
+      p_notes: (notes || null) as any
     });
 
     if (error) throw error;

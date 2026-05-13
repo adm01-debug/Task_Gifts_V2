@@ -193,9 +193,12 @@ export const certificationsService = {
     if (currentError) throw currentError;
     if (!current) throw new Error("User certification not found");
 
-    const cert = current.certifications as { name?: string; validity_months?: number } | null;
-    const newExpiresAt = cert.validity_months
-      ? new Date(Date.now() + cert.validity_months * 30 * 24 * 60 * 60 * 1000).toISOString()
+    const cert = current.certifications as { name?: string; validity_months?: number } | null | undefined;
+    
+    if (!cert) throw new Error("Certification details not found");
+
+    const newExpiresAt = cert?.validity_months
+      ? new Date(Date.now() + (cert.validity_months || 0) * 30 * 24 * 60 * 60 * 1000).toISOString()
       : null;
 
     const { data, error } = await supabase

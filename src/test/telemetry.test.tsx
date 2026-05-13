@@ -383,7 +383,7 @@ describe("TelemetryCharts Component", () => {
   });
 
   it("handles rows with only rpc_name (no table_name)", () => {
-    const rows = generateRows(5, { rpc_name: "get_executive_metrics", table_name: null });
+    const rows = generateRows(5, { rpc_name: "get_executive_metrics", table_name: null as any });
     render(<TelemetryCharts rows={rows} timeFilter="24h" />, { wrapper });
     expect(screen.getByText("Duração Média / Máxima por Tabela (ms)")).toBeInTheDocument();
   });
