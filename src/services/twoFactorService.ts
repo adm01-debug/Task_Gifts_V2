@@ -165,7 +165,7 @@ class TwoFactorService {
       algorithm: "SHA1",
       digits: 6,
       period: 30,
-      secret: data.totp_secret,
+      secret: (data.totp_secret || "") as string,
     });
 
     const delta = totp.validate({ token, window: 1 });
