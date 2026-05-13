@@ -326,7 +326,7 @@ export const positionsService = {
     });
     
     if (error) throw error;
-    return data as { success: boolean; xp_earned?: number; coins_earned?: number; xp_penalty?: number };
+     return data as unknown as { success: boolean; xp_earned?: number; coins_earned?: number; xp_penalty?: number };
   },
 
   // === PENALTIES ===

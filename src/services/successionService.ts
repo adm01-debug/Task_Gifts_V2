@@ -119,7 +119,7 @@ export const successionService = {
         currentHolder: holderProfile ? {
           userId: holderProfile.id,
           name: holderProfile.display_name || 'Não definido',
-          avatarUrl: holderProfile.avatar_url,
+           avatarUrl: holderProfile.avatar_url || undefined,
           tenure,
           retirementRisk: tenure > 5 ? 'high' : tenure > 3 ? 'medium' : 'low',
         } : undefined,
