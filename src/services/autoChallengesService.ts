@@ -1,4 +1,5 @@
-import { supabase } from "@/integrations/supabase/client";
+ import { supabase } from "@/integrations/supabase/client";
+ import { logger } from "./loggingService";
 
 export interface AutoChallenge {
   id: string;
@@ -237,10 +238,8 @@ export const autoChallengesService = {
        .select("*")
        .eq("user_id", userId)
        .eq("type", challengeType)
-       .eq("is_active", true)
-       .lt("current", supabase.raw("target")); // Use RAW or just fetch and filter
+       .eq("is_active", true);
  
-     // Fallback to simpler query if target comparison is tricky
      const activeChallenge = (challenges || []).find(c => c.current < c.target);
  
      if (!activeChallenge) {
