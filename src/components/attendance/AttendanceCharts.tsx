@@ -48,7 +48,7 @@ export function AttendanceCharts({ weeklyTrendData, checkInTimesData, targetMinu
                 <YAxis stroke="hsl(var(--muted-foreground))" fontSize={12} domain={[420, 600]}
                   tickFormatter={(value) => { const h = Math.floor(value / 60); const m = value % 60; return `${h}:${m.toString().padStart(2, '0')}`; }} />
                 <Tooltip contentStyle={tooltipStyle}
-                  formatter={(_v: number, _n: string, props: { payload: { displayTime?: string } }) => [props.payload?.displayTime || '', 'Horário']}
+                  formatter={(_v: any, _n: any, props: any) => [props.payload?.displayTime || '', 'Horário']}
                   labelFormatter={(label) => `Dia: ${label}`} />
                 {targetMinutes > 0 && (
                   <Line type="monotone" dataKey={() => targetMinutes} stroke="hsl(var(--destructive))" strokeDasharray="5 5" strokeWidth={2} dot={false} name="Limite" />
