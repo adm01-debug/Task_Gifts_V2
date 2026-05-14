@@ -6,61 +6,45 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useProfiles } from "@/hooks/useProfiles";
 import { useDepartments } from "@/hooks/useDepartments";
 import { useAllTeamMembers } from "@/hooks/useAdminUsers";
-import { useQuery } from "@tanstack/react-query";
-import { supabase } from "@/integrations/supabase/client";
+ import { useQuery } from "@tanstack/react-query";
+ import { adminService } from "@/services/adminService";
 import { format, subDays, startOfDay, eachDayOfInterval, subMonths, startOfMonth, eachMonthOfInterval } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { MetricsCharts } from "./metrics/MetricsCharts";
 
 const COLORS = ["#6366f1", "#10b981", "#f59e0b", "#ec4899", "#8b5cf6", "#14b8a6", "#f97316", "#06b6d4"];
 
-function useAttendanceStats() {
-  return useQuery({
-    queryKey: ["admin-attendance-stats"],
-    queryFn: async () => {
-      const { data, error } = await supabase.from("attendance_records").select("check_in, is_punctual, user_id").gte("check_in", subDays(new Date(), 30).toISOString()).order("check_in", { ascending: true });
-      if (error) throw error;
-      return data || [];
-    },
-    staleTime: 60000,
-  });
-}
-
-function useQuizActivity() {
-  return useQuery({
-    queryKey: ["admin-quiz-activity"],
-    queryFn: async () => {
-      const { data, error } = await supabase.from("quiz_scores").select("played_at, score, user_id").gte("played_at", subDays(new Date(), 30).toISOString()).order("played_at", { ascending: true });
-      if (error) throw error;
-      return data || [];
-    },
-    staleTime: 60000,
-  });
-}
-
-function useTrailEnrollments() {
-  return useQuery({
-    queryKey: ["admin-trail-enrollments"],
-    queryFn: async () => {
-      const { data, error } = await supabase.from("trail_enrollments").select("started_at, completed_at, user_id").order("started_at", { ascending: true });
-      if (error) throw error;
-      return data || [];
-    },
-    staleTime: 60000,
-  });
-}
-
-function useUserSignups() {
-  return useQuery({
-    queryKey: ["admin-user-signups"],
-    queryFn: async () => {
-      const { data, error } = await supabase.from("profiles").select("created_at").gte("created_at", subMonths(new Date(), 6).toISOString()).order("created_at", { ascending: true });
-      if (error) throw error;
-      return data || [];
-    },
-    staleTime: 60000,
-  });
-}
+ function useAttendanceStats() {
+   return useQuery({
+     queryKey: ["admin-attendance-stats"],
+     queryFn: () => adminService.getAttendanceStats(),
+     staleTime: 60000,
+   });
+ }
+ 
+ function useQuizActivity() {
+   return useQuery({
+     queryKey: ["admin-quiz-activity"],
+     queryFn: () => adminService.getQuizActivity(),
+     staleTime: 60000,
+   });
+ }
+ 
+ function useTrailEnrollments() {
+   return useQuery({
+     queryKey: ["admin-trail-enrollments"],
+     queryFn: () => adminService.getTrailEnrollments(),
+     staleTime: 60000,
+   });
+ }
+ 
+ function useUserSignups() {
+   return useQuery({
+     queryKey: ["admin-user-signups"],
+     queryFn: () => adminService.getUserSignups(),
+     staleTime: 60000,
+   });
+ }
 
 export function AdminMetricsDashboard() {
   const { data: profiles, isLoading: profilesLoading } = useProfiles();
