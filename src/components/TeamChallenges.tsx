@@ -26,7 +26,7 @@ const TeamChallengesComponent = () => {
           <Swords className="h-4 w-4 text-secondary" />
           <CardTitle className="text-sm">Duelos</CardTitle>
         </div>
-        <Button size="xs" variant="ghost" className="h-7 text-[10px]" onClick={() => navigate("/duelos")}>Ver Todos</Button>
+         <Button size="icon-xs" variant="ghost" className="h-7 w-auto px-2 text-[10px]" onClick={() => navigate("/duelos")}>Ver Todos</Button>
       </CardHeader>
       <CardContent className="p-0 flex-1 overflow-y-auto max-h-[300px]">
         {activeChallenges.length === 0 ? (

@@ -108,7 +108,7 @@ const PeerRecognitionComponent = () => {
           <CardTitle className="text-sm">Kudos</CardTitle>
         </div>
         <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-          <DialogTrigger asChild><Button size="xs" variant="ghost" className="h-7 text-[10px]">Dar Kudos</Button></DialogTrigger>
+           <DialogTrigger asChild><Button size="icon-xs" variant="ghost" className="h-7 w-auto px-2 text-[10px]">Dar Kudos</Button></DialogTrigger>
           <DialogContent><GiveKudosForm onSuccess={() => setDialogOpen(false)} /></DialogContent>
         </Dialog>
       </CardHeader>
