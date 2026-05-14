@@ -27,6 +27,9 @@ vi.mock('../../integrations/supabase/client', () => ({
 describe('notificationsService', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    // Ensure .eq is returned by .update mock
+    mockUpdate.mockReturnValue({ eq: mockEq });
+    mockEq.mockResolvedValue({ error: null });
   });
 
   describe('create', () => {
@@ -45,8 +48,6 @@ describe('notificationsService', () => {
 
   describe('markAsRead', () => {
     it('should update the notification status to read', async () => {
-      mockUpdate.mockResolvedValue({ error: null });
-
       await notificationsService.markAsRead('n1');
       
       expect(mockUpdate).toHaveBeenCalledWith({ read: true });
