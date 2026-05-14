@@ -32,12 +32,23 @@ vi.mock('../../integrations/supabase/client', () => ({
 describe('leaguesService', () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    mockInsert.mockReturnValue({ select: vi.fn().mockReturnThis(), single: mockSingle });
+    mockSelect.mockReturnThis();
+    mockEq.mockReturnThis();
+    mockOrder.mockReturnThis();
+    mockLimit.mockReturnThis();
+    
+    // Default chain behavior
+    mockInsert.mockReturnValue({ select: mockSelect });
+    mockSelect.mockReturnValue({ single: mockSingle });
     mockUpdate.mockReturnValue({ eq: mockEq });
   });
 
   describe('addWeeklyXP', () => {
     it('should update weekly XP if user league exists', async () => {
+      // Chain: from.select.eq.maybeSingle
+      mockSelect.mockReturnValue({ eq: mockEq });
+      mockEq.mockReturnValue({ maybeSingle: mockMaybeSingle });
+      
       mockMaybeSingle.mockResolvedValueOnce({ data: { weekly_xp: 100 }, error: null });
       mockEq.mockResolvedValueOnce({ error: null });
 
@@ -47,11 +58,18 @@ describe('leaguesService', () => {
     });
 
     it('should initialize league if user league does not exist', async () => {
-      mockMaybeSingle.mockResolvedValueOnce({ data: null, error: null }); // get weekly_xp
-      mockMaybeSingle.mockResolvedValueOnce({ data: { id: 'l1', tier: 1 }, error: null }); // initialize -> get bronze league
-      mockSingle.mockResolvedValueOnce({ data: { id: 'ul1', weekly_xp: 0 }, error: null }); // initialize -> insert user_league
+      // get weekly_xp (fails initially)
+      mockSelect.mockReturnValue({ eq: mockEq });
+      mockEq.mockReturnValue({ maybeSingle: mockMaybeSingle });
+      mockMaybeSingle.mockResolvedValueOnce({ data: null, error: null }); 
+      
+      // initialize -> get bronze league
+      mockMaybeSingle.mockResolvedValueOnce({ data: { id: 'l1', tier: 1 }, error: null }); 
+      
+      // initialize -> insert user_league
+      mockSingle.mockResolvedValueOnce({ data: { id: 'ul1', weekly_xp: 0 }, error: null }); 
 
-      // Mock recursive call success
+      // addWeeklyXP recursion -> get weekly_xp (now exists)
       mockMaybeSingle.mockResolvedValueOnce({ data: { weekly_xp: 0 }, error: null });
 
       await leaguesService.addWeeklyXP('u1', 50);
