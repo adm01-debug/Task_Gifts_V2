@@ -60,7 +60,14 @@ This project is built with:
 - shadcn-ui
 - Tailwind CSS
 
-## How can I deploy this project?
+ ## 📋 Audit & Inventory
+ 
+ Access the full enterprise audit report and system inventory:
+ - [Audit Report (Markdown)](./audit_report.md)
+ - [Audit Report (PDF)](./audit_report.pdf)
+ - [System Inventory Detail](./SYSTEM_INVENTORY_AUDIT.md)
+ 
+ ## How can I deploy this project?
 
 Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
 
