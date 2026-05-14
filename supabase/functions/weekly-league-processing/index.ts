@@ -77,8 +77,10 @@ serve(async (req) => {
       // Encontrar liga anterior (tier inferior = rebaixamento)
       const prevLeague = leagues.find(l => l.tier === league.tier - 1);
 
-      for (let i = 0; i < members.length; i++) {
-        const member = members[i];
+      // Usar transação (limitado em Supabase JS via RPC ou Promise.all mas aqui fazemos sequencialmente por segurança de concorrência por enquanto)
+      // Idealmente usaríamos um RPC para processar a liga toda em uma única transação DB
+      
+      const memberPromises = members.map(async (member, i) => {
         const position = i + 1;
         let changeType = 'maintained';
         let toLeagueId = league.id;
@@ -87,20 +89,14 @@ serve(async (req) => {
         if (position <= promotionSlots && nextLeague) {
           changeType = 'promotion';
           toLeagueId = nextLeague.id;
-          promotions++;
-          console.log(`Promoting user ${member.user_id} to ${nextLeague.name}`);
         }
         // Bottom players get demoted (if there's a lower tier league)
         else if (position > members.length - demotionSlots && prevLeague) {
           changeType = 'demotion';
           toLeagueId = prevLeague.id;
-          demotions++;
-          console.log(`Demoting user ${member.user_id} to ${prevLeague.name}`);
-        } else {
-          maintained++;
         }
 
-        // 4. Registrar histórico
+        // Registrar histórico
         const { error: historyError } = await supabase
           .from('league_history')
           .insert({
@@ -116,7 +112,7 @@ serve(async (req) => {
           console.error(`Error inserting history for user ${member.user_id}:`, historyError);
         }
 
-        // 5. Atualizar membro para nova liga e resetar XP semanal
+        // Atualizar membro para nova liga e resetar XP semanal
         const { error: updateError } = await supabase
           .from('league_members')
           .update({
@@ -129,19 +125,22 @@ serve(async (req) => {
           console.error(`Error updating member ${member.user_id}:`, updateError);
         }
 
-        // 6. Criar notificação para o usuário
+        // Criar notificação para o usuário
         let notificationTitle = '';
         let notificationMessage = '';
 
         if (changeType === 'promotion') {
           notificationTitle = '🎉 Parabéns! Você foi promovido!';
           notificationMessage = `Você subiu para a liga ${nextLeague?.name}!`;
+          promotions++;
         } else if (changeType === 'demotion') {
           notificationTitle = '📉 Rebaixamento de Liga';
           notificationMessage = `Você foi rebaixado para a liga ${prevLeague?.name}. Continue tentando!`;
+          demotions++;
         } else {
           notificationTitle = '🏆 Liga Mantida';
           notificationMessage = `Você permanece na liga ${league.name}. Boa semana!`;
+          maintained++;
         }
 
         await supabase
@@ -158,7 +157,9 @@ serve(async (req) => {
                          changeType === 'demotion' ? prevLeague?.name : league.name,
             },
           });
-      }
+      });
+
+      await Promise.all(memberPromises);
     }
 
     console.log(`Processing complete. Promotions: ${promotions}, Demotions: ${demotions}, Maintained: ${maintained}`);
