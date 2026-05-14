@@ -62,18 +62,28 @@ export interface FeedbackResult {
 
 export const feedback360Service = {
   async getCycles(filters?: { status?: string; departmentId?: string }): Promise<FeedbackCycle[]> {
-    let query = supabase.from('feedback_cycles').select('*').order('created_at', { ascending: false });
-    if (filters?.status) query = query.eq('status', filters.status);
-    if (filters?.departmentId) query = query.eq('department_id', filters.departmentId);
-    const { data, error } = await query;
-    if (error) { logger.error('Failed to fetch cycles', 'Feedback360', error); throw error; }
-    return (data || []) as unknown as FeedbackCycle[];
+    try {
+      let query = supabase.from('feedback_cycles').select('*').order('created_at', { ascending: false });
+      if (filters?.status) query = query.eq('status', filters.status);
+      if (filters?.departmentId) query = query.eq('department_id', filters.departmentId);
+      const { data, error } = await query;
+      if (error) throw error;
+      return (data || []) as unknown as FeedbackCycle[];
+    } catch (error) {
+      logger.apiError('getCycles', error, 'Feedback360');
+      return [];
+    }
   },
 
   async getCycleById(id: string): Promise<FeedbackCycle | null> {
-    const { data, error } = await supabase.from('feedback_cycles').select('*').eq('id', id).maybeSingle();
-    if (error) { logger.error('Failed to fetch cycle', 'Feedback360', error); return null; }
-    return data as unknown as FeedbackCycle;
+    try {
+      const { data, error } = await supabase.from('feedback_cycles').select('*').eq('id', id).maybeSingle();
+      if (error) throw error;
+      return data as unknown as FeedbackCycle;
+    } catch (error) {
+      logger.apiError('getCycleById', error, 'Feedback360');
+      return null;
+    }
   },
 
   async createCycle(cycle: {
@@ -85,72 +95,112 @@ export const feedback360Service = {
     created_by: string;
     department_id?: string;
   }): Promise<FeedbackCycle> {
-    const { data, error } = await supabase.from('feedback_cycles').insert({
-      name: cycle.name,
-      description: cycle.description,
-      cycle_type: cycle.cycle_type || '360',
-      starts_at: cycle.starts_at,
-      ends_at: cycle.ends_at,
-      created_by: cycle.created_by,
-      department_id: cycle.department_id,
-      status: 'draft',
-    }).select().maybeSingle();
-    if (error) { logger.error('Failed to create cycle', 'Feedback360', error); throw error; }
-    if (!data) throw new Error('Failed to create feedback cycle');
-    return data as unknown as FeedbackCycle;
+    try {
+      const { data, error } = await supabase.from('feedback_cycles').insert({
+        name: cycle.name,
+        description: cycle.description,
+        cycle_type: cycle.cycle_type || '360',
+        starts_at: cycle.starts_at,
+        ends_at: cycle.ends_at,
+        created_by: cycle.created_by,
+        department_id: cycle.department_id,
+        status: 'draft',
+      }).select().maybeSingle();
+      if (error) throw error;
+      if (!data) throw new Error('Failed to create feedback cycle');
+      return data as unknown as FeedbackCycle;
+    } catch (error) {
+      logger.apiError('createCycle', error, 'Feedback360');
+      throw error;
+    }
   },
 
   async updateCycle(id: string, updates: Record<string, unknown>): Promise<FeedbackCycle> {
-    const { data, error } = await supabase.from('feedback_cycles').update(updates as never).eq('id', id).select().maybeSingle();
-    if (error) { logger.error('Failed to update cycle', 'Feedback360', error); throw error; }
-    if (!data) throw new Error('Feedback cycle not found');
-    return data as unknown as FeedbackCycle;
+    try {
+      const { data, error } = await supabase.from('feedback_cycles').update(updates as never).eq('id', id).select().maybeSingle();
+      if (error) throw error;
+      if (!data) throw new Error('Feedback cycle not found');
+      return data as unknown as FeedbackCycle;
+    } catch (error) {
+      logger.apiError('updateCycle', error, 'Feedback360');
+      throw error;
+    }
   },
 
   async getQuestions(cycleId: string): Promise<FeedbackQuestion[]> {
-    const { data, error } = await supabase.from('feedback_questions').select('*').eq('cycle_id', cycleId).order('order_index');
-    if (error) { logger.error('Failed to fetch questions', 'Feedback360', error); throw error; }
-    return (data || []) as unknown as FeedbackQuestion[];
+    try {
+      const { data, error } = await supabase.from('feedback_questions').select('*').eq('cycle_id', cycleId).order('order_index');
+      if (error) throw error;
+      return (data || []) as unknown as FeedbackQuestion[];
+    } catch (error) {
+      logger.apiError('getQuestions', error, 'Feedback360');
+      return [];
+    }
   },
 
   async getMyEvaluations(userId: string): Promise<FeedbackEvaluation[]> {
-    const { data, error } = await supabase.from('feedback_evaluations').select('*').eq('evaluator_id', userId).order('created_at', { ascending: false });
-    if (error) { logger.error('Failed to fetch evaluations', 'Feedback360', error); throw error; }
-    return (data || []) as unknown as FeedbackEvaluation[];
+    try {
+      const { data, error } = await supabase.from('feedback_evaluations').select('*').eq('evaluator_id', userId).order('created_at', { ascending: false });
+      if (error) throw error;
+      return (data || []) as unknown as FeedbackEvaluation[];
+    } catch (error) {
+      logger.apiError('getMyEvaluations', error, 'Feedback360');
+      return [];
+    }
   },
 
   async getEvaluationsForMe(userId: string): Promise<FeedbackEvaluation[]> {
-    const { data, error } = await supabase.from('feedback_evaluations').select('*').eq('evaluatee_id', userId).order('created_at', { ascending: false });
-    if (error) { logger.error('Failed to fetch evaluations', 'Feedback360', error); throw error; }
-    return (data || []) as unknown as FeedbackEvaluation[];
+    try {
+      const { data, error } = await supabase.from('feedback_evaluations').select('*').eq('evaluatee_id', userId).order('created_at', { ascending: false });
+      if (error) throw error;
+      return (data || []) as unknown as FeedbackEvaluation[];
+    } catch (error) {
+      logger.apiError('getEvaluationsForMe', error, 'Feedback360');
+      return [];
+    }
   },
 
   async createEvaluation(evaluation: { cycle_id: string; evaluator_id: string; evaluatee_id: string; evaluator_type: string }): Promise<FeedbackEvaluation> {
-    const { data, error } = await supabase.from('feedback_evaluations').insert({
-      cycle_id: evaluation.cycle_id,
-      evaluator_id: evaluation.evaluator_id,
-      evaluatee_id: evaluation.evaluatee_id,
-      evaluator_type: evaluation.evaluator_type,
-      status: 'pending',
-    }).select().maybeSingle();
-    if (error) { logger.error('Failed to create evaluation', 'Feedback360', error); throw error; }
-    if (!data) throw new Error('Failed to create evaluation');
-    return data as unknown as FeedbackEvaluation;
+    try {
+      const { data, error } = await supabase.from('feedback_evaluations').insert({
+        cycle_id: evaluation.cycle_id,
+        evaluator_id: evaluation.evaluator_id,
+        evaluatee_id: evaluation.evaluatee_id,
+        evaluator_type: evaluation.evaluator_type,
+        status: 'pending',
+      }).select().maybeSingle();
+      if (error) throw error;
+      if (!data) throw new Error('Failed to create evaluation');
+      return data as unknown as FeedbackEvaluation;
+    } catch (error) {
+      logger.apiError('createEvaluation', error, 'Feedback360');
+      throw error;
+    }
   },
 
   async completeEvaluation(evaluationId: string): Promise<void> {
-    const { error } = await supabase.from('feedback_evaluations').update({ 
-      status: 'completed', 
-      completed_at: new Date().toISOString() 
-    }).eq('id', evaluationId);
-    if (error) { logger.error('Failed to complete evaluation', 'Feedback360', error); throw error; }
+    try {
+      const { error } = await supabase.from('feedback_evaluations').update({ 
+        status: 'completed', 
+        completed_at: new Date().toISOString() 
+      }).eq('id', evaluationId);
+      if (error) throw error;
+    } catch (error) {
+      logger.apiError('completeEvaluation', error, 'Feedback360');
+      throw error;
+    }
   },
 
   async getMyResults(userId: string, cycleId?: string): Promise<FeedbackResult[]> {
-    let query = supabase.from('feedback_results').select('*').eq('user_id', userId);
-    if (cycleId) query = query.eq('cycle_id', cycleId);
-    const { data, error } = await query;
-    if (error) { logger.error('Failed to fetch results', 'Feedback360', error); throw error; }
-    return (data || []) as unknown as FeedbackResult[];
+    try {
+      let query = supabase.from('feedback_results').select('*').eq('user_id', userId);
+      if (cycleId) query = query.eq('cycle_id', cycleId);
+      const { data, error } = await query;
+      if (error) throw error;
+      return (data || []) as unknown as FeedbackResult[];
+    } catch (error) {
+      logger.apiError('getMyResults', error, 'Feedback360');
+      return [];
+    }
   },
 };
