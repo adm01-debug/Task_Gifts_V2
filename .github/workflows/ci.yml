@@ -22,5 +22,23 @@
        - name: Type Check
          run: bun run typecheck
  
-       - name: Test
-         run: bun run test
+        - name: Test
+          run: bun run test
+ 
+        - name: Generate Audit PDF
+          run: |
+            bun add -D md-to-pdf
+            cat << 'EOF' > md-to-pdf.config.js
+            module.exports = {
+              launch_options: {
+                args: ['--no-sandbox', '--disable-setuid-sandbox'],
+              },
+            };
+            EOF
+            npx md-to-pdf audit_report.md
+ 
+        - name: Upload Audit PDF
+          uses: actions/upload-artifact@v4
+          with:
+            name: audit-report-pdf
+            path: audit_report.pdf
