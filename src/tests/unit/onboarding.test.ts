@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { onboardingService, ONBOARDING_STEPS } from '../../services/onboardingService';
+import { onboardingService } from '../../services/onboardingService';
 import { supabase } from '../../integrations/supabase/client';
 
 const mockSelect = vi.fn().mockReturnThis();
@@ -21,6 +21,8 @@ vi.mock('../../integrations/supabase/client', () => ({
 describe('onboardingService', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    mockUpdate.mockReturnValue({ eq: mockEq });
+    mockEq.mockResolvedValue({ error: null });
   });
 
   describe('completeStep', () => {
@@ -30,7 +32,6 @@ describe('onboardingService', () => {
       const mockProgress = { user_id: userId, completed_steps: [], current_step: 0 };
       
       mockMaybeSingle.mockResolvedValueOnce({ data: mockProgress, error: null });
-      mockUpdate.mockResolvedValueOnce({ error: null });
 
       const result = await onboardingService.completeStep(userId, stepId);
       
