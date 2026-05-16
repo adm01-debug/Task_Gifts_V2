@@ -5,7 +5,8 @@ import { useCurrentProfile } from "@/hooks/useProfiles";
 import { useUserAchievements } from "@/hooks/useAchievements";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { AppSidebar } from "@/components/AppSidebar";
+ import { AppSidebar } from "@/components/AppSidebar";
+ import { PageShell } from "@/components/navigation";
 import { MobilePageLayout } from "@/components/mobile";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { WeeklyPerformanceComparison } from "@/components/WeeklyPerformanceComparison";
@@ -150,15 +151,22 @@ export default function PersonalStats() {
     </main>
   );
 
-  if (isMobile) {
-    return <MobilePageLayout title="Estatísticas" icon={TrendingUp} backPath="/"><PageWrapper pageName="Estatísticas" className="min-h-screen bg-background pb-24"><SEOHead title={seoData.title} description={seoData.description} keywords={seoData.keywords} />{content}</PageWrapper></MobilePageLayout>;
-  }
-
-  return (
-    <PageWrapper pageName="Estatísticas" className="min-h-screen flex bg-background">
-      <SEOHead title={seoData.title} description={seoData.description} keywords={seoData.keywords} />
-      <AppSidebar collapsed={sidebarCollapsed} onToggle={() => setSidebarCollapsed(!sidebarCollapsed)} />
-      {content}
-    </PageWrapper>
-  );
+   return (
+     <PageShell title="Estatísticas">
+       {isMobile ? (
+         <MobilePageLayout title="Estatísticas" icon={TrendingUp} backPath="/">
+           <PageWrapper pageName="Estatísticas" className="min-h-screen bg-background pb-24">
+             <SEOHead title={seoData.title} description={seoData.description} keywords={seoData.keywords} />
+             {content}
+           </PageWrapper>
+         </MobilePageLayout>
+       ) : (
+         <PageWrapper pageName="Estatísticas" className="min-h-screen flex bg-background">
+           <SEOHead title={seoData.title} description={seoData.description} keywords={seoData.keywords} />
+           <AppSidebar collapsed={sidebarCollapsed} onToggle={() => setSidebarCollapsed(!sidebarCollapsed)} />
+           {content}
+         </PageWrapper>
+       )}
+     </PageShell>
+   );
 }
