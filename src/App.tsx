@@ -1,3 +1,4 @@
+import { TopLoadingBar } from "@/components/navigation/TopLoadingBar";
 import { BrowserRouter, Routes, Route, useLocation, useNavigate } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
 import { PageTransition } from "@/components/navigation/PageTransition";
@@ -151,8 +152,8 @@ const App = () => (
       <OnboardingTourProvider>
         <ScrollRestorationProvider>
           <Suspense fallback={<PageLoader />}>
+            <TopLoadingBar />
             <SkipLinks />
-            <OfflineIndicator />
             <KeyboardShortcutsHelp />
             <CommandPalette />
             <FloatingCommandHint />
