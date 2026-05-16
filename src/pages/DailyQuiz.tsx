@@ -15,7 +15,8 @@ import { toast } from "sonner";
 import { PageWrapper } from "@/components/PageWrapper";
 import { SEOHead } from "@/components/SEOHead";
 import { useSEO } from "@/hooks/useSEO";
-import { MobilePageLayout } from "@/components/mobile";
+ import { MobilePageLayout } from "@/components/mobile";
+ import { PageShell } from "@/components/navigation";
 import { useIsMobile } from "@/hooks/use-mobile";
 
 // Transform database questions to MagicCardQuiz format
