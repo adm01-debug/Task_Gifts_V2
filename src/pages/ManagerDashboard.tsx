@@ -9,7 +9,7 @@ import { Card } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { AllSelectItem } from "@/components/ui/all-select-item";
 import { SectionErrorBoundary } from "@/components/SectionErrorBoundary";
-import { PageWrapper } from "@/components/PageWrapper";
+ import { PageShell } from "@/components/navigation";
 import { SEOHead } from "@/components/SEOHead";
 import { useSEO } from "@/hooks/useSEO";
 import { useAuth } from "@/hooks/useAuth";
@@ -58,20 +58,30 @@ export default function ManagerDashboard() {
   const atRiskCount = teamMembers.filter(m => m.riskLevel === "high").length;
   const seo = useSEO();
 
-  return (
-    <PageWrapper pageName="Dashboard do Gestor">
-      <SEOHead {...seo} />
-      <div className="min-h-screen bg-background">
-        <motion.header initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className={cn("header-sticky border-b border-border/50", isScrolled && "scrolled")}>
-          <div className="max-w-7xl mx-auto px-4 py-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-4"><DesktopBackButton /><div><h1 className="text-xl font-bold text-foreground">Dashboard do Gestor</h1><p className="text-sm text-muted-foreground">Acompanhe o progresso da sua equipe</p></div></div>
-              <Select value={selectedDepartment} onValueChange={setSelectedDepartment}><SelectTrigger className="w-40"><Filter className="w-4 h-4 mr-2" /><SelectValue placeholder="Departamento" /></SelectTrigger><SelectContent><AllSelectItem />{departments.map(dept => <SelectItem key={dept.id} value={dept.name}>{dept.name}</SelectItem>)}</SelectContent></Select>
-            </div>
-          </div>
-        </motion.header>
-        
-        <main className="max-w-7xl mx-auto px-4 py-6 space-y-6">
+   return (
+     <PageShell title="Dashboard do Gestor">
+       <SEOHead {...seo} />
+       <div className="min-h-screen bg-background">
+         <div className="max-w-7xl mx-auto px-4 py-4">
+           <div className="flex items-center justify-between">
+             <div className="flex flex-col">
+               <h1 className="text-2xl font-bold text-foreground">Dashboard do Gestor</h1>
+               <p className="text-sm text-muted-foreground">Acompanhe o progresso da sua equipe</p>
+             </div>
+             <Select value={selectedDepartment} onValueChange={setSelectedDepartment}>
+               <SelectTrigger className="w-40">
+                 <Filter className="w-4 h-4 mr-2" />
+                 <SelectValue placeholder="Departamento" />
+               </SelectTrigger>
+               <SelectContent>
+                 <AllSelectItem />
+                 {departments.map(dept => <SelectItem key={dept.id} value={dept.name}>{dept.name}</SelectItem>)}
+               </SelectContent>
+             </Select>
+           </div>
+         </div>
+         
+         <main className="max-w-7xl mx-auto px-4 py-6 space-y-6">
           <AtRiskAlert members={teamMembers} />
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <StatCard icon={Users} label="Membros da Equipe" value={totalMembers.toString()} color="#6366f1" delay={0} />
@@ -120,8 +130,8 @@ export default function ManagerDashboard() {
             <TabsContent value="succession"><SectionErrorBoundary sectionName="Sucessão Inteligente"><SuccessionPanel /></SectionErrorBoundary></TabsContent>
             <TabsContent value="quests"><SectionErrorBoundary sectionName="Quests"><QuestsList /></SectionErrorBoundary></TabsContent>
           </Tabs>
-        </main>
-      </div>
-    </PageWrapper>
-  );
+         </main>
+       </div>
+     </PageShell>
+   );
 }

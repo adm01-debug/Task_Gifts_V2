@@ -1,4 +1,4 @@
- import { motion, HTMLMotionProps, AnimatePresence } from "framer-motion";
+  import { motion, HTMLMotionProps } from "framer-motion";
  import { ReactNode, forwardRef } from "react";
  import { useLocation } from "react-router-dom";
 
@@ -14,25 +14,23 @@ interface PageTransitionProps extends HTMLMotionProps<"div"> {
    ({ children, className, ...props }, ref) => {
      const location = useLocation();
      
-     return (
-       <AnimatePresence mode="wait">
-         <motion.div
-           key={location.pathname}
-           ref={ref}
-           initial={{ opacity: 0, y: 10, filter: "blur(4px)" }}
-           animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-           exit={{ opacity: 0, y: -10, filter: "blur(4px)" }}
-           transition={{
-             duration: 0.25,
-             ease: [0.23, 1, 0.32, 1],
-           }}
-           className={className}
-           {...props}
-         >
-           {children}
-         </motion.div>
-       </AnimatePresence>
-     );
+      return (
+        <motion.div
+          key={location.pathname}
+          ref={ref}
+          initial={{ opacity: 0, y: 10, filter: "blur(4px)" }}
+          animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+          exit={{ opacity: 0, y: -10, filter: "blur(4px)" }}
+          transition={{
+            duration: 0.25,
+            ease: [0.23, 1, 0.32, 1],
+          }}
+          className={className}
+          {...props}
+        >
+          {children}
+        </motion.div>
+      );
    }
  );
 

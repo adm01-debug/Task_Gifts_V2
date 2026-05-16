@@ -14,10 +14,9 @@ import { useSoundEffects } from "@/hooks/useSoundEffects";
 import { useScrollHeader } from "@/hooks/useScrollHeader";
 import { shopService, type ShopReward, type RewardCategory } from "@/services/shopService";
 import { cn } from "@/lib/utils";
-import { PageWrapper } from "@/components/PageWrapper";
-import { SEOHead } from "@/components/SEOHead";
-import { useSEO } from "@/hooks/useSEO";
-import { GlobalBreadcrumbs } from "@/components/navigation";
+ import { PageShell } from "@/components/navigation";
+ import { SEOHead } from "@/components/SEOHead";
+ import { useSEO } from "@/hooks/useSEO";
 import { RewardCard } from "@/components/shop/RewardCard";
 import { PurchaseHistory } from "@/components/shop/PurchaseHistory";
 
@@ -57,28 +56,25 @@ export default function Shop() {
   };
 
   return (
-    <PageWrapper pageName="Loja" className="min-h-screen bg-background pb-20">
-      <SEOHead title={seoConfig.title} description={seoConfig.description} keywords={seoConfig.keywords} />
-      {celebration && <CelebrationEffect isActive={celebration.active} type={celebration.type} onComplete={() => setCelebration(null)} />}
-
-      <div className={cn("header-sticky bg-gradient-to-r from-amber-500 via-orange-500 to-pink-500 text-white", isScrolled && "scrolled")}>
-        <div className="max-w-6xl mx-auto p-6">
-          <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={() => navigate("/")} className="p-2 rounded-lg hover:bg-white/20 transition-colors" aria-label="Voltar">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
-              </motion.button>
-              <div>
-                <h1 className="text-2xl font-bold flex items-center gap-2"><Sparkles className="w-6 h-6" />Loja de Recompensas</h1>
-                <p className="text-white/80 mt-1">Troque suas moedas por produtos e benefícios exclusivos</p>
-              </div>
-            </div>
-            <motion.div whileHover={{ scale: 1.05 }} className="bg-white/20 backdrop-blur-sm rounded-xl px-4 py-2 flex items-center gap-2">
-              <Coins className="w-6 h-6 text-amber-200" /><span className="text-2xl font-bold">{userCoins}</span><span className="text-white/80 text-sm">moedas</span>
-            </motion.div>
-          </motion.div>
-        </div>
-      </div>
+     <PageShell title="Loja">
+       <SEOHead title={seoConfig.title} description={seoConfig.description} keywords={seoConfig.keywords} />
+       {celebration && <CelebrationEffect isActive={celebration.active} type={celebration.type} onComplete={() => setCelebration(null)} />}
+ 
+       <div className={cn("header-sticky bg-gradient-to-r from-amber-500 via-orange-500 to-pink-500 text-white", isScrolled && "scrolled")}>
+         <div className="max-w-6xl mx-auto p-6">
+           <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="flex items-center justify-between">
+             <div className="flex items-center gap-4">
+               <div className="flex flex-col">
+                 <h1 className="text-2xl font-bold flex items-center gap-2"><Sparkles className="w-6 h-6" />Loja de Recompensas</h1>
+                 <p className="text-white/80 mt-1">Troque suas moedas por produtos e benefícios exclusivos</p>
+               </div>
+             </div>
+             <motion.div whileHover={{ scale: 1.05 }} className="bg-white/20 backdrop-blur-sm rounded-xl px-4 py-2 flex items-center gap-2">
+               <Coins className="w-6 h-6 text-amber-200" /><span className="text-2xl font-bold">{userCoins}</span><span className="text-white/80 text-sm">moedas</span>
+             </motion.div>
+           </motion.div>
+         </div>
+       </div>
 
       <div className="max-w-6xl mx-auto p-4 md:p-6">
         <Tabs defaultValue="shop" className="space-y-6">
@@ -147,6 +143,6 @@ export default function Shop() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
-    </PageWrapper>
+   </PageShell>
   );
 }

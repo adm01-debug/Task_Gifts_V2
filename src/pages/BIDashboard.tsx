@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
-import { PageWrapper } from "@/components/PageWrapper";
+ import { PageShell } from "@/components/navigation";
 import { SEOHead } from "@/components/SEOHead";
 import { useSEO } from "@/hooks/useSEO";
 import { useExecutiveMetrics, useMonthlyTrends, useDepartmentMetrics } from "@/hooks/useExecutiveMetrics";
@@ -85,19 +85,19 @@ export default function BIDashboard() {
   const seo = useSEO();
 
   return (
-    <PageWrapper pageName="Business Intelligence">
+    <PageShell title="Business Intelligence">
       <SEOHead {...seo} />
       <div className="min-h-screen bg-background">
         {/* Header */}
         <div className="sticky top-0 z-40 bg-background/95 backdrop-blur-sm border-b border-border">
           <div className="container mx-auto px-4 py-4">
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-              <div className="flex items-center gap-4">
-                <Button variant="ghost" size="icon" onClick={() => navigate(-1)} className="shrink-0"><ArrowLeft className="h-5 w-5" /></Button>
-                <div>
-                  <h1 className="text-2xl font-bold text-foreground flex items-center gap-2"><BarChart3 className="h-6 w-6 text-primary" />Business Intelligence</h1>
-                  <p className="text-sm text-muted-foreground">Visão executiva de métricas e KPIs</p>
-                </div>
+              <div className="flex flex-col">
+                <h1 className="text-2xl font-bold text-foreground flex items-center gap-2">
+                  <BarChart3 className="h-6 w-6 text-primary" />
+                  Business Intelligence
+                </h1>
+                <p className="text-sm text-muted-foreground">Visão executiva de métricas e KPIs</p>
               </div>
               <div className="flex items-center gap-3">
                 <Select value={selectedPeriod} onValueChange={setSelectedPeriod}>
@@ -154,6 +154,6 @@ export default function BIDashboard() {
           </Tabs>
         </div>
       </div>
-    </PageWrapper>
+    </PageShell>
   );
 }

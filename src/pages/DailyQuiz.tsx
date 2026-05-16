@@ -12,7 +12,6 @@ import { useSaveQuizScore } from "@/hooks/useQuizScores";
 import { useQuizQuestionsWithOptions } from "@/hooks/useQuizQuestions";
 import { QuizQuestion as DbQuizQuestion } from "@/services/quizQuestionsService";
 import { toast } from "sonner";
-import { PageWrapper } from "@/components/PageWrapper";
 import { SEOHead } from "@/components/SEOHead";
 import { useSEO } from "@/hooks/useSEO";
  import { MobilePageLayout } from "@/components/mobile";
@@ -134,10 +133,10 @@ export default function DailyQuiz() {
   const hasMagicQuestions = magicQuestions.length >= 3;
   const hasMillionaireQuestions = millionaireQuestions.length >= 5;
 
-   return (
+  return (
      <PageShell title="Quiz Diário" backFallback="/">
        <MobilePageLayout title="Quiz Diário" icon={Gamepad2} backPath="/">
-         <PageWrapper pageName="Quiz Diário" className="min-h-screen bg-background pb-24">
+         <div className="min-h-screen bg-background pb-24">
            <SEOHead title={seoConfig.title} description={seoConfig.description} keywords={seoConfig.keywords} />
            <div className="container max-w-5xl mx-auto px-4 py-6 md:py-8">
              {/* Header - Desktop only */}
@@ -363,9 +362,9 @@ export default function DailyQuiz() {
             />
           </motion.div>
         )}
-           </div>
-         </PageWrapper>
-       </MobilePageLayout>
-     </PageShell>
-   );
+            </div>
+          </div>
+        </MobilePageLayout>
+      </PageShell>
+    );
 }
