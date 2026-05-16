@@ -54,25 +54,25 @@ const routeConfig: Record<string, RouteConfig> = {
   "/conquistas": { label: "Conquistas", icon: Trophy, parent: "/", group: "gamificacao" },
   "/leagues": { label: "Ligas", icon: Award, parent: "/", group: "gamificacao" },
   "/duelos": { label: "Duelos", icon: Swords, parent: "/", group: "gamificacao" },
-  "/loja": { label: "Loja", icon: Gift, parent: "/", group: "gamificacao" },
-  "/loja/admin": { label: "Administrar Loja", icon: Settings, parent: "/loja", group: "gamificacao" },
+   "/loja": { label: "Marketplace", icon: Gift, parent: "/", group: "gamificacao" },
+   "/loja/admin": { label: "Administrar Loja", icon: Settings, parent: "/loja", group: "gamificacao" },
   
   // Desenvolvimento
   "/goals": { label: "Metas", icon: Target, parent: "/", group: "desenvolvimento" },
-  "/trails": { label: "Trilhas", icon: BookOpen, parent: "/", group: "desenvolvimento" },
-  "/mentoria": { label: "Mentoria", icon: Users, parent: "/", group: "desenvolvimento" },
+   "/trails": { label: "Trilhas", icon: BookOpen, parent: "/", group: "desenvolvimento" },
+   "/mentoria": { label: "Mentoria", icon: Users, parent: "/", group: "desenvolvimento" },
   "/quiz": { label: "Quiz Diário", icon: Brain, parent: "/", group: "desenvolvimento" },
   "/quiz/admin": { label: "Administrar Quiz", icon: Settings, parent: "/quiz", group: "desenvolvimento" },
   
-  // Engajamento
-  "/feed": { label: "Feed Social", icon: MessageCircle, parent: "/", group: "engajamento" },
+   // Engajamento
+   "/feed": { label: "Social", icon: MessageCircle, parent: "/", group: "engajamento" },
   "/announcements": { label: "Anúncios", icon: Bell, parent: "/", group: "engajamento" },
   "/feedback": { label: "Feedback", icon: FileText, parent: "/", group: "engajamento" },
   "/surveys": { label: "Pesquisas", icon: FileText, parent: "/", group: "engajamento" },
   "/checkins": { label: "Check-ins", icon: Calendar, parent: "/", group: "engajamento" },
   
-  // Operações
-  "/ponto": { label: "Ponto", icon: Calendar, parent: "/", group: "operacoes" },
+   // Operações
+   "/ponto": { label: "Registro de Ponto", icon: Calendar, parent: "/", group: "operacoes" },
   
   // Analytics & BI
   "/analytics": { label: "Analytics", icon: TrendingUp, parent: "/", group: "analytics" },

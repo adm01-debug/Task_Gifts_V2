@@ -1,7 +1,8 @@
 import { memo, ReactNode } from "react";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { GlobalBreadcrumbs } from "./GlobalBreadcrumbs";
-import { DesktopBackButton } from "./DesktopBackButton";
+ import { GlobalBreadcrumbs } from "./GlobalBreadcrumbs";
+ import { DesktopBackButton } from "./DesktopBackButton";
+ import { MobileHeader } from "../MobileHeader";
 import { cn } from "@/lib/utils";
 
 interface PageShellProps {
@@ -37,18 +38,16 @@ export const PageShell = memo(function PageShell({
 }: PageShellProps) {
   const isMobile = useIsMobile();
 
-  // On mobile, MobilePageLayout handles navigation
-  if (isMobile) {
-    return <>{children}</>;
-  }
-
   return (
     <div className={cn("min-h-screen", className)}>
-      {/* Navigation bar */}
-      <div className="px-4 md:px-6 pt-4 flex items-center gap-3">
-        {!hideBackButton && <DesktopBackButton fallbackPath={backFallback} />}
-        {!hideBreadcrumbs && <GlobalBreadcrumbs className="mb-0" />}
-      </div>
+       {isMobile ? (
+         <MobileHeader title={title} />
+       ) : (
+         <div className="px-4 md:px-6 pt-4 flex items-center gap-3">
+           {!hideBackButton && <DesktopBackButton fallbackPath={backFallback} />}
+           {!hideBreadcrumbs && <GlobalBreadcrumbs className="mb-0" />}
+         </div>
+       )}
 
       {/* Page title (sr-only if using breadcrumbs) */}
       {title && <h1 className="sr-only">{title}</h1>}

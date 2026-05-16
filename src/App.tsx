@@ -12,6 +12,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { lazy, Suspense } from "react";
 import { Spinner } from "@/components/ui/spinner";
 import { useScrollRestoration } from "@/hooks/useNavigationHelpers";
+ import { useSwipeNavigation } from "@/hooks/useSwipeNavigation";
 import { Providers } from "@/components/Providers";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
 
@@ -91,6 +92,7 @@ function MobileGlobalComponents() {
 // Scroll restoration wrapper
 function ScrollRestorationProvider({ children }: { children: React.ReactNode }) {
   useScrollRestoration();
+   useSwipeNavigation();
   return <>{children}</>;
 }
 

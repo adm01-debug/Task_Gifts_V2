@@ -1,8 +1,9 @@
 import { useState, useCallback } from "react";
-import { Menu, Gift, Bell } from "lucide-react";
+ import { Menu, Gift, Bell, ChevronLeft } from "lucide-react";
 import { motion } from "framer-motion";
-import { useNavigate } from "react-router-dom";
+ import { useNavigate, useLocation } from "react-router-dom";
 import { MobileDrawer } from "./MobileDrawer";
+ import { MobileBackButton } from "./navigation/MobileBackButton";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
 
@@ -10,6 +11,7 @@ interface MobileHeaderProps {
   title?: string;
   showTitle?: boolean;
   showNotifications?: boolean;
+   forceShowBackButton?: boolean;
   className?: string;
 }
 
@@ -17,11 +19,21 @@ export function MobileHeader({
   title, 
   showTitle = true, 
   showNotifications = true,
+   forceShowBackButton = false,
   className 
 }: MobileHeaderProps) {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const isMobile = useIsMobile();
   const navigate = useNavigate();
+   const location = useLocation();
+
+   // Show back button if forced or if we're not on a root/tab page
+   const shouldShowBack = forceShowBackButton || (
+     location.pathname !== "/" && 
+     location.pathname !== "/goals" && 
+     location.pathname !== "/leagues" && 
+     location.pathname !== "/trails"
+   );
 
   const openDrawer = useCallback(() => setDrawerOpen(true), []);
   const closeDrawer = useCallback(() => setDrawerOpen(false), []);
@@ -38,14 +50,18 @@ export function MobileHeader({
         className
       )}>
         <div className="flex h-14 items-center justify-between px-4">
-          <motion.button
-            whileTap={{ scale: 0.9 }}
-            onClick={openDrawer}
-            className="flex items-center justify-center w-10 h-10 rounded-xl bg-muted/60 hover:bg-muted active:bg-muted/80 transition-colors"
-            aria-label="Abrir menu"
-          >
-            <Menu className="h-5 w-5" />
-          </motion.button>
+           {shouldShowBack ? (
+             <MobileBackButton />
+           ) : (
+             <motion.button
+               whileTap={{ scale: 0.9 }}
+               onClick={openDrawer}
+               className="flex items-center justify-center w-10 h-10 rounded-xl bg-muted/60 hover:bg-muted active:bg-muted/80 transition-colors"
+               aria-label="Abrir menu"
+             >
+               <Menu className="h-5 w-5" />
+             </motion.button>
+           )}
 
           {showTitle && (
             <motion.div 
