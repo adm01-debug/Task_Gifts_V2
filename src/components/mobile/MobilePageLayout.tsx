@@ -60,7 +60,7 @@ export const MobilePageLayout = memo(function MobilePageLayout({
   const containerRef = useRef<HTMLDivElement>(null);
 
   const handleBack = () => {
-    haptic.impactLight();
+    haptic.trigger("light");
     if (backPath) {
       navigateWithTransition(backPath);
     } else {
@@ -180,7 +180,7 @@ export const MobilePageLayout = memo(function MobilePageLayout({
 
       {/* Main Content with swipe transform and PullToRefresh */}
       <PullToRefresh onRefresh={async () => {
-        haptic.notificationSuccess();
+        haptic.trigger("success");
         window.location.reload(); // Simple reload for now, but could be specific refresh
       }}>
         <motion.main 
