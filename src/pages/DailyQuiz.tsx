@@ -133,38 +133,42 @@ export default function DailyQuiz() {
   const hasMagicQuestions = magicQuestions.length >= 3;
   const hasMillionaireQuestions = millionaireQuestions.length >= 5;
 
-  return (
-    <MobilePageLayout title="Quiz Diário" icon={Gamepad2} backPath="/">
-      <PageWrapper pageName="Quiz Diário" className="min-h-screen bg-background pb-24">
-        <SEOHead title={seoConfig.title} description={seoConfig.description} keywords={seoConfig.keywords} />
-        <div className="container max-w-5xl mx-auto px-4 py-6 md:py-8">
-          {/* Header - Desktop only */}
-          {!isMobile && (
-            <motion.div
-              initial={{ opacity: 0, y: -20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="mb-8"
-            >
-              <Button 
-                variant="ghost" 
-                className="mb-4 gap-2"
-                onClick={() => activeQuiz ? setActiveQuiz(null) : navigate(-1)}
-              >
-                <ArrowLeft className="w-4 h-4" />
-                {activeQuiz ? "Voltar aos Quiz" : "Voltar"}
-              </Button>
-              
-              <div className="flex items-center gap-3 mb-2">
-                <div className="p-2 rounded-xl bg-primary/10">
-                  <Gamepad2 className="h-6 w-6 text-primary" />
-                </div>
-                <h1 className="text-3xl font-bold">Quiz Diário</h1>
-              </div>
-              <p className="text-muted-foreground">
-                Dedique 10 minutos do seu dia para aprender jogando!
-              </p>
-            </motion.div>
-          )}
+   return (
+     <PageShell title="Quiz Diário" backFallback="/">
+       <MobilePageLayout title="Quiz Diário" icon={Gamepad2} backPath="/">
+         <PageWrapper pageName="Quiz Diário" className="min-h-screen bg-background pb-24">
+           <SEOHead title={seoConfig.title} description={seoConfig.description} keywords={seoConfig.keywords} />
+           <div className="container max-w-5xl mx-auto px-4 py-6 md:py-8">
+             {/* Header - Desktop only */}
+             {!isMobile && !activeQuiz && (
+               <motion.div
+                 initial={{ opacity: 0, y: -20 }}
+                 animate={{ opacity: 1, y: 0 }}
+                 className="mb-8"
+               >
+                 <div className="flex items-center gap-3 mb-2">
+                   <div className="p-2 rounded-xl bg-primary/10">
+                     <Gamepad2 className="h-6 w-6 text-primary" />
+                   </div>
+                   <h1 className="text-3xl font-bold">Quiz Diário</h1>
+                 </div>
+                 <p className="text-muted-foreground">
+                   Dedique 10 minutos do seu dia para aprender jogando!
+                 </p>
+               </motion.div>
+             )}
+ 
+             {/* Back Button for active quiz on desktop */}
+             {!isMobile && activeQuiz && (
+               <Button 
+                 variant="ghost" 
+                 className="mb-6 gap-2"
+                 onClick={() => setActiveQuiz(null)}
+               >
+                 <ArrowLeft className="w-4 h-4" />
+                 Voltar aos Quiz
+               </Button>
+             )}
 
           {isLoading ? (
           <div className="grid lg:grid-cols-3 gap-6">
@@ -358,8 +362,9 @@ export default function DailyQuiz() {
             />
           </motion.div>
         )}
-        </div>
-      </PageWrapper>
-    </MobilePageLayout>
-  );
+           </div>
+         </PageWrapper>
+       </MobilePageLayout>
+     </PageShell>
+   );
 }
