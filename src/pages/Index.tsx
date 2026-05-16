@@ -1,9 +1,8 @@
 // Core & Libs
 import { useState, useCallback, useEffect } from "react";
 
-// Components
-import { PageTransition } from "@/components/PageTransition";
-import { AppSidebar } from "@/components/AppSidebar";
+ // Components
+ import { AppSidebar } from "@/components/AppSidebar";
 import { MobileDrawer } from "@/components/MobileDrawer";
 import { MobileBottomNav } from "@/components/mobile";
 import { StatsGrid, QuickActions } from "@/components/StatsGrid";
@@ -11,9 +10,9 @@ import { AchievementContainer, useAchievements } from "@/components/AchievementS
 import { OnboardingWidget } from "@/components/onboarding/OnboardingWidget";
 import { SeasonalEventBanner } from "@/components/SeasonalEventBanner";
 import { DashboardHeader, DashboardLeftColumn, DashboardRightColumn, DashboardFooter } from "@/components/dashboard";
-import { SectionWrapper } from "@/components/PageWrapper";
-import { SEOHead } from "@/components/SEOHead";
-import { GlobalBreadcrumbs } from "@/components/navigation";
+ import { SectionWrapper } from "@/components/PageWrapper";
+ import { SEOHead } from "@/components/SEOHead";
+ import { PageShell } from "@/components/navigation";
 
 // Hooks
 import { useIsMobileWithHydration } from "@/hooks/use-mobile";
@@ -97,94 +96,95 @@ function Index() {
     }
   }, [isMobile, handleToggleSidebar]);
 
-  return (
-    <PageTransition>
-      <SEOHead 
-        title={seoConfig.title}
-        description={seoConfig.description}
-        keywords={seoConfig.keywords}
-      />
-      <div className="min-h-screen flex bg-background">
-        {/* Achievement System */}
-        <AchievementContainer
-          achievements={achievements}
-          onHide={hideAchievement}
-          levelUp={levelUp}
-          onCloseLevelUp={closeLevelUp}
-        />
-
-        {/* Mobile Drawer */}
-        <MobileDrawer open={mobileDrawerOpen} onClose={handleCloseMobileDrawer} />
-
-        {/* Desktop Sidebar - Skeleton placeholder prevents layout shift during hydration */}
-        {!isMobile && (
-          isHydrated ? (
-            <AppSidebar 
-              collapsed={sidebarCollapsed} 
-              onToggle={handleToggleSidebar} 
-            />
-          ) : (
-            <div 
-              className="hidden lg:block w-64 shrink-0 bg-card border-r border-border" 
-              aria-hidden="true" 
-            />
-          )
-        )}
-
-        {/* Main Content */}
-        <main id="main-content" className={`flex-1 overflow-auto ${isMobile ? 'pb-20' : ''}`} aria-label="Dashboard principal">
-          {/* Breadcrumbs */}
-          <GlobalBreadcrumbs className="px-4 md:px-6 pt-4" />
-          
-          {/* Top Header */}
-          <DashboardHeader onMenuClick={handleMenuClick} />
-
-          {/* Dashboard Content */}
-          <div className="p-4 md:p-6 space-y-4 md:space-y-6">
-            {/* Seasonal Event Banner */}
-            <SeasonalEventBanner />
-            
-            {/* Onboarding Widget */}
-            <OnboardingWidget />
-
-            {/* Stats Grid */}
-            <SectionWrapper sectionName="Estatísticas">
-              <section aria-labelledby="stats-heading">
-                <h2 id="stats-heading" className="sr-only">Estatísticas do usuário</h2>
-                <StatsGrid />
-              </section>
-            </SectionWrapper>
-
-            {/* Quick Actions */}
-            <SectionWrapper sectionName="Ações Rápidas">
-              <section className="flex flex-wrap items-center gap-2 md:gap-4" aria-label="Ações rápidas">
-                <QuickActions />
-              </section>
-            </SectionWrapper>
-
-            {/* Main Grid - Split into semantic columns */}
-            <div className="grid lg:grid-cols-3 gap-4 md:gap-6">
-              {/* Left Column - Missions, Quests, Team & Recognition */}
-              <SectionWrapper sectionName="Coluna Principal">
-                <DashboardLeftColumn />
-              </SectionWrapper>
-
-              {/* Right Column - Combo, Attendance, Rankings, Leaderboard, Analytics & Rewards */}
-              <SectionWrapper sectionName="Coluna Lateral">
-                <DashboardRightColumn />
-              </SectionWrapper>
-            </div>
-          </div>
-
-          {/* Footer */}
-          <DashboardFooter />
-        </main>
-
-        {/* Mobile Bottom Navigation */}
-        {isMobile && <MobileBottomNav />}
-      </div>
-    </PageTransition>
-  );
+   return (
+     <PageShell 
+       title="Dashboard" 
+       hideBackButton 
+       hideBreadcrumbs 
+       className="flex bg-background"
+     >
+       <SEOHead 
+         title={seoConfig.title}
+         description={seoConfig.description}
+         keywords={seoConfig.keywords}
+       />
+       
+       {/* Achievement System */}
+       <AchievementContainer
+         achievements={achievements}
+         onHide={hideAchievement}
+         levelUp={levelUp}
+         onCloseLevelUp={closeLevelUp}
+       />
+ 
+       {/* Mobile Drawer */}
+       <MobileDrawer open={mobileDrawerOpen} onClose={handleCloseMobileDrawer} />
+ 
+       {/* Desktop Sidebar - Skeleton placeholder prevents layout shift during hydration */}
+       {!isMobile && (
+         isHydrated ? (
+           <AppSidebar 
+             collapsed={sidebarCollapsed} 
+             onToggle={handleToggleSidebar} 
+           />
+         ) : (
+           <div 
+             className="hidden lg:block w-64 shrink-0 bg-card border-r border-border" 
+             aria-hidden="true" 
+           />
+         )
+       )}
+ 
+       {/* Main Content Container */}
+       <div id="main-content" className={`flex-1 overflow-auto ${isMobile ? 'pb-20' : ''}`} aria-label="Dashboard principal">
+         {/* Top Header */}
+         <DashboardHeader onMenuClick={handleMenuClick} />
+ 
+         {/* Dashboard Content */}
+         <div className="p-4 md:p-6 space-y-4 md:space-y-6">
+           {/* Seasonal Event Banner */}
+           <SeasonalEventBanner />
+           
+           {/* Onboarding Widget */}
+           <OnboardingWidget />
+ 
+           {/* Stats Grid */}
+           <SectionWrapper sectionName="Estatísticas">
+             <section aria-labelledby="stats-heading">
+               <h2 id="stats-heading" className="sr-only">Estatísticas do usuário</h2>
+               <StatsGrid />
+             </section>
+           </SectionWrapper>
+ 
+           {/* Quick Actions */}
+           <SectionWrapper sectionName="Ações Rápidas">
+             <section className="flex flex-wrap items-center gap-2 md:gap-4" aria-label="Ações rápidas">
+               <QuickActions />
+             </section>
+           </SectionWrapper>
+ 
+           {/* Main Grid - Split into semantic columns */}
+           <div className="grid lg:grid-cols-3 gap-4 md:gap-6">
+             {/* Left Column - Missions, Quests, Team & Recognition */}
+             <SectionWrapper sectionName="Coluna Principal">
+               <DashboardLeftColumn />
+             </SectionWrapper>
+ 
+             {/* Right Column - Combo, Attendance, Rankings, Leaderboard, Analytics & Rewards */}
+             <SectionWrapper sectionName="Coluna Lateral">
+               <DashboardRightColumn />
+             </SectionWrapper>
+           </div>
+         </div>
+ 
+         {/* Footer */}
+         <DashboardFooter />
+       </div>
+ 
+       {/* Mobile Bottom Navigation */}
+       {isMobile && <MobileBottomNav />}
+     </PageShell>
+   );
 }
 
 export default Index;
