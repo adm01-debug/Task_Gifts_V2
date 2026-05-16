@@ -162,8 +162,8 @@ const Profile = () => {
         <SectionErrorBoundary sectionName="Segurança"><TwoFactorSetup /></SectionErrorBoundary>
         <SoundSettingsCard />
         <PushNotificationToggle />
-      </main>
-    </div>
+      </div>
+    </MobilePageLayout>
   );
 };
 
