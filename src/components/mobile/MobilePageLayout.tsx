@@ -1,11 +1,14 @@
 import { memo, ReactNode, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, ChevronLeft, LucideIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useScrollHeader } from "@/hooks/useScrollHeader";
 import { useSwipeBack } from "@/hooks/useSwipeBack";
+import { useViewTransition } from "@/hooks/useViewTransition";
+import { PullToRefresh } from "./PullToRefresh";
+import { useHapticFeedback } from "@/hooks/useHapticFeedback";
 import { MobileBottomNav } from "./MobileBottomNav";
 import { ScrollToTopFAB } from "./ScrollToTopFAB";
 
@@ -49,15 +52,19 @@ export const MobilePageLayout = memo(function MobilePageLayout({
   enableSwipeBack = true,
 }: MobilePageLayoutProps) {
   const navigate = useNavigate();
+  const navigateWithTransition = useViewTransition();
+  const location = useLocation();
+  const haptic = useHapticFeedback();
   const isMobile = useIsMobile();
   const isScrolled = useScrollHeader(10);
   const containerRef = useRef<HTMLDivElement>(null);
 
   const handleBack = () => {
+    haptic.impactLight();
     if (backPath) {
-      navigate(backPath);
+      navigateWithTransition(backPath);
     } else {
-      navigate(-1);
+      navigateWithTransition(-1 as any);
     }
   };
 
@@ -171,16 +178,21 @@ export const MobilePageLayout = memo(function MobilePageLayout({
         </div>
       </header>
 
-      {/* Main Content with swipe transform */}
-      <motion.main 
-        className={cn("relative", className)}
-        style={{
-          transform: isSwiping ? `translateX(${progress * 30}px)` : 'translateX(0)',
-          transition: isSwiping ? 'none' : 'transform 0.2s ease-out'
-        }}
-      >
-        {children}
-      </motion.main>
+      {/* Main Content with swipe transform and PullToRefresh */}
+      <PullToRefresh onRefresh={async () => {
+        haptic.notificationSuccess();
+        window.location.reload(); // Simple reload for now, but could be specific refresh
+      }}>
+        <motion.main 
+          className={cn("relative", className)}
+          style={{
+            transform: isSwiping ? `translateX(${progress * 30}px)` : 'translateX(0)',
+            transition: isSwiping ? 'none' : 'transform 0.2s ease-out'
+          }}
+        >
+          {children}
+        </motion.main>
+      </PullToRefresh>
 
       {/* Bottom Navigation */}
       {!hideBottomNav && <MobileBottomNav />}
