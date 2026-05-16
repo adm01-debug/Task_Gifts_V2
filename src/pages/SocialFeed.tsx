@@ -39,7 +39,7 @@ import {
 } from "@/components/ui/popover";
 import { Calendar as CalendarComponent } from "@/components/ui/calendar";
 import { SectionErrorBoundary } from "@/components/SectionErrorBoundary";
-import { PageWrapper } from "@/components/PageWrapper";
+import { MobilePageLayout } from "@/components/mobile/MobilePageLayout";
 import { SEOHead } from "@/components/SEOHead";
 import { useSEO } from "@/hooks/useSEO";
 import { useSocialFeed } from "@/hooks/useSocialFeed";
@@ -143,42 +143,22 @@ export default function SocialFeedPage() {
   }), [filteredActivities]);
 
   return (
-    <PageWrapper pageName="Feed Social" className="min-h-screen bg-background pb-24">
+    <MobilePageLayout
+      title="Feed da Equipe"
+      subtitle="Acompanhe as conquistas e atividades"
+      icon={Activity}
+      headerActions={
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={() => refetch()}
+          className="w-10 h-10 rounded-xl"
+        >
+          <RefreshCw className={cn("w-5 h-5", isLoading && "animate-spin")} />
+        </Button>
+      }
+    >
       <SEOHead {...seoData} />
-      {/* Header */}
-      <header className="sticky top-0 z-40 backdrop-blur-xl bg-background/80 border-b border-border">
-        <div className="flex items-center justify-between px-4 md:px-6 py-4">
-          <div className="flex items-center gap-3">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => navigate("/")}
-              className="shrink-0"
-            >
-              <ArrowLeft className="w-5 h-5" />
-            </Button>
-            <div>
-              <h1 className="text-xl font-bold flex items-center gap-2">
-                <Activity className="w-5 h-5 text-primary" />
-                Feed da Equipe
-              </h1>
-              <p className="text-sm text-muted-foreground">
-                Acompanhe as conquistas e atividades
-              </p>
-            </div>
-          </div>
-
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => refetch()}
-            className="gap-2"
-          >
-            <RefreshCw className="w-4 h-4" />
-            <span className="hidden sm:inline">Atualizar</span>
-          </Button>
-        </div>
-      </header>
 
       <div className="p-4 md:p-6 space-y-6">
         {/* Filters */}
@@ -474,6 +454,6 @@ export default function SocialFeedPage() {
           </CardContent>
         </Card>
       </div>
-    </PageWrapper>
+    </MobilePageLayout>
   );
 }

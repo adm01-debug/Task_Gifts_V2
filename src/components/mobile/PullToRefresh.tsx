@@ -1,133 +1,94 @@
-import { useState, useCallback, useRef, ReactNode } from "react";
-import { motion, useMotionValue, useTransform, AnimatePresence } from "framer-motion";
-import { RefreshCw } from "lucide-react";
-import { cn } from "@/lib/utils";
-import { useHapticFeedback } from "@/hooks/useHapticFeedback";
-import { logger } from "@/services/loggingService";
+import { useState, useEffect, ReactNode, useRef } from "react";
+import { motion, useScroll, useSpring, useTransform } from "framer-motion";
+import { Loader2, RefreshCw } from "lucide-react";
 
 interface PullToRefreshProps {
-  children: ReactNode;
   onRefresh: () => Promise<void>;
+  children: ReactNode;
   disabled?: boolean;
-  threshold?: number;
-  className?: string;
 }
 
-export function PullToRefresh({
-  children,
-  onRefresh,
-  disabled = false,
-  threshold = 80,
-  className,
-}: PullToRefreshProps) {
+export const PullToRefresh = ({ onRefresh, children, disabled }: PullToRefreshProps) => {
   const [isRefreshing, setIsRefreshing] = useState(false);
-  const [isPulling, setIsPulling] = useState(false);
+  const [pullDistance, setPullDistance] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
   const startY = useRef(0);
-  const haptic = useHapticFeedback();
+  
+  const MAX_PULL = 80;
+  const THRESHOLD = 60;
 
-  const pullDistance = useMotionValue(0);
-  const opacity = useTransform(pullDistance, [0, threshold], [0, 1]);
-  const rotate = useTransform(pullDistance, [0, threshold], [0, 180]);
-  const scale = useTransform(pullDistance, [0, threshold * 0.5, threshold], [0.5, 0.8, 1]);
+  const handleTouchStart = (e: React.TouchEvent) => {
+    if (disabled || isRefreshing || window.scrollY > 0) return;
+    startY.current = e.touches[0].pageY;
+  };
 
-  const handleTouchStart = useCallback((e: React.TouchEvent) => {
-    if (disabled || isRefreshing) return;
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (disabled || isRefreshing || window.scrollY > 0) return;
     
-    const container = containerRef.current;
-    if (!container) return;
-
-    // Only trigger if at the top of the scroll container
-    if (container.scrollTop <= 0) {
-      startY.current = e.touches[0].clientY;
-      setIsPulling(true);
-    }
-  }, [disabled, isRefreshing]);
-
-  const handleTouchMove = useCallback((e: React.TouchEvent) => {
-    if (!isPulling || disabled || isRefreshing) return;
-
-    const currentY = e.touches[0].clientY;
+    const currentY = e.touches[0].pageY;
     const diff = currentY - startY.current;
-
+    
     if (diff > 0) {
-      // Apply resistance
-      const resistance = 0.4;
-      const distance = diff * resistance;
-      pullDistance.set(Math.min(distance, threshold * 1.5));
-
-      // Haptic feedback when reaching threshold
-      if (distance >= threshold && pullDistance.get() < threshold) {
-        haptic.buttonPress();
+      // Add some resistance
+      const pull = Math.min(MAX_PULL, diff * 0.4);
+      setPullDistance(pull);
+      
+      if (pull > 5) {
+        if (e.cancelable) e.preventDefault();
       }
     }
-  }, [isPulling, disabled, isRefreshing, pullDistance, threshold, haptic]);
+  };
 
-  const handleTouchEnd = useCallback(async () => {
-    if (!isPulling) return;
-
-    const distance = pullDistance.get();
-
-    if (distance >= threshold && !isRefreshing) {
+  const handleTouchEnd = async () => {
+    if (pullDistance >= THRESHOLD) {
       setIsRefreshing(true);
-      haptic.questCompleted();
-
+      setPullDistance(THRESHOLD);
       try {
         await onRefresh();
-      } catch (err: unknown) {
-        logger.apiError('Pull to refresh', err, 'PullToRefresh');
       } finally {
         setIsRefreshing(false);
+        setPullDistance(0);
       }
+    } else {
+      setPullDistance(0);
     }
-
-    pullDistance.set(0);
-    setIsPulling(false);
-  }, [isPulling, pullDistance, threshold, isRefreshing, onRefresh, haptic]);
+  };
 
   return (
-    <div
+    <div 
       ref={containerRef}
-      className={cn("relative overflow-auto", className)}
       onTouchStart={handleTouchStart}
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
+      className="relative overflow-hidden"
     >
-      <AnimatePresence>
-        {(isPulling || isRefreshing) && (
-          <motion.div
-            className="absolute top-0 left-0 right-0 flex items-center justify-center z-10 pointer-events-none"
-            initial={{ opacity: 0, y: -40 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -40 }}
-            style={{ height: threshold }}
-          >
-            <motion.div
-              className={cn(
-                "w-10 h-10 rounded-full flex items-center justify-center",
-                "bg-primary/10 border border-primary/20"
-              )}
-              style={{ scale, opacity }}
-            >
-              <motion.div
-                style={{ rotate: isRefreshing ? undefined : rotate }}
-                animate={isRefreshing ? { rotate: 360 } : undefined}
-                transition={isRefreshing ? { repeat: Infinity, duration: 1, ease: "linear" } : undefined}
-              >
-                <RefreshCw className="w-5 h-5 text-primary" />
-              </motion.div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
       <motion.div
-        style={{
-          y: useTransform(pullDistance, (v) => (isRefreshing ? threshold * 0.5 : v * 0.5)),
-        }}
+        className="absolute top-0 left-0 right-0 flex justify-center items-center pointer-events-none z-50"
+        style={{ height: pullDistance }}
+        animate={{ height: pullDistance }}
+      >
+        <div className="bg-background border shadow-md rounded-full p-2 flex items-center justify-center">
+          {isRefreshing ? (
+            <Loader2 className="w-5 h-5 animate-spin text-primary" />
+          ) : (
+            <motion.div
+              style={{ 
+                rotate: pullDistance * 2,
+                opacity: pullDistance / THRESHOLD 
+              }}
+            >
+              <RefreshCw className="w-5 h-5 text-primary" />
+            </motion.div>
+          )}
+        </div>
+      </motion.div>
+      
+      <motion.div
+        animate={{ y: pullDistance }}
+        transition={isRefreshing ? { type: "spring", bounce: 0 } : { type: "tween" }}
       >
         {children}
       </motion.div>
     </div>
   );
-}
+};
