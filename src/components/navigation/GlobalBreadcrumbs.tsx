@@ -59,7 +59,10 @@ const routeConfig: Record<string, RouteConfig> = {
   
   // Desenvolvimento
   "/goals": { label: "Metas", icon: Target, parent: "/", group: "desenvolvimento" },
-  "/trails": { label: "Trilhas", icon: BookOpen, parent: "/", group: "desenvolvimento" },
+   "/trails": { label: "Trilhas", icon: BookOpen, parent: "/", group: "desenvolvimento" },
+   "/ponto": { label: "Registro de Ponto", icon: Calendar, parent: "/", group: "operacoes" },
+   "/feed": { label: "Social", icon: MessageCircle, parent: "/", group: "engajamento" },
+   "/loja": { label: "Marketplace", icon: Gift, parent: "/", group: "gamificacao" },
   "/mentoria": { label: "Mentoria", icon: Users, parent: "/", group: "desenvolvimento" },
   "/quiz": { label: "Quiz Diário", icon: Brain, parent: "/", group: "desenvolvimento" },
   "/quiz/admin": { label: "Administrar Quiz", icon: Settings, parent: "/quiz", group: "desenvolvimento" },
