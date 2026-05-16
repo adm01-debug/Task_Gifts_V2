@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-import {
-  ArrowLeft, Users, Target, Clock, Award, AlertTriangle, Download, Calendar, BarChart3, Activity,
-} from "lucide-react";
+ import {
+   Users, Target, Clock, Award, AlertTriangle, Download, Calendar, BarChart3, Activity,
+ } from "lucide-react";
 import {
   AreaChart, Area, BarChart, Bar, PieChart as RechartsPie, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend,
 } from "recharts";
@@ -13,9 +13,10 @@ import { Progress } from "@/components/ui/progress";
 import { Card } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-  useCompletionTrend, useDepartmentPerformance, useQuestDifficultyDistribution, useWeeklyEngagement, useTopQuests, useStrugglingAreas, useEngagementMetrics,
-} from "@/hooks/useEngagementReports";
+ import {
+   useCompletionTrend, useDepartmentPerformance, useQuestDifficultyDistribution, useWeeklyEngagement, useTopQuests, useStrugglingAreas, useEngagementMetrics,
+ } from "@/hooks/useEngagementReports";
+ import { PageShell } from "@/components/navigation";
 import { toast } from "sonner";
 import { StatCard, ChartCard, EngagementCustomTooltip, StrugglingAreasSection } from "@/components/engagement/EngagementCharts";
 
@@ -32,32 +33,31 @@ export default function EngagementReports() {
   const { data: strugglingAreas, isLoading: loadingStruggle } = useStrugglingAreas();
   const { data: metrics, isLoading: loadingMetrics } = useEngagementMetrics();
 
-  return (
-    <div className="min-h-screen bg-background">
-      <motion.header initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="sticky top-0 z-50 bg-background/80 backdrop-blur-xl border-b border-border/50">
-        <div className="max-w-7xl mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <Button variant="ghost" size="icon" onClick={() => navigate(-1)} aria-label="Voltar"><ArrowLeft className="w-5 h-5" /></Button>
-              <div><h1 className="text-xl font-bold text-foreground">Relatórios de Engajamento</h1><p className="text-sm text-muted-foreground">Métricas e ROI do treinamento corporativo</p></div>
-            </div>
-            <div className="flex items-center gap-3">
-              <Select value={period} onValueChange={setPeriod}>
-                <SelectTrigger className="w-36"><Calendar className="w-4 h-4 mr-2" /><SelectValue /></SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="1m">Último mês</SelectItem>
-                  <SelectItem value="3m">Últimos 3 meses</SelectItem>
-                  <SelectItem value="6m">Últimos 6 meses</SelectItem>
-                  <SelectItem value="1y">Último ano</SelectItem>
-                </SelectContent>
-              </Select>
-              <Button variant="outline" className="gap-2" onClick={() => toast.success("Relatório exportado com sucesso!")}><Download className="w-4 h-4" />Exportar</Button>
-            </div>
-          </div>
-        </div>
-      </motion.header>
-
-      <main className="max-w-7xl mx-auto px-4 py-6 space-y-6">
+   return (
+     <PageShell title="Relatórios de Engajamento">
+       <div className="min-h-screen bg-background">
+         <div className="max-w-7xl mx-auto px-4 py-4">
+           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+             <div className="flex flex-col">
+               <h1 className="text-2xl font-bold text-foreground">Relatórios de Engajamento</h1>
+               <p className="text-sm text-muted-foreground">Métricas e ROI do treinamento corporativo</p>
+             </div>
+             <div className="flex items-center gap-3">
+               <Select value={period} onValueChange={setPeriod}>
+                 <SelectTrigger className="w-36"><Calendar className="w-4 h-4 mr-2" /><SelectValue /></SelectTrigger>
+                 <SelectContent>
+                   <SelectItem value="1m">Último mês</SelectItem>
+                   <SelectItem value="3m">Últimos 3 meses</SelectItem>
+                   <SelectItem value="6m">Últimos 6 meses</SelectItem>
+                   <SelectItem value="1y">Último ano</SelectItem>
+                 </SelectContent>
+               </Select>
+               <Button variant="outline" className="gap-2" onClick={() => toast.success("Relatório exportado com sucesso!")}><Download className="w-4 h-4" />Exportar</Button>
+             </div>
+           </div>
+         </div>
+ 
+         <main className="max-w-7xl mx-auto px-4 py-6 space-y-6">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <StatCard icon={Clock} label="Horas de Treinamento" value={metrics?.totalTrainingHours.toLocaleString() || "0"} subValue="horas investidas" change={metrics?.totalTrainingHours ? "+18%" : undefined} changeType="positive" color="#6366f1" delay={0} loading={loadingMetrics} />
           <StatCard icon={Target} label="Taxa de Conclusão" value={`${metrics?.avgCompletionRate || 0}%`} subValue="média geral" change={metrics?.avgCompletionRate ? "+12%" : undefined} changeType="positive" color="#10b981" delay={0.1} loading={loadingMetrics} />
@@ -178,7 +178,8 @@ export default function EngagementReports() {
             <StrugglingAreasSection strugglingAreas={strugglingAreas} loading={loadingStruggle} />
           </TabsContent>
         </Tabs>
-      </main>
-    </div>
-  );
+         </main>
+       </div>
+     </PageShell>
+   );
 }
