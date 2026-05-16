@@ -1,10 +1,15 @@
 import { useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 
-/**
- * useSwipeNavigation - Adds edge swipe gesture support for back navigation
- */
-export function useSwipeNavigation(threshold = 50, edgeSize = 30) {
+ import { useSmartBack } from "./useNavigationHelpers";
+ import { useHapticFeedback } from "./useHapticFeedback";
+ 
+ /**
+  * useSwipeNavigation - Adds edge swipe gesture support for back navigation
+  */
+ export function useSwipeNavigation(threshold = 50, edgeSize = 30) {
+   const { goBack } = useSmartBack();
+   const haptic = useHapticFeedback();
   const navigate = useNavigate();
   const touchStart = useRef<{ x: number; y: number } | null>(null);
 
@@ -24,10 +29,11 @@ export function useSwipeNavigation(threshold = 50, edgeSize = 30) {
       const deltaX = touch.clientX - touchStart.current.x;
       const deltaY = Math.abs(touch.clientY - touchStart.current.y);
 
-      // Horizontal swipe to the right, with minimal vertical movement
-      if (deltaX > threshold && deltaY < threshold) {
-        navigate(-1);
-      }
+       // Horizontal swipe to the right, with minimal vertical movement
+       if (deltaX > threshold && deltaY < threshold) {
+         haptic.trigger("medium");
+         goBack();
+       }
 
       touchStart.current = null;
     };
