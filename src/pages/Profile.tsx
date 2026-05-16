@@ -26,7 +26,9 @@ import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { SEOHead } from "@/components/SEOHead";
 import { useSEO } from "@/hooks/useSEO";
-import { DesktopBackButton, GlobalBreadcrumbs } from "@/components/navigation";
+import { GlobalBreadcrumbs } from "@/components/navigation";
+import { MobilePageLayout } from "@/components/mobile/MobilePageLayout";
+import { User, Settings } from "lucide-react";
 
 interface ProfileData {
   id: string;
@@ -88,18 +90,28 @@ const Profile = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-background">
+    <MobilePageLayout
+      title="Meu Perfil"
+      icon={User}
+      headerActions={
+        <Button
+          variant="ghost"
+          size="icon"
+          className="rounded-xl"
+          onClick={() => toast.info("Configurações em breve")}
+        >
+          <Settings className="w-5 h-5" />
+        </Button>
+      }
+    >
       <SEOHead title={seoConfig.title} description={seoConfig.description} keywords={seoConfig.keywords} />
       <div className="fixed inset-0 pointer-events-none overflow-hidden">
         <motion.div className="absolute w-[500px] h-[500px] rounded-full opacity-10 blur-[100px]" style={{ background: "radial-gradient(circle, hsl(24 95% 55%) 0%, transparent 70%)", top: "5%", right: "10%" }} animate={{ x: [0, 30, 0], y: [0, -20, 0] }} transition={{ duration: 15, repeat: Infinity }} />
       </div>
 
-      <header className={cn("header-sticky border-b border-border", isScrolled && "scrolled")}>
-        <div className="container max-w-4xl mx-auto px-6 py-4 flex items-center gap-4"><DesktopBackButton /><h1 className="text-xl font-bold">Meu Perfil</h1></div>
-      </header>
       <GlobalBreadcrumbs className="container max-w-4xl mx-auto px-6 pt-2" />
 
-      <main className="container max-w-4xl mx-auto px-6 py-8 space-y-8 relative z-10">
+      <div className="container max-w-4xl mx-auto px-4 md:px-6 py-4 md:py-8 space-y-8 relative z-10">
         {/* Profile Header */}
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="relative">
           <div className="glass rounded-3xl p-8 border border-border">
