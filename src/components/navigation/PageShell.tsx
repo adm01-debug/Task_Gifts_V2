@@ -3,6 +3,8 @@ import { useIsMobile } from "@/hooks/use-mobile";
  import { GlobalBreadcrumbs } from "./GlobalBreadcrumbs";
  import { DesktopBackButton } from "./DesktopBackButton";
  import { MobileHeader } from "../MobileHeader";
+ import { PageTransition } from "./PageTransition";
+ import { TopLoadingBar } from "./TopLoadingBar";
 import { cn } from "@/lib/utils";
 
 interface PageShellProps {
@@ -38,8 +40,9 @@ export const PageShell = memo(function PageShell({
 }: PageShellProps) {
   const isMobile = useIsMobile();
 
-  return (
-    <div className={cn("min-h-screen", className)}>
+   return (
+     <PageTransition className={cn("min-h-screen", className)}>
+       <TopLoadingBar />
        {isMobile ? (
          <MobileHeader title={title} />
        ) : (
@@ -48,12 +51,14 @@ export const PageShell = memo(function PageShell({
            {!hideBreadcrumbs && <GlobalBreadcrumbs className="mb-0" />}
          </div>
        )}
-
-      {/* Page title (sr-only if using breadcrumbs) */}
-      {title && <h1 className="sr-only">{title}</h1>}
-
-      {/* Content */}
-      {children}
-    </div>
-  );
+ 
+       {/* Page title (sr-only if using breadcrumbs) */}
+       {title && <h1 className="sr-only">{title}</h1>}
+ 
+       {/* Content */}
+       <main className="focus:outline-none" tabIndex={-1}>
+         {children}
+       </main>
+     </PageTransition>
+   );
 });
