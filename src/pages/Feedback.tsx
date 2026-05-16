@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useNavigate } from "react-router-dom";
 import { useFeedback360 } from "@/hooks/useFeedback360";
 import { Badge } from "@/components/ui/badge";
-import { PageWrapper } from "@/components/PageWrapper";
+ import { PageShell } from "@/components/navigation";
 import { SEOHead } from "@/components/SEOHead";
 import { useSEO } from "@/hooks/useSEO";
 import { LoadingState, EmptyState } from "@/components/ui/states";
@@ -25,14 +25,13 @@ export default function Feedback() {
   }
 
   return (
-    <PageWrapper pageName="Feedback" className="min-h-screen bg-background">
-      <SEOHead {...seoData} />
-      <header className="flex h-16 shrink-0 items-center gap-2 border-b px-4 md:px-6">
-        <DesktopBackButton />
-        <MessageCircle className="h-6 w-6 text-primary" />
-        <h1 className="text-xl font-bold">Feedback 360°</h1>
-      </header>
-      <GlobalBreadcrumbs className="px-4 md:px-6 pt-3" />
+    <PageShell title="Feedback 360°">
+      <div className="min-h-screen bg-background">
+        <SEOHead {...seoData} />
+        <div className="flex h-16 shrink-0 items-center gap-2 px-4 md:px-6">
+          <MessageCircle className="h-6 w-6 text-primary" />
+          <h1 className="text-xl font-bold">Feedback 360°</h1>
+        </div>
 
       <main className="p-4 md:p-6 space-y-6 max-w-4xl mx-auto">
         <Card>
@@ -86,6 +85,7 @@ export default function Feedback() {
           </CardContent>
         </Card>
       </main>
-    </PageWrapper>
+    </div>
+  </PageShell>
   );
 }
