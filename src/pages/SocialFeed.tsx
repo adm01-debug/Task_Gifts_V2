@@ -39,7 +39,8 @@ import {
 } from "@/components/ui/popover";
 import { Calendar as CalendarComponent } from "@/components/ui/calendar";
 import { SectionErrorBoundary } from "@/components/SectionErrorBoundary";
-import { MobilePageLayout } from "@/components/mobile/MobilePageLayout";
+ import { MobilePageLayout } from "@/components/mobile/MobilePageLayout";
+ import { PageShell } from "@/components/navigation";
 import { SEOHead } from "@/components/SEOHead";
 import { useSEO } from "@/hooks/useSEO";
 import { useSocialFeed } from "@/hooks/useSocialFeed";
@@ -142,25 +143,38 @@ export default function SocialFeedPage() {
     quests: filteredActivities.filter((a) => a.type === "quest_completed").length,
   }), [filteredActivities]);
 
-  return (
-    <MobilePageLayout
-      title="Feed da Equipe"
-      subtitle="Acompanhe as conquistas e atividades"
-      icon={Activity}
-      headerActions={
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={() => refetch()}
-          className="w-10 h-10 rounded-xl"
-        >
-          <RefreshCw className={cn("w-5 h-5", isLoading && "animate-spin")} />
-        </Button>
-      }
-    >
-      <SEOHead {...seoData} />
-
-      <div className="p-4 md:p-6 space-y-6">
+   return (
+     <PageShell title="Feed da Equipe">
+       <MobilePageLayout
+         title="Feed da Equipe"
+         subtitle="Acompanhe as conquistas e atividades"
+         icon={Activity}
+         headerActions={
+           <Button
+             variant="ghost"
+             size="icon"
+             onClick={() => refetch()}
+             className="w-10 h-10 rounded-xl"
+           >
+             <RefreshCw className={cn("w-5 h-5", isLoading && "animate-spin")} />
+           </Button>
+         }
+       >
+         <SEOHead {...seoData} />
+ 
+         <div className="p-4 md:p-6 space-y-6 max-w-5xl mx-auto">
+           {!isLoading && (
+             <header className="hidden md:flex items-center justify-between mb-6">
+               <div>
+                 <h1 className="text-3xl font-bold">Feed da Equipe</h1>
+                 <p className="text-muted-foreground">Acompanhe o progresso e as conquistas de todos</p>
+               </div>
+               <Button onClick={() => refetch()} variant="outline" className="gap-2">
+                 <RefreshCw className={cn("w-4 h-4", isLoading && "animate-spin")} />
+                 Atualizar
+               </Button>
+             </header>
+           )}
         {/* Filters */}
         <Card>
           <CardHeader className="pb-3">
@@ -453,7 +467,8 @@ export default function SocialFeedPage() {
             )}
           </CardContent>
         </Card>
-      </div>
-    </MobilePageLayout>
-  );
+         </div>
+       </MobilePageLayout>
+     </PageShell>
+   );
 }
