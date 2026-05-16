@@ -16,13 +16,15 @@ export default function Feedback() {
   const { cycles, pendingRequests, isLoading } = useFeedback360();
   const seoData = useSEO();
 
-  if (isLoading) {
-    return (
-      <PageWrapper pageName="Feedback" className="min-h-screen bg-background flex items-center justify-center">
-        <LoadingState message="Carregando feedbacks..." />
-      </PageWrapper>
-    );
-  }
+   if (isLoading) {
+     return (
+       <PageShell title="Feedback 360°">
+         <div className="min-h-screen bg-background flex items-center justify-center">
+           <LoadingState message="Carregando feedbacks..." />
+         </div>
+       </PageShell>
+     );
+   }
 
   return (
     <PageShell title="Feedback 360°">
