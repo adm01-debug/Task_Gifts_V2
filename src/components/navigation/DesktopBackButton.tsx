@@ -2,7 +2,8 @@ import { memo } from "react";
 import { useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
 import { ArrowLeft } from "lucide-react";
-import { useSmartBack } from "@/hooks/useNavigationHelpers";
+ import { useSmartBack } from "@/hooks/useNavigationHelpers";
+ import { useHapticFeedback } from "@/hooks/useHapticFeedback";
 import { cn } from "@/lib/utils";
 
 interface DesktopBackButtonProps {
@@ -23,7 +24,13 @@ export const DesktopBackButton = memo(function DesktopBackButton({
   label = "Voltar",
 }: DesktopBackButtonProps) {
   const location = useLocation();
-  const { goBack } = useSmartBack(fallbackPath);
+   const { goBack } = useSmartBack(fallbackPath);
+   const haptic = useHapticFeedback();
+ 
+   const handleClick = () => {
+     haptic.buttonPress();
+     goBack();
+   };
 
   // Don't show on root/dashboard
   if (location.pathname === "/") {
@@ -35,7 +42,7 @@ export const DesktopBackButton = memo(function DesktopBackButton({
       initial={{ opacity: 0, x: -10 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ duration: 0.2 }}
-      onClick={goBack}
+       onClick={handleClick}
       className={cn(
         "inline-flex items-center gap-2 px-3 py-2 rounded-lg",
         "text-sm font-medium text-muted-foreground",

@@ -22,10 +22,10 @@ export const MobileBackButton = memo(function MobileBackButton({
   const { goBack } = useSmartBack(fallbackPath);
   const haptic = useHapticFeedback();
 
-  const handleClick = () => {
-    haptic.buttonPress();
-    goBack();
-  };
+   const handleClick = () => {
+     haptic.trigger("light");
+     goBack();
+   };
 
   return (
     <motion.button
