@@ -38,7 +38,7 @@ import { useAdminRewards } from "@/hooks/useShop";
 import { useQuizQuestions } from "@/hooks/useQuizQuestions";
 import { usePublishedTrails } from "@/hooks/useTrails";
 import { useFuseSearch, SEARCH_PRESETS } from "@/hooks/useFuseSearch";
-import { DesktopBackButton } from "@/components/navigation";
+ import { PageShell } from "@/components/navigation";
 import { AdminTabsList } from "@/components/admin/AdminTabsList";
 
 interface QuickLinkProps {
@@ -100,22 +100,25 @@ function AdminPanelContent() {
   const filteredLinks = searchResults.map(r => r.item);
   const seo = useSEO();
 
-  return (
-    <PageWrapper pageName="Painel Administrativo">
-      <SEOHead {...seo} />
-      <div className="min-h-screen bg-background">
-        <motion.header initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="sticky top-0 z-50 bg-background/80 backdrop-blur-xl border-b border-border">
-          <div className="container max-w-7xl mx-auto px-4 py-4">
-            <div className="flex items-center gap-4">
-              <DesktopBackButton />
-              <div className="p-2 rounded-xl bg-primary/10"><Settings className="h-5 w-5 text-primary" /></div>
-              <div><h1 className="text-xl font-bold">Painel Administrativo</h1><p className="text-sm text-muted-foreground">Gerenciamento centralizado da plataforma</p></div>
-            </div>
-          </div>
-        </motion.header>
-
-        <main className="container max-w-7xl mx-auto px-4 py-6 space-y-6">
-          <Tabs value={activeTab} onValueChange={setActiveTab}>
+   return (
+     <PageShell title="Painel Administrativo">
+       <PageWrapper pageName="Painel Administrativo">
+         <SEOHead {...seo} />
+         <div className="min-h-screen bg-background">
+           <header className="px-4 md:px-6 py-6">
+             <div className="flex items-center gap-3">
+               <div className="p-2 rounded-xl bg-primary/10">
+                 <Settings className="h-6 w-6 text-primary" />
+               </div>
+               <div>
+                 <h1 className="text-3xl font-bold">Painel Administrativo</h1>
+                 <p className="text-muted-foreground">Gerenciamento centralizado da plataforma</p>
+               </div>
+             </div>
+           </header>
+ 
+           <main className="container max-w-7xl mx-auto px-4 py-6 space-y-6">
+             <Tabs value={activeTab} onValueChange={setActiveTab}>
             <AdminTabsList />
 
             <TabsContent value="overview" className="space-y-6">
@@ -173,11 +176,12 @@ function AdminPanelContent() {
             <TabsContent value="ip-whitelist"><IpWhitelistManager /></TabsContent>
             <TabsContent value="rbac"><RBACDashboard /></TabsContent>
             <TabsContent value="password-reset"><PasswordResetApprovalPanel /></TabsContent>
-          </Tabs>
-        </main>
-      </div>
-    </PageWrapper>
-  );
+             </Tabs>
+           </main>
+         </div>
+       </PageWrapper>
+     </PageShell>
+   );
 }
 
 export default function AdminPanel() {

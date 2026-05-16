@@ -1,12 +1,13 @@
 import { motion } from "framer-motion";
-import { Flame, Zap, Trophy, Target, Users, BarChart3, Gift, Settings, Home, Medal, X, ClipboardList, PlusCircle, Shield, Activity, BookOpen, Clock, LineChart, ShoppingBag, MessageSquare, TrendingUp, Swords, Heart, Gamepad2, HelpCircle, Bot, Search, Link2 } from "lucide-react";
+ import { Flame, Zap, Trophy, Target, Users, BarChart3, Gift, Settings, Home, Medal, X, ClipboardList, PlusCircle, Shield, Activity, BookOpen, Clock, LineChart, ShoppingBag, MessageSquare, TrendingUp, Swords, Heart, Gamepad2, HelpCircle, Bot, Search, Link2, LogOut } from "lucide-react";
 import { useState, useCallback, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { AICoachDialog } from "@/components/AICoachDialog";
 import { GlobalSearch } from "@/components/GlobalSearch";
-import { useCurrentProfile } from "@/hooks/useProfiles";
+ import { useCurrentProfile } from "@/hooks/useProfiles";
+ import { useAuth } from "@/hooks/useAuth";
 import {
   Drawer,
   DrawerClose,
@@ -59,7 +60,8 @@ interface MobileDrawerProps {
 export const MobileDrawer = ({ open, onClose }: MobileDrawerProps) => {
   const [activeItem, setActiveItem] = useState("Dashboard");
   const navigate = useNavigate();
-  const { data: profile } = useCurrentProfile();
+   const { data: profile } = useCurrentProfile();
+   const { signOut } = useAuth();
 
   const displayName = profile?.display_name || "Usuário";
   const initials = displayName.substring(0, 2).toUpperCase();
@@ -91,10 +93,15 @@ export const MobileDrawer = ({ open, onClose }: MobileDrawerProps) => {
     onClose();
   }, [navigate, onClose]);
 
-  const handleSettingsClick = useCallback(() => {
-    navigate("/profile");
-    onClose();
-  }, [navigate, onClose]);
+   const handleSettingsClick = useCallback(() => {
+     navigate("/profile");
+     onClose();
+   }, [navigate, onClose]);
+ 
+   const handleSignOut = useCallback(async () => {
+     await signOut();
+     onClose();
+   }, [signOut, onClose]);
 
   return (
     <Drawer open={open} onOpenChange={(isOpen) => !isOpen && onClose()}>
@@ -266,14 +273,24 @@ export const MobileDrawer = ({ open, onClose }: MobileDrawerProps) => {
             <span className="font-medium">Tema</span>
             <ThemeToggle />
           </div>
-          <motion.button
-            whileTap={{ scale: 0.98 }}
-            onClick={handleSettingsClick}
-            className="w-full flex items-center gap-4 px-4 py-3 rounded-xl hover:bg-muted transition-colors"
-          >
-            <Settings className="w-6 h-6" />
-            <span className="font-medium">Configurações</span>
-          </motion.button>
+           <div className="grid grid-cols-2 gap-2">
+             <motion.button
+               whileTap={{ scale: 0.98 }}
+               onClick={handleSettingsClick}
+               className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-muted transition-colors border border-transparent hover:border-border"
+             >
+               <Settings className="w-5 h-5 text-muted-foreground" />
+               <span className="font-medium">Ajustes</span>
+             </motion.button>
+             <motion.button
+               whileTap={{ scale: 0.98 }}
+               onClick={handleSignOut}
+               className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-destructive/10 hover:text-destructive transition-colors border border-transparent hover:border-destructive/20"
+             >
+               <LogOut className="w-5 h-5" />
+               <span className="font-medium">Sair</span>
+             </motion.button>
+           </div>
         </div>
       </DrawerContent>
     </Drawer>

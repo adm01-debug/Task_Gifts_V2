@@ -11,30 +11,41 @@ export const TopLoadingBar = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [progress, setProgress] = useState(0);
 
-  useEffect(() => {
-    setIsLoading(true);
-    setProgress(20);
-    
-    const timer = setInterval(() => {
-      setProgress((prev) => {
-        if (prev >= 90) return prev;
-        return prev + 5;
-      });
-    }, 100);
-
-    const finishTimer = setTimeout(() => {
-      setProgress(100);
-      setTimeout(() => {
-        setIsLoading(false);
-        setProgress(0);
-      }, 200);
-    }, 400); // Simulate page load completion
-
-    return () => {
-      clearInterval(timer);
-      clearTimeout(finishTimer);
-    };
-  }, [location.pathname]);
+   useEffect(() => {
+     const startLoading = () => {
+       setIsLoading(true);
+       setProgress(20);
+     };
+ 
+     const completeLoading = () => {
+       setProgress(100);
+       setTimeout(() => {
+         setIsLoading(false);
+         setProgress(0);
+       }, 250);
+     };
+ 
+     startLoading();
+     
+     const timer = setInterval(() => {
+       setProgress((prev) => {
+         if (prev >= 95) {
+           clearInterval(timer);
+           return prev;
+         }
+         return prev + (prev < 60 ? 10 : 2);
+       });
+     }, 150);
+ 
+     // This should ideally be triggered by actual content loading, 
+     // but for SPA navigation, a small delay is sufficient to feel snappy
+     const finishTimer = setTimeout(completeLoading, 300);
+ 
+     return () => {
+       clearInterval(timer);
+       clearTimeout(finishTimer);
+     };
+   }, [location.pathname, location.key]);
 
   return (
     <AnimatePresence>

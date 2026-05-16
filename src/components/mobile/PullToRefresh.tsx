@@ -1,6 +1,7 @@
-import { useState, useEffect, ReactNode, useRef } from "react";
-import { motion, useScroll, useSpring, useTransform } from "framer-motion";
-import { Loader2, RefreshCw } from "lucide-react";
+ import { useState, ReactNode, useRef } from "react";
+ import { motion } from "framer-motion";
+ import { Loader2, RefreshCw } from "lucide-react";
+ import { useHapticFeedback } from "@/hooks/useHapticFeedback";
 
 interface PullToRefreshProps {
   onRefresh: () => Promise<void>;
@@ -12,8 +13,8 @@ export const PullToRefresh = ({ onRefresh, children, disabled }: PullToRefreshPr
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [pullDistance, setPullDistance] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
-  const startY = useRef(0);
-  
+   const startY = useRef(0);
+   const haptic = useHapticFeedback();
   const MAX_PULL = 80;
   const THRESHOLD = 60;
 
@@ -26,32 +27,41 @@ export const PullToRefresh = ({ onRefresh, children, disabled }: PullToRefreshPr
     if (disabled || isRefreshing || window.scrollY > 0) return;
     
     const currentY = e.touches[0].pageY;
-    const diff = currentY - startY.current;
-    
-    if (diff > 0) {
-      // Add some resistance
-      const pull = Math.min(MAX_PULL, diff * 0.4);
-      setPullDistance(pull);
-      
-      if (pull > 5) {
-        if (e.cancelable) e.preventDefault();
-      }
-    }
+     const diff = currentY - startY.current;
+     
+     if (diff > 0) {
+       // Add some resistance
+       const pull = Math.min(MAX_PULL, diff * 0.4);
+       
+       if (pull >= THRESHOLD && pullDistance < THRESHOLD) {
+         haptic.trigger("selection");
+       }
+       
+       setPullDistance(pull);
+       
+       if (pull > 5 && e.cancelable) {
+         e.preventDefault();
+       }
+     }
   };
 
   const handleTouchEnd = async () => {
-    if (pullDistance >= THRESHOLD) {
-      setIsRefreshing(true);
-      setPullDistance(THRESHOLD);
-      try {
-        await onRefresh();
-      } finally {
-        setIsRefreshing(false);
-        setPullDistance(0);
-      }
-    } else {
-      setPullDistance(0);
-    }
+     if (pullDistance >= THRESHOLD) {
+       setIsRefreshing(true);
+       setPullDistance(THRESHOLD);
+       haptic.trigger("light");
+       try {
+         await onRefresh();
+         haptic.trigger("success");
+       } catch (error) {
+         haptic.trigger("error");
+       } finally {
+         setIsRefreshing(false);
+         setPullDistance(0);
+       }
+     } else {
+       setPullDistance(0);
+     }
   };
 
   return (

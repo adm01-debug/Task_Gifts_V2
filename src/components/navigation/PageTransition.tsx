@@ -1,5 +1,6 @@
-import { motion, HTMLMotionProps } from "framer-motion";
-import { ReactNode, forwardRef } from "react";
+ import { motion, HTMLMotionProps, AnimatePresence } from "framer-motion";
+ import { ReactNode, forwardRef } from "react";
+ import { useLocation } from "react-router-dom";
 
 interface PageTransitionProps extends HTMLMotionProps<"div"> {
   children: ReactNode;
@@ -9,25 +10,30 @@ interface PageTransitionProps extends HTMLMotionProps<"div"> {
  * PageTransition - Fornece uma animação de transição suave entre páginas
  * Pode ser estendido para suportar diferentes tipos de animações (slide, fade, scale)
  */
-export const PageTransition = forwardRef<HTMLDivElement, PageTransitionProps>(
-  ({ children, className, ...props }, ref) => {
-    return (
-      <motion.div
-        ref={ref}
-        initial={{ opacity: 0, y: 8 }}
-        animate={{ opacity: 1, y: 0 }}
-        exit={{ opacity: 0, y: -8 }}
-        transition={{
-          duration: 0.3,
-          ease: [0.22, 1, 0.36, 1], // Custom cubic-bezier for smoother feel
-        }}
-        className={className}
-        {...props}
-      >
-        {children}
-      </motion.div>
-    );
-  }
-);
+ export const PageTransition = forwardRef<HTMLDivElement, PageTransitionProps>(
+   ({ children, className, ...props }, ref) => {
+     const location = useLocation();
+     
+     return (
+       <AnimatePresence mode="wait">
+         <motion.div
+           key={location.pathname}
+           ref={ref}
+           initial={{ opacity: 0, y: 10, filter: "blur(4px)" }}
+           animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+           exit={{ opacity: 0, y: -10, filter: "blur(4px)" }}
+           transition={{
+             duration: 0.25,
+             ease: [0.23, 1, 0.32, 1],
+           }}
+           className={className}
+           {...props}
+         >
+           {children}
+         </motion.div>
+       </AnimatePresence>
+     );
+   }
+ );
 
 PageTransition.displayName = "PageTransition";

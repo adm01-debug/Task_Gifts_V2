@@ -16,7 +16,7 @@ import { SEOHead } from "@/components/SEOHead";
 import { useSEO } from "@/hooks/useSEO";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { MobilePageLayout } from "@/components/mobile";
-import { DesktopBackButton, GlobalBreadcrumbs } from "@/components/navigation";
+ import { PageShell } from "@/components/navigation";
 import { GoalCard } from "@/components/goals/GoalCard";
 
 export default function Goals() {
@@ -115,27 +115,23 @@ export default function Goals() {
     </>
   );
 
-  if (isMobile) {
-    return (
-      <PageWrapper pageName="Goals">
-        <MobilePageLayout title="Goals & OKRs" subtitle="Gerencie seus objetivos" icon={Target}>
-          {pageContent}
-        </MobilePageLayout>
-      </PageWrapper>
-    );
-  }
-
-  return (
-    <PageWrapper pageName="Goals">
-      <div className="min-h-screen bg-background">
-        <header className="sticky top-0 z-30 bg-background/80 backdrop-blur-xl border-b border-border px-4 md:px-6 py-4">
-          <div className="max-w-7xl mx-auto flex items-center gap-4">
-            <DesktopBackButton />
-            <div><GlobalBreadcrumbs /><h1 className="text-xl font-bold">Goals & OKRs</h1></div>
-          </div>
-        </header>
-        {pageContent}
-      </div>
-    </PageWrapper>
-  );
+   return (
+     <PageShell title="Goals & OKRs" backFallback="/">
+       <PageWrapper pageName="Goals">
+         {isMobile ? (
+           <MobilePageLayout title="Goals & OKRs" subtitle="Gerencie seus objetivos" icon={Target}>
+             {pageContent}
+           </MobilePageLayout>
+         ) : (
+           <div className="min-h-screen bg-background">
+             <header className="px-4 md:px-6 py-4">
+               <h1 className="text-2xl font-bold">Goals & OKRs</h1>
+               <p className="text-muted-foreground">Gerencie seus objetivos e OKRs</p>
+             </header>
+             {pageContent}
+           </div>
+         )}
+       </PageWrapper>
+     </PageShell>
+   );
 }

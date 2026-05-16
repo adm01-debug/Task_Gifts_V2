@@ -11,7 +11,9 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { useUserStreak, useTodayAttendance, useRecentAttendance, useCheckIn, useCheckOut, useAttendanceSettings } from "@/hooks/useAttendance";
 import { AttendanceCalendar } from "@/components/AttendanceCalendar";
 import { AttendanceCharts } from "@/components/attendance/AttendanceCharts";
-import { DesktopBackButton } from "@/components/navigation";
+ import { PageShell } from "@/components/navigation";
+ import { useIsMobile } from "@/hooks/use-mobile";
+ import { MobilePageLayout } from "@/components/mobile";
 import { format, parseISO, startOfMonth, endOfMonth, eachDayOfInterval, isWeekend } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { useState, useMemo } from "react";
@@ -61,15 +63,19 @@ const Attendance = () => {
 
   const targetMinutes = settings ? parseInt(settings.work_start_time.split(':')[0]) * 60 + parseInt(settings.work_start_time.split(':')[1]) : 480;
 
-  return (
-    <PageWrapper pageName="Ponto" className="min-h-screen bg-background">
-      <SEOHead {...seoData} />
-      <header className="sticky top-0 z-50 bg-background/80 backdrop-blur-xl border-b border-border">
-        <div className="container mx-auto px-4 py-4"><div className="flex items-center gap-4"><DesktopBackButton /><div><h1 className="text-2xl font-bold">Controle de Ponto</h1><p className="text-sm text-muted-foreground">{format(new Date(), "EEEE, d 'de' MMMM", { locale: ptBR })}</p></div></div></div>
-      </header>
-
-      <main className="container mx-auto px-4 py-6 space-y-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+   const isMobile = useIsMobile();
+ 
+   const pageContent = (
+     <main className="container mx-auto px-4 py-6 space-y-6 max-w-7xl pb-24">
+       {!isMobile && (
+         <div className="flex items-center justify-between mb-4">
+           <div>
+             <h1 className="text-3xl font-bold">Controle de Ponto</h1>
+             <p className="text-muted-foreground">{format(new Date(), "EEEE, d 'de' MMMM", { locale: ptBR })}</p>
+           </div>
+         </div>
+       )}
+       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <Card className="border-border/50 bg-card/50 backdrop-blur-sm">
             <CardHeader><CardTitle className="flex items-center gap-2"><Clock className="w-5 h-5 text-primary" />Registro de Hoje</CardTitle></CardHeader>
             <CardContent className="space-y-4">
@@ -151,9 +157,23 @@ const Attendance = () => {
             </Table>
           </CardContent>
         </Card>
-      </main>
-    </PageWrapper>
-  );
+       </main>
+   );
+ 
+   return (
+     <PageShell title="Ponto">
+       <PageWrapper pageName="Ponto" className="min-h-screen bg-background">
+         <SEOHead {...seoData} />
+         {isMobile ? (
+           <MobilePageLayout title="Controle de Ponto" icon={Clock} backPath="/" subtitle={format(new Date(), "EEEE, d 'de' MMMM", { locale: ptBR })}>
+             {pageContent}
+           </MobilePageLayout>
+         ) : (
+           pageContent
+         )}
+       </PageWrapper>
+     </PageShell>
+   );
 };
 
 export default Attendance;

@@ -21,7 +21,7 @@ import { useOneOnOnePreparationManual } from "@/hooks/useOneOnOnePreparation";
 import { OneOnOnePreparationPanel } from "@/components/checkins/OneOnOnePreparationPanel";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { MobilePageLayout } from "@/components/mobile";
-import { DesktopBackButton, GlobalBreadcrumbs } from "@/components/navigation";
+ import { PageShell } from "@/components/navigation";
 import { CheckinCard, getStatusBadge, moodEmojis } from "@/components/checkins/CheckinCard";
 import type { Checkin, ActionItem, CheckinTemplate } from "@/services/checkinsService";
 
@@ -162,17 +162,22 @@ export default function Checkins() {
     </main>
   );
 
-  if (isMobile) {
-    return <MobilePageLayout title="Check-ins 1:1" icon={Users} backPath="/" subtitle="Reuniões de acompanhamento">{pageContent}</MobilePageLayout>;
-  }
-
-  return (
-    <div className="min-h-screen bg-background">
-      <header className="flex h-16 shrink-0 items-center gap-2 border-b px-4 md:px-6">
-        <DesktopBackButton /><Users className="h-6 w-6 text-primary" /><h1 className="text-xl font-bold">Check-ins 1:1</h1><span className="text-muted-foreground ml-2">Reuniões de acompanhamento</span>
-      </header>
-      <GlobalBreadcrumbs className="px-4 md:px-6 pt-3" />
-      {pageContent}
-    </div>
-  );
+   return (
+     <PageShell title="Check-ins 1:1">
+       {isMobile ? (
+         <MobilePageLayout title="Check-ins 1:1" icon={Users} backPath="/" subtitle="Reuniões de acompanhamento">
+           {pageContent}
+         </MobilePageLayout>
+       ) : (
+         <div className="min-h-screen bg-background">
+           <header className="flex h-16 shrink-0 items-center gap-2 px-4 md:px-6">
+             <Users className="h-6 w-6 text-primary" />
+             <h1 className="text-xl font-bold">Check-ins 1:1</h1>
+             <span className="text-muted-foreground ml-2">Reuniões de acompanhamento</span>
+           </header>
+           {pageContent}
+         </div>
+       )}
+     </PageShell>
+   );
 }

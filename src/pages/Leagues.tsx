@@ -4,12 +4,11 @@ import { useLeagues } from "@/hooks/useLeagues";
 import { useNavigate } from "react-router-dom";
 import { LeagueCard } from "@/components/LeagueCard";
 import type { LeagueHistory } from "@/services/leaguesService";
-import { PageWrapper } from "@/components/PageWrapper";
-import { SEOHead } from "@/components/SEOHead";
-import { useIsMobile } from "@/hooks/use-mobile";
-import { MobilePageLayout } from "@/components/mobile";
-import { DesktopBackButton } from "@/components/navigation";
-import { GlobalBreadcrumbs } from "@/components/navigation";
+ import { PageWrapper } from "@/components/PageWrapper";
+ import { SEOHead } from "@/components/SEOHead";
+ import { useIsMobile } from "@/hooks/use-mobile";
+ import { MobilePageLayout } from "@/components/mobile";
+ import { PageShell } from "@/components/navigation";
 
 export default function Leagues() {
   const navigate = useNavigate();
@@ -53,29 +52,23 @@ export default function Leagues() {
     </>
   );
 
-  // Mobile: use MobilePageLayout
-  if (isMobile) {
-    return (
-      <MobilePageLayout
-        title="Ligas & Divisões"
-        icon={Trophy}
-        backPath="/"
-      >
-        {pageContent}
-      </MobilePageLayout>
-    );
-  }
-
-  // Desktop: original layout
-  return (
-    <PageWrapper pageName="Ligas" className="min-h-screen bg-background">
-      <header className="flex h-16 shrink-0 items-center gap-2 border-b px-4 md:px-6">
-        <DesktopBackButton />
-        <Trophy className="h-6 w-6 text-primary" />
-        <h1 className="text-xl font-bold">Ligas & Divisões</h1>
-      </header>
-      <GlobalBreadcrumbs className="px-4 md:px-6 pt-3" />
-      {pageContent}
-    </PageWrapper>
-  );
+   return (
+     <PageShell title="Ligas & Divisões">
+       <PageWrapper pageName="Ligas" className="min-h-screen bg-background">
+         {isMobile ? (
+           <MobilePageLayout title="Ligas & Divisões" icon={Trophy} backPath="/">
+             {pageContent}
+           </MobilePageLayout>
+         ) : (
+           <>
+             <header className="flex h-16 shrink-0 items-center gap-2 px-4 md:px-6">
+               <Trophy className="h-6 w-6 text-primary" />
+               <h1 className="text-xl font-bold">Ligas & Divisões</h1>
+             </header>
+             {pageContent}
+           </>
+         )}
+       </PageWrapper>
+     </PageShell>
+   );
 }

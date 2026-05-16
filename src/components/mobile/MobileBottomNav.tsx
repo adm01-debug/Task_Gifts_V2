@@ -13,21 +13,21 @@ interface NavItem {
 }
 
 const mainNavItems: NavItem[] = [
-  { icon: Home, label: "Início", path: "/" },
+   { icon: Home, label: "Dashboard", path: "/" },
   { icon: Target, label: "Metas", path: "/goals" },
   { icon: Trophy, label: "Ligas", path: "/leagues" },
   { icon: BookOpen, label: "Trilhas", path: "/trails" },
 ];
 
 const moreNavItems: NavItem[] = [
-  { icon: Gamepad2, label: "Duelos", path: "/duels", color: "text-orange-500" },
-  { icon: BarChart3, label: "Stats", path: "/personal-stats", color: "text-blue-500" },
-  { icon: MessageSquare, label: "Feed", path: "/social-feed", color: "text-green-500" },
+   { icon: Gamepad2, label: "Quiz Diário", path: "/quiz", color: "text-orange-500" },
+   { icon: BarChart3, label: "Estatísticas", path: "/estatisticas", color: "text-blue-500" },
+   { icon: MessageSquare, label: "Feed Social", path: "/feed", color: "text-green-500" },
   { icon: User, label: "Perfil", path: "/profile", color: "text-purple-500" },
-  { icon: Sparkles, label: "Conquistas", path: "/achievements", color: "text-amber-500" },
+   { icon: Sparkles, label: "Conquistas", path: "/conquistas", color: "text-amber-500" },
   { icon: Bell, label: "Avisos", path: "/announcements", color: "text-pink-500" },
-  { icon: Settings, label: "Config", path: "/admin", color: "text-slate-500" },
-  { icon: HelpCircle, label: "Ajuda", path: "/feedback", color: "text-cyan-500" },
+   { icon: Settings, label: "Painel Admin", path: "/admin", color: "text-slate-500" },
+   { icon: HelpCircle, label: "Pesquisas", path: "/surveys", color: "text-cyan-500" },
 ];
 
 interface MobileBottomNavProps {
@@ -99,15 +99,9 @@ export const MobileBottomNav = memo(function MobileBottomNav({ className }: Mobi
               style={{ paddingBottom: "max(env(safe-area-inset-bottom), 20px)" }}
             >
               {/* Drag handle with animation */}
-              <motion.div 
-                className="flex justify-center pt-3 pb-2 cursor-grab active:cursor-grabbing"
-                onPointerDown={(e) => dragControls.start(e)}
-              >
-                <motion.div 
-                  className="w-10 h-1 bg-muted-foreground/30 rounded-full"
-                  whileHover={{ width: 48 }}
-                />
-              </motion.div>
+               <div className="flex justify-center pt-3 pb-2 cursor-grab active:cursor-grabbing" onPointerDown={(e) => dragControls.start(e)}>
+                 <div className="w-12 h-1.5 bg-muted-foreground/20 rounded-full" />
+               </div>
 
               {/* Title */}
               <div className="px-5 pb-4">
