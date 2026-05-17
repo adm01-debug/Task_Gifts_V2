@@ -91,6 +91,6 @@ export default function AuditLogs() {
           <AuditTable logs={filteredLogs} isLoading={logsLoading} getUserName={getUserName} />
         </motion.div>
       </div>
-    </div>
+    </PageShell>
   );
 }
