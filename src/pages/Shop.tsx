@@ -58,27 +58,36 @@ export default function Shop() {
   };
 
   return (
-     <PageShell title="Loja">
+   return (
+     <PageShell 
+       title="Loja de Recompensas" 
+       subtitle="Troque suas moedas por produtos e benefícios exclusivos"
+       icon={<Sparkles className="w-6 h-6 text-amber-500" />}
+     >
        <SEOHead title={seoConfig.title} description={seoConfig.description} keywords={seoConfig.keywords} />
        {celebration && <CelebrationEffect isActive={celebration.active} type={celebration.type} onComplete={() => setCelebration(null)} />}
  
-       <div className={cn("header-sticky bg-gradient-to-r from-amber-500 via-orange-500 to-pink-500 text-white", isScrolled && "scrolled")}>
-         <div className="max-w-6xl mx-auto p-6">
-           <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="flex items-center justify-between">
-             <div className="flex items-center gap-4">
-               <div className="flex flex-col">
-                 <h1 className="text-2xl font-bold flex items-center gap-2"><Sparkles className="w-6 h-6" />Loja de Recompensas</h1>
-                 <p className="text-white/80 mt-1">Troque suas moedas por produtos e benefícios exclusivos</p>
-               </div>
+       <div className="max-w-6xl mx-auto p-4 md:p-6">
+         <motion.div 
+           initial={{ opacity: 0, scale: 0.95 }}
+           animate={{ opacity: 1, scale: 1 }}
+           className="mb-8 p-6 rounded-2xl bg-gradient-to-r from-amber-500 via-orange-500 to-pink-500 text-white shadow-lg flex items-center justify-between"
+         >
+           <div className="flex items-center gap-3">
+             <div className="p-3 rounded-xl bg-white/20 backdrop-blur-sm">
+               <Coins className="w-8 h-8 text-amber-200" />
              </div>
-             <motion.div whileHover={{ scale: 1.05 }} className="bg-white/20 backdrop-blur-sm rounded-xl px-4 py-2 flex items-center gap-2">
-               <Coins className="w-6 h-6 text-amber-200" /><span className="text-2xl font-bold">{userCoins}</span><span className="text-white/80 text-sm">moedas</span>
-             </motion.div>
-           </motion.div>
-         </div>
-       </div>
-
-      <div className="max-w-6xl mx-auto p-4 md:p-6">
+             <div>
+               <p className="text-white/80 text-sm font-medium">Seu Saldo Atual</p>
+               <p className="text-4xl font-black">{userCoins.toLocaleString()}</p>
+             </div>
+           </div>
+           <div className="hidden md:block">
+             <Button variant="secondary" className="bg-white/20 hover:bg-white/30 border-none text-white backdrop-blur-sm">
+               Ver Histórico
+             </Button>
+           </div>
+         </motion.div>
         <Tabs defaultValue="shop" className="space-y-6">
           <TabsList className="grid w-full max-w-md grid-cols-2">
             <TabsTrigger value="shop" className="flex items-center gap-2"><ShoppingBag className="w-4 h-4" />Loja</TabsTrigger>
