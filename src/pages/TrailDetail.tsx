@@ -14,6 +14,7 @@ import { SectionErrorBoundary } from "@/components/SectionErrorBoundary";
 import { useTrailWithModules, useUserEnrollments, useModuleProgress, useEnrollInTrail, useStartModule, useCompleteModule } from "@/hooks/useTrails";
 import { useAuth } from "@/hooks/useAuth";
 import type { TrailModule, ModuleProgress } from "@/services/trailsService";
+import { PageShell } from "@/components/navigation";
 import ModuleViewer from "@/components/lms/ModuleViewer";
 
 const contentTypeConfig = {
