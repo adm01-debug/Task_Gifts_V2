@@ -144,37 +144,25 @@ export default function SocialFeedPage() {
   }), [filteredActivities]);
 
    return (
-     <PageShell title="Feed da Equipe">
-       <MobilePageLayout
-         title="Feed da Equipe"
-         subtitle="Acompanhe as conquistas e atividades"
-         icon={Activity}
-         headerActions={
-           <Button
-             variant="ghost"
-             size="icon"
-             onClick={() => refetch()}
-             className="w-10 h-10 rounded-xl"
-           >
-             <RefreshCw className={cn("w-5 h-5", isLoading && "animate-spin")} />
-           </Button>
-         }
-       >
-         <SEOHead {...seoData} />
+     <PageShell title="Feed da Equipe" backFallback="/">
+       <SEOHead {...seoData} />
+       <header className="px-4 py-6 border-b border-border/50 mb-6 flex items-center justify-between">
+         <div className="flex items-center gap-3">
+           <div className="p-3 rounded-xl bg-primary/10">
+             <Activity className="w-8 h-8 text-primary" />
+           </div>
+           <div>
+             <h1 className="text-3xl font-bold">Feed da Equipe</h1>
+             <p className="text-muted-foreground text-sm">Acompanhe o progresso de todos</p>
+           </div>
+         </div>
+         <Button onClick={() => refetch()} variant="outline" size="sm" className="gap-2">
+           <RefreshCw className={cn("w-4 h-4", isLoading && "animate-spin")} />
+           <span className="hidden sm:inline">Atualizar</span>
+         </Button>
+       </header>
  
-         <div className="p-4 md:p-6 space-y-6 max-w-5xl mx-auto">
-           {!isLoading && (
-             <header className="hidden md:flex items-center justify-between mb-6">
-               <div>
-                 <h1 className="text-3xl font-bold">Feed da Equipe</h1>
-                 <p className="text-muted-foreground">Acompanhe o progresso e as conquistas de todos</p>
-               </div>
-               <Button onClick={() => refetch()} variant="outline" className="gap-2">
-                 <RefreshCw className={cn("w-4 h-4", isLoading && "animate-spin")} />
-                 Atualizar
-               </Button>
-             </header>
-           )}
+       <div className="p-4 md:p-6 space-y-6 max-w-5xl mx-auto pb-24">
         {/* Filters */}
         <Card>
           <CardHeader className="pb-3">
