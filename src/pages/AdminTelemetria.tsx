@@ -385,11 +385,11 @@ function AdminTelemetriaContent() {
               )}
             </CardContent>
           </Card>
-        </main>
-      </div>
-    </PageWrapper>
-  );
-}
+           </div>
+         </PageWrapper>
+       </PageShell>
+     );
+   }
 
 export default function AdminTelemetriaPage() {
   return (
