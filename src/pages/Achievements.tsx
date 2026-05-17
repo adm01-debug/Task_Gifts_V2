@@ -1,6 +1,7 @@
 import { motion, AnimatePresence } from "framer-motion";
- import { Trophy, Lock, CheckCircle2, Flame, Sparkles, Star, Trophy as TrophyIcon } from "lucide-react";
- import { PageShell } from "@/components/navigation";
+  import { Trophy, Lock, CheckCircle2, Flame, Sparkles, Star, Trophy as TrophyIcon } from "lucide-react";
+  import { useNavigate } from "react-router-dom";
+  import { PageShell } from "@/components/navigation";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
