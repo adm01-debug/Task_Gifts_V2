@@ -294,7 +294,7 @@ export default function RateLimitDashboard() {
             </TabsContent>
           </Tabs>
         </div>
-      </div>
+      </PageShell>
     </RequireAdmin>
   );
 }
