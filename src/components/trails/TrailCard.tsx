@@ -34,7 +34,7 @@ export function TrailCard({ trail, enrollment, hasCertification, certificationNa
 
   return (
     <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} whileHover={{ y: isLocked ? 0 : -4 }} transition={{ duration: 0.2 }}>
-      <Card className={`overflow-hidden border-border/50 bg-card/50 backdrop-blur-sm transition-all duration-300 h-full flex flex-col ${isLocked ? 'opacity-60 grayscale-[30%]' : hasCertification ? 'ring-1 ring-amber-500/30 hover:border-primary/30' : 'hover:border-primary/30'}`}>
+       <Card variant={isLocked ? "subtle" : "interactive"} className={`overflow-hidden transition-all duration-300 h-full flex flex-col ${isLocked ? 'opacity-60 grayscale-[30%]' : hasCertification ? 'ring-1 ring-amber-500/30 hover:border-primary/30' : ''}`}>
         <CardHeader className="pb-3">
           <div className="flex items-start justify-between gap-3">
             <div className="flex items-center gap-3">

@@ -45,39 +45,55 @@ interface ModuleViewerProps {
       : new URL(videoUrl).searchParams.get("v");
     
     return (
-      <div className="aspect-video rounded-lg overflow-hidden bg-black">
+      <div className="group relative aspect-video rounded-2xl overflow-hidden bg-black shadow-2xl ring-1 ring-white/10">
         <iframe
-          src={`https://www.youtube.com/embed/${videoId}`}
+          src={`https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1`}
           className="w-full h-full"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
           allowFullScreen
         />
+        <div className="absolute inset-0 pointer-events-none border-[6px] border-white/5 rounded-2xl" />
       </div>
     );
   }
 
-   return (
-     <div className="relative group aspect-video rounded-2xl overflow-hidden bg-slate-900 shadow-2xl ring-1 ring-white/10">
-       {!isPlaying ? (
-         <div className="absolute inset-0 flex items-center justify-center bg-black/40 backdrop-blur-[2px] z-10">
-           <motion.button
-             whileHover={{ scale: 1.1 }}
-             whileTap={{ scale: 0.9 }}
-             onClick={() => setIsPlaying(true)}
-             className="w-20 h-20 rounded-full bg-primary/90 text-primary-foreground flex items-center justify-center shadow-2xl shadow-primary/40 group-hover:bg-primary"
-           >
-             <Play className="h-8 w-8 ml-1" />
-           </motion.button>
-         </div>
-       ) : null}
-       <video 
-         src={videoUrl} 
-         controls={isPlaying}
-         autoPlay={isPlaying}
-         className="w-full h-full object-cover" 
-       />
-     </div>
-   );
+  return (
+    <div className="relative group aspect-video rounded-2xl overflow-hidden bg-slate-900 shadow-2xl ring-1 ring-white/10">
+      {!isPlaying ? (
+        <div className="absolute inset-0 flex items-center justify-center bg-black/60 backdrop-blur-md z-10 transition-all group-hover:bg-black/40">
+          <div className="relative">
+            <motion.div 
+              className="absolute inset-0 rounded-full bg-primary/20"
+              animate={{ scale: [1, 1.4], opacity: [1, 0] }}
+              transition={{ duration: 2, repeat: Infinity }}
+            />
+            <motion.button
+              whileHover={{ scale: 1.1, rotate: 5 }}
+              whileTap={{ scale: 0.9 }}
+              onClick={() => setIsPlaying(true)}
+              className="relative w-24 h-24 rounded-full bg-primary text-primary-foreground flex items-center justify-center shadow-[0_0_50px_rgba(var(--primary),0.5)] z-20"
+            >
+              <Play className="h-10 w-10 ml-1 fill-current" />
+            </motion.button>
+          </div>
+          <motion.p 
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="absolute bottom-12 text-white font-bold tracking-widest uppercase text-xs"
+          >
+            Clique para Iniciar
+          </motion.p>
+        </div>
+      ) : null}
+      <video 
+        src={videoUrl} 
+        controls={isPlaying}
+        autoPlay={isPlaying}
+        className="w-full h-full object-cover" 
+      />
+      <div className="absolute inset-0 pointer-events-none border-[6px] border-white/5 rounded-2xl" />
+    </div>
+  );
  }
 
 function TextContent({ content }: { content: { text?: string; html?: string } }) {
@@ -274,52 +290,66 @@ function FlashcardsContent({
         <Progress value={(reviewed.size / cards.length) * 100} className="w-32 h-2" />
       </div>
 
-      <motion.div
-        className="relative h-64 cursor-pointer perspective-1000"
+      <div 
+        className="relative h-80 cursor-pointer perspective-2000 group"
         onClick={() => setIsFlipped(!isFlipped)}
       >
-       <motion.div
-         className="absolute inset-0 rounded-2xl border-2 border-primary/20 bg-gradient-to-br from-card to-muted/50 p-8 flex items-center justify-center text-center shadow-xl backface-hidden"
-         animate={{ rotateY: isFlipped ? 180 : 0 }}
-         transition={{ 
-           duration: 0.6,
-           type: "spring",
-           stiffness: 260,
-           damping: 20
-         }}
-         style={{ backfaceVisibility: "hidden" }}
-       >
-         <div className="space-y-4">
-           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-[10px] font-bold uppercase tracking-wider">
-             <Layers className="h-3 w-3" />
-             Pergunta
-           </div>
-           <p className="text-2xl font-bold leading-tight text-foreground">{cards[currentCard].front}</p>
-           <p className="text-sm text-muted-foreground/60 font-medium">Toque para revelar a resposta</p>
-         </div>
-       </motion.div>
+        <motion.div
+          className="absolute inset-0 rounded-3xl border-2 border-primary/20 bg-gradient-to-br from-card via-card to-primary/5 p-8 flex flex-col items-center justify-center text-center shadow-2xl backface-hidden preserve-3d"
+          animate={{ 
+            rotateY: isFlipped ? 180 : 0,
+            z: isFlipped ? 0 : 50
+          }}
+          transition={{ 
+            duration: 0.7,
+            type: "spring",
+            stiffness: 200,
+            damping: 20
+          }}
+          style={{ backfaceVisibility: "hidden" }}
+        >
+          <div className="absolute top-6 left-6 flex items-center gap-2 opacity-50">
+             <Layers className="h-4 w-4 text-primary" />
+             <span className="text-[10px] font-black uppercase tracking-tighter">Flashcard</span>
+          </div>
+          <div className="space-y-6 translate-z-20">
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 text-primary text-xs font-black uppercase tracking-widest border border-primary/20">
+              Pergunta
+            </div>
+            <h4 className="text-3xl font-black leading-tight text-foreground tracking-tight">{cards[currentCard].front}</h4>
+            <div className="flex flex-col items-center gap-2 mt-8 animate-bounce">
+              <span className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest">Toque para Girar</span>
+              <ChevronRight className="h-4 w-4 rotate-90 text-primary" />
+            </div>
+          </div>
+        </motion.div>
 
-       <motion.div
-         className="absolute inset-0 rounded-2xl border-2 border-emerald-500/30 bg-gradient-to-br from-emerald-500/5 to-emerald-500/10 p-8 flex items-center justify-center text-center shadow-xl"
-         initial={{ rotateY: 180 }}
-         animate={{ rotateY: isFlipped ? 0 : -180 }}
-         transition={{ 
-           duration: 0.6,
-           type: "spring",
-           stiffness: 260,
-           damping: 20
-         }}
-         style={{ backfaceVisibility: "hidden" }}
-       >
-         <div className="space-y-4">
-           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-500 text-[10px] font-bold uppercase tracking-wider">
-             <CheckCircle2 className="h-3 w-3" />
-             Resposta Correcta
-           </div>
-           <p className="text-2xl font-bold leading-tight text-foreground">{cards[currentCard].back}</p>
-         </div>
-       </motion.div>
-      </motion.div>
+        <motion.div
+          className="absolute inset-0 rounded-3xl border-2 border-emerald-500/30 bg-gradient-to-br from-emerald-500/10 via-background to-emerald-500/5 p-8 flex flex-col items-center justify-center text-center shadow-2xl preserve-3d"
+          initial={{ rotateY: 180 }}
+          animate={{ 
+            rotateY: isFlipped ? 0 : -180,
+            z: isFlipped ? 50 : 0
+          }}
+          transition={{ 
+            duration: 0.7,
+            type: "spring",
+            stiffness: 200,
+            damping: 20
+          }}
+          style={{ backfaceVisibility: "hidden" }}
+        >
+          <div className="absolute top-6 right-6">
+             <CheckCircle2 className="h-8 w-8 text-emerald-500/40" />
+          </div>
+          <div className="space-y-6 translate-z-20">
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-500/10 text-emerald-500 text-xs font-black uppercase tracking-widest border border-emerald-500/20">
+              Resposta
+            </div>
+            <p className="text-3xl font-black leading-tight text-foreground tracking-tight">{cards[currentCard].back}</p>
+          </div>
+        </motion.div>
+      </div>
 
       <div className="flex justify-between pt-4">
         <Button variant="outline" onClick={handlePrev} disabled={currentCard === 0}>
