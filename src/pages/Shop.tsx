@@ -57,7 +57,6 @@ export default function Shop() {
     });
   };
 
-  return (
    return (
      <PageShell 
        title="Loja de Recompensas" 
@@ -88,81 +87,81 @@ export default function Shop() {
              </Button>
            </div>
          </motion.div>
-        <Tabs defaultValue="shop" className="space-y-6">
-          <TabsList className="grid w-full max-w-md grid-cols-2">
-            <TabsTrigger value="shop" className="flex items-center gap-2"><ShoppingBag className="w-4 h-4" />Loja</TabsTrigger>
-            <TabsTrigger value="history" className="flex items-center gap-2"><History className="w-4 h-4" />Meus Resgates</TabsTrigger>
-          </TabsList>
-          <TabsContent value="shop" className="space-y-6">
-            <FlashSalesBanner onPurchase={(rewardId) => { const reward = rewards?.find(r => r.id === rewardId); if (reward) handlePurchase(reward); }} />
-            <div className="flex flex-wrap gap-2">
-              <Button variant={activeCategory === "all" ? "default" : "outline"} size="sm" onClick={() => setActiveCategory("all")}>Todos</Button>
-              <Button variant={activeCategory === "product" ? "default" : "outline"} size="sm" onClick={() => setActiveCategory("product")}><Package className="w-4 h-4 mr-1" />Produtos</Button>
-              <Button variant={activeCategory === "benefit" ? "default" : "outline"} size="sm" onClick={() => setActiveCategory("benefit")}><Star className="w-4 h-4 mr-1" />Benefícios</Button>
-              <Button variant={activeCategory === "experience" ? "default" : "outline"} size="sm" onClick={() => setActiveCategory("experience")}><Target className="w-4 h-4 mr-1" />Experiências</Button>
-            </div>
-            {isLoading ? (
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-                  {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => <Skeleton key={i} className="h-64 rounded-xl" />)}
-                </div>
-             ) : filteredRewards && filteredRewards.length > 0 ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-                <AnimatePresence mode="popLayout">
-                   {filteredRewards.map((reward) => (
-                    <RewardCard key={reward.id} reward={reward} userCoins={userCoins} onPurchase={handlePurchase} purchasingRewardId={purchasingRewardId} />
-                  ))}
-                </AnimatePresence>
-              </div>
-             ) : (
-               <EmptyState 
-                 icon={ShoppingCart}
-                 title="Nenhuma recompensa encontrada"
-                 description="Não há itens disponíveis nesta categoria no momento. Volte em breve!"
-                 action={{ label: "Ver todos", onClick: () => setActiveCategory("all") }}
-               />
-             )}
-          </TabsContent>
-          <TabsContent value="history"><PurchaseHistory /></TabsContent>
-        </Tabs>
-      </div>
-
-      <Dialog open={!!selectedReward} onOpenChange={() => setSelectedReward(null)}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Confirmar Resgate</DialogTitle>
-            <DialogDescription>Você está prestes a resgatar esta recompensa</DialogDescription>
-          </DialogHeader>
-          {selectedReward && (
-            <div className="py-4">
-              <div className="flex items-center gap-4">
-                <div className={`w-14 h-14 rounded-xl flex items-center justify-center text-2xl ${selectedReward.rarity === "legendary" ? "bg-gradient-to-br from-amber-400 to-orange-500" : selectedReward.rarity === "epic" ? "bg-gradient-to-br from-purple-400 to-pink-500" : selectedReward.rarity === "rare" ? "bg-gradient-to-br from-blue-400 to-cyan-500" : "bg-muted"}`}>
-                  {shopService.getCategoryConfig(selectedReward.category).icon}
-                </div>
-                <div>
-                  <h3 className="font-bold text-lg">{selectedReward.name}</h3>
-                  <p className="text-sm text-muted-foreground">{selectedReward.description}</p>
-                </div>
-              </div>
-              <div className="mt-4 p-4 bg-muted rounded-lg">
-                <div className="flex justify-between items-center">
-                  <span className="text-muted-foreground">Custo:</span>
-                  <div className="flex items-center gap-1"><Coins className="w-5 h-5 text-amber-500" /><span className="font-bold text-lg">{selectedReward.price_coins}</span></div>
-                </div>
-                <div className="flex justify-between items-center mt-2">
-                  <span className="text-muted-foreground">Seu saldo após:</span>
-                  <div className="flex items-center gap-1"><Coins className="w-5 h-5 text-amber-500" /><span className="font-bold">{userCoins - selectedReward.price_coins}</span></div>
-                </div>
-              </div>
-            </div>
-          )}
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setSelectedReward(null)}>Cancelar</Button>
-            <Button onClick={confirmPurchase} disabled={purchaseMutation.isPending} className="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600">
-              {purchaseMutation.isPending ? "Resgatando..." : "Confirmar Resgate"}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-   </PageShell>
-  );
-}
+         <Tabs defaultValue="shop" className="space-y-6">
+           <TabsList className="grid w-full max-w-md grid-cols-2">
+             <TabsTrigger value="shop" className="flex items-center gap-2"><ShoppingBag className="w-4 h-4" />Loja</TabsTrigger>
+             <TabsTrigger value="history" className="flex items-center gap-2"><History className="w-4 h-4" />Meus Resgates</TabsTrigger>
+           </TabsList>
+           <TabsContent value="shop" className="space-y-6">
+             <FlashSalesBanner onPurchase={(rewardId) => { const reward = rewards?.find(r => r.id === rewardId); if (reward) handlePurchase(reward); }} />
+             <div className="flex flex-wrap gap-2">
+               <Button variant={activeCategory === "all" ? "default" : "outline"} size="sm" onClick={() => setActiveCategory("all")}>Todos</Button>
+               <Button variant={activeCategory === "product" ? "default" : "outline"} size="sm" onClick={() => setActiveCategory("product")}><Package className="w-4 h-4 mr-1" />Produtos</Button>
+               <Button variant={activeCategory === "benefit" ? "default" : "outline"} size="sm" onClick={() => setActiveCategory("benefit")}><Star className="w-4 h-4 mr-1" />Benefícios</Button>
+               <Button variant={activeCategory === "experience" ? "default" : "outline"} size="sm" onClick={() => setActiveCategory("experience")}><Target className="w-4 h-4 mr-1" />Experiências</Button>
+             </div>
+             {isLoading ? (
+                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                   {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => <Skeleton key={i} className="h-64 rounded-xl" />)}
+                 </div>
+              ) : filteredRewards && filteredRewards.length > 0 ? (
+               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                 <AnimatePresence mode="popLayout">
+                    {filteredRewards.map((reward) => (
+                     <RewardCard key={reward.id} reward={reward} userCoins={userCoins} onPurchase={handlePurchase} purchasingRewardId={purchasingRewardId} />
+                   ))}
+                 </AnimatePresence>
+               </div>
+              ) : (
+                <EmptyState 
+                  icon={ShoppingCart}
+                  title="Nenhuma recompensa encontrada"
+                  description="Não há itens disponíveis nesta categoria no momento. Volte em breve!"
+                  action={{ label: "Ver todos", onClick: () => setActiveCategory("all") }}
+                />
+              )}
+           </TabsContent>
+           <TabsContent value="history"><PurchaseHistory /></TabsContent>
+         </Tabs>
+       </div>
+ 
+       <Dialog open={!!selectedReward} onOpenChange={() => setSelectedReward(null)}>
+         <DialogContent>
+           <DialogHeader>
+             <DialogTitle>Confirmar Resgate</DialogTitle>
+             <DialogDescription>Você está prestes a resgatar esta recompensa</DialogDescription>
+           </DialogHeader>
+           {selectedReward && (
+             <div className="py-4">
+               <div className="flex items-center gap-4">
+                 <div className={`w-14 h-14 rounded-xl flex items-center justify-center text-2xl ${selectedReward.rarity === "legendary" ? "bg-gradient-to-br from-amber-400 to-orange-500" : selectedReward.rarity === "epic" ? "bg-gradient-to-br from-purple-400 to-pink-500" : selectedReward.rarity === "rare" ? "bg-gradient-to-br from-blue-400 to-cyan-500" : "bg-muted"}`}>
+                   {shopService.getCategoryConfig(selectedReward.category).icon}
+                 </div>
+                 <div>
+                   <h3 className="font-bold text-lg">{selectedReward.name}</h3>
+                   <p className="text-sm text-muted-foreground">{selectedReward.description}</p>
+                 </div>
+               </div>
+               <div className="mt-4 p-4 bg-muted rounded-lg">
+                 <div className="flex justify-between items-center">
+                   <span className="text-muted-foreground">Custo:</span>
+                   <div className="flex items-center gap-1"><Coins className="w-5 h-5 text-amber-500" /><span className="font-bold text-lg">{selectedReward.price_coins}</span></div>
+                 </div>
+                 <div className="flex justify-between items-center mt-2">
+                   <span className="text-muted-foreground">Seu saldo após:</span>
+                   <div className="flex items-center gap-1"><Coins className="w-5 h-5 text-amber-500" /><span className="font-bold">{userCoins - selectedReward.price_coins}</span></div>
+                 </div>
+               </div>
+             </div>
+           )}
+           <DialogFooter>
+             <Button variant="outline" onClick={() => setSelectedReward(null)}>Cancelar</Button>
+             <Button onClick={confirmPurchase} disabled={purchaseMutation.isPending} className="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600">
+               {purchaseMutation.isPending ? "Resgatando..." : "Confirmar Resgate"}
+             </Button>
+           </DialogFooter>
+         </DialogContent>
+       </Dialog>
+     </PageShell>
+   );
+ }
