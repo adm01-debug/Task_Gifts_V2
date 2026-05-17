@@ -245,8 +245,7 @@ function AdminTelemetriaContent() {
              </div>
            </header>
 
-        <main className="container max-w-7xl mx-auto px-4 py-6 space-y-6">
-          <TelemetryStatsCards verySlow={verySlow} slow={slow} errors={errors} avgDuration={avgDuration} />
+           <TelemetryStatsCards verySlow={verySlow} slow={slow} errors={errors} avgDuration={avgDuration} />
 
           <TopOffendersCard topOffenders={topOffenders} />
 
