@@ -449,6 +449,6 @@ export default function TrailDetail() {
           </SectionErrorBoundary>
         )}
       </AnimatePresence>
-    </div>
-  );
-}
+       </PageShell>
+     );
+   }
