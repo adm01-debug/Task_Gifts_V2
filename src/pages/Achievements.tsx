@@ -93,17 +93,7 @@ export default function Achievements() {
              </div>
            </div>
          ) : (
-           <div className="space-y-6">
-             <header className="px-4 py-6 border-b border-border/50 mb-6 flex items-center gap-3">
-               <div className="p-3 rounded-xl bg-amber-500/10">
-                 <Trophy className="w-8 h-8 text-amber-500" />
-               </div>
-               <div>
-                 <h1 className="text-3xl font-bold">Conquistas</h1>
-                 <p className="text-muted-foreground text-sm">Desbloqueie troféus e badges exclusivos</p>
-               </div>
-             </header>
- 
+            <div className="space-y-6 pt-6">
              {/* Progress Overview */}
              <motion.div
                initial={{ opacity: 0, y: 20 }}

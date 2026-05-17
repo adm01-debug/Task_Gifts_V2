@@ -13,8 +13,12 @@ import { useScrollRestoration } from "@/hooks/useNavigationHelpers";
 
 interface PageShellProps {
   children: ReactNode;
-  /** Page title for accessibility */
-  title?: string;
+   /** Page title displayed in header and for accessibility */
+   title: string;
+   /** Subtitle displayed under the title */
+   subtitle?: string;
+   /** Icon displayed next to title in header */
+   icon?: React.ReactNode;
   /** Additional class for the content wrapper */
   className?: string;
   /** Override fallback path for back button */
