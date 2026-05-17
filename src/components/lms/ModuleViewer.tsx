@@ -2,8 +2,8 @@ import { useState, useMemo } from "react";
 import { motion } from "framer-motion";
 import DOMPurify from "dompurify";
 import { 
-  X, CheckCircle2, ChevronLeft, ChevronRight, 
-  Video, FileText, HelpCircle, Layers, Play
+   X, CheckCircle2, ChevronLeft, ChevronRight, 
+   Video, FileText, HelpCircle, Layers, Play, Clock, Star, Trophy
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -35,10 +35,11 @@ interface ModuleViewerProps {
   onClose: () => void;
 }
 
-function VideoContent({ videoUrl }: { videoUrl: string }) {
-  const isYoutube = videoUrl.includes("youtube.com") || videoUrl.includes("youtu.be");
-  
-  if (isYoutube) {
+ function VideoContent({ videoUrl }: { videoUrl: string }) {
+   const isYoutube = videoUrl.includes("youtube.com") || videoUrl.includes("youtu.be");
+   const [isPlaying, setIsPlaying] = useState(false);
+
+   if (isYoutube) {
     const videoId = videoUrl.includes("youtu.be") 
       ? videoUrl.split("/").pop() 
       : new URL(videoUrl).searchParams.get("v");
@@ -55,12 +56,29 @@ function VideoContent({ videoUrl }: { videoUrl: string }) {
     );
   }
 
-  return (
-    <div className="aspect-video rounded-lg overflow-hidden bg-black">
-      <video src={videoUrl} controls className="w-full h-full" />
-    </div>
-  );
-}
+   return (
+     <div className="relative group aspect-video rounded-2xl overflow-hidden bg-slate-900 shadow-2xl ring-1 ring-white/10">
+       {!isPlaying ? (
+         <div className="absolute inset-0 flex items-center justify-center bg-black/40 backdrop-blur-[2px] z-10">
+           <motion.button
+             whileHover={{ scale: 1.1 }}
+             whileTap={{ scale: 0.9 }}
+             onClick={() => setIsPlaying(true)}
+             className="w-20 h-20 rounded-full bg-primary/90 text-primary-foreground flex items-center justify-center shadow-2xl shadow-primary/40 group-hover:bg-primary"
+           >
+             <Play className="h-8 w-8 ml-1" />
+           </motion.button>
+         </div>
+       ) : null}
+       <video 
+         src={videoUrl} 
+         controls={isPlaying}
+         autoPlay={isPlaying}
+         className="w-full h-full object-cover" 
+       />
+     </div>
+   );
+ }
 
 function TextContent({ content }: { content: { text?: string; html?: string } }) {
   // Sanitize HTML content to prevent XSS attacks
@@ -260,31 +278,47 @@ function FlashcardsContent({
         className="relative h-64 cursor-pointer perspective-1000"
         onClick={() => setIsFlipped(!isFlipped)}
       >
-        <motion.div
-          className="absolute inset-0 rounded-xl border bg-card p-6 flex items-center justify-center text-center backface-hidden"
-          animate={{ rotateY: isFlipped ? 180 : 0 }}
-          transition={{ duration: 0.6 }}
-          style={{ backfaceVisibility: "hidden" }}
-        >
-          <div>
-            <p className="text-xs text-muted-foreground mb-2">Pergunta</p>
-            <p className="text-lg font-medium">{cards[currentCard].front}</p>
-            <p className="text-xs text-muted-foreground mt-4">Clique para virar</p>
-          </div>
-        </motion.div>
+       <motion.div
+         className="absolute inset-0 rounded-2xl border-2 border-primary/20 bg-gradient-to-br from-card to-muted/50 p-8 flex items-center justify-center text-center shadow-xl backface-hidden"
+         animate={{ rotateY: isFlipped ? 180 : 0 }}
+         transition={{ 
+           duration: 0.6,
+           type: "spring",
+           stiffness: 260,
+           damping: 20
+         }}
+         style={{ backfaceVisibility: "hidden" }}
+       >
+         <div className="space-y-4">
+           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-[10px] font-bold uppercase tracking-wider">
+             <Layers className="h-3 w-3" />
+             Pergunta
+           </div>
+           <p className="text-2xl font-bold leading-tight text-foreground">{cards[currentCard].front}</p>
+           <p className="text-sm text-muted-foreground/60 font-medium">Toque para revelar a resposta</p>
+         </div>
+       </motion.div>
 
-        <motion.div
-          className="absolute inset-0 rounded-xl border bg-primary/10 p-6 flex items-center justify-center text-center"
-          initial={{ rotateY: 180 }}
-          animate={{ rotateY: isFlipped ? 0 : -180 }}
-          transition={{ duration: 0.6 }}
-          style={{ backfaceVisibility: "hidden" }}
-        >
-          <div>
-            <p className="text-xs text-primary mb-2">Resposta</p>
-            <p className="text-lg font-medium">{cards[currentCard].back}</p>
-          </div>
-        </motion.div>
+       <motion.div
+         className="absolute inset-0 rounded-2xl border-2 border-emerald-500/30 bg-gradient-to-br from-emerald-500/5 to-emerald-500/10 p-8 flex items-center justify-center text-center shadow-xl"
+         initial={{ rotateY: 180 }}
+         animate={{ rotateY: isFlipped ? 0 : -180 }}
+         transition={{ 
+           duration: 0.6,
+           type: "spring",
+           stiffness: 260,
+           damping: 20
+         }}
+         style={{ backfaceVisibility: "hidden" }}
+       >
+         <div className="space-y-4">
+           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-500 text-[10px] font-bold uppercase tracking-wider">
+             <CheckCircle2 className="h-3 w-3" />
+             Resposta Correcta
+           </div>
+           <p className="text-2xl font-bold leading-tight text-foreground">{cards[currentCard].back}</p>
+         </div>
+       </motion.div>
       </motion.div>
 
       <div className="flex justify-between pt-4">
@@ -443,32 +477,105 @@ export default function ModuleViewer({ module, onComplete, onClose }: ModuleView
     }
   };
 
-  return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      className="fixed inset-0 z-50 bg-background/95 backdrop-blur-sm overflow-y-auto"
-    >
-      <div className="container max-w-3xl mx-auto px-4 py-8">
-        <div className="flex items-center justify-between mb-6">
-          <div>
-            <h2 className="text-xl font-bold">{module.title}</h2>
-            {module.description && (
-              <p className="text-muted-foreground">{module.description}</p>
-            )}
-          </div>
-          <Button variant="ghost" size="icon" onClick={onClose} aria-label="Fechar módulo">
-            <X className="h-5 w-5" />
-          </Button>
-        </div>
+   return (
+     <motion.div
+       initial={{ opacity: 0 }}
+       animate={{ opacity: 1 }}
+       exit={{ opacity: 0 }}
+       className="fixed inset-0 z-[100] bg-background/98 backdrop-blur-xl overflow-y-auto"
+     >
+       <div className="container max-w-4xl mx-auto px-4 py-8 md:py-12">
+         {/* Top Navigation */}
+         <div className="flex items-center justify-between mb-8">
+           <div className="flex items-center gap-4">
+             <div className="p-3 rounded-2xl bg-primary/10 text-primary shadow-inner">
+               <Layers className="h-6 w-6" />
+             </div>
+             <div>
+               <div className="flex items-center gap-2 mb-1">
+                 <span className="text-[10px] font-black uppercase tracking-[0.2em] text-primary bg-primary/10 px-2 py-0.5 rounded-sm">
+                   Módulo em Curso
+                 </span>
+               </div>
+               <h2 className="text-2xl font-black tracking-tight">{module.title}</h2>
+             </div>
+           </div>
+           
+           <Button 
+             variant="ghost" 
+             size="icon" 
+             onClick={onClose} 
+             className="rounded-full hover:bg-destructive/10 hover:text-destructive transition-colors h-12 w-12"
+           >
+             <X className="h-6 w-6" />
+           </Button>
+         </div>
 
-        <Card>
-          <CardContent className="p-6">
-            {renderContent()}
-          </CardContent>
-        </Card>
-      </div>
-    </motion.div>
-  );
+         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+           {/* Main Content Area */}
+           <div className="lg:col-span-8 space-y-6">
+             <Card className="border-none bg-card/50 shadow-2xl shadow-primary/5 ring-1 ring-white/10 overflow-hidden">
+               <CardContent className="p-0">
+                 <div className="p-6 md:p-8">
+                   {renderContent()}
+                 </div>
+               </CardContent>
+             </Card>
+
+             {module.description && (
+               <div className="p-6 rounded-2xl bg-muted/30 border border-border/50">
+                 <h4 className="text-sm font-bold uppercase tracking-wider text-muted-foreground mb-2">Sobre este módulo</h4>
+                 <p className="text-muted-foreground leading-relaxed">{module.description}</p>
+               </div>
+             )}
+           </div>
+
+           {/* Sidebar Info */}
+           <div className="lg:col-span-4 space-y-6">
+             <Card className="bg-gradient-to-br from-primary/10 via-background to-background border-primary/20">
+               <CardHeader className="pb-4">
+                 <CardTitle className="text-sm font-black uppercase tracking-widest flex items-center gap-2">
+                   <Trophy className="h-4 w-4 text-primary" />
+                   Recompensas
+                 </CardTitle>
+               </CardHeader>
+               <CardContent className="space-y-4">
+                 <div className="flex items-center justify-between p-4 rounded-xl bg-background/50 border border-primary/10">
+                   <div className="flex items-center gap-3">
+                     <div className="w-10 h-10 rounded-full bg-amber-500/10 flex items-center justify-center">
+                       <Star className="h-5 w-5 text-amber-500 fill-amber-500" />
+                     </div>
+                     <span className="text-sm font-bold">XP Bonus</span>
+                   </div>
+                   <span className="text-xl font-black text-amber-500">+{module.xp_reward}</span>
+                 </div>
+
+                 <div className="flex items-center justify-between p-4 rounded-xl bg-background/50 border border-primary/10">
+                   <div className="flex items-center gap-3">
+                     <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+                       <Clock className="h-5 w-5 text-primary" />
+                     </div>
+                     <span className="text-sm font-bold">Duração</span>
+                   </div>
+                   <span className="text-lg font-black">{module.duration_minutes} min</span>
+                 </div>
+               </CardContent>
+             </Card>
+
+             <div className="rounded-2xl bg-emerald-500/10 border border-emerald-500/20 p-6">
+               <div className="flex items-center gap-3 mb-4">
+                 <div className="w-8 h-8 rounded-full bg-emerald-500 text-white flex items-center justify-center">
+                   <CheckCircle2 className="h-5 w-5" />
+                 </div>
+                 <span className="font-bold text-emerald-500">Foco Total</span>
+               </div>
+               <p className="text-xs text-emerald-600/80 leading-relaxed font-medium">
+                 Você está no modo de aprendizagem profunda. Complete as atividades para validar seu progresso na trilha.
+               </p>
+             </div>
+           </div>
+         </div>
+       </div>
+     </motion.div>
+   );
 }
