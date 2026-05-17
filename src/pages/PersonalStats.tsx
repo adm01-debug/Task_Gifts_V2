@@ -153,7 +153,7 @@ export default function PersonalStats() {
    );
 
    return (
-     <PageShell title="Estatísticas Pessoais" backFallback="/">
+     <PageShell title="Estatísticas">
        <SEOHead title={seoData.title} description={seoData.description} keywords={seoData.keywords} />
        <header className="px-4 py-6 border-b border-border/50 mb-6 flex items-center gap-3">
          <div className="p-3 rounded-xl bg-primary/10">
