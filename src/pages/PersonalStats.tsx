@@ -17,7 +17,7 @@ import { SEOHead } from "@/components/SEOHead";
 import { useSEO } from "@/hooks/useSEO";
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
 import { AreaChart, Area, XAxis, YAxis, ResponsiveContainer } from "recharts";
-import { TrendingUp, Trophy, Zap, Target, Flame, Star, Menu } from "lucide-react";
+ import { TrendingUp, Trophy, Zap, Target, Flame, Star } from "lucide-react";
 import { format, subDays, eachDayOfInterval } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { supabase } from "@/integrations/supabase/client";
@@ -101,20 +101,22 @@ export default function PersonalStats() {
     { label: "Moedas", value: profile?.coins?.toLocaleString() || "0", icon: Star, color: "from-amber-400 to-yellow-500" },
   ];
 
-  const content = (
-    <main className="flex-1 overflow-auto">
-      <SEOHead {...seoData} />
-      <header className="sticky top-0 z-40 backdrop-blur-xl bg-background/80 border-b border-border">
-        <div className="flex items-center gap-4 px-4 md:px-6 py-4">
-          <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={() => isMobile ? setMobileDrawerOpen(true) : setSidebarCollapsed(!sidebarCollapsed)} className="p-2 rounded-lg hover:bg-muted transition-colors"><Menu className="w-5 h-5" /></motion.button>
-          <div className="flex items-center gap-3">
-            <div className="p-2 rounded-xl bg-gradient-to-br from-primary to-primary/60"><TrendingUp className="h-5 w-5 text-primary-foreground" /></div>
-            <div><h1 className="text-xl md:text-2xl font-bold">Estatísticas Pessoais</h1><p className="text-sm text-muted-foreground hidden sm:block">Acompanhe sua evolução ao longo do tempo</p></div>
-          </div>
-        </div>
-      </header>
-
-      <div className="p-4 md:p-8 space-y-6">
+   const content = (
+     <main className="flex-1 overflow-auto p-4 md:p-8 space-y-6">
+       <SEOHead {...seoData} />
+       
+       {/* Header - Desktop only */}
+       {!isMobile && (
+         <div className="flex items-center gap-3 mb-6">
+           <div className="p-2 rounded-xl bg-gradient-to-br from-primary to-primary/60">
+             <TrendingUp className="h-6 w-6 text-primary-foreground" />
+           </div>
+           <div>
+             <h2 className="text-2xl font-bold">Estatísticas Pessoais</h2>
+             <p className="text-sm text-muted-foreground">Acompanhe sua evolução ao longo do tempo</p>
+           </div>
+         </div>
+       )}
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
           {stats.map((stat, index) => (
             <motion.div key={stat.label} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: index * 0.05 }}>
@@ -153,20 +155,20 @@ export default function PersonalStats() {
 
    return (
      <PageShell title="Estatísticas">
-       {isMobile ? (
-         <MobilePageLayout title="Estatísticas" icon={TrendingUp} backPath="/">
-           <PageWrapper pageName="Estatísticas" className="min-h-screen bg-background pb-24">
+       <MobilePageLayout title="Estatísticas" icon={TrendingUp} backPath="/">
+         <div className="flex bg-background">
+           {!isMobile && (
+             <AppSidebar 
+               collapsed={sidebarCollapsed} 
+               onToggle={() => setSidebarCollapsed(!sidebarCollapsed)} 
+             />
+           )}
+           <PageWrapper pageName="Estatísticas" className="flex-1 min-h-screen bg-background pb-24">
              <SEOHead title={seoData.title} description={seoData.description} keywords={seoData.keywords} />
              {content}
            </PageWrapper>
-         </MobilePageLayout>
-       ) : (
-         <PageWrapper pageName="Estatísticas" className="min-h-screen flex bg-background">
-           <SEOHead title={seoData.title} description={seoData.description} keywords={seoData.keywords} />
-           <AppSidebar collapsed={sidebarCollapsed} onToggle={() => setSidebarCollapsed(!sidebarCollapsed)} />
-           {content}
-         </PageWrapper>
-       )}
+         </div>
+       </MobilePageLayout>
      </PageShell>
    );
 }
