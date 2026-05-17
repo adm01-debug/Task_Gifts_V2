@@ -1,7 +1,8 @@
 import { useState, useRef, useEffect, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Lightbulb, Copy, Check, Volume2, VolumeX, RotateCcw, Maximize2, Minimize2 } from "lucide-react";
-import { Sparkles, Send, X, Trash2, Bot, User, Loader2, BookOpen, Clock, Zap, Target, Trophy, Flame, TrendingUp, AlertCircle } from "lucide-react";
+ import { Lightbulb, Copy, Check, Volume2, VolumeX, RotateCcw, Maximize2, Minimize2, Sparkles, Send, X, Trash2, Bot, User, Loader2, BookOpen, Clock, Zap, Target, Trophy, Flame, TrendingUp, AlertCircle } from "lucide-react";
+ import { useHaptics } from "@/hooks/useHaptics";
+ import { useSoundEffects } from "@/hooks/useSoundEffects";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -84,18 +85,25 @@ export function AICoachDialog({ trigger }: AICoachDialogProps = {}) {
   const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
   const [isExpanded, setIsExpanded] = useState(false);
   const [activeTab, setActiveTab] = useState<"chat" | "stats">("chat");
-  const { messages, suggestions, isLoading, error, sendMessage, clearMessages } = useAICoach();
+   const { messages, suggestions, isLoading, error, sendMessage, clearMessages } = useAICoach();
+   const { vibrate } = useHaptics();
+   const { playClickSound, playXPSound } = useSoundEffects();
   const { data: trails } = usePublishedTrails();
   const { data: profile } = useCurrentProfile();
   const navigate = useNavigate();
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  useEffect(() => {
-    if (scrollRef.current) {
-      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
-    }
-  }, [messages]);
+   useEffect(() => {
+     if (scrollRef.current) {
+       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+     }
+ 
+     if (messages.length > 0 && messages[messages.length - 1].role === "assistant" && !isLoading) {
+       vibrate("medium");
+       playXPSound();
+     }
+   }, [messages, isLoading, vibrate, playXPSound]);
 
   useEffect(() => {
     if (open && inputRef.current) {
@@ -103,22 +111,28 @@ export function AICoachDialog({ trigger }: AICoachDialogProps = {}) {
     }
   }, [open]);
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (input.trim() && !isLoading) {
-      sendMessage(input);
-      setInput("");
-    }
-  };
+   const handleSubmit = (e: React.FormEvent) => {
+     e.preventDefault();
+     if (input.trim() && !isLoading) {
+       vibrate("light");
+       playClickSound();
+       sendMessage(input);
+       setInput("");
+     }
+   };
 
-  const handleQuickPrompt = (prompt: string) => {
-    sendMessage(prompt);
-  };
+   const handleQuickPrompt = (prompt: string) => {
+     vibrate("light");
+     playClickSound();
+     sendMessage(prompt);
+   };
 
-  const handleNavigateToTrail = (trailId: string) => {
-    setOpen(false);
-    navigate(`/trails/${trailId}`);
-  };
+   const handleNavigateToTrail = (trailId: string) => {
+     vibrate("medium");
+     playClickSound();
+     setOpen(false);
+     navigate(`/trails/${trailId}`);
+   };
 
   const handleCopyMessage = async (content: string, index: number) => {
     try {
