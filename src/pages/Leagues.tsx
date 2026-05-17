@@ -1,5 +1,6 @@
  import { Trophy, TrendingUp, Shield, History, Star, Zap, Crown, Award, ChevronRight } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+ import { Badge } from "@/components/ui/badge";
 import { useLeagues } from "@/hooks/useLeagues";
 import { useNavigate } from "react-router-dom";
 import { LeagueCard } from "@/components/LeagueCard";
