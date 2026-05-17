@@ -1,4 +1,4 @@
-import { memo, ReactNode, useEffect } from "react";
+ import { memo, ReactNode, useEffect, useCallback } from "react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { GlobalBreadcrumbs } from "./GlobalBreadcrumbs";
 import { DesktopBackButton } from "./DesktopBackButton";
@@ -7,6 +7,9 @@ import { PageTransition } from "./PageTransition";
 import { TopLoadingBar } from "./TopLoadingBar";
 import { cn } from "@/lib/utils";
 import { useScrollRestoration } from "@/hooks/useNavigationHelpers";
+ import { PullToRefresh } from "../mobile/PullToRefresh";
+ import { useQueryClient } from "@tanstack/react-query";
+ import { useHapticFeedback } from "@/hooks/useHapticFeedback";
 
 interface PageShellProps {
   children: ReactNode;
@@ -49,8 +52,18 @@ export const PageShell = memo(function PageShell({
     window.scrollTo(0, 0);
   }, []);
 
-   return (
-     <PageTransition className={cn("min-h-screen", className)}>
+   const queryClient = useQueryClient();
+   const haptic = useHapticFeedback();
+ 
+   const handleRefresh = useCallback(async () => {
+     haptic.trigger("light");
+     // Invalida todas as queries para recarregar os dados da página
+     await queryClient.invalidateQueries();
+     haptic.trigger("success");
+   }, [queryClient, haptic]);
+ 
+   const content = (
+     <div className={cn("min-h-screen", className)}>
        <TopLoadingBar />
        {isMobile ? (
          <MobileHeader title={title} />
@@ -68,6 +81,18 @@ export const PageShell = memo(function PageShell({
        <main className="focus:outline-none" tabIndex={-1}>
          {children}
        </main>
+     </div>
+   );
+ 
+   return (
+     <PageTransition>
+       {isMobile ? (
+         <PullToRefresh onRefresh={handleRefresh}>
+           {content}
+         </PullToRefresh>
+       ) : (
+         content
+       )}
      </PageTransition>
    );
 });
