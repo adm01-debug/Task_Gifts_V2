@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from "framer-motion";
-   import { Trophy, Lock, CheckCircle2, Flame, Sparkles, Star, Trophy as TrophyIcon, SearchX } from "lucide-react";
+    import { Trophy, Lock, CheckCircle2, Flame, Sparkles, Star, Trophy as TrophyIcon, SearchX, Zap, Share2, Award, Info } from "lucide-react";
   import { useNavigate } from "react-router-dom";
   import { PageShell } from "@/components/navigation";
 import { Card, CardContent } from "@/components/ui/card";
