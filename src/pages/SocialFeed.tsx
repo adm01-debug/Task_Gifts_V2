@@ -40,7 +40,7 @@ import {
 import { Calendar as CalendarComponent } from "@/components/ui/calendar";
 import { SectionErrorBoundary } from "@/components/SectionErrorBoundary";
  import { MobilePageLayout } from "@/components/mobile/MobilePageLayout";
- import { PageShell } from "@/components/navigation";
+import { PageShell } from "@/components/navigation";
 import { SEOHead } from "@/components/SEOHead";
 import { useSEO } from "@/hooks/useSEO";
 import { useSocialFeed } from "@/hooks/useSocialFeed";

@@ -6,7 +6,7 @@ import { useUserAchievements } from "@/hooks/useAchievements";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
  import { AppSidebar } from "@/components/AppSidebar";
- import { PageShell } from "@/components/navigation";
+import { PageShell } from "@/components/navigation";
 import { MobilePageLayout } from "@/components/mobile";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { WeeklyPerformanceComparison } from "@/components/WeeklyPerformanceComparison";
