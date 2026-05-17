@@ -3,23 +3,25 @@ import { motion, AnimatePresence } from "framer-motion";
 import { formatDistanceToNow, subDays, startOfDay, endOfDay } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { useNavigate } from "react-router-dom";
-import {
-  Activity,
-  ArrowLeft,
-  Calendar,
-  Filter,
-  Heart,
-  MessageCircle,
-  RefreshCw,
-  Sparkles,
-  Users,
-  Zap,
-  Trophy,
-  Star,
-  Gift,
-  Flame,
-  CheckCircle,
-} from "lucide-react";
+ import {
+   Activity,
+   ArrowLeft,
+   Calendar,
+   Filter,
+   Heart,
+   MessageCircle,
+   RefreshCw,
+   Sparkles,
+   Users,
+   Zap,
+   Trophy,
+   Star,
+   Gift,
+   Flame,
+   CheckCircle,
+   SearchX,
+ } from "lucide-react";
+ import { EmptyState } from "@/components/ui/empty-state";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -337,15 +339,12 @@ export default function SocialFeedPage() {
                 ))}
               </div>
             ) : filteredActivities.length === 0 ? (
-              <div className="flex flex-col items-center justify-center py-12 text-center">
-                <Users className="h-16 w-16 text-muted-foreground/30 mb-4" />
-                <p className="text-lg font-medium text-muted-foreground">
-                  Nenhuma atividade encontrada
-                </p>
-                <p className="text-sm text-muted-foreground/70">
-                  Ajuste os filtros para ver mais resultados
-                </p>
-              </div>
+               <EmptyState 
+                 icon={SearchX}
+                 title="Nenhuma atividade encontrada"
+                 description="Ajuste os filtros ou selecione outro período para ver mais resultados do time."
+                 action={{ label: "Limpar Filtros", onClick: () => { setActivityType("all"); setPeriod("all"); } }}
+               />
             ) : (
               <div className="space-y-1">
                 <AnimatePresence mode="popLayout">

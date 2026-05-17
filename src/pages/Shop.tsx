@@ -1,6 +1,6 @@
 import { useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Coins, Package, Star, Target, ShoppingBag, History, Sparkles } from "lucide-react";
+ import { Coins, Package, Star, Target, ShoppingBag, History, Sparkles, ShoppingCart } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { CelebrationEffect } from "@/components/CelebrationEffect";
 import { FlashSalesBanner } from "@/components/FlashSalesBanner";
@@ -19,6 +19,8 @@ import { cn } from "@/lib/utils";
  import { useSEO } from "@/hooks/useSEO";
 import { RewardCard } from "@/components/shop/RewardCard";
 import { PurchaseHistory } from "@/components/shop/PurchaseHistory";
+ import { Skeleton } from "@/components/ui/skeleton";
+ import { EmptyState } from "@/components/ui/empty-state";
 
 export default function Shop() {
   const seoConfig = useSEO();
@@ -91,16 +93,25 @@ export default function Shop() {
               <Button variant={activeCategory === "experience" ? "default" : "outline"} size="sm" onClick={() => setActiveCategory("experience")}><Target className="w-4 h-4 mr-1" />Experiências</Button>
             </div>
             {isLoading ? (
-              <div className="text-center py-12 text-muted-foreground">Carregando recompensas...</div>
-            ) : (
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                  {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => <Skeleton key={i} className="h-64 rounded-xl" />)}
+                </div>
+             ) : filteredRewards && filteredRewards.length > 0 ? (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                 <AnimatePresence mode="popLayout">
-                  {filteredRewards?.map((reward) => (
+                   {filteredRewards.map((reward) => (
                     <RewardCard key={reward.id} reward={reward} userCoins={userCoins} onPurchase={handlePurchase} purchasingRewardId={purchasingRewardId} />
                   ))}
                 </AnimatePresence>
               </div>
-            )}
+             ) : (
+               <EmptyState 
+                 icon={ShoppingCart}
+                 title="Nenhuma recompensa encontrada"
+                 description="Não há itens disponíveis nesta categoria no momento. Volte em breve!"
+                 action={{ label: "Ver todos", onClick: () => setActiveCategory("all") }}
+               />
+             )}
           </TabsContent>
           <TabsContent value="history"><PurchaseHistory /></TabsContent>
         </Tabs>

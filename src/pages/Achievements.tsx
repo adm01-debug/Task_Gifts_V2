@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from "framer-motion";
-  import { Trophy, Lock, CheckCircle2, Flame, Sparkles, Star, Trophy as TrophyIcon } from "lucide-react";
+   import { Trophy, Lock, CheckCircle2, Flame, Sparkles, Star, Trophy as TrophyIcon, SearchX } from "lucide-react";
   import { useNavigate } from "react-router-dom";
   import { PageShell } from "@/components/navigation";
 import { Card, CardContent } from "@/components/ui/card";
@@ -8,7 +8,8 @@ import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { useAllAchievements, useUserAchievements } from "@/hooks/useAchievements";
-import { Skeleton } from "@/components/ui/skeleton";
+ import { Skeleton } from "@/components/ui/skeleton";
+ import { EmptyState } from "@/components/ui/empty-state";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { BehavioralBadgesWidget } from "@/components/BehavioralBadgesWidget";
@@ -222,7 +223,17 @@ interface AchievementGridProps {
   getUnlockDate: (id: string) => string | undefined;
 }
 
-function AchievementGrid({ achievements, unlockedIds, getUnlockDate }: AchievementGridProps) {
+ function AchievementGrid({ achievements, unlockedIds, getUnlockDate }: AchievementGridProps) {
+   if (achievements.length === 0) {
+     return (
+       <EmptyState 
+         icon={SearchX}
+         title="Nenhuma conquista nesta categoria"
+         description="Continue jogando para descobrir novas conquistas!"
+       />
+     );
+   }
+ 
   // Sort: unlocked first, then by rarity
   const rarityOrder = { legendary: 0, epic: 1, rare: 2, common: 3 };
   const sorted = [...achievements].sort((a, b) => {
