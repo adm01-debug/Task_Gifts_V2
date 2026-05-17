@@ -6,6 +6,7 @@ import {
   CheckCircle2, AlertCircle, Info, XCircle
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { triggerHaptic } from "@/hooks/useHaptics";
 
 type ToastType = "xp" | "coins" | "achievement" | "levelUp" | "streak" | "reward" | "quest" | "success" | "error" | "warning" | "info";
 
@@ -205,6 +206,7 @@ const ToastContent = ({
 
 export const gamifiedToast = {
   xp: (amount: number, description?: string) => {
+    triggerHaptic("light");
     toast.custom(() => (
       <ToastContent
         title={`+${amount} XP Ganhos!`}
@@ -216,6 +218,7 @@ export const gamifiedToast = {
   },
 
   coins: (amount: number, description?: string) => {
+    triggerHaptic("medium");
     toast.custom(() => (
       <ToastContent
         title={`+${amount} Moedas!`}
@@ -227,6 +230,7 @@ export const gamifiedToast = {
   },
 
   achievement: (title: string, description?: string) => {
+    triggerHaptic("success");
     toast.custom(() => (
       <ToastContent
         title={title}
@@ -237,6 +241,7 @@ export const gamifiedToast = {
   },
 
   levelUp: (level: number) => {
+    triggerHaptic("heavy");
     toast.custom(() => (
       <ToastContent
         title={`Level ${level} Alcançado!`}
@@ -247,6 +252,7 @@ export const gamifiedToast = {
   },
 
   streak: (days: number) => {
+    triggerHaptic("medium");
     toast.custom(() => (
       <ToastContent
         title={`${days} Dias de Streak!`}
@@ -257,6 +263,7 @@ export const gamifiedToast = {
   },
 
   reward: (title: string, description?: string) => {
+    triggerHaptic("success");
     toast.custom(() => (
       <ToastContent
         title={title}
@@ -267,6 +274,7 @@ export const gamifiedToast = {
   },
 
   quest: (title: string, description?: string) => {
+    triggerHaptic("medium");
     toast.custom(() => (
       <ToastContent
         title={title}
@@ -277,6 +285,7 @@ export const gamifiedToast = {
   },
 
   success: (title: string, description?: string) => {
+    triggerHaptic("success");
     toast.custom(() => (
       <ToastContent
         title={title}
@@ -287,6 +296,7 @@ export const gamifiedToast = {
   },
 
   error: (title: string, description?: string) => {
+    triggerHaptic("error");
     toast.custom(() => (
       <ToastContent
         title={title}
