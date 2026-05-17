@@ -61,10 +61,10 @@ export default function Leagues() {
            </MobilePageLayout>
          ) : (
            <>
-             <header className="flex h-16 shrink-0 items-center gap-2 px-4 md:px-6">
-               <Trophy className="h-6 w-6 text-primary" />
-               <h1 className="text-xl font-bold">Ligas & Divisões</h1>
-             </header>
+               <div className="flex h-16 shrink-0 items-center gap-2 px-4 md:px-6">
+                 <Trophy className="h-6 w-6 text-primary" />
+                 <h2 className="text-xl font-bold">Ligas & Divisões</h2>
+               </div>
              {pageContent}
            </>
          )}

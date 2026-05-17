@@ -1,6 +1,7 @@
 import { motion, AnimatePresence } from "framer-motion";
-import { Trophy, Lock, CheckCircle2, Flame, Sparkles, Star } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+  import { Trophy, Lock, CheckCircle2, Flame, Sparkles, Star, Trophy as TrophyIcon } from "lucide-react";
+  import { useNavigate } from "react-router-dom";
+  import { PageShell } from "@/components/navigation";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
@@ -75,43 +76,40 @@ export default function Achievements() {
     return ua?.unlocked_at;
   };
 
-  if (isLoading) {
-    return (
-      <MobilePageLayout title="Conquistas" icon={Trophy} backPath="/">
-        <div className="container max-w-4xl py-8 space-y-6 px-4">
-          <Skeleton className="h-10 w-64" />
-          <Skeleton className="h-32 w-full" />
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {[1, 2, 3, 4].map((i) => (
-              <Skeleton key={i} className="h-40" />
-            ))}
-          </div>
-        </div>
-      </MobilePageLayout>
-    );
-  }
+   if (isLoading) {
+     return (
+       <PageShell title="Conquistas">
+         <MobilePageLayout title="Conquistas" icon={TrophyIcon} backPath="/">
+           <div className="container max-w-4xl py-8 space-y-6 px-4">
+             <Skeleton className="h-10 w-64" />
+             <Skeleton className="h-32 w-full" />
+             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+               {[1, 2, 3, 4].map((i) => (
+                 <Skeleton key={i} className="h-40" />
+               ))}
+             </div>
+           </div>
+         </MobilePageLayout>
+       </PageShell>
+     );
+   }
 
-  const mainContent = (
-    <div className="space-y-6">
-      {/* Header - Desktop only */}
-      {!isMobile && (
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="flex items-center gap-3"
-        >
-          <DesktopBackButton />
-          <div className="p-3 rounded-xl bg-amber-500/10">
-            <Trophy className="w-8 h-8 text-amber-500" />
-          </div>
-          <div>
-            <h1 className="text-3xl font-bold">Conquistas</h1>
-            <p className="text-muted-foreground">
-              Desbloqueie conquistas completando ações na plataforma
-            </p>
-          </div>
-        </motion.div>
-      )}
+   const mainContent = (
+     <div className="space-y-6">
+       {/* Header Content - Hidden if mobile since MobilePageLayout handles it */}
+       {!isMobile && (
+         <div className="flex items-center gap-3">
+           <div className="p-3 rounded-xl bg-amber-500/10">
+             <Trophy className="w-8 h-8 text-amber-500" />
+           </div>
+           <div>
+             <h2 className="text-3xl font-bold">Conquistas</h2>
+             <p className="text-muted-foreground">
+               Desbloqueie conquistas completando ações na plataforma
+             </p>
+           </div>
+         </div>
+       )}
       {/* Progress Overview */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
@@ -204,14 +202,16 @@ export default function Achievements() {
     </div>
   );
 
-  return (
-    <MobilePageLayout title="Conquistas" icon={Trophy} backPath="/">
-      <PageWrapper pageName="Conquistas" className="container max-w-4xl py-6 px-4 space-y-6 pb-24">
-        <SEOHead title={seoConfig.title} description={seoConfig.description} keywords={seoConfig.keywords} />
-        {mainContent}
-      </PageWrapper>
-    </MobilePageLayout>
-  );
+   return (
+     <PageShell title="Conquistas">
+       <MobilePageLayout title="Conquistas" icon={TrophyIcon} backPath="/">
+         <PageWrapper pageName="Conquistas" className="container max-w-4xl py-6 px-4 space-y-6 pb-24">
+           <SEOHead title={seoConfig.title} description={seoConfig.description} keywords={seoConfig.keywords} />
+           {mainContent}
+         </PageWrapper>
+       </MobilePageLayout>
+     </PageShell>
+   );
 }
 
 interface AchievementGridProps {
