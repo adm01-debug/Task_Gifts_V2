@@ -254,86 +254,97 @@ interface AchievementGridProps {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
       <AnimatePresence>
-        {sorted.map((achievement, index) => {
-          const isUnlocked = unlockedIds.has(achievement.id);
-          const config = rarityConfig[achievement.rarity as keyof typeof rarityConfig] || rarityConfig.common;
-          const unlockDate = getUnlockDate(achievement.id);
-
-          return (
-            <motion.div
-              key={achievement.id}
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: index * 0.05 }}
-            >
-              <Card
-                className={`relative overflow-hidden transition-all duration-300 ${
-                  isUnlocked
-                    ? `${config.borderColor} ${config.glow} shadow-lg`
-                    : "border-muted/50 opacity-60"
-                }`}
-              >
-                {/* Rarity indicator */}
-                <div
-                  className={`absolute top-0 left-0 right-0 h-1 ${
-                    isUnlocked ? config.bgColor.replace("/10", "") : "bg-muted"
-                  }`}
-                />
-
-                <CardContent className="p-4">
-                  <div className="flex items-start gap-4">
-                    {/* Icon */}
-                    <motion.div
-                      animate={isUnlocked ? { scale: [1, 1.1, 1] } : {}}
-                      transition={{ repeat: Infinity, duration: 3 }}
-                      className={`text-4xl p-3 rounded-xl ${
-                        isUnlocked ? config.bgColor : "bg-muted/50"
-                      }`}
-                    >
-                      {isUnlocked ? (
-                        achievement.icon
-                      ) : (
-                        <Lock className="w-8 h-8 text-muted-foreground" />
-                      )}
-                    </motion.div>
-
-                    {/* Content */}
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2 mb-1">
-                        <h3 className="font-bold truncate">{achievement.name}</h3>
-                        {isUnlocked && (
-                          <CheckCircle2 className="w-4 h-4 text-green-500 flex-shrink-0" />
-                        )}
-                      </div>
-                      <p className="text-sm text-muted-foreground line-clamp-2">
-                        {achievement.description}
-                      </p>
-
-                      {/* Rewards & Rarity */}
-                      <div className="flex items-center gap-2 mt-2 flex-wrap">
-                        <Badge variant="outline" className={config.color}>
-                          {config.label}
-                        </Badge>
-                        <span className="text-xs text-green-500">+{achievement.xp_reward} XP</span>
-                        <span className="text-xs text-amber-500">
-                          +{achievement.coin_reward} moedas
-                        </span>
-                      </div>
-
-                      {/* Unlock date */}
-                      {isUnlocked && unlockDate && (
-                        <p className="text-xs text-muted-foreground mt-2">
-                          Desbloqueada em{" "}
-                          {format(new Date(unlockDate), "dd 'de' MMM 'de' yyyy", { locale: ptBR })}
-                        </p>
-                      )}
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </motion.div>
-          );
-        })}
+         {sorted.map((achievement, index) => {
+           const isUnlocked = unlockedIds.has(achievement.id);
+           const config = rarityConfig[achievement.rarity as keyof typeof rarityConfig] || rarityConfig.common;
+           const unlockDate = getUnlockDate(achievement.id);
+ 
+           return (
+             <motion.div
+               key={achievement.id}
+               initial={{ opacity: 0, y: 20 }}
+               animate={{ opacity: 1, y: 0 }}
+               transition={{ delay: index * 0.05 }}
+               whileHover={{ y: -5, scale: 1.02 }}
+             >
+               <Card className={cn(
+                 "relative h-full overflow-hidden border-none bg-gradient-to-br from-card to-card/40 transition-all duration-500 group ring-1 ring-white/5",
+                 isUnlocked ? config.glow : "opacity-40 grayscale"
+               )}>
+                 <div className={cn(
+                   "absolute inset-0 bg-gradient-to-br opacity-0 group-hover:opacity-20 transition-opacity duration-500 pointer-events-none",
+                   config.gradient
+                 )} />
+                 
+                 <CardContent className="p-6 relative">
+                   <div className="flex items-start gap-5">
+                     <div className="relative">
+                       <motion.div
+                         animate={isUnlocked ? { 
+                           boxShadow: ["0 0 20px transparent", `0 0 40px ${config.glow.split(' ')[0].replace('shadow-', '')}60`, "0 0 20px transparent"]
+                         } : {}}
+                         transition={{ duration: 4, repeat: Infinity }}
+                         className={cn(
+                           "w-16 h-16 rounded-2xl flex items-center justify-center text-3xl transition-all duration-500 transform group-hover:rotate-12 group-hover:scale-110",
+                           isUnlocked ? config.bgColor : "bg-muted/40 ring-1 ring-white/5"
+                         )}
+                       >
+                         {isUnlocked ? achievement.icon : <Lock className="w-6 h-6 text-muted-foreground" />}
+                       </motion.div>
+                       
+                       {isUnlocked && (
+                         <motion.div 
+                           initial={{ scale: 0 }}
+                           animate={{ scale: 1 }}
+                           className="absolute -bottom-2 -right-2 w-6 h-6 rounded-full bg-green-500 flex items-center justify-center shadow-lg border-2 border-card"
+                         >
+                           <CheckCircle2 className="w-3 h-3 text-white" />
+                         </motion.div>
+                       )}
+                     </div>
+ 
+                     <div className="flex-1 min-w-0">
+                       <div className="flex items-center justify-between gap-2 mb-1">
+                         <h4 className="font-black italic uppercase tracking-tight truncate group-hover:text-primary transition-colors">
+                           {achievement.name}
+                         </h4>
+                         <Badge variant="outline" className={cn("text-[9px] font-black tracking-widest uppercase py-0 px-2 border-none", config.color, config.bgColor)}>
+                           {config.label}
+                         </Badge>
+                       </div>
+                       
+                       <p className="text-xs text-muted-foreground font-medium leading-relaxed mb-4 line-clamp-2">
+                         {achievement.description}
+                       </p>
+ 
+                       <div className="flex items-center gap-3">
+                         <div className="flex items-center gap-1.5 px-2 py-1 rounded-lg bg-primary/10 border border-primary/10">
+                           <Zap className="w-3 h-3 text-primary fill-primary" />
+                           <span className="text-[10px] font-black">+{achievement.xp_reward} XP</span>
+                         </div>
+                         <div className="flex items-center gap-1.5 px-2 py-1 rounded-lg bg-amber-500/10 border border-amber-500/10">
+                           <Star className="w-3 h-3 text-amber-500 fill-amber-500" />
+                           <span className="text-[10px] font-black">+{achievement.coin_reward} TOKENS</span>
+                         </div>
+                       </div>
+ 
+                       {isUnlocked && unlockDate && (
+                         <div className="mt-4 pt-4 border-t border-white/5 flex items-center justify-between">
+                           <span className="text-[10px] font-bold text-muted-foreground opacity-50 uppercase tracking-widest">
+                             CONQUISTADA EM {format(new Date(unlockDate), "dd MMM yyyy", { locale: ptBR }).toUpperCase()}
+                           </span>
+                           <button className="text-muted-foreground hover:text-primary transition-colors">
+                             <Share2 className="w-3.5 h-3.5" />
+                           </button>
+                         </div>
+                       )}
+                     </div>
+                   </div>
+                 </CardContent>
+               </Card>
+             </motion.div>
+           );
+         })}
       </AnimatePresence>
     </div>
   );
