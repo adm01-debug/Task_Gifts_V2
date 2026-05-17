@@ -146,7 +146,7 @@ export default function SocialFeedPage() {
   }), [filteredActivities]);
 
    return (
-     <PageShell title="Feed da Equipe" backFallback="/">
+     <PageShell title="Feed Social">
        <SEOHead {...seoData} />
        <header className="px-4 py-6 border-b border-border/50 mb-6 flex items-center justify-between">
          <div className="flex items-center gap-3">
@@ -154,7 +154,7 @@ export default function SocialFeedPage() {
              <Activity className="w-8 h-8 text-primary" />
            </div>
            <div>
-             <h1 className="text-3xl font-bold">Feed da Equipe</h1>
+             <h1 className="text-3xl font-bold">Feed Social</h1>
              <p className="text-muted-foreground text-sm">Acompanhe o progresso de todos</p>
            </div>
          </div>

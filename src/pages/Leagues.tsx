@@ -77,7 +77,7 @@ export default function Leagues() {
    );
  
    return (
-     <PageShell title="Ligas & Divisões" backFallback="/">
+     <PageShell title="Ligas">
        {pageContent}
      </PageShell>
    );

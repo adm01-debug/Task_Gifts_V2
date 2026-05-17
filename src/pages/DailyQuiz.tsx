@@ -134,27 +134,26 @@ export default function DailyQuiz() {
   const hasMillionaireQuestions = millionaireQuestions.length >= 5;
 
    return (
-     <PageShell title="Quiz Diário" backFallback="/">
+     <PageShell title="Quiz Diário">
        <SEOHead title={seoConfig.title} description={seoConfig.description} keywords={seoConfig.keywords} />
-       <header className="px-4 py-6 border-b border-border/50 mb-6 flex items-center justify-between">
-         <div className="flex items-center gap-3">
-           <div className="p-3 rounded-xl bg-primary/10">
-             <Gamepad2 className="w-8 h-8 text-primary" />
-           </div>
-           <div>
-             <h1 className="text-3xl font-bold">Quiz Diário</h1>
-             <p className="text-muted-foreground text-sm">Aprenda jogando e ganhe XP</p>
-           </div>
-         </div>
-         {activeQuiz && (
-           <Button variant="outline" size="sm" onClick={() => setActiveQuiz(null)} className="gap-2">
-             <ArrowLeft className="w-4 h-4" />
-             Voltar
-           </Button>
-         )}
-       </header>
- 
        <div className="container max-w-5xl mx-auto px-4 pb-24">
+         <header className="py-6 border-b border-border/50 mb-6 flex items-center justify-between">
+           <div className="flex items-center gap-3">
+             <div className="p-3 rounded-xl bg-primary/10">
+               <Gamepad2 className="w-8 h-8 text-primary" />
+             </div>
+             <div>
+               <h1 className="text-3xl font-bold">Quiz Diário</h1>
+               <p className="text-muted-foreground text-sm">Aprenda jogando e ganhe XP</p>
+             </div>
+           </div>
+           {activeQuiz && (
+             <Button variant="outline" size="sm" onClick={() => setActiveQuiz(null)} className="gap-2">
+               <ArrowLeft className="w-4 h-4" />
+               Voltar
+             </Button>
+           )}
+         </header>
           {isLoading ? (
           <div className="grid lg:grid-cols-3 gap-6">
             <div className="lg:col-span-2 grid md:grid-cols-2 gap-6">

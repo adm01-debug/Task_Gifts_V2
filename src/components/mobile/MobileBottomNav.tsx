@@ -23,7 +23,7 @@ const moreNavItems: NavItem[] = [
    { icon: Gamepad2, label: "Quiz Diário", path: "/quiz", color: "text-orange-500" },
    { icon: BarChart3, label: "Estatísticas", path: "/estatisticas", color: "text-blue-500" },
    { icon: MessageSquare, label: "Feed Social", path: "/feed", color: "text-green-500" },
-  { icon: User, label: "Perfil", path: "/profile", color: "text-purple-500" },
+   { icon: User, label: "Perfil", path: "/profile", color: "text-slate-500" },
    { icon: Sparkles, label: "Conquistas", path: "/conquistas", color: "text-amber-500" },
   { icon: Bell, label: "Avisos", path: "/announcements", color: "text-pink-500" },
    { icon: Settings, label: "Painel Admin", path: "/admin", color: "text-slate-500" },

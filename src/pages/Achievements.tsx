@@ -77,11 +77,13 @@ export default function Achievements() {
     return ua?.unlocked_at;
   };
 
-   if (isLoading) {
-     return (
-       <PageShell title="Conquistas">
-         <MobilePageLayout title="Conquistas" icon={TrophyIcon} backPath="/">
-           <div className="container max-w-4xl py-8 space-y-6 px-4">
+   return (
+     <PageShell title="Conquistas" backFallback="/">
+       <PageWrapper pageName="Conquistas" className="container max-w-4xl px-4 pb-24 mx-auto">
+         <SEOHead title={seoConfig.title} description={seoConfig.description} keywords={seoConfig.keywords} />
+         
+         {isLoading ? (
+           <div className="space-y-6">
              <Skeleton className="h-10 w-64" />
              <Skeleton className="h-32 w-full" />
              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -90,120 +92,109 @@ export default function Achievements() {
                ))}
              </div>
            </div>
-         </MobilePageLayout>
-       </PageShell>
-     );
-   }
-
-   const mainContent = (
-     <div className="space-y-6">
-       <header className="px-4 py-6 border-b border-border/50 mb-6 flex items-center gap-3">
-         <div className="p-3 rounded-xl bg-amber-500/10">
-           <Trophy className="w-8 h-8 text-amber-500" />
-         </div>
-         <div>
-           <h1 className="text-3xl font-bold">Conquistas</h1>
-           <p className="text-muted-foreground text-sm">Desbloqueie troféus e badges exclusivos</p>
-         </div>
-       </header>
-
-      {/* Progress Overview */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.1 }}
-      >
-        <Card className="bg-gradient-to-br from-amber-500/5 to-orange-500/5 border-amber-500/20">
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between mb-4">
-              <div>
-                <p className="text-sm text-muted-foreground">Progresso Geral</p>
-                <p className="text-3xl font-bold">
-                  {unlockedCount}{" "}
-                  <span className="text-lg text-muted-foreground">/ {totalCount}</span>
-                </p>
-              </div>
-              <div className="text-right">
-                <p className="text-4xl font-black text-amber-500">
-                  {progressPercent.toFixed(0)}%
-                </p>
-                <p className="text-sm text-muted-foreground">completo</p>
-              </div>
-            </div>
-            <Progress value={progressPercent} className="h-3" />
-
-            {/* Stats by rarity */}
-            <div className="grid grid-cols-4 gap-2 mt-4">
-              {(["common", "rare", "epic", "legendary"] as const).map((rarity) => {
-                const config = rarityConfig[rarity];
-                const total = allAchievements?.filter((a) => a.rarity === rarity).length || 0;
-                const unlocked =
-                  allAchievements?.filter((a) => a.rarity === rarity && unlockedIds.has(a.id))
-                    .length || 0;
-                return (
-                  <div
-                    key={rarity}
-                    className={`text-center p-2 rounded-lg ${config.bgColor}`}
-                  >
-                    <p className={`text-lg font-bold ${config.color}`}>
-                      {unlocked}/{total}
-                    </p>
-                    <p className="text-xs text-muted-foreground">{config.label}</p>
-                  </div>
-                );
-              })}
-            </div>
-          </CardContent>
-        </Card>
-      </motion.div>
-
-      {/* Behavioral Badges Widget */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.2 }}
-      >
-        <BehavioralBadgesWidget />
-      </motion.div>
-
-      {/* Tabs by Category */}
-      <Tabs defaultValue="all" className="space-y-4">
-        <TabsList className="flex-wrap">
-          <TabsTrigger value="all">Todas</TabsTrigger>
-          {categories.map((cat) => (
-            <TabsTrigger key={cat} value={cat} className="flex items-center gap-1">
-              {categoryConfig[cat]?.icon}
-              {categoryConfig[cat]?.label || cat}
-            </TabsTrigger>
-          ))}
-        </TabsList>
-
-        <TabsContent value="all" className="space-y-4">
-          <AchievementGrid
-            achievements={allAchievements || []}
-            unlockedIds={unlockedIds}
-            getUnlockDate={getUnlockDate}
-          />
-        </TabsContent>
-
-        {categories.map((cat) => (
-          <TabsContent key={cat} value={cat} className="space-y-4">
-            <AchievementGrid
-              achievements={allAchievements?.filter((a) => a.category === cat) || []}
-              unlockedIds={unlockedIds}
-              getUnlockDate={getUnlockDate}
-            />
-          </TabsContent>
-        ))}
-      </Tabs>
-    </div>
-  );
-
-   return (
-     <PageShell title="Conquistas" backFallback="/">
-       <PageWrapper pageName="Conquistas" className="container max-w-4xl px-4 pb-24 mx-auto">
-         <SEOHead title={seoConfig.title} description={seoConfig.description} keywords={seoConfig.keywords} />
-         {mainContent}
+         ) : (
+           <div className="space-y-6">
+             <header className="px-4 py-6 border-b border-border/50 mb-6 flex items-center gap-3">
+               <div className="p-3 rounded-xl bg-amber-500/10">
+                 <Trophy className="w-8 h-8 text-amber-500" />
+               </div>
+               <div>
+                 <h1 className="text-3xl font-bold">Conquistas</h1>
+                 <p className="text-muted-foreground text-sm">Desbloqueie troféus e badges exclusivos</p>
+               </div>
+             </header>
+ 
+             {/* Progress Overview */}
+             <motion.div
+               initial={{ opacity: 0, y: 20 }}
+               animate={{ opacity: 1, y: 0 }}
+               transition={{ delay: 0.1 }}
+             >
+               <Card className="bg-gradient-to-br from-amber-500/5 to-orange-500/5 border-amber-500/20">
+                 <CardContent className="p-6">
+                   <div className="flex items-center justify-between mb-4">
+                     <div>
+                       <p className="text-sm text-muted-foreground">Progresso Geral</p>
+                       <p className="text-3xl font-bold">
+                         {unlockedCount}{" "}
+                         <span className="text-lg text-muted-foreground">/ {totalCount}</span>
+                       </p>
+                     </div>
+                     <div className="text-right">
+                       <p className="text-4xl font-black text-amber-500">
+                         {progressPercent.toFixed(0)}%
+                       </p>
+                       <p className="text-sm text-muted-foreground">completo</p>
+                     </div>
+                   </div>
+                   <Progress value={progressPercent} className="h-3" />
+ 
+                   {/* Stats by rarity */}
+                   <div className="grid grid-cols-4 gap-2 mt-4">
+                     {(["common", "rare", "epic", "legendary"] as const).map((rarity) => {
+                       const config = rarityConfig[rarity];
+                       const total = allAchievements?.filter((a) => a.rarity === rarity).length || 0;
+                       const unlocked =
+                         allAchievements?.filter((a) => a.rarity === rarity && unlockedIds.has(a.id))
+                           .length || 0;
+                       return (
+                         <div
+                           key={rarity}
+                           className={`text-center p-2 rounded-lg ${config.bgColor}`}
+                         >
+                           <p className={`text-lg font-bold ${config.color}`}>
+                             {unlocked}/{total}
+                           </p>
+                           <p className="text-xs text-muted-foreground">{config.label}</p>
+                         </div>
+                       );
+                     })}
+                   </div>
+                 </CardContent>
+               </Card>
+             </motion.div>
+ 
+             {/* Behavioral Badges Widget */}
+             <motion.div
+               initial={{ opacity: 0, y: 20 }}
+               animate={{ opacity: 1, y: 0 }}
+               transition={{ delay: 0.2 }}
+             >
+               <BehavioralBadgesWidget />
+             </motion.div>
+ 
+             {/* Tabs by Category */}
+             <Tabs defaultValue="all" className="space-y-4">
+               <TabsList className="flex-wrap">
+                 <TabsTrigger value="all">Todas</TabsTrigger>
+                 {categories.map((cat) => (
+                   <TabsTrigger key={cat} value={cat} className="flex items-center gap-1">
+                     {categoryConfig[cat]?.icon}
+                     {categoryConfig[cat]?.label || cat}
+                   </TabsTrigger>
+                 ))}
+               </TabsList>
+ 
+               <TabsContent value="all" className="space-y-4">
+                 <AchievementGrid
+                   achievements={allAchievements || []}
+                   unlockedIds={unlockedIds}
+                   getUnlockDate={getUnlockDate}
+                 />
+               </TabsContent>
+ 
+               {categories.map((cat) => (
+                 <TabsContent key={cat} value={cat} className="space-y-4">
+                   <AchievementGrid
+                     achievements={allAchievements?.filter((a) => a.category === cat) || []}
+                     unlockedIds={unlockedIds}
+                     getUnlockDate={getUnlockDate}
+                   />
+                 </TabsContent>
+               ))}
+             </Tabs>
+           </div>
+         )}
        </PageWrapper>
      </PageShell>
    );
