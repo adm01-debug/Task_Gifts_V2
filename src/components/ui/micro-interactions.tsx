@@ -1,6 +1,7 @@
-import { memo, useCallback, useState } from "react";
+import { memo, useCallback, useState, useEffect } from "react";
 import { motion, AnimatePresence, useMotionValue, useTransform } from "framer-motion";
 import { cn } from "@/lib/utils";
+import { useHaptics } from "@/hooks/useHaptics";
 
 // Tipos de microinterações
 type MicroInteractionType = 
@@ -75,10 +76,11 @@ export const useRipple = () => {
 // Botão com efeito de pressão
 interface PressableButtonProps {
   children: React.ReactNode;
-  variant?: "default" | "success" | "error" | "ghost";
+  variant?: "default" | "success" | "error" | "ghost" | "outline";
   className?: string;
   onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
   disabled?: boolean;
+  haptic?: "light" | "medium" | "heavy" | "none";
 }
 
 export const PressableButton = memo(function PressableButton({
@@ -87,28 +89,32 @@ export const PressableButton = memo(function PressableButton({
   className,
   onClick,
   disabled,
+  haptic = "light",
 }: PressableButtonProps) {
   const { createRipple, RippleContainer } = useRipple();
+  const { vibrate } = useHaptics();
 
   return (
     <motion.button
       className={cn(
-        "relative overflow-hidden px-4 py-2 rounded-lg font-medium transition-colors",
-        variant === "default" && "bg-primary text-primary-foreground hover:bg-primary/90",
-        variant === "success" && "bg-emerald-500 text-white hover:bg-emerald-600",
-        variant === "error" && "bg-red-500 text-white hover:bg-red-600",
-        variant === "ghost" && "bg-transparent hover:bg-muted",
+        "relative overflow-hidden px-4 py-2 rounded-lg font-medium transition-all active:shadow-inner",
+        variant === "default" && "bg-primary text-primary-foreground hover:bg-primary/90 shadow-md hover:shadow-lg",
+        variant === "success" && "bg-emerald-500 text-white hover:bg-emerald-600 shadow-md hover:shadow-lg",
+        variant === "error" && "bg-red-500 text-white hover:bg-red-600 shadow-md hover:shadow-lg",
+        variant === "ghost" && "bg-transparent hover:bg-muted text-foreground",
+        variant === "outline" && "bg-transparent border-2 border-primary text-primary hover:bg-primary/5",
         className
       )}
-      whileTap={{ scale: 0.97 }}
+      whileTap={{ scale: 0.96, translateY: 1 }}
       whileHover={{ scale: 1.02 }}
       disabled={disabled}
       onClick={(e) => {
+        if (haptic !== "none") vibrate(haptic);
         createRipple(e);
         onClick?.(e);
       }}
     >
-      {children}
+      <span className="relative z-10">{children}</span>
       <RippleContainer />
     </motion.button>
   );
@@ -126,11 +132,24 @@ export const HeartLike = memo(function HeartLike({
   onToggle, 
   size = 24 
 }: HeartLikeProps) {
+  const { vibrate } = useHaptics();
+
+  const handleClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (!isLiked) {
+      vibrate("medium");
+    } else {
+      vibrate("light");
+    }
+    onToggle();
+  };
+
   return (
     <motion.button
-      onClick={onToggle}
+      onClick={handleClick}
       whileTap={{ scale: 0.8 }}
-      className="relative"
+      className="relative p-2 rounded-full hover:bg-red-50 transition-colors"
+      aria-label={isLiked ? "Remover curtida" : "Curtir"}
     >
       <motion.svg
         width={size}
@@ -226,6 +245,12 @@ export const FloatingReward = memo(function FloatingReward({
   y = 50,
   onComplete,
 }: FloatingRewardProps) {
+  const { vibrate } = useHaptics();
+
+  useEffect(() => {
+    vibrate("success");
+  }, [vibrate]);
+
   const colors = {
     xp: "text-amber-500",
     coins: "text-yellow-500",

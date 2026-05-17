@@ -6,6 +6,7 @@ interface AccessibilitySettings {
   fontSize: "normal" | "large" | "larger";
   focusVisible: boolean;
   screenReaderMode: boolean;
+  hapticsEnabled: boolean;
 }
 
 interface AccessibilityContextType {
@@ -25,6 +26,7 @@ const defaultSettings: AccessibilitySettings = {
   fontSize: "normal",
   focusVisible: true,
   screenReaderMode: false,
+  hapticsEnabled: true,
 };
 
 const STORAGE_KEY = "accessibility-settings";

@@ -13,7 +13,8 @@ import { CommandPalette } from "@/components/CommandPalette";
 import { FloatingCommandHint } from "@/components/ui/command-trigger";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { lazy, Suspense } from "react";
-import { Spinner } from "@/components/ui/spinner";
+import { motion } from "framer-motion";
+import { Shield } from "lucide-react";
 import { useScrollRestoration } from "@/hooks/useNavigationHelpers";
  import { useSwipeNavigation } from "@/hooks/useSwipeNavigation";
 import { Providers } from "@/components/Providers";
@@ -59,13 +60,73 @@ const SecurityDashboard = lazy(() => import("./pages/SecurityDashboard"));
 const PermissionsAdmin = lazy(() => import("./pages/PermissionsAdmin"));
 const AdminTelemetria = lazy(() => import("./pages/AdminTelemetria"));
 
-// Loading fallback component
 function PageLoader() {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background">
-      <div className="flex flex-col items-center gap-4">
-        <Spinner size="lg" />
-        <p className="text-muted-foreground animate-pulse">Carregando...</p>
+    <div className="min-h-screen flex flex-col items-center justify-center bg-background p-6">
+      <div className="relative">
+        <motion.div
+          initial={{ scale: 0.8, opacity: 0 }}
+          animate={{ 
+            scale: [0.8, 1.1, 1],
+            opacity: 1,
+          }}
+          transition={{ duration: 0.5 }}
+          className="relative z-10"
+        >
+          <div className="w-20 h-20 rounded-2xl bg-primary/10 flex items-center justify-center border-2 border-primary/20 shadow-xl overflow-hidden">
+            <Shield className="w-10 h-10 text-primary" />
+            
+            {/* Shimmer effect inside the logo box */}
+            <motion.div 
+              className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -skew-x-12"
+              animate={{ x: ['100%', '-100%'] }}
+              transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
+            />
+          </div>
+        </motion.div>
+        
+        {/* Pulse rings */}
+        <motion.div 
+          className="absolute inset-0 rounded-2xl border-2 border-primary/30"
+          animate={{ scale: [1, 1.5], opacity: [0.5, 0] }}
+          transition={{ duration: 1.5, repeat: Infinity }}
+        />
+        <motion.div 
+          className="absolute inset-0 rounded-2xl border-2 border-primary/20"
+          animate={{ scale: [1, 2], opacity: [0.3, 0] }}
+          transition={{ duration: 1.5, repeat: Infinity, delay: 0.5 }}
+        />
+      </div>
+
+      <div className="mt-12 text-center max-w-xs">
+        <motion.h2 
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
+          className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-accent"
+        >
+          Gamificação Corporativa
+        </motion.h2>
+        <motion.div
+          initial={{ width: 0 }}
+          animate={{ width: "100%" }}
+          transition={{ duration: 2, repeat: Infinity }}
+          className="h-1 bg-muted rounded-full mt-4 overflow-hidden"
+        >
+          <motion.div 
+            className="h-full bg-primary"
+            animate={{ x: ["-100%", "100%"] }}
+            transition={{ duration: 1, repeat: Infinity, ease: "easeInOut" }}
+          />
+        </motion.div>
+        <motion.p 
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 0.6 }}
+          transition={{ delay: 0.4 }}
+          className="text-sm mt-3 font-medium text-muted-foreground animate-pulse"
+        >
+          Preparando sua experiência 10/10...
+        </motion.p>
       </div>
     </div>
   );
