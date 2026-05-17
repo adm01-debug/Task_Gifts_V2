@@ -74,18 +74,23 @@ export const PageShell = memo(function PageShell({
        
        {isMobile && <MobileHeader title={title} />}
 
-       <header className="px-4 md:px-6 pt-4 pb-6 border-b border-border/50 mb-6 bg-background/50 backdrop-blur-sm sticky top-0 z-20">
+        <header className="px-4 md:px-6 pt-6 pb-6 border-b border-border/50 mb-6 bg-background/80 backdrop-blur-md sticky top-0 z-20 transition-all duration-300">
          <div className="flex flex-col gap-4">
            <div className="flex items-center justify-between gap-4">
              <div className="flex items-center gap-3">
                {!isMobile && !hideBackButton && <DesktopBackButton fallbackPath={backFallback} />}
                <div className="flex flex-col">
-                 {!isMobile && !hideBreadcrumbs && <GlobalBreadcrumbs className="mb-1" />}
+                  {!isMobile && !hideBreadcrumbs && <GlobalBreadcrumbs className="mb-2" />}
+                  {isMobile && !hideBreadcrumbs && (
+                    <span className="text-[10px] uppercase tracking-widest text-primary/70 font-bold mb-1 ml-0.5">
+                      Visualizando {title}
+                    </span>
+                  )}
                  <div className="flex items-center gap-2">
-                   {icon && <div className="p-2 rounded-lg bg-primary/10">{icon}</div>}
-                   <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-foreground">{title}</h1>
+                    {icon && <div className="p-2 rounded-xl bg-primary/10 text-primary shadow-sm ring-1 ring-primary/20">{icon}</div>}
+                    <h1 className="text-2xl md:text-4xl font-black tracking-tight text-foreground leading-none">{title}</h1>
                  </div>
-                 {subtitle && <p className="text-sm text-muted-foreground mt-1 max-w-2xl">{subtitle}</p>}
+                  {subtitle && <p className="text-sm md:text-base text-muted-foreground mt-2 max-w-2xl leading-relaxed opacity-80 font-medium">{subtitle}</p>}
                </div>
              </div>
            </div>

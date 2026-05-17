@@ -91,16 +91,14 @@ export const DashboardHeader = memo(function DashboardHeader({
               <Menu className="w-5 h-5" />
             </motion.button>
             
-            <div>
-              <h1 className="text-base font-bold truncate max-w-[140px]">
-                Olá, {displayName.split(" ")[0]}! 👋
-              </h1>
-              {rankData?.rank && (
-                <p className="text-xs text-muted-foreground">
-                  Rank <span className="text-primary font-semibold">#{rankData.rank}</span>
-                </p>
-              )}
-            </div>
+             <div className="flex flex-col">
+               <h2 className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold leading-none mb-1">
+                 Dashboard Principal
+               </h2>
+               <h1 className="text-base font-bold truncate max-w-[140px] leading-tight">
+                 Olá, {displayName.split(" ")[0]}! 👋
+               </h1>
+             </div>
           </div>
 
           {/* Right: Essential actions only */}
