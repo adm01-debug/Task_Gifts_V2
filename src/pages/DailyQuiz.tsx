@@ -133,43 +133,28 @@ export default function DailyQuiz() {
   const hasMagicQuestions = magicQuestions.length >= 3;
   const hasMillionaireQuestions = millionaireQuestions.length >= 5;
 
-  return (
+   return (
      <PageShell title="Quiz Diário" backFallback="/">
-       <MobilePageLayout title="Quiz Diário" icon={Gamepad2} backPath="/">
-         <div className="min-h-screen bg-background pb-24">
-           <SEOHead title={seoConfig.title} description={seoConfig.description} keywords={seoConfig.keywords} />
-           <div className="container max-w-5xl mx-auto px-4 py-6 md:py-8">
-             {/* Header - Desktop only */}
-             {!isMobile && !activeQuiz && (
-               <motion.div
-                 initial={{ opacity: 0, y: -20 }}
-                 animate={{ opacity: 1, y: 0 }}
-                 className="mb-8"
-               >
-                 <div className="flex items-center gap-3 mb-2">
-                   <div className="p-2 rounded-xl bg-primary/10">
-                     <Gamepad2 className="h-6 w-6 text-primary" />
-                   </div>
-                   <h1 className="text-3xl font-bold">Quiz Diário</h1>
-                 </div>
-                 <p className="text-muted-foreground">
-                   Dedique 10 minutos do seu dia para aprender jogando!
-                 </p>
-               </motion.div>
-             )}
+       <SEOHead title={seoConfig.title} description={seoConfig.description} keywords={seoConfig.keywords} />
+       <header className="px-4 py-6 border-b border-border/50 mb-6 flex items-center justify-between">
+         <div className="flex items-center gap-3">
+           <div className="p-3 rounded-xl bg-primary/10">
+             <Gamepad2 className="w-8 h-8 text-primary" />
+           </div>
+           <div>
+             <h1 className="text-3xl font-bold">Quiz Diário</h1>
+             <p className="text-muted-foreground text-sm">Aprenda jogando e ganhe XP</p>
+           </div>
+         </div>
+         {activeQuiz && (
+           <Button variant="outline" size="sm" onClick={() => setActiveQuiz(null)} className="gap-2">
+             <ArrowLeft className="w-4 h-4" />
+             Voltar
+           </Button>
+         )}
+       </header>
  
-             {/* Back Button for active quiz on desktop */}
-             {!isMobile && activeQuiz && (
-               <Button 
-                 variant="ghost" 
-                 className="mb-6 gap-2"
-                 onClick={() => setActiveQuiz(null)}
-               >
-                 <ArrowLeft className="w-4 h-4" />
-                 Voltar aos Quiz
-               </Button>
-             )}
-
+       <div className="container max-w-5xl mx-auto px-4 pb-24">
           {isLoading ? (
           <div className="grid lg:grid-cols-3 gap-6">
             <div className="lg:col-span-2 grid md:grid-cols-2 gap-6">
@@ -362,9 +347,7 @@ export default function DailyQuiz() {
             />
           </motion.div>
         )}
-            </div>
-          </div>
-        </MobilePageLayout>
-      </PageShell>
-    );
+       </div>
+     </PageShell>
+   );
 }

@@ -12,7 +12,7 @@ import { SeasonalEventBanner } from "@/components/SeasonalEventBanner";
 import { DashboardHeader, DashboardLeftColumn, DashboardRightColumn, DashboardFooter } from "@/components/dashboard";
  import { SectionWrapper } from "@/components/PageWrapper";
  import { SEOHead } from "@/components/SEOHead";
- import { PageShell } from "@/components/navigation";
+import { PageShell } from "@/components/navigation";
 
 // Hooks
 import { useIsMobileWithHydration } from "@/hooks/use-mobile";

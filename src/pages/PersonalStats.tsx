@@ -6,7 +6,7 @@ import { useUserAchievements } from "@/hooks/useAchievements";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
  import { AppSidebar } from "@/components/AppSidebar";
- import { PageShell } from "@/components/navigation";
+import { PageShell } from "@/components/navigation";
 import { MobilePageLayout } from "@/components/mobile";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { WeeklyPerformanceComparison } from "@/components/WeeklyPerformanceComparison";
@@ -153,21 +153,23 @@ export default function PersonalStats() {
    );
 
    return (
-     <PageShell title="Estatísticas">
-       <MobilePageLayout title="Estatísticas" icon={TrendingUp} backPath="/">
-         <div className="flex bg-background">
-           {!isMobile && (
-             <AppSidebar 
-               collapsed={sidebarCollapsed} 
-               onToggle={() => setSidebarCollapsed(!sidebarCollapsed)} 
-             />
-           )}
-           <PageWrapper pageName="Estatísticas" className="flex-1 min-h-screen bg-background pb-24">
-             <SEOHead title={seoData.title} description={seoData.description} keywords={seoData.keywords} />
-             {content}
-           </PageWrapper>
+     <PageShell title="Estatísticas Pessoais" backFallback="/">
+       <SEOHead title={seoData.title} description={seoData.description} keywords={seoData.keywords} />
+       <header className="px-4 py-6 border-b border-border/50 mb-6 flex items-center gap-3">
+         <div className="p-3 rounded-xl bg-primary/10">
+           <TrendingUp className="w-8 h-8 text-primary" />
          </div>
-       </MobilePageLayout>
+         <div>
+           <h1 className="text-3xl font-bold">Estatísticas</h1>
+           <p className="text-muted-foreground text-sm">Visualize sua evolução detalhada</p>
+         </div>
+       </header>
+       
+       <div className="container max-w-7xl mx-auto pb-24">
+         <PageWrapper pageName="Estatísticas">
+           {content}
+         </PageWrapper>
+       </div>
      </PageShell>
    );
 }

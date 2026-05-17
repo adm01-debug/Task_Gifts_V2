@@ -1,11 +1,12 @@
-import { memo, ReactNode } from "react";
+import { memo, ReactNode, useEffect } from "react";
 import { useIsMobile } from "@/hooks/use-mobile";
- import { GlobalBreadcrumbs } from "./GlobalBreadcrumbs";
- import { DesktopBackButton } from "./DesktopBackButton";
- import { MobileHeader } from "../MobileHeader";
- import { PageTransition } from "./PageTransition";
- import { TopLoadingBar } from "./TopLoadingBar";
+import { GlobalBreadcrumbs } from "./GlobalBreadcrumbs";
+import { DesktopBackButton } from "./DesktopBackButton";
+import { MobileHeader } from "../MobileHeader";
+import { PageTransition } from "./PageTransition";
+import { TopLoadingBar } from "./TopLoadingBar";
 import { cn } from "@/lib/utils";
+import { useScrollRestoration } from "@/hooks/useNavigationHelpers";
 
 interface PageShellProps {
   children: ReactNode;
@@ -39,6 +40,14 @@ export const PageShell = memo(function PageShell({
   hideBreadcrumbs = false,
 }: PageShellProps) {
   const isMobile = useIsMobile();
+
+  // Apply scroll restoration to all pages using PageShell
+  useScrollRestoration();
+
+  // Focus management: scroll to top on mount for level 2+ pages
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
    return (
      <PageTransition className={cn("min-h-screen", className)}>

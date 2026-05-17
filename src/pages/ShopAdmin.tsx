@@ -4,33 +4,26 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
  import { RewardsManager } from "@/components/shop-admin/RewardsManager";
  import { PurchasesManager } from "@/components/shop-admin/PurchasesManager";
  import { PromotionsManager } from "@/components/shop-admin/PromotionsManager";
- import { PageShell } from "@/components/navigation";
+import { PageShell } from "@/components/navigation";
 
 export default function ShopAdmin() {
-  return (
-    <PageShell title="Admin da Loja">
-       <div className="min-h-screen bg-background pb-20">
-         {/* Header */}
-         <div className="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 p-6 text-white">
-           <div className="max-w-6xl mx-auto">
-             <motion.div
-               initial={{ opacity: 0, y: -20 }}
-               animate={{ opacity: 1, y: 0 }}
-               className="flex items-center gap-3"
-             >
-               <Settings className="w-8 h-8" />
-               <div>
-                 <h1 className="text-2xl font-bold">Admin da Loja</h1>
-                 <p className="text-white/80">Gerencie recompensas, pedidos e promoções</p>
-               </div>
-             </motion.div>
+   return (
+     <PageShell title="Administração da Loja" backFallback="/admin">
+       <div className="max-w-7xl mx-auto space-y-6 p-4 md:p-6 lg:p-8 pb-24">
+         <header className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
+           <div className="flex items-center gap-3">
+             <div className="p-2 rounded-xl bg-primary/10">
+               <Settings className="h-6 w-6 text-primary" />
+             </div>
+             <div>
+               <h1 className="text-3xl font-bold">Administração da Loja</h1>
+               <p className="text-muted-foreground">Gerencie recompensas, pedidos e promoções</p>
+             </div>
            </div>
-         </div>
-
-      {/* Content */}
-      <div className="max-w-6xl mx-auto p-4 md:p-6">
-        <Tabs defaultValue="rewards" className="space-y-6">
-          <TabsList className="grid w-full max-w-lg grid-cols-3">
+         </header>
+ 
+         <Tabs defaultValue="rewards" className="space-y-4">
+           <TabsList className="grid w-full max-w-lg grid-cols-3 h-auto">
             <TabsTrigger value="rewards" className="flex items-center gap-2">
               <Package className="w-4 h-4" />
               Recompensas
@@ -57,8 +50,7 @@ export default function ShopAdmin() {
             <PromotionsManager />
           </TabsContent>
         </Tabs>
-        </div>
-      </div>
-    </PageShell>
-  );
-}
+         </div>
+     </PageShell>
+   );
+ }

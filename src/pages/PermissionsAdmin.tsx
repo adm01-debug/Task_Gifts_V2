@@ -8,6 +8,7 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { usePermissions } from "@/hooks/usePermissions";
 import { Skeleton } from "@/components/ui/skeleton";
+import { PageShell } from "@/components/navigation";
 import {
   Shield,
   Users,
@@ -42,26 +43,20 @@ export default function PermissionsAdmin() {
     },
   });
 
-  return (
-    <div className="min-h-screen bg-background">
-      <div className="container mx-auto p-6 space-y-6">
-        {/* Header */}
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <Button variant="ghost" size="icon" onClick={() => navigate(-1)}>
-              <ChevronLeft className="h-5 w-5" />
-            </Button>
-            <div>
-              <h1 className="text-3xl font-bold flex items-center gap-2">
-                <Shield className="h-8 w-8 text-primary" />
-                Gestão de Permissões
-              </h1>
-              <p className="text-muted-foreground mt-1">
-                Gerencie roles, permissões e controle de acesso do sistema
-              </p>
-            </div>
-          </div>
-        </div>
+   return (
+     <PageShell title="Gestão de Permissões" backFallback="/admin">
+       <div className="max-w-7xl mx-auto space-y-6 p-4 md:p-6 lg:p-8 pb-24">
+         <header className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
+           <div className="flex items-center gap-3">
+             <div className="p-2 rounded-xl bg-primary/10">
+               <Shield className="h-6 w-6 text-primary" />
+             </div>
+             <div>
+               <h1 className="text-3xl font-bold">Gestão de Permissões</h1>
+               <p className="text-muted-foreground">Controle de acesso e roles do sistema</p>
+             </div>
+           </div>
+         </header>
 
         {/* Stats */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
@@ -175,7 +170,7 @@ export default function PermissionsAdmin() {
             <PermissionsManager />
           </TabsContent>
         </Tabs>
-      </div>
-    </div>
+       </div>
+     </PageShell>
   );
 }

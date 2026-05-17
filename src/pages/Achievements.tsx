@@ -18,7 +18,7 @@ import { useSEO } from "@/hooks/useSEO";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { MobilePageLayout } from "@/components/mobile";
 import { DesktopBackButton, GlobalBreadcrumbs } from "@/components/navigation";
-const rarityConfig = {
+const rarityConfig: Record<string, { label: string; color: string; bgColor: string; borderColor: string; glow: string }> = {
   common: {
     label: "Comum",
     color: "text-gray-500",
@@ -96,20 +96,16 @@ export default function Achievements() {
 
    const mainContent = (
      <div className="space-y-6">
-       {/* Header Content - Hidden if mobile since MobilePageLayout handles it */}
-       {!isMobile && (
-         <div className="flex items-center gap-3">
-           <div className="p-3 rounded-xl bg-amber-500/10">
-             <Trophy className="w-8 h-8 text-amber-500" />
-           </div>
-           <div>
-             <h2 className="text-3xl font-bold">Conquistas</h2>
-             <p className="text-muted-foreground">
-               Desbloqueie conquistas completando ações na plataforma
-             </p>
-           </div>
+       <header className="px-4 py-6 border-b border-border/50 mb-6 flex items-center gap-3">
+         <div className="p-3 rounded-xl bg-amber-500/10">
+           <Trophy className="w-8 h-8 text-amber-500" />
          </div>
-       )}
+         <div>
+           <h1 className="text-3xl font-bold">Conquistas</h1>
+           <p className="text-muted-foreground text-sm">Desbloqueie troféus e badges exclusivos</p>
+         </div>
+       </header>
+
       {/* Progress Overview */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
@@ -203,13 +199,11 @@ export default function Achievements() {
   );
 
    return (
-     <PageShell title="Conquistas">
-       <MobilePageLayout title="Conquistas" icon={TrophyIcon} backPath="/">
-         <PageWrapper pageName="Conquistas" className="container max-w-4xl py-6 px-4 space-y-6 pb-24">
-           <SEOHead title={seoConfig.title} description={seoConfig.description} keywords={seoConfig.keywords} />
-           {mainContent}
-         </PageWrapper>
-       </MobilePageLayout>
+     <PageShell title="Conquistas" backFallback="/">
+       <PageWrapper pageName="Conquistas" className="container max-w-4xl px-4 pb-24 mx-auto">
+         <SEOHead title={seoConfig.title} description={seoConfig.description} keywords={seoConfig.keywords} />
+         {mainContent}
+       </PageWrapper>
      </PageShell>
    );
 }

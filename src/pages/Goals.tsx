@@ -117,20 +117,17 @@ export default function Goals() {
 
    return (
      <PageShell title="Goals & OKRs" backFallback="/">
+       <header className="px-4 py-6 border-b border-border/50 mb-6 flex items-center gap-3">
+         <div className="p-3 rounded-xl bg-primary/10">
+           <Target className="w-8 h-8 text-primary" />
+         </div>
+         <div>
+           <h1 className="text-3xl font-bold">Goals & OKRs</h1>
+           <p className="text-muted-foreground text-sm">Gerencie seus objetivos estratégicos</p>
+         </div>
+       </header>
        <PageWrapper pageName="Goals">
-         {isMobile ? (
-           <MobilePageLayout title="Goals & OKRs" subtitle="Gerencie seus objetivos" icon={Target}>
-             {pageContent}
-           </MobilePageLayout>
-         ) : (
-           <div className="min-h-screen bg-background">
-             <header className="px-4 md:px-6 py-4">
-               <h1 className="text-2xl font-bold">Goals & OKRs</h1>
-               <p className="text-muted-foreground">Gerencie seus objetivos e OKRs</p>
-             </header>
-             {pageContent}
-           </div>
-         )}
+         {pageContent}
        </PageWrapper>
      </PageShell>
    );

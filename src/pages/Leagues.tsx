@@ -1,4 +1,4 @@
-import { Trophy, TrendingUp } from "lucide-react";
+import { Trophy, TrendingUp, Shield } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useLeagues } from "@/hooks/useLeagues";
 import { useNavigate } from "react-router-dom";
@@ -16,13 +16,23 @@ export default function Leagues() {
   const { myLeague, leaderboard, history, isLoading } = useLeagues();
 
   const pageContent = (
-    <>
-      <SEOHead
-        title="Ligas & Divisões | Gamify"
-        description="Participe das ligas semanais e avance nas divisões competindo com outros usuários."
-      />
-      <main className="p-4 md:p-6 space-y-6 max-w-7xl mx-auto pb-24">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+     <PageWrapper pageName="Ligas">
+       <SEOHead
+         title="Ligas & Divisões | Gamify"
+         description="Participe das ligas semanais e avance nas divisões competindo com outros usuários."
+       />
+       <header className="px-4 py-6 border-b border-border/50 mb-6 flex items-center gap-3">
+         <div className="p-3 rounded-xl bg-primary/10">
+           <Shield className="w-8 h-8 text-primary" />
+         </div>
+         <div>
+           <h1 className="text-3xl font-bold">Ligas & Divisões</h1>
+           <p className="text-muted-foreground text-sm">Suba nas divisões e prove sua maestria</p>
+         </div>
+       </header>
+
+       <div className="p-4 md:p-6 space-y-6 max-w-7xl mx-auto pb-24">
+         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <LeagueCard />
           
           <Card>
@@ -48,27 +58,13 @@ export default function Leagues() {
             </CardContent>
           </Card>
         </div>
-      </main>
-    </>
-  );
-
+       </div>
+     </PageWrapper>
+   );
+ 
    return (
-     <PageShell title="Ligas & Divisões">
-       <PageWrapper pageName="Ligas" className="min-h-screen bg-background">
-         {isMobile ? (
-           <MobilePageLayout title="Ligas & Divisões" icon={Trophy} backPath="/">
-             {pageContent}
-           </MobilePageLayout>
-         ) : (
-           <>
-               <div className="flex h-16 shrink-0 items-center gap-2 px-4 md:px-6">
-                 <Trophy className="h-6 w-6 text-primary" />
-                 <h2 className="text-xl font-bold">Ligas & Divisões</h2>
-               </div>
-             {pageContent}
-           </>
-         )}
-       </PageWrapper>
+     <PageShell title="Ligas & Divisões" backFallback="/">
+       {pageContent}
      </PageShell>
    );
 }

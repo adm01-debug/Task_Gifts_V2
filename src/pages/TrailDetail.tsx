@@ -14,6 +14,7 @@ import { SectionErrorBoundary } from "@/components/SectionErrorBoundary";
 import { useTrailWithModules, useUserEnrollments, useModuleProgress, useEnrollInTrail, useStartModule, useCompleteModule } from "@/hooks/useTrails";
 import { useAuth } from "@/hooks/useAuth";
 import type { TrailModule, ModuleProgress } from "@/services/trailsService";
+import { PageShell } from "@/components/navigation";
 import ModuleViewer from "@/components/lms/ModuleViewer";
 
 const contentTypeConfig = {
@@ -211,20 +212,10 @@ export default function TrailDetail() {
 
   const activeModule = trail.modules.find(m => m.id === activeModuleId);
 
-  return (
-    <div className="min-h-screen bg-background">
-      <div className="container max-w-6xl mx-auto px-4 py-8">
-        {/* Back Button */}
-        <Button
-          variant="ghost"
-          className="mb-6 gap-2"
-          onClick={() => navigate("/trails")}
-        >
-          <ArrowLeft className="h-4 w-4" />
-          Voltar às Trilhas
-        </Button>
-
-        <div className="grid lg:grid-cols-3 gap-8">
+   return (
+     <PageShell title={trail.title} backFallback="/trails">
+       <div className="container max-w-7xl mx-auto px-4 py-6 md:py-8 pb-24">
+         <div className="grid lg:grid-cols-3 gap-8">
           {/* Main Content */}
           <div className="lg:col-span-2 space-y-6">
             {/* Trail Header */}
@@ -449,6 +440,6 @@ export default function TrailDetail() {
           </SectionErrorBoundary>
         )}
       </AnimatePresence>
-    </div>
-  );
-}
+       </PageShell>
+     );
+   }
