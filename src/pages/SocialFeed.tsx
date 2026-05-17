@@ -455,8 +455,7 @@ export default function SocialFeedPage() {
             )}
           </CardContent>
         </Card>
-         </div>
-       </MobilePageLayout>
+       </div>
      </PageShell>
    );
-}
+ }
