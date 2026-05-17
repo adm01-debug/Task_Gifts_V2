@@ -169,7 +169,15 @@ const Attendance = () => {
              {pageContent}
            </MobilePageLayout>
          ) : (
-           pageContent
+           <div className="container mx-auto px-4 py-6 space-y-6 max-w-7xl pb-24">
+             <div className="flex items-center justify-between mb-4">
+               <div>
+                 <h1 className="text-3xl font-bold">Controle de Ponto</h1>
+                 <p className="text-muted-foreground">{format(new Date(), "EEEE, d 'de' MMMM", { locale: ptBR })}</p>
+               </div>
+             </div>
+             {pageContent}
+           </div>
          )}
        </PageWrapper>
      </PageShell>
