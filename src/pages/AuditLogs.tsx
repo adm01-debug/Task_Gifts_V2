@@ -1,10 +1,10 @@
 import { useState, useMemo } from "react";
 import { motion } from "framer-motion";
-import { Shield, User, Activity, Clock, FileText } from "lucide-react";
+import { Shield, User, Activity, Clock, FileText, Settings } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { useRecentAuditLogs } from "@/hooks/useAudit";
 import { useProfiles } from "@/hooks/useProfiles";
-import { DesktopBackButton } from "@/components/navigation";
+import { PageShell } from "@/components/navigation";
 import { AuditFilters, actionLabels } from "@/components/audit/AuditFilters";
 import { AuditTable } from "@/components/audit/AuditTable";
 import { format, startOfDay } from "date-fns";
@@ -44,15 +44,19 @@ export default function AuditLogs() {
   const hasActiveFilters = selectedAction !== "all" || selectedUserId !== "all" || !!searchQuery || !!startDate || !!endDate;
 
   return (
-    <div className="min-h-screen bg-background p-4 md:p-6 lg:p-8">
-      <div className="max-w-7xl mx-auto space-y-6">
-        <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="flex items-center gap-4">
-          <DesktopBackButton />
+    <PageShell title="Logs de Auditoria" backFallback="/admin">
+      <div className="max-w-7xl mx-auto space-y-6 p-4 md:p-6 lg:p-8 pb-24">
+        <header className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
           <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary to-accent flex items-center justify-center"><Shield className="w-6 h-6 text-primary-foreground" /></div>
-            <div><h1 className="text-2xl font-bold">Logs de Auditoria</h1><p className="text-muted-foreground text-sm">Histórico completo de ações do sistema</p></div>
+            <div className="p-2 rounded-xl bg-primary/10">
+              <Settings className="h-6 w-6 text-primary" />
+            </div>
+            <div>
+              <h1 className="text-3xl font-bold">Logs de Auditoria</h1>
+              <p className="text-muted-foreground">Histórico completo de ações do sistema</p>
+            </div>
           </div>
-        </motion.div>
+        </header>
 
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {[

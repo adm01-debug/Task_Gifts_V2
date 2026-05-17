@@ -7,7 +7,7 @@ import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { QuestPreview } from "@/components/quest-builder/QuestPreview";
-import { DesktopBackButton } from "@/components/navigation";
+import { PageShell } from "@/components/navigation";
 import { logger } from "@/services/loggingService";
 import { BasicInfoSection, AdvancedSection, StepsSection } from "@/components/quest-builder/QuestFormSections";
 
@@ -77,31 +77,26 @@ export default function QuestBuilder() {
   };
 
   return (
-    <div className="min-h-screen bg-background">
-      <motion.header initial={{ y: -20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="sticky top-0 z-50 border-b border-border/50 bg-background/80 backdrop-blur-lg">
-        <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4">
-          <div className="flex items-center gap-4">
-            <DesktopBackButton />
-            <div>
-              <h1 className="text-lg font-bold text-foreground">Criar Nova Quest</h1>
-              <p className="text-sm text-muted-foreground">Monte uma trilha de aprendizado para sua equipe</p>
-            </div>
-          </div>
-          <div className="flex items-center gap-2">
-            <Button variant="outline" size="sm" onClick={() => setShowPreview(!showPreview)} className="hidden gap-2 md:flex">
-              {showPreview ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}{showPreview ? "Ocultar Preview" : "Mostrar Preview"}
-            </Button>
-            <Button variant="outline" onClick={() => handleSave("draft")} disabled={isSaving} className="gap-2">
-              {isSaving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}Salvar Rascunho
-            </Button>
-            <Button onClick={() => handleSave("active")} disabled={isSaving} className="gap-2 bg-gradient-to-r from-primary to-accent hover:opacity-90">
-              {saveSuccess ? <CheckCircle className="h-4 w-4" /> : isSaving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />}Publicar Quest
-            </Button>
-          </div>
+    <PageShell title="Criar Nova Quest" backFallback="/manager">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 px-4 py-6 border-b border-border/50 bg-background/50 backdrop-blur-lg sticky top-0 z-40">
+        <div className="flex-1">
+          <h1 className="text-2xl font-bold">Criar Nova Quest</h1>
+          <p className="text-muted-foreground text-sm">Monte uma trilha de aprendizado para sua equipe</p>
         </div>
-      </motion.header>
+        <div className="flex items-center gap-2">
+          <Button variant="outline" size="sm" onClick={() => setShowPreview(!showPreview)} className="hidden gap-2 md:flex">
+            {showPreview ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}{showPreview ? "Ocultar Preview" : "Mostrar Preview"}
+          </Button>
+          <Button variant="outline" onClick={() => handleSave("draft")} disabled={isSaving} className="gap-2">
+            {isSaving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}Salvar Rascunho
+          </Button>
+          <Button onClick={() => handleSave("active")} disabled={isSaving} className="gap-2 bg-gradient-to-r from-primary to-accent hover:opacity-90">
+            {saveSuccess ? <CheckCircle className="h-4 w-4" /> : isSaving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />}Publicar Quest
+          </Button>
+        </div>
+      </div>
 
-      <div className="mx-auto max-w-7xl px-4 py-8">
+      <div className="mx-auto max-w-7xl px-4 py-8 pb-24">
         <div className={`grid gap-8 ${showPreview ? "lg:grid-cols-2" : "lg:grid-cols-1 max-w-3xl mx-auto"}`}>
           <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="space-y-8">
             <BasicInfoSection icon={icon} setIcon={setIcon} title={title} setTitle={setTitle} description={description} setDescription={setDescription} difficulty={difficulty} setDifficulty={setDifficulty} xpReward={xpReward} setXpReward={setXpReward} coinReward={coinReward} setCoinReward={setCoinReward} />
@@ -118,6 +113,6 @@ export default function QuestBuilder() {
           </AnimatePresence>
         </div>
       </div>
-    </div>
+    </PageShell>
   );
 }
