@@ -199,13 +199,11 @@ export default function Achievements() {
   );
 
    return (
-     <PageShell title="Conquistas">
-       <MobilePageLayout title="Conquistas" icon={TrophyIcon} backPath="/">
-         <PageWrapper pageName="Conquistas" className="container max-w-4xl py-6 px-4 space-y-6 pb-24">
-           <SEOHead title={seoConfig.title} description={seoConfig.description} keywords={seoConfig.keywords} />
-           {mainContent}
-         </PageWrapper>
-       </MobilePageLayout>
+     <PageShell title="Conquistas" backFallback="/">
+       <PageWrapper pageName="Conquistas" className="container max-w-4xl px-4 pb-24 mx-auto">
+         <SEOHead title={seoConfig.title} description={seoConfig.description} keywords={seoConfig.keywords} />
+         {mainContent}
+       </PageWrapper>
      </PageShell>
    );
 }
