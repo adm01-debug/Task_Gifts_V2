@@ -13,8 +13,12 @@ import { useScrollRestoration } from "@/hooks/useNavigationHelpers";
 
 interface PageShellProps {
   children: ReactNode;
-  /** Page title for accessibility */
-  title?: string;
+   /** Page title displayed in header and for accessibility */
+   title: string;
+   /** Subtitle displayed under the title */
+   subtitle?: string;
+   /** Icon displayed next to title in header */
+   icon?: React.ReactNode;
   /** Additional class for the content wrapper */
   className?: string;
   /** Override fallback path for back button */
@@ -36,12 +40,14 @@ interface PageShellProps {
  */
 export const PageShell = memo(function PageShell({
   children,
-  title,
-  className,
-  backFallback = "/",
-  hideBackButton = false,
-  hideBreadcrumbs = false,
-}: PageShellProps) {
+   title = "Página",
+   subtitle,
+   icon,
+   className,
+   backFallback = "/",
+   hideBackButton = false,
+   hideBreadcrumbs = false,
+ }: PageShellProps) {
   const isMobile = useIsMobile();
 
   // Apply scroll restoration to all pages using PageShell
@@ -65,17 +71,26 @@ export const PageShell = memo(function PageShell({
    const content = (
      <div className={cn("min-h-screen", className)}>
        <TopLoadingBar />
-       {isMobile ? (
-         <MobileHeader title={title} />
-       ) : (
-         <div className="px-4 md:px-6 pt-4 flex items-center gap-3">
-           {!hideBackButton && <DesktopBackButton fallbackPath={backFallback} />}
-           {!hideBreadcrumbs && <GlobalBreadcrumbs className="mb-0" />}
+       
+       {isMobile && <MobileHeader title={title} />}
+
+       <header className="px-4 md:px-6 pt-4 pb-6 border-b border-border/50 mb-6 bg-background/50 backdrop-blur-sm sticky top-0 z-20">
+         <div className="flex flex-col gap-4">
+           <div className="flex items-center justify-between gap-4">
+             <div className="flex items-center gap-3">
+               {!isMobile && !hideBackButton && <DesktopBackButton fallbackPath={backFallback} />}
+               <div className="flex flex-col">
+                 {!isMobile && !hideBreadcrumbs && <GlobalBreadcrumbs className="mb-1" />}
+                 <div className="flex items-center gap-2">
+                   {icon && <div className="p-2 rounded-lg bg-primary/10">{icon}</div>}
+                   <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-foreground">{title}</h1>
+                 </div>
+                 {subtitle && <p className="text-sm text-muted-foreground mt-1 max-w-2xl">{subtitle}</p>}
+               </div>
+             </div>
+           </div>
          </div>
-       )}
- 
-       {/* Page title (sr-only if using breadcrumbs) */}
-       {title && <h1 className="sr-only">{title}</h1>}
+       </header>
  
        {/* Content */}
        <main className="focus:outline-none" tabIndex={-1}>

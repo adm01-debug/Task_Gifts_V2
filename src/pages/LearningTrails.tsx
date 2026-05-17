@@ -138,17 +138,13 @@ export default function LearningTrails() {
   const handleEnroll = async (trailId: string) => { setEnrollingTrailId(trailId); try { await enrollMutation.mutateAsync(trailId); navigate(`/trails/${trailId}`); } finally { setEnrollingTrailId(null); } };
 
    return (
-     <PageShell title="Trilhas">
+     <PageShell 
+       title="Trilhas" 
+       subtitle="Desenvolva suas habilidades através de trilhas estruturadas"
+       icon={<BookOpen className="h-6 w-6 text-primary" />}
+     >
        <SEOHead {...seoData} />
-       <div className="container max-w-7xl mx-auto px-4 py-6 md:py-8 pb-24">
-         <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="mb-8">
-           <div className="flex items-center gap-3 mb-2">
-             <div className="p-2 rounded-xl bg-primary/10"><BookOpen className="h-6 w-6 text-primary" /></div>
-             <h1 className="text-3xl font-bold">Trilhas de Aprendizado</h1>
-           </div>
-           <p className="text-muted-foreground">Desenvolva suas habilidades através de trilhas estruturadas</p>
-         </motion.div>
- 
+       <div className="container max-w-7xl mx-auto px-4 pb-24">
          {isLoading ? (
            <div className="space-y-8">
              <div className="grid grid-cols-1 md:grid-cols-4 gap-4"><Skeleton className="h-32" /><Skeleton className="h-32" /><Skeleton className="h-32" /><Skeleton className="h-32" /></div>
