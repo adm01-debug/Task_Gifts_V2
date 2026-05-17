@@ -1,13 +1,15 @@
 import { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-import { BookOpen, Clock, Star, Trophy, Users, Play, CheckCircle2, Lock, ChevronRight, Sparkles, Filter, Award, Link2 } from "lucide-react";
+ import { BookOpen, Clock, Star, Trophy, Users, Play, CheckCircle2, Lock, ChevronRight, Sparkles, Filter, Award, Link2, SearchX } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { SEOHead } from "@/components/SEOHead";
 import { useSEO } from "@/hooks/useSEO";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
+ import { Skeleton } from "@/components/ui/skeleton";
+ import { EmptyState } from "@/components/ui/empty-state";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { AllSelectItem } from "@/components/ui/all-select-item";
@@ -135,10 +137,6 @@ export default function LearningTrails() {
 
   const handleEnroll = async (trailId: string) => { setEnrollingTrailId(trailId); try { await enrollMutation.mutateAsync(trailId); navigate(`/trails/${trailId}`); } finally { setEnrollingTrailId(null); } };
 
-  if (isLoading) {
-    return <div className="min-h-screen bg-background flex items-center justify-center"><motion.div animate={{ rotate: 360 }} transition={{ duration: 1, repeat: Infinity, ease: "linear" }} className="h-8 w-8 border-2 border-primary border-t-transparent rounded-full" /></div>;
-  }
-
     return (
       <PageShell title="Trilhas">
         <div className="min-h-screen bg-background pb-24">
@@ -152,6 +150,14 @@ export default function LearningTrails() {
               <p className="text-muted-foreground">Desenvolva suas habilidades através de trilhas estruturadas</p>
             </motion.div>
 
+             {isLoading ? (
+               <div className="space-y-8">
+                 <div className="grid grid-cols-1 md:grid-cols-4 gap-4"><Skeleton className="h-32" /><Skeleton className="h-32" /><Skeleton className="h-32" /><Skeleton className="h-32" /></div>
+                 <Skeleton className="h-48 w-full" />
+                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"><Skeleton className="h-80" /><Skeleton className="h-80" /><Skeleton className="h-80" /></div>
+               </div>
+             ) : (
+               <>
             <TrailStatsCards totalTrails={trails.length} inProgressCount={inProgressCount} completedCount={completedCount} totalXpEarned={totalXpEarned} />
 
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }} className="mb-8"><TrailRecommendations /></motion.div>
@@ -174,9 +180,12 @@ export default function LearningTrails() {
 
             <AnimatePresence mode="wait">
               {filteredTrails.length === 0 ? (
-                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="text-center py-16">
-                  <BookOpen className="h-16 w-16 mx-auto text-muted-foreground/50 mb-4" /><h3 className="text-xl font-semibold mb-2">Nenhuma trilha encontrada</h3><p className="text-muted-foreground">Tente ajustar os filtros ou volte mais tarde</p>
-                </motion.div>
+                 <EmptyState 
+                   icon={SearchX}
+                   title="Nenhuma trilha encontrada"
+                   description="Tente ajustar os filtros de categoria ou departamento para encontrar novas trilhas."
+                   action={{ label: "Limpar Filtros", onClick: () => { setSelectedDepartment("all"); setActiveTab("all"); } }}
+                 />
               ) : (
                 <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
                   {filteredTrails.map((trail, index) => {
@@ -190,6 +199,8 @@ export default function LearningTrails() {
                 </motion.div>
               )}
             </AnimatePresence>
+               </>
+             )}
           </div>
         </div>
       </PageShell>
