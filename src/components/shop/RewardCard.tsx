@@ -76,8 +76,8 @@ interface RewardCardProps {
                  reward.rarity === "rare" ? "bg-gradient-to-br from-blue-400 to-cyan-500 shadow-blue-500/20" : "bg-muted/50"
                }`}
              >
-               {categoryConfig.icon}
-             </div>
+                {categoryConfig.icon}
+              </motion.div>
              {/* Shadow Glow behind icon */}
              <div className={`absolute inset-0 blur-2xl opacity-40 scale-150 rounded-full pointer-events-none ${
                reward.rarity === "legendary" ? "bg-amber-500/20" : 
