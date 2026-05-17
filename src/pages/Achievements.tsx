@@ -19,34 +19,38 @@ import { useSEO } from "@/hooks/useSEO";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { MobilePageLayout } from "@/components/mobile";
 import { DesktopBackButton, GlobalBreadcrumbs } from "@/components/navigation";
-const rarityConfig: Record<string, { label: string; color: string; bgColor: string; borderColor: string; glow: string }> = {
+ const rarityConfig: Record<string, { label: string; color: string; bgColor: string; borderColor: string; glow: string; gradient: string }> = {
   common: {
     label: "Comum",
     color: "text-gray-500",
     bgColor: "bg-gray-500/10",
     borderColor: "border-gray-500/30",
-    glow: "",
+     glow: "shadow-gray-500/10",
+     gradient: "from-gray-500/20 to-transparent",
   },
   rare: {
     label: "Raro",
     color: "text-blue-500",
     bgColor: "bg-blue-500/10",
     borderColor: "border-blue-500/30",
-    glow: "shadow-blue-500/20",
+     glow: "shadow-blue-500/30 shadow-[0_0_20px_rgba(59,130,246,0.3)]",
+     gradient: "from-blue-500/20 to-transparent",
   },
   epic: {
     label: "Épico",
     color: "text-purple-500",
     bgColor: "bg-purple-500/10",
     borderColor: "border-purple-500/30",
-    glow: "shadow-purple-500/30",
+     glow: "shadow-purple-500/40 shadow-[0_0_30px_rgba(168,85,247,0.4)]",
+     gradient: "from-purple-500/20 to-transparent",
   },
   legendary: {
     label: "Lendário",
     color: "text-amber-500",
     bgColor: "bg-amber-500/10",
     borderColor: "border-amber-500/30",
-    glow: "shadow-amber-500/40",
+     glow: "shadow-amber-500/50 shadow-[0_0_40px_rgba(245,158,11,0.5)]",
+     gradient: "from-amber-500/20 to-transparent",
   },
 };
 
