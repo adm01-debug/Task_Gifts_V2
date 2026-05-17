@@ -13,7 +13,8 @@ import { useAllAchievements, useUserAchievements } from "@/hooks/useAchievements
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { BehavioralBadgesWidget } from "@/components/BehavioralBadgesWidget";
-import { PageWrapper, SectionWrapper } from "@/components/PageWrapper";
+ import { PageWrapper, SectionWrapper } from "@/components/PageWrapper";
+ import { cn } from "@/lib/utils";
 import { SEOHead } from "@/components/SEOHead";
 import { useSEO } from "@/hooks/useSEO";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -109,42 +110,56 @@ export default function Achievements() {
                animate={{ opacity: 1, y: 0 }}
                transition={{ delay: 0.1 }}
              >
-               <Card className="bg-gradient-to-br from-amber-500/5 to-orange-500/5 border-amber-500/20">
-                 <CardContent className="p-6">
-                   <div className="flex items-center justify-between mb-4">
-                     <div>
-                       <p className="text-sm text-muted-foreground">Progresso Geral</p>
-                       <p className="text-3xl font-bold">
-                         {unlockedCount}{" "}
-                         <span className="text-lg text-muted-foreground">/ {totalCount}</span>
-                       </p>
+               <Card className="relative overflow-hidden border-none bg-gradient-to-br from-card to-card/50 shadow-2xl ring-1 ring-white/10">
+                 <div className="absolute top-0 right-0 w-64 h-64 bg-amber-500/10 blur-[100px] rounded-full -mr-20 -mt-20 pointer-events-none" />
+                 <CardContent className="p-8 relative">
+                   <div className="flex flex-col md:flex-row items-center justify-between gap-6 mb-8">
+                     <div className="text-center md:text-left">
+                       <p className="text-[10px] font-black uppercase tracking-[0.3em] text-amber-500 mb-1">Status da Coleção</p>
+                       <h3 className="text-4xl font-black tracking-tighter italic uppercase flex items-baseline gap-2">
+                         {unlockedCount} <span className="text-sm font-bold text-muted-foreground not-italic tracking-normal">/ {totalCount}</span>
+                       </h3>
+                       <p className="text-sm text-muted-foreground font-medium">Troféus Conquistados</p>
                      </div>
-                     <div className="text-right">
-                       <p className="text-4xl font-black text-amber-500">
-                         {progressPercent.toFixed(0)}%
-                       </p>
-                       <p className="text-sm text-muted-foreground">completo</p>
+                     <div className="relative w-32 h-32 flex items-center justify-center">
+                       <svg className="w-full h-full transform -rotate-90">
+                         <circle cx="64" cy="64" r="58" stroke="currentColor" strokeWidth="8" fill="transparent" className="text-muted/20" />
+                         <motion.circle
+                           cx="64" cy="64" r="58" stroke="currentColor" strokeWidth="8" fill="transparent" strokeDasharray={364.42}
+                           initial={{ strokeDashoffset: 364.42 }}
+                           animate={{ strokeDashoffset: 364.42 - (364.42 * progressPercent) / 100 }}
+                           transition={{ duration: 1.5, ease: "easeOut" }}
+                           className="text-amber-500"
+                         />
+                       </svg>
+                       <div className="absolute inset-0 flex flex-col items-center justify-center">
+                         <span className="text-2xl font-black">{progressPercent.toFixed(0)}%</span>
+                       </div>
+                     </div>
+                     <div className="hidden md:block text-right">
+                       <Badge variant="outline" className="border-amber-500/50 text-amber-500 font-black uppercase tracking-widest text-[10px] py-1 px-3">
+                         Mestre Colecionador
+                       </Badge>
                      </div>
                    </div>
-                   <Progress value={progressPercent} className="h-3" />
- 
-                   {/* Stats by rarity */}
-                   <div className="grid grid-cols-4 gap-2 mt-4">
+                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                      {(["common", "rare", "epic", "legendary"] as const).map((rarity) => {
                        const config = rarityConfig[rarity];
                        const total = allAchievements?.filter((a) => a.rarity === rarity).length || 0;
-                       const unlocked =
-                         allAchievements?.filter((a) => a.rarity === rarity && unlockedIds.has(a.id))
-                           .length || 0;
+                       const unlocked = allAchievements?.filter((a) => a.rarity === rarity && unlockedIds.has(a.id)).length || 0;
+                       const percent = total > 0 ? (unlocked / total) * 100 : 0;
                        return (
-                         <div
-                           key={rarity}
-                           className={`text-center p-2 rounded-lg ${config.bgColor}`}
-                         >
-                           <p className={`text-lg font-bold ${config.color}`}>
-                             {unlocked}/{total}
-                           </p>
-                           <p className="text-xs text-muted-foreground">{config.label}</p>
+                         <div key={rarity} className="group cursor-default">
+                           <div className={cn("p-4 rounded-3xl border border-white/5 bg-white/5 transition-all hover:bg-white/10", config.glow)}>
+                             <div className="flex justify-between items-center mb-2">
+                               <div className={cn("w-2 h-2 rounded-full", config.color.replace('text-', 'bg-'))} />
+                               <span className="text-[10px] font-black uppercase tracking-tighter opacity-50">{config.label}</span>
+                             </div>
+                             <p className="text-lg font-black italic">{unlocked}/{total}</p>
+                             <div className="w-full h-1 bg-white/10 rounded-full mt-2 overflow-hidden">
+                               <motion.div initial={{ width: 0 }} animate={{ width: `${percent}%` }} className={cn("h-full", config.color.replace('text-', 'bg-'))} />
+                             </div>
+                           </div>
                          </div>
                        );
                      })}
