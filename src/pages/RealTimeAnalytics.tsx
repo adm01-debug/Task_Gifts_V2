@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { format, subDays, startOfDay, endOfDay, eachHourOfInterval, eachDayOfInterval } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import { Activity, Radio, RefreshCw } from "lucide-react";
+import { Activity, Radio, RefreshCw, BarChart3 } from "lucide-react";
 import { AnalyticsChartTabs } from "@/components/analytics/AnalyticsChartTabs";
 import { AnalyticsStatsCards } from "@/components/analytics/AnalyticsStatsCards";
 import { ActivityByTypeCard } from "@/components/analytics/ActivityByTypeCard";
@@ -15,8 +15,8 @@ import { SEOHead } from "@/components/SEOHead";
 import { useSEO } from "@/hooks/useSEO";
 import { useRecentAuditLogs, AuditAction } from "@/hooks/useAudit";
 import { useProfiles } from "@/hooks/useProfiles";
+import { PageShell } from "@/components/navigation";
 import { supabase } from "@/integrations/supabase/client";
-import { DesktopBackButton } from "@/components/navigation";
 
 const actionCategories: Record<string, AuditAction[]> = {
   auth: ["user_signup", "user_login"],
@@ -106,43 +106,40 @@ export default function RealTimeAnalytics() {
 
   const seo = useSEO();
 
-  return (
-    <PageWrapper pageName="Analytics em Tempo Real">
-      <SEOHead {...seo} />
-      <div className="min-h-screen bg-background p-4 md:p-6 lg:p-8">
-        <div className="max-w-7xl mx-auto space-y-6">
-          <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-            <div className="flex items-center gap-4">
-              <DesktopBackButton />
-              <div className="flex items-center gap-3">
-                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-success to-primary flex items-center justify-center">
-                  <Activity className="w-6 h-6 text-primary-foreground" />
-                </div>
-                <div>
-                  <div className="flex items-center gap-2">
-                    <h1 className="text-2xl font-bold">Analytics em Tempo Real</h1>
-                    {isLive && <Badge variant="outline" className="bg-success/10 text-success border-success/30 animate-pulse"><Radio className="w-3 h-3 mr-1" />AO VIVO</Badge>}
-                  </div>
-                  <p className="text-muted-foreground text-sm">Monitoramento de atividade do sistema</p>
-                </div>
-              </div>
-            </div>
-            <div className="flex items-center gap-3">
-              <p className="text-xs text-muted-foreground">Atualizado: {format(lastUpdate, "HH:mm:ss")}</p>
-              <Button variant="outline" size="sm" onClick={() => { refetch(); setLastUpdate(new Date()); }} className="gap-2"><RefreshCw className="w-4 h-4" />Atualizar</Button>
-              <Button variant={isLive ? "default" : "outline"} size="sm" onClick={() => setIsLive(!isLive)} className="gap-2"><Radio className="w-4 h-4" />{isLive ? "Ao Vivo" : "Pausado"}</Button>
-            </div>
-          </motion.div>
+   return (
+     <PageShell title="Analytics em Tempo Real" backFallback="/admin">
+       <PageWrapper pageName="Analytics em Tempo Real">
+         <SEOHead {...seo} />
+         <div className="max-w-7xl mx-auto space-y-6 p-4 md:p-6 lg:p-8 pb-24">
+           <header className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
+             <div className="flex items-center gap-3">
+               <div className="p-2 rounded-xl bg-primary/10">
+                 <BarChart3 className="h-6 w-6 text-primary" />
+               </div>
+               <div>
+                 <div className="flex items-center gap-2">
+                   <h1 className="text-3xl font-bold">Analytics em Tempo Real</h1>
+                   {isLive && <Badge variant="outline" className="bg-success/10 text-success border-success/30 animate-pulse"><Radio className="w-3 h-3 mr-1" />AO VIVO</Badge>}
+                 </div>
+                 <p className="text-muted-foreground">Monitoramento de atividade do sistema</p>
+               </div>
+             </div>
+             <div className="flex items-center gap-3">
+               <p className="text-xs text-muted-foreground">Atualizado: {format(lastUpdate, "HH:mm:ss")}</p>
+               <Button variant="outline" size="sm" onClick={() => { refetch(); setLastUpdate(new Date()); }} className="gap-2"><RefreshCw className="w-4 h-4" />Atualizar</Button>
+               <Button variant={isLive ? "default" : "outline"} size="sm" onClick={() => setIsLive(!isLive)} className="gap-2"><Radio className="w-4 h-4" />{isLive ? "Ao Vivo" : "Pausado"}</Button>
+             </div>
+           </header>
 
-          <AnalyticsStatsCards stats={stats} />
-          <AnalyticsChartTabs hourlyData={hourlyData} dailyData={dailyData} categoryColors={categoryColors} categoryLabels={categoryLabels} />
-
-          <div className="grid lg:grid-cols-2 gap-6">
-            <ActivityByTypeCard activityByType={activityByType} />
-            <MostActiveUsersCard users={mostActiveUsers} />
-          </div>
-        </div>
-      </div>
-    </PageWrapper>
-  );
-}
+           <AnalyticsStatsCards stats={stats} />
+           <AnalyticsChartTabs hourlyData={hourlyData} dailyData={dailyData} categoryColors={categoryColors} categoryLabels={categoryLabels} />
+ 
+           <div className="grid lg:grid-cols-2 gap-6">
+             <ActivityByTypeCard activityByType={activityByType} />
+             <MostActiveUsersCard users={mostActiveUsers} />
+           </div>
+         </div>
+       </PageWrapper>
+     </PageShell>
+   );
+ }

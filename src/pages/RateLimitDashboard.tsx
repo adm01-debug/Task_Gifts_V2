@@ -8,15 +8,16 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Skeleton } from "@/components/ui/skeleton";
-import { 
-  Shield, ShieldAlert, ShieldOff, Activity, AlertTriangle, 
-  Ban, Clock, RefreshCw, Search, Trash2, CheckCircle, 
-  XCircle, TrendingUp, Users, Globe, Loader2
+import {
+  Shield, ShieldAlert, ShieldOff, Activity, AlertTriangle,
+  Ban, Clock, RefreshCw, Search, Trash2, CheckCircle,
+  XCircle, TrendingUp, Users, Globe, Loader2, Lock
 } from "lucide-react";
 import { toast } from "sonner";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { RequireAdmin } from "@/components/rbac/AccessControl";
+import { PageShell } from "@/components/navigation";
 import { BlockedIPsPanel } from "@/components/security/BlockedIPsPanel";
 import { SecurityAlertsPanel } from "@/components/security/SecurityAlertsPanel";
 import { RateLimitRulesPanel } from "@/components/security/RateLimitRulesPanel";
@@ -94,38 +95,38 @@ export default function RateLimitDashboard() {
 
   return (
     <RequireAdmin showAccessDenied>
-      <div className="min-h-screen bg-background">
-        <div className="container mx-auto p-6 space-y-6">
-          {/* Header */}
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-3xl font-bold flex items-center gap-2">
-                <Shield className="w-8 h-8 text-primary" />
-                Central de Segurança
-              </h1>
-              <p className="text-muted-foreground mt-1">
-                Monitoramento de rate limiting, IPs bloqueados e alertas de segurança
-              </p>
+    <PageShell title="Central de Segurança" backFallback="/admin">
+      <div className="max-w-7xl mx-auto space-y-6 p-4 md:p-6 lg:p-8 pb-24">
+        <header className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
+          <div className="flex items-center gap-3">
+            <div className="p-2 rounded-xl bg-primary/10">
+              <Lock className="h-6 w-6 text-primary" />
             </div>
-            <div className="flex gap-2">
-              <Button variant="outline" onClick={() => refetchStats()}>
-                <RefreshCw className="w-4 h-4 mr-2" />
-                Atualizar
-              </Button>
-              <Button 
-                variant="destructive" 
-                onClick={() => cleanupMutation.mutate()}
-                disabled={cleanupMutation.isPending}
-              >
-                {cleanupMutation.isPending ? (
-                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                ) : (
-                  <Trash2 className="w-4 h-4 mr-2" />
-                )}
-                Limpar Logs Antigos
-              </Button>
+            <div>
+              <h1 className="text-3xl font-bold">Central de Segurança</h1>
+              <p className="text-muted-foreground">Monitoramento de rate limiting e IPs bloqueados</p>
             </div>
           </div>
+          <div className="flex items-center gap-3">
+            <Button variant="outline" size="sm" onClick={() => refetchStats()}>
+              <RefreshCw className="w-4 h-4 mr-2" />
+              Atualizar
+            </Button>
+            <Button
+              variant="destructive"
+              size="sm"
+              onClick={() => cleanupMutation.mutate()}
+              disabled={cleanupMutation.isPending}
+            >
+              {cleanupMutation.isPending ? (
+                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+              ) : (
+                <Trash2 className="w-4 h-4 mr-2" />
+              )}
+              Limpar Logs
+            </Button>
+          </div>
+        </header>
 
           {/* Stats Cards */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
