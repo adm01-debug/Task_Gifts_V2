@@ -153,19 +153,13 @@ export default function PersonalStats() {
    );
 
    return (
-     <PageShell title="Estatísticas">
+     <PageShell 
+       title="Estatísticas" 
+       subtitle="Visualize sua evolução detalhada e progresso no sistema"
+       icon={<TrendingUp className="w-6 h-6 text-primary" />}
+     >
        <SEOHead title={seoData.title} description={seoData.description} keywords={seoData.keywords} />
        <div className="container max-w-7xl mx-auto pb-24">
-         <header className="px-4 py-6 border-b border-border/50 mb-6 flex items-center gap-3">
-           <div className="p-3 rounded-xl bg-primary/10">
-             <TrendingUp className="w-8 h-8 text-primary" />
-           </div>
-           <div>
-             <h1 className="text-3xl font-bold">Estatísticas</h1>
-             <p className="text-muted-foreground text-sm">Visualize sua evolução detalhada</p>
-           </div>
-         </header>
-         
          <PageWrapper pageName="Estatísticas">
            {content}
          </PageWrapper>

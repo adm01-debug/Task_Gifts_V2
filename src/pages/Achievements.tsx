@@ -78,7 +78,12 @@ export default function Achievements() {
   };
 
    return (
-     <PageShell title="Conquistas" backFallback="/">
+     <PageShell 
+       title="Conquistas" 
+       subtitle="Desbloqueie troféus e badges exclusivos ao atingir seus objetivos"
+       icon={<Trophy className="w-6 h-6 text-amber-500" />}
+       backFallback="/"
+     >
        <PageWrapper pageName="Conquistas" className="container max-w-4xl px-4 pb-24 mx-auto">
          <SEOHead title={seoConfig.title} description={seoConfig.description} keywords={seoConfig.keywords} />
          
@@ -93,7 +98,7 @@ export default function Achievements() {
              </div>
            </div>
          ) : (
-            <div className="space-y-6 pt-6">
+           <div className="space-y-6 pt-6">
              {/* Progress Overview */}
              <motion.div
                initial={{ opacity: 0, y: 20 }}
