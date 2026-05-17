@@ -1,6 +1,10 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useState, useEffect, useCallback } from "react";
-import { Trophy, Zap, Star, Flame, Award, PartyPopper } from "lucide-react";
+ import { Trophy, Zap, Star, Flame, Award, PartyPopper, Sparkles } from "lucide-react";
+ import { useHaptics } from "@/hooks/useHaptics";
+ import { useSoundEffects } from "@/hooks/useSoundEffects";
+ import { CelebrationEffect } from "./CelebrationEffect";
+ import { cn } from "@/lib/utils";
 
 interface Achievement {
   id: string;
@@ -31,22 +35,45 @@ interface AchievementToastProps {
   onClose: () => void;
 }
 
-const AchievementToast = ({ achievement, onClose }: AchievementToastProps) => {
-  const Icon = iconMap[achievement.icon];
+ const AchievementToast = ({ achievement, onClose }: AchievementToastProps) => {
+   const Icon = iconMap[achievement.icon];
+   const { vibrate } = useHaptics();
+   const { playAchievementSound, playLegendaryCelebrationSound } = useSoundEffects();
+   const [showCelebration, setShowCelebration] = useState(false);
+ 
+   useEffect(() => {
+     if (achievement.rarity === "legendary") {
+       vibrate("heavy");
+       playLegendaryCelebrationSound();
+       setShowCelebration(true);
+     } else {
+       vibrate("medium");
+       playAchievementSound();
+     }
+     
+     const timer = setTimeout(onClose, 6000);
+     return () => clearTimeout(timer);
+   }, [onClose, achievement.rarity, vibrate, playAchievementSound, playLegendaryCelebrationSound]);
 
-  useEffect(() => {
-    const timer = setTimeout(onClose, 5000);
-    return () => clearTimeout(timer);
-  }, [onClose]);
-
-  return (
-    <motion.div
-      initial={{ x: 400, opacity: 0 }}
-      animate={{ x: 0, opacity: 1 }}
-      exit={{ x: 400, opacity: 0 }}
-      transition={{ type: "spring", stiffness: 300, damping: 30 }}
-      className="relative overflow-hidden rounded-2xl border border-border bg-card shadow-2xl"
-    >
+   return (
+     <>
+       {showCelebration && (
+         <CelebrationEffect 
+           isActive={showCelebration} 
+           type="legendary" 
+           onComplete={() => setShowCelebration(false)} 
+         />
+       )}
+       <motion.div
+         initial={{ x: 400, opacity: 0, scale: 0.9 }}
+         animate={{ x: 0, opacity: 1, scale: 1 }}
+         exit={{ x: 400, opacity: 0, scale: 0.9 }}
+         transition={{ type: "spring", stiffness: 400, damping: 25 }}
+         className={cn(
+           "relative overflow-hidden rounded-2xl border border-border bg-card shadow-2xl",
+           achievement.rarity === "legendary" && "border-gold/50 shadow-gold/20"
+         )}
+       >
       {/* Animated background */}
       <motion.div
         className={`absolute inset-0 bg-gradient-to-r ${rarityColors[achievement.rarity]} opacity-20`}
@@ -148,15 +175,19 @@ const AchievementToast = ({ achievement, onClose }: AchievementToastProps) => {
         </motion.div>
       </div>
 
-      {/* Progress bar */}
-      <motion.div
-        initial={{ scaleX: 1 }}
-        animate={{ scaleX: 0 }}
-        transition={{ duration: 5, ease: "linear" }}
-        className="h-1 bg-primary origin-left"
-      />
-    </motion.div>
-  );
+       {/* Progress bar */}
+       <motion.div
+         initial={{ scaleX: 1 }}
+         animate={{ scaleX: 0 }}
+         transition={{ duration: 6, ease: "linear" }}
+         className={cn(
+           "h-1 bg-primary origin-left",
+           achievement.rarity === "legendary" && "bg-gold"
+         )}
+       />
+     </motion.div>
+     </>
+   );
 };
 
 // Level Up Animation Component
@@ -165,11 +196,16 @@ interface LevelUpProps {
   onClose: () => void;
 }
 
-export const LevelUpCelebration = ({ newLevel, onClose }: LevelUpProps) => {
-  useEffect(() => {
-    const timer = setTimeout(onClose, 4000);
-    return () => clearTimeout(timer);
-  }, [onClose]);
+ export const LevelUpCelebration = ({ newLevel, onClose }: LevelUpProps) => {
+   const { vibrate } = useHaptics();
+   const { playLevelUpSound } = useSoundEffects();
+ 
+   useEffect(() => {
+     vibrate("heavy");
+     playLevelUpSound();
+     const timer = setTimeout(onClose, 5000);
+     return () => clearTimeout(timer);
+   }, [onClose, vibrate, playLevelUpSound]);
 
   return (
     <motion.div
