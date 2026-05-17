@@ -224,7 +224,10 @@ export default function TrailDetail() {
           Voltar às Trilhas
         </Button>
 
-        <div className="grid lg:grid-cols-3 gap-8">
+   return (
+     <PageShell title={trail.title} backFallback="/trails">
+       <div className="container max-w-7xl mx-auto px-4 py-6 md:py-8 pb-24">
+         <div className="grid lg:grid-cols-3 gap-8">
           {/* Main Content */}
           <div className="lg:col-span-2 space-y-6">
             {/* Trail Header */}
