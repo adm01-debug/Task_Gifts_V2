@@ -21,7 +21,7 @@ export default function Announcements() {
   );
 
    return (
-     <PageShell title="Mural de Anúncios">
+     <PageShell title="Anúncios">
        <PageWrapper pageName="Anúncios" className="min-h-screen bg-background">
          {isMobile ? (
            <MobilePageLayout title="Mural de Anúncios" icon={Megaphone} backPath="/">
