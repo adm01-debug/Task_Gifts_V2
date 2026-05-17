@@ -14,6 +14,7 @@ import { NotificationCenter } from "@/components/NotificationCenter";
 import { ComboIndicator } from "@/components/ComboIndicator";
 import { RankingBadge } from "@/components/RankingBadge";
 import { MiniStreakTracker } from "@/components/ui/streak-tracker";
+import { Badge } from "@/components/ui/badge";
 import { CommandTrigger } from "@/components/ui/command-trigger";
 
 // Hooks
@@ -79,7 +80,7 @@ export const DashboardHeader = memo(function DashboardHeader({
         )}
         role="banner"
       >
-        <div className="flex items-center justify-between px-4 py-3">
+        <div className="flex items-center justify-between px-5 py-4">
           {/* Left: Menu + Greeting */}
           <div className="flex items-center gap-3">
             <motion.button
@@ -91,12 +92,17 @@ export const DashboardHeader = memo(function DashboardHeader({
               <Menu className="w-5 h-5" />
             </motion.button>
             
-             <div className="flex flex-col">
-               <h2 className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold leading-none mb-1">
-                 Dashboard Principal
-               </h2>
-               <h1 className="text-base font-bold truncate max-w-[140px] leading-tight">
-                 Olá, {displayName.split(" ")[0]}! 👋
+             <div className="flex flex-col -space-y-0.5">
+               <div className="flex items-center gap-2 mb-1">
+                 <Badge variant="outline" className="text-[9px] h-4 px-1.5 py-0 border-primary/30 text-primary font-black uppercase tracking-tighter bg-primary/5">
+                   Elite
+                 </Badge>
+                 <h2 className="text-[9px] uppercase tracking-[0.2em] text-muted-foreground/70 font-black leading-none">
+                   Dashboard
+                 </h2>
+               </div>
+               <h1 className="text-lg font-black tracking-tight truncate max-w-[150px] leading-tight">
+                 Olá, {displayName.split(" ")[0]}!
                </h1>
              </div>
           </div>
@@ -106,14 +112,17 @@ export const DashboardHeader = memo(function DashboardHeader({
             <ComboIndicator variant="compact" />
             <NotificationCenter />
             
-            <motion.button
-              whileTap={{ scale: 0.9 }}
-              onClick={handleNavigateToProfile}
-              className="w-9 h-9 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center font-bold text-xs text-primary-foreground"
-              aria-label="Meu perfil"
-            >
-              {displayName.charAt(0).toUpperCase()}
-            </motion.button>
+            <div className="relative">
+              <motion.button
+                whileTap={{ scale: 0.9 }}
+                onClick={handleNavigateToProfile}
+                className="w-10 h-10 rounded-2xl bg-gradient-to-br from-primary via-primary/90 to-accent flex items-center justify-center font-black text-sm text-primary-foreground shadow-lg shadow-primary/20 ring-2 ring-background"
+                aria-label="Meu perfil"
+              >
+                {displayName.charAt(0).toUpperCase()}
+              </motion.button>
+              <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-success rounded-full border-2 border-background" />
+            </div>
           </div>
         </div>
       </motion.header>
