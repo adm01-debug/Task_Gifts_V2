@@ -13,6 +13,7 @@ import { TelemetryCharts } from "@/components/admin/telemetry/TelemetryCharts";
 import { TelemetryStatsCards } from "@/components/admin/telemetry/TelemetryStatsCards";
 import { TopOffendersCard } from "@/components/admin/telemetry/TopOffendersCard";
 import { toast } from "sonner";
+import { PageShell } from "@/components/navigation";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { PageWrapper } from "@/components/PageWrapper";
 import { DesktopBackButton } from "@/components/navigation";
@@ -210,45 +211,39 @@ function AdminTelemetriaContent() {
     }
   };
 
-  return (
-    <PageWrapper pageName="Telemetria de Queries">
-      <div className="min-h-screen bg-background">
-        <header className="sticky top-0 z-50 bg-background/80 backdrop-blur-xl border-b border-border">
-          <div className="container max-w-7xl mx-auto px-4 py-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-4">
-                <DesktopBackButton />
-                <div className="flex items-center gap-3">
-                  <div className="p-2 rounded-xl bg-primary/10">
-                    <Activity className="h-5 w-5 text-primary" />
-                  </div>
-                  <div>
-                    <h1 className="text-xl font-bold">Telemetria de Queries</h1>
-                    <p className="text-sm text-muted-foreground">Monitoramento de performance do banco externo</p>
-                  </div>
-                </div>
-              </div>
-              <div className="flex items-center gap-2">
-                <Button variant="outline" size="sm" onClick={() => exportTelemetryCSV(rows)} disabled={rows.length === 0}>
-                  <Download className="h-3.5 w-3.5 mr-1.5" />
-                  CSV
-                </Button>
-                <Button variant="outline" size="sm" onClick={() => exportTelemetryPDF(rows)} disabled={rows.length === 0}>
-                  <FileText className="h-3.5 w-3.5 mr-1.5" />
-                  PDF
-                </Button>
-                <Button variant="outline" size="sm" onClick={handleCleanup}>
-                  <Trash2 className="h-3.5 w-3.5 mr-1.5" />
-                  Limpar +7d
-                </Button>
-                <Button variant="outline" size="sm" onClick={() => refetch()} disabled={isRefetching}>
-                  <RefreshCw className={`h-3.5 w-3.5 mr-1.5 ${isRefetching ? "animate-spin" : ""}`} />
-                  Atualizar
-                </Button>
-              </div>
-            </div>
-          </div>
-        </header>
+   return (
+     <PageShell title="Telemetria de Queries" backFallback="/admin">
+       <PageWrapper pageName="Telemetria de Queries">
+         <div className="max-w-7xl mx-auto space-y-6 p-4 md:p-6 lg:p-8 pb-24">
+           <header className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
+             <div className="flex items-center gap-3">
+               <div className="p-2 rounded-xl bg-primary/10">
+                 <Activity className="h-6 w-6 text-primary" />
+               </div>
+               <div>
+                 <h1 className="text-3xl font-bold">Telemetria de Queries</h1>
+                 <p className="text-muted-foreground">Monitoramento de performance do banco externo</p>
+               </div>
+             </div>
+             <div className="flex items-center gap-2">
+               <Button variant="outline" size="sm" onClick={() => exportTelemetryCSV(rows)} disabled={rows.length === 0}>
+                 <Download className="h-3.5 w-3.5 mr-1.5" />
+                 CSV
+               </Button>
+               <Button variant="outline" size="sm" onClick={() => exportTelemetryPDF(rows)} disabled={rows.length === 0}>
+                 <FileText className="h-3.5 w-3.5 mr-1.5" />
+                 PDF
+               </Button>
+               <Button variant="outline" size="sm" onClick={handleCleanup}>
+                 <Trash2 className="h-3.5 w-3.5 mr-1.5" />
+                 Limpar +7d
+               </Button>
+               <Button variant="outline" size="sm" onClick={() => refetch()} disabled={isRefetching}>
+                 <RefreshCw className={`h-3.5 w-3.5 mr-1.5 ${isRefetching ? "animate-spin" : ""}`} />
+                 Atualizar
+               </Button>
+             </div>
+           </header>
 
         <main className="container max-w-7xl mx-auto px-4 py-6 space-y-6">
           <TelemetryStatsCards verySlow={verySlow} slow={slow} errors={errors} avgDuration={avgDuration} />
