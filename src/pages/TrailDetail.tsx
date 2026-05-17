@@ -212,212 +212,259 @@ export default function TrailDetail() {
 
   const activeModule = trail.modules.find(m => m.id === activeModuleId);
 
-   return (
-     <PageShell title={trail.title} backFallback="/trails">
-       <div className="container max-w-7xl mx-auto px-4 py-6 md:py-8 pb-24">
-         <div className="grid lg:grid-cols-3 gap-8">
-          {/* Main Content */}
-          <div className="lg:col-span-2 space-y-6">
-            {/* Trail Header */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-            >
-              <Card className="overflow-hidden">
-                <div className="bg-gradient-to-r from-primary/20 via-primary/10 to-transparent p-6">
-                  <div className="flex items-start gap-4">
-                    <div className="text-6xl">{trail.icon}</div>
-                    <div className="flex-1">
-                      <h1 className="text-2xl font-bold mb-2">{trail.title}</h1>
-                      <p className="text-muted-foreground mb-4">{trail.description}</p>
-                      
-                      <div className="flex flex-wrap gap-3">
-                        <Badge variant="secondary" className="gap-1">
-                          <Clock className="h-3 w-3" />
-                          {trail.estimated_hours}h estimadas
-                        </Badge>
-                        <Badge variant="secondary" className="gap-1">
-                          <BookOpen className="h-3 w-3" />
-                          {totalModules} módulos
-                        </Badge>
-                        <Badge variant="secondary" className="gap-1">
-                          <Star className="h-3 w-3 text-amber-400" />
-                          {trail.xp_reward} XP total
-                        </Badge>
-                        {trail.badge_name && (
-                          <Badge className="gap-1 bg-primary/20 text-primary border-primary/30">
-                            <Trophy className="h-3 w-3" />
-                            {trail.badge_icon} {trail.badge_name}
-                          </Badge>
-                        )}
+  return (
+    <PageShell title={trail.title} backFallback="/trails">
+      {/* Page Header Background Decoration */}
+      <div className="absolute top-0 left-0 w-full h-[350px] bg-gradient-to-b from-primary/10 via-primary/5 to-transparent pointer-events-none" />
+      
+      <div className="container max-w-7xl mx-auto px-4 py-8 md:py-12 pb-24 relative">
+        <div className="grid lg:grid-cols-12 gap-10">
+          {/* Main Content (Left Column) */}
+          <div className="lg:col-span-8 space-y-8">
+            {/* Trail Header Card */}
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
+              <Card variant="premium" className="overflow-hidden border-none shadow-2xl">
+                <div className="relative p-8 md:p-10">
+                  <div className="absolute top-0 right-0 p-4">
+                    <div className="text-8xl opacity-10 blur-[2px]">{trail.icon}</div>
+                  </div>
+                  
+                  <div className="relative z-10">
+                    <div className="flex items-center gap-2 mb-4">
+                      <Badge variant="outline" className="bg-primary/10 text-primary border-primary/20 font-black uppercase tracking-widest text-[10px]">
+                        Trilha de Especialização
+                      </Badge>
+                    </div>
+                    
+                    <h1 className="text-4xl md:text-5xl font-black tracking-tight mb-4 text-foreground">{trail.title}</h1>
+                    <p className="text-lg text-muted-foreground max-w-2xl mb-8 leading-relaxed">
+                      {trail.description}
+                    </p>
+                    
+                    <div className="flex flex-wrap gap-4">
+                      <div className="flex items-center gap-2 px-4 py-2 rounded-2xl bg-background/50 backdrop-blur-md border border-border/50">
+                        <Clock className="h-4 w-4 text-primary" />
+                        <span className="text-sm font-bold">{trail.estimated_hours}h estimadas</span>
+                      </div>
+                      <div className="flex items-center gap-2 px-4 py-2 rounded-2xl bg-background/50 backdrop-blur-md border border-border/50">
+                        <Layers className="h-4 w-4 text-primary" />
+                        <span className="text-sm font-bold">{totalModules} módulos</span>
+                      </div>
+                      <div className="flex items-center gap-2 px-4 py-2 rounded-2xl bg-background/50 backdrop-blur-md border border-border/50">
+                        <Star className="h-4 w-4 text-amber-500" />
+                        <span className="text-sm font-bold">{trail.xp_reward} XP Reward</span>
                       </div>
                     </div>
                   </div>
                 </div>
 
                 {isEnrolled && (
-                  <CardContent className="pt-4">
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="text-sm font-medium">Seu Progresso</span>
-                      <span className="text-sm text-muted-foreground">
-                        {completedModules}/{totalModules} módulos
+                  <div className="bg-muted/30 p-8 border-t border-border/50">
+                    <div className="flex items-center justify-between mb-3">
+                      <div className="flex items-center gap-2">
+                        <div className="w-2 h-2 rounded-full bg-primary animate-pulse" />
+                        <span className="text-sm font-black uppercase tracking-widest">Seu Progresso Atual</span>
+                      </div>
+                      <span className="text-lg font-black text-primary">
+                        {progressPercent}%
                       </span>
                     </div>
-                    <Progress value={progressPercent} className="h-3" />
-                    <p className="text-xs text-muted-foreground mt-2">
-                      {progressPercent}% concluído
-                    </p>
-                  </CardContent>
+                    <Progress value={progressPercent} className="h-4 rounded-full bg-muted shadow-inner" />
+                    <div className="flex justify-between mt-3 text-xs font-bold text-muted-foreground">
+                      <span>{completedModules} MÓDULOS CONCLUÍDOS</span>
+                      <span>{totalModules - completedModules} RESTANTES</span>
+                    </div>
+                  </div>
                 )}
               </Card>
             </motion.div>
 
-            {/* Modules List */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1 }}
-            >
-              <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
-                <Layers className="h-5 w-5 text-primary" />
-                Conteúdo da Trilha
-              </h2>
+            {/* Modules Section */}
+            <div className="space-y-6">
+              <div className="flex items-center justify-between">
+                <h2 className="text-2xl font-black tracking-tight flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
+                    <BookOpen className="h-5 w-5 text-primary" />
+                  </div>
+                  Conteúdo do Programa
+                </h2>
+                {isEnrolled && (
+                   <Badge variant="secondary" className="font-bold">
+                     Próximo: {trail.modules[completedModules]?.title || "Concluído"}
+                   </Badge>
+                )}
+              </div>
 
-              <div className="space-y-3">
+              <div className="grid gap-4">
                 {trail.modules.map((module, index) => {
                   const progress = progressMap.get(module.id);
                   const prevCompleted = index === 0 || progressMap.get(trail.modules[index - 1].id)?.completed_at;
                   const isLocked = !isEnrolled || (index > 0 && !prevCompleted);
 
                   return (
-                    <ModuleCard
+                    <motion.div
                       key={module.id}
-                      module={module}
-                      progress={progress}
-                      isLocked={isLocked}
-                      isActive={activeModuleId === module.id}
-                      onClick={() => handleModuleClick(module)}
-                    />
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: index * 0.05 }}
+                    >
+                      <ModuleCard
+                        module={module}
+                        progress={progress}
+                        isLocked={isLocked}
+                        isActive={activeModuleId === module.id}
+                        onClick={() => handleModuleClick(module)}
+                      />
+                    </motion.div>
                   );
                 })}
               </div>
-            </motion.div>
+            </div>
           </div>
 
-          {/* Sidebar */}
-          <div className="space-y-6">
-            {/* Enroll CTA or Progress */}
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.2 }}
-            >
+          {/* Sidebar (Right Column) */}
+          <div className="lg:col-span-4 space-y-8">
+            {/* Primary Action Card */}
+            <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.2 }}>
               {!isEnrolled ? (
-                <Card className="border-primary/30 bg-gradient-to-br from-primary/10 to-transparent">
-                  <CardContent className="p-6 text-center">
-                    <Sparkles className="h-12 w-12 mx-auto text-primary mb-4" />
-                    <h3 className="text-lg font-semibold mb-2">
-                      Comece sua jornada!
-                    </h3>
-                    <p className="text-sm text-muted-foreground mb-4">
-                      Inscreva-se para acessar todos os módulos e ganhar recompensas.
-                    </p>
+                <Card variant="premium" className="overflow-hidden border-primary/20 group">
+                  <CardContent className="p-8 text-center space-y-6">
+                    <div className="relative mx-auto w-24 h-24">
+                       <div className="absolute inset-0 rounded-full bg-primary/20 animate-ping" />
+                       <div className="relative w-24 h-24 rounded-full bg-primary/10 flex items-center justify-center">
+                         <Sparkles className="h-10 w-10 text-primary" />
+                       </div>
+                    </div>
+                    <div className="space-y-2">
+                      <h3 className="text-2xl font-black tracking-tight">Liberar Acesso</h3>
+                      <p className="text-muted-foreground">
+                        Inscreva-se agora para começar a trilha e conquistar recompensas exclusivas.
+                      </p>
+                    </div>
                     <Button 
-                      className="w-full gap-2" 
-                      size="lg"
+                      className="w-full h-14 text-lg font-black tracking-widest uppercase gap-3 shadow-[0_10px_30px_rgba(var(--primary),0.3)] hover:shadow-[0_15px_40px_rgba(var(--primary),0.4)] transition-all hover:-translate-y-1" 
                       onClick={handleEnroll}
                       disabled={enrollMutation.isPending}
                     >
-                      <Play className="h-4 w-4" />
-                      {enrollMutation.isPending ? "Inscrevendo..." : "Iniciar Trilha"}
+                      {enrollMutation.isPending ? (
+                        <div className="w-6 h-6 border-4 border-white/30 border-t-white rounded-full animate-spin" />
+                      ) : (
+                        <>
+                          <Play className="h-5 w-5 fill-current" />
+                          INICIAR AGORA
+                        </>
+                      )}
                     </Button>
                   </CardContent>
                 </Card>
               ) : progressPercent >= 100 ? (
-                <Card className="border-emerald-500/30 bg-gradient-to-br from-emerald-500/10 to-transparent">
-                  <CardContent className="p-6 text-center">
-                    <Award className="h-12 w-12 mx-auto text-emerald-500 mb-4" />
-                    <h3 className="text-lg font-semibold mb-2 text-emerald-500">
-                      🎉 Trilha Concluída!
-                    </h3>
-                    <p className="text-sm text-muted-foreground mb-4">
-                      Parabéns! Você completou todos os módulos.
-                    </p>
+                <Card className="border-emerald-500/30 bg-gradient-to-br from-emerald-500/10 via-background to-emerald-500/5 overflow-hidden">
+                  <CardContent className="p-8 text-center space-y-6">
+                    <div className="relative mx-auto w-24 h-24">
+                       <motion.div 
+                        animate={{ rotate: [0, 10, -10, 10, 0] }}
+                        transition={{ duration: 0.5, repeat: Infinity, repeatDelay: 3 }}
+                       >
+                         <Award className="h-24 w-24 text-emerald-500" />
+                       </motion.div>
+                    </div>
+                    <div className="space-y-2">
+                      <h3 className="text-2xl font-black tracking-tight text-emerald-500">EXCELÊNCIA ATINGIDA</h3>
+                      <p className="text-muted-foreground font-medium">
+                        Você dominou todos os conceitos desta trilha com maestria!
+                      </p>
+                    </div>
                     {trail.badge_name && (
-                      <Badge className="bg-emerald-500/20 text-emerald-500 border-emerald-500/30">
-                        {trail.badge_icon} {trail.badge_name} Conquistado!
-                      </Badge>
+                      <div className="p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex flex-col items-center gap-2">
+                        <span className="text-4xl">{trail.badge_icon}</span>
+                        <span className="font-black text-xs tracking-[0.2em] uppercase">{trail.badge_name}</span>
+                      </div>
                     )}
                   </CardContent>
                 </Card>
               ) : (
-                <Card>
+                <Card variant="stat" className="bg-card/50 backdrop-blur-xl border-border/50">
                   <CardHeader>
-                    <CardTitle className="text-sm">Estatísticas</CardTitle>
+                    <CardTitle className="text-xs font-black uppercase tracking-[0.2em] text-muted-foreground">Status da Missão</CardTitle>
                   </CardHeader>
-                  <CardContent className="space-y-4">
-                    <div className="flex justify-between">
-                      <span className="text-sm text-muted-foreground">Módulos completos</span>
-                      <span className="font-medium">{completedModules}/{totalModules}</span>
+                  <CardContent className="space-y-6">
+                    <div className="flex justify-between items-end border-b border-border/50 pb-4">
+                      <div className="space-y-1">
+                        <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest">Concluídos</p>
+                        <p className="text-3xl font-black">{completedModules}/{totalModules}</p>
+                      </div>
+                      <Badge variant="outline" className="mb-1">{Math.round((completedModules/totalModules)*100)}%</Badge>
                     </div>
-                    <div className="flex justify-between">
-                      <span className="text-sm text-muted-foreground">XP ganho</span>
-                      <span className="font-medium text-amber-500">
-                        {moduleProgressList.filter(p => p.completed_at).reduce((acc, p) => {
-                          const mod = trail.modules.find(m => m.id === p.module_id);
-                          return acc + (mod?.xp_reward || 0);
-                        }, 0)} XP
-                      </span>
+                    
+                    <div className="flex items-center gap-4">
+                      <div className="w-10 h-10 rounded-xl bg-amber-500/10 flex items-center justify-center">
+                        <Star className="h-5 w-5 text-amber-500" />
+                      </div>
+                      <div>
+                        <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">XP Acumulado</p>
+                        <p className="font-black text-amber-500">
+                          {moduleProgressList.filter(p => p.completed_at).reduce((acc, p) => {
+                            const mod = trail.modules.find(m => m.id === p.module_id);
+                            return acc + (mod?.xp_reward || 0);
+                          }, 0)} XP
+                        </p>
+                      </div>
                     </div>
-                    <div className="flex justify-between">
-                      <span className="text-sm text-muted-foreground">Tempo restante</span>
-                      <span className="font-medium">
-                        ~{Math.ceil(trail.estimated_hours * (1 - progressPercent / 100))}h
-                      </span>
-                    </div>
+
+                    <Button 
+                      className="w-full h-12 font-black tracking-widest uppercase"
+                      onClick={() => {
+                        const next = trail.modules[completedModules];
+                        if (next) handleModuleClick(next);
+                      }}
+                    >
+                      CONTINUAR APRENDIZADO
+                    </Button>
                   </CardContent>
                 </Card>
               )}
             </motion.div>
 
-            {/* Rewards Preview */}
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.3 }}
-            >
-              <Card>
+            {/* Rewards Card */}
+            <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.3 }}>
+              <Card className="border-border/50 bg-card/30 backdrop-blur-md">
                 <CardHeader>
-                  <CardTitle className="text-sm flex items-center gap-2">
-                    <Trophy className="h-4 w-4 text-amber-500" />
-                    Recompensas
+                  <CardTitle className="text-xs font-black uppercase tracking-[0.2em] flex items-center gap-2">
+                    <Trophy className="h-4 w-4 text-primary" />
+                    Prêmios da Trilha
                   </CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-3">
-                  <div className="flex items-center gap-3 p-3 rounded-lg bg-amber-500/10">
-                    <Star className="h-5 w-5 text-amber-500" />
-                    <div>
-                      <p className="font-medium">{trail.xp_reward} XP</p>
-                      <p className="text-xs text-muted-foreground">Experiência total</p>
+                <CardContent className="space-y-4">
+                  <div className="p-4 rounded-2xl bg-gradient-to-r from-amber-500/10 to-transparent border-l-4 border-amber-500 flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <Star className="h-6 w-6 text-amber-500" />
+                      <div>
+                        <p className="font-black text-lg">+{trail.xp_reward}</p>
+                        <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">XP de Bônus</p>
+                      </div>
                     </div>
                   </div>
                   
                   {trail.coin_reward > 0 && (
-                    <div className="flex items-center gap-3 p-3 rounded-lg bg-yellow-500/10">
-                      <span className="text-xl">🪙</span>
-                      <div>
-                        <p className="font-medium">{trail.coin_reward} Moedas</p>
-                        <p className="text-xs text-muted-foreground">Para a loja</p>
+                    <div className="p-4 rounded-2xl bg-gradient-to-r from-yellow-500/10 to-transparent border-l-4 border-yellow-500 flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <span className="text-2xl">🪙</span>
+                        <div>
+                          <p className="font-black text-lg">+{trail.coin_reward}</p>
+                          <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Coins Corporativos</p>
+                        </div>
                       </div>
                     </div>
                   )}
 
                   {trail.badge_name && (
-                    <div className="flex items-center gap-3 p-3 rounded-lg bg-primary/10">
-                      <span className="text-xl">{trail.badge_icon}</span>
-                      <div>
-                        <p className="font-medium">{trail.badge_name}</p>
-                        <p className="text-xs text-muted-foreground">Badge exclusivo</p>
+                    <div className="p-4 rounded-2xl bg-gradient-to-r from-primary/10 to-transparent border-l-4 border-primary flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <span className="text-2xl">{trail.badge_icon}</span>
+                        <div>
+                          <p className="font-black text-lg">{trail.badge_name}</p>
+                          <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Badge de Mestria</p>
+                        </div>
                       </div>
                     </div>
                   )}
