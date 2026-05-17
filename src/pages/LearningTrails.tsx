@@ -137,66 +137,169 @@ export default function LearningTrails() {
 
   const handleEnroll = async (trailId: string) => { setEnrollingTrailId(trailId); try { await enrollMutation.mutateAsync(trailId); navigate(`/trails/${trailId}`); } finally { setEnrollingTrailId(null); } };
 
-   return (
-     <PageShell 
-       title="Trilhas" 
-       subtitle="Desenvolva suas habilidades através de trilhas estruturadas"
-       icon={<BookOpen className="h-6 w-6 text-primary" />}
-     >
-       <SEOHead {...seoData} />
-       <div className="container max-w-7xl mx-auto px-4 pb-24">
-         {isLoading ? (
-           <div className="space-y-8">
-             <div className="grid grid-cols-1 md:grid-cols-4 gap-4"><Skeleton className="h-32" /><Skeleton className="h-32" /><Skeleton className="h-32" /><Skeleton className="h-32" /></div>
-             <Skeleton className="h-48 w-full" />
-             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"><Skeleton className="h-80" /><Skeleton className="h-80" /><Skeleton className="h-80" /></div>
-           </div>
-         ) : (
-           <>
-             <TrailStatsCards totalTrails={trails.length} inProgressCount={inProgressCount} completedCount={completedCount} totalXpEarned={totalXpEarned} />
- 
-             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }} className="mb-8"><TrailRecommendations /></motion.div>
-             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.18 }} className="mb-8"><TrailDependencyTree /></motion.div>
- 
-             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="flex flex-col sm:flex-row gap-4 mb-6">
-               <Tabs value={activeTab} onValueChange={setActiveTab} className="flex-1">
-                 <TabsList className="grid w-full grid-cols-4">
-                   <TabsTrigger value="all">Todas</TabsTrigger>
-                   <TabsTrigger value="available">Disponíveis</TabsTrigger>
-                   <TabsTrigger value="enrolled">Em Andamento</TabsTrigger>
-                   <TabsTrigger value="completed">Concluídas</TabsTrigger>
-                 </TabsList>
-               </Tabs>
-               <Select value={selectedDepartment} onValueChange={setSelectedDepartment}>
-                 <SelectTrigger className="w-full sm:w-[200px]"><Filter className="h-4 w-4 mr-2" /><SelectValue placeholder="Departamento" /></SelectTrigger>
-                 <SelectContent><AllSelectItem label="Todos os Departamentos" />{departments.map(d => <SelectItem key={d.id} value={d.id}>{d.name}</SelectItem>)}</SelectContent>
-               </Select>
-             </motion.div>
- 
-             <AnimatePresence mode="wait">
-               {filteredTrails.length === 0 ? (
-                 <EmptyState
-                   icon={SearchX}
-                   title="Nenhuma trilha encontrada"
-                   description="Tente ajustar os filtros de categoria ou departamento para encontrar novas trilhas."
-                   action={{ label: "Limpar Filtros", onClick: () => { setSelectedDepartment("all"); setActiveTab("all"); } }}
-                 />
-               ) : (
-                 <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                   {filteredTrails.map((trail, index) => {
-                     const lockedInfo = getLockedInfo(trail.id);
-                     return (
-                       <motion.div key={trail.id} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: index * 0.05 }}>
-                         <TrailCard trail={trail} enrollment={enrollmentMap.get(trail.id)} hasCertification={trailCertificationMap.has(trail.id)} certificationName={trailCertificationMap.get(trail.id)?.name} isLocked={lockedInfo.isLocked} missingPrerequisiteNames={lockedInfo.missingNames} isEnrolling={enrollingTrailId === trail.id} onEnroll={() => handleEnroll(trail.id)} onContinue={() => navigate(`/trails/${trail.id}`)} />
-                       </motion.div>
-                     );
-                   })}
-                 </motion.div>
-               )}
-             </AnimatePresence>
-           </>
-         )}
-       </div>
-     </PageShell>
-   );
+  return (
+    <PageShell 
+      title="Trilhas de Conhecimento" 
+      subtitle="Sua jornada de aprendizado personalizada rumo à excelência."
+      icon={<BookOpen className="h-6 w-6 text-primary" />}
+    >
+      <SEOHead {...seoData} />
+      
+      {/* Hero Section Background Decor */}
+      <div className="absolute top-0 left-0 w-full h-[300px] bg-gradient-to-b from-primary/5 via-primary/2 to-transparent pointer-events-none" />
+
+      <div className="container max-w-7xl mx-auto px-4 pb-24 relative">
+        {isLoading ? (
+          <div className="space-y-8">
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+              {[1, 2, 3, 4].map(i => <Skeleton key={i} className="h-32 rounded-2xl" />)}
+            </div>
+            <Skeleton className="h-48 w-full rounded-2xl" />
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {[1, 2, 3].map(i => <Skeleton key={i} className="h-80 rounded-2xl" />)}
+            </div>
+          </div>
+        ) : (
+          <>
+            <motion.div
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="relative z-10"
+            >
+              <TrailStatsCards totalTrails={trails.length} inProgressCount={inProgressCount} completedCount={completedCount} totalXpEarned={totalXpEarned} />
+            </motion.div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 mt-8">
+              <div className="lg:col-span-8 space-y-8">
+                <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.15 }}>
+                  <div className="flex items-center gap-2 mb-4">
+                    <Sparkles className="w-5 h-5 text-primary animate-pulse" />
+                    <h2 className="text-xl font-bold tracking-tight">Recomendações para Você</h2>
+                  </div>
+                  <TrailRecommendations />
+                </motion.div>
+
+                <div className="space-y-6">
+                  <motion.div 
+                    initial={{ opacity: 0, y: 20 }} 
+                    animate={{ opacity: 1, y: 0 }} 
+                    transition={{ delay: 0.2 }} 
+                    className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-4 rounded-2xl bg-card/30 backdrop-blur-md border border-border/50"
+                  >
+                    <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full sm:w-auto">
+                      <TabsList className="bg-muted/50 p-1">
+                        <TabsTrigger value="all" className="rounded-lg">Todas</TabsTrigger>
+                        <TabsTrigger value="enrolled" className="rounded-lg">Em Curso</TabsTrigger>
+                        <TabsTrigger value="available" className="rounded-lg">Novas</TabsTrigger>
+                        <TabsTrigger value="completed" className="rounded-lg">Concluídas</TabsTrigger>
+                      </TabsList>
+                    </Tabs>
+                    
+                    <Select value={selectedDepartment} onValueChange={setSelectedDepartment}>
+                      <SelectTrigger className="w-full sm:w-[220px] bg-muted/50 border-none rounded-lg ring-offset-background focus:ring-1 focus:ring-primary/20">
+                        <div className="flex items-center gap-2">
+                          <Filter className="h-4 w-4 text-primary" />
+                          <SelectValue placeholder="Departamento" />
+                        </div>
+                      </SelectTrigger>
+                      <SelectContent className="backdrop-blur-xl bg-background/95">
+                        <AllSelectItem label="Todos os Departamentos" />
+                        {departments.map(d => <SelectItem key={d.id} value={d.id}>{d.name}</SelectItem>)}
+                      </SelectContent>
+                    </Select>
+                  </motion.div>
+
+                  <AnimatePresence mode="wait">
+                    {filteredTrails.length === 0 ? (
+                      <motion.div
+                        initial={{ opacity: 0, scale: 0.95 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0.95 }}
+                      >
+                        <EmptyState
+                          icon={SearchX}
+                          title="Nenhuma trilha encontrada"
+                          description="Tente ajustar os filtros para encontrar novos desafios."
+                          action={{ label: "Limpar Filtros", onClick: () => { setSelectedDepartment("all"); setActiveTab("all"); } }}
+                        />
+                      </motion.div>
+                    ) : (
+                      <motion.div 
+                        initial={{ opacity: 0 }} 
+                        animate={{ opacity: 1 }} 
+                        exit={{ opacity: 0 }} 
+                        className="grid gap-6 sm:grid-cols-2"
+                      >
+                        {filteredTrails.map((trail, index) => {
+                          const lockedInfo = getLockedInfo(trail.id);
+                          return (
+                            <motion.div 
+                              key={trail.id} 
+                              initial={{ opacity: 0, y: 20 }} 
+                              animate={{ opacity: 1, y: 0 }} 
+                              transition={{ delay: index * 0.05 }}
+                            >
+                              <TrailCard 
+                                trail={trail} 
+                                enrollment={enrollmentMap.get(trail.id)} 
+                                hasCertification={trailCertificationMap.has(trail.id)} 
+                                certificationName={trailCertificationMap.get(trail.id)?.name} 
+                                isLocked={lockedInfo.isLocked} 
+                                missingPrerequisiteNames={lockedInfo.missingNames} 
+                                isEnrolling={enrollingTrailId === trail.id} 
+                                onEnroll={() => handleEnroll(trail.id)} 
+                                onContinue={() => navigate(`/trails/${trail.id}`)} 
+                              />
+                            </motion.div>
+                          );
+                        })}
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              </div>
+
+              <div className="lg:col-span-4 space-y-8">
+                <motion.div 
+                  initial={{ opacity: 0, x: 20 }} 
+                  animate={{ opacity: 1, x: 0 }} 
+                  transition={{ delay: 0.18 }}
+                  className="sticky top-24"
+                >
+                  <div className="flex items-center gap-2 mb-4">
+                    <Link2 className="w-5 h-5 text-primary" />
+                    <h2 className="text-xl font-bold tracking-tight">Mapa de Carreira</h2>
+                  </div>
+                  <div className="rounded-3xl border border-border/50 bg-card/30 backdrop-blur-md overflow-hidden p-1 shadow-2xl">
+                    <TrailDependencyTree />
+                  </div>
+                  
+                  <Card variant="subtle" className="mt-8 overflow-hidden group">
+                    <CardContent className="p-6">
+                      <div className="flex items-center gap-4 mb-4">
+                        <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center group-hover:scale-110 transition-transform">
+                          <Trophy className="w-6 h-6 text-primary" />
+                        </div>
+                        <div>
+                          <h3 className="font-bold text-lg">Próximo Nível</h3>
+                          <p className="text-sm text-muted-foreground">Complete trilhas para subir no ranking.</p>
+                        </div>
+                      </div>
+                      <div className="space-y-2">
+                        <div className="flex justify-between text-xs font-medium">
+                          <span>Progressão Global</span>
+                          <span>{completedCount}/{trails.length} Concluídas</span>
+                        </div>
+                        <Progress value={(completedCount / trails.length) * 100} className="h-2" />
+                      </div>
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              </div>
+            </div>
+          </>
+        )}
+      </div>
+    </PageShell>
+  );
 }
