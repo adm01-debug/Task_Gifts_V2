@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, useMemo, useCallback, memo } from "react";
 import { motion, Variants } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-import { Zap, Flame, Trophy, Target, TrendingUp, Users, Clock, ArrowUpRight } from "lucide-react";
+import { Zap, Flame, Trophy, Target, TrendingUp, Users, Clock, ArrowUpRight, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useCurrentProfile } from "@/hooks/useProfiles";
 import { useUserRank } from "@/hooks/useUserRank";
@@ -112,7 +112,8 @@ const StatCard = ({ icon: Icon, label, value, change, changeType = "neutral", co
         "relative p-4 rounded-2xl border border-border bg-card overflow-hidden",
         "card-interactive",
         colors.glow,
-        pulse && pulseClasses[pulse]
+        pulse && pulseClasses[pulse],
+        "group cursor-pointer active:scale-[0.98] transition-all duration-300"
       )}
     >
       {/* XP Particles effect */}
@@ -143,25 +144,31 @@ const StatCard = ({ icon: Icon, label, value, change, changeType = "neutral", co
         <AnimatedCoinsIndicator coins={coinsIndicator} />
       )}
 
-      {/* Gradient background */}
+      {/* Advanced Glass Backdrop */}
       <div className={cn(
-        "absolute inset-0 bg-gradient-to-br opacity-50",
+        "absolute inset-0 bg-gradient-to-br opacity-[0.08] dark:opacity-[0.15] group-hover:opacity-[0.12] dark:group-hover:opacity-[0.2] transition-opacity duration-500",
         colors.bg
       )} />
+      
+      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-border/50 to-transparent" />
 
-      <div className="relative z-10">
-        <div className="flex items-start justify-between mb-3">
-          <motion.div 
-            initial={{ scale: 0, rotate: -180 }}
-            animate={{ scale: 1, rotate: 0 }}
-            transition={{ delay: delay + 0.2, type: "spring", stiffness: 260, damping: 20 }}
-            className={cn(
-              "w-10 h-10 rounded-xl bg-gradient-to-br flex items-center justify-center",
-              colors.bg
-            )}
-          >
-            <Icon className={cn("w-5 h-5", colors.icon)} />
-          </motion.div>
+      <div className="relative z-10 flex flex-col h-full">
+        <div className="flex items-start justify-between mb-4">
+          <div className="relative">
+            <motion.div 
+              initial={{ scale: 0, rotate: -180 }}
+              animate={{ scale: 1, rotate: 0 }}
+              transition={{ delay: delay + 0.2, type: "spring", stiffness: 260, damping: 20 }}
+              className={cn(
+                "w-12 h-12 rounded-2xl bg-gradient-to-br flex items-center justify-center shadow-inner ring-1 ring-white/10",
+                colors.bg
+              )}
+            >
+              <Icon className={cn("w-6 h-6", colors.icon)} />
+            </motion.div>
+            <div className={cn("absolute -inset-1 rounded-2xl blur-md opacity-20 group-hover:opacity-40 transition-opacity", colors.bg)} />
+          </div>
+          
           {change && (
             <motion.div 
               initial={{ opacity: 0, x: 10 }}
@@ -180,18 +187,29 @@ const StatCard = ({ icon: Icon, label, value, change, changeType = "neutral", co
           )}
         </div>
 
-        <div className="flex items-center gap-1">
-          <p className="text-sm text-muted-foreground">{label}</p>
-          {helpText && <HelpTooltip content={helpText} side="right" />}
+        <div className="mt-auto space-y-1">
+          <div className="flex items-center gap-1.5">
+            <p className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground/80">{label}</p>
+            {helpText && <HelpTooltip content={helpText} side="right" />}
+          </div>
+          <div className="flex items-end justify-between gap-2">
+            <motion.p
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: delay + 0.25, type: "spring", stiffness: 300 }}
+              className="text-3xl font-black tracking-tight leading-none"
+            >
+              {value}
+            </motion.p>
+            <motion.div 
+              initial={{ opacity: 0, x: -5 }}
+              animate={{ opacity: 1, x: 0 }}
+              className="p-1 rounded-full bg-muted/40 group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-300"
+            >
+              <ChevronRight className="w-3.5 h-3.5" />
+            </motion.div>
+          </div>
         </div>
-        <motion.p
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: delay + 0.25, type: "spring", stiffness: 300 }}
-          className="text-2xl font-bold"
-        >
-          {value}
-        </motion.p>
       </div>
     </motion.div>
   );
