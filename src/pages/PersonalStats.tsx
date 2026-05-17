@@ -148,10 +148,9 @@ export default function PersonalStats() {
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}><ComboHistory /></motion.div>
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}><WeeklyPerformanceComparison /></motion.div>
 
-        <PersonalStatsCharts rarityData={rarityData} difficultyData={difficultyData} achievementHistory={achievementHistory} questStats={questStats} />
-      </div>
-    </main>
-  );
+         <PersonalStatsCharts rarityData={rarityData} difficultyData={difficultyData} achievementHistory={achievementHistory} questStats={questStats} />
+     </main>
+   );
 
    return (
      <PageShell title="Estatísticas">
