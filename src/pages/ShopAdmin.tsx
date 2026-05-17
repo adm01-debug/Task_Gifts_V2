@@ -50,8 +50,7 @@ export default function ShopAdmin() {
             <PromotionsManager />
           </TabsContent>
         </Tabs>
-        </div>
-      </div>
-    </PageShell>
-  );
-}
+         </div>
+     </PageShell>
+   );
+ }
