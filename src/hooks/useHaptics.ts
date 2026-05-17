@@ -1,10 +1,13 @@
 import { useCallback } from "react";
+import { useAccessibility } from "@/components/accessibility/AccessibilityProvider";
 
 export type HapticStyle = "light" | "medium" | "heavy" | "success" | "warning" | "error" | "none";
 
 export const useHaptics = () => {
+  const { settings } = useAccessibility();
+
   const vibrate = useCallback((style: HapticStyle = "light") => {
-    if (typeof window === "undefined" || !navigator.vibrate) return;
+    if (typeof window === "undefined" || !navigator.vibrate || !settings.hapticsEnabled) return;
 
     switch (style) {
       case "light":
@@ -28,7 +31,7 @@ export const useHaptics = () => {
       default:
         break;
     }
-  }, []);
+  }, [settings.hapticsEnabled]);
 
   return { vibrate };
 };
@@ -38,6 +41,17 @@ export const useHaptics = () => {
  */
 export const triggerHaptic = (style: HapticStyle = "light") => {
   if (typeof window === "undefined" || !navigator.vibrate) return;
+  
+  // Check localStorage for hapticsEnabled (fallback for non-hook usage)
+  try {
+    const stored = localStorage.getItem("accessibility-settings");
+    if (stored) {
+      const settings = JSON.parse(stored);
+      if (settings.hapticsEnabled === false) return;
+    }
+  } catch (e) {
+    // If storage fails, continue with default enabled
+  }
   
   switch (style) {
     case "light":
