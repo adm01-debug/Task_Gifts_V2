@@ -1,6 +1,7 @@
 import { useCallback, useMemo, memo } from "react";
 import { motion } from "framer-motion";
 import { Trophy, Crown, Medal, TrendingUp, TrendingDown, Minus, Target, Shield, Zap } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 import { useNavigate } from "react-router-dom";
 import { useLeaderboard } from "@/hooks/useProfiles";
 import { useAuth } from "@/hooks/useAuth";
