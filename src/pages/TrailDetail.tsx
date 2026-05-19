@@ -259,20 +259,45 @@ export default function TrailDetail() {
                 </div>
 
                 {isEnrolled && (
-                  <div className="bg-muted/30 p-8 border-t border-border/50">
-                    <div className="flex items-center justify-between mb-3">
-                      <div className="flex items-center gap-2">
-                        <div className="w-2 h-2 rounded-full bg-primary animate-pulse" />
-                        <span className="text-sm font-black uppercase tracking-widest">Seu Progresso Atual</span>
+                 <div className="bg-muted/10 p-8 border-t border-border/30 relative overflow-hidden group/progress">
+                    <div className="absolute inset-0 bg-gradient-to-r from-primary/5 to-transparent opacity-0 group-hover/progress:opacity-100 transition-opacity duration-700" />
+                    <div className="relative z-10">
+                      <div className="flex items-center justify-between mb-4">
+                        <div className="flex items-center gap-3">
+                          <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center border border-primary/20">
+                            <TrendingUp className="h-5 w-5 text-primary" />
+                          </div>
+                          <div className="flex flex-col">
+                            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/70">Sync Protocol Progress</span>
+                            <span className="text-sm font-bold text-foreground">Otimização de Carreira</span>
+                          </div>
+                        </div>
+                        <div className="flex flex-col items-end">
+                          <span className="text-2xl font-black text-primary tracking-tighter">
+                            {progressPercent}%
+                          </span>
+                        </div>
                       </div>
-                      <span className="text-lg font-black text-primary">
-                        {progressPercent}%
-                      </span>
-                    </div>
-                    <Progress value={progressPercent} className="h-4 rounded-full bg-muted shadow-inner" />
-                    <div className="flex justify-between mt-3 text-xs font-bold text-muted-foreground">
-                      <span>{completedModules} MÓDULOS CONCLUÍDOS</span>
-                      <span>{totalModules - completedModules} RESTANTES</span>
+                      <div className="h-3 w-full bg-muted/30 rounded-full overflow-hidden p-0.5 border border-white/5">
+                        <motion.div 
+                          initial={{ width: 0 }}
+                          animate={{ width: `${progressPercent}%` }}
+                          transition={{ duration: 1, ease: "easeOut" }}
+                          className="h-full bg-primary rounded-full shadow-[0_0_15px_rgba(var(--primary),0.5)] relative overflow-hidden"
+                        >
+                          <div className="absolute inset-0 bg-[linear-gradient(90deg,transparent_0%,rgba(255,255,255,0.3)_50%,transparent_100%)] animate-shimmer" style={{ backgroundSize: '200% 100%' }} />
+                        </motion.div>
+                      </div>
+                      <div className="flex justify-between mt-4">
+                        <div className="flex items-center gap-1.5">
+                          <div className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                          <span className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">{completedModules} COMPLETED</span>
+                        </div>
+                        <div className="flex items-center gap-1.5">
+                          <div className="w-1.5 h-1.5 rounded-full bg-muted-foreground/30" />
+                          <span className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">{totalModules - completedModules} PENDING</span>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 )}

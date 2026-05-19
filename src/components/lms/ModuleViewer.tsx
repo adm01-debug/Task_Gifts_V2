@@ -233,9 +233,10 @@ function QuizContent({
         ))}
       </RadioGroup>
 
-      <div className="flex justify-between pt-4">
+      <div className="flex justify-between pt-8 gap-4">
         <Button
           variant="outline"
+          className="h-12 px-6 font-bold tracking-tight rounded-xl border-2"
           onClick={() => setCurrentQuestion(Math.max(0, currentQuestion - 1))}
           disabled={currentQuestion === 0}
         >
@@ -243,10 +244,11 @@ function QuizContent({
           Anterior
         </Button>
         <Button
+          className="flex-1 h-12 font-black tracking-widest uppercase text-xs shadow-lg shadow-primary/20 rounded-xl"
           onClick={handleNext}
           disabled={answers[currentQuestion] === undefined}
         >
-          {currentQuestion === questions.length - 1 ? "Finalizar" : "Próxima"}
+          {currentQuestion === questions.length - 1 ? "Finalizar Protocolo" : "Próxima Fase"}
           <ChevronRight className="h-4 w-4 ml-2" />
         </Button>
       </div>
