@@ -82,7 +82,7 @@ export const AppSidebar = memo(function AppSidebar({ collapsed, onToggle }: AppS
       initial={false}
       animate={{ width: collapsed ? 72 : 260 }}
       transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-      className="h-screen bg-sidebar border-r border-sidebar-border flex flex-col overflow-hidden"
+      className="h-screen bg-sidebar/80 backdrop-blur-xl border-r border-sidebar-border/40 flex flex-col overflow-hidden shadow-2xl relative z-50"
       role="navigation"
       aria-label="Menu lateral principal"
     >
