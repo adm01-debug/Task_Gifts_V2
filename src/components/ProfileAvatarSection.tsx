@@ -46,6 +46,49 @@ export function ProfileAvatarSection({
     return { totalItems: total, ownedItems: owned, collectionPercent: percent, legendaryOwned: legendary, epicOwned: epic, nextUnlocks: unlocks };
   }, [items]);
 
+  if (!items) {
+    return (
+      <div className="bg-card/40 backdrop-blur-3xl rounded-[2.5rem] border border-white/5 overflow-hidden shadow-2xl group">
+        <div className="p-8 border-b border-white/5 bg-gradient-to-br from-primary/5 via-transparent to-secondary/5 relative overflow-hidden">
+          <div className="flex items-center justify-between mb-8 relative z-10">
+            <div className="flex flex-col space-y-2">
+              <Skeleton variant="shimmer" className="h-8 w-48 rounded-xl" />
+              <Skeleton variant="shimmer" className="h-3 w-64 opacity-50" />
+            </div>
+            <Skeleton variant="glow" className="h-12 w-44 rounded-2xl" />
+          </div>
+          <div className="flex flex-col md:flex-row items-center gap-10 relative z-10">
+            <Skeleton variant="glow" shape="circle" className="w-48 h-48 md:w-56 md:h-56 shrink-0" />
+            <div className="flex-1 space-y-6 w-full">
+              <div className="space-y-3">
+                <div className="flex justify-between items-end">
+                  <div className="space-y-2">
+                    <Skeleton variant="shimmer" className="h-3 w-32" />
+                    <Skeleton variant="shimmer" className="h-8 w-40" />
+                  </div>
+                  <Skeleton variant="shimmer" className="h-6 w-24" />
+                </div>
+                <Skeleton variant="shimmer" className="h-3 w-full rounded-full" />
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <Skeleton variant="shimmer" className="h-20 rounded-2xl" />
+                <Skeleton variant="shimmer" className="h-20 rounded-2xl" />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="p-8">
+          <Skeleton variant="shimmer" className="h-3 w-40 mb-6" />
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+            {[1, 2, 3, 4, 5].map(i => (
+              <Skeleton key={i} variant="shimmer" className="aspect-square rounded-3xl" />
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
