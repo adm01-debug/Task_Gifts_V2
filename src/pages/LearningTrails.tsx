@@ -60,14 +60,14 @@ export default function LearningTrails() {
   const isLoading = trailsLoading || enrollmentsLoading;
   const enrollmentMap = new Map(enrollments.map(e => [e.trail_id, e]));
 
-  const filteredTrails = trails.filter(trail => {
+  const filteredTrails = useMemo(() => trails.filter(trail => {
     if (selectedDepartment !== "all" && trail.department_id !== selectedDepartment) return false;
     const enrollment = enrollmentMap.get(trail.id);
     if (activeTab === "enrolled") return enrollment && !enrollment.completed_at;
     if (activeTab === "completed") return enrollment?.completed_at;
     if (activeTab === "available") return !enrollment;
     return true;
-  });
+  }), [trails, selectedDepartment, activeTab, enrollmentMap]);
 
   const completedCount = enrollments.filter(e => e.completed_at).length;
   const inProgressCount = enrollments.filter(e => !e.completed_at).length;
