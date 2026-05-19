@@ -5,7 +5,7 @@ import { Zap, Flame, Trophy, Target, TrendingUp, Users, Clock, ArrowUpRight, Che
 import { cn } from "@/lib/utils";
 import { useCurrentProfile } from "@/hooks/useProfiles";
 import { useUserRank } from "@/hooks/useUserRank";
-import { SkeletonStatCard } from "@/components/ui/skeleton";
+import { Skeleton, SkeletonStatCard } from "@/components/ui/skeleton";
 import { AnimatedFireIndicator } from "@/components/effects/AnimatedFireIndicator";
 import { AnimatedTrophyIndicator } from "@/components/effects/AnimatedTrophyIndicator";
 import { AnimatedLevelIndicator } from "@/components/effects/AnimatedLevelIndicator";
@@ -103,7 +103,24 @@ const StatCard = ({ icon: Icon, label, value, change, changeType = "neutral", co
   const colors = colorClasses[color];
 
   if (isLoading) {
-    return <SkeletonStatCard />;
+    return (
+      <Card variant="ultra" className="p-0 overflow-hidden border-border/40 relative h-[180px]">
+        <div className="absolute inset-0 bg-muted/20 animate-pulse" />
+        <CardContent className="p-5 relative z-10 flex flex-col h-full">
+          <div className="flex items-start justify-between mb-5">
+            <Skeleton variant="glow" shape="card" className="w-12 h-12 rounded-2xl" />
+            <Skeleton variant="shimmer" shape="pill" className="h-5 w-16" />
+          </div>
+          <div className="mt-auto space-y-2">
+            <Skeleton variant="shimmer" className="h-3 w-20" />
+            <div className="flex items-end justify-between">
+              <Skeleton variant="shimmer" className="h-10 w-24" />
+              <Skeleton shape="card" className="w-8 h-8 rounded-xl" />
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+    );
   }
 
   return (
