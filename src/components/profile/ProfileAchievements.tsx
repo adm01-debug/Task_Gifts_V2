@@ -68,7 +68,13 @@ export function ProfileAchievements() {
           
           {isLoading ? (
             <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-6">
-              {[...Array(6)].map((_, i) => <Skeleton key={i} className="aspect-square rounded-2xl bg-white/5" />)}
+              {[...Array(12)].map((_, i) => (
+                <div key={i} className="aspect-square rounded-2xl bg-white/5 border border-white/5 p-4 flex flex-col items-center justify-center gap-2 relative overflow-hidden">
+                  <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-transparent animate-pulse" />
+                  <Skeleton variant="glow" shape="card" className="w-12 h-12 rounded-xl mb-1" />
+                  <Skeleton variant="shimmer" className="h-1.5 w-8 rounded-full opacity-40" />
+                </div>
+              ))}
             </div>
           ) : allAchievements.length === 0 ? (
             <div className="text-center py-16">

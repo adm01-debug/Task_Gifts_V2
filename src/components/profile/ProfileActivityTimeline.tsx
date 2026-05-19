@@ -63,13 +63,17 @@ export function ProfileActivityTimeline({ userId }: { userId?: string }) {
   if (isLoading) {
     return (
       <ContentWrapper title="Atividade Recente">
-        <div className="space-y-6">
-          {[1, 2, 3, 4].map((i) => (
-            <div key={i} className="flex gap-4">
-              <Skeleton className="h-14 w-14 rounded-2xl bg-white/5" />
-              <div className="space-y-2 flex-1 pt-1">
-                <Skeleton className="h-4 w-1/3 bg-white/5" />
-                <Skeleton className="h-3 w-1/4 bg-white/5" />
+        <div className="space-y-8 relative">
+          <div className="absolute left-[27px] top-2 bottom-2 w-px bg-white/5 z-0" />
+          {[1, 2, 3, 4, 5].map((i) => (
+            <div key={i} className="flex gap-6 relative z-10">
+              <Skeleton variant="glow" shape="card" className="h-14 w-14 rounded-[1.25rem] shrink-0" />
+              <div className="flex-1 space-y-3 pt-1">
+                <div className="flex justify-between items-center">
+                  <Skeleton variant="shimmer" className="h-4 w-1/3" />
+                  <Skeleton variant="shimmer" shape="pill" className="h-6 w-16" />
+                </div>
+                <Skeleton variant="shimmer" className="h-3 w-1/4 opacity-50" />
               </div>
             </div>
           ))}
