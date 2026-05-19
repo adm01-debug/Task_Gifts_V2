@@ -18,7 +18,7 @@ import { Shield } from "lucide-react";
 import { useScrollRestoration } from "@/hooks/useNavigationHelpers";
  import { useSwipeNavigation } from "@/hooks/useSwipeNavigation";
 import { Providers } from "@/components/Providers";
-import { ProtectedRoute } from "@/components/ProtectedRoute";
+ import { ProtectedRoute } from "@/components/rbac/ProtectedRoute";
 
 // Eagerly loaded routes (critical path)
 import Index from "./pages/Index";
