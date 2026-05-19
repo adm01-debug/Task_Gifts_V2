@@ -34,7 +34,10 @@ export const SidebarUserStats = memo(function SidebarUserStats({
 
   // Memoized XP calculations
   const { xpInCurrentLevel, xpNeededForNext, xpProgress } = useMemo(() => {
-    const xpForLevel = (lvl: number) => Math.floor(100 * Math.pow(1.5, lvl - 1));
+   const xpForLevel = (lvl: number) => {
+     if (lvl <= 1) return 0;
+     return Math.floor(100 * Math.pow(1.5, lvl - 1));
+   };
     const xpForCurrentLevel = xpForLevel(level);
     const xpForNextLevel = xpForLevel(level + 1);
     const inCurrent = xp - xpForCurrentLevel;
@@ -50,19 +53,19 @@ export const SidebarUserStats = memo(function SidebarUserStats({
   if (collapsed) {
     return (
       <div className="p-2 border-b border-sidebar-border flex justify-center">
-        <div className="relative group">
-          <motion.div 
-            whileHover={{ scale: 1.1 }}
-            className="w-10 h-10 rounded-full bg-gradient-to-br from-secondary to-accent flex items-center justify-center text-sm font-bold text-primary-foreground shadow-lg"
-          >
-            {initials}
-          </motion.div>
-          <motion.div 
-            className="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-card border-2 border-sidebar flex items-center justify-center shadow-md"
-            whileHover={{ scale: 1.2 }}
-          >
-            <span className="text-[10px] font-bold text-primary">{level}</span>
-          </motion.div>
+         <div className="relative group cursor-pointer">
+           <motion.div 
+             whileHover={{ scale: 1.15, rotate: 5 }}
+             className="w-12 h-12 rounded-2xl bg-gradient-to-br from-primary via-primary/80 to-accent flex items-center justify-center text-sm font-black text-primary-foreground shadow-glow-sm border-2 border-white/20"
+           >
+             {initials}
+           </motion.div>
+           <motion.div 
+             className="absolute -bottom-1 -right-1 w-6 h-6 rounded-lg bg-card border-2 border-primary flex items-center justify-center shadow-lg"
+             whileHover={{ scale: 1.2, y: -2 }}
+           >
+             <span className="text-[11px] font-black text-primary italic">{level}</span>
+           </motion.div>
           
           {/* Streak indicator */}
           {streak > 0 && (
@@ -86,38 +89,44 @@ export const SidebarUserStats = memo(function SidebarUserStats({
       animate={{ opacity: 1 }}
       className="p-4 border-b border-sidebar-border"
     >
-      <div className="flex items-center gap-3 mb-3">
-        <div className="relative">
-          <motion.div 
-            whileHover={{ scale: 1.05, rotate: 5 }}
-            className="w-12 h-12 rounded-xl bg-gradient-to-br from-secondary to-accent flex items-center justify-center text-sm font-bold text-primary-foreground shadow-lg"
-          >
-            {initials}
-          </motion.div>
-          <motion.div 
-            className="absolute -bottom-1 -right-1 w-6 h-6 rounded-lg bg-gradient-to-br from-primary to-accent border-2 border-sidebar flex items-center justify-center shadow-md"
-            animate={xpDiff ? { scale: [1, 1.3, 1] } : {}}
-          >
-            <span className="text-[10px] font-bold text-primary-foreground">{level}</span>
-          </motion.div>
-        </div>
-        <div className="flex-1 min-w-0">
-          <p className="font-semibold text-sm truncate">{displayName}</p>
-          <div className="flex items-center gap-2">
-            <div className="flex items-center gap-1 text-xs text-muted-foreground">
-              <motion.div
-                animate={streak > 0 ? { 
-                  scale: [1, 1.2, 1],
-                  rotate: [0, -5, 5, 0]
-                } : {}}
-                transition={{ duration: 0.5, repeat: Infinity, repeatDelay: 2 }}
-              >
-                <Flame className="w-3 h-3 text-streak streak-fire" />
-              </motion.div>
-              <span className="font-medium">{streak} dias</span>
-            </div>
-          </div>
-        </div>
+       <div className="flex items-center gap-4 mb-4">
+         <div className="relative shrink-0 group">
+           <motion.div 
+             whileHover={{ scale: 1.1, rotate: 8 }}
+             className="w-14 h-14 rounded-2xl bg-gradient-to-br from-primary via-primary/90 to-accent flex items-center justify-center text-base font-black text-primary-foreground shadow-glow border-2 border-white/20"
+           >
+             {initials}
+           </motion.div>
+           <motion.div 
+             className="absolute -bottom-1.5 -right-1.5 w-7 h-7 rounded-xl bg-gradient-to-br from-primary to-accent border-2 border-white/30 flex items-center justify-center shadow-xl z-10"
+             animate={xpDiff ? { 
+               scale: [1, 1.4, 1],
+               boxShadow: ["0 0 0px var(--primary)", "0 0 20px var(--primary)", "0 0 0px var(--primary)"]
+             } : {}}
+           >
+             <span className="text-[12px] font-black text-primary-foreground italic">{level}</span>
+           </motion.div>
+           <div className="absolute inset-0 bg-primary/20 blur-2xl opacity-0 group-hover:opacity-40 transition-opacity rounded-full" />
+         </div>
+         
+         <div className="flex-1 min-w-0">
+           <p className="font-black text-xs uppercase tracking-widest text-muted-foreground/60 leading-none mb-1">Elite Member</p>
+           <p className="font-black text-lg tracking-tighter truncate italic">{displayName.toUpperCase()}</p>
+           <div className="flex items-center gap-2 mt-1">
+             <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-lg bg-orange-500/10 border border-orange-500/20">
+               <motion.div
+                 animate={streak > 0 ? { 
+                   scale: [1, 1.3, 1],
+                   filter: ["brightness(1)", "brightness(1.5)", "brightness(1)"]
+                 } : {}}
+                 transition={{ duration: 1, repeat: Infinity }}
+               >
+                 <Flame className="w-3.5 h-3.5 text-orange-500 fill-orange-500/20" />
+               </motion.div>
+               <span className="text-[10px] font-black text-orange-500 uppercase tracking-tighter">{streak} DAYS STREAK</span>
+             </div>
+           </div>
+         </div>
       </div>
       
       {/* XP Bar with animation */}
