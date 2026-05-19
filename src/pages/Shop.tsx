@@ -191,43 +191,79 @@ export default function Shop() {
          </div>
        </div>
  
-       <Dialog open={!!selectedReward} onOpenChange={() => setSelectedReward(null)}>
-         <DialogContent>
-           <DialogHeader>
-             <DialogTitle>Confirmar Resgate</DialogTitle>
-             <DialogDescription>Você está prestes a resgatar esta recompensa</DialogDescription>
-           </DialogHeader>
-           {selectedReward && (
-             <div className="py-4">
-               <div className="flex items-center gap-4">
-                 <div className={`w-14 h-14 rounded-xl flex items-center justify-center text-2xl ${selectedReward.rarity === "legendary" ? "bg-gradient-to-br from-amber-400 to-orange-500" : selectedReward.rarity === "epic" ? "bg-gradient-to-br from-purple-400 to-pink-500" : selectedReward.rarity === "rare" ? "bg-gradient-to-br from-blue-400 to-cyan-500" : "bg-muted"}`}>
-                   {shopService.getCategoryConfig(selectedReward.category).icon}
-                 </div>
-                 <div>
-                   <h3 className="font-bold text-lg">{selectedReward.name}</h3>
-                   <p className="text-sm text-muted-foreground">{selectedReward.description}</p>
-                 </div>
-               </div>
-               <div className="mt-4 p-4 bg-muted rounded-lg">
-                 <div className="flex justify-between items-center">
-                   <span className="text-muted-foreground">Custo:</span>
-                   <div className="flex items-center gap-1"><Coins className="w-5 h-5 text-amber-500" /><span className="font-bold text-lg">{selectedReward.price_coins}</span></div>
-                 </div>
-                 <div className="flex justify-between items-center mt-2">
-                   <span className="text-muted-foreground">Seu saldo após:</span>
-                   <div className="flex items-center gap-1"><Coins className="w-5 h-5 text-amber-500" /><span className="font-bold">{userCoins - selectedReward.price_coins}</span></div>
-                 </div>
-               </div>
-             </div>
-           )}
-           <DialogFooter>
-             <Button variant="outline" onClick={() => setSelectedReward(null)}>Cancelar</Button>
-             <Button onClick={confirmPurchase} disabled={purchaseMutation.isPending} className="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600">
-               {purchaseMutation.isPending ? "Resgatando..." : "Confirmar Resgate"}
-             </Button>
-           </DialogFooter>
-         </DialogContent>
-       </Dialog>
+        <Dialog open={!!selectedReward} onOpenChange={() => setSelectedReward(null)}>
+          <DialogContent className="max-w-md bg-[#0d0e14] border-white/10 p-0 overflow-hidden rounded-[2rem] shadow-[0_0_50px_rgba(0,0,0,0.8)]">
+            <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-transparent pointer-events-none" />
+            
+            <div className="p-8 space-y-8 relative">
+              <DialogHeader className="space-y-2">
+                <div className="flex items-center gap-2 mb-2">
+                  <div className="w-2 h-2 rounded-full bg-primary animate-pulse" />
+                  <span className="text-[10px] font-black text-primary uppercase tracking-[0.4em]">Protocolo_de_Aquisição</span>
+                </div>
+                <DialogTitle className="text-3xl font-black uppercase italic tracking-tighter text-white">Confirmar Resgate</DialogTitle>
+                <DialogDescription className="text-[10px] font-bold uppercase tracking-widest text-zinc-500">
+                  Autorização necessária para transferência de ativos digitais
+                </DialogDescription>
+              </DialogHeader>
+
+              {selectedReward && (
+                <div className="space-y-6">
+                  <div className="flex items-center gap-6 p-4 rounded-2xl bg-white/5 border border-white/5 ring-1 ring-white/5">
+                    <div className={cn(
+                      "w-20 h-20 rounded-2xl flex items-center justify-center text-3xl shadow-2xl relative overflow-hidden",
+                      selectedReward.rarity === "legendary" ? "bg-gradient-to-br from-amber-400 to-orange-600" : 
+                      selectedReward.rarity === "epic" ? "bg-gradient-to-br from-purple-500 to-pink-600" : 
+                      selectedReward.rarity === "rare" ? "bg-gradient-to-br from-blue-500 to-cyan-600" : "bg-zinc-800"
+                    )}>
+                      <div className="absolute inset-0 bg-white/10 pointer-events-none" />
+                      {shopService.getCategoryConfig(selectedReward.category).icon}
+                    </div>
+                    <div className="flex-1 space-y-1">
+                      <h3 className="font-black uppercase italic tracking-tighter text-xl text-white">{selectedReward.name}</h3>
+                      <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-tight line-clamp-2">{selectedReward.description}</p>
+                    </div>
+                  </div>
+
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between p-4 rounded-2xl bg-zinc-900/50 border border-white/5">
+                      <span className="text-[10px] font-black text-zinc-500 uppercase tracking-widest">Custo Operacional</span>
+                      <div className="flex items-center gap-2">
+                        <Coins className="w-4 h-4 text-amber-500" />
+                        <span className="text-xl font-black italic tracking-tighter text-white">{selectedReward.price_coins.toLocaleString()}</span>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center justify-between p-4 rounded-2xl bg-zinc-900/50 border border-white/5">
+                      <span className="text-[10px] font-black text-zinc-500 uppercase tracking-widest">Saldo Remanescente</span>
+                      <div className="flex items-center gap-2">
+                        <Coins className="w-4 h-4 text-zinc-600" />
+                        <span className="text-xl font-black italic tracking-tighter text-zinc-400">{(userCoins - selectedReward.price_coins).toLocaleString()}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              <DialogFooter className="flex flex-col sm:flex-row gap-4 pt-4">
+                <Button 
+                  variant="ghost" 
+                  onClick={() => setSelectedReward(null)}
+                  className="h-14 rounded-2xl font-black uppercase text-[10px] tracking-widest text-zinc-500 hover:text-white hover:bg-white/5"
+                >
+                  Abortar
+                </Button>
+                <Button 
+                  onClick={confirmPurchase} 
+                  disabled={purchaseMutation.isPending} 
+                  className="h-14 flex-1 rounded-2xl font-black uppercase text-[10px] tracking-[0.3em] bg-white text-black hover:bg-zinc-200 transition-all active:scale-95 shadow-[0_0_30px_rgba(255,255,255,0.1)]"
+                >
+                  {purchaseMutation.isPending ? "SINCRONIZANDO..." : "CONFIRMAR AQUISIÇÃO"}
+                </Button>
+              </DialogFooter>
+            </div>
+          </DialogContent>
+        </Dialog>
      </PageShell>
    );
  }
