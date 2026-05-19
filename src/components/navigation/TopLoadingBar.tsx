@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+ import { useEffect, useState, memo } from "react";
 import { useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -6,7 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
  * TopLoadingBar - Uma barra de progresso discreta no topo da página
  * Ativada durante mudanças de rota para indicar que o conteúdo está carregando
  */
-export const TopLoadingBar = () => {
+ export const TopLoadingBar = memo(() => {
   const location = useLocation();
   const [isLoading, setIsLoading] = useState(false);
   const [progress, setProgress] = useState(0);
@@ -47,17 +47,19 @@ export const TopLoadingBar = () => {
      };
    }, [location.pathname, location.key]);
 
-  return (
-    <AnimatePresence>
-      {isLoading && (
-        <motion.div
-          className="fixed top-0 left-0 right-0 h-0.5 bg-primary z-[9999] origin-left"
-          initial={{ scaleX: 0 }}
-          animate={{ scaleX: progress / 100 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.2 }}
-        />
-      )}
-    </AnimatePresence>
-  );
-};
+   return (
+     <AnimatePresence>
+       {isLoading && (
+         <motion.div
+           className="fixed top-0 left-0 right-0 h-0.5 bg-primary z-[9999] origin-left"
+           initial={{ scaleX: 0 }}
+           animate={{ scaleX: progress / 100 }}
+           exit={{ opacity: 0 }}
+           transition={{ duration: 0.2 }}
+         />
+       )}
+     </AnimatePresence>
+   );
+ });
+ 
+ TopLoadingBar.displayName = "TopLoadingBar";
