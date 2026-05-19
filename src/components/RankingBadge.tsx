@@ -7,7 +7,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 
-export type RankTier = "champion" | "top3" | "top10" | "top50" | "rising" | null;
+ export type RankTier = "master" | "champion" | "top3" | "top10" | "top50" | "rising" | null;
 
 interface RankingBadgeProps {
   rank: number | null;
