@@ -5,7 +5,7 @@ import { Zap, Flame, Trophy, Target, TrendingUp, Users, Clock, ArrowUpRight, Che
 import { cn } from "@/lib/utils";
 import { useCurrentProfile } from "@/hooks/useProfiles";
 import { useUserRank } from "@/hooks/useUserRank";
-import { SkeletonStatCard } from "@/components/ui/skeleton";
+import { Skeleton, SkeletonStatCard } from "@/components/ui/skeleton";
 import { AnimatedFireIndicator } from "@/components/effects/AnimatedFireIndicator";
 import { AnimatedTrophyIndicator } from "@/components/effects/AnimatedTrophyIndicator";
 import { AnimatedLevelIndicator } from "@/components/effects/AnimatedLevelIndicator";

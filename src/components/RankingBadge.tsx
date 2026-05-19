@@ -6,6 +6,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { Skeleton } from "@/components/ui/skeleton";
 
  export type RankTier = "master" | "champion" | "top3" | "top10" | "top50" | "rising" | null;
 

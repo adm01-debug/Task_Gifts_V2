@@ -4,7 +4,7 @@ import { ptBR } from "date-fns/locale";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { SkeletonActivityList } from "@/components/ui/skeleton";
+import { Skeleton, SkeletonActivityList } from "@/components/ui/skeleton";
 import { useSocialFeed } from "@/hooks/useSocialFeed";
 import { useCommentsCounts } from "@/hooks/useActivityComments";
 import { useActivityReactions } from "@/hooks/useActivityReactions";
