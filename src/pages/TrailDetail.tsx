@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
-  ArrowLeft, BookOpen, Clock, Star, Trophy, Play, 
+   ArrowLeft, BookOpen, Clock, Star, Trophy, Play, TrendingUp,
   CheckCircle2, Video, FileText, HelpCircle, Layers,
   ChevronRight, Lock, Sparkles, Award
 } from "lucide-react";
