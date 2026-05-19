@@ -1,4 +1,5 @@
  import { memo, ReactNode, useEffect, useCallback } from "react";
+ import { Sparkles } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { GlobalBreadcrumbs } from "./GlobalBreadcrumbs";
 import { DesktopBackButton } from "./DesktopBackButton";
