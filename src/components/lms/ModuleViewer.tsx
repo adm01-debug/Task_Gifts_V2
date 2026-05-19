@@ -181,14 +181,14 @@ function QuizContent({
             : "Você precisa de 70% para passar. Tente novamente!"}
         </p>
         
-        <Button 
-          onClick={() => onComplete(score)} 
-          disabled={!passed}
-          className="gap-2"
-        >
-          <CheckCircle2 className="h-4 w-4" />
-          {passed ? "Concluir Módulo" : "Tentar Novamente"}
-        </Button>
+         <Button 
+           onClick={() => onComplete(score)} 
+           disabled={!passed}
+           className="w-full h-14 font-black uppercase tracking-widest text-xs gap-3 shadow-lg rounded-xl"
+         >
+           <CheckCircle2 className="h-5 w-5" />
+           {passed ? "Finalizar Protocolo de Quiz" : "Repetir Avaliação"}
+         </Button>
       </div>
     );
   }
@@ -359,12 +359,15 @@ function FlashcardsContent({
           Anterior
         </Button>
         
-        {allReviewed ? (
-          <Button onClick={() => onComplete()} className="gap-2">
-            <CheckCircle2 className="h-4 w-4" />
-            Concluir
-          </Button>
-        ) : (
+         {allReviewed ? (
+           <Button 
+             onClick={() => onComplete()} 
+             className="flex-1 h-12 font-black tracking-widest uppercase text-xs shadow-lg shadow-primary/20 rounded-xl gap-2"
+           >
+             <CheckCircle2 className="h-4 w-4" />
+             Protocolo Concluído
+           </Button>
+         ) : (
           <Button onClick={handleNext} disabled={currentCard === cards.length - 1}>
             Próximo
             <ChevronRight className="h-4 w-4 ml-2" />
@@ -423,14 +426,14 @@ function ChecklistContent({
         ))}
       </div>
 
-      <Button 
-        onClick={() => onComplete()} 
-        disabled={!allChecked}
-        className="w-full gap-2"
-      >
-        <CheckCircle2 className="h-4 w-4" />
-        Concluir Módulo
-      </Button>
+       <Button 
+         onClick={() => onComplete()} 
+         disabled={!allChecked}
+         className="w-full h-14 font-black uppercase tracking-widest text-xs gap-3 shadow-lg shadow-emerald-500/20 rounded-xl"
+       >
+         <CheckCircle2 className="h-5 w-5" />
+         Validar Checklist
+       </Button>
     </div>
   );
 }
@@ -447,13 +450,13 @@ export default function ModuleViewer({ module, onComplete, onClose }: ModuleView
         return (
           <div className="space-y-4">
             <VideoContent videoUrl={module.video_url || ""} />
-            <Button 
-              onClick={() => onComplete()} 
-              className="w-full gap-2"
-            >
-              <CheckCircle2 className="h-4 w-4" />
-              Marcar como Assistido
-            </Button>
+             <Button 
+               onClick={() => onComplete()} 
+               className="w-full h-14 font-black uppercase tracking-widest text-xs gap-3 shadow-lg shadow-emerald-500/20 rounded-xl"
+             >
+               <CheckCircle2 className="h-5 w-5" />
+               Validar Visualização
+             </Button>
           </div>
         );
 
@@ -463,13 +466,13 @@ export default function ModuleViewer({ module, onComplete, onClose }: ModuleView
             <div className="max-h-96 overflow-y-auto p-4 rounded-lg bg-muted/50">
               <TextContent content={content as { text?: string; html?: string }} />
             </div>
-            <Button 
-              onClick={() => onComplete()} 
-              className="w-full gap-2"
-            >
-              <CheckCircle2 className="h-4 w-4" />
-              Marcar como Lido
-            </Button>
+             <Button 
+               onClick={() => onComplete()} 
+               className="w-full h-14 font-black uppercase tracking-widest text-xs gap-3 shadow-lg shadow-emerald-500/20 rounded-xl"
+             >
+               <CheckCircle2 className="h-5 w-5" />
+               Confirmar Leitura
+             </Button>
           </div>
         );
 
