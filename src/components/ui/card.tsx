@@ -28,6 +28,7 @@ const cardVariants = cva(
         
         // Stats and data
         stat: "shadow-sm hover:shadow-md hover:-translate-y-1 border-border relative overflow-hidden",
+        ultra: "bg-card/40 backdrop-blur-2xl border-white/10 dark:border-white/5 shadow-2xl rounded-3xl hover:bg-card/50 hover:border-primary/30 transition-all duration-500 hover:shadow-primary/10 hover:shadow-2xl",
         shimmer: "shadow-sm border-border hover:border-primary/30",
         glow: "shadow-sm border-border animate-border-glow",
       },
