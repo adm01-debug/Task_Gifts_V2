@@ -14,7 +14,7 @@ import { TelemetryStatsCards } from "@/components/admin/telemetry/TelemetryStats
 import { TopOffendersCard } from "@/components/admin/telemetry/TopOffendersCard";
 import { toast } from "sonner";
 import { PageShell } from "@/components/navigation";
-import { ProtectedRoute } from "@/components/ProtectedRoute";
+ import { ProtectedRoute } from "@/components/rbac/ProtectedRoute";
 import { PageWrapper } from "@/components/PageWrapper";
 import { DesktopBackButton } from "@/components/navigation";
 import { format } from "date-fns";
