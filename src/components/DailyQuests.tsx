@@ -115,7 +115,7 @@ const DailyQuestsComponent = () => {
                 {claimableCount} Rewards Available
               </span>
             </div>
-            <div className="text-[9px] font-black text-emerald-500/60 tracking-tighter italic group-hover:translate-x-1 transition-transform">PROCEED_TO_COORDINATES >></div>
+            <div className="text-[9px] font-black text-emerald-500/60 tracking-tighter italic group-hover:translate-x-1 transition-transform">PROCEED_TO_COORDINATES {" >>"}</div>
           </motion.div>
         )}
       </div>
