@@ -31,10 +31,10 @@ export const DashboardRightColumn = memo(function DashboardRightColumn() {
   const activityData = useActivityHeatmapData();
   
   return (
-    <StaggeredContainer 
-      className="space-y-4 md:space-y-6"
-      staggerDelay={0.1}
-      initialDelay={0.2}
+    <StaggeredContainer
+      className="space-y-6 md:space-y-8"
+      staggerDelay={0.12}
+      initialDelay={0.3}
       data-tour="leaderboard"
     >
       {/* Streak Tracker - High priority gamification */}
