@@ -60,14 +60,14 @@ export default function LearningTrails() {
   const isLoading = trailsLoading || enrollmentsLoading;
   const enrollmentMap = new Map(enrollments.map(e => [e.trail_id, e]));
 
-  const filteredTrails = trails.filter(trail => {
+  const filteredTrails = useMemo(() => trails.filter(trail => {
     if (selectedDepartment !== "all" && trail.department_id !== selectedDepartment) return false;
     const enrollment = enrollmentMap.get(trail.id);
     if (activeTab === "enrolled") return enrollment && !enrollment.completed_at;
     if (activeTab === "completed") return enrollment?.completed_at;
     if (activeTab === "available") return !enrollment;
     return true;
-  });
+  }), [trails, selectedDepartment, activeTab, enrollmentMap]);
 
   const completedCount = enrollments.filter(e => e.completed_at).length;
   const inProgressCount = enrollments.filter(e => !e.completed_at).length;
@@ -125,11 +125,11 @@ export default function LearningTrails() {
                     className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-4 rounded-2xl bg-card/30 backdrop-blur-md border border-border/50"
                   >
                     <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full sm:w-auto">
-                      <TabsList className="bg-muted/50 p-1">
-                        <TabsTrigger value="all" className="rounded-lg">Todas</TabsTrigger>
-                        <TabsTrigger value="enrolled" className="rounded-lg">Em Curso</TabsTrigger>
-                        <TabsTrigger value="available" className="rounded-lg">Novas</TabsTrigger>
-                        <TabsTrigger value="completed" className="rounded-lg">Concluídas</TabsTrigger>
+                      <TabsList className="bg-muted/50 p-1.5 rounded-xl border border-border/50 h-auto flex flex-wrap sm:flex-nowrap">
+                        <TabsTrigger value="all" className="rounded-lg px-4 font-bold data-[state=active]:bg-primary data-[state=active]:text-primary-foreground transition-all">Todas</TabsTrigger>
+                        <TabsTrigger value="enrolled" className="rounded-lg px-4 font-bold data-[state=active]:bg-primary data-[state=active]:text-primary-foreground transition-all">Em Curso</TabsTrigger>
+                        <TabsTrigger value="available" className="rounded-lg px-4 font-bold data-[state=active]:bg-primary data-[state=active]:text-primary-foreground transition-all">Novas</TabsTrigger>
+                        <TabsTrigger value="completed" className="rounded-lg px-4 font-bold data-[state=active]:bg-primary data-[state=active]:text-primary-foreground transition-all">Concluídas</TabsTrigger>
                       </TabsList>
                     </Tabs>
                     
