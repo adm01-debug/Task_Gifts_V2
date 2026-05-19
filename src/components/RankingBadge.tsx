@@ -65,15 +65,24 @@ const rankConfig: Record<
     glowColor: "shadow-blue-500/50",
     borderColor: "border-blue-400",
   },
-  rising: {
-    icon: Sparkles,
-    label: "Em Ascensão",
-    description: "Continue evoluindo!",
-    gradient: "from-emerald-400 via-teal-500 to-emerald-600",
-    iconColor: "text-emerald-900",
-    glowColor: "shadow-emerald-500/50",
-    borderColor: "border-emerald-400",
-  },
+   rising: {
+     icon: Sparkles,
+     label: "Em Ascensão",
+     description: "Continue evoluindo!",
+     gradient: "from-emerald-400 via-teal-500 to-emerald-600",
+     iconColor: "text-emerald-900",
+     glowColor: "shadow-emerald-500/50",
+     borderColor: "border-emerald-400",
+   },
+   master: {
+     icon: Crown,
+     label: "Mestre Supremo",
+     description: "Poder absoluto no ranking!",
+     gradient: "from-purple-600 via-pink-600 to-red-600",
+     iconColor: "text-white",
+     glowColor: "shadow-purple-500/50",
+     borderColor: "border-purple-400",
+   },
 };
 
 export function getRankTier(rank: number | null): RankTier {
