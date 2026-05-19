@@ -20,30 +20,40 @@ import {
   RefreshCw,
   Trophy,
   Sparkles,
-  Lock
+  Lock,
+  Zap,
+  Star,
+  Activity,
+  GraduationCap,
+  Sunrise,
+  Moon,
+  Crown,
+  HandHeart,
+  ShieldCheck
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { cn } from "@/lib/utils";
 
 const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   MessageSquare,
   CalendarCheck,
   Heart,
-  Activity: Heart,
+  Activity,
   Users,
   Target,
   Award,
   BookOpen,
-  GraduationCap: BookOpen,
+  GraduationCap,
   Trophy,
   TrendingUp,
   Sparkles,
   Share2,
-  Star: Sparkles,
-  Sunrise: CalendarCheck,
-  Moon: CalendarCheck,
+  Star,
+  Sunrise,
+  Moon,
   Lightbulb,
-  Crown: Trophy,
-  HandHeart: Heart,
+  Crown,
+  HandHeart,
 };
 
 const categoryLabels: Record<string, string> = {
@@ -59,17 +69,10 @@ const categoryLabels: Record<string, string> = {
 };
 
 const rarityColors: Record<string, string> = {
-  common: "bg-muted text-muted-foreground",
-  rare: "bg-blue-500/20 text-blue-400 border-blue-500/30",
-  epic: "bg-purple-500/20 text-purple-400 border-purple-500/30",
-  legendary: "bg-amber-500/20 text-amber-400 border-amber-500/30",
-};
-
-const rarityGlow: Record<string, string> = {
-  common: "",
-  rare: "shadow-blue-500/20",
-  epic: "shadow-purple-500/20",
-  legendary: "shadow-amber-500/40 shadow-lg",
+  common: "text-slate-400 bg-slate-500/10 border-slate-500/20",
+  rare: "text-cyan-400 bg-cyan-500/10 border-cyan-500/20",
+  epic: "text-indigo-400 bg-indigo-500/10 border-indigo-500/20",
+  legendary: "text-amber-400 bg-amber-500/10 border-amber-500/20",
 };
 
 export function BehavioralBadgesWidget() {
@@ -92,17 +95,14 @@ export function BehavioralBadgesWidget() {
 
   if (isLoadingMetrics || isLoadingAchievements) {
     return (
-      <Card className="glass-card">
+      <Card className="border border-white/5 bg-[#0A0C10] shadow-xl">
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Award className="h-5 w-5 text-primary" />
-            Badges Comportamentais
-          </CardTitle>
+          <Skeleton className="h-6 w-48" />
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
             {[1, 2, 3].map(i => (
-              <Skeleton key={i} className="h-16 w-full" />
+              <Skeleton key={i} className="h-20 w-full rounded-xl" />
             ))}
           </div>
         </CardContent>
@@ -113,72 +113,118 @@ export function BehavioralBadgesWidget() {
   const categories = Object.keys(badgesByCategory);
 
   return (
-    <Card className="glass-card">
-      <CardHeader>
+    <Card className="border border-white/5 bg-[#0A0C10] shadow-2xl relative overflow-hidden group">
+      <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 blur-[80px] rounded-full -mr-32 -mt-32 pointer-events-none transition-all group-hover:bg-primary/10" />
+      
+      <CardHeader className="pb-4 relative z-10">
         <div className="flex items-center justify-between">
-          <CardTitle className="flex items-center gap-2">
-            <Award className="h-5 w-5 text-primary" />
-            Badges Comportamentais
-          </CardTitle>
+          <div className="space-y-1">
+            <p className="text-[10px] font-black uppercase tracking-[0.3em] text-primary">Protocolos Ativos</p>
+            <CardTitle className="flex items-center gap-2 text-xl font-black italic uppercase tracking-tighter text-white">
+              <ShieldCheck className="h-5 w-5 text-primary" />
+              Badges de Conduta
+            </CardTitle>
+          </div>
           <Button 
             variant="ghost" 
-            size="sm" 
+            size="icon" 
             onClick={triggerCheck}
             disabled={isChecking}
+            className="hover:bg-white/5 text-slate-400 hover:text-white transition-all rounded-xl"
           >
-            <RefreshCw className={`h-4 w-4 ${isChecking ? 'animate-spin' : ''}`} />
+            <RefreshCw className={cn("h-4 w-4", isChecking && "animate-spin")} />
           </Button>
         </div>
       </CardHeader>
-      <CardContent>
-        <Tabs defaultValue="progress" className="space-y-4">
-          <TabsList className="grid grid-cols-2 w-full">
-            <TabsTrigger value="progress">Próximos</TabsTrigger>
-            <TabsTrigger value="all">Todos os Badges</TabsTrigger>
+
+      <CardContent className="relative z-10">
+        <Tabs defaultValue="progress" className="space-y-6">
+          <TabsList className="grid grid-cols-2 w-full bg-white/[0.03] border border-white/5 p-1 rounded-xl h-11">
+            <TabsTrigger 
+              value="progress" 
+              className="rounded-lg data-[state=active]:bg-primary data-[state=active]:text-white font-black uppercase tracking-widest text-[10px]"
+            >
+              Objetivos Imediatos
+            </TabsTrigger>
+            <TabsTrigger 
+              value="all"
+              className="rounded-lg data-[state=active]:bg-primary data-[state=active]:text-white font-black uppercase tracking-widest text-[10px]"
+            >
+              Arquivos de Conduta
+            </TabsTrigger>
           </TabsList>
 
-          <TabsContent value="progress" className="space-y-4">
+          <TabsContent value="progress" className="space-y-4 mt-0 focus-visible:outline-none">
             {nextBadges.length === 0 ? (
-              <div className="text-center py-6 text-muted-foreground">
-                <Trophy className="h-12 w-12 mx-auto mb-2 opacity-50" />
-                <p>Você já desbloqueou todos os badges disponíveis!</p>
+              <div className="text-center py-10 space-y-4">
+                <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto border border-primary/20">
+                  <Trophy className="h-8 w-8 text-primary" />
+                </div>
+                <div className="space-y-1">
+                  <p className="font-black uppercase tracking-widest text-white italic">Protocolo Completo</p>
+                  <p className="text-xs text-slate-500 uppercase tracking-wide">Todos os badges de conduta foram sincronizados.</p>
+                </div>
               </div>
             ) : (
-              <AnimatePresence>
+              <AnimatePresence mode="popLayout">
                 {nextBadges.map(({ badge, progress, remaining }, index) => {
                   const IconComponent = iconMap[badge.icon] || Award;
                   return (
                     <motion.div
                       key={badge.key}
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: index * 0.1 }}
-                      className={`p-4 rounded-lg border bg-card/50 ${rarityGlow[badge.rarity]}`}
+                      className="p-4 rounded-xl border border-white/5 bg-white/[0.02] hover:bg-white/[0.05] transition-all group/item"
                     >
-                      <div className="flex items-start gap-3">
-                        <div className={`p-2 rounded-lg ${rarityColors[badge.rarity]}`}>
+                      <div className="flex items-start gap-4">
+                        <div className={cn(
+                          "p-3 rounded-lg border flex items-center justify-center transition-transform group-hover/item:scale-110",
+                          rarityColors[badge.rarity]
+                        )}>
                           <IconComponent className="h-5 w-5" />
                         </div>
-                        <div className="flex-1 min-w-0">
-                          <div className="flex items-center gap-2 mb-1">
-                            <span className="font-medium truncate">{badge.name}</span>
-                            <Badge variant="outline" className={`text-xs ${rarityColors[badge.rarity]}`}>
+                        <div className="flex-1 min-w-0 space-y-3">
+                          <div className="flex items-center justify-between">
+                            <div className="space-y-0.5">
+                              <h5 className="font-black text-white italic uppercase tracking-tighter truncate text-sm">
+                                {badge.name}
+                              </h5>
+                              <p className="text-[10px] text-slate-500 uppercase font-bold tracking-wide line-clamp-1">
+                                {badge.description}
+                              </p>
+                            </div>
+                            <Badge variant="outline" className={cn(
+                              "text-[8px] font-black uppercase tracking-[0.15em] py-0 px-2 border",
+                              rarityColors[badge.rarity]
+                            )}>
                               {badge.rarity}
                             </Badge>
                           </div>
-                          <p className="text-xs text-muted-foreground mb-2">
-                            {badge.description}
-                          </p>
-                          <div className="space-y-1">
-                            <Progress value={progress} className="h-2" />
-                            <div className="flex justify-between text-xs text-muted-foreground">
-                              <span>{Math.round(progress)}%</span>
-                              <span>{remaining}</span>
+                          
+                          <div className="space-y-1.5">
+                            <div className="flex justify-between items-end mb-1">
+                              <span className="text-[9px] font-black text-primary uppercase tracking-widest">Progresso: {Math.round(progress)}%</span>
+                              <span className="text-[9px] font-bold text-slate-500 uppercase tracking-widest">{remaining} restantes</span>
+                            </div>
+                            <div className="h-1.5 w-full bg-white/5 rounded-full overflow-hidden">
+                              <motion.div 
+                                initial={{ width: 0 }}
+                                animate={{ width: `${progress}%` }}
+                                className="h-full bg-primary"
+                              />
                             </div>
                           </div>
-                          <div className="flex gap-2 mt-2 text-xs">
-                            <span className="text-primary">+{badge.xpReward} XP</span>
-                            <span className="text-amber-500">+{badge.coinReward} 🪙</span>
+
+                          <div className="flex gap-4 pt-1">
+                            <div className="flex items-center gap-1.5">
+                              <Zap className="h-3 w-3 text-primary" />
+                              <span className="text-[9px] font-black text-white">+{badge.xpReward} XP</span>
+                            </div>
+                            <div className="flex items-center gap-1.5">
+                              <Star className="h-3 w-3 text-amber-500" />
+                              <span className="text-[9px] font-black text-white">+{badge.coinReward} TOKENS</span>
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -189,18 +235,20 @@ export function BehavioralBadgesWidget() {
             )}
           </TabsContent>
 
-          <TabsContent value="all" className="space-y-4">
+          <TabsContent value="all" className="space-y-8 mt-0 focus-visible:outline-none">
             {categories.map(category => {
               const badges = badgesByCategory[category];
               return (
-                <div key={category} className="space-y-2">
-                  <h4 className="text-sm font-medium text-muted-foreground flex items-center gap-2">
-                    {categoryLabels[category] || category}
-                    <Badge variant="secondary" className="text-xs">
+                <div key={category} className="space-y-4">
+                  <div className="flex items-center justify-between border-b border-white/5 pb-2">
+                    <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em]">
+                      {categoryLabels[category] || category}
+                    </h4>
+                    <Badge variant="secondary" className="bg-white/5 text-white text-[9px] font-black px-2 py-0.5 border border-white/5">
                       {badges.filter(b => unlockedKeys.has(b.key)).length}/{badges.length}
                     </Badge>
-                  </h4>
-                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                  </div>
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                     {badges.map(badge => {
                       const isUnlocked = unlockedKeys.has(badge.key);
                       const IconComponent = iconMap[badge.icon] || Award;
@@ -208,23 +256,32 @@ export function BehavioralBadgesWidget() {
                       return (
                         <motion.div
                           key={badge.key}
-                          whileHover={{ scale: isUnlocked ? 1.05 : 1 }}
-                          className={`
-                            p-3 rounded-lg border text-center relative
-                            ${isUnlocked 
-                              ? `${rarityColors[badge.rarity]} ${rarityGlow[badge.rarity]}` 
-                              : 'bg-muted/30 opacity-50'
-                            }
-                          `}
+                          whileHover={{ y: isUnlocked ? -4 : 0 }}
+                          className={cn(
+                            "p-4 rounded-xl border text-center relative transition-all duration-300",
+                            isUnlocked 
+                              ? cn(rarityColors[badge.rarity], "bg-white/[0.03]") 
+                              : "bg-black/40 border-white/5 opacity-40"
+                          )}
                         >
                           {!isUnlocked && (
-                            <Lock className="absolute top-1 right-1 h-3 w-3 text-muted-foreground" />
+                            <div className="absolute top-2 right-2">
+                              <Lock className="h-3 w-3 text-slate-600" />
+                            </div>
                           )}
-                          <IconComponent className={`h-6 w-6 mx-auto mb-1 ${!isUnlocked && 'opacity-50'}`} />
-                          <p className="text-xs font-medium truncate">{badge.name}</p>
+                          <div className={cn(
+                            "w-12 h-12 rounded-lg flex items-center justify-center mx-auto mb-3 border",
+                            isUnlocked ? "bg-white/5 border-white/10" : "bg-black/20 border-white/5"
+                          )}>
+                            <IconComponent className={cn("h-6 w-6", !isUnlocked && 'opacity-30')} />
+                          </div>
+                          <p className="text-[10px] font-black uppercase tracking-tighter italic text-white truncate px-1">
+                            {badge.name}
+                          </p>
                           {isUnlocked && (
-                            <div className="text-xs text-primary mt-1">
-                              +{badge.xpReward} XP
+                            <div className="flex items-center justify-center gap-1 mt-2">
+                              <Zap className="h-2.5 w-2.5 text-primary" />
+                              <span className="text-[8px] font-black text-primary">+{badge.xpReward} XP</span>
                             </div>
                           )}
                         </motion.div>
@@ -240,3 +297,4 @@ export function BehavioralBadgesWidget() {
     </Card>
   );
 }
+
