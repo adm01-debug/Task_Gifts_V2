@@ -12,6 +12,8 @@ import React from 'react';
 vi.mock('@/hooks/useShop', () => ({
   useShopRewards: vi.fn(),
   usePurchaseReward: vi.fn(() => ({ mutate: vi.fn(), isPending: false })),
+  useActivePromotions: vi.fn(() => ({ data: [], isLoading: false })),
+  useUserPurchases: vi.fn(() => ({ data: [], isLoading: false })),
 }));
 
 vi.mock('@/hooks/useProfiles', () => ({
