@@ -4,7 +4,7 @@ import { useState, useMemo, useCallback, memo } from "react";
 import { cn } from "@/lib/utils";
 import { useAllMissions, useClaimMissionReward } from "@/hooks/useMissions";
 import { useCurrentProfile } from "@/hooks/useProfiles";
-import { SkeletonQuestList } from "@/components/ui/skeleton";
+import { Skeleton, SkeletonQuestList } from "@/components/ui/skeleton";
 import { EmptyState } from "@/components/ui/empty-state";
 import type { MissionWithProgress } from "@/services/missionsService";
 
