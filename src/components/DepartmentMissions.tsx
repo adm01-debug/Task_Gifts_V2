@@ -1,5 +1,6 @@
 import { useState, useMemo, useCallback, memo, useEffect } from "react";
 import { motion, AnimatePresence, useAnimation } from "framer-motion";
+import { cn } from "@/lib/utils";
 import { 
   Target, Star, CheckCircle2, Clock, 
   Trophy, Sparkles, Calendar
