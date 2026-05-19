@@ -121,7 +121,16 @@ export function RankingBadge({
 }: RankingBadgeProps) {
   const tier = getRankTier(rank);
 
-  if (!tier || rank === null) {
+  if (rank === null) {
+    return (
+      <div className={cn("flex flex-col items-center gap-1", className)}>
+        <Skeleton variant="glow" shape="circle" className={cn(sizes.container)} />
+        {showLabel && <Skeleton variant="shimmer" className={cn("h-3 w-16", sizes.label)} />}
+      </div>
+    );
+  }
+
+  if (!tier) {
     return null;
   }
 
