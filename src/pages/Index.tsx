@@ -84,17 +84,18 @@ function Index() {
   }, [isMobile, mobileDrawerOpen]);
 
   // Memoized handlers
-  const handleCloseMobileDrawer = useCallback(() => setMobileDrawerOpen(false), []);
-  const handleToggleSidebar = useCallback(() => setSidebarCollapsed(prev => !prev), []);
-  
-  // Unified menu click - reuses handleToggleSidebar to avoid duplication
-  const handleMenuClick = useCallback(() => {
-    if (isMobile) {
-      setMobileDrawerOpen(true);
-    } else {
-      handleToggleSidebar();
-    }
-  }, [isMobile, handleToggleSidebar]);
+   const handleCloseMobileDrawer = useCallback(() => setMobileDrawerOpen(false), []);
+   const handleToggleSidebar = useCallback(() => {
+     setSidebarCollapsed(prev => !prev);
+   }, []);
+   
+   const handleMenuClick = useCallback(() => {
+     if (isMobile) {
+       setMobileDrawerOpen(true);
+     } else {
+       handleToggleSidebar();
+     }
+   }, [isMobile, handleToggleSidebar]);
 
    return (
      <PageShell 
