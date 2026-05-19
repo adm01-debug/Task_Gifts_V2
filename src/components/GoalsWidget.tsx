@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useGoals } from "@/hooks/useGoals";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Target, Plus, ChevronRight, Trophy, Calendar, TrendingUp } from "lucide-react";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
@@ -61,9 +62,41 @@ export function GoalsWidget() {
 
   if (isLoading) {
     return (
-      <Card>
-        <CardContent className="p-8 text-center text-muted-foreground">
-          Carregando metas...
+      <Card className="bg-card/40 backdrop-blur-xl border-white/5 overflow-hidden shadow-2xl">
+        <CardHeader className="flex-row items-center justify-between pb-2 bg-white/5 relative overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-r from-primary/5 via-transparent to-transparent animate-pulse" />
+          <div className="flex items-center gap-2 relative z-10">
+            <Skeleton variant="glow" shape="card" className="h-5 w-5 rounded-md" />
+            <Skeleton variant="shimmer" className="h-5 w-32" />
+          </div>
+          <Skeleton variant="shimmer" className="h-8 w-24 rounded-lg" />
+        </CardHeader>
+        <CardContent className="space-y-4 pt-6">
+          <div className="flex items-center gap-4">
+            <Skeleton variant="shimmer" className="h-4 w-20" />
+            <Skeleton variant="shimmer" className="h-4 w-24" />
+          </div>
+          <div className="space-y-3">
+            {[1, 2, 3].map(i => (
+              <div key={i} className="p-3 rounded-lg border border-white/5 bg-white/5 space-y-3">
+                <div className="flex items-center gap-3">
+                  <Skeleton variant="glow" shape="circle" className="w-2 h-2 mt-1" />
+                  <div className="flex-1 space-y-2">
+                    <div className="flex justify-between">
+                      <Skeleton variant="shimmer" className="h-4 w-1/2" />
+                      <Skeleton variant="shimmer" shape="pill" className="h-5 w-16" />
+                    </div>
+                    <Skeleton variant="shimmer" className="h-2 w-full rounded-full" />
+                    <div className="flex justify-between">
+                      <Skeleton variant="shimmer" className="h-3 w-20" />
+                      <Skeleton variant="shimmer" className="h-3 w-16" />
+                    </div>
+                  </div>
+                  <Skeleton variant="shimmer" className="h-4 w-4" />
+                </div>
+              </div>
+            ))}
+          </div>
         </CardContent>
       </Card>
     );
