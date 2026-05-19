@@ -156,18 +156,19 @@ export function LuckyDrop({ isOpen, onClose, onClaim }: LuckyDropProps) {
             )}
 
             {phase === "opening" && (
-              <motion.div className="bg-card rounded-2xl p-8 text-center border border-border shadow-2xl">
+              <motion.div className="bg-card rounded-3xl p-10 text-center border border-primary/30 shadow-glow-primary backdrop-blur-2xl relative overflow-hidden">
+                <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-10" />
                 <motion.div
                   animate={{ 
                     rotate: [0, 360],
                     scale: [1, 1.2, 1],
                   }}
-                  transition={{ duration: 1.5, ease: "easeInOut" }}
-                  className="inline-flex p-4 rounded-full bg-gradient-to-br from-amber-400 to-orange-500 text-white mb-4"
+                  transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                  className="inline-flex p-6 rounded-3xl bg-gradient-to-br from-primary via-accent to-primary text-white mb-6 shadow-glow-primary"
                 >
-                  <Gift className="w-12 h-12" />
+                  <Gift className="w-16 h-16" />
                 </motion.div>
-                <p className="text-lg font-medium animate-pulse">Abrindo...</p>
+                <p className="text-sm font-black text-primary animate-pulse uppercase tracking-[0.3em] italic">DECRYPTING_CONTAINER...</p>
               </motion.div>
             )}
 
@@ -176,13 +177,15 @@ export function LuckyDrop({ isOpen, onClose, onClaim }: LuckyDropProps) {
                 initial={{ scale: 0.5, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 transition={{ type: "spring", damping: 15 }}
-                className={`bg-card rounded-2xl p-8 text-center border border-border shadow-2xl ${rarityGlow[reward.rarity]}`}
+                className={`bg-card rounded-3xl p-10 text-center border-2 border-primary/40 shadow-glow-primary backdrop-blur-2xl relative overflow-hidden ${rarityGlow[reward.rarity]}`}
               >
+                <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-10" />
+                
                 <motion.div
                   initial={{ y: -50, opacity: 0 }}
                   animate={{ y: 0, opacity: 1 }}
                   transition={{ delay: 0.2 }}
-                  className={`inline-flex p-4 rounded-full bg-gradient-to-br ${rarityColors[reward.rarity]} text-white mb-4 shadow-lg`}
+                  className={`inline-flex p-6 rounded-3xl bg-gradient-to-br ${rarityColors[reward.rarity]} text-white mb-6 shadow-glow-sm relative z-10 border border-white/20`}
                 >
                   {reward.icon}
                 </motion.div>
@@ -191,23 +194,24 @@ export function LuckyDrop({ isOpen, onClose, onClaim }: LuckyDropProps) {
                   initial={{ y: 20, opacity: 0 }}
                   animate={{ y: 0, opacity: 1 }}
                   transition={{ delay: 0.4 }}
+                  className="relative z-10"
                 >
-                  <span className={`text-xs font-bold uppercase tracking-wider px-3 py-1 rounded-full bg-gradient-to-r ${rarityColors[reward.rarity]} text-white`}>
-                    {reward.rarity}
+                  <span className={`text-[10px] font-black uppercase tracking-[0.2em] px-4 py-1.5 rounded-lg bg-gradient-to-r ${rarityColors[reward.rarity]} text-white italic shadow-lg`}>
+                    RARE_ITEM_DETECTION: {reward.rarity}
                   </span>
                   
-                  <h2 className="text-3xl font-bold mt-4 mb-2">
+                  <h2 className="text-4xl font-black mt-6 mb-2 text-white italic uppercase tracking-tighter">
                     {reward.type === "xp" && `+${reward.amount} XP`}
-                    {reward.type === "coins" && `+${reward.amount} Coins`}
+                    {reward.type === "coins" && `+${reward.amount} CREDITS`}
                     {reward.type === "boost" && reward.name}
                     {reward.type === "badge" && reward.name}
                   </h2>
                   
-                  <p className="text-muted-foreground mb-6">
-                    {reward.rarity === "legendary" && "Incrível! Recompensa lendária! 🌟"}
-                    {reward.rarity === "epic" && "Uau! Recompensa épica! ✨"}
-                    {reward.rarity === "rare" && "Legal! Recompensa rara! 💎"}
-                    {reward.rarity === "common" && "Boa! Continue assim! 🎯"}
+                  <p className="text-[11px] text-muted-foreground mb-8 font-black uppercase tracking-widest opacity-80 italic">
+                    {reward.rarity === "legendary" && "LEGENDARY_ASSET_ACQUIRED // CRITICAL_SUCCESS"}
+                    {reward.rarity === "epic" && "EPIC_UPGRADE_DETECTED // HIGH_VALUE"}
+                    {reward.rarity === "rare" && "RARE_RESOURCE_EXTRACTED // SUCCESS"}
+                    {reward.rarity === "common" && "STANDARD_ISSUE_REWARD // COMPLETED"}
                   </p>
                 </motion.div>
                 
@@ -215,12 +219,14 @@ export function LuckyDrop({ isOpen, onClose, onClaim }: LuckyDropProps) {
                   initial={{ y: 20, opacity: 0 }}
                   animate={{ y: 0, opacity: 1 }}
                   transition={{ delay: 0.6 }}
+                  className="relative z-10"
                 >
                   <Button
                     onClick={handleClaim}
-                    className={`w-full bg-gradient-to-r ${rarityColors[reward.rarity]} hover:opacity-90`}
+                    variant="hero"
+                    className={`w-full uppercase font-black text-xs italic tracking-widest shadow-glow-primary bg-gradient-to-r ${rarityColors[reward.rarity]}`}
                   >
-                    Coletar Recompensa
+                    TRANSFER_TO_INVENTORY
                   </Button>
                 </motion.div>
               </motion.div>
