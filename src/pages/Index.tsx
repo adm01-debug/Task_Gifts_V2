@@ -1,5 +1,6 @@
 // Core & Libs
 import { useState, useCallback, useEffect } from "react";
+import { motion } from "framer-motion";
 
  // Components
  import { AppSidebar } from "@/components/AppSidebar";

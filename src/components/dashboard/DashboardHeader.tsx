@@ -200,7 +200,7 @@ export const DashboardHeader = memo(function DashboardHeader({
             </div>
 
             <motion.button
-              whileHover={{ scale: 1.05, ring: "4px rgba(var(--primary), 0.1)" }}
+              whileHover={{ scale: 1.05, boxShadow: "0 0 0 4px rgba(var(--primary), 0.1)" }}
               whileTap={{ scale: 0.95 }}
               onClick={handleToggleUserMenu}
               className="relative w-11 h-11 rounded-2xl bg-gradient-to-br from-primary via-primary/90 to-accent flex items-center justify-center font-black text-sm text-primary-foreground shadow-lg shadow-primary/20 border-2 border-background"
