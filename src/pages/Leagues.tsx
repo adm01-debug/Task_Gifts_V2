@@ -1,4 +1,5 @@
  import { Trophy, TrendingUp, Shield, History, Star, Zap, Crown, Award, ChevronRight } from "lucide-react";
+ import { motion } from "framer-motion";
  import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
  import { Badge } from "@/components/ui/badge";
 import { useLeagues } from "@/hooks/useLeagues";
@@ -10,8 +11,9 @@ import type { LeagueHistory } from "@/services/leaguesService";
  import { useIsMobile } from "@/hooks/use-mobile";
   import { MobilePageLayout } from "@/components/mobile";
   import { PageShell } from "@/components/navigation";
-  import { EmptyState } from "@/components/ui/empty-state";
+   import { EmptyState } from "@/components/ui/empty-state";
    import { Skeleton } from "@/components/ui/skeleton";
+   import { Progress } from "@/components/ui/progress";
  
  export default function Leagues() {
    const navigate = useNavigate();
@@ -48,29 +50,28 @@ import type { LeagueHistory } from "@/services/leaguesService";
                    <LeagueCard />
                    
                    {/* Benefits Section */}
-                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                     <div className="p-6 rounded-3xl bg-gradient-to-br from-primary/10 to-transparent border border-primary/20 flex flex-col items-center text-center space-y-3">
-                       <div className="w-12 h-12 rounded-2xl bg-primary/20 flex items-center justify-center">
-                         <Zap className="w-6 h-6 text-primary" />
-                       </div>
-                       <h4 className="font-black uppercase text-xs tracking-widest">XP Multiplier</h4>
-                       <p className="text-xs text-muted-foreground">Ganhe até 20% mais XP em todas as atividades nas ligas superiores.</p>
+                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                       {[
+                         { icon: Zap, title: "XP Multiplier", desc: "Ganhe até 20% mais XP em todas as atividades nas ligas superiores.", color: "primary" },
+                         { icon: Crown, title: "Elite Badges", desc: "Desbloqueie insígnias exclusivas que aparecem no seu perfil global.", color: "amber-500" },
+                         { icon: Award, title: "Store Discounts", desc: "Receba descontos progressivos na Loja de Recompensas.", color: "purple-500" }
+                       ].map((benefit, i) => (
+                         <motion.div 
+                           key={i}
+                           initial={{ opacity: 0, y: 20 }}
+                           animate={{ opacity: 1, y: 0 }}
+                           transition={{ delay: 0.2 + i * 0.1 }}
+                           whileHover={{ y: -5, scale: 1.02 }}
+                           className="p-6 rounded-3xl bg-card/40 backdrop-blur-xl border border-white/5 flex flex-col items-center text-center space-y-4 hover:border-primary/30 transition-all shadow-xl group"
+                         >
+                           <div className={`w-14 h-14 rounded-2xl bg-${benefit.color}/20 flex items-center justify-center shadow-lg transform group-hover:rotate-12 transition-transform`}>
+                             <benefit.icon className={`w-7 h-7 text-${benefit.color}`} />
+                           </div>
+                           <h4 className="font-black uppercase text-xs tracking-[0.2em]">{benefit.title}</h4>
+                           <p className="text-xs text-muted-foreground leading-relaxed font-medium">{benefit.desc}</p>
+                         </motion.div>
+                       ))}
                      </div>
-                     <div className="p-6 rounded-3xl bg-gradient-to-br from-amber-500/10 to-transparent border border-amber-500/20 flex flex-col items-center text-center space-y-3">
-                       <div className="w-12 h-12 rounded-2xl bg-amber-500/20 flex items-center justify-center">
-                         <Crown className="w-6 h-6 text-amber-500" />
-                       </div>
-                       <h4 className="font-black uppercase text-xs tracking-widest">Elite Badges</h4>
-                       <p className="text-xs text-muted-foreground">Desbloqueie insígnias exclusivas que aparecem no seu perfil global.</p>
-                     </div>
-                     <div className="p-6 rounded-3xl bg-gradient-to-br from-purple-500/10 to-transparent border border-purple-500/20 flex flex-col items-center text-center space-y-3">
-                       <div className="w-12 h-12 rounded-2xl bg-purple-500/20 flex items-center justify-center">
-                         <Award className="w-6 h-6 text-purple-500" />
-                       </div>
-                       <h4 className="font-black uppercase text-xs tracking-widest">Store Discounts</h4>
-                       <p className="text-xs text-muted-foreground">Receba descontos progressivos na Loja de Recompensas.</p>
-                     </div>
-                   </div>
                  </div>
                  
                  {/* Sidebar: History & Rewards */}
@@ -104,9 +105,12 @@ import type { LeagueHistory } from "@/services/leaguesService";
                                    </span>
                                    <span className="text-[10px] font-bold text-muted-foreground opacity-70">SEMANA PASSADA</span>
                                  </div>
-                                 <div className="flex items-center gap-2 mt-1">
-                                   <Badge variant="secondary" className="text-[10px] font-black">{entry.weekly_xp} XP</Badge>
-                                   <span className="text-[10px] text-muted-foreground font-medium">Performance de Elite</span>
+                                 <div className="flex flex-col gap-2 mt-2">
+                                   <div className="flex items-center gap-2">
+                                     <Badge variant="secondary" className="text-[10px] font-black bg-primary/20 text-primary border-primary/20">{entry.weekly_xp} XP</Badge>
+                                     <span className="text-[10px] text-muted-foreground font-bold uppercase tracking-tighter">Performance de Elite</span>
+                                   </div>
+                                   <Progress value={Math.min(100, (entry.weekly_xp / 1000) * 100)} className="h-1 bg-white/5" />
                                  </div>
                                </div>
                              </div>

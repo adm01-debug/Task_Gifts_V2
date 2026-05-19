@@ -32,16 +32,16 @@ import { ptBR } from "date-fns/locale";
 import type { Notification } from "@/services/notificationsService";
 
 const notificationIcons: Record<string, React.ReactNode> = {
-  achievement: <Trophy className="w-4 h-4 text-amber-400" />,
-  level_up: <TrendingUp className="w-4 h-4 text-green-400" />,
-  xp: <Zap className="w-4 h-4 text-primary" />,
-  quest: <Target className="w-4 h-4 text-primary" />,
-  leaderboard: <TrendingUp className="w-4 h-4 text-blue-400" />,
-  competency_gap: <AlertTriangle className="w-4 h-4 text-red-400" />,
-  development_tip: <Lightbulb className="w-4 h-4 text-yellow-400" />,
-  competency_celebration: <Sparkles className="w-4 h-4 text-green-400" />,
-  churn_risk: <Brain className="w-4 h-4 text-orange-400" />,
-  info: <Bell className="w-4 h-4 text-muted-foreground" />,
+   achievement: <Trophy className="w-4 h-4 text-amber-500 drop-shadow-glow-sm" />,
+   level_up: <TrendingUp className="w-4 h-4 text-emerald-500 drop-shadow-glow-sm" />,
+   xp: <Zap className="w-4 h-4 text-primary animate-pulse" />,
+   quest: <Target className="w-4 h-4 text-sky-500" />,
+   leaderboard: <TrendingUp className="w-4 h-4 text-indigo-500" />,
+   competency_gap: <AlertTriangle className="w-4 h-4 text-rose-500" />,
+   development_tip: <Lightbulb className="w-4 h-4 text-amber-400" />,
+   competency_celebration: <Sparkles className="w-4 h-4 text-emerald-400 animate-spin-slow" />,
+   churn_risk: <Brain className="w-4 h-4 text-orange-500" />,
+   info: <Bell className="w-4 h-4 text-muted-foreground" />,
 };
 
 interface NotificationItemProps {
@@ -63,39 +63,45 @@ const NotificationItem = memo(({ notification, onMarkRead, onDelete }: Notificat
       initial={{ opacity: 0, x: -20 }}
       animate={{ opacity: 1, x: 0 }}
       exit={{ opacity: 0, x: 20 }}
-      className={cn(
-        "p-3 border-b border-border last:border-0 hover:bg-muted/30 transition-colors group",
-        !notification.read && "bg-primary/5"
-      )}
+       className={cn(
+         "p-4 border-b border-white/5 last:border-0 hover:bg-white/5 transition-all group relative overflow-hidden",
+         !notification.read && "bg-primary/5 before:absolute before:left-0 before:top-2 before:bottom-2 before:w-1 before:bg-primary before:rounded-r-full"
+       )}
     >
       <div className="flex items-start gap-3">
-        <div className={cn(
-          "w-8 h-8 rounded-full flex items-center justify-center shrink-0",
-          notification.read ? "bg-muted" : "bg-primary/10"
-        )}>
+         <div className={cn(
+           "w-10 h-10 rounded-2xl flex items-center justify-center shrink-0 shadow-lg transition-transform group-hover:scale-110",
+           notification.read ? "bg-muted/50 text-muted-foreground" : "bg-primary/10 ring-1 ring-primary/20"
+         )}>
           {icon}
         </div>
         
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 mb-0.5">
-            <h4 className={cn(
-              "text-sm truncate",
-              notification.read ? "font-medium text-muted-foreground" : "font-semibold"
-            )}>
+             <h4 className={cn(
+               "text-xs font-black uppercase tracking-tight truncate leading-none",
+               notification.read ? "text-muted-foreground/60" : "text-foreground"
+             )}>
               {notification.title}
             </h4>
             {!notification.read && (
               <span className="w-2 h-2 rounded-full bg-primary shrink-0" />
             )}
           </div>
-          {notification.message && (
-            <p className="text-xs text-muted-foreground line-clamp-2">
-              {notification.message}
-            </p>
-          )}
-          <p className="text-[10px] text-muted-foreground mt-1">
-            {timeAgo}
-          </p>
+           {notification.message && (
+             <p className={cn(
+               "text-xs line-clamp-2 mt-1 font-medium leading-relaxed",
+               notification.read ? "text-muted-foreground/40" : "text-muted-foreground"
+             )}>
+               {notification.message}
+             </p>
+           )}
+           <div className="flex items-center gap-2 mt-2">
+             <div className="w-1 h-1 rounded-full bg-primary/30" />
+             <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground opacity-50">
+               {timeAgo}
+             </p>
+           </div>
         </div>
 
         <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
@@ -185,11 +191,11 @@ export const NotificationCenter = () => {
         </Button>
       </PopoverTrigger>
       
-      <PopoverContent 
-        className="w-80 p-0" 
-        align="end"
-        sideOffset={8}
-      >
+       <PopoverContent 
+         className="w-96 p-0 bg-card/60 backdrop-blur-2xl border-white/10 shadow-2xl rounded-3xl overflow-hidden" 
+         align="end"
+         sideOffset={12}
+       >
         {/* Header */}
         <div className="p-3 border-b border-border flex items-center justify-between">
           <div className="flex items-center gap-2">

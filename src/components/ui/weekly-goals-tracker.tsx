@@ -1,8 +1,8 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
 import { 
-  Target, CheckCircle2, Circle, Flame, Trophy, 
-  ChevronRight, Sparkles, Calendar, TrendingUp 
+   Target, CheckCircle2, Circle, Flame, Trophy, 
+   ChevronRight, Sparkles, Calendar, TrendingUp, Zap
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -97,44 +97,59 @@ export function WeeklyGoalsTracker({
   const potentialXP = goals.reduce((acc, g) => acc + g.xpReward, 0);
 
   return (
-    <Card className={cn("overflow-hidden", className)}>
-      <CardHeader className="pb-3">
-        <div className="flex items-center justify-between">
-          <CardTitle className="flex items-center gap-2 text-base">
-            <Trophy className="w-5 h-5 text-amber-500" />
-            Metas Semanais
-          </CardTitle>
-          <div className="flex items-center gap-2 text-xs text-muted-foreground">
-            <Calendar className="w-3 h-3" />
-            <span>{daysRemaining} dias restantes</span>
-          </div>
-        </div>
-      </CardHeader>
+     <Card className={cn("overflow-hidden border border-white/5 bg-card/40 backdrop-blur-xl rounded-3xl", className)}>
+       <CardHeader className="pb-4 bg-white/5">
+         <div className="flex items-center justify-between">
+           <div className="flex items-center gap-3">
+             <div className="w-10 h-10 rounded-2xl bg-amber-500/20 flex items-center justify-center shadow-glow-sm">
+               <Target className="w-5 h-5 text-amber-500" />
+             </div>
+             <div>
+               <CardTitle className="text-xs font-black uppercase tracking-widest leading-none mb-1">Weekly Directives</CardTitle>
+               <p className="text-[10px] text-muted-foreground font-black opacity-70 uppercase tracking-tighter italic">MISSION_CYCLE_04</p>
+             </div>
+           </div>
+           <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-black/40 border border-white/5 text-[10px] font-black uppercase tracking-widest text-primary">
+             <Calendar className="w-3 h-3 animate-pulse" />
+             <span>{daysRemaining}D REMAINING</span>
+           </div>
+         </div>
+       </CardHeader>
 
       <CardContent className="space-y-4">
         {/* Overall Progress */}
-        <div className="p-3 rounded-xl bg-gradient-to-r from-primary/5 to-accent/5 border border-primary/10">
-          <div className="flex items-center justify-between mb-2">
-            <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary to-accent flex items-center justify-center">
-                <Sparkles className="w-4 h-4 text-primary-foreground" />
-              </div>
-              <div>
-                <p className="text-sm font-medium">Progresso Geral</p>
-                <p className="text-xs text-muted-foreground">
-                  {completedGoals}/{goals.length} metas completas
-                </p>
-              </div>
-            </div>
-            <div className="text-right">
-              <p className="text-lg font-bold text-primary">{Math.round(totalProgress)}%</p>
-              <p className="text-[10px] text-muted-foreground">
-                {totalXPReward}/{potentialXP} XP
-              </p>
-            </div>
-          </div>
-          <Progress value={totalProgress} className="h-2" />
-        </div>
+         <div className="p-4 rounded-2xl bg-gradient-to-br from-primary/10 via-primary/5 to-transparent border border-primary/20 shadow-inner group">
+           <div className="flex items-center justify-between mb-3">
+             <div className="flex items-center gap-3">
+               <div className="w-12 h-12 rounded-2xl bg-primary/20 flex items-center justify-center shadow-lg group-hover:rotate-12 transition-transform">
+                 <Sparkles className="w-6 h-6 text-primary drop-shadow-glow" />
+               </div>
+               <div>
+                 <p className="text-[10px] font-black uppercase tracking-widest text-primary opacity-70">Total Efficiency</p>
+                 <p className="text-base font-black italic tracking-tighter">
+                   {completedGoals} / {goals.length} <span className="text-muted-foreground/50 not-italic ml-1 uppercase text-[10px] tracking-normal font-bold">Goals Locked</span>
+                 </p>
+               </div>
+             </div>
+             <div className="text-right">
+               <p className="text-3xl font-black italic tracking-tighter text-primary leading-none">{Math.round(totalProgress)}%</p>
+               <div className="flex items-center justify-end gap-1 mt-1">
+                 <Zap className="w-3 h-3 text-primary" />
+                 <p className="text-[10px] font-black uppercase tracking-tighter text-muted-foreground">
+                   {totalXPReward} / {potentialXP} XP SECURED
+                 </p>
+               </div>
+             </div>
+           </div>
+           <div className="relative h-2.5 bg-black/40 rounded-full overflow-hidden border border-white/5 p-0.5">
+             <motion.div 
+               className="h-full bg-gradient-to-r from-primary via-primary to-accent rounded-full shadow-[0_0_15px_rgba(var(--primary-rgb),0.5)]"
+               initial={{ width: 0 }}
+               animate={{ width: `${totalProgress}%` }}
+               transition={{ duration: 1, type: "spring" }}
+             />
+           </div>
+         </div>
 
         {/* Goals List */}
         <div className="space-y-2">

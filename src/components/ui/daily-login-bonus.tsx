@@ -61,19 +61,24 @@ export function DailyLoginBonus({
   const availableReward = rewards.find(r => r.available && !r.claimed);
 
   return (
-    <Card className={cn("overflow-hidden", className)}>
-      <CardHeader className="pb-3">
-        <div className="flex items-center justify-between">
-          <CardTitle className="flex items-center gap-2 text-base">
-            <Calendar className="w-5 h-5 text-primary" />
-            Bônus Diário
-          </CardTitle>
-          <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-orange-500/10 text-orange-600 dark:text-orange-400">
-            <Flame className="w-4 h-4" />
-            <span className="text-sm font-bold">{currentStreak} dias</span>
-          </div>
-        </div>
-      </CardHeader>
+     <Card className={cn("overflow-hidden border border-white/5 bg-card/40 backdrop-blur-xl rounded-3xl", className)}>
+       <CardHeader className="pb-4 bg-white/5">
+         <div className="flex items-center justify-between">
+           <div className="flex items-center gap-3">
+             <div className="w-10 h-10 rounded-2xl bg-primary/20 flex items-center justify-center shadow-glow-sm">
+               <Calendar className="w-5 h-5 text-primary" />
+             </div>
+             <div>
+               <CardTitle className="text-xs font-black uppercase tracking-widest leading-none mb-1">Daily Protocol</CardTitle>
+               <p className="text-[10px] text-muted-foreground font-black opacity-70 uppercase tracking-tighter italic">REWARDS_SEQUENCE_ALPHA</p>
+             </div>
+           </div>
+           <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-orange-500/10 border border-orange-500/20">
+             <Flame className="w-4 h-4 text-orange-500 animate-pulse" />
+             <span className="text-[10px] font-black text-orange-500 uppercase tracking-widest">{currentStreak}D STREAK</span>
+           </div>
+         </div>
+       </CardHeader>
 
       <CardContent className="space-y-4">
         {/* Weekly Calendar */}
@@ -97,13 +102,13 @@ export function DailyLoginBonus({
                   whileTap={isToday ? { scale: 0.95 } : {}}
                   onClick={() => isToday && handleClaim(reward.day)}
                   disabled={!isToday || isClaiming}
-                  className={cn(
-                    "w-full aspect-square rounded-xl flex flex-col items-center justify-center gap-0.5 transition-all duration-200 border-2",
-                    isClaimed && "bg-green-500/10 border-green-500/30 text-green-600",
-                    isToday && "bg-primary/10 border-primary animate-pulse cursor-pointer hover:bg-primary/20",
-                    isLocked && "bg-muted/50 border-border/50 text-muted-foreground",
-                    reward.isMilestone && !isClaimed && "bg-gradient-to-br from-amber-500/10 to-orange-500/10 border-amber-500/30"
-                  )}
+                   className={cn(
+                     "w-full aspect-square rounded-2xl flex flex-col items-center justify-center gap-1 transition-all duration-300 border relative overflow-hidden group",
+                     isClaimed && "bg-emerald-500/10 border-emerald-500/30 text-emerald-500 shadow-inner",
+                     isToday && "bg-primary/20 border-primary ring-2 ring-primary/20 animate-pulse cursor-pointer",
+                     isLocked && "bg-white/5 border-white/5 text-muted-foreground/40",
+                     reward.isMilestone && !isClaimed && "bg-gradient-to-br from-amber-500/20 to-orange-500/20 border-amber-500/40 shadow-glow-sm"
+                   )}
                 >
                   {/* Day number */}
                   <span className="text-[10px] font-medium">Dia {reward.day}</span>
