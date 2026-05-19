@@ -300,18 +300,4 @@ export const LiveLeaderboard = memo(function LiveLeaderboard() {
       </div>
     </motion.div>
   );
-
-      {/* View All */}
-      <div className="p-3 border-t border-border">
-        <motion.button
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.98 }}
-          onClick={handleViewRanking}
-          className="w-full py-2 rounded-lg bg-muted/50 hover:bg-muted text-sm font-medium transition-colors"
-        >
-          Ver ranking completo
-        </motion.button>
-      </div>
-    </motion.div>
-  );
 });
