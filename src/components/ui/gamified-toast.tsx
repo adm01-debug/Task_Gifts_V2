@@ -103,42 +103,44 @@ const ToastContent = ({
       initial={{ x: 50, opacity: 0 }}
       animate={{ x: 0, opacity: 1 }}
       exit={{ x: 50, opacity: 0 }}
-      className={cn(
-        "flex items-center gap-3 p-4 rounded-lg border shadow-lg",
-        "bg-gradient-to-r",
-        style.gradient,
-        "backdrop-blur-sm"
-      )}
+       className={cn(
+         "flex items-center gap-4 p-5 rounded-3xl border border-white/10 shadow-2xl",
+         "bg-card/60 backdrop-blur-2xl relative overflow-hidden group",
+       )}
     >
-      <motion.div
-        initial={{ scale: 0, rotate: -180 }}
-        animate={{ scale: 1, rotate: 0 }}
-        transition={{ 
-          type: "spring", 
-          stiffness: 260, 
-          damping: 20,
-          delay: 0.1 
-        }}
-        className={cn(
-          "flex items-center justify-center w-10 h-10 rounded-full",
-          "bg-background/80 shadow-inner",
-          style.textColor
-        )}
-      >
-        {customIcon || style.icon}
-      </motion.div>
+       {/* Glow Backdrop */}
+       <div className={cn("absolute inset-0 opacity-10 bg-gradient-to-br", style.gradient)} />
+       
+       <motion.div
+         initial={{ scale: 0, rotate: -180 }}
+         animate={{ scale: 1, rotate: 0 }}
+         transition={{ 
+           type: "spring", 
+           stiffness: 260, 
+           damping: 20,
+           delay: 0.1 
+         }}
+         className={cn(
+           "flex items-center justify-center w-12 h-12 rounded-2xl shrink-0 shadow-lg relative z-10",
+           "bg-background/40 border border-white/5",
+           style.textColor
+         )}
+       >
+         <div className="absolute inset-0 blur-lg opacity-40 bg-current" />
+         <div className="relative z-10">{customIcon || style.icon}</div>
+       </motion.div>
 
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2">
-          <motion.p 
-            initial={{ y: -10, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ delay: 0.15 }}
-            className="font-semibold text-sm truncate"
-          >
-            {style.emoji && <span className="mr-1">{style.emoji}</span>}
-            {title}
-          </motion.p>
+           <motion.p 
+             initial={{ y: -10, opacity: 0 }}
+             animate={{ y: 0, opacity: 1 }}
+             transition={{ delay: 0.15 }}
+             className="font-black text-xs uppercase tracking-widest truncate flex items-center gap-2"
+           >
+             {style.emoji && <span className="text-base">{style.emoji}</span>}
+             {title}
+           </motion.p>
           {amount !== undefined && (
             <motion.span
               initial={{ scale: 0 }}
@@ -160,14 +162,16 @@ const ToastContent = ({
           )}
         </div>
         {description && (
-          <motion.p 
-            initial={{ y: 10, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ delay: 0.2 }}
-            className="text-xs text-muted-foreground mt-0.5 truncate"
-          >
-            {description}
-          </motion.p>
+           {description && (
+             <motion.p 
+               initial={{ y: 10, opacity: 0 }}
+               animate={{ y: 0, opacity: 1 }}
+               transition={{ delay: 0.2 }}
+               className="text-sm font-bold text-muted-foreground/80 mt-1 truncate"
+             >
+               {description}
+             </motion.p>
+           )}
         )}
       </div>
 
