@@ -6,6 +6,7 @@ import { AvatarCustomizer } from "./AvatarCustomizer";
 import { useAvatarItems } from "@/hooks/useAvatar";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 interface ProfileAvatarSectionProps {
   userId: string;
   userLevel: number;
