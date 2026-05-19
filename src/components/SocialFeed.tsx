@@ -75,8 +75,8 @@ export const SocialFeed = memo(function SocialFeed({ limit = 30, compact = false
   }
 
   return (
-    <Card variant="elevated" className={cn("h-full", className)}>
-      <CardHeader className="pb-3">
+    <Card variant="ultra" className={cn("h-full", className)}>
+      <CardHeader className="pb-3 border-b border-border/40">
         <CardTitle className="flex items-center gap-2 text-lg">
           <Activity className="h-5 w-5 text-primary" />
           Feed da Equipe

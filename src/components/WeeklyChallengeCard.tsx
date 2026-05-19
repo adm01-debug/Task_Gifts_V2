@@ -109,7 +109,7 @@ export function WeeklyChallengeCard() {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
     >
-      <Card variant="featured" className="overflow-hidden relative">
+      <Card variant="ultra" className="overflow-hidden relative border-primary/20 bg-gradient-to-br from-card/60 via-card/40 to-primary/5">
         {/* Animated background effect */}
         <div className="absolute inset-0 bg-gradient-to-r from-primary/5 via-transparent to-accent/5 animate-pulse" />
         <CardHeader className="pb-2 relative">
