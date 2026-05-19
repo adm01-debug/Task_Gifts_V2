@@ -82,20 +82,28 @@ export const PageShell = memo(function PageShell({
             <div className="flex flex-col gap-4">
               <div className="flex items-center justify-between gap-4">
                 <div className="flex items-center gap-3">
-                  {!isMobile && !hideBackButton && <DesktopBackButton fallbackPath={backFallback} />}
-                  <div className="flex flex-col">
-                     {!isMobile && !hideBreadcrumbs && <GlobalBreadcrumbs className="mb-2" />}
-                     {isMobile && !hideBreadcrumbs && (
-                       <span className="text-[10px] uppercase tracking-widest text-primary/70 font-bold mb-1 ml-0.5">
-                         Visualizando {title}
-                       </span>
-                     )}
-                    <div className="flex items-center gap-2">
-                       {icon && <div className="p-2 rounded-xl bg-primary/10 text-primary shadow-sm ring-1 ring-primary/20">{icon}</div>}
-                       <h1 className="text-2xl md:text-4xl font-black tracking-tight text-foreground leading-none">{title}</h1>
-                    </div>
-                     {subtitle && <p className="text-sm md:text-base text-muted-foreground mt-2 max-w-2xl leading-relaxed opacity-80 font-medium">{subtitle}</p>}
-                  </div>
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 w-full">
+          <div className="flex items-center gap-3">
+            {!isMobile && !hideBackButton && <DesktopBackButton fallbackPath={backFallback} />}
+            <div className="flex flex-col">
+               {!isMobile && !hideBreadcrumbs && <GlobalBreadcrumbs className="mb-2" />}
+               {isMobile && !hideBreadcrumbs && (
+                 <span className="text-[10px] uppercase tracking-widest text-primary/70 font-bold mb-1 ml-0.5">
+                   Visualizando {title}
+                 </span>
+               )}
+              <div className="flex items-center gap-2">
+                 {icon && <div className="p-2 rounded-xl bg-primary/10 text-primary shadow-sm ring-1 ring-primary/20">{icon}</div>}
+                 <h1 className="text-2xl md:text-4xl font-black tracking-tight text-foreground leading-none">{title}</h1>
+              </div>
+               {subtitle && <p className="text-sm md:text-base text-muted-foreground mt-2 max-w-2xl leading-relaxed opacity-80 font-medium">{subtitle}</p>}
+            </div>
+          </div>
+          <div className="hidden sm:flex items-center gap-2 bg-card/30 backdrop-blur-md p-2 rounded-2xl border border-border/50 shadow-sm shrink-0">
+            <Sparkles className="w-4 h-4 text-primary animate-pulse" />
+            <span className="text-[10px] font-black uppercase tracking-widest">Protocolo de Treinamento Elite</span>
+          </div>
+        </div>
                 </div>
               </div>
             </div>

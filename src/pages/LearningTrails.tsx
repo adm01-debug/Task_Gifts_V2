@@ -125,11 +125,11 @@ export default function LearningTrails() {
                     className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-4 rounded-2xl bg-card/30 backdrop-blur-md border border-border/50"
                   >
                     <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full sm:w-auto">
-                      <TabsList className="bg-muted/50 p-1">
-                        <TabsTrigger value="all" className="rounded-lg">Todas</TabsTrigger>
-                        <TabsTrigger value="enrolled" className="rounded-lg">Em Curso</TabsTrigger>
-                        <TabsTrigger value="available" className="rounded-lg">Novas</TabsTrigger>
-                        <TabsTrigger value="completed" className="rounded-lg">Concluídas</TabsTrigger>
+                      <TabsList className="bg-muted/50 p-1.5 rounded-xl border border-border/50 h-auto flex flex-wrap sm:flex-nowrap">
+                        <TabsTrigger value="all" className="rounded-lg px-4 font-bold data-[state=active]:bg-primary data-[state=active]:text-primary-foreground transition-all">Todas</TabsTrigger>
+                        <TabsTrigger value="enrolled" className="rounded-lg px-4 font-bold data-[state=active]:bg-primary data-[state=active]:text-primary-foreground transition-all">Em Curso</TabsTrigger>
+                        <TabsTrigger value="available" className="rounded-lg px-4 font-bold data-[state=active]:bg-primary data-[state=active]:text-primary-foreground transition-all">Novas</TabsTrigger>
+                        <TabsTrigger value="completed" className="rounded-lg px-4 font-bold data-[state=active]:bg-primary data-[state=active]:text-primary-foreground transition-all">Concluídas</TabsTrigger>
                       </TabsList>
                     </Tabs>
                     
