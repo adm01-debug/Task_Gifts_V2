@@ -398,24 +398,23 @@ export const QuickActions = memo(function QuickActions() {
       className="flex gap-2"
     >
       {actions.map((action, index) => (
-        <motion.button
-          key={action.label}
-          variants={quickActionItemVariants}
-          whileHover={{ 
-            scale: 1.05, 
-            y: -2,
-            transition: { duration: 0.2 } 
-          }}
-          whileTap={{ scale: 0.95 }}
-          onClick={action.onClick}
-          className={cn(
-            "flex items-center gap-2 px-4 py-2 rounded-xl border border-border",
-            "bg-gradient-to-r hover:border-primary/30 transition-all duration-200",
-            action.color === "primary" && "from-primary/10 to-transparent",
-            action.color === "secondary" && "from-secondary/10 to-transparent",
-            action.color === "accent" && "from-accent/10 to-transparent"
-          )}
-        >
+          <motion.button
+            key={action.label}
+            variants={quickActionItemVariants}
+            whileHover={{ 
+              scale: 1.05, 
+              y: -4,
+              boxShadow: "0 10px 20px -5px rgba(var(--primary), 0.2)"
+            }}
+            whileTap={{ scale: 0.95 }}
+            onClick={action.onClick}
+            className={cn(
+              "flex items-center gap-3 px-5 py-3 rounded-2xl border transition-all duration-300 backdrop-blur-md font-bold text-sm shadow-lg",
+              action.color === "primary" && "bg-primary/10 border-primary/20 hover:border-primary/40 text-primary hover:bg-primary/15",
+              action.color === "secondary" && "bg-secondary/10 border-secondary/20 hover:border-secondary/40 text-secondary hover:bg-secondary/15",
+              action.color === "accent" && "bg-accent/10 border-accent/20 hover:border-accent/40 text-accent hover:bg-accent/15"
+            )}
+          >
           <motion.div
             initial={{ rotate: -90, opacity: 0 }}
             animate={{ rotate: 0, opacity: 1 }}
