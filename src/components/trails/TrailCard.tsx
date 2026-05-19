@@ -69,15 +69,22 @@ export function TrailCard({ trail, enrollment, hasCertification, certificationNa
            <p className="text-sm text-muted-foreground mt-2 line-clamp-2 min-h-[40px] leading-relaxed">{trail.description}</p>
         </CardHeader>
         <CardContent className="flex-1 flex flex-col justify-between gap-4">
-          <div className="flex flex-wrap gap-2">
-            <Badge variant="secondary" className="gap-1"><Clock className="h-3 w-3" />{trail.estimated_hours}h</Badge>
-            <Badge variant="secondary" className="gap-1"><Star className="h-3 w-3 text-amber-400" />{trail.xp_reward} XP</Badge>
-            {trail.coin_reward > 0 && <Badge variant="secondary" className="gap-1">🪙 {trail.coin_reward}</Badge>}
-            {trail.badge_name && <Badge variant="outline" className="gap-1 border-primary/30"><Trophy className="h-3 w-3 text-primary" />{trail.badge_icon} {trail.badge_name}</Badge>}
-            {hasCertification && (
-              <TooltipProvider><Tooltip><TooltipTrigger asChild>
-                <Badge className="gap-1 bg-amber-500/20 text-amber-400 border-amber-500/30 hover:bg-amber-500/30"><Award className="h-3 w-3" />Certificação</Badge>
-              </TooltipTrigger><TooltipContent><p>Concede: {certificationName}</p></TooltipContent></Tooltip></TooltipProvider>
+          <div className="flex flex-wrap items-center gap-3">
+            <div className="flex items-center gap-1.5 text-xs font-bold text-amber-400">
+              <Star className="h-3.5 w-3.5 fill-current" />
+              {trail.xp_reward} XP
+            </div>
+            {trail.coin_reward > 0 && (
+              <div className="flex items-center gap-1.5 text-xs font-bold text-emerald-400">
+                <span className="text-sm">🪙</span>
+                {trail.coin_reward}
+              </div>
+            )}
+            {trail.badge_name && (
+              <div className="flex items-center gap-1.5 text-xs font-bold text-primary">
+                <Trophy className="h-3.5 w-3.5" />
+                {trail.badge_name}
+              </div>
             )}
           </div>
           {isLocked && missingPrerequisiteNames && missingPrerequisiteNames.length > 0 && (
@@ -87,18 +94,39 @@ export function TrailCard({ trail, enrollment, hasCertification, certificationNa
             </div>
           )}
           {enrollment && (
-            <div className="space-y-2">
-              <div className="flex justify-between text-sm"><span className="text-muted-foreground">Progresso</span><span className="font-medium">{progress}%</span></div>
-              <Progress value={progress} className="h-2" />
+            <div className="space-y-2 py-1">
+              <div className="flex justify-between text-[10px] font-black uppercase tracking-widest"><span className="text-muted-foreground">Sync Progress</span><span className="text-primary">{progress}%</span></div>
+              <div className="h-1.5 w-full bg-muted/30 rounded-full overflow-hidden">
+                <motion.div 
+                  initial={{ width: 0 }}
+                  animate={{ width: `${progress}%` }}
+                  className="h-full bg-primary shadow-[0_0_10px_rgba(var(--primary),0.5)]" 
+                />
+              </div>
             </div>
           )}
-          <TooltipProvider><Tooltip><TooltipTrigger asChild><div>
-            <Button className={`w-full gap-2 ${status === "completed" ? "bg-emerald-500 hover:bg-emerald-600" : status === "locked" ? "bg-muted text-muted-foreground cursor-not-allowed" : ""}`}
-              onClick={isLocked ? undefined : (enrollment ? onContinue : onEnroll)} disabled={status === "completed" || isLocked || isEnrolling}>
-              {isEnrolling ? <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" /> : <Icon className="h-4 w-4" />}
-              {isEnrolling ? 'Inscrevendo...' : config.label}
+
+          <TooltipProvider><Tooltip><TooltipTrigger asChild><div className="pt-2">
+            <Button 
+              className={`w-full h-11 font-black uppercase tracking-widest text-xs gap-3 group/btn ${
+                status === "completed" 
+                  ? "bg-emerald-500/10 text-emerald-500 border border-emerald-500/20 hover:bg-emerald-500/20" 
+                  : status === "locked" 
+                    ? "bg-muted text-muted-foreground cursor-not-allowed" 
+                    : "shadow-[0_10px_20px_rgba(var(--primary),0.2)] hover:shadow-[0_15px_30px_rgba(var(--primary),0.3)] hover:-translate-y-0.5"
+              }`}
+              variant={status === "completed" ? "outline" : "default"}
+              onClick={isLocked ? undefined : (enrollment ? onContinue : onEnroll)} 
+              disabled={status === "completed" || isLocked || isEnrolling}
+            >
+              {isEnrolling ? (
+                <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
+              ) : (
+                <Icon className={`h-4 w-4 transition-transform ${status !== "locked" ? "group-hover/btn:scale-125" : ""}`} />
+              )}
+              {isEnrolling ? 'Enrolling...' : config.label}
             </Button>
-          </div></TooltipTrigger>{isLocked && <TooltipContent><p>Complete os pré-requisitos para desbloquear</p></TooltipContent>}</Tooltip></TooltipProvider>
+          </div></TooltipTrigger>{isLocked && <TooltipContent><p className="font-bold">Protocolo Bloqueado: Complete os pré-requisitos</p></TooltipContent>}</Tooltip></TooltipProvider>
         </CardContent>
       </Card>
     </motion.div>
