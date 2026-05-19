@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { useEffect } from "react";
+import { useEffect, useCallback, useMemo } from "react";
 import { leaguesService, League } from "@/services/leaguesService";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
@@ -102,17 +102,39 @@ export function useLeagues() {
     },
   });
 
-  return {
-    leagues: leaguesQuery.data ?? [],
-    myLeague: myLeagueQuery.data,
-    leaderboard: leaderboardQuery.data ?? [],
-    history: historyQuery.data ?? [],
-    isLoading: leaguesQuery.isLoading || myLeagueQuery.isLoading,
-    createLeague: createLeagueMutation.mutate,
-    updateLeague: updateLeagueMutation.mutate,
-    deleteLeague: deleteLeagueMutation.mutate,
+  const leagues = useMemo(() => leaguesQuery.data ?? [], [leaguesQuery.data]);
+  const myLeague = myLeagueQuery.data;
+  const leaderboard = useMemo(() => leaderboardQuery.data ?? [], [leaderboardQuery.data]);
+  const history = useMemo(() => historyQuery.data ?? [], [historyQuery.data]);
+  const isLoading = leaguesQuery.isLoading || myLeagueQuery.isLoading;
+
+  const createLeague = createLeagueMutation.mutate;
+  const updateLeague = updateLeagueMutation.mutate;
+  const deleteLeague = deleteLeagueMutation.mutate;
+
+  return useMemo(() => ({
+    leagues,
+    myLeague,
+    leaderboard,
+    history,
+    isLoading,
+    createLeague,
+    updateLeague,
+    deleteLeague,
     isCreating: createLeagueMutation.isPending,
     isUpdating: updateLeagueMutation.isPending,
     isDeleting: deleteLeagueMutation.isPending,
-  };
+  }), [
+    leagues, 
+    myLeague, 
+    leaderboard, 
+    history, 
+    isLoading, 
+    createLeague, 
+    updateLeague, 
+    deleteLeague,
+    createLeagueMutation.isPending,
+    updateLeagueMutation.isPending,
+    deleteLeagueMutation.isPending
+  ]);
 }
