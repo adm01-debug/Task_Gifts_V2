@@ -98,21 +98,26 @@ export function PowerUps({
   };
 
   return (
-    <Card className={cn("overflow-hidden", className)}>
-      <CardHeader className="pb-3">
-        <div className="flex items-center justify-between">
-          <CardTitle className="flex items-center gap-2 text-base">
-            <Rocket className="w-5 h-5 text-primary" />
-            Power-Ups
-          </CardTitle>
-          <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-amber-500/10">
-            <Star className="w-4 h-4 text-amber-500" />
-            <span className="text-sm font-bold text-amber-600 dark:text-amber-400">
-              {userCoins}
-            </span>
-          </div>
-        </div>
-      </CardHeader>
+     <Card className={cn("overflow-hidden border border-white/5 bg-card/40 backdrop-blur-xl rounded-3xl", className)}>
+       <CardHeader className="pb-4 bg-white/5">
+         <div className="flex items-center justify-between">
+           <div className="flex items-center gap-3">
+             <div className="w-10 h-10 rounded-2xl bg-primary/20 flex items-center justify-center shadow-glow-sm">
+               <Rocket className="w-5 h-5 text-primary" />
+             </div>
+             <div>
+               <CardTitle className="text-xs font-black uppercase tracking-widest leading-none mb-1">Combat Support</CardTitle>
+               <p className="text-[10px] text-muted-foreground font-black opacity-70 uppercase tracking-tighter italic">ARMORY_AVAILABLE</p>
+             </div>
+           </div>
+           <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-black/40 border border-white/5">
+             <Star className="w-3.5 h-3.5 text-amber-500 fill-amber-500" />
+             <span className="text-xs font-black text-white italic">
+               {userCoins.toLocaleString()}
+             </span>
+           </div>
+         </div>
+       </CardHeader>
 
       <CardContent className="space-y-4">
         {/* Active Power-Up */}
@@ -136,13 +141,13 @@ export function PowerUps({
                 transition={{ delay: index * 0.1 }}
                 onClick={() => setSelectedPowerUp(isSelected ? null : powerUp)}
                 disabled={!canAfford || !!activePowerUp}
-                className={cn(
-                  "relative p-3 rounded-xl border-2 transition-all duration-200 text-left",
-                  isSelected && "border-primary bg-primary/5",
-                  !isSelected && "border-border hover:border-primary/50",
-                  !canAfford && "opacity-50 cursor-not-allowed",
-                  activePowerUp && "opacity-50 cursor-not-allowed"
-                )}
+                 className={cn(
+                   "relative p-4 rounded-2xl border transition-all duration-300 text-left overflow-hidden group",
+                   isSelected && "border-primary bg-primary/10 ring-1 ring-primary/20 shadow-glow-sm",
+                   !isSelected && "border-white/5 bg-white/5 hover:border-primary/40 hover:bg-white/10",
+                   !canAfford && "opacity-40 grayscale cursor-not-allowed",
+                   activePowerUp && "opacity-40 cursor-not-allowed"
+                 )}
               >
                 {/* Icon */}
                 <div className={cn(
