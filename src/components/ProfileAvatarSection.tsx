@@ -1,10 +1,11 @@
 import { motion } from "framer-motion";
 import { useState, useCallback, useMemo } from "react";
-import { Wand2, Sparkles, Lock, ChevronRight, Crown, Palette, Frame } from "lucide-react";
+import { Wand2, Sparkles, Lock, ChevronRight, Crown, Palette, Frame, Target } from "lucide-react";
 import { AvatarPreview, AvatarCollectionPreview } from "./AvatarPreview";
 import { AvatarCustomizer } from "./AvatarCustomizer";
 import { useAvatarItems } from "@/hooks/useAvatar";
 import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 interface ProfileAvatarSectionProps {
   userId: string;
   userLevel: number;
