@@ -119,30 +119,38 @@ export function LuckyDrop({ isOpen, onClose, onClaim }: LuckyDropProps) {
               <motion.div
                 initial={{ y: 20 }}
                 animate={{ y: 0 }}
-                className="bg-card rounded-2xl p-8 text-center border border-border shadow-2xl"
+                className="bg-card rounded-3xl p-10 text-center border border-primary/30 shadow-[0_0_50px_rgba(0,255,255,0.15)] relative overflow-hidden backdrop-blur-2xl"
               >
+                {/* HUD scanline */}
+                <div className="absolute inset-0 pointer-events-none opacity-10">
+                  <div className="absolute inset-0 bg-[linear-gradient(to_bottom,transparent_0%,cyan_50%,transparent_100%)] bg-[length:100%_4px] animate-scanline" />
+                </div>
+
                 <motion.div
                   animate={{ 
                     rotate: [0, -10, 10, -10, 0],
                     scale: [1, 1.1, 1],
                   }}
                   transition={{ duration: 2, repeat: Infinity }}
-                  className="inline-flex p-4 rounded-full bg-gradient-to-br from-amber-400 to-orange-500 text-white mb-4"
+                  className="inline-flex p-6 rounded-3xl bg-gradient-to-br from-primary via-accent to-primary text-white mb-6 shadow-glow-primary relative z-10"
                 >
-                  <Gift className="w-12 h-12" />
+                  <Gift className="w-16 h-16 animate-pulse" />
                 </motion.div>
                 
-                <h2 className="text-2xl font-bold mb-2">Lucky Drop!</h2>
-                <p className="text-muted-foreground mb-6">
-                  Você ganhou uma recompensa surpresa! 🎉
+                <h2 className="text-3xl font-black mb-2 text-white uppercase italic tracking-widest">
+                  Tactical Drop
+                </h2>
+                <p className="text-xs text-muted-foreground mb-8 font-black uppercase tracking-tighter opacity-70">
+                  SECURE_CONTAINER_LOCATED // AUTHORIZATION_REQUIRED
                 </p>
                 
                 <Button
                   onClick={handleOpen}
-                  className="w-full bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600"
+                  variant="hero"
+                  className="w-full shadow-glow-primary uppercase font-black italic tracking-[0.2em] py-6"
                 >
-                  <Sparkles className="w-4 h-4 mr-2" />
-                  Abrir Presente
+                  <Sparkles className="w-5 h-5 mr-3" />
+                  INITIALIZE_EXTRACTION
                 </Button>
               </motion.div>
             )}
@@ -253,42 +261,46 @@ export function LuckyDropTrigger() {
       <motion.div
         whileHover={{ scale: 1.02 }}
         whileTap={{ scale: 0.98 }}
-        className="relative overflow-hidden rounded-xl bg-gradient-to-r from-amber-500/10 via-orange-500/10 to-red-500/10 border border-amber-500/20 p-4 cursor-pointer"
+        className="relative overflow-hidden rounded-2xl bg-black/40 border border-primary/20 p-5 cursor-pointer shadow-lg hover:border-primary/50 transition-all duration-500 group"
         onClick={openDrop}
       >
-        <div className="flex items-center gap-4">
+        {/* Animated background grid */}
+        <div className="absolute inset-0 bg-[url('/grid.svg')] bg-[length:20px_20px] opacity-10" />
+        
+        <div className="flex items-center gap-5 relative z-10">
           <motion.div
             animate={{ 
-              rotate: [0, -5, 5, -5, 0],
-              scale: [1, 1.05, 1],
+              rotate: [0, -8, 8, -8, 0],
+              scale: [1, 1.1, 1],
             }}
             transition={{ duration: 3, repeat: Infinity }}
-            className="p-3 rounded-full bg-gradient-to-br from-amber-400 to-orange-500 text-white shadow-lg shadow-amber-500/30"
+            className="p-4 rounded-2xl bg-gradient-to-br from-primary via-accent to-primary text-white shadow-glow-primary border border-white/20 group-hover:shadow-glow-accent transition-all duration-500"
           >
-            <Gift className="w-6 h-6" />
+            <Gift className="w-7 h-7" />
           </motion.div>
           
           <div className="flex-1">
-            <h3 className="font-semibold text-foreground flex items-center gap-2">
-              Lucky Drop Disponível!
+            <h3 className="font-black text-sm text-white uppercase italic tracking-[0.1em] flex items-center gap-2">
+              Tactical Cargo
               <motion.span
-                animate={{ opacity: [1, 0.5, 1] }}
-                transition={{ duration: 1.5, repeat: Infinity }}
-                className="text-xs bg-amber-500/20 text-amber-600 dark:text-amber-400 px-2 py-0.5 rounded-full"
+                animate={{ opacity: [1, 0.4, 1] }}
+                transition={{ duration: 1, repeat: Infinity }}
+                className="text-[10px] bg-primary text-primary-foreground font-black px-2 py-0.5 rounded-md italic"
               >
-                NOVO
+                UNCLAIMED
               </motion.span>
             </h3>
-            <p className="text-sm text-muted-foreground">
-              Clique para tentar sua sorte! 🎁
+            <p className="text-[11px] text-muted-foreground font-black uppercase tracking-tighter opacity-70 italic mt-0.5">
+              SECURE_DROP_AVAILABLE // EXTRACT_NOW
             </p>
           </div>
           
           <motion.div
-            animate={{ x: [0, 5, 0] }}
-            transition={{ duration: 1.5, repeat: Infinity }}
+            animate={{ x: [0, 6, 0], opacity: [0.5, 1, 0.5] }}
+            transition={{ duration: 2, repeat: Infinity }}
+            className="hidden sm:block"
           >
-            <Sparkles className="w-5 h-5 text-amber-500" />
+            <Sparkles className="w-6 h-6 text-primary" />
           </motion.div>
         </div>
         
