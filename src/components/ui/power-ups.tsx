@@ -98,28 +98,38 @@ export function PowerUps({
   };
 
   return (
-     <Card className={cn("overflow-hidden border border-white/5 bg-card/40 backdrop-blur-xl rounded-3xl", className)}>
-       <CardHeader className="pb-4 bg-white/5">
+     <Card variant="ultra" className={cn("overflow-hidden relative group", className)}>
+       {/* Scanner lines effect */}
+       <div className="absolute inset-0 pointer-events-none overflow-hidden opacity-10">
+         <div className="absolute inset-0 bg-[linear-gradient(to_bottom,transparent_0%,rgba(0,255,255,0.2)_50%,transparent_100%)] bg-[length:100%_4px] animate-scanline" />
+       </div>
+       
+       <CardHeader className="pb-4 relative z-10">
          <div className="flex items-center justify-between">
            <div className="flex items-center gap-3">
-             <div className="w-10 h-10 rounded-2xl bg-primary/20 flex items-center justify-center shadow-glow-sm">
-               <Rocket className="w-5 h-5 text-primary" />
+             <div className="w-12 h-12 rounded-2xl bg-primary/20 border border-primary/30 flex items-center justify-center shadow-glow-sm group-hover:shadow-glow-primary transition-all duration-500">
+               <Rocket className="w-6 h-6 text-primary animate-pulse" />
              </div>
              <div>
-               <CardTitle className="text-xs font-black uppercase tracking-widest leading-none mb-1">Combat Support</CardTitle>
-               <p className="text-[10px] text-muted-foreground font-black opacity-70 uppercase tracking-tighter italic">ARMORY_AVAILABLE</p>
+               <CardTitle className="text-sm font-black uppercase tracking-widest leading-none mb-1 text-white">
+                 Tactical Armory
+               </CardTitle>
+               <div className="flex items-center gap-2">
+                 <span className="flex h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                 <p className="text-[10px] text-muted-foreground font-black opacity-70 uppercase tracking-tighter italic">SYS_READY_FOR_DEPLOYMENT</p>
+               </div>
              </div>
            </div>
-           <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-black/40 border border-white/5">
-             <Star className="w-3.5 h-3.5 text-amber-500 fill-amber-500" />
-             <span className="text-xs font-black text-white italic">
+           <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-black/60 border border-white/10 shadow-inner">
+             <Star className="w-3.5 h-3.5 text-amber-500 fill-amber-500 animate-bounce" />
+             <span className="text-xs font-black text-white italic tracking-wider">
                {userCoins.toLocaleString()}
              </span>
            </div>
          </div>
        </CardHeader>
 
-      <CardContent className="space-y-4">
+      <CardContent className="space-y-4 relative z-10">
         {/* Active Power-Up */}
         <AnimatePresence>
           {activePowerUp && (
@@ -140,53 +150,60 @@ export function PowerUps({
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
                 onClick={() => setSelectedPowerUp(isSelected ? null : powerUp)}
-                disabled={!canAfford || !!activePowerUp}
+                 disabled={!canAfford || !!activePowerUp}
                  className={cn(
-                   "relative p-4 rounded-2xl border transition-all duration-300 text-left overflow-hidden group",
-                   isSelected && "border-primary bg-primary/10 ring-1 ring-primary/20 shadow-glow-sm",
-                   !isSelected && "border-white/5 bg-white/5 hover:border-primary/40 hover:bg-white/10",
+                   "relative p-4 rounded-2xl border transition-all duration-500 text-left overflow-hidden group/btn",
+                   isSelected && "border-primary bg-primary/20 ring-1 ring-primary/40 shadow-glow-sm",
+                   !isSelected && "border-white/10 bg-black/20 hover:border-primary/50 hover:bg-black/40",
                    !canAfford && "opacity-40 grayscale cursor-not-allowed",
                    activePowerUp && "opacity-40 cursor-not-allowed"
                  )}
-              >
-                {/* Icon */}
-                <div className={cn(
-                  "w-10 h-10 rounded-xl flex items-center justify-center mb-2",
-                  `bg-gradient-to-br ${powerUp.gradient}`
-                )}>
-                  <powerUp.icon className="w-5 h-5 text-white" />
-                </div>
+               >
+                 {/* Holographic background effect */}
+                 <div className="absolute inset-0 opacity-0 group-hover/btn:opacity-5 bg-gradient-to-br from-primary via-transparent to-primary transition-opacity duration-500" />
 
-                {/* Info */}
-                <h4 className="font-semibold text-sm">{powerUp.name}</h4>
-                <p className="text-[10px] text-muted-foreground line-clamp-2 mb-2">
-                  {powerUp.description}
-                </p>
+                 {/* Icon Container */}
+                 <div className={cn(
+                   "w-12 h-12 rounded-xl flex items-center justify-center mb-3 transition-transform duration-500 group-hover/btn:scale-110 relative",
+                   `bg-gradient-to-br ${powerUp.gradient} shadow-lg shadow-${powerUp.color.split('-')[1]}-500/20`
+                 )}>
+                   <powerUp.icon className="w-6 h-6 text-white" />
+                   {/* Glow effect */}
+                   <div className="absolute inset-0 rounded-xl bg-white/20 animate-pulse opacity-0 group-hover/btn:opacity-100 transition-opacity" />
+                 </div>
 
-                {/* Duration & Cost */}
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-1 text-[10px] text-muted-foreground">
-                    <Clock className="w-3 h-3" />
-                    <span>{powerUp.duration}min</span>
-                  </div>
-                  <div className={cn(
-                    "flex items-center gap-0.5 px-1.5 py-0.5 rounded-full text-[10px] font-bold",
-                    canAfford 
-                      ? "bg-amber-500/10 text-amber-600" 
-                      : "bg-destructive/10 text-destructive"
-                  )}>
-                    <Star className="w-2.5 h-2.5" />
-                    <span>{powerUp.cost}</span>
-                  </div>
-                </div>
+                 {/* Info */}
+                 <h4 className="font-black text-sm text-white uppercase tracking-tighter mb-1 italic group-hover/btn:text-primary transition-colors">
+                   {powerUp.name}
+                 </h4>
+                 <p className="text-[10px] text-muted-foreground font-medium leading-tight line-clamp-2 mb-3 h-8">
+                   {powerUp.description}
+                 </p>
 
-                {/* Multiplier badge */}
-                {powerUp.multiplier > 1 && (
-                  <div className="absolute -top-1 -right-1 px-1.5 py-0.5 rounded-full bg-gradient-to-r from-primary to-accent text-[10px] font-bold text-primary-foreground">
-                    {powerUp.multiplier}x
-                  </div>
-                )}
-              </motion.button>
+                 {/* Duration & Cost */}
+                 <div className="flex items-center justify-between mt-auto">
+                   <div className="flex items-center gap-1 text-[10px] font-black text-muted-foreground uppercase tracking-widest italic">
+                     <Clock className="w-3 h-3 text-primary" />
+                     <span>{powerUp.duration}M</span>
+                   </div>
+                   <div className={cn(
+                     "flex items-center gap-1 px-2 py-1 rounded-lg text-[10px] font-black italic shadow-inner",
+                     canAfford 
+                       ? "bg-amber-500/20 text-amber-500 border border-amber-500/30" 
+                       : "bg-destructive/20 text-destructive border border-destructive/30"
+                   )}>
+                     <Star className="w-3 h-3 fill-current" />
+                     <span>{powerUp.cost}</span>
+                   </div>
+                 </div>
+
+                 {/* Multiplier badge */}
+                 {powerUp.multiplier > 1 && (
+                   <div className="absolute top-2 right-2 px-2 py-0.5 rounded-md bg-white/10 backdrop-blur-md border border-white/20 text-[10px] font-black text-white italic tracking-tighter shadow-glow-sm animate-pulse">
+                     MOD_{powerUp.multiplier}X
+                   </div>
+                 )}
+               </motion.button>
             );
           })}
         </div>
@@ -200,42 +217,49 @@ export function PowerUps({
               exit={{ opacity: 0, height: 0 }}
               className="overflow-hidden"
             >
-              <div className="p-4 rounded-xl bg-gradient-to-r from-primary/10 to-accent/10 border border-primary/20">
-                <div className="flex items-center justify-between mb-3">
-                  <div className="flex items-center gap-2">
-                    <div className={cn(
-                      "w-8 h-8 rounded-lg flex items-center justify-center",
-                      `bg-gradient-to-br ${selectedPowerUp.gradient}`
-                    )}>
-                      <selectedPowerUp.icon className="w-4 h-4 text-white" />
-                    </div>
-                    <div>
-                      <p className="font-semibold text-sm">{selectedPowerUp.name}</p>
-                      <p className="text-[10px] text-muted-foreground">
-                        Duração: {selectedPowerUp.duration} minutos
-                      </p>
-                    </div>
-                  </div>
-                </div>
-                <div className="flex gap-2">
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    className="flex-1"
-                    onClick={() => setSelectedPowerUp(null)}
-                  >
-                    Cancelar
-                  </Button>
-                  <Button
-                    size="sm"
-                    className="flex-1 bg-gradient-to-r from-primary to-accent"
-                    onClick={() => handleActivate(selectedPowerUp)}
-                  >
-                    <Sparkles className="w-4 h-4 mr-1" />
-                    Ativar ({selectedPowerUp.cost})
-                  </Button>
-                </div>
-              </div>
+               <div className="p-4 rounded-2xl bg-black/40 border border-primary/40 shadow-glow-primary relative overflow-hidden">
+                 {/* HUD grid background */}
+                 <div className="absolute inset-0 bg-[url('/grid.svg')] bg-[length:20px_20px] opacity-10" />
+                 
+                 <div className="flex items-center justify-between mb-4 relative z-10">
+                   <div className="flex items-center gap-3">
+                     <div className={cn(
+                       "w-12 h-12 rounded-xl flex items-center justify-center shadow-lg",
+                       `bg-gradient-to-br ${selectedPowerUp.gradient}`
+                     )}>
+                       <selectedPowerUp.icon className="w-6 h-6 text-white" />
+                     </div>
+                     <div>
+                       <p className="font-black text-sm text-white uppercase italic tracking-wider leading-tight">
+                         {selectedPowerUp.name}
+                       </p>
+                       <p className="text-[10px] text-primary font-black uppercase tracking-tighter italic opacity-80">
+                         DEPLOYMENT_READY // DUR: {selectedPowerUp.duration}M
+                       </p>
+                     </div>
+                   </div>
+                 </div>
+                 
+                 <div className="flex gap-3 relative z-10">
+                   <Button
+                     size="sm"
+                     variant="glass"
+                     className="flex-1 border-white/10 hover:bg-white/5 uppercase font-black text-[10px] italic tracking-widest"
+                     onClick={() => setSelectedPowerUp(null)}
+                   >
+                     ABORT_MISSION
+                   </Button>
+                   <Button
+                     size="sm"
+                     variant="hero"
+                     className="flex-1 uppercase font-black text-[10px] italic tracking-widest shadow-glow-primary"
+                     onClick={() => handleActivate(selectedPowerUp)}
+                   >
+                     <Sparkles className="w-3 h-3 mr-1" />
+                     INITIATE_DEPLOY ({selectedPowerUp.cost})
+                   </Button>
+                 </div>
+               </div>
             </motion.div>
           )}
         </AnimatePresence>
