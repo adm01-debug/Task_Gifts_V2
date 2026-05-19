@@ -29,7 +29,7 @@ import {
 } from "@/hooks/useQuizQuestions";
 import { useDepartments } from "@/hooks/useDepartments";
 import { useFuseSearch, SEARCH_PRESETS } from "@/hooks/useFuseSearch";
-import { ProtectedRoute } from "@/components/ProtectedRoute";
+ import { ProtectedRoute } from "@/components/rbac/ProtectedRoute";
 import { Skeleton } from "@/components/ui/skeleton";
 import { QuestionFormDialog, emptyForm, type QuestionForm } from "@/components/quiz/QuestionFormDialog";
 

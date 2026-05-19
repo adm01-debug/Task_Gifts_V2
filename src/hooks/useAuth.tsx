@@ -42,7 +42,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const { registerDevice } = useDeviceDetection();
 
-  const signIn = async (email: string, password: string) => {
+   const signIn = useCallback(async (email: string, password: string) => {
     const { data, error } = await supabase.auth.signInWithPassword({
       email,
       password,
@@ -53,10 +53,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       registerDevice(data.user.id).catch((err: unknown) => logger.apiError('registerDevice', err, 'useAuth'));
     }
     
-    return { error };
-  };
+     return { error };
+   }, [registerDevice]);
 
-  const signUp = async (email: string, password: string, displayName?: string) => {
+   const signUp = useCallback(async (email: string, password: string, displayName?: string) => {
     const redirectUrl = `${window.location.origin}/`;
     
     const { error } = await supabase.auth.signUp({
@@ -69,12 +69,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         },
       },
     });
-    return { error };
-  };
+     return { error };
+   }, []);
 
-  const signOut = async () => {
-    await supabase.auth.signOut();
-  };
+   const signOut = useCallback(async () => {
+     await supabase.auth.signOut();
+   }, []);
 
   return (
     <AuthContext.Provider value={{ user, session, loading, signIn, signUp, signOut }}>
