@@ -94,16 +94,26 @@ export const DashboardHeader = memo(function DashboardHeader({
             
              <div className="flex flex-col -space-y-0.5">
                <div className="flex items-center gap-2 mb-1">
-                 <Badge variant="outline" className="text-[9px] h-4 px-1.5 py-0 border-primary/30 text-primary font-black uppercase tracking-tighter bg-primary/5">
-                   Elite
-                 </Badge>
+                  <div className="flex items-center gap-1.5">
+                    <Badge variant="outline" className="text-[9px] h-4 px-1.5 py-0 border-primary/30 text-primary font-black uppercase tracking-tighter bg-primary/5">
+                      Elite
+                    </Badge>
+                    <div className="flex gap-0.5">
+                      {[1, 2, 3].map(i => (
+                        <div key={i} className="w-1 h-1 rounded-full bg-primary/30 animate-pulse" style={{ animationDelay: `${i * 0.2}s` }} />
+                      ))}
+                    </div>
+                  </div>
                  <h2 className="text-[9px] uppercase tracking-[0.2em] text-muted-foreground/70 font-black leading-none">
                    Dashboard
                  </h2>
                </div>
-               <h1 className="text-lg font-black tracking-tight truncate max-w-[150px] leading-tight">
-                 Olá, {displayName.split(" ")[0]}!
-               </h1>
+                <div className="flex items-baseline gap-2">
+                  <h1 className="text-lg font-black tracking-tight truncate max-w-[150px] leading-tight">
+                    Olá, {displayName.split(" ")[0]}!
+                  </h1>
+                  <span className="text-[10px] font-black text-success animate-pulse">●</span>
+                </div>
              </div>
           </div>
 
@@ -154,14 +164,21 @@ export const DashboardHeader = memo(function DashboardHeader({
             <Menu className="w-5 h-5" aria-hidden="true" />
           </motion.button>
           
-          <div className="flex flex-col">
-            <div className="flex items-center gap-2 mb-0.5">
-              <span className="text-[10px] font-black uppercase tracking-[0.2em] text-primary bg-primary/10 px-2 py-0.5 rounded-full border border-primary/20">
-                Command Center
-              </span>
-            </div>
-            <h1 className="text-xl md:text-2xl font-black tracking-tight flex items-center gap-2">
-              Olá, {displayName}! <span className="animate-wave origin-bottom-right">👋</span>
+            <div className="flex flex-col relative">
+              <motion.div 
+                initial={{ x: -20, opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                className="flex items-center gap-2 mb-0.5"
+              >
+                <span className="text-[10px] font-black uppercase tracking-[0.3em] text-primary bg-primary/10 px-3 py-1 rounded-full border border-primary/20 shadow-glow-sm">
+                  Tactical Intelligence Hub
+                </span>
+                <div className="h-px w-8 bg-gradient-to-r from-primary/50 to-transparent" />
+              </motion.div>
+            <h1 className="text-xl md:text-3xl font-black tracking-tighter flex items-center gap-3 italic">
+              <span className="text-muted-foreground/30">SYSTEM://</span>
+              {displayName.toUpperCase()}
+              <span className="text-primary animate-pulse">_</span>
             </h1>
             <p className="text-xs md:text-sm text-muted-foreground/80 font-medium">
               {rankData?.rank ? (
