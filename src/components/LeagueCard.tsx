@@ -101,7 +101,7 @@ export const LeagueCard = memo(function LeagueCard() {
   }
 
   return (
-    <Card className="overflow-hidden border-none bg-gradient-to-br from-card to-card/50 shadow-2xl ring-1 ring-white/10 relative">
+    <Card variant="ultra" className="overflow-hidden relative bg-gradient-to-br from-card/60 via-card/40 to-primary/5">
       <div 
         className="absolute -top-24 -right-24 w-64 h-64 blur-[100px] opacity-20 pointer-events-none rounded-full"
         style={{ backgroundColor: currentLeague?.color || 'var(--primary)' }}

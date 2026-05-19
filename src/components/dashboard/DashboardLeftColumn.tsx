@@ -20,10 +20,10 @@ import { TeamChallenges as TeamChallengesNew } from "@/components/ui/team-challe
 
 export const DashboardLeftColumn = memo(function DashboardLeftColumn() {
   return (
-    <StaggeredContainer 
-      className="lg:col-span-2 space-y-4 md:space-y-6"
-      staggerDelay={0.12}
-      initialDelay={0.1}
+    <StaggeredContainer
+      className="lg:col-span-2 space-y-6 md:space-y-8"
+      staggerDelay={0.15}
+      initialDelay={0.2}
       data-tour="missions"
     >
       <StaggeredItemLeft>

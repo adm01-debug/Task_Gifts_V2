@@ -97,6 +97,8 @@ const pulseClasses = {
   success: "card-pulse-success",
 };
 
+import { Card, CardContent } from "@/components/ui/card";
+
 const StatCard = ({ icon: Icon, label, value, change, changeType = "neutral", color, delay = 0, isLoading, pulse, fireIndicator, trophyIndicator, levelIndicator, coinsIndicator, xpParticles, helpText }: StatCardProps) => {
   const colors = colorClasses[color];
 
@@ -107,15 +109,17 @@ const StatCard = ({ icon: Icon, label, value, change, changeType = "neutral", co
   return (
     <motion.div
       variants={cardVariants}
-      whileHover={{ y: -4, transition: { duration: 0.2 } }}
-      className={cn(
-        "relative p-4 rounded-2xl border border-border bg-card overflow-hidden",
-        "card-interactive",
-        colors.glow,
-        pulse && pulseClasses[pulse],
-        "group cursor-pointer active:scale-[0.98] transition-all duration-300"
-      )}
+      whileHover={{ y: -8, scale: 1.02 }}
+      className="relative"
     >
+      <Card
+        variant="ultra"
+        className={cn(
+          "p-0 overflow-hidden group border-border/40",
+          pulse && pulseClasses[pulse]
+        )}
+      >
+        <CardContent className="p-5 relative z-10">
       {/* XP Particles effect */}
       {xpParticles && (
         <AnimatedXPParticles 
@@ -152,65 +156,67 @@ const StatCard = ({ icon: Icon, label, value, change, changeType = "neutral", co
       
       <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-border/50 to-transparent" />
 
-      <div className="relative z-10 flex flex-col h-full">
-        <div className="flex items-start justify-between mb-4">
-          <div className="relative">
-            <motion.div 
-              initial={{ scale: 0, rotate: -180 }}
-              animate={{ scale: 1, rotate: 0 }}
-              transition={{ delay: delay + 0.2, type: "spring", stiffness: 260, damping: 20 }}
-              className={cn(
-                "w-12 h-12 rounded-2xl bg-gradient-to-br flex items-center justify-center shadow-inner ring-1 ring-white/10",
-                colors.bg
+          <div className="flex flex-col h-full">
+            <div className="flex items-start justify-between mb-5">
+              <div className="relative">
+                <motion.div 
+                  initial={{ scale: 0, rotate: -180 }}
+                  animate={{ scale: 1, rotate: 0 }}
+                  transition={{ delay: delay + 0.2, type: "spring", stiffness: 260, damping: 20 }}
+                  className={cn(
+                    "w-12 h-12 rounded-2xl bg-gradient-to-br flex items-center justify-center shadow-lg ring-1 ring-white/10",
+                    colors.bg
+                  )}
+                >
+                  <Icon className={cn("w-6 h-6", colors.icon)} />
+                </motion.div>
+                <div className={cn("absolute -inset-2 rounded-2xl blur-xl opacity-0 group-hover:opacity-40 transition-opacity duration-500", colors.bg)} />
+              </div>
+              
+              {change && (
+                <motion.div 
+                  initial={{ opacity: 0, x: 10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: delay + 0.3 }}
+                  className={cn(
+                    "flex items-center gap-0.5 text-[10px] font-black uppercase tracking-wider px-2.5 py-1 rounded-lg border border-border/50 backdrop-blur-md",
+                    changeType === "positive" && "bg-success/10 text-success border-success/20",
+                    changeType === "negative" && "bg-destructive/10 text-destructive border-destructive/20",
+                    changeType === "neutral" && "bg-muted/50 text-muted-foreground"
+                  )}
+                >
+                  {changeType === "positive" && <TrendingUp className="w-3 h-3" />}
+                  {change}
+                </motion.div>
               )}
-            >
-              <Icon className={cn("w-6 h-6", colors.icon)} />
-            </motion.div>
-            <div className={cn("absolute -inset-1 rounded-2xl blur-md opacity-20 group-hover:opacity-40 transition-opacity", colors.bg)} />
-          </div>
-          
-          {change && (
-            <motion.div 
-              initial={{ opacity: 0, x: 10 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: delay + 0.3 }}
-              className={cn(
-                "flex items-center gap-0.5 text-xs font-medium px-2 py-1 rounded-full",
-                changeType === "positive" && "bg-success/10 text-success",
-                changeType === "negative" && "bg-destructive/10 text-destructive",
-                changeType === "neutral" && "bg-muted text-muted-foreground"
-              )}
-            >
-              {changeType === "positive" && <TrendingUp className="w-3 h-3" />}
-              {change}
-            </motion.div>
-          )}
-        </div>
+            </div>
 
-        <div className="mt-auto space-y-1">
-          <div className="flex items-center gap-1.5">
-            <p className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground/80">{label}</p>
-            {helpText && <HelpTooltip content={helpText} side="right" />}
+            <div className="mt-auto space-y-2">
+              <div className="flex items-center gap-1.5">
+                <p className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/60">{label}</p>
+                {helpText && <HelpTooltip content={helpText} side="right" />}
+              </div>
+              <div className="flex items-end justify-between gap-2">
+                <motion.p
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: delay + 0.25, type: "spring", stiffness: 300 }}
+                  className="text-4xl font-black tracking-tighter leading-none"
+                >
+                  {value}
+                </motion.p>
+                <motion.div 
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  className="p-1.5 rounded-xl bg-muted/40 group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-500 shadow-sm"
+                >
+                  <ChevronRight className="w-4 h-4" />
+                </motion.div>
+              </div>
+            </div>
           </div>
-          <div className="flex items-end justify-between gap-2">
-            <motion.p
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: delay + 0.25, type: "spring", stiffness: 300 }}
-              className="text-3xl font-black tracking-tight leading-none"
-            >
-              {value}
-            </motion.p>
-            <motion.div 
-              initial={{ opacity: 0, x: -5 }}
-              animate={{ opacity: 1, x: 0 }}
-              className="p-1 rounded-full bg-muted/40 group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-300"
-            >
-              <ChevronRight className="w-3.5 h-3.5" />
-            </motion.div>
-          </div>
-        </div>
-      </div>
+        </CardContent>
+      </Card>
     </motion.div>
   );
 };
@@ -392,24 +398,23 @@ export const QuickActions = memo(function QuickActions() {
       className="flex gap-2"
     >
       {actions.map((action, index) => (
-        <motion.button
-          key={action.label}
-          variants={quickActionItemVariants}
-          whileHover={{ 
-            scale: 1.05, 
-            y: -2,
-            transition: { duration: 0.2 } 
-          }}
-          whileTap={{ scale: 0.95 }}
-          onClick={action.onClick}
-          className={cn(
-            "flex items-center gap-2 px-4 py-2 rounded-xl border border-border",
-            "bg-gradient-to-r hover:border-primary/30 transition-all duration-200",
-            action.color === "primary" && "from-primary/10 to-transparent",
-            action.color === "secondary" && "from-secondary/10 to-transparent",
-            action.color === "accent" && "from-accent/10 to-transparent"
-          )}
-        >
+          <motion.button
+            key={action.label}
+            variants={quickActionItemVariants}
+            whileHover={{ 
+              scale: 1.05, 
+              y: -4,
+              boxShadow: "0 10px 20px -5px rgba(var(--primary), 0.2)"
+            }}
+            whileTap={{ scale: 0.95 }}
+            onClick={action.onClick}
+            className={cn(
+              "flex items-center gap-3 px-5 py-3 rounded-2xl border transition-all duration-300 backdrop-blur-md font-bold text-sm shadow-lg",
+              action.color === "primary" && "bg-primary/10 border-primary/20 hover:border-primary/40 text-primary hover:bg-primary/15",
+              action.color === "secondary" && "bg-secondary/10 border-secondary/20 hover:border-secondary/40 text-secondary hover:bg-secondary/15",
+              action.color === "accent" && "bg-accent/10 border-accent/20 hover:border-accent/40 text-accent hover:bg-accent/15"
+            )}
+          >
           <motion.div
             initial={{ rotate: -90, opacity: 0 }}
             animate={{ rotate: 0, opacity: 1 }}
