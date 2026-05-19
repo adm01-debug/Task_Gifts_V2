@@ -1,8 +1,8 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
 import { 
-  Target, CheckCircle2, Circle, Flame, Trophy, 
-  ChevronRight, Sparkles, Calendar, TrendingUp 
+   Target, CheckCircle2, Circle, Flame, Trophy, 
+   ChevronRight, Sparkles, Calendar, TrendingUp, Zap
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
