@@ -10,23 +10,23 @@ export type ProfileUpdate = TablesUpdate<"profiles">;
 const PUBLIC_PROFILE_COLUMNS = "id, display_name, avatar_url, level, xp, coins, streak, best_streak, quests_completed, status, created_at, updated_at, email, employee_id, hire_date, last_access_at, contract_type" as const;
 
 export const profilesService = {
-  async getById(id: string): Promise<Profile | null> {
-    const { data, error } = await supabase.from("profiles").select("*").eq("id", id).maybeSingle();
-    if (error) throw error;
-    return data;
-  },
+   getById: async (id: string): Promise<Profile | null> => {
+     const { data, error } = await supabase.from("profiles").select("*").eq("id", id).maybeSingle();
+     if (error) throw error;
+     return data;
+   },
 
-  async getAll(): Promise<Profile[]> {
-    const { data, error } = await supabase.from("profiles").select(PUBLIC_PROFILE_COLUMNS).order("xp", { ascending: false });
-    if (error) throw error;
-    return (data ?? []) as unknown as Profile[];
-  },
+   getAll: async (): Promise<Profile[]> => {
+     const { data, error } = await supabase.from("profiles").select(PUBLIC_PROFILE_COLUMNS).order("xp", { ascending: false });
+     if (error) throw error;
+     return (data ?? []) as unknown as Profile[];
+   },
 
-  async getLeaderboard(limit = 10): Promise<Profile[]> {
-    const { data, error } = await supabase.from("profiles").select(PUBLIC_PROFILE_COLUMNS).order("xp", { ascending: false }).limit(limit);
-    if (error) throw error;
-    return (data ?? []) as unknown as Profile[];
-  },
+   getLeaderboard: async (limit = 10): Promise<Profile[]> => {
+     const { data, error } = await supabase.from("profiles").select(PUBLIC_PROFILE_COLUMNS).order("xp", { ascending: false }).limit(limit);
+     if (error) throw error;
+     return (data ?? []) as unknown as Profile[];
+   },
 
   async update(id: string, updates: ProfileUpdate): Promise<Profile> {
     const { data, error } = await supabase.from("profiles").update(updates).eq("id", id).select().single();
