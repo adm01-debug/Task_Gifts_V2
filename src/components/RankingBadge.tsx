@@ -120,6 +120,7 @@ export function RankingBadge({
   animate = true,
   className,
 }: RankingBadgeProps) {
+  const sizes = sizeClasses[size];
   const tier = getRankTier(rank);
 
   if (rank === null) {
@@ -137,7 +138,6 @@ export function RankingBadge({
 
   const config = rankConfig[tier];
   const Icon = config.icon;
-  const sizes = sizeClasses[size];
 
   const badge = (
     <motion.div
