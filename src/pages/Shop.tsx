@@ -115,42 +115,80 @@ export default function Shop() {
               </div>
             </div>
           </motion.div>
-         <Tabs defaultValue="shop" className="space-y-6">
-           <TabsList className="grid w-full max-w-md grid-cols-2">
-             <TabsTrigger value="shop" className="flex items-center gap-2"><ShoppingBag className="w-4 h-4" />Loja</TabsTrigger>
-             <TabsTrigger value="history" className="flex items-center gap-2"><History className="w-4 h-4" />Meus Resgates</TabsTrigger>
-           </TabsList>
-           <TabsContent value="shop" className="space-y-6">
-             <FlashSalesBanner onPurchase={(rewardId) => { const reward = rewards?.find(r => r.id === rewardId); if (reward) handlePurchase(reward); }} />
-             <div className="flex flex-wrap gap-2">
-               <Button variant={activeCategory === "all" ? "default" : "outline"} size="sm" onClick={() => setActiveCategory("all")}>Todos</Button>
-               <Button variant={activeCategory === "product" ? "default" : "outline"} size="sm" onClick={() => setActiveCategory("product")}><Package className="w-4 h-4 mr-1" />Produtos</Button>
-               <Button variant={activeCategory === "benefit" ? "default" : "outline"} size="sm" onClick={() => setActiveCategory("benefit")}><Star className="w-4 h-4 mr-1" />Benefícios</Button>
-               <Button variant={activeCategory === "experience" ? "default" : "outline"} size="sm" onClick={() => setActiveCategory("experience")}><Target className="w-4 h-4 mr-1" />Experiências</Button>
-             </div>
-             {isLoading ? (
-                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-                   {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => <Skeleton key={i} className="h-64 rounded-xl" />)}
+         <div className="space-y-12">
+           <FlashSalesBanner onPurchase={(rewardId) => { const reward = rewards?.find(r => r.id === rewardId); if (reward) handlePurchase(reward); }} />
+           
+           <Tabs defaultValue="shop" className="space-y-8">
+             <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+               <TabsList className="h-16 p-2 bg-zinc-900/80 backdrop-blur-md rounded-2xl border border-white/5 w-fit">
+                 <TabsTrigger value="shop" className="px-8 h-12 rounded-xl data-[state=active]:bg-primary data-[state=active]:text-primary-foreground font-black uppercase text-[10px] tracking-widest gap-3 transition-all">
+                   <ShoppingBag className="w-4 h-4" /> RECURSOS DISPONÍVEIS
+                 </TabsTrigger>
+                 <TabsTrigger value="history" className="px-8 h-12 rounded-xl data-[state=active]:bg-zinc-800 data-[state=active]:text-white font-black uppercase text-[10px] tracking-widest gap-3 transition-all">
+                   <History className="w-4 h-4" /> ARQUIVO DE AQUISIÇÕES
+                 </TabsTrigger>
+               </TabsList>
+
+               <div className="flex items-center gap-3">
+                 <div className="hidden sm:flex items-center gap-2 px-4 py-3 rounded-xl bg-zinc-900/50 border border-white/5">
+                   <Filter className="w-3.5 h-3.5 text-zinc-500" />
+                   <span className="text-[10px] font-black text-zinc-500 uppercase tracking-widest">Filtragem_Ativa</span>
                  </div>
-              ) : filteredRewards && filteredRewards.length > 0 ? (
-               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-                 <AnimatePresence mode="popLayout">
-                    {filteredRewards.map((reward) => (
-                     <RewardCard key={reward.id} reward={reward} userCoins={userCoins} onPurchase={handlePurchase} purchasingRewardId={purchasingRewardId} />
-                   ))}
-                 </AnimatePresence>
                </div>
-              ) : (
-                <EmptyState 
-                  icon={ShoppingCart}
-                  title="Nenhuma recompensa encontrada"
-                  description="Não há itens disponíveis nesta categoria no momento. Volte em breve!"
-                  action={{ label: "Ver todos", onClick: () => setActiveCategory("all") }}
-                />
-              )}
-           </TabsContent>
-           <TabsContent value="history"><PurchaseHistory /></TabsContent>
-         </Tabs>
+             </div>
+
+             <TabsContent value="shop" className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+               <div className="flex flex-wrap items-center gap-3 p-2 bg-zinc-900/30 rounded-2xl border border-white/5 w-fit">
+                 {[
+                   { id: "all", label: "TODOS", icon: LayoutGrid },
+                   { id: "product", label: "PRODUTOS", icon: Package },
+                   { id: "benefit", label: "BENEFÍCIOS", icon: Star },
+                   { id: "experience", label: "EXPERIÊNCIAS", icon: Target },
+                 ].map((cat) => (
+                   <Button 
+                     key={cat.id}
+                     variant={activeCategory === cat.id ? "default" : "ghost"} 
+                     size="sm" 
+                     onClick={() => setActiveCategory(cat.id as any)}
+                     className={cn(
+                       "h-10 px-6 rounded-xl font-black text-[10px] tracking-widest gap-2 transition-all",
+                       activeCategory === cat.id ? "shadow-lg shadow-primary/20" : "text-zinc-500 hover:text-white hover:bg-white/5"
+                     )}
+                   >
+                     <cat.icon className="w-3.5 h-3.5" />
+                     {cat.label}
+                   </Button>
+                 ))}
+               </div>
+
+               {isLoading ? (
+                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                     {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => <Skeleton key={i} className="h-[400px] rounded-[2.5rem] bg-zinc-900/50" />)}
+                   </div>
+                ) : filteredRewards && filteredRewards.length > 0 ? (
+                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                   <AnimatePresence mode="popLayout">
+                      {filteredRewards.map((reward) => (
+                       <RewardCard key={reward.id} reward={reward} userCoins={userCoins} onPurchase={handlePurchase} purchasingRewardId={purchasingRewardId} />
+                     ))}
+                   </AnimatePresence>
+                 </div>
+                ) : (
+                  <div className="py-20">
+                    <EmptyState 
+                      icon={ShoppingCart}
+                      title="Módulos Indisponíveis"
+                      description="O estoque desta categoria está atualmente em manutenção. Nossos agentes estão reabastecendo o sistema."
+                      action={{ label: "VOLTAR PARA O INVENTÁRIO COMPLETO", onClick: () => setActiveCategory("all") }}
+                    />
+                  </div>
+                )}
+             </TabsContent>
+             <TabsContent value="history" className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+               <PurchaseHistory />
+             </TabsContent>
+           </Tabs>
+         </div>
        </div>
  
        <Dialog open={!!selectedReward} onOpenChange={() => setSelectedReward(null)}>
