@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Target, Plus, TrendingUp, CheckCircle2, Clock, Shield, Zap, Sparkles, Filter, LayoutGrid, List, Search } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
