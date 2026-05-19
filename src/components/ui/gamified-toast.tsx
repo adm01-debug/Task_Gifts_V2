@@ -161,18 +161,16 @@ const ToastContent = ({
             </motion.span>
           )}
         </div>
-        {description && (
-           {description && (
-             <motion.p 
-               initial={{ y: 10, opacity: 0 }}
-               animate={{ y: 0, opacity: 1 }}
-               transition={{ delay: 0.2 }}
-               className="text-sm font-bold text-muted-foreground/80 mt-1 truncate"
-             >
-               {description}
-             </motion.p>
-           )}
-        )}
+         {description && (
+           <motion.p 
+             initial={{ y: 10, opacity: 0 }}
+             animate={{ y: 0, opacity: 1 }}
+             transition={{ delay: 0.2 }}
+             className="text-sm font-bold text-muted-foreground/80 mt-1 truncate"
+           >
+             {description}
+           </motion.p>
+         )}
       </div>
 
       {/* Sparkle effects for special toasts */}
