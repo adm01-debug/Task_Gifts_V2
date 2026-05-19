@@ -62,21 +62,36 @@ export const RewardsShop = () => {
 
   if (isLoading) {
     return (
-      <div className="bg-card rounded-2xl border border-border overflow-hidden">
-        <div className="p-4 border-b border-border flex items-center justify-between">
+      <div className="bg-card/80 backdrop-blur-xl rounded-2xl border border-border/60 overflow-hidden shadow-sm">
+        <div className="p-4 border-b border-border flex items-center justify-between bg-card/40 relative overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-r from-coins/5 via-transparent to-transparent animate-pulse" />
           <div className="flex items-center gap-2">
-            <Skeleton className="w-8 h-8 rounded-lg" />
-            <div>
-              <Skeleton className="w-24 h-5 mb-1" />
-              <Skeleton className="w-16 h-3" />
+            <Skeleton variant="glow" shape="card" className="w-8 h-8 rounded-lg" />
+            <div className="space-y-1">
+              <Skeleton variant="shimmer" className="h-4 w-24" />
+              <Skeleton variant="shimmer" className="h-3 w-16 opacity-50" />
             </div>
           </div>
-          <Skeleton className="w-20 h-8 rounded-full" />
+          <Skeleton variant="shimmer" className="h-8 w-20 rounded-full" />
         </div>
         <div className="p-4 grid grid-cols-2 gap-3">
           {[1, 2, 3, 4].map((i) => (
-            <Skeleton key={i} className="h-32 rounded-xl" />
+            <div key={i} className="p-3 rounded-xl border border-border/40 bg-card/30 space-y-3">
+              <div className="flex justify-between">
+                <Skeleton variant="shimmer" className="h-4 w-10 rounded" />
+                <Skeleton variant="shimmer" className="h-4 w-4 rounded-full" />
+              </div>
+              <Skeleton variant="shimmer" className="w-10 h-10 mx-auto rounded-lg" />
+              <div className="space-y-1.5">
+                <Skeleton variant="shimmer" className="h-3 w-3/4 mx-auto" />
+                <Skeleton variant="shimmer" className="h-2 w-1/2 mx-auto opacity-50" />
+              </div>
+              <Skeleton variant="glow" className="h-8 w-full rounded-lg" />
+            </div>
           ))}
+        </div>
+        <div className="p-4 border-t border-border bg-card/20">
+          <Skeleton variant="shimmer" className="h-4 w-1/2 mx-auto" />
         </div>
       </div>
     );

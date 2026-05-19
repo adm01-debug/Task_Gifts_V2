@@ -46,18 +46,37 @@ const DailyQuestsComponent = () => {
 
   if (isLoading) {
     return (
-      <div className="bg-card/40 backdrop-blur-xl rounded-3xl border border-white/5 overflow-hidden animate-pulse">
-        <div className="p-6 border-b border-white/5 bg-white/5">
-          <div className="h-6 w-32 bg-white/10 rounded-lg mb-4" />
-          <div className="h-2 w-full bg-white/5 rounded-full" />
+      <div className="bg-card/40 backdrop-blur-xl rounded-3xl border border-white/5 overflow-hidden shadow-2xl h-full flex flex-col">
+        <div className="p-6 border-b border-white/5 bg-white/5 relative overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-r from-primary/5 via-transparent to-transparent animate-pulse" />
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-4">
+              <Skeleton variant="glow" shape="card" className="w-12 h-12 rounded-2xl" />
+              <div className="space-y-2">
+                <Skeleton variant="shimmer" className="h-4 w-32" />
+                <Skeleton variant="shimmer" className="h-2 w-24 opacity-50" />
+              </div>
+            </div>
+            <Skeleton variant="shimmer" className="h-7 w-20 rounded-xl" />
+          </div>
+          <div className="space-y-2">
+            <div className="flex justify-between">
+              <Skeleton variant="shimmer" className="h-3 w-24" />
+              <Skeleton variant="shimmer" className="h-3 w-16" />
+            </div>
+            <Skeleton variant="shimmer" className="h-2 w-full rounded-full" />
+          </div>
         </div>
-        <div className="p-4 space-y-4">
+        <div className="p-4 space-y-2 flex-1">
           {[1, 2, 3].map(i => (
-            <div key={i} className="flex gap-4">
-              <div className="w-10 h-10 rounded-xl bg-white/5" />
+            <div key={i} className="p-4 rounded-2xl bg-white/5 border border-transparent flex items-center gap-4">
+              <Skeleton variant="shimmer" shape="card" className="w-10 h-10 rounded-xl shrink-0" />
               <div className="flex-1 space-y-2">
-                <div className="h-4 w-3/4 bg-white/5 rounded" />
-                <div className="h-1.5 w-full bg-white/5 rounded" />
+                <div className="flex justify-between">
+                  <Skeleton variant="shimmer" className="h-3 w-1/2" />
+                  <Skeleton variant="shimmer" className="h-3 w-12" />
+                </div>
+                <Skeleton variant="shimmer" className="h-1 w-full rounded-full" />
               </div>
             </div>
           ))}
