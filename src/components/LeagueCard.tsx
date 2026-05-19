@@ -101,43 +101,62 @@ export const LeagueCard = memo(function LeagueCard() {
   }
 
   return (
-    <Card variant="ultra" className="overflow-hidden relative bg-gradient-to-br from-card/60 via-card/40 to-primary/5">
+    <Card variant="ultra" className="overflow-hidden relative bg-gradient-to-br from-card/80 via-card/50 to-primary/10 border-white/5 ring-1 ring-white/10 shadow-2xl">
+      {/* Scanning Line Animation */}
+      <div className="absolute inset-0 pointer-events-none z-0">
+        <motion.div 
+          className="w-full h-[2px] bg-primary/20 shadow-[0_0_20px_rgba(var(--primary-rgb),0.5)]"
+          animate={{ top: ['0%', '100%', '0%'] }}
+          transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
+          style={{ position: 'absolute' }}
+        />
+      </div>
+
       <div 
-        className="absolute -top-24 -right-24 w-64 h-64 blur-[100px] opacity-20 pointer-events-none rounded-full"
+        className="absolute -top-32 -right-32 w-80 h-80 blur-[120px] opacity-20 pointer-events-none rounded-full"
         style={{ backgroundColor: currentLeague?.color || 'var(--primary)' }}
       />
       
-      <CardHeader className="pb-4 relative">
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center gap-3">
-            <div 
-              className="w-12 h-12 rounded-2xl flex items-center justify-center text-3xl shadow-lg ring-1 ring-white/20 transform transition-transform hover:scale-110"
-              style={{ backgroundColor: `${currentLeague?.color}20`, border: `1px solid ${currentLeague?.color}40` }}
+      <CardHeader className="pb-4 relative z-10">
+        <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center gap-4">
+            <motion.div 
+              whileHover={{ scale: 1.1, rotate: 5 }}
+              className="w-16 h-16 rounded-2xl flex items-center justify-center text-4xl shadow-glow ring-2 ring-white/10"
+              style={{ backgroundColor: `${currentLeague?.color}30`, border: `2px solid ${currentLeague?.color}60` }}
             >
               {currentLeague?.icon}
-            </div>
-            <div>
-              <CardTitle className="text-xl font-black tracking-tight uppercase">
-                Liga {currentLeague?.name}
+            </motion.div>
+            <div className="space-y-1">
+              <div className="flex items-center gap-2">
+                <Badge variant="outline" className="text-[10px] font-black uppercase tracking-[0.2em] border-primary/30 text-primary bg-primary/5">
+                  Operational Level
+                </Badge>
+              </div>
+              <CardTitle className="text-2xl font-black tracking-tighter uppercase italic text-shadow-glow">
+                Divisão {currentLeague?.name}
               </CardTitle>
-              <div className="flex items-center gap-2 text-xs text-muted-foreground font-medium">
-                <Timer className="w-3 h-3" />
-                Termina em 3 dias
+              <div className="flex items-center gap-2 text-[10px] text-muted-foreground font-black uppercase tracking-widest">
+                <Timer className="w-3 h-3 text-primary" />
+                Cycle reset in <span className="text-foreground">3D 14H</span>
               </div>
             </div>
           </div>
-          <div className="flex flex-col items-end gap-1">
-            <Badge 
-              className="px-3 py-1 font-bold text-xs shadow-glow-sm"
-              style={{ backgroundColor: currentLeague?.color, color: 'white' }}
-            >
-              +{currentLeague?.xp_bonus_percent}% XP BOOST
-            </Badge>
+          <div className="flex flex-col items-end gap-2">
+            <div className="text-right">
+              <div className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-1">Xp Protocol</div>
+              <Badge 
+                className="px-4 py-1.5 font-black text-xs shadow-glow border-none"
+                style={{ backgroundColor: currentLeague?.color, color: 'white' }}
+              >
+                +{currentLeague?.xp_bonus_percent}% YIELD
+              </Badge>
+            </div>
           </div>
         </div>
         
-        <div className="flex items-center justify-between px-2 py-4 relative">
-          <div className="absolute top-1/2 left-0 right-0 h-0.5 bg-muted-foreground/10 -translate-y-1/2 z-0" />
+        <div className="flex items-center justify-between px-4 py-6 relative bg-white/5 rounded-2xl border border-white/5 shadow-inner">
+          <div className="absolute top-1/2 left-8 right-8 h-[2px] bg-white/10 -translate-y-1/2 z-0" />
           {leagues.map((league, idx) => {
             const isPast = idx < leagues.findIndex(l => l.id === myLeague.league_id);
             const isCurrent = league.id === myLeague.league_id;
@@ -145,16 +164,16 @@ export const LeagueCard = memo(function LeagueCard() {
             return (
               <div key={league.id} className="relative z-10 group cursor-help">
                 <motion.div 
-                  whileHover={{ scale: 1.2 }}
-                  className={`w-8 h-8 rounded-full flex items-center justify-center text-sm transition-all shadow-lg ${
-                    isCurrent ? 'ring-2 ring-primary ring-offset-2 ring-offset-background scale-110' : 
-                    isPast ? 'bg-primary/20 text-primary' : 'bg-muted text-muted-foreground'
+                  whileHover={{ scale: 1.3, rotate: 10 }}
+                  className={`w-10 h-10 rounded-xl flex items-center justify-center text-lg transition-all shadow-xl ${
+                    isCurrent ? 'ring-2 ring-primary ring-offset-4 ring-offset-background scale-125' : 
+                    isPast ? 'bg-primary/20 text-primary border border-primary/30' : 'bg-muted/30 text-muted-foreground border border-white/5'
                   }`}
-                  style={isCurrent ? { backgroundColor: league.color, color: 'white' } : {}}
+                  style={isCurrent ? { backgroundColor: league.color, color: 'white', boxShadow: `0 0 20px ${league.color}40` } : {}}
                 >
-                  {isPast ? <ChevronRight className="w-4 h-4" /> : league.icon}
+                  {isPast ? <ChevronRight className="w-5 h-5" /> : league.icon}
                 </motion.div>
-                <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 text-[10px] font-bold opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap uppercase tracking-widest">
+                <div className="absolute -bottom-7 left-1/2 -translate-x-1/2 text-[9px] font-black opacity-0 group-hover:opacity-100 transition-all transform translate-y-1 group-hover:translate-y-0 whitespace-nowrap uppercase tracking-[0.2em] text-primary">
                   {league.name}
                 </div>
               </div>
@@ -164,21 +183,31 @@ export const LeagueCard = memo(function LeagueCard() {
       </CardHeader>
       
       <CardContent className="space-y-6 relative">
-        <div className="grid grid-cols-2 gap-4">
-          <div className="p-4 rounded-2xl bg-muted/30 border border-white/5 flex flex-col items-center justify-center space-y-1">
-            <span className="text-[10px] font-black text-muted-foreground uppercase tracking-wider">Sua Posição</span>
-            <div className="flex items-center gap-2">
-              {getPositionIcon(userPosition)}
-              <span className="text-2xl font-black italic tracking-tighter">#{userPosition}</span>
+        <div className="grid grid-cols-2 gap-4 relative z-10">
+          <motion.div 
+            whileHover={{ y: -5 }}
+            className="p-5 rounded-3xl bg-white/5 border border-white/10 flex flex-col items-center justify-center space-y-2 group shadow-xl"
+          >
+            <span className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] group-hover:text-primary transition-colors">Combat Rank</span>
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+                {getPositionIcon(userPosition)}
+              </div>
+              <span className="text-3xl font-black italic tracking-tighter text-shadow-glow">#{userPosition}</span>
             </div>
-          </div>
-          <div className="p-4 rounded-2xl bg-muted/30 border border-white/5 flex flex-col items-center justify-center space-y-1">
-            <span className="text-[10px] font-black text-muted-foreground uppercase tracking-wider">XP Semanal</span>
-            <div className="flex items-center gap-2">
-              <Zap className="h-4 w-4 text-amber-500 fill-amber-500" />
-              <span className="text-2xl font-black italic tracking-tighter">{myLeague.weekly_xp.toLocaleString()}</span>
+          </motion.div>
+          <motion.div 
+            whileHover={{ y: -5 }}
+            className="p-5 rounded-3xl bg-white/5 border border-white/10 flex flex-col items-center justify-center space-y-2 group shadow-xl"
+          >
+            <span className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] group-hover:text-amber-500 transition-colors">Weekly Intel</span>
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-full bg-amber-500/10 flex items-center justify-center">
+                <Zap className="h-5 w-5 text-amber-500 fill-amber-500 shadow-glow-sm" />
+              </div>
+              <span className="text-3xl font-black italic tracking-tighter text-shadow-glow">{myLeague.weekly_xp.toLocaleString()}</span>
             </div>
-          </div>
+          </motion.div>
         </div>
 
         <div className="space-y-2 px-2">
@@ -202,15 +231,18 @@ export const LeagueCard = memo(function LeagueCard() {
           </div>
         </div>
 
-        <div className="bg-muted/20 rounded-3xl p-2 border border-white/5">
-          <div className="px-4 py-2 flex items-center justify-between border-b border-white/5 mb-2">
-            <span className="text-xs font-black uppercase tracking-widest text-muted-foreground flex items-center gap-2">
-              <Trophy className="w-3 h-3" /> Top Concorrentes
+        <div className="bg-black/20 backdrop-blur-md rounded-[2.5rem] p-3 border border-white/5 relative z-10">
+          <div className="px-6 py-4 flex items-center justify-between border-b border-white/5 mb-3">
+            <span className="text-[10px] font-black uppercase tracking-[0.3em] text-primary flex items-center gap-3">
+              <Trophy className="w-4 h-4" /> Global Operatives
             </span>
-            <Info className="w-3 h-3 text-muted-foreground cursor-help" />
+            <div className="flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse shadow-[0_0_8px_#ef4444]" />
+              <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">Live Feed</span>
+            </div>
           </div>
           
-          <ScrollArea className="h-[260px] px-2">
+          <ScrollArea className="h-[280px] px-3">
             <div className="space-y-1 pb-2">
               {leaderboard.slice(0, 15).map((u, index) => {
                 const position = index + 1;
@@ -222,19 +254,19 @@ export const LeagueCard = memo(function LeagueCard() {
                     key={u.user_id}
                     initial={{ opacity: 0, x: -10 }}
                     animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: index * 0.05 }}
-                    className={`flex items-center gap-3 p-3 rounded-xl transition-all ${
-                      isCurrentUser ? 'bg-primary/20 ring-1 ring-primary/40 shadow-glow-sm' : 'hover:bg-white/5'
+                    transition={{ delay: index * 0.03 }}
+                    className={`flex items-center gap-4 p-4 rounded-2xl transition-all duration-300 ${
+                      isCurrentUser ? 'bg-primary/25 ring-2 ring-primary/50 shadow-glow mx-1' : 'hover:bg-white/5 border border-transparent hover:border-white/5'
                     }`}
                   >
-                    <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-black ${
+                    <div className={`w-9 h-9 rounded-xl flex items-center justify-center text-sm font-black italic tracking-tighter shadow-lg ${
                       getPositionStyle(position)
                     }`}>
                       {position}
                     </div>
-                    <Avatar className="h-9 w-9 border border-white/10 shadow-lg">
+                    <Avatar className="h-11 w-11 border-2 border-white/10 shadow-2xl ring-2 ring-black/20">
                       <AvatarImage src={typedUser.profile?.avatar_url || undefined} />
-                      <AvatarFallback className="bg-muted text-xs font-black">
+                      <AvatarFallback className="bg-muted/50 text-xs font-black">
                         {typedUser.profile?.display_name?.charAt(0) || '?'}
                       </AvatarFallback>
                     </Avatar>
@@ -253,11 +285,13 @@ export const LeagueCard = memo(function LeagueCard() {
             </div>
           </ScrollArea>
         </div>
-
-        <div className="text-[10px] font-black text-center text-muted-foreground/40 tracking-[0.2em] uppercase pt-2">
-          O destino está em suas mãos
-        </div>
       </CardContent>
+      
+      <div className="p-4 bg-white/5 border-t border-white/5 text-center">
+        <div className="text-[10px] font-black text-primary/40 tracking-[0.4em] uppercase">
+          Victory is the only acceptable outcome
+        </div>
+      </div>
     </Card>
   );
 });
