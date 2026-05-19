@@ -1,4 +1,5 @@
  import { Trophy, TrendingUp, Shield, History, Star, Zap, Crown, Award, ChevronRight } from "lucide-react";
+ import { motion } from "framer-motion";
  import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
  import { Badge } from "@/components/ui/badge";
 import { useLeagues } from "@/hooks/useLeagues";
