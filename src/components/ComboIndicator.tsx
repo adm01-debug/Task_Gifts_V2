@@ -82,30 +82,43 @@ export function ComboIndicator({ variant = "compact" }: ComboIndicatorProps) {
           }}
           className={`flex items-center gap-2 px-3 py-1.5 rounded-full border ${currentTier.bgColor} ${glowClass} transition-shadow duration-300`}
         >
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={currentTier.label}
-              initial={{ scale: 0 }}
-              animate={{ scale: 1 }}
-              exit={{ scale: 0 }}
-            >
-              {isOnFire ? (
-                <Flame className={`w-4 h-4 ${currentTier.color}`} />
-              ) : (
-                <Zap className={`w-4 h-4 ${currentTier.color}`} />
-              )}
-            </motion.div>
-          </AnimatePresence>
-
-          <span className={`text-sm font-bold ${currentTier.color}`}>
-            x{combo.current_multiplier}
-          </span>
-
-          {combo.actions_count > 0 && (
-            <span className="text-xs text-muted-foreground">
-              ({combo.actions_count} ações)
-            </span>
-          )}
+           <div className="flex items-center gap-1.5 relative overflow-hidden">
+             <AnimatePresence mode="wait">
+               <motion.div
+                 key={currentTier.label}
+                 initial={{ scale: 0, rotate: -180 }}
+                 animate={{ scale: 1, rotate: 0 }}
+                 exit={{ scale: 0, rotate: 180 }}
+                 className="relative z-10"
+               >
+                 {isOnFire ? (
+                   <Flame className={`w-4 h-4 ${currentTier.color} drop-shadow-glow`} />
+                 ) : (
+                   <Zap className={`w-4 h-4 ${currentTier.color} drop-shadow-glow`} />
+                 )}
+               </motion.div>
+             </AnimatePresence>
+ 
+             <div className="flex flex-col -space-y-1">
+               <span className={`text-[10px] font-black uppercase tracking-widest ${currentTier.color} opacity-70`}>Multiplier</span>
+               <span className={`text-base font-black italic tracking-tighter ${currentTier.color}`}>
+                 x{combo.current_multiplier.toFixed(1)}
+               </span>
+             </div>
+           </div>
+ 
+           {combo.actions_count > 0 && (
+             <div className="h-4 w-px bg-white/10 mx-1" />
+           )}
+ 
+           {combo.actions_count > 0 && (
+             <div className="flex flex-col -space-y-1">
+               <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground opacity-50">Actions</span>
+               <span className="text-xs font-black text-muted-foreground">
+                 {combo.actions_count}
+               </span>
+             </div>
+           )}
         </motion.div>
       </>
     );
