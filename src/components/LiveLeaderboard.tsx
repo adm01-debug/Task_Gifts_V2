@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { useNavigate } from "react-router-dom";
 import { useLeaderboard } from "@/hooks/useProfiles";
 import { useAuth } from "@/hooks/useAuth";
-import { SkeletonLeaderboard } from "@/components/ui/skeleton";
+import { Skeleton, SkeletonLeaderboard } from "@/components/ui/skeleton";
 
 interface LeaderboardPlayer {
   rank: number;
@@ -84,20 +84,32 @@ export const LiveLeaderboard = memo(function LiveLeaderboard() {
 
   if (isLoading) {
     return (
-      <div className="bg-card rounded-2xl border border-border overflow-hidden card-shimmer">
-        <div className="p-4 border-b border-border flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-gold/20 to-gold/5 flex items-center justify-center">
-              <Trophy className="w-4 h-4 text-gold" />
-            </div>
-            <div>
-              <h3 className="font-bold">Leaderboard</h3>
-              <p className="text-xs text-muted-foreground">Esta semana</p>
+      <div className="rounded-[2.5rem] overflow-hidden border border-white/5 bg-card/40 backdrop-blur-2xl relative">
+        <div className="p-6 border-b border-white/5 flex items-center justify-between bg-white/5">
+          <div className="flex items-center gap-4">
+            <Skeleton variant="glow" shape="card" className="w-12 h-12 rounded-2xl" />
+            <div className="space-y-2">
+              <Skeleton variant="shimmer" className="h-3 w-32" />
+              <Skeleton variant="shimmer" className="h-2 w-24" />
             </div>
           </div>
+          <Skeleton variant="subtle" shape="pill" className="h-6 w-24" />
         </div>
+        
+        {/* Podium Skeleton */}
+        <div className="px-6 py-10 border-b border-white/5 bg-gradient-to-b from-primary/5 to-transparent">
+          <div className="flex items-end justify-center gap-6">
+            {[70, 100, 50].map((h, i) => (
+              <div key={i} className="flex flex-col items-center space-y-4">
+                <Skeleton variant="glow" shape="card" className="w-16 h-16 rounded-[1.25rem]" />
+                <Skeleton variant="tactic" className="w-20 rounded-t-3xl" style={{ height: h }} />
+              </div>
+            ))}
+          </div>
+        </div>
+
         <div className="p-4">
-          <SkeletonLeaderboard items={5} />
+          <SkeletonLeaderboard items={4} />
         </div>
       </div>
     );

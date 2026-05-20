@@ -63,23 +63,35 @@ export const AnalyticsWidget = () => {
 
   if (isLoading) {
     return (
-      <div className="bg-card rounded-2xl border border-border overflow-hidden">
+      <div className="bg-card/80 rounded-2xl border border-border/60 overflow-hidden">
         <div className="p-4 border-b border-border">
           <div className="flex items-center gap-2">
-            <Skeleton className="w-8 h-8 rounded-lg" />
-            <div>
-              <Skeleton className="w-24 h-5 mb-1" />
-              <Skeleton className="w-16 h-3" />
+            <Skeleton variant="glow" shape="card" className="w-8 h-8 rounded-lg" />
+            <div className="space-y-1">
+              <Skeleton variant="shimmer" className="h-4 w-24" />
+              <Skeleton variant="shimmer" className="h-3 w-16" />
             </div>
           </div>
         </div>
-        <div className="p-4 grid grid-cols-2 gap-3">
+        <div className="p-4 grid grid-cols-2 gap-3 border-b border-border">
           {[1, 2, 3, 4].map((i) => (
-            <Skeleton key={i} className="h-20 rounded-xl" />
+            <div key={i} className="p-3 rounded-xl bg-muted/30 space-y-2">
+              <div className="flex justify-between">
+                <Skeleton variant="shimmer" shape="circle" className="w-4 h-4" />
+                <Skeleton variant="shimmer" shape="pill" className="w-10 h-3" />
+              </div>
+              <Skeleton variant="glow" className="h-6 w-3/4" />
+              <Skeleton variant="shimmer" className="h-2 w-1/2" />
+            </div>
           ))}
         </div>
         <div className="p-4">
-          <Skeleton className="h-32" />
+          <Skeleton variant="shimmer" className="h-4 w-1/3 mb-3" />
+          <div className="flex items-end gap-2 h-32">
+            {[40, 60, 30, 80, 50, 90, 70].map((h, i) => (
+              <Skeleton key={i} variant="glow" className="flex-1 rounded-t-md" style={{ height: `${h}%` }} />
+            ))}
+          </div>
         </div>
       </div>
     );

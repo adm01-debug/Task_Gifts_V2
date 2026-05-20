@@ -132,11 +132,16 @@ export function RankingBadge({
     );
   }
 
-  if (!tier) {
-    return null;
-  }
-
-  const config = rankConfig[tier];
+  // Fallback visual para rank 0 ou null mantendo o layout
+  const config = tier ? rankConfig[tier] : {
+    icon: Star,
+    label: "Iniciante",
+    description: "Comece sua jornada!",
+    gradient: "from-slate-400 to-slate-600",
+    iconColor: "text-slate-100",
+    glowColor: "shadow-slate-500/30",
+    borderColor: "border-slate-400",
+  };
   const Icon = config.icon;
 
   const badge = (
@@ -242,7 +247,7 @@ export function RankingBadge({
           <div>
             <p className="font-semibold">{config.label}</p>
             <p className="text-xs text-muted-foreground">{config.description}</p>
-            <p className="text-xs font-medium text-primary">Posição #{rank}</p>
+            <p className="text-xs font-medium text-primary">Posição {rank > 0 ? `#${rank}` : "Não Ranqueado"}</p>
           </div>
         </div>
       </TooltipContent>
@@ -260,11 +265,16 @@ export function RankingBadgeInline({
 }) {
   const tier = getRankTier(rank);
 
-  if (!tier || rank === null) {
+  if (rank === null) {
+    return <Skeleton variant="shimmer" shape="pill" className={cn("h-6 w-16", className)} />;
+  }
+
+  if (!tier || rank <= 0) {
     return (
-      <span className={cn("text-muted-foreground text-sm", className)}>
-        #{rank || "-"}
-      </span>
+      <div className={cn("inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-muted text-muted-foreground", className)}>
+        <Star className="w-3 h-3" />
+        <span>#{rank || "-"}</span>
+      </div>
     );
   }
 

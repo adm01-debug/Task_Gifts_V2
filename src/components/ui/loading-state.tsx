@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { Loader2 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -54,6 +54,42 @@ export function LoadingStateCard({ cardClassName, ...props }: LoadingStateCardPr
         <LoadingState {...props} />
       </CardContent>
     </Card>
+  );
+}
+
+// Componente de transição ultra-fluida para Skeletons
+export function AdaptiveLoading({ 
+  isLoading, 
+  skeleton, 
+  children 
+}: { 
+  isLoading: boolean; 
+  skeleton: React.ReactNode; 
+  children: React.ReactNode;
+}) {
+  return (
+    <AnimatePresence mode="wait">
+      {isLoading ? (
+        <motion.div
+          key="skeleton"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.2, ease: "easeInOut" }}
+        >
+          {skeleton}
+        </motion.div>
+      ) : (
+        <motion.div
+          key="content"
+          initial={{ opacity: 0, y: 5 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3, ease: "easeOut" }}
+        >
+          {children}
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 }
 

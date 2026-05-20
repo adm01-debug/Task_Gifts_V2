@@ -15,6 +15,7 @@ import { useDepartments } from "@/hooks/useDepartments";
 import { useProfiles } from "@/hooks/useProfiles";
 import { useAllMissions } from "@/hooks/useMissions";
 import { EmptyState } from "@/components/ui/empty-state";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface RankingMetric {
   key: string;
@@ -153,8 +154,10 @@ export default function DepartmentRankings() {
   const [selectedDepartment, setSelectedDepartment] = useState<string>("all");
   const [periodType, setPeriodType] = useState<"weekly" | "monthly">("weekly");
   
-  const { data: departments = [] } = useDepartments();
-  const { data: profiles = [] } = useProfiles();
+  const { data: departments = [], isLoading: deptsLoading } = useDepartments();
+  const { data: profiles = [], isLoading: profilesLoading } = useProfiles();
+
+  const isLoading = deptsLoading || profilesLoading;
 
   // Use profiles as ranking data for now
   const rankings = profiles
@@ -185,6 +188,46 @@ export default function DepartmentRankings() {
   const selectedDept = departments.find(d => d.id === selectedDepartment);
   const deptKey = selectedDept ? getDepartmentKey(selectedDept.name) : null;
   const metrics = deptKey ? departmentMetrics[deptKey] : null;
+
+  if (isLoading) {
+    return (
+      <Card className="border-border/50 bg-card/50 backdrop-blur-sm">
+        <CardHeader className="pb-4">
+          <div className="flex items-center justify-between flex-wrap gap-4">
+            <div className="flex items-center gap-3">
+              <Skeleton variant="glow" shape="card" className="p-2 rounded-xl w-10 h-10" />
+              <div className="space-y-2">
+                <Skeleton variant="shimmer" className="h-4 w-32" />
+                <Skeleton variant="shimmer" className="h-3 w-40" />
+              </div>
+            </div>
+            <div className="flex items-center gap-2">
+              <Skeleton variant="shimmer" className="h-10 w-32 rounded-lg" />
+              <Skeleton variant="shimmer" className="h-10 w-24 rounded-lg" />
+            </div>
+          </div>
+        </CardHeader>
+        <CardContent className="space-y-3">
+          {[1, 2, 3].map(i => (
+            <Card key={i} className="bg-card/50 border-border/50">
+              <CardContent className="p-4 flex items-center gap-4">
+                <Skeleton variant="glow" shape="circle" className="w-10 h-10" />
+                <Skeleton variant="shimmer" shape="circle" className="h-12 w-12" />
+                <div className="flex-1 space-y-2">
+                  <Skeleton variant="shimmer" className="h-4 w-32" />
+                  <div className="flex gap-3">
+                    <Skeleton variant="shimmer" className="h-3 w-16" />
+                    <Skeleton variant="shimmer" className="h-3 w-16" />
+                  </div>
+                </div>
+                <Skeleton variant="shimmer" className="h-2 w-24 rounded-full" />
+              </CardContent>
+            </Card>
+          ))}
+        </CardContent>
+      </Card>
+    );
+  }
 
   return (
     <Card className="border-border/50 bg-card/50 backdrop-blur-sm">

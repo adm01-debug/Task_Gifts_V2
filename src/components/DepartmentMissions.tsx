@@ -12,7 +12,7 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { AllSelectItem } from "@/components/ui/all-select-item";
-import { SkeletonMissionList } from "@/components/ui/skeleton";
+import { Skeleton, SkeletonMissionList } from "@/components/ui/skeleton";
 import { useDepartmentMissions, useClaimMissionReward } from "@/hooks/useMissions";
 import { useDepartments } from "@/hooks/useDepartments";
 import type { MissionWithProgress } from "@/services/missionsService";
@@ -137,7 +137,44 @@ function DepartmentMissions() {
     });
   };
 
-  if (isLoading) return <SkeletonMissionList items={3} />;
+  if (isLoading) {
+    return (
+      <Card variant="ultra" className="h-full flex flex-col overflow-hidden border-white/5">
+        <CardHeader className="p-5 bg-white/5">
+          <div className="flex items-center justify-between gap-4">
+            <div className="flex items-center gap-3">
+              <Skeleton variant="glow" shape="card" className="w-10 h-10 rounded-2xl" />
+              <div className="space-y-1">
+                <Skeleton variant="shimmer" className="h-3 w-24" />
+                <Skeleton variant="shimmer" className="h-2 w-32" />
+              </div>
+            </div>
+            <Skeleton variant="shimmer" className="h-9 w-32 rounded-xl" />
+          </div>
+        </CardHeader>
+        <CardContent className="p-4 space-y-4">
+          <Skeleton variant="shimmer" className="h-10 w-full rounded-2xl" />
+          <div className="space-y-3">
+            {[1, 2, 3].map(i => (
+              <div key={i} className="p-4 rounded-2xl border border-white/5 bg-card/40 space-y-3">
+                <div className="flex items-center gap-4">
+                  <Skeleton variant="glow" shape="card" className="w-12 h-12 rounded-xl" />
+                  <div className="flex-1 space-y-2">
+                    <div className="flex justify-between">
+                      <Skeleton variant="shimmer" className="h-2 w-32" />
+                      <Skeleton variant="shimmer" className="h-2 w-16" />
+                    </div>
+                    <Skeleton variant="shimmer" className="h-1.5 w-full rounded-full" />
+                    <Skeleton variant="shimmer" className="h-2 w-24" />
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
 
   return (
     <Card variant="ultra" className="h-full flex flex-col overflow-hidden border-white/5">
