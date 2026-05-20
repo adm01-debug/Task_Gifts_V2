@@ -551,6 +551,11 @@ export function SkeletonPurchaseHistory({ items = 3, className, ...props }: Skel
   );
 }
 
+// Skeleton for Achievement item
+export function SkeletonAchievementItem({ className, ...props }: SkeletonProps) {
+  return (
+    <div className={cn("flex items-center justify-between p-3 rounded-xl border border-border", className)} {...props}>
+      <div className="flex items-center gap-3">
         <Skeleton variant="glow" className="w-8 h-8 rounded-lg" />
         <div className="space-y-1">
           <Skeleton variant="shimmer" className="h-4 w-24" />
@@ -561,6 +566,7 @@ export function SkeletonPurchaseHistory({ items = 3, className, ...props }: Skel
     </div>
   );
 }
+
 
 // Complete Widget Skeleton
 export function SkeletonWidget({ 
