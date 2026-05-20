@@ -22,12 +22,17 @@
        - name: Type Check
          run: bun run typecheck
  
-        - name: Test
+        - name: Unit Tests
           run: bun run test
- 
+
+        - name: Install Playwright Browsers
+          run: bun playwright install --with-deps chromium
+
+        - name: E2E Tests
+          run: bun playwright test
+
         - name: Generate Audit PDF
           run: |
-            bun add -D md-to-pdf
             cat << 'EOF' > md-to-pdf.config.js
             module.exports = {
               launch_options: {
@@ -36,9 +41,11 @@
             };
             EOF
             npx md-to-pdf audit_report.md
- 
-        - name: Upload Audit PDF
+
+        - name: Upload Artifacts
           uses: actions/upload-artifact@v4
           with:
-            name: audit-report-pdf
-            path: audit_report.pdf
+            name: ci-artifacts
+            path: |
+              audit_report.pdf
+              playwright-report/
