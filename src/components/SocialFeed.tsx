@@ -46,27 +46,7 @@ export const SocialFeed = memo(function SocialFeed({ limit = 30, compact = false
           </CardTitle>
         </CardHeader>
         <CardContent className="p-4">
-          <div className="space-y-4">
-            {[1, 2, 3, 4, 5].map((i) => (
-              <div key={i} className="flex items-start gap-3 py-2">
-                <div className="relative">
-                  <Skeleton variant="shimmer" shape="circle" className="h-10 w-10" />
-                  <Skeleton variant="glow" shape="circle" className="absolute -bottom-1 -right-1 h-5 w-5" />
-                </div>
-                <div className="flex-1 space-y-2">
-                  <div className="flex items-center gap-2">
-                    <Skeleton variant="shimmer" className="h-4 w-24" />
-                    <Skeleton variant="subtle" className="h-3 w-40" />
-                  </div>
-                  <Skeleton variant="subtle" className="h-3 w-20" />
-                  <div className="flex gap-2 mt-2">
-                    <Skeleton variant="subtle" shape="pill" className="h-6 w-12" />
-                    <Skeleton variant="subtle" shape="pill" className="h-6 w-12" />
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
+          <SkeletonActivityList count={5} />
         </CardContent>
       </Card>
     );

@@ -74,22 +74,7 @@ export const RewardsShop = () => {
           </div>
           <Skeleton variant="shimmer" className="h-8 w-20 rounded-full" />
         </div>
-        <div className="p-4 grid grid-cols-2 gap-3">
-          {[1, 2, 3, 4].map((i) => (
-            <div key={i} className="p-3 rounded-xl border border-border/40 bg-card/30 space-y-3">
-              <div className="flex justify-between">
-                <Skeleton variant="shimmer" className="h-4 w-10 rounded" />
-                <Skeleton variant="shimmer" className="h-4 w-4 rounded-full" />
-              </div>
-              <Skeleton variant="shimmer" className="w-10 h-10 mx-auto rounded-lg" />
-              <div className="space-y-1.5">
-                <Skeleton variant="shimmer" className="h-3 w-3/4 mx-auto" />
-                <Skeleton variant="shimmer" className="h-2 w-1/2 mx-auto opacity-50" />
-              </div>
-              <Skeleton variant="glow" className="h-8 w-full rounded-lg" />
-            </div>
-          ))}
-        </div>
+        <SkeletonRewardGrid items={4} />
         <div className="p-4 border-t border-border bg-card/20">
           <Skeleton variant="shimmer" className="h-4 w-1/2 mx-auto" />
         </div>

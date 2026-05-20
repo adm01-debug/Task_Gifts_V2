@@ -68,18 +68,14 @@ const DailyQuestsComponent = () => {
           </div>
         </div>
         <div className="p-4 space-y-2 flex-1">
-          {[1, 2, 3].map(i => (
-            <div key={i} className="p-4 rounded-2xl bg-white/5 border border-transparent flex items-center gap-4">
-              <Skeleton variant="shimmer" shape="card" className="w-10 h-10 rounded-xl shrink-0" />
-              <div className="flex-1 space-y-2">
-                <div className="flex justify-between">
-                  <Skeleton variant="shimmer" className="h-3 w-1/2" />
-                  <Skeleton variant="shimmer" className="h-3 w-12" />
-                </div>
-                <Skeleton variant="shimmer" className="h-1 w-full rounded-full" />
-              </div>
-            </div>
-          ))}
+          <SkeletonQuestList items={3} />
+        </div>
+        <div className="p-4 bg-black/20 border-t border-white/5 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <Skeleton variant="shimmer" className="w-3 h-3" />
+            <Skeleton variant="shimmer" className="h-3 w-32" />
+          </div>
+          <Skeleton variant="shimmer" className="h-3 w-16" />
         </div>
       </div>
     );
