@@ -6,7 +6,8 @@ import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useLeagues } from "@/hooks/useLeagues";
 import { useSoundEffects } from "@/hooks/useSoundEffects";
-import { Trophy, TrendingUp, TrendingDown, Minus, Crown, Zap, Info, Timer, ChevronRight, Star } from "lucide-react";
+import { Trophy, TrendingUp, TrendingDown, Minus, Crown, Zap, Info, Timer, ChevronRight, Star } from "lucide-center";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface LeaderboardUser {
   user_id: string;
@@ -75,10 +76,41 @@ export const LeagueCard = memo(function LeagueCard() {
 
   if (isLoading) {
     return (
-      <Card className="border-none bg-card/50 backdrop-blur-xl">
-        <CardContent className="p-12 text-center text-muted-foreground animate-pulse">
-          <Trophy className="w-12 h-12 mx-auto mb-4 opacity-20" />
-          Sincronizando ligas de elite...
+      <Card variant="ultra" className="overflow-hidden relative bg-gradient-to-br from-card/80 via-card/50 to-primary/10 border-white/5 ring-1 ring-white/10 shadow-2xl">
+        <CardHeader className="pb-4 relative z-10">
+          <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center gap-4">
+              <Skeleton variant="glow" shape="card" className="w-16 h-16 rounded-2xl" />
+              <div className="space-y-2">
+                <Skeleton variant="shimmer" className="h-3 w-24" />
+                <Skeleton variant="shimmer" className="h-6 w-48" />
+                <Skeleton variant="shimmer" className="h-2 w-32" />
+              </div>
+            </div>
+            <Skeleton variant="subtle" shape="pill" className="h-8 w-24" />
+          </div>
+          <div className="flex items-center justify-between px-4 py-6 relative bg-white/5 rounded-2xl border border-white/5">
+            {[1, 2, 3, 4, 5].map(i => (
+              <Skeleton key={i} variant="shimmer" shape="card" className="w-10 h-10 rounded-xl" />
+            ))}
+          </div>
+        </CardHeader>
+        <CardContent className="space-y-6">
+          <div className="grid grid-cols-2 gap-4">
+            <Skeleton variant="glow" className="h-20 rounded-3xl" />
+            <Skeleton variant="glow" className="h-20 rounded-3xl" />
+          </div>
+          <div className="space-y-3 p-4 bg-black/20 rounded-[2.5rem]">
+            <Skeleton variant="shimmer" className="h-4 w-1/2 mb-4" />
+            {[1, 2, 3].map(i => (
+              <div key={i} className="flex items-center gap-4 p-4">
+                <Skeleton variant="shimmer" className="w-8 h-4" />
+                <Skeleton variant="shimmer" shape="circle" className="h-11 w-11" />
+                <Skeleton variant="shimmer" className="h-4 flex-1" />
+                <Skeleton variant="shimmer" className="h-4 w-12" />
+              </div>
+            ))}
+          </div>
         </CardContent>
       </Card>
     );
