@@ -163,7 +163,7 @@ export const rbacService = {
       .eq("role_id", roleId);
 
     if (error) throw error;
-     return (data || []).map((rp: any) => rp.permissions).filter(Boolean) as Permission[];
+     return (data || []).map((rp) => (rp as any).permissions).filter(Boolean) as Permission[];
   },
 
   async assignPermissionToRole(roleId: string, permissionId: string): Promise<void> {

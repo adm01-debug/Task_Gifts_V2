@@ -6601,6 +6601,36 @@ export type Database = {
           },
         ]
       }
+      webhook_idempotency: {
+        Row: {
+          created_at: string | null
+          expires_at: string | null
+          id: string
+          idempotency_key: string
+          provider: string
+          response_body: Json | null
+          status: string
+        }
+        Insert: {
+          created_at?: string | null
+          expires_at?: string | null
+          id?: string
+          idempotency_key: string
+          provider: string
+          response_body?: Json | null
+          status: string
+        }
+        Update: {
+          created_at?: string | null
+          expires_at?: string | null
+          id?: string
+          idempotency_key?: string
+          provider?: string
+          response_body?: Json | null
+          status?: string
+        }
+        Relationships: []
+      }
       webhook_subscriptions: {
         Row: {
           api_key_id: string | null
@@ -6747,6 +6777,7 @@ export type Database = {
       calculate_enps_score: { Args: { p_survey_id: string }; Returns: number }
       check_login_lockout: { Args: { p_email: string }; Returns: Json }
       cleanup_expired_challenges: { Args: never; Returns: undefined }
+      cleanup_expired_idempotency_keys: { Args: never; Returns: undefined }
       cleanup_old_security_logs:
         | { Args: never; Returns: undefined }
         | { Args: { p_days_to_keep?: number }; Returns: Json }
