@@ -62,21 +62,44 @@ export function GoalsWidget() {
 
   if (isLoading) {
     return (
-      <Card className="bg-card/40 backdrop-blur-xl border-white/5 overflow-hidden shadow-2xl">
-        <CardHeader className="flex-row items-center justify-between pb-2 bg-white/5 relative overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-r from-primary/5 via-transparent to-transparent animate-pulse" />
-          <div className="flex items-center gap-2 relative z-10">
-            <Skeleton variant="glow" shape="card" className="h-5 w-5 rounded-md" />
-            <Skeleton variant="shimmer" className="h-5 w-32" />
-          </div>
-          <Skeleton variant="shimmer" className="h-8 w-24 rounded-lg" />
-        </CardHeader>
-        <CardContent className="space-y-4 pt-6">
+      <Card className="bg-card/40 backdrop-blur-xl border-white/5 overflow-hidden shadow-2xl rounded-[2.5rem] relative">
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-transparent animate-pulse pointer-events-none" />
+        <CardHeader className="flex-row items-center justify-between p-6 bg-white/5 relative z-10 border-b border-white/5">
           <div className="flex items-center gap-4">
-            <Skeleton variant="shimmer" className="h-4 w-20" />
-            <Skeleton variant="shimmer" className="h-4 w-24" />
+            <Skeleton variant="glow" shape="card" className="h-10 w-10 rounded-2xl ring-1 ring-white/10" />
+            <Skeleton variant="shimmer" className="h-5 w-40 rounded-lg" />
           </div>
-          <SkeletonQuestList items={3} />
+          <Skeleton variant="shimmer" className="h-10 w-28 rounded-2xl bg-black/40 border border-white/5" />
+        </CardHeader>
+        <CardContent className="p-8 space-y-6 relative z-10">
+          <div className="flex items-center gap-6">
+            <div className="flex items-center gap-2">
+              <Skeleton variant="shimmer" className="h-4 w-4 rounded-full" />
+              <Skeleton variant="shimmer" className="h-4 w-24 rounded-full" />
+            </div>
+            <div className="flex items-center gap-2">
+              <Skeleton variant="shimmer" className="h-4 w-4 rounded-full" />
+              <Skeleton variant="shimmer" className="h-4 w-28 rounded-full" />
+            </div>
+          </div>
+          <div className="space-y-4">
+            {Array.from({ length: 3 }).map((_, i) => (
+              <div key={i} className="p-4 rounded-2xl border border-white/5 bg-white/5 space-y-3">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <Skeleton variant="shimmer" className="h-2 w-2 rounded-full" />
+                    <Skeleton variant="shimmer" className="h-4 w-48 rounded-lg" />
+                  </div>
+                  <Skeleton variant="shimmer" className="h-5 w-16 rounded-md bg-black/40" />
+                </div>
+                <Skeleton variant="shimmer" className="h-2 w-full rounded-full bg-black/40" />
+                <div className="flex justify-between">
+                  <Skeleton variant="shimmer" className="h-3 w-24 rounded-full opacity-40" />
+                  <Skeleton variant="shimmer" className="h-3 w-20 rounded-full opacity-40" />
+                </div>
+              </div>
+            ))}
+          </div>
         </CardContent>
       </Card>
     );

@@ -46,36 +46,47 @@ const DailyQuestsComponent = () => {
 
   if (isLoading) {
     return (
-      <div className="bg-card/40 backdrop-blur-xl rounded-3xl border border-white/5 overflow-hidden shadow-2xl h-full flex flex-col">
-        <div className="p-6 border-b border-white/5 bg-white/5 relative overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-r from-primary/5 via-transparent to-transparent animate-pulse" />
-          <div className="flex items-center justify-between mb-4">
+      <div className="bg-card/40 backdrop-blur-xl rounded-[2.5rem] border border-white/5 overflow-hidden shadow-2xl h-full flex flex-col relative">
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-transparent animate-pulse pointer-events-none" />
+        <div className="p-8 border-b border-white/5 bg-white/5 relative overflow-hidden">
+          <div className="flex items-center justify-between mb-6">
             <div className="flex items-center gap-4">
-              <Skeleton variant="glow" shape="card" className="w-12 h-12 rounded-2xl" />
+              <Skeleton variant="glow" shape="card" className="w-14 h-14 rounded-2xl ring-1 ring-white/10" />
               <div className="space-y-2">
-                <Skeleton variant="shimmer" className="h-4 w-32" />
-                <Skeleton variant="shimmer" className="h-2 w-24 opacity-50" />
+                <Skeleton variant="shimmer" className="h-4 w-32 rounded-lg" />
+                <Skeleton variant="shimmer" className="h-2.5 w-24 opacity-40 rounded-full" />
               </div>
             </div>
-            <Skeleton variant="shimmer" className="h-7 w-20 rounded-xl" />
+            <Skeleton variant="shimmer" className="h-9 w-24 rounded-2xl bg-black/40 border border-white/5" />
           </div>
-          <div className="space-y-2">
-            <div className="flex justify-between">
-              <Skeleton variant="shimmer" className="h-3 w-24" />
-              <Skeleton variant="shimmer" className="h-3 w-16" />
+          <div className="space-y-3">
+            <div className="flex justify-between items-end">
+              <Skeleton variant="shimmer" className="h-3 w-28 rounded-full" />
+              <Skeleton variant="shimmer" className="h-3 w-20 rounded-full" />
             </div>
-            <Skeleton variant="shimmer" className="h-2 w-full rounded-full" />
+            <Skeleton variant="shimmer" className="h-2 w-full rounded-full bg-black/40" />
           </div>
         </div>
-        <div className="p-4 space-y-2 flex-1">
-          <SkeletonQuestList items={3} />
+        <div className="p-4 space-y-3 flex-1 overflow-hidden">
+          {Array.from({ length: 3 }).map((_, i) => (
+            <div key={i} className="p-4 rounded-2xl bg-white/5 border border-transparent flex items-center gap-4">
+              <Skeleton variant="shimmer" shape="card" className="w-10 h-10 rounded-xl bg-black/40" />
+              <div className="flex-1 space-y-2">
+                <div className="flex justify-between">
+                  <Skeleton variant="shimmer" className="h-3.5 w-32 rounded-full" />
+                  <Skeleton variant="shimmer" className="h-3 w-12 rounded-full" />
+                </div>
+                <Skeleton variant="shimmer" className="h-1.5 w-full rounded-full bg-black/40" />
+              </div>
+            </div>
+          ))}
         </div>
-        <div className="p-4 bg-black/20 border-t border-white/5 flex items-center justify-between">
+        <div className="p-6 bg-black/20 border-t border-white/5 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Skeleton variant="shimmer" className="w-3 h-3" />
-            <Skeleton variant="shimmer" className="h-3 w-32" />
+            <Skeleton variant="shimmer" className="w-3.5 h-3.5 rounded-full" />
+            <Skeleton variant="shimmer" className="h-3 w-36 rounded-full" />
           </div>
-          <Skeleton variant="shimmer" className="h-3 w-16" />
+          <Skeleton variant="shimmer" className="h-3 w-16 rounded-full" />
         </div>
       </div>
     );

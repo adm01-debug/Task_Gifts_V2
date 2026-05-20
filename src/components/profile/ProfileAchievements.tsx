@@ -67,12 +67,12 @@ export function ProfileAchievements() {
           <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full blur-3xl -mr-32 -mt-32 group-hover:bg-primary/10 transition-colors duration-700" />
           
           {isLoading ? (
-            <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-6">
+            <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-6 relative z-10">
               {[...Array(12)].map((_, i) => (
-                <div key={i} className="aspect-square rounded-2xl bg-white/5 border border-white/5 p-4 flex flex-col items-center justify-center gap-2 relative overflow-hidden">
+                <div key={i} className="aspect-square rounded-2xl bg-white/5 border border-white/5 p-4 flex flex-col items-center justify-center gap-2 relative overflow-hidden ring-1 ring-white/5">
                   <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-transparent animate-pulse" />
-                  <Skeleton variant="glow" shape="card" className="w-12 h-12 rounded-xl mb-1" />
-                  <Skeleton variant="shimmer" className="h-1.5 w-8 rounded-full opacity-40" />
+                  <Skeleton variant="glow" shape="card" className="w-12 h-12 rounded-xl mb-1 bg-black/20" />
+                  <Skeleton variant="shimmer" className="h-2 w-10 rounded-full opacity-30" />
                 </div>
               ))}
             </div>
