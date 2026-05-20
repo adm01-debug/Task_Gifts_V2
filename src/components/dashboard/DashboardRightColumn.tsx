@@ -99,7 +99,7 @@ export const DashboardRightColumn = memo(function DashboardRightColumn() {
 
       {/* Combo History - Can be lazy */}
       <StaggeredItemRight>
-        <LazyWidget fallbackHeight="160px">
+        <LazyWidget fallbackHeight="160px" variant="list">
           <SectionErrorBoundary sectionName="Histórico de Combo">
             <ComboHistory />
           </SectionErrorBoundary>
@@ -108,7 +108,7 @@ export const DashboardRightColumn = memo(function DashboardRightColumn() {
 
       {/* Activity Heatmap */}
       <StaggeredItemRight>
-        <LazyWidget fallbackHeight="200px">
+        <LazyWidget fallbackHeight="200px" variant="chart">
           <SectionErrorBoundary sectionName="Mapa de Atividades">
             <ActivityHeatmap data={activityData} />
           </SectionErrorBoundary>
@@ -117,7 +117,7 @@ export const DashboardRightColumn = memo(function DashboardRightColumn() {
 
       {/* Weekly Performance - Can be lazy */}
       <StaggeredItemRight>
-        <LazyWidget fallbackHeight="200px">
+        <LazyWidget fallbackHeight="200px" variant="chart">
           <SectionErrorBoundary sectionName="Comparativo Semanal">
             <WeeklyPerformanceComparison />
           </SectionErrorBoundary>
@@ -133,7 +133,7 @@ export const DashboardRightColumn = memo(function DashboardRightColumn() {
 
       {/* Department Rankings - Below the fold */}
       <StaggeredItemRight>
-        <LazyWidget fallbackHeight="320px">
+        <LazyWidget fallbackHeight="320px" variant="list">
           <SectionErrorBoundary sectionName="Rankings por Departamento">
             <DepartmentRankings />
           </SectionErrorBoundary>
@@ -142,7 +142,7 @@ export const DashboardRightColumn = memo(function DashboardRightColumn() {
 
       {/* Live Leaderboard - Below the fold */}
       <StaggeredItemRight>
-        <LazyWidget fallbackHeight="400px">
+        <LazyWidget fallbackHeight="400px" variant="list">
           <SectionErrorBoundary sectionName="Leaderboard">
             <LiveLeaderboard />
           </SectionErrorBoundary>
@@ -151,7 +151,7 @@ export const DashboardRightColumn = memo(function DashboardRightColumn() {
 
       {/* Kudos Ranking - Below the fold */}
       <StaggeredItemRight>
-        <LazyWidget fallbackHeight="280px">
+        <LazyWidget fallbackHeight="280px" variant="list">
           <SectionErrorBoundary sectionName="Ranking de Kudos">
             <KudosRanking />
           </SectionErrorBoundary>
@@ -160,7 +160,7 @@ export const DashboardRightColumn = memo(function DashboardRightColumn() {
 
       {/* Analytics Widget - Below the fold */}
       <StaggeredItemRight>
-        <LazyWidget fallbackHeight="320px">
+        <LazyWidget fallbackHeight="320px" variant="chart">
           <SectionErrorBoundary sectionName="Analytics">
             <AnalyticsWidget />
           </SectionErrorBoundary>
@@ -169,7 +169,7 @@ export const DashboardRightColumn = memo(function DashboardRightColumn() {
 
       {/* Rewards Shop - Bottom of page */}
       <StaggeredItemRight>
-        <LazyWidget fallbackHeight="360px">
+        <LazyWidget fallbackHeight="360px" variant="card">
           <SectionErrorBoundary sectionName="Loja de Recompensas">
             <RewardsShop />
           </SectionErrorBoundary>
