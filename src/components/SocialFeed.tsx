@@ -41,12 +41,12 @@ export const SocialFeed = memo(function SocialFeed({ limit = 30, compact = false
       <Card variant="ultra" className={cn("h-full", className)}>
         <CardHeader className="pb-3 border-b border-border/40">
           <CardTitle className="flex items-center gap-2 text-lg">
-            <Skeleton variant="glow" className="h-5 w-5" />
+            <Skeleton variant="glow" shape="circle" className="h-5 w-5" />
             <Skeleton variant="shimmer" className="h-5 w-32" />
           </CardTitle>
         </CardHeader>
         <CardContent className="p-4">
-          <SkeletonActivityList count={5} />
+          <SkeletonActivityList count={compact ? 5 : 8} />
         </CardContent>
       </Card>
     );
