@@ -10,7 +10,8 @@
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "prepare": "husky"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
@@ -110,6 +111,8 @@
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.20",
     "globals": "^15.15.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^17.0.5",
     "lovable-tagger": "^1.1.13",
     "md-to-pdf": "^5.2.5",
     "postcss": "^8.5.6",
