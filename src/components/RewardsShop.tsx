@@ -3,7 +3,7 @@ import { Gift, Star, Lock, Sparkles, ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useShopRewards } from "@/hooks/useShop";
 import { useCurrentProfile } from "@/hooks/useProfiles";
-import { Skeleton } from "@/components/ui/skeleton";
+import { Skeleton, SkeletonRewardGrid } from "@/components/ui/skeleton";
 import { EmptyState } from "@/components/ui/empty-state";
 import { useNavigate } from "react-router-dom";
 import { useMemo, useCallback } from "react";

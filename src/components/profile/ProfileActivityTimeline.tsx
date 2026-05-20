@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { Zap, TrendingUp, Target, Trophy, Heart, Flame, Star, ChevronRight, Activity, Shield, Clock } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import { Skeleton } from "@/components/ui/skeleton";
+import { Skeleton, SkeletonActivityList } from "@/components/ui/skeleton";
 import { useRecentAuditLogs } from "@/hooks/useAudit";
 import { formatDistanceToNow } from "date-fns";
 import { ptBR } from "date-fns/locale";
