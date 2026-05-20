@@ -9,9 +9,10 @@ const skeletonVariants = cva(
       variant: {
         default: "bg-muted",
         shimmer: "bg-gradient-to-r from-muted via-muted/50 to-muted bg-[length:400%_100%] animate-shimmer",
-        glow: "bg-muted relative overflow-hidden after:absolute after:inset-0 after:bg-gradient-to-r after:from-transparent after:via-primary/10 after:to-transparent after:animate-shimmer",
+        glow: "bg-muted relative overflow-hidden after:absolute after:inset-0 after:bg-gradient-to-r after:from-transparent after:via-primary/10 after:to-transparent after:animate-shimmer shadow-inner shadow-primary/5",
         subtle: "bg-muted/60",
-        card: "bg-card border border-border shadow-xs",
+        card: "bg-card border border-border/50 shadow-xs",
+        tactic: "bg-gradient-to-br from-muted to-muted/40 border border-primary/5",
       },
       shape: {
         default: "rounded-md",
