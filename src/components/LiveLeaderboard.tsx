@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { useNavigate } from "react-router-dom";
 import { useLeaderboard } from "@/hooks/useProfiles";
 import { useAuth } from "@/hooks/useAuth";
-import { SkeletonLeaderboard } from "@/components/ui/skeleton";
+import { Skeleton, SkeletonLeaderboard } from "@/components/ui/skeleton";
 
 interface LeaderboardPlayer {
   rank: number;
