@@ -126,8 +126,8 @@ export function RankingBadge({
   if (rank === null) {
     return (
       <div className={cn("flex flex-col items-center gap-1", className)}>
-        <Skeleton variant="glow" shape="circle" className={cn(sizes.container)} />
-        {showLabel && <Skeleton variant="shimmer" className={cn("h-3 w-16", sizes.label)} />}
+        <Skeleton variant="tactic" shape="circle" className={cn(sizes.container, "shadow-inner shadow-primary/10")} />
+        {showLabel && <Skeleton variant="shimmer" className={cn("h-3 w-16 opacity-50", sizes.label)} />}
       </div>
     );
   }
@@ -137,10 +137,10 @@ export function RankingBadge({
     icon: Star,
     label: "Iniciante",
     description: "Comece sua jornada!",
-    gradient: "from-slate-400 to-slate-600",
+    gradient: "from-slate-500 via-slate-600 to-slate-700",
     iconColor: "text-slate-100",
-    glowColor: "shadow-slate-500/30",
-    borderColor: "border-slate-400",
+    glowColor: "shadow-slate-500/20",
+    borderColor: "border-slate-500/30",
   };
   const Icon = config.icon;
 

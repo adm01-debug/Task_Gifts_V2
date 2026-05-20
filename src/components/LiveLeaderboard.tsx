@@ -84,31 +84,32 @@ export const LiveLeaderboard = memo(function LiveLeaderboard() {
 
   if (isLoading) {
     return (
-      <div className="rounded-[2.5rem] overflow-hidden border border-white/5 bg-card/40 backdrop-blur-2xl relative">
-        <div className="p-6 border-b border-white/5 flex items-center justify-between bg-white/5">
+      <div className="rounded-[2.5rem] overflow-hidden border border-white/10 bg-black/40 backdrop-blur-2xl relative shadow-2xl">
+        <div className="absolute inset-0 bg-gradient-to-b from-primary/10 via-transparent to-transparent opacity-50" />
+        <div className="p-6 border-b border-white/5 flex items-center justify-between bg-white/5 relative z-10">
           <div className="flex items-center gap-4">
-            <Skeleton variant="glow" shape="card" className="w-12 h-12 rounded-2xl" />
+            <Skeleton variant="elite" shape="card" className="w-12 h-12" />
             <div className="space-y-2">
               <Skeleton variant="shimmer" className="h-3 w-32" />
-              <Skeleton variant="shimmer" className="h-2 w-24" />
+              <Skeleton variant="tactic" className="h-2 w-24" />
             </div>
           </div>
-          <Skeleton variant="subtle" shape="pill" className="h-6 w-24" />
+          <Skeleton variant="elite" shape="pill" className="h-6 w-24" />
         </div>
         
         {/* Podium Skeleton */}
-        <div className="px-6 py-10 border-b border-white/5 bg-gradient-to-b from-primary/5 to-transparent">
-          <div className="flex items-end justify-center gap-6">
+        <div className="px-6 py-10 border-b border-white/5 bg-gradient-to-b from-primary/5 to-transparent relative z-10">
+          <div className="flex items-end justify-center gap-8">
             {[70, 100, 50].map((h, i) => (
               <div key={i} className="flex flex-col items-center space-y-4">
-                <Skeleton variant="glow" shape="card" className="w-16 h-16 rounded-[1.25rem]" />
-                <Skeleton variant="tactic" className="w-20 rounded-t-3xl" style={{ height: h }} />
+                <Skeleton variant="elite" shape="card" className="w-16 h-16" />
+                <Skeleton variant="elite" className="w-20 rounded-t-3xl" style={{ height: h }} />
               </div>
             ))}
           </div>
         </div>
 
-        <div className="p-4">
+        <div className="p-4 relative z-10">
           <SkeletonLeaderboard items={4} />
         </div>
       </div>

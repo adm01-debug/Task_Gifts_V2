@@ -7,19 +7,21 @@ const skeletonVariants = cva(
   {
     variants: {
       variant: {
-        default: "bg-muted",
-        shimmer: "bg-gradient-to-r from-muted via-muted/50 to-muted bg-[length:400%_100%] animate-shimmer",
-        glow: "bg-muted relative overflow-hidden after:absolute after:inset-0 after:bg-gradient-to-r after:from-transparent after:via-primary/10 after:to-transparent after:animate-shimmer shadow-inner shadow-primary/5",
-        subtle: "bg-muted/60",
-        card: "bg-card border border-border/50 shadow-xs",
-        tactic: "bg-gradient-to-br from-muted to-muted/40 border border-primary/5",
+        default: "bg-muted/40",
+        shimmer: "bg-gradient-to-r from-muted/30 via-muted/60 to-muted/30 bg-[length:400%_100%] animate-shimmer",
+        glow: "bg-muted/30 relative overflow-hidden after:absolute after:inset-0 after:bg-gradient-to-r after:from-transparent after:via-primary/20 after:to-transparent after:animate-shimmer shadow-inner shadow-primary/5",
+        subtle: "bg-muted/20",
+        card: "bg-card/40 border border-white/5 shadow-xs backdrop-blur-sm",
+        tactic: "bg-gradient-to-br from-white/10 to-white/5 border border-white/10 backdrop-blur-md shadow-[0_0_15px_rgba(255,255,255,0.05)]",
+        elite: "bg-gradient-to-br from-primary/15 via-primary/5 to-transparent border border-primary/20 shadow-[0_0_20px_rgba(var(--primary-rgb),0.1)] backdrop-blur-xl",
       },
       shape: {
         default: "rounded-md",
         circle: "rounded-full",
         square: "rounded-none",
         pill: "rounded-full",
-        card: "rounded-xl",
+        card: "rounded-[1.25rem]",
+        module: "rounded-[2.5rem]",
       },
     },
     defaultVariants: {
@@ -192,26 +194,29 @@ function SkeletonChart({ className, ...props }: SkeletonProps) {
 
 function SkeletonLeaderboard({ items = 5, className, ...props }: SkeletonProps & { items?: number }) {
   return (
-    <div className={cn("space-y-2", className)} {...props}>
+    <div className={cn("space-y-3", className)} {...props}>
       {Array.from({ length: items }).map((_, i) => (
         <div 
           key={i} 
-          className="flex items-center gap-3 p-3 rounded-xl border border-border bg-card"
+          className="flex items-center gap-4 p-4 rounded-2xl border border-white/5 bg-white/5 backdrop-blur-sm"
           style={{ animationDelay: `${i * 80}ms` }}
         >
           <Skeleton 
-            variant={i < 3 ? "glow" : "shimmer"} 
-            shape="circle" 
-            className="h-8 w-8" 
+            variant="subtle" 
+            className="h-4 w-6" 
           />
-          <SkeletonAvatar className="h-10 w-10" />
-          <div className="flex-1 space-y-1.5">
-            <Skeleton variant="shimmer" className="h-4 w-28" />
-            <Skeleton variant="shimmer" className="h-3 w-20" />
+          <Skeleton 
+            variant="tactic" 
+            shape="circle" 
+            className="h-12 w-12" 
+          />
+          <div className="flex-1 space-y-2">
+            <Skeleton variant="shimmer" className="h-4 w-32" />
+            <Skeleton variant="subtle" className="h-3 w-20" />
           </div>
-          <div className="text-right space-y-1">
-            <Skeleton variant="glow" className="h-5 w-16 ml-auto" />
-            <Skeleton variant="shimmer" className="h-3 w-12 ml-auto" />
+          <div className="text-right space-y-2">
+            <Skeleton variant="glow" className="h-5 w-20 ml-auto" />
+            <Skeleton variant="subtle" className="h-3 w-14 ml-auto" />
           </div>
         </div>
       ))}

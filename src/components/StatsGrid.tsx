@@ -104,18 +104,18 @@ const StatCard = ({ icon: Icon, label, value, change, changeType = "neutral", co
 
   if (isLoading) {
     return (
-      <Card variant="ultra" className="p-0 overflow-hidden border-border/40 relative h-[180px]">
-        <div className="absolute inset-0 bg-muted/10 animate-pulse" />
+      <Card variant="ultra" className="p-0 overflow-hidden border-white/10 relative h-[180px] bg-white/5 backdrop-blur-xl">
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-transparent opacity-50 animate-pulse" />
         <CardContent className="p-5 relative z-10 flex flex-col h-full">
           <div className="flex items-start justify-between mb-5">
-            <Skeleton variant="glow" shape="card" className="w-12 h-12 rounded-2xl" />
-            <Skeleton variant="shimmer" shape="pill" className="h-5 w-16" />
+            <Skeleton variant="elite" shape="card" className="w-12 h-12" />
+            <Skeleton variant="tactic" shape="pill" className="h-6 w-20" />
           </div>
-          <div className="mt-auto space-y-2">
-            <Skeleton variant="shimmer" className="h-3 w-20" />
+          <div className="mt-auto space-y-3">
+            <Skeleton variant="shimmer" className="h-3 w-24 opacity-60" />
             <div className="flex items-end justify-between">
-              <Skeleton variant="shimmer" className="h-10 w-24" />
-              <div className="p-1.5 rounded-xl bg-muted/40 w-7 h-7" />
+              <Skeleton variant="elite" className="h-10 w-32" />
+              <div className="p-2 rounded-xl bg-white/10 w-8 h-8 border border-white/5" />
             </div>
           </div>
         </CardContent>
