@@ -62,34 +62,33 @@ export const RewardsShop = () => {
 
   if (isLoading) {
     return (
-      <div className="bg-card/40 backdrop-blur-xl rounded-[2.5rem] border border-white/5 overflow-hidden shadow-2xl relative">
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-transparent animate-pulse pointer-events-none" />
-        <div className="p-6 border-b border-white/5 flex items-center justify-between bg-white/5 relative z-10">
-          <div className="flex items-center gap-4">
-            <Skeleton variant="glow" shape="card" className="w-12 h-12 rounded-2xl ring-1 ring-white/10" />
-            <div className="space-y-2">
-              <Skeleton variant="shimmer" className="h-4 w-32 rounded-lg" />
-              <Skeleton variant="shimmer" className="h-2.5 w-24 opacity-40 rounded-full" />
+      <div className="bg-card/80 rounded-2xl border border-border/60 overflow-hidden shadow-sm">
+        <div className="p-4 border-b border-border flex items-center justify-between bg-white/5">
+          <div className="flex items-center gap-2">
+            <Skeleton variant="glow" shape="card" className="w-8 h-8 rounded-lg" />
+            <div className="space-y-1">
+              <Skeleton variant="shimmer" className="h-4 w-24" />
+              <Skeleton variant="shimmer" className="h-3 w-16" />
             </div>
           </div>
-          <Skeleton variant="shimmer" className="h-9 w-24 rounded-full bg-black/40 border border-white/5" />
+          <Skeleton variant="subtle" shape="pill" className="h-6 w-16" />
         </div>
-        <div className="p-6 grid grid-cols-2 gap-4 relative z-10">
+        <div className="p-4 grid grid-cols-2 gap-4">
           {Array.from({ length: 4 }).map((_, i) => (
             <div key={i} className="p-4 rounded-2xl border border-white/5 bg-white/5 space-y-3">
               <div className="flex justify-between items-start">
-                <Skeleton variant="shimmer" shape="pill" className="h-4 w-12 rounded-lg" />
-                <Skeleton variant="glow" className="h-4 w-4 rounded-sm" />
+                <Skeleton variant="shimmer" shape="pill" className="h-3 w-10" />
+                <Skeleton variant="glow" className="h-3 w-3" />
               </div>
               <Skeleton variant="shimmer" className="h-10 w-10 mx-auto rounded-xl bg-black/40" />
               <Skeleton variant="shimmer" className="h-4 w-full rounded-lg" />
-              <Skeleton variant="shimmer" className="h-2.5 w-3/4 mx-auto rounded-full opacity-40" />
+              <Skeleton variant="shimmer" className="h-2 w-3/4 mx-auto" />
               <Skeleton variant="shimmer" className="h-8 w-full rounded-xl bg-black/40" />
             </div>
           ))}
         </div>
-        <div className="p-6 border-t border-white/5 bg-black/20 relative z-10">
-          <Skeleton variant="shimmer" className="h-4 w-1/2 mx-auto rounded-full" />
+        <div className="p-4 border-t border-border text-center">
+          <Skeleton variant="shimmer" className="h-3 w-1/2 mx-auto" />
         </div>
       </div>
     );
