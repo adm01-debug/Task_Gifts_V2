@@ -15,6 +15,7 @@ import { useDepartments } from "@/hooks/useDepartments";
 import { useProfiles } from "@/hooks/useProfiles";
 import { useAllMissions } from "@/hooks/useMissions";
 import { EmptyState } from "@/components/ui/empty-state";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface RankingMetric {
   key: string;
