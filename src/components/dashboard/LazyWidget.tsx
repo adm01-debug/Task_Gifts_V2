@@ -65,7 +65,7 @@ export const LazyWidget = memo(function LazyWidget({
           </div>
         );
       default:
-        return <SkeletonWidget items={items} className={cn("bg-card/50", className)} />;
+        return <SkeletonWidget items={3} className={cn("bg-card/50", className)} />;
     }
   };
 

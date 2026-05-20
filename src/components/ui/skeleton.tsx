@@ -2,7 +2,7 @@ import { cn } from "@/lib/utils";
 import { cva, type VariantProps } from "class-variance-authority";
 import { forwardRef } from "react";
 
-const skeletonVariants = cva(
+export const skeletonVariants = cva(
   "rounded-md animate-pulse",
   {
     variants: {
@@ -554,7 +554,7 @@ export function SkeletonCertification({ className, ...props }: SkeletonProps) {
   );
 }
 
-function SkeletonCertificationList({ items = 3, className, ...props }: SkeletonProps & { items?: number }) {
+export function SkeletonCertificationList({ items = 3, className, ...props }: SkeletonProps & { items?: number }) {
   return (
     <div className={cn("space-y-3", className)} {...props}>
       {Array.from({ length: items }).map((_, i) => (
@@ -567,7 +567,7 @@ function SkeletonCertificationList({ items = 3, className, ...props }: SkeletonP
 }
 
 // Skeleton for Notification item
-function SkeletonNotification({ className, ...props }: SkeletonProps) {
+export function SkeletonNotification({ className, ...props }: SkeletonProps) {
   return (
     <div className={cn("flex items-start gap-3 p-3", className)} {...props}>
       <Skeleton variant="shimmer" shape="circle" className="w-8 h-8 shrink-0" />
@@ -580,7 +580,7 @@ function SkeletonNotification({ className, ...props }: SkeletonProps) {
   );
 }
 
-function SkeletonNotificationList({ items = 5, className, ...props }: SkeletonProps & { items?: number }) {
+export function SkeletonNotificationList({ items = 5, className, ...props }: SkeletonProps & { items?: number }) {
   return (
     <div className={cn("divide-y divide-border", className)} {...props}>
       {Array.from({ length: items }).map((_, i) => (
@@ -593,7 +593,7 @@ function SkeletonNotificationList({ items = 5, className, ...props }: SkeletonPr
 }
 
 // Skeleton for Shop/Reward item
-function SkeletonReward({ className, ...props }: SkeletonProps) {
+export function SkeletonReward({ className, ...props }: SkeletonProps) {
   return (
     <div className={cn("p-3 rounded-xl border border-border", className)} {...props}>
       <div className="flex justify-between items-start mb-2">
@@ -608,7 +608,7 @@ function SkeletonReward({ className, ...props }: SkeletonProps) {
   );
 }
 
-function SkeletonRewardGrid({ items = 4, className, ...props }: SkeletonProps & { items?: number }) {
+export function SkeletonRewardGrid({ items = 4, className, ...props }: SkeletonProps & { items?: number }) {
   return (
     <div className={cn("grid grid-cols-2 gap-3 p-4", className)} {...props}>
       {Array.from({ length: items }).map((_, i) => (
@@ -621,7 +621,7 @@ function SkeletonRewardGrid({ items = 4, className, ...props }: SkeletonProps & 
 }
 
 // Skeleton for Profile header
-function SkeletonProfileHeader({ className, ...props }: SkeletonProps) {
+export function SkeletonProfileHeader({ className, ...props }: SkeletonProps) {
   return (
     <div className={cn("flex items-center gap-4 p-4", className)} {...props}>
       <Skeleton variant="glow" shape="circle" className="w-16 h-16" />
@@ -636,37 +636,3 @@ function SkeletonProfileHeader({ className, ...props }: SkeletonProps) {
     </div>
   );
 }
-
-export { 
-  Skeleton,
-  SkeletonText,
-  SkeletonAvatar,
-  SkeletonCard,
-  SkeletonStatCard,
-  SkeletonTable,
-  SkeletonList,
-  SkeletonChart,
-  SkeletonLeaderboard,
-  SkeletonMission,
-  SkeletonMissionList,
-  SkeletonQuest,
-  SkeletonQuestList,
-  SkeletonDuel,
-  SkeletonDuelList,
-  SkeletonKudos,
-  SkeletonKudosList,
-  SkeletonRankingItem,
-  SkeletonRankingList,
-  SkeletonActivity,
-  SkeletonActivityList,
-  SkeletonWidgetHeader,
-  SkeletonWidget,
-  SkeletonCertification,
-  SkeletonCertificationList,
-  SkeletonNotification,
-  SkeletonNotificationList,
-  SkeletonReward,
-  SkeletonRewardGrid,
-  SkeletonProfileHeader,
-  skeletonVariants,
-};
