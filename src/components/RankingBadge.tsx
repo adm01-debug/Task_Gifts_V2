@@ -123,11 +123,14 @@ export function RankingBadge({
   const sizes = sizeClasses[size];
   const tier = getRankTier(rank);
 
+  // Fallback visual para rank null mantendo o layout e animação consistentes
   if (rank === null) {
     return (
-      <div className={cn("flex flex-col items-center gap-1", className)}>
-        <Skeleton variant="tactic" shape="circle" className={cn(sizes.container, "shadow-inner shadow-primary/10")} />
-        {showLabel && <Skeleton variant="shimmer" className={cn("h-3 w-16 opacity-50", sizes.label)} />}
+      <div className={cn("flex flex-col items-center gap-1 opacity-70", className)}>
+        <div className={cn("relative rounded-full bg-muted/20 p-0.5", sizes.container)}>
+          <Skeleton variant="tactic" shape="circle" className="w-full h-full" />
+        </div>
+        {showLabel && <Skeleton variant="shimmer" className={cn("h-3 w-16 mt-1", sizes.label)} />}
       </div>
     );
   }
