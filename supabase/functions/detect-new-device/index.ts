@@ -1,10 +1,7 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { corsHeaders, verifyUser } from "../_shared/security.ts";
 
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
-};
 
 interface DeviceRequest {
   userId: string;
@@ -28,8 +25,15 @@ serve(async (req) => {
     
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
     
+    // Verify user JWT
+    const authenticatedUser = await verifyUser(req);
+    
     const body: DeviceRequest = await req.json();
-    const { userId, fingerprint, userAgent, browser, os, deviceType } = body;
+    const { userId: bodyUserId, fingerprint, userAgent, browser, os, deviceType } = body;
+    
+    // Ensure the user is only registering devices for themselves
+    const userId = authenticatedUser.id;
+
     
     if (!userId || !fingerprint) {
       return new Response(
