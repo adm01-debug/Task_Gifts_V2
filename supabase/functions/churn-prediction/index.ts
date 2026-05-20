@@ -46,6 +46,9 @@ serve(async (req) => {
   }
 
   try {
+    // Verify user JWT
+    await verifyUser(req);
+
     const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');
     if (!LOVABLE_API_KEY) {
       throw new Error('LOVABLE_API_KEY is not configured');
