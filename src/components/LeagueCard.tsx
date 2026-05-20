@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useLeagues } from "@/hooks/useLeagues";
 import { useSoundEffects } from "@/hooks/useSoundEffects";
-import { Trophy, TrendingUp, TrendingDown, Minus, Crown, Zap, Info, Timer, ChevronRight, Star } from "lucide-center";
+import { Trophy, TrendingUp, TrendingDown, Minus, Crown, Zap, Info, Timer, ChevronRight, Star } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 
 interface LeaderboardUser {
