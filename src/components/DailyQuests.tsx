@@ -44,6 +44,7 @@ const DailyQuestsComponent = () => {
     return Math.floor((midnight.getTime() - now.getTime()) / (1000 * 60 * 60));
   }, []);
 
+  if (isLoading) {
     return (
       <div className="bg-card/40 backdrop-blur-xl rounded-[2.5rem] border border-white/5 overflow-hidden shadow-2xl h-full flex flex-col relative">
         <div className="p-8 border-b border-white/5 bg-white/5 relative">
