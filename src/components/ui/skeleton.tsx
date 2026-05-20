@@ -495,6 +495,67 @@ export function SkeletonWidgetHeader({ className, ...props }: SkeletonProps) {
   return (
     <div className={cn("flex items-center justify-between p-4 border-b border-border", className)} {...props}>
       <div className="flex items-center gap-2">
+        <Skeleton variant="shimmer" className="h-5 w-32" />
+      </div>
+      <Skeleton variant="shimmer" shape="pill" className="h-6 w-20" />
+    </div>
+  );
+}
+
+export function SkeletonShopCard({ className, ...props }: SkeletonProps) {
+  return (
+    <div className={cn("h-[400px] rounded-[2.5rem] bg-[#0d0e14] border border-white/5 p-6 flex flex-col relative overflow-hidden", className)} {...props}>
+      <div className="absolute top-4 left-4 right-4 flex justify-between">
+        <Skeleton variant="subtle" className="h-5 w-16 rounded-full" />
+        <Skeleton variant="subtle" className="h-5 w-20 rounded-full" />
+      </div>
+      
+      <div className="flex-1 flex flex-col items-center justify-center pt-10">
+        <Skeleton variant="tactic" shape="module" className="h-24 w-24 mb-8" />
+        <Skeleton variant="shimmer" className="h-4 w-24 mb-2" />
+        <Skeleton variant="shimmer" className="h-7 w-48 mb-4" />
+        <Skeleton variant="shimmer" className="h-3 w-40" />
+      </div>
+
+      <div className="mt-auto space-y-3">
+        <Skeleton variant="subtle" className="h-14 w-full rounded-2xl" />
+        <Skeleton variant="elite" className="h-14 w-full rounded-2xl" />
+      </div>
+    </div>
+  );
+}
+
+export function SkeletonPurchaseHistory({ items = 3, className, ...props }: SkeletonProps & { items?: number }) {
+  return (
+    <div className={cn("space-y-4", className)} {...props}>
+      <Skeleton variant="shimmer" className="h-14 w-full rounded-2xl mb-6" />
+      {Array.from({ length: items }).map((_, i) => (
+        <div key={i} className="h-24 bg-[#0d0e14] border border-white/5 rounded-2xl p-5 flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <Skeleton variant="subtle" className="h-14 w-14 rounded-2xl" />
+            <div className="space-y-2">
+              <Skeleton variant="shimmer" className="h-5 w-40" />
+              <Skeleton variant="subtle" className="h-3 w-32" />
+            </div>
+          </div>
+          <div className="flex items-center gap-6">
+            <div className="text-right space-y-1">
+              <Skeleton variant="subtle" className="h-2 w-16 ml-auto" />
+              <Skeleton variant="shimmer" className="h-6 w-20" />
+            </div>
+            <Skeleton variant="subtle" className="h-10 w-24 rounded-xl" />
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+// Skeleton for Achievement item
+export function SkeletonAchievementItem({ className, ...props }: SkeletonProps) {
+  return (
+    <div className={cn("flex items-center justify-between p-3 rounded-xl border border-border", className)} {...props}>
+      <div className="flex items-center gap-3">
         <Skeleton variant="glow" className="w-8 h-8 rounded-lg" />
         <div className="space-y-1">
           <Skeleton variant="shimmer" className="h-4 w-24" />
@@ -505,6 +566,7 @@ export function SkeletonWidgetHeader({ className, ...props }: SkeletonProps) {
     </div>
   );
 }
+
 
 // Complete Widget Skeleton
 export function SkeletonWidget({ 

@@ -19,7 +19,7 @@ import { cn } from "@/lib/utils";
  import { useSEO } from "@/hooks/useSEO";
 import { RewardCard } from "@/components/shop/RewardCard";
 import { PurchaseHistory } from "@/components/shop/PurchaseHistory";
- import { Skeleton } from "@/components/ui/skeleton";
+ import { Skeleton, SkeletonShopCard } from "@/components/ui/skeleton";
  import { EmptyState } from "@/components/ui/empty-state";
 
 export default function Shop() {
@@ -162,9 +162,9 @@ export default function Shop() {
                </div>
 
                {isLoading ? (
-                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                     {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => <Skeleton key={i} className="h-[400px] rounded-[2.5rem] bg-zinc-900/50" />)}
-                   </div>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                      {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => <SkeletonShopCard key={i} />)}
+                    </div>
                 ) : filteredRewards && filteredRewards.length > 0 ? (
                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                    <AnimatePresence mode="popLayout">

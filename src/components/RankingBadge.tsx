@@ -125,13 +125,32 @@ export function RankingBadge({
 
   // Fallback visual para rank null mantendo o layout e animação consistentes
   if (rank === null) {
+    const fallbackConfig = {
+      icon: Star,
+      label: "Iniciante",
+      gradient: "from-slate-700/50 via-slate-800/50 to-slate-900/50",
+      iconColor: "text-slate-500",
+      glowColor: "shadow-slate-900/10",
+    };
+    const Icon = fallbackConfig.icon;
+
     return (
-      <div className={cn("flex flex-col items-center gap-1 opacity-70", className)}>
-        <div className={cn("relative rounded-full bg-muted/20 p-0.5", sizes.container)}>
-          <Skeleton variant="tactic" shape="circle" className="w-full h-full" />
+      <motion.div
+        initial={animate ? { opacity: 0, scale: 0.9 } : false}
+        animate={{ opacity: 1, scale: 1 }}
+        className={cn("relative inline-flex flex-col items-center gap-1 opacity-50 grayscale", className)}
+      >
+        <div className={cn("relative rounded-full bg-gradient-to-br p-0.5", fallbackConfig.gradient)}>
+          <div className={cn("relative flex items-center justify-center rounded-full bg-background", sizes.container)}>
+            <Icon className={cn(sizes.icon, fallbackConfig.iconColor)} />
+          </div>
         </div>
-        {showLabel && <Skeleton variant="shimmer" className={cn("h-3 w-16 mt-1", sizes.label)} />}
-      </div>
+        {showLabel && (
+          <span className={cn("font-semibold text-slate-600", sizes.label)}>
+            {fallbackConfig.label}
+          </span>
+        )}
+      </motion.div>
     );
   }
 
