@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { Zap, TrendingUp, Target, Trophy, Heart, Flame, Star, ChevronRight, Activity, Shield, Clock } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import { Skeleton } from "@/components/ui/skeleton";
+import { Skeleton, SkeletonActivityList } from "@/components/ui/skeleton";
 import { useRecentAuditLogs } from "@/hooks/useAudit";
 import { formatDistanceToNow } from "date-fns";
 import { ptBR } from "date-fns/locale";
@@ -65,18 +65,7 @@ export function ProfileActivityTimeline({ userId }: { userId?: string }) {
       <ContentWrapper title="Atividade Recente">
         <div className="space-y-8 relative">
           <div className="absolute left-[27px] top-2 bottom-2 w-px bg-white/5 z-0" />
-          {[1, 2, 3, 4, 5].map((i) => (
-            <div key={i} className="flex gap-6 relative z-10">
-              <Skeleton variant="glow" shape="card" className="h-14 w-14 rounded-[1.25rem] shrink-0" />
-              <div className="flex-1 space-y-3 pt-1">
-                <div className="flex justify-between items-center">
-                  <Skeleton variant="shimmer" className="h-4 w-1/3" />
-                  <Skeleton variant="shimmer" shape="pill" className="h-6 w-16" />
-                </div>
-                <Skeleton variant="shimmer" className="h-3 w-1/4 opacity-50" />
-              </div>
-            </div>
-          ))}
+          <SkeletonActivityList count={5} />
         </div>
       </ContentWrapper>
     );
