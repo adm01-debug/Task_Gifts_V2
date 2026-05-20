@@ -13,7 +13,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useAnnouncements } from "@/hooks/useAnnouncements";
 import { CATEGORY_CONFIG, type Announcement } from "@/services/announcementsService";
 import { Megaphone, Pin, Plus, Eye, MessageCircle } from "lucide-react";
-import { LoadingState } from "@/components/ui/loading-state";
+import { Skeleton } from "@/components/ui/skeleton";
 import { EmptyState } from "@/components/ui/empty-state";
 
 const REACTION_EMOJIS = ['👍', '❤️', '🎉', '🚀', '👀'];
@@ -115,8 +115,31 @@ export function AnnouncementsBoard() {
   if (isLoading) {
     return (
       <Card>
-        <CardContent className="p-0">
-          <LoadingState message="Carregando anúncios..." />
+        <CardHeader className="flex-row items-center justify-between">
+          <div className="flex items-center gap-2">
+            <Skeleton variant="glow" shape="circle" className="h-5 w-5" />
+            <Skeleton variant="shimmer" className="h-5 w-40" />
+          </div>
+          <Skeleton variant="shimmer" shape="pill" className="h-9 w-20" />
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-3">
+            {[1, 2, 3].map(i => (
+              <div key={i} className="p-4 rounded-lg border border-border space-y-3">
+                <div className="flex gap-3">
+                  <Skeleton variant="glow" shape="circle" className="h-10 w-10 shrink-0" />
+                  <div className="flex-1 space-y-2">
+                    <Skeleton variant="shimmer" className="h-4 w-3/4" />
+                    <Skeleton variant="shimmer" className="h-3 w-1/2" />
+                  </div>
+                </div>
+                <div className="space-y-1">
+                  <Skeleton variant="shimmer" className="h-3 w-full" />
+                  <Skeleton variant="shimmer" className="h-3 w-2/3" />
+                </div>
+              </div>
+            ))}
+          </div>
         </CardContent>
       </Card>
     );
