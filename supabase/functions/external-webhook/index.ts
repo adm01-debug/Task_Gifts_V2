@@ -1,10 +1,36 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { crypto } from "https://deno.land/std@0.168.0/crypto/mod.ts";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, x-api-key, x-api-secret, x-webhook-signature',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, x-api-key, x-api-secret, x-webhook-signature, x-webhook-timestamp',
 };
+
+async function verifyHMAC(payload: string, signature: string, secret: string) {
+  const encoder = new TextEncoder();
+  const keyData = encoder.encode(secret);
+  const data = encoder.encode(payload);
+  
+  const key = await crypto.subtle.importKey(
+    "raw",
+    keyData,
+    { name: "HMAC", hash: "SHA-256" },
+    false,
+    ["verify"]
+  );
+  
+  const signatureBytes = new Uint8Array(
+    signature.match(/.{1,2}/g)!.map(byte => parseInt(byte, 16))
+  );
+  
+  return await crypto.subtle.verify(
+    "HMAC",
+    key,
+    signatureBytes,
+    data
+  );
+}
 
 serve(async (req) => {
   // Handle CORS preflight
@@ -43,8 +69,28 @@ serve(async (req) => {
     const apiKeyInfo = keyData[0];
     console.log(`[Webhook] Authenticated: ${apiKeyInfo.name}`);
 
+    const rawPayload = await req.text();
+    const signature = req.headers.get('x-webhook-signature');
+    const timestamp = req.headers.get('x-webhook-timestamp');
+
+    // HMAC Validation
+    if (signature && timestamp) {
+      // Validate signature with x-api-secret
+      const isValid = await verifyHMAC(`${timestamp}.${rawPayload}`, signature, apiSecret);
+      if (!isValid) {
+        console.error('[Webhook] Invalid HMAC signature');
+        return jsonResponse({ error: 'Invalid HMAC signature' }, 401);
+      }
+      
+      // Prevent Replay Attacks (5 min window)
+      const now = Math.floor(Date.now() / 1000);
+      if (Math.abs(now - parseInt(timestamp)) > 300) {
+        return jsonResponse({ error: 'Webhook timestamp expired' }, 401);
+      }
+    }
+
     // Parse webhook payload
-    const payload = await req.json();
+    const payload = JSON.parse(rawPayload);
     const { event, data } = payload;
 
     if (!event) {

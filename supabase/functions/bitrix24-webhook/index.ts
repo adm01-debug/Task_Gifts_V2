@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient, SupabaseClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { crypto } from "https://deno.land/std@0.168.0/crypto/mod.ts";
 import { 
   checkRateLimit, 
   getRateLimitIdentifier, 
@@ -39,6 +40,31 @@ interface Quest {
   coin_reward: number;
 }
 
+async function verifyHMAC(payload: string, signature: string, secret: string) {
+  const encoder = new TextEncoder();
+  const keyData = encoder.encode(secret);
+  const data = encoder.encode(payload);
+  
+  const key = await crypto.subtle.importKey(
+    "raw",
+    keyData,
+    { name: "HMAC", hash: "SHA-256" },
+    false,
+    ["verify"]
+  );
+  
+  const signatureBytes = new Uint8Array(
+    signature.match(/.{1,2}/g)!.map(byte => parseInt(byte, 16))
+  );
+  
+  return await crypto.subtle.verify(
+    "HMAC",
+    key,
+    signatureBytes,
+    data
+  );
+}
+
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
@@ -61,18 +87,29 @@ serve(async (req) => {
     // Parse webhook payload
     let payload: Record<string, unknown>;
     const contentType = req.headers.get('content-type') || '';
+    const rawBody = await req.text();
     
+    // HMAC Validation
+    const signature = req.headers.get('x-bitrix24-signature');
+    const secret = Deno.env.get('BITRIX24_WEBHOOK_SECRET');
+    
+    if (signature && secret) {
+      const isValid = await verifyHMAC(rawBody, signature, secret);
+      if (!isValid) {
+        return new Response(JSON.stringify({ error: 'Invalid HMAC' }), { status: 401, headers: corsHeaders });
+      }
+    }
+
     if (contentType.includes('application/json')) {
-      payload = await req.json();
+      payload = JSON.parse(rawBody);
     } else if (contentType.includes('application/x-www-form-urlencoded')) {
-      const formData = await req.formData();
-      payload = Object.fromEntries(formData);
+      const params = new URLSearchParams(rawBody);
+      payload = Object.fromEntries(params);
     } else {
-      const text = await req.text();
       try {
-        payload = JSON.parse(text);
+        payload = JSON.parse(rawBody);
       } catch {
-        payload = { raw: text };
+        payload = { raw: rawBody };
       }
     }
 

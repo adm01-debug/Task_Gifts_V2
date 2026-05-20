@@ -6747,10 +6747,9 @@ export type Database = {
       calculate_enps_score: { Args: { p_survey_id: string }; Returns: number }
       check_login_lockout: { Args: { p_email: string }; Returns: Json }
       cleanup_expired_challenges: { Args: never; Returns: undefined }
-      cleanup_old_security_logs: {
-        Args: { p_days_to_keep?: number }
-        Returns: Json
-      }
+      cleanup_old_security_logs:
+        | { Args: never; Returns: undefined }
+        | { Args: { p_days_to_keep?: number }; Returns: Json }
       complete_external_task: {
         Args: {
           p_external_id: string
