@@ -32,3 +32,30 @@ export async function verifyUser(req: Request) {
 
   return user;
 }
+
+/**
+ * Verifies that the request has a valid service role key or internal secret.
+ * Used for cron jobs and internal system calls.
+ */
+export function verifyServiceRole(req: Request) {
+  const authHeader = req.headers.get("Authorization");
+  const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+  
+  if (!authHeader) {
+    throw new Error("Missing Authorization header");
+  }
+
+  const token = authHeader.replace("Bearer ", "");
+  
+  if (token !== serviceRoleKey) {
+    // Also allow an internal secret if configured (for extra safety)
+    const internalSecret = Deno.env.get("INTERNAL_FUNCTION_SECRET");
+    if (internalSecret && token === internalSecret) {
+      return true;
+    }
+    throw new Error("Unauthorized: Service role required");
+  }
+
+  return true;
+}
+
