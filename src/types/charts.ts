@@ -9,7 +9,7 @@ export interface RechartsTooltipPayloadItem {
 
 export interface RechartsTooltipProps {
   active?: boolean;
-  payload?: any[];
+  payload?: RechartsTooltipPayloadItem[];
   label?: string | number;
 }
 
