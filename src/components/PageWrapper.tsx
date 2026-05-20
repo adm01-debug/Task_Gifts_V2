@@ -1,6 +1,8 @@
 import { ReactNode } from "react";
 import { SectionErrorBoundary } from "@/components/SectionErrorBoundary";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
+import { usePerformanceTrack } from "@/hooks/usePerformanceTrack";
+
 
 interface PageWrapperProps {
   children: ReactNode;
@@ -16,6 +18,8 @@ interface PageWrapperProps {
  * - SectionErrorBoundary for section-level errors (partial recovery)
  */
 export function PageWrapper({ children, pageName, className }: PageWrapperProps) {
+  usePerformanceTrack(pageName);
+
   return (
     <ErrorBoundary>
       <SectionErrorBoundary sectionName={pageName}>
