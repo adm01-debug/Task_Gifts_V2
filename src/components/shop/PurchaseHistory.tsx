@@ -9,6 +9,7 @@ import { shopService } from "@/services/shopService";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
  import { cn } from "@/lib/utils";
+ import { SkeletonPurchaseHistory } from "@/components/ui/skeleton";
 
 const statusConfig = {
    pending: { label: "PENDENTE", color: "bg-amber-500/20 text-amber-500 border-amber-500/20", icon: Clock },
@@ -30,12 +31,7 @@ export function PurchaseHistory() {
    }, [purchases, searchTerm]);
 
   if (isLoading) {
-     return (
-       <div className="flex flex-col items-center justify-center py-20 gap-4">
-         <div className="w-12 h-12 rounded-full border-4 border-primary/20 border-t-primary animate-spin" />
-         <p className="text-[10px] font-black uppercase tracking-[0.4em] text-muted-foreground">Acessando Arquivos de Transação...</p>
-       </div>
-     );
+     return <SkeletonPurchaseHistory items={5} />;
   }
 
   if (!purchases || purchases.length === 0) {
