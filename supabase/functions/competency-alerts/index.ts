@@ -6,11 +6,8 @@ import {
   createRateLimitResponse,
   RATE_LIMITS 
 } from "../_shared/rate-limiter.ts";
+import { corsHeaders, verifyUser } from "../_shared/security.ts";
 
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
-};
 
 interface CompetencyData {
   area: string;
@@ -201,22 +198,54 @@ serve(async (req) => {
     const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
     const supabase = createClient(supabaseUrl, supabaseKey);
 
-    const { userId, checkAllUsers } = await req.json();
+    // Verify user JWT
+    const authenticatedUser = await verifyUser(req);
+    
+    const { userId: bodyUserId, checkAllUsers } = await req.json();
 
     let usersToAnalyze: string[] = [];
 
     if (checkAllUsers) {
+      // Admin only check
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('role')
+        .eq('id', authenticatedUser.id)
+        .single();
+        
+      if (profile?.role !== 'admin') {
+        return new Response(JSON.stringify({ error: "Unauthorized: Admin access required for batch analysis" }), {
+          status: 403,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        });
+      }
+
       // Get all users for batch analysis (e.g., scheduled job)
       const { data: profiles } = await supabase.from('profiles').select('id') as { data: ProfileItem[] | null };
       usersToAnalyze = profiles?.map((p: ProfileItem) => p.id) || [];
-    } else if (userId) {
-      usersToAnalyze = [userId];
     } else {
-      return new Response(JSON.stringify({ error: "userId or checkAllUsers required" }), {
-        status: 400,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      });
+      // If userId is provided, ensure it matches authenticated user or user is admin
+      const targetUserId = bodyUserId || authenticatedUser.id;
+      
+      if (bodyUserId && bodyUserId !== authenticatedUser.id) {
+        // Check if admin
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('role')
+          .eq('id', authenticatedUser.id)
+          .single();
+          
+        if (profile?.role !== 'admin') {
+          return new Response(JSON.stringify({ error: "Unauthorized" }), {
+            status: 403,
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          });
+        }
+      }
+      
+      usersToAnalyze = [targetUserId];
     }
+
 
     const results: { userId: string; gaps: string[]; notificationsCreated: number }[] = [];
 

@@ -6,11 +6,8 @@ import {
   createRateLimitResponse,
   RATE_LIMITS 
 } from "../_shared/rate-limiter.ts";
+import { corsHeaders, verifyUser } from "../_shared/security.ts";
 
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
-};
 
 interface UserMetrics {
   userId: string;
@@ -46,6 +43,9 @@ serve(async (req) => {
   }
 
   try {
+    // Verify user JWT
+    await verifyUser(req);
+
     const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');
     if (!LOVABLE_API_KEY) {
       throw new Error('LOVABLE_API_KEY is not configured');

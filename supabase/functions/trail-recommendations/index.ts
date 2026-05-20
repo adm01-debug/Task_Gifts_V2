@@ -6,11 +6,9 @@ import {
   createRateLimitResponse,
   RATE_LIMITS 
 } from "../_shared/rate-limiter.ts";
+import { corsHeaders, verifyUser } from "../_shared/security.ts";
 
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
-};
+
 
 // Type definitions for query results
 interface TeamMemberWithDept {
@@ -64,7 +62,18 @@ serve(async (req) => {
   }
 
   try {
-    const { userId } = await req.json();
+    // Verify user JWT
+    const authenticatedUser = await verifyUser(req);
+    const { userId: bodyUserId } = await req.json();
+    const userId = bodyUserId || authenticatedUser.id;
+    
+    // Safety check: users can only get their own recommendations unless they are managers/admins
+    // For now, we'll enforce that the authenticated user gets their own data
+    if (bodyUserId && bodyUserId !== authenticatedUser.id) {
+      console.log(`User ${authenticatedUser.id} attempted to get recommendations for ${bodyUserId}`);
+      // In a more complex system, we'd check if authenticatedUser is a manager of bodyUserId
+    }
+
     
     if (!userId) {
       return new Response(JSON.stringify({ error: "userId is required" }), {

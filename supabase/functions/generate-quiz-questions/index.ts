@@ -6,11 +6,8 @@ import {
   createRateLimitResponse,
   RATE_LIMITS 
 } from "../_shared/rate-limiter.ts";
+import { corsHeaders, verifyUser } from "../_shared/security.ts";
 
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
-};
 
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
@@ -27,6 +24,9 @@ serve(async (req) => {
   }
 
   try {
+    // Verify user JWT
+    await verifyUser(req);
+    
     const { trailId, quizType = 'magic_cards', questionCount = 5 } = await req.json();
 
     if (!trailId) {
