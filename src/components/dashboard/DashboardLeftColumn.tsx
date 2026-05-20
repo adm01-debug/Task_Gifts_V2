@@ -95,12 +95,12 @@ export const DashboardLeftColumn = memo(function DashboardLeftColumn() {
 
       <StaggeredItemLeft>
         <div className="grid md:grid-cols-2 gap-4 md:gap-6">
-          <LazyWidget fallbackHeight="200px">
+          <LazyWidget fallbackHeight="200px" variant="card">
             <SectionErrorBoundary sectionName="Reconhecimento">
               <PeerRecognitionLazy />
             </SectionErrorBoundary>
           </LazyWidget>
-          <LazyWidget fallbackHeight="200px">
+          <LazyWidget fallbackHeight="200px" variant="card">
             <SectionErrorBoundary sectionName="Duelos">
               <TeamChallengesLazy />
             </SectionErrorBoundary>
