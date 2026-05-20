@@ -136,25 +136,21 @@ export const KudosRanking = () => {
 
   if (isLoading) {
     return (
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="bg-card rounded-2xl border border-border overflow-hidden"
-      >
+      <div className="bg-card/80 rounded-2xl border border-border/60 overflow-hidden">
         {/* Header */}
         <div className="p-4 border-b border-border">
           <div className="flex items-center gap-2">
-            <Skeleton variant="shimmer" shape="square" className="w-8 h-8 rounded-lg" />
+            <Skeleton variant="glow" shape="card" className="w-8 h-8 rounded-lg" />
             <div className="space-y-1">
               <Skeleton variant="shimmer" className="h-4 w-32" />
-              <Skeleton variant="default" className="h-3 w-40" />
+              <Skeleton variant="shimmer" className="h-3 w-40" />
             </div>
           </div>
         </div>
         <div className="p-4">
           <SkeletonRankingList count={5} />
         </div>
-      </motion.div>
+      </div>
     );
   }
 
