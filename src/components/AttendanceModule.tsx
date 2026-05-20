@@ -9,6 +9,7 @@ import {
   Trophy,
   Zap
 } from "lucide-react";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
@@ -29,12 +30,14 @@ import { ptBR } from "date-fns/locale";
 import { cn } from "@/lib/utils";
 
 export const AttendanceModule = () => {
-  const { data: settings } = useAttendanceSettings();
-  const { data: streak } = useUserStreak();
-  const { data: todayRecord } = useTodayAttendance();
-  const { data: recentRecords } = useRecentAttendance(7);
-  const { data: leaderboard } = useStreakLeaderboard(5);
-  const { data: profiles } = useProfiles();
+  const { data: settings, isLoading: settingsLoading } = useAttendanceSettings();
+  const { data: streak, isLoading: streakLoading } = useUserStreak();
+  const { data: todayRecord, isLoading: todayLoading } = useTodayAttendance();
+  const { data: recentRecords, isLoading: recentLoading } = useRecentAttendance(7);
+  const { data: leaderboard, isLoading: leaderboardLoading } = useStreakLeaderboard(5);
+  const { data: profiles, isLoading: profilesLoading } = useProfiles();
+
+  const isLoading = settingsLoading || streakLoading || todayLoading || recentLoading || leaderboardLoading || profilesLoading;
   
   const checkInMutation = useCheckIn();
   const checkOutMutation = useCheckOut();
@@ -62,6 +65,37 @@ export const AttendanceModule = () => {
 
   // Get profile by user_id helper
   const getProfile = (userId: string) => profiles?.find(p => p.id === userId);
+
+  if (isLoading) {
+    return (
+      <div className="space-y-6">
+        <Card variant="prominent" className="overflow-hidden">
+          <CardHeader>
+            <Skeleton variant="shimmer" className="h-6 w-32" />
+          </CardHeader>
+          <CardContent className="space-y-6 text-center">
+            <Skeleton variant="glow" className="h-16 w-32 mx-auto rounded-xl" />
+            <Skeleton variant="shimmer" className="h-4 w-48 mx-auto" />
+            <div className="flex justify-center gap-4">
+              <Skeleton variant="shimmer" className="h-4 w-24" />
+              <Skeleton variant="shimmer" className="h-4 w-24" />
+            </div>
+            <Skeleton variant="glow" className="h-12 w-40 mx-auto rounded-lg" />
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="p-4 space-y-4">
+            <Skeleton variant="shimmer" className="h-4 w-40" />
+            <div className="flex justify-between items-center">
+              <Skeleton variant="glow" className="h-12 w-20" />
+              <Skeleton variant="shimmer" className="h-12 w-32" />
+            </div>
+            <Skeleton variant="shimmer" className="h-2 w-full rounded-full" />
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
