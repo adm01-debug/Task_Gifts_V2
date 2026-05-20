@@ -1,0 +1,39 @@
+openapi: 3.0.0
+info:
+  title: Dashboard Elite Edge Functions API
+  version: 1.0.0
+  description: Documentação das Edge Functions para o Ecossistema Elite 10/10.
+
+paths:
+  /bitrix24-webhook:
+    post:
+      summary: Webhook receiver for Bitrix24 events
+      security:
+        - hmacSignature: []
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: Unauthorized (Invalid HMAC)
+        '429':
+          description: Too Many Requests
+
+  /auth-email-hook:
+    post:
+      summary: Supabase Auth Email Hook
+      security:
+        - serviceRole: []
+      responses:
+        '200':
+          description: OK
+
+components:
+  securitySchemes:
+    hmacSignature:
+      type: apiKey
+      in: header
+      name: x-bitrix24-signature
+    serviceRole:
+      type: apiKey
+      in: header
+      name: Authorization
