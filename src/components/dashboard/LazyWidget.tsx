@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, ReactNode, memo } from "react";
-import { Skeleton } from "@/components/ui/skeleton";
+import { Skeleton, SkeletonList, SkeletonChart, SkeletonStatCard, SkeletonWidget } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -54,61 +54,18 @@ export const LazyWidget = memo(function LazyWidget({
   const renderSkeleton = () => {
     switch (variant) {
       case "list":
-        return (
-          <div className="space-y-4 p-4 rounded-xl border border-border bg-card/50">
-            <Skeleton variant="shimmer" className="h-6 w-1/4 mb-4" />
-            {[1, 2, 3].map(i => (
-              <div key={i} className="flex items-center gap-3">
-                <Skeleton shape="circle" className="h-10 w-10 shrink-0" />
-                <div className="flex-1 space-y-2">
-                  <Skeleton className="h-4 w-3/4" />
-                  <Skeleton className="h-3 w-1/2" />
-                </div>
-              </div>
-            ))}
-          </div>
-        );
+        return <SkeletonList items={3} className={cn("p-4 rounded-xl border border-border bg-card/50", className)} />;
       case "chart":
-        return (
-          <div className="p-4 rounded-xl border border-border bg-card/50">
-            <Skeleton variant="shimmer" className="h-6 w-1/3 mb-6" />
-            <div className="flex items-end gap-2 h-32">
-              {[60, 40, 80, 50, 90, 70, 45].map((h, i) => (
-                <Skeleton 
-                  key={i} 
-                  variant="glow" 
-                  className="flex-1 rounded-t-md" 
-                  style={{ height: `${h}%`, animationDelay: `${i * 100}ms` }} 
-                />
-              ))}
-            </div>
-          </div>
-        );
+        return <SkeletonChart className={cn("p-4 rounded-xl border border-border bg-card/50", className)} />;
       case "stats":
         return (
           <div className="grid grid-cols-2 gap-4">
-            {[1, 2].map(i => (
-              <div key={i} className="p-4 rounded-xl border border-border bg-card/50">
-                <Skeleton variant="shimmer" className="h-4 w-1/2 mb-2" />
-                <Skeleton variant="glow" className="h-8 w-3/4" />
-              </div>
-            ))}
+            <SkeletonStatCard className="bg-card/50" />
+            <SkeletonStatCard className="bg-card/50" />
           </div>
         );
       default:
-        return (
-          <div className={cn("p-4 rounded-xl border border-border bg-card/50 space-y-4", className)}>
-            <div className="flex items-center justify-between">
-              <Skeleton variant="shimmer" className="h-6 w-1/3" />
-              <Skeleton shape="pill" className="h-6 w-12" />
-            </div>
-            <Skeleton variant="glow" className="h-24 w-full rounded-lg" />
-            <div className="space-y-2">
-              <Skeleton className="h-4 w-full" />
-              <Skeleton className="h-4 w-2/3" />
-            </div>
-          </div>
-        );
+        return <SkeletonWidget items={3} className={cn("bg-card/50", className)} />;
     }
   };
 
