@@ -43,14 +43,19 @@ export const rbacService = {
   // ===== PERMISSIONS =====
   
   async getPermissions(): Promise<Permission[]> {
-    const { data, error } = await supabase
-      .from("permissions")
-      .select("*")
-      .order("module", { ascending: true })
-      .order("name", { ascending: true });
+    try {
+      const { data, error } = await supabase
+        .from("permissions")
+        .select("*")
+        .order("module", { ascending: true })
+        .order("name", { ascending: true });
 
-    if (error) throw error;
-    return data as Permission[];
+      if (error) throw error;
+      return data as Permission[];
+    } catch (error) {
+      logger.apiError("getPermissions", error, "RBACService");
+      return [];
+    }
   },
 
   async getPermissionsByModule(module: string): Promise<Permission[]> {
@@ -290,43 +295,48 @@ export const rbacService = {
   // ===== USER PERMISSIONS (computed) =====
   
   async getUserPermissions(userId: string): Promise<string[]> {
-    // Get user's roles
-    const userRoles = await this.getUserRoles(userId);
-    const roleKeys = userRoles.map(r => r.role);
+    try {
+      // Get user's roles
+      const userRoles = await this.getUserRoles(userId);
+      const roleKeys = userRoles.map(r => r.role);
 
-    if (roleKeys.length === 0) return [];
+      if (roleKeys.length === 0) return [];
 
-    // Get role IDs from roles table
-    const { data: rolesData, error: rolesError } = await supabase
-      .from("roles")
-      .select("id")
-      .in("key", roleKeys);
+      // Get role IDs from roles table
+      const { data: rolesData, error: rolesError } = await supabase
+        .from("roles")
+        .select("id")
+        .in("key", roleKeys);
 
-    if (rolesError) throw rolesError;
-    const roleIds = (rolesData || []).map(r => r.id);
+      if (rolesError) throw rolesError;
+      const roleIds = (rolesData || []).map(r => r.id);
 
-    if (roleIds.length === 0) return [];
+      if (roleIds.length === 0) return [];
 
-    // Get permissions for those roles
-    const { data: permissionsData, error: permissionsError } = await supabase
-      .from("role_permissions")
-      .select(`
-        permissions:permission_id (key)
-      `)
-      .in("role_id", roleIds);
+      // Get permissions for those roles
+      const { data: permissionsData, error: permissionsError } = await supabase
+        .from("role_permissions")
+        .select(`
+          permissions:permission_id (key)
+        `)
+        .in("role_id", roleIds);
 
-    if (permissionsError) throw permissionsError;
+      if (permissionsError) throw permissionsError;
 
-    // Extract unique permission keys
-    interface PermissionWithKey { permissions: { key: string } | null }
-    const permissionKeys = new Set<string>();
-    (permissionsData || []).forEach((rp: PermissionWithKey) => {
-      if (rp.permissions?.key) {
-        permissionKeys.add(rp.permissions.key);
-      }
-    });
+      // Extract unique permission keys
+      interface PermissionWithKey { permissions: { key: string } | null }
+      const permissionKeys = new Set<string>();
+      (permissionsData || []).forEach((rp: any) => {
+        if (rp.permissions?.key) {
+          permissionKeys.add(rp.permissions.key);
+        }
+      });
 
-    return Array.from(permissionKeys);
+      return Array.from(permissionKeys);
+    } catch (error) {
+      logger.apiError("getUserPermissions", error, "RBACService");
+      return [];
+    }
   },
 
   async checkUserPermission(userId: string, permissionKey: string): Promise<boolean> {

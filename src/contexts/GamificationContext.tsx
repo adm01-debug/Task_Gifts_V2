@@ -110,6 +110,18 @@ export function GamificationProvider({ children }: GamificationProviderProps) {
     updateStreak,
   };
 
+  // Expose methods for service layer usage
+  useEffect(() => {
+    (window as any).__GAMIFICATION_CONTEXT__ = {
+      rewardXP,
+      rewardCoins,
+      unlockAchievement,
+      completeQuest,
+      updateStreak,
+      celebrateLevelUp
+    };
+  }, [rewardXP, rewardCoins, unlockAchievement, completeQuest, updateStreak, celebrateLevelUp]);
+
   return (
     <GamificationContext.Provider value={value}>
       {children}

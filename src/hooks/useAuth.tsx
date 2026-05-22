@@ -79,20 +79,37 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
    }, [registerDevice, showMessage]);
 
    const signUp = useCallback(async (email: string, password: string, displayName?: string) => {
-    const redirectUrl = `${window.location.origin}/`;
-    
-    const { error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        emailRedirectTo: redirectUrl,
-        data: {
-          display_name: displayName,
+    try {
+      const redirectUrl = `${window.location.origin}/`;
+      
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          emailRedirectTo: redirectUrl,
+          data: {
+            display_name: displayName,
+          },
         },
-      },
-    });
-     return { error };
-   }, []);
+      });
+
+      if (error) {
+        showMessage(error.message, "error", "Falha no Cadastro");
+        return { error };
+      }
+
+      if (data?.user) {
+        // Registrar dispositivo após cadastro bem-sucedido (auto-login dependendo da config)
+        registerDevice(data.user.id).catch((err: unknown) => logger.apiError('registerDevice', err, 'useAuth'));
+      }
+      
+      return { error: null };
+    } catch (err: unknown) {
+      const error = err as Error;
+      showMessage(error.message, "error", "Erro Inesperado");
+      return { error };
+    }
+   }, [registerDevice, showMessage]);
 
    const signOut = useCallback(async () => {
      await supabase.auth.signOut();
