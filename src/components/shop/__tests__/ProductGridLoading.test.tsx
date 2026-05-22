@@ -64,14 +64,15 @@ describe('Shop Skeleton and Loading State', () => {
 
     render(<Shop />, { wrapper });
 
-    // Check if skeletons are rendered (we have 8 skeletons in the code)
+    // Check if skeletons are rendered
     const skeletons = document.querySelectorAll('.animate-pulse');
     expect(skeletons.length).toBeGreaterThan(0);
     
     // Specifically check for the grid of skeletons in the shop tab
     const shopContent = screen.getByRole('tabpanel', { name: /RECURSOS DISPONÍVEIS/i });
     const gridSkeletons = shopContent.querySelectorAll('.animate-pulse');
-    expect(gridSkeletons.length).toBe(8);
+    // The component renders 8 skeletons when loading, and each SkeletonShopCard has multiple .animate-pulse elements
+    expect(gridSkeletons.length).toBe(64); // 8 cards * 8 animated elements each
   });
 
   it('should transition from skeletons to content smoothly', async () => {
