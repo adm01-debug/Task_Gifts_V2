@@ -89,7 +89,10 @@ const Auth = () => {
   }, []);
 
   useEffect(() => {
-    if (!authLoading && user) navigate("/", { replace: true });
+    if (!authLoading && user) {
+      const redirect = new URLSearchParams(window.location.search).get("redirect") || "/";
+      navigate(redirect, { replace: true });
+    }
   }, [user, authLoading, navigate]);
 
   // Gate screens

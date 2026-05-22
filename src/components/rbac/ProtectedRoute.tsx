@@ -62,7 +62,8 @@ export function ProtectedRoute({
 
   // Redirect to auth if not logged in
   if (!user) {
-    return <Navigate to={redirectTo} replace />;
+    const currentPath = window.location.pathname + window.location.search;
+    return <Navigate to={`${redirectTo}?redirect=${encodeURIComponent(currentPath)}`} replace />;
   }
 
   // Determinar se precisa verificar RBAC
