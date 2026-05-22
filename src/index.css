@@ -1588,5 +1588,18 @@
 /* Allow text selection */
 .allow-select {
   -webkit-user-select: text;
-  user-select: text;
+user-select: text;
 }
+
+/* ========================================
+   GLOBAL MESSAGE OVERLAY BAR
+   ======================================== */
+.global-message-progress {
+  @apply absolute bottom-0 left-0 h-0.5 opacity-40;
+  transition: width linear;
+}
+
+.global-message-progress-error { @apply bg-destructive; }
+.global-message-progress-success { @apply bg-green-500; }
+.global-message-progress-warning { @apply bg-yellow-500; }
+.global-message-progress-info { @apply bg-primary; }
