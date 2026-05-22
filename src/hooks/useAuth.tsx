@@ -112,7 +112,15 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
    }, [registerDevice, showMessage]);
 
    const signOut = useCallback(async () => {
-     await supabase.auth.signOut();
+     try {
+       await supabase.auth.signOut();
+       // Clear local state if needed (most is handled by onAuthStateChange)
+       window.location.href = "/auth"; // Force redirect to clear any sensitive state
+     } catch (err: unknown) {
+       logger.apiError('signOut', err, 'useAuth');
+       // Fallback redirect
+       window.location.href = "/auth";
+     }
    }, []);
 
   return (
