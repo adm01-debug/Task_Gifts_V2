@@ -85,11 +85,11 @@ export function GlobalMessageProvider({ children }: { children: ReactNode }) {
                   animate={{ width: "0%" }}
                   transition={{ duration: msg.duration / 1000, ease: "linear" }}
                   className={cn(
-                    "absolute bottom-0 left-0 h-0.5 opacity-30",
-                    msg.type === "error" && "bg-destructive",
-                    msg.type === "success" && "bg-green-500",
-                    msg.type === "warning" && "bg-yellow-500",
-                    msg.type === "info" && "bg-primary"
+                    "global-message-progress",
+                    msg.type === "error" && "global-message-progress-error",
+                    msg.type === "success" && "global-message-progress-success",
+                    msg.type === "warning" && "global-message-progress-warning",
+                    msg.type === "info" && "global-message-progress-info"
                   )}
                 />
               )}
