@@ -8,7 +8,11 @@ import { profilesService } from "./profilesService";
 import { achievementsService } from "./achievementsService";
 import { logger } from "./loggingService";
 
-export type Quest = Tables<"custom_quests">;
+export interface Quest extends Tables<"custom_quests"> {
+  quest_steps: { id: string }[];
+  quest_assignments: { id: string; completed_at: string | null }[];
+}
+
 export type QuestInsert = TablesInsert<"custom_quests">;
 export type QuestUpdate = TablesUpdate<"custom_quests">;
 export type QuestStep = Tables<"quest_steps">;
@@ -24,7 +28,7 @@ export interface QuestWithSteps extends Quest {
 export const questsService = {
   // Quests CRUD
   async getAll(status?: QuestStatus): Promise<Quest[]> {
-    let query = supabase.from("custom_quests").select("*");
+    let query = supabase.from("custom_quests").select(`*, quest_steps(id), quest_assignments(id, completed_at)`);
     
     if (status) {
       query = query.eq("status", status);
@@ -49,7 +53,7 @@ export const questsService = {
   async getByCreator(creatorId: string): Promise<Quest[]> {
     const { data, error } = await supabase
       .from("custom_quests")
-      .select("*")
+      .select(`*, quest_steps(id), quest_assignments(id, completed_at)`)
       .eq("created_by", creatorId)
       .order("created_at", { ascending: false });
     

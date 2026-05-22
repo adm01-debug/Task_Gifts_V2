@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { supabase } from "@/integrations/supabase/client";
+import { securityService, type BlockedIP } from "@/services/securityService";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -30,16 +30,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-interface BlockedIP {
-  id: string;
-  ip_address: string;
-  reason: string;
-  block_type: string;
-  blocked_at: string;
-  expires_at: string | null;
-  is_permanent: boolean;
-  violation_count: number;
-}
 
 export function BlockedIPsPanel() {
   const queryClient = useQueryClient();
@@ -52,21 +42,11 @@ export function BlockedIPsPanel() {
 
   const { data: blockedIPs, isLoading } = useQuery({
     queryKey: ["blocked-ips"],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from("blocked_ips")
-        .select("*")
-        .order("blocked_at", { ascending: false });
-      if (error) throw error;
-      return data as BlockedIP[];
-    },
+    queryFn: securityService.getBlockedIPs,
   });
 
   const unblockMutation = useMutation({
-    mutationFn: async (id: string) => {
-      const { error } = await supabase.from("blocked_ips").delete().eq("id", id);
-      if (error) throw error;
-    },
+    mutationFn: securityService.unblockIP,
     onSuccess: () => {
       toast.success("IP desbloqueado com sucesso");
       queryClient.invalidateQueries({ queryKey: ["blocked-ips"] });
@@ -83,14 +63,13 @@ export function BlockedIPsPanel() {
         ? null 
         : new Date(Date.now() + parseInt(newDuration) * 60 * 1000).toISOString();
 
-      const { error } = await supabase.from("blocked_ips").insert({
+      await securityService.blockIP({
         ip_address: newIP,
         reason: newReason,
         block_type: newBlockType,
         is_permanent: newDuration === "permanent",
         expires_at: expiresAt,
       });
-      if (error) throw error;
     },
     onSuccess: () => {
       toast.success("IP bloqueado com sucesso");
