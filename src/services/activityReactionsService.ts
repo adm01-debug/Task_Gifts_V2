@@ -1,4 +1,6 @@
 import { supabase } from "@/integrations/supabase/client";
+import { logger } from "./loggingService";
+import { toast } from "sonner";
 
 export interface ActivityReaction {
   id: string;
@@ -21,12 +23,13 @@ export const activityReactionsService = {
     activityIds: string[],
     currentUserId?: string
   ): Promise<Record<string, ReactionCount[]>> {
-    const { data, error } = await supabase
-      .from("activity_reactions")
-      .select("*")
-      .in("activity_id", activityIds);
+    try {
+      const { data, error } = await supabase
+        .from("activity_reactions")
+        .select("*")
+        .in("activity_id", activityIds);
 
-    if (error) throw error;
+      if (error) throw error;
 
     const result: Record<string, ReactionCount[]> = {};
     activityIds.forEach((id) => (result[id] = []));
@@ -58,7 +61,11 @@ export const activityReactionsService = {
       }));
     });
 
-    return result;
+      return result;
+    } catch (error) {
+      logger.apiError("getReactionsByActivityIds", error, "activityReactionsService");
+      return {};
+    }
   },
 
   async toggleReaction(activityId: string, userId: string, emoji: string): Promise<boolean> {
