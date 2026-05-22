@@ -66,6 +66,11 @@
 @tailwind utilities;
 
 @layer base {
+
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
   /* ========================================
      LIGHT MODE - Professional & Warm
      Enhanced depth, better contrast, refined shadows
