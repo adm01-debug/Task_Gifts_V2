@@ -45,14 +45,12 @@ export default function ForgotPassword() {
       });
 
       if (error) {
-        // Don't reveal if email exists or not for security
         if (error.message.includes("rate limit")) {
           toast.error("Muitas tentativas. Aguarde alguns minutos.");
           return;
         }
       }
 
-      // Always show success to prevent email enumeration
       setEmailSent(true);
       setSentEmail(data.email);
       toast.success("Instruções enviadas!");
