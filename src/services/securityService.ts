@@ -13,11 +13,16 @@ export interface BlockedIP {
 
 export interface RateLimitRule {
   id: string;
-  path: string;
-  max_requests: number;
-  window_seconds: number;
+  name: string;
+  endpoint_pattern: string;
+  requests_per_minute: number;
+  requests_per_hour: number;
+  block_duration_minutes: number;
   is_active: boolean;
-  created_at: string;
+  applies_to_authenticated: boolean;
+  applies_to_anonymous: boolean;
+  created_at?: string;
+  updated_at?: string;
 }
 
 export const securityService = {
@@ -50,18 +55,34 @@ export const securityService = {
     const { data, error } = await supabase
       .from("rate_limit_rules")
       .select("*")
-      .order("created_at", { ascending: false });
+      .order("name");
     if (error) throw error;
     return data as RateLimitRule[];
   },
 
-  async addRateLimitRule(rule: Omit<RateLimitRule, "id" | "created_at">): Promise<void> {
-    const { error } = await supabase.from("rate_limit_rules").insert(rule);
-    if (error) throw error;
+  async saveRateLimitRule(rule: Partial<RateLimitRule>): Promise<void> {
+    if (rule.id) {
+      const { error } = await supabase
+        .from("rate_limit_rules")
+        .update(rule)
+        .eq("id", rule.id);
+      if (error) throw error;
+    } else {
+      const { error } = await supabase.from("rate_limit_rules").insert(rule);
+      if (error) throw error;
+    }
   },
 
   async deleteRateLimitRule(id: string): Promise<void> {
     const { error } = await supabase.from("rate_limit_rules").delete().eq("id", id);
     if (error) throw error;
   },
+  
+  async toggleRateLimitRule(id: string, is_active: boolean): Promise<void> {
+    const { error } = await supabase
+      .from("rate_limit_rules")
+      .update({ is_active })
+      .eq("id", id);
+    if (error) throw error;
+  }
 };
