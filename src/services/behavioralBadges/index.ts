@@ -1,8 +1,9 @@
- import { supabase } from "@/integrations/supabase/client";
- import { achievementsService } from "../achievementsService";
- import { logger } from "../loggingService";
- import { BEHAVIORAL_BADGES } from "./badges";
- import { BehaviorMetrics, BehavioralBadge } from "./types";
+import { supabase } from "@/integrations/supabase/client";
+import { achievementsService } from "../achievementsService";
+import { logger } from "../loggingService";
+import { BEHAVIORAL_BADGES } from "./badges";
+import { BehaviorMetrics, BehavioralBadge } from "./types";
+import { triggerHaptic } from "@/hooks/useHaptics";
  
  export const behavioralBadgesService = {
    async getUserMetrics(userId: string): Promise<BehaviorMetrics> {
@@ -18,30 +19,32 @@
        socialData,
        attendanceData,
        mentorData,
-       commentsData,
-     ] = await Promise.all([
-       supabase.from("kudos").select("*", { count: "exact", head: true }).eq("from_user_id", userId),
-       supabase.from("kudos").select("*", { count: "exact", head: true }).eq("to_user_id", userId),
-       supabase.from("checkins").select("completed_at").eq("employee_id", userId).not("completed_at", "is", null).order("completed_at", { ascending: false }),
-       supabase.from("mood_entries").select("created_at").eq("user_id", userId).order("created_at", { ascending: false }),
-       supabase.from("checkins").select("*", { count: "exact", head: true }).or(`employee_id.eq.${userId},manager_id.eq.${userId}`).eq("status", "completed"),
-       supabase.from("goals").select("status").eq("user_id", userId),
-       supabase.from("trail_enrollments").select("*", { count: "exact", head: true }).eq("user_id", userId).not("completed_at", "is", null),
-       supabase.from("development_plan_actions").select("status, plan:development_plans!inner(user_id)").eq("development_plans.user_id", userId),
-       Promise.all([
-         supabase.from("announcements").select("*", { count: "exact", head: true }).eq("author_id", userId),
-         supabase.from("activity_reactions").select("*", { count: "exact", head: true }).eq("user_id", userId),
-       ]),
-       supabase.from("attendance_records").select("check_in").eq("user_id", userId),
-       supabase.from("mentorship_pairs").select("*", { count: "exact", head: true }).eq("mentor_id", userId).eq("status", "active"),
+        commentsData,
+        aiCoachData,
+      ] = await Promise.all([
+        supabase.from("kudos").select("*", { count: "exact", head: true }).eq("from_user_id", userId),
+        supabase.from("kudos").select("*", { count: "exact", head: true }).eq("to_user_id", userId),
+        supabase.from("checkins").select("completed_at").eq("employee_id", userId).not("completed_at", "is", null).order("completed_at", { ascending: false }),
+        supabase.from("mood_entries").select("created_at").eq("user_id", userId).order("created_at", { ascending: false }),
+        supabase.from("checkins").select("*", { count: "exact", head: true }).or(`employee_id.eq.${userId},manager_id.eq.${userId}`).eq("status", "completed"),
+        supabase.from("goals").select("status").eq("user_id", userId),
+        supabase.from("trail_enrollments").select("*", { count: "exact", head: true }).eq("user_id", userId).not("completed_at", "is", null),
+        supabase.from("development_plan_actions").select("status, plan:development_plans!inner(user_id)").eq("development_plans.user_id", userId),
+        Promise.all([
+          supabase.from("announcements").select("*", { count: "exact", head: true }).eq("author_id", userId),
+          supabase.from("activity_reactions").select("*", { count: "exact", head: true }).eq("user_id", userId),
+        ]),
+        supabase.from("attendance_records").select("check_in").eq("user_id", userId),
+        supabase.from("mentorship_pairs").select("*", { count: "exact", head: true }).eq("mentor_id", userId).eq("status", "active"),
         supabase.from("activity_comments").select("*", { count: "exact", head: true }).eq("user_id", userId),
-      ]);
+        supabase.from("ai_coach_messages").select("*", { count: "exact", head: true }).eq("user_id", userId).eq("role", "user"),
+       ]);
   
       // Error checking for each result
       const results = [
         feedbacksGiven, feedbacksReceived, checkinsData, pulsesData, 
         oneOnOnesData, goalsData, coursesData, pdiData, 
-        socialData, attendanceData, mentorData, commentsData
+        socialData, attendanceData, mentorData, commentsData, aiCoachData
       ];
       
       results.forEach((res, index) => {
@@ -123,29 +126,43 @@
        lateNightActivity,
        weekendActivity: 0,
        helpfulComments: (commentsData as any).count || 0,
-       mentorSessions: (mentorData as any).count || 0,
-     };
-   },
- 
-  async checkAndAwardBadges(userId: string): Promise<string[]> {
-    try {
-      const metrics = await this.getUserMetrics(userId);
-      const awardedBadges: string[] = [];
-      for (const badge of BEHAVIORAL_BADGES) {
-        if (badge.condition(metrics)) {
-         const result = await achievementsService.unlockAchievement(userId, badge.key);
-         if (result.success) {
-           awardedBadges.push(badge.key);
-           logger.info(`Badge desbloqueado: ${badge.name} para usuário ${userId}`, "behavioralBadges");
+        mentorSessions: (mentorData as any).count || 0,
+        aiCoachInteractions: (aiCoachData as any).count || 0,
+      } as BehaviorMetrics;
+    },
+
+    // Singleton instance of GamificationContext safe methods
+    _getGamification() {
+      return (window as any).__GAMIFICATION_CONTEXT__;
+    },
+
+   async checkAndAwardBadges(userId: string): Promise<string[]> {
+     try {
+       const metrics = await this.getUserMetrics(userId);
+       const awardedBadges: string[] = [];
+       for (const badge of BEHAVIORAL_BADGES) {
+         if (badge.condition(metrics)) {
+          const result = await achievementsService.unlockAchievement(userId, badge.key);
+          if (result.success) {
+            awardedBadges.push(badge.key);
+            logger.info(`Badge desbloqueado: ${badge.name} para usuário ${userId}`, "behavioralBadges");
+            
+            // Try to trigger UI toast if context was exposed
+            const gamification = this._getGamification();
+            if (gamification) {
+              gamification.unlockAchievement(badge.name, badge.description);
+            }
+            // Trigger haptic feedback
+            triggerHaptic(badge.rarity === 'legendary' || badge.rarity === 'epic' ? 'heavy' : 'medium');
+          }
          }
-        }
-      }
-      return awardedBadges;
-    } catch (error) {
-      logger.apiError('checkAndAwardBadges', error, 'behavioralBadges');
-      return [];
-    }
-  },
+       }
+       return awardedBadges;
+     } catch (error) {
+       logger.apiError('checkAndAwardBadges', error, 'behavioralBadges');
+       return [];
+     }
+   },
  
   async syncBadgesToDatabase(): Promise<void> {
     try {

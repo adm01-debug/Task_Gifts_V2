@@ -308,6 +308,29 @@
      rarity: "common",
      xpReward: 75,
      coinReward: 40,
-     condition: (m) => m.helpfulComments >= 20
-   },
- ];
+      condition: (m) => m.helpfulComments >= 20
+    },
+    // === AI COACH APPRENTICE ===
+    {
+      key: "ai_coach_apprentice",
+      name: "Aprendiz de IA",
+      description: "Interagiu 10 vezes com o AI Coach",
+      icon: "Sparkles",
+      category: "learning",
+      rarity: "common",
+      xpReward: 100,
+      coinReward: 50,
+      condition: (m) => (m as any).aiCoachInteractions >= 10
+    },
+    {
+      key: "ai_coach_enthusiast",
+      name: "Entusiasta de IA",
+      description: "Interagiu 50 vezes com o AI Coach",
+      icon: "Sparkles",
+      category: "learning",
+      rarity: "rare",
+      xpReward: 300,
+      coinReward: 150,
+      condition: (m) => (m as any).aiCoachInteractions >= 50
+    },
+  ];

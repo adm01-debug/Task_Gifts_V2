@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 import { Trophy, ChevronRight, Award, Shield, Sparkles, Target, Zap } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useAllAchievements, useUserAchievements } from "@/hooks/useAchievements";
@@ -33,6 +34,7 @@ const rarityConfig: Record<string, { colors: string; glow: string; label: string
 };
 
 export function ProfileAchievements() {
+  const navigate = useNavigate();
   const { data: allAchievements = [], isLoading } = useAllAchievements();
   const { data: userAchievements = [] } = useUserAchievements();
 
@@ -182,6 +184,7 @@ export function ProfileAchievements() {
         <motion.button 
           whileHover={{ scale: 1.02, x: 5 }}
           whileTap={{ scale: 0.98 }}
+          onClick={() => navigate("/conquistas")}
           className="w-full py-4 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/10 transition-all duration-300 text-[10px] font-black uppercase tracking-[0.3em] flex items-center justify-center gap-3 text-muted-foreground hover:text-primary group"
         >
           Acessar Arsenal Completo 

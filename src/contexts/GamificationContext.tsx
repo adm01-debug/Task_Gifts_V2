@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useCallback, ReactNode } from "react";
+import { createContext, useContext, useState, useCallback, ReactNode, useEffect } from "react";
 import { LevelUpCelebration } from "@/components/ui/level-up-celebration";
 import { gamifiedToast } from "@/components/ui/gamified-toast";
 
@@ -109,6 +109,18 @@ export function GamificationProvider({ children }: GamificationProviderProps) {
     completeQuest,
     updateStreak,
   };
+
+  // Expose methods for service layer usage
+  useEffect(() => {
+    (window as any).__GAMIFICATION_CONTEXT__ = {
+      rewardXP,
+      rewardCoins,
+      unlockAchievement,
+      completeQuest,
+      updateStreak,
+      celebrateLevelUp
+    };
+  }, [rewardXP, rewardCoins, unlockAchievement, completeQuest, updateStreak, celebrateLevelUp]);
 
   return (
     <GamificationContext.Provider value={value}>

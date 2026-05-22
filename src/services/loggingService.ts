@@ -67,6 +67,12 @@ class LoggingService {
     this.addLog(entry);
     console.error(this.formatMessage(context, message), error ?? '');
     
+    // Send to global message system if available
+    const msgSystem = (window as any).__GLOBAL_MESSAGE_SYSTEM__;
+    if (msgSystem) {
+      msgSystem.showMessage(message, "error", context || "Erro de Sistema");
+    }
+    
     // In production, you could send errors to an external service here
     // Example: sendToErrorTracking(entry);
   }

@@ -1,4 +1,5 @@
 import { supabase } from "@/integrations/supabase/client";
+import { logger } from "./loggingService";
 import type { Tables, TablesInsert, TablesUpdate } from "@/integrations/supabase/types";
 import { notificationsService } from "./notificationsService";
 import { auditService } from "./auditService";
@@ -11,9 +12,14 @@ const PUBLIC_PROFILE_COLUMNS = "id, display_name, avatar_url, level, xp, coins, 
 
 export const profilesService = {
    getById: async (id: string): Promise<Profile | null> => {
-     const { data, error } = await supabase.from("profiles").select("*").eq("id", id).maybeSingle();
-     if (error) throw error;
-     return data;
+     try {
+       const { data, error } = await supabase.from("profiles").select("*").eq("id", id).maybeSingle();
+       if (error) throw error;
+       return data;
+     } catch (error) {
+       logger.apiError("getProfileById", error, "ProfilesService");
+       return null;
+     }
    },
 
    getAll: async (): Promise<Profile[]> => {
@@ -29,9 +35,14 @@ export const profilesService = {
    },
 
   async update(id: string, updates: ProfileUpdate): Promise<Profile> {
-    const { data, error } = await supabase.from("profiles").update(updates).eq("id", id).select().single();
-    if (error) throw error;
-    return data;
+    try {
+      const { data, error } = await supabase.from("profiles").update(updates).eq("id", id).select().single();
+      if (error) throw error;
+      return data;
+    } catch (error) {
+      logger.apiError("updateProfile", error, "ProfilesService");
+      throw error;
+    }
   },
 
   async addXp(id: string, xpAmount: number, source?: string): Promise<{ profile: Profile; leveledUp: boolean; newLevel?: number }> {
