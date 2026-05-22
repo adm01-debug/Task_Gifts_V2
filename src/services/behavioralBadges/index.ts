@@ -124,28 +124,39 @@
        weekendActivity: 0,
        helpfulComments: (commentsData as any).count || 0,
        mentorSessions: (mentorData as any).count || 0,
-     };
-   },
- 
-  async checkAndAwardBadges(userId: string): Promise<string[]> {
-    try {
-      const metrics = await this.getUserMetrics(userId);
-      const awardedBadges: string[] = [];
-      for (const badge of BEHAVIORAL_BADGES) {
-        if (badge.condition(metrics)) {
-         const result = await achievementsService.unlockAchievement(userId, badge.key);
-         if (result.success) {
-           awardedBadges.push(badge.key);
-           logger.info(`Badge desbloqueado: ${badge.name} para usuário ${userId}`, "behavioralBadges");
+      };
+    },
+
+    // Singleton instance of GamificationContext safe methods
+    _getGamification() {
+      return (window as any).__GAMIFICATION_CONTEXT__;
+    },
+
+   async checkAndAwardBadges(userId: string): Promise<string[]> {
+     try {
+       const metrics = await this.getUserMetrics(userId);
+       const awardedBadges: string[] = [];
+       for (const badge of BEHAVIORAL_BADGES) {
+         if (badge.condition(metrics)) {
+          const result = await achievementsService.unlockAchievement(userId, badge.key);
+          if (result.success) {
+            awardedBadges.push(badge.key);
+            logger.info(`Badge desbloqueado: ${badge.name} para usuário ${userId}`, "behavioralBadges");
+            
+            // Try to trigger UI toast if context was exposed
+            const gamification = this._getGamification();
+            if (gamification) {
+              gamification.unlockAchievement(badge.name, badge.description);
+            }
+          }
          }
-        }
-      }
-      return awardedBadges;
-    } catch (error) {
-      logger.apiError('checkAndAwardBadges', error, 'behavioralBadges');
-      return [];
-    }
-  },
+       }
+       return awardedBadges;
+     } catch (error) {
+       logger.apiError('checkAndAwardBadges', error, 'behavioralBadges');
+       return [];
+     }
+   },
  
   async syncBadgesToDatabase(): Promise<void> {
     try {
