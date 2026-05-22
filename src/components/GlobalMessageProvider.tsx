@@ -36,6 +36,13 @@ export function GlobalMessageProvider({ children }: { children: ReactNode }) {
     }
   }, [hideMessage]);
 
+  // Expose to global window for non-hook usage (like loggingService)
+  useEffect(() => {
+    (window as any).__GLOBAL_MESSAGE_SYSTEM__ = {
+      showMessage
+    };
+  }, [showMessage]);
+
   return (
     <GlobalMessageContext.Provider value={{ showMessage, hideMessage }}>
       {children}
