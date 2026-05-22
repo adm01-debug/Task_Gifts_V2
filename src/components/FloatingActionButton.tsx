@@ -39,13 +39,16 @@ export function FloatingActionButton({
   const [isOpen, setIsOpen] = useState(false);
   const isMobile = useIsMobile();
 
-  // Only show on mobile
-  if (!isMobile) return null;
-
   const handleActionClick = useCallback((action: FABAction) => {
     action.onClick();
     setIsOpen(false);
   }, []);
+
+  const closeMenu = useCallback(() => setIsOpen(false), []);
+  const toggleMenu = useCallback(() => setIsOpen(prev => !prev), []);
+
+  // Only show on mobile
+  if (!isMobile) return null;
 
   const closeMenu = useCallback(() => setIsOpen(false), []);
   const toggleMenu = useCallback(() => setIsOpen(prev => !prev), []);

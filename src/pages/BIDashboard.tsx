@@ -72,6 +72,8 @@ export default function BIDashboard() {
     inovacao: Math.min(100, (d.nivelMedio * 10) + 10)
   }));
 
+  const seo = useSEO();
+
   if (isLoading) {
     return (
       <div className="min-h-screen bg-background p-4 md:p-6 space-y-6">
@@ -81,8 +83,6 @@ export default function BIDashboard() {
       </div>
     );
   }
-
-  const seo = useSEO();
 
   return (
     <PageShell title="Business Intelligence">

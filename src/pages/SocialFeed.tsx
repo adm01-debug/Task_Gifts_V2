@@ -86,12 +86,6 @@ export default function SocialFeedPage() {
     to: undefined,
   });
 
-  // Redirect to auth if not logged in
-  if (!authLoading && !user) {
-    navigate("/auth");
-    return null;
-  }
-
   const handleLike = useCallback((id: string) => {
     setLikedItems((prev) => {
       const next = new Set(prev);
@@ -144,6 +138,12 @@ export default function SocialFeedPage() {
     kudos: filteredActivities.filter((a) => a.type === "kudos_given" || a.type === "kudos_received").length,
     quests: filteredActivities.filter((a) => a.type === "quest_completed").length,
   }), [filteredActivities]);
+
+   // Redirect to auth if not logged in
+   if (!authLoading && !user) {
+     navigate("/auth");
+     return null;
+   }
 
    return (
      <PageShell title="Feed Social">
