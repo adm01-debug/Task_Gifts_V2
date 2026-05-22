@@ -1,5 +1,5 @@
 import { TopLoadingBar } from "@/components/navigation/TopLoadingBar";
-import { BrowserRouter, Routes, Route, useLocation, useNavigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation, useNavigate, Navigate } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
 import { PageTransition } from "@/components/navigation/PageTransition";
 import { OnboardingTourProvider } from "@/contexts/OnboardingTourContext";
@@ -161,15 +161,16 @@ function ScrollRestorationProvider({ children }: { children: React.ReactNode }) 
 }
 
 const AnimatedRoutes = () => {
+  const { user } = useAuth();
   const location = useLocation();
   
   return (
     <AnimatePresence mode="wait">
       <Routes location={location} key={location.pathname}>
         <Route path="/" element={<ProtectedRoute><PageTransition><Index /></PageTransition></ProtectedRoute>} />
-        <Route path="/auth" element={<PageTransition><Auth /></PageTransition>} />
-        <Route path="/forgot-password" element={<PageTransition><ForgotPassword /></PageTransition>} />
-        <Route path="/reset-password" element={<PageTransition><ResetPassword /></PageTransition>} />
+        <Route path="/auth" element={user ? <Navigate to="/" replace /> : <PageTransition><Auth /></PageTransition>} />
+        <Route path="/forgot-password" element={user ? <Navigate to="/" replace /> : <PageTransition><ForgotPassword /></PageTransition>} />
+        <Route path="/reset-password" element={user ? <Navigate to="/" replace /> : <PageTransition><ResetPassword /></PageTransition>} />
         <Route path="/security" element={<ProtectedRoute requiredRole="admin"><PageTransition><RateLimitDashboard /></PageTransition></ProtectedRoute>} />
         <Route path="/profile" element={<ProtectedRoute><PageTransition><Profile /></PageTransition></ProtectedRoute>} />
         <Route path="/manager" element={<ProtectedRoute requiredRole="manager"><PageTransition><ManagerDashboard /></PageTransition></ProtectedRoute>} />
