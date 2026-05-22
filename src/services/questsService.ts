@@ -8,7 +8,11 @@ import { profilesService } from "./profilesService";
 import { achievementsService } from "./achievementsService";
 import { logger } from "./loggingService";
 
-export interface Quest extends Tables<"custom_quests"> {
+// Define the base table type
+type BaseQuest = Tables<"custom_quests">;
+
+// Define the extended type with joined fields
+export interface Quest extends BaseQuest {
   quest_steps: { id: string }[];
   quest_assignments: { id: string; completed_at: string | null }[];
 }
@@ -36,18 +40,18 @@ export const questsService = {
     
     const { data, error } = await query.order("created_at", { ascending: false });
     if (error) throw error;
-    return data ?? [];
+    return (data as unknown as Quest[]) ?? [];
   },
 
   async getById(id: string): Promise<QuestWithSteps | null> {
     const { data, error } = await supabase
       .from("custom_quests")
-      .select("*, quest_steps(*)")
+      .select("*, quest_steps(*), quest_assignments(id, completed_at)")
       .eq("id", id)
       .maybeSingle();
     
     if (error) throw error;
-    return data;
+    return data as unknown as QuestWithSteps;
   },
 
   async getByCreator(creatorId: string): Promise<Quest[]> {
@@ -58,14 +62,14 @@ export const questsService = {
       .order("created_at", { ascending: false });
     
     if (error) throw error;
-    return data ?? [];
+    return (data as unknown as Quest[]) ?? [];
   },
 
   async create(quest: QuestInsert): Promise<Quest> {
     const { data, error } = await supabase
       .from("custom_quests")
       .insert(quest)
-      .select()
+      .select(`*, quest_steps(id), quest_assignments(id, completed_at)`)
       .maybeSingle();
     
     if (error) throw error;
@@ -78,7 +82,7 @@ export const questsService = {
       logger.apiError("Failed to audit quest creation", e, "questsService");
     }
 
-    return data;
+    return data as unknown as Quest;
   },
 
   async update(id: string, updates: QuestUpdate): Promise<Quest> {
@@ -86,12 +90,12 @@ export const questsService = {
       .from("custom_quests")
       .update(updates)
       .eq("id", id)
-      .select()
+      .select(`*, quest_steps(id), quest_assignments(id, completed_at)`)
       .maybeSingle();
     
     if (error) throw error;
     if (!data) throw new Error("Quest not found");
-    return data;
+    return data as unknown as Quest;
   },
 
   async delete(id: string): Promise<void> {

@@ -32,7 +32,7 @@ export const securityService = {
       .select("*")
       .order("blocked_at", { ascending: false });
     if (error) throw error;
-    return data as BlockedIP[];
+    return (data as any) as BlockedIP[];
   },
 
   async unblockIP(id: string): Promise<void> {
@@ -40,13 +40,7 @@ export const securityService = {
     if (error) throw error;
   },
 
-  async blockIP(params: {
-    ip_address: string;
-    reason: string;
-    block_type: string;
-    is_permanent: boolean;
-    expires_at: string | null;
-  }): Promise<void> {
+  async blockIP(params: any): Promise<void> {
     const { error } = await supabase.from("blocked_ips").insert(params);
     if (error) throw error;
   },
@@ -57,15 +51,16 @@ export const securityService = {
       .select("*")
       .order("name");
     if (error) throw error;
-    return data as RateLimitRule[];
+    return (data as any) as RateLimitRule[];
   },
 
-  async saveRateLimitRule(rule: Partial<RateLimitRule>): Promise<void> {
+  async saveRateLimitRule(rule: any): Promise<void> {
     if (rule.id) {
+      const { id, ...updates } = rule;
       const { error } = await supabase
         .from("rate_limit_rules")
-        .update(rule)
-        .eq("id", rule.id);
+        .update(updates)
+        .eq("id", id);
       if (error) throw error;
     } else {
       const { error } = await supabase.from("rate_limit_rules").insert(rule);
@@ -81,7 +76,7 @@ export const securityService = {
   async toggleRateLimitRule(id: string, is_active: boolean): Promise<void> {
     const { error } = await supabase
       .from("rate_limit_rules")
-      .update({ is_active })
+      .update({ is_active } as any)
       .eq("id", id);
     if (error) throw error;
   }

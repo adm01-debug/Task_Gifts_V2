@@ -9,22 +9,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 
-export interface Quest {
-  id: string;
-  title: string;
-  description: string;
-  icon: string;
-  difficulty: "easy" | "medium" | "hard" | "expert";
-  xp_reward: number;
-  coin_reward: number;
-  status: "draft" | "active" | "archived";
-  deadline_days: number | null;
-  max_participants: number | null;
-  tags: string[] | null;
-  created_at: string;
-  quest_steps: { id: string }[];
-  quest_assignments: { id: string; completed_at: string | null }[];
-}
+import { type Quest } from "@/services/questsService";
 
 interface QuestStatsModalProps {
   quest: Quest | null;
