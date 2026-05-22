@@ -137,6 +137,7 @@ export const feedback360Service = {
       return (data || []) as unknown as FeedbackQuestion[];
     } catch (error) {
       logger.apiError('getQuestions', error, 'Feedback360');
+      toast.error('Erro ao carregar perguntas de feedback');
       return [];
     }
   },
@@ -148,6 +149,7 @@ export const feedback360Service = {
       return (data || []) as unknown as FeedbackEvaluation[];
     } catch (error) {
       logger.apiError('getMyEvaluations', error, 'Feedback360');
+      toast.error('Erro ao carregar suas avaliações');
       return [];
     }
   },
@@ -159,6 +161,7 @@ export const feedback360Service = {
       return (data || []) as unknown as FeedbackEvaluation[];
     } catch (error) {
       logger.apiError('getEvaluationsForMe', error, 'Feedback360');
+      toast.error('Erro ao carregar avaliações pendentes');
       return [];
     }
   },
@@ -203,6 +206,7 @@ export const feedback360Service = {
       return (data || []) as unknown as FeedbackResult[];
     } catch (error) {
       logger.apiError('getMyResults', error, 'Feedback360');
+      toast.error('Erro ao carregar resultados de feedback');
       return [];
     }
   },
