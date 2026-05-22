@@ -1,5 +1,6 @@
- import { supabase } from "@/integrations/supabase/client";
- import { logger } from "@/services/loggingService";
+import { supabase } from "@/integrations/supabase/client";
+import { logger } from "@/services/loggingService";
+import { toast } from "sonner";
 
 export interface AICoachMessage {
   id: string;
@@ -21,10 +22,11 @@ export const aiCoachService = {
  
        if (error) throw error;
        return (data || []) as AICoachMessage[];
-     } catch (error) {
-       logger.apiError("getMessages", error, "AICoachService");
-       return [];
-     }
+    } catch (error) {
+      logger.apiError("getMessages", error, "AICoachService");
+      toast.error('Erro ao carregar mensagens do Coach AI');
+      return [];
+    }
    },
 
    async saveMessage(userId: string, role: "user" | "assistant", content: string): Promise<AICoachMessage | null> {

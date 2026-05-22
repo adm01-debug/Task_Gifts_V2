@@ -1,5 +1,6 @@
 import { supabase } from "@/integrations/supabase/client";
 import { logger } from "@/services/loggingService";
+import { toast } from "sonner";
 
 export interface FeedbackCycle {
   id: string;
@@ -71,6 +72,7 @@ export const feedback360Service = {
       return (data || []) as unknown as FeedbackCycle[];
     } catch (error) {
       logger.apiError('getCycles', error, 'Feedback360');
+      toast.error('Erro ao carregar ciclos de feedback');
       return [];
     }
   },
@@ -82,6 +84,7 @@ export const feedback360Service = {
       return data as unknown as FeedbackCycle;
     } catch (error) {
       logger.apiError('getCycleById', error, 'Feedback360');
+      toast.error('Erro ao carregar ciclo de feedback');
       return null;
     }
   },
