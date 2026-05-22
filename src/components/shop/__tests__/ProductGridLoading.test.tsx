@@ -71,8 +71,8 @@ describe('Shop Skeleton and Loading State', () => {
     // Specifically check for the grid of skeletons in the shop tab
     const shopContent = screen.getByRole('tabpanel', { name: /RECURSOS DISPONÍVEIS/i });
     const gridSkeletons = shopContent.querySelectorAll('.animate-pulse');
-    // The component renders 8 skeletons when loading
-    expect(gridSkeletons.length).toBe(8);
+    // The component renders 8 skeletons when loading, and each SkeletonShopCard has multiple .animate-pulse elements
+    expect(gridSkeletons.length).toBe(64); // 8 cards * 8 animated elements each
   });
 
   it('should transition from skeletons to content smoothly', async () => {
