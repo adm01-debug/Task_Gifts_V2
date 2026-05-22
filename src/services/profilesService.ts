@@ -1,4 +1,5 @@
 import { supabase } from "@/integrations/supabase/client";
+import { logger } from "./loggingService";
 import type { Tables, TablesInsert, TablesUpdate } from "@/integrations/supabase/types";
 import { notificationsService } from "./notificationsService";
 import { auditService } from "./auditService";

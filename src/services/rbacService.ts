@@ -1,4 +1,5 @@
 import { supabase } from "@/integrations/supabase/client";
+import { logger } from "./loggingService";
 import type { AppRole } from "@/hooks/useRBAC";
 
 export interface Permission {

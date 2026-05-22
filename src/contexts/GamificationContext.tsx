@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useCallback, ReactNode } from "react";
+import { createContext, useContext, useState, useCallback, ReactNode, useEffect } from "react";
 import { LevelUpCelebration } from "@/components/ui/level-up-celebration";
 import { gamifiedToast } from "@/components/ui/gamified-toast";
 
