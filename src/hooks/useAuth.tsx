@@ -3,6 +3,7 @@ import { User, Session } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
 import { useDeviceDetection } from "./useDeviceDetection";
 import { logger } from "@/services/loggingService";
+import { useGlobalMessage } from "@/components/GlobalMessageProvider";
 
 interface AuthContextType {
   user: User | null;
@@ -19,6 +20,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
+  const { showMessage } = useGlobalMessage();
 
   useEffect(() => {
     let mounted = true;
@@ -52,18 +54,29 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const { registerDevice } = useDeviceDetection();
 
    const signIn = useCallback(async (email: string, password: string) => {
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
-    
-    // Registrar dispositivo após login bem-sucedido
-    if (!error && data?.user) {
-      registerDevice(data.user.id).catch((err: unknown) => logger.apiError('registerDevice', err, 'useAuth'));
+    try {
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+      
+      if (error) {
+        showMessage(error.message, "error", "Falha na Autenticação");
+        return { error };
+      }
+
+      // Registrar dispositivo após login bem-sucedido
+      if (data?.user) {
+        registerDevice(data.user.id).catch((err: unknown) => logger.apiError('registerDevice', err, 'useAuth'));
+      }
+      
+      return { error: null };
+    } catch (err: unknown) {
+      const error = err as Error;
+      showMessage(error.message, "error", "Erro Inesperado");
+      return { error };
     }
-    
-     return { error };
-   }, [registerDevice]);
+   }, [registerDevice, showMessage]);
 
    const signUp = useCallback(async (email: string, password: string, displayName?: string) => {
     const redirectUrl = `${window.location.origin}/`;

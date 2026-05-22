@@ -11,6 +11,7 @@ import { IpAccessGuard } from "@/components/IpAccessGuard";
 import { AccessibilityProvider } from "@/components/accessibility";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
+import { GlobalMessageProvider } from "@/components/GlobalMessageProvider";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -31,23 +32,25 @@ export function Providers({ children }: ProvidersProps) {
     <ErrorBoundary>
       <QueryClientProvider client={queryClient}>
         <ThemeProvider>
-          <AccessibilityProvider>
-            <SoundSettingsProvider>
-              <IpAccessGuard>
-                <AuthProvider>
-                  <GamificationProvider>
-                    <AchievementNotificationProvider>
-                      <TooltipProvider>
-                        <Toaster />
-                        <Sonner />
-                        {children}
-                      </TooltipProvider>
-                    </AchievementNotificationProvider>
-                  </GamificationProvider>
-                </AuthProvider>
-              </IpAccessGuard>
-            </SoundSettingsProvider>
-          </AccessibilityProvider>
+          <GlobalMessageProvider>
+            <AccessibilityProvider>
+              <SoundSettingsProvider>
+                <IpAccessGuard>
+                  <AuthProvider>
+                    <GamificationProvider>
+                      <AchievementNotificationProvider>
+                        <TooltipProvider>
+                          <Toaster />
+                          <Sonner />
+                          {children}
+                        </TooltipProvider>
+                      </AchievementNotificationProvider>
+                    </GamificationProvider>
+                  </AuthProvider>
+                </IpAccessGuard>
+              </SoundSettingsProvider>
+            </AccessibilityProvider>
+          </GlobalMessageProvider>
         </ThemeProvider>
       </QueryClientProvider>
     </ErrorBoundary>
