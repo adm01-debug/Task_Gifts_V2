@@ -39,7 +39,9 @@ interface CompetencyRadarProps {
 
 // CustomTooltip must be a simple function (not a component receiving refs)
 // recharts internally passes refs to tooltip content components
-const renderCustomTooltip = ({ active, payload }: any) => {
+import { TooltipProps } from "recharts";
+...
+const renderCustomTooltip = ({ active, payload }: TooltipProps<number, string>) => {
   if (active && payload && payload.length) {
     const data = payload[0].payload;
     const percentage = Math.round((data.value / data.maxValue) * 100);
