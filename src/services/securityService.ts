@@ -1,11 +1,29 @@
 import { supabase } from "@/integrations/supabase/client";
-import type { Tables, TablesInsert, TablesUpdate } from "@/integrations/supabase/types";
 
-export type BlockedIP = Tables<"blocked_ips">;
-export type BlockedIPInsert = TablesInsert<"blocked_ips">;
-export type RateLimitRule = Tables<"rate_limit_rules">;
-export type RateLimitRuleInsert = TablesInsert<"rate_limit_rules">;
-export type RateLimitRuleUpdate = TablesUpdate<"rate_limit_rules">;
+export interface BlockedIP {
+  id: string;
+  ip_address: string;
+  reason: string;
+  block_type: string;
+  blocked_at: string;
+  expires_at: string | null;
+  is_permanent: boolean;
+  violation_count: number;
+}
+
+export interface RateLimitRule {
+  id: string;
+  name: string;
+  endpoint_pattern: string;
+  requests_per_minute: number;
+  requests_per_hour: number;
+  block_duration_minutes: number;
+  is_active: boolean;
+  applies_to_authenticated: boolean;
+  applies_to_anonymous: boolean;
+  created_at?: string;
+  updated_at?: string;
+}
 
 export const securityService = {
   async getBlockedIPs(): Promise<BlockedIP[]> {
@@ -14,7 +32,7 @@ export const securityService = {
       .select("*")
       .order("blocked_at", { ascending: false });
     if (error) throw error;
-    return (data as BlockedIP[]) ?? [];
+    return (data as any) as BlockedIP[];
   },
 
   async unblockIP(id: string): Promise<void> {
@@ -22,8 +40,8 @@ export const securityService = {
     if (error) throw error;
   },
 
-  async blockIP(params: BlockedIPInsert): Promise<void> {
-    const { error } = await supabase.from("blocked_ips").insert(params);
+  async blockIP(params: Partial<BlockedIP>): Promise<void> {
+    const { error } = await supabase.from("blocked_ips").insert(params as any);
     if (error) throw error;
   },
 
@@ -33,19 +51,19 @@ export const securityService = {
       .select("*")
       .order("name");
     if (error) throw error;
-    return (data as RateLimitRule[]) ?? [];
+    return (data as any) as RateLimitRule[];
   },
 
-  async saveRateLimitRule(rule: any): Promise<void> {
+  async saveRateLimitRule(rule: Partial<RateLimitRule>): Promise<void> {
     if (rule.id) {
       const { id, ...updates } = rule;
       const { error } = await supabase
         .from("rate_limit_rules")
-        .update(updates)
+        .update(updates as any)
         .eq("id", id);
       if (error) throw error;
     } else {
-      const { error } = await supabase.from("rate_limit_rules").insert(rule);
+      const { error } = await supabase.from("rate_limit_rules").insert(rule as any);
       if (error) throw error;
     }
   },
