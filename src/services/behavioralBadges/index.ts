@@ -1,8 +1,9 @@
- import { supabase } from "@/integrations/supabase/client";
- import { achievementsService } from "../achievementsService";
- import { logger } from "../loggingService";
- import { BEHAVIORAL_BADGES } from "./badges";
- import { BehaviorMetrics, BehavioralBadge } from "./types";
+import { supabase } from "@/integrations/supabase/client";
+import { achievementsService } from "../achievementsService";
+import { logger } from "../loggingService";
+import { BEHAVIORAL_BADGES } from "./badges";
+import { BehaviorMetrics, BehavioralBadge } from "./types";
+import { triggerHaptic } from "@/hooks/useHaptics";
  
  export const behavioralBadgesService = {
    async getUserMetrics(userId: string): Promise<BehaviorMetrics> {
@@ -148,6 +149,8 @@
             if (gamification) {
               gamification.unlockAchievement(badge.name, badge.description);
             }
+            // Trigger haptic feedback
+            triggerHaptic(badge.rarity === 'legendary' || badge.rarity === 'epic' ? 'heavy' : 'medium');
           }
          }
        }
