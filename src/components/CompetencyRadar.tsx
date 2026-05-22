@@ -8,6 +8,7 @@ import {
   Radar,
   ResponsiveContainer,
   Tooltip,
+  TooltipProps,
 } from "recharts";
 import {
   Brain,
@@ -39,8 +40,6 @@ interface CompetencyRadarProps {
 
 // CustomTooltip must be a simple function (not a component receiving refs)
 // recharts internally passes refs to tooltip content components
-import { TooltipProps } from "recharts";
-...
 const renderCustomTooltip = ({ active, payload }: TooltipProps<number, string>) => {
   if (active && payload && payload.length) {
     const data = payload[0].payload;
