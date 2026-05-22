@@ -1,29 +1,11 @@
 import { supabase } from "@/integrations/supabase/client";
+import type { Tables, TablesInsert, TablesUpdate } from "@/integrations/supabase/types";
 
-export interface BlockedIP {
-  id: string;
-  ip_address: string;
-  reason: string;
-  block_type: string;
-  blocked_at: string;
-  expires_at: string | null;
-  is_permanent: boolean;
-  violation_count: number;
-}
-
-export interface RateLimitRule {
-  id: string;
-  name: string;
-  endpoint_pattern: string;
-  requests_per_minute: number;
-  requests_per_hour: number;
-  block_duration_minutes: number;
-  is_active: boolean;
-  applies_to_authenticated: boolean;
-  applies_to_anonymous: boolean;
-  created_at?: string;
-  updated_at?: string;
-}
+export type BlockedIP = Tables<"blocked_ips">;
+export type BlockedIPInsert = TablesInsert<"blocked_ips">;
+export type RateLimitRule = Tables<"rate_limit_rules">;
+export type RateLimitRuleInsert = TablesInsert<"rate_limit_rules">;
+export type RateLimitRuleUpdate = TablesUpdate<"rate_limit_rules">;
 
 export const securityService = {
   async getBlockedIPs(): Promise<BlockedIP[]> {
@@ -54,7 +36,7 @@ export const securityService = {
     return (data as RateLimitRule[]) ?? [];
   },
 
-  async saveRateLimitRule(rule: RateLimitRuleInsert | RateLimitRuleUpdate): Promise<void> {
+  async saveRateLimitRule(rule: any): Promise<void> {
     if (rule.id) {
       const { id, ...updates } = rule;
       const { error } = await supabase
