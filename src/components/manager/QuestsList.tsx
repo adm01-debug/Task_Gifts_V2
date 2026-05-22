@@ -5,9 +5,9 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Target, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { questsService, type Quest } from "@/services/questsService";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
+import { questsService, type Quest } from "@/services/questsService";
 import { QuestStatsModal } from "./QuestStatsModal";
 import { QuestCard } from "./QuestCard";
 
