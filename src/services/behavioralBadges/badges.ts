@@ -308,8 +308,7 @@
      rarity: "common",
      xpReward: 75,
      coinReward: 40,
-     condition: (m) => m.helpfulComments >= 20
-   },
+      condition: (m) => m.helpfulComments >= 20
     },
     // === AI COACH APPRENTICE ===
     {
