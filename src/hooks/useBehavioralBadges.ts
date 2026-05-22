@@ -131,11 +131,12 @@ export function useBehavioralBadges() {
           }
           break;
 
-        case "communication":
+        case "communication": {
           const target = badge.key.includes("master") ? 100 : badge.key.includes("pro") ? 25 : 5;
           progress = Math.min(100, (metrics.oneOnOnesAttended / target) * 100);
           remaining = `${target - metrics.oneOnOnesAttended} 1-on-1s restantes`;
           break;
+        }
 
         case "performance":
           if (badge.key === "goal_first") {
@@ -147,17 +148,19 @@ export function useBehavioralBadges() {
           }
           break;
 
-        case "learning":
+        case "learning": {
           const courseTarget = badge.key.includes("master") ? 25 : badge.key.includes("dedicated") ? 10 : 3;
           progress = Math.min(100, (metrics.coursesCompleted / courseTarget) * 100);
           remaining = `${courseTarget - metrics.coursesCompleted} cursos restantes`;
           break;
+        }
 
-        case "development":
+        case "development": {
           const pdiTarget = badge.key.includes("transformed") ? 25 : badge.key.includes("dedicated") ? 10 : 3;
           progress = Math.min(100, (metrics.pdiActionsCompleted / pdiTarget) * 100);
           remaining = `${pdiTarget - metrics.pdiActionsCompleted} ações restantes`;
           break;
+        }
       }
 
       if (progress > 0 && progress < 100) {

@@ -104,7 +104,17 @@ export function TeamCompetencyDashboard() {
     };
   }, [teamCompetencies]);
 
-  const toggleMember = (userId: string) => { setExpandedMembers(prev => { const next = new Set(prev); next.has(userId) ? next.delete(userId) : next.add(userId); return next; }); };
+  const toggleMember = (userId: string) => { 
+    setExpandedMembers(prev => { 
+      const next = new Set(prev); 
+      if (next.has(userId)) {
+        next.delete(userId);
+      } else {
+        next.add(userId);
+      }
+      return next; 
+    }); 
+  };
 
   if (loadingMembers || loadingCompetencies) return <div className="space-y-6"><div className="grid grid-cols-1 md:grid-cols-3 gap-4">{[1, 2, 3].map(i => <Skeleton key={i} className="h-32" />)}</div><Skeleton className="h-80" /></div>;
   if (!teamStats || !teamCompetencies?.length) return <Card className="p-8 text-center bg-card/50 border-border/50"><Users className="w-12 h-12 mx-auto text-muted-foreground mb-4" /><h3 className="text-lg font-semibold text-foreground">Nenhum dado disponível</h3></Card>;

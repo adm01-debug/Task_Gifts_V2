@@ -42,16 +42,13 @@ export function FloatingActionButton({
   const handleActionClick = useCallback((action: FABAction) => {
     action.onClick();
     setIsOpen(false);
-  }, []);
+  }, [setIsOpen]);
 
-  const closeMenu = useCallback(() => setIsOpen(false), []);
-  const toggleMenu = useCallback(() => setIsOpen(prev => !prev), []);
+  const closeMenu = useCallback(() => setIsOpen(false), [setIsOpen]);
+  const toggleMenu = useCallback(() => setIsOpen(prev => !prev), [setIsOpen]);
 
   // Only show on mobile
   if (!isMobile) return null;
-
-  const closeMenu = useCallback(() => setIsOpen(false), []);
-  const toggleMenu = useCallback(() => setIsOpen(prev => !prev), []);
 
   return (
     <>
