@@ -69,7 +69,7 @@ class LoggingService {
     
     // Send to global message system if available
     const msgSystem = (window as any).__GLOBAL_MESSAGE_SYSTEM__;
-    if (msgSystem && level === 'error') {
+    if (msgSystem) {
       msgSystem.showMessage(message, "error", context || "Erro de Sistema");
     }
     
