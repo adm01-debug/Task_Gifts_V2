@@ -19,6 +19,7 @@ import { useScrollRestoration } from "@/hooks/useNavigationHelpers";
  import { useSwipeNavigation } from "@/hooks/useSwipeNavigation";
 import { Providers } from "@/components/Providers";
  import { ProtectedRoute } from "@/components/rbac/ProtectedRoute";
+ import { useAuth } from "@/hooks/useAuth";
 
 // Eagerly loaded routes (critical path)
 import Index from "./pages/Index";
