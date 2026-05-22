@@ -19,30 +19,32 @@ import { triggerHaptic } from "@/hooks/useHaptics";
        socialData,
        attendanceData,
        mentorData,
-       commentsData,
-     ] = await Promise.all([
-       supabase.from("kudos").select("*", { count: "exact", head: true }).eq("from_user_id", userId),
-       supabase.from("kudos").select("*", { count: "exact", head: true }).eq("to_user_id", userId),
-       supabase.from("checkins").select("completed_at").eq("employee_id", userId).not("completed_at", "is", null).order("completed_at", { ascending: false }),
-       supabase.from("mood_entries").select("created_at").eq("user_id", userId).order("created_at", { ascending: false }),
-       supabase.from("checkins").select("*", { count: "exact", head: true }).or(`employee_id.eq.${userId},manager_id.eq.${userId}`).eq("status", "completed"),
-       supabase.from("goals").select("status").eq("user_id", userId),
-       supabase.from("trail_enrollments").select("*", { count: "exact", head: true }).eq("user_id", userId).not("completed_at", "is", null),
-       supabase.from("development_plan_actions").select("status, plan:development_plans!inner(user_id)").eq("development_plans.user_id", userId),
-       Promise.all([
-         supabase.from("announcements").select("*", { count: "exact", head: true }).eq("author_id", userId),
-         supabase.from("activity_reactions").select("*", { count: "exact", head: true }).eq("user_id", userId),
-       ]),
-       supabase.from("attendance_records").select("check_in").eq("user_id", userId),
-       supabase.from("mentorship_pairs").select("*", { count: "exact", head: true }).eq("mentor_id", userId).eq("status", "active"),
+        commentsData,
+        aiCoachData,
+      ] = await Promise.all([
+        supabase.from("kudos").select("*", { count: "exact", head: true }).eq("from_user_id", userId),
+        supabase.from("kudos").select("*", { count: "exact", head: true }).eq("to_user_id", userId),
+        supabase.from("checkins").select("completed_at").eq("employee_id", userId).not("completed_at", "is", null).order("completed_at", { ascending: false }),
+        supabase.from("mood_entries").select("created_at").eq("user_id", userId).order("created_at", { ascending: false }),
+        supabase.from("checkins").select("*", { count: "exact", head: true }).or(`employee_id.eq.${userId},manager_id.eq.${userId}`).eq("status", "completed"),
+        supabase.from("goals").select("status").eq("user_id", userId),
+        supabase.from("trail_enrollments").select("*", { count: "exact", head: true }).eq("user_id", userId).not("completed_at", "is", null),
+        supabase.from("development_plan_actions").select("status, plan:development_plans!inner(user_id)").eq("development_plans.user_id", userId),
+        Promise.all([
+          supabase.from("announcements").select("*", { count: "exact", head: true }).eq("author_id", userId),
+          supabase.from("activity_reactions").select("*", { count: "exact", head: true }).eq("user_id", userId),
+        ]),
+        supabase.from("attendance_records").select("check_in").eq("user_id", userId),
+        supabase.from("mentorship_pairs").select("*", { count: "exact", head: true }).eq("mentor_id", userId).eq("status", "active"),
         supabase.from("activity_comments").select("*", { count: "exact", head: true }).eq("user_id", userId),
-      ]);
+        supabase.from("ai_coach_messages").select("*", { count: "exact", head: true }).eq("user_id", userId).eq("role", "user"),
+       ]);
   
       // Error checking for each result
       const results = [
         feedbacksGiven, feedbacksReceived, checkinsData, pulsesData, 
         oneOnOnesData, goalsData, coursesData, pdiData, 
-        socialData, attendanceData, mentorData, commentsData
+        socialData, attendanceData, mentorData, commentsData, aiCoachData
       ];
       
       results.forEach((res, index) => {
@@ -124,8 +126,9 @@ import { triggerHaptic } from "@/hooks/useHaptics";
        lateNightActivity,
        weekendActivity: 0,
        helpfulComments: (commentsData as any).count || 0,
-       mentorSessions: (mentorData as any).count || 0,
-      };
+        mentorSessions: (mentorData as any).count || 0,
+        aiCoachInteractions: (aiCoachData as any).count || 0,
+      } as BehaviorMetrics;
     },
 
     // Singleton instance of GamificationContext safe methods
