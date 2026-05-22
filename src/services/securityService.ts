@@ -32,7 +32,7 @@ export const securityService = {
       .select("*")
       .order("blocked_at", { ascending: false });
     if (error) throw error;
-    return (data as any) as BlockedIP[];
+    return (data as BlockedIP[]) ?? [];
   },
 
   async unblockIP(id: string): Promise<void> {
@@ -40,7 +40,7 @@ export const securityService = {
     if (error) throw error;
   },
 
-  async blockIP(params: any): Promise<void> {
+  async blockIP(params: BlockedIPInsert): Promise<void> {
     const { error } = await supabase.from("blocked_ips").insert(params);
     if (error) throw error;
   },
@@ -51,10 +51,10 @@ export const securityService = {
       .select("*")
       .order("name");
     if (error) throw error;
-    return (data as any) as RateLimitRule[];
+    return (data as RateLimitRule[]) ?? [];
   },
 
-  async saveRateLimitRule(rule: any): Promise<void> {
+  async saveRateLimitRule(rule: RateLimitRuleInsert | RateLimitRuleUpdate): Promise<void> {
     if (rule.id) {
       const { id, ...updates } = rule;
       const { error } = await supabase
