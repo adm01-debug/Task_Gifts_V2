@@ -34,8 +34,27 @@
        ]),
        supabase.from("attendance_records").select("check_in").eq("user_id", userId),
        supabase.from("mentorship_pairs").select("*", { count: "exact", head: true }).eq("mentor_id", userId).eq("status", "active"),
-       supabase.from("activity_comments").select("*", { count: "exact", head: true }).eq("user_id", userId),
-     ]);
+        supabase.from("activity_comments").select("*", { count: "exact", head: true }).eq("user_id", userId),
+      ]);
+  
+      // Error checking for each result
+      const results = [
+        feedbacksGiven, feedbacksReceived, checkinsData, pulsesData, 
+        oneOnOnesData, goalsData, coursesData, pdiData, 
+        socialData, attendanceData, mentorData, commentsData
+      ];
+      
+      results.forEach((res, index) => {
+        if (res instanceof Array) {
+            res.forEach((r, i) => {
+                if (r.error) {
+                    logger.apiError(`getUserMetrics[${index}][${i}]`, r.error, "behavioralBadges");
+                }
+            });
+        } else if (res.error) {
+          logger.apiError(`getUserMetrics[${index}]`, res.error, "behavioralBadges");
+        }
+      });
  
      const checkins = checkinsData.data || [];
      let consecutiveCheckinsWeeks = 0;
@@ -108,23 +127,29 @@
      };
    },
  
-   async checkAndAwardBadges(userId: string): Promise<string[]> {
-     const metrics = await this.getUserMetrics(userId);
-     const awardedBadges: string[] = [];
-     for (const badge of BEHAVIORAL_BADGES) {
-       if (badge.condition(metrics)) {
+  async checkAndAwardBadges(userId: string): Promise<string[]> {
+    try {
+      const metrics = await this.getUserMetrics(userId);
+      const awardedBadges: string[] = [];
+      for (const badge of BEHAVIORAL_BADGES) {
+        if (badge.condition(metrics)) {
          const result = await achievementsService.unlockAchievement(userId, badge.key);
          if (result.success) {
            awardedBadges.push(badge.key);
            logger.info(`Badge desbloqueado: ${badge.name} para usuário ${userId}`, "behavioralBadges");
          }
-       }
-     }
-     return awardedBadges;
-   },
+        }
+      }
+      return awardedBadges;
+    } catch (error) {
+      logger.apiError('checkAndAwardBadges', error, 'behavioralBadges');
+      return [];
+    }
+  },
  
-   async syncBadgesToDatabase(): Promise<void> {
-     for (const badge of BEHAVIORAL_BADGES) {
+  async syncBadgesToDatabase(): Promise<void> {
+    try {
+      for (const badge of BEHAVIORAL_BADGES) {
        const { data: existing } = await supabase.from("achievements").select("id").eq("key", badge.key).maybeSingle();
        if (!existing) {
          await supabase.from("achievements").insert({
@@ -138,9 +163,12 @@
            coin_reward: badge.coinReward,
          });
          logger.info(`Badge criado no banco: ${badge.name}`, "behavioralBadges");
-       }
-     }
-   },
+        }
+      }
+    } catch (error) {
+      logger.apiError('syncBadgesToDatabase', error, 'behavioralBadges');
+    }
+  },
  
    getBadgesByCategory(): Record<string, BehavioralBadge[]> {
      const categories: Record<string, BehavioralBadge[]> = {};

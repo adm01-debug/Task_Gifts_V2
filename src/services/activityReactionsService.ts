@@ -1,4 +1,6 @@
 import { supabase } from "@/integrations/supabase/client";
+import { logger } from "./loggingService";
+import { toast } from "sonner";
 
 export interface ActivityReaction {
   id: string;
@@ -21,12 +23,13 @@ export const activityReactionsService = {
     activityIds: string[],
     currentUserId?: string
   ): Promise<Record<string, ReactionCount[]>> {
-    const { data, error } = await supabase
-      .from("activity_reactions")
-      .select("*")
-      .in("activity_id", activityIds);
+    try {
+      const { data, error } = await supabase
+        .from("activity_reactions")
+        .select("*")
+        .in("activity_id", activityIds);
 
-    if (error) throw error;
+      if (error) throw error;
 
     const result: Record<string, ReactionCount[]> = {};
     activityIds.forEach((id) => (result[id] = []));
@@ -58,34 +61,44 @@ export const activityReactionsService = {
       }));
     });
 
-    return result;
+      return result;
+    } catch (error) {
+      logger.apiError("getReactionsByActivityIds", error, "activityReactionsService");
+      return {};
+    }
   },
 
   async toggleReaction(activityId: string, userId: string, emoji: string): Promise<boolean> {
-    // Check if reaction exists
-    const { data: existing } = await supabase
-      .from("activity_reactions")
-      .select("id")
-      .eq("activity_id", activityId)
-      .eq("user_id", userId)
-      .eq("emoji", emoji)
-      .maybeSingle();
+    try {
+      // Check if reaction exists
+      const { data: existing } = await supabase
+        .from("activity_reactions")
+        .select("id")
+        .eq("activity_id", activityId)
+        .eq("user_id", userId)
+        .eq("emoji", emoji)
+        .maybeSingle();
 
-    if (existing) {
-      // Remove reaction
-      const { error } = await supabase
-        .from("activity_reactions")
-        .delete()
-        .eq("id", existing.id);
-      if (error) throw error;
-      return false;
-    } else {
-      // Add reaction
-      const { error } = await supabase
-        .from("activity_reactions")
-        .insert({ activity_id: activityId, user_id: userId, emoji });
-      if (error) throw error;
-      return true;
+      if (existing) {
+        // Remove reaction
+        const { error } = await supabase
+          .from("activity_reactions")
+          .delete()
+          .eq("id", existing.id);
+        if (error) throw error;
+        return false;
+      } else {
+        // Add reaction
+        const { error } = await supabase
+          .from("activity_reactions")
+          .insert({ activity_id: activityId, user_id: userId, emoji });
+        if (error) throw error;
+        return true;
+      }
+    } catch (error) {
+      logger.apiError("toggleReaction", error, "activityReactionsService");
+      toast.error("Erro ao processar reação");
+      throw error;
     }
   },
 };

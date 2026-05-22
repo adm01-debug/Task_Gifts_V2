@@ -1,5 +1,6 @@
- import { supabase } from "@/integrations/supabase/client";
- import { logger } from "@/services/loggingService";
+import { supabase } from "@/integrations/supabase/client";
+import { logger } from "@/services/loggingService";
+import { toast } from "sonner";
 
 export interface AICoachMessage {
   id: string;
@@ -21,10 +22,11 @@ export const aiCoachService = {
  
        if (error) throw error;
        return (data || []) as AICoachMessage[];
-     } catch (error) {
-       logger.apiError("getMessages", error, "AICoachService");
-       return [];
-     }
+    } catch (error) {
+      logger.apiError("getMessages", error, "AICoachService");
+      toast.error('Erro ao carregar mensagens do Coach AI');
+      return [];
+    }
    },
 
    async saveMessage(userId: string, role: "user" | "assistant", content: string): Promise<AICoachMessage | null> {
@@ -35,12 +37,13 @@ export const aiCoachService = {
          .select()
          .single();
  
-       if (error) throw error;
-       return data as AICoachMessage;
-     } catch (error) {
-       logger.apiError("saveMessage", error, "AICoachService");
-       return null;
-     }
+      if (error) throw error;
+      return data as AICoachMessage;
+    } catch (error) {
+      logger.apiError("saveMessage", error, "AICoachService");
+      toast.error('Erro ao salvar mensagem no histórico');
+      return null;
+    }
    },
 
   async clearHistory(userId: string): Promise<boolean> {

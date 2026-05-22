@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams, Link } from "react-router-dom";
+import { useAuth } from "@/hooks/useAuth";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -13,7 +14,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Lock, CheckCircle2, Loader2, Eye, EyeOff, Shield, XCircle } from "lucide-react";
 import { toast } from "sonner";
 import { PasswordStrengthIndicator } from "@/components/PasswordStrengthIndicator";
-import { Link } from "react-router-dom";
+
 
 const resetPasswordSchema = z.object({
   password: z
@@ -34,6 +35,21 @@ type ResetPasswordForm = z.infer<typeof resetPasswordSchema>;
 
 export default function ResetPassword() {
   const navigate = useNavigate();
+  const { user, loading: authLoading } = useAuth();
+
+  useEffect(() => {
+    // Only redirect if authenticated AND not in a recovery session
+    const checkAuth = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      const isRecovery = session?.user && (new URLSearchParams(window.location.hash.substring(1)).get("type") === "recovery" || session.user.recovery_sent_at);
+      
+      if (!authLoading && user && !isRecovery) {
+        navigate("/", { replace: true });
+      }
+    };
+    checkAuth();
+  }, [user, authLoading, navigate]);
+
   const [searchParams] = useSearchParams();
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
