@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { supabase } from "@/integrations/supabase/client";
+import { securityService, type RateLimitRule } from "@/services/securityService";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -22,17 +22,6 @@ import {
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 
-interface RateLimitRule {
-  id: string;
-  name: string;
-  endpoint_pattern: string;
-  requests_per_minute: number;
-  requests_per_hour: number;
-  block_duration_minutes: number;
-  is_active: boolean;
-  applies_to_authenticated: boolean;
-  applies_to_anonymous: boolean;
-}
 
 export function RateLimitRulesPanel() {
   const queryClient = useQueryClient();
@@ -50,42 +39,19 @@ export function RateLimitRulesPanel() {
 
   const { data: rules, isLoading } = useQuery({
     queryKey: ["rate-limit-rules"],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from("rate_limit_rules")
-        .select("*")
-        .order("name");
-      if (error) throw error;
-      return data as RateLimitRule[];
-    },
+    queryFn: securityService.getRateLimitRules,
   });
 
   const toggleMutation = useMutation({
-    mutationFn: async ({ id, is_active }: { id: string; is_active: boolean }) => {
-      const { error } = await supabase
-        .from("rate_limit_rules")
-        .update({ is_active })
-        .eq("id", id);
-      if (error) throw error;
-    },
+    mutationFn: ({ id, is_active }: { id: string; is_active: boolean }) => 
+      securityService.toggleRateLimitRule(id, is_active),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["rate-limit-rules"] });
     },
   });
 
   const saveMutation = useMutation({
-    mutationFn: async (data: typeof formData & { id?: string }) => {
-      if (data.id) {
-        const { error } = await supabase
-          .from("rate_limit_rules")
-          .update(data)
-          .eq("id", data.id);
-        if (error) throw error;
-      } else {
-        const { error } = await supabase.from("rate_limit_rules").insert(data);
-        if (error) throw error;
-      }
-    },
+    mutationFn: (data: Partial<RateLimitRule>) => securityService.saveRateLimitRule(data),
     onSuccess: () => {
       toast.success(editingRule ? "Regra atualizada" : "Regra criada");
       queryClient.invalidateQueries({ queryKey: ["rate-limit-rules"] });
@@ -99,10 +65,7 @@ export function RateLimitRulesPanel() {
   });
 
   const deleteMutation = useMutation({
-    mutationFn: async (id: string) => {
-      const { error } = await supabase.from("rate_limit_rules").delete().eq("id", id);
-      if (error) throw error;
-    },
+    mutationFn: securityService.deleteRateLimitRule,
     onSuccess: () => {
       toast.success("Regra excluída");
       queryClient.invalidateQueries({ queryKey: ["rate-limit-rules"] });

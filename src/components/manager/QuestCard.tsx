@@ -11,7 +11,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import type { Quest } from "./QuestStatsModal";
+import { type Quest } from "@/services/questsService";
 
 export const difficultyConfig = {
   easy: { label: "Fácil", color: "bg-emerald-500/20 text-emerald-400 border-emerald-500/30" },
@@ -37,10 +37,10 @@ interface QuestCardProps {
 
 export function QuestCard({ quest, index, onViewStats, onArchive, onActivate, onDelete }: QuestCardProps) {
   const navigate = useNavigate();
-  const diffConfig = difficultyConfig[quest.difficulty];
-  const statConfig = statusConfig[quest.status];
+  const diffConfig = difficultyConfig[quest.difficulty as keyof typeof difficultyConfig] || difficultyConfig.medium;
+  const statConfig = statusConfig[quest.status as keyof typeof statusConfig] || statusConfig.draft;
   const totalAssignments = quest.quest_assignments?.length || 0;
-  const completedAssignments = quest.quest_assignments?.filter(a => a.completed_at)?.length || 0;
+  const completedAssignments = quest.quest_assignments?.filter((a: any) => a.completed_at)?.length || 0;
   const stepsCount = quest.quest_steps?.length || 0;
 
   return (

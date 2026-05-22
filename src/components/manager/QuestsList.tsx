@@ -5,10 +5,10 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Target, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
-import { QuestStatsModal, type Quest } from "./QuestStatsModal";
+import { questsService, type Quest } from "@/services/questsService";
+import { QuestStatsModal } from "./QuestStatsModal";
 import { QuestCard } from "./QuestCard";
 
 export function QuestsList() {
@@ -23,21 +23,15 @@ export function QuestsList() {
     queryKey: ["manager-quests", user?.id],
     queryFn: async () => {
       if (!user) return [];
-      const { data, error } = await supabase
-        .from("custom_quests")
-        .select(`*, quest_steps(id), quest_assignments(id, completed_at)`)
-        .eq("created_by", user.id)
-        .order("created_at", { ascending: false });
-      if (error) throw error;
-      return data as Quest[];
+      return questsService.getByCreator(user.id);
     },
     enabled: !!user,
   });
 
   const updateStatusMutation = useMutation({
     mutationFn: async ({ questId, status }: { questId: string; status: "active" | "archived" }) => {
-      const { error } = await supabase.from("custom_quests").update({ status }).eq("id", questId);
-      if (error) throw error;
+      if (status === "active") return questsService.activate(questId);
+      return questsService.archive(questId);
     },
     onSuccess: () => { queryClient.invalidateQueries({ queryKey: ["manager-quests"] }); toast({ title: "Status atualizado!" }); },
     onError: (error: Error) => { toast({ title: "Erro", description: error.message, variant: "destructive" }); },
@@ -45,8 +39,7 @@ export function QuestsList() {
 
   const deleteMutation = useMutation({
     mutationFn: async (questId: string) => {
-      const { error } = await supabase.from("custom_quests").delete().eq("id", questId);
-      if (error) throw error;
+      return questsService.delete(questId);
     },
     onSuccess: () => { queryClient.invalidateQueries({ queryKey: ["manager-quests"] }); toast({ title: "Quest excluída!" }); },
     onError: (error: Error) => { toast({ title: "Erro", description: error.message, variant: "destructive" }); },

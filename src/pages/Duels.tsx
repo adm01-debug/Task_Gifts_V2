@@ -55,13 +55,14 @@ const Duels = () => {
 
   const fabActions = [{ icon: Swords, label: "Novo Duelo", onClick: () => setDialogOpen(true), color: "primary" as const }];
 
+  const seo = useSEO();
+
   if (loading) {
     return <div className="min-h-screen flex items-center justify-center bg-background"><motion.div animate={{ rotate: 360 }} transition={{ duration: 1, repeat: Infinity, ease: "linear" }} className="w-12 h-12 rounded-full border-4 border-primary border-t-transparent" /></div>;
   }
 
   const activeDuels = duels?.filter(d => ['pending', 'accepted', 'active'].includes(d.status)) || [];
   const completedDuels = duels?.filter(d => ['completed', 'declined', 'cancelled'].includes(d.status)) || [];
-  const seo = useSEO();
 
    return (
      <PageShell title="Duelos">

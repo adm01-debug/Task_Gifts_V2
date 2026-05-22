@@ -1,3 +1,4 @@
+import { supabase } from "@/integrations/supabase/client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -6,7 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { UserCog, Loader2, X } from "lucide-react";
 import { toast } from "sonner";
 import { rbacService } from "@/services/rbacService";
-import { supabase } from "@/integrations/supabase/client";
+import { profilesService } from "@/services/profilesService";
 import type { AppRole } from "@/hooks/useRBAC";
 import { useFuseSearch, SEARCH_PRESETS } from "@/hooks/useFuseSearch";
 
@@ -23,6 +24,7 @@ export function UserRolesTab({ searchTerm }: { searchTerm: string }) {
   const { data: users = [], isLoading: usersLoading } = useQuery<UserWithRoles[]>({
     queryKey: ["rbac-users-with-roles"],
     queryFn: async () => {
+      // Profiles service should have a method for this, but let's use the one that includes roles
       const { data, error } = await supabase.from("profiles").select(`id, display_name, email, user_roles (id, role, created_at)`).order("display_name");
       if (error) throw error;
       return (data || []) as unknown as UserWithRoles[];

@@ -207,7 +207,7 @@ function DepartmentMissions() {
       </CardHeader>
       
       <CardContent className="p-4 pt-0 flex-1 flex flex-col space-y-4">
-        <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as any)} className="flex-1 flex flex-col">
+        <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as typeof activeTab)} className="flex-1 flex flex-col">
           <TabsList className="grid grid-cols-3 h-10 mb-4 p-1 bg-black/20 rounded-2xl border border-white/5">
             <TabsTrigger value="daily" className="text-[10px] font-black uppercase tracking-widest transition-all data-[state=active]:bg-primary data-[state=active]:text-white rounded-xl">DIÁRIO</TabsTrigger>
             <TabsTrigger value="weekly" className="text-[10px] font-black uppercase tracking-widest transition-all data-[state=active]:bg-primary data-[state=active]:text-white rounded-xl">SEMANAL</TabsTrigger>
