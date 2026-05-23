@@ -1,6 +1,7 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { crypto } from "https://deno.land/std@0.168.0/crypto/mod.ts";
+import { ExternalWebhookSchema, validatePayload, createValidationErrorResponse } from "../_shared/validation.ts";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -89,9 +90,27 @@ serve(async (req) => {
       }
     }
 
-    // Parse webhook payload
-    const payload = JSON.parse(rawPayload);
-    const { event, data } = payload;
+    // Parse and validate webhook payload
+    const payloadResult = JSON.parse(rawPayload);
+    const validation = validatePayload(ExternalWebhookSchema, payloadResult);
+    
+    if (!validation.success) {
+      return createValidationErrorResponse(validation.error, corsHeaders);
+    }
+
+    const payload = validation.data;
+    
+    // Normalize v1/v2 payload
+    let event: string;
+    let data: any;
+    
+    if ('version' in payload && payload.version === 'v2') {
+      event = payload.event;
+      data = payload.payload;
+    } else {
+      event = payload.event;
+      data = payload.data;
+    }
 
     if (!event) {
       return jsonResponse({ error: 'Missing event type in payload' }, 400);

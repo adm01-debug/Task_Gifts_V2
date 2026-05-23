@@ -7,6 +7,7 @@ import {
   createRateLimitResponse,
   RATE_LIMITS 
 } from "../_shared/rate-limiter.ts";
+import { Bitrix24WebhookSchema, validatePayload, createValidationErrorResponse } from "../_shared/validation.ts";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -113,11 +114,20 @@ serve(async (req) => {
       }
     }
 
+    // Validate payload with schema
+    const validation = validatePayload(Bitrix24WebhookSchema, payload);
+    if (!validation.success) {
+      console.error('Validation error:', validation.error);
+      return createValidationErrorResponse(validation.error, corsHeaders);
+    }
+    
+    const validatedData = validation.data;
+
     // Webhook payload logged to database for audit
 
     // Determine event type
-    const eventType = (payload.event || payload.EVENT || 'unknown') as string;
-    const eventData = (payload.data || payload.DATA || payload) as BitrixEventData;
+    const eventType = (validatedData.event || validatedData.EVENT || 'unknown') as string;
+    const eventData = (validatedData.data || validatedData.DATA || validatedData) as BitrixEventData;
 
     // Log the webhook
     const { data: logEntry, error: logError } = await supabase
