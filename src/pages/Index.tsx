@@ -169,7 +169,7 @@ function Index() {
          <DashboardHeader onMenuClick={handleMenuClick} />
  
          {/* Dashboard Content */}
-         <div className="p-4 md:p-6 space-y-4 md:space-y-6">
+         <div className="p-6 md:p-10 space-y-8 md:space-y-12 max-w-[1920px] mx-auto">
            {/* Seasonal Event Banner */}
            <SeasonalEventBanner />
            
