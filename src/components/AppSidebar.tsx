@@ -80,9 +80,9 @@ export const AppSidebar = memo(function AppSidebar({ collapsed, onToggle }: AppS
       data-tour="sidebar"
       id="main-nav"
       initial={false}
-      animate={{ width: collapsed ? 72 : 260 }}
-      transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-      className="h-screen bg-sidebar/80 backdrop-blur-xl border-r border-sidebar-border/40 flex flex-col overflow-hidden shadow-2xl relative z-50"
+      animate={{ width: collapsed ? 80 : 280 }}
+      transition={{ duration: 0.5, ease: [0.34, 1.56, 0.64, 1] }}
+      className="h-screen bg-sidebar/70 backdrop-blur-2xl border-r border-sidebar-border/30 flex flex-col overflow-hidden shadow-[10px_0_50px_rgba(0,0,0,0.1)] relative z-50"
       role="navigation"
       aria-label="Menu lateral principal"
     >
