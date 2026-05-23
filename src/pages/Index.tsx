@@ -191,18 +191,22 @@ function Index() {
              </section>
            </SectionWrapper>
  
-           {/* Main Grid - Split into semantic columns */}
-           <div className="grid lg:grid-cols-3 gap-4 md:gap-6">
-             {/* Left Column - Missions, Quests, Team & Recognition */}
-             <SectionWrapper sectionName="Coluna Principal">
-               <DashboardLeftColumn />
-             </SectionWrapper>
- 
-             {/* Right Column - Combo, Attendance, Rankings, Leaderboard, Analytics & Rewards */}
-             <SectionWrapper sectionName="Coluna Lateral">
-               <DashboardRightColumn />
-             </SectionWrapper>
-           </div>
+            {/* Main Grid - Split into semantic columns with improved responsiveness */}
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 md:gap-8 items-start">
+              {/* Left Column - Missions, Quests, Team & Recognition (Takes 2 cols on XL if needed or just flows) */}
+              <div className="xl:col-span-2 space-y-8 md:space-y-12">
+                <SectionWrapper sectionName="Coluna Principal">
+                  <DashboardLeftColumn />
+                </SectionWrapper>
+              </div>
+
+              {/* Right Column - Combo, Attendance, Rankings, Leaderboard, Analytics & Rewards */}
+              <div className="space-y-8 md:space-y-12">
+                <SectionWrapper sectionName="Coluna Lateral">
+                  <DashboardRightColumn />
+                </SectionWrapper>
+              </div>
+            </div>
          </div>
  
          {/* Footer */}
