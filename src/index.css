@@ -72,247 +72,72 @@
      Enhanced depth, better contrast, refined shadows
      ======================================== */
   :root {
-    /* Base Colors - Warm Cream with better depth */
-    --background: 40 20% 95%;
-    --foreground: 225 35% 8%;
-
-    /* Card - Elevated white with subtle warmth and better shadow */
+    --background: 40 20% 97%;
+    --foreground: 225 35% 10%;
     --card: 0 0% 100%;
     --card-foreground: 225 35% 8%;
-
     --popover: 0 0% 100%;
     --popover-foreground: 225 35% 8%;
-
-    /* Primary - Vibrant Orange (otimizado para contraste WCAG) */
     --primary: 24 95% 46%;
     --primary-foreground: 0 0% 100%;
-
-    /* Secondary - Electric Blue (mais profundo) */
     --secondary: 215 90% 42%;
     --secondary-foreground: 0 0% 100%;
-
-    /* Success Green (melhor contraste) */
     --success: 150 70% 32%;
     --success-foreground: 0 0% 100%;
-
-    /* Warning Yellow (texto escuro para legibilidade) */
     --warning: 42 95% 48%;
     --warning-foreground: 30 100% 8%;
-
-    /* Muted - Warm Gray com MUITO MAIS contraste */
-    --muted: 40 15% 88%;
-    --muted-foreground: 225 22% 38%;
-
-    /* Accent - Purple (vibrante mas acessível) */
+    --muted: 40 15% 90%;
+    --muted-foreground: 225 22% 40%;
     --accent: 275 75% 48%;
     --accent-foreground: 0 0% 100%;
-
-    /* Destructive */
     --destructive: 0 78% 45%;
     --destructive-foreground: 0 0% 100%;
-
-    /* Borders & Inputs - Mais definição visual */
-    --border: 40 12% 72%;
-    --input: 40 10% 92%;
+    --border: 225 20% 85%;
+    --input: 225 20% 90%;
     --ring: 24 95% 46%;
-
-    --radius: 0.75rem;
-
-    /* Spacing Tokens - Sistema padronizado */
-    --spacing-card: 1.5rem;
-    --spacing-card-sm: 1rem;
-    --spacing-card-lg: 2rem;
-    --spacing-section: 2rem;
-    --spacing-section-lg: 3rem;
-    
-    /* Divider Gradient */
-    --divider-gradient: linear-gradient(90deg, transparent 0%, hsl(225 20% 50% / 0.3) 50%, transparent 100%);
-    
-    /* Header Sticky Shadow - mais pronunciado */
-    --header-shadow: 0 2px 12px hsl(225 30% 10% / 0.10);
-    --header-shadow-scrolled: 0 4px 24px hsl(225 30% 10% / 0.15);
-
-    /* Gamification Colors - Mais vibrantes */
-    --xp: 150 70% 32%;
-    --xp-foreground: 0 0% 100%;
-    --coins: 42 95% 48%;
-    --coins-foreground: 30 100% 8%;
-    --streak: 24 95% 46%;
-    --streak-foreground: 0 0% 100%;
-
-    /* Rank Colors - Com foreground para badges */
-    --gold: 42 100% 50%;
-    --gold-foreground: 35 100% 10%;
-    --silver: 220 12% 55%;
-    --silver-foreground: 225 30% 10%;
-    --bronze: 28 65% 38%;
-    --bronze-foreground: 0 0% 100%;
-
-    /* Glass & Effects - Mais visíveis */
-    --glass-bg: 0 0% 100% / 0.90;
-    --glass-border: 225 20% 50% / 0.40;
-
-    /* Elevated Surfaces */
-    --elevated: 0 0% 100%;
-    --elevated-hover: 40 20% 97%;
-
-    /* Gradients - Mais expressivos */
-    --gradient-primary: linear-gradient(135deg, hsl(24 95% 46%), hsl(340 75% 45%));
-    --gradient-secondary: linear-gradient(135deg, hsl(215 90% 42%), hsl(275 75% 48%));
-    --gradient-success: linear-gradient(135deg, hsl(150 70% 32%), hsl(168 65% 30%));
-    --gradient-xp: linear-gradient(90deg, hsl(150 70% 32%), hsl(175 65% 36%));
-    --gradient-gold: linear-gradient(135deg, hsl(48 100% 55%), hsl(32 100% 42%));
-    --gradient-surface: linear-gradient(180deg, hsl(0 0% 100%), hsl(40 20% 95%));
-
-    /* Shadows - Light mode: sombras MUITO mais definidas para elevação */
-    --shadow-xs: 0 1px 3px hsl(225 30% 10% / 0.06);
-    --shadow-sm: 0 2px 8px hsl(225 30% 10% / 0.08), 0 1px 3px hsl(225 30% 10% / 0.05);
-    --shadow-md: 0 4px 20px hsl(225 30% 10% / 0.12), 0 2px 8px hsl(225 30% 10% / 0.07);
-    --shadow-lg: 0 10px 40px hsl(225 30% 10% / 0.14), 0 4px 16px hsl(225 30% 10% / 0.08);
-    --shadow-xl: 0 20px 60px hsl(225 30% 10% / 0.16), 0 8px 28px hsl(225 30% 10% / 0.10);
-    --shadow-glow-primary: 0 4px 28px hsl(24 95% 46% / 0.32);
-    --shadow-glow-secondary: 0 4px 28px hsl(215 90% 42% / 0.32);
-    --shadow-glow-success: 0 4px 28px hsl(150 70% 32% / 0.32);
-
-    /* Sidebar - Light mode refinado com mais contraste */
-    --sidebar-background: 40 18% 94%;
-    --sidebar-foreground: 225 35% 10%;
-    --sidebar-primary: 24 95% 46%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 40 20% 88%;
-    --sidebar-accent-foreground: 225 35% 8%;
-    --sidebar-border: 40 12% 78%;
-    --sidebar-ring: 24 95% 46%;
-
-    /* Chart Colors - Otimizados para light mode */
-    --chart-1: 24 95% 46%;
-    --chart-2: 215 90% 42%;
-    --chart-3: 150 70% 32%;
-    --chart-4: 275 75% 48%;
-    --chart-5: 42 95% 48%;
+    --radius: 0.85rem;
+    --shadow-xs: 0 1px 2px hsl(225 30% 10% / 0.05);
+    --shadow-sm: 0 4px 6px -1px hsl(225 30% 10% / 0.08), 0 2px 4px -1px hsl(225 30% 10% / 0.05);
+    --shadow-md: 0 10px 15px -3px hsl(225 30% 10% / 0.1), 0 4px 6px -2px hsl(225 30% 10% / 0.05);
+    --shadow-lg: 0 20px 25px -5px hsl(225 30% 10% / 0.12), 0 10px 10px -5px hsl(225 30% 10% / 0.04);
+    --shadow-xl: 0 25px 50px -12px hsl(225 30% 10% / 0.15);
+    --shadow-glow-primary: 0 0 20px hsl(var(--primary) / 0.2);
+    --shadow-glow-secondary: 0 0 20px hsl(var(--secondary) / 0.2);
+    --shadow-glow-success: 0 0 20px hsl(var(--success) / 0.2);
   }
 
-  /* ========================================
-     DARK MODE - Gaming Theme
-     Enhanced depth, better glow effects, refined contrasts
-     ======================================== */
   .dark {
-    /* Base Colors - Deep Blue-Black (mais profundo) */
     --background: 228 35% 6%;
     --foreground: 220 25% 95%;
-
-    /* Card - Elevated dark surface com mais contraste */
-    --card: 228 30% 11%;
+    --card: 228 30% 10%;
     --card-foreground: 220 25% 95%;
-
-    --popover: 228 28% 13%;
+    --popover: 228 28% 12%;
     --popover-foreground: 220 25% 95%;
-
-    /* Primary - Vibrant Orange (mais brilhante no dark) */
-    --primary: 24 95% 54%;
+    --primary: 24 95% 58%;
     --primary-foreground: 0 0% 100%;
-
-    /* Secondary - Electric Blue */
-    --secondary: 210 100% 58%;
+    --secondary: 210 100% 60%;
     --secondary-foreground: 0 0% 100%;
-
-    /* Success Green */
-    --success: 145 75% 48%;
+    --success: 145 75% 50%;
     --success-foreground: 0 0% 100%;
-
-    /* Warning Yellow */
-    --warning: 45 100% 54%;
+    --warning: 45 100% 55%;
     --warning-foreground: 228 35% 6%;
-
-    /* Muted - Melhor contraste - AUMENTADO para legibilidade */
-    --muted: 228 22% 15%;
-    --muted-foreground: 220 18% 68%;
-
-    /* Accent - Purple (mais brilhante) */
-    --accent: 280 80% 60%;
+    --muted: 228 22% 14%;
+    --muted-foreground: 220 18% 70%;
+    --accent: 280 80% 65%;
     --accent-foreground: 0 0% 100%;
-
-    /* Destructive */
-    --destructive: 0 85% 56%;
+    --destructive: 0 85% 60%;
     --destructive-foreground: 0 0% 100%;
-
-    /* Borders & Inputs - Mais visíveis */
     --border: 228 22% 18%;
     --input: 228 22% 16%;
-    --ring: 24 95% 54%;
-
-    /* Spacing Tokens - Sistema padronizado (dark) */
-    --spacing-card: 1.5rem;
-    --spacing-card-sm: 1rem;
-    --spacing-card-lg: 2rem;
-    --spacing-section: 2rem;
-    --spacing-section-lg: 3rem;
-    
-    /* Divider Gradient */
-    --divider-gradient: linear-gradient(90deg, transparent 0%, hsl(0 0% 100% / 0.08) 50%, transparent 100%);
-    
-    /* Header Sticky Shadow */
-    --header-shadow: 0 2px 12px hsl(0 0% 0% / 0.25);
-    --header-shadow-scrolled: 0 4px 24px hsl(0 0% 0% / 0.35);
-
-    /* Gamification Colors - Mais vibrantes */
-    --xp: 145 78% 50%;
-    --xp-foreground: 0 0% 100%;
-    --coins: 45 100% 58%;
-    --coins-foreground: 228 35% 6%;
-    --streak: 24 95% 54%;
-    --streak-foreground: 0 0% 100%;
-
-    /* Rank Colors - Mais brilhantes */
-    --gold: 45 100% 58%;
-    --gold-foreground: 35 100% 6%;
-    --silver: 220 15% 72%;
-    --silver-foreground: 220 25% 6%;
-    --bronze: 28 70% 52%;
-    --bronze-foreground: 0 0% 100%;
-
-    /* Glass & Effects - Melhor definição */
-    --glass-bg: 228 28% 12% / 0.88;
-    --glass-border: 0 0% 100% / 0.10;
-
-    /* Elevated Surfaces */
-    --elevated: 228 28% 13%;
-    --elevated-hover: 228 28% 16%;
-
-    /* Gradients - Mais intensos */
-    --gradient-primary: linear-gradient(135deg, hsl(24 95% 54%), hsl(340 80% 52%));
-    --gradient-secondary: linear-gradient(135deg, hsl(210 100% 58%), hsl(280 80% 60%));
-    --gradient-success: linear-gradient(135deg, hsl(145 75% 48%), hsl(168 70% 42%));
-    --gradient-xp: linear-gradient(90deg, hsl(145 78% 50%), hsl(175 75% 48%));
-    --gradient-gold: linear-gradient(135deg, hsl(48 100% 62%), hsl(35 100% 50%));
-    --gradient-surface: linear-gradient(180deg, hsl(228 30% 13%), hsl(228 35% 7%));
-
-    /* Shadows - Dark mode: glows mais sutis e profundidade */
-    --shadow-xs: 0 1px 2px hsl(0 0% 0% / 0.35);
-    --shadow-sm: 0 2px 4px hsl(0 0% 0% / 0.40), inset 0 1px 0 hsl(0 0% 100% / 0.03);
-    --shadow-md: 0 4px 16px hsl(0 0% 0% / 0.45), inset 0 1px 0 hsl(0 0% 100% / 0.04);
-    --shadow-lg: 0 8px 32px hsl(0 0% 0% / 0.50), inset 0 1px 0 hsl(0 0% 100% / 0.05);
-    --shadow-xl: 0 16px 56px hsl(0 0% 0% / 0.55), inset 0 1px 0 hsl(0 0% 100% / 0.06);
-    --shadow-glow-primary: 0 0 40px hsl(24 95% 54% / 0.25);
-    --shadow-glow-secondary: 0 0 40px hsl(210 100% 58% / 0.25);
-    --shadow-glow-success: 0 0 40px hsl(145 75% 48% / 0.25);
-
-    /* Sidebar - Dark mode refinado com MAIOR contraste */
-    --sidebar-background: 228 35% 5%;
-    --sidebar-foreground: 220 22% 90%;
-    --sidebar-primary: 24 95% 54%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 228 25% 12%;
-    --sidebar-accent-foreground: 220 22% 95%;
-    --sidebar-border: 228 22% 12%;
-    --sidebar-ring: 24 95% 54%;
-
-    /* Chart Colors - Otimizados para dark mode */
-    --chart-1: 24 95% 54%;
-    --chart-2: 210 100% 58%;
-    --chart-3: 145 75% 48%;
-    --chart-4: 280 80% 60%;
-    --chart-5: 45 100% 54%;
+    --ring: 24 95% 58%;
+    --shadow-xs: 0 1px 2px hsl(0 0% 0% / 0.3);
+    --shadow-sm: 0 4px 6px -1px hsl(0 0% 0% / 0.4), inset 0 1px 0 hsl(0 0% 100% / 0.05);
+    --shadow-md: 0 10px 15px -3px hsl(0 0% 0% / 0.5), inset 0 1px 0 hsl(0 0% 100% / 0.05);
+    --shadow-lg: 0 20px 25px -5px hsl(0 0% 0% / 0.6), inset 0 1px 0 hsl(0 0% 100% / 0.06);
+    --shadow-xl: 0 25px 50px -12px hsl(0 0% 0% / 0.7);
+    --shadow-glow-primary: 0 0 30px hsl(var(--primary) / 0.25);
+    --shadow-glow-secondary: 0 0 30px hsl(var(--secondary) / 0.25);
+    --shadow-glow-success: 0 0 30px hsl(var(--success) / 0.25);
   }
 }
 

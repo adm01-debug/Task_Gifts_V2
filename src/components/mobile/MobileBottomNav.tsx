@@ -174,11 +174,11 @@ export const MobileBottomNav = memo(function MobileBottomNav({ className }: Mobi
       >
         <div className="mx-3 mb-2">
           <div className={cn(
-            "flex items-center justify-around h-[62px] px-2",
-            "bg-card/95 backdrop-blur-xl",
-            "rounded-2xl",
-            "border border-border/50",
-            "shadow-lg shadow-black/10"
+            "flex items-center justify-around h-[68px] px-3",
+            "bg-card/70 backdrop-blur-[32px]",
+            "rounded-[2.5rem]",
+            "border border-white/20 dark:border-white/10",
+            "shadow-[0_15px_40px_rgba(0,0,0,0.2)]"
           )}>
             {mainNavItems.map((item) => {
               const active = isActive(item.path);

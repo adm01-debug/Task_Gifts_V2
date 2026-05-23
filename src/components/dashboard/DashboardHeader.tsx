@@ -145,38 +145,38 @@ export const DashboardHeader = memo(function DashboardHeader({
       initial={{ y: -20, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       className={cn(
-        "sticky top-0 z-40 transition-all duration-300",
+        "sticky top-0 z-40 transition-all duration-500",
         isScrolled 
-          ? "bg-background/80 backdrop-blur-xl border-b border-border/50 py-3 shadow-lg shadow-black/5" 
-          : "bg-transparent py-5"
+          ? "bg-background/70 backdrop-blur-2xl border-b border-border/40 py-2 shadow-xl shadow-black/5" 
+          : "bg-transparent py-4"
       )}
       role="banner"
     >
-      <div className="max-w-[1800px] mx-auto flex items-center justify-between px-6 md:px-8">
-        <div className="flex items-center gap-6">
+      <div className="max-w-[1920px] mx-auto flex items-center justify-between px-8 md:px-12">
+        <div className="flex items-center gap-8">
           <motion.button
-            whileHover={{ scale: 1.05, backgroundColor: "hsl(var(--muted))" }}
+            whileHover={{ scale: 1.05, backgroundColor: "hsl(var(--muted))", borderColor: "hsl(var(--primary)/0.3)" }}
             whileTap={{ scale: 0.95 }}
             onClick={onMenuClick}
-            className="flex items-center justify-center w-11 h-11 rounded-2xl bg-muted/40 border border-border/40 transition-all"
+            className="flex items-center justify-center w-12 h-12 rounded-[1.25rem] bg-card/40 backdrop-blur-md border border-border/40 transition-all shadow-sm"
             aria-label="Abrir menu de navegação"
           >
-            <Menu className="w-5 h-5" aria-hidden="true" />
+            <Menu className="w-6 h-6" aria-hidden="true" />
           </motion.button>
           
             <div className="flex flex-col relative">
               <motion.div 
                 initial={{ x: -20, opacity: 0 }}
                 animate={{ x: 0, opacity: 1 }}
-                className="flex items-center gap-2 mb-0.5"
+                className="flex items-center gap-3 mb-1"
               >
-                <span className="text-[10px] font-black uppercase tracking-[0.3em] text-primary bg-primary/10 px-3 py-1 rounded-full border border-primary/20 shadow-glow-sm">
+                <span className="text-[10px] font-black uppercase tracking-[0.4em] text-primary bg-primary/10 px-4 py-1.5 rounded-full border border-primary/20 shadow-glow-sm backdrop-blur-sm">
                   Tactical Intelligence Hub
                 </span>
-                <div className="h-px w-8 bg-gradient-to-r from-primary/50 to-transparent" />
+                <div className="h-px w-12 bg-gradient-to-r from-primary/50 to-transparent" />
               </motion.div>
-            <h1 className="text-xl md:text-3xl font-black tracking-tighter flex items-center gap-3 italic">
-              <span className="text-muted-foreground/30">SYSTEM://</span>
+            <h1 className="text-2xl md:text-4xl font-black tracking-tighter flex items-center gap-4 italic">
+              <span className="text-muted-foreground/20">SYSTEM://</span>
               {displayName.toUpperCase()}
               <span className="text-primary animate-pulse">_</span>
             </h1>
