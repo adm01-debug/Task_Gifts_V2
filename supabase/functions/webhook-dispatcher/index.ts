@@ -2,6 +2,7 @@ import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { createHmac } from "https://deno.land/std@0.168.0/node/crypto.ts";
 import { corsHeaders, verifyServiceRole } from "../_shared/security.ts";
+import { WebhookDispatcherSchema, validatePayload, createValidationErrorResponse } from "../_shared/validation.ts";
 
 
 
@@ -18,7 +19,14 @@ serve(async (req) => {
     // Verify service role or internal secret
     verifyServiceRole(req);
 
-    const { subscription_id, event_type, payload } = await req.json();
+    const rawPayload = await req.json();
+    const validation = validatePayload(WebhookDispatcherSchema, rawPayload);
+    
+    if (!validation.success) {
+      return createValidationErrorResponse(validation.error, corsHeaders);
+    }
+
+    const { subscription_id, event_type, payload } = validation.data;
 
     if (!subscription_id || !event_type || !payload) {
       return new Response(JSON.stringify({ error: 'Missing required fields' }), {
