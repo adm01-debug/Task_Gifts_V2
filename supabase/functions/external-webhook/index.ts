@@ -99,7 +99,18 @@ serve(async (req) => {
     }
 
     const payload = validation.data;
-    const { event, data } = payload;
+    
+    // Normalize v1/v2 payload
+    let event: string;
+    let data: any;
+    
+    if ('version' in payload && payload.version === 'v2') {
+      event = payload.event;
+      data = payload.payload;
+    } else {
+      event = payload.event;
+      data = payload.data;
+    }
 
     if (!event) {
       return jsonResponse({ error: 'Missing event type in payload' }, 400);

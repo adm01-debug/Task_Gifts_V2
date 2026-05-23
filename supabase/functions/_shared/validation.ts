@@ -68,12 +68,24 @@ export const Bitrix24WebhookSchema = z.object({
 }).passthrough();
 
 /**
- * External Webhook Schema
+ * External Webhook Schema with versioning support
  */
-export const ExternalWebhookSchema = z.object({
+export const ExternalWebhookV1Schema = z.object({
   event: z.string(),
   data: z.record(z.any()),
 }).passthrough();
+
+export const ExternalWebhookV2Schema = z.object({
+  version: z.literal("v2"),
+  event: z.string(),
+  payload: z.record(z.any()), // Renamed data to payload in v2
+  metadata: z.record(z.any()).optional(),
+}).passthrough();
+
+export const ExternalWebhookSchema = z.union([
+  ExternalWebhookV1Schema,
+  ExternalWebhookV2Schema,
+]);
 
 /**
  * Webhook Dispatcher Schema

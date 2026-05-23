@@ -77,3 +77,22 @@ Deno.test("Webhook Dispatcher Contract - Invalid UUID", () => {
   const result = WebhookDispatcherSchema.safeParse(payload);
   assertEquals(result.success, false);
 });
+
+Deno.test("External Webhook Versioning - v1 compatibility", () => {
+  const payload = {
+    event: "task.created",
+    data: { id: 1 }
+  };
+  const result = ExternalWebhookSchema.safeParse(payload);
+  assertEquals(result.success, true);
+});
+
+Deno.test("External Webhook Versioning - v2 support", () => {
+  const payload = {
+    version: "v2",
+    event: "task.created",
+    payload: { id: 1 }
+  };
+  const result = ExternalWebhookSchema.safeParse(payload);
+  assertEquals(result.success, true);
+});
