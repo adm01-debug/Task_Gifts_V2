@@ -56,30 +56,36 @@ export const SidebarNavGroup = memo(function SidebarNavGroup({
         {items.map((item) => {
           const isActive = currentPath === item.path || (item.path !== "/" && currentPath.startsWith(item.path));
           return (
-            <motion.button
-              key={item.label}
-              onClick={() => handleItemClick(item)}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              aria-label={item.label}
-              aria-current={isActive ? "page" : undefined}
-              className={cn(
-                "w-full flex items-center justify-center p-2.5 rounded-lg transition-all duration-200",
-                "hover:bg-sidebar-accent",
-                isActive
-                  ? "bg-sidebar-accent text-sidebar-primary"
-                  : "text-sidebar-foreground/70"
-              )}
-            >
-              <div className="relative">
-                <item.icon className={cn("w-5 h-5", isActive && "text-primary")} />
-                {item.badge && (
-                  <span className="absolute -top-1.5 -right-1.5 w-4 h-4 rounded-full bg-primary text-[10px] font-bold flex items-center justify-center text-primary-foreground">
-                    {item.badge}
-                  </span>
+            <div key={item.label} className="relative group/sidebar-item">
+              <motion.button
+                onClick={() => handleItemClick(item)}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                aria-label={item.label}
+                aria-current={isActive ? "page" : undefined}
+                className={cn(
+                  "w-full flex items-center justify-center p-3 rounded-xl transition-all duration-300",
+                  "hover:bg-sidebar-accent hover:shadow-glow-primary/10",
+                  isActive
+                    ? "bg-primary/15 text-primary shadow-glow-primary/5"
+                    : "text-sidebar-foreground/70"
                 )}
+              >
+                <div className="relative">
+                  <item.icon className={cn("w-5.5 h-5.5 transition-colors", isActive ? "text-primary" : "group-hover/sidebar-item:text-primary/70")} />
+                  {item.badge && (
+                    <span className="absolute -top-2 -right-2 w-4.5 h-4.5 rounded-full bg-primary text-[10px] font-black flex items-center justify-center text-primary-foreground shadow-sm ring-2 ring-background">
+                      {item.badge}
+                    </span>
+                  )}
+                </div>
+              </motion.button>
+              
+              {/* Tooltip label for collapsed mode */}
+              <div className="absolute left-full ml-4 px-3 py-2 bg-popover text-popover-foreground text-xs font-bold rounded-lg shadow-xl opacity-0 invisible group-hover/sidebar-item:opacity-100 group-hover/sidebar-item:visible transition-all duration-300 translate-x-[-10px] group-hover/sidebar-item:translate-x-0 z-[60] whitespace-nowrap pointer-events-none border border-border/50 backdrop-blur-md">
+                {item.label}
               </div>
-            </motion.button>
+            </div>
           );
         })}
       </div>
