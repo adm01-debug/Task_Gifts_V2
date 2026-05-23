@@ -186,7 +186,7 @@ serve(async (req) => {
 
   // Apply rate limiting
   const identifier = getRateLimitIdentifier(req, "competency-alerts");
-  const rateLimitResult = checkRateLimit(identifier, RATE_LIMITS.standard);
+  const rateLimitResult = await checkRateLimit(identifier, RATE_LIMITS.standard);
   
   if (!rateLimitResult.allowed) {
     console.log(`Rate limit exceeded for ${identifier}`);
