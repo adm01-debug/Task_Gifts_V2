@@ -16,8 +16,8 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { supabase } from "@/integrations/supabase/client";
 import { competencyService, CompetencyData } from "@/services/competencyService";
+import { profilesService } from "@/services/profilesService";
 import { CompetencyRecommendationsDialog, type RecommendationsResponse } from "./CompetencyRecommendationsDialog";
 
 interface TeamMemberCompetency {
@@ -40,11 +40,7 @@ export function TeamCompetencyDashboard() {
 
   const { data: teamMembers, isLoading: loadingMembers } = useQuery({
     queryKey: ["team-members-profiles"],
-    queryFn: async () => {
-      const { data, error } = await supabase.from("profiles").select("id, display_name, email, level, xp").order("level", { ascending: false }).limit(20);
-      if (error) throw error;
-      return data;
-    },
+    queryFn: () => profilesService.getTopByLevel(20),
   });
 
   const { data: teamCompetencies, isLoading: loadingCompetencies } = useQuery({
