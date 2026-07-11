@@ -1,12 +1,12 @@
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-import { Trophy, ChevronRight, Award, Shield, Sparkles, Target, Zap } from "lucide-react";
+import { Trophy, ChevronRight, Award, Shield, Sparkles, Target, Zap, type LucideIcon } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useAllAchievements, useUserAchievements } from "@/hooks/useAchievements";
 import { cn } from "@/lib/utils";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
-const rarityConfig: Record<string, { colors: string; glow: string; label: string; icon: any }> = {
+const rarityConfig: Record<string, { colors: string; glow: string; label: string; icon: LucideIcon }> = {
   common: { 
     colors: "from-slate-400/20 to-slate-500/10 border-slate-500/20", 
     glow: "", 
