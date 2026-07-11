@@ -21,6 +21,7 @@
    mentorSessions: number;
    checkinsInCurrentMonth?: number;
    oneOnOnesInCurrentMonth?: number;
+   aiCoachInteractions?: number;
  }
  
  export interface BehavioralBadge {
