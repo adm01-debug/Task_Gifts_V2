@@ -133,7 +133,6 @@ export const SocialFeed = memo(function SocialFeed({ limit = 30, compact = false
                         </motion.div>
                       </div>
 
-                      {/* Content */}
                       <div className="flex-1 min-w-0">
                         <motion.p
                           className="text-sm leading-relaxed"
