@@ -34,9 +34,11 @@ export const useSoundFeedback = () => {
   const playSound = useCallback((type: "success" | "click" | "error" | "achievement") => {
     // In a real app, these would be small encoded audio files or URL references
     // For now, we use the Web Audio API to synthesize feedback sounds
-    if (typeof window !== "undefined" && window.AudioContext || (window as any).webkitAudioContext) {
+    type WebkitWindow = Window & { webkitAudioContext?: typeof AudioContext };
+    const w = window as WebkitWindow;
+    if (typeof window !== "undefined" && (window.AudioContext || w.webkitAudioContext)) {
       try {
-        const AudioContextClass = (window as any).AudioContext || (window as any).webkitAudioContext;
+        const AudioContextClass = window.AudioContext || w.webkitAudioContext!;
         const ctx = new AudioContextClass();
         const osc = ctx.createOscillator();
         const gain = ctx.createGain();
