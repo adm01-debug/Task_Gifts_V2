@@ -12,6 +12,7 @@ import { AccessibilityProvider } from "@/components/accessibility";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { GlobalMessageProvider } from "@/components/GlobalMessageProvider";
+import { I18nProvider, useI18n } from "@/hooks/useI18n";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -27,6 +28,11 @@ interface ProvidersProps {
   children: ReactNode;
 }
 
+function I18nBridge({ children }: { children: ReactNode }) {
+  const value = useI18n();
+  return <I18nProvider value={value}>{children}</I18nProvider>;
+}
+
 export function Providers({ children }: ProvidersProps) {
   return (
     <ErrorBoundary>
@@ -40,9 +46,11 @@ export function Providers({ children }: ProvidersProps) {
                     <GamificationProvider>
                       <AchievementNotificationProvider>
                         <TooltipProvider>
-                          <Toaster />
-                          <Sonner />
-                          {children}
+                          <I18nBridge>
+                            <Toaster />
+                            <Sonner />
+                            {children}
+                          </I18nBridge>
                         </TooltipProvider>
                       </AchievementNotificationProvider>
                     </GamificationProvider>
