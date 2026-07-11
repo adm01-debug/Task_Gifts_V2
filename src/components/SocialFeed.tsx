@@ -129,7 +129,7 @@ export const SocialFeed = memo(function SocialFeed({ limit = 30, compact = false
                           animate={{ scale: 1, rotate: 0 }}
                           transition={{ delay: index * 0.05 + 0.2, type: "spring" }}
                         >
-                           {activity.icon}
+                           {String(activity.icon)}
                         </motion.div>
                       </div>
 
