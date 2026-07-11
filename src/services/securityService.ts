@@ -1,4 +1,11 @@
 import { supabase } from "@/integrations/supabase/client";
+import type { Database } from "@/integrations/supabase/types";
+
+type BlockedIPRow = Database["public"]["Tables"]["blocked_ips"]["Row"];
+type BlockedIPInsert = Database["public"]["Tables"]["blocked_ips"]["Insert"];
+type RateLimitRuleRow = Database["public"]["Tables"]["rate_limit_rules"]["Row"];
+type RateLimitRuleInsert = Database["public"]["Tables"]["rate_limit_rules"]["Insert"];
+type RateLimitRuleUpdate = Database["public"]["Tables"]["rate_limit_rules"]["Update"];
 
 export interface BlockedIP {
   id: string;
@@ -32,7 +39,7 @@ export const securityService = {
       .select("*")
       .order("blocked_at", { ascending: false });
     if (error) throw error;
-    return (data as any) as BlockedIP[];
+    return (data ?? []) as unknown as BlockedIP[];
   },
 
   async unblockIP(id: string): Promise<void> {
@@ -41,7 +48,9 @@ export const securityService = {
   },
 
   async blockIP(params: Partial<BlockedIP>): Promise<void> {
-    const { error } = await supabase.from("blocked_ips").insert(params as any);
+    const { error } = await supabase
+      .from("blocked_ips")
+      .insert(params as unknown as BlockedIPInsert);
     if (error) throw error;
   },
 
@@ -51,7 +60,7 @@ export const securityService = {
       .select("*")
       .order("name");
     if (error) throw error;
-    return (data as any) as RateLimitRule[];
+    return (data ?? []) as unknown as RateLimitRule[];
   },
 
   async saveRateLimitRule(rule: Partial<RateLimitRule>): Promise<void> {
@@ -59,11 +68,13 @@ export const securityService = {
       const { id, ...updates } = rule;
       const { error } = await supabase
         .from("rate_limit_rules")
-        .update(updates as any)
+        .update(updates as unknown as RateLimitRuleUpdate)
         .eq("id", id);
       if (error) throw error;
     } else {
-      const { error } = await supabase.from("rate_limit_rules").insert(rule as any);
+      const { error } = await supabase
+        .from("rate_limit_rules")
+        .insert(rule as unknown as RateLimitRuleInsert);
       if (error) throw error;
     }
   },
@@ -76,8 +87,11 @@ export const securityService = {
   async toggleRateLimitRule(id: string, is_active: boolean): Promise<void> {
     const { error } = await supabase
       .from("rate_limit_rules")
-      .update({ is_active } as any)
+      .update({ is_active } as unknown as RateLimitRuleUpdate)
       .eq("id", id);
     if (error) throw error;
   }
 };
+
+// Type references retained for compile-time coupling
+export type { BlockedIPRow, RateLimitRuleRow };

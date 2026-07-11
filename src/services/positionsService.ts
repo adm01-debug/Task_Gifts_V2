@@ -319,8 +319,7 @@ export const positionsService = {
   },
 
   async completeTaskScore(taskScoreId: string, status: 'on_time' | 'late' | 'rejected' | 'rework'): Promise<{ success: boolean; xp_earned?: number; coins_earned?: number; xp_penalty?: number }> {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const { data, error } = await (supabase.rpc as any)("complete_task_score", { 
+    const { data, error } = await supabase.rpc("complete_task_score", {
       p_task_score_id: taskScoreId, 
       p_status: status 
     });
@@ -362,8 +361,8 @@ export const positionsService = {
         p_penalty_type: penaltyType,
         p_xp_deducted: xpDeducted,
         p_coins_deducted: coinsDeducted,
-        p_reason: (reason || null) as any,
-        p_applied_by: (user?.id || null) as any
+        p_reason: (reason ?? null) as unknown as string,
+        p_applied_by: (user?.id ?? null) as unknown as string
       });
     
     if (error) throw error;
@@ -398,7 +397,7 @@ export const positionsService = {
       penalty_type: rule.penalty_type || "",
       name: rule.name || "",
       description: rule.description,
-      trigger_condition: rule.trigger_condition as any,
+      trigger_condition: rule.trigger_condition as unknown as PenaltyRuleInsert["trigger_condition"],
       xp_penalty_percent: rule.xp_penalty_percent,
       xp_penalty_fixed: rule.xp_penalty_fixed,
       coin_penalty_percent: rule.coin_penalty_percent,
