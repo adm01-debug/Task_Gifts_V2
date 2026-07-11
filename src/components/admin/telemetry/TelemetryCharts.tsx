@@ -56,7 +56,8 @@ export function TelemetryCharts({ rows, timeFilter }: TelemetryChartsProps) {
 
   // Stacked AreaChart timeline by severity
   const timeline = useMemo(() => {
-    const buckets = new Map<string, { time: string; normal: number; slow: number; very_slow: number; error: number; avgMs: number; maxMs: number; totalMs: number; count: number }>();
+    type Bucket = { time: string; normal: number; slow: number; very_slow: number; error: number; avgMs: number; maxMs: number; totalMs: number; count: number };
+    const buckets = new Map<string, Bucket>();
 
     for (const r of rows) {
       const d = new Date(r.created_at);
@@ -72,8 +73,9 @@ export function TelemetryCharts({ rows, timeFilter }: TelemetryChartsProps) {
         key = d.toLocaleString("pt-BR", { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" });
       }
 
-      const prev = buckets.get(key) || { time: key, normal: 0, slow: 0, very_slow: 0, error: 0, avgMs: 0, maxMs: 0, totalMs: 0, count: 0 } as any;
-      prev[r.severity] = (prev[r.severity] || 0) + 1;
+      const prev: Bucket = buckets.get(key) || { time: key, normal: 0, slow: 0, very_slow: 0, error: 0, avgMs: 0, maxMs: 0, totalMs: 0, count: 0 };
+      const sev = r.severity as "normal" | "slow" | "very_slow" | "error";
+      prev[sev] = (prev[sev] || 0) + 1;
       prev.count++;
       prev.totalMs += r.duration_ms;
       prev.maxMs = Math.max(prev.maxMs, r.duration_ms);
