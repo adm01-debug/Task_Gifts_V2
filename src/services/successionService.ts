@@ -115,7 +115,7 @@ export const successionService = {
         id: position.id,
         title: position.name,
         department: deptMap.get(position.department_id || '') || 'Geral',
-        departmentId: (position.department_id || undefined) as any,
+        departmentId: position.department_id || undefined,
         currentHolder: holderProfile ? {
           userId: holderProfile.id,
           name: holderProfile.display_name || 'Não definido',
@@ -171,7 +171,7 @@ export const successionService = {
       if (currentPosition?.position_id === positionId) continue;
 
       // Calculate match score based on various factors
-       const matchScore = this.calculateMatchScore(hipo, position as any);
+       const matchScore = this.calculateMatchScore(hipo);
       
       // Determine readiness
       const { readiness, readinessScore } = this.determineReadiness(hipo, matchScore);
@@ -203,7 +203,7 @@ export const successionService = {
       .slice(0, limit);
   },
 
-  calculateMatchScore(hipo: HighPotentialScore, _position: CriticalPosition): number {
+  calculateMatchScore(hipo: HighPotentialScore, _position?: CriticalPosition): number {
     let score = 0;
 
     // Base score from HiPo assessment
