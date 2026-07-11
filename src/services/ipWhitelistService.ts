@@ -120,7 +120,7 @@ class IpWhitelistService {
     const { data, error } = await supabase
       .rpc('log_ip_access', {
         p_ip_address: ipAddress,
-        p_user_id: (userId || null) as any,
+        p_user_id: userId ?? undefined,
         p_endpoint: endpoint,
         p_was_allowed: wasAllowed,
         p_reason: reason,
