@@ -4,6 +4,14 @@ import { logger } from "../loggingService";
 import { BEHAVIORAL_BADGES } from "./badges";
 import { BehaviorMetrics, BehavioralBadge } from "./types";
 import { triggerHaptic } from "@/hooks/useHaptics";
+
+type CountResult = { count: number | null; error?: unknown };
+type DataResult<T> = { data: T[] | null; error?: unknown };
+type CheckinRow = { completed_at: string };
+type PulseRow = { created_at: string };
+type GoalRow = { status: string };
+type PdiActionRow = { status: string };
+type AttendanceRow = { check_in: string };
  
  export const behavioralBadgesService = {
    async getUserMetrics(userId: string): Promise<BehaviorMetrics> {
@@ -69,7 +77,7 @@ import { triggerHaptic } from "@/hooks/useHaptics";
          weekStart.setDate(weekStart.getDate() - (i * 7));
          const weekEnd = new Date(weekStart);
          weekEnd.setDate(weekEnd.getDate() + 7);
-         const hasCheckinInWeek = (checkins as any[]).some(c => {
+          const hasCheckinInWeek = (checkins as CheckinRow[]).some((c) => {
            const date = new Date(c.completed_at);
            return date >= weekStart && date < weekEnd;
          });
@@ -88,7 +96,7 @@ import { triggerHaptic } from "@/hooks/useHaptics";
          weekStart.setDate(weekStart.getDate() - (i * 7));
          const weekEnd = new Date(weekStart);
          weekEnd.setDate(weekEnd.getDate() + 7);
-         const hasPulseInWeek = (pulses as any[]).some(p => {
+          const hasPulseInWeek = (pulses as PulseRow[]).some((p) => {
            const date = new Date(p.created_at);
            return date >= weekStart && date < weekEnd;
          });
@@ -97,43 +105,43 @@ import { triggerHaptic } from "@/hooks/useHaptics";
        }
      }
  
-     const goals = (goalsData.data || []) as any[];
+      const goals = ((goalsData.data as GoalRow[] | null) || []);
      const goalsCompleted = goals.filter(g => g.status === "completed").length;
      const goalsOnTrack = goals.filter(g => g.status === "on_track" || g.status === "completed").length;
-     const pdiActions = (pdiData.data || []) as any[];
+      const pdiActions = ((pdiData.data as PdiActionRow[] | null) || []);
      const pdiActionsCompleted = pdiActions.filter(a => a.status === "completed").length;
-     const attendance = (attendanceData.data || []) as any[];
+      const attendance = ((attendanceData.data as AttendanceRow[] | null) || []);
      const earlyCheckins = attendance.filter(a => new Date(a.check_in).getHours() < 8).length;
      const lateNightActivity = attendance.filter(a => new Date(a.check_in).getHours() >= 22).length;
  
      return {
        userId,
-       feedbacksGiven: (feedbacksGiven as any).count || 0,
-       feedbacksReceived: (feedbacksReceived as any).count || 0,
-       checkinsCompleted: (checkins as any[]).length,
+        feedbacksGiven: (feedbacksGiven as CountResult).count || 0,
+        feedbacksReceived: (feedbacksReceived as CountResult).count || 0,
+        checkinsCompleted: checkins.length,
        consecutiveCheckinsWeeks,
-       pulsesResponded: (pulses as any[]).length,
+        pulsesResponded: pulses.length,
        consecutivePulsesWeeks,
-       oneOnOnesAttended: (oneOnOnesData as any).count || 0,
+        oneOnOnesAttended: (oneOnOnesData as CountResult).count || 0,
        goalsCompleted,
        goalsOnTrack,
-       totalGoals: (goals as any[]).length,
-       coursesCompleted: (coursesData as any).count || 0,
+        totalGoals: goals.length,
+        coursesCompleted: (coursesData as CountResult).count || 0,
        pdiActionsCompleted,
-       socialPostsCreated: ((socialData as any)[0]).count || 0,
-       socialReactionsGiven: ((socialData as any)[1]).count || 0,
+        socialPostsCreated: (socialData[0] as CountResult).count || 0,
+        socialReactionsGiven: (socialData[1] as CountResult).count || 0,
        earlyCheckins,
        lateNightActivity,
        weekendActivity: 0,
-       helpfulComments: (commentsData as any).count || 0,
-        mentorSessions: (mentorData as any).count || 0,
-        aiCoachInteractions: (aiCoachData as any).count || 0,
+        helpfulComments: (commentsData as CountResult).count || 0,
+         mentorSessions: (mentorData as CountResult).count || 0,
+         aiCoachInteractions: (aiCoachData as CountResult).count || 0,
       } as BehaviorMetrics;
     },
 
     // Singleton instance of GamificationContext safe methods
     _getGamification() {
-      return (window as any).__GAMIFICATION_CONTEXT__;
+      return (window as unknown as { __GAMIFICATION_CONTEXT__?: { unlockAchievement: (name: string, description: string) => void } }).__GAMIFICATION_CONTEXT__;
     },
 
    async checkAndAwardBadges(userId: string): Promise<string[]> {
