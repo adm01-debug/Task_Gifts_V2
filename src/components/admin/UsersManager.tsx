@@ -218,10 +218,10 @@ export function UsersManager() {
               const userToRow = {
                 id: user.id,
                 display_name: user.display_name,
-                email: (user as any).email || "",
+                email: user.email || "",
                 avatar_url: user.avatar_url,
                 level: user.level,
-                streak: (user as any).streak || 0,
+                streak: user.streak || 0,
                 coins: user.coins
               };
               return (
