@@ -13,7 +13,7 @@ import {
 import { useCreateDevelopmentPlan } from "@/hooks/useDevelopmentPlans";
 
 interface CreatePlanFormProps {
-  profiles: { id: string; display_name: string; avatar_url: string | null }[];
+  profiles: { id: string; display_name: string | null; avatar_url: string | null }[];
   onClose: () => void;
 }
 
