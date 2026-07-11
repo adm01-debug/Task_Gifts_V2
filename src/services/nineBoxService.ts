@@ -106,8 +106,8 @@ export const nineBoxService = {
   async getDistribution(departmentId?: string, period?: string) {
     const { data, error } = await supabase
       .rpc("get_nine_box_distribution", {
-        p_department_id: (departmentId || null) as any,
-        p_period: (period || null) as any,
+        p_department_id: departmentId ?? undefined,
+        p_period: period ?? undefined,
       });
 
     if (error) throw error;
