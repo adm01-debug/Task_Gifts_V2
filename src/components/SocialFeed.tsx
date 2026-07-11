@@ -174,7 +174,7 @@ export const SocialFeed = memo(function SocialFeed({ limit = 30, compact = false
                       </div>
 
                       {/* XP/Coins badge if applicable */}
-                      {activity.metadata?.xp_amount && (
+                      {Boolean(activity.metadata?.xp_amount) && (
                         <motion.div
                           className="flex items-center gap-1 text-xs font-medium text-amber-500 bg-amber-500/10 px-2 py-1 rounded-full"
                           initial={{ opacity: 0, scale: 0 }}
