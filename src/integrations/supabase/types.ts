@@ -455,6 +455,13 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "announcements_author_id_fkey"
+            columns: ["author_id"]
+            isOneToOne: false
+            referencedRelation: "profiles_public"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "announcements_department_id_fkey"
             columns: ["department_id"]
             isOneToOne: false
@@ -909,6 +916,13 @@ export type Database = {
             columns: ["user_id"]
             isOneToOne: false
             referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "celebrations_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles_public"
             referencedColumns: ["id"]
           },
         ]
@@ -3202,6 +3216,13 @@ export type Database = {
             referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "league_history_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles_public"
+            referencedColumns: ["id"]
+          },
         ]
       }
       leagues: {
@@ -5426,6 +5447,13 @@ export type Database = {
             referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "shop_purchases_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles_public"
+            referencedColumns: ["id"]
+          },
         ]
       }
       shop_rewards: {
@@ -6236,6 +6264,13 @@ export type Database = {
             referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "user_leagues_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: true
+            referencedRelation: "profiles_public"
+            referencedColumns: ["id"]
+          },
         ]
       }
       user_mission_progress: {
@@ -6746,7 +6781,54 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      profiles_public: {
+        Row: {
+          avatar_url: string | null
+          best_streak: number | null
+          coins: number | null
+          created_at: string | null
+          display_name: string | null
+          id: string | null
+          last_access_at: string | null
+          level: number | null
+          quests_completed: number | null
+          status: string | null
+          streak: number | null
+          updated_at: string | null
+          xp: number | null
+        }
+        Insert: {
+          avatar_url?: string | null
+          best_streak?: number | null
+          coins?: number | null
+          created_at?: string | null
+          display_name?: string | null
+          id?: string | null
+          last_access_at?: string | null
+          level?: number | null
+          quests_completed?: number | null
+          status?: string | null
+          streak?: number | null
+          updated_at?: string | null
+          xp?: number | null
+        }
+        Update: {
+          avatar_url?: string | null
+          best_streak?: number | null
+          coins?: number | null
+          created_at?: string | null
+          display_name?: string | null
+          id?: string | null
+          last_access_at?: string | null
+          level?: number | null
+          quests_completed?: number | null
+          status?: string | null
+          streak?: number | null
+          updated_at?: string | null
+          xp?: number | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       apply_task_penalty: {
