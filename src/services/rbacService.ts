@@ -195,7 +195,12 @@ export const rbacService = {
       .eq("role_id", roleId);
 
     if (error) throw error;
-     return (data || []).map((rp) => (rp as any).permissions).filter(Boolean) as Permission[];
+     type RolePermissionRow = { permissions: Permission | Permission[] | null };
+     return (data || []).flatMap((rp) => {
+       const p = (rp as RolePermissionRow).permissions;
+       if (!p) return [];
+       return Array.isArray(p) ? p : [p];
+     });
   },
 
   async assignPermissionToRole(roleId: string, permissionId: string): Promise<void> {
@@ -351,12 +356,13 @@ export const rbacService = {
       if (permissionsError) throw permissionsError;
 
       // Extract unique permission keys
-      interface PermissionWithKey { permissions: { key: string } | null }
+      type PermRow = { permissions: { key: string } | { key: string }[] | null };
       const permissionKeys = new Set<string>();
-      (permissionsData || []).forEach((rp: any) => {
-        if (rp.permissions?.key) {
-          permissionKeys.add(rp.permissions.key);
-        }
+      (permissionsData || []).forEach((rp) => {
+        const perms = (rp as PermRow).permissions;
+        if (!perms) return;
+        const arr = Array.isArray(perms) ? perms : [perms];
+        arr.forEach((p) => p?.key && permissionKeys.add(p.key));
       });
 
       return Array.from(permissionKeys);
