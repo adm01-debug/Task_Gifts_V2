@@ -320,7 +320,7 @@
       rarity: "common",
       xpReward: 100,
       coinReward: 50,
-      condition: (m) => (m as any).aiCoachInteractions >= 10
+      condition: (m) => (m.aiCoachInteractions ?? 0) >= 10
     },
     {
       key: "ai_coach_enthusiast",
@@ -331,6 +331,6 @@
       rarity: "rare",
       xpReward: 300,
       coinReward: 150,
-      condition: (m) => (m as any).aiCoachInteractions >= 50
+      condition: (m) => (m.aiCoachInteractions ?? 0) >= 50
     },
   ];
