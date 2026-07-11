@@ -6831,6 +6831,7 @@ export type Database = {
       }
     }
     Functions: {
+      _require_admin: { Args: never; Returns: undefined }
       apply_task_penalty: {
         Args: {
           p_applied_by?: string
