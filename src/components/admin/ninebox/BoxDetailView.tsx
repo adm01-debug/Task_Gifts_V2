@@ -27,9 +27,9 @@ interface Evaluation {
 
 interface Profile {
   id: string;
-  display_name: string;
+  display_name: string | null;
   avatar_url: string | null;
-  email: string;
+  email: string | null;
 }
 
 interface BoxDetailViewProps {
