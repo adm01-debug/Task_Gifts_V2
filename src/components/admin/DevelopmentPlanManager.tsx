@@ -42,7 +42,7 @@ export function DevelopmentPlanManager() {
   const searchableItems = useMemo(() => {
     return (plans || []).map(plan => {
       const profile = profiles?.find(p => p.id === plan.user_id);
-      return { ...plan, _searchName: profile?.display_name || '', _searchEmail: (profile as any)?.email || '' };
+      return { ...plan, _searchName: profile?.display_name || '', _searchEmail: profile?.email || '' };
     });
   }, [plans, profiles]);
 
@@ -82,7 +82,7 @@ export function DevelopmentPlanManager() {
             <DialogTrigger asChild><Button><Plus className="w-4 h-4 mr-2" />Novo PDI</Button></DialogTrigger>
             <DialogContent className="max-w-md">
               <CreatePlanForm 
-                profiles={(profiles || []) as any} 
+                profiles={profiles || []} 
                 onClose={() => setShowCreateDialog(false)} 
               />
             </DialogContent>
@@ -123,7 +123,7 @@ export function DevelopmentPlanManager() {
           ) : (
             <AnimatePresence>
               {filteredPlans?.map((plan, index) => {
-               const profile = profiles?.find((p) => p.id === plan.user_id) as any;
+               const profile = profiles?.find((p) => p.id === plan.user_id);
                 const isExpanded = expandedPlans.has(plan.id);
                 return (
                   <motion.div key={plan.id} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ delay: index * 0.02 }}>
@@ -161,7 +161,7 @@ export function DevelopmentPlanManager() {
 
       <Dialog open={selectedPlan !== null} onOpenChange={() => setSelectedPlan(null)}>
         <DialogContent className="max-w-3xl max-h-[80vh] overflow-y-auto">
-          {selectedPlan && <PlanDetailView planId={selectedPlan} profiles={(profiles || []) as any} />}
+          {selectedPlan && <PlanDetailView planId={selectedPlan} profiles={profiles || []} />}
         </DialogContent>
       </Dialog>
     </div>
