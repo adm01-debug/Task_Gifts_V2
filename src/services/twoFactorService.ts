@@ -111,7 +111,7 @@ class TwoFactorService {
       algorithm: "SHA1",
       digits: 6,
       period: 30,
-      secret: (data.totp_secret || "") as any,
+      secret: OTPAuth.Secret.fromBase32(data.totp_secret),
     });
 
     const delta = totp.validate({ token, window: 1 });
