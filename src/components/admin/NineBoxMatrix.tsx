@@ -82,7 +82,7 @@ export function NineBoxMatrix() {
         <p className="text-[10px] text-muted-foreground mb-2 line-clamp-1">{label.description}</p>
         <div className="flex flex-wrap gap-1">
           {people.slice(0, 5).map((evaluation) => {
-             const profile = profiles?.find((p) => p.id === evaluation.user_id) as any;
+             const profile = profiles?.find((p) => p.id === evaluation.user_id);
             return (
               <TooltipProvider key={evaluation.id}>
                 <Tooltip>
@@ -123,7 +123,7 @@ export function NineBoxMatrix() {
             <DialogTrigger asChild><Button><Plus className="w-4 h-4 mr-2" />Nova Avaliação</Button></DialogTrigger>
             <DialogContent className="max-w-md">
               <CreateEvaluationForm 
-                profiles={(profiles || []) as any} 
+                profiles={profiles || []} 
                 onClose={() => setShowCreateDialog(false)} 
               />
             </DialogContent>
@@ -155,7 +155,7 @@ export function NineBoxMatrix() {
 
       <Dialog open={selectedBox !== null} onOpenChange={() => setSelectedBox(null)}>
         <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
-          {selectedBox && <BoxDetailView box={selectedBox} evaluations={evaluationsByBox[selectedBox] || []} profiles={(profiles || []) as any} />}
+          {selectedBox && <BoxDetailView box={selectedBox} evaluations={evaluationsByBox[selectedBox] || []} profiles={profiles || []} />}
         </DialogContent>
       </Dialog>
     </div>

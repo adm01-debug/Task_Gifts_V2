@@ -49,7 +49,7 @@ export { STATUS_COLORS, STATUS_LABELS, ACTION_STATUS_ICONS };
 
 interface PlanDetailViewProps {
   planId: string;
-  profiles: { id: string; display_name: string; avatar_url: string | null }[];
+  profiles: { id: string; display_name: string | null; avatar_url: string | null }[];
 }
 
 export function PlanDetailView({ planId, profiles }: PlanDetailViewProps) {

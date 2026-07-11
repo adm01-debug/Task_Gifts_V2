@@ -17,7 +17,7 @@ import { BOX_LABELS } from "@/services/nineBoxService";
 import { format } from "date-fns";
 
 interface CreateEvaluationFormProps {
-  profiles: { id: string; display_name: string; avatar_url: string | null }[];
+  profiles: { id: string; display_name: string | null; avatar_url: string | null }[];
   onClose: () => void;
 }
 
