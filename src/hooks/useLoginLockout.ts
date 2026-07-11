@@ -25,8 +25,7 @@ export function useLoginLockout(email: string) {
 
     setIsChecking(true);
     try {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const { data, error } = await (supabase.rpc as any)("check_login_lockout", {
+      const { data, error } = await supabase.rpc("check_login_lockout", {
         p_email: email.toLowerCase().trim(),
       });
 
@@ -52,8 +51,7 @@ export function useLoginLockout(email: string) {
     if (!email) return null;
 
     try {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const { data, error } = await (supabase.rpc as any)("log_login_attempt", {
+      const { data, error } = await supabase.rpc("log_login_attempt", {
         p_email: email.toLowerCase().trim(),
         p_ip_address: null,
         p_user_agent: navigator.userAgent,
@@ -84,8 +82,7 @@ export function useLoginLockout(email: string) {
     if (!email) return;
 
     try {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      await (supabase.rpc as any)("reset_login_attempts", {
+      await supabase.rpc("reset_login_attempts", {
         p_email: email.toLowerCase().trim(),
       });
       setLockoutStatus(null);
