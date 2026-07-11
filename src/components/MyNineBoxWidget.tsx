@@ -73,9 +73,10 @@ export function MyNineBoxWidget() {
     );
   }
 
-  const position = evaluation.box_position as keyof typeof BOX_LABELS;
+  const boxPosition = (evaluation.box_position ?? 0) as number;
+  const position = boxPosition as keyof typeof BOX_LABELS;
   const boxInfo = BOX_LABELS[position] || { name: "Desconhecido", description: "" };
-  const Icon = getBoxIcon(evaluation.box_position);
+  const Icon = getBoxIcon(boxPosition);
 
   return (
     <motion.div
@@ -98,7 +99,7 @@ export function MyNineBoxWidget() {
         <CardContent className="space-y-4">
           {/* Box Position Highlight */}
           <div
-            className={`p-4 rounded-xl bg-gradient-to-br border ${BOX_COLORS[evaluation.box_position] || ""}`}
+            className={`p-4 rounded-xl bg-gradient-to-br border ${BOX_COLORS[boxPosition] || ""}`}
           >
             <div className="flex items-center gap-3">
               <div className="p-3 rounded-xl bg-background/50">
