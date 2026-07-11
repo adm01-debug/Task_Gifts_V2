@@ -41,6 +41,32 @@ export interface UserRoleWithProfile extends UserRole {
 }
 
 export const rbacService = {
+  // ===== ADMIN LISTINGS =====
+
+  async getUsersWithRoles(): Promise<Array<{
+    id: string;
+    display_name: string | null;
+    email: string | null;
+    user_roles: Array<{ id: string; role: AppRole; created_at: string }>;
+  }>> {
+    try {
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("id, display_name, email, user_roles (id, role, created_at)")
+        .order("display_name");
+      if (error) throw error;
+      return (data || []) as unknown as Array<{
+        id: string;
+        display_name: string | null;
+        email: string | null;
+        user_roles: Array<{ id: string; role: AppRole; created_at: string }>;
+      }>;
+    } catch (error) {
+      logger.apiError("getUsersWithRoles", error, "RBACService");
+      return [];
+    }
+  },
+
   // ===== PERMISSIONS =====
   
   async getPermissions(): Promise<Permission[]> {
