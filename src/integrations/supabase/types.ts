@@ -6989,6 +6989,19 @@ export type Database = {
           total_answers: number
         }[]
       }
+      get_reliability_slo: { Args: { p_hours?: number }; Returns: Json }
+      get_reliability_timeline: {
+        Args: { p_hours?: number }
+        Returns: {
+          api_errors: number
+          api_p95_ms: number
+          api_total: number
+          bucket: string
+          webhook_p95_ms: number
+          webhook_success: number
+          webhook_total: number
+        }[]
+      }
       get_security_digest_history: {
         Args: { p_weeks?: number }
         Returns: {
