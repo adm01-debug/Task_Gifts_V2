@@ -4524,6 +4524,80 @@ export type Database = {
           },
         ]
       }
+      postmortems: {
+        Row: {
+          action_items: string | null
+          alert_id: string | null
+          alert_type: string | null
+          contributing_factors: string | null
+          created_at: string
+          created_by: string | null
+          duration_seconds: number | null
+          id: string
+          incident_resolved_at: string | null
+          incident_started_at: string | null
+          lessons_learned: string | null
+          metadata: Json
+          root_cause: string | null
+          severity: string | null
+          status: string
+          summary: string | null
+          timeline: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          action_items?: string | null
+          alert_id?: string | null
+          alert_type?: string | null
+          contributing_factors?: string | null
+          created_at?: string
+          created_by?: string | null
+          duration_seconds?: number | null
+          id?: string
+          incident_resolved_at?: string | null
+          incident_started_at?: string | null
+          lessons_learned?: string | null
+          metadata?: Json
+          root_cause?: string | null
+          severity?: string | null
+          status?: string
+          summary?: string | null
+          timeline?: string | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          action_items?: string | null
+          alert_id?: string | null
+          alert_type?: string | null
+          contributing_factors?: string | null
+          created_at?: string
+          created_by?: string | null
+          duration_seconds?: number | null
+          id?: string
+          incident_resolved_at?: string | null
+          incident_started_at?: string | null
+          lessons_learned?: string | null
+          metadata?: Json
+          root_cause?: string | null
+          severity?: string | null
+          status?: string
+          summary?: string | null
+          timeline?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "postmortems_alert_id_fkey"
+            columns: ["alert_id"]
+            isOneToOne: true
+            referencedRelation: "security_alerts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           avatar_url: string | null
