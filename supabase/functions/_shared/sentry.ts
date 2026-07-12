@@ -51,6 +51,45 @@ export const addBreadcrumb = (
 };
 
 /**
+ * Records a numeric metric as a structured log line and a Sentry breadcrumb.
+ * Use for durations (ms), attempts, sizes, counts, etc.
+ */
+export const recordMetric = (
+  fnName: string,
+  metric: string,
+  value: number,
+  tags?: Record<string, string | number | boolean | null | undefined>,
+) => {
+  const payload = { metric, value, ...(tags ?? {}) };
+  console.info(`[${fnName}] metric`, JSON.stringify(payload));
+  addBreadcrumb(`${fnName}:metric:${metric}`, payload, "info", "metric");
+};
+
+/**
+ * Measures the duration of an async step and records it via recordMetric.
+ * Adds start/end breadcrumbs for step-by-step traceability.
+ */
+export const timeStep = async <T>(
+  fnName: string,
+  step: string,
+  fn: () => Promise<T>,
+  tags?: Record<string, string | number | boolean | null | undefined>,
+): Promise<T> => {
+  const started = Date.now();
+  addBreadcrumb(`${fnName}:${step}:start`, tags);
+  try {
+    const result = await fn();
+    const duration = Date.now() - started;
+    recordMetric(fnName, `${step}.duration_ms`, duration, { ...tags, status: "ok" });
+    return result;
+  } catch (err) {
+    const duration = Date.now() - started;
+    recordMetric(fnName, `${step}.duration_ms`, duration, { ...tags, status: "error" });
+    throw err;
+  }
+};
+
+/**
  * Wraps an edge function handler with Sentry init, request breadcrumbs,
  * requestId correlation and centralized exception capture.
  */
