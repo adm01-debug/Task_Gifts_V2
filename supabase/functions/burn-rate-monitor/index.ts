@@ -50,16 +50,18 @@ Deno.serve(async (req) => {
             .limit(1);
           if (existing && existing.length > 0) continue;
 
-          const message =
-            `${surface} burn ${pair.name} — long(${pair.long}m)=${lb.toFixed(1)}x ` +
-            `short(${pair.short}m)=${sb_.toFixed(1)}x >= ${pair.threshold}x (SLO ${SLO}%)`;
+          const title = `${pair.severity === "critical" ? "🔥" : "⚠️"} Burn ${pair.name} — ${surface}`;
+          const description =
+            `${surface} burn ${pair.name} — janela longa (${pair.long}m)=${lb.toFixed(1)}x, ` +
+            `curta (${pair.short}m)=${sb_.toFixed(1)}x >= ${pair.threshold}x (SLO ${SLO}%)`;
 
           const { data: alert, error: insErr } = await sb
             .from("security_alerts")
             .insert({
               alert_type: alertType,
               severity: pair.severity,
-              message,
+              title,
+              description,
               metadata: { pair, surface, long: longW[surface], short: shortW[surface] },
             })
             .select("id")
@@ -68,10 +70,9 @@ Deno.serve(async (req) => {
 
           triggered.push({ alertType, severity: pair.severity, id: alert?.id });
 
-          // Fan out via existing dispatcher (Slack + in-app admins)
           try {
             await sb.functions.invoke("dispatch-critical-alert", {
-              body: { alert_id: alert?.id, severity: pair.severity, alert_type: alertType, message },
+              body: { alert_id: alert?.id, severity: pair.severity, alert_type: alertType, message: description },
             });
           } catch (e) {
             console.error("dispatch-critical-alert failed", e);
