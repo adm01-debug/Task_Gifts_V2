@@ -7,9 +7,10 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { AlertHeatmap } from "@/components/security/AlertHeatmap";
+import { toCSV, downloadCSV } from "@/lib/csvExport";
 import {
   BookOpen, Search, ShieldAlert, Activity, Ban, KeyRound, Bug, Bell,
-  ExternalLink, ArrowRight, AlertTriangle, TrendingUp, TrendingDown, Minus,
+  ExternalLink, ArrowRight, AlertTriangle, TrendingUp, TrendingDown, Minus, Download,
 } from "lucide-react";
 
 interface RunbookStep {
