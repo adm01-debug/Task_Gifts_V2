@@ -6902,6 +6902,10 @@ export type Database = {
         Returns: Json
       }
       check_login_lockout: { Args: { p_email: string }; Returns: Json }
+      check_webhook_sla_and_alert: {
+        Args: { p_threshold_pct?: number; p_window_hours?: number }
+        Returns: Json
+      }
       cleanup_expired_challenges: { Args: never; Returns: undefined }
       cleanup_expired_idempotency_keys: { Args: never; Returns: undefined }
       cleanup_old_security_logs:
