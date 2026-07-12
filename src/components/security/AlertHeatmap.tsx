@@ -3,7 +3,10 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Flame } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Flame, Download } from "lucide-react";
+import { toCSV, downloadCSV } from "@/lib/csvExport";
+import { format } from "date-fns";
 
 interface HeatmapRow {
   dow: number;
@@ -61,6 +64,26 @@ export function AlertHeatmap() {
               Pico: {DOW_LABELS[peak.dow]} {String(peak.hour).padStart(2, "0")}h ({peak.total})
             </span>
           )}
+          <Button
+            variant="ghost"
+            size="sm"
+            className="h-7 px-2"
+            disabled={!data || data.length === 0}
+            onClick={() => {
+              const csv = toCSV(
+                (data ?? []).map((r) => ({
+                  dia_semana: DOW_LABELS[r.dow],
+                  hora: String(r.hour).padStart(2, "0"),
+                  total: r.total,
+                  criticos: r.critical_count,
+                  altos: r.high_count,
+                }))
+              );
+              downloadCSV(`heatmap_alertas_${format(new Date(), "yyyyMMdd")}.csv`, csv);
+            }}
+          >
+            <Download className="w-3.5 h-3.5 mr-1" /> CSV
+          </Button>
         </CardTitle>
       </CardHeader>
       <CardContent>
