@@ -7,6 +7,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Activity, AlertTriangle, CheckCircle2, Webhook, ShieldAlert } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { useEffect } from "react";
+import { Link } from "react-router-dom";
 import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid, Legend, BarChart, Bar } from "recharts";
 
 interface WebhookStat {
@@ -235,10 +236,12 @@ export default function WebhooksAdmin() {
                     const rate = Number(row.success_rate_pct ?? 0);
                     const rateVariant = rate >= 99 ? "default" : rate >= 90 ? "secondary" : "destructive";
                     return (
-                      <TableRow key={row.subscription_id}>
+                      <TableRow key={row.subscription_id} className="hover:bg-muted/40">
                         <TableCell>
-                          <div className="font-medium">{row.subscription_name || "—"}</div>
-                          <div className="text-xs text-muted-foreground truncate max-w-xs">{row.subscription_url}</div>
+                          <Link to={`/admin/webhooks/${row.subscription_id}`} className="block hover:underline">
+                            <div className="font-medium">{row.subscription_name || "—"}</div>
+                            <div className="text-xs text-muted-foreground truncate max-w-xs">{row.subscription_url}</div>
+                          </Link>
                         </TableCell>
                         <TableCell className="text-right tabular-nums">{row.total_deliveries}</TableCell>
                         <TableCell className="text-right"><Badge variant={rateVariant}>{rate.toFixed(1)}%</Badge></TableCell>
