@@ -97,13 +97,12 @@ Deno.serve(async (req) => {
       type: "security_weekly_digest",
       title: `Digest de segurança — ${weekKey}`,
       message: `SLA ${slaPct}% • MTTR ${avgMttr ?? "—"}min • ${pending} pendentes de ${total}`,
-      metadata: { week_key: weekKey, sla_pct: slaPct, avg_mttr_min: avgMttr, total, pending, critical, high, top: top.map(([t, c]) => ({ type: t, count: c })) },
-      link: "/admin/security-runbook",
+      data: { week_key: weekKey, sla_pct: slaPct, avg_mttr_min: avgMttr, total, pending, critical, high, top: top.map(([t, c]) => ({ type: t, count: c })), link: "/admin/security-runbook" },
     }));
 
     if (notifRows.length > 0) {
       await admin.from("notifications").upsert(notifRows, {
-        onConflict: "user_id,type,metadata",
+        onConflict: "user_id,type,data",
         ignoreDuplicates: true,
       });
     }
