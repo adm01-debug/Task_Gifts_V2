@@ -7030,6 +7030,19 @@ export type Database = {
         Returns: Json
       }
       get_executive_metrics: { Args: never; Returns: Json }
+      get_incident_metrics: {
+        Args: { p_days?: number }
+        Returns: {
+          acknowledged: number
+          alert_type: string
+          incidents: number
+          mtta_seconds: number
+          mttr_seconds: number
+          p95_mttr_seconds: number
+          resolved: number
+          week_start: string
+        }[]
+      }
       get_leaderboard_api: {
         Args: { p_department_id?: string; p_limit?: number }
         Returns: Json
