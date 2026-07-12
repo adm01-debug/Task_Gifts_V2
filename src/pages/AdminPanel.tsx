@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Users, Building2, HelpCircle, ShoppingBag, BookOpen, Settings, Shield, LayoutDashboard, Key, Award, ChevronRight, Search } from "lucide-react";
+import { Users, Building2, HelpCircle, ShoppingBag, BookOpen, Settings, Shield, LayoutDashboard, Key, Award, ChevronRight, Search, Activity, BarChart3, Lock } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -89,11 +89,14 @@ function AdminPanelContent() {
 
   const quickLinks: QuickLinkProps[] = [
     { icon: HelpCircle, title: "Perguntas do Quiz", description: "Gerenciar perguntas e gerar com IA", href: "/quiz/admin", badge: `${stats.questions}`, color: "#6366f1" },
-    { icon: ShoppingBag, title: "Loja de Recompensas", description: "Produtos, promoções e pedidos", href: "/shop/admin", badge: `${stats.rewards}`, color: "#10b981" },
+    { icon: ShoppingBag, title: "Loja de Recompensas", description: "Produtos, promoções e pedidos", href: "/loja/admin", badge: `${stats.rewards}`, color: "#10b981" },
     { icon: BookOpen, title: "Trilhas de Aprendizado", description: "Criar e gerenciar trilhas", href: "/trails", badge: `${stats.trails}`, color: "#f59e0b" },
     { icon: LayoutDashboard, title: "Dashboard Gestor", description: "Visão geral da equipe", href: "/manager", color: "#8b5cf6" },
-    { icon: Award, title: "Dashboard Executivo", description: "Métricas e KPIs C-Level", href: "/executive", color: "#ec4899" },
+    { icon: Award, title: "Dashboard Executivo", description: "Métricas e KPIs C-Level", href: "/executivo", color: "#ec4899" },
     { icon: Shield, title: "Logs de Auditoria", description: "Histórico de ações do sistema", href: "/audit", color: "#64748b" },
+    { icon: Activity, title: "Observabilidade de Webhooks", description: "Métricas de entrega, latência P95/P99 (24h)", href: "/admin/webhooks", color: "#0ea5e9" },
+    { icon: BarChart3, title: "Telemetria", description: "Queries lentas e métricas de performance", href: "/admin/telemetria", color: "#14b8a6" },
+    { icon: Lock, title: "Permissões & Papéis", description: "Gerenciar roles e permissões", href: "/admin/permissions", color: "#a855f7" },
   ];
 
   const searchResults = useFuseSearch(quickLinks, ['title', 'description'], searchQuery, { ...SEARCH_PRESETS.commands, limit: 20 });
