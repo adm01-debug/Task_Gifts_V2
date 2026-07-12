@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { Fragment, useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -80,8 +80,8 @@ export function AlertHeatmap() {
                 </div>
               ))}
               {DOW_LABELS.map((label, dow) => (
-                <>
-                  <div key={`l-${dow}`} className="text-[10px] pr-1 text-right text-muted-foreground self-center">
+                <Fragment key={`row-${dow}`}>
+                  <div className="text-[10px] pr-1 text-right text-muted-foreground self-center">
                     {label}
                   </div>
                   {Array.from({ length: 24 }, (_, hour) => {
@@ -97,7 +97,7 @@ export function AlertHeatmap() {
                       </div>
                     );
                   })}
-                </>
+                </Fragment>
               ))}
             </div>
             <div className="flex items-center gap-3 mt-3 text-[10px] text-muted-foreground">
