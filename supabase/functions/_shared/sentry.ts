@@ -1,5 +1,4 @@
-// @ts-ignore - deno.land/x/sentry serves via redirect; runtime works, type-check fails
-import * as Sentry from "https://deno.land/x/sentry/index.ts";
+import * as Sentry from "npm:@sentry/deno@8";
 
 export const initSentry = () => {
   const dsn = Deno.env.get("SENTRY_DSN");
