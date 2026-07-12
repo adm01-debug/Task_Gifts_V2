@@ -120,12 +120,12 @@ export default function Runbook() {
   const logStep = useMutation({
     mutationFn: async (args: { phase: string; stepIndex: number | null; stepTitle: string | null; notes: string | null }) => {
       const { data, error } = await supabase.rpc("log_runbook_step", {
-        p_alert_id: alertId,
+        p_alert_id: alertId as string,
         p_runbook_slug: type,
         p_phase: args.phase,
-        p_step_index: args.stepIndex,
-        p_step_title: args.stepTitle,
-        p_notes: args.notes,
+        p_step_index: (args.stepIndex ?? null) as unknown as number,
+        p_step_title: (args.stepTitle ?? "") as string,
+        p_notes: (args.notes ?? "") as string,
       });
       if (error) throw error;
       return data;
