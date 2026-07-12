@@ -7,7 +7,9 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ArrowLeft, FileBarChart2, RefreshCw, Download, ExternalLink, TrendingUp, TrendingDown, Minus } from "lucide-react";
+import { MessageSquareText, Save, Pencil, X } from "lucide-react";
 import { LineChart, Line, ResponsiveContainer, Tooltip as ReTooltip, YAxis } from "recharts";
+import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 
 type Report = {
@@ -29,6 +31,9 @@ type Report = {
   action_items_overdue: number;
   breakdown_by_type: Array<{ alert_type: string; total: number; resolved: number; mttr_minutes: number | null }>;
   generated_at: string;
+  commentary: string | null;
+  commentary_updated_at: string | null;
+  commentary_updated_by: string | null;
 };
 
 const MONTH_NAMES = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"];
@@ -38,6 +43,8 @@ const fmtMin = (n: number | null) => (n == null ? "—" : n < 60 ? `${n.toFixed(
 export default function ExecutiveMonthlyReport() {
   const qc = useQueryClient();
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [editingCommentary, setEditingCommentary] = useState(false);
+  const [commentaryDraft, setCommentaryDraft] = useState("");
 
   const { data: reports = [], isLoading } = useQuery({
     queryKey: ["executive_monthly_reports"],
@@ -57,6 +64,29 @@ export default function ExecutiveMonthlyReport() {
     () => reports.find((r) => r.id === selectedId) ?? reports[0] ?? null,
     [reports, selectedId]
   );
+
+  const saveCommentary = useMutation({
+    mutationFn: async (payload: { id: string; commentary: string }) => {
+      const { data: userData } = await supabase.auth.getUser();
+      const uid = userData.user?.id ?? null;
+      const trimmed = payload.commentary.trim();
+      const { error } = await supabase
+        .from("executive_monthly_reports")
+        .update({
+          commentary: trimmed.length ? trimmed : null,
+          commentary_updated_at: new Date().toISOString(),
+          commentary_updated_by: uid,
+        })
+        .eq("id", payload.id);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      toast.success("Comentário salvo");
+      setEditingCommentary(false);
+      qc.invalidateQueries({ queryKey: ["executive_monthly_reports"] });
+    },
+    onError: (e: unknown) => toast.error(e instanceof Error ? e.message : "Falha ao salvar"),
+  });
 
   // Previous period = report immediately before the selected one in chronological order.
   const previous = useMemo(() => {
@@ -222,6 +252,77 @@ export default function ExecutiveMonthlyReport() {
               Comparativo vs. {fmtPeriod(previous.period_year, previous.period_month)}
             </div>
           )}
+
+          <Card className="border-primary/30 bg-primary/[0.02]">
+            <CardHeader className="pb-2 flex flex-row items-center justify-between gap-2">
+              <CardTitle className="text-sm flex items-center gap-2">
+                <MessageSquareText className="w-4 h-4 text-primary" />
+                Comentário do mês
+              </CardTitle>
+              {!editingCommentary ? (
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  onClick={() => {
+                    setCommentaryDraft(selected.commentary ?? "");
+                    setEditingCommentary(true);
+                  }}
+                >
+                  <Pencil className="w-3.5 h-3.5 mr-1" />
+                  {selected.commentary ? "Editar" : "Adicionar"}
+                </Button>
+              ) : (
+                <div className="flex items-center gap-1">
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    onClick={() => setEditingCommentary(false)}
+                    disabled={saveCommentary.isPending}
+                  >
+                    <X className="w-3.5 h-3.5 mr-1" /> Cancelar
+                  </Button>
+                  <Button
+                    size="sm"
+                    onClick={() => saveCommentary.mutate({ id: selected.id, commentary: commentaryDraft })}
+                    disabled={saveCommentary.isPending || commentaryDraft.length > 4000}
+                  >
+                    <Save className="w-3.5 h-3.5 mr-1" />
+                    {saveCommentary.isPending ? "Salvando…" : "Salvar"}
+                  </Button>
+                </div>
+              )}
+            </CardHeader>
+            <CardContent>
+              {editingCommentary ? (
+                <>
+                  <Textarea
+                    value={commentaryDraft}
+                    onChange={(e) => setCommentaryDraft(e.target.value)}
+                    placeholder="Narrativa executiva do mês: destaques, causas raiz recorrentes, decisões tomadas…"
+                    rows={6}
+                    maxLength={4000}
+                    className="text-sm"
+                  />
+                  <div className="text-[11px] text-muted-foreground mt-1 text-right">
+                    {commentaryDraft.length}/4000
+                  </div>
+                </>
+              ) : selected.commentary ? (
+                <>
+                  <p className="text-sm whitespace-pre-wrap leading-relaxed">{selected.commentary}</p>
+                  {selected.commentary_updated_at && (
+                    <div className="text-[11px] text-muted-foreground mt-2">
+                      Atualizado em {new Date(selected.commentary_updated_at).toLocaleString("pt-BR")}
+                    </div>
+                  )}
+                </>
+              ) : (
+                <p className="text-sm text-muted-foreground italic">
+                  Nenhum comentário registrado para este período.
+                </p>
+              )}
+            </CardContent>
+          </Card>
 
           <Card>
             <CardHeader className="pb-2 flex flex-row items-center justify-between">
