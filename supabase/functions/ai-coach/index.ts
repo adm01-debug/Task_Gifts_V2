@@ -194,10 +194,10 @@ serve(withSentry("ai-coach", async (req, { requestId }) => {
       headers: { ...corsHeaders, "Content-Type": "text/event-stream" },
     });
   } catch (e) {
-    console.error("AI Coach error:", e);
+    captureException(e, { fn: "ai-coach", requestId });
     return new Response(JSON.stringify({ error: e instanceof Error ? e.message : "Erro desconhecido" }), {
       status: 500,
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   }
-});
+}));
