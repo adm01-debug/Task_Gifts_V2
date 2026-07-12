@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "sonner";
 import { FileBarChart } from "lucide-react";
-import { logger } from "@/lib/logger";
+import { logger } from "@/services/loggingService";
 
 type TypePrefs = Record<string, { push?: boolean; email?: boolean; in_app?: boolean; priority?: string }>;
 
