@@ -6938,6 +6938,16 @@ export type Database = {
           verified_at: string
         }[]
       }
+      get_alert_heatmap_30d: {
+        Args: never
+        Returns: {
+          critical_count: number
+          dow: number
+          high_count: number
+          hour: number
+          total: number
+        }[]
+      }
       get_alert_mttr_by_type_7d: {
         Args: never
         Returns: {
