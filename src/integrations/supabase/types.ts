@@ -6992,6 +6992,7 @@ export type Database = {
         Returns: Json
       }
       check_login_lockout: { Args: { p_email: string }; Returns: Json }
+      check_sla_breaches_and_alert: { Args: never; Returns: Json }
       check_webhook_sla_and_alert: {
         Args: { p_threshold_pct?: number; p_window_hours?: number }
         Returns: Json
