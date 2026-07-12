@@ -4,13 +4,14 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Activity, AlertTriangle, CheckCircle2, Webhook, ShieldAlert, Zap, Plus } from "lucide-react";
+import { Activity, AlertTriangle, CheckCircle2, Webhook, ShieldAlert, Zap, Plus, Pencil } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { Link } from "react-router-dom";
 import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid, Legend, BarChart, Bar } from "recharts";
+import { EditWebhookDialog } from "@/components/webhooks/EditWebhookDialog";
 
 interface WebhookStat {
   subscription_id: string;
@@ -53,6 +54,8 @@ const HEALTH_MIN_SAMPLE = 5;
 
 export default function WebhooksAdmin() {
   const [pingingId, setPingingId] = useState<string | null>(null);
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editOpen, setEditOpen] = useState(false);
   useEffect(() => {
     document.title = "Observabilidade de Webhooks — Últimas 24h";
   }, []);
@@ -294,6 +297,15 @@ export default function WebhooksAdmin() {
                             <Zap className={`w-3.5 h-3.5 mr-1 ${pingingId === row.subscription_id ? "animate-pulse" : ""}`} />
                             Testar
                           </Button>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="h-7 px-2 ml-1"
+                            onClick={() => { setEditingId(row.subscription_id); setEditOpen(true); }}
+                            title="Editar assinatura"
+                          >
+                            <Pencil className="w-3.5 h-3.5" />
+                          </Button>
                         </TableCell>
                       </TableRow>
                     );
@@ -304,6 +316,11 @@ export default function WebhooksAdmin() {
           )}
         </CardContent>
       </Card>
+      <EditWebhookDialog
+        subscriptionId={editingId}
+        open={editOpen}
+        onOpenChange={(o) => { setEditOpen(o); if (!o) setEditingId(null); }}
+      />
     </main>
   );
 }
