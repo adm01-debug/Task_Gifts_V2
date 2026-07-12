@@ -4524,6 +4524,59 @@ export type Database = {
           },
         ]
       }
+      postmortem_actions: {
+        Row: {
+          completed_at: string | null
+          created_at: string
+          description: string | null
+          due_date: string | null
+          id: string
+          owner_label: string | null
+          owner_user_id: string | null
+          postmortem_id: string
+          priority: string
+          status: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          completed_at?: string | null
+          created_at?: string
+          description?: string | null
+          due_date?: string | null
+          id?: string
+          owner_label?: string | null
+          owner_user_id?: string | null
+          postmortem_id: string
+          priority?: string
+          status?: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          completed_at?: string | null
+          created_at?: string
+          description?: string | null
+          due_date?: string | null
+          id?: string
+          owner_label?: string | null
+          owner_user_id?: string | null
+          postmortem_id?: string
+          priority?: string
+          status?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "postmortem_actions_postmortem_id_fkey"
+            columns: ["postmortem_id"]
+            isOneToOne: false
+            referencedRelation: "postmortems"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       postmortems: {
         Row: {
           action_items: string | null
@@ -7066,6 +7119,7 @@ export type Database = {
         Returns: Json
       }
       check_login_lockout: { Args: { p_email: string }; Returns: Json }
+      check_overdue_postmortem_actions: { Args: never; Returns: Json }
       check_sla_breaches_and_alert: { Args: never; Returns: Json }
       check_webhook_sla_and_alert: {
         Args: { p_threshold_pct?: number; p_window_hours?: number }
