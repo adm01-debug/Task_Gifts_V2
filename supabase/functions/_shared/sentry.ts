@@ -51,6 +51,10 @@ export const withSentry = (
     try {
       const res = await handler(req, { requestId });
       addBreadcrumb(`${fnName}:response`, { status: res.status, requestId });
+      // Echo requestId back so clients (and tests) can confirm correlation
+      if (!res.headers.has("x-request-id")) {
+        res.headers.set("x-request-id", requestId);
+      }
       return res;
     } catch (err) {
       captureException(err, { fnName, requestId, url: req.url });
