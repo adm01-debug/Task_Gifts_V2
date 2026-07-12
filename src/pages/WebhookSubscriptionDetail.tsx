@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
@@ -8,11 +8,18 @@ import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
-import { ArrowLeft, CheckCircle2, ChevronDown, Clock, RefreshCw, Webhook, XCircle } from "lucide-react";
+import { ArrowLeft, CheckCircle2, ChevronDown, Clock, RefreshCw, Rocket, Webhook, XCircle } from "lucide-react";
 
 interface DeliveryLog {
   id: string;
@@ -39,6 +46,9 @@ interface Subscription {
 
 export default function WebhookSubscriptionDetail() {
   const { id } = useParams<{ id: string }>();
+  const [statusFilter, setStatusFilter] = useState<"all" | "success" | "failed">("all");
+  const [eventFilter, setEventFilter] = useState<string>("all");
+  const [bulkResending, setBulkResending] = useState(false);
 
   useEffect(() => {
     document.title = "Detalhes da Assinatura — Webhooks";
@@ -82,7 +92,7 @@ export default function WebhookSubscriptionDetail() {
     const data = raw.data ?? raw;
     if (!eventType) {
       toast.error("Evento desconhecido — não é possível reenviar");
-      return;
+      return false;
     }
     const t = toast.loading("Reenviando webhook…");
     try {
@@ -92,9 +102,69 @@ export default function WebhookSubscriptionDetail() {
       if (error) throw error;
       toast.success("Webhook reenviado", { id: t });
       setTimeout(() => refetch(), 1500);
+      return true;
     } catch (e) {
       toast.error(`Falha ao reenviar: ${(e as Error).message}`, { id: t });
+      return false;
     }
+  };
+
+  const eventOptions = useMemo(() => {
+    const set = new Set<string>();
+    (logs ?? []).forEach((l) => l.event_type && set.add(l.event_type));
+    return Array.from(set).sort();
+  }, [logs]);
+
+  const filteredLogs = useMemo(() => {
+    return (logs ?? []).filter((l) => {
+      if (statusFilter === "success" && !l.success) return false;
+      if (statusFilter === "failed" && l.success) return false;
+      if (eventFilter !== "all" && l.event_type !== eventFilter) return false;
+      return true;
+    });
+  }, [logs, statusFilter, eventFilter]);
+
+  const failedLast24h = useMemo(() => {
+    const cutoff = Date.now() - 24 * 60 * 60 * 1000;
+    return (logs ?? []).filter((l) => !l.success && new Date(l.created_at).getTime() >= cutoff);
+  }, [logs]);
+
+  const resendAllFailed = async () => {
+    if (!id || failedLast24h.length === 0) return;
+    if (
+      !window.confirm(
+        `Reenviar ${failedLast24h.length} entrega(s) falhas das últimas 24h? Esta ação disparará novas requisições ao endpoint.`,
+      )
+    ) {
+      return;
+    }
+    setBulkResending(true);
+    const t = toast.loading(`Reenviando ${failedLast24h.length} entregas…`);
+    let ok = 0;
+    let fail = 0;
+    for (const log of failedLast24h) {
+      const raw = (log.payload ?? {}) as { event?: string; data?: unknown };
+      const eventType = log.event_type || raw.event;
+      const data = raw.data ?? raw;
+      if (!eventType) {
+        fail++;
+        continue;
+      }
+      try {
+        const { error } = await supabase.functions.invoke("webhook-dispatcher", {
+          body: { subscription_id: id, event_type: eventType, payload: data },
+        });
+        if (error) throw error;
+        ok++;
+      } catch {
+        fail++;
+      }
+      // pequeno delay para não saturar o dispatcher
+      await new Promise((r) => setTimeout(r, 150));
+    }
+    setBulkResending(false);
+    toast.success(`Reenvio concluído: ${ok} ok · ${fail} falha(s)`, { id: t });
+    refetch();
   };
 
   return (
@@ -131,11 +201,40 @@ export default function WebhookSubscriptionDetail() {
       </header>
 
       <Card>
-        <CardHeader className="flex flex-row items-center justify-between">
+        <CardHeader className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <CardTitle className="text-base">Timeline de Entregas (últimas 100)</CardTitle>
-          <Button variant="outline" size="sm" onClick={() => refetch()} disabled={isFetching}>
-            {isFetching ? "Atualizando…" : "Atualizar"}
-          </Button>
+          <div className="flex flex-wrap items-center gap-2">
+            <Select value={statusFilter} onValueChange={(v) => setStatusFilter(v as typeof statusFilter)}>
+              <SelectTrigger className="h-8 w-[130px] text-xs"><SelectValue placeholder="Status" /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Todos os status</SelectItem>
+                <SelectItem value="success">Somente sucesso</SelectItem>
+                <SelectItem value="failed">Somente falhas</SelectItem>
+              </SelectContent>
+            </Select>
+            <Select value={eventFilter} onValueChange={setEventFilter}>
+              <SelectTrigger className="h-8 w-[150px] text-xs"><SelectValue placeholder="Evento" /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Todos os eventos</SelectItem>
+                {eventOptions.map((e) => (
+                  <SelectItem key={e} value={e}>{e}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <Button
+              variant="destructive"
+              size="sm"
+              onClick={resendAllFailed}
+              disabled={bulkResending || failedLast24h.length === 0}
+              title="Reenviar todas as falhas das últimas 24h"
+            >
+              <Rocket className={`w-3.5 h-3.5 mr-1 ${bulkResending ? "animate-pulse" : ""}`} />
+              Reenviar falhas 24h ({failedLast24h.length})
+            </Button>
+            <Button variant="outline" size="sm" onClick={() => refetch()} disabled={isFetching}>
+              {isFetching ? "Atualizando…" : "Atualizar"}
+            </Button>
+          </div>
         </CardHeader>
         <CardContent>
           {isLoading ? (
@@ -152,9 +251,13 @@ export default function WebhookSubscriptionDetail() {
             <p className="text-sm text-muted-foreground py-8 text-center">
               Nenhuma entrega registrada para esta assinatura.
             </p>
+          ) : filteredLogs.length === 0 ? (
+            <p className="text-sm text-muted-foreground py-8 text-center">
+              Nenhuma entrega corresponde aos filtros selecionados.
+            </p>
           ) : (
             <ol className="relative border-l border-border/60 ml-3 space-y-3">
-              {logs.map((log) => (
+              {filteredLogs.map((log) => (
                 <TimelineItem key={log.id} log={log} onResend={() => resend(log)} />
               ))}
             </ol>
@@ -165,7 +268,7 @@ export default function WebhookSubscriptionDetail() {
   );
 }
 
-function TimelineItem({ log, onResend }: { log: DeliveryLog; onResend: () => void }) {
+function TimelineItem({ log, onResend }: { log: DeliveryLog; onResend: () => Promise<boolean | undefined> | void }) {
   const [open, setOpen] = useState(false);
   const [resending, setResending] = useState(false);
   const handleResend = async () => {
