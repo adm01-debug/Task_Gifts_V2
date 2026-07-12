@@ -9,7 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { ArrowLeft, FileText, Save, ExternalLink, Search } from "lucide-react";
+import { ArrowLeft, FileText, Save, ExternalLink, Search, Plus, Trash2, AlertTriangle } from "lucide-react";
 import { toast } from "sonner";
 
 type Postmortem = {
@@ -30,6 +30,19 @@ type Postmortem = {
   lessons_learned: string | null;
   created_at: string;
   updated_at: string;
+};
+
+type ActionItem = {
+  id: string;
+  postmortem_id: string;
+  title: string;
+  description: string | null;
+  owner_label: string | null;
+  priority: "low" | "medium" | "high" | "critical";
+  status: "open" | "in_progress" | "done" | "cancelled";
+  due_date: string | null;
+  completed_at: string | null;
+  created_at: string;
 };
 
 const STATUS_LABEL: Record<Postmortem["status"], string> = {
@@ -150,12 +163,184 @@ export default function Postmortems() {
         </Card>
 
         {selected ? (
-          <Editor key={selected.id} initial={selected} onSaved={() => qc.invalidateQueries({ queryKey: ["postmortems"] })} />
+          <div className="space-y-4">
+            <Editor key={selected.id} initial={selected} onSaved={() => qc.invalidateQueries({ queryKey: ["postmortems"] })} />
+            <ActionsPanel postmortemId={selected.id} />
+          </div>
         ) : (
           <Card><CardContent className="p-8 text-sm text-muted-foreground text-center">Selecione um postmortem à esquerda.</CardContent></Card>
         )}
       </div>
     </div>
+  );
+}
+
+function ActionsPanel({ postmortemId }: { postmortemId: string }) {
+  const qc = useQueryClient();
+  const { data: items = [], isLoading } = useQuery({
+    queryKey: ["postmortem_actions", postmortemId],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("postmortem_actions")
+        .select("*")
+        .eq("postmortem_id", postmortemId)
+        .order("created_at", { ascending: true });
+      if (error) throw error;
+      return (data ?? []) as ActionItem[];
+    },
+  });
+
+  const invalidate = () => qc.invalidateQueries({ queryKey: ["postmortem_actions", postmortemId] });
+
+  const create = useMutation({
+    mutationFn: async () => {
+      const { error } = await supabase.from("postmortem_actions").insert({
+        postmortem_id: postmortemId,
+        title: "Nova ação",
+        priority: "medium",
+        status: "open",
+      });
+      if (error) throw error;
+    },
+    onSuccess: () => { toast.success("Ação criada"); invalidate(); },
+    onError: (e: unknown) => toast.error(e instanceof Error ? e.message : "Falha ao criar"),
+  });
+
+  const update = useMutation({
+    mutationFn: async (patch: Partial<ActionItem> & { id: string }) => {
+      const { id, ...rest } = patch;
+      const { error } = await supabase.from("postmortem_actions").update(rest).eq("id", id);
+      if (error) throw error;
+    },
+    onSuccess: () => invalidate(),
+    onError: (e: unknown) => toast.error(e instanceof Error ? e.message : "Falha ao atualizar"),
+  });
+
+  const remove = useMutation({
+    mutationFn: async (id: string) => {
+      const { error } = await supabase.from("postmortem_actions").delete().eq("id", id);
+      if (error) throw error;
+    },
+    onSuccess: () => { toast.success("Ação removida"); invalidate(); },
+  });
+
+  const today = new Date().toISOString().slice(0, 10);
+  const overdueCount = items.filter(
+    (i) => (i.status === "open" || i.status === "in_progress") && i.due_date && i.due_date < today
+  ).length;
+
+  return (
+    <Card>
+      <CardHeader className="pb-2 flex flex-row items-center justify-between">
+        <CardTitle className="text-sm flex items-center gap-2">
+          Itens de ação ({items.length})
+          {overdueCount > 0 && (
+            <Badge variant="destructive" className="text-[10px] gap-1">
+              <AlertTriangle className="w-3 h-3" /> {overdueCount} atrasado(s)
+            </Badge>
+          )}
+        </CardTitle>
+        <Button size="sm" variant="outline" onClick={() => create.mutate()} disabled={create.isPending}>
+          <Plus className="w-3.5 h-3.5 mr-1" /> Nova ação
+        </Button>
+      </CardHeader>
+      <CardContent className="space-y-2">
+        {isLoading ? (
+          <div className="text-xs text-muted-foreground text-center py-4">Carregando…</div>
+        ) : items.length === 0 ? (
+          <div className="text-xs text-muted-foreground text-center py-6">
+            Nenhuma ação registrada. Clique em "Nova ação" para começar.
+          </div>
+        ) : (
+          items.map((it) => {
+            const isOverdue = (it.status === "open" || it.status === "in_progress") && it.due_date && it.due_date < today;
+            return (
+              <div
+                key={it.id}
+                className={`p-3 rounded-lg border space-y-2 ${isOverdue ? "border-destructive/40 bg-destructive/5" : "border-border/60"}`}
+              >
+                <div className="flex items-start gap-2">
+                  <Input
+                    defaultValue={it.title}
+                    onBlur={(e) => {
+                      if (e.target.value !== it.title) update.mutate({ id: it.id, title: e.target.value });
+                    }}
+                    className="text-sm font-medium border-0 px-0 focus-visible:ring-0 h-auto"
+                    placeholder="Título da ação"
+                  />
+                  <Button size="sm" variant="ghost" onClick={() => remove.mutate(it.id)} className="h-7 w-7 p-0">
+                    <Trash2 className="w-3.5 h-3.5 text-destructive" />
+                  </Button>
+                </div>
+                <Textarea
+                  defaultValue={it.description ?? ""}
+                  onBlur={(e) => {
+                    if ((e.target.value || null) !== it.description) update.mutate({ id: it.id, description: e.target.value || null });
+                  }}
+                  rows={2}
+                  placeholder="Descrição / contexto…"
+                  className="text-xs"
+                />
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+                  <div>
+                    <Label className="text-[10px] text-muted-foreground">Responsável</Label>
+                    <Input
+                      defaultValue={it.owner_label ?? ""}
+                      onBlur={(e) => {
+                        if ((e.target.value || null) !== it.owner_label) update.mutate({ id: it.id, owner_label: e.target.value || null });
+                      }}
+                      placeholder="Nome/time"
+                      className="h-8 text-xs"
+                    />
+                  </div>
+                  <div>
+                    <Label className="text-[10px] text-muted-foreground">Prazo</Label>
+                    <Input
+                      type="date"
+                      defaultValue={it.due_date ?? ""}
+                      onBlur={(e) => {
+                        if ((e.target.value || null) !== it.due_date) update.mutate({ id: it.id, due_date: e.target.value || null });
+                      }}
+                      className="h-8 text-xs"
+                    />
+                  </div>
+                  <div>
+                    <Label className="text-[10px] text-muted-foreground">Prioridade</Label>
+                    <Select
+                      value={it.priority}
+                      onValueChange={(v) => update.mutate({ id: it.id, priority: v as ActionItem["priority"] })}
+                    >
+                      <SelectTrigger className="h-8 text-xs"><SelectValue /></SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="low">Baixa</SelectItem>
+                        <SelectItem value="medium">Média</SelectItem>
+                        <SelectItem value="high">Alta</SelectItem>
+                        <SelectItem value="critical">Crítica</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div>
+                    <Label className="text-[10px] text-muted-foreground">Status</Label>
+                    <Select
+                      value={it.status}
+                      onValueChange={(v) => update.mutate({ id: it.id, status: v as ActionItem["status"] })}
+                    >
+                      <SelectTrigger className="h-8 text-xs"><SelectValue /></SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="open">Aberto</SelectItem>
+                        <SelectItem value="in_progress">Em progresso</SelectItem>
+                        <SelectItem value="done">Concluído</SelectItem>
+                        <SelectItem value="cancelled">Cancelado</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+              </div>
+            );
+          })
+        )}
+      </CardContent>
+    </Card>
   );
 }
 
