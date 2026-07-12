@@ -76,6 +76,13 @@ export const withSentry = (
       if (!res.headers.has("x-request-id")) {
         res.headers.set("x-request-id", requestId);
       }
+      // Ensure browsers/proxies expose the header to callers
+      const expose = res.headers.get("access-control-expose-headers");
+      if (!expose) {
+        res.headers.set("access-control-expose-headers", "x-request-id");
+      } else if (!/x-request-id/i.test(expose)) {
+        res.headers.set("access-control-expose-headers", `${expose}, x-request-id`);
+      }
       return res;
     } catch (err) {
       captureException(err, { fnName, requestId, url: req.url });
