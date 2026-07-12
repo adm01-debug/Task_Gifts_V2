@@ -30,7 +30,7 @@ interface Subscription {
   id: string;
   name: string | null;
   url: string | null;
-  event_types: string[] | null;
+  events: string[] | null;
   is_active: boolean | null;
   last_status: number | null;
   last_triggered_at: string | null;
@@ -49,11 +49,11 @@ export default function WebhookSubscriptionDetail() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("webhook_subscriptions")
-        .select("id, name, url, event_types, is_active, last_status, last_triggered_at")
+        .select("id, name, url, events, is_active, last_status, last_triggered_at")
         .eq("id", id!)
         .maybeSingle();
       if (error) throw error;
-      return (data as Subscription) || null;
+      return (data as unknown as Subscription) || null;
     },
   });
 
@@ -61,7 +61,10 @@ export default function WebhookSubscriptionDetail() {
     queryKey: ["webhook-delivery-logs", id],
     enabled: !!id,
     queryFn: async () => {
-      const { data, error } = await supabase.rpc("get_webhook_delivery_logs" as never, {
+      const { data, error } = await (supabase.rpc as unknown as (
+        fn: string,
+        args: Record<string, unknown>,
+      ) => Promise<{ data: unknown; error: unknown }>)("get_webhook_delivery_logs", {
         p_subscription_id: id,
         p_limit: 100,
       });
@@ -95,7 +98,7 @@ export default function WebhookSubscriptionDetail() {
             {sub?.last_status != null && (
               <Badge variant="outline">Último status: {sub.last_status}</Badge>
             )}
-            {sub?.event_types?.map((e) => (
+            {sub?.events?.map((e) => (
               <Badge key={e} variant="secondary">
                 {e}
               </Badge>
