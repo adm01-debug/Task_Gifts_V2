@@ -63,6 +63,7 @@ const PermissionsAdmin = lazy(() => import("./pages/PermissionsAdmin"));
 const AdminTelemetria = lazy(() => import("./pages/AdminTelemetria"));
 const WebhooksAdmin = lazy(() => import("./pages/WebhooksAdmin"));
 const WebhookSubscriptionDetail = lazy(() => import("./pages/WebhookSubscriptionDetail"));
+const WebhookSubscriptionNew = lazy(() => import("./pages/WebhookSubscriptionNew"));
 
 function PageLoader() {
   return (
@@ -206,6 +207,7 @@ const AnimatedRoutes = () => {
         <Route path="/admin/permissions" element={<ProtectedRoute requiredRole="admin"><PageTransition><PermissionsAdmin /></PageTransition></ProtectedRoute>} />
         <Route path="/admin/telemetria" element={<ProtectedRoute requiredRole="admin"><PageTransition><AdminTelemetria /></PageTransition></ProtectedRoute>} />
         <Route path="/admin/webhooks" element={<ProtectedRoute requiredRole="admin"><PageTransition><WebhooksAdmin /></PageTransition></ProtectedRoute>} />
+        <Route path="/admin/webhooks/new" element={<ProtectedRoute requiredRole="admin"><PageTransition><WebhookSubscriptionNew /></PageTransition></ProtectedRoute>} />
         <Route path="/admin/webhooks/:id" element={<ProtectedRoute requiredRole="admin"><PageTransition><WebhookSubscriptionDetail /></PageTransition></ProtectedRoute>} />
         <Route path="/loja/admin" element={<ProtectedRoute requiredRole="admin"><PageTransition><ShopAdmin /></PageTransition></ProtectedRoute>} />
         <Route path="*" element={<NotFound />} />

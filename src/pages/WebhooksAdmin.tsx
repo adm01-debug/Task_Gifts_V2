@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Activity, AlertTriangle, CheckCircle2, Webhook, ShieldAlert, Zap } from "lucide-react";
+import { Activity, AlertTriangle, CheckCircle2, Webhook, ShieldAlert, Zap, Plus } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -141,14 +141,19 @@ export default function WebhooksAdmin() {
 
   return (
     <main className="container mx-auto px-4 py-8 space-y-6">
-      <header className="flex items-center gap-3">
-        <div className="w-11 h-11 rounded-xl bg-primary/10 flex items-center justify-center border border-primary/20">
-          <Webhook className="w-5 h-5 text-primary" />
+      <header className="flex items-center justify-between gap-3">
+        <div className="flex items-center gap-3">
+          <div className="w-11 h-11 rounded-xl bg-primary/10 flex items-center justify-center border border-primary/20">
+            <Webhook className="w-5 h-5 text-primary" />
+          </div>
+          <div>
+            <h1 className="text-2xl font-bold">Observabilidade de Webhooks</h1>
+            <p className="text-sm text-muted-foreground">Métricas de entrega das últimas 24 horas — atualiza a cada 60s.</p>
+          </div>
         </div>
-        <div>
-          <h1 className="text-2xl font-bold">Observabilidade de Webhooks</h1>
-          <p className="text-sm text-muted-foreground">Métricas de entrega das últimas 24 horas — atualiza a cada 60s.</p>
-        </div>
+        <Button asChild size="sm">
+          <Link to="/admin/webhooks/new"><Plus className="w-4 h-4 mr-1.5" />Nova assinatura</Link>
+        </Button>
       </header>
 
       {degraded.length > 0 && (
