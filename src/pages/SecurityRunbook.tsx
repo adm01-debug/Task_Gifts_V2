@@ -289,6 +289,11 @@ export default function SecurityRunbook() {
                 <Activity className="w-4 h-4 mr-2" /> Digests Semanais
               </Link>
             </Button>
+            <Button asChild variant="outline">
+              <Link to="/admin/reliability">
+                <Activity className="w-4 h-4 mr-2" /> Reliability SLO
+              </Link>
+            </Button>
           </div>
         </div>
 
