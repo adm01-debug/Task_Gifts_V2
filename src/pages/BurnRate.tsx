@@ -49,7 +49,7 @@ export default function BurnRate() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("security_alerts")
-        .select("id, alert_type, severity, message, created_at, metadata")
+        .select("id, alert_type, severity, title, description, created_at, metadata")
         .like("alert_type", "burn_rate_%")
         .order("created_at", { ascending: false })
         .limit(50);
@@ -181,8 +181,8 @@ export default function BurnRate() {
                   {a.severity}
                 </Badge>
                 <div className="text-sm flex-1">
-                  <div className="font-medium">{a.alert_type}</div>
-                  <div className="text-muted-foreground">{a.message}</div>
+                  <div className="font-medium">{a.title ?? a.alert_type}</div>
+                  <div className="text-muted-foreground">{a.description}</div>
                   <div className="text-xs text-muted-foreground mt-1">{new Date(a.created_at).toLocaleString("pt-BR")}</div>
                 </div>
               </div>
