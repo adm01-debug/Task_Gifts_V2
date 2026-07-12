@@ -7,6 +7,7 @@ import {
   RATE_LIMITS 
 } from "../_shared/rate-limiter.ts";
 import { corsHeaders, verifyUser } from "../_shared/security.ts";
+import { withSentry, addBreadcrumb, captureException } from "../_shared/sentry.ts";
 
 const SYSTEM_PROMPT = `Você é o AI Coach do Task Gifts, uma plataforma de gamificação corporativa da Promo Brindes.
 
@@ -45,7 +46,7 @@ REGRAS:
 
 Responda APENAS com as 3 sugestões, uma por linha, sem formatação adicional.`;
 
-serve(async (req) => {
+serve(withSentry("ai-coach", async (req, { requestId }) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
   }
@@ -55,14 +56,15 @@ serve(async (req) => {
   const rateLimitResult = checkRateLimit(identifier, RATE_LIMITS.ai);
   
   if (!rateLimitResult.allowed) {
-    console.log(`Rate limit exceeded for ${identifier}`);
+    addBreadcrumb("ai-coach:rate-limited", { identifier, requestId }, "warning");
     return createRateLimitResponse(rateLimitResult.retryAfter || 60, corsHeaders);
   }
 
   try {
     // Verify user JWT
     const authenticatedUser = await verifyUser(req);
-    
+    addBreadcrumb("ai-coach:auth", { userId: authenticatedUser?.id, requestId });
+
     const { messages, userContext, generateSuggestions } = await req.json();
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     
@@ -192,10 +194,10 @@ serve(async (req) => {
       headers: { ...corsHeaders, "Content-Type": "text/event-stream" },
     });
   } catch (e) {
-    console.error("AI Coach error:", e);
+    captureException(e, { fn: "ai-coach", requestId });
     return new Response(JSON.stringify({ error: e instanceof Error ? e.message : "Erro desconhecido" }), {
       status: 500,
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   }
-});
+}));

@@ -2,6 +2,7 @@ import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { crypto } from "https://deno.land/std@0.168.0/crypto/mod.ts";
 import { ExternalWebhookSchema, validatePayload, createValidationErrorResponse } from "../_shared/validation.ts";
+import { withSentry, addBreadcrumb, captureException } from "../_shared/sentry.ts";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -33,13 +34,13 @@ async function verifyHMAC(payload: string, signature: string, secret: string) {
   );
 }
 
-serve(async (req) => {
+serve(withSentry("external-webhook", async (req, { requestId }) => {
   // Handle CORS preflight
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
   }
 
-  console.log('[Webhook] Received webhook request');
+  addBreadcrumb("external-webhook:received", { method: req.method, requestId });
 
   // Get Supabase client
   const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
@@ -207,13 +208,13 @@ serve(async (req) => {
 
   } catch (error: unknown) {
     const message = error instanceof Error ? error.message : 'Unknown error';
-    console.error('[Webhook] Error:', message);
+    captureException(error, { fn: "external-webhook", requestId });
     return jsonResponse({ 
       error: 'Internal server error', 
       message 
     }, 500);
   }
-});
+}));
 
 function jsonResponse(data: any, status: number) {
   return new Response(JSON.stringify(data), {
