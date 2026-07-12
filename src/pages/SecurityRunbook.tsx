@@ -1,12 +1,14 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
   BookOpen, Search, ShieldAlert, Activity, Ban, KeyRound, Bug, Bell,
-  ExternalLink, ArrowRight, AlertTriangle,
+  ExternalLink, ArrowRight, AlertTriangle, TrendingUp, TrendingDown, Minus,
 } from "lucide-react";
 
 interface RunbookStep {
@@ -186,6 +188,30 @@ export default function SecurityRunbook() {
   const [highlighted, setHighlighted] = useState<string | null>(null);
   const cardRefs = useRef<Record<string, HTMLDivElement | null>>({});
 
+  const { data: mttrData } = useQuery({
+    queryKey: ["alert-mttr-by-type-7d"],
+    queryFn: async () => {
+      const { data, error } = await supabase.rpc("get_alert_mttr_by_type_7d");
+      if (error) throw error;
+      return (data ?? []) as Array<{
+        alert_type: string;
+        total_count: number;
+        resolved_count: number;
+        unresolved_count: number;
+        avg_mttr_minutes: number | null;
+        median_mttr_minutes: number | null;
+        max_mttr_minutes: number | null;
+      }>;
+    },
+    staleTime: 5 * 60 * 1000,
+  });
+
+  const mttrByType = useMemo(() => {
+    const map: Record<string, (typeof mttrData extends (infer U)[] | undefined ? U : never)> = {} as never;
+    (mttrData ?? []).forEach((row) => { map[row.alert_type] = row; });
+    return map;
+  }, [mttrData]);
+
   useEffect(() => {
     const hash = location.hash.replace(/^#type-/, "");
     if (!hash) return;
@@ -248,6 +274,14 @@ export default function SecurityRunbook() {
           {filtered.map((entry) => {
             const Icon = entry.icon;
             const isHl = highlighted === entry.alertType;
+            const stats = mttrByType[entry.alertType];
+            const avg = stats?.avg_mttr_minutes ?? null;
+            const ratio = avg !== null ? avg / entry.slaMinutes : null;
+            const mttrColor =
+              ratio === null ? "text-muted-foreground" :
+              ratio <= 1 ? "text-green-600" :
+              ratio <= 1.5 ? "text-yellow-600" : "text-red-600";
+            const MttrIcon = ratio === null ? Minus : ratio <= 1 ? TrendingDown : TrendingUp;
             return (
               <Card
                 key={entry.alertType}
@@ -272,6 +306,38 @@ export default function SecurityRunbook() {
                 </CardHeader>
                 <CardContent className="space-y-4 text-sm">
                   <p className="text-muted-foreground">{entry.description}</p>
+
+                  <div className="grid grid-cols-3 gap-2 rounded-lg border bg-muted/30 p-3 text-xs">
+                    <div>
+                      <p className="text-muted-foreground">MTTR 7d</p>
+                      <p className={`font-semibold text-sm flex items-center gap-1 ${mttrColor}`}>
+                        <MttrIcon className="w-3.5 h-3.5" />
+                        {avg !== null ? `${avg.toFixed(0)}min` : "—"}
+                      </p>
+                      {ratio !== null && (
+                        <p className="text-[10px] text-muted-foreground">
+                          {ratio <= 1 ? "dentro do SLA" : `${((ratio - 1) * 100).toFixed(0)}% acima`}
+                        </p>
+                      )}
+                    </div>
+                    <div>
+                      <p className="text-muted-foreground">Mediana</p>
+                      <p className="font-semibold text-sm">
+                        {stats?.median_mttr_minutes != null ? `${Number(stats.median_mttr_minutes).toFixed(0)}min` : "—"}
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-muted-foreground">Volume 7d</p>
+                      <p className="font-semibold text-sm">
+                        {stats?.total_count ?? 0}
+                        {stats?.unresolved_count ? (
+                          <span className="ml-1 text-[10px] text-yellow-600">
+                            ({stats.unresolved_count} abertos)
+                          </span>
+                        ) : null}
+                      </p>
+                    </div>
+                  </div>
 
                   <div>
                     <p className="font-semibold mb-1 text-xs uppercase tracking-wide text-muted-foreground">Triagem</p>
