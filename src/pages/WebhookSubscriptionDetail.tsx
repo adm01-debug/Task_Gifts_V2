@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
+import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -11,7 +12,7 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
-import { ArrowLeft, CheckCircle2, ChevronDown, Clock, Webhook, XCircle } from "lucide-react";
+import { ArrowLeft, CheckCircle2, ChevronDown, Clock, RefreshCw, Webhook, XCircle } from "lucide-react";
 
 interface DeliveryLog {
   id: string;
@@ -74,6 +75,28 @@ export default function WebhookSubscriptionDetail() {
     refetchInterval: 30_000,
   });
 
+  const resend = async (log: DeliveryLog) => {
+    if (!id) return;
+    const raw = (log.payload ?? {}) as { event?: string; data?: unknown };
+    const eventType = log.event_type || raw.event;
+    const data = raw.data ?? raw;
+    if (!eventType) {
+      toast.error("Evento desconhecido — não é possível reenviar");
+      return;
+    }
+    const t = toast.loading("Reenviando webhook…");
+    try {
+      const { error } = await supabase.functions.invoke("webhook-dispatcher", {
+        body: { subscription_id: id, event_type: eventType, payload: data },
+      });
+      if (error) throw error;
+      toast.success("Webhook reenviado", { id: t });
+      setTimeout(() => refetch(), 1500);
+    } catch (e) {
+      toast.error(`Falha ao reenviar: ${(e as Error).message}`, { id: t });
+    }
+  };
+
   return (
     <main className="container mx-auto px-4 py-8 space-y-6">
       <div className="flex items-center gap-3">
@@ -132,7 +155,7 @@ export default function WebhookSubscriptionDetail() {
           ) : (
             <ol className="relative border-l border-border/60 ml-3 space-y-3">
               {logs.map((log) => (
-                <TimelineItem key={log.id} log={log} />
+                <TimelineItem key={log.id} log={log} onResend={() => resend(log)} />
               ))}
             </ol>
           )}
@@ -142,8 +165,17 @@ export default function WebhookSubscriptionDetail() {
   );
 }
 
-function TimelineItem({ log }: { log: DeliveryLog }) {
+function TimelineItem({ log, onResend }: { log: DeliveryLog; onResend: () => void }) {
   const [open, setOpen] = useState(false);
+  const [resending, setResending] = useState(false);
+  const handleResend = async () => {
+    setResending(true);
+    try {
+      await onResend();
+    } finally {
+      setResending(false);
+    }
+  };
   const statusColor = log.success
     ? "bg-primary/10 text-primary border-primary/30"
     : "bg-destructive/10 text-destructive border-destructive/30";
@@ -179,6 +211,17 @@ function TimelineItem({ log }: { log: DeliveryLog }) {
               <span className="tabular-nums">
                 {new Date(log.created_at).toLocaleString("pt-BR")}
               </span>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="h-7 px-2"
+                onClick={handleResend}
+                disabled={resending}
+                title="Reenviar este payload"
+              >
+                <RefreshCw className={`w-3.5 h-3.5 ${resending ? "animate-spin" : ""}`} />
+                <span className="ml-1 hidden sm:inline">Reenviar</span>
+              </Button>
               <CollapsibleTrigger asChild>
                 <Button variant="ghost" size="sm" className="h-7 px-2">
                   <ChevronDown
