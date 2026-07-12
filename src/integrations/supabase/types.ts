@@ -6950,6 +6950,17 @@ export type Database = {
       }
       get_security_stats: { Args: { p_hours?: number }; Returns: Json }
       get_user_stats_api: { Args: { p_user_email: string }; Returns: Json }
+      get_webhook_delivery_hourly_24h: {
+        Args: never
+        Returns: {
+          avg_duration_ms: number
+          bucket: string
+          failed: number
+          p95_duration_ms: number
+          successful: number
+          total: number
+        }[]
+      }
       get_webhook_delivery_stats_24h: {
         Args: never
         Returns: {
