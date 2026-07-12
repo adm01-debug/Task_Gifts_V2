@@ -6829,6 +6829,33 @@ export type Database = {
         }
         Relationships: []
       }
+      webhook_delivery_stats_24h: {
+        Row: {
+          avg_attempts: number | null
+          avg_duration_ms: number | null
+          failed_deliveries: number | null
+          last_delivery_at: string | null
+          max_duration_ms: number | null
+          p50_duration_ms: number | null
+          p95_duration_ms: number | null
+          p99_duration_ms: number | null
+          subscription_id: string | null
+          subscription_name: string | null
+          subscription_url: string | null
+          success_rate_pct: number | null
+          successful_deliveries: number | null
+          total_deliveries: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "webhook_delivery_logs_subscription_id_fkey"
+            columns: ["subscription_id"]
+            isOneToOne: false
+            referencedRelation: "webhook_subscriptions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Functions: {
       _require_admin: { Args: never; Returns: undefined }
@@ -6923,6 +6950,25 @@ export type Database = {
       }
       get_security_stats: { Args: { p_hours?: number }; Returns: Json }
       get_user_stats_api: { Args: { p_user_email: string }; Returns: Json }
+      get_webhook_delivery_stats_24h: {
+        Args: never
+        Returns: {
+          avg_attempts: number
+          avg_duration_ms: number
+          failed_deliveries: number
+          last_delivery_at: string
+          max_duration_ms: number
+          p50_duration_ms: number
+          p95_duration_ms: number
+          p99_duration_ms: number
+          subscription_id: string
+          subscription_name: string
+          subscription_url: string
+          success_rate_pct: number
+          successful_deliveries: number
+          total_deliveries: number
+        }[]
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
