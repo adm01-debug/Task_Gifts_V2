@@ -53,7 +53,8 @@ export default function SecurityDigests() {
 
   const ackMutation = useMutation({
     mutationFn: async (week_key: string) => {
-      const { data, error } = await supabase.rpc("acknowledge_security_digest", { p_week_key: week_key });
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const { data, error } = await (supabase.rpc as any)("acknowledge_security_digest", { p_week_key: week_key });
       if (error) throw error;
       return data;
     },
