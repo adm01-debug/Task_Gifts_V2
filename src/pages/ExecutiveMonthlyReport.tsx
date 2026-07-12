@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { ArrowLeft, FileBarChart2, RefreshCw, Download, ExternalLink } from "lucide-react";
+import { ArrowLeft, FileBarChart2, RefreshCw, Download, ExternalLink, TrendingUp, TrendingDown, Minus } from "lucide-react";
 import { toast } from "sonner";
 
 type Report = {
@@ -57,6 +57,14 @@ export default function ExecutiveMonthlyReport() {
     [reports, selectedId]
   );
 
+  // Previous period = report immediately before the selected one in chronological order.
+  const previous = useMemo(() => {
+    if (!selected) return null;
+    const idx = reports.findIndex((r) => r.id === selected.id);
+    // reports are ordered DESC, so the "previous month" is at idx + 1
+    return idx >= 0 ? reports[idx + 1] ?? null : null;
+  }, [reports, selected]);
+
   const regenerate = useMutation({
     mutationFn: async (params: { year?: number; month?: number }) => {
       const args: { p_year?: number; p_month?: number } = {};
@@ -99,6 +107,12 @@ export default function ExecutiveMonthlyReport() {
   const actionCompletion = selected && selected.action_items_total > 0
     ? Math.round((selected.action_items_done / selected.action_items_total) * 100)
     : null;
+
+  // Helpers for MoM delta rendering.
+  const prevResolutionRate = previous && previous.incidents_total > 0
+    ? Math.round((previous.incidents_resolved / previous.incidents_total) * 100) : null;
+  const prevActionCompletion = previous && previous.action_items_total > 0
+    ? Math.round((previous.action_items_done / previous.action_items_total) * 100) : null;
 
   return (
     <div className="container mx-auto p-6 max-w-7xl space-y-6">
@@ -160,23 +174,37 @@ export default function ExecutiveMonthlyReport() {
         <>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
             <Kpi label="Incidentes" value={selected.incidents_total.toString()}
-                 hint={`${selected.incidents_critical} críticos · ${selected.incidents_high} high`} />
+                 hint={`${selected.incidents_critical} críticos · ${selected.incidents_high} high`}
+                 delta={buildDelta(selected.incidents_total, previous?.incidents_total, { lowerIsBetter: true })} />
             <Kpi label="Resolvidos" value={resolutionRate != null ? `${resolutionRate}%` : "—"}
                  hint={`${selected.incidents_resolved}/${selected.incidents_total}`}
-                 tone={resolutionRate != null && resolutionRate < 80 ? "warn" : "ok"} />
+                 tone={resolutionRate != null && resolutionRate < 80 ? "warn" : "ok"}
+                 delta={buildDelta(resolutionRate, prevResolutionRate, { unit: "pp" })} />
             <Kpi label="MTTR médio" value={fmtMin(selected.mttr_minutes_avg)}
-                 hint={`P95: ${fmtMin(selected.mttr_minutes_p95)}`} />
-            <Kpi label="MTTA médio" value={fmtMin(selected.mtta_minutes_avg)} />
+                 hint={`P95: ${fmtMin(selected.mttr_minutes_p95)}`}
+                 delta={buildDelta(selected.mttr_minutes_avg, previous?.mttr_minutes_avg, { lowerIsBetter: true })} />
+            <Kpi label="MTTA médio" value={fmtMin(selected.mtta_minutes_avg)}
+                 delta={buildDelta(selected.mtta_minutes_avg, previous?.mtta_minutes_avg, { lowerIsBetter: true })} />
             <Kpi label="SLA breaches" value={selected.sla_breaches.toString()}
-                 tone={selected.sla_breaches > 0 ? "warn" : "ok"} />
+                 tone={selected.sla_breaches > 0 ? "warn" : "ok"}
+                 delta={buildDelta(selected.sla_breaches, previous?.sla_breaches, { lowerIsBetter: true })} />
             <Kpi label="Postmortems" value={`${selected.postmortems_published}/${selected.postmortems_created}`}
-                 hint="publicados/criados" />
+                 hint="publicados/criados"
+                 delta={buildDelta(selected.postmortems_published, previous?.postmortems_published)} />
             <Kpi label="Ações concluídas" value={actionCompletion != null ? `${actionCompletion}%` : "—"}
                  hint={`${selected.action_items_done}/${selected.action_items_total}`}
-                 tone={actionCompletion != null && actionCompletion < 70 ? "warn" : "ok"} />
+                 tone={actionCompletion != null && actionCompletion < 70 ? "warn" : "ok"}
+                 delta={buildDelta(actionCompletion, prevActionCompletion, { unit: "pp" })} />
             <Kpi label="Ações atrasadas" value={selected.action_items_overdue.toString()}
-                 tone={selected.action_items_overdue > 0 ? "warn" : "ok"} />
+                 tone={selected.action_items_overdue > 0 ? "warn" : "ok"}
+                 delta={buildDelta(selected.action_items_overdue, previous?.action_items_overdue, { lowerIsBetter: true })} />
           </div>
+
+          {previous && (
+            <div className="text-xs text-muted-foreground -mt-2">
+              Comparativo vs. {fmtPeriod(previous.period_year, previous.period_month)}
+            </div>
+          )}
 
           <Card>
             <CardHeader className="pb-2 flex flex-row items-center justify-between">
@@ -235,17 +263,59 @@ export default function ExecutiveMonthlyReport() {
   );
 }
 
-function Kpi({ label, value, hint, tone = "neutral" }: {
-  label: string; value: string; hint?: string; tone?: "ok" | "warn" | "neutral";
+type DeltaInfo = { pct: number | null; direction: "up" | "down" | "flat"; better: boolean; unit: "%" | "pp" } | null;
+
+function buildDelta(
+  current: number | null | undefined,
+  previous: number | null | undefined,
+  opts: { lowerIsBetter?: boolean; unit?: "%" | "pp" } = {}
+): DeltaInfo {
+  const { lowerIsBetter = false, unit = "%" } = opts;
+  if (current == null || previous == null) return null;
+  if (unit === "pp") {
+    const diff = current - previous;
+    const direction = diff > 0 ? "up" : diff < 0 ? "down" : "flat";
+    const better = diff === 0 ? true : lowerIsBetter ? diff < 0 : diff > 0;
+    return { pct: Math.abs(diff), direction, better, unit: "pp" };
+  }
+  if (previous === 0) {
+    if (current === 0) return { pct: 0, direction: "flat", better: true, unit: "%" };
+    return { pct: null, direction: current > 0 ? "up" : "down", better: lowerIsBetter ? current < 0 : current > 0, unit: "%" };
+  }
+  const pct = ((current - previous) / Math.abs(previous)) * 100;
+  const direction = pct > 0.5 ? "up" : pct < -0.5 ? "down" : "flat";
+  const better = direction === "flat" ? true : lowerIsBetter ? direction === "down" : direction === "up";
+  return { pct: Math.abs(pct), direction, better, unit: "%" };
+}
+
+function Kpi({ label, value, hint, tone = "neutral", delta }: {
+  label: string; value: string; hint?: string; tone?: "ok" | "warn" | "neutral"; delta?: DeltaInfo;
 }) {
   const toneClass =
     tone === "warn" ? "border-destructive/40 bg-destructive/5"
     : tone === "ok" ? "border-emerald-500/30 bg-emerald-500/5"
     : "border-border/60";
+  const DeltaIcon = delta?.direction === "up" ? TrendingUp
+    : delta?.direction === "down" ? TrendingDown : Minus;
+  const deltaColor = !delta ? "" : delta.better
+    ? "text-emerald-600 dark:text-emerald-400"
+    : "text-destructive";
   return (
     <div className={`rounded-lg border p-3 ${toneClass}`}>
       <div className="text-[10px] uppercase tracking-wide text-muted-foreground">{label}</div>
-      <div className="text-2xl font-semibold mt-1">{value}</div>
+      <div className="flex items-baseline gap-2 mt-1">
+        <div className="text-2xl font-semibold">{value}</div>
+        {delta && (
+          <span
+            className={`inline-flex items-center gap-0.5 text-[11px] font-medium ${deltaColor}`}
+            title="Variação vs. mês anterior"
+            aria-label={`Variação vs mês anterior: ${delta.direction === "flat" ? "estável" : delta.direction === "up" ? "aumento" : "queda"}`}
+          >
+            <DeltaIcon className="w-3 h-3" aria-hidden />
+            {delta.pct == null ? "novo" : delta.direction === "flat" ? "estável" : `${delta.pct.toFixed(delta.unit === "pp" ? 0 : 1)}${delta.unit}`}
+          </span>
+        )}
+      </div>
       {hint && <div className="text-[11px] text-muted-foreground mt-0.5">{hint}</div>}
     </div>
   );
