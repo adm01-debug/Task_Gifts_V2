@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -8,7 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ArrowLeft, FileBarChart2, RefreshCw, Download, ExternalLink, TrendingUp, TrendingDown, Minus } from "lucide-react";
 import { MessageSquareText, Save, Pencil, X } from "lucide-react";
-import { AlertTriangle, Settings2, RotateCcw } from "lucide-react";
+import { AlertTriangle, Settings2, RotateCcw, FilePlus2 } from "lucide-react";
 import { LineChart, Line, ResponsiveContainer, Tooltip as ReTooltip, YAxis } from "recharts";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
@@ -48,6 +48,7 @@ const csvEscape = (s: string) => `"${s.replace(/"/g, '""').replace(/\r?\n/g, " "
 
 export default function ExecutiveMonthlyReport() {
   const qc = useQueryClient();
+  const navigate = useNavigate();
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [editingCommentary, setEditingCommentary] = useState(false);
   const [commentaryDraft, setCommentaryDraft] = useState("");
@@ -223,6 +224,56 @@ export default function ExecutiveMonthlyReport() {
     checkHigherPct("Ações concluídas", actionCompletion, prevActionCompletion);
     return out;
   }, [previous, selected, resolutionRate, prevResolutionRate, actionCompletion, prevActionCompletion, relPct, ppAbs]);
+
+  // ── Postmortem draft from anomalies ────────────────────────────────
+  // Turns the alert list into an actionable investigation artifact,
+  // pre-filling title/summary/action items so the executive → postmortem
+  // handoff is one click instead of a manual copy-paste.
+  const createPostmortem = useMutation({
+    mutationFn: async () => {
+      if (!selected || !previous || anomalies.length === 0) {
+        throw new Error("Nada para investigar neste período.");
+      }
+      const { data: userData } = await supabase.auth.getUser();
+      const uid = userData.user?.id ?? null;
+      const period = fmtPeriod(selected.period_year, selected.period_month);
+      const prevPeriod = fmtPeriod(previous.period_year, previous.period_month);
+      const bullets = anomalies.map((a) => `- **${a.label}:** ${a.detail}`).join("\n");
+      const summary =
+        `Regressão mensal detectada em ${anomalies.length} KPI(s) vs. ${prevPeriod} ` +
+        `(limiares: ≥${relPct}% em métricas contáveis, ≥${ppAbs}pp em percentuais).\n\n${bullets}`;
+      const actionItems = anomalies
+        .map((a) => `- [ ] Investigar causa raiz de "${a.label}" (${a.detail})`)
+        .join("\n");
+      const { data, error } = await supabase
+        .from("postmortems")
+        .insert({
+          title: `Regressão mensal — ${period}`,
+          status: "draft",
+          alert_type: "executive_monthly_regression",
+          summary,
+          action_items: actionItems,
+          created_by: uid,
+          metadata: {
+            source: "executive_monthly_report",
+            report_id: selected.id,
+            period,
+            previous_period: prevPeriod,
+            thresholds: { rel_pct: relPct, pp_abs: ppAbs },
+            anomalies,
+          },
+        })
+        .select("id")
+        .single();
+      if (error) throw error;
+      return data.id as string;
+    },
+    onSuccess: (id) => {
+      toast.success("Postmortem criado a partir dos alertas");
+      navigate(`/admin/postmortems?highlight=${id}`);
+    },
+    onError: (e: unknown) => toast.error(e instanceof Error ? e.message : "Falha ao criar postmortem"),
+  });
 
   return (
     <div className="container mx-auto p-6 max-w-7xl space-y-6">
@@ -408,12 +459,22 @@ export default function ExecutiveMonthlyReport() {
 
           {anomalies.length > 0 && (
             <Card className="border-destructive/50 bg-destructive/5" role="alert" aria-live="polite">
-              <CardHeader className="pb-2">
+              <CardHeader className="pb-2 flex flex-row items-center justify-between gap-2">
                 <CardTitle className="text-sm flex items-center gap-2 text-destructive">
                   <AlertTriangle className="w-4 h-4" aria-hidden />
                   🚨 Alertas do período
                   <Badge variant="destructive" className="ml-1">{anomalies.length}</Badge>
                 </CardTitle>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  className="h-8 gap-1 border-destructive/40 hover:bg-destructive/10"
+                  onClick={() => createPostmortem.mutate()}
+                  disabled={createPostmortem.isPending}
+                >
+                  <FilePlus2 className="w-3.5 h-3.5" aria-hidden />
+                  {createPostmortem.isPending ? "Criando…" : "Criar postmortem"}
+                </Button>
               </CardHeader>
               <CardContent className="pt-0">
                 <p className="text-xs text-muted-foreground mb-2">
