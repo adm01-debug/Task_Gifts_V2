@@ -1,14 +1,26 @@
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { AlertTriangle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { ArrowLeft, Activity, Clock, Timer, Download, TrendingDown } from "lucide-react";
+import { ArrowLeft, Activity, Clock, Timer, Download, TrendingDown, Settings2, Save, Trash2, Plus } from "lucide-react";
 import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid, Legend } from "recharts";
+import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { toast } from "sonner";
+
+type SlaTarget = {
+  id: string;
+  alert_type: string;
+  mtta_target_seconds: number | null;
+  mttr_target_seconds: number | null;
+  notes: string | null;
+};
 
 type Row = {
   week_start: string;
@@ -37,6 +49,7 @@ function fmtDuration(sec: number | null | undefined) {
 export default function IncidentMetrics() {
   const [days, setDays] = useState("30");
   const [typeFilter, setTypeFilter] = useState("all");
+  const [slaOpen, setSlaOpen] = useState(false);
 
   const { data = [], isLoading, refetch } = useQuery({
     queryKey: ["incident-metrics", days],
@@ -140,8 +153,13 @@ export default function IncidentMetrics() {
           <Button variant="outline" size="sm" onClick={exportCSV} disabled={filtered.length === 0}>
             <Download className="w-3.5 h-3.5 mr-1" /> CSV
           </Button>
+          <Button variant="outline" size="sm" onClick={() => setSlaOpen(true)}>
+            <Settings2 className="w-3.5 h-3.5 mr-1" /> Metas SLA
+          </Button>
         </div>
       </div>
+
+      <SlaTargetsDrawer open={slaOpen} onOpenChange={setSlaOpen} knownTypes={types} onSaved={() => refetch()} />
 
       <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
         <Card><CardContent className="p-4">
@@ -250,5 +268,204 @@ export default function IncidentMetrics() {
         </CardContent>
       </Card>
     </div>
+  );
+}
+
+function SlaTargetsDrawer({
+  open,
+  onOpenChange,
+  knownTypes,
+  onSaved,
+}: {
+  open: boolean;
+  onOpenChange: (v: boolean) => void;
+  knownTypes: string[];
+  onSaved: () => void;
+}) {
+  const qc = useQueryClient();
+  const { data: targets = [], isLoading } = useQuery({
+    queryKey: ["sla-targets"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("sla_targets")
+        .select("id, alert_type, mtta_target_seconds, mttr_target_seconds, notes")
+        .order("alert_type");
+      if (error) throw error;
+      return (data ?? []) as SlaTarget[];
+    },
+    enabled: open,
+  });
+
+  const [drafts, setDrafts] = useState<Record<string, Partial<SlaTarget>>>({});
+  const [newType, setNewType] = useState("");
+  const [newMtta, setNewMtta] = useState("");
+  const [newMttr, setNewMttr] = useState("");
+  const [newNotes, setNewNotes] = useState("");
+
+  const setDraft = (id: string, patch: Partial<SlaTarget>) =>
+    setDrafts((prev) => ({ ...prev, [id]: { ...prev[id], ...patch } }));
+
+  const saveMutation = useMutation({
+    mutationFn: async (t: SlaTarget) => {
+      const d = drafts[t.id] ?? {};
+      const { error } = await supabase
+        .from("sla_targets")
+        .update({
+          mtta_target_seconds: d.mtta_target_seconds ?? t.mtta_target_seconds,
+          mttr_target_seconds: d.mttr_target_seconds ?? t.mttr_target_seconds,
+          notes: d.notes ?? t.notes,
+        })
+        .eq("id", t.id);
+      if (error) throw error;
+    },
+    onSuccess: (_d, t) => {
+      toast.success(`Meta atualizada: ${t.alert_type}`);
+      setDrafts((prev) => { const n = { ...prev }; delete n[t.id]; return n; });
+      qc.invalidateQueries({ queryKey: ["sla-targets"] });
+      onSaved();
+    },
+    onError: (e: unknown) => toast.error(e instanceof Error ? e.message : "Falha ao salvar"),
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: async (id: string) => {
+      const { error } = await supabase.from("sla_targets").delete().eq("id", id);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      toast.success("Meta removida");
+      qc.invalidateQueries({ queryKey: ["sla-targets"] });
+      onSaved();
+    },
+    onError: (e: unknown) => toast.error(e instanceof Error ? e.message : "Falha ao remover"),
+  });
+
+  const createMutation = useMutation({
+    mutationFn: async () => {
+      const type = newType.trim();
+      if (!type) throw new Error("Informe o alert_type");
+      const mtta = Number(newMtta);
+      const mttr = Number(newMttr);
+      if (!Number.isFinite(mtta) || mtta <= 0) throw new Error("MTTA inválido (segundos)");
+      if (!Number.isFinite(mttr) || mttr <= 0) throw new Error("MTTR inválido (segundos)");
+      const { error } = await supabase.from("sla_targets").insert({
+        alert_type: type,
+        mtta_target_seconds: Math.round(mtta),
+        mttr_target_seconds: Math.round(mttr),
+        notes: newNotes.trim() || null,
+      });
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      toast.success("Meta criada");
+      setNewType(""); setNewMtta(""); setNewMttr(""); setNewNotes("");
+      qc.invalidateQueries({ queryKey: ["sla-targets"] });
+      onSaved();
+    },
+    onError: (e: unknown) => toast.error(e instanceof Error ? e.message : "Falha ao criar"),
+  });
+
+  const existingTypes = new Set(targets.map((t) => t.alert_type));
+  const suggestions = knownTypes.filter((t) => !existingTypes.has(t));
+
+  return (
+    <Sheet open={open} onOpenChange={onOpenChange}>
+      <SheetContent className="w-full sm:max-w-2xl overflow-y-auto">
+        <SheetHeader>
+          <SheetTitle className="flex items-center gap-2"><Settings2 className="w-5 h-5" /> Metas SLA por tipo de alerta</SheetTitle>
+          <SheetDescription>
+            Valores em segundos. MTTA = tempo até acknowledge · MTTR = tempo até resolução.
+          </SheetDescription>
+        </SheetHeader>
+
+        <div className="mt-6 space-y-6">
+          <Card>
+            <CardHeader className="pb-2"><CardTitle className="text-sm flex items-center gap-2"><Plus className="w-4 h-4" /> Nova meta</CardTitle></CardHeader>
+            <CardContent className="space-y-3">
+              <div className="grid grid-cols-3 gap-2">
+                <div className="col-span-3">
+                  <Label className="text-xs">alert_type</Label>
+                  <Input value={newType} onChange={(e) => setNewType(e.target.value)} placeholder="ex.: burn_rate_fast" list="sla-suggestions" />
+                  <datalist id="sla-suggestions">
+                    {suggestions.map((s) => <option key={s} value={s} />)}
+                  </datalist>
+                </div>
+                <div>
+                  <Label className="text-xs">MTTA (s)</Label>
+                  <Input inputMode="numeric" value={newMtta} onChange={(e) => setNewMtta(e.target.value)} placeholder="300" />
+                </div>
+                <div>
+                  <Label className="text-xs">MTTR (s)</Label>
+                  <Input inputMode="numeric" value={newMttr} onChange={(e) => setNewMttr(e.target.value)} placeholder="1800" />
+                </div>
+                <div className="col-span-1 flex items-end">
+                  <Button size="sm" className="w-full" onClick={() => createMutation.mutate()} disabled={createMutation.isPending}>
+                    <Plus className="w-3.5 h-3.5 mr-1" /> Criar
+                  </Button>
+                </div>
+              </div>
+              <div>
+                <Label className="text-xs">Notas</Label>
+                <Input value={newNotes} onChange={(e) => setNewNotes(e.target.value)} placeholder="Descrição / referência do runbook" />
+              </div>
+            </CardContent>
+          </Card>
+
+          <div className="space-y-3">
+            {isLoading ? (
+              <div className="text-sm text-muted-foreground text-center py-6">Carregando…</div>
+            ) : targets.length === 0 ? (
+              <div className="text-sm text-muted-foreground text-center py-6">Nenhuma meta cadastrada.</div>
+            ) : targets.map((t) => {
+              const d = drafts[t.id] ?? {};
+              const dirty = Object.keys(d).length > 0;
+              return (
+                <Card key={t.id} className={dirty ? "border-primary/50" : undefined}>
+                  <CardContent className="p-4 space-y-3">
+                    <div className="flex items-center justify-between gap-2">
+                      <Badge variant="outline" className="font-mono text-[11px]">{t.alert_type}</Badge>
+                      <div className="flex items-center gap-1">
+                        <Button size="sm" variant="outline" disabled={!dirty || saveMutation.isPending} onClick={() => saveMutation.mutate(t)}>
+                          <Save className="w-3.5 h-3.5 mr-1" /> Salvar
+                        </Button>
+                        <Button size="sm" variant="ghost" className="text-destructive hover:text-destructive"
+                          onClick={() => { if (confirm(`Remover meta para ${t.alert_type}?`)) deleteMutation.mutate(t.id); }}>
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </Button>
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-2 gap-2">
+                      <div>
+                        <Label className="text-xs">MTTA (s)</Label>
+                        <Input
+                          inputMode="numeric"
+                          value={String(d.mtta_target_seconds ?? t.mtta_target_seconds ?? "")}
+                          onChange={(e) => setDraft(t.id, { mtta_target_seconds: e.target.value === "" ? null : Number(e.target.value) })}
+                        />
+                      </div>
+                      <div>
+                        <Label className="text-xs">MTTR (s)</Label>
+                        <Input
+                          inputMode="numeric"
+                          value={String(d.mttr_target_seconds ?? t.mttr_target_seconds ?? "")}
+                          onChange={(e) => setDraft(t.id, { mttr_target_seconds: e.target.value === "" ? null : Number(e.target.value) })}
+                        />
+                      </div>
+                    </div>
+                    <div>
+                      <Label className="text-xs">Notas</Label>
+                      <Input
+                        value={d.notes ?? t.notes ?? ""}
+                        onChange={(e) => setDraft(t.id, { notes: e.target.value })}
+                      />
+                    </div>
+                  </CardContent>
+                </Card>
+              );
+            })}
+          </div>
+        </div>
+      </SheetContent>
+    </Sheet>
   );
 }
