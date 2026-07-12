@@ -19,7 +19,7 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
-import { ArrowLeft, CheckCircle2, ChevronDown, Clock, Download, RefreshCw, Rocket, Webhook, XCircle } from "lucide-react";
+import { ArrowLeft, CheckCircle2, ChevronDown, Clock, Download, KeyRound, RefreshCw, Rocket, Webhook, XCircle } from "lucide-react";
 
 interface DeliveryLog {
   id: string;
@@ -42,6 +42,13 @@ interface Subscription {
   is_active: boolean | null;
   last_status: number | null;
   last_triggered_at: string | null;
+  secret_next_expires_at: string | null;
+}
+
+interface RotationHistoryEntry {
+  id: string;
+  created_at: string;
+  promoted: Array<{ id: string; name: string | null; url: string | null }>;
 }
 
 export default function WebhookSubscriptionDetail() {
@@ -60,13 +67,58 @@ export default function WebhookSubscriptionDetail() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("webhook_subscriptions")
-        .select("id, name, url, events, is_active, last_status, last_triggered_at")
+        .select("id, name, url, events, is_active, last_status, last_triggered_at, secret_next_expires_at")
         .eq("id", id!)
         .maybeSingle();
       if (error) throw error;
       return (data as unknown as Subscription) || null;
     },
   });
+
+  const { data: rotationHistory } = useQuery<RotationHistoryEntry[]>({
+    queryKey: ["webhook-rotation-history", id],
+    enabled: !!id,
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("security_alerts")
+        .select("id, created_at, metadata")
+        .eq("alert_type", "webhook_secret_auto_promoted")
+        .order("created_at", { ascending: false })
+        .limit(50);
+      if (error) throw error;
+      const rows = (data ?? []) as Array<{ id: string; created_at: string; metadata: { promoted?: RotationHistoryEntry["promoted"] } | null }>;
+      return rows
+        .map((r) => ({
+          id: r.id,
+          created_at: r.created_at,
+          promoted: (r.metadata?.promoted ?? []) as RotationHistoryEntry["promoted"],
+        }))
+        .filter((r) => r.promoted.some((p) => p.id === id));
+    },
+  });
+
+  const rotationCountdown = useMemo(() => {
+    if (!sub?.secret_next_expires_at) return null;
+    const ms = new Date(sub.secret_next_expires_at).getTime() - Date.now();
+    if (ms <= 0) return { expired: true, label: "expirando a qualquer momento" };
+    const totalMin = Math.floor(ms / 60_000);
+    const days = Math.floor(totalMin / (60 * 24));
+    const hours = Math.floor((totalMin % (60 * 24)) / 60);
+    const mins = totalMin % 60;
+    const parts: string[] = [];
+    if (days > 0) parts.push(`${days}d`);
+    if (hours > 0) parts.push(`${hours}h`);
+    parts.push(`${mins}min`);
+    return { expired: false, label: parts.join(" ") };
+  }, [sub?.secret_next_expires_at]);
+
+  // Tick a cada 30s para atualizar o contador
+  const [, setTick] = useState(0);
+  useEffect(() => {
+    if (!sub?.secret_next_expires_at) return;
+    const t = setInterval(() => setTick((n) => n + 1), 30_000);
+    return () => clearInterval(t);
+  }, [sub?.secret_next_expires_at]);
 
   const { data: logs, isLoading, error, refetch, isFetching } = useQuery<DeliveryLog[]>({
     queryKey: ["webhook-delivery-logs", id],
@@ -233,6 +285,15 @@ export default function WebhookSubscriptionDetail() {
           <p className="text-sm text-muted-foreground truncate">{sub?.url || "—"}</p>
           <div className="flex flex-wrap gap-2 mt-2">
             {sub?.is_active === false && <Badge variant="destructive">Inativa</Badge>}
+            {rotationCountdown && (
+              <Badge
+                variant={rotationCountdown.expired ? "destructive" : "outline"}
+                className="flex items-center gap-1 border-amber-500/40 text-amber-600 dark:text-amber-400"
+              >
+                <KeyRound className="w-3 h-3" />
+                Rotação pendente · {rotationCountdown.label}
+              </Badge>
+            )}
             {sub?.last_status != null && (
               <Badge variant="outline">Último status: {sub.last_status}</Badge>
             )}
@@ -244,6 +305,49 @@ export default function WebhookSubscriptionDetail() {
           </div>
         </div>
       </header>
+
+      {(rotationCountdown || (rotationHistory && rotationHistory.length > 0)) && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-base flex items-center gap-2">
+              <KeyRound className="w-4 h-4 text-primary" />
+              Rotação de secret HMAC
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            {rotationCountdown ? (
+              <div className="rounded-lg border border-amber-500/30 bg-amber-500/5 p-3">
+                <p className="text-sm font-medium">Janela de graça ativa</p>
+                <p className="text-xs text-muted-foreground mt-1">
+                  Encerra em <span className="font-semibold text-foreground">{rotationCountdown.label}</span>
+                  {" "}({new Date(sub!.secret_next_expires_at!).toLocaleString("pt-BR")}). Após esse prazo o novo secret é promovido automaticamente pelo job diário.
+                </p>
+              </div>
+            ) : (
+              <p className="text-sm text-muted-foreground">Nenhuma rotação em andamento.</p>
+            )}
+
+            {rotationHistory && rotationHistory.length > 0 && (
+              <div>
+                <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide mb-2">
+                  Histórico de promoções automáticas
+                </p>
+                <ol className="space-y-1.5 text-sm">
+                  {rotationHistory.slice(0, 10).map((h) => (
+                    <li key={h.id} className="flex items-center gap-2 text-xs">
+                      <CheckCircle2 className="w-3.5 h-3.5 text-primary shrink-0" />
+                      <span className="tabular-nums text-muted-foreground">
+                        {new Date(h.created_at).toLocaleString("pt-BR")}
+                      </span>
+                      <span className="text-muted-foreground">— secret promovido automaticamente</span>
+                    </li>
+                  ))}
+                </ol>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      )}
 
       <Card>
         <CardHeader className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
