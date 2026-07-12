@@ -1,6 +1,7 @@
 // Monitor de saúde de webhooks — dispara alertas Sentry quando taxa de sucesso
 // por assinatura cai abaixo do limiar (default 90%) na última hora.
 // Executado via pg_cron (a cada 15 min) ou invocação manual admin.
+import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from "npm:@supabase/supabase-js@2";
 import { corsHeaders } from "npm:@supabase/supabase-js@2/cors";
 import { withSentry, captureMessage, captureException, recordMetric } from "../_shared/sentry.ts";
@@ -18,7 +19,7 @@ interface StatRow {
   success_rate_pct: number | null;
 }
 
-export default withSentry("webhook-health-monitor", async (req, ctx) => {
+serve(withSentry("webhook-health-monitor", async (req, { requestId }) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
 
   const supabase = createClient(
@@ -28,7 +29,7 @@ export default withSentry("webhook-health-monitor", async (req, ctx) => {
 
   const { data, error } = await supabase.rpc("get_webhook_delivery_stats_1h");
   if (error) {
-    captureException(error, { fn: "webhook-health-monitor", requestId: ctx.requestId });
+    captureException(error, { fn: "webhook-health-monitor", requestId });
     return new Response(JSON.stringify({ error: error.message }), {
       status: 500,
       headers: { ...corsHeaders, "Content-Type": "application/json" },
@@ -53,14 +54,14 @@ export default withSentry("webhook-health-monitor", async (req, ctx) => {
           failed_deliveries: r.failed_deliveries,
           success_rate_pct: r.success_rate_pct,
           threshold_pct: THRESHOLD_PCT,
-          requestId: ctx.requestId,
+          requestId,
         },
       );
     }
   }
 
-  recordMetric("webhook_health.subscriptions_checked", rows.length, { fn: "webhook-health-monitor" });
-  recordMetric("webhook_health.subscriptions_degraded", degraded.length, { fn: "webhook-health-monitor" });
+  recordMetric("webhook-health-monitor", "subscriptions_checked", rows.length, { requestId });
+  recordMetric("webhook-health-monitor", "subscriptions_degraded", degraded.length, { requestId });
 
   return new Response(
     JSON.stringify({
@@ -75,8 +76,8 @@ export default withSentry("webhook-health-monitor", async (req, ctx) => {
         total: d.total_deliveries,
         failed: d.failed_deliveries,
       })),
-      requestId: ctx.requestId,
+      requestId,
     }),
     { headers: { ...corsHeaders, "Content-Type": "application/json" }, status: 200 },
   );
-});
+}));
