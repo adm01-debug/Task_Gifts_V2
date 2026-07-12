@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Activity, AlertTriangle, CheckCircle2, Webhook } from "lucide-react";
-import { useSEO } from "@/hooks/useSEO";
+import { useEffect } from "react";
 
 interface WebhookStat {
   subscription_id: string;
@@ -25,10 +25,9 @@ interface WebhookStat {
 }
 
 export default function WebhooksAdmin() {
-  useSEO({
-    title: "Observabilidade de Webhooks — Últimas 24h",
-    description: "Painel administrativo com métricas de entrega, latência P50/P95/P99 e taxa de sucesso por assinatura de webhook.",
-  });
+  useEffect(() => {
+    document.title = "Observabilidade de Webhooks — Últimas 24h";
+  }, []);
 
   const { data, isLoading, error } = useQuery<WebhookStat[]>({
     queryKey: ["webhook-delivery-stats-24h"],
