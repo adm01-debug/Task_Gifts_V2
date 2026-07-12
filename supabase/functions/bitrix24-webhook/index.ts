@@ -8,6 +8,7 @@ import {
   RATE_LIMITS 
 } from "../_shared/rate-limiter.ts";
 import { Bitrix24WebhookSchema, validatePayload, createValidationErrorResponse } from "../_shared/validation.ts";
+import { withSentry, addBreadcrumb, captureException } from "../_shared/sentry.ts";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -66,7 +67,7 @@ async function verifyHMAC(payload: string, signature: string, secret: string) {
   );
 }
 
-serve(async (req) => {
+serve(withSentry("bitrix24-webhook", async (req, { requestId }) => {
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
   }
@@ -76,7 +77,7 @@ serve(async (req) => {
   const rateLimitResult = checkRateLimit(identifier, RATE_LIMITS.webhook);
   
   if (!rateLimitResult.allowed) {
-    console.log(`Rate limit exceeded for ${identifier}`);
+    addBreadcrumb("bitrix24-webhook:rate-limited", { identifier, requestId }, "warning");
     return createRateLimitResponse(rateLimitResult.retryAfter || 60, corsHeaders);
   }
 
@@ -216,14 +217,14 @@ serve(async (req) => {
     );
 
   } catch (error) {
-    console.error('Bitrix24 webhook error:', error);
+    captureException(error, { fn: "bitrix24-webhook", requestId });
     const errorMessage = error instanceof Error ? error.message : 'Erro desconhecido';
     return new Response(
       JSON.stringify({ error: errorMessage }),
       { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
   }
-});
+}));
 
 // Process CRM events (leads, deals, contacts)
 async function processCrmEvent(supabase: SupabaseClient, entityType: string, eventType: string, data: BitrixEventData) {
