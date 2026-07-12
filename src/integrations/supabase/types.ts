@@ -2221,6 +2221,9 @@ export type Database = {
           action_items_overdue: number
           action_items_total: number
           breakdown_by_type: Json
+          commentary: string | null
+          commentary_updated_at: string | null
+          commentary_updated_by: string | null
           created_at: string
           generated_at: string
           id: string
@@ -2242,6 +2245,9 @@ export type Database = {
           action_items_overdue?: number
           action_items_total?: number
           breakdown_by_type?: Json
+          commentary?: string | null
+          commentary_updated_at?: string | null
+          commentary_updated_by?: string | null
           created_at?: string
           generated_at?: string
           id?: string
@@ -2263,6 +2269,9 @@ export type Database = {
           action_items_overdue?: number
           action_items_total?: number
           breakdown_by_type?: Json
+          commentary?: string | null
+          commentary_updated_at?: string | null
+          commentary_updated_by?: string | null
           created_at?: string
           generated_at?: string
           id?: string
