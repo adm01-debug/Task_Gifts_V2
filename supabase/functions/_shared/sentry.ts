@@ -1,21 +1,42 @@
-import * as Sentry from "npm:@sentry/deno@8";
+// Dynamic import keeps Sentry optional and avoids type-check pulling the module.
+// deno-lint-ignore no-explicit-any
+let SentryMod: any = null;
+let initPromise: Promise<void> | null = null;
+
+async function getSentry(): Promise<any> {
+  const dsn = Deno.env.get("SENTRY_DSN");
+  if (!dsn) return null;
+  if (SentryMod) return SentryMod;
+  if (!initPromise) {
+    initPromise = (async () => {
+      try {
+        // @ts-ignore - runtime dynamic import; type-check skipped
+        const mod = await import("https://deno.land/x/sentry/index.ts");
+        mod.init({
+          dsn,
+          tracesSampleRate: 1.0,
+          environment: Deno.env.get("SENTRY_ENV") ?? "production",
+        });
+        SentryMod = mod;
+      } catch (e) {
+        console.error("[sentry] init failed", e);
+      }
+    })();
+  }
+  await initPromise;
+  return SentryMod;
+}
 
 export const initSentry = () => {
-  const dsn = Deno.env.get("SENTRY_DSN");
-  if (dsn) {
-    Sentry.init({
-      dsn,
-      tracesSampleRate: 1.0,
-      environment: Deno.env.get("SENTRY_ENV") ?? "production",
-    });
-  }
+  // Fire and forget; getSentry() is idempotent
+  void getSentry();
 };
 
 export const captureException = (error: unknown, context?: Record<string, unknown>) => {
   console.error(error);
-  if (Deno.env.get("SENTRY_DSN")) {
-    Sentry.captureException(error as Error, { extra: context });
-  }
+  void getSentry().then((s) => {
+    if (s) s.captureException(error as Error, { extra: context });
+  });
 };
 
 export const addBreadcrumb = (
@@ -24,9 +45,9 @@ export const addBreadcrumb = (
   level: "info" | "warning" | "error" = "info",
   category = "edge",
 ) => {
-  if (Deno.env.get("SENTRY_DSN")) {
-    Sentry.addBreadcrumb({ message, data, level, category, timestamp: Date.now() / 1000 });
-  }
+  void getSentry().then((s) => {
+    if (s) s.addBreadcrumb({ message, data, level, category, timestamp: Date.now() / 1000 });
+  });
 };
 
 /**
