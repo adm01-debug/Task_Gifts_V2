@@ -124,13 +124,14 @@ export default function ExecutiveMonthlyReport() {
     if (reports.length === 0) return;
     const header = [
       "Periodo","Incidentes","Resolvidos","Criticos","High","MTTA_min","MTTR_min","MTTR_p95_min",
-      "SLA_breaches","Postmortems","Publicados","Acoes_total","Acoes_concluidas","Acoes_atrasadas",
+      "SLA_breaches","Postmortems","Publicados","Acoes_total","Acoes_concluidas","Acoes_atrasadas","Comentario",
     ];
     const rows = reports.map((r) => [
       fmtPeriod(r.period_year, r.period_month), r.incidents_total, r.incidents_resolved,
       r.incidents_critical, r.incidents_high, r.mtta_minutes_avg ?? "", r.mttr_minutes_avg ?? "",
       r.mttr_minutes_p95 ?? "", r.sla_breaches, r.postmortems_created, r.postmortems_published,
       r.action_items_total, r.action_items_done, r.action_items_overdue,
+      csvEscape(r.commentary ?? ""),
     ]);
     const csv = [header, ...rows].map((r) => r.join(",")).join("\n");
     const blob = new Blob([csv], { type: "text/csv" });
