@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -8,9 +8,12 @@ import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ArrowLeft, FileBarChart2, RefreshCw, Download, ExternalLink, TrendingUp, TrendingDown, Minus } from "lucide-react";
 import { MessageSquareText, Save, Pencil, X } from "lucide-react";
-import { AlertTriangle } from "lucide-react";
+import { AlertTriangle, Settings2, RotateCcw } from "lucide-react";
 import { LineChart, Line, ResponsiveContainer, Tooltip as ReTooltip, YAxis } from "recharts";
 import { Textarea } from "@/components/ui/textarea";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { toast } from "sonner";
 
 type Report = {
@@ -48,6 +51,28 @@ export default function ExecutiveMonthlyReport() {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [editingCommentary, setEditingCommentary] = useState(false);
   const [commentaryDraft, setCommentaryDraft] = useState("");
+
+  // ── Anomaly thresholds (persisted per browser) ─────────────────────
+  const DEFAULT_REL_PCT = 30;   // 30% MoM em métricas contáveis/duração
+  const DEFAULT_PP = 15;        // 15pp em métricas percentuais
+  const STORAGE_KEY = "exec-report:anomaly-thresholds:v1";
+  const [relPct, setRelPct] = useState<number>(DEFAULT_REL_PCT);
+  const [ppAbs, setPpAbs] = useState<number>(DEFAULT_PP);
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return;
+      const parsed = JSON.parse(raw) as { relPct?: number; ppAbs?: number };
+      if (typeof parsed.relPct === "number" && parsed.relPct > 0 && parsed.relPct <= 500) setRelPct(parsed.relPct);
+      if (typeof parsed.ppAbs === "number" && parsed.ppAbs > 0 && parsed.ppAbs <= 100) setPpAbs(parsed.ppAbs);
+    } catch { /* ignore corrupted preference */ }
+  }, []);
+  const persistThresholds = (rel: number, pp: number) => {
+    setRelPct(rel);
+    setPpAbs(pp);
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify({ relPct: rel, ppAbs: pp })); } catch { /* noop */ }
+  };
+  const resetThresholds = () => persistThresholds(DEFAULT_REL_PCT, DEFAULT_PP);
 
   const { data: reports = [], isLoading } = useQuery({
     queryKey: ["executive_monthly_reports"],
@@ -166,8 +191,9 @@ export default function ExecutiveMonthlyReport() {
   const anomalies = useMemo<Anomaly[]>(() => {
     if (!previous || !selected) return [];
     const out: Anomaly[] = [];
-    const REL = 0.30;   // 30% pior
-    const PP = 15;      // 15 pontos percentuais pior
+    // Thresholds are user-adjustable and persisted in localStorage.
+    const REL = Math.max(0, relPct) / 100;
+    const PP = Math.max(0, ppAbs);
 
     const checkLower = (label: string, curr: number | null, prev: number | null, fmt: (n: number) => string) => {
       if (curr == null || prev == null) return;
@@ -196,7 +222,7 @@ export default function ExecutiveMonthlyReport() {
     checkHigherPct("Resolvidos", resolutionRate, prevResolutionRate);
     checkHigherPct("Ações concluídas", actionCompletion, prevActionCompletion);
     return out;
-  }, [previous, selected, resolutionRate, prevResolutionRate, actionCompletion, prevActionCompletion]);
+  }, [previous, selected, resolutionRate, prevResolutionRate, actionCompletion, prevActionCompletion, relPct, ppAbs]);
 
   return (
     <div className="container mx-auto p-6 max-w-7xl space-y-6">
@@ -293,8 +319,90 @@ export default function ExecutiveMonthlyReport() {
           </div>
 
           {previous && (
-            <div className="text-xs text-muted-foreground -mt-2">
-              Comparativo vs. {fmtPeriod(previous.period_year, previous.period_month)}
+            <div className="text-xs text-muted-foreground -mt-2 flex items-center justify-between gap-2 flex-wrap">
+              <span>Comparativo vs. {fmtPeriod(previous.period_year, previous.period_month)}</span>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="h-7 px-2 text-xs gap-1"
+                    aria-label="Ajustar limiares de anomalia"
+                  >
+                    <Settings2 className="w-3.5 h-3.5" aria-hidden />
+                    Limiares de anomalia
+                    <Badge variant="secondary" className="ml-1 font-mono text-[10px]">
+                      {relPct}% · {ppAbs}pp
+                    </Badge>
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent align="end" className="w-80 space-y-4">
+                  <div className="space-y-1">
+                    <h4 className="text-sm font-semibold">Sensibilidade dos alertas MoM</h4>
+                    <p className="text-xs text-muted-foreground">
+                      Métricas são sinalizadas quando pioram além destes limites vs. o mês anterior.
+                      Preferência salva neste navegador.
+                    </p>
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="rel-pct" className="text-xs">
+                      Métricas contáveis/duração (Incidentes, MTTR, MTTA, SLA, Ações atrasadas)
+                    </Label>
+                    <div className="flex items-center gap-2">
+                      <Input
+                        id="rel-pct"
+                        type="number"
+                        min={1}
+                        max={500}
+                        step={5}
+                        value={relPct}
+                        onChange={(e) => {
+                          const v = Number(e.target.value);
+                          if (Number.isFinite(v) && v > 0 && v <= 500) persistThresholds(v, ppAbs);
+                        }}
+                        className="h-8"
+                      />
+                      <span className="text-xs text-muted-foreground">% pior</span>
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="pp-abs" className="text-xs">
+                      Métricas percentuais (% Resolvidos, % Ações concluídas)
+                    </Label>
+                    <div className="flex items-center gap-2">
+                      <Input
+                        id="pp-abs"
+                        type="number"
+                        min={1}
+                        max={100}
+                        step={1}
+                        value={ppAbs}
+                        onChange={(e) => {
+                          const v = Number(e.target.value);
+                          if (Number.isFinite(v) && v > 0 && v <= 100) persistThresholds(relPct, v);
+                        }}
+                        className="h-8"
+                      />
+                      <span className="text-xs text-muted-foreground">pp de queda</span>
+                    </div>
+                  </div>
+                  <div className="flex items-center justify-between pt-1 border-t">
+                    <span className="text-[11px] text-muted-foreground">
+                      Padrão: {DEFAULT_REL_PCT}% · {DEFAULT_PP}pp
+                    </span>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="h-7 px-2 text-xs gap-1"
+                      onClick={resetThresholds}
+                      disabled={relPct === DEFAULT_REL_PCT && ppAbs === DEFAULT_PP}
+                    >
+                      <RotateCcw className="w-3 h-3" aria-hidden />
+                      Restaurar
+                    </Button>
+                  </div>
+                </PopoverContent>
+              </Popover>
             </div>
           )}
 
@@ -310,7 +418,7 @@ export default function ExecutiveMonthlyReport() {
               <CardContent className="pt-0">
                 <p className="text-xs text-muted-foreground mb-2">
                   KPIs com regressão significativa vs. {fmtPeriod(previous!.period_year, previous!.period_month)}
-                  {" "}(≥30% em métricas contáveis, ≥15pp em percentuais).
+                  {" "}(≥{relPct}% em métricas contáveis, ≥{ppAbs}pp em percentuais).
                 </p>
                 <ul className="space-y-1.5">
                   {anomalies.map((a) => (
