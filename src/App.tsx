@@ -73,6 +73,7 @@ const BurnRate = lazy(() => import("./pages/BurnRate"));
 const Runbook = lazy(() => import("./pages/Runbook"));
 const IncidentMetrics = lazy(() => import("./pages/IncidentMetrics"));
 const Postmortems = lazy(() => import("./pages/Postmortems"));
+const ExecutiveMonthlyReport = lazy(() => import("./pages/ExecutiveMonthlyReport"));
 
 function PageLoader() {
   return (
@@ -225,6 +226,7 @@ const AnimatedRoutes = () => {
         <Route path="/admin/runbook/:type" element={<ProtectedRoute requiredRole="admin"><PageTransition><Runbook /></PageTransition></ProtectedRoute>} />
         <Route path="/admin/incident-metrics" element={<ProtectedRoute requiredRole="admin"><PageTransition><IncidentMetrics /></PageTransition></ProtectedRoute>} />
         <Route path="/admin/postmortems" element={<ProtectedRoute requiredRole="admin"><PageTransition><Postmortems /></PageTransition></ProtectedRoute>} />
+        <Route path="/admin/executive-report" element={<ProtectedRoute requiredRole="admin"><PageTransition><ExecutiveMonthlyReport /></PageTransition></ProtectedRoute>} />
         <Route path="/admin/webhooks/new" element={<ProtectedRoute requiredRole="admin"><PageTransition><WebhookSubscriptionNew /></PageTransition></ProtectedRoute>} />
         <Route path="/admin/webhooks/:id" element={<ProtectedRoute requiredRole="admin"><PageTransition><WebhookSubscriptionDetail /></PageTransition></ProtectedRoute>} />
         <Route path="/loja/admin" element={<ProtectedRoute requiredRole="admin"><PageTransition><ShopAdmin /></PageTransition></ProtectedRoute>} />
