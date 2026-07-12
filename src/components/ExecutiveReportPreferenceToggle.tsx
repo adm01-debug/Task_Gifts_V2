@@ -37,7 +37,7 @@ export function ExecutiveReportPreferenceToggle() {
         setInApp(prefs.in_app ?? true);
         setEmail(prefs.email ?? true);
       } catch (err: unknown) {
-        logger.error("Falha ao carregar preferências do relatório executivo", err);
+        logger.error("Falha ao carregar preferências do relatório executivo", String(err));
       } finally {
         setLoading(false);
       }
@@ -69,7 +69,7 @@ export function ExecutiveReportPreferenceToggle() {
       if (error) throw error;
       toast.success("Preferência atualizada");
     } catch (err: unknown) {
-      logger.error("Falha ao salvar preferência do relatório executivo", err);
+      logger.error("Falha ao salvar preferência do relatório executivo", String(err));
       toast.error("Não foi possível salvar a preferência");
       // revert on failure
       setInApp((v) => (v === nextInApp ? !nextInApp : v));
