@@ -6938,6 +6938,18 @@ export type Database = {
           verified_at: string
         }[]
       }
+      get_alert_mttr_by_type_7d: {
+        Args: never
+        Returns: {
+          alert_type: string
+          avg_mttr_minutes: number
+          max_mttr_minutes: number
+          median_mttr_minutes: number
+          resolved_count: number
+          total_count: number
+          unresolved_count: number
+        }[]
+      }
       get_department_metrics: { Args: never; Returns: Json }
       get_executive_metrics: { Args: never; Returns: Json }
       get_leaderboard_api: {
