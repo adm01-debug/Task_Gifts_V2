@@ -9,6 +9,7 @@ import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "sonner";
+import { KeyRound, RotateCw, ShieldCheck, X, Copy } from "lucide-react";
 
 const COMMON_EVENTS = [
   "task.completed",
@@ -20,6 +21,12 @@ const COMMON_EVENTS = [
   "kudos.given",
   "test.ping",
 ];
+
+function generateSecret(bytes = 32): string {
+  const arr = new Uint8Array(bytes);
+  crypto.getRandomValues(arr);
+  return Array.from(arr, (b) => b.toString(16).padStart(2, "0")).join("");
+}
 
 interface EditWebhookDialogProps {
   subscriptionId: string | null;
@@ -35,6 +42,10 @@ export function EditWebhookDialog({ subscriptionId, open, onOpenChange }: EditWe
   const [events, setEvents] = useState<string[]>([]);
   const [customEvent, setCustomEvent] = useState("");
   const [isActive, setIsActive] = useState(true);
+  const [rotationBusy, setRotationBusy] = useState(false);
+  const [pendingRotation, setPendingRotation] = useState<{ expires_at: string | null } | null>(null);
+  const [newSecretVisible, setNewSecretVisible] = useState<string | null>(null);
+  const [graceHours, setGraceHours] = useState(24);
 
   useEffect(() => {
     if (!open || !subscriptionId) return;
@@ -43,7 +54,7 @@ export function EditWebhookDialog({ subscriptionId, open, onOpenChange }: EditWe
     (async () => {
       const { data, error } = await supabase
         .from("webhook_subscriptions")
-        .select("name, events, is_active")
+        .select("name, events, is_active, secret_next, secret_next_expires_at")
         .eq("id", subscriptionId)
         .maybeSingle();
       if (cancelled) return;
@@ -54,6 +65,12 @@ export function EditWebhookDialog({ subscriptionId, open, onOpenChange }: EditWe
         setName(data.name ?? "");
         setEvents((data.events as string[]) ?? []);
         setIsActive(!!data.is_active);
+        setPendingRotation(
+          (data as { secret_next?: string | null; secret_next_expires_at?: string | null }).secret_next
+            ? { expires_at: (data as { secret_next_expires_at?: string | null }).secret_next_expires_at ?? null }
+            : null,
+        );
+        setNewSecretVisible(null);
       }
       setLoading(false);
     })();
@@ -61,6 +78,66 @@ export function EditWebhookDialog({ subscriptionId, open, onOpenChange }: EditWe
       cancelled = true;
     };
   }, [open, subscriptionId, onOpenChange]);
+
+  const startRotation = async () => {
+    if (!subscriptionId) return;
+    setRotationBusy(true);
+    const secret = generateSecret();
+    try {
+      const { data, error } = await supabase.rpc("rotate_webhook_secret" as never, {
+        p_subscription_id: subscriptionId,
+        p_new_secret: secret,
+        p_grace_hours: graceHours,
+      } as never);
+      if (error) throw error;
+      const meta = data as { expires_at?: string } | null;
+      setPendingRotation({ expires_at: meta?.expires_at ?? null });
+      setNewSecretVisible(secret);
+      await navigator.clipboard.writeText(secret).catch(() => {});
+      toast.success("Novo secret gerado e copiado — atualize seu endpoint antes de promover.");
+    } catch (e) {
+      toast.error(`Falha ao rotacionar: ${(e as Error).message}`);
+    } finally {
+      setRotationBusy(false);
+    }
+  };
+
+  const promoteRotation = async () => {
+    if (!subscriptionId) return;
+    if (!confirm("Promover novo secret? A assinatura antiga deixará de ser aceita.")) return;
+    setRotationBusy(true);
+    try {
+      const { error } = await supabase.rpc("promote_webhook_secret" as never, {
+        p_subscription_id: subscriptionId,
+      } as never);
+      if (error) throw error;
+      setPendingRotation(null);
+      setNewSecretVisible(null);
+      toast.success("Rotação promovida — novo secret agora é o primário.");
+    } catch (e) {
+      toast.error(`Falha ao promover: ${(e as Error).message}`);
+    } finally {
+      setRotationBusy(false);
+    }
+  };
+
+  const cancelRotation = async () => {
+    if (!subscriptionId) return;
+    setRotationBusy(true);
+    try {
+      const { error } = await supabase.rpc("cancel_webhook_secret_rotation" as never, {
+        p_subscription_id: subscriptionId,
+      } as never);
+      if (error) throw error;
+      setPendingRotation(null);
+      setNewSecretVisible(null);
+      toast.success("Rotação cancelada.");
+    } catch (e) {
+      toast.error(`Falha ao cancelar: ${(e as Error).message}`);
+    } finally {
+      setRotationBusy(false);
+    }
+  };
 
   const toggleEvent = (e: string) =>
     setEvents((prev) => (prev.includes(e) ? prev.filter((x) => x !== e) : [...prev, e]));
@@ -166,6 +243,70 @@ export function EditWebhookDialog({ subscriptionId, open, onOpenChange }: EditWe
                 <p className="text-xs text-muted-foreground">Desative para pausar entregas.</p>
               </div>
               <Switch id="edit-active" checked={isActive} onCheckedChange={setIsActive} />
+            </div>
+
+            <div className="rounded-lg border p-3 space-y-3">
+              <div className="flex items-center gap-2">
+                <KeyRound className="w-4 h-4 text-primary" />
+                <Label className="font-medium">Rotação de secret HMAC</Label>
+              </div>
+              {pendingRotation ? (
+                <>
+                  <div className="text-xs text-muted-foreground">
+                    Rotação em andamento — ambos os secrets são aceitos até{" "}
+                    <span className="font-medium text-foreground">
+                      {pendingRotation.expires_at ? new Date(pendingRotation.expires_at).toLocaleString("pt-BR") : "—"}
+                    </span>
+                    . O dispatcher envia <code>X-Webhook-Signature</code> (antigo) e <code>X-Webhook-Signature-Next</code> (novo).
+                  </div>
+                  {newSecretVisible && (
+                    <div className="flex items-center gap-2 rounded-md bg-muted p-2">
+                      <Input readOnly value={newSecretVisible} className="font-mono text-xs h-8" />
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => {
+                          navigator.clipboard.writeText(newSecretVisible);
+                          toast.success("Copiado");
+                        }}
+                      >
+                        <Copy className="w-3.5 h-3.5" />
+                      </Button>
+                    </div>
+                  )}
+                  <div className="flex gap-2">
+                    <Button size="sm" onClick={promoteRotation} disabled={rotationBusy}>
+                      <ShieldCheck className="w-4 h-4 mr-1.5" />Promover agora
+                    </Button>
+                    <Button size="sm" variant="ghost" onClick={cancelRotation} disabled={rotationBusy}>
+                      <X className="w-4 h-4 mr-1.5" />Cancelar
+                    </Button>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <p className="text-xs text-muted-foreground">
+                    Gera um novo secret e ativa período de dupla assinatura. Copie o valor exibido, atualize o endpoint e clique em Promover.
+                  </p>
+                  <div className="flex items-end gap-2">
+                    <div className="w-32">
+                      <Label htmlFor="grace" className="text-xs">Graça (horas)</Label>
+                      <Input
+                        id="grace"
+                        type="number"
+                        min={1}
+                        max={168}
+                        value={graceHours}
+                        onChange={(e) => setGraceHours(Number(e.target.value))}
+                      />
+                    </div>
+                    <Button size="sm" onClick={startRotation} disabled={rotationBusy}>
+                      <RotateCw className={`w-4 h-4 mr-1.5 ${rotationBusy ? "animate-spin" : ""}`} />
+                      Rotacionar secret
+                    </Button>
+                  </div>
+                </>
+              )}
             </div>
           </div>
         )}
