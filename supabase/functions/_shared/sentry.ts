@@ -39,6 +39,17 @@ export const captureException = (error: unknown, context?: Record<string, unknow
   });
 };
 
+export const captureMessage = (
+  message: string,
+  level: "info" | "warning" | "error" = "info",
+  context?: Record<string, unknown>,
+) => {
+  console.info(`[sentry:${level}] ${message}`, context ? JSON.stringify(context) : "");
+  void getSentry().then((s) => {
+    if (s) s.captureMessage(message, { level, extra: context });
+  });
+};
+
 export const addBreadcrumb = (
   message: string,
   data?: Record<string, unknown>,
