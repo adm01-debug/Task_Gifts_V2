@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Activity, AlertTriangle, CheckCircle2, Webhook, ShieldAlert, Zap, Plus, Pencil, RotateCw, Filter, KeyRound } from "lucide-react";
+import { Activity, AlertTriangle, CheckCircle2, Webhook, ShieldAlert, Zap, Plus, Pencil, RotateCw, Filter, KeyRound, LineChart as LineChartIcon } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -181,9 +181,14 @@ export default function WebhooksAdmin() {
             <p className="text-sm text-muted-foreground">Métricas de entrega das últimas 24 horas — atualiza a cada 60s.</p>
           </div>
         </div>
-        <Button asChild size="sm">
-          <Link to="/admin/webhooks/new"><Plus className="w-4 h-4 mr-1.5" />Nova assinatura</Link>
-        </Button>
+        <div className="flex items-center gap-2">
+          <Button asChild size="sm" variant="outline">
+            <Link to="/admin/webhooks/executive"><LineChartIcon className="w-4 h-4 mr-1.5" />Saúde executiva 7d</Link>
+          </Button>
+          <Button asChild size="sm">
+            <Link to="/admin/webhooks/new"><Plus className="w-4 h-4 mr-1.5" />Nova assinatura</Link>
+          </Button>
+        </div>
       </header>
 
       {degraded.length > 0 && (
