@@ -9,11 +9,15 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Textarea } from "@/components/ui/textarea";
 import { 
   AlertTriangle, CheckCircle, XCircle, Clock, Shield, 
-  Bell, Loader2, ChevronDown, ChevronUp
+  Bell, Loader2, ChevronDown, ChevronUp, Filter, ExternalLink, Activity
 } from "lucide-react";
 import { toast } from "sonner";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
+import { Link } from "react-router-dom";
+import {
+  Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
+} from "@/components/ui/select";
 import {
   Collapsible,
   CollapsibleContent,
@@ -49,6 +53,9 @@ export function SecurityAlertsPanel() {
   const queryClient = useQueryClient();
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [resolutionNotes, setResolutionNotes] = useState<Record<string, string>>({});
+  const [typeFilter, setTypeFilter] = useState<string>("all");
+  const [severityFilter, setSeverityFilter] = useState<string>("all");
+  const [statusFilter, setStatusFilter] = useState<string>("unresolved");
 
   const { data: alerts, isLoading } = useQuery({
     queryKey: ["security-alerts"],
@@ -136,6 +143,18 @@ export function SecurityAlertsPanel() {
   const unresolvedAlerts = alerts?.filter((a) => !a.is_resolved) || [];
   const resolvedAlerts = alerts?.filter((a) => a.is_resolved) || [];
 
+  const uniqueTypes = Array.from(new Set((alerts || []).map((a) => a.alert_type)));
+
+  const filteredAlerts = (alerts || []).filter((a) => {
+    if (typeFilter !== "all" && a.alert_type !== typeFilter) return false;
+    if (severityFilter !== "all" && a.severity !== severityFilter) return false;
+    if (statusFilter === "unresolved" && a.is_resolved) return false;
+    if (statusFilter === "resolved" && !a.is_resolved) return false;
+    return true;
+  });
+
+  const isWebhookSlaAlert = (type: string) => type === "webhook_sla_below_threshold";
+
   return (
     <Card>
       <CardHeader>
@@ -148,20 +167,66 @@ export function SecurityAlertsPanel() {
         </CardTitle>
       </CardHeader>
       <CardContent>
+        <div className="flex flex-wrap items-center gap-2 mb-4 p-3 rounded-lg border bg-muted/30">
+          <Filter className="w-4 h-4 text-muted-foreground" />
+          <Select value={statusFilter} onValueChange={setStatusFilter}>
+            <SelectTrigger className="w-[160px] h-9"><SelectValue /></SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">Todos os status</SelectItem>
+              <SelectItem value="unresolved">Pendentes</SelectItem>
+              <SelectItem value="resolved">Resolvidos</SelectItem>
+            </SelectContent>
+          </Select>
+          <Select value={severityFilter} onValueChange={setSeverityFilter}>
+            <SelectTrigger className="w-[160px] h-9"><SelectValue /></SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">Todas severidades</SelectItem>
+              <SelectItem value="critical">Critical</SelectItem>
+              <SelectItem value="high">High</SelectItem>
+              <SelectItem value="medium">Medium</SelectItem>
+              <SelectItem value="low">Low</SelectItem>
+            </SelectContent>
+          </Select>
+          <Select value={typeFilter} onValueChange={setTypeFilter}>
+            <SelectTrigger className="w-[220px] h-9"><SelectValue /></SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">Todos os tipos</SelectItem>
+              {uniqueTypes.map((t) => (
+                <SelectItem key={t} value={t}>{t}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <Button
+            variant={typeFilter === "webhook_sla_below_threshold" ? "default" : "outline"}
+            size="sm"
+            onClick={() =>
+              setTypeFilter(
+                typeFilter === "webhook_sla_below_threshold" ? "all" : "webhook_sla_below_threshold"
+              )
+            }
+            className="ml-auto"
+          >
+            <Activity className="w-4 h-4 mr-2" />
+            SLA de Webhooks
+          </Button>
+          <span className="text-xs text-muted-foreground">
+            {filteredAlerts.length} de {alerts?.length || 0}
+          </span>
+        </div>
         {isLoading ? (
           <div className="space-y-2">
             {[...Array(5)].map((_, i) => (
               <Skeleton key={i} className="h-16 w-full" />
             ))}
           </div>
-        ) : alerts?.length === 0 ? (
+        ) : filteredAlerts.length === 0 ? (
           <div className="text-center py-8 text-muted-foreground">
             <CheckCircle className="w-12 h-12 mx-auto mb-2 text-green-500 opacity-50" />
-            <p>Nenhum alerta de segurança</p>
+            <p>Nenhum alerta corresponde aos filtros</p>
           </div>
         ) : (
           <div className="space-y-2">
-            {alerts?.map((alert) => (
+            {filteredAlerts.map((alert) => (
               <Collapsible
                 key={alert.id}
                 open={expandedId === alert.id}
@@ -234,6 +299,15 @@ export function SecurityAlertsPanel() {
                           {JSON.stringify(alert.metadata, null, 2)}
                         </pre>
                       </div>
+                    )}
+
+                    {isWebhookSlaAlert(alert.alert_type) && (
+                      <Button asChild variant="secondary" size="sm">
+                        <Link to="/admin/webhooks/executive">
+                          <ExternalLink className="w-4 h-4 mr-2" />
+                          Abrir dashboard executivo de webhooks
+                        </Link>
+                      </Button>
                     )}
 
                     {alert.is_resolved ? (
