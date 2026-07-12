@@ -64,11 +64,11 @@ export default function WebhookSubscriptionDetail() {
       const { data, error } = await (supabase.rpc as unknown as (
         fn: string,
         args: Record<string, unknown>,
-      ) => Promise<{ data: unknown; error: unknown }>)("get_webhook_delivery_logs", {
+      ) => Promise<{ data: unknown; error: { message: string } | null }>)("get_webhook_delivery_logs", {
         p_subscription_id: id,
         p_limit: 100,
       });
-      if (error) throw error;
+      if (error) throw new Error(error.message);
       return (data as DeliveryLog[]) || [];
     },
     refetchInterval: 30_000,
