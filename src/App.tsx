@@ -63,6 +63,7 @@ const PermissionsAdmin = lazy(() => import("./pages/PermissionsAdmin"));
 const AdminTelemetria = lazy(() => import("./pages/AdminTelemetria"));
 const WebhooksAdmin = lazy(() => import("./pages/WebhooksAdmin"));
 const WebhookSubscriptionDetail = lazy(() => import("./pages/WebhookSubscriptionDetail"));
+const WebhookSubscriptionNew = lazy(() => import("./pages/WebhookSubscriptionNew"));
 
 function PageLoader() {
   return (
