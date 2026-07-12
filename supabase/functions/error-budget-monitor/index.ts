@@ -114,7 +114,7 @@ serve(async (req) => {
             dedupe_key: dedupeKey,
             window_days: budget.window_days,
           },
-          resolved: false,
+          is_resolved: false,
         })
         .select("id")
         .single();
