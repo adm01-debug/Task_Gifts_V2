@@ -6961,6 +6961,21 @@ export type Database = {
           total: number
         }[]
       }
+      get_webhook_delivery_logs: {
+        Args: { p_limit?: number; p_subscription_id: string }
+        Returns: {
+          attempt_count: number
+          created_at: string
+          duration_ms: number
+          error_message: string
+          event_type: string
+          id: string
+          payload: Json
+          response_body: string
+          response_status: number
+          success: boolean
+        }[]
+      }
       get_webhook_delivery_stats_1h: {
         Args: never
         Returns: {
