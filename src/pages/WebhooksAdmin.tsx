@@ -4,16 +4,18 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Activity, AlertTriangle, CheckCircle2, Webhook, ShieldAlert, Zap, Plus, Pencil, RotateCw, Filter } from "lucide-react";
+import { Activity, AlertTriangle, CheckCircle2, Webhook, ShieldAlert, Zap, Plus, Pencil, RotateCw, Filter, KeyRound } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
+import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from "sonner";
 import { Link } from "react-router-dom";
 import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid, Legend, BarChart, Bar } from "recharts";
 import { EditWebhookDialog } from "@/components/webhooks/EditWebhookDialog";
+import { BulkRotateDialog } from "@/components/webhooks/BulkRotateDialog";
 
 interface WebhookStat {
   subscription_id: string;
@@ -59,6 +61,8 @@ export default function WebhooksAdmin() {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editOpen, setEditOpen] = useState(false);
   const [onlyRotating, setOnlyRotating] = useState(false);
+  const [selected, setSelected] = useState<Set<string>>(new Set());
+  const [bulkOpen, setBulkOpen] = useState(false);
   useEffect(() => {
     document.title = "Observabilidade de Webhooks — Últimas 24h";
   }, []);
@@ -268,6 +272,11 @@ export default function WebhooksAdmin() {
         <CardHeader className="flex flex-row items-center justify-between gap-3">
           <CardTitle>Detalhamento por Assinatura</CardTitle>
           <div className="flex items-center gap-2">
+            {selected.size > 0 && (
+              <Button size="sm" variant="outline" onClick={() => setBulkOpen(true)}>
+                <KeyRound className="w-4 h-4 mr-1.5" />Rotacionar {selected.size}
+              </Button>
+            )}
             <Filter className="w-4 h-4 text-muted-foreground" />
             <Label htmlFor="only-rotating" className="text-sm cursor-pointer">
               Somente com rotação pendente
@@ -292,6 +301,18 @@ export default function WebhooksAdmin() {
               <Table>
                 <TableHeader>
                   <TableRow>
+                    <TableHead className="w-8">
+                      <Checkbox
+                        checked={filteredData.length > 0 && filteredData.every((r) => selected.has(r.subscription_id))}
+                        onCheckedChange={(v) => {
+                          const next = new Set(selected);
+                          if (v) filteredData.forEach((r) => next.add(r.subscription_id));
+                          else filteredData.forEach((r) => next.delete(r.subscription_id));
+                          setSelected(next);
+                        }}
+                        aria-label="Selecionar todas"
+                      />
+                    </TableHead>
                     <TableHead>Assinatura</TableHead>
                     <TableHead>Rotação</TableHead>
                     <TableHead className="text-right">Total</TableHead>
@@ -323,6 +344,17 @@ export default function WebhooksAdmin() {
                     }
                     return (
                       <TableRow key={row.subscription_id} className="hover:bg-muted/40">
+                        <TableCell>
+                          <Checkbox
+                            checked={selected.has(row.subscription_id)}
+                            onCheckedChange={(v) => {
+                              const next = new Set(selected);
+                              if (v) next.add(row.subscription_id); else next.delete(row.subscription_id);
+                              setSelected(next);
+                            }}
+                            aria-label={`Selecionar ${row.subscription_name || row.subscription_id}`}
+                          />
+                        </TableCell>
                         <TableCell>
                           <Link to={`/admin/webhooks/${row.subscription_id}`} className="block hover:underline">
                             <div className="font-medium">{row.subscription_name || "—"}</div>
@@ -380,6 +412,11 @@ export default function WebhooksAdmin() {
         subscriptionId={editingId}
         open={editOpen}
         onOpenChange={(o) => { setEditOpen(o); if (!o) setEditingId(null); }}
+      />
+      <BulkRotateDialog
+        open={bulkOpen}
+        onOpenChange={(o) => { setBulkOpen(o); if (!o) setSelected(new Set()); }}
+        selected={filteredData.filter((r) => selected.has(r.subscription_id)).map((r) => ({ id: r.subscription_id, name: r.subscription_name }))}
       />
     </main>
   );
