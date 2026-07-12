@@ -284,6 +284,11 @@ export default function SecurityRunbook() {
                 <Activity className="w-4 h-4 mr-2" /> Webhooks Executivo
               </Link>
             </Button>
+            <Button asChild variant="outline">
+              <Link to="/admin/security-digests">
+                <Activity className="w-4 h-4 mr-2" /> Digests Semanais
+              </Link>
+            </Button>
           </div>
         </div>
 
