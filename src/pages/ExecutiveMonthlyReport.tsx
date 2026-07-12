@@ -459,12 +459,22 @@ export default function ExecutiveMonthlyReport() {
 
           {anomalies.length > 0 && (
             <Card className="border-destructive/50 bg-destructive/5" role="alert" aria-live="polite">
-              <CardHeader className="pb-2">
+              <CardHeader className="pb-2 flex flex-row items-center justify-between gap-2">
                 <CardTitle className="text-sm flex items-center gap-2 text-destructive">
                   <AlertTriangle className="w-4 h-4" aria-hidden />
                   🚨 Alertas do período
                   <Badge variant="destructive" className="ml-1">{anomalies.length}</Badge>
                 </CardTitle>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  className="h-8 gap-1 border-destructive/40 hover:bg-destructive/10"
+                  onClick={() => createPostmortem.mutate()}
+                  disabled={createPostmortem.isPending}
+                >
+                  <FilePlus2 className="w-3.5 h-3.5" aria-hidden />
+                  {createPostmortem.isPending ? "Criando…" : "Criar postmortem"}
+                </Button>
               </CardHeader>
               <CardContent className="pt-0">
                 <p className="text-xs text-muted-foreground mb-2">
