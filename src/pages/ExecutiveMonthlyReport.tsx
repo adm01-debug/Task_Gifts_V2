@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ArrowLeft, FileBarChart2, RefreshCw, Download, ExternalLink, TrendingUp, TrendingDown, Minus } from "lucide-react";
+import { LineChart, Line, ResponsiveContainer, Tooltip as ReTooltip, YAxis } from "recharts";
 import { toast } from "sonner";
 
 type Report = {
@@ -63,6 +64,14 @@ export default function ExecutiveMonthlyReport() {
     const idx = reports.findIndex((r) => r.id === selected.id);
     // reports are ordered DESC, so the "previous month" is at idx + 1
     return idx >= 0 ? reports[idx + 1] ?? null : null;
+  }, [reports, selected]);
+
+  // Trailing 6-month window (oldest → newest) ending on the selected report.
+  const trailing = useMemo(() => {
+    if (!selected) return [];
+    const idx = reports.findIndex((r) => r.id === selected.id);
+    if (idx < 0) return [];
+    return reports.slice(idx, idx + 6).slice().reverse();
   }, [reports, selected]);
 
   const regenerate = useMutation({
@@ -175,19 +184,25 @@ export default function ExecutiveMonthlyReport() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
             <Kpi label="Incidentes" value={selected.incidents_total.toString()}
                  hint={`${selected.incidents_critical} críticos · ${selected.incidents_high} high`}
-                 delta={buildDelta(selected.incidents_total, previous?.incidents_total, { lowerIsBetter: true })} />
+                 delta={buildDelta(selected.incidents_total, previous?.incidents_total, { lowerIsBetter: true })}
+                 spark={trailing.map((r) => ({ p: fmtPeriod(r.period_year, r.period_month), v: r.incidents_total }))}
+                 sparkLowerIsBetter />
             <Kpi label="Resolvidos" value={resolutionRate != null ? `${resolutionRate}%` : "—"}
                  hint={`${selected.incidents_resolved}/${selected.incidents_total}`}
                  tone={resolutionRate != null && resolutionRate < 80 ? "warn" : "ok"}
                  delta={buildDelta(resolutionRate, prevResolutionRate, { unit: "pp" })} />
             <Kpi label="MTTR médio" value={fmtMin(selected.mttr_minutes_avg)}
                  hint={`P95: ${fmtMin(selected.mttr_minutes_p95)}`}
-                 delta={buildDelta(selected.mttr_minutes_avg, previous?.mttr_minutes_avg, { lowerIsBetter: true })} />
+                 delta={buildDelta(selected.mttr_minutes_avg, previous?.mttr_minutes_avg, { lowerIsBetter: true })}
+                 spark={trailing.map((r) => ({ p: fmtPeriod(r.period_year, r.period_month), v: r.mttr_minutes_avg ?? 0 }))}
+                 sparkLowerIsBetter />
             <Kpi label="MTTA médio" value={fmtMin(selected.mtta_minutes_avg)}
                  delta={buildDelta(selected.mtta_minutes_avg, previous?.mtta_minutes_avg, { lowerIsBetter: true })} />
             <Kpi label="SLA breaches" value={selected.sla_breaches.toString()}
                  tone={selected.sla_breaches > 0 ? "warn" : "ok"}
-                 delta={buildDelta(selected.sla_breaches, previous?.sla_breaches, { lowerIsBetter: true })} />
+                 delta={buildDelta(selected.sla_breaches, previous?.sla_breaches, { lowerIsBetter: true })}
+                 spark={trailing.map((r) => ({ p: fmtPeriod(r.period_year, r.period_month), v: r.sla_breaches }))}
+                 sparkLowerIsBetter />
             <Kpi label="Postmortems" value={`${selected.postmortems_published}/${selected.postmortems_created}`}
                  hint="publicados/criados"
                  delta={buildDelta(selected.postmortems_published, previous?.postmortems_published)} />
@@ -197,7 +212,9 @@ export default function ExecutiveMonthlyReport() {
                  delta={buildDelta(actionCompletion, prevActionCompletion, { unit: "pp" })} />
             <Kpi label="Ações atrasadas" value={selected.action_items_overdue.toString()}
                  tone={selected.action_items_overdue > 0 ? "warn" : "ok"}
-                 delta={buildDelta(selected.action_items_overdue, previous?.action_items_overdue, { lowerIsBetter: true })} />
+                 delta={buildDelta(selected.action_items_overdue, previous?.action_items_overdue, { lowerIsBetter: true })}
+                 spark={trailing.map((r) => ({ p: fmtPeriod(r.period_year, r.period_month), v: r.action_items_overdue }))}
+                 sparkLowerIsBetter />
           </div>
 
           {previous && (
@@ -288,8 +305,9 @@ function buildDelta(
   return { pct: Math.abs(pct), direction, better, unit: "%" };
 }
 
-function Kpi({ label, value, hint, tone = "neutral", delta }: {
+function Kpi({ label, value, hint, tone = "neutral", delta, spark, sparkLowerIsBetter }: {
   label: string; value: string; hint?: string; tone?: "ok" | "warn" | "neutral"; delta?: DeltaInfo;
+  spark?: Array<{ p: string; v: number }>; sparkLowerIsBetter?: boolean;
 }) {
   const toneClass =
     tone === "warn" ? "border-destructive/40 bg-destructive/5"
@@ -300,6 +318,12 @@ function Kpi({ label, value, hint, tone = "neutral", delta }: {
   const deltaColor = !delta ? "" : delta.better
     ? "text-emerald-600 dark:text-emerald-400"
     : "text-destructive";
+  // Sparkline color mirrors the trend of the last vs first point in the window.
+  const sparkTrendUp = spark && spark.length >= 2 ? spark[spark.length - 1].v > spark[0].v : true;
+  const sparkGood = sparkLowerIsBetter ? !sparkTrendUp : sparkTrendUp;
+  const sparkStroke = spark && spark.length >= 2
+    ? sparkGood ? "hsl(var(--primary))" : "hsl(var(--destructive))"
+    : "hsl(var(--muted-foreground))";
   return (
     <div className={`rounded-lg border p-3 ${toneClass}`}>
       <div className="text-[10px] uppercase tracking-wide text-muted-foreground">{label}</div>
@@ -317,6 +341,22 @@ function Kpi({ label, value, hint, tone = "neutral", delta }: {
         )}
       </div>
       {hint && <div className="text-[11px] text-muted-foreground mt-0.5">{hint}</div>}
+      {spark && spark.length >= 2 && (
+        <div className="h-8 mt-2 -mx-1" aria-hidden>
+          <ResponsiveContainer width="100%" height="100%">
+            <LineChart data={spark} margin={{ top: 2, bottom: 2, left: 2, right: 2 }}>
+              <YAxis hide domain={["auto", "auto"]} />
+              <ReTooltip
+                cursor={false}
+                contentStyle={{ fontSize: 11, padding: "4px 8px", borderRadius: 6 }}
+                labelFormatter={(l) => String(l)}
+                formatter={(v: number) => [v, label]}
+              />
+              <Line type="monotone" dataKey="v" stroke={sparkStroke} strokeWidth={1.5} dot={false} isAnimationActive={false} />
+            </LineChart>
+          </ResponsiveContainer>
+        </div>
+      )}
     </div>
   );
 }
