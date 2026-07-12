@@ -2215,6 +2215,72 @@ export type Database = {
           },
         ]
       }
+      executive_monthly_reports: {
+        Row: {
+          action_items_done: number
+          action_items_overdue: number
+          action_items_total: number
+          breakdown_by_type: Json
+          created_at: string
+          generated_at: string
+          id: string
+          incidents_critical: number
+          incidents_high: number
+          incidents_resolved: number
+          incidents_total: number
+          mtta_minutes_avg: number | null
+          mttr_minutes_avg: number | null
+          mttr_minutes_p95: number | null
+          period_month: number
+          period_year: number
+          postmortems_created: number
+          postmortems_published: number
+          sla_breaches: number
+        }
+        Insert: {
+          action_items_done?: number
+          action_items_overdue?: number
+          action_items_total?: number
+          breakdown_by_type?: Json
+          created_at?: string
+          generated_at?: string
+          id?: string
+          incidents_critical?: number
+          incidents_high?: number
+          incidents_resolved?: number
+          incidents_total?: number
+          mtta_minutes_avg?: number | null
+          mttr_minutes_avg?: number | null
+          mttr_minutes_p95?: number | null
+          period_month: number
+          period_year: number
+          postmortems_created?: number
+          postmortems_published?: number
+          sla_breaches?: number
+        }
+        Update: {
+          action_items_done?: number
+          action_items_overdue?: number
+          action_items_total?: number
+          breakdown_by_type?: Json
+          created_at?: string
+          generated_at?: string
+          id?: string
+          incidents_critical?: number
+          incidents_high?: number
+          incidents_resolved?: number
+          incidents_total?: number
+          mtta_minutes_avg?: number | null
+          mttr_minutes_avg?: number | null
+          mttr_minutes_p95?: number | null
+          period_month?: number
+          period_year?: number
+          postmortems_created?: number
+          postmortems_published?: number
+          sla_breaches?: number
+        }
+        Relationships: []
+      }
       external_api_keys: {
         Row: {
           api_key: string
@@ -7149,6 +7215,10 @@ export type Database = {
       generate_engagement_snapshot: {
         Args: { p_department_id?: string; p_period_type?: string }
         Returns: string
+      }
+      generate_executive_monthly_report: {
+        Args: { p_month?: number; p_year?: number }
+        Returns: Json
       }
       get_2fa_status: {
         Args: { p_user_id: string }
