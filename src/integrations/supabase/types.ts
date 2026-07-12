@@ -7022,6 +7022,7 @@ export type Database = {
           total_deliveries: number
         }[]
       }
+      get_webhook_executive_metrics_7d: { Args: never; Returns: Json }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
