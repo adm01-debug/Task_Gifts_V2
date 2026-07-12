@@ -155,6 +155,18 @@ export function SecurityAlertsPanel() {
 
   const isWebhookSlaAlert = (type: string) => type === "webhook_sla_below_threshold";
 
+  const RUNBOOK_TYPES = new Set([
+    "webhook_sla_below_threshold",
+    "brute_force",
+    "rate_limit_exceeded",
+    "ip_blocked",
+    "suspicious_login",
+    "webhook_secret_auto_promoted",
+    "webhook_secret_bulk_rotated",
+  ]);
+  const runbookHref = (type: string) =>
+    `/admin/security-runbook#type-${RUNBOOK_TYPES.has(type) ? type : "generic"}`;
+
   return (
     <Card>
       <CardHeader>
@@ -314,6 +326,13 @@ export function SecurityAlertsPanel() {
                         </Link>
                       </Button>
                     )}
+
+                    <Button asChild variant="outline" size="sm">
+                      <Link to={runbookHref(alert.alert_type)}>
+                        <BookOpen className="w-4 h-4 mr-2" />
+                        Ver runbook deste alerta
+                      </Link>
+                    </Button>
 
                     {alert.is_resolved ? (
                       <div className="p-3 bg-green-500/10 rounded-lg text-sm">

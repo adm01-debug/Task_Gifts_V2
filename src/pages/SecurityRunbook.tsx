@@ -1,5 +1,5 @@
-import { useMemo, useState } from "react";
-import { Link } from "react-router-dom";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { Link, useLocation } from "react-router-dom";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -182,6 +182,21 @@ const SEVERITY_BADGE: Record<string, string> = {
 
 export default function SecurityRunbook() {
   const [query, setQuery] = useState("");
+  const location = useLocation();
+  const [highlighted, setHighlighted] = useState<string | null>(null);
+  const cardRefs = useRef<Record<string, HTMLDivElement | null>>({});
+
+  useEffect(() => {
+    const hash = location.hash.replace(/^#type-/, "");
+    if (!hash) return;
+    const el = cardRefs.current[hash];
+    if (el) {
+      el.scrollIntoView({ behavior: "smooth", block: "start" });
+      setHighlighted(hash);
+      const t = setTimeout(() => setHighlighted(null), 2500);
+      return () => clearTimeout(t);
+    }
+  }, [location.hash, query]);
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -232,8 +247,15 @@ export default function SecurityRunbook() {
         <div className="grid gap-4 md:grid-cols-2">
           {filtered.map((entry) => {
             const Icon = entry.icon;
+            const isHl = highlighted === entry.alertType;
             return (
-              <Card key={entry.alertType} className="border-l-4" style={{ borderLeftColor: `hsl(var(--primary))` }}>
+              <Card
+                key={entry.alertType}
+                id={`type-${entry.alertType}`}
+                ref={(el) => { cardRefs.current[entry.alertType] = el; }}
+                className={`border-l-4 transition-all duration-500 ${isHl ? "ring-2 ring-primary shadow-lg" : ""}`}
+                style={{ borderLeftColor: `hsl(var(--primary))` }}
+              >
                 <CardHeader className="pb-3">
                   <div className="flex items-start justify-between gap-2">
                     <div className="flex items-center gap-2">
