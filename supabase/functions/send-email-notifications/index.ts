@@ -1,8 +1,7 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { corsHeaders, verifyServiceRole } from "../_shared/security.ts";
-
-
+import { withSentry, addBreadcrumb, captureException } from "../_shared/sentry.ts";
 
 interface EmailPayload {
   to: string;
@@ -11,7 +10,7 @@ interface EmailPayload {
   type: 'digest' | 'reminder' | 'notification' | 'celebration';
 }
 
-serve(async (req) => {
+serve(withSentry("send-email-notifications", async (req, { requestId }) => {
   // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
@@ -20,8 +19,7 @@ serve(async (req) => {
   try {
     // Verify service role or internal secret for system triggers
     verifyServiceRole(req);
-    
-    console.log("Starting email notifications processing...");
+    addBreadcrumb("email:start", { requestId });
 
 
     const supabase = createClient(
@@ -199,10 +197,10 @@ serve(async (req) => {
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
   } catch (error) {
-    console.error("Error in email notifications:", error);
+    captureException(error, { fn: "send-email-notifications", requestId });
     return new Response(
       JSON.stringify({ error: error instanceof Error ? error.message : 'Unknown error' }),
       { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
   }
-});
+}));
