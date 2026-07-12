@@ -4,9 +4,11 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Activity, AlertTriangle, CheckCircle2, Webhook, ShieldAlert } from "lucide-react";
+import { Activity, AlertTriangle, CheckCircle2, Webhook, ShieldAlert, Zap } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
 import { Link } from "react-router-dom";
 import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid, Legend, BarChart, Bar } from "recharts";
 
@@ -50,6 +52,7 @@ const HEALTH_THRESHOLD = 90;
 const HEALTH_MIN_SAMPLE = 5;
 
 export default function WebhooksAdmin() {
+  const [pingingId, setPingingId] = useState<string | null>(null);
   useEffect(() => {
     document.title = "Observabilidade de Webhooks — Últimas 24h";
   }, []);
@@ -111,6 +114,30 @@ export default function WebhooksAdmin() {
     { total: 0, ok: 0, fail: 0 },
   );
   const globalSuccess = totals.total > 0 ? ((totals.ok / totals.total) * 100).toFixed(2) : "—";
+
+  const pingSubscription = async (id: string, name: string | null) => {
+    setPingingId(id);
+    const t = toast.loading(`Enviando ping para ${name || id.slice(0, 8)}…`);
+    try {
+      const { error } = await supabase.functions.invoke("webhook-dispatcher", {
+        body: {
+          subscription_id: id,
+          event_type: "test.ping",
+          payload: {
+            source: "webhooks-admin",
+            sent_at: new Date().toISOString(),
+            message: "Payload de teste enviado manualmente pelo admin",
+          },
+        },
+      });
+      if (error) throw error;
+      toast.success("Ping enviado — verifique a timeline em alguns segundos", { id: t });
+    } catch (e) {
+      toast.error(`Falha ao enviar ping: ${(e as Error).message}`, { id: t });
+    } finally {
+      setPingingId(null);
+    }
+  };
 
   return (
     <main className="container mx-auto px-4 py-8 space-y-6">
@@ -229,6 +256,7 @@ export default function WebhooksAdmin() {
                     <TableHead className="text-right">P95 (ms)</TableHead>
                     <TableHead className="text-right">P99 (ms)</TableHead>
                     <TableHead className="text-right">Tentativas</TableHead>
+                    <TableHead className="text-right">Ações</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -249,6 +277,19 @@ export default function WebhooksAdmin() {
                         <TableCell className="text-right tabular-nums">{row.p95_duration_ms ?? "—"}</TableCell>
                         <TableCell className="text-right tabular-nums">{row.p99_duration_ms ?? "—"}</TableCell>
                         <TableCell className="text-right tabular-nums">{Number(row.avg_attempts ?? 0).toFixed(2)}</TableCell>
+                        <TableCell className="text-right">
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="h-7 px-2"
+                            onClick={() => pingSubscription(row.subscription_id, row.subscription_name)}
+                            disabled={pingingId === row.subscription_id}
+                            title="Enviar payload test.ping para este endpoint"
+                          >
+                            <Zap className={`w-3.5 h-3.5 mr-1 ${pingingId === row.subscription_id ? "animate-pulse" : ""}`} />
+                            Testar
+                          </Button>
+                        </TableCell>
                       </TableRow>
                     );
                   })}
