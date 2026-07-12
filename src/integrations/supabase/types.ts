@@ -5554,6 +5554,36 @@ export type Database = {
         }
         Relationships: []
       }
+      sla_targets: {
+        Row: {
+          alert_type: string
+          created_at: string
+          id: string
+          mtta_target_seconds: number
+          mttr_target_seconds: number
+          notes: string | null
+          updated_at: string
+        }
+        Insert: {
+          alert_type: string
+          created_at?: string
+          id?: string
+          mtta_target_seconds: number
+          mttr_target_seconds: number
+          notes?: string | null
+          updated_at?: string
+        }
+        Update: {
+          alert_type?: string
+          created_at?: string
+          id?: string
+          mtta_target_seconds?: number
+          mttr_target_seconds?: number
+          notes?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       task_penalties: {
         Row: {
           applied_by: string | null
@@ -7036,8 +7066,12 @@ export type Database = {
           acknowledged: number
           alert_type: string
           incidents: number
+          mtta_breached: boolean
           mtta_seconds: number
+          mtta_target_seconds: number
+          mttr_breached: boolean
           mttr_seconds: number
+          mttr_target_seconds: number
           p95_mttr_seconds: number
           resolved: number
           week_start: string

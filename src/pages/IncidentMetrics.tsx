@@ -4,6 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { AlertTriangle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ArrowLeft, Activity, Clock, Timer, Download, TrendingDown } from "lucide-react";
@@ -18,6 +19,10 @@ type Row = {
   mtta_seconds: number | null;
   mttr_seconds: number | null;
   p95_mttr_seconds: number | null;
+  mtta_target_seconds: number | null;
+  mttr_target_seconds: number | null;
+  mtta_breached: boolean | null;
+  mttr_breached: boolean | null;
 };
 
 function fmtDuration(sec: number | null | undefined) {
@@ -51,10 +56,13 @@ export default function IncidentMetrics() {
 
   const totals = useMemo(() => {
     let inc = 0, ack = 0, res = 0, mttaSum = 0, mttaN = 0, mttrSum = 0, mttrN = 0;
+    let mttaBreaches = 0, mttrBreaches = 0;
     for (const r of filtered) {
       inc += r.incidents; ack += r.acknowledged; res += r.resolved;
       if (r.mtta_seconds != null) { mttaSum += r.mtta_seconds * r.acknowledged; mttaN += r.acknowledged; }
       if (r.mttr_seconds != null) { mttrSum += r.mttr_seconds * r.resolved; mttrN += r.resolved; }
+      if (r.mtta_breached) mttaBreaches += 1;
+      if (r.mttr_breached) mttrBreaches += 1;
     }
     return {
       incidents: inc,
@@ -62,6 +70,7 @@ export default function IncidentMetrics() {
       resRate: inc > 0 ? Math.round((res / inc) * 100) : 0,
       mtta: mttaN > 0 ? mttaSum / mttaN : null,
       mttr: mttrN > 0 ? mttrSum / mttrN : null,
+      breaches: mttaBreaches + mttrBreaches,
     };
   }, [filtered]);
 
@@ -151,10 +160,13 @@ export default function IncidentMetrics() {
           <div className="text-xs text-muted-foreground">Ack rate</div>
           <div className="text-2xl font-bold">{totals.ackRate}%</div>
         </CardContent></Card>
-        <Card><CardContent className="p-4">
-          <div className="text-xs text-muted-foreground flex items-center gap-1"><TrendingDown className="w-3 h-3" /> Resolved rate</div>
-          <div className="text-2xl font-bold">{totals.resRate}%</div>
-        </CardContent></Card>
+        <Card className={totals.breaches > 0 ? "border-destructive/40" : undefined}>
+          <CardContent className="p-4">
+            <div className="text-xs text-muted-foreground flex items-center gap-1"><AlertTriangle className="w-3 h-3" /> SLA breaches</div>
+            <div className={`text-2xl font-bold ${totals.breaches > 0 ? "text-destructive" : ""}`}>{totals.breaches}</div>
+            <div className="text-[10px] text-muted-foreground mt-0.5">Resolved rate: {totals.resRate}%</div>
+          </CardContent>
+        </Card>
       </div>
 
       <Card>
@@ -197,19 +209,39 @@ export default function IncidentMetrics() {
                   <th className="text-right py-2 px-2">MTTA</th>
                   <th className="text-right py-2 px-2">MTTR</th>
                   <th className="text-right py-2 px-2">P95 MTTR</th>
+                  <th className="text-right py-2 px-2">SLA</th>
                 </tr>
               </thead>
               <tbody>
                 {filtered.map((r, i) => (
-                  <tr key={i} className="border-b last:border-0 hover:bg-muted/40">
+                  <tr key={i} className={`border-b last:border-0 hover:bg-muted/40 ${r.mtta_breached || r.mttr_breached ? "bg-destructive/5" : ""}`}>
                     <td className="py-2 px-2">{new Date(r.week_start).toLocaleDateString("pt-BR")}</td>
                     <td className="py-2 px-2"><Badge variant="outline" className="font-mono text-[10px]">{r.alert_type}</Badge></td>
                     <td className="py-2 px-2 text-right font-semibold">{r.incidents}</td>
                     <td className="py-2 px-2 text-right">{r.acknowledged}</td>
                     <td className="py-2 px-2 text-right">{r.resolved}</td>
-                    <td className="py-2 px-2 text-right">{fmtDuration(r.mtta_seconds)}</td>
-                    <td className="py-2 px-2 text-right">{fmtDuration(r.mttr_seconds)}</td>
+                    <td className={`py-2 px-2 text-right ${r.mtta_breached ? "text-destructive font-semibold" : ""}`}>
+                      {fmtDuration(r.mtta_seconds)}
+                      {r.mtta_target_seconds != null && (
+                        <div className="text-[10px] text-muted-foreground">/ {fmtDuration(r.mtta_target_seconds)}</div>
+                      )}
+                    </td>
+                    <td className={`py-2 px-2 text-right ${r.mttr_breached ? "text-destructive font-semibold" : ""}`}>
+                      {fmtDuration(r.mttr_seconds)}
+                      {r.mttr_target_seconds != null && (
+                        <div className="text-[10px] text-muted-foreground">/ {fmtDuration(r.mttr_target_seconds)}</div>
+                      )}
+                    </td>
                     <td className="py-2 px-2 text-right text-muted-foreground">{fmtDuration(r.p95_mttr_seconds)}</td>
+                    <td className="py-2 px-2 text-right">
+                      {r.mtta_target_seconds == null && r.mttr_target_seconds == null ? (
+                        <span className="text-[10px] text-muted-foreground">sem SLA</span>
+                      ) : r.mtta_breached || r.mttr_breached ? (
+                        <Badge variant="outline" className="bg-destructive/15 text-destructive border-destructive/30">breach</Badge>
+                      ) : (
+                        <Badge variant="outline" className="bg-emerald-500/15 text-emerald-600 border-emerald-500/30">ok</Badge>
+                      )}
+                    </td>
                   </tr>
                 ))}
               </tbody>
