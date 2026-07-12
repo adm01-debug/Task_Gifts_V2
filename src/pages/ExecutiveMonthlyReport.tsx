@@ -39,6 +39,8 @@ type Report = {
 const MONTH_NAMES = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"];
 const fmtPeriod = (y: number, m: number) => `${MONTH_NAMES[m - 1]}/${y}`;
 const fmtMin = (n: number | null) => (n == null ? "—" : n < 60 ? `${n.toFixed(1)}min` : `${(n / 60).toFixed(1)}h`);
+// CSV-safe: wrap in quotes and escape embedded quotes/newlines per RFC 4180.
+const csvEscape = (s: string) => `"${s.replace(/"/g, '""').replace(/\r?\n/g, " ")}"`;
 
 export default function ExecutiveMonthlyReport() {
   const qc = useQueryClient();
