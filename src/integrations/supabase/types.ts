@@ -6679,6 +6679,8 @@ export type Database = {
           name: string
           retry_count: number
           secret: string
+          secret_next: string | null
+          secret_next_expires_at: string | null
           timeout_seconds: number
           updated_at: string
           url: string
@@ -6695,6 +6697,8 @@ export type Database = {
           name: string
           retry_count?: number
           secret: string
+          secret_next?: string | null
+          secret_next_expires_at?: string | null
           timeout_seconds?: number
           updated_at?: string
           url: string
@@ -6711,6 +6715,8 @@ export type Database = {
           name?: string
           retry_count?: number
           secret?: string
+          secret_next?: string | null
+          secret_next_expires_at?: string | null
           timeout_seconds?: number
           updated_at?: string
           url?: string
@@ -6886,6 +6892,10 @@ export type Database = {
         Returns: string
       }
       calculate_enps_score: { Args: { p_survey_id: string }; Returns: number }
+      cancel_webhook_secret_rotation: {
+        Args: { p_subscription_id: string }
+        Returns: Json
+      }
       check_login_lockout: { Args: { p_email: string }; Returns: Json }
       cleanup_expired_challenges: { Args: never; Returns: undefined }
       cleanup_expired_idempotency_keys: { Args: never; Returns: undefined }
@@ -7063,6 +7073,10 @@ export type Database = {
         Args: { p_external_task_id: string }
         Returns: Json
       }
+      promote_webhook_secret: {
+        Args: { p_subscription_id: string }
+        Returns: Json
+      }
       register_device: {
         Args: {
           p_browser?: string
@@ -7081,6 +7095,14 @@ export type Database = {
       }
       request_password_reset: { Args: { p_user_id: string }; Returns: string }
       reset_login_attempts: { Args: { p_email: string }; Returns: undefined }
+      rotate_webhook_secret: {
+        Args: {
+          p_grace_hours?: number
+          p_new_secret: string
+          p_subscription_id: string
+        }
+        Returns: Json
+      }
       update_certification_statuses: { Args: never; Returns: undefined }
       user_has_passkeys: { Args: { p_user_id: string }; Returns: boolean }
       validate_api_key: {

@@ -81,6 +81,14 @@ serve(withSentry("webhook-dispatcher", async (req, { requestId }) => {
       ...(subscription.headers || {})
     };
 
+    // Dupla assinatura durante rotação (grace period)
+    const nextSecret = subscription.secret_next as string | null;
+    const nextExpires = subscription.secret_next_expires_at as string | null;
+    if (nextSecret && nextExpires && new Date(nextExpires).getTime() > Date.now()) {
+      webhookHeaders['X-Webhook-Signature-Next'] = generateSignature(payloadString, nextSecret);
+      webhookHeaders['X-Webhook-Rotation-Expires'] = nextExpires;
+    }
+
     let success = false;
     let responseStatus: number | null = null;
     let responseBody: string | null = null;
