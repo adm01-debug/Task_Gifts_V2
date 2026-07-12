@@ -6992,6 +6992,9 @@ export type Database = {
       get_security_digest_history: {
         Args: { p_weeks?: number }
         Returns: {
+          ack_count: number
+          acknowledged_by_me: boolean
+          acknowledgments: Json
           avg_mttr_min: number
           created_at: string
           critical: number
