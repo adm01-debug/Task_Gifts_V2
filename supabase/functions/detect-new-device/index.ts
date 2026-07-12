@@ -1,7 +1,7 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { corsHeaders, verifyUser } from "../_shared/security.ts";
-
+import { withSentry, addBreadcrumb, captureException } from "../_shared/sentry.ts";
 
 interface DeviceRequest {
   userId: string;
@@ -12,7 +12,7 @@ interface DeviceRequest {
   deviceType?: string;
 }
 
-serve(async (req) => {
+serve(withSentry("detect-new-device", async (req, { requestId }) => {
   // Handle CORS preflight
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
@@ -27,6 +27,7 @@ serve(async (req) => {
     
     // Verify user JWT
     const authenticatedUser = await verifyUser(req);
+    addBreadcrumb("device:auth", { userId: authenticatedUser?.id, requestId });
     
     const body: DeviceRequest = await req.json();
     const { userId: bodyUserId, fingerprint, userAgent, browser, os, deviceType } = body;
@@ -197,7 +198,7 @@ serve(async (req) => {
     
   } catch (error: unknown) {
     const message = error instanceof Error ? error.message : "Unknown error";
-    console.error("Error in detect-new-device:", message);
+    captureException(error, { fn: "detect-new-device", requestId });
     return new Response(
       JSON.stringify({ error: message }),
       { 
@@ -206,4 +207,4 @@ serve(async (req) => {
       }
     );
   }
-});
+}));

@@ -3,10 +3,9 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { createHmac } from "https://deno.land/std@0.168.0/node/crypto.ts";
 import { corsHeaders, verifyServiceRole } from "../_shared/security.ts";
 import { WebhookDispatcherSchema, validatePayload, createValidationErrorResponse } from "../_shared/validation.ts";
+import { withSentry, addBreadcrumb, captureException } from "../_shared/sentry.ts";
 
-
-
-serve(async (req) => {
+serve(withSentry("webhook-dispatcher", async (req, { requestId }) => {
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
   }
@@ -27,6 +26,7 @@ serve(async (req) => {
     }
 
     const { subscription_id, event_type, payload } = validation.data;
+    addBreadcrumb("dispatcher:start", { subscription_id, event_type, requestId });
 
     if (!subscription_id || !event_type || !payload) {
       return new Response(JSON.stringify({ error: 'Missing required fields' }), {
@@ -165,7 +165,7 @@ serve(async (req) => {
 
   } catch (error: unknown) {
     const message = error instanceof Error ? error.message : 'Unknown error';
-    console.error('[Dispatcher] Error:', message);
+    captureException(error, { fn: "webhook-dispatcher", requestId });
     return new Response(JSON.stringify({ 
       error: 'Internal server error', 
       message 
@@ -174,7 +174,7 @@ serve(async (req) => {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' }
     });
   }
-});
+}));
 
 function generateSignature(payload: string, secret: string): string {
   try {
