@@ -6961,6 +6961,18 @@ export type Database = {
           total: number
         }[]
       }
+      get_webhook_delivery_stats_1h: {
+        Args: never
+        Returns: {
+          failed_deliveries: number
+          subscription_id: string
+          subscription_name: string
+          subscription_url: string
+          success_rate_pct: number
+          successful_deliveries: number
+          total_deliveries: number
+        }[]
+      }
       get_webhook_delivery_stats_24h: {
         Args: never
         Returns: {
