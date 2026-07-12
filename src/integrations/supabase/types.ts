@@ -6989,6 +6989,20 @@ export type Database = {
           total_answers: number
         }[]
       }
+      get_security_digest_history: {
+        Args: { p_weeks?: number }
+        Returns: {
+          avg_mttr_min: number
+          created_at: string
+          critical: number
+          high: number
+          pending: number
+          sla_pct: number
+          top: Json
+          total: number
+          week_key: string
+        }[]
+      }
       get_security_stats: { Args: { p_hours?: number }; Returns: Json }
       get_user_stats_api: { Args: { p_user_email: string }; Returns: Json }
       get_webhook_delivery_hourly_24h: {
