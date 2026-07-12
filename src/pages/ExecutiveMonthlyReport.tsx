@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ArrowLeft, FileBarChart2, RefreshCw, Download, ExternalLink, TrendingUp, TrendingDown, Minus } from "lucide-react";
 import { MessageSquareText, Save, Pencil, X } from "lucide-react";
+import { AlertTriangle } from "lucide-react";
 import { LineChart, Line, ResponsiveContainer, Tooltip as ReTooltip, YAxis } from "recharts";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
@@ -156,6 +157,47 @@ export default function ExecutiveMonthlyReport() {
   const prevActionCompletion = previous && previous.action_items_total > 0
     ? Math.round((previous.action_items_done / previous.action_items_total) * 100) : null;
 
+  // ── Anomaly detection ──────────────────────────────────────────────
+  // A KPI is flagged when its MoM change is significantly worse than last month.
+  // - Countable/duration metrics (lowerIsBetter): relative regression ≥ 30%.
+  // - Percentage metrics (unit "pp"): absolute drop ≥ 15pp in the "good" direction.
+  // - Edge case: previous = 0 and current > 0 on a lowerIsBetter metric is always flagged.
+  type Anomaly = { label: string; detail: string };
+  const anomalies = useMemo<Anomaly[]>(() => {
+    if (!previous || !selected) return [];
+    const out: Anomaly[] = [];
+    const REL = 0.30;   // 30% pior
+    const PP = 15;      // 15 pontos percentuais pior
+
+    const checkLower = (label: string, curr: number | null, prev: number | null, fmt: (n: number) => string) => {
+      if (curr == null || prev == null) return;
+      if (prev === 0) {
+        if (curr > 0) out.push({ label, detail: `subiu de 0 para ${fmt(curr)}` });
+        return;
+      }
+      const diff = (curr - prev) / prev;
+      if (diff >= REL) {
+        out.push({ label, detail: `${(diff * 100).toFixed(0)}% pior (${fmt(prev)} → ${fmt(curr)})` });
+      }
+    };
+    const checkHigherPct = (label: string, curr: number | null, prev: number | null) => {
+      if (curr == null || prev == null) return;
+      const drop = prev - curr; // queda em pp é ruim
+      if (drop >= PP) {
+        out.push({ label, detail: `caiu ${drop}pp (${prev}% → ${curr}%)` });
+      }
+    };
+
+    checkLower("Incidentes", selected.incidents_total, previous.incidents_total, (n) => n.toString());
+    checkLower("MTTR médio", selected.mttr_minutes_avg, previous.mttr_minutes_avg, fmtMin);
+    checkLower("MTTA médio", selected.mtta_minutes_avg, previous.mtta_minutes_avg, fmtMin);
+    checkLower("SLA breaches", selected.sla_breaches, previous.sla_breaches, (n) => n.toString());
+    checkLower("Ações atrasadas", selected.action_items_overdue, previous.action_items_overdue, (n) => n.toString());
+    checkHigherPct("Resolvidos", resolutionRate, prevResolutionRate);
+    checkHigherPct("Ações concluídas", actionCompletion, prevActionCompletion);
+    return out;
+  }, [previous, selected, resolutionRate, prevResolutionRate, actionCompletion, prevActionCompletion]);
+
   return (
     <div className="container mx-auto p-6 max-w-7xl space-y-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
@@ -254,6 +296,35 @@ export default function ExecutiveMonthlyReport() {
             <div className="text-xs text-muted-foreground -mt-2">
               Comparativo vs. {fmtPeriod(previous.period_year, previous.period_month)}
             </div>
+          )}
+
+          {anomalies.length > 0 && (
+            <Card className="border-destructive/50 bg-destructive/5" role="alert" aria-live="polite">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm flex items-center gap-2 text-destructive">
+                  <AlertTriangle className="w-4 h-4" aria-hidden />
+                  🚨 Alertas do período
+                  <Badge variant="destructive" className="ml-1">{anomalies.length}</Badge>
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="pt-0">
+                <p className="text-xs text-muted-foreground mb-2">
+                  KPIs com regressão significativa vs. {fmtPeriod(previous!.period_year, previous!.period_month)}
+                  {" "}(≥30% em métricas contáveis, ≥15pp em percentuais).
+                </p>
+                <ul className="space-y-1.5">
+                  {anomalies.map((a) => (
+                    <li key={a.label} className="text-sm flex items-start gap-2">
+                      <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-destructive shrink-0" aria-hidden />
+                      <span>
+                        <strong className="font-semibold">{a.label}:</strong>{" "}
+                        <span className="text-muted-foreground">{a.detail}</span>
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              </CardContent>
+            </Card>
           )}
 
           <Card className="border-primary/30 bg-primary/[0.02]">
