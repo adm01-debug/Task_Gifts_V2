@@ -1,5 +1,5 @@
-import { useMemo, useState } from "react";
-import { Link } from "react-router-dom";
+import { useEffect, useMemo, useState } from "react";
+import { Link, useSearchParams } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -50,6 +50,23 @@ export default function IncidentMetrics() {
   const [days, setDays] = useState("30");
   const [typeFilter, setTypeFilter] = useState("all");
   const [slaOpen, setSlaOpen] = useState(false);
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  useEffect(() => {
+    const t = searchParams.get("type");
+    if (t && t !== typeFilter) setTypeFilter(t);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchParams]);
+
+  useEffect(() => {
+    const current = searchParams.get("type") ?? "all";
+    if (typeFilter !== current) {
+      const next = new URLSearchParams(searchParams);
+      if (typeFilter === "all") next.delete("type"); else next.set("type", typeFilter);
+      setSearchParams(next, { replace: true });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [typeFilter]);
 
   const { data = [], isLoading, refetch } = useQuery({
     queryKey: ["incident-metrics", days],
