@@ -70,6 +70,7 @@ const SecurityDigests = lazy(() => import("./pages/SecurityDigests"));
 const ReliabilitySLO = lazy(() => import("./pages/ReliabilitySLO"));
 const ErrorBudget = lazy(() => import("./pages/ErrorBudget"));
 const BurnRate = lazy(() => import("./pages/BurnRate"));
+const Runbook = lazy(() => import("./pages/Runbook"));
 
 function PageLoader() {
   return (
