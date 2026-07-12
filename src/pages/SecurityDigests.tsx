@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, TrendingDown, TrendingUp, Minus, Download, ShieldAlert } from "lucide-react";
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, Legend } from "recharts";
-import { exportToCSV } from "@/lib/csvExport";
+import { toCSV, downloadCSV } from "@/lib/csvExport";
 
 interface DigestRow {
   week_key: string;
@@ -55,8 +55,7 @@ export default function SecurityDigests() {
 
   const handleExport = () => {
     if (!data || data.length === 0) return;
-    exportToCSV(
-      data.map((d) => ({
+    const rows = data.map((d) => ({
         semana: d.week_key,
         sla_pct: d.sla_pct ?? "",
         mttr_min: d.avg_mttr_min ?? "",
@@ -66,9 +65,8 @@ export default function SecurityDigests() {
         altos: d.high,
         top_ofensores: d.top.map((t) => `${t.type}:${t.count}`).join(" | "),
         gerado_em: d.created_at,
-      })),
-      `security-digests-${new Date().toISOString().split("T")[0]}.csv`,
-    );
+    }));
+    downloadCSV(`security-digests-${new Date().toISOString().split("T")[0]}.csv`, toCSV(rows));
   };
 
   return (
