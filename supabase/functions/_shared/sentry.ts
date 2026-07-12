@@ -69,9 +69,12 @@ export const withSentry = (
       url: req.url,
       requestId,
     });
+    // Structured log for correlation even without Sentry DSN configured
+    console.info(`[${fnName}] request`, JSON.stringify({ requestId, method: req.method }));
     try {
       const res = await handler(req, { requestId });
       addBreadcrumb(`${fnName}:response`, { status: res.status, requestId });
+      console.info(`[${fnName}] response`, JSON.stringify({ requestId, status: res.status }));
       // Echo requestId back so clients (and tests) can confirm correlation
       if (!res.headers.has("x-request-id")) {
         res.headers.set("x-request-id", requestId);
