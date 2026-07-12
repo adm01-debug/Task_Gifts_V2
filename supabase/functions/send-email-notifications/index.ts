@@ -1,7 +1,7 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { corsHeaders, verifyServiceRole } from "../_shared/security.ts";
-import { withSentry, addBreadcrumb, captureException } from "../_shared/sentry.ts";
+import { withSentry, addBreadcrumb, captureException, recordMetric, timeStep } from "../_shared/sentry.ts";
 
 interface EmailPayload {
   to: string;
@@ -30,32 +30,29 @@ serve(withSentry("send-email-notifications", async (req, { requestId }) => {
     const { type, userId } = await req.json();
     
     console.log(`Processing ${type} email notifications${userId ? ` for user ${userId}` : ''}`);
+    addBreadcrumb("email:params", { type, userId: userId ?? null, requestId });
+    const runStart = Date.now();
 
     // If specific user, send only to them
     let profiles;
-    if (userId) {
-      const { data, error } = await supabase
-        .from('profiles')
-        .select('id, email, display_name')
-        .eq('id', userId)
-        .single();
-      
-      if (error) throw error;
-      profiles = [data];
-    } else {
-      // Get all profiles with email
-      const { data, error } = await supabase
-        .from('profiles')
-        .select('id, email, display_name')
-        .not('email', 'is', null);
-      
-      if (error) throw error;
-      profiles = data;
-    }
+    const { data: profileData, error: profileError } = await timeStep(
+      "send-email-notifications",
+      "load_profiles",
+      async () => userId
+        ? await supabase.from('profiles').select('id, email, display_name').eq('id', userId).single().then((r) => ({ data: r.data ? [r.data] : [], error: r.error }))
+        : await supabase.from('profiles').select('id, email, display_name').not('email', 'is', null),
+      { scope: userId ? "single" : "all", requestId },
+    );
+    if (profileError) throw profileError;
+    profiles = profileData;
+    recordMetric("send-email-notifications", "profiles.loaded", profiles?.length || 0, {
+      type, requestId,
+    });
 
     console.log(`Found ${profiles?.length || 0} profiles to notify`);
 
     const emailsToSend: EmailPayload[] = [];
+    const buildStart = Date.now();
 
     for (const profile of profiles || []) {
       if (!profile.email) continue;
@@ -165,32 +162,72 @@ serve(withSentry("send-email-notifications", async (req, { requestId }) => {
     }
 
     console.log(`Prepared ${emailsToSend.length} emails to send`);
+    recordMetric("send-email-notifications", "build.duration_ms", Date.now() - buildStart, {
+      type, count: emailsToSend.length, requestId,
+    });
+    recordMetric("send-email-notifications", "emails.prepared", emailsToSend.length, {
+      type, requestId,
+    });
 
     // In production, you would integrate with an email service like Resend, SendGrid, etc.
     // For now, we log the emails that would be sent
+    let delivered = 0;
+    let failed = 0;
+    const dispatchStart = Date.now();
     for (const email of emailsToSend) {
       console.log(`Would send email to ${email.to}: ${email.subject}`);
-      
-      // Log the email attempt for tracking
-      await supabase
-        .from('audit_logs')
-        .insert({
-          action: 'CREATE',
-          entity_type: 'email_notification',
-          entity_id: email.to,
-          user_id: userId || '00000000-0000-0000-0000-000000000000',
-          metadata: {
-            email_type: email.type,
-            subject: email.subject,
-            status: 'logged', // Would be 'sent' with actual email service
-          },
+      const emailStart = Date.now();
+      addBreadcrumb("email:dispatch:start", { to: email.to, type: email.type, requestId });
+      try {
+        // Log the email attempt for tracking
+        const { error: auditErr } = await supabase
+          .from('audit_logs')
+          .insert({
+            action: 'CREATE',
+            entity_type: 'email_notification',
+            entity_id: email.to,
+            user_id: userId || '00000000-0000-0000-0000-000000000000',
+            metadata: {
+              email_type: email.type,
+              subject: email.subject,
+              status: 'logged', // Would be 'sent' with actual email service
+              request_id: requestId,
+            },
+          });
+        if (auditErr) throw auditErr;
+        delivered += 1;
+        recordMetric("send-email-notifications", "email.dispatch_ms", Date.now() - emailStart, {
+          type: email.type, status: "logged", requestId,
         });
+        addBreadcrumb("email:dispatch:ok", {
+          to: email.to, duration_ms: Date.now() - emailStart, requestId,
+        });
+      } catch (err) {
+        failed += 1;
+        recordMetric("send-email-notifications", "email.dispatch_ms", Date.now() - emailStart, {
+          type: email.type, status: "error", requestId,
+        });
+        addBreadcrumb("email:dispatch:error", {
+          to: email.to, error: err instanceof Error ? err.message : String(err), requestId,
+        }, "error");
+        captureException(err, { fn: "send-email-notifications", email: email.to, requestId });
+      }
     }
+    recordMetric("send-email-notifications", "dispatch.total_ms", Date.now() - dispatchStart, {
+      type, delivered, failed, requestId,
+    });
+    recordMetric("send-email-notifications", "emails.delivered", delivered, { type, requestId });
+    recordMetric("send-email-notifications", "emails.failed", failed, { type, requestId });
+    recordMetric("send-email-notifications", "run.duration_ms", Date.now() - runStart, {
+      type, requestId,
+    });
 
     return new Response(
       JSON.stringify({
         success: true,
         emails_prepared: emailsToSend.length,
+        delivered,
+        failed,
         type,
         message: "Emails logged. Integrate with email service for actual delivery.",
       }),
