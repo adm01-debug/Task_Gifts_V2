@@ -6960,6 +6960,10 @@ export type Database = {
           unresolved_count: number
         }[]
       }
+      get_burn_rate: {
+        Args: { _minutes: number; _slo?: number }
+        Returns: Json
+      }
       get_department_metrics: { Args: never; Returns: Json }
       get_error_budget_30d: {
         Args: { p_api_slo?: number; p_webhook_slo?: number }
