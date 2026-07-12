@@ -9,7 +9,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Textarea } from "@/components/ui/textarea";
 import { 
   AlertTriangle, CheckCircle, XCircle, Clock, Shield, 
-  Bell, Loader2, ChevronDown, ChevronUp, Filter, ExternalLink, Activity
+  Bell, Loader2, ChevronDown, ChevronUp, Filter, ExternalLink, Activity, BookOpen
 } from "lucide-react";
 import { toast } from "sonner";
 import { format } from "date-fns";
@@ -164,6 +164,11 @@ export function SecurityAlertsPanel() {
           {unresolvedAlerts.length > 0 && (
             <Badge variant="destructive">{unresolvedAlerts.length} pendentes</Badge>
           )}
+          <Button asChild variant="ghost" size="sm" className="ml-auto">
+            <Link to="/admin/security-runbook">
+              <BookOpen className="w-4 h-4 mr-1" /> Runbook
+            </Link>
+          </Button>
         </CardTitle>
       </CardHeader>
       <CardContent>
