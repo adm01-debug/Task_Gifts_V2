@@ -5136,6 +5136,50 @@ export type Database = {
         }
         Relationships: []
       }
+      runbook_executions: {
+        Row: {
+          alert_id: string | null
+          created_at: string
+          id: string
+          notes: string | null
+          performed_by: string | null
+          phase: string
+          runbook_slug: string
+          step_index: number | null
+          step_title: string | null
+        }
+        Insert: {
+          alert_id?: string | null
+          created_at?: string
+          id?: string
+          notes?: string | null
+          performed_by?: string | null
+          phase: string
+          runbook_slug: string
+          step_index?: number | null
+          step_title?: string | null
+        }
+        Update: {
+          alert_id?: string | null
+          created_at?: string
+          id?: string
+          notes?: string | null
+          performed_by?: string | null
+          phase?: string
+          runbook_slug?: string
+          step_index?: number | null
+          step_title?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "runbook_executions_alert_id_fkey"
+            columns: ["alert_id"]
+            isOneToOne: false
+            referencedRelation: "security_alerts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       seasonal_challenges: {
         Row: {
           badge_icon: string | null
@@ -5239,6 +5283,9 @@ export type Database = {
       }
       security_alerts: {
         Row: {
+          acknowledged_at: string | null
+          acknowledged_by: string | null
+          acknowledgment_notes: string | null
           alert_type: string
           created_at: string
           description: string | null
@@ -5249,11 +5296,15 @@ export type Database = {
           resolution_notes: string | null
           resolved_at: string | null
           resolved_by: string | null
+          runbook_slug: string | null
           severity: string
           title: string
           user_id: string | null
         }
         Insert: {
+          acknowledged_at?: string | null
+          acknowledged_by?: string | null
+          acknowledgment_notes?: string | null
           alert_type: string
           created_at?: string
           description?: string | null
@@ -5264,11 +5315,15 @@ export type Database = {
           resolution_notes?: string | null
           resolved_at?: string | null
           resolved_by?: string | null
+          runbook_slug?: string | null
           severity?: string
           title: string
           user_id?: string | null
         }
         Update: {
+          acknowledged_at?: string | null
+          acknowledged_by?: string | null
+          acknowledgment_notes?: string | null
           alert_type?: string
           created_at?: string
           description?: string | null
@@ -5279,6 +5334,7 @@ export type Database = {
           resolution_notes?: string | null
           resolved_at?: string | null
           resolved_by?: string | null
+          runbook_slug?: string | null
           severity?: string
           title?: string
           user_id?: string | null
@@ -6866,6 +6922,10 @@ export type Database = {
     Functions: {
       _require_admin: { Args: never; Returns: undefined }
       _require_manager_or_admin: { Args: never; Returns: undefined }
+      acknowledge_security_alert: {
+        Args: { _alert_id: string; _notes: string; _runbook_slug: string }
+        Returns: undefined
+      }
       apply_task_penalty: {
         Args: {
           p_applied_by?: string

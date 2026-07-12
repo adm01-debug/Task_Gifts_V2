@@ -1,10 +1,14 @@
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
+import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Flame, Webhook, Zap, RefreshCw, AlertTriangle, BookOpen } from "lucide-react";
+import { CheckCircle2 } from "lucide-react";
+import { Textarea } from "@/components/ui/textarea";
+import { toast } from "sonner";
 import { toCSV, downloadCSV } from "@/lib/csvExport";
 
 interface BurnResp {
@@ -35,6 +39,25 @@ function burnBadge(burn: number, threshold: number) {
 }
 
 export default function BurnRate() {
+  const qc = useQueryClient();
+  const [ackOpen, setAckOpen] = useState<string | null>(null);
+  const [ackNote, setAckNote] = useState("");
+
+  const ackMutation = useMutation({
+    mutationFn: async ({ id, slug, notes }: { id: string; slug: string; notes: string }) => {
+      const { error } = await supabase.rpc("acknowledge_security_alert", {
+        _alert_id: id, _runbook_slug: slug, _notes: notes,
+      });
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      toast.success("Alerta reconhecido — auditoria registrada.");
+      setAckOpen(null); setAckNote("");
+      qc.invalidateQueries({ queryKey: ["burn-rate-alerts"] });
+    },
+    onError: (e: unknown) => toast.error("Falha ao reconhecer: " + (e instanceof Error ? e.message : String(e))),
+  });
+
   const results = useQuery({
     queryKey: ["burn-rate-all"],
     queryFn: async () => {
@@ -49,7 +72,7 @@ export default function BurnRate() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("security_alerts")
-        .select("id, alert_type, severity, title, description, created_at, metadata")
+        .select("id, alert_type, severity, title, description, created_at, metadata, acknowledged_at, acknowledgment_notes, runbook_slug")
         .like("alert_type", "burn_rate_%")
         .order("created_at", { ascending: false })
         .limit(50);
@@ -183,15 +206,53 @@ export default function BurnRate() {
           )}
           <div className="space-y-2">
             {alerts.data?.map((a) => (
-              <div key={a.id} className="border rounded-lg p-3 flex items-start gap-3">
-                <Badge variant="outline" className={a.severity === "critical" ? "bg-destructive/15 text-destructive border-destructive/30" : "bg-orange-500/15 text-orange-600 border-orange-500/30"}>
-                  {a.severity}
-                </Badge>
-                <div className="text-sm flex-1">
-                  <div className="font-medium">{a.title ?? a.alert_type}</div>
-                  <div className="text-muted-foreground">{a.description}</div>
-                  <div className="text-xs text-muted-foreground mt-1">{new Date(a.created_at).toLocaleString("pt-BR")}</div>
+              <div key={a.id} className="border rounded-lg p-3 space-y-2">
+                <div className="flex items-start gap-3">
+                  <Badge variant="outline" className={a.severity === "critical" ? "bg-destructive/15 text-destructive border-destructive/30" : "bg-orange-500/15 text-orange-600 border-orange-500/30"}>
+                    {a.severity}
+                  </Badge>
+                  <div className="text-sm flex-1">
+                    <div className="font-medium">{a.title ?? a.alert_type}</div>
+                    <div className="text-muted-foreground">{a.description}</div>
+                    <div className="text-xs text-muted-foreground mt-1">{new Date(a.created_at).toLocaleString("pt-BR")}</div>
+                    {a.acknowledged_at && (
+                      <div className="text-xs mt-1 flex items-center gap-1 text-emerald-600">
+                        <CheckCircle2 className="w-3 h-3" /> Reconhecido em {new Date(a.acknowledged_at).toLocaleString("pt-BR")}
+                        {a.acknowledgment_notes && <span className="text-muted-foreground">— {a.acknowledgment_notes}</span>}
+                      </div>
+                    )}
+                  </div>
+                  <div className="flex flex-col gap-1">
+                    <Link to={`/admin/runbook/${a.alert_type.replace("burn_rate_", "burn-rate-")}`}>
+                      <Button variant="outline" size="sm" className="h-7 w-full">
+                        <BookOpen className="w-3.5 h-3.5 mr-1" /> Runbook
+                      </Button>
+                    </Link>
+                    {!a.acknowledged_at && (
+                      <Button variant="outline" size="sm" className="h-7"
+                        onClick={() => { setAckOpen(ackOpen === a.id ? null : a.id); setAckNote(""); }}>
+                        <CheckCircle2 className="w-3.5 h-3.5 mr-1" /> ACK
+                      </Button>
+                    )}
+                  </div>
                 </div>
+                {ackOpen === a.id && (
+                  <div className="space-y-2 pt-2 border-t">
+                    <Textarea placeholder="Notas do reconhecimento (ex: ação tomada, causa suspeita)…"
+                      value={ackNote} onChange={(e) => setAckNote(e.target.value)} rows={2} />
+                    <div className="flex gap-2 justify-end">
+                      <Button size="sm" variant="ghost" onClick={() => setAckOpen(null)}>Cancelar</Button>
+                      <Button size="sm" disabled={ackMutation.isPending || !ackNote.trim()}
+                        onClick={() => ackMutation.mutate({
+                          id: a.id,
+                          slug: a.alert_type.replace("burn_rate_", "burn-rate-"),
+                          notes: ackNote.trim(),
+                        })}>
+                        Confirmar ACK
+                      </Button>
+                    </div>
+                  </div>
+                )}
               </div>
             ))}
           </div>
