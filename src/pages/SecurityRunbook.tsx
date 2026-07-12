@@ -6,6 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { AlertHeatmap } from "@/components/security/AlertHeatmap";
 import {
   BookOpen, Search, ShieldAlert, Activity, Ban, KeyRound, Bug, Bell,
   ExternalLink, ArrowRight, AlertTriangle, TrendingUp, TrendingDown, Minus,
@@ -269,6 +270,8 @@ export default function SecurityRunbook() {
             className="pl-9"
           />
         </div>
+
+        <AlertHeatmap />
 
         <div className="grid gap-4 md:grid-cols-2">
           {filtered.map((entry) => {
