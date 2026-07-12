@@ -7199,6 +7199,17 @@ export type Database = {
         }
         Returns: Json
       }
+      log_runbook_step: {
+        Args: {
+          p_alert_id: string
+          p_notes: string
+          p_phase: string
+          p_runbook_slug: string
+          p_step_index: number
+          p_step_title: string
+        }
+        Returns: string
+      }
       process_external_task: {
         Args: { p_external_task_id: string }
         Returns: Json
