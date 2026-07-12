@@ -19,7 +19,7 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
-import { ArrowLeft, CheckCircle2, ChevronDown, Clock, RefreshCw, Rocket, Webhook, XCircle } from "lucide-react";
+import { ArrowLeft, CheckCircle2, ChevronDown, Clock, Download, RefreshCw, Rocket, Webhook, XCircle } from "lucide-react";
 
 interface DeliveryLog {
   id: string;
@@ -167,6 +167,51 @@ export default function WebhookSubscriptionDetail() {
     refetch();
   };
 
+  const exportCsv = () => {
+    if (filteredLogs.length === 0) {
+      toast.error("Nada para exportar com os filtros atuais");
+      return;
+    }
+    const esc = (v: unknown) => {
+      const s = v === null || v === undefined ? "" : String(v);
+      return `"${s.replace(/"/g, '""').replace(/\r?\n/g, " ")}"`;
+    };
+    const header = [
+      "id",
+      "created_at",
+      "event_type",
+      "success",
+      "response_status",
+      "attempt_count",
+      "duration_ms",
+      "error_message",
+    ];
+    const rows = filteredLogs.map((l) =>
+      [
+        l.id,
+        l.created_at,
+        l.event_type ?? "",
+        l.success,
+        l.response_status ?? "",
+        l.attempt_count ?? "",
+        l.duration_ms ?? "",
+        l.error_message ?? "",
+      ].map(esc).join(","),
+    );
+    const csv = "\uFEFF" + [header.join(","), ...rows].join("\n");
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    const stamp = new Date().toISOString().replace(/[:.]/g, "-");
+    a.href = url;
+    a.download = `webhook-${id?.slice(0, 8)}-${stamp}.csv`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    toast.success(`CSV exportado (${filteredLogs.length} linhas)`);
+  };
+
   return (
     <main className="container mx-auto px-4 py-8 space-y-6">
       <div className="flex items-center gap-3">
@@ -230,6 +275,16 @@ export default function WebhookSubscriptionDetail() {
             >
               <Rocket className={`w-3.5 h-3.5 mr-1 ${bulkResending ? "animate-pulse" : ""}`} />
               Reenviar falhas 24h ({failedLast24h.length})
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={exportCsv}
+              disabled={!logs || logs.length === 0}
+              title="Exportar a timeline filtrada em CSV"
+            >
+              <Download className="w-3.5 h-3.5 mr-1" />
+              CSV
             </Button>
             <Button variant="outline" size="sm" onClick={() => refetch()} disabled={isFetching}>
               {isFetching ? "Atualizando…" : "Atualizar"}
