@@ -270,7 +270,7 @@ export default function ExecutiveMonthlyReport() {
     },
     onSuccess: (id) => {
       toast.success("Postmortem criado a partir dos alertas");
-      navigate(`/admin/postmortems?highlight=${id}`);
+      navigate(`/admin/postmortems?id=${id}&flash=1`);
     },
     onError: (e: unknown) => toast.error(e instanceof Error ? e.message : "Falha ao criar postmortem"),
   });

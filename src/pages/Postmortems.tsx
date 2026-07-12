@@ -1,4 +1,4 @@
-import { useMemo, useState, useEffect } from "react";
+import { useMemo, useState, useEffect, useRef } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -65,6 +65,26 @@ export default function Postmortems() {
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [params, setParams] = useSearchParams();
   const selectedId = params.get("id");
+  const flash = params.get("flash") === "1";
+  const editorRef = useRef<HTMLDivElement>(null);
+  const [flashActive, setFlashActive] = useState(false);
+
+  // Handoff from Executive Monthly Report: when arriving with ?flash=1,
+  // scroll the freshly-created postmortem into view and briefly highlight
+  // it, then strip the flag from the URL so it does not re-trigger.
+  useEffect(() => {
+    if (!flash || !selectedId) return;
+    setFlashActive(true);
+    const t1 = window.setTimeout(() => {
+      editorRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }, 60);
+    const t2 = window.setTimeout(() => setFlashActive(false), 2400);
+    const next = new URLSearchParams(params);
+    next.delete("flash");
+    setParams(next, { replace: true });
+    return () => { clearTimeout(t1); clearTimeout(t2); };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [flash, selectedId]);
 
   const { data: list = [], isLoading } = useQuery({
     queryKey: ["postmortems"],
@@ -163,7 +183,12 @@ export default function Postmortems() {
         </Card>
 
         {selected ? (
-          <div className="space-y-4">
+          <div
+            ref={editorRef}
+            className={`space-y-4 rounded-lg transition-shadow duration-500 ${
+              flashActive ? "ring-2 ring-primary ring-offset-2 ring-offset-background" : ""
+            }`}
+          >
             <Editor key={selected.id} initial={selected} onSaved={() => qc.invalidateQueries({ queryKey: ["postmortems"] })} />
             <ActionsPanel postmortemId={selected.id} />
           </div>
