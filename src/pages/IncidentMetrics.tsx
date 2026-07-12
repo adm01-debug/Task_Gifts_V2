@@ -308,12 +308,14 @@ function SlaTargetsDrawer({
   const saveMutation = useMutation({
     mutationFn: async (t: SlaTarget) => {
       const d = drafts[t.id] ?? {};
+      const mtta = d.mtta_target_seconds ?? t.mtta_target_seconds;
+      const mttr = d.mttr_target_seconds ?? t.mttr_target_seconds;
       const { error } = await supabase
         .from("sla_targets")
         .update({
-          mtta_target_seconds: d.mtta_target_seconds ?? t.mtta_target_seconds,
-          mttr_target_seconds: d.mttr_target_seconds ?? t.mttr_target_seconds,
-          notes: d.notes ?? t.notes,
+          mtta_target_seconds: mtta ?? undefined,
+          mttr_target_seconds: mttr ?? undefined,
+          notes: (d.notes ?? t.notes) ?? undefined,
         })
         .eq("id", t.id);
       if (error) throw error;
