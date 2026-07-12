@@ -5,6 +5,7 @@ import { useCompetencies } from "./useCompetencies";
 import { usePublishedTrails, useUserEnrollments } from "./useTrails";
 import { aiCoachService } from "@/services/aiCoachService";
 import { logger } from "@/services/loggingService";
+import { newRequestId } from "@/lib/requestId";
 
 interface Message {
   role: "user" | "assistant";
@@ -49,11 +50,13 @@ export function useAICoach() {
     if (conversationMessages.length < 2) return;
     
     try {
+      const requestId = newRequestId();
       const resp = await fetch(CHAT_URL, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+          "x-request-id": requestId,
         },
         body: JSON.stringify({ 
           messages: conversationMessages,
@@ -126,11 +129,13 @@ export function useAICoach() {
         completedTrailsCount,
       } : undefined;
 
+      const requestId = newRequestId();
       const resp = await fetch(CHAT_URL, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+          "x-request-id": requestId,
         },
         body: JSON.stringify({ 
           messages: [...messages, userMsg],
@@ -140,7 +145,7 @@ export function useAICoach() {
 
       if (!resp.ok) {
         const errData = await resp.json().catch(() => ({}));
-        throw new Error(errData.error || `Erro ${resp.status}`);
+        throw new Error(errData.error || `Erro ${resp.status} (req ${requestId})`);
       }
 
       if (!resp.body) throw new Error("Sem resposta do servidor");
