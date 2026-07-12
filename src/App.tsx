@@ -68,6 +68,7 @@ const WebhooksExecutive = lazy(() => import("./pages/WebhooksExecutive"));
 const SecurityRunbook = lazy(() => import("./pages/SecurityRunbook"));
 const SecurityDigests = lazy(() => import("./pages/SecurityDigests"));
 const ReliabilitySLO = lazy(() => import("./pages/ReliabilitySLO"));
+const ErrorBudget = lazy(() => import("./pages/ErrorBudget"));
 
 function PageLoader() {
   return (
