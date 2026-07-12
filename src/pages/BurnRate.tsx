@@ -4,7 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Flame, Webhook, Zap, RefreshCw, AlertTriangle } from "lucide-react";
+import { ArrowLeft, Flame, Webhook, Zap, RefreshCw, AlertTriangle, BookOpen } from "lucide-react";
 import { toCSV, downloadCSV } from "@/lib/csvExport";
 
 interface BurnResp {
@@ -125,7 +125,14 @@ export default function BurnRate() {
               <CardHeader>
                 <CardTitle className="flex items-center justify-between">
                   <span className="capitalize">Par {pair === "fast" ? "Rápido (1h ∧ 5min)" : "Lento (6h ∧ 30min)"}</span>
-                  <Badge variant="outline">≥ {threshold}x → {pair === "fast" ? "critical" : "high"}</Badge>
+                  <div className="flex items-center gap-2">
+                    <Badge variant="outline">≥ {threshold}x → {pair === "fast" ? "critical" : "high"}</Badge>
+                    <Link to={`/admin/runbook/burn-rate-${pair}`}>
+                      <Button variant="outline" size="sm" className="h-7">
+                        <BookOpen className="w-3.5 h-3.5 mr-1" /> Runbook
+                      </Button>
+                    </Link>
+                  </div>
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">

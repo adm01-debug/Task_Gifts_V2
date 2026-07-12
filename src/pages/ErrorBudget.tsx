@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
-import { ArrowLeft, Flame, Webhook, Zap, Download, AlertTriangle } from "lucide-react";
+import { ArrowLeft, Flame, Webhook, Zap, Download, AlertTriangle, BookOpen } from "lucide-react";
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, Legend, ReferenceLine } from "recharts";
 import { toCSV, downloadCSV } from "@/lib/csvExport";
 
@@ -68,6 +68,9 @@ function BudgetCard({
   const badge = STATUS_COPY[block.status];
   const remaining = Math.max(0, block.budget_total - block.budget_consumed);
   const clamped = Math.min(100, block.burn_pct);
+  const runbookSlug =
+    block.status === "critical" ? "error-budget-critical" :
+    block.status === "high" ? "error-budget-high" : null;
   return (
     <Card>
       <CardHeader className="pb-2">
@@ -105,6 +108,13 @@ function BudgetCard({
           <span className="text-xs text-muted-foreground">
             Sucesso {block.success_rate_pct}% • {block.total.toLocaleString("pt-BR")} eventos
           </span>
+          {runbookSlug && (
+            <Link to={`/admin/runbook/${runbookSlug}`} className="ml-auto">
+              <Button variant="outline" size="sm" className="h-7">
+                <BookOpen className="w-3.5 h-3.5 mr-1" /> Runbook
+              </Button>
+            </Link>
+          )}
         </div>
       </CardContent>
     </Card>
