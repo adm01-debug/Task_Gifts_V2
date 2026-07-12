@@ -6892,6 +6892,10 @@ export type Database = {
         Returns: string
       }
       auto_promote_expired_webhook_secrets: { Args: never; Returns: Json }
+      bulk_rotate_webhook_secrets: {
+        Args: { p_grace_hours?: number; p_rotations: Json }
+        Returns: Json
+      }
       calculate_enps_score: { Args: { p_survey_id: string }; Returns: number }
       cancel_webhook_secret_rotation: {
         Args: { p_subscription_id: string }
