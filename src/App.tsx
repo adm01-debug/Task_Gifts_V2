@@ -212,6 +212,7 @@ const AnimatedRoutes = () => {
         <Route path="/admin/webhooks" element={<ProtectedRoute requiredRole="admin"><PageTransition><WebhooksAdmin /></PageTransition></ProtectedRoute>} />
         <Route path="/admin/webhooks/executive" element={<ProtectedRoute requiredRole="admin"><PageTransition><WebhooksExecutive /></PageTransition></ProtectedRoute>} />
         <Route path="/admin/security-runbook" element={<ProtectedRoute requiredRole="admin"><PageTransition><SecurityRunbook /></PageTransition></ProtectedRoute>} />
+        <Route path="/admin/security-digests" element={<ProtectedRoute requiredRole="admin"><PageTransition><SecurityDigests /></PageTransition></ProtectedRoute>} />
         <Route path="/admin/webhooks/new" element={<ProtectedRoute requiredRole="admin"><PageTransition><WebhookSubscriptionNew /></PageTransition></ProtectedRoute>} />
         <Route path="/admin/webhooks/:id" element={<ProtectedRoute requiredRole="admin"><PageTransition><WebhookSubscriptionDetail /></PageTransition></ProtectedRoute>} />
         <Route path="/loja/admin" element={<ProtectedRoute requiredRole="admin"><PageTransition><ShopAdmin /></PageTransition></ProtectedRoute>} />
