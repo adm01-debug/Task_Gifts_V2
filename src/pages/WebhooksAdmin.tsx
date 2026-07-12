@@ -6,6 +6,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Activity, AlertTriangle, CheckCircle2, Webhook } from "lucide-react";
 import { useEffect } from "react";
+import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid, Legend, BarChart, Bar } from "recharts";
 
 interface WebhookStat {
   subscription_id: string;
@@ -24,6 +25,15 @@ interface WebhookStat {
   last_delivery_at: string | null;
 }
 
+interface HourlyPoint {
+  bucket: string;
+  total: number;
+  successful: number;
+  failed: number;
+  avg_duration_ms: number | null;
+  p95_duration_ms: number | null;
+}
+
 export default function WebhooksAdmin() {
   useEffect(() => {
     document.title = "Observabilidade de Webhooks — Últimas 24h";
@@ -35,6 +45,25 @@ export default function WebhooksAdmin() {
       const { data, error } = await supabase.rpc("get_webhook_delivery_stats_24h");
       if (error) throw error;
       return (data as WebhookStat[]) || [];
+    },
+    staleTime: 30_000,
+    refetchInterval: 60_000,
+  });
+
+  const { data: hourly, isLoading: hourlyLoading } = useQuery<HourlyPoint[]>({
+    queryKey: ["webhook-delivery-hourly-24h"],
+    queryFn: async () => {
+      const { data, error } = await supabase.rpc("get_webhook_delivery_hourly_24h");
+      if (error) throw error;
+      return ((data as HourlyPoint[]) || []).map((p) => ({
+        ...p,
+        bucket: new Date(p.bucket).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" }),
+        total: Number(p.total),
+        successful: Number(p.successful),
+        failed: Number(p.failed),
+        avg_duration_ms: p.avg_duration_ms !== null ? Number(p.avg_duration_ms) : null,
+        p95_duration_ms: p.p95_duration_ms !== null ? Number(p.p95_duration_ms) : null,
+      }));
     },
     staleTime: 30_000,
     refetchInterval: 60_000,
@@ -75,6 +104,49 @@ export default function WebhooksAdmin() {
         <Card>
           <CardHeader className="pb-2"><CardTitle className="text-sm text-muted-foreground flex items-center gap-2"><AlertTriangle className="w-4 h-4 text-destructive" />Falhas nas Últimas 24h</CardTitle></CardHeader>
           <CardContent><p className="text-3xl font-bold text-destructive">{totals.fail}</p></CardContent>
+        </Card>
+      </section>
+
+      <section className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <Card>
+          <CardHeader><CardTitle className="text-base">Volume de Entregas por Hora</CardTitle></CardHeader>
+          <CardContent className="h-72">
+            {hourlyLoading ? (
+              <Skeleton className="h-full w-full" />
+            ) : (
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={hourly || []}>
+                  <CartesianGrid strokeDasharray="3 3" className="stroke-border/40" />
+                  <XAxis dataKey="bucket" stroke="hsl(var(--muted-foreground))" fontSize={11} />
+                  <YAxis stroke="hsl(var(--muted-foreground))" fontSize={11} />
+                  <Tooltip contentStyle={{ background: "hsl(var(--card))", border: "1px solid hsl(var(--border))", borderRadius: 8 }} />
+                  <Legend />
+                  <Bar dataKey="successful" name="Sucesso" stackId="a" fill="hsl(var(--primary))" radius={[0, 0, 0, 0]} />
+                  <Bar dataKey="failed" name="Falhas" stackId="a" fill="hsl(var(--destructive))" radius={[4, 4, 0, 0]} />
+                </BarChart>
+              </ResponsiveContainer>
+            )}
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader><CardTitle className="text-base">Latência por Hora (ms)</CardTitle></CardHeader>
+          <CardContent className="h-72">
+            {hourlyLoading ? (
+              <Skeleton className="h-full w-full" />
+            ) : (
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart data={hourly || []}>
+                  <CartesianGrid strokeDasharray="3 3" className="stroke-border/40" />
+                  <XAxis dataKey="bucket" stroke="hsl(var(--muted-foreground))" fontSize={11} />
+                  <YAxis stroke="hsl(var(--muted-foreground))" fontSize={11} />
+                  <Tooltip contentStyle={{ background: "hsl(var(--card))", border: "1px solid hsl(var(--border))", borderRadius: 8 }} />
+                  <Legend />
+                  <Line type="monotone" dataKey="avg_duration_ms" name="Média" stroke="hsl(var(--primary))" strokeWidth={2} dot={false} />
+                  <Line type="monotone" dataKey="p95_duration_ms" name="P95" stroke="hsl(var(--destructive))" strokeWidth={2} dot={false} />
+                </LineChart>
+              </ResponsiveContainer>
+            )}
+          </CardContent>
         </Card>
       </section>
 
