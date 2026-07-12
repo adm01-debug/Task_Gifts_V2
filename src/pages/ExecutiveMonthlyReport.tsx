@@ -48,7 +48,7 @@ export default function ExecutiveMonthlyReport() {
         .order("period_month", { ascending: false })
         .limit(36);
       if (error) throw error;
-      return (data ?? []) as Report[];
+      return ((data ?? []) as unknown) as Report[];
     },
   });
 
@@ -59,10 +59,10 @@ export default function ExecutiveMonthlyReport() {
 
   const regenerate = useMutation({
     mutationFn: async (params: { year?: number; month?: number }) => {
-      const { data, error } = await supabase.rpc("generate_executive_monthly_report", {
-        p_year: params.year ?? null,
-        p_month: params.month ?? null,
-      });
+      const args: { p_year?: number; p_month?: number } = {};
+      if (params.year != null) args.p_year = params.year;
+      if (params.month != null) args.p_month = params.month;
+      const { data, error } = await supabase.rpc("generate_executive_monthly_report", args);
       if (error) throw error;
       return data;
     },
