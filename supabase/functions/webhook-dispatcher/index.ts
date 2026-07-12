@@ -3,7 +3,7 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { createHmac } from "https://deno.land/std@0.168.0/node/crypto.ts";
 import { corsHeaders, verifyServiceRole } from "../_shared/security.ts";
 import { WebhookDispatcherSchema, validatePayload, createValidationErrorResponse } from "../_shared/validation.ts";
-import { withSentry, addBreadcrumb, captureException } from "../_shared/sentry.ts";
+import { withSentry, addBreadcrumb, captureException, recordMetric, timeStep } from "../_shared/sentry.ts";
 
 serve(withSentry("webhook-dispatcher", async (req, { requestId }) => {
   if (req.method === 'OPTIONS') {
@@ -38,15 +38,22 @@ serve(withSentry("webhook-dispatcher", async (req, { requestId }) => {
     console.log(`[Dispatcher] Processing webhook for subscription ${subscription_id}, event: ${event_type}`);
 
     // Get subscription details
-    const { data: subscription, error: subError } = await supabase
-      .from('webhook_subscriptions')
-      .select('*')
-      .eq('id', subscription_id)
-      .eq('is_active', true)
-      .single();
+    const { data: subscription, error: subError } = await timeStep(
+      "webhook-dispatcher",
+      "load_subscription",
+      async () =>
+        await supabase
+          .from('webhook_subscriptions')
+          .select('*')
+          .eq('id', subscription_id)
+          .eq('is_active', true)
+          .single(),
+      { subscription_id, requestId },
+    );
 
     if (subError || !subscription) {
       console.error('[Dispatcher] Subscription not found or inactive:', subError);
+      addBreadcrumb("dispatcher:subscription_missing", { subscription_id, requestId }, "warning");
       return new Response(JSON.stringify({ error: 'Subscription not found' }), {
         status: 404,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' }
@@ -86,6 +93,14 @@ serve(withSentry("webhook-dispatcher", async (req, { requestId }) => {
     for (let attempt = 1; attempt <= maxRetries; attempt++) {
       attemptCount = attempt;
       console.log(`[Dispatcher] Attempt ${attempt}/${maxRetries} to ${subscription.url}`);
+      addBreadcrumb("dispatcher:attempt:start", {
+        attempt,
+        max: maxRetries,
+        url: subscription.url,
+        subscription_id,
+        requestId,
+      });
+      const attemptStart = Date.now();
 
       try {
         const controller = new AbortController();
@@ -102,14 +117,34 @@ serve(withSentry("webhook-dispatcher", async (req, { requestId }) => {
 
         responseStatus = response.status;
         responseBody = await response.text();
+        const attemptDuration = Date.now() - attemptStart;
+        recordMetric("webhook-dispatcher", "attempt.duration_ms", attemptDuration, {
+          attempt,
+          status: responseStatus,
+          success: response.ok,
+          subscription_id,
+          requestId,
+        });
 
         if (response.ok) {
           success = true;
           console.log(`[Dispatcher] Webhook delivered successfully on attempt ${attempt}`);
+          addBreadcrumb("dispatcher:attempt:success", {
+            attempt,
+            status: responseStatus,
+            duration_ms: attemptDuration,
+            requestId,
+          });
           break;
         } else {
           errorMessage = `HTTP ${responseStatus}: ${responseBody}`;
           console.warn(`[Dispatcher] Webhook failed with status ${responseStatus}`);
+          addBreadcrumb("dispatcher:attempt:http_error", {
+            attempt,
+            status: responseStatus,
+            duration_ms: attemptDuration,
+            requestId,
+          }, "warning");
         }
       } catch (error: unknown) {
         errorMessage = error instanceof Error ? error.message : 'Unknown error';
@@ -118,20 +153,54 @@ serve(withSentry("webhook-dispatcher", async (req, { requestId }) => {
         if (error instanceof Error && error.name === 'AbortError') {
           errorMessage = 'Request timeout';
         }
+        const attemptDuration = Date.now() - attemptStart;
+        recordMetric("webhook-dispatcher", "attempt.duration_ms", attemptDuration, {
+          attempt,
+          status: "network_error",
+          success: false,
+          error: errorMessage,
+          subscription_id,
+          requestId,
+        });
+        addBreadcrumb("dispatcher:attempt:network_error", {
+          attempt,
+          error: errorMessage,
+          duration_ms: attemptDuration,
+          requestId,
+        }, "error");
       }
 
       // Wait before retry (exponential backoff)
       if (attempt < maxRetries) {
         const delay = Math.min(1000 * Math.pow(2, attempt - 1), 10000);
         console.log(`[Dispatcher] Waiting ${delay}ms before retry...`);
+        addBreadcrumb("dispatcher:backoff", { attempt, delay_ms: delay, requestId });
         await new Promise(resolve => setTimeout(resolve, delay));
       }
     }
 
     const duration = Date.now() - startTime;
+    recordMetric("webhook-dispatcher", "total.duration_ms", duration, {
+      attempts: attemptCount,
+      success,
+      status: responseStatus,
+      event_type,
+      subscription_id,
+      requestId,
+    });
+    recordMetric("webhook-dispatcher", "delivery.attempts", attemptCount, {
+      success,
+      subscription_id,
+      requestId,
+    });
+    recordMetric("webhook-dispatcher", "delivery.success", success ? 1 : 0, {
+      subscription_id,
+      event_type,
+      requestId,
+    });
 
     // Log delivery attempt
-    await supabase.from('webhook_delivery_logs').insert({
+    await timeStep("webhook-dispatcher", "persist_log", async () => await supabase.from('webhook_delivery_logs').insert({
       subscription_id: subscription.id,
       event_type,
       payload: webhookPayload,
@@ -141,16 +210,26 @@ serve(withSentry("webhook-dispatcher", async (req, { requestId }) => {
       success,
       error_message: errorMessage,
       duration_ms: duration
-    });
+    }), { subscription_id, requestId });
 
     // Update subscription status
-    await supabase
-      .from('webhook_subscriptions')
-      .update({
-        last_triggered_at: new Date().toISOString(),
-        last_status: responseStatus
-      })
-      .eq('id', subscription.id);
+    await timeStep("webhook-dispatcher", "update_subscription", async () =>
+      await supabase
+        .from('webhook_subscriptions')
+        .update({
+          last_triggered_at: new Date().toISOString(),
+          last_status: responseStatus
+        })
+        .eq('id', subscription.id),
+      { subscription_id, requestId },
+    );
+
+    addBreadcrumb("dispatcher:done", {
+      success,
+      attempts: attemptCount,
+      duration_ms: duration,
+      requestId,
+    });
 
     return new Response(JSON.stringify({
       success,
