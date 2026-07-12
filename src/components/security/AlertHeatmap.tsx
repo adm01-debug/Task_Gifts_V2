@@ -26,7 +26,11 @@ export function AlertHeatmap() {
     staleTime: 10 * 60 * 1000,
   });
 
-  const { grid, max, peak } = useMemo(() => {
+  const { grid, max, peak } = useMemo<{
+    grid: Record<string, HeatmapRow>;
+    max: number;
+    peak: HeatmapRow | null;
+  }>(() => {
     const g: Record<string, HeatmapRow> = {};
     let m = 0;
     let p: HeatmapRow | null = null;
