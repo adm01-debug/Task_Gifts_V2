@@ -4,10 +4,12 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Activity, AlertTriangle, CheckCircle2, Webhook, ShieldAlert, Zap, Plus, Pencil } from "lucide-react";
+import { Activity, AlertTriangle, CheckCircle2, Webhook, ShieldAlert, Zap, Plus, Pencil, RotateCw, Filter } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { Link } from "react-router-dom";
 import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid, Legend, BarChart, Bar } from "recharts";
@@ -56,6 +58,7 @@ export default function WebhooksAdmin() {
   const [pingingId, setPingingId] = useState<string | null>(null);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editOpen, setEditOpen] = useState(false);
+  const [onlyRotating, setOnlyRotating] = useState(false);
   useEffect(() => {
     document.title = "Observabilidade de Webhooks — Últimas 24h";
   }, []);
@@ -101,10 +104,30 @@ export default function WebhooksAdmin() {
     refetchInterval: 60_000,
   });
 
+  const { data: rotations } = useQuery<Array<{ id: string; secret_next_expires_at: string | null }>>({
+    queryKey: ["webhook-pending-rotations"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("webhook_subscriptions")
+        .select("id, secret_next_expires_at")
+        .not("secret_next", "is", null);
+      if (error) throw error;
+      return (data as Array<{ id: string; secret_next_expires_at: string | null }>) || [];
+    },
+    staleTime: 30_000,
+    refetchInterval: 60_000,
+  });
+
+  const rotationMap = new Map((rotations || []).map((r) => [r.id, r.secret_next_expires_at]));
+
   const degraded = (lastHour || []).filter(
     (s) =>
       Number(s.total_deliveries) >= HEALTH_MIN_SAMPLE &&
       Number(s.success_rate_pct ?? 100) < HEALTH_THRESHOLD,
+  );
+
+  const filteredData = (data || []).filter((row) =>
+    onlyRotating ? rotationMap.has(row.subscription_id) : true,
   );
 
   const totals = (data || []).reduce(
@@ -242,7 +265,19 @@ export default function WebhooksAdmin() {
       </section>
 
       <Card>
-        <CardHeader><CardTitle>Detalhamento por Assinatura</CardTitle></CardHeader>
+        <CardHeader className="flex flex-row items-center justify-between gap-3">
+          <CardTitle>Detalhamento por Assinatura</CardTitle>
+          <div className="flex items-center gap-2">
+            <Filter className="w-4 h-4 text-muted-foreground" />
+            <Label htmlFor="only-rotating" className="text-sm cursor-pointer">
+              Somente com rotação pendente
+              {rotationMap.size > 0 && (
+                <Badge variant="secondary" className="ml-2">{rotationMap.size}</Badge>
+              )}
+            </Label>
+            <Switch id="only-rotating" checked={onlyRotating} onCheckedChange={setOnlyRotating} />
+          </div>
+        </CardHeader>
         <CardContent>
           {isLoading ? (
             <div className="space-y-2">
@@ -250,7 +285,7 @@ export default function WebhooksAdmin() {
             </div>
           ) : error ? (
             <p className="text-sm text-destructive">Não foi possível carregar as métricas: {(error as Error).message}</p>
-          ) : !data || data.length === 0 ? (
+          ) : !filteredData || filteredData.length === 0 ? (
             <p className="text-sm text-muted-foreground py-8 text-center">Nenhuma entrega registrada nas últimas 24h.</p>
           ) : (
             <div className="overflow-x-auto">
@@ -258,6 +293,7 @@ export default function WebhooksAdmin() {
                 <TableHeader>
                   <TableRow>
                     <TableHead>Assinatura</TableHead>
+                    <TableHead>Rotação</TableHead>
                     <TableHead className="text-right">Total</TableHead>
                     <TableHead className="text-right">Sucesso</TableHead>
                     <TableHead className="text-right">P50 (ms)</TableHead>
@@ -268,9 +304,23 @@ export default function WebhooksAdmin() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {data.map((row) => {
+                  {filteredData.map((row) => {
                     const rate = Number(row.success_rate_pct ?? 0);
                     const rateVariant = rate >= 99 ? "default" : rate >= 90 ? "secondary" : "destructive";
+                    const rotationExpires = rotationMap.get(row.subscription_id);
+                    const hasRotation = rotationMap.has(row.subscription_id);
+                    let rotationLabel = "—";
+                    if (hasRotation) {
+                      if (rotationExpires) {
+                        const ms = new Date(rotationExpires).getTime() - Date.now();
+                        if (ms <= 0) rotationLabel = "Expirando";
+                        else {
+                          const h = Math.floor(ms / 3_600_000);
+                          const m = Math.floor((ms % 3_600_000) / 60_000);
+                          rotationLabel = h > 0 ? `${h}h ${m}m` : `${m}m`;
+                        }
+                      } else rotationLabel = "Ativa";
+                    }
                     return (
                       <TableRow key={row.subscription_id} className="hover:bg-muted/40">
                         <TableCell>
@@ -278,6 +328,16 @@ export default function WebhooksAdmin() {
                             <div className="font-medium">{row.subscription_name || "—"}</div>
                             <div className="text-xs text-muted-foreground truncate max-w-xs">{row.subscription_url}</div>
                           </Link>
+                        </TableCell>
+                        <TableCell>
+                          {hasRotation ? (
+                            <Badge variant="outline" className="border-amber-500/40 text-amber-600 dark:text-amber-400 gap-1">
+                              <RotateCw className="w-3 h-3" />
+                              {rotationLabel}
+                            </Badge>
+                          ) : (
+                            <span className="text-xs text-muted-foreground">—</span>
+                          )}
                         </TableCell>
                         <TableCell className="text-right tabular-nums">{row.total_deliveries}</TableCell>
                         <TableCell className="text-right"><Badge variant={rateVariant}>{rate.toFixed(1)}%</Badge></TableCell>
