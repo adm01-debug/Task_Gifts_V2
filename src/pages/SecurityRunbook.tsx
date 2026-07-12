@@ -248,6 +248,31 @@ export default function SecurityRunbook() {
             </p>
           </div>
           <div className="flex gap-2">
+            <Button
+              variant="outline"
+              disabled={!mttrData || mttrData.length === 0}
+              onClick={() => {
+                const rows = RUNBOOK.map((r) => {
+                  const s = mttrByType[r.alertType];
+                  return {
+                    tipo: r.alertType,
+                    titulo: r.title,
+                    dono: r.owner,
+                    sla_alvo_min: r.slaMinutes,
+                    total_7d: s?.total_count ?? 0,
+                    resolvidos_7d: s?.resolved_count ?? 0,
+                    pendentes_7d: s?.unresolved_count ?? 0,
+                    mttr_medio_min: s?.avg_mttr_minutes ?? "",
+                    mttr_mediano_min: s?.median_mttr_minutes ?? "",
+                    mttr_max_min: s?.max_mttr_minutes ?? "",
+                  };
+                });
+                const csv = toCSV(rows);
+                downloadCSV(`mttr_runbook_${new Date().toISOString().slice(0, 10)}.csv`, csv);
+              }}
+            >
+              <Download className="w-4 h-4 mr-2" /> Exportar MTTR
+            </Button>
             <Button asChild variant="outline">
               <Link to="/admin/seguranca">
                 <Bug className="w-4 h-4 mr-2" /> Central de Segurança
