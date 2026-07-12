@@ -130,6 +130,11 @@ export default function ReliabilitySLO() {
               <Download className="w-4 h-4 mr-2" />
               CSV
             </Button>
+            <Link to="/admin/error-budget">
+              <Button size="sm" variant="secondary">
+                Error Budget 30d
+              </Button>
+            </Link>
           </div>
         </div>
 
