@@ -4,9 +4,11 @@ import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, TrendingDown, TrendingUp, Minus, Download, ShieldAlert } from "lucide-react";
+import { ArrowLeft, TrendingDown, TrendingUp, Minus, Download, ShieldAlert, CheckCircle2, Users } from "lucide-react";
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, Legend } from "recharts";
 import { toCSV, downloadCSV } from "@/lib/csvExport";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
 
 interface DigestRow {
   week_key: string;
@@ -18,6 +20,9 @@ interface DigestRow {
   high: number;
   top: Array<{ type: string; count: number }>;
   created_at: string;
+  ack_count: number;
+  acknowledged_by_me: boolean;
+  acknowledgments: Array<{ user_id: string; at: string }>;
 }
 
 function slaColor(pct: number | null): string {
@@ -35,14 +40,30 @@ function trendIcon(curr: number | null, prev: number | null) {
 }
 
 export default function SecurityDigests() {
+  const qc = useQueryClient();
   const { data, isLoading, error } = useQuery({
     queryKey: ["security-digest-history", 12],
     queryFn: async () => {
       const { data, error } = await supabase.rpc("get_security_digest_history", { p_weeks: 12 });
       if (error) throw error;
-      return (data ?? []) as DigestRow[];
+      return (data ?? []) as unknown as DigestRow[];
     },
     staleTime: 5 * 60 * 1000,
+  });
+
+  const ackMutation = useMutation({
+    mutationFn: async (week_key: string) => {
+      const { data, error } = await supabase.rpc("acknowledge_security_digest", { p_week_key: week_key });
+      if (error) throw error;
+      return data;
+    },
+    onSuccess: (_res, week_key) => {
+      toast.success(`Digest ${week_key} marcado como revisado`);
+      qc.invalidateQueries({ queryKey: ["security-digest-history", 12] });
+    },
+    onError: (err: unknown) => {
+      toast.error(err instanceof Error ? err.message : "Falha ao registrar revisão");
+    },
   });
 
   const digests = (data ?? []).slice().reverse(); // oldest → newest para gráfico
@@ -159,6 +180,24 @@ export default function SecurityDigests() {
                         {d.pending} pendente{d.pending !== 1 ? "s" : ""}
                       </Badge>
                       {d.critical > 0 && <Badge variant="destructive">{d.critical} crítico{d.critical !== 1 ? "s" : ""}</Badge>}
+                      <Badge variant="outline" className="gap-1">
+                        <Users className="w-3 h-3" /> {d.ack_count} revisão{d.ack_count !== 1 ? "es" : ""}
+                      </Badge>
+                      {d.acknowledged_by_me ? (
+                        <Badge className="gap-1 bg-emerald-500/15 text-emerald-600 hover:bg-emerald-500/20 border-emerald-500/30">
+                          <CheckCircle2 className="w-3 h-3" /> Revisado por você
+                        </Badge>
+                      ) : (
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          disabled={ackMutation.isPending}
+                          onClick={() => ackMutation.mutate(d.week_key)}
+                        >
+                          <CheckCircle2 className="w-4 h-4 mr-1" />
+                          Marcar como revisado
+                        </Button>
+                      )}
                     </div>
                   </div>
                 </CardHeader>
