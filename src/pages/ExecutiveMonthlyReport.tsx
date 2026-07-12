@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -8,9 +8,12 @@ import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ArrowLeft, FileBarChart2, RefreshCw, Download, ExternalLink, TrendingUp, TrendingDown, Minus } from "lucide-react";
 import { MessageSquareText, Save, Pencil, X } from "lucide-react";
-import { AlertTriangle } from "lucide-react";
+import { AlertTriangle, Settings2, RotateCcw } from "lucide-react";
 import { LineChart, Line, ResponsiveContainer, Tooltip as ReTooltip, YAxis } from "recharts";
 import { Textarea } from "@/components/ui/textarea";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { toast } from "sonner";
 
 type Report = {
@@ -48,6 +51,28 @@ export default function ExecutiveMonthlyReport() {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [editingCommentary, setEditingCommentary] = useState(false);
   const [commentaryDraft, setCommentaryDraft] = useState("");
+
+  // ── Anomaly thresholds (persisted per browser) ─────────────────────
+  const DEFAULT_REL_PCT = 30;   // 30% MoM em métricas contáveis/duração
+  const DEFAULT_PP = 15;        // 15pp em métricas percentuais
+  const STORAGE_KEY = "exec-report:anomaly-thresholds:v1";
+  const [relPct, setRelPct] = useState<number>(DEFAULT_REL_PCT);
+  const [ppAbs, setPpAbs] = useState<number>(DEFAULT_PP);
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return;
+      const parsed = JSON.parse(raw) as { relPct?: number; ppAbs?: number };
+      if (typeof parsed.relPct === "number" && parsed.relPct > 0 && parsed.relPct <= 500) setRelPct(parsed.relPct);
+      if (typeof parsed.ppAbs === "number" && parsed.ppAbs > 0 && parsed.ppAbs <= 100) setPpAbs(parsed.ppAbs);
+    } catch { /* ignore corrupted preference */ }
+  }, []);
+  const persistThresholds = (rel: number, pp: number) => {
+    setRelPct(rel);
+    setPpAbs(pp);
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify({ relPct: rel, ppAbs: pp })); } catch { /* noop */ }
+  };
+  const resetThresholds = () => persistThresholds(DEFAULT_REL_PCT, DEFAULT_PP);
 
   const { data: reports = [], isLoading } = useQuery({
     queryKey: ["executive_monthly_reports"],
@@ -166,8 +191,9 @@ export default function ExecutiveMonthlyReport() {
   const anomalies = useMemo<Anomaly[]>(() => {
     if (!previous || !selected) return [];
     const out: Anomaly[] = [];
-    const REL = 0.30;   // 30% pior
-    const PP = 15;      // 15 pontos percentuais pior
+    // Thresholds are user-adjustable and persisted in localStorage.
+    const REL = Math.max(0, relPct) / 100;
+    const PP = Math.max(0, ppAbs);
 
     const checkLower = (label: string, curr: number | null, prev: number | null, fmt: (n: number) => string) => {
       if (curr == null || prev == null) return;
@@ -196,7 +222,7 @@ export default function ExecutiveMonthlyReport() {
     checkHigherPct("Resolvidos", resolutionRate, prevResolutionRate);
     checkHigherPct("Ações concluídas", actionCompletion, prevActionCompletion);
     return out;
-  }, [previous, selected, resolutionRate, prevResolutionRate, actionCompletion, prevActionCompletion]);
+  }, [previous, selected, resolutionRate, prevResolutionRate, actionCompletion, prevActionCompletion, relPct, ppAbs]);
 
   return (
     <div className="container mx-auto p-6 max-w-7xl space-y-6">
