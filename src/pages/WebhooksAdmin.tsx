@@ -4,7 +4,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Activity, AlertTriangle, CheckCircle2, Webhook } from "lucide-react";
+import { Activity, AlertTriangle, CheckCircle2, Webhook, ShieldAlert } from "lucide-react";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { useEffect } from "react";
 import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid, Legend, BarChart, Bar } from "recharts";
 
@@ -33,6 +34,19 @@ interface HourlyPoint {
   avg_duration_ms: number | null;
   p95_duration_ms: number | null;
 }
+
+interface HourlyBySubscription {
+  subscription_id: string;
+  subscription_name: string | null;
+  subscription_url: string | null;
+  total_deliveries: number;
+  successful_deliveries: number;
+  failed_deliveries: number;
+  success_rate_pct: number | null;
+}
+
+const HEALTH_THRESHOLD = 90;
+const HEALTH_MIN_SAMPLE = 5;
 
 export default function WebhooksAdmin() {
   useEffect(() => {
@@ -69,6 +83,23 @@ export default function WebhooksAdmin() {
     refetchInterval: 60_000,
   });
 
+  const { data: lastHour } = useQuery<HourlyBySubscription[]>({
+    queryKey: ["webhook-delivery-stats-1h"],
+    queryFn: async () => {
+      const { data, error } = await supabase.rpc("get_webhook_delivery_stats_1h" as never);
+      if (error) throw error;
+      return (data as HourlyBySubscription[]) || [];
+    },
+    staleTime: 30_000,
+    refetchInterval: 60_000,
+  });
+
+  const degraded = (lastHour || []).filter(
+    (s) =>
+      Number(s.total_deliveries) >= HEALTH_MIN_SAMPLE &&
+      Number(s.success_rate_pct ?? 100) < HEALTH_THRESHOLD,
+  );
+
   const totals = (data || []).reduce(
     (acc, s) => {
       acc.total += Number(s.total_deliveries || 0);
@@ -91,6 +122,30 @@ export default function WebhooksAdmin() {
           <p className="text-sm text-muted-foreground">Métricas de entrega das últimas 24 horas — atualiza a cada 60s.</p>
         </div>
       </header>
+
+      {degraded.length > 0 && (
+        <Alert variant="destructive" className="border-destructive/40 bg-destructive/5">
+          <ShieldAlert className="h-4 w-4" />
+          <AlertTitle>
+            {degraded.length === 1
+              ? "1 assinatura degradada na última hora"
+              : `${degraded.length} assinaturas degradadas na última hora`}
+          </AlertTitle>
+          <AlertDescription>
+            Taxa de sucesso abaixo de {HEALTH_THRESHOLD}% (amostra mínima de {HEALTH_MIN_SAMPLE} entregas):
+            <ul className="mt-2 space-y-1 text-sm">
+              {degraded.map((d) => (
+                <li key={d.subscription_id} className="flex items-center justify-between gap-3">
+                  <span className="font-medium truncate">{d.subscription_name || d.subscription_url || d.subscription_id}</span>
+                  <span className="tabular-nums whitespace-nowrap">
+                    {Number(d.success_rate_pct ?? 0).toFixed(1)}% · {d.failed_deliveries}/{d.total_deliveries} falhas
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </AlertDescription>
+        </Alert>
+      )}
 
       <section className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <Card>
