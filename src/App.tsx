@@ -66,6 +66,7 @@ const WebhookSubscriptionDetail = lazy(() => import("./pages/WebhookSubscription
 const WebhookSubscriptionNew = lazy(() => import("./pages/WebhookSubscriptionNew"));
 const WebhooksExecutive = lazy(() => import("./pages/WebhooksExecutive"));
 const SecurityRunbook = lazy(() => import("./pages/SecurityRunbook"));
+const SecurityDigests = lazy(() => import("./pages/SecurityDigests"));
 
 function PageLoader() {
   return (
