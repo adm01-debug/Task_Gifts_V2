@@ -125,6 +125,11 @@ export default function Postmortems() {
     });
   }, [list, search, statusFilter, anomalyOnly]);
 
+  const anomalyCount = useMemo(
+    () => list.filter((p) => p.alert_type === "executive_monthly_regression").length,
+    [list],
+  );
+
   const selected = useMemo(() => list.find((p) => p.id === selectedId) ?? null, [list, selectedId]);
 
   useEffect(() => {
@@ -182,6 +187,14 @@ export default function Postmortems() {
               <span className="flex items-center gap-1.5">
                 <AlertTriangle className="w-3.5 h-3.5" />
                 Criados a partir de anomalia
+                <Badge
+                  variant="outline"
+                  className={`text-[10px] font-mono px-1.5 py-0 ${
+                    anomalyOnly ? "border-destructive/50 text-destructive" : ""
+                  }`}
+                >
+                  {anomalyCount}
+                </Badge>
               </span>
               {anomalyOnly ? <X className="w-3.5 h-3.5" /> : null}
             </button>
