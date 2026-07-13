@@ -349,6 +349,23 @@ export default function Postmortems() {
               </span>
               {anomalyOnly ? <X className="w-3.5 h-3.5" /> : null}
             </button>
+            <button
+              type="button"
+              onClick={() => setSortBySeverity((v) => !v)}
+              className={`w-full flex items-center justify-between gap-2 px-2.5 py-1.5 rounded border text-xs transition-colors ${
+                sortBySeverity
+                  ? "bg-primary/10 border-primary/40 text-primary"
+                  : "border-border hover:bg-muted/50 text-muted-foreground"
+              }`}
+              aria-pressed={sortBySeverity}
+              title="Ordena Crítica → Alta → Média → Baixa → Sem severidade"
+            >
+              <span className="flex items-center gap-1.5">
+                <ArrowDownWideNarrow className="w-3.5 h-3.5" />
+                Ordenar por severidade
+              </span>
+              {sortBySeverity ? <X className="w-3.5 h-3.5" /> : null}
+            </button>
             <div className="space-y-1 max-h-[70vh] overflow-y-auto">
               {isLoading ? (
                 <div className="text-xs text-muted-foreground text-center py-6">Carregando…</div>
