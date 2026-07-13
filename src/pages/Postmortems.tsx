@@ -405,6 +405,30 @@ function Editor({ initial, onSaved }: { initial: Postmortem; onSaved: () => void
             className="text-lg font-semibold border-0 px-0 focus-visible:ring-0 focus-visible:ring-offset-0 h-auto"
           />
           <div className="flex flex-wrap items-center gap-2 mt-1 text-xs text-muted-foreground">
+            {draft.alert_type === "executive_monthly_regression" && (() => {
+              const meta = (draft.metadata ?? {}) as Record<string, unknown>;
+              const reportId = typeof meta.report_id === "string" ? meta.report_id : null;
+              const period = typeof meta.period === "string" ? meta.period : null;
+              return (
+                <Badge
+                  variant="outline"
+                  className="text-[10px] gap-1 border-primary/40 bg-primary/10 text-primary"
+                >
+                  <Sparkles className="w-3 h-3" aria-hidden />
+                  Criado a partir de anomalia
+                  {reportId && (
+                    <Link
+                      to={`/admin/executive-monthly-report?report=${reportId}`}
+                      className="ml-1 inline-flex items-center gap-0.5 hover:underline"
+                      title="Abrir relatório de origem"
+                    >
+                      <ExternalLink className="w-3 h-3" />
+                      {period ?? "relatório"}
+                    </Link>
+                  )}
+                </Badge>
+              );
+            })()}
             {draft.severity && <Badge variant="outline" className="text-[10px]">{draft.severity}</Badge>}
             {draft.alert_type && <Badge variant="outline" className="text-[10px] font-mono">{draft.alert_type}</Badge>}
             <span>Início: {draft.incident_started_at ? new Date(draft.incident_started_at).toLocaleString("pt-BR") : "—"}</span>
