@@ -207,6 +207,7 @@ export default function Postmortems() {
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [anomalyOnly, setAnomalyOnly] = useState(false);
+  const [sortBySeverity, setSortBySeverity] = useState(false);
   const [params, setParams] = useSearchParams();
   const selectedId = params.get("id");
   const flash = params.get("flash") === "1";
@@ -256,7 +257,7 @@ export default function Postmortems() {
   });
 
   const filtered = useMemo(() => {
-    return list.filter((p) => {
+    const result = list.filter((p) => {
       if (statusFilter !== "all" && p.status !== statusFilter) return false;
       if (anomalyOnly && p.alert_type !== "executive_monthly_regression") return false;
       if (search.trim()) {
@@ -265,7 +266,15 @@ export default function Postmortems() {
       }
       return true;
     });
-  }, [list, search, statusFilter, anomalyOnly]);
+    if (sortBySeverity) {
+      return [...result].sort((a, b) => {
+        const diff = severityRank(a.severity) - severityRank(b.severity);
+        if (diff !== 0) return diff;
+        return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+      });
+    }
+    return result;
+  }, [list, search, statusFilter, anomalyOnly, sortBySeverity]);
 
   const anomalyCount = useMemo(
     () => list.filter((p) => p.alert_type === "executive_monthly_regression").length,
