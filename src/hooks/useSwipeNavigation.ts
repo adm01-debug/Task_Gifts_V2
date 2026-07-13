@@ -2,7 +2,7 @@ import { useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 
  import { useSmartBack } from "./useNavigationHelpers";
- import { useHapticFeedback } from "./useHapticFeedback";
+ import { useHapticFeedback } from "./useHaptics";
  
  /**
   * useSwipeNavigation - Adds edge swipe gesture support for back navigation

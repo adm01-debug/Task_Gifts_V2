@@ -2,7 +2,7 @@ import { memo } from "react";
 import { ChevronLeft } from "lucide-react";
 import { motion } from "framer-motion";
 import { useSmartBack } from "@/hooks/useNavigationHelpers";
-import { useHapticFeedback } from "@/hooks/useHapticFeedback";
+import { useHapticFeedback } from "@/hooks/useHaptics";
 import { cn } from "@/lib/utils";
 
 interface MobileBackButtonProps {

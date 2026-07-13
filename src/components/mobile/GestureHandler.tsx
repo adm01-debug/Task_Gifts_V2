@@ -1,7 +1,7 @@
 import { memo, ReactNode, useRef, useCallback } from "react";
 import { motion, PanInfo, useDragControls } from "framer-motion";
 import { cn } from "@/lib/utils";
-import { useHapticFeedback } from "@/hooks/useHapticFeedback";
+import { useHapticFeedback } from "@/hooks/useHaptics";
 
 type GestureDirection = "up" | "down" | "left" | "right";
 

@@ -1,6 +1,6 @@
 import { useCallback, useRef, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useHapticFeedback } from "@/hooks/useHapticFeedback";
+import { useHapticFeedback } from "@/hooks/useHaptics";
 
 interface SwipeBackOptions {
   /** Minimum horizontal distance to trigger navigation (default: 80) */

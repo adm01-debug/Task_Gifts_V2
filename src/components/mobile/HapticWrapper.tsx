@@ -1,5 +1,5 @@
 import { useCallback, ComponentType } from "react";
-import { useHapticFeedback } from "@/hooks/useHapticFeedback";
+import { useHapticFeedback } from "@/hooks/useHaptics";
 
 /**
  * Higher-order component that adds haptic feedback to any clickable component
