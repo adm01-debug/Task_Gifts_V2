@@ -332,24 +332,47 @@ export default function Postmortems() {
                 <div className="text-xs text-muted-foreground text-center py-6">Carregando…</div>
               ) : filtered.length === 0 ? (
                 <div className="text-xs text-muted-foreground text-center py-6">Nenhum postmortem.</div>
-              ) : filtered.map((p) => (
-                <button
-                  key={p.id}
-                  onClick={() => setParams({ id: p.id })}
-                  className={`w-full text-left p-2 rounded border transition-colors ${
-                    selectedId === p.id ? "bg-primary/10 border-primary/40" : "hover:bg-muted/50 border-transparent"
-                  }`}
-                >
-                  <div className="text-sm font-medium line-clamp-1">{p.title}</div>
-                  <div className="flex items-center gap-1.5 mt-1">
-                    <Badge variant="outline" className="text-[10px] font-mono">{STATUS_LABEL[p.status]}</Badge>
-                    {p.alert_type && <Badge variant="outline" className="text-[10px] font-mono">{p.alert_type}</Badge>}
-                    <span className="text-[10px] text-muted-foreground ml-auto">
-                      {new Date(p.created_at).toLocaleDateString("pt-BR")}
-                    </span>
-                  </div>
-                </button>
-              ))}
+              ) : filtered.map((p) => {
+                const sev = getSeverityMeta(p.severity);
+                return (
+                  <button
+                    key={p.id}
+                    onClick={() => setParams({ id: p.id })}
+                    className={`w-full text-left p-2 rounded border border-l-4 transition-colors ${
+                      sev ? sev.ring : "border-l-transparent"
+                    } ${
+                      selectedId === p.id
+                        ? "bg-primary/10 border-primary/40"
+                        : "hover:bg-muted/50 border-transparent"
+                    }`}
+                    title={sev ? `Severidade: ${sev.label}` : "Sem severidade"}
+                  >
+                    <div className="flex items-start gap-2">
+                      <span
+                        className={`mt-1.5 inline-block h-2 w-2 rounded-full flex-shrink-0 ${
+                          sev ? sev.dot : "bg-muted-foreground/30"
+                        }`}
+                        aria-hidden
+                      />
+                      <div className="min-w-0 flex-1">
+                        <div className="text-sm font-medium line-clamp-1">{p.title}</div>
+                        <div className="flex items-center flex-wrap gap-1.5 mt-1">
+                          <Badge variant="outline" className="text-[10px] font-mono">{STATUS_LABEL[p.status]}</Badge>
+                          {sev && (
+                            <Badge variant="outline" className={`text-[10px] font-mono ${sev.badge}`}>
+                              {sev.label}
+                            </Badge>
+                          )}
+                          {p.alert_type && <Badge variant="outline" className="text-[10px] font-mono">{p.alert_type}</Badge>}
+                          <span className="text-[10px] text-muted-foreground ml-auto">
+                            {new Date(p.created_at).toLocaleDateString("pt-BR")}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </button>
+                );
+              })}
             </div>
           </CardContent>
         </Card>
