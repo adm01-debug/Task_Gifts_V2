@@ -9,7 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { ArrowLeft, FileText, Save, ExternalLink, Search, Plus, Trash2, AlertTriangle, Sparkles } from "lucide-react";
+import { ArrowLeft, FileText, Save, ExternalLink, Search, Plus, Trash2, AlertTriangle, Sparkles, X } from "lucide-react";
 import { toast } from "sonner";
 
 type Postmortem = {
@@ -64,9 +64,21 @@ export default function Postmortems() {
   const qc = useQueryClient();
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
+  const [anomalyOnly, setAnomalyOnly] = useState(false);
   const [params, setParams] = useSearchParams();
   const selectedId = params.get("id");
   const flash = params.get("flash") === "1";
+  const sourceParam = params.get("source");
+
+  // Deep-link: chegar via ?source=anomaly já aplica o filtro e limpa o param.
+  useEffect(() => {
+    if (sourceParam !== "anomaly") return;
+    setAnomalyOnly(true);
+    const next = new URLSearchParams(params);
+    next.delete("source");
+    setParams(next, { replace: true });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [sourceParam]);
   const editorRef = useRef<HTMLDivElement>(null);
   const [flashActive, setFlashActive] = useState(false);
 
@@ -104,13 +116,14 @@ export default function Postmortems() {
   const filtered = useMemo(() => {
     return list.filter((p) => {
       if (statusFilter !== "all" && p.status !== statusFilter) return false;
+      if (anomalyOnly && p.alert_type !== "executive_monthly_regression") return false;
       if (search.trim()) {
         const s = search.toLowerCase();
         return p.title.toLowerCase().includes(s) || (p.alert_type ?? "").toLowerCase().includes(s);
       }
       return true;
     });
-  }, [list, search, statusFilter]);
+  }, [list, search, statusFilter, anomalyOnly]);
 
   const selected = useMemo(() => list.find((p) => p.id === selectedId) ?? null, [list, selectedId]);
 
