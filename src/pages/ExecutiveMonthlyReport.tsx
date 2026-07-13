@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -50,6 +50,7 @@ export default function ExecutiveMonthlyReport() {
   const qc = useQueryClient();
   const navigate = useNavigate();
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [searchParams, setSearchParams] = useSearchParams();
   const [editingCommentary, setEditingCommentary] = useState(false);
   const [commentaryDraft, setCommentaryDraft] = useState("");
 
@@ -93,6 +94,21 @@ export default function ExecutiveMonthlyReport() {
     () => reports.find((r) => r.id === selectedId) ?? reports[0] ?? null,
     [reports, selectedId]
   );
+
+  // Deep-link: quando o Postmortem devolve o usuário via ?report=<id>,
+  // selecionamos aquele mês automaticamente e removemos o param da URL.
+  useEffect(() => {
+    const reportParam = searchParams.get("report");
+    if (!reportParam || reports.length === 0) return;
+    const exists = reports.some((r) => r.id === reportParam);
+    if (exists) {
+      setSelectedId(reportParam);
+      const next = new URLSearchParams(searchParams);
+      next.delete("report");
+      setSearchParams(next, { replace: true });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [reports.length, searchParams]);
 
   const saveCommentary = useMutation({
     mutationFn: async (payload: { id: string; commentary: string }) => {
