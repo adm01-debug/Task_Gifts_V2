@@ -334,7 +334,20 @@ export default function ExecutiveMonthlyReport() {
 
       <Card>
         <CardHeader className="pb-2 flex flex-row items-center justify-between">
-          <CardTitle className="text-sm">Período</CardTitle>
+          <CardTitle className="text-sm flex items-center gap-2">
+            Período
+            {selected && linkedPostmortems > 0 && (
+              <Link
+                to="/admin/postmortems"
+                className="inline-flex items-center gap-1 text-[11px] font-normal px-2 py-0.5 rounded-full bg-primary/10 text-primary hover:bg-primary/20 transition-colors"
+                title="Ver postmortems criados a partir deste mês"
+              >
+                <FileText className="w-3 h-3" aria-hidden />
+                {linkedPostmortems} postmortem{linkedPostmortems > 1 ? "s" : ""} vinculado{linkedPostmortems > 1 ? "s" : ""}
+                <ExternalLink className="w-2.5 h-2.5 opacity-70" aria-hidden />
+              </Link>
+            )}
+          </CardTitle>
           <Select
             value={selected?.id ?? ""}
             onValueChange={(v) => setSelectedId(v)}
