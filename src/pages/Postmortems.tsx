@@ -9,7 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { ArrowLeft, FileText, Save, ExternalLink, Search, Plus, Trash2, AlertTriangle, Sparkles, X, CircleDot, Flame, CheckCircle2, Clock, Pencil } from "lucide-react";
+import { ArrowLeft, FileText, Save, ExternalLink, Search, Plus, Trash2, AlertTriangle, Sparkles, X, CircleDot, Flame, CheckCircle2, Clock, Pencil, Check } from "lucide-react";
 import { toast } from "sonner";
 
 type Postmortem = {
@@ -76,7 +76,15 @@ type Milestone = {
   hint?: string | null;
 };
 
-function IncidentTimeline({ draft }: { draft: Postmortem }) {
+function IncidentTimeline({
+  draft,
+  onResolveNow,
+  resolving,
+}: {
+  draft: Postmortem;
+  onResolveNow: () => void;
+  resolving: boolean;
+}) {
   const anchor = draft.incident_started_at ?? draft.created_at;
   const milestones: Milestone[] = [
     { key: "created", label: "Postmortem aberto", at: draft.created_at, icon: Pencil, tone: "muted" },
@@ -94,9 +102,24 @@ function IncidentTimeline({ draft }: { draft: Postmortem }) {
 
   return (
     <div className="rounded-md border bg-muted/20 p-3">
-      <div className="flex items-center gap-1.5 mb-3 text-xs font-medium text-muted-foreground">
-        <CircleDot className="w-3.5 h-3.5" aria-hidden />
-        Cronograma do incidente
+      <div className="flex items-center justify-between gap-2 mb-3">
+        <div className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
+          <CircleDot className="w-3.5 h-3.5" aria-hidden />
+          Cronograma do incidente
+        </div>
+        {!draft.incident_resolved_at && (
+          <Button
+            size="sm"
+            variant="outline"
+            className="h-7 text-xs gap-1 border-emerald-500/40 text-emerald-700 dark:text-emerald-400 hover:bg-emerald-500/10"
+            onClick={onResolveNow}
+            disabled={resolving}
+            title="Marca incident_resolved_at = agora e recalcula a duração"
+          >
+            <Check className="w-3.5 h-3.5" aria-hidden />
+            {resolving ? "Resolvendo…" : "Marcar como resolvido agora"}
+          </Button>
+        )}
       </div>
       <ol className="relative border-l border-border/60 pl-4 space-y-3" aria-label="Marcos do incidente">
         {milestones.map((m) => {
@@ -487,6 +510,41 @@ function Editor({ initial, onSaved }: { initial: Postmortem; onSaved: () => void
   const [draft, setDraft] = useState<Postmortem>(initial);
   const dirty = JSON.stringify(draft) !== JSON.stringify(initial);
 
+  const resolveNow = useMutation({
+    mutationFn: async () => {
+      const resolvedAt = new Date();
+      // Fallback: se não houver incident_started_at, usa created_at como âncora.
+      const startISO = draft.incident_started_at ?? draft.created_at;
+      const startMs = new Date(startISO).getTime();
+      const durationSec = Number.isFinite(startMs)
+        ? Math.max(0, Math.round((resolvedAt.getTime() - startMs) / 1000))
+        : null;
+      const payload = {
+        incident_resolved_at: resolvedAt.toISOString(),
+        duration_seconds: durationSec,
+      };
+      const { data, error } = await supabase
+        .from("postmortems")
+        .update(payload)
+        .eq("id", draft.id)
+        .select("incident_resolved_at, duration_seconds, updated_at")
+        .maybeSingle();
+      if (error) throw error;
+      return data;
+    },
+    onSuccess: (data) => {
+      setDraft((d) => ({
+        ...d,
+        incident_resolved_at: data?.incident_resolved_at ?? d.incident_resolved_at,
+        duration_seconds: data?.duration_seconds ?? d.duration_seconds,
+        updated_at: data?.updated_at ?? d.updated_at,
+      }));
+      toast.success("Incidente marcado como resolvido");
+      onSaved();
+    },
+    onError: (e: unknown) => toast.error(e instanceof Error ? e.message : "Falha ao resolver"),
+  });
+
   const save = useMutation({
     mutationFn: async () => {
       const { error } = await supabase
@@ -569,7 +627,11 @@ function Editor({ initial, onSaved }: { initial: Postmortem; onSaved: () => void
         </div>
       </CardHeader>
       <CardContent className="space-y-4">
-        <IncidentTimeline draft={draft} />
+        <IncidentTimeline
+          draft={draft}
+          onResolveNow={() => resolveNow.mutate()}
+          resolving={resolveNow.isPending}
+        />
         {([
           ["summary", "Resumo executivo"],
           ["root_cause", "Causa raiz"],
