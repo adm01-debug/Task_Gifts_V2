@@ -418,7 +418,7 @@ function Editor({ initial, onSaved }: { initial: Postmortem; onSaved: () => void
                   Criado a partir de anomalia
                   {reportId && (
                     <Link
-                      to={`/admin/executive-monthly-report?report=${reportId}`}
+                      to={`/admin/executive-report?report=${reportId}`}
                       className="ml-1 inline-flex items-center gap-0.5 hover:underline"
                       title="Abrir relatório de origem"
                     >
