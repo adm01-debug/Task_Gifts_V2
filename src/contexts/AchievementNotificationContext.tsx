@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, ReactNode, useCallback } from "react";
 import { AchievementContainer } from "@/components/AchievementSystem";
-import { useHapticFeedback } from "@/hooks/useHapticFeedback";
+import { useHapticFeedback } from "@/hooks/useHaptics";
 
 interface AchievementNotification {
   id: string;

@@ -10,7 +10,7 @@ import { cn } from "@/lib/utils";
 import { useScrollRestoration } from "@/hooks/useNavigationHelpers";
  import { PullToRefresh } from "../mobile/PullToRefresh";
  import { useQueryClient } from "@tanstack/react-query";
- import { useHapticFeedback } from "@/hooks/useHapticFeedback";
+ import { useHapticFeedback } from "@/hooks/useHaptics";
 
 interface PageShellProps {
   children: ReactNode;

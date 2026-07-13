@@ -3,7 +3,7 @@ import { useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
 import { ArrowLeft } from "lucide-react";
  import { useSmartBack } from "@/hooks/useNavigationHelpers";
- import { useHapticFeedback } from "@/hooks/useHapticFeedback";
+ import { useHapticFeedback } from "@/hooks/useHaptics";
 import { cn } from "@/lib/utils";
 
 interface DesktopBackButtonProps {

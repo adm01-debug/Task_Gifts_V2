@@ -2,7 +2,7 @@ import { memo, ReactNode, useRef, useState } from "react";
 import { motion, useMotionValue, useTransform, PanInfo } from "framer-motion";
 import { Trash2, Check, Archive, MoreHorizontal } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { useHapticFeedback } from "@/hooks/useHapticFeedback";
+import { useHapticFeedback } from "@/hooks/useHaptics";
 
 type SwipeAction = "delete" | "complete" | "archive" | "custom";
 

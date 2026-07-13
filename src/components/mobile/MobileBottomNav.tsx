@@ -3,7 +3,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { Home, Target, Trophy, User, BookOpen, MoreHorizontal, Gamepad2, BarChart3, MessageSquare, Sparkles, Settings, Bell, HelpCircle } from "lucide-react";
 import { motion, AnimatePresence, useDragControls } from "framer-motion";
 import { cn } from "@/lib/utils";
-import { useHapticFeedback } from "@/hooks/useHapticFeedback";
+import { useHapticFeedback } from "@/hooks/useHaptics";
 
 interface NavItem {
   icon: React.ElementType;

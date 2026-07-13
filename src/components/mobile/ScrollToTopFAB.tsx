@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ArrowUp } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useScrollDirection } from "@/hooks/useScrollDirection";
-import { useHapticFeedback } from "@/hooks/useHapticFeedback";
+import { useHapticFeedback } from "@/hooks/useHaptics";
 
 interface ScrollToTopFABProps {
   className?: string;

@@ -1,7 +1,7 @@
 import { memo, useRef, useState, useCallback } from "react";
 import { motion, useMotionValue, useTransform, PanInfo } from "framer-motion";
 import { cn } from "@/lib/utils";
-import { useHapticFeedback } from "@/hooks/useHapticFeedback";
+import { useHapticFeedback } from "@/hooks/useHaptics";
 
 interface SwipeAction {
   icon: React.ReactNode;

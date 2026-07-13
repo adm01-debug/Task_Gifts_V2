@@ -8,7 +8,7 @@ import { useScrollHeader } from "@/hooks/useScrollHeader";
 import { useSwipeBack } from "@/hooks/useSwipeBack";
 import { useViewTransition } from "@/hooks/useViewTransition";
 import { PullToRefresh } from "./PullToRefresh";
-import { useHapticFeedback } from "@/hooks/useHapticFeedback";
+import { useHapticFeedback } from "@/hooks/useHaptics";
 import { MobileBottomNav } from "./MobileBottomNav";
 import { ScrollToTopFAB } from "./ScrollToTopFAB";
 

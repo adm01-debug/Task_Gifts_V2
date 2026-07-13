@@ -1,34 +1,4 @@
-import { useToast } from "@/components/ui/use-toast";
 import { useCallback } from "react";
-
-export const useHapticFeedback = () => {
-  const triggerHaptic = useCallback((type: "success" | "warning" | "error" | "light" | "medium" | "heavy" = "light") => {
-    if (typeof window !== "undefined" && window.navigator && window.navigator.vibrate) {
-      switch (type) {
-        case "light":
-          window.navigator.vibrate(10);
-          break;
-        case "medium":
-          window.navigator.vibrate(25);
-          break;
-        case "heavy":
-          window.navigator.vibrate(50);
-          break;
-        case "success":
-          window.navigator.vibrate([10, 30, 10]);
-          break;
-        case "warning":
-          window.navigator.vibrate([30, 50, 30]);
-          break;
-        case "error":
-          window.navigator.vibrate([50, 100, 50, 100]);
-          break;
-      }
-    }
-  }, []);
-
-  return { triggerHaptic };
-};
 
 export const useSoundFeedback = () => {
   const playSound = useCallback((type: "success" | "click" | "error" | "achievement") => {

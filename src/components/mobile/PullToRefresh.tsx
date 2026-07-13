@@ -1,7 +1,7 @@
  import { useState, ReactNode, useRef } from "react";
  import { motion } from "framer-motion";
  import { Loader2, RefreshCw } from "lucide-react";
- import { useHapticFeedback } from "@/hooks/useHapticFeedback";
+ import { useHapticFeedback } from "@/hooks/useHaptics";
 
 interface PullToRefreshProps {
   onRefresh: () => Promise<void>;
