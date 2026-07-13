@@ -558,6 +558,7 @@ function Editor({ initial, onSaved }: { initial: Postmortem; onSaved: () => void
           timeline: draft.timeline,
           action_items: draft.action_items,
           lessons_learned: draft.lessons_learned,
+          severity: draft.severity,
         })
         .eq("id", draft.id);
       if (error) throw error;
@@ -600,7 +601,6 @@ function Editor({ initial, onSaved }: { initial: Postmortem; onSaved: () => void
                 </Badge>
               );
             })()}
-            {draft.severity && <Badge variant="outline" className="text-[10px]">{draft.severity}</Badge>}
             {draft.alert_type && <Badge variant="outline" className="text-[10px] font-mono">{draft.alert_type}</Badge>}
             <span>Início: {draft.incident_started_at ? new Date(draft.incident_started_at).toLocaleString("pt-BR") : "—"}</span>
             <span>·</span>
@@ -613,6 +613,21 @@ function Editor({ initial, onSaved }: { initial: Postmortem; onSaved: () => void
           </div>
         </div>
         <div className="flex items-center gap-2">
+          <Select
+            value={draft.severity ?? "unset"}
+            onValueChange={(v) => setDraft({ ...draft, severity: v === "unset" ? null : v })}
+          >
+            <SelectTrigger className="h-9 w-[130px]" aria-label="Severidade">
+              <SelectValue placeholder="Severidade" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="unset">Sem severidade</SelectItem>
+              <SelectItem value="low">Baixa</SelectItem>
+              <SelectItem value="medium">Média</SelectItem>
+              <SelectItem value="high">Alta</SelectItem>
+              <SelectItem value="critical">Crítica</SelectItem>
+            </SelectContent>
+          </Select>
           <Select value={draft.status} onValueChange={(v) => setDraft({ ...draft, status: v as Postmortem["status"] })}>
             <SelectTrigger className="h-9 w-[140px]"><SelectValue /></SelectTrigger>
             <SelectContent>
