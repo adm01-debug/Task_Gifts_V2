@@ -9,7 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { ArrowLeft, FileText, Save, ExternalLink, Search, Plus, Trash2, AlertTriangle, Sparkles, X } from "lucide-react";
+import { ArrowLeft, FileText, Save, ExternalLink, Search, Plus, Trash2, AlertTriangle, Sparkles, X, CircleDot, Flame, CheckCircle2, Clock, Pencil } from "lucide-react";
 import { toast } from "sonner";
 
 type Postmortem = {
@@ -58,6 +58,77 @@ function fmtDur(sec: number | null) {
   if (sec < 3600) return `${Math.round(sec / 60)}min`;
   const h = Math.floor(sec / 3600), m = Math.round((sec % 3600) / 60);
   return m ? `${h}h ${m}min` : `${h}h`;
+}
+
+function fmtRel(fromISO: string | null, toISO: string | null): string | null {
+  if (!fromISO || !toISO) return null;
+  const diff = Math.round((new Date(toISO).getTime() - new Date(fromISO).getTime()) / 1000);
+  if (!Number.isFinite(diff) || diff < 0) return null;
+  return `+${fmtDur(diff)}`;
+}
+
+type Milestone = {
+  key: string;
+  label: string;
+  at: string | null;
+  icon: typeof CircleDot;
+  tone: "muted" | "warn" | "success" | "info";
+  hint?: string | null;
+};
+
+function IncidentTimeline({ draft }: { draft: Postmortem }) {
+  const anchor = draft.incident_started_at ?? draft.created_at;
+  const milestones: Milestone[] = [
+    { key: "created", label: "Postmortem aberto", at: draft.created_at, icon: Pencil, tone: "muted" },
+    { key: "started", label: "Início do incidente", at: draft.incident_started_at, icon: Flame, tone: "warn" },
+    { key: "resolved", label: "Incidente resolvido", at: draft.incident_resolved_at, icon: CheckCircle2, tone: "success", hint: fmtRel(draft.incident_started_at, draft.incident_resolved_at) },
+    { key: "updated", label: "Última atualização", at: draft.updated_at, icon: Clock, tone: "info", hint: fmtRel(anchor, draft.updated_at) },
+  ];
+
+  const toneClasses: Record<Milestone["tone"], string> = {
+    muted: "bg-muted text-muted-foreground border-border",
+    warn: "bg-orange-500/10 text-orange-600 border-orange-500/30 dark:text-orange-400",
+    success: "bg-emerald-500/10 text-emerald-600 border-emerald-500/30 dark:text-emerald-400",
+    info: "bg-primary/10 text-primary border-primary/30",
+  };
+
+  return (
+    <div className="rounded-md border bg-muted/20 p-3">
+      <div className="flex items-center gap-1.5 mb-3 text-xs font-medium text-muted-foreground">
+        <CircleDot className="w-3.5 h-3.5" aria-hidden />
+        Cronograma do incidente
+      </div>
+      <ol className="relative border-l border-border/60 pl-4 space-y-3" aria-label="Marcos do incidente">
+        {milestones.map((m) => {
+          const Icon = m.icon;
+          const missing = !m.at;
+          return (
+            <li key={m.key} className="relative">
+              <span
+                className={`absolute -left-[22px] top-0.5 flex h-4 w-4 items-center justify-center rounded-full border ${
+                  missing ? "bg-background text-muted-foreground/50 border-dashed" : toneClasses[m.tone]
+                }`}
+                aria-hidden
+              >
+                <Icon className="w-2.5 h-2.5" />
+              </span>
+              <div className="flex flex-wrap items-center gap-2 text-xs">
+                <span className={missing ? "text-muted-foreground/70" : "font-medium"}>{m.label}</span>
+                <span className="font-mono text-muted-foreground">
+                  {m.at ? new Date(m.at).toLocaleString("pt-BR") : "aguardando"}
+                </span>
+                {m.hint && (
+                  <Badge variant="outline" className="text-[10px] font-mono">
+                    {m.hint}
+                  </Badge>
+                )}
+              </div>
+            </li>
+          );
+        })}
+      </ol>
+    </div>
+  );
 }
 
 export default function Postmortems() {
@@ -498,6 +569,7 @@ function Editor({ initial, onSaved }: { initial: Postmortem; onSaved: () => void
         </div>
       </CardHeader>
       <CardContent className="space-y-4">
+        <IncidentTimeline draft={draft} />
         {([
           ["summary", "Resumo executivo"],
           ["root_cause", "Causa raiz"],
