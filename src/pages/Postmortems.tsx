@@ -9,7 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { ArrowLeft, FileText, Save, ExternalLink, Search, Plus, Trash2, AlertTriangle, Sparkles, X, CircleDot, Flame, CheckCircle2, Clock, Pencil, Check } from "lucide-react";
+import { ArrowLeft, FileText, Save, ExternalLink, Search, Plus, Trash2, AlertTriangle, Sparkles, X, CircleDot, Flame, CheckCircle2, Clock, Pencil, Check, ArrowDownWideNarrow } from "lucide-react";
 import { toast } from "sonner";
 
 type Postmortem = {
@@ -85,6 +85,19 @@ function getSeverityMeta(sev: string | null) {
   if (!sev) return null;
   const key = sev.toLowerCase() as SeverityKey;
   return SEVERITY_META[key] ?? null;
+}
+
+const SEVERITY_ORDER: Record<SeverityKey, number> = {
+  critical: 0,
+  high: 1,
+  medium: 2,
+  low: 3,
+};
+
+function severityRank(sev: string | null): number {
+  if (!sev) return 99;
+  const key = sev.toLowerCase() as SeverityKey;
+  return SEVERITY_ORDER[key] ?? 99;
 }
 
 function fmtDur(sec: number | null) {
@@ -194,6 +207,7 @@ export default function Postmortems() {
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [anomalyOnly, setAnomalyOnly] = useState(false);
+  const [sortBySeverity, setSortBySeverity] = useState(false);
   const [params, setParams] = useSearchParams();
   const selectedId = params.get("id");
   const flash = params.get("flash") === "1";
@@ -243,7 +257,7 @@ export default function Postmortems() {
   });
 
   const filtered = useMemo(() => {
-    return list.filter((p) => {
+    const result = list.filter((p) => {
       if (statusFilter !== "all" && p.status !== statusFilter) return false;
       if (anomalyOnly && p.alert_type !== "executive_monthly_regression") return false;
       if (search.trim()) {
@@ -252,7 +266,15 @@ export default function Postmortems() {
       }
       return true;
     });
-  }, [list, search, statusFilter, anomalyOnly]);
+    if (sortBySeverity) {
+      return [...result].sort((a, b) => {
+        const diff = severityRank(a.severity) - severityRank(b.severity);
+        if (diff !== 0) return diff;
+        return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+      });
+    }
+    return result;
+  }, [list, search, statusFilter, anomalyOnly, sortBySeverity]);
 
   const anomalyCount = useMemo(
     () => list.filter((p) => p.alert_type === "executive_monthly_regression").length,
@@ -326,6 +348,23 @@ export default function Postmortems() {
                 </Badge>
               </span>
               {anomalyOnly ? <X className="w-3.5 h-3.5" /> : null}
+            </button>
+            <button
+              type="button"
+              onClick={() => setSortBySeverity((v) => !v)}
+              className={`w-full flex items-center justify-between gap-2 px-2.5 py-1.5 rounded border text-xs transition-colors ${
+                sortBySeverity
+                  ? "bg-primary/10 border-primary/40 text-primary"
+                  : "border-border hover:bg-muted/50 text-muted-foreground"
+              }`}
+              aria-pressed={sortBySeverity}
+              title="Ordena Crítica → Alta → Média → Baixa → Sem severidade"
+            >
+              <span className="flex items-center gap-1.5">
+                <ArrowDownWideNarrow className="w-3.5 h-3.5" />
+                Ordenar por severidade
+              </span>
+              {sortBySeverity ? <X className="w-3.5 h-3.5" /> : null}
             </button>
             <div className="space-y-1 max-h-[70vh] overflow-y-auto">
               {isLoading ? (
