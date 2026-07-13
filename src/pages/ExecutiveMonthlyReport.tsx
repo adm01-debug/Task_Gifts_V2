@@ -338,7 +338,7 @@ export default function ExecutiveMonthlyReport() {
             Período
             {selected && linkedPostmortems > 0 && (
               <Link
-                to="/admin/postmortems"
+                to="/admin/postmortems?source=anomaly"
                 className="inline-flex items-center gap-1 text-[11px] font-normal px-2 py-0.5 rounded-full bg-primary/10 text-primary hover:bg-primary/20 transition-colors"
                 title="Ver postmortems criados a partir deste mês"
               >
