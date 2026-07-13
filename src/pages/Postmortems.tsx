@@ -9,7 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { ArrowLeft, FileText, Save, ExternalLink, Search, Plus, Trash2, AlertTriangle } from "lucide-react";
+import { ArrowLeft, FileText, Save, ExternalLink, Search, Plus, Trash2, AlertTriangle, Sparkles } from "lucide-react";
 import { toast } from "sonner";
 
 type Postmortem = {
@@ -28,6 +28,7 @@ type Postmortem = {
   timeline: string | null;
   action_items: string | null;
   lessons_learned: string | null;
+  metadata: Record<string, unknown> | null;
   created_at: string;
   updated_at: string;
 };
