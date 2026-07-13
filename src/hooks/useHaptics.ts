@@ -55,8 +55,18 @@ export const useHaptics = () => {
   const isSupported = isVibrationSupported();
 
   const vibrate = useCallback(
-    (pattern: number | number[]): boolean => {
+    (pattern: number | number[] | HapticStyle): boolean => {
       if (!isSupported || !settings.hapticsEnabled) return false;
+      if (typeof pattern === "string") {
+        if (pattern === "none") return false;
+        const stylePattern = STYLE_PATTERNS[pattern];
+        if (stylePattern === undefined) return false;
+        try {
+          return navigator.vibrate(stylePattern);
+        } catch {
+          return false;
+        }
+      }
       try {
         return navigator.vibrate(pattern);
       } catch {
