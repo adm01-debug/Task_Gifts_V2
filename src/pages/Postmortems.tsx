@@ -9,7 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { ArrowLeft, FileText, Save, ExternalLink, Search, Plus, Trash2, AlertTriangle, Sparkles, X, CircleDot, Flame, CheckCircle2, Clock, Pencil, Check } from "lucide-react";
+import { ArrowLeft, FileText, Save, ExternalLink, Search, Plus, Trash2, AlertTriangle, Sparkles, X, CircleDot, Flame, CheckCircle2, Clock, Pencil, Check, ArrowDownWideNarrow } from "lucide-react";
 import { toast } from "sonner";
 
 type Postmortem = {
@@ -85,6 +85,19 @@ function getSeverityMeta(sev: string | null) {
   if (!sev) return null;
   const key = sev.toLowerCase() as SeverityKey;
   return SEVERITY_META[key] ?? null;
+}
+
+const SEVERITY_ORDER: Record<SeverityKey, number> = {
+  critical: 0,
+  high: 1,
+  medium: 2,
+  low: 3,
+};
+
+function severityRank(sev: string | null): number {
+  if (!sev) return 99;
+  const key = sev.toLowerCase() as SeverityKey;
+  return SEVERITY_ORDER[key] ?? 99;
 }
 
 function fmtDur(sec: number | null) {
