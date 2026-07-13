@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { ArrowLeft, FileBarChart2, RefreshCw, Download, ExternalLink, TrendingUp, TrendingDown, Minus } from "lucide-react";
+import { ArrowLeft, FileBarChart2, RefreshCw, Download, ExternalLink, TrendingUp, TrendingDown, Minus, FileText } from "lucide-react";
 import { MessageSquareText, Save, Pencil, X } from "lucide-react";
 import { AlertTriangle, Settings2, RotateCcw, FilePlus2 } from "lucide-react";
 import { LineChart, Line, ResponsiveContainer, Tooltip as ReTooltip, YAxis } from "recharts";
@@ -140,6 +140,22 @@ export default function ExecutiveMonthlyReport() {
     // reports are ordered DESC, so the "previous month" is at idx + 1
     return idx >= 0 ? reports[idx + 1] ?? null : null;
   }, [reports, selected]);
+
+  // Contagem de postmortems vinculados ao mês selecionado (via metadata.report_id),
+  // permitindo enxergar rapidamente se aquele mês já foi investigado.
+  const { data: linkedPostmortems = 0 } = useQuery({
+    queryKey: ["executive_report_linked_postmortems", selected?.id],
+    enabled: !!selected?.id,
+    queryFn: async () => {
+      const { count, error } = await supabase
+        .from("postmortems")
+        .select("id", { count: "exact", head: true })
+        .eq("alert_type", "executive_monthly_regression")
+        .contains("metadata", { report_id: selected!.id });
+      if (error) throw error;
+      return count ?? 0;
+    },
+  });
 
   // Trailing 6-month window (oldest → newest) ending on the selected report.
   const trailing = useMemo(() => {
