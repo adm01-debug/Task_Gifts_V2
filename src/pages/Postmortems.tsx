@@ -52,6 +52,41 @@ const STATUS_LABEL: Record<Postmortem["status"], string> = {
   published: "Publicado",
 };
 
+type SeverityKey = "critical" | "high" | "medium" | "low";
+
+const SEVERITY_META: Record<SeverityKey, { label: string; dot: string; badge: string; ring: string }> = {
+  critical: {
+    label: "Crítica",
+    dot: "bg-destructive",
+    badge: "border-destructive/50 text-destructive bg-destructive/10",
+    ring: "border-l-destructive",
+  },
+  high: {
+    label: "Alta",
+    dot: "bg-orange-500",
+    badge: "border-orange-500/40 text-orange-600 dark:text-orange-400 bg-orange-500/10",
+    ring: "border-l-orange-500",
+  },
+  medium: {
+    label: "Média",
+    dot: "bg-amber-500",
+    badge: "border-amber-500/40 text-amber-700 dark:text-amber-400 bg-amber-500/10",
+    ring: "border-l-amber-500",
+  },
+  low: {
+    label: "Baixa",
+    dot: "bg-emerald-500",
+    badge: "border-emerald-500/40 text-emerald-700 dark:text-emerald-400 bg-emerald-500/10",
+    ring: "border-l-emerald-500",
+  },
+};
+
+function getSeverityMeta(sev: string | null) {
+  if (!sev) return null;
+  const key = sev.toLowerCase() as SeverityKey;
+  return SEVERITY_META[key] ?? null;
+}
+
 function fmtDur(sec: number | null) {
   if (sec == null) return "—";
   if (sec < 60) return `${sec}s`;
