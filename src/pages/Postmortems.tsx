@@ -209,22 +209,24 @@ type PersistedFilters = {
   anomalyOnly: boolean;
   sortBySeverity: boolean;
   pendingOnly: boolean;
+  noPlanOnly: boolean;
 };
 
 function loadFilters(): PersistedFilters {
-  if (typeof window === "undefined") return { statusFilter: "all", anomalyOnly: false, sortBySeverity: false, pendingOnly: false };
+  if (typeof window === "undefined") return { statusFilter: "all", anomalyOnly: false, sortBySeverity: false, pendingOnly: false, noPlanOnly: false };
   try {
     const raw = window.localStorage.getItem(FILTERS_KEY);
-    if (!raw) return { statusFilter: "all", anomalyOnly: false, sortBySeverity: false, pendingOnly: false };
+    if (!raw) return { statusFilter: "all", anomalyOnly: false, sortBySeverity: false, pendingOnly: false, noPlanOnly: false };
     const parsed = JSON.parse(raw) as Partial<PersistedFilters>;
     return {
       statusFilter: typeof parsed.statusFilter === "string" ? parsed.statusFilter : "all",
       anomalyOnly: Boolean(parsed.anomalyOnly),
       sortBySeverity: Boolean(parsed.sortBySeverity),
       pendingOnly: Boolean(parsed.pendingOnly),
+      noPlanOnly: Boolean(parsed.noPlanOnly),
     };
   } catch {
-    return { statusFilter: "all", anomalyOnly: false, sortBySeverity: false, pendingOnly: false };
+    return { statusFilter: "all", anomalyOnly: false, sortBySeverity: false, pendingOnly: false, noPlanOnly: false };
   }
 }
 
@@ -237,6 +239,7 @@ export default function Postmortems() {
   const [anomalyOnly, setAnomalyOnly] = useState(initialFilters.anomalyOnly);
   const [sortBySeverity, setSortBySeverity] = useState(initialFilters.sortBySeverity);
   const [pendingOnly, setPendingOnly] = useState(initialFilters.pendingOnly);
+  const [noPlanOnly, setNoPlanOnly] = useState(initialFilters.noPlanOnly);
   const [params, setParams] = useSearchParams();
 
   // Persist filter preferences so the investigator keeps context between sessions.
@@ -245,12 +248,12 @@ export default function Postmortems() {
     try {
       window.localStorage.setItem(
         FILTERS_KEY,
-        JSON.stringify({ statusFilter, anomalyOnly, sortBySeverity, pendingOnly } satisfies PersistedFilters),
+        JSON.stringify({ statusFilter, anomalyOnly, sortBySeverity, pendingOnly, noPlanOnly } satisfies PersistedFilters),
       );
     } catch {
       /* storage cheio ou bloqueado — ignore silenciosamente */
     }
-  }, [statusFilter, anomalyOnly, sortBySeverity, pendingOnly]);
+  }, [statusFilter, anomalyOnly, sortBySeverity, pendingOnly, noPlanOnly]);
 
   const selectedId = params.get("id");
   const flash = params.get("flash") === "1";
@@ -343,6 +346,7 @@ export default function Postmortems() {
       if (statusFilter !== "all" && p.status !== statusFilter) return false;
       if (anomalyOnly && p.alert_type !== "executive_monthly_regression") return false;
       if (pendingOnly && !(pendingByPostmortem[p.id] > 0)) return false;
+      if (noPlanOnly && !(p.status === "published" && (totalByPostmortem[p.id] ?? 0) === 0)) return false;
       if (search.trim()) {
         const s = search.toLowerCase();
         return p.title.toLowerCase().includes(s) || (p.alert_type ?? "").toLowerCase().includes(s);
@@ -357,11 +361,16 @@ export default function Postmortems() {
       });
     }
     return result;
-  }, [list, search, statusFilter, anomalyOnly, sortBySeverity, pendingOnly, pendingByPostmortem]);
+  }, [list, search, statusFilter, anomalyOnly, sortBySeverity, pendingOnly, noPlanOnly, pendingByPostmortem, totalByPostmortem]);
 
   const pendingCount = useMemo(
     () => list.filter((p) => (pendingByPostmortem[p.id] ?? 0) > 0).length,
     [list, pendingByPostmortem],
+  );
+
+  const noPlanCount = useMemo(
+    () => list.filter((p) => p.status === "published" && (totalByPostmortem[p.id] ?? 0) === 0).length,
+    [list, totalByPostmortem],
   );
 
   const anomalyCount = useMemo(
@@ -491,6 +500,31 @@ export default function Postmortems() {
                 </Badge>
               </span>
               {pendingOnly ? <X className="w-3.5 h-3.5" /> : null}
+            </button>
+            <button
+              type="button"
+              onClick={() => setNoPlanOnly((v) => !v)}
+              className={`w-full flex items-center justify-between gap-2 px-2.5 py-1.5 rounded border text-xs transition-colors ${
+                noPlanOnly
+                  ? "bg-destructive/10 border-destructive/40 text-destructive"
+                  : "border-border hover:bg-muted/50 text-muted-foreground"
+              }`}
+              aria-pressed={noPlanOnly}
+              title="Mostra apenas postmortems publicados sem nenhum action item registrado"
+            >
+              <span className="flex items-center gap-1.5">
+                <AlertTriangle className="w-3.5 h-3.5" />
+                Publicado sem plano
+                <Badge
+                  variant="outline"
+                  className={`text-[10px] font-mono px-1.5 py-0 ${
+                    noPlanOnly ? "border-destructive/50 text-destructive" : ""
+                  }`}
+                >
+                  {noPlanCount}
+                </Badge>
+              </span>
+              {noPlanOnly ? <X className="w-3.5 h-3.5" /> : null}
             </button>
             <div className="space-y-1 max-h-[70vh] overflow-y-auto">
               {isLoading ? (
