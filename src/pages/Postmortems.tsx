@@ -356,6 +356,7 @@ export default function Postmortems() {
       if (anomalyOnly && p.alert_type !== "executive_monthly_regression") return false;
       if (pendingOnly && !(pendingByPostmortem[p.id] > 0)) return false;
       if (noPlanOnly && !(p.status === "published" && (totalByPostmortem[p.id] ?? 0) === 0)) return false;
+      if (overdueOnly && !((overdueByPostmortem[p.id] ?? 0) > 0)) return false;
       if (search.trim()) {
         const s = search.toLowerCase();
         return p.title.toLowerCase().includes(s) || (p.alert_type ?? "").toLowerCase().includes(s);
@@ -370,7 +371,7 @@ export default function Postmortems() {
       });
     }
     return result;
-  }, [list, search, statusFilter, anomalyOnly, sortBySeverity, pendingOnly, noPlanOnly, pendingByPostmortem, totalByPostmortem]);
+  }, [list, search, statusFilter, anomalyOnly, sortBySeverity, pendingOnly, noPlanOnly, overdueOnly, pendingByPostmortem, totalByPostmortem, overdueByPostmortem]);
 
   const pendingCount = useMemo(
     () => list.filter((p) => (pendingByPostmortem[p.id] ?? 0) > 0).length,
@@ -380,6 +381,11 @@ export default function Postmortems() {
   const noPlanCount = useMemo(
     () => list.filter((p) => p.status === "published" && (totalByPostmortem[p.id] ?? 0) === 0).length,
     [list, totalByPostmortem],
+  );
+
+  const overdueCountGlobal = useMemo(
+    () => list.filter((p) => (overdueByPostmortem[p.id] ?? 0) > 0).length,
+    [list, overdueByPostmortem],
   );
 
   const anomalyCount = useMemo(
