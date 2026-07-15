@@ -311,6 +311,26 @@ export default function Postmortems() {
     refetchInterval: 60_000,
   });
 
+  // Contagem de action items pendentes (open/in_progress) por postmortem.
+  // Uma única query agregada em JS evita N+1 na sidebar.
+  const { data: pendingByPostmortem = {} } = useQuery({
+    queryKey: ["postmortem_actions_pending_counts"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("postmortem_actions")
+        .select("postmortem_id,status")
+        .in("status", ["open", "in_progress"]);
+      if (error) throw error;
+      const counts: Record<string, number> = {};
+      for (const row of data ?? []) {
+        const id = (row as { postmortem_id: string }).postmortem_id;
+        counts[id] = (counts[id] ?? 0) + 1;
+      }
+      return counts;
+    },
+    refetchInterval: 60_000,
+  });
+
   const filtered = useMemo(() => {
     const result = list.filter((p) => {
       if (statusFilter !== "all" && p.status !== statusFilter) return false;
@@ -471,6 +491,15 @@ export default function Postmortems() {
                             </Badge>
                           )}
                           {p.alert_type && <Badge variant="outline" className="text-[10px] font-mono">{p.alert_type}</Badge>}
+                          {(pendingByPostmortem[p.id] ?? 0) > 0 && (
+                            <Badge
+                              variant="outline"
+                              className="text-[10px] font-mono border-amber-500/40 bg-amber-500/10 text-amber-700 dark:text-amber-300"
+                              title={`${pendingByPostmortem[p.id]} ação(ões) pendente(s)`}
+                            >
+                              {pendingByPostmortem[p.id]} pendente(s)
+                            </Badge>
+                          )}
                           <span className="text-[10px] text-muted-foreground ml-auto">
                             {new Date(p.created_at).toLocaleDateString("pt-BR")}
                           </span>
@@ -517,7 +546,10 @@ function ActionsPanel({ postmortemId }: { postmortemId: string }) {
     },
   });
 
-  const invalidate = () => qc.invalidateQueries({ queryKey: ["postmortem_actions", postmortemId] });
+  const invalidate = () => {
+    qc.invalidateQueries({ queryKey: ["postmortem_actions", postmortemId] });
+    qc.invalidateQueries({ queryKey: ["postmortem_actions_pending_counts"] });
+  };
 
   const create = useMutation({
     mutationFn: async () => {
