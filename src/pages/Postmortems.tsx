@@ -501,6 +501,31 @@ export default function Postmortems() {
               </span>
               {pendingOnly ? <X className="w-3.5 h-3.5" /> : null}
             </button>
+            <button
+              type="button"
+              onClick={() => setNoPlanOnly((v) => !v)}
+              className={`w-full flex items-center justify-between gap-2 px-2.5 py-1.5 rounded border text-xs transition-colors ${
+                noPlanOnly
+                  ? "bg-destructive/10 border-destructive/40 text-destructive"
+                  : "border-border hover:bg-muted/50 text-muted-foreground"
+              }`}
+              aria-pressed={noPlanOnly}
+              title="Mostra apenas postmortems publicados sem nenhum action item registrado"
+            >
+              <span className="flex items-center gap-1.5">
+                <AlertTriangle className="w-3.5 h-3.5" />
+                Publicado sem plano
+                <Badge
+                  variant="outline"
+                  className={`text-[10px] font-mono px-1.5 py-0 ${
+                    noPlanOnly ? "border-destructive/50 text-destructive" : ""
+                  }`}
+                >
+                  {noPlanCount}
+                </Badge>
+              </span>
+              {noPlanOnly ? <X className="w-3.5 h-3.5" /> : null}
+            </button>
             <div className="space-y-1 max-h-[70vh] overflow-y-auto">
               {isLoading ? (
                 <div className="text-xs text-muted-foreground text-center py-6">Carregando…</div>
