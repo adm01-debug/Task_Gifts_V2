@@ -210,13 +210,14 @@ type PersistedFilters = {
   sortBySeverity: boolean;
   pendingOnly: boolean;
   noPlanOnly: boolean;
+  overdueOnly: boolean;
 };
 
 function loadFilters(): PersistedFilters {
-  if (typeof window === "undefined") return { statusFilter: "all", anomalyOnly: false, sortBySeverity: false, pendingOnly: false, noPlanOnly: false };
+  if (typeof window === "undefined") return { statusFilter: "all", anomalyOnly: false, sortBySeverity: false, pendingOnly: false, noPlanOnly: false, overdueOnly: false };
   try {
     const raw = window.localStorage.getItem(FILTERS_KEY);
-    if (!raw) return { statusFilter: "all", anomalyOnly: false, sortBySeverity: false, pendingOnly: false, noPlanOnly: false };
+    if (!raw) return { statusFilter: "all", anomalyOnly: false, sortBySeverity: false, pendingOnly: false, noPlanOnly: false, overdueOnly: false };
     const parsed = JSON.parse(raw) as Partial<PersistedFilters>;
     return {
       statusFilter: typeof parsed.statusFilter === "string" ? parsed.statusFilter : "all",
@@ -224,9 +225,10 @@ function loadFilters(): PersistedFilters {
       sortBySeverity: Boolean(parsed.sortBySeverity),
       pendingOnly: Boolean(parsed.pendingOnly),
       noPlanOnly: Boolean(parsed.noPlanOnly),
+      overdueOnly: Boolean(parsed.overdueOnly),
     };
   } catch {
-    return { statusFilter: "all", anomalyOnly: false, sortBySeverity: false, pendingOnly: false, noPlanOnly: false };
+    return { statusFilter: "all", anomalyOnly: false, sortBySeverity: false, pendingOnly: false, noPlanOnly: false, overdueOnly: false };
   }
 }
 
@@ -240,6 +242,7 @@ export default function Postmortems() {
   const [sortBySeverity, setSortBySeverity] = useState(initialFilters.sortBySeverity);
   const [pendingOnly, setPendingOnly] = useState(initialFilters.pendingOnly);
   const [noPlanOnly, setNoPlanOnly] = useState(initialFilters.noPlanOnly);
+  const [overdueOnly, setOverdueOnly] = useState(initialFilters.overdueOnly);
   const [params, setParams] = useSearchParams();
 
   // Persist filter preferences so the investigator keeps context between sessions.
@@ -248,12 +251,12 @@ export default function Postmortems() {
     try {
       window.localStorage.setItem(
         FILTERS_KEY,
-        JSON.stringify({ statusFilter, anomalyOnly, sortBySeverity, pendingOnly, noPlanOnly } satisfies PersistedFilters),
+        JSON.stringify({ statusFilter, anomalyOnly, sortBySeverity, pendingOnly, noPlanOnly, overdueOnly } satisfies PersistedFilters),
       );
     } catch {
       /* storage cheio ou bloqueado — ignore silenciosamente */
     }
-  }, [statusFilter, anomalyOnly, sortBySeverity, pendingOnly, noPlanOnly]);
+  }, [statusFilter, anomalyOnly, sortBySeverity, pendingOnly, noPlanOnly, overdueOnly]);
 
   const selectedId = params.get("id");
   const flash = params.get("flash") === "1";
@@ -353,6 +356,7 @@ export default function Postmortems() {
       if (anomalyOnly && p.alert_type !== "executive_monthly_regression") return false;
       if (pendingOnly && !(pendingByPostmortem[p.id] > 0)) return false;
       if (noPlanOnly && !(p.status === "published" && (totalByPostmortem[p.id] ?? 0) === 0)) return false;
+      if (overdueOnly && !((overdueByPostmortem[p.id] ?? 0) > 0)) return false;
       if (search.trim()) {
         const s = search.toLowerCase();
         return p.title.toLowerCase().includes(s) || (p.alert_type ?? "").toLowerCase().includes(s);
@@ -367,7 +371,7 @@ export default function Postmortems() {
       });
     }
     return result;
-  }, [list, search, statusFilter, anomalyOnly, sortBySeverity, pendingOnly, noPlanOnly, pendingByPostmortem, totalByPostmortem]);
+  }, [list, search, statusFilter, anomalyOnly, sortBySeverity, pendingOnly, noPlanOnly, overdueOnly, pendingByPostmortem, totalByPostmortem, overdueByPostmortem]);
 
   const pendingCount = useMemo(
     () => list.filter((p) => (pendingByPostmortem[p.id] ?? 0) > 0).length,
@@ -377,6 +381,11 @@ export default function Postmortems() {
   const noPlanCount = useMemo(
     () => list.filter((p) => p.status === "published" && (totalByPostmortem[p.id] ?? 0) === 0).length,
     [list, totalByPostmortem],
+  );
+
+  const overdueCountGlobal = useMemo(
+    () => list.filter((p) => (overdueByPostmortem[p.id] ?? 0) > 0).length,
+    [list, overdueByPostmortem],
   );
 
   const anomalyCount = useMemo(
@@ -531,6 +540,31 @@ export default function Postmortems() {
                 </Badge>
               </span>
               {noPlanOnly ? <X className="w-3.5 h-3.5" /> : null}
+            </button>
+            <button
+              type="button"
+              onClick={() => setOverdueOnly((v) => !v)}
+              className={`w-full flex items-center justify-between gap-2 px-2.5 py-1.5 rounded border text-xs transition-colors ${
+                overdueOnly
+                  ? "bg-destructive/10 border-destructive/40 text-destructive"
+                  : "border-border hover:bg-muted/50 text-muted-foreground"
+              }`}
+              aria-pressed={overdueOnly}
+              title="Mostra apenas postmortems com action items vencidos por SLA (due_date no passado)"
+            >
+              <span className="flex items-center gap-1.5">
+                <AlertTriangle className={`w-3.5 h-3.5 ${overdueOnly ? "animate-pulse" : ""}`} />
+                SLA estourado
+                <Badge
+                  variant="outline"
+                  className={`text-[10px] font-mono px-1.5 py-0 ${
+                    overdueOnly ? "border-destructive/50 text-destructive" : ""
+                  }`}
+                >
+                  {overdueCountGlobal}
+                </Badge>
+              </span>
+              {overdueOnly ? <X className="w-3.5 h-3.5" /> : null}
             </button>
             <div className="space-y-1 max-h-[70vh] overflow-y-auto">
               {isLoading ? (
