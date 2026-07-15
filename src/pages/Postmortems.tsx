@@ -412,6 +412,14 @@ export default function Postmortems() {
     () => list.filter((p) => (overdueByPostmortem[p.id] ?? 0) > 0).length,
     [list, overdueByPostmortem],
   );
+  const totalPendingActions = useMemo(
+    () => Object.values(pendingByPostmortem).reduce((s, n) => s + (n ?? 0), 0),
+    [pendingByPostmortem],
+  );
+  const totalOverdueActions = useMemo(
+    () => Object.values(overdueByPostmortem).reduce((s, n) => s + (n ?? 0), 0),
+    [overdueByPostmortem],
+  );
 
   const anomalyCount = useMemo(
     () => list.filter((p) => p.alert_type === "executive_monthly_regression").length,
@@ -449,6 +457,27 @@ export default function Postmortems() {
             <CardTitle className="text-sm">Incidentes ({filtered.length})</CardTitle>
           </CardHeader>
           <CardContent className="space-y-2">
+            {(totalPendingActions > 0 || totalOverdueActions > 0 || noPlanCount > 0) && (
+              <div
+                className="flex items-center justify-between gap-2 rounded border border-border/60 bg-muted/30 px-2.5 py-1.5 text-[11px] font-medium"
+                aria-label="Resumo agregado dos postmortems"
+                title="Somatório em todos os postmortems visíveis"
+              >
+                <span className="flex items-center gap-1 text-amber-600 dark:text-amber-400" title="Ações pendentes (abertas ou em progresso)">
+                  <span className="font-mono tabular-nums">{totalPendingActions}</span>
+                  <span className="text-muted-foreground">pend.</span>
+                </span>
+                <span className="flex items-center gap-1 text-destructive" title="Ações vencidas por SLA">
+                  <AlertTriangle className={`w-3 h-3 ${totalOverdueActions > 0 ? "animate-pulse" : ""}`} />
+                  <span className="font-mono tabular-nums">{totalOverdueActions}</span>
+                  <span className="text-muted-foreground">venc.</span>
+                </span>
+                <span className="flex items-center gap-1 text-destructive" title="Postmortems publicados sem plano de ação">
+                  <span className="font-mono tabular-nums">{noPlanCount}</span>
+                  <span className="text-muted-foreground">sem plano</span>
+                </span>
+              </div>
+            )}
             <div className="relative">
               <Search className="w-3.5 h-3.5 absolute left-2 top-2.5 text-muted-foreground" />
               <Input
