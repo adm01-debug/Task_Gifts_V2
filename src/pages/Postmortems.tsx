@@ -229,6 +229,7 @@ function loadFilters(): PersistedFilters {
 export default function Postmortems() {
   const qc = useQueryClient();
   const [search, setSearch] = useState("");
+  const searchRef = useRef<HTMLInputElement>(null);
   const initialFilters = useRef<PersistedFilters>(loadFilters()).current;
   const [statusFilter, setStatusFilter] = useState<string>(initialFilters.statusFilter);
   const [anomalyOnly, setAnomalyOnly] = useState(initialFilters.anomalyOnly);
@@ -251,6 +252,21 @@ export default function Postmortems() {
   const selectedId = params.get("id");
   const flash = params.get("flash") === "1";
   const sourceParam = params.get("source");
+
+  // Atalho "/" foca a busca (ignora quando o usuário já está digitando em outro campo).
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key !== "/" || e.metaKey || e.ctrlKey || e.altKey) return;
+      const t = e.target as HTMLElement | null;
+      const tag = t?.tagName;
+      if (tag === "INPUT" || tag === "TEXTAREA" || t?.isContentEditable) return;
+      e.preventDefault();
+      searchRef.current?.focus();
+      searchRef.current?.select();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, []);
 
   // Deep-link: chegar via ?source=anomaly já aplica o filtro e limpa o param.
   useEffect(() => {
@@ -353,7 +369,20 @@ export default function Postmortems() {
           <CardContent className="space-y-2">
             <div className="relative">
               <Search className="w-3.5 h-3.5 absolute left-2 top-2.5 text-muted-foreground" />
-              <Input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Buscar por título/tipo…" className="pl-7 h-9" />
+              <Input
+                ref={searchRef}
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                placeholder="Buscar por título/tipo…"
+                className="pl-7 pr-10 h-9"
+                aria-keyshortcuts="/"
+              />
+              <kbd
+                className="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 hidden sm:inline-flex items-center justify-center h-5 min-w-[20px] px-1.5 rounded border border-border bg-muted/60 text-[10px] font-mono text-muted-foreground"
+                aria-hidden
+              >
+                /
+              </kbd>
             </div>
             <Select value={statusFilter} onValueChange={setStatusFilter}>
               <SelectTrigger className="h-9"><SelectValue /></SelectTrigger>
