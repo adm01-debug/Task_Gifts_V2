@@ -319,27 +319,33 @@ export default function Postmortems() {
 
   // Contagem de action items por postmortem (pendentes e total).
   // Uma única query agregada em JS evita N+1 na sidebar.
-  const { data: actionCounts = { pending: {}, total: {} } } = useQuery({
+  const { data: actionCounts = { pending: {}, total: {}, overdue: {} } } = useQuery({
     queryKey: ["postmortem_actions_pending_counts"],
     queryFn: async () => {
       const { data, error } = await supabase
         .from("postmortem_actions")
-        .select("postmortem_id,status");
+        .select("postmortem_id,status,due_date");
       if (error) throw error;
       const pending: Record<string, number> = {};
       const total: Record<string, number> = {};
-      for (const row of (data ?? []) as { postmortem_id: string; status: string }[]) {
+      const overdue: Record<string, number> = {};
+      const today = new Date().toISOString().slice(0, 10);
+      for (const row of (data ?? []) as { postmortem_id: string; status: string; due_date: string | null }[]) {
         total[row.postmortem_id] = (total[row.postmortem_id] ?? 0) + 1;
         if (row.status === "open" || row.status === "in_progress") {
           pending[row.postmortem_id] = (pending[row.postmortem_id] ?? 0) + 1;
+          if (row.due_date && row.due_date < today) {
+            overdue[row.postmortem_id] = (overdue[row.postmortem_id] ?? 0) + 1;
+          }
         }
       }
-      return { pending, total };
+      return { pending, total, overdue };
     },
     refetchInterval: 60_000,
   });
   const pendingByPostmortem = actionCounts.pending;
   const totalByPostmortem = actionCounts.total;
+  const overdueByPostmortem = actionCounts.overdue;
 
   const filtered = useMemo(() => {
     const result = list.filter((p) => {
@@ -570,6 +576,15 @@ export default function Postmortems() {
                               title={`${pendingByPostmortem[p.id]} ação(ões) pendente(s)`}
                             >
                               {pendingByPostmortem[p.id]} pendente(s)
+                            </Badge>
+                          )}
+                          {(overdueByPostmortem[p.id] ?? 0) > 0 && (
+                            <Badge
+                              variant="outline"
+                              className="text-[10px] font-mono border-destructive/50 bg-destructive/10 text-destructive animate-pulse"
+                              title={`${overdueByPostmortem[p.id]} ação(ões) vencida(s) por SLA`}
+                            >
+                              {overdueByPostmortem[p.id]} vencida(s)
                             </Badge>
                           )}
                           {p.status === "published" && (totalByPostmortem[p.id] ?? 0) === 0 && (
