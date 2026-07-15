@@ -541,6 +541,31 @@ export default function Postmortems() {
               </span>
               {noPlanOnly ? <X className="w-3.5 h-3.5" /> : null}
             </button>
+            <button
+              type="button"
+              onClick={() => setOverdueOnly((v) => !v)}
+              className={`w-full flex items-center justify-between gap-2 px-2.5 py-1.5 rounded border text-xs transition-colors ${
+                overdueOnly
+                  ? "bg-destructive/10 border-destructive/40 text-destructive"
+                  : "border-border hover:bg-muted/50 text-muted-foreground"
+              }`}
+              aria-pressed={overdueOnly}
+              title="Mostra apenas postmortems com action items vencidos por SLA (due_date no passado)"
+            >
+              <span className="flex items-center gap-1.5">
+                <AlertTriangle className={`w-3.5 h-3.5 ${overdueOnly ? "animate-pulse" : ""}`} />
+                SLA estourado
+                <Badge
+                  variant="outline"
+                  className={`text-[10px] font-mono px-1.5 py-0 ${
+                    overdueOnly ? "border-destructive/50 text-destructive" : ""
+                  }`}
+                >
+                  {overdueCountGlobal}
+                </Badge>
+              </span>
+              {overdueOnly ? <X className="w-3.5 h-3.5" /> : null}
+            </button>
             <div className="space-y-1 max-h-[70vh] overflow-y-auto">
               {isLoading ? (
                 <div className="text-xs text-muted-foreground text-center py-6">Carregando…</div>
