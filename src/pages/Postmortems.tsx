@@ -210,13 +210,14 @@ type PersistedFilters = {
   sortBySeverity: boolean;
   pendingOnly: boolean;
   noPlanOnly: boolean;
+  overdueOnly: boolean;
 };
 
 function loadFilters(): PersistedFilters {
-  if (typeof window === "undefined") return { statusFilter: "all", anomalyOnly: false, sortBySeverity: false, pendingOnly: false, noPlanOnly: false };
+  if (typeof window === "undefined") return { statusFilter: "all", anomalyOnly: false, sortBySeverity: false, pendingOnly: false, noPlanOnly: false, overdueOnly: false };
   try {
     const raw = window.localStorage.getItem(FILTERS_KEY);
-    if (!raw) return { statusFilter: "all", anomalyOnly: false, sortBySeverity: false, pendingOnly: false, noPlanOnly: false };
+    if (!raw) return { statusFilter: "all", anomalyOnly: false, sortBySeverity: false, pendingOnly: false, noPlanOnly: false, overdueOnly: false };
     const parsed = JSON.parse(raw) as Partial<PersistedFilters>;
     return {
       statusFilter: typeof parsed.statusFilter === "string" ? parsed.statusFilter : "all",
@@ -224,9 +225,10 @@ function loadFilters(): PersistedFilters {
       sortBySeverity: Boolean(parsed.sortBySeverity),
       pendingOnly: Boolean(parsed.pendingOnly),
       noPlanOnly: Boolean(parsed.noPlanOnly),
+      overdueOnly: Boolean(parsed.overdueOnly),
     };
   } catch {
-    return { statusFilter: "all", anomalyOnly: false, sortBySeverity: false, pendingOnly: false, noPlanOnly: false };
+    return { statusFilter: "all", anomalyOnly: false, sortBySeverity: false, pendingOnly: false, noPlanOnly: false, overdueOnly: false };
   }
 }
 
@@ -240,6 +242,7 @@ export default function Postmortems() {
   const [sortBySeverity, setSortBySeverity] = useState(initialFilters.sortBySeverity);
   const [pendingOnly, setPendingOnly] = useState(initialFilters.pendingOnly);
   const [noPlanOnly, setNoPlanOnly] = useState(initialFilters.noPlanOnly);
+  const [overdueOnly, setOverdueOnly] = useState(initialFilters.overdueOnly);
   const [params, setParams] = useSearchParams();
 
   // Persist filter preferences so the investigator keeps context between sessions.
@@ -248,12 +251,12 @@ export default function Postmortems() {
     try {
       window.localStorage.setItem(
         FILTERS_KEY,
-        JSON.stringify({ statusFilter, anomalyOnly, sortBySeverity, pendingOnly, noPlanOnly } satisfies PersistedFilters),
+        JSON.stringify({ statusFilter, anomalyOnly, sortBySeverity, pendingOnly, noPlanOnly, overdueOnly } satisfies PersistedFilters),
       );
     } catch {
       /* storage cheio ou bloqueado — ignore silenciosamente */
     }
-  }, [statusFilter, anomalyOnly, sortBySeverity, pendingOnly, noPlanOnly]);
+  }, [statusFilter, anomalyOnly, sortBySeverity, pendingOnly, noPlanOnly, overdueOnly]);
 
   const selectedId = params.get("id");
   const flash = params.get("flash") === "1";
