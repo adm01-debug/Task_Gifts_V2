@@ -412,6 +412,14 @@ export default function Postmortems() {
     () => list.filter((p) => (overdueByPostmortem[p.id] ?? 0) > 0).length,
     [list, overdueByPostmortem],
   );
+  const totalPendingActions = useMemo(
+    () => Object.values(pendingByPostmortem).reduce((s, n) => s + (n ?? 0), 0),
+    [pendingByPostmortem],
+  );
+  const totalOverdueActions = useMemo(
+    () => Object.values(overdueByPostmortem).reduce((s, n) => s + (n ?? 0), 0),
+    [overdueByPostmortem],
+  );
 
   const anomalyCount = useMemo(
     () => list.filter((p) => p.alert_type === "executive_monthly_regression").length,
