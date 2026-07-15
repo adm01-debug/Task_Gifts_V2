@@ -202,13 +202,52 @@ function IncidentTimeline({
   );
 }
 
+const FILTERS_KEY = "postmortems:filters";
+
+type PersistedFilters = {
+  statusFilter: string;
+  anomalyOnly: boolean;
+  sortBySeverity: boolean;
+};
+
+function loadFilters(): PersistedFilters {
+  if (typeof window === "undefined") return { statusFilter: "all", anomalyOnly: false, sortBySeverity: false };
+  try {
+    const raw = window.localStorage.getItem(FILTERS_KEY);
+    if (!raw) return { statusFilter: "all", anomalyOnly: false, sortBySeverity: false };
+    const parsed = JSON.parse(raw) as Partial<PersistedFilters>;
+    return {
+      statusFilter: typeof parsed.statusFilter === "string" ? parsed.statusFilter : "all",
+      anomalyOnly: Boolean(parsed.anomalyOnly),
+      sortBySeverity: Boolean(parsed.sortBySeverity),
+    };
+  } catch {
+    return { statusFilter: "all", anomalyOnly: false, sortBySeverity: false };
+  }
+}
+
 export default function Postmortems() {
   const qc = useQueryClient();
   const [search, setSearch] = useState("");
-  const [statusFilter, setStatusFilter] = useState<string>("all");
-  const [anomalyOnly, setAnomalyOnly] = useState(false);
-  const [sortBySeverity, setSortBySeverity] = useState(false);
+  const initialFilters = useRef<PersistedFilters>(loadFilters()).current;
+  const [statusFilter, setStatusFilter] = useState<string>(initialFilters.statusFilter);
+  const [anomalyOnly, setAnomalyOnly] = useState(initialFilters.anomalyOnly);
+  const [sortBySeverity, setSortBySeverity] = useState(initialFilters.sortBySeverity);
   const [params, setParams] = useSearchParams();
+
+  // Persist filter preferences so the investigator keeps context between sessions.
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    try {
+      window.localStorage.setItem(
+        FILTERS_KEY,
+        JSON.stringify({ statusFilter, anomalyOnly, sortBySeverity } satisfies PersistedFilters),
+      );
+    } catch {
+      /* storage cheio ou bloqueado — ignore silenciosamente */
+    }
+  }, [statusFilter, anomalyOnly, sortBySeverity]);
+
   const selectedId = params.get("id");
   const flash = params.get("flash") === "1";
   const sourceParam = params.get("source");
