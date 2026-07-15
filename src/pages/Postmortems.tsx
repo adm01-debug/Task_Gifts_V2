@@ -208,21 +208,23 @@ type PersistedFilters = {
   statusFilter: string;
   anomalyOnly: boolean;
   sortBySeverity: boolean;
+  pendingOnly: boolean;
 };
 
 function loadFilters(): PersistedFilters {
-  if (typeof window === "undefined") return { statusFilter: "all", anomalyOnly: false, sortBySeverity: false };
+  if (typeof window === "undefined") return { statusFilter: "all", anomalyOnly: false, sortBySeverity: false, pendingOnly: false };
   try {
     const raw = window.localStorage.getItem(FILTERS_KEY);
-    if (!raw) return { statusFilter: "all", anomalyOnly: false, sortBySeverity: false };
+    if (!raw) return { statusFilter: "all", anomalyOnly: false, sortBySeverity: false, pendingOnly: false };
     const parsed = JSON.parse(raw) as Partial<PersistedFilters>;
     return {
       statusFilter: typeof parsed.statusFilter === "string" ? parsed.statusFilter : "all",
       anomalyOnly: Boolean(parsed.anomalyOnly),
       sortBySeverity: Boolean(parsed.sortBySeverity),
+      pendingOnly: Boolean(parsed.pendingOnly),
     };
   } catch {
-    return { statusFilter: "all", anomalyOnly: false, sortBySeverity: false };
+    return { statusFilter: "all", anomalyOnly: false, sortBySeverity: false, pendingOnly: false };
   }
 }
 
@@ -234,6 +236,7 @@ export default function Postmortems() {
   const [statusFilter, setStatusFilter] = useState<string>(initialFilters.statusFilter);
   const [anomalyOnly, setAnomalyOnly] = useState(initialFilters.anomalyOnly);
   const [sortBySeverity, setSortBySeverity] = useState(initialFilters.sortBySeverity);
+  const [pendingOnly, setPendingOnly] = useState(initialFilters.pendingOnly);
   const [params, setParams] = useSearchParams();
 
   // Persist filter preferences so the investigator keeps context between sessions.
@@ -242,12 +245,12 @@ export default function Postmortems() {
     try {
       window.localStorage.setItem(
         FILTERS_KEY,
-        JSON.stringify({ statusFilter, anomalyOnly, sortBySeverity } satisfies PersistedFilters),
+        JSON.stringify({ statusFilter, anomalyOnly, sortBySeverity, pendingOnly } satisfies PersistedFilters),
       );
     } catch {
       /* storage cheio ou bloqueado — ignore silenciosamente */
     }
-  }, [statusFilter, anomalyOnly, sortBySeverity]);
+  }, [statusFilter, anomalyOnly, sortBySeverity, pendingOnly]);
 
   const selectedId = params.get("id");
   const flash = params.get("flash") === "1";
@@ -335,6 +338,7 @@ export default function Postmortems() {
     const result = list.filter((p) => {
       if (statusFilter !== "all" && p.status !== statusFilter) return false;
       if (anomalyOnly && p.alert_type !== "executive_monthly_regression") return false;
+      if (pendingOnly && !(pendingByPostmortem[p.id] > 0)) return false;
       if (search.trim()) {
         const s = search.toLowerCase();
         return p.title.toLowerCase().includes(s) || (p.alert_type ?? "").toLowerCase().includes(s);
@@ -349,7 +353,12 @@ export default function Postmortems() {
       });
     }
     return result;
-  }, [list, search, statusFilter, anomalyOnly, sortBySeverity]);
+  }, [list, search, statusFilter, anomalyOnly, sortBySeverity, pendingOnly, pendingByPostmortem]);
+
+  const pendingCount = useMemo(
+    () => list.filter((p) => (pendingByPostmortem[p.id] ?? 0) > 0).length,
+    [list, pendingByPostmortem],
+  );
 
   const anomalyCount = useMemo(
     () => list.filter((p) => p.alert_type === "executive_monthly_regression").length,
@@ -453,6 +462,31 @@ export default function Postmortems() {
                 Ordenar por severidade
               </span>
               {sortBySeverity ? <X className="w-3.5 h-3.5" /> : null}
+            </button>
+            <button
+              type="button"
+              onClick={() => setPendingOnly((v) => !v)}
+              className={`w-full flex items-center justify-between gap-2 px-2.5 py-1.5 rounded border text-xs transition-colors ${
+                pendingOnly
+                  ? "bg-amber-500/10 border-amber-500/40 text-amber-600 dark:text-amber-400"
+                  : "border-border hover:bg-muted/50 text-muted-foreground"
+              }`}
+              aria-pressed={pendingOnly}
+              title="Mostra apenas postmortems com action items em aberto ou em progresso"
+            >
+              <span className="flex items-center gap-1.5">
+                <AlertTriangle className="w-3.5 h-3.5" />
+                Somente com pendências
+                <Badge
+                  variant="outline"
+                  className={`text-[10px] font-mono px-1.5 py-0 ${
+                    pendingOnly ? "border-amber-500/50 text-amber-600 dark:text-amber-400" : ""
+                  }`}
+                >
+                  {pendingCount}
+                </Badge>
+              </span>
+              {pendingOnly ? <X className="w-3.5 h-3.5" /> : null}
             </button>
             <div className="space-y-1 max-h-[70vh] overflow-y-auto">
               {isLoading ? (
