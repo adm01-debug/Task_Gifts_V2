@@ -491,6 +491,15 @@ export default function Postmortems() {
                             </Badge>
                           )}
                           {p.alert_type && <Badge variant="outline" className="text-[10px] font-mono">{p.alert_type}</Badge>}
+                          {(pendingByPostmortem[p.id] ?? 0) > 0 && (
+                            <Badge
+                              variant="outline"
+                              className="text-[10px] font-mono border-amber-500/40 bg-amber-500/10 text-amber-700 dark:text-amber-300"
+                              title={`${pendingByPostmortem[p.id]} ação(ões) pendente(s)`}
+                            >
+                              {pendingByPostmortem[p.id]} pendente(s)
+                            </Badge>
+                          )}
                           <span className="text-[10px] text-muted-foreground ml-auto">
                             {new Date(p.created_at).toLocaleDateString("pt-BR")}
                           </span>
