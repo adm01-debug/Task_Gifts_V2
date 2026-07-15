@@ -619,7 +619,18 @@ export default function Postmortems() {
                         aria-hidden
                       />
                       <div className="min-w-0 flex-1">
-                        <div className="text-sm font-medium line-clamp-1">{p.title}</div>
+                        <div className="text-sm font-medium line-clamp-1 flex items-center gap-1">
+                          {slaBoostedIds.has(p.id) && (
+                            <span
+                              className="text-destructive text-[10px] font-bold leading-none flex-shrink-0"
+                              title="Priorizado pelo desempate de SLA (ações vencidas)"
+                              aria-label="Priorizado por SLA"
+                            >
+                              ▲
+                            </span>
+                          )}
+                          <span className="truncate">{p.title}</span>
+                        </div>
                         <div className="flex items-center flex-wrap gap-1.5 mt-1">
                           <Badge variant="outline" className="text-[10px] font-mono">{STATUS_LABEL[p.status]}</Badge>
                           {sev && (
