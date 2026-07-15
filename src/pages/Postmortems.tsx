@@ -546,7 +546,10 @@ function ActionsPanel({ postmortemId }: { postmortemId: string }) {
     },
   });
 
-  const invalidate = () => qc.invalidateQueries({ queryKey: ["postmortem_actions", postmortemId] });
+  const invalidate = () => {
+    qc.invalidateQueries({ queryKey: ["postmortem_actions", postmortemId] });
+    qc.invalidateQueries({ queryKey: ["postmortem_actions_pending_counts"] });
+  };
 
   const create = useMutation({
     mutationFn: async () => {
