@@ -367,6 +367,10 @@ export default function Postmortems() {
       return [...result].sort((a, b) => {
         const diff = severityRank(a.severity) - severityRank(b.severity);
         if (diff !== 0) return diff;
+        const overdueDiff = (overdueByPostmortem[b.id] ?? 0) - (overdueByPostmortem[a.id] ?? 0);
+        if (overdueDiff !== 0) return overdueDiff;
+        const pendingDiff = (pendingByPostmortem[b.id] ?? 0) - (pendingByPostmortem[a.id] ?? 0);
+        if (pendingDiff !== 0) return pendingDiff;
         return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
       });
     }
