@@ -377,6 +377,27 @@ export default function Postmortems() {
     return result;
   }, [list, search, statusFilter, anomalyOnly, sortBySeverity, pendingOnly, noPlanOnly, overdueOnly, pendingByPostmortem, totalByPostmortem, overdueByPostmortem]);
 
+  // Fase 107: identifica postmortems que subiram no ranking por desempate de SLA
+  // (mesma severidade que outro item abaixo, mas com mais ações vencidas).
+  const slaBoostedIds = useMemo(() => {
+    const boosted = new Set<string>();
+    if (!sortBySeverity) return boosted;
+    for (let i = 0; i < filtered.length; i++) {
+      const a = filtered[i];
+      const aOverdue = overdueByPostmortem[a.id] ?? 0;
+      if (aOverdue === 0) continue;
+      for (let j = i + 1; j < filtered.length; j++) {
+        const b = filtered[j];
+        if (severityRank(a.severity) !== severityRank(b.severity)) break;
+        if ((overdueByPostmortem[b.id] ?? 0) < aOverdue) {
+          boosted.add(a.id);
+          break;
+        }
+      }
+    }
+    return boosted;
+  }, [filtered, sortBySeverity, overdueByPostmortem]);
+
   const pendingCount = useMemo(
     () => list.filter((p) => (pendingByPostmortem[p.id] ?? 0) > 0).length,
     [list, pendingByPostmortem],
@@ -598,7 +619,18 @@ export default function Postmortems() {
                         aria-hidden
                       />
                       <div className="min-w-0 flex-1">
-                        <div className="text-sm font-medium line-clamp-1">{p.title}</div>
+                        <div className="text-sm font-medium line-clamp-1 flex items-center gap-1">
+                          {slaBoostedIds.has(p.id) && (
+                            <span
+                              className="text-destructive text-[10px] font-bold leading-none flex-shrink-0"
+                              title="Priorizado pelo desempate de SLA (ações vencidas)"
+                              aria-label="Priorizado por SLA"
+                            >
+                              ▲
+                            </span>
+                          )}
+                          <span className="truncate">{p.title}</span>
+                        </div>
                         <div className="flex items-center flex-wrap gap-1.5 mt-1">
                           <Badge variant="outline" className="text-[10px] font-mono">{STATUS_LABEL[p.status]}</Badge>
                           {sev && (
