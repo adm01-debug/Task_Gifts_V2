@@ -339,6 +339,68 @@ export type Database = {
         }
         Relationships: []
       }
+      ai_course_jobs: {
+        Row: {
+          completed_at: string | null
+          created_at: string
+          error_message: string | null
+          generated_trail_id: string | null
+          id: string
+          modules_created: number
+          prompt_hint: string | null
+          questions_created: number
+          source_file_name: string
+          source_file_path: string
+          source_file_size: number | null
+          started_at: string | null
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          completed_at?: string | null
+          created_at?: string
+          error_message?: string | null
+          generated_trail_id?: string | null
+          id?: string
+          modules_created?: number
+          prompt_hint?: string | null
+          questions_created?: number
+          source_file_name: string
+          source_file_path: string
+          source_file_size?: number | null
+          started_at?: string | null
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          completed_at?: string | null
+          created_at?: string
+          error_message?: string | null
+          generated_trail_id?: string | null
+          id?: string
+          modules_created?: number
+          prompt_hint?: string | null
+          questions_created?: number
+          source_file_name?: string
+          source_file_path?: string
+          source_file_size?: number | null
+          started_at?: string | null
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ai_course_jobs_generated_trail_id_fkey"
+            columns: ["generated_trail_id"]
+            isOneToOne: false
+            referencedRelation: "learning_trails"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       announcement_reactions: {
         Row: {
           announcement_id: string
