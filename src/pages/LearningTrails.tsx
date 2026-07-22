@@ -24,6 +24,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 import { TrailStatsCards } from "@/components/trails/TrailStatsCards";
  import type { TrailEnrollment } from "@/services/trailsService";
  import { TrailCard } from "@/components/trails/TrailCard";
+ import { AICourseBuilderDialog } from "@/components/trails/AICourseBuilderDialog";
 
 
 export default function LearningTrails() {
@@ -145,6 +146,7 @@ export default function LearningTrails() {
                         {departments.map(d => <SelectItem key={d.id} value={d.id}>{d.name}</SelectItem>)}
                       </SelectContent>
                     </Select>
+                    <AICourseBuilderDialog />
                   </motion.div>
 
                   <AnimatePresence mode="wait">
