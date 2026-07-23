@@ -71,7 +71,7 @@ export default function CampaignHistory() {
         .order("completed_at", { ascending: false });
 
       if (error) {
-        logger.error("CampaignHistory: falha ao carregar histórico", error);
+        logger.error("CampaignHistory: falha ao carregar histórico", "CampaignHistory", error);
         throw error;
       }
       return (data as unknown as CompletedCampaignRow[]) || [];
