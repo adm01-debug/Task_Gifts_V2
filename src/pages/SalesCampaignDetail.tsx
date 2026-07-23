@@ -11,6 +11,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ArrowLeft, Check, X, Target, Trophy, TrendingUp, Users, Sparkles } from "lucide-react";
 import { UserPlus } from "lucide-react";
 import { useRBAC } from "@/hooks/useRBAC";
+import { CampaignProgressChart } from "@/components/campaigns/CampaignProgressChart";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { cn } from "@/lib/utils";
