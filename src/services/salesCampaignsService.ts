@@ -366,6 +366,34 @@ export const salesCampaignsService = {
       }
     }
 
+    // Milestone notifications (25/50/75%) — disparadas apenas na transição
+    if (campaign && !justCompleted && participantRow.target_adjusted > 0) {
+      try {
+        const target = participantRow.target_adjusted;
+        const prevPct = (prev / target) * 100;
+        const nextPct = (next / target) * 100;
+        const milestones = [25, 50, 75];
+        const crossed = milestones.find((m) => prevPct < m && nextPct >= m && nextPct < 100);
+        if (crossed) {
+          const emoji = crossed === 75 ? "🔥" : crossed === 50 ? "⚡" : "🚀";
+          await db.from("notifications").insert({
+            user_id: uid,
+            type: "campaign_milestone",
+            title: `${emoji} ${crossed}% da meta em ${campaign.name}`,
+            message: `Você já atingiu ${next}/${target} ${campaign.metric_unit ?? ""}. Continue firme!`.trim(),
+            data: {
+              campaign_id: campaign.id,
+              milestone: crossed,
+              progress: next,
+              target,
+            },
+          });
+        }
+      } catch {
+        // Silencioso: milestone é opcional.
+      }
+    }
+
     return data as CampaignParticipant;
   },
 };
