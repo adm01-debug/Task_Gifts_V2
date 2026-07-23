@@ -13,6 +13,7 @@ import { SEOHead } from "@/components/SEOHead";
 import { useSEO } from "@/hooks/useSEO";
 import { UsersManager } from "@/components/admin/UsersManager";
 import { DepartmentsManager } from "@/components/admin/DepartmentsManager";
+import { OrganizationSettings } from "@/components/admin/OrganizationSettings";
 import { AdminChangeHistory } from "@/components/admin/AdminChangeHistory";
 import { AdminMetricsDashboard } from "@/components/admin/AdminMetricsDashboard";
 import { AdminAlertsPanel } from "@/components/admin/AdminAlertsPanel";
@@ -161,6 +162,7 @@ function AdminPanelContent() {
             <TabsContent value="metrics"><AdminMetricsDashboard /></TabsContent>
             <TabsContent value="users"><UsersManager /></TabsContent>
             <TabsContent value="departments"><DepartmentsManager /></TabsContent>
+            <TabsContent value="organization"><OrganizationSettings /></TabsContent>
             <TabsContent value="alerts"><AdminAlertsPanel /></TabsContent>
             <TabsContent value="pdi-alerts"><PDIAlertsPanel /></TabsContent>
             <TabsContent value="history"><AdminChangeHistory /></TabsContent>
