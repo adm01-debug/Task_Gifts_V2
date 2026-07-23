@@ -4215,6 +4215,115 @@ export type Database = {
         }
         Relationships: []
       }
+      org_members: {
+        Row: {
+          created_at: string
+          id: string
+          org_id: string
+          role: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          org_id: string
+          role?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          org_id?: string
+          role?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "org_members_org_id_fkey"
+            columns: ["org_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      org_theme_history: {
+        Row: {
+          changed_by: string | null
+          created_at: string
+          id: string
+          org_id: string
+          snapshot: Json
+        }
+        Insert: {
+          changed_by?: string | null
+          created_at?: string
+          id?: string
+          org_id: string
+          snapshot: Json
+        }
+        Update: {
+          changed_by?: string | null
+          created_at?: string
+          id?: string
+          org_id?: string
+          snapshot?: Json
+        }
+        Relationships: [
+          {
+            foreignKeyName: "org_theme_history_org_id_fkey"
+            columns: ["org_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      organizations: {
+        Row: {
+          accent_color: string | null
+          created_at: string
+          custom_domain: string | null
+          favicon_url: string | null
+          id: string
+          logo_url: string | null
+          name: string
+          primary_color: string | null
+          secondary_color: string | null
+          slug: string
+          tagline: string | null
+          updated_at: string
+        }
+        Insert: {
+          accent_color?: string | null
+          created_at?: string
+          custom_domain?: string | null
+          favicon_url?: string | null
+          id?: string
+          logo_url?: string | null
+          name: string
+          primary_color?: string | null
+          secondary_color?: string | null
+          slug: string
+          tagline?: string | null
+          updated_at?: string
+        }
+        Update: {
+          accent_color?: string | null
+          created_at?: string
+          custom_domain?: string | null
+          favicon_url?: string | null
+          id?: string
+          logo_url?: string | null
+          name?: string
+          primary_color?: string | null
+          secondary_color?: string | null
+          slug?: string
+          tagline?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       password_reset_requests: {
         Row: {
           completed_at: string | null
@@ -7482,6 +7591,14 @@ export type Database = {
       }
       is_ip_blocked: { Args: { p_ip_address: unknown }; Returns: boolean }
       is_ip_whitelisted: { Args: { p_ip_address: unknown }; Returns: boolean }
+      is_org_admin: {
+        Args: { _org_id: string; _user_id: string }
+        Returns: boolean
+      }
+      is_org_member: {
+        Args: { _org_id: string; _user_id: string }
+        Returns: boolean
+      }
       log_geo_access: {
         Args: {
           p_country_code: string
