@@ -166,6 +166,7 @@ const Profile = () => {
         <SectionErrorBoundary sectionName="Segurança"><TwoFactorSetup /></SectionErrorBoundary>
         <SoundSettingsCard />
         <PushNotificationToggle />
+        <CampaignNotificationPreferences />
         <ExecutiveReportPreferenceToggle />
          </div>
        </MobilePageLayout>
