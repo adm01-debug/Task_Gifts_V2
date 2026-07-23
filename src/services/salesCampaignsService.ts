@@ -270,7 +270,11 @@ export const salesCampaignsService = {
     source?: string;
     referenceId?: string;
     note?: string;
-  }): Promise<CampaignParticipant> {
+  }): Promise<{
+    participant: CampaignParticipant;
+    justCompleted: boolean;
+    milestoneCrossed: 25 | 50 | 75 | null;
+  }> {
     const { data: { user } } = await supabase.auth.getUser();
     const uid = params.userId ?? user?.id;
     if (!uid) throw new Error("Não autenticado");
@@ -367,14 +371,16 @@ export const salesCampaignsService = {
     }
 
     // Milestone notifications (25/50/75%) — disparadas apenas na transição
+    let milestoneCrossed: 25 | 50 | 75 | null = null;
     if (campaign && !justCompleted && participantRow.target_adjusted > 0) {
       try {
         const target = participantRow.target_adjusted;
         const prevPct = (prev / target) * 100;
         const nextPct = (next / target) * 100;
-        const milestones = [25, 50, 75];
+        const milestones = [25, 50, 75] as const;
         const crossed = milestones.find((m) => prevPct < m && nextPct >= m && nextPct < 100);
         if (crossed) {
+          milestoneCrossed = crossed;
           const emoji = crossed === 75 ? "🔥" : crossed === 50 ? "⚡" : "🚀";
           await db.from("notifications").insert({
             user_id: uid,
@@ -394,6 +400,6 @@ export const salesCampaignsService = {
       }
     }
 
-    return data as CampaignParticipant;
+    return { participant: data as CampaignParticipant, justCompleted, milestoneCrossed };
   },
 };
