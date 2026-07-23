@@ -349,7 +349,7 @@ export const salesCampaignsService = {
         await db.from("notifications").insert({
           user_id: uid,
           type: "campaign_completed",
-          title: `🏆 Meta concluída: ${campaign.title}`,
+          title: `🏆 Meta concluída: ${campaign.name}`,
           message: `Você atingiu ${next}/${participantRow.target_adjusted} (${pct}%) em ${dateLabel}.${rewardTxt}`,
           data: {
             campaign_id: campaign.id,
