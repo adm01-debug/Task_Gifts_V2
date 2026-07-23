@@ -200,6 +200,53 @@ export const salesCampaignsService = {
     if (error) throw error;
   },
 
+  /**
+   * Enrolla em massa todos os membros do departamento da campanha
+   * (ou toda a organização, se department_id = null).
+   * Idempotente: usa upsert em (campaign_id,user_id).
+   */
+  async bulkEnroll(campaignId: string): Promise<{ enrolled: number }> {
+    const campaign = await this.getById(campaignId);
+    if (!campaign) throw new Error("Campanha não encontrada");
+
+    let userIds: string[] = [];
+    if (campaign.department_id) {
+      const { data, error } = await db
+        .from("team_members")
+        .select("user_id")
+        .eq("department_id", campaign.department_id);
+      if (error) throw error;
+      userIds = Array.from(
+        new Set(
+          (data ?? [])
+            .map((r: { user_id: string | null }) => r.user_id)
+            .filter((v: string | null): v is string => !!v),
+        ),
+      );
+    } else {
+      const { data, error } = await db.from("profiles_public").select("id");
+      if (error) throw error;
+      userIds = (data ?? []).map((r: { id: string }) => r.id);
+    }
+
+    if (userIds.length === 0) return { enrolled: 0 };
+
+    const rows = userIds.map((uid) => ({
+      campaign_id: campaignId,
+      user_id: uid,
+      target_adjusted: campaign.target_individual_default,
+      accepted_at: new Date().toISOString(),
+      declined_at: null,
+    }));
+
+    const { error } = await db
+      .from("campaign_participants")
+      .upsert(rows, { onConflict: "campaign_id,user_id", ignoreDuplicates: false });
+    if (error) throw error;
+
+    return { enrolled: rows.length };
+  },
+
   async logProgress(params: {
     campaignId: string;
     userId?: string;

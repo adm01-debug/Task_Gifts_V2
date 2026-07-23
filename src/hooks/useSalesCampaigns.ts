@@ -112,6 +112,21 @@ export function useSalesCampaign(id: string | undefined) {
     },
   });
 
+  const bulkEnrollMut = useMutation({
+    mutationFn: () => salesCampaignsService.bulkEnroll(id!),
+    onSuccess: (res) => {
+      invalidate();
+      toast({
+        title: "Enrollment concluído",
+        description: `${res.enrolled} participante(s) adicionado(s) à campanha.`,
+      });
+    },
+    onError: (err: unknown) => {
+      const msg = err instanceof Error ? err.message : "Erro ao enrollar participantes";
+      toast({ title: "Falha no enrollment", description: msg, variant: "destructive" });
+    },
+  });
+
   return {
     campaign: campaign.data,
     participants: participants.data ?? [],
@@ -122,5 +137,7 @@ export function useSalesCampaign(id: string | undefined) {
     decline: declineMut.mutate,
     logProgress: logProgressMut.mutate,
     isLoggingProgress: logProgressMut.isPending,
+    bulkEnroll: bulkEnrollMut.mutate,
+    isBulkEnrolling: bulkEnrollMut.isPending,
   };
 }
