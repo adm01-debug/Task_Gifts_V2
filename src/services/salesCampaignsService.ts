@@ -78,6 +78,43 @@ export interface CampaignInsert {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const db = supabase as any;
 
+/** Verifica se o usuário aceita determinado tipo de notificação in-app. */
+async function userWantsNotification(userId: string, type: string): Promise<boolean> {
+  try {
+    const { data, error } = await db.rpc("user_wants_in_app_notification", {
+      _user_id: userId,
+      _type: type,
+    });
+    if (error) return true; // fallback permissivo
+    return data !== false;
+  } catch {
+    return true;
+  }
+}
+
+/** Filtra em lote uma lista de usuários pelas preferências in-app. */
+async function filterUsersByPreference(userIds: string[], type: string): Promise<string[]> {
+  if (userIds.length === 0) return [];
+  try {
+    const { data, error } = await db
+      .from("notification_preferences")
+      .select("user_id, type_preferences")
+      .in("user_id", userIds);
+    if (error) return userIds;
+    const prefs = new Map<string, Record<string, boolean> | null>();
+    (data ?? []).forEach((row: { user_id: string; type_preferences: Record<string, boolean> | null }) => {
+      prefs.set(row.user_id, row.type_preferences);
+    });
+    return userIds.filter((uid) => {
+      const p = prefs.get(uid);
+      if (!p) return true; // sem registro = default permissivo
+      return p[type] !== false;
+    });
+  } catch {
+    return userIds;
+  }
+}
+
 export const salesCampaignsService = {
   async list(status?: SalesCampaign["status"]): Promise<SalesCampaign[]> {
     try {
