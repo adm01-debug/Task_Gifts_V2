@@ -310,13 +310,16 @@ export default function SalesCampaignDetail() {
                 >
                   <div className="flex items-center gap-3">
                     <div className={cn(
-                      "w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold shrink-0",
-                      p.rank_position === 1 ? "bg-yellow-400 text-yellow-950" :
-                      p.rank_position === 2 ? "bg-gray-300 text-gray-800" :
-                      p.rank_position === 3 ? "bg-orange-400 text-orange-950" :
+                      "w-9 h-9 rounded-full flex items-center justify-center text-sm font-bold shrink-0 shadow-sm",
+                      p.rank_position === 1 ? "bg-gradient-to-br from-yellow-300 to-amber-500 text-yellow-950 ring-2 ring-yellow-300/50" :
+                      p.rank_position === 2 ? "bg-gradient-to-br from-slate-200 to-slate-400 text-slate-900 ring-2 ring-slate-300/50" :
+                      p.rank_position === 3 ? "bg-gradient-to-br from-orange-300 to-amber-700 text-orange-950 ring-2 ring-orange-400/40" :
                       "bg-muted text-muted-foreground",
                     )}>
-                      {p.rank_position ?? "-"}
+                      {p.rank_position === 1 ? "🥇" :
+                       p.rank_position === 2 ? "🥈" :
+                       p.rank_position === 3 ? "🥉" :
+                       (p.rank_position ?? "-")}
                     </div>
                     <Avatar className="h-9 w-9">
                       <AvatarImage src={p.profile?.avatar_url ?? undefined} alt={p.profile?.display_name ?? "Participante"} />
