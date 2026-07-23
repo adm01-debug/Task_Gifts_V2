@@ -44,9 +44,10 @@ export const pushSubscriptionService = {
 
     let sub = await registration.pushManager.getSubscription();
     if (!sub) {
+      const key = urlBase64ToUint8Array(publicKey);
       sub = await registration.pushManager.subscribe({
         userVisibleOnly: true,
-        applicationServerKey: urlBase64ToUint8Array(publicKey),
+        applicationServerKey: key.buffer as ArrayBuffer,
       });
     }
 
@@ -74,7 +75,7 @@ export const pushSubscriptionService = {
         { onConflict: "user_id,endpoint" },
       );
     if (error) {
-      logger.error("push_subscribe_failed", { message: error.message });
+      logger.error("push_subscribe_failed", "push", error);
       return { ok: false, reason: "persist_failed" };
     }
     return { ok: true };
@@ -95,7 +96,7 @@ export const pushSubscriptionService = {
       }
       return true;
     } catch (err) {
-      logger.error("push_unsubscribe_failed", { err: (err as Error).message });
+      logger.error("push_unsubscribe_failed", "push", err);
       return false;
     }
   },
