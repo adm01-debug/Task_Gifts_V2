@@ -5160,6 +5160,51 @@ export type Database = {
           },
         ]
       }
+      push_subscriptions: {
+        Row: {
+          auth: string
+          created_at: string
+          device_label: string | null
+          disabled_at: string | null
+          endpoint: string
+          failure_count: number
+          id: string
+          last_used_at: string | null
+          p256dh: string
+          updated_at: string
+          user_agent: string | null
+          user_id: string
+        }
+        Insert: {
+          auth: string
+          created_at?: string
+          device_label?: string | null
+          disabled_at?: string | null
+          endpoint: string
+          failure_count?: number
+          id?: string
+          last_used_at?: string | null
+          p256dh: string
+          updated_at?: string
+          user_agent?: string | null
+          user_id: string
+        }
+        Update: {
+          auth?: string
+          created_at?: string
+          device_label?: string | null
+          disabled_at?: string | null
+          endpoint?: string
+          failure_count?: number
+          id?: string
+          last_used_at?: string | null
+          p256dh?: string
+          updated_at?: string
+          user_agent?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       query_telemetry: {
         Row: {
           count_mode: string | null
