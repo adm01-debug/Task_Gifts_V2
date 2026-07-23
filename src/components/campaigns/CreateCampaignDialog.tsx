@@ -132,15 +132,35 @@ export function CreateCampaignDialog({ trigger }: CreateCampaignDialogProps) {
               <Input type="number" value={form.coin_reward} onChange={(e) => setForm({ ...form, coin_reward: Number(e.target.value) })} />
             </div>
           </div>
-          <div className="grid gap-2">
-            <Label>Status inicial</Label>
-            <Select value={form.status} onValueChange={(v: "draft" | "active") => setForm({ ...form, status: v })}>
-              <SelectTrigger><SelectValue /></SelectTrigger>
-              <SelectContent>
-                <SelectItem value="draft">Rascunho</SelectItem>
-                <SelectItem value="active">Ativa (já publicar)</SelectItem>
-              </SelectContent>
-            </Select>
+          <div className="grid grid-cols-2 gap-3">
+            <div className="grid gap-2">
+              <Label>Departamento / Segmento</Label>
+              <Select
+                value={form.department_id}
+                onValueChange={(v) => setForm({ ...form, department_id: v })}
+              >
+                <SelectTrigger><SelectValue placeholder="Todos" /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">Todos os departamentos</SelectItem>
+                  {departments.map((d) => (
+                    <SelectItem key={d.id} value={d.id}>{d.name}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <p className="text-xs text-muted-foreground">
+                Restrinja quem pode participar. "Todos" libera a campanha para toda a organização.
+              </p>
+            </div>
+            <div className="grid gap-2">
+              <Label>Status inicial</Label>
+              <Select value={form.status} onValueChange={(v: "draft" | "active") => setForm({ ...form, status: v })}>
+                <SelectTrigger><SelectValue /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="draft">Rascunho</SelectItem>
+                  <SelectItem value="active">Ativa (já publicar)</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
           </div>
         </div>
         <DialogFooter>
