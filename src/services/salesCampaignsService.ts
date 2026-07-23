@@ -122,6 +122,32 @@ async function filterUsersByPreference(userIds: string[], type: string): Promise
   }
 }
 
+/** Dispara push best-effort via edge function `send-campaign-push`. */
+async function sendCampaignPush(params: {
+  userIds: string[];
+  type: string;
+  title: string;
+  message: string;
+  url?: string;
+  data?: Record<string, unknown>;
+}): Promise<void> {
+  if (!params.userIds.length) return;
+  try {
+    await supabase.functions.invoke("send-campaign-push", {
+      body: {
+        user_ids: params.userIds,
+        type: params.type,
+        title: params.title,
+        message: params.message,
+        url: params.url,
+        data: params.data,
+      },
+    });
+  } catch (err) {
+    logger.apiError("send-campaign-push", err, "salesCampaignsService");
+  }
+}
+
 export const salesCampaignsService = {
   async list(status?: SalesCampaign["status"]): Promise<SalesCampaign[]> {
     try {
@@ -414,6 +440,19 @@ export const salesCampaignsService = {
             completed_at: completedAt,
           },
         });
+        void sendCampaignPush({
+          userIds: [uid],
+          type: "campaign_completed",
+          title: `🏆 Meta concluída: ${campaign.name}`,
+          message: `Você atingiu ${pct}% da meta.${rewardTxt}`,
+          url: `/campanhas/${campaign.id}`,
+          data: {
+            campaign_id: campaign.id,
+            progress: next,
+            target: participantRow.target_adjusted,
+            percent: pct,
+          },
+        });
       } catch (err) {
         // Não bloqueia o fluxo se a notificação falhar.
       }
@@ -436,6 +475,19 @@ export const salesCampaignsService = {
             type: "campaign_milestone",
             title: `${emoji} ${crossed}% da meta em ${campaign.name}`,
             message: `Você já atingiu ${next}/${target} ${campaign.metric_unit ?? ""}. Continue firme!`.trim(),
+            data: {
+              campaign_id: campaign.id,
+              milestone: crossed,
+              progress: next,
+              target,
+            },
+          });
+          void sendCampaignPush({
+            userIds: [uid],
+            type: "campaign_milestone",
+            title: `${emoji} ${crossed}% da meta`,
+            message: `${campaign.name}: ${next}/${target} ${campaign.metric_unit ?? ""}`.trim(),
+            url: `/campanhas/${campaign.id}`,
             data: {
               campaign_id: campaign.id,
               milestone: crossed,
