@@ -30,6 +30,17 @@ export type OrganizationUpdate = Partial<
 >;
 
 export const organizationService = {
+  async getOrganizationByHostname(hostname: string): Promise<Organization | null> {
+    const normalized = hostname.toLowerCase().replace(/^www\./, "");
+    const { data, error } = await supabase
+      .from("organizations")
+      .select("*")
+      .eq("custom_domain", normalized)
+      .maybeSingle();
+    if (error || !data) return null;
+    return data as Organization;
+  },
+
   async getMyOrganization(userId: string): Promise<Organization | null> {
     const { data: membership, error: memErr } = await supabase
       .from("org_members")
