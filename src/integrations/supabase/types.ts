@@ -5160,6 +5160,68 @@ export type Database = {
           },
         ]
       }
+      push_notification_logs: {
+        Row: {
+          campaign_id: string | null
+          created_at: string
+          data: Json | null
+          device_label: string | null
+          endpoint: string | null
+          error: string | null
+          id: string
+          message: string
+          status: string
+          status_code: number | null
+          subscription_id: string | null
+          title: string
+          type: string
+          url: string | null
+          user_id: string
+        }
+        Insert: {
+          campaign_id?: string | null
+          created_at?: string
+          data?: Json | null
+          device_label?: string | null
+          endpoint?: string | null
+          error?: string | null
+          id?: string
+          message: string
+          status: string
+          status_code?: number | null
+          subscription_id?: string | null
+          title: string
+          type: string
+          url?: string | null
+          user_id: string
+        }
+        Update: {
+          campaign_id?: string | null
+          created_at?: string
+          data?: Json | null
+          device_label?: string | null
+          endpoint?: string | null
+          error?: string | null
+          id?: string
+          message?: string
+          status?: string
+          status_code?: number | null
+          subscription_id?: string | null
+          title?: string
+          type?: string
+          url?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "push_notification_logs_subscription_id_fkey"
+            columns: ["subscription_id"]
+            isOneToOne: false
+            referencedRelation: "push_subscriptions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       push_subscriptions: {
         Row: {
           auth: string
