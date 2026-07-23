@@ -249,7 +249,7 @@ export const salesCampaignsService = {
       const notifRows = userIds.map((uid) => ({
         user_id: uid,
         type: "campaign_enrolled",
-        title: `Você foi inscrito em: ${campaign.title}`,
+        title: `Você foi inscrito em: ${campaign.name}`,
         message: campaign.target_individual_default
           ? `Meta individual sugerida: ${campaign.target_individual_default} ${campaign.metric_unit ?? ""}. Aceite para começar.`
           : "Acesse a campanha para aceitar sua meta e começar.",
