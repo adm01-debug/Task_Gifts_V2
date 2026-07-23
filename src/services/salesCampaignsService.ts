@@ -244,6 +244,22 @@ export const salesCampaignsService = {
       .upsert(rows, { onConflict: "campaign_id,user_id", ignoreDuplicates: false });
     if (error) throw error;
 
+    // Notificação in-app (best-effort): requer role admin pela policy de INSERT.
+    try {
+      const notifRows = userIds.map((uid) => ({
+        user_id: uid,
+        type: "campaign_enrolled",
+        title: `Você foi inscrito em: ${campaign.name}`,
+        message: campaign.target_individual_default
+          ? `Meta individual sugerida: ${campaign.target_individual_default} ${campaign.metric_unit ?? ""}. Aceite para começar.`
+          : "Acesse a campanha para aceitar sua meta e começar.",
+        data: { campaign_id: campaignId, kind: "bulk_enroll" },
+      }));
+      await db.from("notifications").insert(notifRows);
+    } catch {
+      // Não bloqueia o enrollment se a notificação falhar.
+    }
+
     return { enrolled: rows.length };
   },
 
