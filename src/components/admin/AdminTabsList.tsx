@@ -2,7 +2,7 @@ import { TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   LayoutDashboard, TrendingUp, Users, Building2, AlertTriangle, History,
   Trophy, Target, BarChart3, MessageSquare, Megaphone, PartyPopper,
-  Heart, Briefcase, Grid3X3, FileText, Gauge, Globe, Shield, Key,
+  Heart, Briefcase, Grid3X3, FileText, Gauge, Globe, Shield, Key, Palette,
 } from "lucide-react";
 
 const tabs = [
@@ -10,6 +10,7 @@ const tabs = [
   { value: "metrics", label: "Métricas", icon: TrendingUp },
   { value: "users", label: "Usuários", icon: Users },
   { value: "departments", label: "Departamentos", icon: Building2 },
+  { value: "organization", label: "Organização", icon: Palette },
   { value: "alerts", label: "Alertas Sistema", icon: AlertTriangle },
   { value: "pdi-alerts", label: "Alertas PDI", icon: AlertTriangle },
   { value: "history", label: "Histórico", icon: History },
