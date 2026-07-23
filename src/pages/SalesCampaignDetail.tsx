@@ -215,6 +215,7 @@ export default function SalesCampaignDetail() {
         campaignId={campaign.id}
         currentUserId={myParticipation?.user_id ?? null}
         metricUnit={campaign.metric_unit}
+        personalTarget={myParticipation?.target_adjusted ?? null}
       />
 
       {/* Ranking */}

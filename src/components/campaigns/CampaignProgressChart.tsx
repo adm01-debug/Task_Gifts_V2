@@ -12,6 +12,7 @@ import {
   CartesianGrid,
   Tooltip,
   Legend,
+  ReferenceLine,
 } from "recharts";
 import { format, parseISO } from "date-fns";
 import { ptBR } from "date-fns/locale";
@@ -22,6 +23,7 @@ interface CampaignProgressChartProps {
   campaignId: string;
   currentUserId?: string | null;
   metricUnit?: string;
+  personalTarget?: number | null;
 }
 
 interface ProgressEvent {
@@ -40,8 +42,17 @@ export function CampaignProgressChart({
   campaignId,
   currentUserId,
   metricUnit = "",
+  personalTarget = null,
 }: CampaignProgressChartProps) {
   const [period, setPeriod] = useState<PeriodFilter>("all");
+
+  const milestones = useMemo(() => {
+    if (!personalTarget || personalTarget <= 0) return [] as { value: number; label: string }[];
+    return [25, 50, 75].map((p) => ({
+      value: Math.round((personalTarget * p) / 100),
+      label: `${p}%`,
+    }));
+  }, [personalTarget]);
 
   const { data: events = [], isLoading } = useQuery({
     queryKey: ["campaign-progress-events", campaignId],
@@ -164,6 +175,22 @@ export function CampaignProgressChart({
               formatter={(v) => (v === "global" ? "Global" : "Você")}
               wrapperStyle={{ fontSize: 12 }}
             />
+            {currentUserId &&
+              milestones.map((m) => (
+                <ReferenceLine
+                  key={m.label}
+                  y={m.value}
+                  stroke="hsl(var(--muted-foreground))"
+                  strokeDasharray="2 4"
+                  strokeOpacity={0.6}
+                  label={{
+                    value: m.label,
+                    position: "right",
+                    fill: "hsl(var(--muted-foreground))",
+                    fontSize: 10,
+                  }}
+                />
+              ))}
             <Line
               type="monotone"
               dataKey="global"
