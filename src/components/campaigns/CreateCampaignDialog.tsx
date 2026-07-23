@@ -7,6 +7,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Plus } from "lucide-react";
 import { useSalesCampaigns } from "@/hooks/useSalesCampaigns";
+import { useDepartments } from "@/hooks/useDepartments";
 
 interface CreateCampaignDialogProps {
   trigger?: React.ReactNode;
@@ -14,6 +15,7 @@ interface CreateCampaignDialogProps {
 
 export function CreateCampaignDialog({ trigger }: CreateCampaignDialogProps) {
   const { create, isCreating } = useSalesCampaigns();
+  const { data: departments = [] } = useDepartments();
   const [open, setOpen] = useState(false);
   const [form, setForm] = useState({
     name: "",
@@ -29,11 +31,16 @@ export function CreateCampaignDialog({ trigger }: CreateCampaignDialogProps) {
     xp_reward: 500,
     coin_reward: 100,
     status: "draft" as "draft" | "active",
+    department_id: "all" as string,
   });
 
   const handleSubmit = () => {
     if (!form.name.trim()) return;
-    create(form, { onSuccess: () => setOpen(false) });
+    const { department_id, ...rest } = form;
+    create(
+      { ...rest, department_id: department_id === "all" ? null : department_id },
+      { onSuccess: () => setOpen(false) },
+    );
   };
 
   return (
