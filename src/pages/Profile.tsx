@@ -15,6 +15,7 @@ import { SoundSettingsCard } from "@/components/SoundSettingsCard";
 import { PushNotificationToggle } from "@/components/PushNotificationToggle";
 import { PushNotificationHistory } from "@/components/PushNotificationHistory";
 import { CampaignNotificationPreferences } from "@/components/CampaignNotificationPreferences";
+import { InAppNotificationToggle } from "@/components/InAppNotificationToggle";
 import { ExecutiveReportPreferenceToggle } from "@/components/ExecutiveReportPreferenceToggle";
 import { SectionErrorBoundary } from "@/components/SectionErrorBoundary";
 import { TwoFactorSetup } from "@/components/auth/TwoFactorSetup";
@@ -168,6 +169,7 @@ const Profile = () => {
         <SoundSettingsCard />
         <PushNotificationToggle />
         <SectionErrorBoundary sectionName="Histórico de Push"><PushNotificationHistory /></SectionErrorBoundary>
+        <InAppNotificationToggle />
         <CampaignNotificationPreferences />
         <ExecutiveReportPreferenceToggle />
          </div>

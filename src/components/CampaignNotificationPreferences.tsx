@@ -9,7 +9,9 @@ import { toast } from "sonner";
 import { Trophy } from "lucide-react";
 import { logger } from "@/services/loggingService";
 
-type TypePrefs = Record<string, { push?: boolean; email?: boolean; in_app?: boolean; priority?: string }>;
+type Channel = "in_app" | "push" | "email";
+type TypePrefEntry = { in_app?: boolean; push?: boolean; email?: boolean; priority?: string };
+type TypePrefs = Record<string, TypePrefEntry>;
 
 type CampaignPrefKey =
   | "campaign_enrolled"
@@ -26,19 +28,35 @@ const ROWS: Array<{ key: CampaignPrefKey; label: string; description: string }> 
   { key: "campaign_closed",    label: "Campanha encerrada",   description: "Ao final da campanha, com sua posição." },
 ];
 
-const DEFAULTS: Record<CampaignPrefKey, boolean> = {
-  campaign_enrolled: true,
-  campaign_progress: true,
-  campaign_milestone: true,
-  campaign_completed: true,
-  campaign_closed: true,
+const CHANNELS: Array<{ key: Channel; label: string }> = [
+  { key: "in_app", label: "In-app" },
+  { key: "push",   label: "Push" },
+  { key: "email",  label: "E-mail" },
+];
+
+// Defaults por (tipo × canal). E-mail padrão só em marcos terminais.
+const DEFAULTS: Record<CampaignPrefKey, Record<Channel, boolean>> = {
+  campaign_enrolled:  { in_app: true, push: true, email: false },
+  campaign_progress:  { in_app: true, push: true, email: false },
+  campaign_milestone: { in_app: true, push: true, email: false },
+  campaign_completed: { in_app: true, push: true, email: true  },
+  campaign_closed:    { in_app: true, push: true, email: true  },
 };
+
+type Values = Record<CampaignPrefKey, Record<Channel, boolean>>;
+
+function cloneDefaults(): Values {
+  return (Object.keys(DEFAULTS) as CampaignPrefKey[]).reduce((acc, k) => {
+    acc[k] = { ...DEFAULTS[k] };
+    return acc;
+  }, {} as Values);
+}
 
 export function CampaignNotificationPreferences() {
   const { user } = useAuth();
   const [loading, setLoading] = useState(true);
-  const [saving, setSaving] = useState<CampaignPrefKey | null>(null);
-  const [values, setValues] = useState<Record<CampaignPrefKey, boolean>>({ ...DEFAULTS });
+  const [saving, setSaving] = useState<string | null>(null); // `${key}:${channel}`
+  const [values, setValues] = useState<Values>(cloneDefaults);
 
   useEffect(() => {
     if (!user?.id) { setLoading(false); return; }
@@ -51,10 +69,14 @@ export function CampaignNotificationPreferences() {
           .maybeSingle();
         if (error) throw error;
         const prefs = (data?.type_preferences as TypePrefs) || {};
-        const next = { ...DEFAULTS };
+        const next = cloneDefaults();
         (Object.keys(DEFAULTS) as CampaignPrefKey[]).forEach((k) => {
-          const v = prefs[k]?.in_app;
-          if (typeof v === "boolean") next[k] = v;
+          const entry = prefs[k];
+          if (entry && typeof entry === "object") {
+            CHANNELS.forEach((c) => {
+              if (typeof entry[c.key] === "boolean") next[k][c.key] = entry[c.key] as boolean;
+            });
+          }
         });
         setValues(next);
       } catch (err: unknown) {
@@ -65,11 +87,12 @@ export function CampaignNotificationPreferences() {
     })();
   }, [user?.id]);
 
-  const persist = async (key: CampaignPrefKey, nextValue: boolean) => {
+  const persist = async (key: CampaignPrefKey, channel: Channel, nextValue: boolean) => {
     if (!user?.id) return;
-    setSaving(key);
-    const previous = values[key];
-    setValues((v) => ({ ...v, [key]: nextValue }));
+    const cellId = `${key}:${channel}`;
+    setSaving(cellId);
+    const previous = values[key][channel];
+    setValues((v) => ({ ...v, [key]: { ...v[key], [channel]: nextValue } }));
     try {
       const { data: existing } = await supabase
         .from("notification_preferences")
@@ -78,15 +101,14 @@ export function CampaignNotificationPreferences() {
         .maybeSingle();
       const current = (existing?.type_preferences as TypePrefs) || {};
       const prior = current[key] || {};
-      const next: TypePrefs = {
-        ...current,
-        [key]: {
-          push: prior.push ?? true,
-          email: prior.email ?? (key === "campaign_completed" || key === "campaign_closed"),
-          in_app: nextValue,
-          priority: prior.priority ?? (key === "campaign_completed" ? "high" : "normal"),
-        },
+      const merged: TypePrefEntry = {
+        in_app:   prior.in_app ?? DEFAULTS[key].in_app,
+        push:     prior.push   ?? DEFAULTS[key].push,
+        email:    prior.email  ?? DEFAULTS[key].email,
+        priority: prior.priority ?? (key === "campaign_completed" ? "high" : "normal"),
+        [channel]: nextValue,
       };
+      const next: TypePrefs = { ...current, [key]: merged };
       const { error } = await supabase
         .from("notification_preferences")
         .upsert({ user_id: user.id, type_preferences: next }, { onConflict: "user_id" });
@@ -95,7 +117,7 @@ export function CampaignNotificationPreferences() {
     } catch (err: unknown) {
       logger.error("Falha ao salvar preferência de campanha", String(err));
       toast.error("Não foi possível salvar a preferência");
-      setValues((v) => ({ ...v, [key]: previous }));
+      setValues((v) => ({ ...v, [key]: { ...v[key], [channel]: previous } }));
     } finally {
       setSaving(null);
     }
@@ -109,31 +131,56 @@ export function CampaignNotificationPreferences() {
           Notificações de campanhas
         </CardTitle>
         <CardDescription>
-          Escolha quais avisos in-app você quer receber sobre campanhas comerciais.
+          Escolha por canal (in-app, push e e-mail) quais avisos de campanhas você quer receber.
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-3">
         {loading ? (
           <>
-            <Skeleton className="h-10 w-full" />
-            <Skeleton className="h-10 w-full" />
-            <Skeleton className="h-10 w-full" />
+            <Skeleton className="h-14 w-full" />
+            <Skeleton className="h-14 w-full" />
+            <Skeleton className="h-14 w-full" />
           </>
         ) : (
-          ROWS.map((row) => (
-            <div key={row.key} className="flex items-center justify-between gap-4 rounded-lg border border-border/40 bg-card/40 p-3">
-              <div className="min-w-0">
-                <Label htmlFor={`pref-${row.key}`} className="text-sm font-medium">{row.label}</Label>
-                <p className="text-xs text-muted-foreground">{row.description}</p>
+          <>
+            {ROWS.map((row) => (
+              <div key={row.key} className="rounded-lg border border-border/40 bg-card/40 p-3">
+                <div className="mb-2">
+                  <Label className="text-sm font-medium">{row.label}</Label>
+                  <p className="text-xs text-muted-foreground">{row.description}</p>
+                </div>
+                <div className="grid grid-cols-3 gap-2 sm:gap-3">
+                  {CHANNELS.map((c) => {
+                    const cellId = `${row.key}:${c.key}`;
+                    return (
+                      <div
+                        key={c.key}
+                        className="flex items-center justify-between gap-2 rounded-md border border-border/30 bg-background/40 px-2 py-1.5"
+                      >
+                        <Label
+                          htmlFor={`pref-${cellId}`}
+                          className="text-xs text-muted-foreground"
+                        >
+                          {c.label}
+                        </Label>
+                        <Switch
+                          id={`pref-${cellId}`}
+                          checked={values[row.key][c.key]}
+                          disabled={saving === cellId}
+                          onCheckedChange={(v) => persist(row.key, c.key, v)}
+                          aria-label={`${row.label} · ${c.label}`}
+                        />
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
-              <Switch
-                id={`pref-${row.key}`}
-                checked={values[row.key]}
-                disabled={saving === row.key}
-                onCheckedChange={(v) => persist(row.key, v)}
-              />
-            </div>
-          ))
+            ))}
+            <p className="pt-1 text-[11px] text-muted-foreground">
+              As RPCs <code>user_wants_in_app_notification</code>, <code>user_wants_push_notification</code> e{" "}
+              <code>user_wants_email_notification</code> respeitam estas preferências antes de qualquer envio.
+            </p>
+          </>
         )}
       </CardContent>
     </Card>
