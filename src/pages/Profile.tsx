@@ -20,6 +20,7 @@ import { MyNineBoxWidget } from "@/components/MyNineBoxWidget";
 import { MyDevelopmentPlanWidget } from "@/components/MyDevelopmentPlanWidget";
 import { ProfileActivityTimeline } from "@/components/profile/ProfileActivityTimeline";
 import { ProfileAchievements } from "@/components/profile/ProfileAchievements";
+import { MyCampaignBadgeCard } from "@/components/campaigns/MyCampaignBadgeCard";
 import { logger } from "@/services/loggingService";
 import { useAvatarConfig } from "@/hooks/useAvatar";
 import { useUserRank } from "@/hooks/useUserRank";
@@ -153,6 +154,7 @@ const Profile = () => {
         </motion.div>
 
         {user?.id && profile && <SectionErrorBoundary sectionName="Coleção de Avatar"><ProfileAvatarSection userId={user.id} userLevel={profile.level} userStreak={profile.streak} userCoins={profile.coins} displayName={profile.display_name || "Jogador"} /></SectionErrorBoundary>}
+        <SectionErrorBoundary sectionName="Metas de Campanha"><MyCampaignBadgeCard /></SectionErrorBoundary>
         <SectionErrorBoundary sectionName="Conquistas"><ProfileAchievements /></SectionErrorBoundary>
         <SectionErrorBoundary sectionName="Competências"><CompetencyRadar /></SectionErrorBoundary>
         <SectionErrorBoundary sectionName="Certificações"><CertificationsPanel /></SectionErrorBoundary>
