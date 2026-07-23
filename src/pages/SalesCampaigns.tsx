@@ -22,7 +22,7 @@ export default function SalesCampaigns() {
   const [departmentFilter, setDepartmentFilter] = useState<string>("all");
   const { campaigns, isLoading } = useSalesCampaigns(tab === "all" ? undefined : tab);
   const { hasRole } = useRBAC();
-  const { departments } = useDepartments();
+  const { data: departments = [] } = useDepartments();
   const canCreate = hasRole("admin") || hasRole("manager");
 
   useEffect(() => {
