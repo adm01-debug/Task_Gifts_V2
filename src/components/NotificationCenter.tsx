@@ -167,6 +167,7 @@ NotificationItem.displayName = "NotificationItem";
 
 export const NotificationCenter = () => {
   const [open, setOpen] = useState(false);
+  const navigate = useNavigate();
   const { notifications, unreadCount, isLoading, realtimeEnabled } = useNotifications();
   const markAsRead = useMarkAsRead();
   const markAllAsRead = useMarkAllAsRead();
@@ -188,6 +189,22 @@ export const NotificationCenter = () => {
   const handleClearAll = useCallback(() => {
     clearAll.mutate();
   }, [clearAll]);
+
+  const handleNavigate = useCallback(
+    (notification: Notification) => {
+      const data = (notification.data ?? {}) as Record<string, unknown>;
+      const url = typeof data.url === "string" ? data.url : null;
+      if (!url) return;
+      if (!notification.read) markAsRead.mutate(notification.id);
+      setOpen(false);
+      if (/^https?:\/\//i.test(url)) {
+        window.open(url, "_blank", "noopener,noreferrer");
+      } else {
+        navigate(url);
+      }
+    },
+    [markAsRead, navigate],
+  );
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -279,6 +296,7 @@ export const NotificationCenter = () => {
                   notification={notification}
                   onMarkRead={handleMarkRead}
                   onDelete={handleDelete}
+                  onNavigate={handleNavigate}
                 />
               ))}
             </AnimatePresence>
