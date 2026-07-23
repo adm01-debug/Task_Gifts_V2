@@ -13,6 +13,7 @@ import { CompetencyRadar } from "@/components/CompetencyRadar";
 import { CertificationsPanel } from "@/components/CertificationsPanel";
 import { SoundSettingsCard } from "@/components/SoundSettingsCard";
 import { PushNotificationToggle } from "@/components/PushNotificationToggle";
+import { PushNotificationHistory } from "@/components/PushNotificationHistory";
 import { CampaignNotificationPreferences } from "@/components/CampaignNotificationPreferences";
 import { ExecutiveReportPreferenceToggle } from "@/components/ExecutiveReportPreferenceToggle";
 import { SectionErrorBoundary } from "@/components/SectionErrorBoundary";
@@ -166,6 +167,7 @@ const Profile = () => {
         <SectionErrorBoundary sectionName="Segurança"><TwoFactorSetup /></SectionErrorBoundary>
         <SoundSettingsCard />
         <PushNotificationToggle />
+        <SectionErrorBoundary sectionName="Histórico de Push"><PushNotificationHistory /></SectionErrorBoundary>
         <CampaignNotificationPreferences />
         <ExecutiveReportPreferenceToggle />
          </div>
