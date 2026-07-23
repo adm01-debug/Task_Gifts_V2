@@ -180,6 +180,13 @@ export default function SalesCampaignDetail() {
         )}
       </Card>
 
+      {/* Progress chart */}
+      <CampaignProgressChart
+        campaignId={campaign.id}
+        currentUserId={myParticipation?.user_id ?? null}
+        metricUnit={campaign.metric_unit}
+      />
+
       {/* Ranking */}
       <Card className="p-6">
         <div className="flex items-center justify-between mb-4 gap-3 flex-wrap">
