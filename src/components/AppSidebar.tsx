@@ -3,7 +3,7 @@ import {
   Home, Target, Trophy, TrendingUp, Clock, BookOpen, 
   Gamepad2, ShoppingBag, Swords, Heart, Award, 
   ClipboardCheck, BarChart3, Megaphone, MessageSquare,
-  LayoutDashboard, GraduationCap, Users, Sparkles
+  LayoutDashboard, GraduationCap, Users, Sparkles, Rocket
 } from "lucide-react";
 import { memo } from "react";
 import { SidebarNavGroup, SidebarUserStats, SidebarLogo, SidebarFooter } from "@/components/sidebar";
@@ -47,6 +47,7 @@ const navCategories = [
     items: [
       { icon: Award, label: "Ligas", path: "/leagues" },
       { icon: Swords, label: "Duelos", path: "/duelos" },
+      { icon: Rocket, label: "Campanhas", path: "/campanhas" },
     ],
   },
   {
