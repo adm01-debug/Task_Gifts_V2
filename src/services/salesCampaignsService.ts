@@ -49,6 +49,11 @@ export interface CampaignParticipant {
   rank_position: number | null;
   created_at: string;
   updated_at: string;
+  profile?: {
+    display_name: string | null;
+    avatar_url: string | null;
+    level: number | null;
+  } | null;
 }
 
 export interface CampaignInsert {
@@ -124,7 +129,19 @@ export const salesCampaignsService = {
       .eq("campaign_id", campaignId)
       .order("rank_position", { ascending: true, nullsFirst: false });
     if (error) throw error;
-    return (data ?? []) as CampaignParticipant[];
+    const rows = (data ?? []) as CampaignParticipant[];
+    if (rows.length === 0) return rows;
+
+    const ids = Array.from(new Set(rows.map((r) => r.user_id)));
+    const { data: profiles } = await db
+      .from("profiles_public")
+      .select("id, display_name, avatar_url, level")
+      .in("id", ids);
+    const byId = new Map<string, { display_name: string | null; avatar_url: string | null; level: number | null }>();
+    (profiles ?? []).forEach((p: { id: string; display_name: string | null; avatar_url: string | null; level: number | null }) => {
+      byId.set(p.id, { display_name: p.display_name, avatar_url: p.avatar_url, level: p.level });
+    });
+    return rows.map((r) => ({ ...r, profile: byId.get(r.user_id) ?? null }));
   },
 
   async getMyParticipation(campaignId: string): Promise<CampaignParticipant | null> {
