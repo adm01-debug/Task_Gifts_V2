@@ -1,4 +1,5 @@
 import { useState, useCallback, memo } from "react";
+import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
   Bell, 
@@ -13,6 +14,9 @@ import {
   Lightbulb,
   Sparkles,
   Brain,
+  Flag,
+  Megaphone,
+  PartyPopper,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -41,6 +45,11 @@ const notificationIcons: Record<string, React.ReactNode> = {
    development_tip: <Lightbulb className="w-4 h-4 text-amber-400" />,
    competency_celebration: <Sparkles className="w-4 h-4 text-emerald-400 animate-spin-slow" />,
    churn_risk: <Brain className="w-4 h-4 text-orange-500" />,
+   campaign_enrolled: <Megaphone className="w-4 h-4 text-primary" />,
+   campaign_progress: <TrendingUp className="w-4 h-4 text-sky-500" />,
+   campaign_milestone: <Sparkles className="w-4 h-4 text-amber-400 animate-pulse" />,
+   campaign_completed: <PartyPopper className="w-4 h-4 text-emerald-500" />,
+   campaign_closed: <Flag className="w-4 h-4 text-amber-500" />,
    info: <Bell className="w-4 h-4 text-muted-foreground" />,
 };
 
@@ -48,14 +57,17 @@ interface NotificationItemProps {
   notification: Notification;
   onMarkRead: (id: string) => void;
   onDelete: (id: string) => void;
+  onNavigate: (notification: Notification) => void;
 }
 
-const NotificationItem = memo(({ notification, onMarkRead, onDelete }: NotificationItemProps) => {
+const NotificationItem = memo(({ notification, onMarkRead, onDelete, onNavigate }: NotificationItemProps) => {
   const icon = notificationIcons[notification.type] || notificationIcons.info;
   const timeAgo = formatDistanceToNow(new Date(notification.created_at), { 
     addSuffix: true, 
     locale: ptBR 
   });
+  const data = (notification.data ?? {}) as Record<string, unknown>;
+  const url = typeof data.url === "string" ? data.url : null;
 
   return (
     <motion.div
@@ -65,8 +77,22 @@ const NotificationItem = memo(({ notification, onMarkRead, onDelete }: Notificat
       exit={{ opacity: 0, x: 20 }}
        className={cn(
          "p-4 border-b border-white/5 last:border-0 hover:bg-white/5 transition-all group relative overflow-hidden",
+         url && "cursor-pointer",
          !notification.read && "bg-primary/5 before:absolute before:left-0 before:top-2 before:bottom-2 before:w-1 before:bg-primary before:rounded-r-full"
        )}
+      role={url ? "button" : undefined}
+      tabIndex={url ? 0 : undefined}
+      onClick={url ? () => onNavigate(notification) : undefined}
+      onKeyDown={
+        url
+          ? (e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                onNavigate(notification);
+              }
+            }
+          : undefined
+      }
     >
       <div className="flex items-start gap-3">
          <div className={cn(
