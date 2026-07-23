@@ -1,5 +1,6 @@
 // Edge Function: send-campaign-push
-// Envia notificações Web Push respeitando `notification_preferences` e limpa inscrições inválidas.
+// Envia notificações Web Push com retry+backoff, invalidação automática de
+// endpoints expirados e reset de contador de falhas em sucesso.
 import { createClient } from "npm:@supabase/supabase-js@2";
 import { corsHeaders } from "npm:@supabase/supabase-js@2/cors";
 import webpush from "npm:web-push@3.6.7";
@@ -71,6 +72,7 @@ Deno.serve(async (req) => {
   let sent = 0;
   const invalidIds: string[] = [];
   const failedIds: string[] = [];
+  const successIds: string[] = [];
   const logRows: Record<string, unknown>[] = [];
   const campaignId = (data && typeof data === "object" && "campaign_id" in (data as Record<string, unknown>))
     ? String((data as Record<string, unknown>).campaign_id)
@@ -90,25 +92,20 @@ Deno.serve(async (req) => {
         url: url ?? null,
         data: data ?? null,
       };
-      try {
-        await webpush.sendNotification(
-          { endpoint: s.endpoint, keys: { p256dh: s.p256dh, auth: s.auth } },
-          payload,
-        );
+      const outcome = await sendWithRetry(
+        { endpoint: s.endpoint, keys: { p256dh: s.p256dh, auth: s.auth } },
+        payload,
+      );
+      if (outcome.status === "sent") {
         sent++;
-        logRows.push({ ...base, status: "sent", status_code: 201, error: null });
-      } catch (err: unknown) {
-        const statusCode = (err as { statusCode?: number })?.statusCode;
-        const errMsg = (err as { body?: string; message?: string })?.body
-          ?? (err as { message?: string })?.message
-          ?? String(err);
-        if (statusCode === 404 || statusCode === 410) {
-          invalidIds.push(s.id);
-          logRows.push({ ...base, status: "invalidated", status_code: statusCode ?? null, error: errMsg });
-        } else {
-          failedIds.push(s.id);
-          logRows.push({ ...base, status: "failed", status_code: statusCode ?? null, error: errMsg });
-        }
+        successIds.push(s.id);
+        logRows.push({ ...base, status: "sent", status_code: outcome.statusCode ?? 201, error: null, attempts: outcome.attempts });
+      } else if (outcome.status === "invalidated") {
+        invalidIds.push(s.id);
+        logRows.push({ ...base, status: "invalidated", status_code: outcome.statusCode ?? null, error: outcome.error, attempts: outcome.attempts });
+      } else {
+        failedIds.push(s.id);
+        logRows.push({ ...base, status: "failed", status_code: outcome.statusCode ?? null, error: outcome.error, attempts: outcome.attempts });
       }
     }),
   );
@@ -116,11 +113,17 @@ Deno.serve(async (req) => {
   if (invalidIds.length > 0) {
     await supabase
       .from("push_subscriptions")
-      .update({ disabled_at: new Date().toISOString() })
+      .update({
+        disabled_at: new Date().toISOString(),
+        disabled_reason: "endpoint_expired_or_removed",
+      })
       .in("id", invalidIds);
   }
   if (failedIds.length > 0) {
     await supabase.rpc("increment_push_failures", { _ids: failedIds }).catch(() => {});
+  }
+  if (successIds.length > 0) {
+    await supabase.rpc("reset_push_failures", { _ids: successIds }).catch(() => {});
   }
 
   if (logRows.length > 0) {
@@ -137,4 +140,88 @@ function json(body: unknown, status = 200) {
     status,
     headers: { ...corsHeaders, "Content-Type": "application/json" },
   });
+}
+
+// ---------------------------------------------------------------------------
+// Retry policy
+// ---------------------------------------------------------------------------
+// - 404 / 410  → invalidated (endpoint removido/expirado). NÃO retentar.
+// - 401 / 403  → failed. NÃO retentar (VAPID/auth issue exige reconfig).
+// - 4xx demais → failed. NÃO retentar (payload/rate rules do provider).
+// - 429        → retentar, respeitando Retry-After (segundos) quando presente.
+// - 5xx / rede → retentar com backoff exponencial + jitter.
+// Máximo de 3 tentativas totais. Backoff base: 500ms, cap 8s.
+type PushOutcome = {
+  status: "sent" | "invalidated" | "failed";
+  statusCode: number | null;
+  error: string | null;
+  attempts: number;
+};
+
+const MAX_ATTEMPTS = 3;
+const BASE_BACKOFF_MS = 500;
+const MAX_BACKOFF_MS = 8000;
+
+async function sendWithRetry(
+  subscription: { endpoint: string; keys: { p256dh: string; auth: string } },
+  payload: string,
+): Promise<PushOutcome> {
+  let lastStatusCode: number | null = null;
+  let lastError: string | null = null;
+
+  for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt++) {
+    try {
+      await webpush.sendNotification(subscription, payload);
+      return { status: "sent", statusCode: 201, error: null, attempts: attempt };
+    } catch (err: unknown) {
+      const e = err as { statusCode?: number; body?: string; message?: string; headers?: Record<string, string> };
+      const statusCode = typeof e?.statusCode === "number" ? e.statusCode : null;
+      const errMsg = e?.body ?? e?.message ?? String(err);
+      lastStatusCode = statusCode;
+      lastError = errMsg;
+
+      // Terminal: subscription morta.
+      if (statusCode === 404 || statusCode === 410) {
+        return { status: "invalidated", statusCode, error: errMsg, attempts: attempt };
+      }
+      // Terminal: 4xx não recuperável (exceto 429).
+      if (statusCode !== null && statusCode >= 400 && statusCode < 500 && statusCode !== 429) {
+        return { status: "failed", statusCode, error: errMsg, attempts: attempt };
+      }
+      // Se já é última tentativa, sai.
+      if (attempt === MAX_ATTEMPTS) break;
+
+      // Retentar com backoff.
+      const retryAfterMs = parseRetryAfter(e?.headers?.["retry-after"] ?? e?.headers?.["Retry-After"]);
+      const backoff = retryAfterMs ?? computeBackoff(attempt);
+      await sleep(backoff);
+    }
+  }
+
+  return { status: "failed", statusCode: lastStatusCode, error: lastError, attempts: MAX_ATTEMPTS };
+}
+
+function computeBackoff(attempt: number): number {
+  const exp = Math.min(MAX_BACKOFF_MS, BASE_BACKOFF_MS * Math.pow(2, attempt - 1));
+  const jitter = Math.floor(Math.random() * (exp / 2));
+  return exp + jitter;
+}
+
+function parseRetryAfter(value: string | undefined | null): number | null {
+  if (!value) return null;
+  const seconds = Number(value);
+  if (Number.isFinite(seconds) && seconds >= 0) {
+    return Math.min(MAX_BACKOFF_MS, Math.floor(seconds * 1000));
+  }
+  // HTTP-date fallback
+  const dateMs = Date.parse(value);
+  if (!Number.isNaN(dateMs)) {
+    const delta = dateMs - Date.now();
+    return delta > 0 ? Math.min(MAX_BACKOFF_MS, delta) : 0;
+  }
+  return null;
+}
+
+function sleep(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }
