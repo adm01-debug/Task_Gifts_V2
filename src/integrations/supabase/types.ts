@@ -7572,7 +7572,13 @@ export type Database = {
       cleanup_old_security_logs:
         | { Args: never; Returns: undefined }
         | { Args: { p_days_to_keep?: number }; Returns: Json }
-      close_expired_sales_campaigns: { Args: never; Returns: number }
+      close_expired_sales_campaigns: {
+        Args: never
+        Returns: {
+          campaign_id: string
+          participants_notified: number
+        }[]
+      }
       complete_external_task: {
         Args: {
           p_external_id: string
@@ -7881,6 +7887,10 @@ export type Database = {
       }
       update_certification_statuses: { Args: never; Returns: undefined }
       user_has_passkeys: { Args: { p_user_id: string }; Returns: boolean }
+      user_wants_in_app_notification: {
+        Args: { _type: string; _user_id: string }
+        Returns: boolean
+      }
       validate_api_key: {
         Args: { p_api_key: string; p_api_secret: string }
         Returns: {
