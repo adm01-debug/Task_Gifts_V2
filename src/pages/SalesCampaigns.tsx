@@ -1,5 +1,4 @@
-import { useState } from "react";
-import { Helmet } from "react-helmet-async";
+import { useEffect, useState } from "react";
 import { useSalesCampaigns } from "@/hooks/useSalesCampaigns";
 import { CampaignCard } from "@/components/campaigns/CampaignCard";
 import { CreateCampaignDialog } from "@/components/campaigns/CreateCampaignDialog";
@@ -22,13 +21,12 @@ export default function SalesCampaigns() {
   const { hasRole } = useRBAC();
   const canCreate = hasRole("admin") || hasRole("manager");
 
+  useEffect(() => {
+    document.title = "Campanhas de Vendas | Gamificação";
+  }, []);
+
   return (
     <div className="container mx-auto max-w-7xl px-4 py-8 pb-24">
-      <Helmet>
-        <title>Campanhas de Vendas | Gamificação</title>
-        <meta name="description" content="Campanhas de venda gameficadas com metas individuais, coletivas e globais." />
-      </Helmet>
-
       <header className="mb-8">
         <div className="flex items-start justify-between gap-4 flex-wrap">
           <div>
