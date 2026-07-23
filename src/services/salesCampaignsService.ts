@@ -98,17 +98,24 @@ async function filterUsersByPreference(userIds: string[], type: string): Promise
   try {
     const { data, error } = await db
       .from("notification_preferences")
-      .select("user_id, type_preferences")
+      .select("user_id, in_app_enabled, type_preferences")
       .in("user_id", userIds);
     if (error) return userIds;
-    const prefs = new Map<string, Record<string, boolean> | null>();
-    (data ?? []).forEach((row: { user_id: string; type_preferences: Record<string, boolean> | null }) => {
-      prefs.set(row.user_id, row.type_preferences);
-    });
+    type Row = {
+      user_id: string;
+      in_app_enabled: boolean | null;
+      type_preferences: Record<string, { in_app?: boolean } | boolean | null> | null;
+    };
+    const prefs = new Map<string, Row>();
+    (data ?? []).forEach((row: Row) => prefs.set(row.user_id, row));
     return userIds.filter((uid) => {
       const p = prefs.get(uid);
-      if (!p) return true; // sem registro = default permissivo
-      return p[type] !== false;
+      if (!p) return true;
+      if (p.in_app_enabled === false) return false;
+      const entry = p.type_preferences?.[type];
+      if (entry == null) return true;
+      if (typeof entry === "boolean") return entry;
+      return entry.in_app !== false;
     });
   } catch {
     return userIds;
