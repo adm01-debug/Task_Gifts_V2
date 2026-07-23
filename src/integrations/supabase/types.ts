@@ -7572,6 +7572,7 @@ export type Database = {
       cleanup_old_security_logs:
         | { Args: never; Returns: undefined }
         | { Args: { p_days_to_keep?: number }; Returns: Json }
+      close_expired_sales_campaigns: { Args: never; Returns: number }
       complete_external_task: {
         Args: {
           p_external_id: string
