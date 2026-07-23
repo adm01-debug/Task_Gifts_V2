@@ -7887,7 +7887,15 @@ export type Database = {
       }
       update_certification_statuses: { Args: never; Returns: undefined }
       user_has_passkeys: { Args: { p_user_id: string }; Returns: boolean }
+      user_wants_email_notification: {
+        Args: { _type: string; _user_id: string }
+        Returns: boolean
+      }
       user_wants_in_app_notification: {
+        Args: { _type: string; _user_id: string }
+        Returns: boolean
+      }
+      user_wants_push_notification: {
         Args: { _type: string; _user_id: string }
         Returns: boolean
       }
