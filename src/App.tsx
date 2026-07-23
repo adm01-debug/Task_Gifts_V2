@@ -76,6 +76,7 @@ const Postmortems = lazy(() => import("./pages/Postmortems"));
 const ExecutiveMonthlyReport = lazy(() => import("./pages/ExecutiveMonthlyReport"));
 const SalesCampaigns = lazy(() => import("./pages/SalesCampaigns"));
 const SalesCampaignDetail = lazy(() => import("./pages/SalesCampaignDetail"));
+const CampaignHistory = lazy(() => import("./pages/CampaignHistory"));
 
 function PageLoader() {
   return (
@@ -233,6 +234,7 @@ const AnimatedRoutes = () => {
         <Route path="/admin/webhooks/:id" element={<ProtectedRoute requiredRole="admin"><PageTransition><WebhookSubscriptionDetail /></PageTransition></ProtectedRoute>} />
         <Route path="/loja/admin" element={<ProtectedRoute requiredRole="admin"><PageTransition><ShopAdmin /></PageTransition></ProtectedRoute>} />
         <Route path="/campanhas" element={<ProtectedRoute><PageTransition><SalesCampaigns /></PageTransition></ProtectedRoute>} />
+        <Route path="/campanhas/historico" element={<ProtectedRoute><PageTransition><CampaignHistory /></PageTransition></ProtectedRoute>} />
         <Route path="/campanhas/:id" element={<ProtectedRoute><PageTransition><SalesCampaignDetail /></PageTransition></ProtectedRoute>} />
         <Route path="*" element={<NotFound />} />
       </Routes>
