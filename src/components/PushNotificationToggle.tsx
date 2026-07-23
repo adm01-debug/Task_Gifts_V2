@@ -1,94 +1,113 @@
-import { Bell, BellOff, BellRing } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Bell, BellOff, BellRing, Loader2, Smartphone } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { usePushNotifications } from "@/hooks/usePushNotifications";
-import { cn } from "@/lib/utils";
+import { Switch } from "@/components/ui/switch";
+import { Badge } from "@/components/ui/badge";
+import { usePushSubscription } from "@/hooks/usePushSubscription";
 
 interface PushNotificationToggleProps {
   compact?: boolean;
 }
 
+/**
+ * Card device-scoped: gerencia a inscrição Web Push deste dispositivo/navegador.
+ * Persiste a subscription em `push_subscriptions` via `pushSubscriptionService`.
+ */
 export function PushNotificationToggle({ compact = false }: PushNotificationToggleProps) {
-  const { isSupported, isGranted, isDenied, requestPermission } = usePushNotifications();
+  const { supported, subscribed, loading, toggle } = usePushSubscription();
 
-  if (!isSupported) {
-    return null;
+  if (!supported) {
+    if (compact) return null;
+    return (
+      <Card className="border-border/50">
+        <CardHeader className="pb-3">
+          <CardTitle className="text-base flex items-center gap-2">
+            <BellOff className="w-5 h-5" />
+            Notificações neste dispositivo
+          </CardTitle>
+          <CardDescription>
+            Este navegador ou ambiente não suporta notificações push.
+          </CardDescription>
+        </CardHeader>
+      </Card>
+    );
   }
 
   if (compact) {
     return (
-      <Button
-        variant={isGranted ? "outline" : "default"}
-        size="sm"
-        onClick={requestPermission}
-        disabled={isDenied}
-        className={cn(
-          "gap-2",
-          isGranted && "bg-green-500/10 border-green-500/30 text-green-600 dark:text-green-400"
-        )}
-      >
-        {isGranted ? (
-          <>
-            <BellRing className="w-4 h-4" />
-            Ativadas
-          </>
-        ) : isDenied ? (
-          <>
-            <BellOff className="w-4 h-4" />
-            Bloqueadas
-          </>
+      <div className="flex items-center gap-2">
+        {loading ? (
+          <Loader2 className="w-4 h-4 animate-spin text-muted-foreground" />
+        ) : subscribed ? (
+          <BellRing className="w-4 h-4 text-success" />
         ) : (
-          <>
-            <Bell className="w-4 h-4" />
-            Ativar
-          </>
+          <Bell className="w-4 h-4 text-muted-foreground" />
         )}
-      </Button>
+        <Switch
+          checked={subscribed}
+          disabled={loading}
+          onCheckedChange={(v) => void toggle(v)}
+          aria-label="Ativar notificações push neste dispositivo"
+        />
+      </div>
     );
   }
 
   return (
-    <Card className="border-border/50">
+    <Card className="glass border-border/50">
       <CardHeader className="pb-3">
-        <CardTitle className="text-base flex items-center gap-2">
-          <Bell className="w-5 h-5" />
-          Notificações Push
-        </CardTitle>
-        <CardDescription>
-          Receba alertas sobre conquistas, kudos e atividades importantes
-        </CardDescription>
+        <div className="flex items-start justify-between gap-3">
+          <div className="space-y-1">
+            <CardTitle className="text-base flex items-center gap-2">
+              <Smartphone className="w-5 h-5 text-primary" />
+              Notificações neste dispositivo
+            </CardTitle>
+            <CardDescription>
+              Receba alertas de campanhas, kudos e conquistas mesmo com o app fechado.
+            </CardDescription>
+          </div>
+          {subscribed ? (
+            <Badge variant="outline" className="border-success/40 text-success bg-success/10 gap-1">
+              <BellRing className="w-3 h-3" /> Ativo
+            </Badge>
+          ) : (
+            <Badge variant="outline" className="text-muted-foreground gap-1">
+              <BellOff className="w-3 h-3" /> Inativo
+            </Badge>
+          )}
+        </div>
       </CardHeader>
       <CardContent>
-        {isGranted ? (
-          <div className="flex items-center gap-3 p-3 rounded-lg bg-green-500/10 border border-green-500/30">
-            <BellRing className="w-5 h-5 text-green-600 dark:text-green-400" />
+        <div className="flex items-center justify-between p-3 rounded-xl border border-border/60 bg-card/40">
+          <div className="flex items-center gap-3">
+            {loading ? (
+              <Loader2 className="w-5 h-5 text-muted-foreground animate-spin" />
+            ) : subscribed ? (
+              <BellRing className="w-5 h-5 text-success" />
+            ) : (
+              <Bell className="w-5 h-5 text-muted-foreground" />
+            )}
             <div>
-              <p className="font-medium text-green-600 dark:text-green-400">
-                Notificações ativadas
+              <p className="font-medium text-sm">
+                {subscribed ? "Push ativado" : "Push desativado"}
               </p>
-              <p className="text-sm text-muted-foreground">
-                Você receberá alertas importantes
+              <p className="text-xs text-muted-foreground">
+                {subscribed
+                  ? "Este navegador está inscrito para receber alertas."
+                  : "Ative para receber notificações em tempo real."}
               </p>
             </div>
           </div>
-        ) : isDenied ? (
-          <div className="flex items-center gap-3 p-3 rounded-lg bg-destructive/10 border border-destructive/30">
-            <BellOff className="w-5 h-5 text-destructive" />
-            <div>
-              <p className="font-medium text-destructive">
-                Notificações bloqueadas
-              </p>
-              <p className="text-sm text-muted-foreground">
-                Habilite nas configurações do navegador
-              </p>
-            </div>
-          </div>
-        ) : (
-          <Button onClick={requestPermission} className="w-full">
-            <Bell className="w-4 h-4 mr-2" />
-            Ativar Notificações Push
-          </Button>
-        )}
+          <Switch
+            checked={subscribed}
+            disabled={loading}
+            onCheckedChange={(v) => void toggle(v)}
+            aria-label="Ativar notificações push neste dispositivo"
+          />
+        </div>
+        <p className="text-[11px] text-muted-foreground mt-3">
+          Ative por dispositivo. Preferências por tipo (campanhas, marcos, etc.) ficam no bloco
+          abaixo.
+        </p>
       </CardContent>
     </Card>
   );
