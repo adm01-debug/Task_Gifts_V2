@@ -9,13 +9,27 @@ import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ArrowLeft, Check, X, Target, Trophy, TrendingUp, Users, Sparkles } from "lucide-react";
+import { UserPlus } from "lucide-react";
+import { useRBAC } from "@/hooks/useRBAC";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { cn } from "@/lib/utils";
 
 export default function SalesCampaignDetail() {
   const { id } = useParams<{ id: string }>();
-  const { campaign, participants, myParticipation, isLoading, accept, decline, logProgress, isLoggingProgress } = useSalesCampaign(id);
+  const {
+    campaign,
+    participants,
+    myParticipation,
+    isLoading,
+    accept,
+    decline,
+    logProgress,
+    isLoggingProgress,
+    bulkEnroll,
+    isBulkEnrolling,
+  } = useSalesCampaign(id);
+  const { isAdmin } = useRBAC();
   const [delta, setDelta] = useState("");
 
   useEffect(() => {
@@ -167,7 +181,31 @@ export default function SalesCampaignDetail() {
 
       {/* Ranking */}
       <Card className="p-6">
-        <h2 className="text-lg font-bold mb-4">Ranking</h2>
+        <div className="flex items-center justify-between mb-4 gap-3 flex-wrap">
+          <h2 className="text-lg font-bold">Ranking</h2>
+          {isAdmin && (
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => {
+                if (
+                  window.confirm(
+                    campaign.department_id
+                      ? "Enrollar em massa todos os membros do departamento nesta campanha?"
+                      : "Enrollar em massa TODOS os usuários da organização nesta campanha?",
+                  )
+                ) {
+                  bulkEnroll();
+                }
+              }}
+              disabled={isBulkEnrolling}
+              className="gap-2"
+            >
+              <UserPlus className="h-4 w-4" />
+              {isBulkEnrolling ? "Enrollando..." : "Enrollar em massa"}
+            </Button>
+          )}
+        </div>
         {participants.length === 0 ? (
           <p className="text-sm text-muted-foreground text-center py-8">
             Ninguém aceitou a meta ainda. Seja o primeiro!
