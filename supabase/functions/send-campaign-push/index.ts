@@ -62,7 +62,7 @@ Deno.serve(async (req) => {
 
   const { data: subs, error: subsErr } = await supabase
     .from("push_subscriptions")
-    .select("id, user_id, endpoint, p256dh, auth")
+    .select("id, user_id, endpoint, p256dh, auth, device_label")
     .in("user_id", allowed)
     .is("disabled_at", null);
   if (subsErr) return json({ error: subsErr.message }, 500);
@@ -71,19 +71,44 @@ Deno.serve(async (req) => {
   let sent = 0;
   const invalidIds: string[] = [];
   const failedIds: string[] = [];
+  const logRows: Record<string, unknown>[] = [];
+  const campaignId = (data && typeof data === "object" && "campaign_id" in (data as Record<string, unknown>))
+    ? String((data as Record<string, unknown>).campaign_id)
+    : null;
 
   await Promise.all(
     (subs ?? []).map(async (s) => {
+      const base = {
+        user_id: s.user_id,
+        subscription_id: s.id,
+        endpoint: s.endpoint,
+        device_label: s.device_label ?? null,
+        campaign_id: campaignId,
+        type,
+        title,
+        message,
+        url: url ?? null,
+        data: data ?? null,
+      };
       try {
         await webpush.sendNotification(
           { endpoint: s.endpoint, keys: { p256dh: s.p256dh, auth: s.auth } },
           payload,
         );
         sent++;
+        logRows.push({ ...base, status: "sent", status_code: 201, error: null });
       } catch (err: unknown) {
         const statusCode = (err as { statusCode?: number })?.statusCode;
-        if (statusCode === 404 || statusCode === 410) invalidIds.push(s.id);
-        else failedIds.push(s.id);
+        const errMsg = (err as { body?: string; message?: string })?.body
+          ?? (err as { message?: string })?.message
+          ?? String(err);
+        if (statusCode === 404 || statusCode === 410) {
+          invalidIds.push(s.id);
+          logRows.push({ ...base, status: "invalidated", status_code: statusCode ?? null, error: errMsg });
+        } else {
+          failedIds.push(s.id);
+          logRows.push({ ...base, status: "failed", status_code: statusCode ?? null, error: errMsg });
+        }
       }
     }),
   );
@@ -96,6 +121,12 @@ Deno.serve(async (req) => {
   }
   if (failedIds.length > 0) {
     await supabase.rpc("increment_push_failures", { _ids: failedIds }).catch(() => {});
+  }
+
+  if (logRows.length > 0) {
+    await supabase.from("push_notification_logs").insert(logRows).then(({ error }) => {
+      if (error) console.error("[send-campaign-push] log insert failed", error.message);
+    });
   }
 
   return json({ sent, invalidated: invalidIds.length, failed: failedIds.length });
