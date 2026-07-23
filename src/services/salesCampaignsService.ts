@@ -244,18 +244,21 @@ export const salesCampaignsService = {
       .upsert(rows, { onConflict: "campaign_id,user_id", ignoreDuplicates: false });
     if (error) throw error;
 
-    // Notificação in-app (best-effort): requer role admin pela policy de INSERT.
+    // Notificação in-app (best-effort): respeita preferências do usuário.
     try {
-      const notifRows = userIds.map((uid) => ({
-        user_id: uid,
-        type: "campaign_enrolled",
-        title: `Você foi inscrito em: ${campaign.name}`,
-        message: campaign.target_individual_default
-          ? `Meta individual sugerida: ${campaign.target_individual_default} ${campaign.metric_unit ?? ""}. Aceite para começar.`
-          : "Acesse a campanha para aceitar sua meta e começar.",
-        data: { campaign_id: campaignId, kind: "bulk_enroll" },
-      }));
-      await db.from("notifications").insert(notifRows);
+      const allowedIds = await filterUsersByPreference(userIds, "campaign_enrolled");
+      if (allowedIds.length > 0) {
+        const notifRows = allowedIds.map((uid) => ({
+          user_id: uid,
+          type: "campaign_enrolled",
+          title: `Você foi inscrito em: ${campaign.name}`,
+          message: campaign.target_individual_default
+            ? `Meta individual sugerida: ${campaign.target_individual_default} ${campaign.metric_unit ?? ""}. Aceite para começar.`
+            : "Acesse a campanha para aceitar sua meta e começar.",
+          data: { campaign_id: campaignId, kind: "bulk_enroll" },
+        }));
+        await db.from("notifications").insert(notifRows);
+      }
     } catch {
       // Não bloqueia o enrollment se a notificação falhar.
     }
@@ -340,6 +343,8 @@ export const salesCampaignsService = {
         .eq("id", participantRow.id);
 
       try {
+        const allowed = await userWantsNotification(uid, "campaign_completed");
+        if (!allowed) throw new Error("skip");
         const pct = Math.round((next / participantRow.target_adjusted) * 100);
         const dateLabel = new Date(completedAt).toLocaleDateString("pt-BR", {
           day: "2-digit",
@@ -379,7 +384,7 @@ export const salesCampaignsService = {
         const nextPct = (next / target) * 100;
         const milestones = [25, 50, 75] as const;
         const crossed = milestones.find((m) => prevPct < m && nextPct >= m && nextPct < 100);
-        if (crossed) {
+        if (crossed && (await userWantsNotification(uid, "campaign_milestone"))) {
           milestoneCrossed = crossed;
           const emoji = crossed === 75 ? "🔥" : crossed === 50 ? "⚡" : "🚀";
           await db.from("notifications").insert({
