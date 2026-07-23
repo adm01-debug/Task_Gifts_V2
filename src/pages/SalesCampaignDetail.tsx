@@ -8,7 +8,7 @@ import { Progress } from "@/components/ui/progress";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { ArrowLeft, Check, X, Target, Trophy, TrendingUp, Users, Sparkles } from "lucide-react";
+import { ArrowLeft, Check, X, Target, Trophy, TrendingUp, Users, Sparkles, Download } from "lucide-react";
 import { UserPlus } from "lucide-react";
 import { useRBAC } from "@/hooks/useRBAC";
 import { CampaignProgressChart } from "@/components/campaigns/CampaignProgressChart";
@@ -57,6 +57,36 @@ export default function SalesCampaignDetail() {
     if (!n || Number.isNaN(n)) return;
     logProgress({ delta: n });
     setDelta("");
+  };
+
+  const handleExportCsv = () => {
+    const accepted = participants.filter((p) => p.accepted_at);
+    const header = ["Posição", "Nome", "Nível", "Progresso", "Meta", "Percentual", "Concluída em"];
+    const escape = (v: unknown) => {
+      const s = v == null ? "" : String(v);
+      return /[",;\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+    };
+    const rows = accepted.map((p) => [
+      p.rank_position ?? "",
+      p.profile?.display_name ?? "Participante",
+      p.profile?.level ?? "",
+      p.progress,
+      p.target_adjusted,
+      `${p.progress_percent}%`,
+      p.completed_at ? format(new Date(p.completed_at), "dd/MM/yyyy HH:mm", { locale: ptBR }) : "",
+    ]);
+    const csv = [header, ...rows].map((r) => r.map(escape).join(";")).join("\n");
+    // BOM for Excel pt-BR
+    const blob = new Blob(["\uFEFF" + csv], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    const safeName = campaign.name.replace(/[^a-z0-9]+/gi, "_").toLowerCase();
+    a.download = `ranking_${safeName}_${format(new Date(), "yyyyMMdd_HHmm")}.csv`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
   };
 
   return (
@@ -191,7 +221,18 @@ export default function SalesCampaignDetail() {
       <Card className="p-6">
         <div className="flex items-center justify-between mb-4 gap-3 flex-wrap">
           <h2 className="text-lg font-bold">Ranking</h2>
-          {isAdmin && (
+          <div className="flex gap-2 flex-wrap">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleExportCsv}
+              disabled={participants.filter((p) => p.accepted_at).length === 0}
+              className="gap-2"
+            >
+              <Download className="h-4 w-4" />
+              Exportar CSV
+            </Button>
+            {isAdmin && (
             <Button
               variant="outline"
               size="sm"
@@ -212,7 +253,8 @@ export default function SalesCampaignDetail() {
               <UserPlus className="h-4 w-4" />
               {isBulkEnrolling ? "Enrollando..." : "Enrollar em massa"}
             </Button>
-          )}
+            )}
+          </div>
         </div>
         {participants.length === 0 ? (
           <p className="text-sm text-muted-foreground text-center py-8">
