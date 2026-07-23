@@ -316,17 +316,54 @@ export const salesCampaignsService = {
 
     // Reward on individual completion
     const campaign = await this.getById(params.campaignId);
-    if (campaign && next >= (data as CampaignParticipant).target_adjusted && (data as CampaignParticipant).target_adjusted > 0) {
+    const participantRow = data as CampaignParticipant;
+    const wasCompleted = !!participant.data?.completed_at;
+    const justCompleted =
+      !wasCompleted &&
+      participantRow.target_adjusted > 0 &&
+      next >= participantRow.target_adjusted;
+    if (campaign && justCompleted) {
       const rule = campaign.split_rule ?? { type: "proportional" };
       const xp = Math.max(campaign.xp_reward, Math.round((rule.xp_per_unit ?? 0) * next));
       const coins = Math.max(campaign.coin_reward, Math.round((rule.coin_per_unit ?? 0) * next));
       if (xp > 0) await profilesService.addXp(uid, xp, `campaign_${campaign.metric_key}`);
       if (coins > 0) await profilesService.addCoins(uid, coins);
 
+      const completedAt = new Date().toISOString();
       await db
         .from("campaign_participants")
-        .update({ xp_earned: xp, coins_earned: coins })
-        .eq("id", (data as CampaignParticipant).id);
+        .update({ xp_earned: xp, coins_earned: coins, completed_at: completedAt })
+        .eq("id", participantRow.id);
+
+      try {
+        const pct = Math.round((next / participantRow.target_adjusted) * 100);
+        const dateLabel = new Date(completedAt).toLocaleDateString("pt-BR", {
+          day: "2-digit",
+          month: "2-digit",
+          year: "numeric",
+        });
+        const rewardParts: string[] = [];
+        if (xp > 0) rewardParts.push(`+${xp} XP`);
+        if (coins > 0) rewardParts.push(`+${coins} moedas`);
+        const rewardTxt = rewardParts.length ? ` ${rewardParts.join(" e ")}.` : "";
+        await db.from("notifications").insert({
+          user_id: uid,
+          type: "campaign_completed",
+          title: `🏆 Meta concluída: ${campaign.name}`,
+          message: `Você atingiu ${next}/${participantRow.target_adjusted} (${pct}%) em ${dateLabel}.${rewardTxt}`,
+          data: {
+            campaign_id: campaign.id,
+            progress: next,
+            target: participantRow.target_adjusted,
+            percent: pct,
+            xp_earned: xp,
+            coins_earned: coins,
+            completed_at: completedAt,
+          },
+        });
+      } catch (err) {
+        // Não bloqueia o fluxo se a notificação falhar.
+      }
     }
 
     return data as CampaignParticipant;
