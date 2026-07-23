@@ -74,6 +74,8 @@ const Runbook = lazy(() => import("./pages/Runbook"));
 const IncidentMetrics = lazy(() => import("./pages/IncidentMetrics"));
 const Postmortems = lazy(() => import("./pages/Postmortems"));
 const ExecutiveMonthlyReport = lazy(() => import("./pages/ExecutiveMonthlyReport"));
+const SalesCampaigns = lazy(() => import("./pages/SalesCampaigns"));
+const SalesCampaignDetail = lazy(() => import("./pages/SalesCampaignDetail"));
 
 function PageLoader() {
   return (
@@ -230,6 +232,8 @@ const AnimatedRoutes = () => {
         <Route path="/admin/webhooks/new" element={<ProtectedRoute requiredRole="admin"><PageTransition><WebhookSubscriptionNew /></PageTransition></ProtectedRoute>} />
         <Route path="/admin/webhooks/:id" element={<ProtectedRoute requiredRole="admin"><PageTransition><WebhookSubscriptionDetail /></PageTransition></ProtectedRoute>} />
         <Route path="/loja/admin" element={<ProtectedRoute requiredRole="admin"><PageTransition><ShopAdmin /></PageTransition></ProtectedRoute>} />
+        <Route path="/campanhas" element={<ProtectedRoute><PageTransition><SalesCampaigns /></PageTransition></ProtectedRoute>} />
+        <Route path="/campanhas/:id" element={<ProtectedRoute><PageTransition><SalesCampaignDetail /></PageTransition></ProtectedRoute>} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </AnimatePresence>

@@ -929,6 +929,112 @@ export type Database = {
         }
         Relationships: []
       }
+      campaign_participants: {
+        Row: {
+          accepted_at: string | null
+          campaign_id: string
+          coins_earned: number
+          completed_at: string | null
+          created_at: string
+          declined_at: string | null
+          id: string
+          progress: number
+          progress_percent: number
+          rank_position: number | null
+          target_adjusted: number
+          updated_at: string
+          user_id: string
+          xp_earned: number
+        }
+        Insert: {
+          accepted_at?: string | null
+          campaign_id: string
+          coins_earned?: number
+          completed_at?: string | null
+          created_at?: string
+          declined_at?: string | null
+          id?: string
+          progress?: number
+          progress_percent?: number
+          rank_position?: number | null
+          target_adjusted?: number
+          updated_at?: string
+          user_id: string
+          xp_earned?: number
+        }
+        Update: {
+          accepted_at?: string | null
+          campaign_id?: string
+          coins_earned?: number
+          completed_at?: string | null
+          created_at?: string
+          declined_at?: string | null
+          id?: string
+          progress?: number
+          progress_percent?: number
+          rank_position?: number | null
+          target_adjusted?: number
+          updated_at?: string
+          user_id?: string
+          xp_earned?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "campaign_participants_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "sales_campaigns"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      campaign_progress_events: {
+        Row: {
+          campaign_id: string
+          created_at: string
+          delta: number
+          id: string
+          new_value: number
+          note: string | null
+          previous_value: number
+          reference_id: string | null
+          source: string
+          user_id: string
+        }
+        Insert: {
+          campaign_id: string
+          created_at?: string
+          delta: number
+          id?: string
+          new_value?: number
+          note?: string | null
+          previous_value?: number
+          reference_id?: string | null
+          source?: string
+          user_id: string
+        }
+        Update: {
+          campaign_id?: string
+          created_at?: string
+          delta?: number
+          id?: string
+          new_value?: number
+          note?: string | null
+          previous_value?: number
+          reference_id?: string | null
+          source?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "campaign_progress_events_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "sales_campaigns"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       celebrations: {
         Row: {
           auto_generated: boolean
@@ -5553,6 +5659,96 @@ export type Database = {
           },
         ]
       }
+      sales_campaigns: {
+        Row: {
+          coin_reward: number
+          cover_image_url: string | null
+          created_at: string
+          created_by: string | null
+          department_id: string | null
+          description: string | null
+          end_date: string
+          id: string
+          metric_key: string
+          metric_unit: string
+          name: string
+          org_id: string | null
+          product_name: string | null
+          progress_global: number
+          sku: string | null
+          split_rule: Json
+          start_date: string
+          status: string
+          target_global: number
+          target_individual_default: number
+          updated_at: string
+          xp_reward: number
+        }
+        Insert: {
+          coin_reward?: number
+          cover_image_url?: string | null
+          created_at?: string
+          created_by?: string | null
+          department_id?: string | null
+          description?: string | null
+          end_date: string
+          id?: string
+          metric_key?: string
+          metric_unit?: string
+          name: string
+          org_id?: string | null
+          product_name?: string | null
+          progress_global?: number
+          sku?: string | null
+          split_rule?: Json
+          start_date: string
+          status?: string
+          target_global?: number
+          target_individual_default?: number
+          updated_at?: string
+          xp_reward?: number
+        }
+        Update: {
+          coin_reward?: number
+          cover_image_url?: string | null
+          created_at?: string
+          created_by?: string | null
+          department_id?: string | null
+          description?: string | null
+          end_date?: string
+          id?: string
+          metric_key?: string
+          metric_unit?: string
+          name?: string
+          org_id?: string | null
+          product_name?: string | null
+          progress_global?: number
+          sku?: string | null
+          split_rule?: Json
+          start_date?: string
+          status?: string
+          target_global?: number
+          target_individual_default?: number
+          updated_at?: string
+          xp_reward?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "sales_campaigns_department_id_fkey"
+            columns: ["department_id"]
+            isOneToOne: false
+            referencedRelation: "departments"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "sales_campaigns_org_id_fkey"
+            columns: ["org_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       seasonal_challenges: {
         Row: {
           badge_icon: string | null
@@ -7651,6 +7847,10 @@ export type Database = {
       promote_webhook_secret: {
         Args: { p_subscription_id: string }
         Returns: Json
+      }
+      recalc_campaign_progress: {
+        Args: { _campaign_id: string }
+        Returns: undefined
       }
       register_device: {
         Args: {
