@@ -256,6 +256,41 @@ export default function SalesCampaignDetail() {
             )}
           </div>
         </div>
+        {(() => {
+          const accepted = participants.filter((p) => p.accepted_at);
+          const me = accepted.find((p) => p.user_id === myParticipation?.user_id);
+          const leader = accepted.find((p) => p.rank_position === 1);
+          if (!me || !me.rank_position) return null;
+          const gap = leader && leader.user_id !== me.user_id
+            ? Math.max(0, leader.progress - me.progress)
+            : 0;
+          const isLeader = leader?.user_id === me.user_id;
+          return (
+            <div className="mb-4 rounded-xl border border-primary/30 bg-gradient-to-r from-primary/10 via-primary/5 to-transparent p-4 flex items-center justify-between gap-3 flex-wrap">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-full bg-primary/20 text-primary flex items-center justify-center font-black">
+                  #{me.rank_position}
+                </div>
+                <div>
+                  <div className="text-sm font-semibold">Sua posição no ranking</div>
+                  <div className="text-xs text-muted-foreground">
+                    {isLeader
+                      ? "Você está na liderança! Mantenha o ritmo."
+                      : gap > 0
+                        ? `Faltam ${gap.toLocaleString("pt-BR")} ${campaign.metric_unit} para alcançar o líder.`
+                        : "Empate técnico com o líder!"}
+                  </div>
+                </div>
+              </div>
+              <div className="text-right">
+                <div className="text-2xl font-black text-primary">{me.progress_percent}%</div>
+                <div className="text-xs text-muted-foreground">
+                  {me.progress.toLocaleString("pt-BR")} / {me.target_adjusted.toLocaleString("pt-BR")}
+                </div>
+              </div>
+            </div>
+          );
+        })()}
         {participants.length === 0 ? (
           <p className="text-sm text-muted-foreground text-center py-8">
             Ninguém aceitou a meta ainda. Seja o primeiro!
