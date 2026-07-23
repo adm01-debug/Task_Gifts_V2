@@ -5,6 +5,8 @@ import {
   type SalesCampaign,
 } from "@/services/salesCampaignsService";
 import { useToast } from "@/hooks/use-toast";
+import { useSoundEffects } from "@/hooks/useSoundEffects";
+import { useHaptics } from "@/hooks/useHaptics";
 
 export function useSalesCampaigns(status?: SalesCampaign["status"]) {
   const qc = useQueryClient();
@@ -59,6 +61,8 @@ export function useSalesCampaigns(status?: SalesCampaign["status"]) {
 export function useSalesCampaign(id: string | undefined) {
   const qc = useQueryClient();
   const { toast } = useToast();
+  const { playQuestCompleteSound, playXPSound, playEpicCelebrationSound } = useSoundEffects();
+  const haptics = useHaptics();
 
   const campaign = useQuery({
     queryKey: ["sales-campaign", id],
@@ -106,9 +110,29 @@ export function useSalesCampaign(id: string | undefined) {
         userId: params.userId,
         note: params.note,
       }),
-    onSuccess: () => {
+    onSuccess: (res) => {
       invalidate();
-      toast({ title: "Progresso registrado!" });
+      if (res.justCompleted) {
+        playEpicCelebrationSound();
+        haptics.questCompleted();
+        toast({
+          title: "🏆 Meta concluída!",
+          description: "Parabéns, você atingiu a meta desta campanha!",
+        });
+      } else if (res.milestoneCrossed) {
+        const m = res.milestoneCrossed;
+        const emoji = m === 75 ? "🔥" : m === 50 ? "⚡" : "🚀";
+        playQuestCompleteSound();
+        haptics.streakMilestone(m === 75 ? 30 : m === 50 ? 7 : 3);
+        toast({
+          title: `${emoji} ${m}% da meta atingido!`,
+          description: "Continue firme, você está no ritmo certo.",
+        });
+      } else {
+        playXPSound();
+        haptics.trigger("light");
+        toast({ title: "Progresso registrado!" });
+      }
     },
   });
 
