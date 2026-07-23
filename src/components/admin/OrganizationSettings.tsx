@@ -47,6 +47,7 @@ export function OrganizationSettings() {
 
   const [name, setName] = useState("");
   const [tagline, setTagline] = useState("");
+  const [customDomain, setCustomDomain] = useState("");
   const [primary, setPrimary] = useState("#6366f1");
   const [secondary, setSecondary] = useState("#a855f7");
   const [accent, setAccent] = useState("#10b981");
@@ -57,6 +58,7 @@ export function OrganizationSettings() {
     if (!org) return;
     setName(org.name);
     setTagline(org.tagline ?? "");
+    setCustomDomain(org.custom_domain ?? "");
     setPrimary(org.primary_color ?? "#6366f1");
     setSecondary(org.secondary_color ?? "#a855f7");
     setAccent(org.accent_color ?? "#10b981");
@@ -71,9 +73,14 @@ export function OrganizationSettings() {
     mutationFn: async () => {
       if (!org || !user) throw new Error("Sem organização");
       if (!wcagOk) throw new Error("Cor primária não atinge contraste WCAG AA (4.5:1)");
+      const domain = customDomain.trim().toLowerCase().replace(/^https?:\/\//, "").replace(/\/.*$/, "").replace(/^www\./, "");
+      if (domain && !/^[a-z0-9.-]+\.[a-z]{2,}$/.test(domain)) {
+        throw new Error("Domínio inválido. Ex.: minhaempresa.com");
+      }
       const patch: OrganizationUpdate = {
         name,
         tagline: tagline || null,
+        custom_domain: domain || null,
         primary_color: hexToHslString(primary),
         secondary_color: hexToHslString(secondary),
         accent_color: hexToHslString(accent),
@@ -149,6 +156,19 @@ export function OrganizationSettings() {
               <Label>Slogan</Label>
               <Input value={tagline} onChange={(e) => setTagline(e.target.value)} maxLength={120} />
             </div>
+          </div>
+
+          <div className="space-y-2">
+            <Label>Domínio customizado</Label>
+            <Input
+              value={customDomain}
+              onChange={(e) => setCustomDomain(e.target.value)}
+              placeholder="ex.: portal.minhaempresa.com"
+              maxLength={253}
+            />
+            <p className="text-xs text-muted-foreground">
+              Após configurar o CNAME apontando para a plataforma, o tema desta organização será aplicado automaticamente ao acessar por este domínio (mesmo antes do login).
+            </p>
           </div>
 
           <div className="grid md:grid-cols-2 gap-4">
