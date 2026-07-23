@@ -5162,6 +5162,7 @@ export type Database = {
       }
       push_notification_logs: {
         Row: {
+          attempts: number
           campaign_id: string | null
           created_at: string
           data: Json | null
@@ -5179,6 +5180,7 @@ export type Database = {
           user_id: string
         }
         Insert: {
+          attempts?: number
           campaign_id?: string | null
           created_at?: string
           data?: Json | null
@@ -5196,6 +5198,7 @@ export type Database = {
           user_id: string
         }
         Update: {
+          attempts?: number
           campaign_id?: string | null
           created_at?: string
           data?: Json | null
@@ -5228,6 +5231,7 @@ export type Database = {
           created_at: string
           device_label: string | null
           disabled_at: string | null
+          disabled_reason: string | null
           endpoint: string
           failure_count: number
           id: string
@@ -5242,6 +5246,7 @@ export type Database = {
           created_at?: string
           device_label?: string | null
           disabled_at?: string | null
+          disabled_reason?: string | null
           endpoint: string
           failure_count?: number
           id?: string
@@ -5256,6 +5261,7 @@ export type Database = {
           created_at?: string
           device_label?: string | null
           disabled_at?: string | null
+          disabled_reason?: string | null
           endpoint?: string
           failure_count?: number
           id?: string
@@ -7894,6 +7900,7 @@ export type Database = {
         Args: { announcement_id: string }
         Returns: undefined
       }
+      increment_push_failures: { Args: { _ids: string[] }; Returns: undefined }
       is_country_allowed: { Args: { p_country_code: string }; Returns: boolean }
       is_department_manager: {
         Args: { _department_id: string; _user_id: string }
@@ -7984,6 +7991,7 @@ export type Database = {
       }
       request_password_reset: { Args: { p_user_id: string }; Returns: string }
       reset_login_attempts: { Args: { p_email: string }; Returns: undefined }
+      reset_push_failures: { Args: { _ids: string[] }; Returns: undefined }
       rotate_webhook_secret: {
         Args: {
           p_grace_hours?: number
