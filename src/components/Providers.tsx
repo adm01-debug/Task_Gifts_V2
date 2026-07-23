@@ -13,6 +13,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { GlobalMessageProvider } from "@/components/GlobalMessageProvider";
 import { I18nProvider, useI18n } from "@/hooks/useI18n";
+import { ThemeInjector } from "@/components/theme/ThemeInjector";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -47,6 +48,7 @@ export function Providers({ children }: ProvidersProps) {
                       <AchievementNotificationProvider>
                         <TooltipProvider>
                           <I18nBridge>
+                            <ThemeInjector />
                             <Toaster />
                             <Sonner />
                             {children}
