@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { CalendarDays, Target, Trophy, Users } from "lucide-react";
+import { CalendarDays, Target, Trophy, Users, Sparkles } from "lucide-react";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { cn } from "@/lib/utils";
@@ -35,6 +35,10 @@ export function CampaignCard({ campaign, className }: CampaignCardProps) {
     ? Math.min(100, Math.round((campaign.progress_global / campaign.target_global) * 100))
     : 0;
 
+  const isNew =
+    campaign.status === "active" &&
+    Date.now() - new Date(campaign.created_at).getTime() < 48 * 60 * 60 * 1000;
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -51,7 +55,14 @@ export function CampaignCard({ campaign, className }: CampaignCardProps) {
           <div className="relative">
             <div className="flex items-start justify-between gap-3">
               <div className="flex-1 min-w-0">
-                <h3 className="text-lg font-bold text-foreground truncate">{campaign.name}</h3>
+                <div className="flex items-center gap-2">
+                  <h3 className="text-lg font-bold text-foreground truncate">{campaign.name}</h3>
+                  {isNew && (
+                    <Badge className="shrink-0 bg-primary text-primary-foreground gap-1 animate-pulse">
+                      <Sparkles className="h-3 w-3" /> Nova
+                    </Badge>
+                  )}
+                </div>
                 {campaign.product_name && (
                   <p className="text-sm text-muted-foreground truncate">{campaign.product_name}</p>
                 )}
