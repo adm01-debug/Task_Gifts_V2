@@ -15,7 +15,8 @@ import {
 } from "recharts";
 import { format, parseISO } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 
 interface CampaignProgressChartProps {
   campaignId: string;
@@ -30,6 +31,8 @@ interface ProgressEvent {
   new_value: number;
 }
 
+type PeriodFilter = "7" | "30" | "all";
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const db = supabase as any;
 
@@ -38,6 +41,8 @@ export function CampaignProgressChart({
   currentUserId,
   metricUnit = "",
 }: CampaignProgressChartProps) {
+  const [period, setPeriod] = useState<PeriodFilter>("all");
+
   const { data: events = [], isLoading } = useQuery({
     queryKey: ["campaign-progress-events", campaignId],
     queryFn: async (): Promise<ProgressEvent[]> => {
@@ -56,11 +61,19 @@ export function CampaignProgressChart({
 
   const chartData = useMemo(() => {
     if (events.length === 0) return [];
-    // Bucket por dia
+    // Filtro de período
+    const cutoff =
+      period === "all"
+        ? null
+        : Date.now() - Number(period) * 24 * 60 * 60 * 1000;
+    const filtered = cutoff
+      ? events.filter((ev) => new Date(ev.created_at).getTime() >= cutoff)
+      : events;
+    // Bucket por dia (acumulado a partir do início da série filtrada)
     const buckets = new Map<string, { day: string; global: number; me: number }>();
     let globalCum = 0;
     let meCum = 0;
-    for (const ev of events) {
+    for (const ev of filtered) {
       const day = ev.created_at.slice(0, 10);
       globalCum += Number(ev.delta) || 0;
       if (currentUserId && ev.user_id === currentUserId) {
@@ -72,7 +85,7 @@ export function CampaignProgressChart({
       ...b,
       label: format(parseISO(b.day), "dd MMM", { locale: ptBR }),
     }));
-  }, [events, currentUserId]);
+  }, [events, currentUserId, period]);
 
   if (isLoading) {
     return (
@@ -83,15 +96,34 @@ export function CampaignProgressChart({
     );
   }
 
+  const header = (
+    <div className="flex items-center justify-between gap-3 flex-wrap mb-4">
+      <div className="flex items-center gap-2">
+        <TrendingUp className="h-4 w-4 text-primary" />
+        <h2 className="text-lg font-bold">Evolução do progresso</h2>
+      </div>
+      <ToggleGroup
+        type="single"
+        size="sm"
+        value={period}
+        onValueChange={(v) => v && setPeriod(v as PeriodFilter)}
+        className="bg-muted/40 rounded-md"
+      >
+        <ToggleGroupItem value="7" aria-label="Últimos 7 dias">7d</ToggleGroupItem>
+        <ToggleGroupItem value="30" aria-label="Últimos 30 dias">30d</ToggleGroupItem>
+        <ToggleGroupItem value="all" aria-label="Todo o período">Tudo</ToggleGroupItem>
+      </ToggleGroup>
+    </div>
+  );
+
   if (chartData.length === 0) {
     return (
       <Card className="p-6">
-        <div className="flex items-center gap-2 mb-2">
-          <TrendingUp className="h-4 w-4 text-primary" />
-          <h2 className="text-lg font-bold">Evolução do progresso</h2>
-        </div>
+        {header}
         <p className="text-sm text-muted-foreground text-center py-8">
-          Ainda não há progresso registrado. Assim que houver movimentação, o gráfico aparecerá aqui.
+          {period === "all"
+            ? "Ainda não há progresso registrado. Assim que houver movimentação, o gráfico aparecerá aqui."
+            : "Sem movimentação no período selecionado. Tente ampliar o intervalo."}
         </p>
       </Card>
     );
@@ -99,10 +131,7 @@ export function CampaignProgressChart({
 
   return (
     <Card className="p-6">
-      <div className="flex items-center gap-2 mb-4">
-        <TrendingUp className="h-4 w-4 text-primary" />
-        <h2 className="text-lg font-bold">Evolução do progresso</h2>
-      </div>
+      {header}
       <div className="h-64 w-full">
         <ResponsiveContainer width="100%" height="100%">
           <LineChart data={chartData} margin={{ top: 8, right: 12, bottom: 8, left: 0 }}>
