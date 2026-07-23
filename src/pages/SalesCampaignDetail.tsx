@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ArrowLeft, Check, X, Target, Trophy, TrendingUp, Users, Sparkles } from "lucide-react";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
@@ -193,9 +194,20 @@ export default function SalesCampaignDetail() {
                     )}>
                       {p.rank_position ?? "-"}
                     </div>
+                    <Avatar className="h-9 w-9">
+                      <AvatarImage src={p.profile?.avatar_url ?? undefined} alt={p.profile?.display_name ?? "Participante"} />
+                      <AvatarFallback>
+                        {(p.profile?.display_name ?? "?").slice(0, 2).toUpperCase()}
+                      </AvatarFallback>
+                    </Avatar>
                     <div>
                       <div className="text-sm font-medium">
-                        {p.user_id === myParticipation?.user_id ? "Você" : p.user_id.slice(0, 8)}
+                        {p.user_id === myParticipation?.user_id
+                          ? "Você"
+                          : p.profile?.display_name ?? "Participante"}
+                        {p.profile?.level != null && (
+                          <span className="ml-2 text-xs text-muted-foreground">Nv. {p.profile.level}</span>
+                        )}
                       </div>
                       <div className="text-xs text-muted-foreground">
                         {p.progress.toLocaleString("pt-BR")} / {p.target_adjusted.toLocaleString("pt-BR")}
