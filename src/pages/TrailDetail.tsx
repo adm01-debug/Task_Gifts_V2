@@ -521,7 +521,6 @@ export default function TrailDetail() {
 
       {/* Module Viewer Modal */}
       <AnimatePresence>
-
         {showViewer && activeModule && (
           <SectionErrorBoundary sectionName="Visualizador de Módulo">
             <ModuleViewer
@@ -532,6 +531,15 @@ export default function TrailDetail() {
           </SectionErrorBoundary>
         )}
       </AnimatePresence>
+
+      {canAuthor && (
+        <TrailModuleEditor
+          trailId={trail.id}
+          modules={trail.modules}
+          open={showEditor}
+          onOpenChange={setShowEditor}
+        />
+      )}
        </PageShell>
      );
    }
