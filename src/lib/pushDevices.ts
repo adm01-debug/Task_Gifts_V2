@@ -104,7 +104,7 @@ export function sameEndpoint(a: unknown, b: unknown): boolean {
  */
 export function buildDeviceList(
   rows: readonly PushDeviceRow[] | null | undefined,
-  options: { currentEndpoint?: string | null; now?: Date } = {},
+  options: { currentEndpoint?: string | null; currentFingerprint?: string | null; now?: Date } = {},
 ): PushDeviceEntry[] {
   const now = options.now ?? new Date();
   const nowTs = now.getTime();
@@ -114,12 +114,21 @@ export function buildDeviceList(
 
   for (const row of rows ?? []) {
     if (!row || typeof row.id !== "string" || !row.id.trim()) continue;
-    if (typeof row.endpoint !== "string" || !row.endpoint.trim()) continue;
+    const fingerprint =
+      typeof row.device_fingerprint === "string" && row.device_fingerprint.trim()
+        ? row.device_fingerprint.trim()
+        : null;
+    const endpoint = typeof row.endpoint === "string" ? row.endpoint.trim() : "";
+    // Um aparelho pode existir só no histórico de acessos (sem push). Nesse
+    // caso a identidade vem da impressão digital, não do endpoint.
+    if (!endpoint && !fingerprint) continue;
     // Defesa contra duplicatas vindas de uma leitura concorrente.
     if (seen.has(row.id)) continue;
     seen.add(row.id);
 
-    const isCurrent = sameEndpoint(row.endpoint, options.currentEndpoint);
+    const isCurrent =
+      sameEndpoint(endpoint, options.currentEndpoint) ||
+      (fingerprint !== null && fingerprint === (options.currentFingerprint ?? null));
     const revoked = parseTime(row.disabled_at) !== null;
     const lastUsedTs = parseTime(row.last_used_at) ?? parseTime(row.created_at);
 
@@ -139,7 +148,17 @@ export function buildDeviceList(
 
     out.push({
       id: row.id,
-      endpoint: row.endpoint,
+      endpoint,
+      fingerprint,
+      subscriptionId:
+        typeof row.subscription_id === "string" && row.subscription_id.trim()
+          ? row.subscription_id.trim()
+          : endpoint
+            ? row.id
+            : null,
+      pushActive: row.push_active === undefined ? !revoked : row.push_active === true,
+      isTrusted: row.is_trusted === true,
+      lastSeenAt: toIso(row.last_seen_at),
       label: custom ?? fallbackLabel,
       hasCustomLabel: custom !== null,
       platform,
