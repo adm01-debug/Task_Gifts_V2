@@ -139,7 +139,7 @@ export const engagementDiagnosticsService = {
     filters: DiagnosticsFilters & { months?: number; bucket?: "month" | "week" } = {},
   ): Promise<NpsHistoryPoint[]> {
     const { data, error } = await supabase.rpc("get_engagement_nps_history", {
-      p_department_id: filters.departmentId ?? null,
+      p_department_id: filters.departmentId ?? undefined,
       p_months: Math.min(Math.max(filters.months ?? 12, 1), 36),
       p_bucket: filters.bucket ?? "month",
     });
