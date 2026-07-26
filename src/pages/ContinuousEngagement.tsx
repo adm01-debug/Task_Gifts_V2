@@ -1,10 +1,13 @@
-import { Activity, Layers, ShieldCheck, Timer } from "lucide-react";
+import { Link } from "react-router-dom";
+import { Activity, BarChart3, Layers, ShieldCheck, Timer } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { PageShell } from "@/components/navigation";
 import { MobilePageLayout } from "@/components/mobile";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { ContinuousSurveyWidget } from "@/components/engagement/ContinuousSurveyWidget";
 import { useActiveEngagementCycle } from "@/hooks/useContinuousEngagement";
+import { useRBAC } from "@/hooks/useRBAC";
 
 const HIGHLIGHTS = [
   {
@@ -27,6 +30,8 @@ const HIGHLIGHTS = [
 export default function ContinuousEngagement() {
   const isMobile = useIsMobile();
   const { data: cycle } = useActiveEngagementCycle();
+  const { hasAnyRole } = useRBAC();
+  const canSeeDiagnostics = hasAnyRole(["admin", "manager"]);
 
   const subtitle = cycle
     ? `Ciclo aberto até ${new Date(cycle.ends_at).toLocaleDateString("pt-BR")}`
@@ -35,6 +40,15 @@ export default function ContinuousEngagement() {
   const content = (
     <div className="space-y-6">
       <ContinuousSurveyWidget />
+
+      {canSeeDiagnostics && (
+        <Button asChild variant="outline" className="w-full sm:w-auto">
+          <Link to="/engajamento/diagnostico">
+            <BarChart3 className="mr-2 h-4 w-4" aria-hidden />
+            Ver diagnóstico de clima
+          </Link>
+        </Button>
+      )}
 
       <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
         {HIGHLIGHTS.map((item) => (
