@@ -11,6 +11,7 @@ import {
   type PushDeviceEntry,
   type PushDeviceRow,
 } from "@/lib/pushDevices";
+import { getDeviceFingerprint } from "@/lib/deviceFingerprint";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const db = supabase as any;
