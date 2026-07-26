@@ -28,7 +28,22 @@ export interface UserCertification {
   issued_by: string | null;
   notes: string | null;
   created_at: string;
+  certificate_code?: string | null;
+  verification_hash?: string | null;
   certification?: Certification;
+}
+
+/** Resultado público da verificação de autenticidade de um certificado. */
+export interface CertificateVerification {
+  certificate_code: string;
+  holder_name: string;
+  certification_name: string;
+  certification_category: string;
+  issued_at: string;
+  expires_at: string | null;
+  status: string;
+  is_valid: boolean;
+  verification_hash: string | null;
 }
 
 export const certificationsService = {
