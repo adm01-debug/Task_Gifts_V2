@@ -1,5 +1,5 @@
 import { supabase } from "@/integrations/supabase/client";
-import { logger } from "@/services/logger";
+import { logger } from "@/services/loggingService";
 import type { ClimatePillar } from "@/services/climateSurveyService";
 
 /** Mínimo de respondentes exigido pelo banco para revelar qualquer recorte. */
