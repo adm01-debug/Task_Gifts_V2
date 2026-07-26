@@ -8258,6 +8258,25 @@ export type Database = {
           respondents: number
         }[]
       }
+      get_engagement_pillar_benchmark: {
+        Args: {
+          p_company_size?: string
+          p_days?: number
+          p_department_id?: string
+          p_industry?: string
+          p_region?: string
+        }
+        Returns: {
+          benchmark_average: number
+          benchmark_sample_size: number
+          benchmark_top_10: number
+          benchmark_top_quartile: number
+          favorability: number
+          pillar: Database["public"]["Enums"]["climate_pillar"]
+          respondents: number
+          score: number
+        }[]
+      }
       get_engagement_pillar_correlations: {
         Args: { p_days?: number }
         Returns: {
