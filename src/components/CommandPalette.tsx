@@ -14,7 +14,7 @@ import {
   Gamepad2, ShoppingBag, Swords, Heart, Award,
   ClipboardCheck, BarChart3, Megaphone, MessageSquare,
   User, Settings, Shield, LogOut, Search, Bell,
-  Moon, Sun
+  Moon, Sun, Activity
 } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { useTheme } from "@/hooks/useTheme";
@@ -106,6 +106,7 @@ export function CommandPalette() {
     { id: "stats", label: "Estatísticas", icon: TrendingUp, action: () => handleNavigate("/estatisticas"), keywords: ["stats", "números"], category: "navigation" },
     { id: "achievements", label: "Conquistas", icon: Trophy, action: () => handleNavigate("/conquistas"), keywords: ["badges", "troféus"], category: "navigation" },
     { id: "goals", label: "Metas & OKRs", icon: Target, action: () => handleNavigate("/goals"), keywords: ["objetivos", "okr"], category: "navigation" },
+    { id: "engagement", label: "Engajamento", icon: Activity, action: () => handleNavigate("/engajamento"), keywords: ["pesquisa", "clima", "continua"], category: "navigation" },
     { id: "checkins", label: "Check-ins 1:1", icon: ClipboardCheck, action: () => handleNavigate("/checkins"), keywords: ["reunião", "one on one"], category: "navigation" },
     { id: "attendance", label: "Ponto", icon: Clock, action: () => handleNavigate("/ponto"), keywords: ["registro", "hora"], category: "navigation" },
     { id: "trails", label: "Trilhas de Aprendizado", icon: BookOpen, action: () => handleNavigate("/trails"), keywords: ["cursos", "learning"], category: "navigation" },

@@ -26,6 +26,7 @@ interface NavItem {
 const navItems: NavItem[] = [
   { icon: Home, label: "Dashboard", path: "/" },
   { icon: Target, label: "Metas & OKRs", path: "/goals" },
+  { icon: Activity, label: "Engajamento", path: "/engajamento" },
   { icon: ClipboardList, label: "Check-ins 1:1", path: "/checkins" },
   { icon: Trophy, label: "Ligas", path: "/leagues" },
   { icon: BarChart3, label: "Pulse Surveys", path: "/surveys" },
