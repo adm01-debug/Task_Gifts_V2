@@ -7180,7 +7180,7 @@ export type Database = {
           verification_hash: string | null
         }
         Insert: {
-          certificate_code: string
+          certificate_code?: string
           certification_id: string
           created_at?: string
           expires_at?: string | null
