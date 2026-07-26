@@ -335,27 +335,46 @@ function QuizContent({
 function FlashcardsContent({ 
   cards,
   onComplete,
+  initialPosition = 0,
+  initialReviewed,
+  onProgress,
 }: { 
   cards: FlashCard[];
   onComplete: () => void;
+  initialPosition?: number;
+  initialReviewed?: number[];
+  onProgress?: (snapshot: ProgressSnapshot) => void;
 }) {
-  const [currentCard, setCurrentCard] = useState(0);
+  const [currentCard, setCurrentCard] = useState(initialPosition);
   const [isFlipped, setIsFlipped] = useState(false);
-  const [reviewed, setReviewed] = useState<Set<number>>(new Set());
+  const [reviewed, setReviewed] = useState<Set<number>>(new Set(initialReviewed ?? []));
 
   const handleNext = () => {
-    setReviewed(new Set([...reviewed, currentCard]));
+    const nextReviewed = new Set([...reviewed, currentCard]);
+    setReviewed(nextReviewed);
     setIsFlipped(false);
-    
-    if (currentCard < cards.length - 1) {
-      setCurrentCard(currentCard + 1);
-    }
+
+    const next = currentCard < cards.length - 1 ? currentCard + 1 : currentCard;
+    setCurrentCard(next);
+    onProgress?.({ position: next, checked: [...nextReviewed] });
   };
 
   const handlePrev = () => {
     setIsFlipped(false);
-    setCurrentCard(Math.max(0, currentCard - 1));
+    const next = Math.max(0, currentCard - 1);
+    setCurrentCard(next);
+    onProgress?.({ position: next, checked: [...reviewed] });
   };
+
+  // Teclado: espaço/Enter gira o card, setas navegam.
+  useContentShortcuts((key) => {
+    if (key === " " || key === "Enter") {
+      setIsFlipped((flipped) => !flipped);
+      return;
+    }
+    if (key === "ArrowLeft" && currentCard > 0) handlePrev();
+    if (key === "ArrowRight" && currentCard < cards.length - 1) handleNext();
+  }, cards.length > 0);
 
   const allReviewed = reviewed.size === cards.length;
 
@@ -369,8 +388,18 @@ function FlashcardsContent({
       </div>
 
       <div 
-        className="relative h-80 cursor-pointer perspective-2000 group"
+        role="button"
+        tabIndex={0}
+        aria-pressed={isFlipped}
+        aria-label={`Flashcard ${currentCard + 1} de ${cards.length}. Pressione espaço para girar.`}
+        className="relative h-80 cursor-pointer perspective-2000 group rounded-3xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
         onClick={() => setIsFlipped(!isFlipped)}
+        onKeyDown={(event) => {
+          if (event.key === "Enter" || event.key === " ") {
+            event.preventDefault();
+            setIsFlipped((flipped) => !flipped);
+          }
+        }}
       >
         <motion.div
           className="absolute inset-0 rounded-3xl border-2 border-primary/20 bg-gradient-to-br from-card via-card to-primary/5 p-8 flex flex-col items-center justify-center text-center shadow-2xl backface-hidden preserve-3d"
@@ -457,16 +486,25 @@ function FlashcardsContent({
 function ChecklistContent({ 
   items: initialItems,
   onComplete,
+  initialChecked,
+  onProgress,
 }: { 
   items: ChecklistItem[];
   onComplete: () => void;
+  initialChecked?: number[];
+  onProgress?: (snapshot: ProgressSnapshot) => void;
 }) {
-  const [items, setItems] = useState(initialItems.map(i => ({ ...i, checked: false })));
+  const [items, setItems] = useState(() =>
+    initialItems.map((item, index) => ({ ...item, checked: initialChecked?.includes(index) ?? false })),
+  );
 
   const toggleItem = (index: number) => {
-    const newItems = [...items];
-    newItems[index].checked = !newItems[index].checked;
+    const newItems = items.map((item, i) => (i === index ? { ...item, checked: !item.checked } : item));
     setItems(newItems);
+    onProgress?.({
+      position: index,
+      checked: newItems.map((item, i) => (item.checked ? i : -1)).filter((i) => i >= 0),
+    });
   };
 
   const allChecked = items.every(i => i.checked);
@@ -486,14 +524,18 @@ function ChecklistContent({
             transition={{ delay: index * 0.1 }}
           >
             <Label
+              htmlFor={`checklist-item-${index}`}
               className={`flex items-center gap-3 p-4 rounded-lg border cursor-pointer transition-all ${
                 item.checked
                   ? "border-emerald-500 bg-emerald-500/10"
                   : "border-border hover:border-primary/50"
               }`}
-              onClick={() => toggleItem(index)}
             >
-              <Checkbox checked={item.checked} />
+              <Checkbox
+                id={`checklist-item-${index}`}
+                checked={item.checked}
+                onCheckedChange={() => toggleItem(index)}
+              />
               <span className={item.checked ? "line-through text-muted-foreground" : ""}>
                 {item.text}
               </span>
