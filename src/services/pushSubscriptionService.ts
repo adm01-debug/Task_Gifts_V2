@@ -120,6 +120,8 @@ export const pushSubscriptionService = {
           auth,
           user_agent: navigator.userAgent,
           device_label: label,
+          // Une esta inscrição ao aparelho registrado em `user_devices`.
+          device_fingerprint: getDeviceFingerprint(),
           disabled_at: null,
           last_used_at: new Date().toISOString(),
         },
@@ -238,19 +240,54 @@ export const pushSubscriptionService = {
     }
   },
 
-  /** Todas as inscrições do usuário logado, inclusive as já revogadas. */
+  /**
+   * Aparelhos da conta já unificados por impressão digital: acessos com push,
+   * acessos sem push e inscrições antigas sem fingerprint aparecem uma vez só.
+   */
   async listDevices(): Promise<PushDeviceRow[]> {
     try {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return [];
-      const { data, error } = await db
-        .from("push_subscriptions")
-        .select("id, endpoint, device_label, user_agent, last_used_at, created_at, disabled_at, disabled_reason, failure_count")
-        .eq("user_id", user.id)
-        .order("last_used_at", { ascending: false, nullsFirst: false })
-        .limit(100);
+      const { data, error } = await db.rpc("get_account_devices");
       if (error) throw error;
-      return (data ?? []) as PushDeviceRow[];
+      type AccountDeviceRow = {
+        device_key: string;
+        fingerprint: string | null;
+        subscription_id: string | null;
+        endpoint: string | null;
+        device_label: string | null;
+        user_agent: string | null;
+        browser: string | null;
+        os: string | null;
+        device_type: string | null;
+        is_trusted: boolean | null;
+        push_active: boolean | null;
+        last_seen_at: string | null;
+        last_used_at: string | null;
+        created_at: string | null;
+        disabled_at: string | null;
+        disabled_reason: string | null;
+        failure_count: number | null;
+      };
+      return ((data ?? []) as AccountDeviceRow[]).map((r) => ({
+        id: r.device_key,
+        endpoint: r.endpoint ?? "",
+        device_fingerprint: r.fingerprint,
+        subscription_id: r.subscription_id,
+        device_label: r.device_label,
+        user_agent: r.user_agent,
+        browser: r.browser,
+        os: r.os,
+        device_type: r.device_type,
+        is_trusted: r.is_trusted,
+        push_active: r.push_active,
+        last_seen_at: r.last_seen_at,
+        last_used_at: r.last_used_at,
+        created_at: r.created_at,
+        disabled_at: r.disabled_at,
+        disabled_reason: r.disabled_reason,
+        failure_count: r.failure_count,
+      }));
     } catch (err) {
       logger.error("push_list_devices_failed", "push", err);
       return [];
@@ -263,14 +300,22 @@ export const pushSubscriptionService = {
    * Quando o alvo é o próprio navegador, também cancela a inscrição local.
    */
   async revokeDevice(
-    subscriptionId: string,
-    options: { isCurrent?: boolean; label?: string } = {},
+    subscriptionId: string | null,
+    options: { isCurrent?: boolean; label?: string; fingerprint?: string | null; deviceKey?: string } = {},
   ): Promise<{ ok: boolean; alreadyRevoked?: boolean; reason?: string }> {
     try {
-      const { data, error } = await db.rpc("revoke_push_device", {
-        p_subscription_id: subscriptionId,
-        p_reason: "revoked_by_user",
-      });
+      // Com inscrição de push, a RPC já derruba em cascata todas as demais
+      // inscrições do mesmo aparelho e marca o acesso como removido. Sem
+      // inscrição (aparelho só com histórico de login), revoga por fingerprint.
+      const { data, error } = subscriptionId
+        ? await db.rpc("revoke_push_device", {
+            p_subscription_id: subscriptionId,
+            p_reason: "revoked_by_user",
+          })
+        : await db.rpc("revoke_device_by_fingerprint", {
+            p_fingerprint: options.fingerprint ?? "",
+            p_reason: "revoked_by_user",
+          });
       if (error) {
         const msg = String(error.message ?? "");
         if (msg.includes("device_not_found")) return { ok: false, reason: "not_found" };
@@ -296,7 +341,7 @@ export const pushSubscriptionService = {
       // houve mudança real de estado — reprocessar não deve gerar ruído.
       if (!alreadyRevoked) {
         await this.notifyRevocation({
-          id: subscriptionId,
+          id: subscriptionId ?? options.deviceKey ?? options.fingerprint ?? "device",
           label: options.label ?? "Dispositivo desconhecido",
           isCurrent: options.isCurrent === true,
         });
