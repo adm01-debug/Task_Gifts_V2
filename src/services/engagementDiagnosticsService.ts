@@ -2,7 +2,11 @@ import { supabase } from "@/integrations/supabase/client";
 import { logger } from "@/services/loggingService";
 import type { ClimatePillar } from "@/services/climateSurveyService";
 import type { NpsHistoryPoint } from "@/lib/npsHistory";
-import type { PillarBenchmarkRow } from "@/lib/climateBenchmark";
+import {
+  normalizeCompanySize,
+  normalizeIndustry,
+  type PillarBenchmarkRow,
+} from "@/lib/climateBenchmark";
 
 /** Mínimo de respondentes exigido pelo banco para revelar qualquer recorte. */
 export const MIN_RESPONDENTS = 5;
