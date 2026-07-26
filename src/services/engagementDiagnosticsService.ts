@@ -2,6 +2,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { logger } from "@/services/loggingService";
 import type { ClimatePillar } from "@/services/climateSurveyService";
 import type { NpsHistoryPoint } from "@/lib/npsHistory";
+import type { PillarBenchmarkRow } from "@/lib/climateBenchmark";
 
 /** Mínimo de respondentes exigido pelo banco para revelar qualquer recorte. */
 export const MIN_RESPONDENTS = 5;
@@ -161,3 +162,18 @@ export const engagementDiagnosticsService = {
     return unwrap<PillarCorrelation>(data);
   },
 };
+
+/** Comparação dos pilares internos com o benchmark de mercado. */
+export async function getPillarBenchmark(
+  filters: DiagnosticsFilters = {},
+): Promise<PillarBenchmarkRow[]> {
+  const { data, error } = await supabase.rpc("get_engagement_pillar_benchmark", {
+    p_department_id: filters.departmentId ?? undefined,
+    p_days: filters.days ?? 90,
+  });
+  if (error) {
+    logger.error("Falha ao obter benchmark de mercado por pilar", error.message);
+    throw error;
+  }
+  return unwrap<PillarBenchmarkRow>(data);
+}
