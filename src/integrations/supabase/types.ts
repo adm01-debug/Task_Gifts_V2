@@ -8610,6 +8610,13 @@ export type Database = {
       request_password_reset: { Args: { p_user_id: string }; Returns: string }
       reset_login_attempts: { Args: { p_email: string }; Returns: undefined }
       reset_push_failures: { Args: { _ids: string[] }; Returns: undefined }
+      revoke_push_device: {
+        Args: { p_reason?: string; p_subscription_id: string }
+        Returns: {
+          device_label: string
+          revoked: boolean
+        }[]
+      }
       rotate_webhook_secret: {
         Args: {
           p_grace_hours?: number
