@@ -23,6 +23,7 @@ import {
   useEngagementCorrelations,
   useEngagementFactorScores,
   useEngagementNps,
+  useEngagementNpsHistory,
   useEngagementOverview,
   useEngagementPillarScores,
 } from "@/hooks/useEngagementDiagnostics";
@@ -30,6 +31,7 @@ import { AnonymityGuardNotice } from "@/components/engagement/diagnostics/Anonym
 import { CorrelationInsights } from "@/components/engagement/diagnostics/CorrelationInsights";
 import { FactorRanking } from "@/components/engagement/diagnostics/FactorRanking";
 import { NpsCards } from "@/components/engagement/diagnostics/NpsCards";
+import { NpsHistoryChart } from "@/components/engagement/diagnostics/NpsHistoryChart";
 import { PillarHeatmap } from "@/components/engagement/diagnostics/PillarHeatmap";
 
 const PERIODS = [
@@ -84,6 +86,11 @@ export default function ClimateDiagnostics() {
   const pillars = useEngagementPillarScores(filters);
   const factors = useEngagementFactorScores(filters);
   const nps = useEngagementNps(filters);
+  const npsHistory = useEngagementNpsHistory({
+    departmentId: filters.departmentId,
+    months: 12,
+    bucket: "month",
+  });
   const correlations = useEngagementCorrelations(Math.max(Number(days), 180));
 
   const isLoading = overview.isLoading || pillars.isLoading;
@@ -220,6 +227,11 @@ export default function ClimateDiagnostics() {
             <section className="space-y-3">
               <h2 className="text-lg font-semibold">Lealdade</h2>
               <NpsCards metrics={nps.data ?? []} />
+              <NpsHistoryChart
+                rows={npsHistory.data}
+                bucket="month"
+                isLoading={npsHistory.isLoading}
+              />
             </section>
           )}
 
