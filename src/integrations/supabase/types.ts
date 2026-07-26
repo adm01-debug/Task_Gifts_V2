@@ -4482,6 +4482,84 @@ export type Database = {
         }
         Relationships: []
       }
+      nr1_factor_mappings: {
+        Row: {
+          category_id: string
+          created_at: string
+          factor_id: string
+          id: string
+          weight: number
+        }
+        Insert: {
+          category_id: string
+          created_at?: string
+          factor_id: string
+          id?: string
+          weight?: number
+        }
+        Update: {
+          category_id?: string
+          created_at?: string
+          factor_id?: string
+          id?: string
+          weight?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "nr1_factor_mappings_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "nr1_risk_categories"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "nr1_factor_mappings_factor_id_fkey"
+            columns: ["factor_id"]
+            isOneToOne: false
+            referencedRelation: "engagement_factors"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      nr1_risk_categories: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          is_active: boolean
+          key: string
+          legal_reference: string | null
+          name: string
+          order_index: number
+          severity_weight: number
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_active?: boolean
+          key: string
+          legal_reference?: string | null
+          name: string
+          order_index?: number
+          severity_weight?: number
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_active?: boolean
+          key?: string
+          legal_reference?: string | null
+          name?: string
+          order_index?: number
+          severity_weight?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
       onboarding_progress: {
         Row: {
           completed_at: string | null
@@ -8199,6 +8277,35 @@ export type Database = {
       get_nine_box_distribution: {
         Args: { p_department_id?: string; p_period?: string }
         Returns: Json
+      }
+      get_nr1_risk_matrix: {
+        Args: { p_days?: number; p_department_id?: string }
+        Returns: {
+          category_id: string
+          category_key: string
+          category_name: string
+          description: string
+          factors_evaluated: number
+          legal_reference: string
+          probability: number
+          respondents: number
+          risk_grade: number
+          risk_level: string
+          score: number
+          severity_weight: number
+        }[]
+      }
+      get_nr1_summary: {
+        Args: { p_days?: number; p_department_id?: string }
+        Returns: {
+          avg_risk_grade: number
+          categories_evaluated: number
+          critical_count: number
+          high_count: number
+          low_count: number
+          max_risk_grade: number
+          moderate_count: number
+        }[]
       }
       get_passkeys_by_email: {
         Args: { p_email: string }
