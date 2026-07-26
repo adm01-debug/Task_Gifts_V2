@@ -787,7 +787,9 @@ export default function ModuleViewer({ module, onComplete, onClose }: ModuleView
            <div className="lg:col-span-8 space-y-6">
              <Card className="border-none bg-card/50 shadow-2xl shadow-primary/5 ring-1 ring-white/10 overflow-hidden">
                <CardContent className="p-0">
-                 <div className="p-6 md:p-8">
+                 {/* A chave força a remontagem ao aplicar a retomada,
+                     garantindo que os estados iniciais sejam reaplicados. */}
+                 <div className="p-6 md:p-8" key={resumeApplied ? "resumed" : "fresh"}>
                    {renderContent()}
                  </div>
                </CardContent>
