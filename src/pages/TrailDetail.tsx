@@ -521,6 +521,7 @@ export default function TrailDetail() {
 
       {/* Module Viewer Modal */}
       <AnimatePresence>
+
         {showViewer && activeModule && (
           <SectionErrorBoundary sectionName="Visualizador de Módulo">
             <ModuleViewer
