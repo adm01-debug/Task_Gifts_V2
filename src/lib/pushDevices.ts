@@ -10,7 +10,6 @@
  */
 
 import {
-  displayDeviceLabel,
   normalizeDeviceLabel,
   relativeTime,
   suggestDeviceLabel,
@@ -112,14 +111,19 @@ export function buildDeviceList(
     else status = "active";
 
     const custom = normalizeDeviceLabel(row.device_label);
+    const platform = suggestDeviceLabel(row.user_agent);
+    // `suggestDeviceLabel` devolve "Este dispositivo" quando não reconhece o
+    // user agent — texto correto no card do próprio navegador, mas enganoso
+    // numa lista que também mostra aparelhos remotos.
+    const fallbackLabel = platform === "Este dispositivo" && !isCurrent ? "Dispositivo desconhecido" : platform;
     const failures = Number.isFinite(row.failure_count) ? Math.max(0, Math.trunc(row.failure_count as number)) : 0;
 
     out.push({
       id: row.id,
       endpoint: row.endpoint,
-      label: displayDeviceLabel(row.device_label, row.user_agent),
+      label: custom ?? fallbackLabel,
       hasCustomLabel: custom !== null,
-      platform: suggestDeviceLabel(row.user_agent),
+      platform,
       status,
       statusLabel: STATUS_LABEL[status],
       isCurrent,

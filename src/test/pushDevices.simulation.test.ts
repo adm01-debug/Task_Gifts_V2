@@ -23,18 +23,23 @@ const UAS = {
   mac: "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537 Chrome/120 Safari/537",
 };
 
+/**
+ * `null` explícito precisa sobreviver ao override — usar `??` aqui mascararia
+ * exatamente os casos de dado ausente que queremos simular.
+ */
 function row(over: Partial<PushDeviceRow> = {}): PushDeviceRow {
-  return {
-    id: over.id ?? "id-1",
-    endpoint: over.endpoint ?? "https://fcm.googleapis.com/x/1",
-    device_label: over.device_label ?? null,
-    user_agent: over.user_agent ?? UAS.winChrome,
-    last_used_at: over.last_used_at ?? ago(1),
-    created_at: over.created_at ?? ago(10),
-    disabled_at: over.disabled_at ?? null,
-    disabled_reason: over.disabled_reason ?? null,
-    failure_count: over.failure_count ?? 0,
+  const base: PushDeviceRow = {
+    id: "id-1",
+    endpoint: "https://fcm.googleapis.com/x/1",
+    device_label: null,
+    user_agent: UAS.winChrome,
+    last_used_at: ago(1),
+    created_at: ago(10),
+    disabled_at: null,
+    disabled_reason: null,
+    failure_count: 0,
   };
+  return { ...base, ...over };
 }
 
 describe("buildDeviceList — saneamento de linhas", () => {
@@ -222,9 +227,15 @@ describe("rótulos", () => {
     }
   });
 
-  it("user agent ausente não gera rótulo vazio", () => {
-    const [entry] = buildDeviceList([row({ user_agent: null, device_label: null })], { now: NOW });
-    expect(entry.label).toBe("Este dispositivo");
+  it("dispositivo remoto sem user agent não é rotulado 'Este dispositivo'", () => {
+    const [remoto] = buildDeviceList([row({ user_agent: null, device_label: null })], { now: NOW });
+    expect(remoto.label).toBe("Dispositivo desconhecido");
+
+    const [proprio] = buildDeviceList([row({ endpoint: "meu", user_agent: null })], {
+      now: NOW,
+      currentEndpoint: "meu",
+    });
+    expect(proprio.label).toBe("Este dispositivo");
   });
 });
 
