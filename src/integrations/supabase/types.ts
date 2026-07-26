@@ -8235,6 +8235,18 @@ export type Database = {
           score: number
         }[]
       }
+      get_engagement_nps_history: {
+        Args: { p_bucket?: string; p_department_id?: string; p_months?: number }
+        Returns: {
+          detractors: number
+          metric: string
+          passives: number
+          period_start: string
+          promoters: number
+          respondents: number
+          score: number
+        }[]
+      }
       get_engagement_overview: {
         Args: { p_days?: number; p_department_id?: string }
         Returns: {

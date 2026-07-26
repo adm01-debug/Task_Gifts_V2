@@ -1,6 +1,7 @@
 import { supabase } from "@/integrations/supabase/client";
 import { logger } from "@/services/loggingService";
 import type { ClimatePillar } from "@/services/climateSurveyService";
+import type { NpsHistoryPoint } from "@/lib/npsHistory";
 
 /** Mínimo de respondentes exigido pelo banco para revelar qualquer recorte. */
 export const MIN_RESPONDENTS = 5;
@@ -128,6 +129,25 @@ export const engagementDiagnosticsService = {
       throw error;
     }
     return unwrap<NpsMetric>(data);
+  },
+
+  /**
+   * Série histórica de eNPS/LNPS agregada por mês (ou semana).
+   * O banco já aplica o mínimo de respondentes por período.
+   */
+  async getNpsHistory(
+    filters: DiagnosticsFilters & { months?: number; bucket?: "month" | "week" } = {},
+  ): Promise<NpsHistoryPoint[]> {
+    const { data, error } = await supabase.rpc("get_engagement_nps_history", {
+      p_department_id: filters.departmentId ?? null,
+      p_months: Math.min(Math.max(filters.months ?? 12, 1), 36),
+      p_bucket: filters.bucket ?? "month",
+    });
+    if (error) {
+      logger.error("Falha ao obter histórico de eNPS/LNPS", error.message);
+      throw error;
+    }
+    return unwrap<NpsHistoryPoint>(data);
   },
 
   async getCorrelations(days = 180): Promise<PillarCorrelation[]> {
