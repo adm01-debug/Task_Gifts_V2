@@ -7978,6 +7978,7 @@ export type Database = {
         }
         Returns: Json
       }
+      engagement_min_respondents: { Args: never; Returns: number }
       generate_engagement_snapshot: {
         Args: { p_department_id?: string; p_period_type?: string }
         Returns: string
@@ -8047,6 +8048,59 @@ export type Database = {
           answered: number
           pending: number
           total: number
+        }[]
+      }
+      get_engagement_factor_scores: {
+        Args: { p_days?: number; p_department_id?: string }
+        Returns: {
+          factor_id: string
+          factor_key: string
+          factor_name: string
+          favorability: number
+          pillar: Database["public"]["Enums"]["climate_pillar"]
+          respondents: number
+          score: number
+        }[]
+      }
+      get_engagement_nps: {
+        Args: { p_days?: number; p_department_id?: string }
+        Returns: {
+          detractors: number
+          metric: string
+          passives: number
+          promoters: number
+          respondents: number
+          score: number
+        }[]
+      }
+      get_engagement_overview: {
+        Args: { p_days?: number; p_department_id?: string }
+        Returns: {
+          answer_count: number
+          eligible_users: number
+          overall_favorability: number
+          overall_score: number
+          participation_rate: number
+          respondents: number
+        }[]
+      }
+      get_engagement_pillar_correlations: {
+        Args: { p_days?: number }
+        Returns: {
+          correlation: number
+          pillar_a: Database["public"]["Enums"]["climate_pillar"]
+          pillar_b: Database["public"]["Enums"]["climate_pillar"]
+          sample_size: number
+        }[]
+      }
+      get_engagement_pillar_scores: {
+        Args: { p_days?: number; p_department_id?: string }
+        Returns: {
+          answer_count: number
+          favorability: number
+          pillar: Database["public"]["Enums"]["climate_pillar"]
+          respondents: number
+          score: number
         }[]
       }
       get_error_budget_30d: {
