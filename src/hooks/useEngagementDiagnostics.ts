@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import {
   engagementDiagnosticsService,
+  getPillarBenchmark,
   type DiagnosticsFilters,
 } from "@/services/engagementDiagnosticsService";
 
@@ -62,6 +63,14 @@ export function useEngagementCorrelations(days = 180) {
   return useQuery({
     queryKey: ["engagement-diagnostics", "correlations", days],
     queryFn: () => engagementDiagnosticsService.getCorrelations(days),
+    staleTime: STALE,
+  });
+}
+
+export function useEngagementBenchmark(filters: DiagnosticsFilters = {}) {
+  return useQuery({
+    queryKey: key("benchmark", filters),
+    queryFn: () => getPillarBenchmark(filters),
     staleTime: STALE,
   });
 }
