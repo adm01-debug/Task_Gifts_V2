@@ -294,3 +294,39 @@ export function buildRevocationNotice(
     },
   };
 }
+
+export interface RevocationBroadcast {
+  type: "security_device_revoked";
+  title: string;
+  message: string;
+  url: string;
+  exclude_subscription_id: string;
+  data: RevocationNotice["data"];
+}
+
+/**
+ * Monta o push real enviado aos DEMAIS aparelhos da conta após uma revogação.
+ *
+ * Diferenças em relação ao aviso in-app:
+ *  - é um alerta de segurança para quem *não* executou a ação, então o texto
+ *    é sempre redigido na terceira pessoa e traz a orientação de contestação;
+ *  - carrega `exclude_subscription_id` para o servidor nunca tentar entregar
+ *    ao aparelho que acabou de ser desligado (entrega garantida a falhar);
+ *  - `url` aponta para a aba de dispositivos da Central de Segurança.
+ */
+export function buildRevocationBroadcast(
+  entry: Pick<PushDeviceEntry, "id" | "label" | "isCurrent"> | null | undefined,
+  now: Date = new Date(),
+): RevocationBroadcast | null {
+  const notice = buildRevocationNotice(entry, now);
+  if (!notice) return null;
+  const label = notice.data.device_label;
+  return {
+    type: "security_device_revoked",
+    title: "🔐 Dispositivo removido da sua conta",
+    message: `O aparelho "${label}" deixou de receber notificações desta conta. Se não foi você, troque sua senha imediatamente.`,
+    url: "/security?tab=devices",
+    exclude_subscription_id: notice.data.subscription_id,
+    data: notice.data,
+  };
+}
