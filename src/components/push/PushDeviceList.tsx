@@ -135,12 +135,12 @@ export function PushDeviceList({ className }: PushDeviceListProps) {
                     className="shrink-0 text-destructive hover:text-destructive min-h-11"
                     disabled={revokingId === entry.id}
                     onClick={() => setPending(entry)}
-                    aria-label={`Remover acesso de ${entry.label}`}
+                    aria-label={`Encerrar acesso de ${entry.label}`}
                   >
                     {revokingId === entry.id ? (
                       <Loader2 className="h-4 w-4 animate-spin" aria-hidden />
                     ) : (
-                      "Remover"
+                      "Encerrar acesso"
                     )}
                   </Button>
                 )}
@@ -153,11 +153,11 @@ export function PushDeviceList({ className }: PushDeviceListProps) {
       <AlertDialog open={pending !== null} onOpenChange={(open) => !open && setPending(null)}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Remover acesso de {pending?.label}?</AlertDialogTitle>
+            <AlertDialogTitle>Encerrar acesso de {pending?.label}?</AlertDialogTitle>
             <AlertDialogDescription>
               {pending?.isCurrent
-                ? "Este é o dispositivo que você está usando agora. Ele deixará de receber notificações até que você as ative novamente aqui."
-                : "Esse aparelho deixará de receber notificações desta conta imediatamente. Você pode reativá-lo entrando na conta pelo próprio aparelho."}
+                ? "Este é o aparelho que você está usando agora. Ele deixará de receber notificações e o acesso será marcado como encerrado até você entrar de novo."
+                : "O aparelho perde as notificações e tem o acesso marcado como encerrado imediatamente. Os demais aparelhos da conta recebem um alerta de segurança."}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
@@ -169,7 +169,7 @@ export function PushDeviceList({ className }: PushDeviceListProps) {
                 setPending(null);
               }}
             >
-              Remover acesso
+              Encerrar acesso
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
