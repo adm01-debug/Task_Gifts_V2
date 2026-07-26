@@ -7908,6 +7908,22 @@ export type Database = {
         Args: { p_notes?: string; p_request_id: string }
         Returns: Json
       }
+      assign_engagement_questions: {
+        Args: { p_cycle_id?: string }
+        Returns: {
+          answer_format: Database["public"]["Enums"]["engagement_answer_format"]
+          answered_at: string
+          assignment_id: string
+          code: string
+          factor_id: string
+          helper_text: string
+          options: Json
+          order_index: number
+          pillar: Database["public"]["Enums"]["climate_pillar"]
+          question_id: string
+          question_text: string
+        }[]
+      }
       auto_block_ip: {
         Args: {
           p_block_type?: string
@@ -7977,6 +7993,27 @@ export type Database = {
           verified_at: string
         }[]
       }
+      get_active_engagement_cycle: {
+        Args: never
+        Returns: {
+          created_at: string
+          created_by: string | null
+          department_id: string | null
+          ends_at: string
+          id: string
+          questions_per_user: number
+          starts_at: string
+          status: Database["public"]["Enums"]["engagement_cycle_status"]
+          title: string
+          updated_at: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "engagement_cycles"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
       get_alert_heatmap_30d: {
         Args: never
         Returns: {
@@ -8004,6 +8041,14 @@ export type Database = {
         Returns: Json
       }
       get_department_metrics: { Args: never; Returns: Json }
+      get_engagement_cycle_progress: {
+        Args: { p_cycle_id: string }
+        Returns: {
+          answered: number
+          pending: number
+          total: number
+        }[]
+      }
       get_error_budget_30d: {
         Args: { p_api_slo?: number; p_webhook_slo?: number }
         Returns: Json
@@ -8253,6 +8298,16 @@ export type Database = {
           p_subscription_id: string
         }
         Returns: Json
+      }
+      submit_engagement_answer: {
+        Args: {
+          p_cycle_id: string
+          p_normalized_score?: number
+          p_question_id: string
+          p_raw_value: Json
+          p_text_answer?: string
+        }
+        Returns: string
       }
       update_certification_statuses: { Args: never; Returns: undefined }
       user_has_passkeys: { Args: { p_user_id: string }; Returns: boolean }
