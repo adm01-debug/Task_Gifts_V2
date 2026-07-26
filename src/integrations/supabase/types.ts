@@ -190,6 +190,7 @@ export type Database = {
           id: string
           initial_score: number | null
           nr1_category_id: string | null
+          opinion_id: string | null
           owner_id: string
           pillar: Database["public"]["Enums"]["climate_pillar"] | null
           progress_percent: number
@@ -217,6 +218,7 @@ export type Database = {
           id?: string
           initial_score?: number | null
           nr1_category_id?: string | null
+          opinion_id?: string | null
           owner_id: string
           pillar?: Database["public"]["Enums"]["climate_pillar"] | null
           progress_percent?: number
@@ -244,6 +246,7 @@ export type Database = {
           id?: string
           initial_score?: number | null
           nr1_category_id?: string | null
+          opinion_id?: string | null
           owner_id?: string
           pillar?: Database["public"]["Enums"]["climate_pillar"] | null
           progress_percent?: number
@@ -279,6 +282,13 @@ export type Database = {
             columns: ["nr1_category_id"]
             isOneToOne: false
             referencedRelation: "nr1_risk_categories"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "action_plans_opinion_id_fkey"
+            columns: ["opinion_id"]
+            isOneToOne: false
+            referencedRelation: "opinions"
             referencedColumns: ["id"]
           },
           {
@@ -8213,6 +8223,10 @@ export type Database = {
           p_days?: number
           p_department_id?: string
         }
+        Returns: string
+      }
+      generate_action_plan_from_opinion: {
+        Args: { p_opinion_id: string }
         Returns: string
       }
       generate_engagement_snapshot: {
