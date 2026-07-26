@@ -42,6 +42,63 @@ export interface PushDeviceRow {
 
 export type PushDeviceStatus = "current" | "active" | "idle" | "revoked";
 
+/** Forma física do aparelho — dirige o ícone e o texto auxiliar. */
+export type PushDeviceKind = "mobile" | "tablet" | "desktop" | "unknown";
+
+/**
+ * Deriva navegador, sistema e tipo de aparelho.
+ *
+ * Os campos vindos de `user_devices` têm prioridade porque são gravados no
+ * login com dados mais ricos; o user agent da inscrição de push é o fallback
+ * para aparelhos antigos, anteriores à unificação.
+ */
+export function describeDevice(row: {
+  browser?: string | null;
+  os?: string | null;
+  device_type?: string | null;
+  user_agent?: string | null;
+}): { browser: string | null; os: string | null; kind: PushDeviceKind; descriptor: string } {
+  const ua = typeof row.user_agent === "string" ? row.user_agent : "";
+  const clean = (v: unknown): string | null => {
+    if (typeof v !== "string") return null;
+    const t = v.trim().replace(/\s+/g, " ");
+    return t && t.toLowerCase() !== "unknown" ? t.slice(0, 40) : null;
+  };
+
+  let browser = clean(row.browser);
+  if (!browser && ua) {
+    // Ordem importa: Edge e Opera também se anunciam como Chrome.
+    if (/Edg\//i.test(ua)) browser = "Edge";
+    else if (/OPR\/|Opera/i.test(ua)) browser = "Opera";
+    else if (/Firefox\//i.test(ua)) browser = "Firefox";
+    else if (/Chrome\//i.test(ua)) browser = "Chrome";
+    else if (/Safari\//i.test(ua)) browser = "Safari";
+  }
+
+  let os = clean(row.os);
+  if (!os && ua) {
+    if (/Windows/i.test(ua)) os = "Windows";
+    else if (/iPhone|iPad|iPod/i.test(ua)) os = "iOS";
+    else if (/Android/i.test(ua)) os = "Android";
+    else if (/Mac OS X|Macintosh/i.test(ua)) os = "macOS";
+    else if (/Linux/i.test(ua)) os = "Linux";
+  }
+
+  const declared = clean(row.device_type)?.toLowerCase();
+  let kind: PushDeviceKind = "unknown";
+  if (declared === "mobile" || declared === "tablet" || declared === "desktop") {
+    kind = declared;
+  } else if (/iPad|Tablet/i.test(ua)) kind = "tablet";
+  else if (/iPhone|iPod|Android.*Mobile|Mobile/i.test(ua)) kind = "mobile";
+  else if (/Android/i.test(ua)) kind = "tablet";
+  else if (os === "iOS") kind = "mobile";
+  else if (os === "Android") kind = "mobile";
+  else if (ua || os) kind = "desktop";
+
+  const descriptor = [browser, os].filter(Boolean).join(" · ");
+  return { browser, os, kind, descriptor };
+}
+
 export interface PushDeviceEntry {
   id: string;
   endpoint: string;
@@ -59,6 +116,13 @@ export interface PushDeviceEntry {
   /** `true` quando o apelido veio do usuário (e não da heurística de UA). */
   hasCustomLabel: boolean;
   platform: string;
+  /** Navegador identificado, quando conhecido. */
+  browser: string | null;
+  /** Sistema operacional identificado, quando conhecido. */
+  os: string | null;
+  kind: PushDeviceKind;
+  /** Texto curto "Navegador · Sistema" (vazio quando nada é conhecido). */
+  descriptor: string;
   status: PushDeviceStatus;
   statusLabel: string;
   isCurrent: boolean;
@@ -145,6 +209,7 @@ export function buildDeviceList(
     // numa lista que também mostra aparelhos remotos.
     const fallbackLabel = platform === "Este dispositivo" && !isCurrent ? "Dispositivo desconhecido" : platform;
     const failures = Number.isFinite(row.failure_count) ? Math.max(0, Math.trunc(row.failure_count as number)) : 0;
+    const described = describeDevice(row);
 
     out.push({
       id: row.id,
@@ -162,6 +227,10 @@ export function buildDeviceList(
       label: custom ?? fallbackLabel,
       hasCustomLabel: custom !== null,
       platform,
+      browser: described.browser,
+      os: described.os,
+      kind: described.kind,
+      descriptor: described.descriptor,
       status,
       statusLabel: STATUS_LABEL[status],
       isCurrent,

@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { computeDeviceFingerprint } from "@/lib/deviceFingerprint";
-import { buildDeviceList, type PushDeviceRow } from "@/lib/pushDevices";
+import { buildDeviceList, describeDevice, type PushDeviceRow } from "@/lib/pushDevices";
 
 const NOW = new Date("2026-07-26T12:00:00.000Z");
 const ago = (days: number) => new Date(NOW.getTime() - days * 86_400_000).toISOString();
@@ -125,5 +125,116 @@ describe("buildDeviceList — unificação por aparelho", () => {
     const list = buildDeviceList(rows, { now: NOW });
     expect(list).toHaveLength(25);
     expect(new Set(list.map((d) => d.fingerprint)).size).toBe(25);
+  });
+});
+
+describe("describeDevice — identidade visual do aparelho", () => {
+  const UAS: Record<string, { ua: string; browser: string; os: string; kind: string }> = {
+    chromeWin: {
+      ua: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/126.0 Safari/537.36",
+      browser: "Chrome",
+      os: "Windows",
+      kind: "desktop",
+    },
+    edgeWin: {
+      ua: "Mozilla/5.0 (Windows NT 10.0) AppleWebKit/537.36 Chrome/126.0 Safari/537.36 Edg/126.0",
+      browser: "Edge",
+      os: "Windows",
+      kind: "desktop",
+    },
+    operaMac: {
+      ua: "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) Chrome/126.0 Safari/537.36 OPR/112.0",
+      browser: "Opera",
+      os: "macOS",
+      kind: "desktop",
+    },
+    safariIphone: {
+      ua: "Mozilla/5.0 (iPhone; CPU iPhone OS 17_5 like Mac OS X) AppleWebKit/605.1.15 Safari/604.1",
+      browser: "Safari",
+      os: "iOS",
+      kind: "mobile",
+    },
+    safariIpad: {
+      ua: "Mozilla/5.0 (iPad; CPU OS 17_5 like Mac OS X) AppleWebKit/605.1.15 Safari/604.1",
+      browser: "Safari",
+      os: "iOS",
+      kind: "tablet",
+    },
+    chromeAndroid: {
+      ua: "Mozilla/5.0 (Linux; Android 14; Pixel 8) AppleWebKit/537.36 Chrome/126.0 Mobile Safari/537.36",
+      browser: "Chrome",
+      os: "Android",
+      kind: "mobile",
+    },
+    firefoxLinux: {
+      ua: "Mozilla/5.0 (X11; Linux x86_64; rv:127.0) Gecko/20100101 Firefox/127.0",
+      browser: "Firefox",
+      os: "Linux",
+      kind: "desktop",
+    },
+  };
+
+  it("classifica corretamente cada família de user agent", () => {
+    for (const { ua, browser, os, kind } of Object.values(UAS)) {
+      const d = describeDevice({ user_agent: ua });
+      expect(d.browser).toBe(browser);
+      expect(d.os).toBe(os);
+      expect(d.kind).toBe(kind);
+      expect(d.descriptor).toBe(`${browser} · ${os}`);
+    }
+  });
+
+  it("dá prioridade aos campos vindos do histórico de acesso", () => {
+    const d = describeDevice({
+      browser: "  Brave  ",
+      os: "ChromeOS",
+      device_type: "TABLET",
+      user_agent: UAS.chromeWin.ua,
+    });
+    expect(d.browser).toBe("Brave");
+    expect(d.os).toBe("ChromeOS");
+    expect(d.kind).toBe("tablet");
+  });
+
+  it("ignora ruído: vazio, 'unknown', espaços e tipo inválido", () => {
+    const d = describeDevice({ browser: "  ", os: "unknown", device_type: "geladeira", user_agent: "" });
+    expect(d.browser).toBeNull();
+    expect(d.os).toBeNull();
+    expect(d.kind).toBe("unknown");
+    expect(d.descriptor).toBe("");
+  });
+
+  it("nunca lança em nenhuma combinação de entradas hostis", () => {
+    const values = [null, undefined, "", "   ", "unknown", "Chrome", 42, {}, "x".repeat(500)];
+    let count = 0;
+    for (const browser of values) {
+      for (const os of values) {
+        for (const device_type of values) {
+          for (const ua of [null, "", UAS.chromeWin.ua, UAS.safariIphone.ua]) {
+            const d = describeDevice({
+              browser: browser as string,
+              os: os as string,
+              device_type: device_type as string,
+              user_agent: ua,
+            });
+            expect(typeof d.descriptor).toBe("string");
+            expect((d.browser ?? "").length).toBeLessThanOrEqual(40);
+            expect((d.os ?? "").length).toBeLessThanOrEqual(40);
+            expect(["mobile", "tablet", "desktop", "unknown"]).toContain(d.kind);
+            count += 1;
+          }
+        }
+      }
+    }
+    expect(count).toBe(values.length ** 3 * 4);
+  });
+
+  it("propaga a identidade para as entradas da lista", () => {
+    const [entry] = buildDeviceList(
+      [row({ browser: "Chrome", os: "Windows", device_type: "desktop" })],
+      { now: NOW },
+    );
+    expect(entry.descriptor).toBe("Chrome · Windows");
+    expect(entry.kind).toBe("desktop");
   });
 });
