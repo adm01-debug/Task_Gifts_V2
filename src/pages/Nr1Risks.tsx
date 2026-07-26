@@ -1,7 +1,8 @@
 import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { ShieldAlert } from "lucide-react";
+import { Download, FileText, ShieldAlert } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
   Select,
@@ -17,6 +18,9 @@ import { useDepartments } from "@/hooks/useDepartments";
 import { useGenerateNr1ActionPlan, useNr1RiskMatrix, useNr1Summary } from "@/hooks/useNr1Risk";
 import { Nr1RiskMatrix } from "@/components/engagement/nr1/Nr1RiskMatrix";
 import { AnonymityGuardNotice } from "@/components/engagement/diagnostics/AnonymityGuardNotice";
+import { exportNr1Csv, exportNr1Pdf } from "@/lib/nr1Export";
+import { logger } from "@/services/loggingService";
+import { toast } from "sonner";
 
 const PERIODS = [
   { value: "90", label: "Últimos 90 dias" },
@@ -50,6 +54,31 @@ export default function Nr1Risks() {
       { categoryKey: row.category_key, departmentId: filters.departmentId, days: filters.days },
       { onSuccess: () => navigate("/planos-acao") },
     );
+  };
+
+  const scopeLabel =
+    departmentId === ALL_DEPARTMENTS
+      ? "Toda a empresa"
+      : ((departments ?? []).find((d) => d.id === departmentId)?.name ?? "Departamento");
+
+  const handleExportCsv = () => {
+    try {
+      exportNr1Csv(rows, { scope: scopeLabel, days: filters.days });
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : "Erro desconhecido";
+      logger.error("Falha ao exportar inventário NR-1 em CSV", message);
+      toast.error("Não foi possível exportar o CSV", { description: message });
+    }
+  };
+
+  const handleExportPdf = async () => {
+    try {
+      await exportNr1Pdf(rows, { scope: scopeLabel, days: filters.days });
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : "Erro desconhecido";
+      logger.error("Falha ao exportar inventário NR-1 em PDF", message);
+      toast.error("Não foi possível exportar o PDF", { description: message });
+    }
   };
 
   const rows = matrix.data ?? [];
@@ -111,7 +140,29 @@ export default function Nr1Risks() {
           </div>
 
           <section className="space-y-3">
-            <h2 className="text-lg font-semibold">Inventário de riscos psicossociais</h2>
+            <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+              <h2 className="text-lg font-semibold">Inventário de riscos psicossociais</h2>
+              <div className="flex gap-2">
+                <Button
+                  size="sm"
+                  variant="outline"
+                  className="min-h-11 sm:min-h-9"
+                  onClick={handleExportCsv}
+                >
+                  <Download className="mr-2 h-4 w-4" aria-hidden />
+                  CSV
+                </Button>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  className="min-h-11 sm:min-h-9"
+                  onClick={() => void handleExportPdf()}
+                >
+                  <FileText className="mr-2 h-4 w-4" aria-hidden />
+                  PDF de auditoria
+                </Button>
+              </div>
+            </div>
             <Nr1RiskMatrix
               rows={rows}
               onTreatRisk={handleTreatRisk}
