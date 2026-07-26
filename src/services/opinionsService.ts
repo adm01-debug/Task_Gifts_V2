@@ -122,6 +122,21 @@ export const opinionsService = {
     }
   },
 
+  /** Gera (ou recupera) o plano 5W2H derivado da manifestação. */
+  async generateActionPlan(opinionId: string): Promise<string> {
+    const { data, error } = await db.rpc("generate_action_plan_from_opinion", {
+      p_opinion_id: opinionId,
+    });
+    if (error) {
+      logger.apiError("opinion_action_plan", error, "opinionsService");
+      throw toError(error, "Não foi possível gerar o plano de ação");
+    }
+    if (typeof data !== "string" || data.length === 0) {
+      throw new Error("O plano de ação não pôde ser criado.");
+    }
+    return data;
+  },
+
   /** Respostas visíveis ao solicitante (RLS filtra notas internas de terceiros). */
   async listResponses(opinionId: string): Promise<OpinionResponseEntry[]> {
     const { data, error } = await db
