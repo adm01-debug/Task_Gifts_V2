@@ -95,7 +95,7 @@ export const continuousEngagementService = {
   async getActiveCycle(): Promise<EngagementCycle | null> {
     const { data, error } = await supabase.rpc("get_active_engagement_cycle");
     if (error) {
-      logger.error("Falha ao buscar ciclo de engajamento ativo", error);
+      logger.error("Falha ao buscar ciclo de engajamento ativo", error.message);
       throw error;
     }
     const row = Array.isArray(data) ? data[0] : data;
@@ -104,10 +104,10 @@ export const continuousEngagementService = {
 
   async getMyQuestions(cycleId?: string): Promise<EngagementAssignment[]> {
     const { data, error } = await supabase.rpc("assign_engagement_questions", {
-      p_cycle_id: cycleId ?? null,
+      p_cycle_id: cycleId ?? undefined,
     });
     if (error) {
-      logger.error("Falha ao distribuir perguntas de engajamento", error);
+      logger.error("Falha ao distribuir perguntas de engajamento", error.message);
       throw error;
     }
     return ((data ?? []) as unknown as EngagementAssignment[]).map((row) => ({
@@ -121,7 +121,7 @@ export const continuousEngagementService = {
       p_cycle_id: cycleId,
     });
     if (error) {
-      logger.error("Falha ao obter progresso do ciclo", error);
+      logger.error("Falha ao obter progresso do ciclo", error.message);
       throw error;
     }
     const row = (Array.isArray(data) ? data[0] : data) as EngagementProgress | undefined;
@@ -133,11 +133,11 @@ export const continuousEngagementService = {
       p_cycle_id: input.cycleId,
       p_question_id: input.questionId,
       p_raw_value: JSON.parse(JSON.stringify({ value: input.rawValue ?? null })),
-      p_normalized_score: input.normalizedScore,
-      p_text_answer: input.textAnswer ?? null,
+      p_normalized_score: input.normalizedScore ?? undefined,
+      p_text_answer: input.textAnswer ?? undefined,
     });
     if (error) {
-      logger.error("Falha ao registrar resposta de engajamento", error);
+      logger.error("Falha ao registrar resposta de engajamento", error.message);
       throw error;
     }
     return data as unknown as string;
