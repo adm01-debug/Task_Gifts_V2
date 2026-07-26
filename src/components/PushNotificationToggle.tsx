@@ -1,8 +1,72 @@
-import { Bell, BellOff, BellRing, Loader2, Smartphone } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Bell, BellOff, BellRing, Check, Loader2, Smartphone } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { usePushSubscription } from "@/hooks/usePushSubscription";
+import { usePushDevice } from "@/hooks/usePushDevice";
+import {
+  DEVICE_LABEL_MAX_LENGTH,
+  normalizeDeviceLabel,
+  suggestDeviceLabel,
+} from "@/lib/deviceLabel";
+
+/**
+ * Campo de apelido do dispositivo. O valor é gravado no perfil do usuário
+ * (tabela de inscrições push), portanto acompanha a conta e não a estação.
+ */
+function DeviceNicknameField() {
+  const { device, isLoading, isSaving, save } = usePushDevice();
+  const [value, setValue] = useState("");
+
+  useEffect(() => {
+    setValue(normalizeDeviceLabel(device?.device_label) ?? "");
+  }, [device?.device_label]);
+
+  if (isLoading) return null;
+
+  const placeholder = suggestDeviceLabel(
+    device?.user_agent ?? (typeof navigator !== "undefined" ? navigator.userAgent : null),
+  );
+  const savedLabel = normalizeDeviceLabel(device?.device_label);
+  const isDirty = (normalizeDeviceLabel(value) ?? null) !== (savedLabel ?? null);
+
+  return (
+    <form
+      className="mt-3 space-y-2"
+      onSubmit={(event) => {
+        event.preventDefault();
+        save(value);
+      }}
+    >
+      <Label htmlFor="device-nickname" className="text-xs text-muted-foreground">
+        Apelido deste dispositivo
+      </Label>
+      <div className="flex gap-2">
+        <Input
+          id="device-nickname"
+          value={value}
+          maxLength={DEVICE_LABEL_MAX_LENGTH}
+          placeholder={placeholder}
+          disabled={!device || isSaving}
+          onChange={(event) => setValue(event.target.value)}
+          aria-describedby="device-nickname-help"
+        />
+        <Button type="submit" variant="outline" size="icon" disabled={!device || isSaving || !isDirty} aria-label="Salvar apelido">
+          {isSaving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Check className="h-4 w-4" />}
+        </Button>
+      </div>
+      <p id="device-nickname-help" className="text-[11px] text-muted-foreground">
+        {device
+          ? "Salvo na sua conta — o apelido aparece no histórico e nos alertas de segurança."
+          : "Ative as notificações acima para dar um apelido a este dispositivo."}
+      </p>
+    </form>
+  );
+}
 
 interface PushNotificationToggleProps {
   compact?: boolean;
@@ -104,6 +168,8 @@ export function PushNotificationToggle({ compact = false }: PushNotificationTogg
             aria-label="Ativar notificações push neste dispositivo"
           />
         </div>
+        <DeviceNicknameField />
+
         <p className="text-[11px] text-muted-foreground mt-3">
           Ative por dispositivo. Preferências por tipo (campanhas, marcos, etc.) ficam no bloco
           abaixo.
