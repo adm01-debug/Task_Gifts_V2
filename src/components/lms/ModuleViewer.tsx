@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import DOMPurify from "dompurify";
 import { 
@@ -12,6 +12,46 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import type { TrailModule } from "@/services/trailsService";
+import { useAuth } from "@/hooks/useAuth";
+import {
+  clearResume,
+  describeResume,
+  loadResume,
+  safeResumePosition,
+  saveResume,
+  type ResumableContentType,
+  type ResumeState,
+} from "@/lib/playerResume";
+
+/** Estado parcial reportado pelos conteúdos para persistência de retomada. */
+interface ProgressSnapshot {
+  position: number;
+  answers?: number[];
+  checked?: number[];
+}
+
+/**
+ * Atalhos de teclado do player. Ignora eventos originados em campos editáveis
+ * para não sequestrar a digitação do usuário.
+ */
+function useContentShortcuts(handler: (key: string) => void, enabled = true) {
+  const handlerRef = useRef(handler);
+  handlerRef.current = handler;
+
+  useEffect(() => {
+    if (!enabled) return;
+    const onKeyDown = (event: KeyboardEvent) => {
+      const target = event.target as HTMLElement | null;
+      if (target?.isContentEditable) return;
+      const tag = target?.tagName;
+      if (tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT") return;
+      if (event.metaKey || event.ctrlKey || event.altKey) return;
+      handlerRef.current(event.key);
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [enabled]);
+}
 
 interface QuizQuestion {
   question: string;
@@ -125,28 +165,64 @@ function TextContent({ content }: { content: { text?: string; html?: string } })
 
 function QuizContent({ 
   questions, 
-  onComplete 
+  onComplete,
+  initialPosition = 0,
+  initialAnswers,
+  onProgress,
 }: { 
   questions: QuizQuestion[]; 
   onComplete: (score: number) => void;
+  initialPosition?: number;
+  initialAnswers?: number[];
+  onProgress?: (snapshot: ProgressSnapshot) => void;
 }) {
-  const [currentQuestion, setCurrentQuestion] = useState(0);
-  const [answers, setAnswers] = useState<number[]>([]);
+  const [currentQuestion, setCurrentQuestion] = useState(initialPosition);
+  const [answers, setAnswers] = useState<number[]>(initialAnswers ?? []);
   const [showResults, setShowResults] = useState(false);
+
+  const report = useCallback(
+    (position: number, nextAnswers: number[]) => {
+      onProgress?.({ position, answers: nextAnswers });
+    },
+    [onProgress],
+  );
 
   const handleAnswer = (answerIndex: number) => {
     const newAnswers = [...answers];
     newAnswers[currentQuestion] = answerIndex;
     setAnswers(newAnswers);
+    report(currentQuestion, newAnswers);
   };
 
   const handleNext = () => {
     if (currentQuestion < questions.length - 1) {
-      setCurrentQuestion(currentQuestion + 1);
+      const next = currentQuestion + 1;
+      setCurrentQuestion(next);
+      report(next, answers);
     } else {
       setShowResults(true);
     }
   };
+
+  const handlePrev = useCallback(() => {
+    setCurrentQuestion((prev) => {
+      const next = Math.max(0, prev - 1);
+      report(next, answers);
+      return next;
+    });
+  }, [answers, report]);
+
+  // Teclado: 1..9 seleciona alternativa, setas navegam entre questões.
+  useContentShortcuts((key) => {
+    if (showResults) return;
+    const numeric = Number.parseInt(key, 10);
+    if (!Number.isNaN(numeric) && numeric >= 1 && numeric <= questions[currentQuestion]?.options.length) {
+      handleAnswer(numeric - 1);
+      return;
+    }
+    if (key === "ArrowLeft") handlePrev();
+    if (key === "ArrowRight" && answers[currentQuestion] !== undefined) handleNext();
+  }, questions.length > 0);
 
   const calculateScore = () => {
     const correct = questions.reduce((acc, q, i) => {
@@ -198,7 +274,7 @@ function QuizContent({
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <span className="text-sm text-muted-foreground">
+        <span className="text-sm text-muted-foreground" aria-live="polite">
           Questão {currentQuestion + 1} de {questions.length}
         </span>
         <Progress value={(currentQuestion / questions.length) * 100} className="w-32 h-2" />
@@ -237,7 +313,7 @@ function QuizContent({
         <Button
           variant="outline"
           className="h-12 px-6 font-bold tracking-tight rounded-xl border-2"
-          onClick={() => setCurrentQuestion(Math.max(0, currentQuestion - 1))}
+          onClick={handlePrev}
           disabled={currentQuestion === 0}
         >
           <ChevronLeft className="h-4 w-4 mr-2" />
@@ -259,27 +335,46 @@ function QuizContent({
 function FlashcardsContent({ 
   cards,
   onComplete,
+  initialPosition = 0,
+  initialReviewed,
+  onProgress,
 }: { 
   cards: FlashCard[];
   onComplete: () => void;
+  initialPosition?: number;
+  initialReviewed?: number[];
+  onProgress?: (snapshot: ProgressSnapshot) => void;
 }) {
-  const [currentCard, setCurrentCard] = useState(0);
+  const [currentCard, setCurrentCard] = useState(initialPosition);
   const [isFlipped, setIsFlipped] = useState(false);
-  const [reviewed, setReviewed] = useState<Set<number>>(new Set());
+  const [reviewed, setReviewed] = useState<Set<number>>(new Set(initialReviewed ?? []));
 
   const handleNext = () => {
-    setReviewed(new Set([...reviewed, currentCard]));
+    const nextReviewed = new Set([...reviewed, currentCard]);
+    setReviewed(nextReviewed);
     setIsFlipped(false);
-    
-    if (currentCard < cards.length - 1) {
-      setCurrentCard(currentCard + 1);
-    }
+
+    const next = currentCard < cards.length - 1 ? currentCard + 1 : currentCard;
+    setCurrentCard(next);
+    onProgress?.({ position: next, checked: [...nextReviewed] });
   };
 
   const handlePrev = () => {
     setIsFlipped(false);
-    setCurrentCard(Math.max(0, currentCard - 1));
+    const next = Math.max(0, currentCard - 1);
+    setCurrentCard(next);
+    onProgress?.({ position: next, checked: [...reviewed] });
   };
+
+  // Teclado: espaço/Enter gira o card, setas navegam.
+  useContentShortcuts((key) => {
+    if (key === " " || key === "Enter") {
+      setIsFlipped((flipped) => !flipped);
+      return;
+    }
+    if (key === "ArrowLeft" && currentCard > 0) handlePrev();
+    if (key === "ArrowRight" && currentCard < cards.length - 1) handleNext();
+  }, cards.length > 0);
 
   const allReviewed = reviewed.size === cards.length;
 
@@ -293,8 +388,18 @@ function FlashcardsContent({
       </div>
 
       <div 
-        className="relative h-80 cursor-pointer perspective-2000 group"
+        role="button"
+        tabIndex={0}
+        aria-pressed={isFlipped}
+        aria-label={`Flashcard ${currentCard + 1} de ${cards.length}. Pressione espaço para girar.`}
+        className="relative h-80 cursor-pointer perspective-2000 group rounded-3xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
         onClick={() => setIsFlipped(!isFlipped)}
+        onKeyDown={(event) => {
+          if (event.key === "Enter" || event.key === " ") {
+            event.preventDefault();
+            setIsFlipped((flipped) => !flipped);
+          }
+        }}
       >
         <motion.div
           className="absolute inset-0 rounded-3xl border-2 border-primary/20 bg-gradient-to-br from-card via-card to-primary/5 p-8 flex flex-col items-center justify-center text-center shadow-2xl backface-hidden preserve-3d"
@@ -381,16 +486,25 @@ function FlashcardsContent({
 function ChecklistContent({ 
   items: initialItems,
   onComplete,
+  initialChecked,
+  onProgress,
 }: { 
   items: ChecklistItem[];
   onComplete: () => void;
+  initialChecked?: number[];
+  onProgress?: (snapshot: ProgressSnapshot) => void;
 }) {
-  const [items, setItems] = useState(initialItems.map(i => ({ ...i, checked: false })));
+  const [items, setItems] = useState(() =>
+    initialItems.map((item, index) => ({ ...item, checked: initialChecked?.includes(index) ?? false })),
+  );
 
   const toggleItem = (index: number) => {
-    const newItems = [...items];
-    newItems[index].checked = !newItems[index].checked;
+    const newItems = items.map((item, i) => (i === index ? { ...item, checked: !item.checked } : item));
     setItems(newItems);
+    onProgress?.({
+      position: index,
+      checked: newItems.map((item, i) => (item.checked ? i : -1)).filter((i) => i >= 0),
+    });
   };
 
   const allChecked = items.every(i => i.checked);
@@ -410,14 +524,18 @@ function ChecklistContent({
             transition={{ delay: index * 0.1 }}
           >
             <Label
+              htmlFor={`checklist-item-${index}`}
               className={`flex items-center gap-3 p-4 rounded-lg border cursor-pointer transition-all ${
                 item.checked
                   ? "border-emerald-500 bg-emerald-500/10"
                   : "border-border hover:border-primary/50"
               }`}
-              onClick={() => toggleItem(index)}
             >
-              <Checkbox checked={item.checked} />
+              <Checkbox
+                id={`checklist-item-${index}`}
+                checked={item.checked}
+                onCheckedChange={() => toggleItem(index)}
+              />
               <span className={item.checked ? "line-through text-muted-foreground" : ""}>
                 {item.text}
               </span>
@@ -439,10 +557,90 @@ function ChecklistContent({
 }
 
 export default function ModuleViewer({ module, onComplete, onClose }: ModuleViewerProps) {
-  const [videoWatched, setVideoWatched] = useState(false);
-  const [textRead, setTextRead] = useState(false);
+  const { user } = useAuth();
+  const containerRef = useRef<HTMLDivElement>(null);
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
 
   const content = module.content as Record<string, unknown>;
+  const contentType = module.content_type as ResumableContentType;
+
+  /** Estado salvo lido uma única vez na montagem (sincronia com o storage local). */
+  const [savedResume] = useState<ResumeState | null>(() => loadResume(user?.id, module.id));
+  const [resumeApplied, setResumeApplied] = useState(false);
+  const [resumeDismissed, setResumeDismissed] = useState(false);
+
+  const totalItems = useMemo(() => {
+    if (contentType === "quiz") return ((content.questions as QuizQuestion[]) || []).length;
+    if (contentType === "flashcard") return ((content.cards as FlashCard[]) || []).length;
+    if (contentType === "checklist") return ((content.items as ChecklistItem[]) || []).length;
+    return 0;
+  }, [content, contentType]);
+
+  const showResumeBanner = Boolean(savedResume) && !resumeApplied && !resumeDismissed && totalItems > 0;
+  const startPosition = resumeApplied ? safeResumePosition(savedResume, totalItems) : 0;
+  const startAnswers = resumeApplied ? savedResume?.answers : undefined;
+  const startChecked = resumeApplied ? savedResume?.checked : undefined;
+
+  const handleProgress = useCallback(
+    (snapshot: ProgressSnapshot) => {
+      saveResume(user?.id, {
+        moduleId: module.id,
+        contentType,
+        position: snapshot.position,
+        answers: snapshot.answers,
+        checked: snapshot.checked,
+        updatedAt: Date.now(),
+      });
+    },
+    [contentType, module.id, user?.id],
+  );
+
+  /** Conclusão limpa a retomada — o módulo deixa de estar "em andamento". */
+  const handleComplete = useCallback(
+    (score?: number) => {
+      clearResume(user?.id, module.id);
+      onComplete(score);
+    },
+    [module.id, onComplete, user?.id],
+  );
+
+  // Acessibilidade: foco inicial, ESC para sair e armadilha de foco no diálogo.
+  useEffect(() => {
+    const previouslyFocused = document.activeElement as HTMLElement | null;
+    closeButtonRef.current?.focus();
+
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        event.stopPropagation();
+        onClose();
+        return;
+      }
+      if (event.key !== "Tab") return;
+
+      const focusables = containerRef.current?.querySelectorAll<HTMLElement>(
+        'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])',
+      );
+      if (!focusables || focusables.length === 0) return;
+      const first = focusables[0];
+      const last = focusables[focusables.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    };
+
+    document.addEventListener("keydown", onKeyDown);
+    const { overflow } = document.body.style;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.removeEventListener("keydown", onKeyDown);
+      document.body.style.overflow = overflow;
+      previouslyFocused?.focus?.();
+    };
+  }, [onClose]);
 
   const renderContent = () => {
     switch (module.content_type) {
@@ -451,7 +649,7 @@ export default function ModuleViewer({ module, onComplete, onClose }: ModuleView
           <div className="space-y-4">
             <VideoContent videoUrl={module.video_url || ""} />
              <Button 
-               onClick={() => onComplete()} 
+               onClick={() => handleComplete()} 
                className="w-full h-14 font-black uppercase tracking-widest text-xs gap-3 shadow-lg shadow-emerald-500/20 rounded-xl"
              >
                <CheckCircle2 className="h-5 w-5" />
@@ -467,7 +665,7 @@ export default function ModuleViewer({ module, onComplete, onClose }: ModuleView
               <TextContent content={content as { text?: string; html?: string }} />
             </div>
              <Button 
-               onClick={() => onComplete()} 
+               onClick={() => handleComplete()} 
                className="w-full h-14 font-black uppercase tracking-widest text-xs gap-3 shadow-lg shadow-emerald-500/20 rounded-xl"
              >
                <CheckCircle2 className="h-5 w-5" />
@@ -480,7 +678,10 @@ export default function ModuleViewer({ module, onComplete, onClose }: ModuleView
         return (
           <QuizContent 
             questions={(content.questions as QuizQuestion[]) || []} 
-            onComplete={onComplete}
+            onComplete={handleComplete}
+            initialPosition={startPosition}
+            initialAnswers={startAnswers}
+            onProgress={handleProgress}
           />
         );
 
@@ -488,7 +689,10 @@ export default function ModuleViewer({ module, onComplete, onClose }: ModuleView
         return (
           <FlashcardsContent 
             cards={(content.cards as FlashCard[]) || []} 
-            onComplete={() => onComplete()}
+            onComplete={() => handleComplete()}
+            initialPosition={startPosition}
+            initialReviewed={startChecked}
+            onProgress={handleProgress}
           />
         );
 
@@ -496,7 +700,9 @@ export default function ModuleViewer({ module, onComplete, onClose }: ModuleView
         return (
           <ChecklistContent 
             items={(content.items as ChecklistItem[]) || []} 
-            onComplete={() => onComplete()}
+            onComplete={() => handleComplete()}
+            initialChecked={startChecked}
+            onProgress={handleProgress}
           />
         );
 
@@ -504,7 +710,7 @@ export default function ModuleViewer({ module, onComplete, onClose }: ModuleView
         return (
           <div className="text-center py-8">
             <p className="text-muted-foreground">Tipo de conteúdo não suportado</p>
-            <Button onClick={() => onComplete()} className="mt-4">
+            <Button onClick={() => handleComplete()} className="mt-4">
               Pular Módulo
             </Button>
           </div>
@@ -517,6 +723,10 @@ export default function ModuleViewer({ module, onComplete, onClose }: ModuleView
        initial={{ opacity: 0 }}
        animate={{ opacity: 1 }}
        exit={{ opacity: 0 }}
+       ref={containerRef}
+       role="dialog"
+       aria-modal="true"
+       aria-labelledby="module-viewer-title"
        className="fixed inset-0 z-[100] bg-background/98 backdrop-blur-xl overflow-y-auto"
      >
        <div className="container max-w-4xl mx-auto px-4 py-8 md:py-12">
@@ -532,7 +742,7 @@ export default function ModuleViewer({ module, onComplete, onClose }: ModuleView
                    Módulo em Curso
                  </span>
                </div>
-               <h2 className="text-2xl font-black tracking-tight">{module.title}</h2>
+               <h2 id="module-viewer-title" className="text-2xl font-black tracking-tight">{module.title}</h2>
              </div>
            </div>
            
@@ -546,12 +756,40 @@ export default function ModuleViewer({ module, onComplete, onClose }: ModuleView
            </Button>
          </div>
 
+         {showResumeBanner && savedResume && (
+           <div
+             role="status"
+             className="mb-6 flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-primary/20 bg-primary/5 p-4"
+           >
+             <p className="text-sm font-semibold text-foreground">
+               {describeResume(savedResume, totalItems)}
+             </p>
+             <div className="flex gap-2">
+               <Button size="sm" onClick={() => setResumeApplied(true)}>
+                 Retomar
+               </Button>
+               <Button
+                 size="sm"
+                 variant="ghost"
+                 onClick={() => {
+                   clearResume(user?.id, module.id);
+                   setResumeDismissed(true);
+                 }}
+               >
+                 Começar do início
+               </Button>
+             </div>
+           </div>
+         )}
+
          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
            {/* Main Content Area */}
            <div className="lg:col-span-8 space-y-6">
              <Card className="border-none bg-card/50 shadow-2xl shadow-primary/5 ring-1 ring-white/10 overflow-hidden">
                <CardContent className="p-0">
-                 <div className="p-6 md:p-8">
+                 {/* A chave força a remontagem ao aplicar a retomada,
+                     garantindo que os estados iniciais sejam reaplicados. */}
+                 <div className="p-6 md:p-8" key={resumeApplied ? "resumed" : "fresh"}>
                    {renderContent()}
                  </div>
                </CardContent>
