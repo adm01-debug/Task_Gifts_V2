@@ -209,6 +209,7 @@ export function buildDeviceList(
     // numa lista que também mostra aparelhos remotos.
     const fallbackLabel = platform === "Este dispositivo" && !isCurrent ? "Dispositivo desconhecido" : platform;
     const failures = Number.isFinite(row.failure_count) ? Math.max(0, Math.trunc(row.failure_count as number)) : 0;
+    const described = describeDevice(row);
 
     out.push({
       id: row.id,
@@ -226,6 +227,10 @@ export function buildDeviceList(
       label: custom ?? fallbackLabel,
       hasCustomLabel: custom !== null,
       platform,
+      browser: described.browser,
+      os: described.os,
+      kind: described.kind,
+      descriptor: described.descriptor,
       status,
       statusLabel: STATUS_LABEL[status],
       isCurrent,
