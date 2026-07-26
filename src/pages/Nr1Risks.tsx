@@ -47,6 +47,8 @@ export default function Nr1Risks() {
   const { data: departments } = useDepartments();
   const matrix = useNr1RiskMatrix(filters);
   const summary = useNr1Summary(filters);
+  const rows = matrix.data ?? [];
+  const isLoading = matrix.isLoading || summary.isLoading;
   const generatePlan = useGenerateNr1ActionPlan();
 
   const handleTreatRisk = (row: { category_key: string }) => {
@@ -81,8 +83,6 @@ export default function Nr1Risks() {
     }
   };
 
-  const rows = matrix.data ?? [];
-  const isLoading = matrix.isLoading || summary.isLoading;
 
   const content = (
     <div className="space-y-6">
