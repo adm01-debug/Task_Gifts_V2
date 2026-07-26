@@ -344,4 +344,20 @@ export const certificationsService = {
 
     return results;
   }
+  ,
+
+  /**
+   * Verificação pública de autenticidade. Não exige sessão: a RPC roda como
+   * SECURITY DEFINER e devolve apenas dados não sensíveis do certificado.
+   */
+  async verifyCertificate(code: string): Promise<CertificateVerification | null> {
+    const normalized = code.trim().toUpperCase();
+    if (normalized.length < 6) return null;
+
+    const { data, error } = await supabase.rpc('verify_certificate', { _code: normalized });
+    if (error) throw error;
+
+    const row = Array.isArray(data) ? data[0] : null;
+    return (row as CertificateVerification | undefined) ?? null;
+  }
 };
