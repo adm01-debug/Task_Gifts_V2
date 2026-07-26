@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { 
    ArrowLeft, BookOpen, Clock, Star, Trophy, Play, TrendingUp,
   CheckCircle2, Video, FileText, HelpCircle, Layers,
-  ChevronRight, Lock, Sparkles, Award
+  ChevronRight, Lock, Sparkles, Award, Pencil
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -12,6 +12,8 @@ import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { SectionErrorBoundary } from "@/components/SectionErrorBoundary";
 import { useTrailWithModules, useUserEnrollments, useModuleProgress, useEnrollInTrail, useStartModule, useCompleteModule } from "@/hooks/useTrails";
+import { useRBAC } from "@/hooks/useRBAC";
+import TrailModuleEditor from "@/components/trails/TrailModuleEditor";
 import { useAuth } from "@/hooks/useAuth";
 import type { TrailModule, ModuleProgress } from "@/services/trailsService";
 import { PageShell } from "@/components/navigation";
@@ -127,6 +129,10 @@ export default function TrailDetail() {
 
   const [activeModuleId, setActiveModuleId] = useState<string | null>(null);
   const [showViewer, setShowViewer] = useState(false);
+  const [showEditor, setShowEditor] = useState(false);
+
+  const { isAdmin, isManager } = useRBAC();
+  const canAuthor = isAdmin || isManager;
 
   const enrollment = enrollments.find(e => e.trail_id === id);
   const isEnrolled = !!enrollment;
@@ -235,6 +241,19 @@ export default function TrailDetail() {
                         Trilha de Especialização
                       </Badge>
                     </div>
+
+                    {canAuthor && (
+                      <div className="mb-4">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => setShowEditor(true)}
+                        >
+                          <Pencil className="h-4 w-4" />
+                          Editar módulos
+                        </Button>
+                      </div>
+                    )}
                     
                     <h1 className="text-4xl md:text-5xl font-black tracking-tight mb-4 text-foreground">{trail.title}</h1>
                     <p className="text-lg text-muted-foreground max-w-2xl mb-8 leading-relaxed">
@@ -512,6 +531,15 @@ export default function TrailDetail() {
           </SectionErrorBoundary>
         )}
       </AnimatePresence>
+
+      {canAuthor && (
+        <TrailModuleEditor
+          trailId={trail.id}
+          modules={trail.modules}
+          open={showEditor}
+          onOpenChange={setShowEditor}
+        />
+      )}
        </PageShell>
      );
    }

@@ -28,7 +28,22 @@ export interface UserCertification {
   issued_by: string | null;
   notes: string | null;
   created_at: string;
+  certificate_code?: string | null;
+  verification_hash?: string | null;
   certification?: Certification;
+}
+
+/** Resultado público da verificação de autenticidade de um certificado. */
+export interface CertificateVerification {
+  certificate_code: string;
+  holder_name: string;
+  certification_name: string;
+  certification_category: string;
+  issued_at: string;
+  expires_at: string | null;
+  status: string;
+  is_valid: boolean;
+  verification_hash: string | null;
 }
 
 export const certificationsService = {
@@ -328,5 +343,21 @@ export const certificationsService = {
     }
 
     return results;
+  }
+  ,
+
+  /**
+   * Verificação pública de autenticidade. Não exige sessão: a RPC roda como
+   * SECURITY DEFINER e devolve apenas dados não sensíveis do certificado.
+   */
+  async verifyCertificate(code: string): Promise<CertificateVerification | null> {
+    const normalized = code.trim().toUpperCase();
+    if (normalized.length < 6) return null;
+
+    const { data, error } = await supabase.rpc('verify_certificate', { _code: normalized });
+    if (error) throw error;
+
+    const row = Array.isArray(data) ? data[0] : null;
+    return (row as CertificateVerification | undefined) ?? null;
   }
 };

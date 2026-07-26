@@ -16,6 +16,7 @@ import {
   useRenewCertification 
 } from '@/hooks/useCertifications';
 import { UserCertification, Certification } from '@/services/certificationsService';
+import { CertificateActions } from '@/components/certifications/CertificateActions';
 import { format, differenceInDays } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 
@@ -148,6 +149,8 @@ function CertificationCard({
               {isRenewing ? 'Renovando...' : isExpired ? 'Renovar Agora' : 'Agendar Renovação'}
             </Button>
           )}
+
+          <CertificateActions userCert={userCert} />
         </div>
       </div>
     </motion.div>

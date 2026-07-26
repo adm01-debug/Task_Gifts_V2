@@ -7164,6 +7164,7 @@ export type Database = {
       }
       user_certifications: {
         Row: {
+          certificate_code: string
           certification_id: string
           created_at: string
           expires_at: string | null
@@ -7176,8 +7177,10 @@ export type Database = {
           status: string
           updated_at: string
           user_id: string
+          verification_hash: string | null
         }
         Insert: {
+          certificate_code?: string
           certification_id: string
           created_at?: string
           expires_at?: string | null
@@ -7190,8 +7193,10 @@ export type Database = {
           status?: string
           updated_at?: string
           user_id: string
+          verification_hash?: string | null
         }
         Update: {
+          certificate_code?: string
           certification_id?: string
           created_at?: string
           expires_at?: string | null
@@ -7204,6 +7209,7 @@ export type Database = {
           status?: string
           updated_at?: string
           user_id?: string
+          verification_hash?: string | null
         }
         Relationships: [
           {
@@ -8238,6 +8244,7 @@ export type Database = {
         Args: { p_opinion_id: string }
         Returns: string
       }
+      generate_certificate_code: { Args: never; Returns: string }
       generate_engagement_snapshot: {
         Args: { p_department_id?: string; p_period_type?: string }
         Returns: string
@@ -8787,6 +8794,20 @@ export type Database = {
         }[]
       }
       validate_reset_token: { Args: { p_token: string }; Returns: boolean }
+      verify_certificate: {
+        Args: { _code: string }
+        Returns: {
+          certificate_code: string
+          certification_category: string
+          certification_name: string
+          expires_at: string
+          holder_name: string
+          is_valid: boolean
+          issued_at: string
+          status: string
+          verification_hash: string
+        }[]
+      }
     }
     Enums: {
       app_role: "admin" | "manager" | "employee"

@@ -28,6 +28,7 @@ import Auth from "./pages/Auth";
 
 // Lazy loaded routes (code splitting)
 const Profile = lazy(() => import("./pages/Profile"));
+const CertificateVerify = lazy(() => import("./pages/CertificateVerify"));
 const ManagerDashboard = lazy(() => import("./pages/ManagerDashboard"));
 const QuestBuilder = lazy(() => import("./pages/QuestBuilder"));
 const EngagementReports = lazy(() => import("./pages/EngagementReports"));
@@ -194,6 +195,9 @@ const AnimatedRoutes = () => {
         <Route path="/auth" element={user ? <Navigate to="/" replace /> : <PageTransition><Auth /></PageTransition>} />
         <Route path="/forgot-password" element={user ? <Navigate to="/" replace /> : <PageTransition><ForgotPassword /></PageTransition>} />
         <Route path="/reset-password" element={user ? <Navigate to="/" replace /> : <PageTransition><ResetPassword /></PageTransition>} />
+        {/* Verificação pública de certificados — acessível sem autenticação. */}
+        <Route path="/verificar" element={<PageTransition><CertificateVerify /></PageTransition>} />
+        <Route path="/verificar/:code" element={<PageTransition><CertificateVerify /></PageTransition>} />
         <Route path="/security" element={<ProtectedRoute requiredRole="admin"><PageTransition><RateLimitDashboard /></PageTransition></ProtectedRoute>} />
         <Route path="/profile" element={<ProtectedRoute><PageTransition><Profile /></PageTransition></ProtectedRoute>} />
         <Route path="/manager" element={<ProtectedRoute requiredRole="manager"><PageTransition><ManagerDashboard /></PageTransition></ProtectedRoute>} />
