@@ -29,11 +29,14 @@ import {
   useEngagementPillarScores,
 } from "@/hooks/useEngagementDiagnostics";
 import { AnonymityGuardNotice } from "@/components/engagement/diagnostics/AnonymityGuardNotice";
+import { AutoInsights } from "@/components/engagement/diagnostics/AutoInsights";
 import { BenchmarkComparison } from "@/components/engagement/diagnostics/BenchmarkComparison";
 import {
+  buildBenchmarkComparisons,
   DEFAULT_BENCHMARK_COMPANY_SIZE,
   DEFAULT_BENCHMARK_INDUSTRY,
 } from "@/lib/climateBenchmark";
+import { buildNpsSeries } from "@/lib/npsHistory";
 import { CorrelationInsights } from "@/components/engagement/diagnostics/CorrelationInsights";
 import { FactorRanking } from "@/components/engagement/diagnostics/FactorRanking";
 import { NpsCards } from "@/components/engagement/diagnostics/NpsCards";
@@ -88,6 +91,20 @@ export default function ClimateDiagnostics() {
     [filters.departmentId, filters.days, generatePlan, navigate],
   );
 
+  const handleGeneratePlanByKey = useCallback(
+    (factorKey: string) => {
+      setGeneratingFactorKey(factorKey);
+      generatePlan.mutate(
+        { factorKey, departmentId: filters.departmentId, days: filters.days },
+        {
+          onSuccess: (planId) => navigate(`/planos-acao?plan=${planId}`),
+          onSettled: () => setGeneratingFactorKey(null),
+        },
+      );
+    },
+    [filters.departmentId, filters.days, generatePlan, navigate],
+  );
+
   const overview = useEngagementOverview(filters);
   const pillars = useEngagementPillarScores(filters);
   const factors = useEngagementFactorScores(filters);
@@ -104,6 +121,23 @@ export default function ClimateDiagnostics() {
     industry: benchmarkIndustry,
     companySize: benchmarkSize,
   });
+
+  /** Comparações de mercado normalizadas — o motor de insights só lê gaps confiáveis. */
+  const benchmarkComparisons = useMemo(
+    () => buildBenchmarkComparisons(benchmark.data ?? []),
+    [benchmark.data],
+  );
+
+  /** eNPS/LNPS atuais enriquecidos com o período anterior da série histórica. */
+  const npsWithHistory = useMemo(() => {
+    const series = buildNpsSeries(npsHistory.data ?? []);
+    return (nps.data ?? []).map((metric) => ({
+      metric: metric.metric,
+      score: metric.score,
+      respondents: metric.respondents,
+      previousScore: series.find((s) => s.metric === metric.metric)?.previous ?? null,
+    }));
+  }, [nps.data, npsHistory.data]);
 
   const isLoading = overview.isLoading || pillars.isLoading;
   const hasData = !!overview.data && (pillars.data ?? []).length > 0;
@@ -229,6 +263,18 @@ export default function ClimateDiagnostics() {
               </CardContent>
             </Card>
           </div>
+
+          <AutoInsights
+            overview={summary}
+            pillars={pillars.data ?? []}
+            factors={factors.data ?? []}
+            benchmark={benchmarkComparisons}
+            nps={npsWithHistory}
+            isLoading={benchmark.isLoading || factors.isLoading}
+            canGeneratePlan={canGeneratePlan}
+            generatingFactorKey={generatingFactorKey}
+            onGeneratePlan={handleGeneratePlanByKey}
+          />
 
           <section className="space-y-3">
             <h2 className="text-lg font-semibold">Mapa de clima por pilar</h2>
