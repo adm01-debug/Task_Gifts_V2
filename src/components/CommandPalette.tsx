@@ -108,6 +108,7 @@ export function CommandPalette() {
     { id: "goals", label: "Metas & OKRs", icon: Target, action: () => handleNavigate("/goals"), keywords: ["objetivos", "okr"], category: "navigation" },
     { id: "engagement", label: "Engajamento", icon: Activity, action: () => handleNavigate("/engajamento"), keywords: ["pesquisa", "clima", "continua"], category: "navigation" },
     { id: "climate-diagnostics", label: "Diagnóstico de Clima", icon: Activity, action: () => handleNavigate("/engajamento/diagnostico"), keywords: ["clima", "enps", "favorabilidade", "pilares", "fatores"], category: "navigation" },
+    { id: "opinion-channel", label: "Canal de Opiniões", icon: Activity, action: () => handleNavigate("/engajamento/opinioes"), keywords: ["opiniao", "opinioes", "anonimo", "sugestao", "reclamacao", "elogio", "voz"], category: "navigation" },
     { id: "action-plans", label: "Planos de Ação", icon: ClipboardCheck, action: () => handleNavigate("/planos-acao"), keywords: ["5w2h", "plano", "acao", "clima", "melhoria"], category: "navigation" },
     { id: "nr1-risks", label: "Riscos Psicossociais (NR-1)", icon: Activity, action: () => handleNavigate("/engajamento/nr1"), keywords: ["nr1", "nr-1", "psicossocial", "iso 45003", "saude mental", "risco"], category: "navigation" },
     { id: "checkins", label: "Check-ins 1:1", icon: ClipboardCheck, action: () => handleNavigate("/checkins"), keywords: ["reunião", "one on one"], category: "navigation" },
