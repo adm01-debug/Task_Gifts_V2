@@ -112,3 +112,44 @@ export const nr1RiskService = {
     return unwrap<Nr1Summary>(data)[0] ?? null;
   },
 };
+
+/** Prazo (em dias) efetivamente aplicado ao plano de tratativa gerado pelo banco. */
+export function nr1PlanDeadlineDays(level: Nr1RiskLevel): number {
+  return level === "critical" ? 30 : level === "high" ? 60 : 90;
+}
+
+/** Meta de score do plano — espelha LEAST(10, score + 1.5) da RPC. */
+export function nr1PlanTargetScore(score: number | null | undefined): number {
+  const base = Number.isFinite(score as number) ? (score as number) : 5;
+  return Math.min(10, Math.round((base + 1.5) * 100) / 100);
+}
+
+export interface GenerateNr1PlanInput {
+  categoryKey: string;
+  departmentId?: string | null;
+  days?: number;
+}
+
+/** Gera (ou reaproveita) o plano 5W2H de tratativa de uma categoria de risco NR-1. */
+export async function generateActionPlanFromNr1Category({
+  categoryKey,
+  departmentId = null,
+  days = 90,
+}: GenerateNr1PlanInput): Promise<string> {
+  if (!categoryKey.trim()) throw new Error("Categoria de risco inválida.");
+
+  const { data, error } = await supabase.rpc("generate_action_plan_from_nr1_category", {
+    p_category_key: categoryKey,
+    p_department_id: departmentId ?? undefined,
+    p_days: days,
+  });
+
+  if (error) {
+    logger.error("Falha ao gerar plano de tratativa NR-1", error.message);
+    throw error;
+  }
+  if (typeof data !== "string" || data.length === 0) {
+    throw new Error("O plano de tratativa não pôde ser criado.");
+  }
+  return data;
+}
