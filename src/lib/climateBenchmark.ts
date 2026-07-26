@@ -79,8 +79,10 @@ export function safeNumber(value: unknown): number | null {
   return Number.isFinite(n) ? n : null;
 }
 
+/** Arredondamento simétrico (half away from zero) — evita viés em gaps negativos. */
 function round1(value: number): number {
-  return Math.round(value * 10) / 10;
+  const sign = value < 0 ? -1 : 1;
+  return (sign * Math.round(Math.abs(value) * 10)) / 10;
 }
 
 /** Inteiro não negativo; qualquer lixo vira 0. */
