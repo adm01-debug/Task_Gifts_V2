@@ -20,6 +20,7 @@ export interface FingerprintSignals {
 }
 
 export const FINGERPRINT_LENGTH = 32;
+const PREFIX_LENGTH = 22;
 
 function toToken(value: unknown): string {
   if (value === null || value === undefined || value === "") return "unknown";
@@ -37,6 +38,25 @@ function encodeBase64(input: string): string {
   return Buffer.from(bytes).toString("base64");
 }
 
+/**
+ * Hash djb2 em hexadecimal.
+ *
+ * Existe porque a impressão digital é truncada para caber em 32 caracteres:
+ * sem um resumo do texto completo, dois aparelhos idênticos da mesma conta
+ * colidiriam e revogar um desligaria o outro.
+ */
+function digest(input: string): string {
+  let h = 5381;
+  for (let i = 0; i < input.length; i += 1) {
+    h = ((h << 5) + h + input.charCodeAt(i)) >>> 0;
+  }
+  let h2 = 52711;
+  for (let i = input.length - 1; i >= 0; i -= 1) {
+    h2 = ((h2 << 5) + h2 + input.charCodeAt(i)) >>> 0;
+  }
+  return (h.toString(16).padStart(8, "0") + h2.toString(16).padStart(8, "0")).slice(0, 10);
+}
+
 /** Deriva a impressão digital determinística a partir dos sinais coletados. */
 export function computeDeviceFingerprint(signals: Partial<FingerprintSignals> | null | undefined): string {
   const parts = [
@@ -48,7 +68,8 @@ export function computeDeviceFingerprint(signals: Partial<FingerprintSignals> | 
     toToken(signals?.hardwareConcurrency),
     toToken(signals?.deviceMemory),
   ];
-  return encodeBase64(parts.join("|")).slice(0, FINGERPRINT_LENGTH);
+  const raw = parts.join("|");
+  return `${encodeBase64(raw).slice(0, PREFIX_LENGTH)}${digest(raw)}`;
 }
 
 /** Coleta os sinais do navegador atual. Retorna `null` fora do browser. */
