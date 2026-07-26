@@ -14,9 +14,8 @@ import {
   Gamepad2, ShoppingBag, Swords, Heart, Award,
   ClipboardCheck, BarChart3, Megaphone, MessageSquare,
   User, Settings, Shield, LogOut, Search, Bell,
-  Moon, Sun
-}, Activity 
-from "lucide-react";
+  Moon, Sun, Activity
+} from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { useTheme } from "@/hooks/useTheme";
 import { useFuseSearch, getHighlightSegments, SEARCH_PRESETS } from "@/hooks/useFuseSearch";
