@@ -14,7 +14,7 @@ import { PageShell } from "@/components/navigation";
 import { MobilePageLayout } from "@/components/mobile";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useDepartments } from "@/hooks/useDepartments";
-import { useNr1RiskMatrix, useNr1Summary } from "@/hooks/useNr1Risk";
+import { useGenerateNr1ActionPlan, useNr1RiskMatrix, useNr1Summary } from "@/hooks/useNr1Risk";
 import { Nr1RiskMatrix } from "@/components/engagement/nr1/Nr1RiskMatrix";
 import { AnonymityGuardNotice } from "@/components/engagement/diagnostics/AnonymityGuardNotice";
 
@@ -43,6 +43,14 @@ export default function Nr1Risks() {
   const { data: departments } = useDepartments();
   const matrix = useNr1RiskMatrix(filters);
   const summary = useNr1Summary(filters);
+  const generatePlan = useGenerateNr1ActionPlan();
+
+  const handleTreatRisk = (row: { category_key: string }) => {
+    generatePlan.mutate(
+      { categoryKey: row.category_key, departmentId: filters.departmentId, days: filters.days },
+      { onSuccess: () => navigate("/planos-acao") },
+    );
+  };
 
   const rows = matrix.data ?? [];
   const isLoading = matrix.isLoading || summary.isLoading;
@@ -106,7 +114,8 @@ export default function Nr1Risks() {
             <h2 className="text-lg font-semibold">Inventário de riscos psicossociais</h2>
             <Nr1RiskMatrix
               rows={rows}
-              onTreatRisk={() => navigate("/engajamento/diagnostico")}
+              onTreatRisk={handleTreatRisk}
+              isTreating={generatePlan.isPending}
             />
           </section>
         </>
