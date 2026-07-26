@@ -98,7 +98,7 @@ export function usePushDevices() {
     mutationFn: async (entry: PushDeviceEntry) => {
       const guard = canRevokeDevice(entry, { confirmedCurrent: true });
       if (!guard.allowed) throw new Error(guard.reason ?? "not_allowed");
-      const res = await pushSubscriptionService.revokeDevice(entry.id, { isCurrent: entry.isCurrent });
+      const res = await pushSubscriptionService.revokeDevice(entry.id, { isCurrent: entry.isCurrent, label: entry.label });
       if (!res.ok) {
         const map: Record<string, string> = {
           not_found: "Este dispositivo não está mais na sua conta.",

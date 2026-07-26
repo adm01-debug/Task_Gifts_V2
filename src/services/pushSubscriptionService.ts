@@ -5,7 +5,7 @@ import {
   type PushSyncEvent,
   type PushSyncEventType,
 } from "@/lib/deviceLabel";
-import type { PushDeviceRow } from "@/lib/pushDevices";
+import { buildRevocationNotice, type PushDeviceEntry, type PushDeviceRow } from "@/lib/pushDevices";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const db = supabase as any;
@@ -258,7 +258,7 @@ export const pushSubscriptionService = {
    */
   async revokeDevice(
     subscriptionId: string,
-    options: { isCurrent?: boolean } = {},
+    options: { isCurrent?: boolean; label?: string } = {},
   ): Promise<{ ok: boolean; alreadyRevoked?: boolean; reason?: string }> {
     try {
       const { data, error } = await db.rpc("revoke_push_device", {
@@ -285,10 +285,50 @@ export const pushSubscriptionService = {
       }
 
       const row = Array.isArray(data) ? data[0] : data;
-      return { ok: true, alreadyRevoked: row?.revoked === false };
+      const alreadyRevoked = row?.revoked === false;
+      // Avisa a conta (todos os aparelhos veem o alerta in-app) apenas quando
+      // houve mudança real de estado — reprocessar não deve gerar ruído.
+      if (!alreadyRevoked) {
+        await this.notifyRevocation({
+          id: subscriptionId,
+          label: options.label ?? "Dispositivo desconhecido",
+          isCurrent: options.isCurrent === true,
+        });
+      }
+      return { ok: true, alreadyRevoked };
     } catch (err) {
       logger.error("push_revoke_device_failed", "push", err);
       return { ok: false, reason: "revoke_failed" };
+    }
+  },
+
+  /**
+   * Registra o aviso in-app de revogação. Best-effort: uma falha aqui não
+   * pode reverter nem mascarar a revogação, que é a ação de segurança.
+   */
+  async notifyRevocation(
+    entry: Pick<PushDeviceEntry, "id" | "label" | "isCurrent">,
+  ): Promise<void> {
+    const notice = buildRevocationNotice(entry);
+    if (!notice) return;
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+      await db.from("notifications").insert({
+        user_id: user.id,
+        type: notice.type,
+        title: notice.title,
+        message: notice.message,
+        data: notice.data,
+      });
+      await recordSyncEvent({
+        userId: user.id,
+        event: "revoked",
+        deviceLabel: notice.data.device_label,
+        detail: notice.message,
+      });
+    } catch (err) {
+      logger.error("push_revocation_notice_failed", "push", err);
     }
   },
 

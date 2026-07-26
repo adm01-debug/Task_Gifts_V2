@@ -243,3 +243,54 @@ export function buildNewDeviceMessage(
   const ip = typeof alert?.ip_address === "string" ? alert.ip_address.trim() : "";
   return ip ? `Novo acesso: ${name} (IP: ${ip})` : `Novo acesso: ${name}`;
 }
+
+/* -------------------------------------------------------------------------- */
+/* Aviso de revogação                                                         */
+/* -------------------------------------------------------------------------- */
+
+export interface RevocationNotice {
+  type: "security_device_revoked";
+  title: string;
+  message: string;
+  data: {
+    subscription_id: string;
+    device_label: string;
+    was_current: boolean;
+    revoked_at: string;
+  };
+}
+
+/**
+ * Monta o aviso in-app enviado à conta quando um dispositivo é revogado.
+ *
+ * Regras:
+ *  - nunca expõe o endpoint (URL sensível), apenas o apelido/plataforma;
+ *  - a data usada é sempre a do momento da revogação (parâmetro `now`),
+ *    para o texto continuar determinístico em testes;
+ *  - o texto diferencia revogação do próprio aparelho da de um remoto,
+ *    porque a ação esperada do usuário é diferente em cada caso.
+ */
+export function buildRevocationNotice(
+  entry: Pick<PushDeviceEntry, "id" | "label" | "isCurrent"> | null | undefined,
+  now: Date = new Date(),
+): RevocationNotice | null {
+  if (!entry || typeof entry.id !== "string" || !entry.id.trim()) return null;
+  const ts = now instanceof Date && Number.isFinite(now.getTime()) ? now : new Date();
+  const rawLabel = typeof entry.label === "string" ? entry.label.trim() : "";
+  const label = rawLabel || "Dispositivo desconhecido";
+  const wasCurrent = entry.isCurrent === true;
+
+  return {
+    type: "security_device_revoked",
+    title: "Acesso de dispositivo removido",
+    message: wasCurrent
+      ? `Você removeu as notificações deste dispositivo (${label}). Reative quando quiser voltar a recebê-las.`
+      : `As notificações de "${label}" foram revogadas. Se não foi você, troque sua senha imediatamente.`,
+    data: {
+      subscription_id: entry.id.trim(),
+      device_label: label,
+      was_current: wasCurrent,
+      revoked_at: ts.toISOString(),
+    },
+  };
+}

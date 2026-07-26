@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { BellOff, BellRing, History, PencilLine, RefreshCw, TriangleAlert } from "lucide-react";
+import { BellOff, BellRing, History, PencilLine, RefreshCw, ShieldX, TriangleAlert } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
@@ -11,6 +11,7 @@ const EVENT_ICON: Record<PushSyncEntry["event"], typeof History> = {
   refreshed: RefreshCw,
   renamed: PencilLine,
   disabled: BellOff,
+  revoked: ShieldX,
   failed: TriangleAlert,
 };
 

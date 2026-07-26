@@ -21,6 +21,7 @@ import { RateLimitRulesPanel } from "@/components/security/RateLimitRulesPanel";
 import { LoginAttemptsPanel } from "@/components/security/LoginAttemptsPanel";
 import { SessionsPanel } from "@/components/security/SessionsPanel";
 import { DevicesPanel } from "@/components/security/DevicesPanel";
+import { PushDeviceList } from "@/components/push/PushDeviceList";
 import { SecurityNotificationsToggle } from "@/components/security/SecurityNotificationsToggle";
 import { PasskeysPanel } from "@/components/security/PasskeysPanel";
 import { TwoFactorSetup } from "@/components/auth/TwoFactorSetup";
@@ -143,7 +144,7 @@ export default function SecurityDashboard() {
 
           <TabsContent value="passkeys" className="space-y-6"><PasskeysPanel /></TabsContent>
           <TabsContent value="mfa" className="space-y-6"><TwoFactorSetup /><SecurityNotificationsToggle /></TabsContent>
-          <TabsContent value="devices"><DevicesPanel /></TabsContent>
+          <TabsContent value="devices" className="space-y-6"><DevicesPanel /><PushDeviceList /></TabsContent>
           <TabsContent value="sessions"><SessionsPanel /></TabsContent>
           <TabsContent value="alerts"><SecurityAlertsPanel /></TabsContent>
 
