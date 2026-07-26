@@ -5668,6 +5668,7 @@ export type Database = {
         Row: {
           auth: string
           created_at: string
+          device_fingerprint: string | null
           device_label: string | null
           disabled_at: string | null
           disabled_reason: string | null
@@ -5683,6 +5684,7 @@ export type Database = {
         Insert: {
           auth: string
           created_at?: string
+          device_fingerprint?: string | null
           device_label?: string | null
           disabled_at?: string | null
           disabled_reason?: string | null
@@ -5698,6 +5700,7 @@ export type Database = {
         Update: {
           auth?: string
           created_at?: string
+          device_fingerprint?: string | null
           device_label?: string | null
           disabled_at?: string | null
           disabled_reason?: string | null
@@ -7423,6 +7426,8 @@ export type Database = {
           location_city: string | null
           location_country: string | null
           os: string | null
+          revoked_at: string | null
+          revoked_reason: string | null
           user_agent: string | null
           user_id: string
         }
@@ -7439,6 +7444,8 @@ export type Database = {
           location_city?: string | null
           location_country?: string | null
           os?: string | null
+          revoked_at?: string | null
+          revoked_reason?: string | null
           user_agent?: string | null
           user_id: string
         }
@@ -7455,6 +7462,8 @@ export type Database = {
           location_city?: string | null
           location_country?: string | null
           os?: string | null
+          revoked_at?: string | null
+          revoked_reason?: string | null
           user_agent?: string | null
           user_id?: string
         }
@@ -8244,6 +8253,28 @@ export type Database = {
           verified_at: string
         }[]
       }
+      get_account_devices: {
+        Args: never
+        Returns: {
+          browser: string
+          created_at: string
+          device_key: string
+          device_label: string
+          device_type: string
+          disabled_at: string
+          disabled_reason: string
+          endpoint: string
+          failure_count: number
+          fingerprint: string
+          is_trusted: boolean
+          last_seen_at: string
+          last_used_at: string
+          os: string
+          push_active: boolean
+          subscription_id: string
+          user_agent: string
+        }[]
+      }
       get_active_engagement_cycle: {
         Args: never
         Returns: {
@@ -8687,6 +8718,13 @@ export type Database = {
           p_status?: string
         }
         Returns: string
+      }
+      revoke_device_by_fingerprint: {
+        Args: { p_fingerprint: string; p_reason?: string }
+        Returns: {
+          revoked: boolean
+          subscriptions_revoked: number
+        }[]
       }
       revoke_push_device: {
         Args: { p_reason?: string; p_subscription_id: string }

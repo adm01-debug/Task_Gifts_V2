@@ -1,6 +1,7 @@
 import { useState, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { logger } from '@/services/loggingService';
+import { collectFingerprintSignals, computeDeviceFingerprint } from '@/lib/deviceFingerprint';
 
 interface DeviceInfo {
   fingerprint: string;
@@ -42,22 +43,11 @@ export const useDeviceDetection = () => {
   // Gerar fingerprint do dispositivo
   const generateFingerprint = useCallback((): DeviceInfo => {
     const nav = navigator;
-    const screen = window.screen;
-    
-    // Coletar informações do dispositivo
-    const components = [
-      nav.userAgent,
-      nav.language,
-      screen.colorDepth,
-      screen.width + 'x' + screen.height,
-      new Date().getTimezoneOffset(),
-      nav.hardwareConcurrency || 'unknown',
-      (nav as Navigator & { deviceMemory?: number }).deviceMemory?.toString() || 'unknown',
-    ];
-    
-    // Criar hash simples
-    const fingerprint = btoa(components.join('|')).substring(0, 32);
-    
+
+    // Mesma derivação usada pelas inscrições de push: é a chave que une
+    // `user_devices` e `push_subscriptions` no mesmo aparelho.
+    const fingerprint = computeDeviceFingerprint(collectFingerprintSignals());
+
     // Detectar browser
     const userAgent = nav.userAgent;
     let browser = 'Desconhecido';

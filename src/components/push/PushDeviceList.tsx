@@ -45,10 +45,12 @@ export function PushDeviceList({ className }: PushDeviceListProps) {
       <CardHeader className="pb-3">
         <CardTitle className="text-base flex items-center gap-2">
           <ShieldCheck className="h-5 w-5 text-primary" aria-hidden />
-          Dispositivos inscritos
+          Aparelhos da conta
         </CardTitle>
         <CardDescription>
-          {isLoading ? "Carregando dispositivos…" : summary.text}
+          {isLoading
+            ? "Carregando aparelhos…"
+            : `${summary.text} · acessos e notificações unificados por aparelho`}
         </CardDescription>
       </CardHeader>
 
@@ -60,7 +62,8 @@ export function PushDeviceList({ className }: PushDeviceListProps) {
           </div>
         ) : devices.length === 0 ? (
           <p className="text-sm text-muted-foreground">
-            Nenhum dispositivo inscrito ainda. Ative as notificações para ver seus aparelhos aqui.
+            Nenhum aparelho registrado ainda. Ao entrar na conta ou ativar as notificações, o
+            aparelho aparece aqui.
           </p>
         ) : (
           <ul className="space-y-2">
@@ -79,10 +82,15 @@ export function PushDeviceList({ className }: PushDeviceListProps) {
                     <Badge variant={STATUS_VARIANT[entry.status]} className="text-[10px]">
                       {entry.statusLabel}
                     </Badge>
+                    {!entry.pushActive && entry.status !== "revoked" && (
+                      <Badge variant="outline" className="text-[10px]">
+                        Sem notificações
+                      </Badge>
+                    )}
                   </div>
                   <p className="text-xs text-muted-foreground">
                     {entry.hasCustomLabel ? `${entry.platform} · ` : ""}
-                    Último uso {entry.lastUsedRelative}
+                    {entry.pushActive ? `Último uso ${entry.lastUsedRelative}` : "Somente acesso à conta"}
                   </p>
                   {entry.failureCount > 0 && entry.status !== "revoked" && (
                     <p className="mt-1 flex items-center gap-1 text-xs text-destructive">
