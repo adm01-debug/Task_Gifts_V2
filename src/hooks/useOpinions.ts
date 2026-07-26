@@ -84,3 +84,16 @@ export function useSetOpinionStatus() {
     onError: (err: unknown) => reportError(err, "Não foi possível atualizar a situação"),
   });
 }
+
+export function useGenerateOpinionActionPlan() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (opinionId: string) => opinionsService.generateActionPlan(opinionId),
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: [KEY] });
+      void queryClient.invalidateQueries({ queryKey: ["action-plans"] });
+      toast.success("Plano 5W2H criado", { description: "Acompanhe em Planos de Ação." });
+    },
+    onError: (err: unknown) => reportError(err, "Não foi possível gerar o plano de ação"),
+  });
+}
