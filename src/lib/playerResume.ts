@@ -111,7 +111,10 @@ export function saveResume(
   userId: string | null | undefined,
   state: ResumeState,
 ): boolean {
-  const normalized = normalizeResume(state, Date.now());
+  const now = Date.now();
+  // O carimbo de tempo é sempre do servidor local no momento da escrita,
+  // impedindo que um estado com relógio adiantado seja rejeitado na leitura.
+  const normalized = normalizeResume({ ...state, updatedAt: now }, now);
   if (!normalized) return false;
   try {
     window.localStorage.setItem(

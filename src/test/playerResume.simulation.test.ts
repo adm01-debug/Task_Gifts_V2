@@ -109,20 +109,20 @@ describe("retomada do player — simulação", () => {
     for (let i = 0; i < 200; i++) {
       const state = base({ moduleId: `mod-${i}`, position: i % 17 });
       expect(saveResume("user-1", state)).toBe(true);
-      const loaded = loadResume("user-1", `mod-${i}`, NOW);
+      const loaded = loadResume("user-1", `mod-${i}`);
       expect(loaded?.position).toBe(i % 17);
       // Outro usuário nunca enxerga o progresso alheio.
-      expect(loadResume("user-2", `mod-${i}`, NOW)).toBeNull();
+      expect(loadResume("user-2", `mod-${i}`)).toBeNull();
       clearResume("user-1", `mod-${i}`);
-      expect(loadResume("user-1", `mod-${i}`, NOW)).toBeNull();
+      expect(loadResume("user-1", `mod-${i}`)).toBeNull();
     }
   });
 
   it("auto-limpa registros corrompidos no storage", () => {
     window.localStorage.setItem(resumeKey("u", "m"), "{não é json");
-    expect(loadResume("u", "m", NOW)).toBeNull();
+    expect(loadResume("u", "m")).toBeNull();
     window.localStorage.setItem(resumeKey("u", "m"), JSON.stringify({ foo: 1 }));
-    expect(loadResume("u", "m", NOW)).toBeNull();
+    expect(loadResume("u", "m")).toBeNull();
     expect(window.localStorage.getItem(resumeKey("u", "m"))).toBeNull();
   });
 
