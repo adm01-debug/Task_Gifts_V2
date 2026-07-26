@@ -42,6 +42,22 @@ export function useEngagementNps(filters: DiagnosticsFilters = {}) {
   });
 }
 
+export function useEngagementNpsHistory(
+  filters: DiagnosticsFilters & { months?: number; bucket?: "month" | "week" } = {},
+) {
+  return useQuery({
+    queryKey: [
+      "engagement-diagnostics",
+      "nps-history",
+      filters.departmentId ?? "all",
+      filters.months ?? 12,
+      filters.bucket ?? "month",
+    ],
+    queryFn: () => engagementDiagnosticsService.getNpsHistory(filters),
+    staleTime: STALE,
+  });
+}
+
 export function useEngagementCorrelations(days = 180) {
   return useQuery({
     queryKey: ["engagement-diagnostics", "correlations", days],
