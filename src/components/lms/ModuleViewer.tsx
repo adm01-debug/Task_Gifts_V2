@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import DOMPurify from "dompurify";
 import { 
@@ -12,6 +12,46 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import type { TrailModule } from "@/services/trailsService";
+import { useAuth } from "@/hooks/useAuth";
+import {
+  clearResume,
+  describeResume,
+  loadResume,
+  safeResumePosition,
+  saveResume,
+  type ResumableContentType,
+  type ResumeState,
+} from "@/lib/playerResume";
+
+/** Estado parcial reportado pelos conteúdos para persistência de retomada. */
+interface ProgressSnapshot {
+  position: number;
+  answers?: number[];
+  checked?: number[];
+}
+
+/**
+ * Atalhos de teclado do player. Ignora eventos originados em campos editáveis
+ * para não sequestrar a digitação do usuário.
+ */
+function useContentShortcuts(handler: (key: string) => void, enabled = true) {
+  const handlerRef = useRef(handler);
+  handlerRef.current = handler;
+
+  useEffect(() => {
+    if (!enabled) return;
+    const onKeyDown = (event: KeyboardEvent) => {
+      const target = event.target as HTMLElement | null;
+      if (target?.isContentEditable) return;
+      const tag = target?.tagName;
+      if (tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT") return;
+      if (event.metaKey || event.ctrlKey || event.altKey) return;
+      handlerRef.current(event.key);
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [enabled]);
+}
 
 interface QuizQuestion {
   question: string;
@@ -125,28 +165,64 @@ function TextContent({ content }: { content: { text?: string; html?: string } })
 
 function QuizContent({ 
   questions, 
-  onComplete 
+  onComplete,
+  initialPosition = 0,
+  initialAnswers,
+  onProgress,
 }: { 
   questions: QuizQuestion[]; 
   onComplete: (score: number) => void;
+  initialPosition?: number;
+  initialAnswers?: number[];
+  onProgress?: (snapshot: ProgressSnapshot) => void;
 }) {
-  const [currentQuestion, setCurrentQuestion] = useState(0);
-  const [answers, setAnswers] = useState<number[]>([]);
+  const [currentQuestion, setCurrentQuestion] = useState(initialPosition);
+  const [answers, setAnswers] = useState<number[]>(initialAnswers ?? []);
   const [showResults, setShowResults] = useState(false);
+
+  const report = useCallback(
+    (position: number, nextAnswers: number[]) => {
+      onProgress?.({ position, answers: nextAnswers });
+    },
+    [onProgress],
+  );
 
   const handleAnswer = (answerIndex: number) => {
     const newAnswers = [...answers];
     newAnswers[currentQuestion] = answerIndex;
     setAnswers(newAnswers);
+    report(currentQuestion, newAnswers);
   };
 
   const handleNext = () => {
     if (currentQuestion < questions.length - 1) {
-      setCurrentQuestion(currentQuestion + 1);
+      const next = currentQuestion + 1;
+      setCurrentQuestion(next);
+      report(next, answers);
     } else {
       setShowResults(true);
     }
   };
+
+  const handlePrev = useCallback(() => {
+    setCurrentQuestion((prev) => {
+      const next = Math.max(0, prev - 1);
+      report(next, answers);
+      return next;
+    });
+  }, [answers, report]);
+
+  // Teclado: 1..9 seleciona alternativa, setas navegam entre questões.
+  useContentShortcuts((key) => {
+    if (showResults) return;
+    const numeric = Number.parseInt(key, 10);
+    if (!Number.isNaN(numeric) && numeric >= 1 && numeric <= questions[currentQuestion]?.options.length) {
+      handleAnswer(numeric - 1);
+      return;
+    }
+    if (key === "ArrowLeft") handlePrev();
+    if (key === "ArrowRight" && answers[currentQuestion] !== undefined) handleNext();
+  }, questions.length > 0);
 
   const calculateScore = () => {
     const correct = questions.reduce((acc, q, i) => {
@@ -198,7 +274,7 @@ function QuizContent({
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <span className="text-sm text-muted-foreground">
+        <span className="text-sm text-muted-foreground" aria-live="polite">
           Questão {currentQuestion + 1} de {questions.length}
         </span>
         <Progress value={(currentQuestion / questions.length) * 100} className="w-32 h-2" />
@@ -237,7 +313,7 @@ function QuizContent({
         <Button
           variant="outline"
           className="h-12 px-6 font-bold tracking-tight rounded-xl border-2"
-          onClick={() => setCurrentQuestion(Math.max(0, currentQuestion - 1))}
+          onClick={handlePrev}
           disabled={currentQuestion === 0}
         >
           <ChevronLeft className="h-4 w-4 mr-2" />
