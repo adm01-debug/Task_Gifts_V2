@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { certificationsService, type CertificateVerification } from "@/services/certificationsService";
-import { logger } from "@/lib/logger";
+import { logger } from "@/services/loggingService";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 
