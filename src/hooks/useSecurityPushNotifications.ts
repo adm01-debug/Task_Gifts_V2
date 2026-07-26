@@ -3,6 +3,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { usePushNotifications } from "@/hooks/usePushNotifications";
 import { toast } from "sonner";
+import { usePushDevices } from "@/hooks/usePushDevice";
+import { buildNewDeviceMessage } from "@/lib/pushDevices";
 
 interface SecurityAlert {
   id: string;
@@ -36,6 +38,7 @@ interface NewDeviceAlert {
   user_id: string;
   device_id: string;
   ip_address: string;
+  user_agent?: string | null;
   browser?: string;
   os?: string;
   created_at: string;
@@ -44,6 +47,9 @@ interface NewDeviceAlert {
 export function useSecurityPushNotifications() {
   const { user } = useAuth();
   const { isGranted, showNotification, requestPermission } = usePushNotifications();
+  // Dispositivos já batizados pelo usuário: permitem dizer "iPhone do João"
+  // em vez de "Chrome em Windows" no alerta de novo acesso.
+  const { devices } = usePushDevices();
 
   // Helper to show security alert notification
   const notifySecurityAlert = useCallback((alert: SecurityAlert) => {
@@ -64,11 +70,8 @@ export function useSecurityPushNotifications() {
 
   // Helper to show new device notification
   const notifyNewDevice = useCallback((alert: NewDeviceAlert) => {
-    const browserInfo = alert.browser ? `${alert.browser}` : 'Navegador desconhecido';
-    const osInfo = alert.os ? ` em ${alert.os}` : '';
-    
     return showNotification('🔐 Novo dispositivo detectado', {
-      body: `Login de ${browserInfo}${osInfo} (IP: ${alert.ip_address})`,
+      body: buildNewDeviceMessage(alert, devices),
       tag: `new-device-${alert.id}`,
       requireInteraction: true,
       data: { 
@@ -77,7 +80,7 @@ export function useSecurityPushNotifications() {
         url: '/security?tab=devices' 
       },
     });
-  }, [showNotification]);
+  }, [showNotification, devices]);
 
   // Subscribe to real-time security alerts
   useEffect(() => {
