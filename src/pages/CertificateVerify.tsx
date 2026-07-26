@@ -41,7 +41,7 @@ export default function CertificateVerify() {
       const result = await certificationsService.verifyCertificate(normalized);
       setState(result ? { kind: "found", data: result } : { kind: "not-found" });
     } catch (err: unknown) {
-      logger.error("Falha ao verificar certificado", err);
+      logger.error("Falha ao verificar certificado", "CertificateVerify", err);
       setState({ kind: "error", message: "Não foi possível consultar o certificado agora. Tente novamente." });
     }
   }, []);
