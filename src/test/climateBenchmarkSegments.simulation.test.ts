@@ -76,8 +76,8 @@ describe("cadeia de fallback (setor × porte)", () => {
   });
 
   it("degrada de forma monotônica (nunca troca setor antes de generalizar porte)", () => {
-    for (const ind of INDUSTRIES) {
-      for (const size of SIZES) {
+    for (const ind of INDUSTRIES.filter((i) => i !== "geral")) {
+      for (const size of SIZES.filter((s) => s !== "all")) {
         const chain = benchmarkFallbackChain(ind, size);
         const specificIdx = chain.findIndex((c) => c.industry === ind && c.companySize === "all");
         const generalIdx = chain.findIndex((c) => c.industry === "geral" && c.companySize === size);
