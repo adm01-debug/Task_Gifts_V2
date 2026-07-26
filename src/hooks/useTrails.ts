@@ -158,6 +158,51 @@ export function useCreateModule() {
   });
 }
 
+export function useUpdateModule() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ id, updates }: { id: string; updates: Partial<TrailModule> }) =>
+      trailsService.updateModule(id, updates),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: trailKeys.all });
+    },
+    onError: (error: Error) => {
+      showErrorToast(error, "atualizar módulo");
+    },
+  });
+}
+
+export function useDeleteModule() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (id: string) => trailsService.deleteModule(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: trailKeys.all });
+      toast.success("Módulo removido");
+    },
+    onError: (error: Error) => {
+      showErrorToast(error, "remover módulo");
+    },
+  });
+}
+
+export function useReorderModules() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (changes: { id: string; order_index: number }[]) =>
+      trailsService.reorderModules(changes),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: trailKeys.all });
+    },
+    onError: (error: Error) => {
+      showErrorToast(error, "reordenar módulos");
+    },
+  });
+}
+
 export function useUpdateTrail() {
   const queryClient = useQueryClient();
 

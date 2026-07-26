@@ -428,6 +428,20 @@ export const trailsService = {
     if (error) throw error;
   },
 
+  // Persist a batch of order_index changes (drag & drop reordering)
+  async reorderModules(changes: { id: string; order_index: number }[]): Promise<void> {
+    if (changes.length === 0) return;
+
+    for (const change of changes) {
+      const { error } = await supabase
+        .from("trail_modules")
+        .update({ order_index: change.order_index })
+        .eq("id", change.id);
+
+      if (error) throw error;
+    }
+  },
+
   // Delete trail
   async deleteTrail(id: string): Promise<void> {
     const { error } = await supabase
