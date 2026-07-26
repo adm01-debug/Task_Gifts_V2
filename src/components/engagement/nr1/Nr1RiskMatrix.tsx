@@ -13,13 +13,15 @@ import {
 export interface Nr1RiskMatrixProps {
   rows: Nr1RiskRow[];
   onTreatRisk?: (row: Nr1RiskRow) => void;
+  /** Bloqueia os botões enquanto um plano está sendo gerado. */
+  isTreating?: boolean;
   className?: string;
 }
 
 /** Grau máximo teórico da matriz (probabilidade 10 x severidade 3). */
 const MAX_GRADE = 30;
 
-export function Nr1RiskMatrix({ rows, onTreatRisk, className }: Nr1RiskMatrixProps) {
+export function Nr1RiskMatrix({ rows, onTreatRisk, isTreating = false, className }: Nr1RiskMatrixProps) {
   if (rows.length === 0) return null;
 
   return (
@@ -80,9 +82,10 @@ export function Nr1RiskMatrix({ rows, onTreatRisk, className }: Nr1RiskMatrixPro
                     size="sm"
                     variant="outline"
                     className="min-h-11 sm:min-h-9"
+                    disabled={isTreating}
                     onClick={() => onTreatRisk(row)}
                   >
-                    Tratar risco
+                    {isTreating ? "Gerando plano..." : "Gerar plano de tratativa"}
                   </Button>
                 )}
               </div>

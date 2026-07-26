@@ -19,7 +19,8 @@ function formatDate(value: string): string {
 
 /** Cartão resumido de um plano de ação de clima. */
 export function ActionPlanCard({ plan, isSelected = false, onSelect }: ActionPlanCardProps) {
-  const isAuto = plan.source === "engagement_factor";
+  const isNr1 = plan.source === "nr1_category";
+  const isAuto = plan.source === "engagement_factor" || isNr1;
 
   return (
     <Card
@@ -54,7 +55,7 @@ export function ActionPlanCard({ plan, isSelected = false, onSelect }: ActionPla
           {isAuto && (
             <span className="inline-flex items-center gap-1 text-primary">
               <Sparkles className="h-3 w-3" aria-hidden />
-              Gerado do diagnóstico
+              {isNr1 ? "Tratativa NR-1" : "Gerado do diagnóstico"}
             </span>
           )}
         </div>

@@ -189,6 +189,7 @@ export type Database = {
           engagement_factor_id: string | null
           id: string
           initial_score: number | null
+          nr1_category_id: string | null
           owner_id: string
           pillar: Database["public"]["Enums"]["climate_pillar"] | null
           progress_percent: number
@@ -215,6 +216,7 @@ export type Database = {
           engagement_factor_id?: string | null
           id?: string
           initial_score?: number | null
+          nr1_category_id?: string | null
           owner_id: string
           pillar?: Database["public"]["Enums"]["climate_pillar"] | null
           progress_percent?: number
@@ -241,6 +243,7 @@ export type Database = {
           engagement_factor_id?: string | null
           id?: string
           initial_score?: number | null
+          nr1_category_id?: string | null
           owner_id?: string
           pillar?: Database["public"]["Enums"]["climate_pillar"] | null
           progress_percent?: number
@@ -269,6 +272,13 @@ export type Database = {
             columns: ["engagement_factor_id"]
             isOneToOne: false
             referencedRelation: "engagement_factors"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "action_plans_nr1_category_id_fkey"
+            columns: ["nr1_category_id"]
+            isOneToOne: false
+            referencedRelation: "nr1_risk_categories"
             referencedColumns: ["id"]
           },
           {
@@ -8120,6 +8130,14 @@ export type Database = {
           p_days?: number
           p_department_id?: string
           p_factor_key: string
+        }
+        Returns: string
+      }
+      generate_action_plan_from_nr1_category: {
+        Args: {
+          p_category_key: string
+          p_days?: number
+          p_department_id?: string
         }
         Returns: string
       }
