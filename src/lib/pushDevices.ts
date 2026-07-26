@@ -28,6 +28,16 @@ export interface PushDeviceRow {
   disabled_at: string | null;
   disabled_reason: string | null;
   failure_count: number | null;
+  /** Chave que une o aparelho entre acessos e notificações. */
+  device_fingerprint?: string | null;
+  /** Id da inscrição de push; `null` quando o aparelho só tem histórico de acesso. */
+  subscription_id?: string | null;
+  browser?: string | null;
+  os?: string | null;
+  device_type?: string | null;
+  is_trusted?: boolean | null;
+  push_active?: boolean | null;
+  last_seen_at?: string | null;
 }
 
 export type PushDeviceStatus = "current" | "active" | "idle" | "revoked";
@@ -35,6 +45,15 @@ export type PushDeviceStatus = "current" | "active" | "idle" | "revoked";
 export interface PushDeviceEntry {
   id: string;
   endpoint: string;
+  /** Impressão digital do aparelho, quando conhecida. */
+  fingerprint: string | null;
+  /** Inscrição de push associada; `null` = aparelho sem push ativo. */
+  subscriptionId: string | null;
+  /** `true` quando o aparelho ainda recebe notificações. */
+  pushActive: boolean;
+  isTrusted: boolean;
+  /** Último acesso registrado no histórico de login. */
+  lastSeenAt: string | null;
   /** Apelido salvo, senão a sugestão derivada do user agent. */
   label: string;
   /** `true` quando o apelido veio do usuário (e não da heurística de UA). */
