@@ -1,5 +1,13 @@
 import { useState } from "react";
-import { Laptop, Loader2, ShieldCheck, Smartphone, TriangleAlert } from "lucide-react";
+import {
+  HelpCircle,
+  Laptop,
+  Loader2,
+  ShieldCheck,
+  Smartphone,
+  Tablet,
+  TriangleAlert,
+} from "lucide-react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -16,7 +24,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 import { usePushDevices } from "@/hooks/usePushDevice";
-import type { PushDeviceEntry, PushDeviceStatus } from "@/lib/pushDevices";
+import type { PushDeviceEntry, PushDeviceKind, PushDeviceStatus } from "@/lib/pushDevices";
 
 const STATUS_VARIANT: Record<PushDeviceStatus, "default" | "secondary" | "outline" | "destructive"> = {
   current: "default",
@@ -25,10 +33,24 @@ const STATUS_VARIANT: Record<PushDeviceStatus, "default" | "secondary" | "outlin
   revoked: "destructive",
 };
 
+const KIND_ICON: Record<PushDeviceKind, typeof Laptop> = {
+  mobile: Smartphone,
+  tablet: Tablet,
+  desktop: Laptop,
+  unknown: HelpCircle,
+};
+
 function DeviceIcon({ entry }: { entry: PushDeviceEntry }) {
-  const mobile = /iPhone|iPad|Android/i.test(entry.platform);
-  const Icon = mobile ? Smartphone : Laptop;
-  return <Icon className="mt-0.5 h-5 w-5 shrink-0 text-muted-foreground" aria-hidden />;
+  const Icon = KIND_ICON[entry.kind];
+  return (
+    <Icon
+      className={cn(
+        "mt-0.5 h-5 w-5 shrink-0",
+        entry.isCurrent ? "text-primary" : "text-muted-foreground",
+      )}
+      aria-hidden
+    />
+  );
 }
 
 export interface PushDeviceListProps {
@@ -87,9 +109,15 @@ export function PushDeviceList({ className }: PushDeviceListProps) {
                         Sem notificações
                       </Badge>
                     )}
+                    {entry.isTrusted && entry.status !== "revoked" && (
+                      <Badge variant="outline" className="gap-1 text-[10px]">
+                        <ShieldCheck className="h-3 w-3" aria-hidden />
+                        Confiável
+                      </Badge>
+                    )}
                   </div>
                   <p className="text-xs text-muted-foreground">
-                    {entry.hasCustomLabel ? `${entry.platform} · ` : ""}
+                    {entry.descriptor ? `${entry.descriptor} · ` : entry.hasCustomLabel ? `${entry.platform} · ` : ""}
                     {entry.pushActive ? `Último uso ${entry.lastUsedRelative}` : "Somente acesso à conta"}
                   </p>
                   {entry.failureCount > 0 && entry.status !== "revoked" && (
