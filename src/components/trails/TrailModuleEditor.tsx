@@ -368,7 +368,7 @@ export function TrailModuleEditor({
         title="Excluir módulo"
         description={`O módulo "${pendingDelete?.title ?? ""}" e o progresso registrado nele serão removidos permanentemente.`}
         confirmText="Excluir"
-        variant="destructive"
+        variant="danger"
         onConfirm={async () => {
           if (!pendingDelete) return;
           await deleteModule.mutateAsync(pendingDelete.id);
