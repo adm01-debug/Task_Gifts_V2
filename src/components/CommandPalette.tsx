@@ -15,7 +15,8 @@ import {
   ClipboardCheck, BarChart3, Megaphone, MessageSquare,
   User, Settings, Shield, LogOut, Search, Bell,
   Moon, Sun
-} from "lucide-react";
+}, Activity 
+from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { useTheme } from "@/hooks/useTheme";
 import { useFuseSearch, getHighlightSegments, SEARCH_PRESETS } from "@/hooks/useFuseSearch";
