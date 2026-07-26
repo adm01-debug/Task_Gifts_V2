@@ -557,10 +557,90 @@ function ChecklistContent({
 }
 
 export default function ModuleViewer({ module, onComplete, onClose }: ModuleViewerProps) {
-  const [videoWatched, setVideoWatched] = useState(false);
-  const [textRead, setTextRead] = useState(false);
+  const { user } = useAuth();
+  const containerRef = useRef<HTMLDivElement>(null);
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
 
   const content = module.content as Record<string, unknown>;
+  const contentType = module.content_type as ResumableContentType;
+
+  /** Estado salvo lido uma única vez na montagem (sincronia com o storage local). */
+  const [savedResume] = useState<ResumeState | null>(() => loadResume(user?.id, module.id));
+  const [resumeApplied, setResumeApplied] = useState(false);
+  const [resumeDismissed, setResumeDismissed] = useState(false);
+
+  const totalItems = useMemo(() => {
+    if (contentType === "quiz") return ((content.questions as QuizQuestion[]) || []).length;
+    if (contentType === "flashcard") return ((content.cards as FlashCard[]) || []).length;
+    if (contentType === "checklist") return ((content.items as ChecklistItem[]) || []).length;
+    return 0;
+  }, [content, contentType]);
+
+  const showResumeBanner = Boolean(savedResume) && !resumeApplied && !resumeDismissed && totalItems > 0;
+  const startPosition = resumeApplied ? safeResumePosition(savedResume, totalItems) : 0;
+  const startAnswers = resumeApplied ? savedResume?.answers : undefined;
+  const startChecked = resumeApplied ? savedResume?.checked : undefined;
+
+  const handleProgress = useCallback(
+    (snapshot: ProgressSnapshot) => {
+      saveResume(user?.id, {
+        moduleId: module.id,
+        contentType,
+        position: snapshot.position,
+        answers: snapshot.answers,
+        checked: snapshot.checked,
+        updatedAt: Date.now(),
+      });
+    },
+    [contentType, module.id, user?.id],
+  );
+
+  /** Conclusão limpa a retomada — o módulo deixa de estar "em andamento". */
+  const handleComplete = useCallback(
+    (score?: number) => {
+      clearResume(user?.id, module.id);
+      onComplete(score);
+    },
+    [module.id, onComplete, user?.id],
+  );
+
+  // Acessibilidade: foco inicial, ESC para sair e armadilha de foco no diálogo.
+  useEffect(() => {
+    const previouslyFocused = document.activeElement as HTMLElement | null;
+    closeButtonRef.current?.focus();
+
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        event.stopPropagation();
+        onClose();
+        return;
+      }
+      if (event.key !== "Tab") return;
+
+      const focusables = containerRef.current?.querySelectorAll<HTMLElement>(
+        'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])',
+      );
+      if (!focusables || focusables.length === 0) return;
+      const first = focusables[0];
+      const last = focusables[focusables.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    };
+
+    document.addEventListener("keydown", onKeyDown);
+    const { overflow } = document.body.style;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.removeEventListener("keydown", onKeyDown);
+      document.body.style.overflow = overflow;
+      previouslyFocused?.focus?.();
+    };
+  }, [onClose]);
 
   const renderContent = () => {
     switch (module.content_type) {
@@ -569,7 +649,7 @@ export default function ModuleViewer({ module, onComplete, onClose }: ModuleView
           <div className="space-y-4">
             <VideoContent videoUrl={module.video_url || ""} />
              <Button 
-               onClick={() => onComplete()} 
+               onClick={() => handleComplete()} 
                className="w-full h-14 font-black uppercase tracking-widest text-xs gap-3 shadow-lg shadow-emerald-500/20 rounded-xl"
              >
                <CheckCircle2 className="h-5 w-5" />
@@ -585,7 +665,7 @@ export default function ModuleViewer({ module, onComplete, onClose }: ModuleView
               <TextContent content={content as { text?: string; html?: string }} />
             </div>
              <Button 
-               onClick={() => onComplete()} 
+               onClick={() => handleComplete()} 
                className="w-full h-14 font-black uppercase tracking-widest text-xs gap-3 shadow-lg shadow-emerald-500/20 rounded-xl"
              >
                <CheckCircle2 className="h-5 w-5" />
@@ -598,7 +678,10 @@ export default function ModuleViewer({ module, onComplete, onClose }: ModuleView
         return (
           <QuizContent 
             questions={(content.questions as QuizQuestion[]) || []} 
-            onComplete={onComplete}
+            onComplete={handleComplete}
+            initialPosition={startPosition}
+            initialAnswers={startAnswers}
+            onProgress={handleProgress}
           />
         );
 
@@ -606,7 +689,10 @@ export default function ModuleViewer({ module, onComplete, onClose }: ModuleView
         return (
           <FlashcardsContent 
             cards={(content.cards as FlashCard[]) || []} 
-            onComplete={() => onComplete()}
+            onComplete={() => handleComplete()}
+            initialPosition={startPosition}
+            initialReviewed={startChecked}
+            onProgress={handleProgress}
           />
         );
 
@@ -614,7 +700,9 @@ export default function ModuleViewer({ module, onComplete, onClose }: ModuleView
         return (
           <ChecklistContent 
             items={(content.items as ChecklistItem[]) || []} 
-            onComplete={() => onComplete()}
+            onComplete={() => handleComplete()}
+            initialChecked={startChecked}
+            onProgress={handleProgress}
           />
         );
 
@@ -622,7 +710,7 @@ export default function ModuleViewer({ module, onComplete, onClose }: ModuleView
         return (
           <div className="text-center py-8">
             <p className="text-muted-foreground">Tipo de conteúdo não suportado</p>
-            <Button onClick={() => onComplete()} className="mt-4">
+            <Button onClick={() => handleComplete()} className="mt-4">
               Pular Módulo
             </Button>
           </div>
@@ -635,6 +723,10 @@ export default function ModuleViewer({ module, onComplete, onClose }: ModuleView
        initial={{ opacity: 0 }}
        animate={{ opacity: 1 }}
        exit={{ opacity: 0 }}
+       ref={containerRef}
+       role="dialog"
+       aria-modal="true"
+       aria-labelledby="module-viewer-title"
        className="fixed inset-0 z-[100] bg-background/98 backdrop-blur-xl overflow-y-auto"
      >
        <div className="container max-w-4xl mx-auto px-4 py-8 md:py-12">
@@ -650,7 +742,7 @@ export default function ModuleViewer({ module, onComplete, onClose }: ModuleView
                    Módulo em Curso
                  </span>
                </div>
-               <h2 className="text-2xl font-black tracking-tight">{module.title}</h2>
+               <h2 id="module-viewer-title" className="text-2xl font-black tracking-tight">{module.title}</h2>
              </div>
            </div>
            
@@ -663,6 +755,32 @@ export default function ModuleViewer({ module, onComplete, onClose }: ModuleView
              <X className="h-6 w-6" />
            </Button>
          </div>
+
+         {showResumeBanner && savedResume && (
+           <div
+             role="status"
+             className="mb-6 flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-primary/20 bg-primary/5 p-4"
+           >
+             <p className="text-sm font-semibold text-foreground">
+               {describeResume(savedResume, totalItems)}
+             </p>
+             <div className="flex gap-2">
+               <Button size="sm" onClick={() => setResumeApplied(true)}>
+                 Retomar
+               </Button>
+               <Button
+                 size="sm"
+                 variant="ghost"
+                 onClick={() => {
+                   clearResume(user?.id, module.id);
+                   setResumeDismissed(true);
+                 }}
+               >
+                 Começar do início
+               </Button>
+             </div>
+           </div>
+         )}
 
          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
            {/* Main Content Area */}
