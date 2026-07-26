@@ -1,8 +1,14 @@
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { pushSubscriptionService } from "@/services/pushSubscriptionService";
 import { normalizeDeviceLabel } from "@/lib/deviceLabel";
+import {
+  buildDeviceList,
+  canRevokeDevice,
+  summarizeDevices,
+  type PushDeviceEntry,
+} from "@/lib/pushDevices";
 
 const DEVICE_KEY = ["push", "current-device"] as const;
 const SYNC_KEY = ["push", "sync-events"] as const;
@@ -59,6 +65,74 @@ export function usePushDevice() {
 }
 
 /** Histórico curto das últimas sincronizações deste usuário. */
+const DEVICES_KEY = ["push", "devices"] as const;
+const ENDPOINT_KEY = ["push", "current-endpoint"] as const;
+
+/**
+ * Lista de dispositivos inscritos + revogação remota.
+ *
+ * A lista é derivada da camada pura `buildDeviceList`, que decide status,
+ * rótulo e ordenação — o hook só cuida de cache, invalidação e feedback.
+ */
+export function usePushDevices() {
+  const queryClient = useQueryClient();
+
+  const endpoint = useQuery({
+    queryKey: ENDPOINT_KEY,
+    queryFn: () => pushSubscriptionService.getCurrentEndpoint(),
+    staleTime: 60_000,
+  });
+
+  const query = useQuery({
+    queryKey: DEVICES_KEY,
+    queryFn: () => pushSubscriptionService.listDevices(),
+    staleTime: 30_000,
+  });
+
+  const devices = useMemo(
+    () => buildDeviceList(query.data, { currentEndpoint: endpoint.data ?? null }),
+    [query.data, endpoint.data],
+  );
+
+  const revoke = useMutation({
+    mutationFn: async (entry: PushDeviceEntry) => {
+      const guard = canRevokeDevice(entry, { confirmedCurrent: true });
+      if (!guard.allowed) throw new Error(guard.reason ?? "not_allowed");
+      const res = await pushSubscriptionService.revokeDevice(entry.id, { isCurrent: entry.isCurrent });
+      if (!res.ok) {
+        const map: Record<string, string> = {
+          not_found: "Este dispositivo não está mais na sua conta.",
+          not_authenticated: "Faça login novamente para remover dispositivos.",
+          revoke_failed: "Não foi possível remover o acesso deste dispositivo.",
+        };
+        throw new Error(map[res.reason ?? ""] ?? "Não foi possível remover o acesso deste dispositivo.");
+      }
+      return { entry, alreadyRevoked: res.alreadyRevoked === true };
+    },
+    onSuccess: ({ entry, alreadyRevoked }) => {
+      toast.success(
+        alreadyRevoked
+          ? `${entry.label} já estava sem acesso.`
+          : `Acesso removido de ${entry.label}.`,
+      );
+      void queryClient.invalidateQueries({ queryKey: DEVICES_KEY });
+      void queryClient.invalidateQueries({ queryKey: DEVICE_KEY });
+      void queryClient.invalidateQueries({ queryKey: SYNC_KEY });
+    },
+    onError: (err: unknown) => {
+      toast.error(err instanceof Error ? err.message : "Não foi possível remover o acesso.");
+    },
+  });
+
+  return {
+    devices,
+    summary: useMemo(() => summarizeDevices(devices), [devices]),
+    isLoading: query.isLoading || endpoint.isLoading,
+    revoke: revoke.mutate,
+    revokingId: revoke.isPending ? (revoke.variables as PushDeviceEntry | undefined)?.id ?? null : null,
+  };
+}
+
 export function usePushSyncHistory(limit = 20) {
   return useQuery({
     queryKey: [...SYNC_KEY, limit],
