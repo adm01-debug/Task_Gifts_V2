@@ -3,6 +3,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { pushSubscriptionService } from "@/services/pushSubscriptionService";
 import { normalizeDeviceLabel } from "@/lib/deviceLabel";
+import { getDeviceFingerprint } from "@/lib/deviceFingerprint";
 import {
   buildDeviceList,
   canRevokeDevice,
@@ -90,7 +91,13 @@ export function usePushDevices() {
   });
 
   const devices = useMemo(
-    () => buildDeviceList(query.data, { currentEndpoint: endpoint.data ?? null }),
+    () =>
+      buildDeviceList(query.data, {
+        currentEndpoint: endpoint.data ?? null,
+        // Sem push ativo neste navegador ainda dá para reconhecer o aparelho
+        // atual pela impressão digital, evitando revogar a si mesmo sem aviso.
+        currentFingerprint: getDeviceFingerprint(),
+      }),
     [query.data, endpoint.data],
   );
 
@@ -98,7 +105,12 @@ export function usePushDevices() {
     mutationFn: async (entry: PushDeviceEntry) => {
       const guard = canRevokeDevice(entry, { confirmedCurrent: true });
       if (!guard.allowed) throw new Error(guard.reason ?? "not_allowed");
-      const res = await pushSubscriptionService.revokeDevice(entry.id, { isCurrent: entry.isCurrent, label: entry.label });
+      const res = await pushSubscriptionService.revokeDevice(entry.subscriptionId, {
+        isCurrent: entry.isCurrent,
+        label: entry.label,
+        fingerprint: entry.fingerprint,
+        deviceKey: entry.id,
+      });
       if (!res.ok) {
         const map: Record<string, string> = {
           not_found: "Este dispositivo não está mais na sua conta.",
