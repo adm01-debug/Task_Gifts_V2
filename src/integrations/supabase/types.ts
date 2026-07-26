@@ -190,6 +190,7 @@ export type Database = {
           id: string
           initial_score: number | null
           nr1_category_id: string | null
+          opinion_id: string | null
           owner_id: string
           pillar: Database["public"]["Enums"]["climate_pillar"] | null
           progress_percent: number
@@ -217,6 +218,7 @@ export type Database = {
           id?: string
           initial_score?: number | null
           nr1_category_id?: string | null
+          opinion_id?: string | null
           owner_id: string
           pillar?: Database["public"]["Enums"]["climate_pillar"] | null
           progress_percent?: number
@@ -244,6 +246,7 @@ export type Database = {
           id?: string
           initial_score?: number | null
           nr1_category_id?: string | null
+          opinion_id?: string | null
           owner_id?: string
           pillar?: Database["public"]["Enums"]["climate_pillar"] | null
           progress_percent?: number
@@ -279,6 +282,13 @@ export type Database = {
             columns: ["nr1_category_id"]
             isOneToOne: false
             referencedRelation: "nr1_risk_categories"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "action_plans_opinion_id_fkey"
+            columns: ["opinion_id"]
+            isOneToOne: false
+            referencedRelation: "opinions"
             referencedColumns: ["id"]
           },
           {
@@ -4641,6 +4651,35 @@ export type Database = {
           },
         ]
       }
+      opinion_supports: {
+        Row: {
+          created_at: string
+          id: string
+          opinion_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          opinion_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          opinion_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "opinion_supports_opinion_id_fkey"
+            columns: ["opinion_id"]
+            isOneToOne: false
+            referencedRelation: "opinions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       opinion_tags: {
         Row: {
           created_at: string
@@ -8126,6 +8165,10 @@ export type Database = {
         Returns: Json
       }
       calculate_enps_score: { Args: { p_survey_id: string }; Returns: number }
+      can_handle_opinion: {
+        Args: { _opinion_id: string; _user_id: string }
+        Returns: boolean
+      }
       cancel_webhook_secret_rotation: {
         Args: { p_subscription_id: string }
         Returns: Json
@@ -8180,6 +8223,10 @@ export type Database = {
           p_days?: number
           p_department_id?: string
         }
+        Returns: string
+      }
+      generate_action_plan_from_opinion: {
+        Args: { p_opinion_id: string }
         Returns: string
       }
       generate_engagement_snapshot: {
@@ -8399,6 +8446,28 @@ export type Database = {
           moderate_count: number
         }[]
       }
+      get_opinion_feed: {
+        Args: { p_limit?: number; p_scope?: string; p_status?: string }
+        Returns: {
+          can_handle: boolean
+          category: string
+          content: string
+          created_at: string
+          department_name: string
+          id: string
+          is_anonymous: boolean
+          recipient_type: string
+          response_count: number
+          sender_id: string
+          sender_name: string
+          status: string
+          subject: string
+          support_count: number
+          updated_at: string
+          urgency: string
+          viewer_supported: boolean
+        }[]
+      }
       get_passkeys_by_email: {
         Args: { p_email: string }
         Returns: {
@@ -8610,6 +8679,15 @@ export type Database = {
       request_password_reset: { Args: { p_user_id: string }; Returns: string }
       reset_login_attempts: { Args: { p_email: string }; Returns: undefined }
       reset_push_failures: { Args: { _ids: string[] }; Returns: undefined }
+      respond_to_opinion: {
+        Args: {
+          p_content: string
+          p_is_internal?: boolean
+          p_opinion_id: string
+          p_status?: string
+        }
+        Returns: string
+      }
       revoke_push_device: {
         Args: { p_reason?: string; p_subscription_id: string }
         Returns: {
@@ -8625,6 +8703,10 @@ export type Database = {
         }
         Returns: Json
       }
+      set_opinion_status: {
+        Args: { p_opinion_id: string; p_status: string }
+        Returns: undefined
+      }
       submit_engagement_answer: {
         Args: {
           p_cycle_id: string
@@ -8634,6 +8716,13 @@ export type Database = {
           p_text_answer?: string
         }
         Returns: string
+      }
+      toggle_opinion_support: {
+        Args: { p_opinion_id: string }
+        Returns: {
+          support_count: number
+          supported: boolean
+        }[]
       }
       update_certification_statuses: { Args: never; Returns: undefined }
       user_has_passkeys: { Args: { p_user_id: string }; Returns: boolean }

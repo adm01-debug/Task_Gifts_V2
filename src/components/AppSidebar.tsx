@@ -56,6 +56,7 @@ const navCategories = [
     defaultOpen: false,
     items: [
       { icon: Activity, label: "Engajamento", path: "/engajamento" },
+      { icon: MessageSquare, label: "Canal de Opiniões", path: "/engajamento/opinioes" },
       { icon: BarChart3, label: "Pulse Surveys", path: "/surveys" },
       { icon: MessageSquare, label: "Feedback 360°", path: "/feedback" },
       { icon: Megaphone, label: "Anúncios", path: "/announcements" },
