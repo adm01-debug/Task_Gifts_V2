@@ -19,7 +19,8 @@ describe("normalizeDeviceLabel", () => {
   });
 
   it("colapsa espaços e remove caracteres de controle", () => {
-    expect(normalizeDeviceLabel("  Note\u0000book   do   João \n")).toBe("Notebook do João");
+    // Controle vira espaço e depois colapsa — nunca some silenciosamente do meio da palavra.
+    expect(normalizeDeviceLabel("  Note\u0000book   do   João \n")).toBe("Note book do João");
     expect(normalizeDeviceLabel("Casa\tSala")).toBe("Casa Sala");
   });
 
