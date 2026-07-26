@@ -20,6 +20,9 @@ export interface PillarBenchmarkRow {
   benchmark_top_quartile: number | null;
   benchmark_top_10: number | null;
   benchmark_sample_size: number | null;
+  /** Recorte efetivamente aplicado pelo fallback do banco. */
+  benchmark_industry?: string | null;
+  benchmark_company_size?: string | null;
 }
 
 /** Posição competitiva do recorte frente ao mercado. */
@@ -212,4 +215,105 @@ export function formatGap(gap: number | null): string {
   const value = round1(gap);
   if (value === 0) return "0,0";
   return `${value > 0 ? "+" : "−"}${Math.abs(value).toFixed(1).replace(".", ",")}`;
+}
+
+/* ------------------------------------------------------------------ *
+ * Segmentação de benchmark (setor × porte)                            *
+ * ------------------------------------------------------------------ */
+
+export const BENCHMARK_INDUSTRIES = [
+  { value: "geral", label: "Todos os setores" },
+  { value: "tecnologia", label: "Tecnologia" },
+  { value: "industria", label: "Indústria" },
+  { value: "comercio", label: "Comércio / Varejo" },
+  { value: "servicos", label: "Serviços" },
+  { value: "saude", label: "Saúde" },
+  { value: "educacao", label: "Educação" },
+  { value: "financeiro", label: "Financeiro" },
+] as const;
+
+export const BENCHMARK_COMPANY_SIZES = [
+  { value: "all", label: "Todos os portes" },
+  { value: "small", label: "Pequena (até 99)" },
+  { value: "medium", label: "Média (100–499)" },
+  { value: "large", label: "Grande (500–1999)" },
+  { value: "enterprise", label: "Corporação (2000+)" },
+] as const;
+
+export type BenchmarkIndustry = (typeof BENCHMARK_INDUSTRIES)[number]["value"];
+export type BenchmarkCompanySize = (typeof BENCHMARK_COMPANY_SIZES)[number]["value"];
+
+export const DEFAULT_BENCHMARK_INDUSTRY: BenchmarkIndustry = "geral";
+export const DEFAULT_BENCHMARK_COMPANY_SIZE: BenchmarkCompanySize = "all";
+
+const INDUSTRY_VALUES = new Set<string>(BENCHMARK_INDUSTRIES.map((i) => i.value));
+const SIZE_VALUES = new Set<string>(BENCHMARK_COMPANY_SIZES.map((s) => s.value));
+
+/** Sanitiza entrada de setor — valores desconhecidos caem no recorte geral. */
+export function normalizeIndustry(value: unknown): BenchmarkIndustry {
+  const key = typeof value === "string" ? value.trim().toLowerCase() : "";
+  return (INDUSTRY_VALUES.has(key) ? key : DEFAULT_BENCHMARK_INDUSTRY) as BenchmarkIndustry;
+}
+
+/** Sanitiza entrada de porte — valores desconhecidos caem em "todos os portes". */
+export function normalizeCompanySize(value: unknown): BenchmarkCompanySize {
+  const key = typeof value === "string" ? value.trim().toLowerCase() : "";
+  return (SIZE_VALUES.has(key) ? key : DEFAULT_BENCHMARK_COMPANY_SIZE) as BenchmarkCompanySize;
+}
+
+export function industryLabel(value: unknown): string {
+  const key = normalizeIndustry(value);
+  return BENCHMARK_INDUSTRIES.find((i) => i.value === key)?.label ?? key;
+}
+
+export function companySizeLabel(value: unknown): string {
+  const key = normalizeCompanySize(value);
+  return BENCHMARK_COMPANY_SIZES.find((s) => s.value === key)?.label ?? key;
+}
+
+/**
+ * Cadeia de fallback aplicada no banco, replicada aqui para exibição e testes:
+ * exato → setor/todos os portes → geral/porte → geral/todos.
+ */
+export function benchmarkFallbackChain(
+  industry: unknown,
+  companySize: unknown,
+): Array<{ industry: BenchmarkIndustry; companySize: BenchmarkCompanySize }> {
+  const ind = normalizeIndustry(industry);
+  const size = normalizeCompanySize(companySize);
+  const chain: Array<{ industry: BenchmarkIndustry; companySize: BenchmarkCompanySize }> = [
+    { industry: ind, companySize: size },
+    { industry: ind, companySize: DEFAULT_BENCHMARK_COMPANY_SIZE },
+    { industry: DEFAULT_BENCHMARK_INDUSTRY, companySize: size },
+    { industry: DEFAULT_BENCHMARK_INDUSTRY, companySize: DEFAULT_BENCHMARK_COMPANY_SIZE },
+  ];
+  const seen = new Set<string>();
+  return chain.filter((c) => {
+    const k = `${c.industry}|${c.companySize}`;
+    if (seen.has(k)) return false;
+    seen.add(k);
+    return true;
+  });
+}
+
+/**
+ * Descreve o recorte realmente aplicado nas linhas retornadas, sinalizando
+ * quando o banco precisou recorrer a um recorte mais amplo que o solicitado.
+ */
+export function describeAppliedSegment(
+  rows: PillarBenchmarkRow[] | null | undefined,
+  requestedIndustry: unknown,
+  requestedSize: unknown,
+): { label: string; isFallback: boolean } {
+  const reqInd = normalizeIndustry(requestedIndustry);
+  const reqSize = normalizeCompanySize(requestedSize);
+  const applied = (Array.isArray(rows) ? rows : []).find(
+    (r) => r?.benchmark_industry || r?.benchmark_company_size,
+  );
+  const ind = normalizeIndustry(applied?.benchmark_industry ?? reqInd);
+  const size = normalizeCompanySize(applied?.benchmark_company_size ?? reqSize);
+  return {
+    label: `${industryLabel(ind)} · ${companySizeLabel(size)}`,
+    isFallback: ind !== reqInd || size !== reqSize,
+  };
 }

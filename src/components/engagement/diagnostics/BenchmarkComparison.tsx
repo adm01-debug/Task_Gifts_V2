@@ -3,12 +3,22 @@ import { Minus, TrendingDown, TrendingUp } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Progress } from "@/components/ui/progress";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { cn } from "@/lib/utils";
 import { PILLAR_LABELS, type ClimatePillar } from "@/services/climateSurveyService";
 import {
+  BENCHMARK_COMPANY_SIZES,
+  BENCHMARK_INDUSTRIES,
   BENCHMARK_POSITION_CLASS,
   BENCHMARK_POSITION_LABEL,
   buildBenchmarkComparisons,
+  describeAppliedSegment,
   formatGap,
   summarizeBenchmark,
   type PillarBenchmarkRow,
@@ -17,12 +27,58 @@ import {
 export interface BenchmarkComparisonProps {
   rows: PillarBenchmarkRow[] | undefined;
   isLoading?: boolean;
+  /** Setor selecionado para o recorte de mercado. */
+  industry: string;
+  onIndustryChange: (value: string) => void;
+  /** Porte selecionado para o recorte de mercado. */
+  companySize: string;
+  onCompanySizeChange: (value: string) => void;
 }
 
 /** Comparativo dos pilares internos com a referência de mercado (Geral / BR). */
-export function BenchmarkComparison({ rows, isLoading = false }: BenchmarkComparisonProps) {
+export function BenchmarkComparison({
+  rows,
+  isLoading = false,
+  industry,
+  onIndustryChange,
+  companySize,
+  onCompanySizeChange,
+}: BenchmarkComparisonProps) {
   const comparisons = useMemo(() => buildBenchmarkComparisons(rows), [rows]);
   const summary = useMemo(() => summarizeBenchmark(comparisons), [comparisons]);
+  const segment = useMemo(
+    () => describeAppliedSegment(rows, industry, companySize),
+    [rows, industry, companySize],
+  );
+
+  const segmentControls = (
+    <div className="flex flex-wrap gap-2">
+      <Select value={industry} onValueChange={onIndustryChange}>
+        <SelectTrigger className="h-9 w-[190px]" aria-label="Setor de referência">
+          <SelectValue placeholder="Setor" />
+        </SelectTrigger>
+        <SelectContent>
+          {BENCHMARK_INDUSTRIES.map((item) => (
+            <SelectItem key={item.value} value={item.value}>
+              {item.label}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+      <Select value={companySize} onValueChange={onCompanySizeChange}>
+        <SelectTrigger className="h-9 w-[190px]" aria-label="Porte de referência">
+          <SelectValue placeholder="Porte" />
+        </SelectTrigger>
+        <SelectContent>
+          {BENCHMARK_COMPANY_SIZES.map((item) => (
+            <SelectItem key={item.value} value={item.value}>
+              {item.label}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+    </div>
+  );
 
   if (isLoading) {
     return (
@@ -39,7 +95,19 @@ export function BenchmarkComparison({ rows, isLoading = false }: BenchmarkCompar
   }
 
   if (summary.comparable === 0) {
-    return null;
+    return (
+      <Card>
+        <CardHeader className="pb-3">
+          <CardTitle className="text-base">Comparativo com o mercado</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-3">
+          {segmentControls}
+          <p className="text-sm text-muted-foreground">
+            Ainda não há respostas suficientes no recorte atual para comparar com o mercado.
+          </p>
+        </CardContent>
+      </Card>
+    );
   }
 
   const GapIcon =
@@ -54,11 +122,12 @@ export function BenchmarkComparison({ rows, isLoading = false }: BenchmarkCompar
       <CardHeader className="pb-3">
         <CardTitle className="text-base">Comparativo com o mercado</CardTitle>
         <p className="text-xs text-muted-foreground">
-          Referência: mercado brasileiro (todos os portes) · {summary.comparable} pilares
-          comparáveis
+          Referência: {segment.label} · Brasil · {summary.comparable} pilares comparáveis
+          {segment.isFallback && " · recorte aproximado (sem base exata para a seleção)"}
         </p>
       </CardHeader>
       <CardContent className="space-y-4">
+        {segmentControls}
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
           <div className="rounded-lg border border-border bg-muted/40 p-3">
             <p className="text-xs text-muted-foreground">Gap médio</p>

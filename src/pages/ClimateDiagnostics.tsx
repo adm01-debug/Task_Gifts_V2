@@ -30,6 +30,10 @@ import {
 } from "@/hooks/useEngagementDiagnostics";
 import { AnonymityGuardNotice } from "@/components/engagement/diagnostics/AnonymityGuardNotice";
 import { BenchmarkComparison } from "@/components/engagement/diagnostics/BenchmarkComparison";
+import {
+  DEFAULT_BENCHMARK_COMPANY_SIZE,
+  DEFAULT_BENCHMARK_INDUSTRY,
+} from "@/lib/climateBenchmark";
 import { CorrelationInsights } from "@/components/engagement/diagnostics/CorrelationInsights";
 import { FactorRanking } from "@/components/engagement/diagnostics/FactorRanking";
 import { NpsCards } from "@/components/engagement/diagnostics/NpsCards";
@@ -94,7 +98,12 @@ export default function ClimateDiagnostics() {
     bucket: "month",
   });
   const correlations = useEngagementCorrelations(Math.max(Number(days), 180));
-  const benchmark = useEngagementBenchmark(filters);
+  const [benchmarkIndustry, setBenchmarkIndustry] = useState<string>(DEFAULT_BENCHMARK_INDUSTRY);
+  const [benchmarkSize, setBenchmarkSize] = useState<string>(DEFAULT_BENCHMARK_COMPANY_SIZE);
+  const benchmark = useEngagementBenchmark(filters, {
+    industry: benchmarkIndustry,
+    companySize: benchmarkSize,
+  });
 
   const isLoading = overview.isLoading || pillars.isLoading;
   const hasData = !!overview.data && (pillars.data ?? []).length > 0;
@@ -228,7 +237,14 @@ export default function ClimateDiagnostics() {
 
           <section className="space-y-3">
             <h2 className="text-lg font-semibold">Benchmark de mercado</h2>
-            <BenchmarkComparison rows={benchmark.data} isLoading={benchmark.isLoading} />
+            <BenchmarkComparison
+              rows={benchmark.data}
+              isLoading={benchmark.isLoading}
+              industry={benchmarkIndustry}
+              onIndustryChange={setBenchmarkIndustry}
+              companySize={benchmarkSize}
+              onCompanySizeChange={setBenchmarkSize}
+            />
           </section>
 
           {(nps.data ?? []).length > 0 && (

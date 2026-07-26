@@ -67,10 +67,17 @@ export function useEngagementCorrelations(days = 180) {
   });
 }
 
-export function useEngagementBenchmark(filters: DiagnosticsFilters = {}) {
+export function useEngagementBenchmark(
+  filters: DiagnosticsFilters = {},
+  segment: { industry?: string; companySize?: string } = {},
+) {
   return useQuery({
-    queryKey: key("benchmark", filters),
-    queryFn: () => getPillarBenchmark(filters),
+    queryKey: [
+      ...key("benchmark", filters),
+      segment.industry ?? "geral",
+      segment.companySize ?? "all",
+    ],
+    queryFn: () => getPillarBenchmark(filters, segment),
     staleTime: STALE,
   });
 }
