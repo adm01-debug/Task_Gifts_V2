@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { 
    ArrowLeft, BookOpen, Clock, Star, Trophy, Play, TrendingUp,
   CheckCircle2, Video, FileText, HelpCircle, Layers,
-  ChevronRight, Lock, Sparkles, Award
+  ChevronRight, Lock, Sparkles, Award, Pencil
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -129,6 +129,10 @@ export default function TrailDetail() {
 
   const [activeModuleId, setActiveModuleId] = useState<string | null>(null);
   const [showViewer, setShowViewer] = useState(false);
+  const [showEditor, setShowEditor] = useState(false);
+
+  const { isAdmin, isManager } = useRBAC();
+  const canAuthor = isAdmin || isManager;
 
   const enrollment = enrollments.find(e => e.trail_id === id);
   const isEnrolled = !!enrollment;
