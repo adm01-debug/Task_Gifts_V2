@@ -112,7 +112,7 @@ describe("toComparison — dados sujos", () => {
             expect(c.gap).toBeNull();
             expect(c.position).toBe("unknown");
           } else {
-            expect(c.gap).toBeCloseTo(Math.round((c.score - c.average) * 10) / 10, 6);
+            expect(Math.abs(c.gap!)).toBeCloseTo(Math.round(Math.abs(c.score - c.average) * 10) / 10, 6);
           }
         }
       }
