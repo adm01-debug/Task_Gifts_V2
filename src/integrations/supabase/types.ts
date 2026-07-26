@@ -2230,6 +2230,260 @@ export type Database = {
         }
         Relationships: []
       }
+      engagement_answers: {
+        Row: {
+          answered_at: string
+          created_at: string
+          cycle_id: string
+          department_id: string | null
+          id: string
+          is_anonymous: boolean
+          normalized_score: number | null
+          question_id: string
+          raw_value: Json | null
+          text_answer: string | null
+          user_id: string
+        }
+        Insert: {
+          answered_at?: string
+          created_at?: string
+          cycle_id: string
+          department_id?: string | null
+          id?: string
+          is_anonymous?: boolean
+          normalized_score?: number | null
+          question_id: string
+          raw_value?: Json | null
+          text_answer?: string | null
+          user_id: string
+        }
+        Update: {
+          answered_at?: string
+          created_at?: string
+          cycle_id?: string
+          department_id?: string | null
+          id?: string
+          is_anonymous?: boolean
+          normalized_score?: number | null
+          question_id?: string
+          raw_value?: Json | null
+          text_answer?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "engagement_answers_cycle_id_fkey"
+            columns: ["cycle_id"]
+            isOneToOne: false
+            referencedRelation: "engagement_cycles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "engagement_answers_department_id_fkey"
+            columns: ["department_id"]
+            isOneToOne: false
+            referencedRelation: "departments"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "engagement_answers_question_id_fkey"
+            columns: ["question_id"]
+            isOneToOne: false
+            referencedRelation: "engagement_question_pool"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      engagement_cycles: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          department_id: string | null
+          ends_at: string
+          id: string
+          questions_per_user: number
+          starts_at: string
+          status: Database["public"]["Enums"]["engagement_cycle_status"]
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          department_id?: string | null
+          ends_at: string
+          id?: string
+          questions_per_user?: number
+          starts_at?: string
+          status?: Database["public"]["Enums"]["engagement_cycle_status"]
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          department_id?: string | null
+          ends_at?: string
+          id?: string
+          questions_per_user?: number
+          starts_at?: string
+          status?: Database["public"]["Enums"]["engagement_cycle_status"]
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "engagement_cycles_department_id_fkey"
+            columns: ["department_id"]
+            isOneToOne: false
+            referencedRelation: "departments"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      engagement_factors: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          is_active: boolean
+          key: string
+          name: string
+          order_index: number
+          pillar: Database["public"]["Enums"]["climate_pillar"]
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_active?: boolean
+          key: string
+          name: string
+          order_index?: number
+          pillar: Database["public"]["Enums"]["climate_pillar"]
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_active?: boolean
+          key?: string
+          name?: string
+          order_index?: number
+          pillar?: Database["public"]["Enums"]["climate_pillar"]
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      engagement_question_assignments: {
+        Row: {
+          answered_at: string | null
+          created_at: string
+          cycle_id: string
+          id: string
+          order_index: number
+          question_id: string
+          user_id: string
+        }
+        Insert: {
+          answered_at?: string | null
+          created_at?: string
+          cycle_id: string
+          id?: string
+          order_index?: number
+          question_id: string
+          user_id: string
+        }
+        Update: {
+          answered_at?: string | null
+          created_at?: string
+          cycle_id?: string
+          id?: string
+          order_index?: number
+          question_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "engagement_question_assignments_cycle_id_fkey"
+            columns: ["cycle_id"]
+            isOneToOne: false
+            referencedRelation: "engagement_cycles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "engagement_question_assignments_question_id_fkey"
+            columns: ["question_id"]
+            isOneToOne: false
+            referencedRelation: "engagement_question_pool"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      engagement_question_pool: {
+        Row: {
+          answer_format: Database["public"]["Enums"]["engagement_answer_format"]
+          code: string
+          copsoq_dimension: string | null
+          created_at: string
+          factor_id: string | null
+          helper_text: string | null
+          id: string
+          is_active: boolean
+          is_nr1: boolean
+          is_reverse: boolean
+          options: Json
+          pillar: Database["public"]["Enums"]["climate_pillar"]
+          question_text: string
+          updated_at: string
+          weight: number
+        }
+        Insert: {
+          answer_format?: Database["public"]["Enums"]["engagement_answer_format"]
+          code: string
+          copsoq_dimension?: string | null
+          created_at?: string
+          factor_id?: string | null
+          helper_text?: string | null
+          id?: string
+          is_active?: boolean
+          is_nr1?: boolean
+          is_reverse?: boolean
+          options?: Json
+          pillar: Database["public"]["Enums"]["climate_pillar"]
+          question_text: string
+          updated_at?: string
+          weight?: number
+        }
+        Update: {
+          answer_format?: Database["public"]["Enums"]["engagement_answer_format"]
+          code?: string
+          copsoq_dimension?: string | null
+          created_at?: string
+          factor_id?: string | null
+          helper_text?: string | null
+          id?: string
+          is_active?: boolean
+          is_nr1?: boolean
+          is_reverse?: boolean
+          options?: Json
+          pillar?: Database["public"]["Enums"]["climate_pillar"]
+          question_text?: string
+          updated_at?: string
+          weight?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "engagement_question_pool_factor_id_fkey"
+            columns: ["factor_id"]
+            isOneToOne: false
+            referencedRelation: "engagement_factors"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       engagement_snapshots: {
         Row: {
           active_users: number | null
@@ -8062,6 +8316,15 @@ export type Database = {
         | "communication"
         | "benefits"
         | "balance"
+      engagement_answer_format:
+        | "slider"
+        | "stars"
+        | "emoji"
+        | "cards"
+        | "checkbox"
+        | "percentage"
+        | "text"
+      engagement_cycle_status: "scheduled" | "active" | "closed"
       evaluator_type: "self" | "manager" | "peer" | "direct_report" | "external"
       feedback_cycle_status:
         | "draft"
@@ -8263,6 +8526,16 @@ export const Constants = {
         "benefits",
         "balance",
       ],
+      engagement_answer_format: [
+        "slider",
+        "stars",
+        "emoji",
+        "cards",
+        "checkbox",
+        "percentage",
+        "text",
+      ],
+      engagement_cycle_status: ["scheduled", "active", "closed"],
       evaluator_type: ["self", "manager", "peer", "direct_report", "external"],
       feedback_cycle_status: [
         "draft",
