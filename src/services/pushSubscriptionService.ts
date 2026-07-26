@@ -5,7 +5,12 @@ import {
   type PushSyncEvent,
   type PushSyncEventType,
 } from "@/lib/deviceLabel";
-import { buildRevocationNotice, type PushDeviceEntry, type PushDeviceRow } from "@/lib/pushDevices";
+import {
+  buildRevocationBroadcast,
+  buildRevocationNotice,
+  type PushDeviceEntry,
+  type PushDeviceRow,
+} from "@/lib/pushDevices";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const db = supabase as any;
@@ -329,6 +334,25 @@ export const pushSubscriptionService = {
       });
     } catch (err) {
       logger.error("push_revocation_notice_failed", "push", err);
+    }
+
+    // Push real aos demais aparelhos: quem não executou a ação precisa saber
+    // fora do app. Best-effort — falha aqui não desfaz a revogação.
+    const broadcast = buildRevocationBroadcast(entry);
+    if (broadcast) {
+      try {
+        await supabase.functions.invoke("push-device-revoked", {
+          body: {
+            exclude_subscription_id: broadcast.exclude_subscription_id,
+            title: broadcast.title,
+            message: broadcast.message,
+            url: broadcast.url,
+            data: broadcast.data,
+          },
+        });
+      } catch (err) {
+        logger.error("push_revocation_broadcast_failed", "push", err);
+      }
     }
   },
 
