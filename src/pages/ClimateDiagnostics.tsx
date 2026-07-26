@@ -21,6 +21,7 @@ import { useGenerateActionPlanFromFactor } from "@/hooks/useActionPlanGenerator"
 import type { FactorScore } from "@/services/engagementDiagnosticsService";
 import {
   useEngagementCorrelations,
+  useEngagementBenchmark,
   useEngagementFactorScores,
   useEngagementNps,
   useEngagementNpsHistory,
@@ -28,6 +29,7 @@ import {
   useEngagementPillarScores,
 } from "@/hooks/useEngagementDiagnostics";
 import { AnonymityGuardNotice } from "@/components/engagement/diagnostics/AnonymityGuardNotice";
+import { BenchmarkComparison } from "@/components/engagement/diagnostics/BenchmarkComparison";
 import { CorrelationInsights } from "@/components/engagement/diagnostics/CorrelationInsights";
 import { FactorRanking } from "@/components/engagement/diagnostics/FactorRanking";
 import { NpsCards } from "@/components/engagement/diagnostics/NpsCards";
@@ -92,6 +94,7 @@ export default function ClimateDiagnostics() {
     bucket: "month",
   });
   const correlations = useEngagementCorrelations(Math.max(Number(days), 180));
+  const benchmark = useEngagementBenchmark(filters);
 
   const isLoading = overview.isLoading || pillars.isLoading;
   const hasData = !!overview.data && (pillars.data ?? []).length > 0;
@@ -221,6 +224,11 @@ export default function ClimateDiagnostics() {
           <section className="space-y-3">
             <h2 className="text-lg font-semibold">Mapa de clima por pilar</h2>
             <PillarHeatmap pillars={pillars.data ?? []} favorabilityMode={favorabilityMode} />
+          </section>
+
+          <section className="space-y-3">
+            <h2 className="text-lg font-semibold">Benchmark de mercado</h2>
+            <BenchmarkComparison rows={benchmark.data} isLoading={benchmark.isLoading} />
           </section>
 
           {(nps.data ?? []).length > 0 && (
