@@ -52,6 +52,7 @@ const BIDashboard = lazy(() => import("./pages/BIDashboard"));
 const Goals = lazy(() => import("./pages/Goals"));
 const ContinuousEngagement = lazy(() => import("./pages/ContinuousEngagement"));
 const ClimateDiagnostics = lazy(() => import("./pages/ClimateDiagnostics"));
+const OpinionChannel = lazy(() => import("./pages/OpinionChannel"));
 const ActionPlans = lazy(() => import("./pages/ActionPlans"));
 const Nr1Risks = lazy(() => import("./pages/Nr1Risks"));
 const Checkins = lazy(() => import("./pages/Checkins"));
@@ -217,6 +218,7 @@ const AnimatedRoutes = () => {
         <Route path="/goals" element={<ProtectedRoute><PageTransition><Goals /></PageTransition></ProtectedRoute>} />
         <Route path="/engajamento" element={<ProtectedRoute><PageTransition><ContinuousEngagement /></PageTransition></ProtectedRoute>} />
         <Route path="/engajamento/diagnostico" element={<ProtectedRoute requiredRole="manager"><PageTransition><ClimateDiagnostics /></PageTransition></ProtectedRoute>} />
+        <Route path="/engajamento/opinioes" element={<ProtectedRoute><PageTransition><OpinionChannel /></PageTransition></ProtectedRoute>} />
         <Route path="/planos-acao" element={<ProtectedRoute requiredRole="manager"><PageTransition><ActionPlans /></PageTransition></ProtectedRoute>} />
         <Route path="/engajamento/nr1" element={<ProtectedRoute requiredRole="manager"><PageTransition><Nr1Risks /></PageTransition></ProtectedRoute>} />
         <Route path="/checkins" element={<ProtectedRoute requiredRole="manager"><PageTransition><Checkins /></PageTransition></ProtectedRoute>} />
