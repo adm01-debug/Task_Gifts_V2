@@ -80,7 +80,13 @@ export function displayDeviceLabel(label: unknown, userAgent: unknown): string {
   return normalizeDeviceLabel(label) ?? suggestDeviceLabel(userAgent);
 }
 
-export type PushSyncEventType = "subscribed" | "refreshed" | "renamed" | "disabled" | "failed";
+export type PushSyncEventType =
+  | "subscribed"
+  | "refreshed"
+  | "renamed"
+  | "disabled"
+  | "revoked"
+  | "failed";
 
 export interface PushSyncEvent {
   id: string;
@@ -107,6 +113,7 @@ const EVENT_LABEL: Record<PushSyncEventType, string> = {
   refreshed: "Inscrição renovada",
   renamed: "Apelido atualizado",
   disabled: "Notificações desativadas",
+  revoked: "Acesso revogado",
   failed: "Falha na sincronização",
 };
 
@@ -115,6 +122,7 @@ const EVENT_TONE: Record<PushSyncEventType, PushSyncEntry["tone"]> = {
   refreshed: "success",
   renamed: "muted",
   disabled: "muted",
+  revoked: "destructive",
   failed: "destructive",
 };
 
@@ -124,6 +132,7 @@ function isKnownEvent(value: unknown): value is PushSyncEventType {
     value === "refreshed" ||
     value === "renamed" ||
     value === "disabled" ||
+    value === "revoked" ||
     value === "failed"
   );
 }
