@@ -107,6 +107,7 @@ export function CommandPalette() {
     { id: "achievements", label: "Conquistas", icon: Trophy, action: () => handleNavigate("/conquistas"), keywords: ["badges", "troféus"], category: "navigation" },
     { id: "goals", label: "Metas & OKRs", icon: Target, action: () => handleNavigate("/goals"), keywords: ["objetivos", "okr"], category: "navigation" },
     { id: "engagement", label: "Engajamento", icon: Activity, action: () => handleNavigate("/engajamento"), keywords: ["pesquisa", "clima", "continua"], category: "navigation" },
+    { id: "climate-diagnostics", label: "Diagnóstico de Clima", icon: Activity, action: () => handleNavigate("/engajamento/diagnostico"), keywords: ["clima", "enps", "favorabilidade", "pilares", "fatores"], category: "navigation" },
     { id: "checkins", label: "Check-ins 1:1", icon: ClipboardCheck, action: () => handleNavigate("/checkins"), keywords: ["reunião", "one on one"], category: "navigation" },
     { id: "attendance", label: "Ponto", icon: Clock, action: () => handleNavigate("/ponto"), keywords: ["registro", "hora"], category: "navigation" },
     { id: "trails", label: "Trilhas de Aprendizado", icon: BookOpen, action: () => handleNavigate("/trails"), keywords: ["cursos", "learning"], category: "navigation" },
