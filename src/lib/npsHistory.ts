@@ -90,24 +90,40 @@ export function npsTrend(latest: number | null, previous: number | null): NpsTre
   return delta > 0 ? "up" : "down";
 }
 
-/** Rótulo curto do período (ex.: "jul/26"), tolerante a datas inválidas. */
+const MONTH_ABBR = [
+  "jan",
+  "fev",
+  "mar",
+  "abr",
+  "mai",
+  "jun",
+  "jul",
+  "ago",
+  "set",
+  "out",
+  "nov",
+  "dez",
+] as const;
+
+/**
+ * Rótulo curto do período (ex.: "jul/26" ou "13/07"), tolerante a datas
+ * inválidas. Não usa `Intl` de propósito: a saída precisa ser estável entre
+ * runtimes (navegador, Node de CI) e curta o suficiente para o eixo do gráfico.
+ */
 export function formatPeriodLabel(periodStart: string, bucket: "month" | "week" = "month"): string {
   const date = new Date(`${periodStart}T00:00:00Z`);
   if (Number.isNaN(date.getTime())) return periodStart ?? "—";
-  if (bucket === "week") {
-    return new Intl.DateTimeFormat("pt-BR", {
-      day: "2-digit",
-      month: "2-digit",
-      timeZone: "UTC",
-    }).format(date);
-  }
-  return new Intl.DateTimeFormat("pt-BR", {
-    month: "short",
-    year: "2-digit",
-    timeZone: "UTC",
-  })
-    .format(date)
-    .replace(".", "");
+  const day = String(date.getUTCDate()).padStart(2, "0");
+  const month = date.getUTCMonth();
+  if (bucket === "week") return `${day}/${String(month + 1).padStart(2, "0")}`;
+  return `${MONTH_ABBR[month]}/${String(date.getUTCFullYear() % 100).padStart(2, "0")}`;
+}
+
+/** Ordem de exibição fixa: empresa antes de liderança. */
+const METRIC_ORDER: Record<string, number> = { eNPS: 0, LNPS: 1 };
+
+function metricRank(metric: string): number {
+  return METRIC_ORDER[metric] ?? 99;
 }
 
 /**
@@ -162,5 +178,5 @@ export function buildNpsSeries(
         worst: scored.length ? Math.min(...scored) : null,
       } satisfies NpsSeries;
     })
-    .sort((a, b) => a.metric.localeCompare(b.metric));
+    .sort((a, b) => metricRank(a.metric) - metricRank(b.metric) || a.metric.localeCompare(b.metric));
 }

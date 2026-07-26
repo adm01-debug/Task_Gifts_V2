@@ -131,12 +131,12 @@ describe("buildNpsSeries — cenários de integração", () => {
     expect(serie.delta).toBe(serie.latest! - serie.previous!);
   });
 
-  it("separa métricas e ordena alfabeticamente", () => {
+  it("separa métricas mantendo eNPS antes de LNPS", () => {
     const series = buildNpsSeries([
       row({ metric: "LNPS", promoters: 4 }),
       row({ metric: "eNPS", promoters: 2 }),
     ]);
-    expect(series.map((s) => s.metric)).toEqual(["LNPS", "eNPS"]);
+    expect(series.map((s) => s.metric)).toEqual(["eNPS", "LNPS"]);
   });
 
   it("descarta linhas inválidas sem lançar", () => {
