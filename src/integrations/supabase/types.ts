@@ -8268,6 +8268,8 @@ export type Database = {
         }
         Returns: {
           benchmark_average: number
+          benchmark_company_size: string
+          benchmark_industry: string
           benchmark_sample_size: number
           benchmark_top_10: number
           benchmark_top_quartile: number
