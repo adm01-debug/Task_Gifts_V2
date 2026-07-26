@@ -72,6 +72,7 @@ const routeConfig: Record<string, RouteConfig> = {
   "/checkins": { label: "Check-ins", icon: Calendar, parent: "/", group: "engajamento" },
   "/engajamento": { label: "Engajamento", icon: TrendingUp, parent: "/", group: "engajamento" },
   "/engajamento/diagnostico": { label: "Diagnóstico de Clima", icon: BarChart3, parent: "/engajamento", group: "engajamento" },
+  "/planos-acao": { label: "Planos de Ação", icon: FileText, parent: "/engajamento/diagnostico", group: "engajamento" },
   
    // Operações
    "/ponto": { label: "Registro de Ponto", icon: Calendar, parent: "/", group: "operacoes" },

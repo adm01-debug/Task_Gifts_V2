@@ -1,4 +1,5 @@
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Gauge, Percent, Users } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
@@ -15,6 +16,9 @@ import { PageShell } from "@/components/navigation";
 import { MobilePageLayout } from "@/components/mobile";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useDepartments } from "@/hooks/useDepartments";
+import { useRBAC } from "@/hooks/useRBAC";
+import { useGenerateActionPlanFromFactor } from "@/hooks/useActionPlanGenerator";
+import type { FactorScore } from "@/services/engagementDiagnosticsService";
 import {
   useEngagementCorrelations,
   useEngagementFactorScores,
@@ -39,9 +43,11 @@ const ALL_DEPARTMENTS = "all";
 
 export default function ClimateDiagnostics() {
   const isMobile = useIsMobile();
+  const navigate = useNavigate();
   const [days, setDays] = useState("90");
   const [departmentId, setDepartmentId] = useState(ALL_DEPARTMENTS);
   const [favorabilityMode, setFavorabilityMode] = useState(false);
+  const [generatingFactorKey, setGeneratingFactorKey] = useState<string | null>(null);
 
   const filters = useMemo(
     () => ({
@@ -52,6 +58,28 @@ export default function ClimateDiagnostics() {
   );
 
   const { data: departments } = useDepartments();
+  const { isAdmin, isManager } = useRBAC();
+  const generatePlan = useGenerateActionPlanFromFactor();
+  const canGeneratePlan = isAdmin || isManager;
+
+  const handleGeneratePlan = useCallback(
+    (factor: FactorScore) => {
+      setGeneratingFactorKey(factor.factor_key);
+      generatePlan.mutate(
+        {
+          factorKey: factor.factor_key,
+          departmentId: filters.departmentId,
+          days: filters.days,
+        },
+        {
+          onSuccess: (planId) => navigate(`/planos-acao?plan=${planId}`),
+          onSettled: () => setGeneratingFactorKey(null),
+        },
+      );
+    },
+    [filters.departmentId, filters.days, generatePlan, navigate],
+  );
+
   const overview = useEngagementOverview(filters);
   const pillars = useEngagementPillarScores(filters);
   const factors = useEngagementFactorScores(filters);
@@ -198,7 +226,11 @@ export default function ClimateDiagnostics() {
           {(factors.data ?? []).length > 0 && (
             <section className="space-y-3">
               <h2 className="text-lg font-semibold">Fatores</h2>
-              <FactorRanking factors={factors.data ?? []} />
+              <FactorRanking
+                factors={factors.data ?? []}
+                onGeneratePlan={canGeneratePlan ? handleGeneratePlan : undefined}
+                generatingFactorKey={generatingFactorKey}
+              />
             </section>
           )}
 

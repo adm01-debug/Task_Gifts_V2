@@ -179,12 +179,14 @@ export type Database = {
       }
       action_plans: {
         Row: {
+          analysis_days: number | null
           coin_reward: number
           completed_at: string | null
           created_at: string
           current_score: number | null
           department_id: string | null
           description: string | null
+          engagement_factor_id: string | null
           id: string
           initial_score: number | null
           owner_id: string
@@ -194,6 +196,7 @@ export type Database = {
           reviewer_id: string | null
           root_cause_summary: string | null
           root_causes: Json
+          source: string
           status: string
           target_date: string
           target_score: number | null
@@ -202,12 +205,14 @@ export type Database = {
           xp_reward: number
         }
         Insert: {
+          analysis_days?: number | null
           coin_reward?: number
           completed_at?: string | null
           created_at?: string
           current_score?: number | null
           department_id?: string | null
           description?: string | null
+          engagement_factor_id?: string | null
           id?: string
           initial_score?: number | null
           owner_id: string
@@ -217,6 +222,7 @@ export type Database = {
           reviewer_id?: string | null
           root_cause_summary?: string | null
           root_causes?: Json
+          source?: string
           status?: string
           target_date: string
           target_score?: number | null
@@ -225,12 +231,14 @@ export type Database = {
           xp_reward?: number
         }
         Update: {
+          analysis_days?: number | null
           coin_reward?: number
           completed_at?: string | null
           created_at?: string
           current_score?: number | null
           department_id?: string | null
           description?: string | null
+          engagement_factor_id?: string | null
           id?: string
           initial_score?: number | null
           owner_id?: string
@@ -240,6 +248,7 @@ export type Database = {
           reviewer_id?: string | null
           root_cause_summary?: string | null
           root_causes?: Json
+          source?: string
           status?: string
           target_date?: string
           target_score?: number | null
@@ -253,6 +262,13 @@ export type Database = {
             columns: ["department_id"]
             isOneToOne: false
             referencedRelation: "departments"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "action_plans_engagement_factor_id_fkey"
+            columns: ["engagement_factor_id"]
+            isOneToOne: false
+            referencedRelation: "engagement_factors"
             referencedColumns: ["id"]
           },
           {
@@ -2227,6 +2243,48 @@ export type Database = {
           updated_at?: string
           winner_id?: string | null
           xp_reward?: number
+        }
+        Relationships: []
+      }
+      engagement_action_playbooks: {
+        Row: {
+          created_at: string
+          duration_days: number
+          how_method: string
+          id: string
+          is_active: boolean
+          order_index: number
+          pillar: Database["public"]["Enums"]["climate_pillar"]
+          priority: string
+          title: string
+          updated_at: string
+          why_reason: string
+        }
+        Insert: {
+          created_at?: string
+          duration_days?: number
+          how_method: string
+          id?: string
+          is_active?: boolean
+          order_index?: number
+          pillar: Database["public"]["Enums"]["climate_pillar"]
+          priority?: string
+          title: string
+          updated_at?: string
+          why_reason: string
+        }
+        Update: {
+          created_at?: string
+          duration_days?: number
+          how_method?: string
+          id?: string
+          is_active?: boolean
+          order_index?: number
+          pillar?: Database["public"]["Enums"]["climate_pillar"]
+          priority?: string
+          title?: string
+          updated_at?: string
+          why_reason?: string
         }
         Relationships: []
       }
@@ -7979,6 +8037,14 @@ export type Database = {
         Returns: Json
       }
       engagement_min_respondents: { Args: never; Returns: number }
+      generate_action_plan_from_factor: {
+        Args: {
+          p_days?: number
+          p_department_id?: string
+          p_factor_key: string
+        }
+        Returns: string
+      }
       generate_engagement_snapshot: {
         Args: { p_department_id?: string; p_period_type?: string }
         Returns: string
