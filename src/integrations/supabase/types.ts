@@ -5673,6 +5673,47 @@ export type Database = {
         }
         Relationships: []
       }
+      push_sync_events: {
+        Row: {
+          created_at: string
+          detail: string | null
+          device_label: string | null
+          endpoint: string | null
+          event: string
+          id: string
+          subscription_id: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          detail?: string | null
+          device_label?: string | null
+          endpoint?: string | null
+          event: string
+          id?: string
+          subscription_id?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          detail?: string | null
+          device_label?: string | null
+          endpoint?: string | null
+          event?: string
+          id?: string
+          subscription_id?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "push_sync_events_subscription_id_fkey"
+            columns: ["subscription_id"]
+            isOneToOne: false
+            referencedRelation: "push_subscriptions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       query_telemetry: {
         Row: {
           count_mode: string | null
