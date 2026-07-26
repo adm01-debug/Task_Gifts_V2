@@ -5,6 +5,7 @@ import {
   type PushSyncEvent,
   type PushSyncEventType,
 } from "@/lib/deviceLabel";
+import type { PushDeviceRow } from "@/lib/pushDevices";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const db = supabase as any;
@@ -219,6 +220,78 @@ export const pushSubscriptionService = {
     }
   },
 
+  /** Endpoint da inscrição deste navegador, se houver. */
+  async getCurrentEndpoint(): Promise<string | null> {
+    try {
+      if (!this.isSupported()) return null;
+      const reg = await navigator.serviceWorker.getRegistration(SW_URL);
+      const sub = await reg?.pushManager.getSubscription();
+      return sub?.endpoint ?? null;
+    } catch {
+      return null;
+    }
+  },
+
+  /** Todas as inscrições do usuário logado, inclusive as já revogadas. */
+  async listDevices(): Promise<PushDeviceRow[]> {
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return [];
+      const { data, error } = await db
+        .from("push_subscriptions")
+        .select("id, endpoint, device_label, user_agent, last_used_at, created_at, disabled_at, disabled_reason, failure_count")
+        .eq("user_id", user.id)
+        .order("last_used_at", { ascending: false, nullsFirst: false })
+        .limit(100);
+      if (error) throw error;
+      return (data ?? []) as PushDeviceRow[];
+    } catch (err) {
+      logger.error("push_list_devices_failed", "push", err);
+      return [];
+    }
+  },
+
+  /**
+   * Revoga um dispositivo remoto. A RPC faz update + log numa transação só,
+   * com trava de linha para tolerar cliques simultâneos em abas diferentes.
+   * Quando o alvo é o próprio navegador, também cancela a inscrição local.
+   */
+  async revokeDevice(
+    subscriptionId: string,
+    options: { isCurrent?: boolean } = {},
+  ): Promise<{ ok: boolean; alreadyRevoked?: boolean; reason?: string }> {
+    try {
+      const { data, error } = await db.rpc("revoke_push_device", {
+        p_subscription_id: subscriptionId,
+        p_reason: "revoked_by_user",
+      });
+      if (error) {
+        const msg = String(error.message ?? "");
+        if (msg.includes("device_not_found")) return { ok: false, reason: "not_found" };
+        if (msg.includes("not_authenticated")) return { ok: false, reason: "not_authenticated" };
+        throw error;
+      }
+
+      if (options.isCurrent) {
+        // Melhor esforço: se o navegador não soltar a inscrição, o servidor
+        // já parou de enviar porque a linha está com disabled_at preenchido.
+        try {
+          const reg = await navigator.serviceWorker.getRegistration(SW_URL);
+          const sub = await reg?.pushManager.getSubscription();
+          await sub?.unsubscribe();
+        } catch (err) {
+          logger.error("push_local_unsubscribe_failed", "push", err);
+        }
+      }
+
+      const row = Array.isArray(data) ? data[0] : data;
+      return { ok: true, alreadyRevoked: row?.revoked === false };
+    } catch (err) {
+      logger.error("push_revoke_device_failed", "push", err);
+      return { ok: false, reason: "revoke_failed" };
+    }
+  },
+
   async unsubscribe(): Promise<boolean> {
     if (!("serviceWorker" in navigator)) return false;
     try {
@@ -237,10 +310,15 @@ export const pushSubscriptionService = {
           : { data: null };
 
         await sub.unsubscribe();
-        await db
-          .from("push_subscriptions")
-          .update({ disabled_at: new Date().toISOString() })
-          .eq("endpoint", endpoint);
+        // Escopo explícito por usuário: a RLS já protege, mas um filtro só por
+        // endpoint dependeria dela como única barreira.
+        if (user) {
+          await db
+            .from("push_subscriptions")
+            .update({ disabled_at: new Date().toISOString(), disabled_reason: "disabled_by_user" })
+            .eq("endpoint", endpoint)
+            .eq("user_id", user.id);
+        }
 
         if (user) {
           await recordSyncEvent({
