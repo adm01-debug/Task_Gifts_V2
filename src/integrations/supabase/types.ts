@@ -7047,6 +7047,101 @@ export type Database = {
           },
         ]
       }
+      scratch_card_prizes: {
+        Row: {
+          amount: number
+          created_at: string
+          id: string
+          is_active: boolean
+          label: string
+          prize_type: string
+          rarity: string
+          updated_at: string
+          weight: number
+        }
+        Insert: {
+          amount?: number
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          label: string
+          prize_type: string
+          rarity?: string
+          updated_at?: string
+          weight?: number
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          label?: string
+          prize_type?: string
+          rarity?: string
+          updated_at?: string
+          weight?: number
+        }
+        Relationships: []
+      }
+      scratch_cards: {
+        Row: {
+          amount: number
+          created_at: string
+          dedupe_key: string
+          id: string
+          prize_id: string | null
+          prize_label: string | null
+          prize_type: string | null
+          rarity: string | null
+          revealed_at: string | null
+          source: string
+          source_ref: string | null
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          amount?: number
+          created_at?: string
+          dedupe_key: string
+          id?: string
+          prize_id?: string | null
+          prize_label?: string | null
+          prize_type?: string | null
+          rarity?: string | null
+          revealed_at?: string | null
+          source: string
+          source_ref?: string | null
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          dedupe_key?: string
+          id?: string
+          prize_id?: string | null
+          prize_label?: string | null
+          prize_type?: string | null
+          rarity?: string | null
+          revealed_at?: string | null
+          source?: string
+          source_ref?: string | null
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "scratch_cards_prize_id_fkey"
+            columns: ["prize_id"]
+            isOneToOne: false
+            referencedRelation: "scratch_card_prizes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       seasonal_challenges: {
         Row: {
           badge_icon: string | null
@@ -9348,6 +9443,10 @@ export type Database = {
         }[]
       }
       get_webhook_executive_metrics_7d: { Args: never; Returns: Json }
+      grant_scratch_card: {
+        Args: { p_source: string; p_source_ref?: string }
+        Returns: Json
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
@@ -9476,6 +9575,7 @@ export type Database = {
         }
         Returns: string
       }
+      reveal_scratch_card: { Args: { p_card_id: string }; Returns: Json }
       revert_campaign_import: { Args: { _import_id: string }; Returns: Json }
       revert_campaign_team_split: {
         Args: { _batch_id: string; _reason?: string }
