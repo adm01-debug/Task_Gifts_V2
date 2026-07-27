@@ -45,15 +45,28 @@ export interface BingoMarkRow {
 }
 
 /**
+ * Normaliza um identificador opcional vindo do banco/UI.
+ *
+ * `null` (ausencia explicita) e `""` carregam a mesma semantica que `undefined`
+ * para a RPC: "sem tabuleiro informado, use o vigente". Converter aqui evita
+ * incompatibilidade de tipos nos chamadores sem perder informacao.
+ */
+function toOptionalId(value: string | null | undefined): string | undefined {
+  if (typeof value !== "string") return undefined;
+  const trimmed = value.trim();
+  return trimmed === "" ? undefined : trimmed;
+}
+
+/**
  * Camada de acesso do Bingo de Missões.
  *
  * O cliente nunca marca casas: `sync_bingo_card` recalcula tudo a partir
  * da atividade real do usuário e credita apenas as linhas novas.
  */
 export const bingoService = {
-  async getOrCreateCard(boardId?: string): Promise<BingoCardResult> {
+  async getOrCreateCard(boardId?: string | null): Promise<BingoCardResult> {
     const { data, error } = await supabase.rpc("get_or_create_bingo_card", {
-      p_board_id: boardId,
+      p_board_id: toOptionalId(boardId),
     });
     if (error) {
       logger.error("Falha ao obter cartela de bingo", "bingoService.getOrCreateCard", error);
