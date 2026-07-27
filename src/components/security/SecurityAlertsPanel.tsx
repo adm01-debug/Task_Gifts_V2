@@ -9,7 +9,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Textarea } from "@/components/ui/textarea";
 import { 
   AlertTriangle, CheckCircle, XCircle, Clock, Shield, 
-  Bell, Loader2, ChevronDown, ChevronUp, Filter, ExternalLink, Activity, BookOpen
+  Bell, Loader2, ChevronDown, ChevronUp, Filter, ExternalLink, Activity, BookOpen, Dices
 } from "lucide-react";
 import { toast } from "sonner";
 import { format } from "date-fns";
@@ -154,6 +154,9 @@ export function SecurityAlertsPanel() {
   });
 
   const isWebhookSlaAlert = (type: string) => type === "webhook_sla_below_threshold";
+  /** Alertas emitidos pelo motor econômico da Roleta da Sorte. */
+  const isLuckyWheelAlert = (type: string) => typeof type === "string" && type.startsWith("lucky_wheel_");
+  const luckyWheelPending = unresolvedAlerts.filter((a) => isLuckyWheelAlert(a.alert_type)).length;
 
   const RUNBOOK_TYPES = new Set([
     "webhook_sla_below_threshold",
@@ -225,6 +228,17 @@ export function SecurityAlertsPanel() {
           >
             <Activity className="w-4 h-4 mr-2" />
             SLA de Webhooks
+          </Button>
+          <Button
+            variant={typeFilter === "lucky_wheel" ? "default" : "outline"}
+            size="sm"
+            onClick={() => setTypeFilter(typeFilter === "lucky_wheel" ? "all" : "lucky_wheel")}
+          >
+            <Dices className="w-4 h-4 mr-2" />
+            Roleta
+            {luckyWheelPending > 0 && (
+              <Badge variant="destructive" className="ml-2">{luckyWheelPending}</Badge>
+            )}
           </Button>
           <span className="text-xs text-muted-foreground">
             {filteredAlerts.length} de {alerts?.length || 0}
