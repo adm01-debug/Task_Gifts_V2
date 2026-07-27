@@ -48,6 +48,11 @@ export interface EdgeErrorInfo {
 const DEFAULT_RETRY_AFTER = 60;
 const MAX_RETRY_AFTER = 3600;
 
+/** Retorna a string apenas se ela tiver conteúdo útil. */
+function nonEmpty(value: string | null | undefined): string | null {
+  return typeof value === "string" && value.trim() !== "" ? value : null;
+}
+
 /** Normaliza `retryAfter` vindo do corpo JSON ou do header `Retry-After`. */
 export function normalizeRetryAfter(raw: unknown): number {
   const value =
@@ -88,9 +93,8 @@ export function classifyEdgeError(
       status: null,
       retryAfterSeconds: null,
       message:
-        fallbackMessage && fallbackMessage.trim() !== ""
-          ? fallbackMessage
-          : "Falha de conexão com o servidor. Verifique sua internet e tente novamente.",
+        nonEmpty(fallbackMessage) ??
+        "Falha de conexão com o servidor. Verifique sua internet e tente novamente.",
       retryable: true,
     };
   }
@@ -170,7 +174,7 @@ export function classifyEdgeError(
     kind: "unknown",
     status,
     retryAfterSeconds: null,
-    message: payloadMessage ?? fallbackMessage ?? "Ocorreu um erro inesperado.",
+    message: payloadMessage ?? nonEmpty(fallbackMessage) ?? "Ocorreu um erro inesperado.",
     retryable: true,
   };
 }
