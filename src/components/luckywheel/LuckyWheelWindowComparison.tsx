@@ -20,6 +20,7 @@ import {
   type BudgetAuditEntry,
 } from "@/lib/luckyWheelBudget";
 import { decideComparisonAlerts, type ComparisonAlertSeverity } from "@/lib/luckyWheelComparisonAlerts";
+import { defaultCandidates, simulateBudgetScenarios } from "@/lib/luckyWheelBudgetWhatIf";
 import {
   comparePayoutWindows,
   type SignificanceTest,
@@ -92,6 +93,11 @@ export function LuckyWheelWindowComparison() {
 
   const alerts = useMemo(
     () => decideComparisonAlerts(comparison, { coinsPerSpinBudget: budget }),
+    [comparison, budget],
+  );
+
+  const whatIf = useMemo(
+    () => simulateBudgetScenarios(comparison, defaultCandidates(budget)),
     [comparison, budget],
   );
 
