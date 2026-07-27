@@ -72,7 +72,7 @@ export default function ScratchCardPage() {
   return (
     <PageShell
       title="Raspadinha Digital"
-      description="Raspe as cartas conquistadas em entregas e treinamentos para revelar prêmios surpresa."
+      subtitle="Raspe as cartas conquistadas em entregas e treinamentos para revelar prêmios surpresa."
       icon={<Gift className="h-5 w-5" aria-hidden />}
     >
       <SEOHead
