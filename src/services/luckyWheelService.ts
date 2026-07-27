@@ -1,6 +1,7 @@
 import { supabase } from "@/integrations/supabase/client";
 import { logger } from "./loggingService";
 import type { AuditRecord, PrizeSnapshot } from "@/lib/luckyWheelAudit";
+import type { PayoutSpin } from "@/lib/luckyWheelPayout";
 
 export type LuckyWheelPrizeType = "coins" | "xp" | "achievement" | "nothing";
 export type LuckyWheelRarity = "common" | "rare" | "epic" | "legendary";
