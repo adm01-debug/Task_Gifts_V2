@@ -14,7 +14,7 @@ import {
   Gamepad2, ShoppingBag, Swords, Heart, Award,
   ClipboardCheck, BarChart3, Megaphone, MessageSquare,
   User, Settings, Shield, LogOut, Search, Bell,
-  Moon, Sun, Activity, Dices, Gift, Grid3X3
+  Moon, Sun, Activity, Dices, Gift, Grid3X3, Flag
 } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { useTheme } from "@/hooks/useTheme";
