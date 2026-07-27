@@ -4619,6 +4619,57 @@ export type Database = {
           },
         ]
       }
+      lucky_wheel_whatif_snapshots: {
+        Row: {
+          active_budget: number
+          baseline_alert_count: number
+          break_even_budget: number | null
+          created_at: string
+          created_by: string | null
+          current_coins_per_spin: number
+          current_window_end: string
+          current_window_start: string
+          id: string
+          previous_window_end: string
+          previous_window_start: string
+          scenarios: Json
+          signature: string
+          updated_at: string
+        }
+        Insert: {
+          active_budget?: number
+          baseline_alert_count?: number
+          break_even_budget?: number | null
+          created_at?: string
+          created_by?: string | null
+          current_coins_per_spin?: number
+          current_window_end: string
+          current_window_start: string
+          id?: string
+          previous_window_end: string
+          previous_window_start: string
+          scenarios?: Json
+          signature: string
+          updated_at?: string
+        }
+        Update: {
+          active_budget?: number
+          baseline_alert_count?: number
+          break_even_budget?: number | null
+          created_at?: string
+          created_by?: string | null
+          current_coins_per_spin?: number
+          current_window_end?: string
+          current_window_start?: string
+          id?: string
+          previous_window_end?: string
+          previous_window_start?: string
+          scenarios?: Json
+          signature?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       mentorship_mission_progress: {
         Row: {
           apprentice_completed_at: string | null
