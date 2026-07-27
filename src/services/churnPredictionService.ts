@@ -1,4 +1,4 @@
-import { supabase } from "@/integrations/supabase/client";
+import { invokeEdgeSafe } from "@/lib/requestId";
 import { logger } from "./loggingService";
 
 export interface ChurnPrediction {
@@ -30,13 +30,24 @@ export interface ChurnPredictionResponse {
 
 export const churnPredictionService = {
   async getPredictions(): Promise<ChurnPredictionResponse> {
-    const { data, error } = await supabase.functions.invoke('churn-prediction');
+    // Retry automático em falhas transitórias (rede/5xx); 429 nunca é repetido.
+    const { data, error, requestId } = await invokeEdgeSafe<ChurnPredictionResponse>(
+      "churn-prediction",
+    );
 
     if (error) {
-      logger.apiError("Error fetching churn predictions", error, "churnPredictionService");
-      throw error;
+      logger.apiError(
+        `Error fetching churn predictions (requestId=${requestId})`,
+        new Error(error.message),
+        "churnPredictionService",
+      );
+      throw new Error(error.message);
     }
 
-    return data as ChurnPredictionResponse;
+    if (!data || typeof data !== "object") {
+      throw new Error("Resposta inválida do serviço de previsão de churn.");
+    }
+
+    return data;
   }
 };
