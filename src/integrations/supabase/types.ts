@@ -4450,6 +4450,7 @@ export type Database = {
         Row: {
           amount: number
           created_at: string
+          dedupe_key: string
           id: string
           prize_id: string | null
           prize_label: string
@@ -4460,6 +4461,7 @@ export type Database = {
         Insert: {
           amount?: number
           created_at?: string
+          dedupe_key: string
           id?: string
           prize_id?: string | null
           prize_label: string
@@ -4470,6 +4472,7 @@ export type Database = {
         Update: {
           amount?: number
           created_at?: string
+          dedupe_key?: string
           id?: string
           prize_id?: string | null
           prize_label?: string
@@ -9311,7 +9314,7 @@ export type Database = {
         Args: { p_opinion_id: string; p_status: string }
         Returns: undefined
       }
-      spin_lucky_wheel: { Args: never; Returns: Json }
+      spin_lucky_wheel: { Args: { p_dedupe_key?: string }; Returns: Json }
       submit_engagement_answer: {
         Args: {
           p_cycle_id: string
