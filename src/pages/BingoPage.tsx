@@ -1,6 +1,16 @@
 import { useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
-import { CalendarClock, Check, Coins, Grid3X3, RefreshCw, Sparkles, Trophy } from "lucide-react";
+import {
+  AlertTriangle,
+  CalendarClock,
+  Check,
+  Coins,
+  Grid3X3,
+  Loader2,
+  RefreshCw,
+  Sparkles,
+  Trophy,
+} from "lucide-react";
 import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -27,10 +37,33 @@ function formatWindow(startsAt?: string, endsAt?: string): string {
   return `${fmt.format(new Date(startsAt))} — ${fmt.format(new Date(endsAt))}`;
 }
 
+/**
+ * Grade neutra exibida enquanto as casas ainda não chegaram do backend.
+ *
+ * Mantém a mesma geometria 5x5 da cartela real para evitar layout shift (CLS)
+ * e garante que a página nunca renderize um grid vazio quando `cells` vier
+ * `null`/vazio — situação possível entre a criação da cartela e o primeiro sync.
+ */
+function BingoGridSkeleton() {
+  return (
+    <div className="grid grid-cols-5 gap-1.5 sm:gap-2" aria-hidden>
+      {Array.from({ length: BINGO_CELLS }, (_, i) => (
+        <Skeleton key={i} className="min-h-[86px] rounded-lg sm:min-h-[104px]" />
+      ))}
+    </div>
+  );
+}
+
 export default function BingoPage() {
-  const { data: card, isLoading } = useBingoCard();
+  const {
+    data: card,
+    isLoading,
+    isError,
+    isFetching,
+    refetch,
+  } = useBingoCard();
   const cardId = card?.success ? card.card_id : undefined;
-  const { data: marks } = useBingoMarks(cardId);
+  const { data: marks, isLoading: isLoadingMarks } = useBingoMarks(cardId);
   const syncMutation = useSyncBingoCard();
   const haptics = useHaptics();
   const [autoSynced, setAutoSynced] = useState(false);
@@ -90,6 +123,13 @@ export default function BingoPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [cardId, autoSynced]);
 
+  // Dados podem chegar parcialmente nulos (RPC recém-criada, sync pendente).
+  // Nunca confiamos na existência de `board`/`cells` para renderizar.
+  const board = card?.board ?? null;
+  const cells = card?.cells ?? [];
+  const isSyncing = syncMutation.isPending;
+  const isRefreshing = isFetching || isLoadingMarks || isSyncing;
+
   return (
     <PageShell
       title="Bingo de Missões"
@@ -101,11 +141,27 @@ export default function BingoPage() {
       />
 
       <SectionErrorBoundary sectionName="Bingo de Missões">
-        {isLoading ? (
+        {isLoading || (!card && isFetching) ? (
           <div className="space-y-4">
             <Skeleton className="h-24 w-full rounded-xl" />
-            <Skeleton className="h-[420px] w-full rounded-xl" />
+            <BingoGridSkeleton />
+            <p className="text-center text-sm text-muted-foreground" role="status">
+              Carregando sua cartela...
+            </p>
           </div>
+        ) : isError || !card ? (
+          <Card className="border-destructive/30">
+            <CardContent className="flex flex-col items-center gap-3 py-12 text-center">
+              <AlertTriangle className="h-10 w-10 text-destructive" aria-hidden />
+              <p className="text-muted-foreground">
+                Não foi possível carregar a cartela agora. Verifique sua conexão e tente novamente.
+              </p>
+              <Button variant="outline" className="min-h-11" onClick={() => void refetch()}>
+                <RefreshCw className={cn("mr-2 h-4 w-4", isFetching && "animate-spin")} />
+                Tentar novamente
+              </Button>
+            </CardContent>
+          </Card>
         ) : !card?.success ? (
           <Card>
             <CardContent className="flex flex-col items-center gap-3 py-12 text-center">
@@ -125,20 +181,24 @@ export default function BingoPage() {
                   <div>
                     <CardTitle className="flex items-center gap-2 text-lg">
                       <Grid3X3 className="h-5 w-5 text-primary" />
-                      {card.board?.title}
+                      {board?.title ?? "Rodada de bingo"}
                     </CardTitle>
-                    <p className="mt-1 flex items-center gap-1.5 text-sm text-muted-foreground">
-                      <CalendarClock className="h-4 w-4" />
-                      {formatWindow(card.board?.starts_at, card.board?.ends_at)}
-                    </p>
+                    {board?.starts_at && board?.ends_at ? (
+                      <p className="mt-1 flex items-center gap-1.5 text-sm text-muted-foreground">
+                        <CalendarClock className="h-4 w-4" />
+                        {formatWindow(board.starts_at, board.ends_at)}
+                      </p>
+                    ) : (
+                      <Skeleton className="mt-1 h-4 w-40" />
+                    )}
                   </div>
                   <Button
                     onClick={() => handleSync(false)}
-                    disabled={syncMutation.isPending}
+                    disabled={isSyncing}
                     className="min-h-11"
                   >
-                    <RefreshCw className={cn("mr-2 h-4 w-4", syncMutation.isPending && "animate-spin")} />
-                    Sincronizar progresso
+                    <RefreshCw className={cn("mr-2 h-4 w-4", isSyncing && "animate-spin")} />
+                    {isSyncing ? "Sincronizando..." : "Sincronizar progresso"}
                   </Button>
                 </div>
               </CardHeader>
@@ -152,9 +212,13 @@ export default function BingoPage() {
                   </div>
                   <div className="rounded-lg border bg-card p-3">
                     <p className="text-xs text-muted-foreground">Casas marcadas</p>
-                    <p className="text-xl font-semibold text-foreground">
-                      {markedPositions.size}/{BINGO_CELLS}
-                    </p>
+                    {isLoadingMarks ? (
+                      <Skeleton className="mt-1 h-6 w-16" />
+                    ) : (
+                      <p className="text-xl font-semibold text-foreground">
+                        {markedPositions.size}/{BINGO_CELLS}
+                      </p>
+                    )}
                   </div>
                   <div className="rounded-lg border bg-card p-3">
                     <p className="text-xs text-muted-foreground">Moedas ganhas</p>
@@ -180,19 +244,36 @@ export default function BingoPage() {
                   <Progress value={progress} aria-label="Progresso da cartela" />
                 </div>
 
-                <p className="text-xs text-muted-foreground">
-                  Cada linha fechada vale {card.board?.coins_per_line} moedas e {card.board?.xp_per_line} XP.
-                  Cartela cheia: +{card.board?.coins_full_house} moedas e +{card.board?.xp_full_house} XP.
-                </p>
+                {board ? (
+                  <p className="text-xs text-muted-foreground">
+                    Cada linha fechada vale {board.coins_per_line ?? 0} moedas e {board.xp_per_line ?? 0} XP.
+                    Cartela cheia: +{board.coins_full_house ?? 0} moedas e +{board.xp_full_house ?? 0} XP.
+                  </p>
+                ) : (
+                  <Skeleton className="h-4 w-3/4" />
+                )}
+                {isRefreshing && (
+                  <p
+                    className="flex items-center gap-1.5 text-xs text-muted-foreground"
+                    role="status"
+                    aria-live="polite"
+                  >
+                    <Loader2 className="h-3.5 w-3.5 animate-spin" aria-hidden />
+                    Atualizando dados da cartela...
+                  </p>
+                )}
               </CardContent>
             </Card>
 
+            {cells.length === 0 ? (
+              <BingoGridSkeleton />
+            ) : (
             <div
               className="grid grid-cols-5 gap-1.5 sm:gap-2"
               role="grid"
               aria-label="Cartela de bingo 5 por 5"
             >
-              {(card.cells || []).map((cell) => {
+              {cells.map((cell) => {
                 const isMarked = markedPositions.has(cell.position);
                 const isHighlighted = highlighted.has(cell.position);
                 const observed = observedByPosition.get(cell.position) ?? 0;
@@ -227,6 +308,7 @@ export default function BingoPage() {
                 );
               })}
             </div>
+            )}
 
             {lines >= BINGO_TOTAL_LINES && (
               <Card className="border-primary/40 bg-primary/5">
