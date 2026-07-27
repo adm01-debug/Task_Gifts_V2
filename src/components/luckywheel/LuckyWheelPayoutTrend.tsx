@@ -219,8 +219,10 @@ export function LuckyWheelPayoutTrend() {
                   borderRadius: 12,
                   fontSize: 12,
                 }}
-                formatter={(value: number | null, name: string) =>
-                  value === null ? ["sem dados", name] : [numberFormat.format(value), name]
+                formatter={(value, name) =>
+                  typeof value === "number"
+                    ? [numberFormat.format(value), String(name)]
+                    : ["sem dados", String(name)]
                 }
               />
               <Legend wrapperStyle={{ fontSize: 12 }} />
