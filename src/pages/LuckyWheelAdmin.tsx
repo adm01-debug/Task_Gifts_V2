@@ -391,6 +391,8 @@ export default function LuckyWheelAdmin() {
                 )}
               </CardContent>
             </Card>
+
+            <LuckyWheelAuditTrail />
           </div>
         </SectionErrorBoundary>
       </PageShell>
