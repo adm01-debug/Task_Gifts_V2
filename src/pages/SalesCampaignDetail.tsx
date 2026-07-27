@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
+import { useQueryClient } from "@tanstack/react-query";
 import { useSalesCampaign } from "@/hooks/useSalesCampaigns";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -12,6 +13,8 @@ import { ArrowLeft, Check, X, Target, Trophy, TrendingUp, Users, Sparkles, Downl
 import { UserPlus } from "lucide-react";
 import { useRBAC } from "@/hooks/useRBAC";
 import { CampaignProgressChart } from "@/components/campaigns/CampaignProgressChart";
+import { CampaignImportDialog } from "@/components/campaigns/CampaignImportDialog";
+import { CampaignImportHistory } from "@/components/campaigns/CampaignImportHistory";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { cn } from "@/lib/utils";
@@ -32,6 +35,13 @@ export default function SalesCampaignDetail() {
   } = useSalesCampaign(id);
   const { isAdmin } = useRBAC();
   const [delta, setDelta] = useState("");
+  const queryClient = useQueryClient();
+
+  /** Revalida campanha, participantes e lotes apos uma importacao. */
+  const refetchAll = () => {
+    queryClient.invalidateQueries({ queryKey: ["sales-campaign", id] });
+    queryClient.invalidateQueries({ queryKey: ["campaign-imports", id] });
+  };
 
   useEffect(() => {
     document.title = campaign ? `${campaign.name} | Campanhas` : "Campanha";
@@ -218,6 +228,8 @@ export default function SalesCampaignDetail() {
         personalTarget={myParticipation?.target_adjusted ?? null}
       />
 
+      {isAdmin && <CampaignImportHistory campaignId={campaign.id} canManage={isAdmin} />}
+
       {/* Ranking */}
       <Card className="p-6">
         <div className="flex items-center justify-between mb-4 gap-3 flex-wrap">
@@ -233,6 +245,13 @@ export default function SalesCampaignDetail() {
               <Download className="h-4 w-4" />
               Exportar CSV
             </Button>
+            {isAdmin && (
+            <CampaignImportDialog
+              campaignId={campaign.id}
+              metricUnit={campaign.metric_unit}
+              onApplied={() => refetchAll()}
+            />
+            )}
             {isAdmin && (
             <Button
               variant="outline"

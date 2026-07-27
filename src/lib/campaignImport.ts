@@ -340,3 +340,105 @@ export const IMPORT_TEMPLATE_CSV = [
   "vendedor@empresa.com;1.250,00;01/07/2026;PED-1001",
   "00123456;980,50;02/07/2026;PED-1002",
 ].join("\n");
+/* ------------------------------------------------------------------ */
+/* Resolucao de colaborador (camada pura)                              */
+/* ------------------------------------------------------------------ */
+
+/** Registro minimo de diretorio usado para casar o identificador da planilha. */
+export interface DirectoryEntry {
+  id: string;
+  email?: string | null;
+  personal_email?: string | null;
+  cpf?: string | null;
+  employee_id?: string | null;
+  display_name?: string | null;
+}
+
+/**
+ * Indice de resolucao. Chaves ambiguas (mesmo valor para dois colaboradores)
+ * sao removidas: e preferivel falhar a linha do que creditar a pessoa errada.
+ */
+export interface DirectoryIndex {
+  byKey: Map<string, string>;
+  ambiguous: Set<string>;
+}
+
+export function buildDirectoryIndex(entries: DirectoryEntry[]): DirectoryIndex {
+  const byKey = new Map<string, string>();
+  const ambiguous = new Set<string>();
+
+  const add = (rawKey: unknown, userId: string) => {
+    const key = normalizeSellerIdentifier(rawKey);
+    if (!key || key.length < 3) return;
+    const existing = byKey.get(key);
+    if (existing && existing !== userId) {
+      ambiguous.add(key);
+      byKey.delete(key);
+      return;
+    }
+    if (ambiguous.has(key)) return;
+    byKey.set(key, userId);
+  };
+
+  entries.forEach((e) => {
+    if (!e?.id) return;
+    add(e.email, e.id);
+    add(e.personal_email, e.id);
+    add(e.cpf, e.id);
+    add(e.employee_id, e.id);
+    add(e.display_name, e.id);
+  });
+
+  return { byKey, ambiguous };
+}
+
+export interface ResolvedResultRow extends ParsedResultRow {
+  userId: string | null;
+}
+
+/** Associa cada linha valida a um colaborador; invalida as nao resolvidas. */
+export function resolveRows(rows: ParsedResultRow[], index: DirectoryIndex): ResolvedResultRow[] {
+  return rows.map((row) => {
+    if (row.status !== "valid") return { ...row, userId: null };
+    const key = normalizeSellerIdentifier(row.sellerIdentifier);
+    if (index.ambiguous.has(key)) {
+      return {
+        ...row,
+        userId: null,
+        status: "invalid",
+        errorReason: "Identificador ambiguo: corresponde a mais de um colaborador",
+      };
+    }
+    const userId = index.byKey.get(key) ?? null;
+    if (!userId) {
+      return {
+        ...row,
+        userId: null,
+        status: "invalid",
+        errorReason: "Colaborador nao encontrado no diretorio",
+      };
+    }
+    return { ...row, userId };
+  });
+}
+
+/** Resumo agregado por colaborador, usado na pre-visualizacao. */
+export function summarizeBySeller(rows: ResolvedResultRow[]): Array<{
+  userId: string;
+  sellerIdentifier: string;
+  rows: number;
+  amount: number;
+}> {
+  const map = new Map<string, { userId: string; sellerIdentifier: string; rows: number; amount: number }>();
+  rows.forEach((r) => {
+    if (r.status !== "valid" || !r.userId) return;
+    const current = map.get(r.userId);
+    if (current) {
+      current.rows += 1;
+      current.amount += r.amount;
+    } else {
+      map.set(r.userId, { userId: r.userId, sellerIdentifier: r.sellerIdentifier, rows: 1, amount: r.amount });
+    }
+  });
+  return Array.from(map.values()).sort((a, b) => b.amount - a.amount);
+}
