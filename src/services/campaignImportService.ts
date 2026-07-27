@@ -43,6 +43,17 @@ export interface CampaignImportRow {
   error_reason: string | null;
 }
 
+/** Desempenho consolidado de um colaborador a partir dos lotes já aplicados. */
+export interface CampaignUserResult {
+  user_id: string;
+  /** Soma dos valores efetivamente contabilizados. */
+  amount: number;
+  /** Quantidade de lançamentos aplicados. */
+  entries: number;
+  /** Data de referência mais recente (ISO) ou null quando ausente. */
+  last_reference_date: string | null;
+}
+
 // Cast controlado: as tabelas existem no schema gerado, mas o client tipado
 // exige narrowing exaustivo que nao agrega valor aqui.
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -55,6 +66,9 @@ async function insertInChunks(rows: Record<string, unknown>[], chunkSize = 500):
     if (error) throw error;
   }
 }
+
+/** Pagina de leitura usada pela agregacao (evita estourar o limite do PostgREST). */
+const RESULT_PAGE_SIZE = 1000;
 
 export const campaignImportService = {
   /** Carrega o diretorio de colaboradores para resolucao de identificadores. */
@@ -173,5 +187,61 @@ export const campaignImportService = {
     const { data, error } = await q;
     if (error) throw error;
     return (data ?? []) as CampaignImportRow[];
+  },
+
+  /**
+   * Consolida, por colaborador, todas as linhas aplicadas de uma campanha.
+   *
+   * A agregacao e feita no cliente sobre paginas porque o PostgREST nao expoe
+   * `GROUP BY`; o custo e linear e as linhas sao enxutas.
+   */
+  async aggregateAppliedByUser(campaignId: string): Promise<CampaignUserResult[]> {
+
+    try {
+      const totals = new Map<string, CampaignUserResult>();
+      let from = 0;
+
+      // Paginação defensiva: interrompe assim que a página vier incompleta.
+      for (;;) {
+        const { data, error } = await db
+          .from("campaign_result_rows")
+          .select("user_id, amount, reference_date")
+          .eq("campaign_id", campaignId)
+          .eq("status", "applied")
+          .range(from, from + RESULT_PAGE_SIZE - 1);
+        if (error) throw error;
+
+        const page = (data ?? []) as Array<{
+          user_id: string | null;
+          amount: number | string | null;
+          reference_date: string | null;
+        }>;
+
+        page.forEach((row) => {
+          if (!row.user_id) return;
+          const amount = Number(row.amount ?? 0);
+          const current =
+            totals.get(row.user_id) ??
+            { user_id: row.user_id, amount: 0, entries: 0, last_reference_date: null };
+          current.amount += Number.isFinite(amount) ? amount : 0;
+          current.entries += 1;
+          if (
+            row.reference_date &&
+            (!current.last_reference_date || row.reference_date > current.last_reference_date)
+          ) {
+            current.last_reference_date = row.reference_date;
+          }
+          totals.set(row.user_id, current);
+        });
+
+        if (page.length < RESULT_PAGE_SIZE) break;
+        from += RESULT_PAGE_SIZE;
+      }
+
+      return Array.from(totals.values()).sort((a, b) => b.amount - a.amount);
+    } catch (err) {
+      logger.apiError("aggregate campaign_result_rows", err, "campaignImportService");
+      return [];
+    }
   },
 };

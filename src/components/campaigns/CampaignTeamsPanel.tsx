@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { Link } from "react-router-dom";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -22,7 +23,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Users, Plus, Trash2, Coins, HandCoins, UserMinus } from "lucide-react";
+import { Users, Plus, Trash2, Coins, HandCoins, UserMinus, BarChart3 } from "lucide-react";
 import { useCampaignTeams } from "@/hooks/useCampaignTeams";
 import { cn } from "@/lib/utils";
 import type { CampaignParticipant } from "@/services/salesCampaignsService";
@@ -120,8 +121,14 @@ export function CampaignTeamsPanel({
             rateado quando a meta da equipe é batida.
           </p>
         </div>
-        {canManage && (
-          <div className="flex gap-2 flex-wrap">
+        <div className="flex gap-2 flex-wrap">
+          <Button asChild size="sm" variant="secondary" className="gap-2">
+            <Link to={`/campanhas/${campaignId}/ranking-equipes`}>
+              <BarChart3 className="h-4 w-4" /> Ranking detalhado
+            </Link>
+          </Button>
+          {canManage && (
+            <>
             <Dialog open={createOpen} onOpenChange={setCreateOpen}>
               <DialogTrigger asChild>
                 <Button size="sm" variant="outline" className="gap-2">
@@ -177,8 +184,9 @@ export function CampaignTeamsPanel({
               <HandCoins className="h-4 w-4" />
               {isAwarding ? "Rateando..." : "Ratear prêmio"}
             </Button>
-          </div>
-        )}
+            </>
+          )}
+        </div>
       </div>
 
       {canManage && teams.length > 0 && (
