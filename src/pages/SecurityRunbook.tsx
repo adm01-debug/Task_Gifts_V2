@@ -469,6 +469,19 @@ export default function SecurityRunbook() {
                     <span><code className="bg-muted px-1 rounded">{entry.alertType}</code></span>
                     <span>👤 {entry.owner}</span>
                     <span>⏱️ SLA {slaMinutes}min</span>
+                    {isAdmin && (
+                      <SlaTargetEditor
+                        alertType={entry.alertType}
+                        title={entry.title}
+                        currentMttaMinutes={Math.max(
+                          1,
+                          Math.round((slaRowByType[entry.alertType]?.mtta_target_seconds ?? 0) / 60) ||
+                            Math.max(1, Math.round(slaMinutes / 2)),
+                        )}
+                        currentMttrMinutes={slaMinutes}
+                        currentNotes={slaRowByType[entry.alertType]?.notes ?? null}
+                      />
+                    )}
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4 text-sm">
