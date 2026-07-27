@@ -131,18 +131,81 @@ export function normalCdf(z: number): number {
 
 /**
  * p-valor bicaudal de uma estatística t com `df` graus de liberdade.
- * Usa a correção de Fisher–Cornish para aproximar t pela normal, o que mantém
- * o erro abaixo de ~0,5% para df >= 5 sem depender de funções beta.
+ * Calculado exatamente por `I_x(df/2, 1/2)` (beta incompleta regularizada),
+ * que é estável tanto para df pequeno quanto para estatísticas grandes —
+ * aproximações normais colapsam nos dois extremos.
  */
 export function tTestPValue(t: number, df: number): number {
   const stat = Math.abs(safe(t));
   if (stat === 0) return 1;
   if (!Number.isFinite(df) || df <= 0) return 1;
-  if (df > 1000) return clampP(2 * (1 - normalCdf(stat)));
-  const g1 = (stat ** 3 + stat) / 4;
-  const g2 = (5 * stat ** 5 + 16 * stat ** 3 + 3 * stat) / 96;
-  const z = stat - g1 / df - g2 / df ** 2;
-  return clampP(2 * (1 - normalCdf(Math.max(0, z))));
+  const x = df / (df + stat * stat);
+  return clampP(regularizedIncompleteBeta(x, df / 2, 0.5));
+}
+
+/** ln Γ(z) — aproximação de Lanczos (precisão ~1e-13 para z > 0). */
+function logGamma(z: number): number {
+  const g = [
+    676.5203681218851, -1259.1392167224028, 771.32342877765313, -176.61502916214059,
+    12.507343278686905, -0.13857109526572012, 9.9843695780195716e-6, 1.5056327351493116e-7,
+  ];
+  if (z < 0.5) return Math.log(Math.PI / Math.sin(Math.PI * z)) - logGamma(1 - z);
+  const x = z - 1;
+  let a = 0.99999999999980993;
+  for (let i = 0; i < g.length; i++) a += g[i] / (x + i + 1);
+  const t = x + g.length - 0.5;
+  return 0.5 * Math.log(2 * Math.PI) + (x + 0.5) * Math.log(t) - t + Math.log(a);
+}
+
+/** Fração contínua de Lentz para a beta incompleta. */
+function betaContinuedFraction(x: number, a: number, b: number): number {
+  const TINY = 1e-30;
+  const qab = a + b;
+  const qap = a + 1;
+  const qam = a - 1;
+  let c = 1;
+  let d = 1 - (qab * x) / qap;
+  if (Math.abs(d) < TINY) d = TINY;
+  d = 1 / d;
+  let h = d;
+  for (let m = 1; m <= 300; m++) {
+    const m2 = 2 * m;
+    let aa = (m * (b - m) * x) / ((qam + m2) * (a + m2));
+    d = 1 + aa * d;
+    if (Math.abs(d) < TINY) d = TINY;
+    c = 1 + aa / c;
+    if (Math.abs(c) < TINY) c = TINY;
+    d = 1 / d;
+    h *= d * c;
+    aa = (-(a + m) * (qab + m) * x) / ((a + m2) * (qap + m2));
+    d = 1 + aa * d;
+    if (Math.abs(d) < TINY) d = TINY;
+    c = 1 + aa / c;
+    if (Math.abs(c) < TINY) c = TINY;
+    d = 1 / d;
+    const del = d * c;
+    h *= del;
+    if (Math.abs(del - 1) < 3e-16) break;
+  }
+  return h;
+}
+
+/** Beta incompleta regularizada I_x(a, b). */
+export function regularizedIncompleteBeta(x: number, a: number, b: number): number {
+  if (!Number.isFinite(x) || x <= 0) return 0;
+  if (x >= 1) return 1;
+  const front = Math.exp(
+    logGamma(a + b) - logGamma(a) - logGamma(b) + a * Math.log(x) + b * Math.log(1 - x),
+  );
+  const value =
+    x < (a + 1) / (a + b + 2)
+      ? (front * betaContinuedFraction(x, a, b)) / a
+      : 1 - (Math.exp(
+          logGamma(a + b) - logGamma(a) - logGamma(b) + b * Math.log(1 - x) + a * Math.log(x),
+        ) *
+          betaContinuedFraction(1 - x, b, a)) /
+          b;
+  return clampP(value);
 }
 
 function clampP(p: number): number {
