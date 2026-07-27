@@ -9329,6 +9329,18 @@ export type Database = {
         Args: { p_subscription_id: string }
         Returns: Json
       }
+      raise_lucky_wheel_window_alerts: {
+        Args: {
+          p_coins_per_spin_budget?: number
+          p_end_date?: string
+          p_max_volume_drop?: number
+          p_min_cost_increase?: number
+          p_min_days?: number
+          p_min_spins?: number
+          p_window_days?: number
+        }
+        Returns: number
+      }
       recalc_campaign_progress: {
         Args: { _campaign_id: string }
         Returns: undefined
