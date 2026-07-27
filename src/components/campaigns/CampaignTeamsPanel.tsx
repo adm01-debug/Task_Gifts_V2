@@ -26,6 +26,8 @@ import {
 import { Users, Plus, Trash2, Coins, HandCoins, UserMinus, BarChart3 } from "lucide-react";
 import { useCampaignTeams } from "@/hooks/useCampaignTeams";
 import { CampaignTeamSplitTrail } from "./CampaignTeamSplitTrail";
+import { CampaignTeamHealthAlert } from "./CampaignTeamHealthAlert";
+import { analyzeTeamHealth } from "@/lib/campaignTeamHealth";
 import { cn } from "@/lib/utils";
 import type { CampaignParticipant } from "@/services/salesCampaignsService";
 
@@ -88,6 +90,24 @@ export function CampaignTeamsPanel({
 
   const assignedUserIds = useMemo(() => new Set(members.map((m) => m.user_id)), [members]);
   const unassigned = participants.filter((p) => !assignedUserIds.has(p.user_id));
+
+  /** Diagnóstico preventivo: bloqueia rateio inconsistente antes do pagamento. */
+  const health = useMemo(
+    () =>
+      analyzeTeamHealth(
+        teams.map((t) => ({
+          id: t.id,
+          name: t.name,
+          target_team: t.target_team,
+          progress: t.progress,
+          members_count: t.members_count,
+          awarded_at: t.awarded_at,
+        })),
+        members.map((m) => ({ team_id: m.team_id, user_id: m.user_id })),
+        participants.map((p) => ({ user_id: p.user_id })),
+      ),
+    [teams, members, participants],
+  );
 
   const myTeamId = currentUserId
     ? members.find((m) => m.user_id === currentUserId)?.team_id ?? null
@@ -176,7 +196,12 @@ export function CampaignTeamsPanel({
               size="sm"
               variant="outline"
               className="gap-2"
-              disabled={isAwarding || teams.length === 0}
+              disabled={isAwarding || teams.length === 0 || health.criticalCount > 0}
+              title={
+                health.criticalCount > 0
+                  ? "Corrija os bloqueios do diagnóstico antes de ratear"
+                  : undefined
+              }
               onClick={() => {
                 if (window.confirm("Ratear o prêmio coletivo entre as equipes que bateram a meta?")) {
                   awardTeamSplit();
@@ -190,6 +215,10 @@ export function CampaignTeamsPanel({
           )}
         </div>
       </div>
+
+      {canManage && teams.length > 0 && (
+        <CampaignTeamHealthAlert report={health} />
+      )}
 
       {canManage && teams.length > 0 && (
         <div className="flex items-end gap-2 flex-wrap rounded-lg border border-dashed p-3">
