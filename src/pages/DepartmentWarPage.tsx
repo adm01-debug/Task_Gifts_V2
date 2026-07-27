@@ -3,6 +3,9 @@ import { motion } from "framer-motion";
 import {
   Building2,
   Coins,
+  Ban,
+  PlayCircle,
+  Plus,
   Flame,
   Gauge,
   Shield,
@@ -26,8 +29,10 @@ import {
   useDepartmentWars,
   useMyWarContributions,
   useSettleDepartmentWar,
+  useSetDepartmentWarStatus,
   useSyncWarHeadcount,
 } from "@/hooks/useDepartmentWars";
+import { DepartmentWarConfigDialog } from "@/components/war/DepartmentWarConfigDialog";
 import { warProgress } from "@/lib/departmentWar";
 import type { DepartmentWarStatus } from "@/services/departmentWarService";
 import { cn } from "@/lib/utils";
@@ -60,7 +65,10 @@ export default function DepartmentWarPage() {
   const { isAdmin } = useRBAC();
   const [selectedId, setSelectedId] = useState<string | null>(null);
 
+  const [configOpen, setConfigOpen] = useState(false);
+
   const settleMutation = useSettleDepartmentWar();
+  const statusMutation = useSetDepartmentWarStatus();
   const syncMutation = useSyncWarHeadcount();
 
   const activeId = useMemo(() => {
@@ -104,6 +112,19 @@ export default function DepartmentWarPage() {
     }
   };
 
+  const handleStatus = async (id: string, status: "running" | "cancelled") => {
+    try {
+      const result = await statusMutation.mutateAsync({ warId: id, status });
+      if (!result.success) {
+        toast.error(result.reason ?? "Não foi possível alterar a situação da guerra.");
+        return;
+      }
+      toast.success(status === "running" ? "Guerra iniciada!" : "Guerra cancelada.");
+    } catch {
+      toast.error("Falha ao alterar a situação da guerra.");
+    }
+  };
+
   return (
     <PageShell
       title="Guerra de Departamentos"
@@ -112,6 +133,21 @@ export default function DepartmentWarPage() {
       <SEOHead
         title="Guerra de Departamentos | Task Gifts"
         description="Competição entre áreas com pontuação ponderada, normalização por tamanho de equipe e prêmios em moedas e XP."
+      />
+
+      {isAdmin ? (
+        <div className="mb-4 flex justify-end">
+          <Button className="min-h-[44px]" onClick={() => setConfigOpen(true)}>
+            <Plus className="mr-2 h-4 w-4" />
+            Nova guerra
+          </Button>
+        </div>
+      ) : null}
+
+      <DepartmentWarConfigDialog
+        open={configOpen}
+        onOpenChange={setConfigOpen}
+        onCreated={(warId) => setSelectedId(warId)}
       />
 
       <SectionErrorBoundary sectionName="Guerra de Departamentos">
@@ -218,10 +254,34 @@ export default function DepartmentWarPage() {
                           <Users className="mr-2 h-4 w-4" />
                           Sincronizar efetivo
                         </Button>
+                        {war.status === "draft" ? (
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="min-h-[44px]"
+                            disabled={statusMutation.isPending}
+                            onClick={() => handleStatus(war.id, "running")}
+                          >
+                            <PlayCircle className="mr-2 h-4 w-4" />
+                            Iniciar guerra
+                          </Button>
+                        ) : null}
+                        {war.status === "draft" || war.status === "running" ? (
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="min-h-[44px]"
+                            disabled={statusMutation.isPending}
+                            onClick={() => handleStatus(war.id, "cancelled")}
+                          >
+                            <Ban className="mr-2 h-4 w-4" />
+                            Cancelar
+                          </Button>
+                        ) : null}
                         <Button
                           size="sm"
                           className="min-h-[44px]"
-                          disabled={settleMutation.isPending || !!war.settled_at}
+                          disabled={settleMutation.isPending || !!war.settled_at || war.status !== "running"}
                           onClick={() => handleSettle(war.id)}
                         >
                           <Sparkles className="mr-2 h-4 w-4" />
