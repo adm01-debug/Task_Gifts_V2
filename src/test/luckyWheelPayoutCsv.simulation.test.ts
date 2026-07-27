@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   buildPayoutCsv,
   payoutCsvFilename,
-  reconcilePayout,
+  buildPayoutReport,
   type PayoutSpin,
 } from "@/lib/luckyWheelPayout";
 import type { OddsPrize } from "@/lib/luckyWheelOdds";
@@ -93,7 +93,7 @@ function sampleSpins(count: number, rnd: () => number): PayoutSpin[] {
 
 describe("buildPayoutCsv — estrutura", () => {
   it("emite as quatro seções na ordem esperada", () => {
-    const report = reconcilePayout(sampleSpins(120, mulberry(1)), BASE_PRIZES);
+    const report = buildPayoutReport(sampleSpins(120, mulberry(1)), BASE_PRIZES);
     const csv = buildPayoutCsv(report, { periodLabel: "30 dias", generatedAt: "2026-07-27T00:00:00.000Z" });
     expect(csv).toContain("Relatório de reconciliação");
     expect(csv).toContain("Indicador,Valor");
@@ -106,13 +106,13 @@ describe("buildPayoutCsv — estrutura", () => {
   });
 
   it("é determinístico para o mesmo relatório e metadados", () => {
-    const report = reconcilePayout(sampleSpins(90, mulberry(7)), BASE_PRIZES);
+    const report = buildPayoutReport(sampleSpins(90, mulberry(7)), BASE_PRIZES);
     const meta = { periodLabel: "7 dias", generatedAt: "2026-07-27T00:00:00.000Z" };
     expect(buildPayoutCsv(report, meta)).toBe(buildPayoutCsv(report, meta));
   });
 
   it("suporta relatório totalmente vazio sem quebrar as seções", () => {
-    const report = reconcilePayout([], []);
+    const report = buildPayoutReport([], []);
     const csv = buildPayoutCsv(report, { generatedAt: "2026-07-27T00:00:00.000Z" });
     expect(csv).toContain("Giros,0");
     expect(() => parseCsv(csv)).not.toThrow();
@@ -138,7 +138,7 @@ describe("buildPayoutCsv — hostilidade de dados", () => {
   it.each(HOSTILE_LABELS)("neutraliza e preserva o rótulo %j", (label) => {
     const prizes = [prize({ id: "px", label, amount: 5, weight: 1 })];
     const spins = [spin({ id: "s1", prize_id: "px", prize_label: label, amount: 5 })];
-    const report = reconcilePayout(spins, prizes);
+    const report = buildPayoutReport(spins, prizes);
     const csv = buildPayoutCsv(report, { generatedAt: "2026-07-27T00:00:00.000Z" });
     const rows = parseCsv(csv);
     const target = rows.find((r) => r[0] === label || r[0] === `'${label}`);
@@ -153,7 +153,7 @@ describe("buildPayoutCsv — hostilidade de dados", () => {
     const spins = HOSTILE_LABELS.map((label, i) =>
       spin({ id: `s${i}`, prize_id: `h${i}`, prize_label: label, amount: i, user_id: `u${i}` }),
     );
-    const report = reconcilePayout(spins, prizes);
+    const report = buildPayoutReport(spins, prizes);
     for (const row of parseCsv(buildPayoutCsv(report))) {
       for (const cell of row) {
         expect(/^[=+@]/.test(cell)).toBe(false);
@@ -171,7 +171,7 @@ describe("buildPayoutCsv — hostilidade de dados", () => {
       spin({ id: "s2", prize_id: "n2", prize_label: "Inf", amount: Number.POSITIVE_INFINITY }),
       spin({ id: "s3", prize_id: "fantasma", prize_label: "Fantasma", amount: 3, created_at: "data-ruim" }),
     ];
-    const csv = buildPayoutCsv(reconcilePayout(spins, prizes));
+    const csv = buildPayoutCsv(buildPayoutReport(spins, prizes));
     expect(csv).not.toMatch(/\bNaN\b/);
     expect(csv).not.toMatch(/\bInfinity\b/);
     expect(csv).not.toMatch(/\bundefined\b/);
@@ -183,7 +183,7 @@ describe("buildPayoutCsv — round-trip contábil", () => {
     for (let seed = 0; seed < 200; seed += 1) {
       const rnd = mulberry(seed + 1000);
       const spins = sampleSpins(20 + Math.floor(rnd() * 200), rnd);
-      const report = reconcilePayout(spins, BASE_PRIZES);
+      const report = buildPayoutReport(spins, BASE_PRIZES);
       const rows = parseCsv(buildPayoutCsv(report, { generatedAt: "2026-07-27T00:00:00.000Z" }));
 
       const header = rows.findIndex((r) => r[0] === "Setor");
@@ -208,7 +208,7 @@ describe("buildPayoutCsv — round-trip contábil", () => {
       spin({ id: "s1", prize_id: "p1", prize_label: "Moedas", amount: 10 }),
       spin({ id: "s2", prize_id: null, prize_label: "Fantasma", amount: 7 }),
     ];
-    const report = reconcilePayout(spins, BASE_PRIZES);
+    const report = buildPayoutReport(spins, BASE_PRIZES);
     const csv = buildPayoutCsv(report);
     for (const alert of report.alerts) {
       expect(csv).toContain(alert.code);
