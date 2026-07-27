@@ -188,14 +188,15 @@ describe("revertCampaignTeamSplit — varredura combinatória", () => {
             });
 
             const out = revertCampaignTeamSplit(s);
-            const payable = entries.filter(
-              (e) => e.outcome === "paid" && (xp > 0 || coins > 0),
-            ).length;
+            const paidRows = entries.filter((e) => e.outcome === "paid").length;
+            const payable = xp > 0 || coins > 0 ? paidRows : 0;
 
-            if (payable === 0) {
+            if (paidRows === 0) {
               expect(out.reverted).toBe(false);
-              expect(["nothing_to_revert"]).toContain(out.reason);
+              expect(out.reason).toBe("nothing_to_revert");
             } else {
+              // Mesmo com valores zerados a reversão ocorre: ela libera as
+              // equipes para um novo rateio e fecha o lote na trilha.
               expect(out.reverted).toBe(true);
               expect(out.members_reverted).toBe(payable);
               expect(out.xp_reverted).toBe(payable * xp);
