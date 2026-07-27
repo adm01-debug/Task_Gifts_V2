@@ -4393,6 +4393,100 @@ export type Database = {
         }
         Relationships: []
       }
+      lucky_wheel_prizes: {
+        Row: {
+          achievement_id: string | null
+          amount: number
+          color: string
+          created_at: string
+          icon: string
+          id: string
+          is_active: boolean
+          label: string
+          prize_type: string
+          rarity: string
+          updated_at: string
+          weight: number
+        }
+        Insert: {
+          achievement_id?: string | null
+          amount?: number
+          color?: string
+          created_at?: string
+          icon?: string
+          id?: string
+          is_active?: boolean
+          label: string
+          prize_type: string
+          rarity?: string
+          updated_at?: string
+          weight?: number
+        }
+        Update: {
+          achievement_id?: string | null
+          amount?: number
+          color?: string
+          created_at?: string
+          icon?: string
+          id?: string
+          is_active?: boolean
+          label?: string
+          prize_type?: string
+          rarity?: string
+          updated_at?: string
+          weight?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "lucky_wheel_prizes_achievement_id_fkey"
+            columns: ["achievement_id"]
+            isOneToOne: false
+            referencedRelation: "achievements"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      lucky_wheel_spins: {
+        Row: {
+          amount: number
+          created_at: string
+          id: string
+          prize_id: string | null
+          prize_label: string
+          prize_type: string
+          spin_date: string
+          user_id: string
+        }
+        Insert: {
+          amount?: number
+          created_at?: string
+          id?: string
+          prize_id?: string | null
+          prize_label: string
+          prize_type: string
+          spin_date?: string
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          id?: string
+          prize_id?: string | null
+          prize_label?: string
+          prize_type?: string
+          spin_date?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "lucky_wheel_spins_prize_id_fkey"
+            columns: ["prize_id"]
+            isOneToOne: false
+            referencedRelation: "lucky_wheel_prizes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       mentorship_mission_progress: {
         Row: {
           apprentice_completed_at: string | null
@@ -8901,6 +8995,7 @@ export type Database = {
         Args: { p_department_id?: string; p_limit?: number }
         Returns: Json
       }
+      get_lucky_wheel_status: { Args: never; Returns: Json }
       get_monthly_trends: { Args: never; Returns: Json }
       get_nine_box_distribution: {
         Args: { p_department_id?: string; p_period?: string }
@@ -9216,6 +9311,7 @@ export type Database = {
         Args: { p_opinion_id: string; p_status: string }
         Returns: undefined
       }
+      spin_lucky_wheel: { Args: never; Returns: Json }
       submit_engagement_answer: {
         Args: {
           p_cycle_id: string
