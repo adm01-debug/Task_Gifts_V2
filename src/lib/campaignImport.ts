@@ -488,3 +488,241 @@ export function summarizeBySeller(rows: ResolvedResultRow[]): Array<{
   });
   return Array.from(map.values()).sort((a, b) => b.amount - a.amount);
 }
+
+/* ------------------------------------------------------------------ */
+/* Reconciliacao (camada pura)                                         */
+/* ------------------------------------------------------------------ */
+
+/** Correcoes manuais: chave normalizada do identificador -> id do colaborador. */
+export type ReconciliationOverrides = Record<string, string | null | undefined>;
+
+const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+/** Aceita apenas ids plausiveis: evita gravar lixo vindo da UI. */
+export function normalizeOverrideId(value: unknown): string | null {
+  const s = String(value ?? "").trim();
+  if (!s || !UUID_RE.test(s)) return null;
+  return s.toLowerCase();
+}
+
+/** Sugestao de colaborador para uma linha nao resolvida. */
+export interface DirectoryCandidate {
+  id: string;
+  label: string;
+  /** 0..1 — quanto maior, mais provavel. */
+  score: number;
+  /** Campo do diretorio que gerou o casamento. */
+  matchedOn: string;
+}
+
+/** Agrupamento de linhas problematicas por identificador. */
+export interface ReconciliationEntry {
+  /** Chave normalizada (vazia quando a planilha nao trouxe identificador). */
+  key: string;
+  displayIdentifier: string;
+  issue: ReconciliationIssue;
+  reason: string;
+  rowNumbers: number[];
+  rows: number;
+  amount: number;
+  candidates: DirectoryCandidate[];
+  /** Reconciliavel = da para apontar um colaborador e reprocessar. */
+  resolvable: boolean;
+}
+
+export interface ReconciliationReport {
+  entries: ReconciliationEntry[];
+  totalIssueRows: number;
+  blockedAmount: number;
+  byIssue: Record<ReconciliationIssue, number>;
+  /** Identificadores distintos que podem ser corrigidos manualmente. */
+  resolvableKeys: number;
+}
+
+const ISSUE_LABEL: Record<ReconciliationIssue, string> = {
+  ambiguous: "Identificador ambíguo (mais de um colaborador)",
+  not_found: "Colaborador não encontrado no diretório",
+  duplicate: "Linha duplicada dentro do arquivo",
+  invalid_data: "Dado inválido na planilha",
+};
+
+function directoryLabel(entry: DirectoryEntry): string {
+  return (
+    entry.display_name?.trim() ||
+    entry.email?.trim() ||
+    entry.employee_id?.trim() ||
+    entry.id
+  );
+}
+
+/** Distancia de similaridade barata (Dice sobre bigramas), sempre em 0..1. */
+function similarity(a: string, b: string): number {
+  if (!a || !b) return 0;
+  if (a === b) return 1;
+  if (a.length < 2 || b.length < 2) return a === b ? 1 : 0;
+  const grams = (s: string) => {
+    const out = new Map<string, number>();
+    for (let i = 0; i < s.length - 1; i += 1) {
+      const g = s.slice(i, i + 2);
+      out.set(g, (out.get(g) ?? 0) + 1);
+    }
+    return out;
+  };
+  const ga = grams(a);
+  const gb = grams(b);
+  let hits = 0;
+  ga.forEach((count, g) => {
+    const other = gb.get(g);
+    if (other) hits += Math.min(count, other);
+  });
+  return (2 * hits) / (a.length - 1 + b.length - 1);
+}
+
+/**
+ * Sugere colaboradores para um identificador que nao resolveu.
+ * Nunca lanca; retorna no maximo `limit` candidatos ordenados por confianca.
+ */
+export function findDirectoryCandidates(
+  rawIdentifier: string,
+  directory: DirectoryEntry[],
+  limit = 5,
+): DirectoryCandidate[] {
+  const key = normalizeSellerIdentifier(rawIdentifier);
+  if (!key) return [];
+  const localPart = key.includes("@") ? key.split("@")[0] : key;
+
+  const scored: DirectoryCandidate[] = [];
+  directory.forEach((entry) => {
+    if (!entry?.id) return;
+    let best = 0;
+    let matchedOn = "";
+    const fields: Array<[string, unknown]> = [
+      ["e-mail", entry.email],
+      ["e-mail pessoal", entry.personal_email],
+      ["CPF", entry.cpf],
+      ["matrícula", entry.employee_id],
+      ["nome", entry.display_name],
+    ];
+    fields.forEach(([label, value]) => {
+      const candidateKey = normalizeSellerIdentifier(value);
+      if (!candidateKey) return;
+      const candidateLocal = candidateKey.includes("@") ? candidateKey.split("@")[0] : candidateKey;
+      let score = similarity(key, candidateKey);
+      if (candidateLocal && localPart && candidateLocal === localPart) score = Math.max(score, 0.95);
+      else if (candidateKey.startsWith(key) || key.startsWith(candidateKey)) score = Math.max(score, 0.8);
+      if (score > best) {
+        best = score;
+        matchedOn = label;
+      }
+    });
+    if (best >= 0.45) {
+      scored.push({ id: entry.id, label: directoryLabel(entry), score: best, matchedOn });
+    }
+  });
+
+  return scored
+    .sort((a, b) => b.score - a.score || a.label.localeCompare(b.label))
+    .slice(0, Math.max(0, limit));
+}
+
+/**
+ * Constroi o relatorio de reconciliacao: agrupa as linhas rejeitadas por
+ * identificador, classifica o motivo e sugere colaboradores para correcao.
+ */
+export function buildReconciliationReport(
+  rows: ResolvedResultRow[],
+  directory: DirectoryEntry[],
+  index?: DirectoryIndex,
+): ReconciliationReport {
+  const idx = index ?? buildDirectoryIndex(directory);
+  const byId = new Map(directory.filter((d) => d?.id).map((d) => [d.id, d] as const));
+  const grouped = new Map<string, ReconciliationEntry>();
+  const byIssue: Record<ReconciliationIssue, number> = {
+    ambiguous: 0,
+    not_found: 0,
+    duplicate: 0,
+    invalid_data: 0,
+  };
+  let blockedAmount = 0;
+  let totalIssueRows = 0;
+
+  rows.forEach((row) => {
+    if (row.status === "valid") return;
+    const issue: ReconciliationIssue = row.issue ?? "invalid_data";
+    const key = normalizeSellerIdentifier(row.sellerIdentifier);
+    const groupKey = `${issue}|${key || `linha-${row.rowNumber}`}`;
+    byIssue[issue] += 1;
+    totalIssueRows += 1;
+    blockedAmount += Number.isFinite(row.amount) ? row.amount : 0;
+
+    const existing = grouped.get(groupKey);
+    if (existing) {
+      existing.rowNumbers.push(row.rowNumber);
+      existing.rows += 1;
+      existing.amount += Number.isFinite(row.amount) ? row.amount : 0;
+      return;
+    }
+
+    const resolvable = issue === "ambiguous" || issue === "not_found";
+    const candidates = !resolvable
+      ? []
+      : issue === "ambiguous"
+        ? (idx.ambiguousOwners.get(key) ?? [])
+            .map((id) => {
+              const entry = byId.get(id);
+              return entry
+                ? { id, label: directoryLabel(entry), score: 1, matchedOn: "conflito direto" }
+                : null;
+            })
+            .filter((c): c is DirectoryCandidate => c !== null)
+        : findDirectoryCandidates(row.sellerIdentifier, directory);
+
+    grouped.set(groupKey, {
+      key,
+      displayIdentifier: row.sellerIdentifier || "(sem identificador)",
+      issue,
+      reason: row.errorReason ?? ISSUE_LABEL[issue],
+      rowNumbers: [row.rowNumber],
+      rows: 1,
+      amount: Number.isFinite(row.amount) ? row.amount : 0,
+      candidates,
+      resolvable: resolvable && key.length > 0,
+    });
+  });
+
+  const entries = Array.from(grouped.values()).sort(
+    (a, b) => Number(b.resolvable) - Number(a.resolvable) || b.amount - a.amount,
+  );
+
+  return {
+    entries,
+    totalIssueRows,
+    blockedAmount,
+    byIssue,
+    resolvableKeys: entries.filter((e) => e.resolvable).length,
+  };
+}
+
+/** Rotulo legivel de um tipo de problema. */
+export function reconciliationIssueLabel(issue: ReconciliationIssue): string {
+  return ISSUE_LABEL[issue];
+}
+
+/**
+ * Reprocessa as linhas aplicando as correcoes manuais.
+ * Linhas duplicadas ou com dado invalido permanecem rejeitadas — corrigir isso
+ * exige alterar a planilha, nao apenas apontar o colaborador certo.
+ */
+export function reprocessWithOverrides(
+  rows: ResolvedResultRow[] | ParsedResultRow[],
+  index: DirectoryIndex,
+  overrides: ReconciliationOverrides,
+): ResolvedResultRow[] {
+  const sanitized: ReconciliationOverrides = {};
+  Object.entries(overrides ?? {}).forEach(([key, value]) => {
+    const id = normalizeOverrideId(value);
+    const normalizedKey = normalizeSellerIdentifier(key);
+    if (id && normalizedKey) sanitized[normalizedKey] = id;
+  });
+  return resolveRows(rows as ParsedResultRow[], index, sanitized);
+}
