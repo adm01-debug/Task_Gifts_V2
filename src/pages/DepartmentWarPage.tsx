@@ -358,6 +358,8 @@ export default function DepartmentWarPage() {
 
                 {/* Métricas e contribuições */}
                 <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+                  <WarLiveFeed warId={war.id} className="lg:col-span-2" />
+
                   <Card>
                     <CardHeader className="pb-3">
                       <CardTitle className="text-base">Como pontuar</CardTitle>
