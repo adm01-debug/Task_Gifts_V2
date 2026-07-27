@@ -4393,6 +4393,57 @@ export type Database = {
         }
         Relationships: []
       }
+      lucky_wheel_payout_snapshots: {
+        Row: {
+          chi_square: number
+          coins_paid: number
+          created_at: string
+          degrees_of_freedom: number
+          duplicate_spins: number
+          id: string
+          projected_coins: number
+          projected_xp: number
+          snapshot_date: string
+          spins: number
+          unconfigured_spins: number
+          unique_users: number
+          updated_at: string
+          xp_paid: number
+        }
+        Insert: {
+          chi_square?: number
+          coins_paid?: number
+          created_at?: string
+          degrees_of_freedom?: number
+          duplicate_spins?: number
+          id?: string
+          projected_coins?: number
+          projected_xp?: number
+          snapshot_date: string
+          spins?: number
+          unconfigured_spins?: number
+          unique_users?: number
+          updated_at?: string
+          xp_paid?: number
+        }
+        Update: {
+          chi_square?: number
+          coins_paid?: number
+          created_at?: string
+          degrees_of_freedom?: number
+          duplicate_spins?: number
+          id?: string
+          projected_coins?: number
+          projected_xp?: number
+          snapshot_date?: string
+          spins?: number
+          unconfigured_spins?: number
+          unique_users?: number
+          updated_at?: string
+          xp_paid?: number
+        }
+        Relationships: []
+      }
       lucky_wheel_prize_audit: {
         Row: {
           after_data: Json | null
@@ -8773,6 +8824,10 @@ export type Database = {
         Args: { p_threshold_pct?: number; p_window_hours?: number }
         Returns: Json
       }
+      chi_square_critical: {
+        Args: { p_alpha: number; p_df: number }
+        Returns: number
+      }
       cleanup_expired_challenges: { Args: never; Returns: undefined }
       cleanup_expired_idempotency_keys: { Args: never; Returns: undefined }
       cleanup_old_security_logs:
@@ -8802,6 +8857,7 @@ export type Database = {
         Returns: Json
       }
       engagement_min_respondents: { Args: never; Returns: number }
+      erf_inverse: { Args: { x: number }; Returns: number }
       generate_action_plan_from_factor: {
         Args: {
           p_days?: number
@@ -9344,6 +9400,7 @@ export type Database = {
         Args: { p_opinion_id: string; p_status: string }
         Returns: undefined
       }
+      snapshot_lucky_wheel_payout: { Args: { p_date?: string }; Returns: Json }
       spin_lucky_wheel: { Args: { p_dedupe_key?: string }; Returns: Json }
       submit_engagement_answer: {
         Args: {
