@@ -4,9 +4,12 @@ import { AlertTriangle, ArrowRight, Minus, ScaleIcon, TrendingDown, TrendingUp }
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useLuckyWheelPayoutSnapshots } from "@/hooks/useLuckyWheel";
+import { loadBudget, saveBudget } from "@/lib/luckyWheelBudget";
 import { decideComparisonAlerts, type ComparisonAlertSeverity } from "@/lib/luckyWheelComparisonAlerts";
 import {
   comparePayoutWindows,
@@ -30,9 +33,6 @@ const VERDICT_LABEL: Record<SignificanceVerdict, string> = {
   stable: "Estável",
   significant: "Variação significativa",
 };
-
-/** Teto padrão de custo por giro usado para sinalizar estouro de orçamento. */
-const COINS_PER_SPIN_BUDGET = 30;
 
 const SEVERITY_LABEL: Record<ComparisonAlertSeverity, string> = {
   critical: "Crítico",
@@ -62,6 +62,8 @@ function VerdictBadge({ verdict }: { verdict: SignificanceVerdict }) {
  */
 export function LuckyWheelWindowComparison() {
   const [windowSize, setWindowSize] = useState<(typeof WINDOWS)[number]["value"]>("7");
+  const [budget, setBudget] = useState<number>(() => loadBudget());
+  const [budgetDraft, setBudgetDraft] = useState<string>(() => String(loadBudget()));
   const windowDays = Number(windowSize);
   const { data, isLoading, isError } = useLuckyWheelPayoutSnapshots(windowDays * 2);
 
@@ -78,9 +80,16 @@ export function LuckyWheelWindowComparison() {
   }, [data, windowDays]);
 
   const alerts = useMemo(
-    () => decideComparisonAlerts(comparison, { coinsPerSpinBudget: COINS_PER_SPIN_BUDGET }),
-    [comparison],
+    () => decideComparisonAlerts(comparison, { coinsPerSpinBudget: budget }),
+    [comparison, budget],
   );
+
+  /** Normaliza e persiste o teto ao sair do campo (nunca lança). */
+  const commitBudget = () => {
+    const applied = saveBudget(budgetDraft);
+    setBudget(applied);
+    setBudgetDraft(String(applied));
+  };
 
   if (isLoading) {
     return (
@@ -135,6 +144,28 @@ export function LuckyWheelWindowComparison() {
       </CardHeader>
 
       <CardContent className="space-y-4">
+        <div className="flex flex-wrap items-end gap-3 rounded-xl border border-border/60 bg-card/60 p-3 backdrop-blur">
+          <div className="space-y-1">
+            <Label htmlFor="coins-per-spin-budget" className="text-xs">
+              Teto de moedas por giro
+            </Label>
+            <Input
+              id="coins-per-spin-budget"
+              inputMode="decimal"
+              className="h-11 w-40"
+              value={budgetDraft}
+              onChange={(event) => setBudgetDraft(event.target.value)}
+              onBlur={commitBudget}
+              onKeyDown={(event) => {
+                if (event.key === "Enter") commitBudget();
+              }}
+            />
+          </div>
+          <p className="text-xs text-muted-foreground">
+            Alerta de estouro dispara quando a janela atual paga acima de {decimal.format(budget)} moeda(s) por giro.
+          </p>
+        </div>
+
         <div className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
           <VerdictBadge verdict={comparison.verdict} />
           <span>
