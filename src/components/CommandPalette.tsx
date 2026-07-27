@@ -14,7 +14,7 @@ import {
   Gamepad2, ShoppingBag, Swords, Heart, Award,
   ClipboardCheck, BarChart3, Megaphone, MessageSquare,
   User, Settings, Shield, LogOut, Search, Bell,
-  Moon, Sun, Activity
+  Moon, Sun, Activity, Dices
 } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { useTheme } from "@/hooks/useTheme";
@@ -118,6 +118,7 @@ export function CommandPalette() {
     { id: "mentorship", label: "Mentoria", icon: Heart, action: () => handleNavigate("/mentoria"), keywords: ["mentor", "coach"], category: "navigation" },
     { id: "leagues", label: "Ligas", icon: Award, action: () => handleNavigate("/leagues"), keywords: ["competição", "ranking"], category: "navigation" },
     { id: "duels", label: "Duelos", icon: Swords, action: () => handleNavigate("/duelos"), keywords: ["batalha", "1v1"], category: "navigation" },
+    { id: "lucky-wheel", label: "Roleta da Sorte", icon: Dices, action: () => handleNavigate("/roleta"), keywords: ["roleta", "sorte", "giro", "premio"], category: "navigation" },
     { id: "surveys", label: "Pulse Surveys", icon: BarChart3, action: () => handleNavigate("/surveys"), keywords: ["pesquisa", "opinião"], category: "navigation" },
     { id: "feedback", label: "Feedback 360°", icon: MessageSquare, action: () => handleNavigate("/feedback"), keywords: ["avaliação", "review"], category: "navigation" },
     { id: "announcements", label: "Anúncios", icon: Megaphone, action: () => handleNavigate("/announcements"), keywords: ["comunicados", "news"], category: "navigation" },
