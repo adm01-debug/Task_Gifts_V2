@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { Activity, AlertTriangle, Coins, LineChart as LineChartIcon, TrendingDown, TrendingUp } from "lucide-react";
+import { Activity, AlertTriangle, Coins, Download, LineChart as LineChartIcon, TrendingDown, TrendingUp } from "lucide-react";
 import {
   CartesianGrid,
   Legend,
@@ -13,11 +13,13 @@ import {
 
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
+import { downloadCSV } from "@/lib/csvExport";
 import { useLuckyWheelPayoutSnapshots } from "@/hooks/useLuckyWheel";
-import { buildPayoutTrend, type PayoutTrendPoint } from "@/lib/luckyWheelPayoutHistory";
+import { buildPayoutTrend, buildPayoutTrendCsv, type PayoutTrendPoint } from "@/lib/luckyWheelPayoutHistory";
 import { cn } from "@/lib/utils";
 
 const PERIODS = [
@@ -91,6 +93,12 @@ export function LuckyWheelPayoutTrend() {
     [trend.points],
   );
 
+  const handleExport = () => {
+    const periodLabel = PERIODS.find((p) => p.value === period)?.label ?? `${days} dias`;
+    const csv = buildPayoutTrendCsv(trend, { periodLabel });
+    downloadCSV(`roleta-serie-payout-${new Date().toISOString().slice(0, 10)}`, csv);
+  };
+
   if (isLoading) {
     return (
       <Card>
@@ -137,18 +145,30 @@ export function LuckyWheelPayoutTrend() {
             Snapshots diários consolidados pelo job automático das 4h. Lacunas indicam dias sem execução.
           </CardDescription>
         </div>
-        <Select value={period} onValueChange={(value) => setPeriod(value as typeof period)}>
-          <SelectTrigger className="w-full sm:w-52">
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            {PERIODS.map((option) => (
-              <SelectItem key={option.value} value={option.value}>
-                {option.label}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+        <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row sm:items-center">
+          <Select value={period} onValueChange={(value) => setPeriod(value as typeof period)}>
+            <SelectTrigger className="w-full sm:w-52">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {PERIODS.map((option) => (
+                <SelectItem key={option.value} value={option.value}>
+                  {option.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <Button
+            type="button"
+            variant="outline"
+            className="min-h-11 w-full sm:w-auto"
+            onClick={handleExport}
+            disabled={trend.summary.daysWithData === 0}
+          >
+            <Download className="mr-2 h-4 w-4" />
+            Exportar CSV
+          </Button>
+        </div>
       </CardHeader>
 
       <CardContent className="space-y-6">

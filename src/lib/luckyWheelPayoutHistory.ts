@@ -315,3 +315,127 @@ export function buildPayoutTrend(
     },
   };
 }
+
+/* ------------------------------------------------------------------ *
+ * Exportação CSV auditável da série histórica
+ * ------------------------------------------------------------------ */
+
+const CSV_INJECTION_RE = /^[=+\-@\t\r]/;
+
+/** Neutraliza fórmulas (CSV injection) e normaliza quebras de linha. */
+function sanitizeCell(value: unknown): string {
+  if (value === null || value === undefined) return "";
+  const normalized = String(value).replace(/\r\n|\r|\n/g, " ");
+  const risky = CSV_INJECTION_RE.test(normalized);
+  const raw = normalized.trim();
+  return risky || CSV_INJECTION_RE.test(raw) ? `'${raw}` : raw;
+}
+
+function cell(value: unknown): string {
+  const s = sanitizeCell(value);
+  return /[",;]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+}
+
+function csvLine(cells: readonly unknown[]): string {
+  return cells.map(cell).join(",");
+}
+
+function fixed(value: number, decimals = 2): string {
+  return Number.isFinite(value) ? value.toFixed(decimals) : "0";
+}
+
+const STATUS_PT: Record<PayoutTrendStatus, string> = {
+  gap: "Sem snapshot",
+  insufficient: "Amostra insuficiente",
+  ok: "Normal",
+  warn: "Atenção",
+  critical: "Crítico",
+};
+
+export interface PayoutTrendCsvMeta {
+  periodLabel?: string;
+  generatedAt?: string;
+}
+
+/**
+ * Gera o CSV auditável da série histórica (cabeçalho de contexto + resumo +
+ * série densa dia a dia, incluindo lacunas). Função pura para permitir
+ * simulação massiva.
+ */
+export function buildPayoutTrendCsv(result: PayoutTrendResult, meta: PayoutTrendCsvMeta = {}): string {
+  const lines: string[] = [];
+  const { summary, points } = result;
+
+  lines.push(csvLine(["Série histórica de payout — Roleta da Sorte"]));
+  lines.push(csvLine(["Período", meta.periodLabel ?? "não informado"]));
+  lines.push(csvLine(["Gerado em", meta.generatedAt ?? new Date().toISOString()]));
+  lines.push("");
+
+  lines.push(csvLine(["Indicador", "Valor"]));
+  lines.push(csvLine(["Dias na janela", summary.days]));
+  lines.push(csvLine(["Dias com snapshot", summary.daysWithData]));
+  lines.push(csvLine(["Lacunas", summary.gaps]));
+  lines.push(csvLine(["Giros", summary.totalSpins]));
+  lines.push(csvLine(["Moedas pagas", summary.totalCoinsPaid]));
+  lines.push(csvLine(["Moedas projetadas", fixed(summary.totalProjectedCoins)]));
+  lines.push(csvLine(["Desvio de moedas", fixed(summary.coinsDeviation, 4)]));
+  lines.push(csvLine(["XP pago", summary.totalXpPaid]));
+  lines.push(csvLine(["XP projetado", fixed(summary.totalProjectedXp)]));
+  lines.push(csvLine(["Desvio de XP", fixed(summary.xpDeviation, 4)]));
+  lines.push(csvLine(["Dias em atenção", summary.warnDays]));
+  lines.push(csvLine(["Dias críticos", summary.criticalDays]));
+  lines.push(csvLine(["Moedas por giro", fixed(summary.avgCoinsPerSpin, 4)]));
+  lines.push(csvLine(["Tendência de custo (moedas/dia)", fixed(summary.coinsTrendPerDay, 4)]));
+  lines.push(csvLine(["Tendência de χ²/gl por dia", fixed(summary.chiTrendPerDay, 4)]));
+  lines.push(csvLine(["Pior dia", summary.worstDay ? summary.worstDay.date : "n/d"]));
+  lines.push("");
+
+  lines.push(
+    csvLine([
+      "Dia",
+      "Snapshot",
+      "Situação",
+      "Giros",
+      "Participantes",
+      "Moedas pagas",
+      "Moedas projetadas",
+      "Desvio moedas",
+      "XP pago",
+      "XP projetado",
+      "Desvio XP",
+      "Qui-quadrado",
+      "Graus de liberdade",
+      "Limite atenção",
+      "Limite crítico",
+      "χ²/limite crítico",
+      "Giros duplicados",
+      "Giros fora da calibração",
+    ]),
+  );
+  for (const p of points) {
+    lines.push(
+      csvLine([
+        p.date,
+        p.present ? "sim" : "não",
+        STATUS_PT[p.status] ?? p.status,
+        p.spins,
+        p.uniqueUsers,
+        p.coinsPaid,
+        fixed(p.projectedCoins),
+        fixed(p.coinsDeviation, 4),
+        p.xpPaid,
+        fixed(p.projectedXp),
+        fixed(p.xpDeviation, 4),
+        fixed(p.chiSquare, 4),
+        p.degreesOfFreedom,
+        fixed(p.chiWarn, 4),
+        fixed(p.chiCritical, 4),
+        p.chiCritical > 0 ? fixed(p.chiSquare / p.chiCritical, 4) : "",
+        p.duplicateSpins,
+        p.unconfiguredSpins,
+      ]),
+    );
+  }
+
+  return lines.join("\n");
+}
