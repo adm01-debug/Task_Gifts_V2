@@ -113,10 +113,13 @@ export const shopService = {
       .order("created_at", { ascending: false });
 
     if (error) throw error;
-    return (data || []).map((p: PurchaseQueryResult) => ({
-      ...p,
-      reward: p.reward as ShopReward,
-    })) as ShopPurchase[];
+    return (data || []).map((row) => {
+      const p = row as unknown as PurchaseQueryResult;
+      return {
+        ...p,
+        reward: p.reward as ShopReward,
+      };
+    }) as ShopPurchase[];
   },
 
   // Purchase a reward
