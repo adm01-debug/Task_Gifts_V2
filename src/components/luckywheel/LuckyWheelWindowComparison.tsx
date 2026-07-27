@@ -108,6 +108,43 @@ export function LuckyWheelWindowComparison() {
     [comparison, budget],
   );
 
+  const [whatIfHistory, setWhatIfHistory] = useState<WhatIfSnapshotRow[]>([]);
+  const [savingWhatIf, setSavingWhatIf] = useState(false);
+
+  /** Carrega a auditoria histórica das simulações (silencioso em caso de falha). */
+  useEffect(() => {
+    let active = true;
+    void fetchWhatIfSnapshots(5)
+      .then((rows) => { if (active) setWhatIfHistory(rows); })
+      .catch((err: unknown) => {
+        logger.warn(
+          `Falha ao carregar histórico de simulações: ${String(err)}`,
+          "LuckyWheelWindowComparison",
+        );
+      });
+    return () => { active = false; };
+  }, []);
+
+  /** Registra o cenário atual; upsert por assinatura evita duplicatas. */
+  const saveWhatIf = async () => {
+    setSavingWhatIf(true);
+    try {
+      const saved = await persistWhatIfSnapshot(comparison, budget, whatIf);
+      if (!saved) {
+        toast.info("Sem janela válida para registrar ainda.");
+        return;
+      }
+      toast.success("Simulação registrada para auditoria.");
+      setWhatIfHistory(await fetchWhatIfSnapshots(5));
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : "Falha ao registrar a simulação";
+      logger.error(`Erro ao registrar simulação what-if: ${message}`, "LuckyWheelWindowComparison");
+      toast.error(message);
+    } finally {
+      setSavingWhatIf(false);
+    }
+  };
+
   /**
    * Hidrata o teto a partir do banco (fonte de verdade compartilhada com o
    * cron diário). Falha de rede mantém o cache local — nunca quebra a tela.
