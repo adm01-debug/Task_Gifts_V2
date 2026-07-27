@@ -105,7 +105,10 @@ export function LuckyWheelWindowComparison() {
         setBudgetDraft(String(remote));
       })
       .catch((err: unknown) => {
-        logger.warn("Falha ao carregar teto da Roleta; usando cache local", err);
+        logger.warn(
+          `Falha ao carregar teto da Roleta; usando cache local: ${String(err)}`,
+          "LuckyWheelWindowComparison",
+        );
       });
     return () => {
       active = false;
@@ -122,7 +125,10 @@ export function LuckyWheelWindowComparison() {
       await persistRemoteBudget(applied);
       toast.success("Teto sincronizado com a rotina diária de alertas");
     } catch (err: unknown) {
-      logger.error("Falha ao salvar teto da Roleta no banco", err);
+      logger.error(
+        `Falha ao salvar teto da Roleta no banco: ${String(err)}`,
+        "LuckyWheelWindowComparison",
+      );
       toast.error("Não foi possível salvar o teto no servidor (valor mantido localmente)");
     } finally {
       setBudgetSyncing(false);
