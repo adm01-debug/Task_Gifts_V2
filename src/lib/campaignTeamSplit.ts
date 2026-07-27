@@ -171,3 +171,45 @@ export function awardCampaignTeamSplit(state: SimCampaignState): TeamSplitOutcom
 
   return { teams_awarded: teamsAwarded, members_awarded: membersAwarded };
 }
+
+/** Projeção (sem efeitos colaterais) do prêmio de um membro no rateio coletivo. */
+export interface MemberSharePreview {
+  user_id: string;
+  /** Fração do pool destinada ao membro (0..1). */
+  share: number;
+  xp: number;
+  coins: number;
+}
+
+/**
+ * Projeta quanto cada membro receberia no rateio coletivo, sem alterar estado.
+ *
+ * Usa exatamente as mesmas regras de `awardCampaignTeamSplit` (modo `equal`
+ * como fallback para progresso zero, `pgRound` e piso em zero), permitindo
+ * exibir a prévia na UI com fidelidade ao que a RPC pagará.
+ */
+export function previewTeamShares(
+  rule: TeamSplitRule | null | undefined,
+  params: { teamProgress: number; members: Array<{ user_id: string; progress: number }> },
+): MemberSharePreview[] {
+  const poolXp = toNumber(rule?.team_pool_xp);
+  const poolCoins = toNumber(rule?.team_pool_coins);
+  const mode: TeamShareMode = rule?.team_share === "equal" ? "equal" : "proportional";
+  const membersCount = params.members.length;
+  const teamProgress = Number.isFinite(params.teamProgress) ? params.teamProgress : 0;
+
+  return params.members.map((m) => {
+    const share =
+      mode === "equal" || teamProgress <= 0
+        ? membersCount > 0
+          ? 1 / membersCount
+          : 0
+        : (Number.isFinite(m.progress) ? m.progress : 0) / teamProgress;
+    return {
+      user_id: m.user_id,
+      share: Math.max(0, share),
+      xp: Math.max(0, pgRound(poolXp * share)),
+      coins: Math.max(0, pgRound(poolCoins * share)),
+    };
+  });
+}
