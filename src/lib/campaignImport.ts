@@ -247,7 +247,7 @@ export function buildResultRows(
     const externalReference =
       refRaw == null || String(refRaw).trim() === "" ? null : String(refRaw).trim().slice(0, 180);
 
-    const invalid = (reason: string): ParsedResultRow => ({
+    const invalid = (reason: string, issue: ReconciliationIssue = "invalid_data"): ParsedResultRow => ({
       rowNumber,
       sellerIdentifier: sellerIdentifier || String(sellerRaw ?? "").slice(0, 180),
       amount: amount ?? 0,
@@ -256,6 +256,7 @@ export function buildResultRows(
       dedupeKey: `invalid:${rowNumber}`,
       status: "invalid",
       errorReason: reason,
+      issue,
     });
 
     if (!sellerIdentifier) {
@@ -275,7 +276,10 @@ export function buildResultRows(
 
     const dedupeKey = buildDedupeKey({ sellerIdentifier, amount, referenceDate, externalReference });
     if (seen.has(dedupeKey)) {
-      rows.push({ ...invalid("Duplicada dentro do proprio arquivo"), dedupeKey: `dup:${rowNumber}` });
+      rows.push({
+        ...invalid("Duplicada dentro do proprio arquivo", "duplicate"),
+        dedupeKey: `dup:${rowNumber}`,
+      });
       return;
     }
     seen.add(dedupeKey);
