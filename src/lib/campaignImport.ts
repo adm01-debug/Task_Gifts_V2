@@ -22,7 +22,18 @@ export interface ParsedResultRow {
   dedupeKey: string;
   status: "valid" | "invalid";
   errorReason: string | null;
+  /** Classificacao do problema, usada pelo relatorio de reconciliacao. */
+  issue?: ReconciliationIssue;
 }
+
+/**
+ * Natureza do problema de uma linha rejeitada.
+ *  - `ambiguous`: o identificador (CPF/e-mail/matricula) casa com mais de um colaborador.
+ *  - `not_found`: nenhum colaborador do diretorio corresponde.
+ *  - `duplicate`: repeticao da mesma venda dentro do proprio arquivo.
+ *  - `invalid_data`: valor/identificador ausente ou fora da faixa (nao reconciliavel).
+ */
+export type ReconciliationIssue = "ambiguous" | "not_found" | "duplicate" | "invalid_data";
 
 export type DetectedColumns = Record<"seller" | "amount" | "date" | "reference", string | null>;
 
