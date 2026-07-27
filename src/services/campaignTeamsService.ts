@@ -294,4 +294,20 @@ export const campaignTeamsService = {
       return [];
     }
   },
+
+  /**
+   * Reverte um lote de rateio: estorna XP/moedas, libera as equipes para novo
+   * rateio e fecha o lote na trilha. Idempotente na própria RPC.
+   */
+  async revertSplitBatch(batchId: string, reason?: string): Promise<TeamSplitRevertResult> {
+    const { data, error } = await db.rpc("revert_campaign_team_split", {
+      _batch_id: batchId,
+      _reason: reason?.trim() || null,
+    });
+    if (error) {
+      logger.apiError("revert_campaign_team_split", error, "campaignTeamsService");
+      throw error;
+    }
+    return (data ?? { reverted: false, reason: "batch_not_found" }) as TeamSplitRevertResult;
+  },
 };
