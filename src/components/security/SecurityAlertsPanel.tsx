@@ -170,6 +170,9 @@ export function SecurityAlertsPanel() {
     "suspicious_login",
     "webhook_secret_auto_promoted",
     "webhook_secret_bulk_rotated",
+    "lucky_wheel_window_cost_regression",
+    "lucky_wheel_window_budget_overrun",
+    "lucky_wheel_window_volume_drop",
   ]);
   const runbookHref = (type: string) =>
     `/admin/security-runbook#type-${RUNBOOK_TYPES.has(type) ? type : "generic"}`;
