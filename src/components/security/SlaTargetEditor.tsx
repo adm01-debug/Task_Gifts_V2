@@ -55,7 +55,7 @@ export function SlaTargetEditor({
     },
     onError: (err: unknown) => {
       const message = err instanceof Error ? err.message : "Falha ao salvar as metas";
-      logger.error("Erro ao salvar meta de SLA", { alertType, message });
+      logger.error(`Erro ao salvar meta de SLA (${alertType}): ${message}`);
       toast.error(message);
     },
   });
