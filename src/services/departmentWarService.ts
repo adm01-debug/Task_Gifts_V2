@@ -1,6 +1,7 @@
 import { supabase } from "@/integrations/supabase/client";
 import { logger } from "./loggingService";
 import type { WarStanding } from "@/lib/departmentWar";
+import { normalizeFeed, type WarFeedItem } from "@/lib/warFeed";
 
 export type DepartmentWarStatus = "draft" | "running" | "finished" | "cancelled";
 
