@@ -142,6 +142,46 @@ export function CreateCampaignDialog({ trigger }: CreateCampaignDialogProps) {
               <Input type="number" value={form.coin_reward} onChange={(e) => setForm({ ...form, coin_reward: Number(e.target.value) })} />
             </div>
           </div>
+          <div className="rounded-lg border border-dashed p-3 space-y-3">
+            <p className="text-sm font-semibold">Prêmio coletivo (meta por equipe)</p>
+            <p className="text-xs text-muted-foreground">
+              Preencha para habilitar o rateio <code>team_split</code>. O prêmio é dividido entre os
+              membros da equipe que bater a meta coletiva.
+            </p>
+            <div className="grid grid-cols-2 gap-3">
+              <div className="grid gap-2">
+                <Label>XP do pool da equipe</Label>
+                <Input
+                  type="number"
+                  min={0}
+                  value={form.team_pool_xp}
+                  onChange={(e) => setForm({ ...form, team_pool_xp: Number(e.target.value) })}
+                />
+              </div>
+              <div className="grid gap-2">
+                <Label>Moedas do pool da equipe</Label>
+                <Input
+                  type="number"
+                  min={0}
+                  value={form.team_pool_coins}
+                  onChange={(e) => setForm({ ...form, team_pool_coins: Number(e.target.value) })}
+                />
+              </div>
+            </div>
+            <div className="grid gap-2">
+              <Label>Forma de rateio</Label>
+              <Select
+                value={form.team_share}
+                onValueChange={(v: "proportional" | "equal") => setForm({ ...form, team_share: v })}
+              >
+                <SelectTrigger><SelectValue /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="proportional">Proporcional à contribuição</SelectItem>
+                  <SelectItem value="equal">Igualitário entre os membros</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
           <div className="grid grid-cols-2 gap-3">
             <div className="grid gap-2">
               <Label>Departamento / Segmento</Label>
