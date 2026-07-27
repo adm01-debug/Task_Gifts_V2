@@ -1,6 +1,7 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { Dices, Coins, Zap, Clock } from "lucide-react";
+import { Dices, Coins, Zap, Clock, SlidersHorizontal } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -13,6 +14,7 @@ import { LuckyWheel, LuckyWheelHistory } from "@/components/luckywheel";
 import { useLuckyWheelPrizes, useLuckyWheelStatus, useSpinLuckyWheel } from "@/hooks/useLuckyWheel";
 import type { LuckyWheelSpinResult } from "@/services/luckyWheelService";
 import { useHaptics } from "@/hooks/useHaptics";
+import { useRBAC } from "@/hooks/useRBAC";
 
 const RARITY_LABEL: Record<string, string> = {
   common: "Comum",
@@ -26,6 +28,7 @@ export default function LuckyWheelPage() {
   const { data: status, isLoading: loadingStatus } = useLuckyWheelStatus();
   const spinMutation = useSpinLuckyWheel();
   const haptics = useHaptics();
+  const { hasRole } = useRBAC();
 
   const [targetIndex, setTargetIndex] = useState<number | null>(null);
   const [result, setResult] = useState<LuckyWheelSpinResult | null>(null);
@@ -164,6 +167,14 @@ export default function LuckyWheelPage() {
             </div>
 
             <div className="space-y-6">
+              {hasRole("admin") && (
+                <Button asChild variant="outline" className="w-full">
+                  <Link to="/roleta/admin">
+                    <SlidersHorizontal className="mr-2 h-4 w-4" aria-hidden />
+                    Calibrar prêmios
+                  </Link>
+                </Button>
+              )}
               <LuckyWheelHistory />
             </div>
           </div>
