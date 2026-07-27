@@ -271,6 +271,33 @@ export default function SecurityRunbook() {
     staleTime: 5 * 60 * 1000,
   });
 
+  /**
+   * SLA vindo do banco (fonte de verdade). O valor hard-coded no RUNBOOK vira
+   * apenas fallback caso o tipo ainda não esteja cadastrado em sla_targets.
+   */
+  const { data: slaTargets } = useQuery({
+    queryKey: ["sla-targets"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("sla_targets")
+        .select("alert_type, mttr_target_seconds");
+      if (error) throw error;
+      return data ?? [];
+    },
+    staleTime: 10 * 60 * 1000,
+  });
+
+  const slaMinutesByType = useMemo(() => {
+    const map: Record<string, number> = {};
+    (slaTargets ?? []).forEach((row) => {
+      const minutes = Math.round((row.mttr_target_seconds ?? 0) / 60);
+      if (minutes > 0) map[row.alert_type] = minutes;
+    });
+    return map;
+  }, [slaTargets]);
+
+  const slaFor = (entry: RunbookEntry) => slaMinutesByType[entry.alertType] ?? entry.slaMinutes;
+
   const mttrByType = useMemo(() => {
     const map: Record<string, (typeof mttrData extends (infer U)[] | undefined ? U : never)> = {} as never;
     (mttrData ?? []).forEach((row) => { map[row.alert_type] = row; });
@@ -291,11 +318,14 @@ export default function SecurityRunbook() {
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
-    if (!q) return RUNBOOK;
-    return RUNBOOK.filter((r) =>
+    const base = family === "lucky_wheel"
+      ? RUNBOOK.filter((r) => r.alertType.startsWith("lucky_wheel_"))
+      : RUNBOOK;
+    if (!q) return base;
+    return base.filter((r) =>
       [r.title, r.description, r.alertType, r.owner].some((v) => v.toLowerCase().includes(q))
     );
-  }, [query]);
+  }, [query, family]);
 
   return (
     <div className="min-h-screen bg-background">
