@@ -1,15 +1,19 @@
-import { useMemo, useState } from "react";
-import { AlertTriangle, Coins, Info, ShieldCheck, TrendingUp, Users } from "lucide-react";
+import { useCallback, useMemo, useState } from "react";
+import { AlertTriangle, Coins, Download, Info, ShieldCheck, TrendingUp, Users } from "lucide-react";
 
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
+import { downloadCSV } from "@/lib/csvExport";
 import { useLuckyWheelAdminPrizes, useLuckyWheelSpins } from "@/hooks/useLuckyWheel";
 import type { OddsPrize } from "@/lib/luckyWheelOdds";
 import {
   buildPayoutReport,
+  buildPayoutCsv,
+  payoutCsvFilename,
   payoutSeverity,
   type PrizeReconciliation,
   type ReconciliationStatus,
@@ -113,6 +117,11 @@ export function LuckyWheelPayoutPanel() {
   const isLoading = loadingPrizes || loadingSpins;
   const severity = payoutSeverity(report);
 
+  const handleExport = useCallback(() => {
+    const periodLabel = PERIODS.find((p) => p.value === period)?.label ?? `${days} dias`;
+    downloadCSV(payoutCsvFilename(days), buildPayoutCsv(report, { periodLabel }));
+  }, [days, period, report]);
+
   if (isLoading) {
     return (
       <Card>
@@ -163,6 +172,17 @@ export function LuckyWheelPayoutPanel() {
               ))}
             </SelectContent>
           </Select>
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={handleExport}
+            disabled={report.totals.spins === 0}
+            aria-label="Exportar relatório de payout em CSV"
+          >
+            <Download className="mr-2 h-4 w-4" aria-hidden />
+            Exportar CSV
+          </Button>
         </div>
       </CardHeader>
 
