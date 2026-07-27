@@ -2596,6 +2596,257 @@ export type Database = {
           },
         ]
       }
+      department_war_contributions: {
+        Row: {
+          amount: number
+          created_at: string
+          dedupe_key: string
+          department_id: string
+          id: string
+          metric_key: string
+          user_id: string
+          war_id: string
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          dedupe_key: string
+          department_id: string
+          id?: string
+          metric_key: string
+          user_id: string
+          war_id: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          dedupe_key?: string
+          department_id?: string
+          id?: string
+          metric_key?: string
+          user_id?: string
+          war_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "department_war_contributions_department_id_fkey"
+            columns: ["department_id"]
+            isOneToOne: false
+            referencedRelation: "departments"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "department_war_contributions_war_id_fkey"
+            columns: ["war_id"]
+            isOneToOne: false
+            referencedRelation: "department_wars"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      department_war_departments: {
+        Row: {
+          created_at: string
+          department_id: string
+          headcount: number
+          id: string
+          updated_at: string
+          war_id: string
+        }
+        Insert: {
+          created_at?: string
+          department_id: string
+          headcount?: number
+          id?: string
+          updated_at?: string
+          war_id: string
+        }
+        Update: {
+          created_at?: string
+          department_id?: string
+          headcount?: number
+          id?: string
+          updated_at?: string
+          war_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "department_war_departments_department_id_fkey"
+            columns: ["department_id"]
+            isOneToOne: false
+            referencedRelation: "departments"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "department_war_departments_war_id_fkey"
+            columns: ["war_id"]
+            isOneToOne: false
+            referencedRelation: "department_wars"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      department_war_metrics: {
+        Row: {
+          created_at: string
+          id: string
+          label: string
+          metric_key: string
+          updated_at: string
+          war_id: string
+          weight: number
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          label: string
+          metric_key: string
+          updated_at?: string
+          war_id: string
+          weight?: number
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          label?: string
+          metric_key?: string
+          updated_at?: string
+          war_id?: string
+          weight?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "department_war_metrics_war_id_fkey"
+            columns: ["war_id"]
+            isOneToOne: false
+            referencedRelation: "department_wars"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      department_war_results: {
+        Row: {
+          coins_per_member: number
+          coins_total: number
+          contributors: number
+          created_at: string
+          department_id: string
+          id: string
+          participation_rate: number
+          position: number
+          raw_score: number
+          score: number
+          war_id: string
+          xp_per_member: number
+          xp_total: number
+        }
+        Insert: {
+          coins_per_member?: number
+          coins_total?: number
+          contributors?: number
+          created_at?: string
+          department_id: string
+          id?: string
+          participation_rate?: number
+          position: number
+          raw_score?: number
+          score?: number
+          war_id: string
+          xp_per_member?: number
+          xp_total?: number
+        }
+        Update: {
+          coins_per_member?: number
+          coins_total?: number
+          contributors?: number
+          created_at?: string
+          department_id?: string
+          id?: string
+          participation_rate?: number
+          position?: number
+          raw_score?: number
+          score?: number
+          war_id?: string
+          xp_per_member?: number
+          xp_total?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "department_war_results_department_id_fkey"
+            columns: ["department_id"]
+            isOneToOne: false
+            referencedRelation: "departments"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "department_war_results_war_id_fkey"
+            columns: ["war_id"]
+            isOneToOne: false
+            referencedRelation: "department_wars"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      department_wars: {
+        Row: {
+          coins_pool: number
+          created_at: string
+          created_by: string | null
+          description: string | null
+          ends_at: string
+          fairness_alpha: number
+          id: string
+          participation_bonus: number
+          per_member_coins_cap: number
+          per_user_cap: number
+          placement_shares: Json
+          settled_at: string | null
+          starts_at: string
+          status: string
+          title: string
+          updated_at: string
+          xp_pool: number
+        }
+        Insert: {
+          coins_pool?: number
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          ends_at: string
+          fairness_alpha?: number
+          id?: string
+          participation_bonus?: number
+          per_member_coins_cap?: number
+          per_user_cap?: number
+          placement_shares?: Json
+          settled_at?: string | null
+          starts_at?: string
+          status?: string
+          title: string
+          updated_at?: string
+          xp_pool?: number
+        }
+        Update: {
+          coins_pool?: number
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          ends_at?: string
+          fairness_alpha?: number
+          id?: string
+          participation_bonus?: number
+          per_member_coins_cap?: number
+          per_user_cap?: number
+          placement_shares?: Json
+          settled_at?: string | null
+          starts_at?: string
+          status?: string
+          title?: string
+          updated_at?: string
+          xp_pool?: number
+        }
+        Relationships: []
+      }
       departments: {
         Row: {
           color: string | null
@@ -9690,6 +9941,10 @@ export type Database = {
         Returns: Json
       }
       get_department_metrics: { Args: never; Returns: Json }
+      get_department_war_standings: {
+        Args: { p_war_id: string }
+        Returns: Json
+      }
       get_engagement_cycle_progress: {
         Args: { p_cycle_id: string }
         Returns: {
@@ -9921,6 +10176,7 @@ export type Database = {
         Args: { p_tournament_id: string }
         Returns: Json
       }
+      get_user_department_id: { Args: { p_user_id: string }; Returns: string }
       get_user_stats_api: { Args: { p_user_email: string }; Returns: Json }
       get_webhook_delivery_hourly_24h: {
         Args: never
@@ -10098,6 +10354,15 @@ export type Database = {
         }
         Returns: Json
       }
+      register_war_contribution: {
+        Args: {
+          p_amount: number
+          p_dedupe_key: string
+          p_metric_key: string
+          p_war_id: string
+        }
+        Returns: Json
+      }
       reject_password_reset: {
         Args: { p_notes?: string; p_request_id: string }
         Returns: Json
@@ -10154,6 +10419,7 @@ export type Database = {
         Args: { p_opinion_id: string; p_status: string }
         Returns: undefined
       }
+      settle_department_war: { Args: { p_war_id: string }; Returns: Json }
       settle_tournament_rewards: {
         Args: { p_tournament_id: string }
         Returns: Json
@@ -10173,6 +10439,10 @@ export type Database = {
         Returns: string
       }
       sync_bingo_card: { Args: { p_card_id: string }; Returns: Json }
+      sync_department_war_headcount: {
+        Args: { p_war_id: string }
+        Returns: Json
+      }
       toggle_opinion_support: {
         Args: { p_opinion_id: string }
         Returns: {
