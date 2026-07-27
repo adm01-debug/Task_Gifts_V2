@@ -69,6 +69,51 @@ export const campaignTeamsService = {
     }
   },
 
+  /**
+   * Lista equipes de várias campanhas em uma única viagem.
+   * Usado pelo dashboard consolidado (filtro por campanha + período).
+   */
+  async listByCampaigns(campaignIds: string[]): Promise<CampaignTeam[]> {
+    const ids = Array.from(new Set(campaignIds.filter(Boolean)));
+    if (ids.length === 0) return [];
+    try {
+      const { data, error } = await db
+        .from("campaign_teams")
+        .select("*")
+        .in("campaign_id", ids);
+      if (error) throw error;
+      return (data ?? []) as CampaignTeam[];
+    } catch (err) {
+      logger.apiError("list campaign_teams by campaigns", err, "campaignTeamsService");
+      return [];
+    }
+  },
+
+  /**
+   * Conta membros por equipe em várias campanhas.
+   * PostgREST não expõe `GROUP BY`, então agregamos no cliente sobre um
+   * payload enxuto (apenas `team_id`).
+   */
+  async countMembersByCampaigns(campaignIds: string[]): Promise<Map<string, number>> {
+    const counts = new Map<string, number>();
+    const ids = Array.from(new Set(campaignIds.filter(Boolean)));
+    if (ids.length === 0) return counts;
+    try {
+      const { data, error } = await db
+        .from("campaign_team_members")
+        .select("team_id")
+        .in("campaign_id", ids);
+      if (error) throw error;
+      (data ?? []).forEach((row: { team_id: string }) => {
+        counts.set(row.team_id, (counts.get(row.team_id) ?? 0) + 1);
+      });
+      return counts;
+    } catch (err) {
+      logger.apiError("count campaign_team_members", err, "campaignTeamsService");
+      return counts;
+    }
+  },
+
   /** Lista os membros de todas as equipes de uma campanha com perfil público. */
   async listMembers(campaignId: string): Promise<CampaignTeamMember[]> {
     try {

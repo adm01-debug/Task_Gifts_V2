@@ -4,7 +4,9 @@ import { CampaignCard } from "@/components/campaigns/CampaignCard";
 import { CreateCampaignDialog } from "@/components/campaigns/CreateCampaignDialog";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Megaphone, Sparkles } from "lucide-react";
+import { BarChart3, Megaphone, Sparkles } from "lucide-react";
+import { Link } from "react-router-dom";
+import { Button } from "@/components/ui/button";
 import { useRBAC } from "@/hooks/useRBAC";
 import { useDepartments } from "@/hooks/useDepartments";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -49,7 +51,15 @@ export default function SalesCampaigns() {
               Acompanhe metas individuais, coletivas e globais. Aceite sua meta, avance no ranking e conquiste XP + moedas.
             </p>
           </div>
-          {canCreate && <CreateCampaignDialog />}
+          <div className="flex flex-wrap items-center gap-2">
+            <Button asChild variant="outline">
+              <Link to="/campanhas/equipes">
+                <BarChart3 className="mr-2 h-4 w-4" />
+                Dashboard de equipes
+              </Link>
+            </Button>
+            {canCreate && <CreateCampaignDialog />}
+          </div>
         </div>
       </header>
 

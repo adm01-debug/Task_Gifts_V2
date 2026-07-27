@@ -83,6 +83,7 @@ const ExecutiveMonthlyReport = lazy(() => import("./pages/ExecutiveMonthlyReport
 const SalesCampaigns = lazy(() => import("./pages/SalesCampaigns"));
 const SalesCampaignDetail = lazy(() => import("./pages/SalesCampaignDetail"));
 const CampaignTeamRanking = lazy(() => import("./pages/CampaignTeamRanking"));
+const CampaignTeamsDashboard = lazy(() => import("./pages/CampaignTeamsDashboard"));
 const CampaignHistory = lazy(() => import("./pages/CampaignHistory"));
 
 function PageLoader() {
@@ -250,6 +251,7 @@ const AnimatedRoutes = () => {
         <Route path="/loja/admin" element={<ProtectedRoute requiredRole="admin"><PageTransition><ShopAdmin /></PageTransition></ProtectedRoute>} />
         <Route path="/campanhas" element={<ProtectedRoute><PageTransition><SalesCampaigns /></PageTransition></ProtectedRoute>} />
         <Route path="/campanhas/historico" element={<ProtectedRoute><PageTransition><CampaignHistory /></PageTransition></ProtectedRoute>} />
+        <Route path="/campanhas/equipes" element={<ProtectedRoute><PageTransition><CampaignTeamsDashboard /></PageTransition></ProtectedRoute>} />
         <Route path="/campanhas/:id" element={<ProtectedRoute><PageTransition><SalesCampaignDetail /></PageTransition></ProtectedRoute>} />
         <Route path="/campanhas/:id/ranking-equipes" element={<ProtectedRoute><PageTransition><CampaignTeamRanking /></PageTransition></ProtectedRoute>} />
         <Route path="*" element={<NotFound />} />
