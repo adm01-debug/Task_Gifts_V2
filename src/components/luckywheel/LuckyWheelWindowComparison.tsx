@@ -74,6 +74,7 @@ export function LuckyWheelWindowComparison() {
   const [budget, setBudget] = useState<number>(() => loadBudget());
   const [budgetDraft, setBudgetDraft] = useState<string>(() => String(loadBudget()));
   const [budgetSyncing, setBudgetSyncing] = useState(false);
+  const [budgetHistory, setBudgetHistory] = useState<BudgetAuditEntry[]>([]);
   const windowDays = Number(windowSize);
   const { data, isLoading, isError } = useLuckyWheelPayoutSnapshots(windowDays * 2);
 
@@ -112,6 +113,9 @@ export function LuckyWheelWindowComparison() {
           "LuckyWheelWindowComparison",
         );
       });
+    void fetchBudgetHistory(5).then((rows) => {
+      if (active) setBudgetHistory(rows);
+    });
     return () => {
       active = false;
     };
@@ -126,6 +130,7 @@ export function LuckyWheelWindowComparison() {
     try {
       await persistRemoteBudget(applied);
       toast.success("Teto sincronizado com a rotina diária de alertas");
+      setBudgetHistory(await fetchBudgetHistory(5));
     } catch (err: unknown) {
       logger.error(
         `Falha ao salvar teto da Roleta no banco: ${String(err)}`,
@@ -212,6 +217,28 @@ export function LuckyWheelWindowComparison() {
             Alerta de estouro dispara quando a janela atual paga acima de {decimal.format(budget)} moeda(s) por giro.
             {" "}Este teto é compartilhado com a rotina diária de alertas do servidor.
           </p>
+          {budgetHistory.length > 0 && (
+            <div className="w-full space-y-1 border-t border-border/60 pt-2">
+              <p className="text-xs font-medium text-muted-foreground">Últimas alterações do teto</p>
+              <ul className="space-y-0.5 text-xs text-muted-foreground">
+                {budgetHistory.map((entry) => (
+                  <li key={entry.id} className="flex flex-wrap items-center gap-1">
+                    <span className="tabular-nums">
+                      {new Date(entry.changedAt).toLocaleString("pt-BR")}
+                    </span>
+                    <span>·</span>
+                    <span>
+                      {entry.oldBudget === null ? "definido" : decimal.format(entry.oldBudget)}
+                    </span>
+                    <ArrowRight className="h-3 w-3" />
+                    <span className="font-medium text-foreground">
+                      {decimal.format(entry.newBudget)} moeda(s)/giro
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
         </div>
 
         <div className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
