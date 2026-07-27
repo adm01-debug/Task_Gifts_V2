@@ -43,6 +43,17 @@ export interface CampaignImportRow {
   error_reason: string | null;
 }
 
+/** Desempenho consolidado de um colaborador a partir dos lotes já aplicados. */
+export interface CampaignUserResult {
+  user_id: string;
+  /** Soma dos valores efetivamente contabilizados. */
+  amount: number;
+  /** Quantidade de lançamentos aplicados. */
+  entries: number;
+  /** Data de referência mais recente (ISO) ou null quando ausente. */
+  last_reference_date: string | null;
+}
+
 // Cast controlado: as tabelas existem no schema gerado, mas o client tipado
 // exige narrowing exaustivo que nao agrega valor aqui.
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
