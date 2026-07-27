@@ -4551,6 +4551,30 @@ export type Database = {
         }
         Relationships: []
       }
+      lucky_wheel_settings_audit: {
+        Row: {
+          changed_at: string
+          changed_by: string | null
+          id: string
+          new_budget: number
+          old_budget: number | null
+        }
+        Insert: {
+          changed_at?: string
+          changed_by?: string | null
+          id?: string
+          new_budget: number
+          old_budget?: number | null
+        }
+        Update: {
+          changed_at?: string
+          changed_by?: string | null
+          id?: string
+          new_budget?: number
+          old_budget?: number | null
+        }
+        Relationships: []
+      }
       lucky_wheel_spins: {
         Row: {
           amount: number
