@@ -10252,6 +10252,15 @@ export type Database = {
         Returns: undefined
       }
       increment_push_failures: { Args: { _ids: string[] }; Returns: undefined }
+      ingest_war_event: {
+        Args: {
+          p_amount: number
+          p_dedupe_key: string
+          p_metric_key: string
+          p_user_id: string
+        }
+        Returns: number
+      }
       is_country_allowed: { Args: { p_country_code: string }; Returns: boolean }
       is_department_manager: {
         Args: { _department_id: string; _user_id: string }
