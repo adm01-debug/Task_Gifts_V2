@@ -12,6 +12,8 @@ import { ArrowLeft, Check, X, Target, Trophy, TrendingUp, Users, Sparkles, Downl
 import { UserPlus } from "lucide-react";
 import { useRBAC } from "@/hooks/useRBAC";
 import { CampaignProgressChart } from "@/components/campaigns/CampaignProgressChart";
+import { CampaignImportDialog } from "@/components/campaigns/CampaignImportDialog";
+import { CampaignImportHistory } from "@/components/campaigns/CampaignImportHistory";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { cn } from "@/lib/utils";
