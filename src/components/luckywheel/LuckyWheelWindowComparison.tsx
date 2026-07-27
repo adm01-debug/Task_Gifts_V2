@@ -1,5 +1,6 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { AlertTriangle, ArrowRight, Minus, ScaleIcon, TrendingDown, TrendingUp } from "lucide-react";
+import { toast } from "sonner";
 
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
@@ -9,7 +10,13 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useLuckyWheelPayoutSnapshots } from "@/hooks/useLuckyWheel";
-import { loadBudget, saveBudget } from "@/lib/luckyWheelBudget";
+import { logger } from "@/services/loggingService";
+import {
+  loadBudget,
+  saveBudget,
+  fetchRemoteBudget,
+  persistRemoteBudget,
+} from "@/lib/luckyWheelBudget";
 import { decideComparisonAlerts, type ComparisonAlertSeverity } from "@/lib/luckyWheelComparisonAlerts";
 import {
   comparePayoutWindows,
@@ -64,6 +71,7 @@ export function LuckyWheelWindowComparison() {
   const [windowSize, setWindowSize] = useState<(typeof WINDOWS)[number]["value"]>("7");
   const [budget, setBudget] = useState<number>(() => loadBudget());
   const [budgetDraft, setBudgetDraft] = useState<string>(() => String(loadBudget()));
+  const [budgetSyncing, setBudgetSyncing] = useState(false);
   const windowDays = Number(windowSize);
   const { data, isLoading, isError } = useLuckyWheelPayoutSnapshots(windowDays * 2);
 
@@ -84,11 +92,47 @@ export function LuckyWheelWindowComparison() {
     [comparison, budget],
   );
 
+  /**
+   * Hidrata o teto a partir do banco (fonte de verdade compartilhada com o
+   * cron diário). Falha de rede mantém o cache local — nunca quebra a tela.
+   */
+  useEffect(() => {
+    let active = true;
+    fetchRemoteBudget()
+      .then((remote) => {
+        if (!active) return;
+        setBudget(remote);
+        setBudgetDraft(String(remote));
+      })
+      .catch((err: unknown) => {
+        logger.warn(
+          `Falha ao carregar teto da Roleta; usando cache local: ${String(err)}`,
+          "LuckyWheelWindowComparison",
+        );
+      });
+    return () => {
+      active = false;
+    };
+  }, []);
+
   /** Normaliza e persiste o teto ao sair do campo (nunca lança). */
-  const commitBudget = () => {
+  const commitBudget = async () => {
     const applied = saveBudget(budgetDraft);
     setBudget(applied);
     setBudgetDraft(String(applied));
+    setBudgetSyncing(true);
+    try {
+      await persistRemoteBudget(applied);
+      toast.success("Teto sincronizado com a rotina diária de alertas");
+    } catch (err: unknown) {
+      logger.error(
+        `Falha ao salvar teto da Roleta no banco: ${String(err)}`,
+        "LuckyWheelWindowComparison",
+      );
+      toast.error("Não foi possível salvar o teto no servidor (valor mantido localmente)");
+    } finally {
+      setBudgetSyncing(false);
+    }
   };
 
   if (isLoading) {
@@ -154,15 +198,17 @@ export function LuckyWheelWindowComparison() {
               inputMode="decimal"
               className="h-11 w-40"
               value={budgetDraft}
+              disabled={budgetSyncing}
               onChange={(event) => setBudgetDraft(event.target.value)}
-              onBlur={commitBudget}
+              onBlur={() => { void commitBudget(); }}
               onKeyDown={(event) => {
-                if (event.key === "Enter") commitBudget();
+                if (event.key === "Enter") void commitBudget();
               }}
             />
           </div>
           <p className="text-xs text-muted-foreground">
             Alerta de estouro dispara quando a janela atual paga acima de {decimal.format(budget)} moeda(s) por giro.
+            {" "}Este teto é compartilhado com a rotina diária de alertas do servidor.
           </p>
         </div>
 
