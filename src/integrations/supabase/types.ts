@@ -818,6 +818,177 @@ export type Database = {
         }
         Relationships: []
       }
+      bingo_board_tasks: {
+        Row: {
+          board_id: string
+          created_at: string
+          id: string
+          label: string
+          metric_key: string
+          order_index: number
+          target_value: number
+        }
+        Insert: {
+          board_id: string
+          created_at?: string
+          id?: string
+          label: string
+          metric_key: string
+          order_index?: number
+          target_value?: number
+        }
+        Update: {
+          board_id?: string
+          created_at?: string
+          id?: string
+          label?: string
+          metric_key?: string
+          order_index?: number
+          target_value?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "bingo_board_tasks_board_id_fkey"
+            columns: ["board_id"]
+            isOneToOne: false
+            referencedRelation: "bingo_boards"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      bingo_boards: {
+        Row: {
+          coins_full_house: number
+          coins_per_line: number
+          created_at: string
+          description: string | null
+          ends_at: string
+          id: string
+          is_active: boolean
+          starts_at: string
+          title: string
+          updated_at: string
+          xp_full_house: number
+          xp_per_line: number
+        }
+        Insert: {
+          coins_full_house?: number
+          coins_per_line?: number
+          created_at?: string
+          description?: string | null
+          ends_at: string
+          id?: string
+          is_active?: boolean
+          starts_at?: string
+          title: string
+          updated_at?: string
+          xp_full_house?: number
+          xp_per_line?: number
+        }
+        Update: {
+          coins_full_house?: number
+          coins_per_line?: number
+          created_at?: string
+          description?: string | null
+          ends_at?: string
+          id?: string
+          is_active?: boolean
+          starts_at?: string
+          title?: string
+          updated_at?: string
+          xp_full_house?: number
+          xp_per_line?: number
+        }
+        Relationships: []
+      }
+      bingo_cards: {
+        Row: {
+          board_id: string
+          cells: Json
+          coins_awarded: number
+          created_at: string
+          full_house_awarded: boolean
+          id: string
+          last_synced_at: string | null
+          lines_awarded: number
+          updated_at: string
+          user_id: string
+          xp_awarded: number
+        }
+        Insert: {
+          board_id: string
+          cells: Json
+          coins_awarded?: number
+          created_at?: string
+          full_house_awarded?: boolean
+          id?: string
+          last_synced_at?: string | null
+          lines_awarded?: number
+          updated_at?: string
+          user_id: string
+          xp_awarded?: number
+        }
+        Update: {
+          board_id?: string
+          cells?: Json
+          coins_awarded?: number
+          created_at?: string
+          full_house_awarded?: boolean
+          id?: string
+          last_synced_at?: string | null
+          lines_awarded?: number
+          updated_at?: string
+          user_id?: string
+          xp_awarded?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "bingo_cards_board_id_fkey"
+            columns: ["board_id"]
+            isOneToOne: false
+            referencedRelation: "bingo_boards"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      bingo_marks: {
+        Row: {
+          card_id: string
+          id: string
+          marked_at: string
+          metric_key: string
+          observed_value: number
+          position: number
+          user_id: string
+        }
+        Insert: {
+          card_id: string
+          id?: string
+          marked_at?: string
+          metric_key: string
+          observed_value?: number
+          position: number
+          user_id: string
+        }
+        Update: {
+          card_id?: string
+          id?: string
+          marked_at?: string
+          metric_key?: string
+          observed_value?: number
+          position?: number
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "bingo_marks_card_id_fkey"
+            columns: ["card_id"]
+            isOneToOne: false
+            referencedRelation: "bingo_cards"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       bitrix24_sync_mappings: {
         Row: {
           bitrix_entity_type: string
@@ -9149,6 +9320,10 @@ export type Database = {
         Args: { _campaign_id: string }
         Returns: Json
       }
+      bingo_metric_value: {
+        Args: { p_from: string; p_key: string; p_to: string; p_user: string }
+        Returns: number
+      }
       bulk_rotate_webhook_secrets: {
         Args: { p_grace_hours?: number; p_rotations: Json }
         Returns: Json
@@ -9487,6 +9662,7 @@ export type Database = {
           viewer_supported: boolean
         }[]
       }
+      get_or_create_bingo_card: { Args: { p_board_id?: string }; Returns: Json }
       get_passkeys_by_email: {
         Args: { p_email: string }
         Returns: {
@@ -9776,6 +9952,7 @@ export type Database = {
         }
         Returns: string
       }
+      sync_bingo_card: { Args: { p_card_id: string }; Returns: Json }
       toggle_opinion_support: {
         Args: { p_opinion_id: string }
         Returns: {
