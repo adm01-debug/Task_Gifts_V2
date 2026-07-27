@@ -51,6 +51,7 @@ const navCategories = [
       { icon: Gift, label: "Raspadinha", path: "/raspadinha" },
       { icon: Zap, label: "V ou F Relâmpago", path: "/relampago" },
       { icon: Grid3X3, label: "Bingo de Missões", path: "/bingo" },
+      { icon: Swords, label: "Torneio Mata-Mata", path: "/torneios" },
       { icon: Rocket, label: "Campanhas", path: "/campanhas" },
     ],
   },
