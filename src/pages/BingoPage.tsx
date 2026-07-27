@@ -100,7 +100,7 @@ export default function BingoPage() {
         description="Cartela mensal de desafios reais: conclua tarefas, seja pontual, reconheça colegas e feche linhas para ganhar recompensas."
       />
 
-      <SectionErrorBoundary section="Bingo de Missões">
+      <SectionErrorBoundary sectionName="Bingo de Missões">
         {isLoading ? (
           <div className="space-y-4">
             <Skeleton className="h-24 w-full rounded-xl" />
