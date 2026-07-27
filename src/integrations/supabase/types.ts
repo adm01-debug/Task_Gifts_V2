@@ -4527,6 +4527,30 @@ export type Database = {
           },
         ]
       }
+      lucky_wheel_settings: {
+        Row: {
+          coins_per_spin_budget: number
+          created_at: string
+          id: boolean
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          coins_per_spin_budget?: number
+          created_at?: string
+          id?: boolean
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          coins_per_spin_budget?: number
+          created_at?: string
+          id?: boolean
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: []
+      }
       lucky_wheel_spins: {
         Row: {
           amount: number
