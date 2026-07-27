@@ -106,7 +106,7 @@ describe("rateio team_split — grade combinatória", () => {
               mode,
               poolXp: pool.xp,
               poolCoins: pool.coins,
-              progressOf: () => Math.floor(rng() * 40) + 5,
+              progressOf: () => Math.floor(rng() * 40) + 10,
             });
 
             const result = awardCampaignTeamSplit(state);
