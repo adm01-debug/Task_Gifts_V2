@@ -78,9 +78,10 @@ export const luckyWheelService = {
    * sem creditar XP/moedas novamente (rede instável, duplo toque, retry automático).
    */
   async spin(dedupeKey?: string): Promise<LuckyWheelSpinResult> {
-    const { data, error } = await supabase.rpc("spin_lucky_wheel", {
-      p_dedupe_key: dedupeKey ?? null,
-    });
+    const { data, error } = await supabase.rpc(
+      "spin_lucky_wheel",
+      dedupeKey ? { p_dedupe_key: dedupeKey } : {},
+    );
     if (error) {
       logger.apiError("spinLuckyWheel", error, "luckyWheelService");
       throw error;
