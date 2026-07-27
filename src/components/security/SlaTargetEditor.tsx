@@ -10,7 +10,7 @@ import {
 import { toast } from "sonner";
 import { Timer, Save } from "lucide-react";
 import { validateSlaDraft, saveSlaTarget, formatMinutes } from "@/lib/slaTargets";
-import { logger } from "@/lib/logger";
+import { logger } from "@/services/loggingService";
 
 export interface SlaTargetEditorProps {
   alertType: string;
