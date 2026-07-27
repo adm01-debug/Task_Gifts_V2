@@ -4,6 +4,8 @@
  * Motor PURO + persistência local tolerante a falhas. Nunca lança: entradas
  * hostis (NaN, negativos, texto, storage indisponível) caem no padrão seguro.
  */
+import { supabase } from "@/integrations/supabase/client";
+
 export const DEFAULT_COINS_PER_SPIN_BUDGET = 30;
 export const MIN_COINS_PER_SPIN_BUDGET = 1;
 export const MAX_COINS_PER_SPIN_BUDGET = 10_000;
