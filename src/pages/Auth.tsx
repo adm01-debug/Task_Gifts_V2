@@ -6,6 +6,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useLoginLockout } from "@/hooks/useLoginLockout";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
+import { invokeEdgeSafe } from "@/lib/requestId";
 import { logger } from "@/services/loggingService";
 import { passwordResetService } from "@/services/passwordResetService";
 import { twoFactorService } from "@/services/twoFactorService";
