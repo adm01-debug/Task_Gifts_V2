@@ -423,8 +423,11 @@ const LEVEL_PT: Record<PayoutAlertLevel, string> = {
  */
 function sanitizeCell(value: unknown): string {
   if (value === null || value === undefined) return "";
-  const raw = typeof value === "number" && !Number.isFinite(value) ? "" : String(value);
-  return /^[=+\-@\t\r]/.test(raw) ? `'${raw}` : raw;
+  // Números são gerados internamente (nunca texto de usuário): um valor
+  // negativo como -2.5 não pode ser prefixado, senão vira texto na planilha.
+  if (typeof value === "number") return Number.isFinite(value) ? String(value) : "0";
+  const raw = String(value);
+  return /^[=+@\t\r]/.test(raw) || /^-(?!\d)/.test(raw) ? `'${raw}` : raw;
 }
 
 function escapeCell(value: unknown): string {
