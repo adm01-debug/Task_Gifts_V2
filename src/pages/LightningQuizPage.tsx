@@ -206,7 +206,7 @@ export default function LightningQuizPage() {
         description="Desafio relâmpago de 60 segundos com afirmações sobre cultura, segurança e processos."
       />
 
-      <SectionErrorBoundary name="Verdadeiro ou Falso Relâmpago">
+      <SectionErrorBoundary sectionName="Verdadeiro ou Falso Relâmpago">
         <div className="space-y-6">
           {phase === "idle" && (
             <Card className="border-border/60 bg-card/70 backdrop-blur">
