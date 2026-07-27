@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo, forwardRef } from "react";
+import { useState, useMemo, forwardRef } from "react";
 import { motion } from "framer-motion";
 import {
   CheckCircle,
@@ -6,29 +6,24 @@ import {
   Clock,
   Truck,
   ShoppingCart,
+  ShieldAlert,
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
-  useAdminPurchases,
-  useUpdatePurchaseStatus,
-} from "@/hooks/useShop";
-import { shopService, type PurchaseStatus } from "@/services/shopService";
+import { useAdminPurchases } from "@/hooks/useShop";
+import { shopService, type PurchaseStatus, type ShopPurchase } from "@/services/shopService";
+import { PurchaseGovernanceDialog } from "./PurchaseGovernanceDialog";
+import { RISK_LEVEL_CONFIG, type RiskLevel } from "@/lib/purchaseRisk";
+import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 
+type AdminPurchase = ShopPurchase & { profile?: { display_name: string; email: string } };
+
 export const PurchasesManager = forwardRef<HTMLDivElement>(function PurchasesManager(_, ref) {
   const { data: purchases, isLoading } = useAdminPurchases();
-  const updateStatusMutation = useUpdatePurchaseStatus();
-  const [updatingPurchaseIds, setUpdatingPurchaseIds] = useState<Set<string>>(new Set());
+  const [selectedId, setSelectedId] = useState<string | null>(null);
 
   const statusConfig = useMemo(() => ({
     pending: {
@@ -53,19 +48,10 @@ export const PurchasesManager = forwardRef<HTMLDivElement>(function PurchasesMan
     },
   } as Record<PurchaseStatus, { label: string; color: string; icon: React.ReactNode }>), []);
 
-  const handleStatusChange = useCallback((purchaseId: string, status: PurchaseStatus) => {
-    setUpdatingPurchaseIds(prev => new Set(prev).add(purchaseId));
-    updateStatusMutation.mutate(
-      { purchaseId, status },
-      {
-        onSettled: () => setUpdatingPurchaseIds(prev => {
-          const next = new Set(prev);
-          next.delete(purchaseId);
-          return next;
-        }),
-      }
-    );
-  }, [updateStatusMutation]);
+  const selectedPurchase = useMemo(
+    () => (purchases as AdminPurchase[] | undefined)?.find((p) => p.id === selectedId) ?? null,
+    [purchases, selectedId]
+  );
 
   const pendingCount = useMemo(() => 
     purchases?.filter((p) => p.status === "pending").length || 0
@@ -153,23 +139,23 @@ export const PurchasesManager = forwardRef<HTMLDivElement>(function PurchasesMan
                           <span className="ml-1">{config.label}</span>
                         </Badge>
 
-                        <Select
-                          value={purchase.status}
-                          onValueChange={(v) =>
-                            handleStatusChange(purchase.id, v as PurchaseStatus)
-                          }
-                          disabled={updatingPurchaseIds.has(purchase.id)}
+                        {purchase.risk_level && (
+                          <Badge
+                            variant="outline"
+                            className={cn("border", RISK_LEVEL_CONFIG[purchase.risk_level as RiskLevel].badgeClass)}
+                          >
+                            Risco {RISK_LEVEL_CONFIG[purchase.risk_level as RiskLevel].label} · {purchase.risk_score ?? 0}
+                          </Badge>
+                        )}
+
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => setSelectedId(purchase.id)}
                         >
-                          <SelectTrigger className="w-[140px]">
-                            <SelectValue placeholder="Alterar status" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="pending">Pendente</SelectItem>
-                            <SelectItem value="approved">Aprovar</SelectItem>
-                            <SelectItem value="delivered">Entregue</SelectItem>
-                            <SelectItem value="cancelled">Cancelar</SelectItem>
-                          </SelectContent>
-                        </Select>
+                          <ShieldAlert className="w-4 h-4 mr-2" />
+                          Revisar
+                        </Button>
                       </div>
                     </div>
 
@@ -185,6 +171,12 @@ export const PurchasesManager = forwardRef<HTMLDivElement>(function PurchasesMan
           })}
         </div>
       )}
+
+      <PurchaseGovernanceDialog
+        purchase={selectedPurchase}
+        open={Boolean(selectedId)}
+        onOpenChange={(open) => !open && setSelectedId(null)}
+      />
     </div>
   );
 });
