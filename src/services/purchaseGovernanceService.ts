@@ -1,4 +1,5 @@
 import { supabase } from "@/integrations/supabase/client";
+import { invokeEdgeSafe } from "@/lib/requestId";
 import type { RiskFactor, RiskLevel } from "@/lib/purchaseRisk";
 
 export type ApprovalAction =
