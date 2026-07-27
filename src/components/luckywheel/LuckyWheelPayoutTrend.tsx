@@ -94,6 +94,7 @@ export function LuckyWheelPayoutTrend() {
   );
 
   if (isLoading) {
+    // fallthrough
     return (
       <Card>
         <CardHeader>
