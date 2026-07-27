@@ -49,6 +49,7 @@ const navCategories = [
       { icon: Swords, label: "Duelos", path: "/duelos" },
       { icon: Dices, label: "Roleta da Sorte", path: "/roleta" },
       { icon: Gift, label: "Raspadinha", path: "/raspadinha" },
+      { icon: Zap, label: "V ou F Relâmpago", path: "/relampago" },
       { icon: Rocket, label: "Campanhas", path: "/campanhas" },
     ],
   },
