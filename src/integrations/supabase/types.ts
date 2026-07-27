@@ -1250,6 +1250,136 @@ export type Database = {
           },
         ]
       }
+      campaign_team_split_batches: {
+        Row: {
+          campaign_id: string
+          created_at: string
+          executed_by: string | null
+          id: string
+          members_awarded: number
+          members_skipped: number
+          pool_coins: number
+          pool_xp: number
+          reason: string | null
+          reverted_at: string | null
+          reverted_by: string | null
+          share_mode: string
+          status: string
+          teams_awarded: number
+          total_coins_paid: number
+          total_xp_paid: number
+        }
+        Insert: {
+          campaign_id: string
+          created_at?: string
+          executed_by?: string | null
+          id?: string
+          members_awarded?: number
+          members_skipped?: number
+          pool_coins?: number
+          pool_xp?: number
+          reason?: string | null
+          reverted_at?: string | null
+          reverted_by?: string | null
+          share_mode?: string
+          status?: string
+          teams_awarded?: number
+          total_coins_paid?: number
+          total_xp_paid?: number
+        }
+        Update: {
+          campaign_id?: string
+          created_at?: string
+          executed_by?: string | null
+          id?: string
+          members_awarded?: number
+          members_skipped?: number
+          pool_coins?: number
+          pool_xp?: number
+          reason?: string | null
+          reverted_at?: string | null
+          reverted_by?: string | null
+          share_mode?: string
+          status?: string
+          teams_awarded?: number
+          total_coins_paid?: number
+          total_xp_paid?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "campaign_team_split_batches_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "sales_campaigns"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      campaign_team_split_entries: {
+        Row: {
+          batch_id: string
+          campaign_id: string
+          coins_allocated: number
+          created_at: string
+          failure_reason: string | null
+          id: string
+          member_progress: number
+          outcome: string
+          share_percent: number
+          team_id: string | null
+          team_name: string | null
+          team_progress: number
+          team_target: number
+          user_id: string | null
+          user_identifier: string | null
+          xp_allocated: number
+        }
+        Insert: {
+          batch_id: string
+          campaign_id: string
+          coins_allocated?: number
+          created_at?: string
+          failure_reason?: string | null
+          id?: string
+          member_progress?: number
+          outcome?: string
+          share_percent?: number
+          team_id?: string | null
+          team_name?: string | null
+          team_progress?: number
+          team_target?: number
+          user_id?: string | null
+          user_identifier?: string | null
+          xp_allocated?: number
+        }
+        Update: {
+          batch_id?: string
+          campaign_id?: string
+          coins_allocated?: number
+          created_at?: string
+          failure_reason?: string | null
+          id?: string
+          member_progress?: number
+          outcome?: string
+          share_percent?: number
+          team_id?: string | null
+          team_name?: string | null
+          team_progress?: number
+          team_target?: number
+          user_id?: string | null
+          user_identifier?: string | null
+          xp_allocated?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "campaign_team_split_entries_batch_id_fkey"
+            columns: ["batch_id"]
+            isOneToOne: false
+            referencedRelation: "campaign_team_split_batches"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       campaign_teams: {
         Row: {
           awarded_at: string | null
