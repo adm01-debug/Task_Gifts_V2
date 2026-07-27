@@ -3,7 +3,7 @@ import {
   Home, Target, Trophy, TrendingUp, Clock, BookOpen, 
   Gamepad2, ShoppingBag, Swords, Heart, Award, 
   ClipboardCheck, BarChart3, Megaphone, MessageSquare,
-  LayoutDashboard, GraduationCap, Users, Sparkles, Rocket, Activity, Dices, Gift
+  LayoutDashboard, GraduationCap, Users, Sparkles, Rocket, Activity, Dices, Gift, Zap
 } from "lucide-react";
 import { memo } from "react";
 import { SidebarNavGroup, SidebarUserStats, SidebarLogo, SidebarFooter } from "@/components/sidebar";
