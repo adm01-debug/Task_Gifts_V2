@@ -14,7 +14,7 @@ import {
   Gamepad2, ShoppingBag, Swords, Heart, Award,
   ClipboardCheck, BarChart3, Megaphone, MessageSquare,
   User, Settings, Shield, LogOut, Search, Bell,
-  Moon, Sun, Activity, Dices, Gift
+  Moon, Sun, Activity, Dices, Gift, Grid3X3
 } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { useTheme } from "@/hooks/useTheme";
@@ -121,6 +121,7 @@ export function CommandPalette() {
     { id: "lucky-wheel", label: "Roleta da Sorte", icon: Dices, action: () => handleNavigate("/roleta"), keywords: ["roleta", "sorte", "giro", "premio"], category: "navigation" },
     { id: "scratch-card", label: "Raspadinha Digital", icon: Gift, action: () => handleNavigate("/raspadinha"), keywords: ["raspadinha", "sorte", "premio", "surpresa"], category: "navigation" },
     { id: "lightning-quiz", label: "Verdadeiro ou Falso Relâmpago", icon: Gamepad2, action: () => handleNavigate("/relampago"), keywords: ["relampago", "verdadeiro", "falso", "quiz", "rapido"], category: "navigation" },
+    { id: "bingo", label: "Bingo de Missões", icon: Grid3X3, action: () => handleNavigate("/bingo"), keywords: ["bingo", "cartela", "missoes", "linhas"], category: "navigation" },
     { id: "surveys", label: "Pulse Surveys", icon: BarChart3, action: () => handleNavigate("/surveys"), keywords: ["pesquisa", "opinião"], category: "navigation" },
     { id: "feedback", label: "Feedback 360°", icon: MessageSquare, action: () => handleNavigate("/feedback"), keywords: ["avaliação", "review"], category: "navigation" },
     { id: "announcements", label: "Anúncios", icon: Megaphone, action: () => handleNavigate("/announcements"), keywords: ["comunicados", "news"], category: "navigation" },
