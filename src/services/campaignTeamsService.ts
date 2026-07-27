@@ -45,7 +45,51 @@ export interface CampaignTeamInsert {
 export interface TeamSplitResult {
   teams_awarded: number;
   members_awarded: number;
+  members_skipped?: number;
+  total_xp_paid?: number;
+  total_coins_paid?: number;
+  batch_id?: string | null;
   reason?: string;
+}
+
+/** Lote de execução do rateio coletivo (trilha de auditoria). */
+export interface TeamSplitBatch {
+  id: string;
+  campaign_id: string;
+  executed_by: string | null;
+  share_mode: string;
+  pool_xp: number;
+  pool_coins: number;
+  teams_awarded: number;
+  members_awarded: number;
+  members_skipped: number;
+  total_xp_paid: number;
+  total_coins_paid: number;
+  status: string;
+  reason: string | null;
+  reverted_at: string | null;
+  reverted_by: string | null;
+  created_at: string;
+}
+
+/** Linha individual do rateio: paga ou pulada, sempre com motivo. */
+export interface TeamSplitEntry {
+  id: string;
+  batch_id: string;
+  campaign_id: string;
+  team_id: string | null;
+  team_name: string | null;
+  user_id: string | null;
+  user_identifier: string | null;
+  member_progress: number;
+  team_progress: number;
+  team_target: number;
+  share_percent: number;
+  xp_allocated: number;
+  coins_allocated: number;
+  outcome: "paid" | "skipped" | string;
+  failure_reason: string | null;
+  created_at: string;
 }
 
 // Tipos gerados são atualizados após a migração; cast defensivo até lá.
@@ -215,5 +259,39 @@ export const campaignTeamsService = {
     const { data, error } = await db.rpc("award_campaign_team_split", { _campaign_id: campaignId });
     if (error) throw error;
     return (data ?? { teams_awarded: 0, members_awarded: 0 }) as TeamSplitResult;
+  },
+
+  /** Histórico de lotes de rateio da campanha (mais recentes primeiro). */
+  async listSplitBatches(campaignId: string): Promise<TeamSplitBatch[]> {
+    try {
+      const { data, error } = await db
+        .from("campaign_team_split_batches")
+        .select("*")
+        .eq("campaign_id", campaignId)
+        .order("created_at", { ascending: false })
+        .limit(50);
+      if (error) throw error;
+      return (data ?? []) as TeamSplitBatch[];
+    } catch (err) {
+      logger.apiError("list campaign_team_split_batches", err, "campaignTeamsService");
+      return [];
+    }
+  },
+
+  /** Linhas auditáveis de um lote: pagas primeiro, depois as puladas. */
+  async listSplitEntries(batchId: string): Promise<TeamSplitEntry[]> {
+    try {
+      const { data, error } = await db
+        .from("campaign_team_split_entries")
+        .select("*")
+        .eq("batch_id", batchId)
+        .order("outcome", { ascending: true })
+        .order("xp_allocated", { ascending: false });
+      if (error) throw error;
+      return (data ?? []) as TeamSplitEntry[];
+    } catch (err) {
+      logger.apiError("list campaign_team_split_entries", err, "campaignTeamsService");
+      return [];
+    }
   },
 };

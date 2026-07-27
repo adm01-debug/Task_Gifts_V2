@@ -25,6 +25,7 @@ import {
 } from "@/components/ui/select";
 import { Users, Plus, Trash2, Coins, HandCoins, UserMinus, BarChart3 } from "lucide-react";
 import { useCampaignTeams } from "@/hooks/useCampaignTeams";
+import { CampaignTeamSplitTrail } from "./CampaignTeamSplitTrail";
 import { cn } from "@/lib/utils";
 import type { CampaignParticipant } from "@/services/salesCampaignsService";
 
@@ -129,6 +130,7 @@ export function CampaignTeamsPanel({
           </Button>
           {canManage && (
             <>
+            <CampaignTeamSplitTrail campaignId={campaignId} />
             <Dialog open={createOpen} onOpenChange={setCreateOpen}>
               <DialogTrigger asChild>
                 <Button size="sm" variant="outline" className="gap-2">

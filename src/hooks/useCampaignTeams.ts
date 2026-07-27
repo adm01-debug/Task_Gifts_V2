@@ -27,6 +27,7 @@ export function useCampaignTeams(campaignId: string | undefined) {
   const invalidate = () => {
     qc.invalidateQueries({ queryKey: ["campaign-teams", campaignId] });
     qc.invalidateQueries({ queryKey: ["sales-campaign", campaignId] });
+    qc.invalidateQueries({ queryKey: ["campaign-team-split", campaignId] });
   };
 
   const failure = (fallback: string) => (err: unknown) => {
