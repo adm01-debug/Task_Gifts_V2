@@ -10,6 +10,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { toast } from "sonner";
 import { logger } from "@/services/loggingService";
+import { describeEdgeError } from "@/lib/edgeErrors";
 
 interface TrailRecommendation {
   trailId: string;
@@ -43,33 +44,6 @@ export function TrailRecommendations() {
   const [recommendations, setRecommendations] = useState<RecommendationsResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  /**
-   * Extrai mensagem amigável de erros da edge function.
-   *
-   * Em respostas não-2xx o supabase-js devolve `FunctionsHttpError` com o corpo
-   * original em `context` (Response). O 429 do rate limit da IA precisa virar
-   * um aviso de espera — nunca uma exceção crua que derruba a tela.
-   */
-  const describeInvokeError = async (err: unknown): Promise<string> => {
-    const context = (err as { context?: Response } | null)?.context;
-    if (context && typeof context.status === "number") {
-      let payload: { error?: string; retryAfter?: number } = {};
-      try {
-        payload = await context.clone().json();
-      } catch {
-        payload = {};
-      }
-      if (context.status === 429) {
-        const seconds = payload.retryAfter ?? 60;
-        return `Muitas solicitações seguidas. Tente novamente em ${seconds} segundos.`;
-      }
-      if (context.status === 402) return "Créditos de IA insuficientes no momento.";
-      if (context.status === 401) return "Sessão expirada. Entre novamente para gerar recomendações.";
-      return payload.error || "Não foi possível gerar as recomendações agora.";
-    }
-    return err instanceof Error ? err.message : String(err);
-  };
-
   const fetchRecommendations = useCallback(async () => {
     // Evita disparos concorrentes que estouram o rate limit da edge function.
     if (!user?.id || isLoading) return;
@@ -95,7 +69,7 @@ export function TrailRecommendations() {
       setRecommendations(data);
       toast.success("Recomendações geradas com sucesso!");
     } catch (err: unknown) {
-      const message = await describeInvokeError(err);
+      const { message } = await describeEdgeError(err);
       logger.apiError(
         "fetchRecommendations",
         err instanceof Error ? err : new Error(message),
