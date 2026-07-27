@@ -153,6 +153,26 @@ export const departmentWarService = {
     }));
   },
 
+  /**
+   * Feed publico "quem pontuou agora" — nomes ja vem abreviados pelo banco,
+   * entao a UI nunca recebe o nome completo de terceiros.
+   */
+  async feed(warId: string, limit = 30): Promise<WarFeedItem[]> {
+    const { data, error } = await supabase.rpc("get_department_war_feed", {
+      p_war_id: warId,
+      p_limit: limit,
+    });
+
+    if (error) {
+      logger.error("Falha ao carregar o feed da guerra", "departmentWarService.feed", error);
+      throw error;
+    }
+
+    const payload = (data ?? {}) as Record<string, unknown>;
+    if (payload.success !== true) return [];
+    return normalizeFeed(payload.items);
+  },
+
   /** Contribuicoes do proprio usuario (RLS garante o escopo). */
   async myContributions(warId: string, userId: string): Promise<WarContributionRow[]> {
     const { data, error } = await supabase
