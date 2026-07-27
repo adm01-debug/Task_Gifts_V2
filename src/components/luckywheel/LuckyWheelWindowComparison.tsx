@@ -10,7 +10,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useLuckyWheelPayoutSnapshots } from "@/hooks/useLuckyWheel";
-import { logger } from "@/lib/logger";
+import { logger } from "@/services/loggingService";
 import {
   loadBudget,
   saveBudget,
