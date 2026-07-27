@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   luckyWheelAdminService,
+  luckyWheelAuditService,
   luckyWheelService,
   type LuckyWheelPrizeInput,
   type LuckyWheelSpinResult,
@@ -114,5 +115,15 @@ export function useDeleteLuckyWheelPrize() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: luckyWheelKeys.all });
     },
+  });
+}
+
+/** Histórico imutável de calibração (somente admins conseguem ler via RLS). */
+export function useLuckyWheelAudit(enabled = true, limit = 200) {
+  return useQuery({
+    queryKey: [...luckyWheelKeys.all, "audit", limit] as const,
+    queryFn: () => luckyWheelAuditService.list(limit),
+    enabled,
+    staleTime: 30_000,
   });
 }

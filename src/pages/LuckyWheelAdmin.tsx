@@ -5,6 +5,7 @@ import { toast } from "sonner";
 import { PageShell } from "@/components/navigation";
 import { SEOHead } from "@/components/SEOHead";
 import { SectionErrorBoundary } from "@/components/SectionErrorBoundary";
+import { LuckyWheelAuditTrail } from "@/components/luckywheel";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -391,6 +392,8 @@ export default function LuckyWheelAdmin() {
                 )}
               </CardContent>
             </Card>
+
+            <LuckyWheelAuditTrail />
           </div>
         </SectionErrorBoundary>
       </PageShell>

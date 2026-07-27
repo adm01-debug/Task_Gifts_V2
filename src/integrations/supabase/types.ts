@@ -4393,6 +4393,36 @@ export type Database = {
         }
         Relationships: []
       }
+      lucky_wheel_prize_audit: {
+        Row: {
+          after_data: Json | null
+          before_data: Json | null
+          changed_at: string
+          changed_by: string | null
+          id: string
+          operation: string
+          prize_id: string | null
+        }
+        Insert: {
+          after_data?: Json | null
+          before_data?: Json | null
+          changed_at?: string
+          changed_by?: string | null
+          id?: string
+          operation: string
+          prize_id?: string | null
+        }
+        Update: {
+          after_data?: Json | null
+          before_data?: Json | null
+          changed_at?: string
+          changed_by?: string | null
+          id?: string
+          operation?: string
+          prize_id?: string | null
+        }
+        Relationships: []
+      }
       lucky_wheel_prizes: {
         Row: {
           achievement_id: string | null

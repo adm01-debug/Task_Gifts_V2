@@ -1,5 +1,6 @@
 import { supabase } from "@/integrations/supabase/client";
 import { logger } from "./loggingService";
+import type { AuditRecord, PrizeSnapshot } from "@/lib/luckyWheelAudit";
 
 export type LuckyWheelPrizeType = "coins" | "xp" | "achievement" | "nothing";
 export type LuckyWheelRarity = "common" | "rare" | "epic" | "legendary";
@@ -179,5 +180,73 @@ export const luckyWheelAdminService = {
       logger.apiError("deleteLuckyWheelPrize", error, "luckyWheelAdminService");
       throw error;
     }
+  },
+};
+
+interface RawAuditRow {
+  id: string;
+  prize_id: string | null;
+  operation: string;
+  changed_by: string | null;
+  changed_at: string;
+  before_data: unknown;
+  after_data: unknown;
+}
+
+function toSnapshot(value: unknown): PrizeSnapshot | null {
+  return value && typeof value === "object" && !Array.isArray(value)
+    ? (value as PrizeSnapshot)
+    : null;
+}
+
+/**
+ * Histórico de calibração. A trilha é escrita por trigger `SECURITY DEFINER`
+ * no banco e não possui policy de INSERT/UPDATE/DELETE — é append-only até
+ * para administradores, que só têm permissão de leitura.
+ */
+export const luckyWheelAuditService = {
+  async list(limit = 200): Promise<AuditRecord[]> {
+    const { data, error } = await supabase
+      .from("lucky_wheel_prize_audit")
+      .select("id, prize_id, operation, changed_by, changed_at, before_data, after_data")
+      .order("changed_at", { ascending: false })
+      .limit(limit);
+
+    if (error) {
+      logger.apiError("listLuckyWheelPrizeAudit", error, "luckyWheelAuditService");
+      throw error;
+    }
+
+    const rows = (data ?? []) as RawAuditRow[];
+    const authorIds = [...new Set(rows.map((r) => r.changed_by).filter((v): v is string => !!v))];
+
+    // Nomes vêm da view pública de perfis: nunca expõe e-mail ou outro PII.
+    const names = new Map<string, string>();
+    if (authorIds.length > 0) {
+      const { data: profiles, error: profileError } = await supabase
+        .from("profiles_public")
+        .select("id, display_name")
+        .in("id", authorIds);
+      if (profileError) {
+        // Falha de nome não pode derrubar a auditoria: degrada para "Administrador".
+        logger.apiError("listLuckyWheelAuditAuthors", profileError, "luckyWheelAuditService");
+      }
+      for (const profile of profiles ?? []) {
+        if (profile.id) names.set(profile.id, profile.display_name ?? "");
+      }
+    }
+
+    return rows.map<AuditRecord>((row) => ({
+      id: row.id,
+      prize_id: row.prize_id,
+      operation: (row.operation === "INSERT" || row.operation === "DELETE"
+        ? row.operation
+        : "UPDATE") as AuditRecord["operation"],
+      changed_by: row.changed_by,
+      changed_by_name: row.changed_by ? (names.get(row.changed_by) ?? null) : null,
+      changed_at: row.changed_at,
+      before_data: toSnapshot(row.before_data),
+      after_data: toSnapshot(row.after_data),
+    }));
   },
 };
