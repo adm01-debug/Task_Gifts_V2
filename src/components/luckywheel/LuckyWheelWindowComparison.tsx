@@ -198,15 +198,17 @@ export function LuckyWheelWindowComparison() {
               inputMode="decimal"
               className="h-11 w-40"
               value={budgetDraft}
+              disabled={budgetSyncing}
               onChange={(event) => setBudgetDraft(event.target.value)}
-              onBlur={commitBudget}
+              onBlur={() => { void commitBudget(); }}
               onKeyDown={(event) => {
-                if (event.key === "Enter") commitBudget();
+                if (event.key === "Enter") void commitBudget();
               }}
             />
           </div>
           <p className="text-xs text-muted-foreground">
             Alerta de estouro dispara quando a janela atual paga acima de {decimal.format(budget)} moeda(s) por giro.
+            {" "}Este teto é compartilhado com a rotina diária de alertas do servidor.
           </p>
         </div>
 
