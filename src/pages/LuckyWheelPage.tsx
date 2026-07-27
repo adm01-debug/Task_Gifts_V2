@@ -12,7 +12,7 @@ import { SectionErrorBoundary } from "@/components/SectionErrorBoundary";
 import { LuckyWheel, LuckyWheelHistory } from "@/components/luckywheel";
 import { useLuckyWheelPrizes, useLuckyWheelStatus, useSpinLuckyWheel } from "@/hooks/useLuckyWheel";
 import type { LuckyWheelSpinResult } from "@/services/luckyWheelService";
-import { useHapticFeedback } from "@/hooks/useHaptics";
+import { useHaptics } from "@/hooks/useHaptics";
 
 const RARITY_LABEL: Record<string, string> = {
   common: "Comum",
@@ -25,7 +25,7 @@ export default function LuckyWheelPage() {
   const { data: prizes, isLoading: loadingPrizes } = useLuckyWheelPrizes();
   const { data: status, isLoading: loadingStatus } = useLuckyWheelStatus();
   const spinMutation = useSpinLuckyWheel();
-  const haptics = useHapticFeedback();
+  const haptics = useHaptics();
 
   const [targetIndex, setTargetIndex] = useState<number | null>(null);
   const [result, setResult] = useState<LuckyWheelSpinResult | null>(null);
@@ -57,7 +57,7 @@ export default function LuckyWheelPage() {
         setRevealed(true);
         return;
       }
-      haptics?.impact?.("medium");
+      haptics.trigger("medium");
       setTargetIndex(index);
     } catch {
       toast.error("Não foi possível girar a roleta. Tente novamente.");
@@ -70,7 +70,7 @@ export default function LuckyWheelPage() {
     if (result?.prize_type === "nothing") {
       toast("Quase lá! Amanhã tem outra chance.");
     } else {
-      haptics?.success?.();
+      haptics.questCompleted();
       toast.success(`🎉 Você ganhou: ${result?.prize_label}`);
     }
   };
