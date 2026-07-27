@@ -61,6 +61,38 @@ export async function fetchRemoteBudget(): Promise<number> {
   return applied;
 }
 
+export interface BudgetAuditEntry {
+  id: string;
+  oldBudget: number | null;
+  newBudget: number;
+  changedBy: string | null;
+  changedAt: string;
+}
+
+/**
+ * Trilha auditável das alterações do teto (`lucky_wheel_settings_audit`).
+ * Nunca lança: falhas de permissão/rede devolvem lista vazia.
+ */
+export async function fetchBudgetHistory(limit = 5): Promise<BudgetAuditEntry[]> {
+  try {
+    const { data, error } = await supabase
+      .from("lucky_wheel_settings_audit")
+      .select("id, old_budget, new_budget, changed_by, changed_at")
+      .order("changed_at", { ascending: false })
+      .limit(Math.max(1, Math.min(50, Math.trunc(limit) || 5)));
+    if (error) throw error;
+    return (data || []).map((row) => ({
+      id: String(row.id),
+      oldBudget: parseBudget(row.old_budget),
+      newBudget: parseBudget(row.new_budget) ?? DEFAULT_COINS_PER_SPIN_BUDGET,
+      changedBy: row.changed_by ? String(row.changed_by) : null,
+      changedAt: String(row.changed_at),
+    }));
+  } catch {
+    return [];
+  }
+}
+
 /** Persiste o teto no banco (upsert do registro único) e atualiza o cache local. */
 export async function persistRemoteBudget(raw: unknown): Promise<number> {
   const applied = parseBudget(raw) ?? DEFAULT_COINS_PER_SPIN_BUDGET;
