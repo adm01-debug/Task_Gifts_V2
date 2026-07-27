@@ -325,8 +325,10 @@ const CSV_INJECTION_RE = /^[=+\-@\t\r]/;
 /** Neutraliza fórmulas (CSV injection) e normaliza quebras de linha. */
 function sanitizeCell(value: unknown): string {
   if (value === null || value === undefined) return "";
-  const raw = String(value).replace(/\r\n|\r|\n/g, " ").trim();
-  return CSV_INJECTION_RE.test(raw) ? `'${raw}` : raw;
+  const normalized = String(value).replace(/\r\n|\r|\n/g, " ");
+  const risky = CSV_INJECTION_RE.test(normalized);
+  const raw = normalized.trim();
+  return risky || CSV_INJECTION_RE.test(raw) ? `'${raw}` : raw;
 }
 
 function cell(value: unknown): string {
