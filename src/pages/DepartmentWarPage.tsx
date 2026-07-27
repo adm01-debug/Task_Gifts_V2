@@ -34,6 +34,7 @@ import {
 } from "@/hooks/useDepartmentWars";
 import { DepartmentWarConfigDialog } from "@/components/war/DepartmentWarConfigDialog";
 import { WarLiveFeed } from "@/components/war/WarLiveFeed";
+import { WarLeadershipAlert } from "@/components/war/WarLeadershipAlert";
 import { warProgress } from "@/lib/departmentWar";
 import type { DepartmentWarStatus } from "@/services/departmentWarService";
 import { cn } from "@/lib/utils";
@@ -358,6 +359,9 @@ export default function DepartmentWarPage() {
 
                 {/* Métricas e contribuições */}
                 <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+                  <div className="lg:col-span-2">
+                    <WarLeadershipAlert standings={standings} />
+                  </div>
                   <WarLiveFeed warId={war.id} className="lg:col-span-2" />
 
                   <Card>
