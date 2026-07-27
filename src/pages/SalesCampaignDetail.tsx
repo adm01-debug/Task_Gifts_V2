@@ -228,6 +228,8 @@ export default function SalesCampaignDetail() {
         personalTarget={myParticipation?.target_adjusted ?? null}
       />
 
+      {isAdmin && <CampaignImportHistory campaignId={campaign.id} canManage={isAdmin} />}
+
       {/* Ranking */}
       <Card className="p-6">
         <div className="flex items-center justify-between mb-4 gap-3 flex-wrap">
