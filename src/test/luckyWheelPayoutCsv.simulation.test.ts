@@ -33,7 +33,6 @@ function parseCsv(text: string): string[][] {
 
 function prize(over: Partial<OddsPrize> & { id: string }): OddsPrize {
   return {
-    id: over.id,
     label: over.label ?? `Prêmio ${over.id}`,
     prize_type: over.prize_type ?? "coins",
     amount: over.amount ?? 10,
@@ -45,7 +44,6 @@ function prize(over: Partial<OddsPrize> & { id: string }): OddsPrize {
 
 function spin(over: Partial<PayoutSpin> & { id: string }): PayoutSpin {
   return {
-    id: over.id,
     user_id: over.user_id ?? "u1",
     prize_id: over.prize_id ?? null,
     prize_label: over.prize_label ?? "Prêmio A",
@@ -69,7 +67,7 @@ function mulberry(seed: number) {
 const BASE_PRIZES = [
   prize({ id: "p1", label: "Moedas", amount: 10, weight: 5 }),
   prize({ id: "p2", label: "XP", prize_type: "xp", amount: 50, weight: 3 }),
-  prize({ id: "p3", label: "Nada", prize_type: "none", amount: 0, weight: 2 }),
+  prize({ id: "p3", label: "Nada", prize_type: "nothing", amount: 0, weight: 2 }),
 ];
 
 function sampleSpins(count: number, rnd: () => number): PayoutSpin[] {
@@ -163,12 +161,12 @@ describe("buildPayoutCsv — hostilidade de dados", () => {
 
   it("não emite NaN, Infinity ou undefined em nenhuma célula", () => {
     const prizes = [
-      prize({ id: "n1", label: "NaN", amount: Number.NaN, weight: 1 }),
-      prize({ id: "n2", label: "Inf", amount: Number.POSITIVE_INFINITY, weight: 0 }),
+      prize({ id: "n1", label: "Rótulo A", amount: Number.NaN, weight: 1 }),
+      prize({ id: "n2", label: "Rótulo B", amount: Number.POSITIVE_INFINITY, weight: 0 }),
     ];
     const spins = [
-      spin({ id: "s1", prize_id: "n1", prize_label: "NaN", amount: Number.NaN }),
-      spin({ id: "s2", prize_id: "n2", prize_label: "Inf", amount: Number.POSITIVE_INFINITY }),
+      spin({ id: "s1", prize_id: "n1", prize_label: "Rótulo A", amount: Number.NaN }),
+      spin({ id: "s2", prize_id: "n2", prize_label: "Rótulo B", amount: Number.POSITIVE_INFINITY }),
       spin({ id: "s3", prize_id: "fantasma", prize_label: "Fantasma", amount: 3, created_at: "data-ruim" }),
     ];
     const csv = buildPayoutCsv(buildPayoutReport(spins, prizes));
