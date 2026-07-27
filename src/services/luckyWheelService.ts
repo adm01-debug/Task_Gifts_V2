@@ -207,6 +207,32 @@ export const luckyWheelPayoutService = {
     }
     return (data ?? []) as PayoutSpin[];
   },
+
+  /**
+   * Snapshots diários gerados pelo cron (`snapshot_lucky_wheel_payout`).
+   * A tabela só é legível por admins via RLS — um não-admin recebe lista vazia.
+   */
+  async listSnapshots(days = 90): Promise<PayoutSnapshotRow[]> {
+    const safeDays = Math.min(365, Math.max(1, Math.floor(days)));
+    const since = new Date(Date.now() - safeDays * 24 * 60 * 60 * 1000)
+      .toISOString()
+      .slice(0, 10);
+
+    const { data, error } = await supabase
+      .from("lucky_wheel_payout_snapshots")
+      .select(
+        "snapshot_date, spins, unique_users, coins_paid, xp_paid, projected_coins, projected_xp, chi_square, degrees_of_freedom, duplicate_spins, unconfigured_spins",
+      )
+      .gte("snapshot_date", since)
+      .order("snapshot_date", { ascending: true })
+      .limit(400);
+
+    if (error) {
+      logger.apiError("listLuckyWheelSnapshots", error, "luckyWheelPayoutService");
+      throw error;
+    }
+    return (data ?? []) as PayoutSnapshotRow[];
+  },
 };
 
 interface RawAuditRow {
