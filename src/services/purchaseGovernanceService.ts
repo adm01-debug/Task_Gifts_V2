@@ -79,12 +79,16 @@ export const purchaseGovernanceService = {
 
   /** Dispara a análise de risco por IA (server-side, service role). */
   async analyzeRisk(purchaseId: string): Promise<RiskAnalysisResult> {
-    const { data, error } = await supabase.functions.invoke("reward-approval-review", {
-      body: { purchase_id: purchaseId },
-    });
+    const { data, error } = await invokeEdgeSafe<RiskAnalysisResult & { error?: string }>(
+      "reward-approval-review",
+      { body: { purchase_id: purchaseId } },
+    );
 
-    if (error) throw new Error(error.message || "Falha ao analisar o resgate");
-    const result = data as RiskAnalysisResult & { error?: string };
+    if (error) throw new Error(error.message);
+    const result = data;
+    if (!result || typeof result !== "object") {
+      throw new Error("Resposta inválida do serviço de análise de risco.");
+    }
     if (result?.error) throw new Error(result.error);
     return result;
   },
