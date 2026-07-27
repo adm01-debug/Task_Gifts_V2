@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { Link } from "react-router-dom";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -22,7 +23,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Users, Plus, Trash2, Coins, HandCoins, UserMinus } from "lucide-react";
+import { Users, Plus, Trash2, Coins, HandCoins, UserMinus, BarChart3 } from "lucide-react";
 import { useCampaignTeams } from "@/hooks/useCampaignTeams";
 import { cn } from "@/lib/utils";
 import type { CampaignParticipant } from "@/services/salesCampaignsService";
