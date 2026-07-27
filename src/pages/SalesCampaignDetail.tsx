@@ -236,6 +236,13 @@ export default function SalesCampaignDetail() {
               Exportar CSV
             </Button>
             {isAdmin && (
+            <CampaignImportDialog
+              campaignId={campaign.id}
+              metricUnit={campaign.metric_unit}
+              onApplied={() => refetchAll()}
+            />
+            )}
+            {isAdmin && (
             <Button
               variant="outline"
               size="sm"
