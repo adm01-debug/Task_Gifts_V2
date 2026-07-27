@@ -119,6 +119,7 @@ export function CommandPalette() {
     { id: "leagues", label: "Ligas", icon: Award, action: () => handleNavigate("/leagues"), keywords: ["competição", "ranking"], category: "navigation" },
     { id: "duels", label: "Duelos", icon: Swords, action: () => handleNavigate("/duelos"), keywords: ["batalha", "1v1"], category: "navigation" },
     { id: "lucky-wheel", label: "Roleta da Sorte", icon: Dices, action: () => handleNavigate("/roleta"), keywords: ["roleta", "sorte", "giro", "premio"], category: "navigation" },
+    { id: "scratch-card", label: "Raspadinha Digital", icon: Gift, action: () => handleNavigate("/raspadinha"), keywords: ["raspadinha", "sorte", "premio", "surpresa"], category: "navigation" },
     { id: "surveys", label: "Pulse Surveys", icon: BarChart3, action: () => handleNavigate("/surveys"), keywords: ["pesquisa", "opinião"], category: "navigation" },
     { id: "feedback", label: "Feedback 360°", icon: MessageSquare, action: () => handleNavigate("/feedback"), keywords: ["avaliação", "review"], category: "navigation" },
     { id: "announcements", label: "Anúncios", icon: Megaphone, action: () => handleNavigate("/announcements"), keywords: ["comunicados", "news"], category: "navigation" },
