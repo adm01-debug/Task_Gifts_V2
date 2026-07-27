@@ -1,5 +1,6 @@
 import { useState, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
+import { invokeEdgeSafe } from '@/lib/requestId';
 import { logger } from '@/services/loggingService';
 import { collectFingerprintSignals, computeDeviceFingerprint } from '@/lib/deviceFingerprint';
 
@@ -87,7 +88,11 @@ export const useDeviceDetection = () => {
       const deviceInfo = generateFingerprint();
       
       // Chamar edge function para registrar dispositivo
-      const { data, error } = await supabase.functions.invoke('detect-new-device', {
+      const { data, error, requestId } = await invokeEdgeSafe<{
+        is_new_device?: boolean;
+        device_id?: string | null;
+        is_trusted?: boolean;
+      }>('detect-new-device', {
         body: {
           userId,
           fingerprint: deviceInfo.fingerprint,
@@ -97,8 +102,8 @@ export const useDeviceDetection = () => {
           deviceType: deviceInfo.deviceType
         }
       });
-      
-      if (error) throw error;
+
+      if (error) throw new Error(`${error.message} (requestId=${requestId})`);
       
       return {
         isNewDevice: data?.is_new_device || false,

@@ -68,8 +68,10 @@ export async function invokeEdgeSafe<T = unknown>(
   const { maxAttempts = 3, ...invokeOptions } = options;
   const requestId = invokeOptions.requestId ?? newRequestId();
   let lastError: EdgeErrorInfo | null = null;
+  let usedAttempts = 0;
 
   for (let attempt = 1; attempt <= Math.max(1, maxAttempts); attempt++) {
+    usedAttempts = attempt;
     const { data, error } = await invokeEdge<T>(fnName, { ...invokeOptions, requestId });
 
     if (!error) {
@@ -82,5 +84,5 @@ export async function invokeEdgeSafe<T = unknown>(
     await new Promise((resolve) => setTimeout(resolve, backoffDelayMs(attempt)));
   }
 
-  return { data: null, error: lastError, requestId, attempts: maxAttempts };
+  return { data: null, error: lastError, requestId, attempts: usedAttempts };
 }

@@ -4,6 +4,7 @@ import { ShieldX, RefreshCw, Globe, AlertTriangle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { supabase } from "@/integrations/supabase/client";
+import { invokeEdgeSafe } from "@/lib/requestId";
 import { logger } from "@/services/loggingService";
 
 interface IpAccessGuardProps {
@@ -26,16 +27,20 @@ export function IpAccessGuard({ children }: IpAccessGuardProps) {
     setIsChecking(true);
     
     try {
-      const { data, error: fnError } = await supabase.functions.invoke('verify-ip');
-      
-      if (fnError) {
-        logger.apiError('verifyIP', fnError, 'IpAccessGuard');
-        // On error, allow access (fail open)
+      const { data, error: fnError, requestId } = await invokeEdgeSafe<IpVerificationResult>('verify-ip');
+
+      if (fnError || !data) {
+        logger.apiError(
+          `verifyIP (requestId=${requestId})`,
+          new Error(fnError?.message ?? 'Resposta vazia do verificador de IP'),
+          'IpAccessGuard',
+        );
+        // Fail open: indisponibilidade do verificador não pode travar o acesso.
         setIsAllowed(true);
         return;
       }
 
-      const result = data as IpVerificationResult;
+      const result = data;
       setIpInfo(result);
       setIsAllowed(result.allowed);
       
