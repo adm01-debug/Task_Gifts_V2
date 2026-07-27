@@ -18,12 +18,17 @@ export interface SalesCampaign {
   target_individual_default: number;
   progress_global: number;
   split_rule: {
-    type: "proportional" | "flat" | "top_only";
+    type: "proportional" | "flat" | "top_only" | "team_split";
     xp_per_unit?: number;
     coin_per_unit?: number;
     global_bonus_xp?: number;
     global_bonus_coins?: number;
     top_n?: number;
+    /** Prêmio coletivo distribuído entre os membros da equipe que bate a meta. */
+    team_pool_xp?: number;
+    team_pool_coins?: number;
+    /** `proportional` (padrão) rateia pela contribuição; `equal` divide igualmente. */
+    team_share?: "proportional" | "equal";
   };
   xp_reward: number;
   coin_reward: number;
