@@ -146,7 +146,11 @@ export function SecurityAlertsPanel() {
   const uniqueTypes = Array.from(new Set((alerts || []).map((a) => a.alert_type)));
 
   const filteredAlerts = (alerts || []).filter((a) => {
-    if (typeFilter !== "all" && a.alert_type !== typeFilter) return false;
+    if (typeFilter === "lucky_wheel") {
+      if (!String(a.alert_type || "").startsWith("lucky_wheel_")) return false;
+    } else if (typeFilter !== "all" && a.alert_type !== typeFilter) {
+      return false;
+    }
     if (severityFilter !== "all" && a.severity !== severityFilter) return false;
     if (statusFilter === "unresolved" && a.is_resolved) return false;
     if (statusFilter === "resolved" && !a.is_resolved) return false;
@@ -337,6 +341,15 @@ export function SecurityAlertsPanel() {
                         <Link to="/admin/webhooks/executive">
                           <ExternalLink className="w-4 h-4 mr-2" />
                           Abrir dashboard executivo de webhooks
+                        </Link>
+                      </Button>
+                    )}
+
+                    {isLuckyWheelAlert(alert.alert_type) && (
+                      <Button asChild variant="secondary" size="sm">
+                        <Link to="/roleta/admin">
+                          <ExternalLink className="w-4 h-4 mr-2" />
+                          Abrir painel econômico da Roleta
                         </Link>
                       </Button>
                     )}
