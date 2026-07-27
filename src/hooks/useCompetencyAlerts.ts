@@ -24,12 +24,12 @@ export function useCompetencyAlerts() {
 
   const triggerAnalysis = useMutation({
     mutationFn: async (userId?: string) => {
-      const { data, error } = await supabase.functions.invoke<CompetencyAlertResponse>(
+      const { data, error, requestId } = await invokeEdgeSafe<CompetencyAlertResponse>(
         'competency-alerts',
         { body: { userId: userId || user?.id } }
       );
 
-      if (error) throw error;
+      if (error) throw new Error(`${error.message} (requestId=${requestId})`);
       return data;
     },
     onSuccess: (data) => {
@@ -44,12 +44,12 @@ export function useCompetencyAlerts() {
 
   const triggerBatchAnalysis = useMutation({
     mutationFn: async () => {
-      const { data, error } = await supabase.functions.invoke<CompetencyAlertResponse>(
+      const { data, error, requestId } = await invokeEdgeSafe<CompetencyAlertResponse>(
         'competency-alerts',
         { body: { checkAllUsers: true } }
       );
 
-      if (error) throw error;
+      if (error) throw new Error(`${error.message} (requestId=${requestId})`);
       return data;
     },
     onSuccess: (data) => {
