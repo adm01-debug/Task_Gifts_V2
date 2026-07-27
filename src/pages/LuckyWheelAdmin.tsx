@@ -149,25 +149,24 @@ export default function LuckyWheelAdmin() {
         subtitle="Ajuste os pesos e veja em tempo real a probabilidade e o custo mensal de cada setor."
         icon={<Dices className="h-5 w-5" />}
         backFallback="/roleta"
-        actions={
-          <div className="flex flex-wrap gap-2">
-            <Button variant="outline" onClick={handleCreate} disabled={createMutation.isPending}>
-              <Plus className="mr-2 h-4 w-4" aria-hidden />
-              Novo prêmio
-            </Button>
-            <Button variant="ghost" onClick={() => setEdits({})} disabled={!isDirty}>
-              <RotateCcw className="mr-2 h-4 w-4" aria-hidden />
-              Descartar
-            </Button>
-            <Button onClick={handleSave} disabled={!isDirty || blocked || saveMutation.isPending}>
-              <Save className="mr-2 h-4 w-4" aria-hidden />
-              {saveMutation.isPending ? "Salvando..." : "Salvar calibração"}
-            </Button>
-          </div>
-        }
       >
         <SectionErrorBoundary sectionName="Calibração da Roleta">
           <div className="space-y-6">
+          <div className="flex flex-wrap justify-end gap-2">
+          <Button variant="outline" onClick={handleCreate} disabled={createMutation.isPending}>
+            <Plus className="mr-2 h-4 w-4" aria-hidden />
+            Novo prêmio
+          </Button>
+          <Button variant="ghost" onClick={() => setEdits({})} disabled={!isDirty}>
+            <RotateCcw className="mr-2 h-4 w-4" aria-hidden />
+            Descartar
+          </Button>
+          <Button onClick={handleSave} disabled={!isDirty || blocked || saveMutation.isPending}>
+            <Save className="mr-2 h-4 w-4" aria-hidden />
+            {saveMutation.isPending ? "Salvando..." : "Salvar calibração"}
+          </Button>
+          </div>
+
             {issues.length > 0 && (
               <Alert variant={blocked ? "destructive" : "default"}>
                 <AlertTriangle className="h-4 w-4" aria-hidden />
