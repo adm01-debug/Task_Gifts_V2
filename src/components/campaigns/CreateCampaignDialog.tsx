@@ -32,13 +32,23 @@ export function CreateCampaignDialog({ trigger }: CreateCampaignDialogProps) {
     coin_reward: 100,
     status: "draft" as "draft" | "active",
     department_id: "all" as string,
+    team_pool_xp: 0,
+    team_pool_coins: 0,
+    team_share: "proportional" as "proportional" | "equal",
   });
 
   const handleSubmit = () => {
     if (!form.name.trim()) return;
-    const { department_id, ...rest } = form;
+    const { department_id, team_pool_xp, team_pool_coins, team_share, ...rest } = form;
+    const usesTeamSplit = team_pool_xp > 0 || team_pool_coins > 0;
     create(
-      { ...rest, department_id: department_id === "all" ? null : department_id },
+      {
+        ...rest,
+        department_id: department_id === "all" ? null : department_id,
+        split_rule: usesTeamSplit
+          ? { type: "team_split", team_pool_xp, team_pool_coins, team_share }
+          : { type: "proportional" },
+      },
       { onSuccess: () => setOpen(false) },
     );
   };
