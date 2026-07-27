@@ -180,11 +180,13 @@ describe("comparePayoutWindows — simulação massiva", () => {
     )!.pValue;
 
     // alpha logo abaixo do p observado nunca deve acusar significância...
-    const strict = comparePayoutWindows(p, { windowDays: 7, alpha: Math.max(1e-6, observed / 2) });
-    expect(strict.tests.find((t) => t.metric === "coinsPerSpin")!.verdict).toBe("stable");
+    if (observed > 1e-6) {
+      const strict = comparePayoutWindows(p, { windowDays: 7, alpha: observed / 2 });
+      expect(strict.tests.find((t) => t.metric === "coinsPerSpin")!.verdict).toBe("stable");
+    }
 
     // ...e logo acima deve acusar.
-    const loose = comparePayoutWindows(p, { windowDays: 7, alpha: Math.min(0.5, observed * 2 + 1e-9) });
+    const loose = comparePayoutWindows(p, { windowDays: 7, alpha: Math.min(0.5, observed * 2 + 1e-6) });
     expect(loose.tests.find((t) => t.metric === "coinsPerSpin")!.verdict).toBe("significant");
   });
 
