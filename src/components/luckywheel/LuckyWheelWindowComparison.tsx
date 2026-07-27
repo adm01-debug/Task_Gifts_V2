@@ -7,6 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useLuckyWheelPayoutSnapshots } from "@/hooks/useLuckyWheel";
+import { decideComparisonAlerts, type ComparisonAlertSeverity } from "@/lib/luckyWheelComparisonAlerts";
 import {
   comparePayoutWindows,
   type SignificanceTest,
@@ -28,6 +29,16 @@ const VERDICT_LABEL: Record<SignificanceVerdict, string> = {
   insufficient: "Amostra insuficiente",
   stable: "Estável",
   significant: "Variação significativa",
+};
+
+/** Teto padrão de custo por giro usado para sinalizar estouro de orçamento. */
+const COINS_PER_SPIN_BUDGET = 30;
+
+const SEVERITY_LABEL: Record<ComparisonAlertSeverity, string> = {
+  critical: "Crítico",
+  high: "Alto",
+  medium: "Médio",
+  low: "Baixo",
 };
 
 function formatValue(test: SignificanceTest, value: number): string {
@@ -65,6 +76,11 @@ export function LuckyWheelWindowComparison() {
       previousLabel: `${windowDays} dias anteriores`,
     });
   }, [data, windowDays]);
+
+  const alerts = useMemo(
+    () => decideComparisonAlerts(comparison, { coinsPerSpinBudget: COINS_PER_SPIN_BUDGET }),
+    [comparison],
+  );
 
   if (isLoading) {
     return (
@@ -185,6 +201,29 @@ export function LuckyWheelWindowComparison() {
             </ul>
           </AlertDescription>
         </Alert>
+
+        {alerts.length > 0 && (
+          <div className="space-y-2">
+            <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+              Alertas acionáveis
+            </p>
+            {alerts.map((alert) => (
+              <Alert
+                key={alert.dedupeKey}
+                variant={alert.severity === "critical" || alert.severity === "high" ? "destructive" : "default"}
+              >
+                <AlertTriangle className="h-4 w-4" />
+                <AlertTitle className="flex flex-wrap items-center gap-2">
+                  <Badge variant={alert.severity === "medium" || alert.severity === "low" ? "secondary" : "destructive"}>
+                    {SEVERITY_LABEL[alert.severity]}
+                  </Badge>
+                  {alert.title}
+                </AlertTitle>
+                <AlertDescription>{alert.description}</AlertDescription>
+              </Alert>
+            ))}
+          </div>
+        )}
       </CardContent>
     </Card>
   );
