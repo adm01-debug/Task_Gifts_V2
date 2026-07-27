@@ -105,7 +105,7 @@ export const departmentWarService = {
       .limit(50);
 
     if (error) {
-      logger.error("departmentWarService.list", error);
+      logger.error("Falha ao listar guerras de departamentos", "departmentWarService.list", error);
       throw error;
     }
     return (data ?? [])
@@ -120,7 +120,7 @@ export const departmentWarService = {
     });
 
     if (error) {
-      logger.error("departmentWarService.board", error);
+      logger.error("Falha ao carregar placar da guerra", "departmentWarService.board", error);
       throw error;
     }
 
@@ -141,7 +141,7 @@ export const departmentWarService = {
       .order("weight", { ascending: false });
 
     if (error) {
-      logger.error("departmentWarService.metrics", error);
+      logger.error("Falha ao carregar metricas da guerra", "departmentWarService.metrics", error);
       throw error;
     }
     return (data ?? []).map((row) => ({
@@ -163,7 +163,7 @@ export const departmentWarService = {
       .limit(30);
 
     if (error) {
-      logger.error("departmentWarService.myContributions", error);
+      logger.error("Falha ao carregar suas contribuicoes", "departmentWarService.myContributions", error);
       throw error;
     }
     return (data ?? []).map((row) => ({
@@ -180,7 +180,7 @@ export const departmentWarService = {
       p_war_id: warId,
     });
     if (error) {
-      logger.error("departmentWarService.settle", error);
+      logger.error("Falha ao encerrar a guerra", "departmentWarService.settle", error);
       throw error;
     }
     const payload = (data ?? {}) as Record<string, unknown>;
@@ -195,7 +195,7 @@ export const departmentWarService = {
       p_war_id: warId,
     });
     if (error) {
-      logger.error("departmentWarService.syncHeadcount", error);
+      logger.error("Falha ao sincronizar o efetivo dos departamentos", "departmentWarService.syncHeadcount", error);
       throw error;
     }
     const payload = (data ?? {}) as Record<string, unknown>;
