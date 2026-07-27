@@ -104,3 +104,80 @@ export const luckyWheelService = {
     return (data ?? []) as LuckyWheelSpin[];
   },
 };
+
+export interface LuckyWheelPrizeInput {
+  label: string;
+  prize_type: LuckyWheelPrizeType;
+  amount: number;
+  weight: number;
+  color: string;
+  icon: string;
+  rarity: LuckyWheelRarity;
+  is_active: boolean;
+}
+
+const ADMIN_PRIZE_COLUMNS =
+  "id, label, prize_type, amount, weight, color, icon, rarity, is_active";
+
+/**
+ * Operações administrativas de calibração. A RLS de `lucky_wheel_prizes`
+ * já restringe escrita a `has_role(auth.uid(), 'admin')`; o cliente nunca
+ * consegue alterar pesos sem esse papel, mesmo chamando direto o endpoint.
+ */
+export const luckyWheelAdminService = {
+  /** Inclui prêmios inativos (visível apenas para admins pela policy de SELECT). */
+  async listAll(): Promise<LuckyWheelPrize[]> {
+    const { data, error } = await supabase
+      .from("lucky_wheel_prizes")
+      .select(ADMIN_PRIZE_COLUMNS)
+      .order("created_at", { ascending: true })
+      .order("id", { ascending: true });
+
+    if (error) {
+      logger.apiError("listAllLuckyWheelPrizes", error, "luckyWheelAdminService");
+      throw error;
+    }
+    return (data ?? []) as LuckyWheelPrize[];
+  },
+
+  async create(input: LuckyWheelPrizeInput): Promise<LuckyWheelPrize> {
+    const { data, error } = await supabase
+      .from("lucky_wheel_prizes")
+      .insert(input)
+      .select(ADMIN_PRIZE_COLUMNS)
+      .single();
+
+    if (error) {
+      logger.apiError("createLuckyWheelPrize", error, "luckyWheelAdminService");
+      throw error;
+    }
+    return data as LuckyWheelPrize;
+  },
+
+  async update(id: string, patch: Partial<LuckyWheelPrizeInput>): Promise<void> {
+    const { error } = await supabase.from("lucky_wheel_prizes").update(patch).eq("id", id);
+    if (error) {
+      logger.apiError("updateLuckyWheelPrize", error, "luckyWheelAdminService");
+      throw error;
+    }
+  },
+
+  /**
+   * Salva várias calibrações de uma vez. Percorre em série para que uma falha
+   * de RLS/constraint identifique exatamente qual prêmio a causou.
+   */
+  async saveMany(patches: ReadonlyArray<{ id: string } & Partial<LuckyWheelPrizeInput>>): Promise<void> {
+    for (const { id, ...patch } of patches) {
+      if (Object.keys(patch).length === 0) continue;
+      await luckyWheelAdminService.update(id, patch);
+    }
+  },
+
+  async remove(id: string): Promise<void> {
+    const { error } = await supabase.from("lucky_wheel_prizes").delete().eq("id", id);
+    if (error) {
+      logger.apiError("deleteLuckyWheelPrize", error, "luckyWheelAdminService");
+      throw error;
+    }
+  },
+};
