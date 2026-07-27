@@ -7,6 +7,8 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { AlertHeatmap } from "@/components/security/AlertHeatmap";
+import { SlaTargetEditor } from "@/components/security/SlaTargetEditor";
+import { useRBAC } from "@/hooks/useRBAC";
 import { toCSV, downloadCSV } from "@/lib/csvExport";
 import {
   BookOpen, Search, ShieldAlert, Activity, Ban, KeyRound, Bug, Bell,
@@ -281,12 +283,27 @@ export default function SecurityRunbook() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("sla_targets")
-        .select("alert_type, mttr_target_seconds");
+        .select("alert_type, mtta_target_seconds, mttr_target_seconds, notes");
       if (error) throw error;
       return data ?? [];
     },
     staleTime: 10 * 60 * 1000,
   });
+
+  const { isAdmin } = useRBAC();
+
+  /** Índice por tipo para hidratar o editor com MTTA/notas reais do banco. */
+  const slaRowByType = useMemo(() => {
+    const map: Record<string, { mtta_target_seconds: number; mttr_target_seconds: number; notes: string | null }> = {};
+    (slaTargets ?? []).forEach((row) => {
+      map[row.alert_type] = {
+        mtta_target_seconds: row.mtta_target_seconds ?? 0,
+        mttr_target_seconds: row.mttr_target_seconds ?? 0,
+        notes: row.notes ?? null,
+      };
+    });
+    return map;
+  }, [slaTargets]);
 
   const slaMinutesByType = useMemo(() => {
     const map: Record<string, number> = {};
