@@ -1,5 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { departmentWarService } from "@/services/departmentWarService";
+import { departmentWarAdminService } from "@/services/departmentWarAdminService";
+import type { WarConfigDraft } from "@/lib/departmentWarConfig";
 import { useAuth } from "./useAuth";
 
 export const departmentWarKeys = {
@@ -71,6 +73,41 @@ export function useSyncWarHeadcount() {
   const invalidate = useInvalidateWars();
   return useMutation({
     mutationFn: (warId: string) => departmentWarService.syncHeadcount(warId),
+    onSuccess: invalidate,
+  });
+}
+export function useWarDepartmentOptions(enabled = true) {
+  const { user } = useAuth();
+  return useQuery({
+    queryKey: [...departmentWarKeys.all, "department-options"],
+    queryFn: () => departmentWarAdminService.departmentOptions(),
+    enabled: !!user && enabled,
+    staleTime: 5 * 60_000,
+  });
+}
+
+export function useCreateDepartmentWar() {
+  const invalidate = useInvalidateWars();
+  return useMutation({
+    mutationFn: (draft: Partial<WarConfigDraft>) => departmentWarAdminService.create(draft),
+    onSuccess: invalidate,
+  });
+}
+
+export function useUpdateDepartmentWar() {
+  const invalidate = useInvalidateWars();
+  return useMutation({
+    mutationFn: ({ warId, draft }: { warId: string; draft: Partial<WarConfigDraft> }) =>
+      departmentWarAdminService.update(warId, draft),
+    onSuccess: invalidate,
+  });
+}
+
+export function useSetDepartmentWarStatus() {
+  const invalidate = useInvalidateWars();
+  return useMutation({
+    mutationFn: ({ warId, status }: { warId: string; status: "running" | "cancelled" }) =>
+      departmentWarAdminService.setStatus(warId, status),
     onSuccess: invalidate,
   });
 }
