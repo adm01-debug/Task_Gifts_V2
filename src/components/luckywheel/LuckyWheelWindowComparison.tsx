@@ -223,6 +223,27 @@ export function LuckyWheelWindowComparison() {
             Alerta de estouro dispara quando a janela atual paga acima de {decimal.format(budget)} moeda(s) por giro.
             {" "}Este teto é compartilhado com a rotina diária de alertas do servidor.
           </p>
+          <div className="w-full space-y-1 border-t border-border/60 pt-2">
+            <p className="text-xs font-medium text-muted-foreground">
+              Simulação “E se?” — alertas por teto
+              {whatIf.breakEvenBudget !== null && (
+                <span className="ml-1 font-normal">
+                  (teto mínimo sem estouro: {decimal.format(whatIf.breakEvenBudget)})
+                </span>
+              )}
+            </p>
+            <div className="flex flex-wrap gap-1.5">
+              {whatIf.scenarios.map((scenario) => (
+                <Badge
+                  key={scenario.budget}
+                  variant={scenario.overrun ? "destructive" : "secondary"}
+                  className={cn("gap-1 text-[11px]", scenario.budget === budget && "ring-1 ring-primary")}
+                >
+                  {decimal.format(scenario.budget)} → {scenario.alertCount} alerta(s)
+                </Badge>
+              ))}
+            </div>
+          </div>
           {budgetHistory.length > 0 && (
             <div className="w-full space-y-1 border-t border-border/60 pt-2">
               <p className="text-xs font-medium text-muted-foreground">Últimas alterações do teto</p>
