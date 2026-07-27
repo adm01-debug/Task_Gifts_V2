@@ -49,7 +49,7 @@ export const scratchCardService = {
       .limit(50);
 
     if (error) {
-      logger.error("scratchCardService.list", error);
+      logger.error("Falha ao listar raspadinhas", "scratchCardService.list", error);
       throw error;
     }
     return (data as ScratchCard[]) || [];
@@ -58,11 +58,11 @@ export const scratchCardService = {
   async grant(source: ScratchCardSource, sourceRef?: string): Promise<ScratchGrantResult> {
     const { data, error } = await supabase.rpc("grant_scratch_card", {
       p_source: source,
-      p_source_ref: sourceRef ?? null,
+      ...(sourceRef ? { p_source_ref: sourceRef } : {}),
     });
 
     if (error) {
-      logger.error("scratchCardService.grant", error);
+      logger.error("Falha ao conceder raspadinha", "scratchCardService.grant", error);
       throw error;
     }
     return (data as unknown as ScratchGrantResult) ?? { success: false };
@@ -72,7 +72,7 @@ export const scratchCardService = {
     const { data, error } = await supabase.rpc("reveal_scratch_card", { p_card_id: cardId });
 
     if (error) {
-      logger.error("scratchCardService.reveal", error);
+      logger.error("Falha ao raspar carta", "scratchCardService.reveal", error);
       throw error;
     }
     return (data as unknown as ScratchRevealResult) ?? { success: false };
