@@ -175,10 +175,17 @@ describe("comparePayoutWindows — simulação massiva", () => {
   it("respeita alpha configurado", () => {
     const rows = [...stableRows("2025-05-20", 7, 22, 3), ...stableRows("2025-05-13", 7, 20, 4)];
     const p = points(rows, 14, "2025-05-20");
-    const strict = comparePayoutWindows(p, { windowDays: 7, alpha: 0.000001 });
-    expect(strict.tests.every((t) => t.verdict !== "significant")).toBe(true);
-    const loose = comparePayoutWindows(p, { windowDays: 7, alpha: 0.49 });
-    expect(loose.tests.some((t) => t.verdict === "significant")).toBe(true);
+    const observed = comparePayoutWindows(p, { windowDays: 7 }).tests.find(
+      (t) => t.metric === "coinsPerSpin",
+    )!.pValue;
+
+    // alpha logo abaixo do p observado nunca deve acusar significância...
+    const strict = comparePayoutWindows(p, { windowDays: 7, alpha: Math.max(1e-6, observed / 2) });
+    expect(strict.tests.find((t) => t.metric === "coinsPerSpin")!.verdict).toBe("stable");
+
+    // ...e logo acima deve acusar.
+    const loose = comparePayoutWindows(p, { windowDays: 7, alpha: Math.min(0.5, observed * 2 + 1e-9) });
+    expect(loose.tests.find((t) => t.metric === "coinsPerSpin")!.verdict).toBe("significant");
   });
 
   it("sanitiza opções hostis", () => {
