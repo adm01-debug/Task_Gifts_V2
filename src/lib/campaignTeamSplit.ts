@@ -82,10 +82,6 @@ function toNumber(value: unknown): number {
 
 /** Espelha `recalc_campaign_teams`: progresso, percentual, contagem e ranking. */
 export function recalcCampaignTeams(state: SimCampaignState): SimTeam[] {
-  return recalcTeamsInternal(state);
-}
-
-function recalcTeamsInternal(state: SimCampaignState): SimTeam[] {
   const progressByUser = new Map<string, number>();
   state.participants.forEach((p) => progressByUser.set(p.user_id, p.progress));
 
