@@ -76,3 +76,43 @@ export function useSpinLuckyWheel() {
     },
   });
 }
+/** Lista completa (inclusive inativos) para a tela de calibração admin. */
+export function useLuckyWheelAdminPrizes(enabled = true) {
+  return useQuery({
+    queryKey: luckyWheelKeys.adminPrizes(),
+    queryFn: () => luckyWheelAdminService.listAll(),
+    enabled,
+    staleTime: 30_000,
+  });
+}
+
+export function useSaveLuckyWheelPrizes() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (patches: ReadonlyArray<{ id: string } & Partial<LuckyWheelPrizeInput>>) =>
+      luckyWheelAdminService.saveMany(patches),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: luckyWheelKeys.all });
+    },
+  });
+}
+
+export function useCreateLuckyWheelPrize() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (input: LuckyWheelPrizeInput) => luckyWheelAdminService.create(input),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: luckyWheelKeys.all });
+    },
+  });
+}
+
+export function useDeleteLuckyWheelPrize() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (id: string) => luckyWheelAdminService.remove(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: luckyWheelKeys.all });
+    },
+  });
+}
