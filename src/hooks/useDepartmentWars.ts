@@ -1,4 +1,6 @@
+import { useEffect } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
 import { departmentWarService } from "@/services/departmentWarService";
 import { departmentWarAdminService } from "@/services/departmentWarAdminService";
 import type { WarConfigDraft } from "@/lib/departmentWarConfig";
@@ -11,6 +13,7 @@ export const departmentWarKeys = {
   metrics: (id: string) => [...departmentWarKeys.all, "metrics", id] as const,
   contributions: (id: string, userId: string) =>
     [...departmentWarKeys.all, "contributions", id, userId] as const,
+  feed: (id: string) => [...departmentWarKeys.all, "feed", id] as const,
 };
 
 export function useDepartmentWars() {
