@@ -353,7 +353,7 @@ export default function SecurityRunbook() {
                     tipo: r.alertType,
                     titulo: r.title,
                     dono: r.owner,
-                    sla_alvo_min: r.slaMinutes,
+                    sla_alvo_min: slaFor(r),
                     total_7d: s?.total_count ?? 0,
                     resolvidos_7d: s?.resolved_count ?? 0,
                     pendentes_7d: s?.unresolved_count ?? 0,
@@ -391,14 +391,30 @@ export default function SecurityRunbook() {
           </div>
         </div>
 
-        <div className="relative max-w-md">
-          <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
-          <Input
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            placeholder="Buscar por título, tipo, dono..."
-            className="pl-9"
-          />
+        <div className="flex flex-wrap items-center gap-2">
+          <div className="relative max-w-md flex-1 min-w-[240px]">
+            <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+            <Input
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Buscar por título, tipo, dono..."
+              className="pl-9"
+            />
+          </div>
+          <Button
+            size="sm"
+            variant={family === "all" ? "default" : "outline"}
+            onClick={() => setFamily("all")}
+          >
+            Todos
+          </Button>
+          <Button
+            size="sm"
+            variant={family === "lucky_wheel" ? "default" : "outline"}
+            onClick={() => setFamily("lucky_wheel")}
+          >
+            <Dices className="w-4 h-4 mr-2" /> Roleta
+          </Button>
         </div>
 
         <AlertHeatmap />
@@ -409,7 +425,8 @@ export default function SecurityRunbook() {
             const isHl = highlighted === entry.alertType;
             const stats = mttrByType[entry.alertType];
             const avg = stats?.avg_mttr_minutes ?? null;
-            const ratio = avg !== null ? avg / entry.slaMinutes : null;
+            const slaMinutes = slaFor(entry);
+            const ratio = avg !== null && slaMinutes > 0 ? avg / slaMinutes : null;
             const mttrColor =
               ratio === null ? "text-muted-foreground" :
               ratio <= 1 ? "text-green-600" :
@@ -434,7 +451,7 @@ export default function SecurityRunbook() {
                   <CardDescription className="mt-2 flex flex-wrap gap-3 text-xs">
                     <span><code className="bg-muted px-1 rounded">{entry.alertType}</code></span>
                     <span>👤 {entry.owner}</span>
-                    <span>⏱️ SLA {entry.slaMinutes}min</span>
+                    <span>⏱️ SLA {slaMinutes}min</span>
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4 text-sm">
