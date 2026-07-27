@@ -252,6 +252,30 @@ export function CampaignImportDialog({ campaignId, metricUnit, onApplied }: Camp
             )}
 
             {errorRows.length > 0 && (
+              <>
+                {directoryIndex && (
+                  <CampaignReconciliationPanel
+                    rows={rows}
+                    directory={directory}
+                    index={directoryIndex}
+                    metricUnit={metricUnit}
+                    disabled={stage === "saving"}
+                    onReprocess={handleReprocess}
+                  />
+                )}
+              </>
+            )}
+
+            {reconciledCount > 0 && (
+              <Alert>
+                <CheckCircle2 className="h-4 w-4" />
+                <AlertDescription>
+                  {reconciledCount} linha(s) recuperada(s) por reconciliação manual nesta sessão.
+                </AlertDescription>
+              </Alert>
+            )}
+
+            {errorRows.length > 0 && (
               <div>
                 <p className="mb-2 text-sm font-medium text-destructive">Linhas rejeitadas</p>
                 <ScrollArea className="h-40 rounded-lg border border-destructive/40">
