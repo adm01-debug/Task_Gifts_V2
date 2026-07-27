@@ -48,13 +48,17 @@ const Auth = () => {
   const checkIpAccess = async () => {
     setIsCheckingIp(true);
     try {
-      const { data, error: fnError } = await supabase.functions.invoke('verify-ip');
-      if (fnError) {
-        logger.apiError('verifyIP', fnError, 'Auth');
+      const { data, error: fnError, requestId } = await invokeEdgeSafe<IpVerificationResult>('verify-ip');
+      if (fnError || !data) {
+        logger.apiError(
+          `verifyIP (requestId=${requestId})`,
+          new Error(fnError?.message ?? 'Resposta vazia do verificador de IP'),
+          'Auth',
+        );
         setIsIpAllowed(true);
         return;
       }
-      const result = data as IpVerificationResult;
+      const result = data;
       setIpInfo(result);
       setIsIpAllowed(result.allowed);
       if (!result.allowed) toast.error('Acesso bloqueado: IP não autorizado');
