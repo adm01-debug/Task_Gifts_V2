@@ -1211,6 +1211,117 @@ export type Database = {
           },
         ]
       }
+      campaign_team_members: {
+        Row: {
+          campaign_id: string
+          created_at: string
+          id: string
+          team_id: string
+          user_id: string
+        }
+        Insert: {
+          campaign_id: string
+          created_at?: string
+          id?: string
+          team_id: string
+          user_id: string
+        }
+        Update: {
+          campaign_id?: string
+          created_at?: string
+          id?: string
+          team_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "campaign_team_members_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "sales_campaigns"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "campaign_team_members_team_id_fkey"
+            columns: ["team_id"]
+            isOneToOne: false
+            referencedRelation: "campaign_teams"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      campaign_teams: {
+        Row: {
+          awarded_at: string | null
+          campaign_id: string
+          coins_awarded: number
+          color: string | null
+          created_at: string
+          created_by: string | null
+          department_id: string | null
+          id: string
+          members_count: number
+          name: string
+          progress: number
+          progress_percent: number
+          rank_position: number | null
+          target_team: number
+          updated_at: string
+          xp_awarded: number
+        }
+        Insert: {
+          awarded_at?: string | null
+          campaign_id: string
+          coins_awarded?: number
+          color?: string | null
+          created_at?: string
+          created_by?: string | null
+          department_id?: string | null
+          id?: string
+          members_count?: number
+          name: string
+          progress?: number
+          progress_percent?: number
+          rank_position?: number | null
+          target_team?: number
+          updated_at?: string
+          xp_awarded?: number
+        }
+        Update: {
+          awarded_at?: string | null
+          campaign_id?: string
+          coins_awarded?: number
+          color?: string | null
+          created_at?: string
+          created_by?: string | null
+          department_id?: string | null
+          id?: string
+          members_count?: number
+          name?: string
+          progress?: number
+          progress_percent?: number
+          rank_position?: number | null
+          target_team?: number
+          updated_at?: string
+          xp_awarded?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "campaign_teams_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "sales_campaigns"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "campaign_teams_department_id_fkey"
+            columns: ["department_id"]
+            isOneToOne: false
+            referencedRelation: "departments"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       celebrations: {
         Row: {
           auto_generated: boolean
@@ -8316,6 +8427,10 @@ export type Database = {
         Returns: string
       }
       auto_promote_expired_webhook_secrets: { Args: never; Returns: Json }
+      award_campaign_team_split: {
+        Args: { _campaign_id: string }
+        Returns: Json
+      }
       bulk_rotate_webhook_secrets: {
         Args: { p_grace_hours?: number; p_rotations: Json }
         Returns: Json
@@ -8836,6 +8951,10 @@ export type Database = {
         Returns: Json
       }
       recalc_campaign_progress: {
+        Args: { _campaign_id: string }
+        Returns: undefined
+      }
+      recalc_campaign_teams: {
         Args: { _campaign_id: string }
         Returns: undefined
       }
