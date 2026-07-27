@@ -5850,6 +5850,50 @@ export type Database = {
           },
         ]
       }
+      purchase_approvals: {
+        Row: {
+          action: string
+          actor_id: string | null
+          created_at: string
+          from_status: Database["public"]["Enums"]["purchase_status"] | null
+          id: string
+          purchase_id: string
+          reason: string | null
+          risk_snapshot: Json
+          to_status: Database["public"]["Enums"]["purchase_status"] | null
+        }
+        Insert: {
+          action: string
+          actor_id?: string | null
+          created_at?: string
+          from_status?: Database["public"]["Enums"]["purchase_status"] | null
+          id?: string
+          purchase_id: string
+          reason?: string | null
+          risk_snapshot?: Json
+          to_status?: Database["public"]["Enums"]["purchase_status"] | null
+        }
+        Update: {
+          action?: string
+          actor_id?: string | null
+          created_at?: string
+          from_status?: Database["public"]["Enums"]["purchase_status"] | null
+          id?: string
+          purchase_id?: string
+          reason?: string | null
+          risk_snapshot?: Json
+          to_status?: Database["public"]["Enums"]["purchase_status"] | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "purchase_approvals_purchase_id_fkey"
+            columns: ["purchase_id"]
+            isOneToOne: false
+            referencedRelation: "shop_purchases"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       push_notification_logs: {
         Row: {
           attempts: number
@@ -6869,37 +6913,58 @@ export type Database = {
       }
       shop_purchases: {
         Row: {
+          ai_summary: string | null
           created_at: string
+          first_approver_id: string | null
           id: string
           notes: string | null
           processed_at: string | null
           processed_by: string | null
           quantity: number
+          requires_dual_approval: boolean
           reward_id: string
+          risk_analyzed_at: string | null
+          risk_factors: Json
+          risk_level: string | null
+          risk_score: number | null
           status: Database["public"]["Enums"]["purchase_status"]
           total_coins: number
           user_id: string
         }
         Insert: {
+          ai_summary?: string | null
           created_at?: string
+          first_approver_id?: string | null
           id?: string
           notes?: string | null
           processed_at?: string | null
           processed_by?: string | null
           quantity?: number
+          requires_dual_approval?: boolean
           reward_id: string
+          risk_analyzed_at?: string | null
+          risk_factors?: Json
+          risk_level?: string | null
+          risk_score?: number | null
           status?: Database["public"]["Enums"]["purchase_status"]
           total_coins: number
           user_id: string
         }
         Update: {
+          ai_summary?: string | null
           created_at?: string
+          first_approver_id?: string | null
           id?: string
           notes?: string | null
           processed_at?: string | null
           processed_by?: string | null
           quantity?: number
+          requires_dual_approval?: boolean
           reward_id?: string
+          risk_analyzed_at?: string | null
+          risk_factors?: Json
+          risk_level?: string | null
+          risk_score?: number | null
           status?: Database["public"]["Enums"]["purchase_status"]
           total_coins?: number
           user_id?: string
@@ -8987,6 +9052,10 @@ export type Database = {
         Returns: string
       }
       revert_campaign_import: { Args: { _import_id: string }; Returns: Json }
+      review_purchase: {
+        Args: { p_action: string; p_purchase_id: string; p_reason?: string }
+        Returns: Json
+      }
       revoke_device_by_fingerprint: {
         Args: { p_fingerprint: string; p_reason?: string }
         Returns: {

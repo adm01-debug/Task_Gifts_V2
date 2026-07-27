@@ -51,6 +51,14 @@ export interface ShopPurchase {
   processed_at: string | null;
   processed_by: string | null;
   reward?: ShopReward;
+  /** Governança de resgate (preenchido pela análise de risco por IA). */
+  risk_score?: number | null;
+  risk_level?: "low" | "medium" | "high" | "critical" | null;
+  risk_factors?: unknown;
+  ai_summary?: string | null;
+  risk_analyzed_at?: string | null;
+  requires_dual_approval?: boolean;
+  first_approver_id?: string | null;
 }
 
 // Input types for mutations (without auto-generated fields)
@@ -105,10 +113,13 @@ export const shopService = {
       .order("created_at", { ascending: false });
 
     if (error) throw error;
-    return (data || []).map((p: PurchaseQueryResult) => ({
-      ...p,
-      reward: p.reward as ShopReward,
-    })) as ShopPurchase[];
+    return (data || []).map((row) => {
+      const p = row as unknown as PurchaseQueryResult;
+      return {
+        ...p,
+        reward: p.reward as ShopReward,
+      };
+    }) as ShopPurchase[];
   },
 
   // Purchase a reward
