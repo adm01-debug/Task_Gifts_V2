@@ -249,6 +249,7 @@ const SEVERITY_BADGE: Record<string, string> = {
 
 export default function SecurityRunbook() {
   const [query, setQuery] = useState("");
+  const [family, setFamily] = useState<"all" | "lucky_wheel">("all");
   const location = useLocation();
   const [highlighted, setHighlighted] = useState<string | null>(null);
   const cardRefs = useRef<Record<string, HTMLDivElement | null>>({});
