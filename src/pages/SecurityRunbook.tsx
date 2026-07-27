@@ -249,6 +249,7 @@ const SEVERITY_BADGE: Record<string, string> = {
 
 export default function SecurityRunbook() {
   const [query, setQuery] = useState("");
+  const [family, setFamily] = useState<"all" | "lucky_wheel">("all");
   const location = useLocation();
   const [highlighted, setHighlighted] = useState<string | null>(null);
   const cardRefs = useRef<Record<string, HTMLDivElement | null>>({});
@@ -271,6 +272,33 @@ export default function SecurityRunbook() {
     staleTime: 5 * 60 * 1000,
   });
 
+  /**
+   * SLA vindo do banco (fonte de verdade). O valor hard-coded no RUNBOOK vira
+   * apenas fallback caso o tipo ainda não esteja cadastrado em sla_targets.
+   */
+  const { data: slaTargets } = useQuery({
+    queryKey: ["sla-targets"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("sla_targets")
+        .select("alert_type, mttr_target_seconds");
+      if (error) throw error;
+      return data ?? [];
+    },
+    staleTime: 10 * 60 * 1000,
+  });
+
+  const slaMinutesByType = useMemo(() => {
+    const map: Record<string, number> = {};
+    (slaTargets ?? []).forEach((row) => {
+      const minutes = Math.round((row.mttr_target_seconds ?? 0) / 60);
+      if (minutes > 0) map[row.alert_type] = minutes;
+    });
+    return map;
+  }, [slaTargets]);
+
+  const slaFor = (entry: RunbookEntry) => slaMinutesByType[entry.alertType] ?? entry.slaMinutes;
+
   const mttrByType = useMemo(() => {
     const map: Record<string, (typeof mttrData extends (infer U)[] | undefined ? U : never)> = {} as never;
     (mttrData ?? []).forEach((row) => { map[row.alert_type] = row; });
@@ -291,11 +319,14 @@ export default function SecurityRunbook() {
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
-    if (!q) return RUNBOOK;
-    return RUNBOOK.filter((r) =>
+    const base = family === "lucky_wheel"
+      ? RUNBOOK.filter((r) => r.alertType.startsWith("lucky_wheel_"))
+      : RUNBOOK;
+    if (!q) return base;
+    return base.filter((r) =>
       [r.title, r.description, r.alertType, r.owner].some((v) => v.toLowerCase().includes(q))
     );
-  }, [query]);
+  }, [query, family]);
 
   return (
     <div className="min-h-screen bg-background">
@@ -322,7 +353,7 @@ export default function SecurityRunbook() {
                     tipo: r.alertType,
                     titulo: r.title,
                     dono: r.owner,
-                    sla_alvo_min: r.slaMinutes,
+                    sla_alvo_min: slaFor(r),
                     total_7d: s?.total_count ?? 0,
                     resolvidos_7d: s?.resolved_count ?? 0,
                     pendentes_7d: s?.unresolved_count ?? 0,
@@ -360,14 +391,30 @@ export default function SecurityRunbook() {
           </div>
         </div>
 
-        <div className="relative max-w-md">
-          <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
-          <Input
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            placeholder="Buscar por título, tipo, dono..."
-            className="pl-9"
-          />
+        <div className="flex flex-wrap items-center gap-2">
+          <div className="relative max-w-md flex-1 min-w-[240px]">
+            <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+            <Input
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Buscar por título, tipo, dono..."
+              className="pl-9"
+            />
+          </div>
+          <Button
+            size="sm"
+            variant={family === "all" ? "default" : "outline"}
+            onClick={() => setFamily("all")}
+          >
+            Todos
+          </Button>
+          <Button
+            size="sm"
+            variant={family === "lucky_wheel" ? "default" : "outline"}
+            onClick={() => setFamily("lucky_wheel")}
+          >
+            <Dices className="w-4 h-4 mr-2" /> Roleta
+          </Button>
         </div>
 
         <AlertHeatmap />
@@ -378,7 +425,8 @@ export default function SecurityRunbook() {
             const isHl = highlighted === entry.alertType;
             const stats = mttrByType[entry.alertType];
             const avg = stats?.avg_mttr_minutes ?? null;
-            const ratio = avg !== null ? avg / entry.slaMinutes : null;
+            const slaMinutes = slaFor(entry);
+            const ratio = avg !== null && slaMinutes > 0 ? avg / slaMinutes : null;
             const mttrColor =
               ratio === null ? "text-muted-foreground" :
               ratio <= 1 ? "text-green-600" :
@@ -403,7 +451,7 @@ export default function SecurityRunbook() {
                   <CardDescription className="mt-2 flex flex-wrap gap-3 text-xs">
                     <span><code className="bg-muted px-1 rounded">{entry.alertType}</code></span>
                     <span>👤 {entry.owner}</span>
-                    <span>⏱️ SLA {entry.slaMinutes}min</span>
+                    <span>⏱️ SLA {slaMinutes}min</span>
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4 text-sm">
