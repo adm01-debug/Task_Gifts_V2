@@ -93,8 +93,13 @@ export function LuckyWheelPayoutTrend() {
     [trend.points],
   );
 
+  const handleExport = () => {
+    const periodLabel = PERIODS.find((p) => p.value === period)?.label ?? `${days} dias`;
+    const csv = buildPayoutTrendCsv(trend, { periodLabel });
+    downloadCSV(`roleta-serie-payout-${new Date().toISOString().slice(0, 10)}`, csv);
+  };
+
   if (isLoading) {
-    /* estado de carregamento */
     return (
       <Card>
         <CardHeader>
