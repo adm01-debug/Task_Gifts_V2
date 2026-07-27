@@ -16,6 +16,8 @@ import {
   saveBudget,
   fetchRemoteBudget,
   persistRemoteBudget,
+  fetchBudgetHistory,
+  type BudgetAuditEntry,
 } from "@/lib/luckyWheelBudget";
 import { decideComparisonAlerts, type ComparisonAlertSeverity } from "@/lib/luckyWheelComparisonAlerts";
 import {
