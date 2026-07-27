@@ -4363,6 +4363,153 @@ export type Database = {
           },
         ]
       }
+      lightning_quiz_answers: {
+        Row: {
+          answered_true: boolean
+          created_at: string
+          elapsed_ms: number
+          id: string
+          idx: number
+          is_correct: boolean
+          question_id: string
+          session_id: string
+          user_id: string
+        }
+        Insert: {
+          answered_true: boolean
+          created_at?: string
+          elapsed_ms?: number
+          id?: string
+          idx: number
+          is_correct: boolean
+          question_id: string
+          session_id: string
+          user_id: string
+        }
+        Update: {
+          answered_true?: boolean
+          created_at?: string
+          elapsed_ms?: number
+          id?: string
+          idx?: number
+          is_correct?: boolean
+          question_id?: string
+          session_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "lightning_quiz_answers_question_id_fkey"
+            columns: ["question_id"]
+            isOneToOne: false
+            referencedRelation: "lightning_quiz_questions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "lightning_quiz_answers_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "lightning_quiz_sessions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      lightning_quiz_questions: {
+        Row: {
+          category: string
+          created_at: string
+          difficulty: string
+          explanation: string | null
+          id: string
+          is_active: boolean
+          is_true: boolean
+          statement: string
+          updated_at: string
+        }
+        Insert: {
+          category?: string
+          created_at?: string
+          difficulty?: string
+          explanation?: string | null
+          id?: string
+          is_active?: boolean
+          is_true: boolean
+          statement: string
+          updated_at?: string
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          difficulty?: string
+          explanation?: string | null
+          id?: string
+          is_active?: boolean
+          is_true?: boolean
+          statement?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      lightning_quiz_sessions: {
+        Row: {
+          best_streak: number
+          coins_awarded: number
+          correct_count: number
+          created_at: string
+          current_index: number
+          current_streak: number
+          deadline_at: string
+          dedupe_key: string
+          finished_at: string | null
+          id: string
+          question_ids: string[]
+          started_at: string
+          status: string
+          updated_at: string
+          user_id: string
+          wrong_count: number
+          xp_awarded: number
+        }
+        Insert: {
+          best_streak?: number
+          coins_awarded?: number
+          correct_count?: number
+          created_at?: string
+          current_index?: number
+          current_streak?: number
+          deadline_at: string
+          dedupe_key: string
+          finished_at?: string | null
+          id?: string
+          question_ids?: string[]
+          started_at?: string
+          status?: string
+          updated_at?: string
+          user_id: string
+          wrong_count?: number
+          xp_awarded?: number
+        }
+        Update: {
+          best_streak?: number
+          coins_awarded?: number
+          correct_count?: number
+          created_at?: string
+          current_index?: number
+          current_streak?: number
+          deadline_at?: string
+          dedupe_key?: string
+          finished_at?: string | null
+          id?: string
+          question_ids?: string[]
+          started_at?: string
+          status?: string
+          updated_at?: string
+          user_id?: string
+          wrong_count?: number
+          xp_awarded?: number
+        }
+        Relationships: []
+      }
       login_attempts: {
         Row: {
           attempt_type: string
@@ -8951,6 +9098,10 @@ export type Database = {
         Args: { _alert_id: string; _notes: string; _runbook_slug: string }
         Returns: undefined
       }
+      answer_lightning_question: {
+        Args: { p_answer: boolean; p_idx: number; p_session_id: string }
+        Returns: Json
+      }
       apply_campaign_import: { Args: { _import_id: string }; Returns: Json }
       apply_task_penalty: {
         Args: {
@@ -9052,6 +9203,7 @@ export type Database = {
       }
       engagement_min_respondents: { Args: never; Returns: number }
       erf_inverse: { Args: { x: number }; Returns: number }
+      finish_lightning_round: { Args: { p_session_id: string }; Returns: Json }
       generate_action_plan_from_factor: {
         Args: {
           p_days?: number
@@ -9613,6 +9765,7 @@ export type Database = {
       }
       snapshot_lucky_wheel_payout: { Args: { p_date?: string }; Returns: Json }
       spin_lucky_wheel: { Args: { p_dedupe_key?: string }; Returns: Json }
+      start_lightning_round: { Args: never; Returns: Json }
       submit_engagement_answer: {
         Args: {
           p_cycle_id: string
