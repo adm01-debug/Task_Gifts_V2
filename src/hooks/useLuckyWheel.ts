@@ -138,3 +138,13 @@ export function useLuckyWheelSpins(days = 30, enabled = true) {
     staleTime: 60_000,
   });
 }
+
+/** Série histórica diária de payout (snapshots do cron) para o gráfico de tendência. */
+export function useLuckyWheelPayoutSnapshots(days = 90, enabled = true) {
+  return useQuery({
+    queryKey: [...luckyWheelKeys.all, "payout-snapshots", days] as const,
+    queryFn: () => luckyWheelPayoutService.listSnapshots(days),
+    enabled,
+    staleTime: 5 * 60_000,
+  });
+}
