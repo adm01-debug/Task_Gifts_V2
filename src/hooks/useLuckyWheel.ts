@@ -128,3 +128,13 @@ export function useLuckyWheelAudit(enabled = true, limit = 200) {
     staleTime: 30_000,
   });
 }
+
+/** Giros do período para reconciliação econômica (payout real x projetado). */
+export function useLuckyWheelSpins(days = 30, enabled = true) {
+  return useQuery({
+    queryKey: [...luckyWheelKeys.all, "spins", days] as const,
+    queryFn: () => luckyWheelPayoutService.listSpins(days),
+    enabled,
+    staleTime: 60_000,
+  });
+}
