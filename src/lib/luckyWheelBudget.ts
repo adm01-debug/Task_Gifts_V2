@@ -41,3 +41,39 @@ export function saveBudget(raw: unknown): number {
   }
   return parsed;
 }
+
+/**
+ * Fonte de verdade: `lucky_wheel_settings.coins_per_spin_budget` — o mesmo teto
+ * consumido pela rotina SQL diária `raise_lucky_wheel_window_alerts`.
+ * O localStorage vira apenas cache otimista para leitura offline.
+ */
+export async function fetchRemoteBudget(): Promise<number> {
+  const { data, error } = await supabase
+    .from("lucky_wheel_settings")
+    .select("coins_per_spin_budget")
+    .maybeSingle();
+  if (error) throw error;
+  const parsed = parseBudget(data?.coins_per_spin_budget);
+  const applied = parsed ?? DEFAULT_COINS_PER_SPIN_BUDGET;
+  saveBudget(applied);
+  return applied;
+}
+
+/** Persiste o teto no banco (upsert do registro único) e atualiza o cache local. */
+export async function persistRemoteBudget(raw: unknown): Promise<number> {
+  const applied = parseBudget(raw) ?? DEFAULT_COINS_PER_SPIN_BUDGET;
+  const { data: userData } = await supabase.auth.getUser();
+  const { error } = await supabase
+    .from("lucky_wheel_settings")
+    .upsert(
+      {
+        id: true,
+        coins_per_spin_budget: applied,
+        updated_by: userData.user?.id ?? null,
+      },
+      { onConflict: "id" },
+    );
+  if (error) throw error;
+  saveBudget(applied);
+  return applied;
+}
