@@ -1,10 +1,16 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { luckyWheelService, type LuckyWheelSpinResult } from "@/services/luckyWheelService";
+import {
+  luckyWheelAdminService,
+  luckyWheelService,
+  type LuckyWheelPrizeInput,
+  type LuckyWheelSpinResult,
+} from "@/services/luckyWheelService";
 import { useAuth } from "./useAuth";
 
 export const luckyWheelKeys = {
   all: ["luckyWheel"] as const,
   prizes: () => [...luckyWheelKeys.all, "prizes"] as const,
+  adminPrizes: () => [...luckyWheelKeys.all, "adminPrizes"] as const,
   status: () => [...luckyWheelKeys.all, "status"] as const,
   history: (userId: string) => [...luckyWheelKeys.all, "history", userId] as const,
 };
