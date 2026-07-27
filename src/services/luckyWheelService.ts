@@ -35,6 +35,8 @@ export interface LuckyWheelStatus {
 export interface LuckyWheelSpinResult {
   success: boolean;
   reason?: "already_spun" | "no_prizes";
+  /** true quando o servidor devolveu um giro já registrado (retentativa idempotente). */
+  replayed?: boolean;
   prize_id?: string;
   prize_label?: string;
   prize_type?: LuckyWheelPrizeType;
@@ -70,9 +72,15 @@ export const luckyWheelService = {
     return data as unknown as LuckyWheelStatus;
   },
 
-  /** O sorteio e o crédito acontecem exclusivamente no servidor (RPC SECURITY DEFINER). */
-  async spin(): Promise<LuckyWheelSpinResult> {
-    const { data, error } = await supabase.rpc("spin_lucky_wheel");
+  /**
+   * O sorteio e o crédito acontecem exclusivamente no servidor (RPC SECURITY DEFINER).
+   * `dedupeKey` garante idempotência: reenviar a mesma chave devolve o mesmo prêmio,
+   * sem creditar XP/moedas novamente (rede instável, duplo toque, retry automático).
+   */
+  async spin(dedupeKey?: string): Promise<LuckyWheelSpinResult> {
+    const { data, error } = await supabase.rpc("spin_lucky_wheel", {
+      p_dedupe_key: dedupeKey ?? null,
+    });
     if (error) {
       logger.apiError("spinLuckyWheel", error, "luckyWheelService");
       throw error;
