@@ -184,6 +184,31 @@ export const luckyWheelAdminService = {
   },
 };
 
+/**
+ * Giros brutos do período para reconciliação de payout. A policy de SELECT de
+ * `lucky_wheel_spins` só devolve giros de terceiros quando `has_role(admin)`,
+ * então um não-admin recebe apenas os próprios registros — sem vazamento.
+ */
+export const luckyWheelPayoutService = {
+  async listSpins(days = 30, limit = 5_000): Promise<PayoutSpin[]> {
+    const safeDays = Math.min(365, Math.max(1, Math.floor(days)));
+    const since = new Date(Date.now() - safeDays * 24 * 60 * 60 * 1000).toISOString();
+
+    const { data, error } = await supabase
+      .from("lucky_wheel_spins")
+      .select("id, user_id, prize_id, prize_label, prize_type, amount, spin_date, created_at")
+      .gte("created_at", since)
+      .order("created_at", { ascending: false })
+      .limit(Math.min(20_000, Math.max(1, limit)));
+
+    if (error) {
+      logger.apiError("listLuckyWheelSpins", error, "luckyWheelPayoutService");
+      throw error;
+    }
+    return (data ?? []) as PayoutSpin[];
+  },
+};
+
 interface RawAuditRow {
   id: string;
   prize_id: string | null;
