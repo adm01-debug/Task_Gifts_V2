@@ -34,6 +34,13 @@ export default function SalesCampaignDetail() {
   } = useSalesCampaign(id);
   const { isAdmin } = useRBAC();
   const [delta, setDelta] = useState("");
+  const queryClient = useQueryClient();
+
+  /** Revalida campanha, participantes e lotes apos uma importacao. */
+  const refetchAll = () => {
+    queryClient.invalidateQueries({ queryKey: ["sales-campaign", id] });
+    queryClient.invalidateQueries({ queryKey: ["campaign-imports", id] });
+  };
 
   useEffect(() => {
     document.title = campaign ? `${campaign.name} | Campanhas` : "Campanha";
