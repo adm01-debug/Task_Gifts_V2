@@ -3,6 +3,7 @@ import { logger } from "./loggingService";
 import {
   buildDirectoryIndex,
   resolveRows,
+  type DirectoryIndex,
   type DirectoryEntry,
   type ParseResult,
   type ResolvedResultRow,
@@ -84,6 +85,21 @@ export const campaignImportService = {
   async resolveParsed(parsed: ParseResult): Promise<ResolvedResultRow[]> {
     const directory = await this.loadDirectory();
     return resolveRows(parsed.rows, buildDirectoryIndex(directory));
+  },
+
+  /**
+   * Igual a `resolveParsed`, mas devolve tambem o diretorio e o indice para que
+   * a UI possa montar o relatorio de reconciliacao e reprocessar localmente,
+   * sem novas idas ao banco a cada correcao.
+   */
+  async resolveWithDirectory(parsed: ParseResult): Promise<{
+    rows: ResolvedResultRow[];
+    directory: DirectoryEntry[];
+    index: DirectoryIndex;
+  }> {
+    const directory = await this.loadDirectory();
+    const index = buildDirectoryIndex(directory);
+    return { rows: resolveRows(parsed.rows, index), directory, index };
   },
 
   /** Cria o lote em estado `pending` com todas as linhas ja resolvidas. */

@@ -11,10 +11,15 @@ import {
   IMPORT_TEMPLATE_CSV,
   MAX_IMPORT_ROWS,
   parseCampaignResultFile,
+  reprocessWithOverrides,
   summarizeBySeller,
+  type DirectoryEntry,
+  type DirectoryIndex,
   type ParseResult,
+  type ReconciliationOverrides,
   type ResolvedResultRow,
 } from "@/lib/campaignImport";
+import { CampaignReconciliationPanel } from "./CampaignReconciliationPanel";
 import { cn } from "@/lib/utils";
 
 export interface CampaignImportDialogProps {
@@ -36,6 +41,9 @@ export function CampaignImportDialog({ campaignId, metricUnit, onApplied }: Camp
   const [fileName, setFileName] = useState<string>("");
   const [parsed, setParsed] = useState<ParseResult | null>(null);
   const [rows, setRows] = useState<ResolvedResultRow[]>([]);
+  const [directory, setDirectory] = useState<DirectoryEntry[]>([]);
+  const [directoryIndex, setDirectoryIndex] = useState<DirectoryIndex | null>(null);
+  const [reconciledCount, setReconciledCount] = useState(0);
   const [fatalError, setFatalError] = useState<string | null>(null);
 
   const validRows = useMemo(() => rows.filter((r) => r.status === "valid"), [rows]);
@@ -47,6 +55,9 @@ export function CampaignImportDialog({ campaignId, metricUnit, onApplied }: Camp
     setStage("idle");
     setParsed(null);
     setRows([]);
+    setDirectory([]);
+    setDirectoryIndex(null);
+    setReconciledCount(0);
     setFileName("");
     setFatalError(null);
     if (inputRef.current) inputRef.current.value = "";
@@ -63,9 +74,12 @@ export function CampaignImportDialog({ campaignId, metricUnit, onApplied }: Camp
       setFileName(file.name);
       try {
         const result = await parseCampaignResultFile(file);
-        const resolved = await campaignImportService.resolveParsed(result);
+        const resolved = await campaignImportService.resolveWithDirectory(result);
         setParsed(result);
-        setRows(resolved);
+        setRows(resolved.rows);
+        setDirectory(resolved.directory);
+        setDirectoryIndex(resolved.index);
+        setReconciledCount(0);
         setStage("preview");
       } catch (err: unknown) {
         const msg = err instanceof Error ? err.message : "Nao foi possivel ler o arquivo.";
@@ -74,6 +88,26 @@ export function CampaignImportDialog({ campaignId, metricUnit, onApplied }: Camp
       }
     },
     [],
+  );
+
+  /** Reaplica a resolucao com as correcoes manuais, sem reenviar o arquivo. */
+  const handleReprocess = useCallback(
+    (overrides: ReconciliationOverrides) => {
+      if (!directoryIndex) return;
+      const before = rows.filter((r) => r.status === "valid").length;
+      const next = reprocessWithOverrides(rows, directoryIndex, overrides);
+      const after = next.filter((r) => r.status === "valid").length;
+      setRows(next);
+      setReconciledCount((c) => c + Math.max(0, after - before));
+      toast({
+        title: "Linhas reprocessadas",
+        description:
+          after > before
+            ? `${after - before} linha(s) recuperada(s) com as correções aplicadas.`
+            : "Nenhuma linha adicional pôde ser recuperada com essas correções.",
+      });
+    },
+    [rows, directoryIndex, toast],
   );
 
   const handleApply = useCallback(async () => {
@@ -215,6 +249,30 @@ export function CampaignImportDialog({ campaignId, metricUnit, onApplied }: Camp
                   </ul>
                 </ScrollArea>
               </div>
+            )}
+
+            {errorRows.length > 0 && (
+              <>
+                {directoryIndex && (
+                  <CampaignReconciliationPanel
+                    rows={rows}
+                    directory={directory}
+                    index={directoryIndex}
+                    metricUnit={metricUnit}
+                    disabled={stage === "saving"}
+                    onReprocess={handleReprocess}
+                  />
+                )}
+              </>
+            )}
+
+            {reconciledCount > 0 && (
+              <Alert>
+                <CheckCircle2 className="h-4 w-4" />
+                <AlertDescription>
+                  {reconciledCount} linha(s) recuperada(s) por reconciliação manual nesta sessão.
+                </AlertDescription>
+              </Alert>
             )}
 
             {errorRows.length > 0 && (
