@@ -52,6 +52,7 @@ const ScratchCardPage = lazy(() => import("./pages/ScratchCardPage"));
 const LightningQuizPage = lazy(() => import("./pages/LightningQuizPage"));
 const BingoPage = lazy(() => import("./pages/BingoPage"));
 const TournamentsPage = lazy(() => import("./pages/TournamentsPage"));
+const DepartmentWarPage = lazy(() => import("./pages/DepartmentWarPage"));
 const DailyQuiz = lazy(() => import("./pages/DailyQuiz"));
 const QuizAdmin = lazy(() => import("./pages/QuizAdmin"));
 const AdminPanel = lazy(() => import("./pages/AdminPanel"));
@@ -229,6 +230,7 @@ const AnimatedRoutes = () => {
         <Route path="/relampago" element={<ProtectedRoute><PageTransition><LightningQuizPage /></PageTransition></ProtectedRoute>} />
         <Route path="/bingo" element={<ProtectedRoute><PageTransition><BingoPage /></PageTransition></ProtectedRoute>} />
         <Route path="/torneios" element={<ProtectedRoute><PageTransition><TournamentsPage /></PageTransition></ProtectedRoute>} />
+        <Route path="/guerra-departamentos" element={<ProtectedRoute><PageTransition><DepartmentWarPage /></PageTransition></ProtectedRoute>} />
         <Route path="/quiz" element={<ProtectedRoute><PageTransition><DailyQuiz /></PageTransition></ProtectedRoute>} />
         <Route path="/quiz/admin" element={<ProtectedRoute requiredRole="manager"><PageTransition><QuizAdmin /></PageTransition></ProtectedRoute>} />
         <Route path="/admin" element={<ProtectedRoute requiredRole="admin"><PageTransition><AdminPanel /></PageTransition></ProtectedRoute>} />

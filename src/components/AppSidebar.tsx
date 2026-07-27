@@ -1,7 +1,8 @@
 import { motion } from "framer-motion";
 import { 
   Home, Target, Trophy, TrendingUp, Clock, BookOpen, 
-  Gamepad2, ShoppingBag, Swords, Heart, Award, 
+  Gamepad2, ShoppingBag, Swords, Heart, Award, Flag,
+  
   ClipboardCheck, BarChart3, Megaphone, MessageSquare,
   LayoutDashboard, GraduationCap, Users, Sparkles, Rocket, Activity, Dices, Gift, Zap, Grid3X3
 } from "lucide-react";
@@ -52,6 +53,7 @@ const navCategories = [
       { icon: Zap, label: "V ou F Relâmpago", path: "/relampago" },
       { icon: Grid3X3, label: "Bingo de Missões", path: "/bingo" },
       { icon: Swords, label: "Torneio Mata-Mata", path: "/torneios" },
+      { icon: Flag, label: "Guerra de Departamentos", path: "/guerra-departamentos" },
       { icon: Rocket, label: "Campanhas", path: "/campanhas" },
     ],
   },
