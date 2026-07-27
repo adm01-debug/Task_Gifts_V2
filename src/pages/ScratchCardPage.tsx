@@ -73,14 +73,14 @@ export default function ScratchCardPage() {
     <PageShell
       title="Raspadinha Digital"
       description="Raspe as cartas conquistadas em entregas e treinamentos para revelar prêmios surpresa."
-      icon={Gift}
+      icon={<Gift className="h-5 w-5" aria-hidden />}
     >
       <SEOHead
         title="Raspadinha Digital | Task Gifts"
         description="Revele prêmios surpresa em moedas e XP conquistados ao concluir tarefas e treinamentos."
       />
 
-      <SectionErrorBoundary name="Raspadinha Digital">
+      <SectionErrorBoundary sectionName="Raspadinha Digital">
         <div className="space-y-8">
           <section aria-label="Raspadinhas disponíveis" className="space-y-4">
             <div className="flex items-center gap-2">
