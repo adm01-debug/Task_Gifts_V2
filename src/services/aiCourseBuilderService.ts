@@ -56,7 +56,11 @@ export const aiCourseBuilderService = {
     const { error } = await supabase.functions.invoke("ai-course-builder", {
       body: { job_id: jobId },
     });
-    if (error) throw error;
+    if (error) {
+      // Preserva a causa original para telemetria, mas expõe mensagem tratada.
+      const { message } = await describeEdgeError(error);
+      throw new Error(message, { cause: error });
+    }
   },
 
   async getJob(jobId: string): Promise<AICourseJob | null> {
