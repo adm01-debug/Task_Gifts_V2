@@ -11,6 +11,7 @@ import { Sparkles, Loader2, Check, BookOpen, AlertCircle } from "lucide-react";
 import { toast } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
 import { logger } from "@/services/loggingService";
+import { describeEdgeError } from "@/lib/edgeErrors";
 
 interface GeneratedQuestion {
   question: string;
@@ -41,6 +42,9 @@ export default function AIQuestionGenerator({ onQuestionsGenerated }: AIQuestion
       return;
     }
 
+    // Trava de reentrância: cliques repetidos saturam o rate limit da IA.
+    if (isGenerating) return;
+
     setIsGenerating(true);
     setGeneratedQuestions([]);
 
@@ -51,15 +55,20 @@ export default function AIQuestionGenerator({ onQuestionsGenerated }: AIQuestion
 
       if (error) throw error;
 
+      if (!data || typeof data !== "object") {
+        throw new Error("Resposta inválida do serviço de geração de perguntas.");
+      }
+
       if (data.error) {
-        throw new Error(data.error);
+        throw new Error(String(data.error));
       }
 
       setGeneratedQuestions(data.questions || []);
       toast.success(`${data.questions?.length || 0} perguntas geradas!`);
     } catch (err: unknown) {
       logger.apiError('handleGenerate', err, 'AIQuestionGenerator');
-      toast.error(err instanceof Error ? err.message : "Erro ao gerar perguntas");
+      const { message } = await describeEdgeError(err);
+      toast.error(message);
     } finally {
       setIsGenerating(false);
     }
