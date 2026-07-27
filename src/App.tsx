@@ -46,6 +46,7 @@ const NotFound = lazy(() => import("./pages/NotFound"));
 const PersonalStats = lazy(() => import("./pages/PersonalStats"));
 const SeasonalEventDetail = lazy(() => import("./pages/SeasonalEventDetail"));
 const Duels = lazy(() => import("./pages/Duels"));
+const LuckyWheelPage = lazy(() => import("./pages/LuckyWheelPage"));
 const DailyQuiz = lazy(() => import("./pages/DailyQuiz"));
 const QuizAdmin = lazy(() => import("./pages/QuizAdmin"));
 const AdminPanel = lazy(() => import("./pages/AdminPanel"));
@@ -217,6 +218,7 @@ const AnimatedRoutes = () => {
         <Route path="/loja" element={<ProtectedRoute><PageTransition><Shop /></PageTransition></ProtectedRoute>} />
         <Route path="/eventos/:eventId" element={<ProtectedRoute><PageTransition><SeasonalEventDetail /></PageTransition></ProtectedRoute>} />
         <Route path="/duelos" element={<ProtectedRoute><PageTransition><Duels /></PageTransition></ProtectedRoute>} />
+        <Route path="/roleta" element={<ProtectedRoute><PageTransition><LuckyWheelPage /></PageTransition></ProtectedRoute>} />
         <Route path="/quiz" element={<ProtectedRoute><PageTransition><DailyQuiz /></PageTransition></ProtectedRoute>} />
         <Route path="/quiz/admin" element={<ProtectedRoute requiredRole="manager"><PageTransition><QuizAdmin /></PageTransition></ProtectedRoute>} />
         <Route path="/admin" element={<ProtectedRoute requiredRole="admin"><PageTransition><AdminPanel /></PageTransition></ProtectedRoute>} />
