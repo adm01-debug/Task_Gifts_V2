@@ -53,6 +53,17 @@ export interface TeamSplitResult {
 }
 
 /** Lote de execução do rateio coletivo (trilha de auditoria). */
+export interface TeamSplitRevertResult {
+  reverted: boolean;
+  members_reverted?: number;
+  teams_reset?: number;
+  xp_reverted?: number;
+  coins_reverted?: number;
+  batch_id?: string;
+  reason?: "batch_not_found" | "already_reverted" | "nothing_to_revert" | string;
+}
+
+/** Lote de execução do rateio coletivo (trilha de auditoria). */
 export interface TeamSplitBatch {
   id: string;
   campaign_id: string;
@@ -293,5 +304,21 @@ export const campaignTeamsService = {
       logger.apiError("list campaign_team_split_entries", err, "campaignTeamsService");
       return [];
     }
+  },
+
+  /**
+   * Reverte um lote de rateio: estorna XP/moedas, libera as equipes para novo
+   * rateio e fecha o lote na trilha. Idempotente na própria RPC.
+   */
+  async revertSplitBatch(batchId: string, reason?: string): Promise<TeamSplitRevertResult> {
+    const { data, error } = await db.rpc("revert_campaign_team_split", {
+      _batch_id: batchId,
+      _reason: reason?.trim() || null,
+    });
+    if (error) {
+      logger.apiError("revert_campaign_team_split", error, "campaignTeamsService");
+      throw error;
+    }
+    return (data ?? { reverted: false, reason: "batch_not_found" }) as TeamSplitRevertResult;
   },
 };

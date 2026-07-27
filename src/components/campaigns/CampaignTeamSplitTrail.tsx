@@ -1,6 +1,20 @@
 import { useMemo, useState } from "react";
-import { useQuery } from "@tanstack/react-query";
-import { Download, FileClock, ShieldCheck } from "lucide-react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { Download, FileClock, RotateCcw, ShieldCheck } from "lucide-react";
+
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import { Textarea } from "@/components/ui/textarea";
+import { toast } from "sonner";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -38,6 +52,9 @@ const REASON_LABELS: Record<string, string> = {
   rounded_to_zero: "Valor arredondado para zero",
   members_count_zero: "Equipe sem contagem de membros",
   profile_not_found: "Perfil do colaborador inexistente",
+  batch_not_found: "Lote inexistente",
+  already_reverted: "Lote já revertido",
+  nothing_to_revert: "Nenhum pagamento a estornar",
 };
 
 const label = (reason: string | null): string =>
@@ -56,6 +73,13 @@ function statusVariant(status: string): "default" | "secondary" | "destructive" 
   return "destructive";
 }
 
+const STATUS_LABELS: Record<string, string> = {
+  completed: "Concluído",
+  skipped: "Sem efeito",
+  running: "Em execução",
+  reverted: "Revertido",
+};
+
 interface Props {
   campaignId: string;
 }
@@ -68,6 +92,8 @@ interface Props {
 export function CampaignTeamSplitTrail({ campaignId }: Props) {
   const [open, setOpen] = useState(false);
   const [selected, setSelected] = useState<string | null>(null);
+  const [revertReason, setRevertReason] = useState("");
+  const queryClient = useQueryClient();
 
   const batches = useQuery({
     queryKey: ["campaign-team-split", campaignId, "batches"],
@@ -87,6 +113,31 @@ export function CampaignTeamSplitTrail({ campaignId }: Props) {
     () => (batches.data ?? []).find((b) => b.id === selected) ?? null,
     [batches.data, selected],
   );
+
+  /**
+   * Reversão do lote: estorna XP/moedas, libera as equipes e fecha o lote.
+   * A RPC é idempotente, então cliques repetidos são inofensivos.
+   */
+  const revert = useMutation({
+    mutationFn: (batchId: string) =>
+      campaignTeamsService.revertSplitBatch(batchId, revertReason),
+    onSuccess: (result) => {
+      if (!result.reverted) {
+        toast.warning(label(result.reason ?? null));
+        return;
+      }
+      toast.success(
+        `Rateio revertido: ${result.members_reverted ?? 0} colaborador(es) estornado(s), ` +
+          `${result.teams_reset ?? 0} equipe(s) liberada(s).`,
+      );
+      setRevertReason("");
+      queryClient.invalidateQueries({ queryKey: ["campaign-team-split"] });
+      queryClient.invalidateQueries({ queryKey: ["campaign-teams"] });
+    },
+    onError: () => {
+      toast.error("Não foi possível reverter o rateio. Verifique suas permissões.");
+    },
+  });
 
   /** Exportação CSV para arquivamento e conferência externa. */
   const exportCsv = () => {
@@ -172,7 +223,9 @@ export function CampaignTeamSplitTrail({ campaignId }: Props) {
                   )}
                 >
                   <div className="flex flex-wrap items-center gap-2">
-                    <Badge variant={statusVariant(batch.status)}>{batch.status}</Badge>
+                    <Badge variant={statusVariant(batch.status)}>
+                      {STATUS_LABELS[batch.status] ?? batch.status}
+                    </Badge>
                     <span className="text-sm font-medium">{formatDateTime(batch.created_at)}</span>
                     <span className="text-xs text-muted-foreground">
                       modo {batch.share_mode}
@@ -191,6 +244,11 @@ export function CampaignTeamSplitTrail({ campaignId }: Props) {
                     {" · "}pool {numberFormatter.format(batch.pool_xp)} XP /{" "}
                     {numberFormatter.format(batch.pool_coins)} moedas
                   </div>
+                  {batch.reverted_at && (
+                    <div className="mt-1 text-xs font-medium text-destructive">
+                      Revertido em {formatDateTime(batch.reverted_at)}
+                    </div>
+                  )}
                 </button>
               ))}
             </div>
@@ -202,15 +260,54 @@ export function CampaignTeamSplitTrail({ campaignId }: Props) {
                 <div className="text-sm font-medium">
                   Linhas do lote {activeBatch ? formatDateTime(activeBatch.created_at) : ""}
                 </div>
-                <Button
-                  size="sm"
-                  variant="outline"
-                  className="gap-2"
-                  onClick={exportCsv}
-                  disabled={(entries.data ?? []).length === 0}
-                >
-                  <Download className="h-4 w-4" /> CSV
-                </Button>
+                <div className="flex items-center gap-2">
+                  {activeBatch &&
+                    activeBatch.status === "completed" &&
+                    !activeBatch.reverted_at && (
+                      <AlertDialog>
+                        <AlertDialogTrigger asChild>
+                          <Button size="sm" variant="destructive" className="gap-2">
+                            <RotateCcw className="h-4 w-4" /> Reverter
+                          </Button>
+                        </AlertDialogTrigger>
+                        <AlertDialogContent>
+                          <AlertDialogHeader>
+                            <AlertDialogTitle>Reverter este rateio?</AlertDialogTitle>
+                            <AlertDialogDescription>
+                              O XP e as moedas pagos serão estornados de cada colaborador
+                              (sem gerar saldo negativo) e as equipes voltarão a ficar
+                              disponíveis para um novo rateio. A ação fica registrada na
+                              trilha de auditoria.
+                            </AlertDialogDescription>
+                          </AlertDialogHeader>
+                          <Textarea
+                            value={revertReason}
+                            onChange={(e) => setRevertReason(e.target.value)}
+                            placeholder="Motivo da reversão (opcional, mas recomendado para compliance)"
+                            rows={3}
+                          />
+                          <AlertDialogFooter>
+                            <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                            <AlertDialogAction
+                              disabled={revert.isPending}
+                              onClick={() => revert.mutate(activeBatch.id)}
+                            >
+                              {revert.isPending ? "Revertendo..." : "Confirmar reversão"}
+                            </AlertDialogAction>
+                          </AlertDialogFooter>
+                        </AlertDialogContent>
+                      </AlertDialog>
+                    )}
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="gap-2"
+                    onClick={exportCsv}
+                    disabled={(entries.data ?? []).length === 0}
+                  >
+                    <Download className="h-4 w-4" /> CSV
+                  </Button>
+                </div>
               </div>
               {entries.isLoading ? (
                 <Skeleton className="m-3 h-32" />

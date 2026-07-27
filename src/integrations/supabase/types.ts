@@ -9182,6 +9182,10 @@ export type Database = {
         Returns: string
       }
       revert_campaign_import: { Args: { _import_id: string }; Returns: Json }
+      revert_campaign_team_split: {
+        Args: { _batch_id: string; _reason?: string }
+        Returns: Json
+      }
       review_purchase: {
         Args: { p_action: string; p_purchase_id: string; p_reason?: string }
         Returns: Json
