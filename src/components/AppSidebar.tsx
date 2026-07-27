@@ -50,6 +50,7 @@ const navCategories = [
       { icon: Dices, label: "Roleta da Sorte", path: "/roleta" },
       { icon: Gift, label: "Raspadinha", path: "/raspadinha" },
       { icon: Zap, label: "V ou F Relâmpago", path: "/relampago" },
+      { icon: Grid3X3, label: "Bingo de Missões", path: "/bingo" },
       { icon: Rocket, label: "Campanhas", path: "/campanhas" },
     ],
   },

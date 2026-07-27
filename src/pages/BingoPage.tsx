@@ -67,7 +67,7 @@ export default function BingoPage() {
         return;
       }
       if ((result.coins_awarded ?? 0) > 0 || (result.xp_awarded ?? 0) > 0) {
-        haptics.success();
+        haptics.questCompleted();
         toast.success(
           result.full_house
             ? `Cartela cheia! +${result.coins_awarded} moedas e +${result.xp_awarded} XP`
@@ -93,7 +93,7 @@ export default function BingoPage() {
   return (
     <PageShell
       title="Bingo de Missões"
-      description="Complete desafios reais do dia a dia e feche linhas para ganhar moedas e XP."
+      subtitle="Complete desafios reais do dia a dia e feche linhas para ganhar moedas e XP."
     >
       <SEOHead
         title="Bingo de Missões | Task Gifts"
