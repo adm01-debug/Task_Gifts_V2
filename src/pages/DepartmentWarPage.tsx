@@ -33,6 +33,7 @@ import {
   useSyncWarHeadcount,
 } from "@/hooks/useDepartmentWars";
 import { DepartmentWarConfigDialog } from "@/components/war/DepartmentWarConfigDialog";
+import { WarLiveFeed } from "@/components/war/WarLiveFeed";
 import { warProgress } from "@/lib/departmentWar";
 import type { DepartmentWarStatus } from "@/services/departmentWarService";
 import { cn } from "@/lib/utils";
