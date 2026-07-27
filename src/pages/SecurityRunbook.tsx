@@ -11,6 +11,7 @@ import { toCSV, downloadCSV } from "@/lib/csvExport";
 import {
   BookOpen, Search, ShieldAlert, Activity, Ban, KeyRound, Bug, Bell,
   ExternalLink, ArrowRight, AlertTriangle, TrendingUp, TrendingDown, Minus, Download,
+  Dices, Coins, Users,
 } from "lucide-react";
 
 interface RunbookStep {
@@ -156,6 +157,68 @@ const RUNBOOK: RunbookEntry[] = [
     ],
     owner: "Plataforma",
     slaMinutes: 60,
+  },
+  {
+    alertType: "lucky_wheel_window_cost_regression",
+    title: "Roleta: regressão de custo por giro",
+    severity: "high",
+    icon: Dices,
+    description:
+      "A comparação estatística entre a janela atual e a anterior (teste t de Welch, p < 0,05) apontou aumento relevante do custo médio em moedas por giro.",
+    triage: [
+      "Confirme a magnitude no card de comparação de janelas (delta, p-valor e Cohen's d).",
+      "Verifique se houve calibração recente de prêmios na trilha de auditoria.",
+      "Cheque se um prêmio raro ficou com peso/valor desproporcional.",
+    ],
+    steps: [
+      { action: "Abrir painel econômico da Roleta", href: "/roleta/admin", hrefLabel: "Ver comparação" },
+      { action: "Revisar a trilha de auditoria de calibração e reverter alterações indevidas", detail: "Tabela: lucky_wheel_prize_audit" },
+      { action: "Reajustar pesos/valores dos prêmios até o custo voltar ao teto configurado" },
+      { action: "Resolver o alerta registrando a causa raiz nas notas de resolução" },
+    ],
+    owner: "Gamificação / Produto",
+    slaMinutes: 240,
+  },
+  {
+    alertType: "lucky_wheel_window_budget_overrun",
+    title: "Roleta: teto de moedas por giro estourado",
+    severity: "critical",
+    icon: Coins,
+    description:
+      "A janela atual pagou acima do teto configurado de moedas por giro, independentemente de significância estatística. Risco direto de inflação da economia interna.",
+    triage: [
+      "Confirme o teto vigente no painel da Roleta (campo 'Teto de moedas por giro').",
+      "Compare o pago acumulado com o projetado no painel de reconciliação.",
+      "Descarte fraude: cheque giros duplicados e o χ² de aderência das odds.",
+    ],
+    steps: [
+      { action: "Abrir painel econômico da Roleta", href: "/roleta/admin", hrefLabel: "Reconciliação" },
+      { action: "Desativar temporariamente prêmios de alto valor se o estouro for > 50%" },
+      { action: "Recalibrar odds e validar o χ² antes de reativar" },
+      { action: "Se houver suspeita de abuso, revisar spins por usuário e abrir alerta de fraude" },
+    ],
+    owner: "Gamificação / Segurança",
+    slaMinutes: 60,
+  },
+  {
+    alertType: "lucky_wheel_window_volume_drop",
+    title: "Roleta: queda significativa de participação",
+    severity: "medium",
+    icon: Users,
+    description:
+      "Giros por dia caíram de forma estatisticamente significativa frente à janela anterior. Pode indicar bug no fluxo do giro, prêmios pouco atrativos ou queda de engajamento.",
+    triage: [
+      "Verifique se o giro diário está funcionando (erros na RPC spin_lucky_wheel).",
+      "Cheque se houve queda de DAU geral no mesmo período.",
+      "Avalie se prêmios recentes reduziram a percepção de valor.",
+    ],
+    steps: [
+      { action: "Abrir painel econômico da Roleta", href: "/roleta/admin", hrefLabel: "Tendência" },
+      { action: "Validar o fluxo do giro em produção e conferir logs de erro" },
+      { action: "Rever mix de prêmios / comunicar campanha de reengajamento" },
+    ],
+    owner: "Gamificação / Produto",
+    slaMinutes: 480,
   },
   {
     alertType: "generic",
