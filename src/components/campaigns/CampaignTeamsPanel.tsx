@@ -183,8 +183,9 @@ export function CampaignTeamsPanel({
               <HandCoins className="h-4 w-4" />
               {isAwarding ? "Rateando..." : "Ratear prêmio"}
             </Button>
-          </div>
-        )}
+            </>
+          )}
+        </div>
       </div>
 
       {canManage && teams.length > 0 && (
