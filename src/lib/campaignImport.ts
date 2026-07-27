@@ -376,11 +376,20 @@ export interface DirectoryEntry {
 export interface DirectoryIndex {
   byKey: Map<string, string>;
   ambiguous: Set<string>;
+  /** Para cada chave ambigua, os ids dos colaboradores que a reivindicam. */
+  ambiguousOwners: Map<string, string[]>;
 }
 
 export function buildDirectoryIndex(entries: DirectoryEntry[]): DirectoryIndex {
   const byKey = new Map<string, string>();
   const ambiguous = new Set<string>();
+  const ambiguousOwners = new Map<string, string[]>();
+
+  const claim = (key: string, userId: string) => {
+    const owners = ambiguousOwners.get(key) ?? [];
+    if (!owners.includes(userId)) owners.push(userId);
+    ambiguousOwners.set(key, owners);
+  };
 
   const add = (rawKey: unknown, userId: string) => {
     const key = normalizeSellerIdentifier(rawKey);
@@ -388,10 +397,15 @@ export function buildDirectoryIndex(entries: DirectoryEntry[]): DirectoryIndex {
     const existing = byKey.get(key);
     if (existing && existing !== userId) {
       ambiguous.add(key);
+      claim(key, existing);
+      claim(key, userId);
       byKey.delete(key);
       return;
     }
-    if (ambiguous.has(key)) return;
+    if (ambiguous.has(key)) {
+      claim(key, userId);
+      return;
+    }
     byKey.set(key, userId);
   };
 
@@ -404,24 +418,40 @@ export function buildDirectoryIndex(entries: DirectoryEntry[]): DirectoryIndex {
     add(e.display_name, e.id);
   });
 
-  return { byKey, ambiguous };
+  return { byKey, ambiguous, ambiguousOwners };
 }
 
 export interface ResolvedResultRow extends ParsedResultRow {
   userId: string | null;
 }
 
-/** Associa cada linha valida a um colaborador; invalida as nao resolvidas. */
-export function resolveRows(rows: ParsedResultRow[], index: DirectoryIndex): ResolvedResultRow[] {
+/**
+ * Associa cada linha valida a um colaborador; invalida as nao resolvidas.
+ *
+ * `overrides` mapeia a chave normalizada do identificador para o id escolhido
+ * manualmente pelo operador no relatorio de reconciliacao. A correcao manual e
+ * soberana sobre a ambiguidade: se o operador decidiu, respeitamos.
+ */
+export function resolveRows(
+  rows: ParsedResultRow[],
+  index: DirectoryIndex,
+  overrides?: ReconciliationOverrides,
+): ResolvedResultRow[] {
   return rows.map((row) => {
-    if (row.status !== "valid") return { ...row, userId: null };
+    const reconcilable = row.status === "valid" || row.issue === "ambiguous" || row.issue === "not_found";
+    if (!reconcilable) return { ...row, userId: null };
     const key = normalizeSellerIdentifier(row.sellerIdentifier);
+    const override = overrides ? normalizeOverrideId(overrides[key]) : null;
+    if (override) {
+      return { ...row, userId: override, status: "valid", errorReason: null, issue: undefined };
+    }
     if (index.ambiguous.has(key)) {
       return {
         ...row,
         userId: null,
         status: "invalid",
         errorReason: "Identificador ambiguo: corresponde a mais de um colaborador",
+        issue: "ambiguous",
       };
     }
     const userId = index.byKey.get(key) ?? null;
@@ -431,9 +461,10 @@ export function resolveRows(rows: ParsedResultRow[], index: DirectoryIndex): Res
         userId: null,
         status: "invalid",
         errorReason: "Colaborador nao encontrado no diretorio",
+        issue: "not_found",
       };
     }
-    return { ...row, userId };
+    return { ...row, userId, status: "valid", errorReason: null, issue: undefined };
   });
 }
 
