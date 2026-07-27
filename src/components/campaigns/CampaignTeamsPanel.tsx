@@ -120,8 +120,14 @@ export function CampaignTeamsPanel({
             rateado quando a meta da equipe é batida.
           </p>
         </div>
-        {canManage && (
-          <div className="flex gap-2 flex-wrap">
+        <div className="flex gap-2 flex-wrap">
+          <Button asChild size="sm" variant="secondary" className="gap-2">
+            <Link to={`/campanhas/${campaignId}/ranking-equipes`}>
+              <BarChart3 className="h-4 w-4" /> Ranking detalhado
+            </Link>
+          </Button>
+          {canManage && (
+            <>
             <Dialog open={createOpen} onOpenChange={setCreateOpen}>
               <DialogTrigger asChild>
                 <Button size="sm" variant="outline" className="gap-2">
