@@ -1071,6 +1071,146 @@ export type Database = {
           },
         ]
       }
+      campaign_result_imports: {
+        Row: {
+          applied_at: string | null
+          applied_rows: number
+          campaign_id: string
+          created_at: string
+          created_by: string | null
+          error_message: string | null
+          error_rows: number
+          file_name: string
+          id: string
+          reverted_at: string | null
+          skipped_rows: number
+          source: string
+          status: string
+          summary: Json
+          total_amount: number
+          total_rows: number
+          updated_at: string
+          valid_rows: number
+        }
+        Insert: {
+          applied_at?: string | null
+          applied_rows?: number
+          campaign_id: string
+          created_at?: string
+          created_by?: string | null
+          error_message?: string | null
+          error_rows?: number
+          file_name: string
+          id?: string
+          reverted_at?: string | null
+          skipped_rows?: number
+          source?: string
+          status?: string
+          summary?: Json
+          total_amount?: number
+          total_rows?: number
+          updated_at?: string
+          valid_rows?: number
+        }
+        Update: {
+          applied_at?: string | null
+          applied_rows?: number
+          campaign_id?: string
+          created_at?: string
+          created_by?: string | null
+          error_message?: string | null
+          error_rows?: number
+          file_name?: string
+          id?: string
+          reverted_at?: string | null
+          skipped_rows?: number
+          source?: string
+          status?: string
+          summary?: Json
+          total_amount?: number
+          total_rows?: number
+          updated_at?: string
+          valid_rows?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "campaign_result_imports_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "sales_campaigns"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      campaign_result_rows: {
+        Row: {
+          amount: number
+          applied_at: string | null
+          campaign_id: string
+          created_at: string
+          dedupe_key: string
+          error_reason: string | null
+          external_reference: string | null
+          id: string
+          import_id: string
+          reference_date: string | null
+          row_number: number
+          seller_identifier: string
+          status: string
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          amount?: number
+          applied_at?: string | null
+          campaign_id: string
+          created_at?: string
+          dedupe_key: string
+          error_reason?: string | null
+          external_reference?: string | null
+          id?: string
+          import_id: string
+          reference_date?: string | null
+          row_number?: number
+          seller_identifier: string
+          status?: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          amount?: number
+          applied_at?: string | null
+          campaign_id?: string
+          created_at?: string
+          dedupe_key?: string
+          error_reason?: string | null
+          external_reference?: string | null
+          id?: string
+          import_id?: string
+          reference_date?: string | null
+          row_number?: number
+          seller_identifier?: string
+          status?: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "campaign_result_rows_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "sales_campaigns"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "campaign_result_rows_import_id_fkey"
+            columns: ["import_id"]
+            isOneToOne: false
+            referencedRelation: "campaign_result_imports"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       celebrations: {
         Row: {
           auto_generated: boolean
@@ -8133,6 +8273,7 @@ export type Database = {
         Args: { _alert_id: string; _notes: string; _runbook_slug: string }
         Returns: undefined
       }
+      apply_campaign_import: { Args: { _import_id: string }; Returns: Json }
       apply_task_penalty: {
         Args: {
           p_applied_by?: string
@@ -8726,6 +8867,7 @@ export type Database = {
         }
         Returns: string
       }
+      revert_campaign_import: { Args: { _import_id: string }; Returns: Json }
       revoke_device_by_fingerprint: {
         Args: { p_fingerprint: string; p_reason?: string }
         Returns: {
