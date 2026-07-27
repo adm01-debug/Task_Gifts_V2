@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { AlertTriangle, ArrowRight, Minus, ScaleIcon, TrendingDown, TrendingUp } from "lucide-react";
+import { AlertTriangle, ArrowRight, Minus, Save, ScaleIcon, TrendingDown, TrendingUp } from "lucide-react";
 import { toast } from "sonner";
 
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
