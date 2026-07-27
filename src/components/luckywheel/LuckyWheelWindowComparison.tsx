@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { AlertTriangle, ArrowRight, Minus, ScaleIcon, TrendingDown, TrendingUp } from "lucide-react";
+import { AlertTriangle, ArrowRight, Minus, Save, ScaleIcon, TrendingDown, TrendingUp } from "lucide-react";
 import { toast } from "sonner";
 
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -20,7 +20,14 @@ import {
   type BudgetAuditEntry,
 } from "@/lib/luckyWheelBudget";
 import { decideComparisonAlerts, type ComparisonAlertSeverity } from "@/lib/luckyWheelComparisonAlerts";
-import { defaultCandidates, simulateBudgetScenarios } from "@/lib/luckyWheelBudgetWhatIf";
+import {
+  defaultCandidates,
+  simulateBudgetScenarios,
+  persistWhatIfSnapshot,
+  fetchWhatIfSnapshots,
+  type WhatIfSnapshotRow,
+} from "@/lib/luckyWheelBudgetWhatIf";
+import { Button } from "@/components/ui/button";
 import {
   comparePayoutWindows,
   type SignificanceTest,
@@ -100,6 +107,43 @@ export function LuckyWheelWindowComparison() {
     () => simulateBudgetScenarios(comparison, defaultCandidates(budget)),
     [comparison, budget],
   );
+
+  const [whatIfHistory, setWhatIfHistory] = useState<WhatIfSnapshotRow[]>([]);
+  const [savingWhatIf, setSavingWhatIf] = useState(false);
+
+  /** Carrega a auditoria histórica das simulações (silencioso em caso de falha). */
+  useEffect(() => {
+    let active = true;
+    void fetchWhatIfSnapshots(5)
+      .then((rows) => { if (active) setWhatIfHistory(rows); })
+      .catch((err: unknown) => {
+        logger.warn(
+          `Falha ao carregar histórico de simulações: ${String(err)}`,
+          "LuckyWheelWindowComparison",
+        );
+      });
+    return () => { active = false; };
+  }, []);
+
+  /** Registra o cenário atual; upsert por assinatura evita duplicatas. */
+  const saveWhatIf = async () => {
+    setSavingWhatIf(true);
+    try {
+      const saved = await persistWhatIfSnapshot(comparison, budget, whatIf);
+      if (!saved) {
+        toast.info("Sem janela válida para registrar ainda.");
+        return;
+      }
+      toast.success("Simulação registrada para auditoria.");
+      setWhatIfHistory(await fetchWhatIfSnapshots(5));
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : "Falha ao registrar a simulação";
+      logger.error(`Erro ao registrar simulação what-if: ${message}`, "LuckyWheelWindowComparison");
+      toast.error(message);
+    } finally {
+      setSavingWhatIf(false);
+    }
+  };
 
   /**
    * Hidrata o teto a partir do banco (fonte de verdade compartilhada com o
@@ -243,6 +287,43 @@ export function LuckyWheelWindowComparison() {
                 </Badge>
               ))}
             </div>
+            <div className="flex flex-wrap items-center gap-2 pt-1">
+              <Button
+                size="sm"
+                variant="outline"
+                className="h-7 gap-1 text-xs"
+                disabled={savingWhatIf || whatIf.scenarios.length === 0}
+                onClick={() => { void saveWhatIf(); }}
+              >
+                <Save className="h-3.5 w-3.5" />
+                {savingWhatIf ? "Registrando…" : "Registrar simulação"}
+              </Button>
+              {whatIfHistory.length > 0 && (
+                <span className="text-[11px] text-muted-foreground">
+                  Último registro em{" "}
+                  {new Date(whatIfHistory[0].created_at).toLocaleString("pt-BR")} · teto{" "}
+                  {decimal.format(Number(whatIfHistory[0].active_budget))}
+                </span>
+              )}
+            </div>
+            {whatIfHistory.length > 0 && (
+              <ul className="space-y-0.5 pt-1 text-[11px] text-muted-foreground">
+                {whatIfHistory.slice(0, 5).map((row) => (
+                  <li key={row.id} className="flex flex-wrap items-center gap-1 tabular-nums">
+                    <span>{row.current_window_start} → {row.current_window_end}</span>
+                    <span>·</span>
+                    <span>teto {decimal.format(Number(row.active_budget))}</span>
+                    <span>·</span>
+                    <span>
+                      break-even{" "}
+                      {row.break_even_budget === null ? "—" : decimal.format(Number(row.break_even_budget))}
+                    </span>
+                    <span>·</span>
+                    <span>{Array.isArray(row.scenarios) ? row.scenarios.length : 0} cenário(s)</span>
+                  </li>
+                ))}
+              </ul>
+            )}
           </div>
           {budgetHistory.length > 0 && (
             <div className="w-full space-y-1 border-t border-border/60 pt-2">
