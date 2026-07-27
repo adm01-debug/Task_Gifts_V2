@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
+import { useQueryClient } from "@tanstack/react-query";
 import { useSalesCampaign } from "@/hooks/useSalesCampaigns";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
