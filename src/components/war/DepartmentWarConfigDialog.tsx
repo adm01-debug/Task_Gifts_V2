@@ -40,8 +40,9 @@ const METRIC_PRESETS: { metric_key: string; label: string; weight: number }[] = 
   { metric_key: "tarefa_no_prazo", label: "Tarefa entregue no prazo", weight: 5 },
   { metric_key: "checkin_pontual", label: "Check-in pontual", weight: 3 },
   { metric_key: "trilha_concluida", label: "Trilha de aprendizagem concluída", weight: 20 },
+  { metric_key: "modulo_concluido", label: "Módulo de trilha concluído", weight: 6 },
   { metric_key: "quiz_acertado", label: "Quiz respondido corretamente", weight: 2 },
-  { metric_key: "feedback_enviado", label: "Feedback enviado", weight: 4 },
+  { metric_key: "feedback_enviado", label: "Kudos enviado a um colega", weight: 4 },
 ];
 
 /** Converte ISO -> valor aceito por <input type="datetime-local"> no fuso local. */
@@ -227,6 +228,10 @@ export function DepartmentWarConfigDialog({
             {/* Métricas */}
             <section className="space-y-2">
               <Label>Métricas que pontuam</Label>
+              <p className="text-xs text-muted-foreground">
+                Todas as métricas abaixo são alimentadas automaticamente pelos eventos
+                reais do sistema — ninguém precisa lançar pontos à mão.
+              </p>
               <div className="space-y-2">
                 {METRIC_PRESETS.map((preset) => {
                   const selected = draft.metrics.find(
