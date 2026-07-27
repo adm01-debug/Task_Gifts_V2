@@ -45,7 +45,7 @@ describe("Raspadinha — grade semeada", () => {
 
   it("mantém o teto de custo esperado por carta abaixo de 45 moedas equivalentes", () => {
     const projection = projectWheel(SEED_GRID);
-    expect(projection.expectedCoins + projection.expectedXp / 10).toBeLessThan(45);
+    expect(projection.expectedCoinsPerSpin + projection.expectedXpPerSpin / 10).toBeLessThan(45);
   });
 });
 
