@@ -116,3 +116,13 @@ export function useDeleteLuckyWheelPrize() {
     },
   });
 }
+
+/** Histórico imutável de calibração (somente admins conseguem ler via RLS). */
+export function useLuckyWheelAudit(enabled = true, limit = 200) {
+  return useQuery({
+    queryKey: [...luckyWheelKeys.all, "audit", limit] as const,
+    queryFn: () => luckyWheelAuditService.list(limit),
+    enabled,
+    staleTime: 30_000,
+  });
+}
