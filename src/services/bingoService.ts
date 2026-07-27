@@ -53,7 +53,7 @@ export interface BingoMarkRow {
 export const bingoService = {
   async getOrCreateCard(boardId?: string): Promise<BingoCardResult> {
     const { data, error } = await supabase.rpc("get_or_create_bingo_card", {
-      p_board_id: boardId ?? null,
+      p_board_id: boardId,
     });
     if (error) {
       logger.error("Falha ao obter cartela de bingo", "bingoService.getOrCreateCard", error);
