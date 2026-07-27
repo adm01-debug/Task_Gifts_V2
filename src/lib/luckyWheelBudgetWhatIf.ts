@@ -118,3 +118,103 @@ export function defaultCandidates(currentBudget: unknown): number[] {
     base * 2,
   ]);
 }
+
+/* ------------------------- persistência auditável -------------------------- */
+
+/**
+ * Assinatura estável do cenário simulado: mesma janela + mesmo teto + mesma
+ * grade de candidatos ⇒ mesma chave, garantindo idempotência do registro
+ * histórico (upsert por `signature`) mesmo com múltiplos cliques do admin.
+ */
+export function buildWhatIfSignature(
+  comparison: WindowComparison | null | undefined,
+  activeBudget: unknown,
+  report: WhatIfReport,
+): string {
+  const cur = comparison?.current;
+  const prev = comparison?.previous;
+  const budget = parseBudget(activeBudget) ?? 0;
+  const grid = report.scenarios.map((s) => s.budget.toFixed(2)).join("|");
+  return [
+    cur?.startDate ?? "-",
+    cur?.endDate ?? "-",
+    prev?.startDate ?? "-",
+    prev?.endDate ?? "-",
+    budget.toFixed(2),
+    grid,
+  ].join("::");
+}
+
+export interface WhatIfSnapshotRow {
+  id: string;
+  current_window_start: string;
+  current_window_end: string;
+  previous_window_start: string;
+  previous_window_end: string;
+  active_budget: number;
+  current_coins_per_spin: number;
+  baseline_alert_count: number;
+  break_even_budget: number | null;
+  scenarios: unknown;
+  created_at: string;
+}
+
+/**
+ * Persiste (ou reatualiza) o cenário simulado para auditoria histórica.
+ * Retorna `false` — sem lançar — quando não há janela válida para registrar.
+ */
+export async function persistWhatIfSnapshot(
+  comparison: WindowComparison | null | undefined,
+  activeBudget: unknown,
+  report: WhatIfReport,
+): Promise<boolean> {
+  const cur = comparison?.current;
+  const prev = comparison?.previous;
+  if (!cur?.startDate || !cur?.endDate || !prev?.startDate || !prev?.endDate) return false;
+  if (report.scenarios.length === 0) return false;
+
+  const { supabase } = await import("@/integrations/supabase/client");
+  const { data: auth } = await supabase.auth.getUser();
+  const userId = auth?.user?.id;
+  if (!userId) throw new Error("Sessão expirada — faça login novamente.");
+
+  const { error } = await supabase
+    .from("lucky_wheel_whatif_snapshots")
+    .upsert(
+      {
+        current_window_start: cur.startDate,
+        current_window_end: cur.endDate,
+        previous_window_start: prev.startDate,
+        previous_window_end: prev.endDate,
+        active_budget: parseBudget(activeBudget) ?? 0,
+        current_coins_per_spin: report.currentCoinsPerSpin,
+        baseline_alert_count: report.baselineAlertCount,
+        break_even_budget: report.breakEvenBudget,
+        scenarios: report.scenarios.map((s) => ({
+          budget: s.budget,
+          alertCount: s.alertCount,
+          overrun: s.overrun,
+          alertTypes: s.alerts.map((a) => a.alertType),
+        })),
+        signature: buildWhatIfSignature(comparison, activeBudget, report),
+        created_by: userId,
+      },
+      { onConflict: "signature" },
+    );
+  if (error) throw error;
+  return true;
+}
+
+/** Últimas simulações registradas (auditoria histórica), mais recentes primeiro. */
+export async function fetchWhatIfSnapshots(limit = 10): Promise<WhatIfSnapshotRow[]> {
+  const { supabase } = await import("@/integrations/supabase/client");
+  const { data, error } = await supabase
+    .from("lucky_wheel_whatif_snapshots")
+    .select(
+      "id, current_window_start, current_window_end, previous_window_start, previous_window_end, active_budget, current_coins_per_spin, baseline_alert_count, break_even_budget, scenarios, created_at",
+    )
+    .order("created_at", { ascending: false })
+    .limit(Math.min(50, Math.max(1, limit)));
+  if (error) throw error;
+  return (data ?? []) as WhatIfSnapshotRow[];
+}
