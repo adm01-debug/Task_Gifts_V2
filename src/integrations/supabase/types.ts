@@ -9941,6 +9941,10 @@ export type Database = {
         Returns: Json
       }
       get_department_metrics: { Args: never; Returns: Json }
+      get_department_war_feed: {
+        Args: { p_limit?: number; p_war_id: string }
+        Returns: Json
+      }
       get_department_war_standings: {
         Args: { p_war_id: string }
         Returns: Json
