@@ -397,3 +397,141 @@ export function payoutSeverity(report: PayoutReport): PayoutAlertLevel | "ok" {
   if (report.alerts.some((a) => a.level === "info")) return "info";
   return "ok";
 }
+
+// ---------------------------------------------------------------------------
+// Exportação auditável (CSV)
+// ---------------------------------------------------------------------------
+
+const STATUS_PT: Record<ReconciliationStatus, string> = {
+  ok: "Dentro do esperado",
+  watch: "Em observação",
+  anomaly: "Anomalia",
+  insufficient: "Amostra insuficiente",
+  unconfigured: "Fora da calibração",
+};
+
+const LEVEL_PT: Record<PayoutAlertLevel, string> = {
+  error: "Erro",
+  warning: "Atenção",
+  info: "Informação",
+};
+
+/**
+ * Neutraliza injeção de fórmula em planilhas (CSV injection). Rótulos de
+ * prêmio são texto livre digitado por administradores: um rótulo começando
+ * com `=`, `+`, `-`, `@`, TAB ou CR viraria fórmula executável no Excel/Sheets.
+ */
+function sanitizeCell(value: unknown): string {
+  if (value === null || value === undefined) return "";
+  const raw = typeof value === "number" && !Number.isFinite(value) ? "" : String(value);
+  return /^[=+\-@\t\r]/.test(raw) ? `'${raw}` : raw;
+}
+
+function escapeCell(value: unknown): string {
+  const s = sanitizeCell(value);
+  return /[",\n\r;]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+}
+
+function csvLine(cells: readonly unknown[]): string {
+  return cells.map(escapeCell).join(",");
+}
+
+function num(value: number, decimals = 0): string {
+  return Number.isFinite(value) ? value.toFixed(decimals) : "0";
+}
+
+export interface PayoutCsvMeta {
+  /** Rótulo do período analisado (ex.: "Últimos 30 dias"). */
+  periodLabel?: string;
+  /** Momento da geração (ISO). Injetável para tornar o teste determinístico. */
+  generatedAt?: string;
+}
+
+/**
+ * Relatório de payout em CSV, em quatro seções (resumo, setores, série diária,
+ * alertas). O separador é vírgula e o arquivo é escrito com BOM por
+ * `downloadCSV`, então o Excel pt-BR abre acentuação corretamente.
+ */
+export function buildPayoutCsv(report: PayoutReport, meta: PayoutCsvMeta = {}): string {
+  const generatedAt = meta.generatedAt ?? new Date().toISOString();
+  const lines: string[] = [];
+
+  lines.push(csvLine(["Relatório de reconciliação — Roleta da Sorte"]));
+  lines.push(csvLine(["Período", meta.periodLabel ?? "não informado"]));
+  lines.push(csvLine(["Gerado em", generatedAt]));
+  lines.push("");
+
+  lines.push(csvLine(["Indicador", "Valor"]));
+  lines.push(csvLine(["Giros", report.totals.spins]));
+  lines.push(csvLine(["Participantes únicos", report.totals.uniqueUsers]));
+  lines.push(csvLine(["Giros por participante", num(report.totals.spinsPerUser, 4)]));
+  lines.push(csvLine(["Moedas pagas", report.totals.coinsPaid]));
+  lines.push(csvLine(["Moedas projetadas", num(report.projectedCoins, 2)]));
+  lines.push(csvLine(["Desvio de moedas", num(report.coinsDelta, 2)]));
+  lines.push(csvLine(["XP pago", report.totals.xpPaid]));
+  lines.push(csvLine(["XP projetado", num(report.projectedXp, 2)]));
+  lines.push(csvLine(["Giros sem prêmio", report.totals.emptySpins]));
+  lines.push(csvLine(["Conquistas concedidas", report.totals.achievements]));
+  lines.push(csvLine(["Qui-quadrado", num(report.chiSquare, 4)]));
+  lines.push(csvLine(["Giros fora da calibração", report.unconfiguredSpins]));
+  lines.push(csvLine(["Giros duplicados", report.duplicateSpins]));
+  lines.push("");
+
+  lines.push(
+    csvLine([
+      "Setor",
+      "ID do prêmio",
+      "Observado",
+      "Esperado",
+      "Share observado",
+      "Share esperado",
+      "Delta",
+      "Z-score",
+      "Situação",
+      "Moedas pagas",
+      "XP pago",
+      "Divergências de valor",
+    ]),
+  );
+  for (const row of report.prizes) {
+    lines.push(
+      csvLine([
+        row.label,
+        row.prizeId ?? "",
+        row.observed,
+        num(row.expectedCount, 4),
+        num(row.observedShare, 6),
+        num(row.expectedShare, 6),
+        num(row.delta, 4),
+        num(row.zScore, 4),
+        STATUS_PT[row.status],
+        row.coinsPaid,
+        row.xpPaid,
+        row.amountMismatches,
+      ]),
+    );
+  }
+  lines.push("");
+
+  lines.push(csvLine(["Dia", "Giros", "Moedas", "XP"]));
+  for (const day of report.daily) {
+    lines.push(csvLine([day.date, day.spins, day.coins, day.xp]));
+  }
+  lines.push("");
+
+  lines.push(csvLine(["Nível", "Código", "Mensagem"]));
+  for (const alert of report.alerts) {
+    lines.push(csvLine([LEVEL_PT[alert.level] ?? alert.level, alert.code, alert.message]));
+  }
+
+  return lines.join("\n");
+}
+
+/** Nome de arquivo determinístico e seguro para o sistema de arquivos. */
+export function payoutCsvFilename(days: number, generatedAt = new Date()): string {
+  const safeDays = Number.isFinite(days) ? Math.max(1, Math.floor(days)) : 30;
+  const stamp = Number.isNaN(generatedAt.getTime())
+    ? "sem-data"
+    : generatedAt.toISOString().slice(0, 10);
+  return `roleta-payout-${safeDays}d-${stamp}.csv`;
+}
