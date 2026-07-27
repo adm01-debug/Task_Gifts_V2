@@ -15,6 +15,7 @@ import { useRBAC } from "@/hooks/useRBAC";
 import { CampaignProgressChart } from "@/components/campaigns/CampaignProgressChart";
 import { CampaignImportDialog } from "@/components/campaigns/CampaignImportDialog";
 import { CampaignImportHistory } from "@/components/campaigns/CampaignImportHistory";
+import { CampaignTeamsPanel } from "@/components/campaigns/CampaignTeamsPanel";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { cn } from "@/lib/utils";
@@ -33,7 +34,8 @@ export default function SalesCampaignDetail() {
     bulkEnroll,
     isBulkEnrolling,
   } = useSalesCampaign(id);
-  const { isAdmin } = useRBAC();
+  const { isAdmin, hasRole } = useRBAC();
+  const canManageTeams = isAdmin || hasRole("manager");
   const [delta, setDelta] = useState("");
   const queryClient = useQueryClient();
 
@@ -229,6 +231,15 @@ export default function SalesCampaignDetail() {
       />
 
       {isAdmin && <CampaignImportHistory campaignId={campaign.id} canManage={isAdmin} />}
+
+      {/* Ranking coletivo por equipe */}
+      <CampaignTeamsPanel
+        campaignId={campaign.id}
+        metricUnit={campaign.metric_unit}
+        participants={participants}
+        canManage={canManageTeams}
+        currentUserId={myParticipation?.user_id ?? null}
+      />
 
       {/* Ranking */}
       <Card className="p-6">

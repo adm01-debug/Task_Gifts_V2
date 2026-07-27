@@ -1,0 +1,174 @@
+import { supabase } from "@/integrations/supabase/client";
+import { logger } from "./loggingService";
+
+/** Equipe de uma campanha de vendas (meta coletiva). */
+export interface CampaignTeam {
+  id: string;
+  campaign_id: string;
+  name: string;
+  color: string | null;
+  department_id: string | null;
+  target_team: number;
+  progress: number;
+  progress_percent: number;
+  rank_position: number | null;
+  members_count: number;
+  awarded_at: string | null;
+  xp_awarded: number;
+  coins_awarded: number;
+  created_at: string;
+  updated_at: string;
+}
+
+/** Membro de uma equipe, já enriquecido com o perfil público. */
+export interface CampaignTeamMember {
+  id: string;
+  team_id: string;
+  campaign_id: string;
+  user_id: string;
+  created_at: string;
+  profile?: {
+    display_name: string | null;
+    avatar_url: string | null;
+    level: number | null;
+  } | null;
+}
+
+export interface CampaignTeamInsert {
+  campaign_id: string;
+  name: string;
+  color?: string | null;
+  department_id?: string | null;
+  target_team: number;
+}
+
+export interface TeamSplitResult {
+  teams_awarded: number;
+  members_awarded: number;
+  reason?: string;
+}
+
+// Tipos gerados são atualizados após a migração; cast defensivo até lá.
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const db = supabase as any;
+
+export const campaignTeamsService = {
+  /** Lista as equipes de uma campanha, já ordenadas pelo ranking coletivo. */
+  async list(campaignId: string): Promise<CampaignTeam[]> {
+    try {
+      const { data, error } = await db
+        .from("campaign_teams")
+        .select("*")
+        .eq("campaign_id", campaignId)
+        .order("rank_position", { ascending: true, nullsFirst: false });
+      if (error) throw error;
+      return (data ?? []) as CampaignTeam[];
+    } catch (err) {
+      logger.apiError("list campaign_teams", err, "campaignTeamsService");
+      return [];
+    }
+  },
+
+  /** Lista os membros de todas as equipes de uma campanha com perfil público. */
+  async listMembers(campaignId: string): Promise<CampaignTeamMember[]> {
+    try {
+      const { data, error } = await db
+        .from("campaign_team_members")
+        .select("*")
+        .eq("campaign_id", campaignId);
+      if (error) throw error;
+      const rows = (data ?? []) as CampaignTeamMember[];
+      if (rows.length === 0) return rows;
+
+      const ids = Array.from(new Set(rows.map((r) => r.user_id)));
+      const { data: profiles } = await db
+        .from("profiles_public")
+        .select("id, display_name, avatar_url, level")
+        .in("id", ids);
+      const byId = new Map<string, CampaignTeamMember["profile"]>();
+      (profiles ?? []).forEach(
+        (p: { id: string; display_name: string | null; avatar_url: string | null; level: number | null }) => {
+          byId.set(p.id, { display_name: p.display_name, avatar_url: p.avatar_url, level: p.level });
+        },
+      );
+      return rows.map((r) => ({ ...r, profile: byId.get(r.user_id) ?? null }));
+    } catch (err) {
+      logger.apiError("list campaign_team_members", err, "campaignTeamsService");
+      return [];
+    }
+  },
+
+  async create(payload: CampaignTeamInsert): Promise<CampaignTeam> {
+    const { data: { user } } = await supabase.auth.getUser();
+    const { data, error } = await db
+      .from("campaign_teams")
+      .insert({ ...payload, created_by: user?.id ?? null })
+      .select()
+      .maybeSingle();
+    if (error) throw error;
+    return data as CampaignTeam;
+  },
+
+  async update(id: string, updates: Partial<CampaignTeamInsert>): Promise<CampaignTeam> {
+    const { data, error } = await db
+      .from("campaign_teams")
+      .update(updates)
+      .eq("id", id)
+      .select()
+      .maybeSingle();
+    if (error) throw error;
+    return data as CampaignTeam;
+  },
+
+  async remove(id: string): Promise<void> {
+    const { error } = await db.from("campaign_teams").delete().eq("id", id);
+    if (error) throw error;
+  },
+
+  /**
+   * Move (ou adiciona) colaboradores para uma equipe.
+   * O índice único (campaign_id, user_id) garante que cada pessoa fique em
+   * apenas uma equipe por campanha — por isso usamos upsert com esse conflito.
+   */
+  async setMembers(params: { campaignId: string; teamId: string; userIds: string[] }): Promise<number> {
+    const unique = Array.from(new Set(params.userIds.filter(Boolean)));
+    if (unique.length === 0) return 0;
+    const rows = unique.map((uid) => ({
+      team_id: params.teamId,
+      campaign_id: params.campaignId,
+      user_id: uid,
+    }));
+    const { error } = await db
+      .from("campaign_team_members")
+      .upsert(rows, { onConflict: "campaign_id,user_id" });
+    if (error) throw error;
+    await this.recalc(params.campaignId);
+    return rows.length;
+  },
+
+  async removeMember(params: { campaignId: string; userId: string }): Promise<void> {
+    const { error } = await db
+      .from("campaign_team_members")
+      .delete()
+      .eq("campaign_id", params.campaignId)
+      .eq("user_id", params.userId);
+    if (error) throw error;
+    await this.recalc(params.campaignId);
+  },
+
+  /** Recalcula progresso e ranking coletivo no servidor. */
+  async recalc(campaignId: string): Promise<void> {
+    const { error } = await db.rpc("recalc_campaign_teams", { _campaign_id: campaignId });
+    if (error) throw error;
+  },
+
+  /**
+   * Executa o rateio do prêmio coletivo (`team_split`).
+   * Idempotente no servidor: equipes já premiadas têm `awarded_at` preenchido.
+   */
+  async awardTeamSplit(campaignId: string): Promise<TeamSplitResult> {
+    const { data, error } = await db.rpc("award_campaign_team_split", { _campaign_id: campaignId });
+    if (error) throw error;
+    return (data ?? { teams_awarded: 0, members_awarded: 0 }) as TeamSplitResult;
+  },
+};
