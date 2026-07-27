@@ -56,6 +56,51 @@ export function useMyWarContributions(warId?: string) {
   });
 }
 
+/**
+ * Feed ao vivo. Combina polling curto com realtime: o realtime cobre a latencia
+ * baixa, e o refetch periodico garante que o feed nao "congele" caso o socket
+ * caia silenciosamente (o que acontece em rede movel instavel).
+ */
+export function useDepartmentWarFeed(warId?: string, limit = 30) {
+  const { user } = useAuth();
+  const queryClient = useQueryClient();
+
+  const query = useQuery({
+    queryKey: departmentWarKeys.feed(warId ?? "none"),
+    queryFn: () => departmentWarService.feed(warId as string, limit),
+    enabled: !!user && !!warId,
+    staleTime: 10_000,
+    refetchInterval: 60_000,
+  });
+
+  useEffect(() => {
+    if (!warId || !user) return;
+
+    const channel = supabase
+      .channel(`war-feed-${warId}`)
+      .on(
+        "postgres_changes",
+        {
+          event: "INSERT",
+          schema: "public",
+          table: "department_war_contributions",
+          filter: `war_id=eq.${warId}`,
+        },
+        () => {
+          void queryClient.invalidateQueries({ queryKey: departmentWarKeys.feed(warId) });
+          void queryClient.invalidateQueries({ queryKey: departmentWarKeys.board(warId) });
+        },
+      )
+      .subscribe();
+
+    return () => {
+      void supabase.removeChannel(channel);
+    };
+  }, [warId, user, queryClient]);
+
+  return query;
+}
+
 function useInvalidateWars() {
   const queryClient = useQueryClient();
   return () => {
