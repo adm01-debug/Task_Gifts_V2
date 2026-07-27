@@ -53,6 +53,17 @@ export interface TeamSplitResult {
 }
 
 /** Lote de execução do rateio coletivo (trilha de auditoria). */
+export interface TeamSplitRevertResult {
+  reverted: boolean;
+  members_reverted?: number;
+  teams_reset?: number;
+  xp_reverted?: number;
+  coins_reverted?: number;
+  batch_id?: string;
+  reason?: "batch_not_found" | "already_reverted" | "nothing_to_revert" | string;
+}
+
+/** Lote de execução do rateio coletivo (trilha de auditoria). */
 export interface TeamSplitBatch {
   id: string;
   campaign_id: string;
