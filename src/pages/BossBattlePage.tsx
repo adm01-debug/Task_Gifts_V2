@@ -73,14 +73,14 @@ export default function BossBattlePage() {
     <PageShell
       title="Chefão Departamental"
       description="A barra de vida coletiva cai a cada entrega real do time. Derrotem o chefão antes do prazo."
-      icon={Skull}
+      icon={<Skull className="h-6 w-6" />}
     >
       <SEOHead
         title="Chefão Departamental | Task Gifts"
         description="Batalha coletiva em que cada entrega do time reduz a vida do chefão antes do prazo."
       />
 
-      <SectionErrorBoundary name="boss-battle">
+      <SectionErrorBoundary>
         {isLoading ? (
           <div className="space-y-4">
             <Skeleton className="h-40 w-full rounded-xl" />
