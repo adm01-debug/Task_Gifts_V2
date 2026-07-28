@@ -1,5 +1,6 @@
 import { supabase } from "@/integrations/supabase/client";
 import { logger } from "./loggingService";
+import { invokeEdgeSafe } from "@/lib/requestId";
 import {
   normalizeDeviceLabel,
   type PushSyncEvent,
