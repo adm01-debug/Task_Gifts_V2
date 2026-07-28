@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { PROFILE_SAFE_COLUMNS } from "@/services/profilesService";
 import { Zap, Flame, Star, Target, Edit2 } from "lucide-react";
 import { RankingBadge } from "@/components/RankingBadge";
 import { AvatarPreview } from "@/components/AvatarPreview";
@@ -72,7 +73,11 @@ const Profile = () => {
   const fetchProfile = async () => {
     if (!user) return;
     try {
-      const { data, error } = await supabase.from("profiles").select("*").eq("id", user.id).maybeSingle();
+      const { data, error } = await supabase
+        .from("profiles")
+        .select(PROFILE_SAFE_COLUMNS)
+        .eq("id", user.id)
+        .maybeSingle();
       if (error) throw error;
       if (data) setProfile(data as ProfileData);
     } catch (err: unknown) {

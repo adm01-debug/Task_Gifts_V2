@@ -11294,6 +11294,17 @@ export type Database = {
         Args: { _alert_id: string; _notes: string; _runbook_slug: string }
         Returns: undefined
       }
+      admin_profile_directory: {
+        Args: never
+        Returns: {
+          cpf: string
+          display_name: string
+          email: string
+          employee_id: string
+          id: string
+          personal_email: string
+        }[]
+      }
       advance_board_trail: {
         Args: { p_dedupe_key: string; p_trail_id: string }
         Returns: Json
@@ -11886,6 +11897,18 @@ export type Database = {
         }[]
       }
       get_monthly_trends: { Args: never; Returns: Json }
+      get_my_profile_private: {
+        Args: never
+        Returns: {
+          contract_type: string
+          cpf: string
+          email: string
+          employee_id: string
+          id: string
+          personal_email: string
+          phone: string
+        }[]
+      }
       get_nine_box_distribution: {
         Args: { p_department_id?: string; p_period?: string }
         Returns: Json

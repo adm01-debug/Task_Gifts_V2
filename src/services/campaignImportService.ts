@@ -74,9 +74,9 @@ const RESULT_PAGE_SIZE = 1000;
 export const campaignImportService = {
   /** Carrega o diretorio de colaboradores para resolucao de identificadores. */
   async loadDirectory(): Promise<DirectoryEntry[]> {
-    const { data, error } = await db
-      .from("profiles")
-      .select("id, email, personal_email, cpf, employee_id, display_name");
+    // Dados identificadores (CPF/e-mail pessoal/matrícula) não são mais
+    // legíveis diretamente em `profiles`: a RPC exige gestor/admin.
+    const { data, error } = await db.rpc("admin_profile_directory");
     if (error) throw error;
     return (data ?? []) as DirectoryEntry[];
   },

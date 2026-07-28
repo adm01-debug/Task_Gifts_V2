@@ -15,7 +15,29 @@ export interface PublicProfile {
   avatar_url: string | null;
 }
 
-const PUBLIC_PROFILE_COLUMNS = "id, display_name, avatar_url, level, xp, coins, streak, best_streak, quests_completed, status, created_at, updated_at, email, employee_id, hire_date, last_access_at, contract_type" as const;
+/**
+ * Colunas de `profiles` legíveis por qualquer usuário autenticado.
+ *
+ * CPF, e-mail pessoal, telefone, matrícula e tipo de contrato foram removidos
+ * do GRANT de coluna no banco (LGPD): qualquer `select("*")` sobre `profiles`
+ * agora falha com `permission denied`. Use `getMyPrivate()` para os próprios
+ * dados sensíveis e a RPC `admin_profile_directory` para fluxos de gestão.
+ */
+export const PROFILE_SAFE_COLUMNS =
+  "id, display_name, avatar_url, level, xp, coins, streak, best_streak, quests_completed, status, created_at, updated_at, email, birth_date, hire_date, last_access_at" as const;
+
+const PUBLIC_PROFILE_COLUMNS = PROFILE_SAFE_COLUMNS;
+
+/** Dados pessoais sensíveis do próprio usuário logado. */
+export interface PrivateProfile {
+  id: string;
+  email: string | null;
+  personal_email: string | null;
+  cpf: string | null;
+  phone: string | null;
+  employee_id: string | null;
+  contract_type: string | null;
+}
 
 export const profilesService = {
   /**
@@ -39,9 +61,9 @@ export const profilesService = {
 
    getById: async (id: string): Promise<Profile | null> => {
      try {
-       const { data, error } = await supabase.from("profiles").select("*").eq("id", id).maybeSingle();
+       const { data, error } = await supabase.from("profiles").select(PROFILE_SAFE_COLUMNS).eq("id", id).maybeSingle();
        if (error) throw error;
-       return data;
+       return (data ?? null) as unknown as Profile | null;
      } catch (error) {
        logger.apiError("getProfileById", error, "ProfilesService");
        return null;
@@ -52,6 +74,24 @@ export const profilesService = {
      const { data, error } = await supabase.from("profiles").select(PUBLIC_PROFILE_COLUMNS).order("xp", { ascending: false });
      if (error) throw error;
      return (data ?? []) as unknown as Profile[];
+   },
+
+   /**
+    * Dados pessoais sensíveis do próprio usuário (CPF, telefone, e-mail
+    * pessoal, matrícula). Lido via função `SECURITY DEFINER` que filtra por
+    * `auth.uid()` — não existe caminho para ler os dados de terceiros.
+    */
+   getMyPrivate: async (): Promise<PrivateProfile | null> => {
+     try {
+       // eslint-disable-next-line @typescript-eslint/no-explicit-any
+       const { data, error } = await (supabase as any).rpc("get_my_profile_private");
+       if (error) throw error;
+       const rows = (data ?? []) as PrivateProfile[];
+       return rows[0] ?? null;
+     } catch (error) {
+       logger.apiError("getMyPrivateProfile", error, "ProfilesService");
+       return null;
+     }
    },
 
    getLeaderboard: async (limit = 10): Promise<Profile[]> => {

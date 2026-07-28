@@ -1,5 +1,6 @@
 import { supabase } from "@/integrations/supabase/client";
 import { logger } from "@/services/loggingService";
+import { PROFILE_SAFE_COLUMNS } from "@/services/profilesService";
 
 export interface HighPotentialScore {
   userId: string;
@@ -77,7 +78,7 @@ export const highPotentialService = {
     // Fetch profile
     const { data: profile } = await supabase
       .from("profiles")
-      .select("*")
+      .select(PROFILE_SAFE_COLUMNS)
       .eq("id", userId)
       .maybeSingle();
 
@@ -391,7 +392,7 @@ export const highPotentialService = {
     // Fetch all profiles (optionally filtered by department)
     let query = supabase
       .from("profiles")
-      .select("*, team_members(department_id, departments(name)), user_positions(positions(name))");
+      .select("id, display_name, avatar_url, level, xp, coins, streak, best_streak, quests_completed, status, created_at, updated_at, email, birth_date, hire_date, last_access_at, team_members(department_id, departments(name)), user_positions(positions(name))");
 
     const { data: profiles } = await query;
 
