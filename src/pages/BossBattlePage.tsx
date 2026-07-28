@@ -72,7 +72,7 @@ export default function BossBattlePage() {
   return (
     <PageShell
       title="Chefão Departamental"
-      description="A barra de vida coletiva cai a cada entrega real do time. Derrotem o chefão antes do prazo."
+      subtitle="A barra de vida coletiva cai a cada entrega real do time. Derrotem o chefão antes do prazo."
       icon={<Skull className="h-6 w-6" />}
     >
       <SEOHead
