@@ -12,6 +12,7 @@ export const auctionKeys = {
   myBids: () => [...auctionKeys.all, "myBids"] as const,
   summary: (id: string) => [...auctionKeys.all, "summary", id] as const,
   admin: () => [...auctionKeys.all, "admin"] as const,
+  events: () => [...auctionKeys.all, "events"] as const,
 };
 
 export function useAuctions() {
@@ -110,5 +111,16 @@ export function useCancelAuction() {
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: auctionKeys.all });
     },
+  });
+}
+
+/** Trilha auditável — só retorna dados para admins (RLS). */
+export function useAuctionAdminEvents(limit = 40) {
+  const { user } = useAuth();
+  return useQuery({
+    queryKey: [...auctionKeys.events(), limit],
+    queryFn: () => auctionAdminService.events(limit),
+    enabled: !!user,
+    staleTime: 15_000,
   });
 }
