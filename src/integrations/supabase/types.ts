@@ -1455,6 +1455,50 @@ export type Database = {
           },
         ]
       }
+      boss_win_rate_goals: {
+        Row: {
+          created_at: string
+          department_id: string | null
+          id: string
+          notes: string | null
+          target_pct: number
+          tolerance_pp: number
+          updated_at: string
+          updated_by: string | null
+          window_days: number
+        }
+        Insert: {
+          created_at?: string
+          department_id?: string | null
+          id?: string
+          notes?: string | null
+          target_pct?: number
+          tolerance_pp?: number
+          updated_at?: string
+          updated_by?: string | null
+          window_days?: number
+        }
+        Update: {
+          created_at?: string
+          department_id?: string | null
+          id?: string
+          notes?: string | null
+          target_pct?: number
+          tolerance_pp?: number
+          updated_at?: string
+          updated_by?: string | null
+          window_days?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "boss_win_rate_goals_department_id_fkey"
+            columns: ["department_id"]
+            isOneToOne: false
+            referencedRelation: "departments"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       campaign_participants: {
         Row: {
           accepted_at: string | null

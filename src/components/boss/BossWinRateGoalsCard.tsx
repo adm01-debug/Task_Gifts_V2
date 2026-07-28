@@ -1,6 +1,7 @@
-import { useMemo, useState } from "react";
-import { Target, TrendingDown, TrendingUp, Minus } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
+import { Target, TrendingDown, TrendingUp, Minus, Save, RotateCcw } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import {
@@ -11,6 +12,12 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useDepartments } from "@/hooks/useDepartments";
+import { useRBAC } from "@/hooks/useRBAC";
+import {
+  useBossWinRateGoals,
+  useRemoveBossWinRateGoal,
+  useSaveBossWinRateGoal,
+} from "@/hooks/useBossWinRateGoals";
 import { NO_DEPARTMENT } from "@/lib/bossDepartmentComparison";
 import {
   evaluateWinRateGoals,
@@ -60,7 +67,24 @@ export interface BossWinRateGoalsCardProps {
 export function BossWinRateGoalsCard({ battles, className }: BossWinRateGoalsCardProps) {
   const [target, setTarget] = useState<string>("0.6");
   const [days, setDays] = useState<string>("90");
+  const [hydrated, setHydrated] = useState(false);
   const { data: departments } = useDepartments();
+  const { isAdmin, isManager } = useRBAC();
+  const canManage = isAdmin || isManager;
+  const { config, isLoading: goalsLoading } = useBossWinRateGoals();
+  const saveGoal = useSaveBossWinRateGoal();
+  const removeGoal = useRemoveBossWinRateGoal();
+
+  // Hidrata os controles com o padrão global persistido apenas uma vez, para
+  // não sobrescrever ajustes manuais do usuário durante a sessão.
+  useEffect(() => {
+    if (hydrated || goalsLoading) return;
+    if (config.global) {
+      setTarget(String(config.global.target));
+      setDays(String(config.global.windowDays));
+    }
+    setHydrated(true);
+  }, [config.global, goalsLoading, hydrated]);
 
   const nameById = useMemo(() => {
     const map = new Map<string, string>();
@@ -73,8 +97,10 @@ export function BossWinRateGoalsCard({ battles, className }: BossWinRateGoalsCar
       evaluateWinRateGoals(battles, {
         target: Number(target),
         days: Number(days),
+        tolerancePp: config.global?.tolerancePp,
+        overrides: config.overrides,
       }),
-    [battles, target, days],
+    [battles, target, days, config.global?.tolerancePp, config.overrides],
   );
 
   if (result.rows.length === 0) return null;
@@ -109,12 +135,32 @@ export function BossWinRateGoalsCard({ battles, className }: BossWinRateGoalsCar
               ))}
             </SelectContent>
           </Select>
+          {canManage && (
+            <Button
+              size="sm"
+              variant="outline"
+              className="h-9"
+              disabled={saveGoal.isPending}
+              onClick={() =>
+                saveGoal.mutate({
+                  departmentId: null,
+                  target: Number(target),
+                  tolerancePp: config.global?.tolerancePp ?? 5,
+                  windowDays: Number(days),
+                })
+              }
+            >
+              <Save className="mr-1.5 h-3.5 w-3.5" />
+              Salvar padrão
+            </Button>
+          )}
         </div>
       </CardHeader>
       <CardContent className="space-y-3">
         <p className="text-xs text-muted-foreground">
           {result.belowTarget} departamento(s) abaixo da meta ·{" "}
           {result.dropping} com queda em relação ao período anterior
+          {config.global ? " · padrão carregado do banco" : ""}
         </p>
 
         <ul className="space-y-3">
@@ -147,6 +193,7 @@ export function BossWinRateGoalsCard({ battles, className }: BossWinRateGoalsCar
                 <Progress value={Math.round(row.winRate * 100)} className="mt-2 h-2" />
                 <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground">
                   <span>{Math.round(row.winRate * 100)}% de vitórias</span>
+                  <span>meta {Math.round(row.target * 100)}%</span>
                   <span>{row.battles} batalha(s)</span>
                   <span className="flex items-center gap-1">
                     <DeltaIcon className="h-3 w-3" />
@@ -156,6 +203,52 @@ export function BossWinRateGoalsCard({ battles, className }: BossWinRateGoalsCar
                   </span>
                   {row.gapToTargetPp > 0 && <span>faltam {row.gapToTargetPp} p.p.</span>}
                 </div>
+                {canManage && row.departmentId !== NO_DEPARTMENT && (
+                  <div className="mt-2 flex flex-wrap items-center gap-2">
+                    <Select
+                      value={row.hasOverride ? String(row.target) : "inherit"}
+                      onValueChange={(value) => {
+                        if (value === "inherit") {
+                          removeGoal.mutate(row.departmentId);
+                          return;
+                        }
+                        saveGoal.mutate({
+                          departmentId: row.departmentId,
+                          target: Number(value),
+                          tolerancePp: config.global?.tolerancePp ?? 5,
+                          windowDays: Number(days),
+                        });
+                      }}
+                    >
+                      <SelectTrigger
+                        className="h-8 w-[170px] text-xs"
+                        aria-label={`Meta específica de ${name}`}
+                      >
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="inherit">Usar meta padrão</SelectItem>
+                        {TARGETS.map((option) => (
+                          <SelectItem key={option.value} value={option.value}>
+                            {option.label} (próprio)
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    {row.hasOverride && (
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        className="h-8 px-2 text-xs"
+                        disabled={removeGoal.isPending}
+                        onClick={() => removeGoal.mutate(row.departmentId)}
+                      >
+                        <RotateCcw className="mr-1 h-3 w-3" />
+                        Restaurar padrão
+                      </Button>
+                    )}
+                  </div>
+                )}
               </li>
             );
           })}
