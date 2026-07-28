@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { AlertTriangle, ShieldCheck, ShieldAlert, Info, Download } from "lucide-react";
+import { AlertTriangle, ShieldCheck, ShieldAlert, Info, Download, History } from "lucide-react";
 import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -11,7 +11,9 @@ import { useWagerLeaderboard } from "@/hooks/useDailyWager";
 import {
   useSaveWagerIntegrityReview,
   useWagerIntegrityReviews,
+  useWagerIntegrityReviewEvents,
 } from "@/hooks/useWagerIntegrityReviews";
+import type { WagerIntegrityReviewEvent } from "@/services/wagerIntegrityReviewEventService";
 import {
   reviewKey,
   type WagerReviewStatus,
@@ -63,8 +65,11 @@ export function WagerIntegrityCard({ className, limit = 50 }: WagerIntegrityCard
   const [days, setDays] = useState<WagerLeaderboardWindow>(30);
   const { data, isLoading } = useWagerLeaderboard(days, limit);
   const { data: reviews } = useWagerIntegrityReviews(days);
+  const { data: events } = useWagerIntegrityReviewEvents(days);
   const saveReview = useSaveWagerIntegrityReview();
   const [pendingKey, setPendingKey] = useState<string | null>(null);
+  /** Chaves com o histórico expandido. */
+  const [openHistory, setOpenHistory] = useState<Record<string, boolean>>({});
   /** Rascunhos de observação por anomalia; ausência = usar a nota já salva. */
   const [noteDrafts, setNoteDrafts] = useState<Record<string, string>>({});
 
@@ -82,6 +87,25 @@ export function WagerIntegrityCard({ className, limit = 50 }: WagerIntegrityCard
     }
     return map;
   }, [reviews]);
+
+  // Histórico agrupado por anomalia (usuário+código+janela), já ordenado desc.
+  const eventIndex = useMemo(() => {
+    const map = new Map<string, WagerIntegrityReviewEvent[]>();
+    for (const event of events ?? []) {
+      const key = reviewKey(event.targetUserId, event.anomalyCode, event.windowDays);
+      const bucket = map.get(key);
+      if (bucket) bucket.push(event);
+      else map.set(key, [event]);
+    }
+    return map;
+  }, [events]);
+
+  function formatMoment(iso: string): string {
+    const date = new Date(iso);
+    return Number.isFinite(date.getTime())
+      ? date.toLocaleString("pt-BR", { dateStyle: "short", timeStyle: "short" })
+      : "—";
+  }
 
   /** Nota exibida: rascunho em edição tem precedência sobre a persistida. */
   function noteValue(key: string): string {
@@ -266,7 +290,44 @@ export function WagerIntegrityCard({ className, limit = 50 }: WagerIntegrityCard
                             {REVIEW_LABEL[status]}
                           </Button>
                         ))}
+                        {(eventIndex.get(reviewKey(anomaly.userId, anomaly.code, days))?.length ??
+                          0) > 0 && (
+                          <Button
+                            type="button"
+                            size="sm"
+                            variant="ghost"
+                            className="h-8 gap-1"
+                            onClick={() => {
+                              const key = reviewKey(anomaly.userId, anomaly.code, days);
+                              setOpenHistory((prev) => ({ ...prev, [key]: !prev[key] }));
+                            }}
+                          >
+                            <History className="h-3.5 w-3.5" />
+                            Histórico (
+                            {eventIndex.get(reviewKey(anomaly.userId, anomaly.code, days))!.length})
+                          </Button>
+                        )}
                       </div>
+                      {openHistory[reviewKey(anomaly.userId, anomaly.code, days)] && (
+                        <ol className="mt-2 space-y-1 border-l border-border pl-3">
+                          {eventIndex
+                            .get(reviewKey(anomaly.userId, anomaly.code, days))!
+                            .map((event) => (
+                              <li key={event.id} className="text-xs text-muted-foreground">
+                                <span className="font-medium text-foreground">
+                                  {event.previousStatus
+                                    ? `${REVIEW_LABEL[event.previousStatus]} → ${REVIEW_LABEL[event.newStatus]}`
+                                    : REVIEW_LABEL[event.newStatus]}
+                                </span>{" "}
+                                · {event.changedByName ?? "Administrador"} ·{" "}
+                                {formatMoment(event.createdAt)}
+                                {event.notes ? (
+                                  <span className="block italic">"{event.notes}"</span>
+                                ) : null}
+                              </li>
+                            ))}
+                        </ol>
+                      )}
                     </div>
                   </li>
                 ))}
