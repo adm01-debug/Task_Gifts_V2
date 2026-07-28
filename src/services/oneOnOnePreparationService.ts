@@ -1,4 +1,5 @@
 import { supabase } from "@/integrations/supabase/client";
+import { PROFILE_SAFE_COLUMNS } from "@/services/profilesService";
 
 export interface OneOnOneContext {
   employee: {
@@ -108,7 +109,7 @@ export const oneOnOnePreparationService = {
     // Fetch employee profile
     const { data: profile } = await supabase
       .from("profiles")
-      .select("*")
+      .select(PROFILE_SAFE_COLUMNS)
       .eq("id", employeeId)
       .maybeSingle();
 
