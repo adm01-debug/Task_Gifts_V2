@@ -175,10 +175,11 @@ export const boardTrailService = {
     }>;
   }): Promise<string> {
     const { data, error } = await supabase.rpc("save_board_trail", {
-      p_trail_id: input.trailId,
+      // Os tipos gerados não expressam parâmetros anuláveis; o SQL trata NULL.
+      p_trail_id: input.trailId as unknown as string,
       p_title: input.title,
-      p_description: input.description,
-      p_department_id: input.departmentId,
+      p_description: input.description as unknown as string,
+      p_department_id: input.departmentId as unknown as string,
       p_status: input.status,
       p_max_moves_per_day: input.maxMovesPerDay,
       p_tiles: input.tiles as unknown as never,
