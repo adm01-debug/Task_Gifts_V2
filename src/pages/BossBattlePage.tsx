@@ -14,6 +14,7 @@ import { BossContributorsCard } from "@/components/boss/BossContributorsCard";
 import { BossBattleAdminDialog } from "@/components/boss/BossBattleAdminDialog";
 import { BossHistoryCard } from "@/components/boss/BossHistoryCard";
 import { BossDepartmentComparisonCard } from "@/components/boss/BossDepartmentComparisonCard";
+import { BossWinRateGoalsCard } from "@/components/boss/BossWinRateGoalsCard";
 import { useRBAC } from "@/hooks/useRBAC";
 import {
   useBossBattles,
@@ -282,6 +283,7 @@ export default function BossBattlePage() {
           <div className="mt-6">
             <BossHistoryCard battles={battles || []} />
             <BossDepartmentComparisonCard battles={battles || []} />
+            <BossWinRateGoalsCard battles={battles || []} />
           </div>
         )}
       </SectionErrorBoundary>
