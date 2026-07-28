@@ -76,3 +76,27 @@ export function useRespondCardTrade() {
     },
   });
 }
+
+export function useCardSetRewards() {
+  const { user } = useAuth();
+  return useQuery({
+    queryKey: tradingCardKeys.setRewards(),
+    queryFn: () => tradingCardsService.listSetRewards(),
+    enabled: !!user,
+    staleTime: 30_000,
+  });
+}
+
+export function useClaimCardSetReward() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (params: { setCode: string; milestone: SetMilestone }) =>
+      tradingCardsService.claimSetReward(params.setCode, params.milestone),
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: tradingCardKeys.setRewards() });
+      // O crédito altera moedas/XP do perfil exibidos no cabeçalho.
+      void queryClient.invalidateQueries({ queryKey: ["profile"] });
+      void queryClient.invalidateQueries({ queryKey: ["userStats"] });
+    },
+  });
+}
