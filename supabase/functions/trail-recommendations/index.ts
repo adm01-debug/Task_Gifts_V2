@@ -291,7 +291,5 @@ Com base nessas informações, quais trilhas você recomenda e por quê?`;
   } catch (error) {
     console.error("Error in trail-recommendations:", error);
     return errorResponse(error);
-      }
-    );
   }
 });
