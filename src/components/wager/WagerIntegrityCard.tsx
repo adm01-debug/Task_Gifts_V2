@@ -40,6 +40,17 @@ const REVIEW_LABEL: Record<WagerReviewStatus, string> = {
   false_positive: "Falso positivo",
 };
 
+/** Filtro de triagem: "pending" agrupa anomalias ainda sem desfecho humano. */
+type ReviewFilter = "all" | "pending" | WagerReviewStatus;
+
+const FILTERS: ReadonlyArray<{ value: ReviewFilter; label: string }> = [
+  { value: "all", label: "Todas" },
+  { value: "pending", label: "Pendentes" },
+  { value: "investigating", label: "Em apuração" },
+  { value: "confirmed", label: "Confirmadas" },
+  { value: "false_positive", label: "Falso positivo" },
+];
+
 const SEVERITY_STYLE: Record<WagerAnomalySeverity, string> = {
   critical: "border-destructive/40 bg-destructive/10 text-destructive",
   warning: "border-amber-500/40 bg-amber-500/10 text-amber-600 dark:text-amber-400",
@@ -63,6 +74,7 @@ export interface WagerIntegrityCardProps {
  */
 export function WagerIntegrityCard({ className, limit = 50 }: WagerIntegrityCardProps) {
   const [days, setDays] = useState<WagerLeaderboardWindow>(30);
+  const [filter, setFilter] = useState<ReviewFilter>("all");
   const { data, isLoading } = useWagerLeaderboard(days, limit);
   const { data: reviews } = useWagerIntegrityReviews(days);
   const { data: events } = useWagerIntegrityReviewEvents(days);
@@ -87,6 +99,16 @@ export function WagerIntegrityCard({ className, limit = 50 }: WagerIntegrityCard
     }
     return map;
   }, [reviews]);
+
+  // Triagem: o filtro afeta apenas a exibição; a exportação segue completa
+  // para que o snapshot auditável nunca dependa da visão do operador.
+  const visibleAnomalies = useMemo(() => {
+    if (filter === "all") return report.anomalies;
+    return report.anomalies.filter((anomaly) => {
+      const status = reviewIndex.get(reviewKey(anomaly.userId, anomaly.code, days))?.status;
+      return filter === "pending" ? !status : status === filter;
+    });
+  }, [report.anomalies, reviewIndex, filter, days]);
 
   // Histórico agrupado por anomalia (usuário+código+janela), já ordenado desc.
   const eventIndex = useMemo(() => {
@@ -234,8 +256,30 @@ export function WagerIntegrityCard({ className, limit = 50 }: WagerIntegrityCard
                 ranking é atualizado.
               </p>
             ) : (
+              <>
+                <div className="flex flex-wrap gap-1" role="group" aria-label="Filtrar por desfecho">
+                  {FILTERS.map((option) => (
+                    <Button
+                      key={option.value}
+                      type="button"
+                      size="sm"
+                      variant={option.value === filter ? "secondary" : "ghost"}
+                      className="h-7 text-xs"
+                      aria-pressed={option.value === filter}
+                      onClick={() => setFilter(option.value)}
+                    >
+                      {option.label}
+                    </Button>
+                  ))}
+                </div>
+                {visibleAnomalies.length === 0 ? (
+                  <p className="rounded-lg border border-border bg-muted/30 p-3 text-sm text-muted-foreground">
+                    Nenhuma anomalia neste filtro. Ajuste a triagem para ver as demais
+                    ({report.anomalies.length} no período).
+                  </p>
+                ) : (
               <ul className="space-y-2">
-                {report.anomalies.map((anomaly, index) => (
+                {visibleAnomalies.map((anomaly, index) => (
                   <li
                     key={`${anomaly.code}-${anomaly.userId}-${index}`}
                     className={cn(
@@ -333,6 +377,8 @@ export function WagerIntegrityCard({ className, limit = 50 }: WagerIntegrityCard
                   </li>
                 ))}
               </ul>
+                )}
+              </>
             )}
           </>
         )}
