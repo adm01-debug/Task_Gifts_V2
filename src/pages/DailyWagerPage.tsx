@@ -88,7 +88,7 @@ export default function DailyWagerPage() {
   return (
     <PageShell
       title="Pergunta do Dia"
-      description="Aposte suas moedas no que você sabe. Acertou, multiplica. Errou, perde a aposta."
+      subtitle="Aposte suas moedas no que você sabe. Acertou, multiplica. Errou, perde a aposta."
       icon={<Dices className="h-5 w-5" />}
     >
       <SEOHead
