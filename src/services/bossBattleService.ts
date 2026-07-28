@@ -42,6 +42,15 @@ export interface DealDamageResult {
   reason?: string;
 }
 
+export interface BossLeaderboardEntry {
+  userId: string;
+  displayName: string | null;
+  avatarUrl: string | null;
+  damage: number;
+  hits: number;
+  share: number;
+}
+
 /** Normaliza as regras vindas do JSONB para o formato do motor puro. */
 function parseRules(raw: unknown): BossDamageRules {
   if (!raw || typeof raw !== "object") return DEFAULT_DAMAGE_RULES;
