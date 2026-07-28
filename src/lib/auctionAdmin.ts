@@ -200,3 +200,51 @@ export function summarizeAuctions(
 
   return overview;
 }
+// ---------------------------------------------------------------------------
+// Entrega do item vinculado à loja
+// ---------------------------------------------------------------------------
+
+export interface DeliveryInput {
+  /** Item da loja vinculado (null = leilão simbólico, sem entrega física). */
+  rewardId: string | null;
+  /** Estoque atual: null significa estoque ilimitado. */
+  stock: number | null;
+  /** Vencedor apurado (null quando ninguém deu lance). */
+  winnerId: string | null;
+  /** Caução retida do vencedor. */
+  escrowCoins: number;
+}
+
+export type DeliveryOutcome =
+  | { kind: "no_winner"; refundedCoins: 0; stockAfter: number | null }
+  | { kind: "symbolic"; refundedCoins: 0; stockAfter: number | null }
+  | { kind: "reserved"; refundedCoins: 0; stockAfter: number | null }
+  | { kind: "refunded_no_stock"; refundedCoins: number; stockAfter: number | null };
+
+/**
+ * Espelha, em TypeScript puro, a decisão de entrega executada dentro de
+ * `settle_auction`. Serve para simulação determinística: qualquer divergência
+ * entre este motor e a RPC é um bug econômico.
+ *
+ * Invariante: moedas nunca são criadas. Ou o vencedor recebe o item (caução
+ * consumida) ou a caução volta integralmente para o saldo dele.
+ */
+export function resolveAuctionDelivery(input: DeliveryInput): DeliveryOutcome {
+  if (!input.winnerId) {
+    return { kind: "no_winner", refundedCoins: 0, stockAfter: input.stock };
+  }
+  if (!input.rewardId) {
+    return { kind: "symbolic", refundedCoins: 0, stockAfter: input.stock };
+  }
+  if (input.stock === null) {
+    return { kind: "reserved", refundedCoins: 0, stockAfter: null };
+  }
+  if (input.stock > 0) {
+    return { kind: "reserved", refundedCoins: 0, stockAfter: input.stock - 1 };
+  }
+  return {
+    kind: "refunded_no_stock",
+    refundedCoins: Math.max(0, input.escrowCoins),
+    stockAfter: input.stock,
+  };
+}
