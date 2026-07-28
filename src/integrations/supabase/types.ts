@@ -6816,6 +6816,41 @@ export type Database = {
           },
         ]
       }
+      prediction_admin_events: {
+        Row: {
+          action: string
+          actor_id: string | null
+          created_at: string
+          id: string
+          market_id: string
+          payload: Json
+        }
+        Insert: {
+          action: string
+          actor_id?: string | null
+          created_at?: string
+          id?: string
+          market_id: string
+          payload?: Json
+        }
+        Update: {
+          action?: string
+          actor_id?: string | null
+          created_at?: string
+          id?: string
+          market_id?: string
+          payload?: Json
+        }
+        Relationships: [
+          {
+            foreignKeyName: "prediction_admin_events_market_id_fkey"
+            columns: ["market_id"]
+            isOneToOne: false
+            referencedRelation: "prediction_markets"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       prediction_markets: {
         Row: {
           created_at: string
@@ -10160,6 +10195,7 @@ export type Database = {
         }
         Returns: string
       }
+      auto_lock_prediction_markets: { Args: never; Returns: number }
       auto_promote_expired_webhook_secrets: { Args: never; Returns: Json }
       award_campaign_team_split: {
         Args: { _campaign_id: string }
@@ -10245,6 +10281,19 @@ export type Database = {
           p_reward_id?: string
           p_starting_bid: number
           p_starts_at: string
+          p_title: string
+        }
+        Returns: Json
+      }
+      create_prediction_market: {
+        Args: {
+          p_description: string
+          p_locks_at: string
+          p_max_stake_per_user: number
+          p_min_stake: number
+          p_options: string[]
+          p_rake_bps: number
+          p_resolves_at?: string
           p_title: string
         }
         Returns: Json
@@ -10947,6 +10996,10 @@ export type Database = {
         Returns: undefined
       }
       tournament_seed_order: { Args: { p_size: number }; Returns: number[] }
+      transition_prediction_market: {
+        Args: { p_action: string; p_market_id: string }
+        Returns: Json
+      }
       update_certification_statuses: { Args: never; Returns: undefined }
       user_has_passkeys: { Args: { p_user_id: string }; Returns: boolean }
       user_wants_email_notification: {
