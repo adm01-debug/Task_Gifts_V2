@@ -55,6 +55,34 @@ export function useBoardChallenge(challengeId: string | null) {
   });
 }
 
+export function useBoardLeaderboard(trailId: string | null, limit = 50) {
+  return useQuery({
+    queryKey: ["board-leaderboard", trailId, limit],
+    queryFn: () => boardTrailService.getLeaderboard(trailId as string, limit),
+    enabled: Boolean(trailId),
+    staleTime: 60 * 1000,
+  });
+}
+
+export function useBoardChallengeStats(trailId: string | null, enabled = true) {
+  return useQuery({
+    queryKey: ["board-challenge-stats", trailId],
+    queryFn: () => boardTrailService.getChallengeStats(trailId as string),
+    enabled: Boolean(trailId) && enabled,
+    staleTime: 60 * 1000,
+    retry: false,
+  });
+}
+
+function useBoardChallengeLegacy(challengeId: string | null) {
+  return useQuery({
+    queryKey: ["board-challenge", challengeId],
+    queryFn: () => boardTrailService.getChallenge(challengeId as string),
+    enabled: Boolean(challengeId),
+    staleTime: 5 * 60 * 1000,
+  });
+}
+
 export function useResolveBoardChallenge(trailId: string | null) {
   const queryClient = useQueryClient();
   return useMutation({
