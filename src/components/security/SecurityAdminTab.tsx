@@ -7,6 +7,7 @@ import { BlockedIPsPanel } from "@/components/security/BlockedIPsPanel";
 import { LoginAttemptsPanel } from "@/components/security/LoginAttemptsPanel";
 import { RateLimitRulesPanel } from "@/components/security/RateLimitRulesPanel";
 import { PushOutboxHealthPanel } from "@/components/security/PushOutboxHealthPanel";
+import { PushOutboxHealthTrend } from "@/components/security/PushOutboxHealthTrend";
 
 interface SecurityAdminTabProps {
   stats: {
@@ -57,7 +58,10 @@ export function SecurityAdminTab({ stats, cleanupMutation }: SecurityAdminTabPro
         <TabsContent value="blocked"><BlockedIPsPanel /></TabsContent>
         <TabsContent value="attempts"><LoginAttemptsPanel /></TabsContent>
         <TabsContent value="rules"><RateLimitRulesPanel /></TabsContent>
-        <TabsContent value="push"><PushOutboxHealthPanel /></TabsContent>
+        <TabsContent value="push" className="space-y-4">
+          <PushOutboxHealthPanel />
+          <PushOutboxHealthTrend />
+        </TabsContent>
       </Tabs>
     </>
   );
