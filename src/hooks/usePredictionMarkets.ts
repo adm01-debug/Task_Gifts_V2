@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   predictionMarketService,
+  fetchOddsHistory,
   type CreateMarketInput,
 } from "@/services/predictionMarketService";
 import { useAuth } from "./useAuth";
@@ -11,7 +12,19 @@ export const predictionKeys = {
   myStakes: () => [...predictionKeys.all, "my-stakes"] as const,
   adminEvents: (marketId?: string) =>
     [...predictionKeys.all, "admin-events", marketId ?? "all"] as const,
+  oddsHistory: (marketId: string) =>
+    [...predictionKeys.all, "odds-history", marketId] as const,
 };
+
+/** Histórico agregado de cotações; só busca quando o gráfico está aberto. */
+export function usePredictionOddsHistory(marketId: string | null) {
+  return useQuery({
+    queryKey: predictionKeys.oddsHistory(marketId ?? ""),
+    queryFn: () => fetchOddsHistory(marketId as string),
+    enabled: !!marketId,
+    staleTime: 60_000,
+  });
+}
 
 export function usePredictionMarkets() {
   const { user } = useAuth();

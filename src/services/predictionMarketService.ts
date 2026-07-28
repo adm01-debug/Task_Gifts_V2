@@ -213,6 +213,34 @@ export const predictionMarketService = {
   },
 };
 
+/**
+ * Série histórica agregada de um mercado. Cada linha é a soma dos aportes de
+ * uma opção dentro de uma faixa de tempo — nunca um aporte individual.
+ */
+export interface OddsHistoryRow {
+  bucket_end: string;
+  option_id: string;
+  amount: number;
+}
+
+export async function fetchOddsHistory(
+  marketId: string,
+  buckets = 40,
+): Promise<OddsHistoryRow[]> {
+  const { data, error } = await supabase.rpc("get_prediction_odds_history", {
+    p_market_id: marketId,
+    p_buckets: buckets,
+  });
+  if (error) {
+    logger.error("Falha ao carregar histórico de cotações", "predictionMarketService", error);
+    throw error;
+  }
+  return ((data ?? []) as unknown as OddsHistoryRow[]).map((row) => ({
+    ...row,
+    amount: Number(row.amount),
+  }));
+}
+
 export const STAKE_REJECTION_MESSAGES: Record<string, string> = {
   unauthenticated: "Faça login para participar.",
   market_not_found: "Mercado não encontrado.",
