@@ -221,9 +221,6 @@ Retorne APENAS um JSON válido no seguinte formato:
 
   } catch (error) {
     console.error('Error in generate-quiz-questions:', error);
-    return new Response(
-      JSON.stringify({ error: error instanceof Error ? error.message : 'Unknown error' }),
-      { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-    );
+    return errorResponse(error);
   }
 });
