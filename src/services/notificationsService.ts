@@ -180,9 +180,7 @@ export const notificationsService = {
   },
 
   async triggerCompetencyAnalysis(userId: string): Promise<void> {
-    const { supabase } = await import("@/integrations/supabase/client");
-    await supabase.functions.invoke('competency-alerts', {
-      body: { userId }
-    });
+    const { invokeEdgeSafe } = await import("@/lib/requestId");
+    await invokeEdgeSafe("competency-alerts", { body: { userId } });
   },
 };
