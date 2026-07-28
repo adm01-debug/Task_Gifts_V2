@@ -244,3 +244,66 @@ export const quizQuestionsService = {
     if (error) throw error;
   },
 };
+
+/**
+ * Alternativa exibida ao jogador — sem o gabarito (`is_correct`).
+ * O gabarito nunca trafega para o cliente antes da resposta ser enviada.
+ */
+export interface QuizPlayOption {
+  id: string;
+  text: string;
+  order_index: number;
+}
+
+export interface QuizPlayQuestion {
+  id: string;
+  quiz_type: string;
+  question: string;
+  explanation: string | null;
+  points: number;
+  difficulty: string;
+  category: string | null;
+  department_id: string | null;
+  created_at: string;
+  options: QuizPlayOption[];
+}
+
+export interface QuizGradeResult {
+  is_correct: boolean;
+  correct_option_id: string | null;
+  explanation: string | null;
+}
+
+export const quizPlayService = {
+  /** Busca o conjunto jogável (perguntas + alternativas) sem expor o gabarito. */
+  async getPlaySet(quizType: string, limit = 10): Promise<QuizPlayQuestion[]> {
+    const { data, error } = await supabase.rpc('get_quiz_play_set', {
+      p_quiz_type: quizType,
+      p_limit: limit,
+    });
+    if (error) throw error;
+    return ((data as unknown as QuizPlayQuestion[]) || []).map((q) => ({
+      ...q,
+      options: q.options || [],
+    }));
+  },
+
+  /** Corrige a resposta no servidor e devolve o gabarito somente após o envio. */
+  async gradeAnswer(questionId: string, optionId: string): Promise<QuizGradeResult> {
+    const { data, error } = await supabase.rpc('grade_quiz_answer', {
+      p_question_id: questionId,
+      p_option_id: optionId,
+    });
+    if (error) throw error;
+    return data as unknown as QuizGradeResult;
+  },
+
+  /** Ajuda 50/50: devolve até duas alternativas incorretas. */
+  async fiftyFifty(questionId: string): Promise<string[]> {
+    const { data, error } = await supabase.rpc('quiz_fifty_fifty', {
+      p_question_id: questionId,
+    });
+    if (error) throw error;
+    return (data as string[] | null) || [];
+  },
+};
