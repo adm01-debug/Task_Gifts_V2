@@ -129,6 +129,30 @@ export const wagerAdminService = {
     return (data as unknown as WagerSaveResponse) ?? { success: false };
   },
 
+  /**
+   * Importação em lote: salva sequencialmente para não estourar o rate limit
+   * e para que uma linha inválida não derrube as demais.
+   */
+  async saveMany(drafts: WagerQuestionDraft[]): Promise<WagerBulkSaveResult> {
+    const result: WagerBulkSaveResult = { saved: 0, failures: [] };
+    for (const draft of drafts) {
+      try {
+        const response = await wagerAdminService.save(draft);
+        if (response.success) {
+          result.saved += 1;
+        } else {
+          result.failures.push({ date: draft.scheduledDate, reason: response.reason ?? "unknown_error" });
+        }
+      } catch (err: unknown) {
+        result.failures.push({
+          date: draft.scheduledDate,
+          reason: err instanceof Error ? err.message : "unknown_error",
+        });
+      }
+    }
+    return result;
+  },
+
   /** Só remove perguntas sem apostas (histórico financeiro é intocável). */
   async remove(id: string): Promise<void> {
     const { error } = await supabase.from("wager_questions").delete().eq("id", id);
