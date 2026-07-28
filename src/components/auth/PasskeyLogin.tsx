@@ -32,13 +32,19 @@ export function PasskeyLogin({ onSuccess, defaultEmail = "" }: PasskeyLoginProps
         return;
       }
 
-      if (!result.userId) {
-        toast.error("Usuário não encontrado");
+      // A biometria por si só NÃO cria sessão: a emissão do token é
+      // responsabilidade exclusiva do servidor de autenticação. Só liberamos
+      // o fluxo se existir uma sessão válida emitida pelo backend — nunca
+      // confiamos apenas no resultado verificado no cliente.
+      const { data: sessionData } = await supabase.auth.getSession();
+
+      if (!sessionData.session) {
+        toast.error(
+          "Biometria reconhecida, mas a sessão não pôde ser emitida. Entre com e-mail e senha."
+        );
         return;
       }
 
-      // Criar sessão usando função administrativa ou token customizado
-      // Por enquanto, vamos apenas notificar sucesso e deixar o backend lidar
       toast.success("Autenticação biométrica bem-sucedida!");
       onSuccess();
       

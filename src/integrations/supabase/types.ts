@@ -11998,7 +11998,6 @@ export type Database = {
         Args: { p_email: string }
         Returns: {
           credential_id: string
-          user_id: string
         }[]
       }
       get_prediction_odds_history: {
