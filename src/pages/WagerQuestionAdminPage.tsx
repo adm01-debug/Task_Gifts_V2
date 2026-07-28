@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { AlertTriangle, CalendarDays, Coins, Dices, Lock, Plus, Save, Trash2 } from "lucide-react";
+import { AlertTriangle, CalendarDays, Coins, Dices, Download, Lock, Plus, Save, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -35,6 +35,7 @@ import {
   type WagerQuestionDraft,
 } from "@/lib/wagerAuthoring";
 import { cn } from "@/lib/utils";
+import { buildWagerScheduleCsv, wagerScheduleFileName } from "@/lib/wagerScheduleExport";
 
 const DIFFICULTY_LABEL: Record<string, string> = {
   easy: "Fácil",
@@ -170,6 +171,25 @@ export default function WagerQuestionAdminPage() {
     }
   };
 
+  /** Exporta a agenda completa em CSV reimportável (round-trip). */
+  const handleExport = () => {
+    const rows = questions ?? [];
+    if (rows.length === 0) {
+      toast.error("Não há perguntas agendadas para exportar.");
+      return;
+    }
+    const blob = new Blob([`\uFEFF${buildWagerScheduleCsv(rows)}`], {
+      type: "text/csv;charset=utf-8;",
+    });
+    const url = URL.createObjectURL(blob);
+    const anchor = document.createElement("a");
+    anchor.href = url;
+    anchor.download = wagerScheduleFileName();
+    anchor.click();
+    URL.revokeObjectURL(url);
+    toast.success(`${rows.length} pergunta(s) exportada(s).`);
+  };
+
   const handleDelete = async (question: AdminWagerQuestion) => {
     if (question.totalEntries > 0) {
       toast.error("Perguntas com apostas registradas não podem ser excluídas.");
@@ -196,7 +216,17 @@ export default function WagerQuestionAdminPage() {
       />
 
       <SectionErrorBoundary sectionName="Autoria da Pergunta do Dia">
-        <div className="mb-4 flex justify-end">
+        <div className="mb-4 flex flex-wrap justify-end gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            className="gap-2"
+            disabled={(questions?.length ?? 0) === 0}
+            onClick={handleExport}
+          >
+            <Download className="h-4 w-4" />
+            Exportar CSV
+          </Button>
           <WagerBulkImportDialog existingDates={scheduledDates} />
         </div>
         <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_360px]">

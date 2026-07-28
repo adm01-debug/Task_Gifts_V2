@@ -17,6 +17,7 @@ import {
   validateWagerDraft,
   type WagerQuestionDraft,
 } from "./wagerAuthoring";
+import { sanitizeExportedCell } from "./wagerScheduleExport";
 
 export const WAGER_IMPORT_MAX_ROWS = 200;
 
@@ -236,12 +237,13 @@ export function parseWagerImportCsv(
 
   bodyLines.forEach((line, index) => {
     const cells = splitLine(line, delimiter);
-    const at = (i: number) => (i >= 0 ? normalizeText(cells[i] ?? "") : "");
+    // `sanitizeExportedCell` desfaz o apóstrofo anti-CSV-injection do export.
+    const at = (i: number) => (i >= 0 ? normalizeText(sanitizeExportedCell(cells[i] ?? "")) : "");
     const errors: string[] = [];
 
     const scheduledDate = normalizeDate(at(dateIdx));
     const options = optionIdxs
-      .map((i) => normalizeText(cells[i] ?? ""))
+      .map((i) => normalizeText(sanitizeExportedCell(cells[i] ?? "")))
       .filter((label) => label.length > 0)
       .map((label, i) => ({ id: optionKeyAt(i), label }));
 
