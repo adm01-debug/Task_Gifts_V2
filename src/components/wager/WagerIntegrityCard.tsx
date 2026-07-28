@@ -232,6 +232,7 @@ export function WagerIntegrityCard({ className, limit = 50 }: WagerIntegrityCard
                             {
                               REVIEW_LABEL[
                                 reviewIndex.get(reviewKey(anomaly.userId, anomaly.code, days))!
+                                  .status
                               ]
                             }
                           </Badge>
@@ -239,6 +240,18 @@ export function WagerIntegrityCard({ className, limit = 50 }: WagerIntegrityCard
                       </div>
                       <p className="text-sm font-medium text-foreground">{anomaly.title}</p>
                       <p className="text-xs text-muted-foreground">{anomaly.detail}</p>
+                      <Textarea
+                        value={noteValue(reviewKey(anomaly.userId, anomaly.code, days))}
+                        onChange={(event) => {
+                          const key = reviewKey(anomaly.userId, anomaly.code, days);
+                          const value = event.target.value.slice(0, 2000);
+                          setNoteDrafts((prev) => ({ ...prev, [key]: value }));
+                        }}
+                        placeholder="Observações da apuração (evidências, contexto, decisão)"
+                        aria-label={`Observações da apuração de ${anomaly.displayName}`}
+                        rows={2}
+                        className="mt-2 min-h-[56px] resize-y bg-background/70 text-xs"
+                      />
                       <div className="flex flex-wrap gap-2 pt-1">
                         {(Object.keys(REVIEW_LABEL) as WagerReviewStatus[]).map((status) => (
                           <Button
