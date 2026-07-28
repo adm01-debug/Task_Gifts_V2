@@ -18,14 +18,14 @@ import {
   useBoardTrails,
 } from "@/hooks/useBoardTrail";
 import { useAuth } from "@/hooks/useAuth";
-import { useUserRoles } from "@/hooks/useUserRoles";
+import { useRBAC } from "@/hooks/useRBAC";
 import { useHaptics } from "@/hooks/useHaptics";
 import { boardProgressPercent, buildMoveDedupeKey, normalizeBoard } from "@/lib/boardTrail";
 import { getErrorMessage } from "@/lib/errorMessages";
 
 export default function BoardTrailPage() {
   const { user } = useAuth();
-  const { hasRole } = useUserRoles();
+  const { hasRole } = useRBAC();
   const haptics = useHaptics();
   const { data: trails, isLoading: loadingTrails } = useBoardTrails();
   const [trailId, setTrailId] = useState<string | null>(null);
