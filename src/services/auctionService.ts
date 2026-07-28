@@ -216,12 +216,12 @@ export const auctionAdminService = {
   async create(input: CreateAuctionInput): Promise<string> {
     const { data, error } = await supabase.rpc("create_auction_draft", {
       p_title: input.title.trim(),
-      p_description: input.description?.trim() || null,
+      p_description: input.description?.trim() ?? "",
       p_starting_bid: input.starting_bid,
       p_min_increment: input.min_increment,
       p_starts_at: input.starts_at,
       p_ends_at: input.ends_at,
-      p_reward_id: input.reward_id ?? null,
+      ...(input.reward_id ? { p_reward_id: input.reward_id } : {}),
     });
 
     if (error) {
