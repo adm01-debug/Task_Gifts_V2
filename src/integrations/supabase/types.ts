@@ -728,6 +728,118 @@ export type Database = {
         }
         Relationships: []
       }
+      auction_bids: {
+        Row: {
+          amount: number
+          auction_id: string
+          created_at: string
+          dedupe_key: string | null
+          escrow_coins: number
+          id: string
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          auction_id: string
+          created_at?: string
+          dedupe_key?: string | null
+          escrow_coins?: number
+          id?: string
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          auction_id?: string
+          created_at?: string
+          dedupe_key?: string | null
+          escrow_coins?: number
+          id?: string
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "auction_bids_auction_id_fkey"
+            columns: ["auction_id"]
+            isOneToOne: false
+            referencedRelation: "auctions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      auctions: {
+        Row: {
+          closed_at: string | null
+          created_at: string
+          created_by: string | null
+          description: string | null
+          ends_at: string
+          id: string
+          image_url: string | null
+          min_increment: number
+          reward_id: string | null
+          starting_bid: number
+          starts_at: string
+          status: string
+          title: string
+          total_bids: number
+          updated_at: string
+          winner_id: string | null
+          winning_bid: number | null
+        }
+        Insert: {
+          closed_at?: string | null
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          ends_at: string
+          id?: string
+          image_url?: string | null
+          min_increment?: number
+          reward_id?: string | null
+          starting_bid?: number
+          starts_at?: string
+          status?: string
+          title: string
+          total_bids?: number
+          updated_at?: string
+          winner_id?: string | null
+          winning_bid?: number | null
+        }
+        Update: {
+          closed_at?: string | null
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          ends_at?: string
+          id?: string
+          image_url?: string | null
+          min_increment?: number
+          reward_id?: string | null
+          starting_bid?: number
+          starts_at?: string
+          status?: string
+          title?: string
+          total_bids?: number
+          updated_at?: string
+          winner_id?: string | null
+          winning_bid?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "auctions_reward_id_fkey"
+            columns: ["reward_id"]
+            isOneToOne: false
+            referencedRelation: "shop_rewards"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       audit_logs: {
         Row: {
           action: Database["public"]["Enums"]["audit_action"]
@@ -9789,6 +9901,7 @@ export type Database = {
         Args: { _opinion_id: string; _user_id: string }
         Returns: boolean
       }
+      cancel_auction: { Args: { p_auction_id: string }; Returns: Json }
       cancel_webhook_secret_rotation: {
         Args: { p_subscription_id: string }
         Returns: Json
@@ -9809,6 +9922,8 @@ export type Database = {
       cleanup_old_security_logs:
         | { Args: never; Returns: undefined }
         | { Args: { p_days_to_keep?: number }; Returns: Json }
+      close_auction: { Args: { p_auction_id: string }; Returns: Json }
+      close_expired_auctions: { Args: never; Returns: number }
       close_expired_sales_campaigns: {
         Args: never
         Returns: {
@@ -9936,6 +10051,7 @@ export type Database = {
           unresolved_count: number
         }[]
       }
+      get_auction_summary: { Args: { p_auction_id: string }; Returns: Json }
       get_burn_rate: {
         Args: { _minutes: number; _slo?: number }
         Returns: Json
@@ -10327,6 +10443,10 @@ export type Database = {
         }
         Returns: string
       }
+      place_auction_bid: {
+        Args: { p_amount: number; p_auction_id: string; p_dedupe_key?: string }
+        Returns: Json
+      }
       process_external_task: {
         Args: { p_external_task_id: string }
         Returns: Json
@@ -10432,6 +10552,7 @@ export type Database = {
         Args: { p_opinion_id: string; p_status: string }
         Returns: undefined
       }
+      settle_auction: { Args: { p_auction_id: string }; Returns: Json }
       settle_department_war: { Args: { p_war_id: string }; Returns: Json }
       settle_tournament_rewards: {
         Args: { p_tournament_id: string }
