@@ -5,6 +5,7 @@
 // Alert only when BOTH long and short windows exceed the threshold (reduces noise).
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
 import { corsHeaders } from "npm:@supabase/supabase-js@2/cors";
+import { guardInternalRequest } from "../_shared/security.ts";
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SERVICE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
@@ -25,6 +26,8 @@ async function burn(sb: ReturnType<typeof createClient>, minutes: number) {
 
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
+  const denied = guardInternalRequest(req);
+  if (denied) return denied;
   try {
     const sb = createClient(SUPABASE_URL, SERVICE_KEY, { auth: { persistSession: false } });
     const triggered: any[] = [];
