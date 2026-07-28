@@ -51,6 +51,7 @@ const PredictionMarketsPage = lazy(() => import("./pages/PredictionMarketsPage")
 const PredictionAdminPage = lazy(() => import("./pages/PredictionAdminPage"));
 const LuckyWheelAdmin = lazy(() => import("./pages/LuckyWheelAdmin"));
 const ScratchCardPage = lazy(() => import("./pages/ScratchCardPage"));
+const CardAlbumPage = lazy(() => import("./pages/CardAlbumPage"));
 const AuctionsPage = lazy(() => import("./pages/AuctionsPage"));
 const AuctionsAdmin = lazy(() => import("./pages/AuctionsAdmin"));
 const LightningQuizPage = lazy(() => import("./pages/LightningQuizPage"));
@@ -235,6 +236,7 @@ const AnimatedRoutes = () => {
         <Route path="/previsoes" element={<ProtectedRoute><PageTransition><PredictionMarketsPage /></PageTransition></ProtectedRoute>} />
         <Route path="/previsoes/admin" element={<ProtectedRoute requiredRole="admin"><PageTransition><PredictionAdminPage /></PageTransition></ProtectedRoute>} />
         <Route path="/raspadinha" element={<ProtectedRoute><PageTransition><ScratchCardPage /></PageTransition></ProtectedRoute>} />
+        <Route path="/album" element={<ProtectedRoute><PageTransition><CardAlbumPage /></PageTransition></ProtectedRoute>} />
         <Route path="/relampago" element={<ProtectedRoute><PageTransition><LightningQuizPage /></PageTransition></ProtectedRoute>} />
         <Route path="/bingo" element={<ProtectedRoute><PageTransition><BingoPage /></PageTransition></ProtectedRoute>} />
         <Route path="/torneios" element={<ProtectedRoute><PageTransition><TournamentsPage /></PageTransition></ProtectedRoute>} />

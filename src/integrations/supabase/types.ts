@@ -1770,6 +1770,144 @@ export type Database = {
           },
         ]
       }
+      card_definitions: {
+        Row: {
+          code: string
+          created_at: string
+          description: string | null
+          id: string
+          image_url: string | null
+          is_active: boolean
+          name: string
+          rarity: string
+          set_code: string
+          updated_at: string
+        }
+        Insert: {
+          code: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          image_url?: string | null
+          is_active?: boolean
+          name: string
+          rarity: string
+          set_code?: string
+          updated_at?: string
+        }
+        Update: {
+          code?: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          image_url?: string | null
+          is_active?: boolean
+          name?: string
+          rarity?: string
+          set_code?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      card_packs: {
+        Row: {
+          created_at: string
+          dedupe_key: string
+          id: string
+          opened_at: string | null
+          result: Json | null
+          size: number
+          source: string
+          source_ref: string | null
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          dedupe_key: string
+          id?: string
+          opened_at?: string | null
+          result?: Json | null
+          size?: number
+          source: string
+          source_ref?: string | null
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          dedupe_key?: string
+          id?: string
+          opened_at?: string | null
+          result?: Json | null
+          size?: number
+          source?: string
+          source_ref?: string | null
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      card_trades: {
+        Row: {
+          created_at: string
+          expires_at: string
+          id: string
+          message: string | null
+          offered_card_id: string
+          proposer_id: string
+          requested_card_id: string
+          resolved_at: string | null
+          responder_id: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          expires_at?: string
+          id?: string
+          message?: string | null
+          offered_card_id: string
+          proposer_id: string
+          requested_card_id: string
+          resolved_at?: string | null
+          responder_id: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          expires_at?: string
+          id?: string
+          message?: string | null
+          offered_card_id?: string
+          proposer_id?: string
+          requested_card_id?: string
+          resolved_at?: string | null
+          responder_id?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "card_trades_offered_card_id_fkey"
+            columns: ["offered_card_id"]
+            isOneToOne: false
+            referencedRelation: "card_definitions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "card_trades_requested_card_id_fkey"
+            columns: ["requested_card_id"]
+            isOneToOne: false
+            referencedRelation: "card_definitions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       celebrations: {
         Row: {
           auto_generated: boolean
@@ -9178,6 +9316,44 @@ export type Database = {
           },
         ]
       }
+      user_cards: {
+        Row: {
+          card_id: string
+          created_at: string
+          first_obtained_at: string
+          id: string
+          quantity: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          card_id: string
+          created_at?: string
+          first_obtained_at?: string
+          id?: string
+          quantity?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          card_id?: string
+          created_at?: string
+          first_obtained_at?: string
+          id?: string
+          quantity?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_cards_card_id_fkey"
+            columns: ["card_id"]
+            isOneToOne: false
+            referencedRelation: "card_definitions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_certifications: {
         Row: {
           certificate_code: string
@@ -10313,6 +10489,7 @@ export type Database = {
         Returns: boolean
       }
       erf_inverse: { Args: { x: number }; Returns: number }
+      expire_card_trades: { Args: never; Returns: number }
       finish_lightning_round: { Args: { p_session_id: string }; Returns: Json }
       generate_action_plan_from_factor: {
         Args: {
@@ -10753,6 +10930,15 @@ export type Database = {
         }[]
       }
       get_webhook_executive_metrics_7d: { Args: never; Returns: Json }
+      grant_card_pack: {
+        Args: {
+          p_size?: number
+          p_source: string
+          p_source_ref?: string
+          p_user_id?: string
+        }
+        Returns: Json
+      }
       grant_scratch_card: {
         Args: { p_source: string; p_source_ref?: string }
         Returns: Json
@@ -10844,6 +11030,7 @@ export type Database = {
         }
         Returns: string
       }
+      open_card_pack: { Args: { p_pack_id: string }; Returns: Json }
       place_auction_bid: {
         Args: { p_amount: number; p_auction_id: string; p_dedupe_key?: string }
         Returns: Json
@@ -10863,6 +11050,15 @@ export type Database = {
       }
       promote_webhook_secret: {
         Args: { p_subscription_id: string }
+        Returns: Json
+      }
+      propose_card_trade: {
+        Args: {
+          p_message?: string
+          p_offered_card_id: string
+          p_requested_card_id: string
+          p_responder_id: string
+        }
         Returns: Json
       }
       publish_auction: { Args: { p_auction_id: string }; Returns: Json }
@@ -10922,6 +11118,10 @@ export type Database = {
       }
       reset_login_attempts: { Args: { p_email: string }; Returns: undefined }
       reset_push_failures: { Args: { _ids: string[] }; Returns: undefined }
+      respond_card_trade: {
+        Args: { p_action: string; p_trade_id: string }
+        Returns: Json
+      }
       respond_to_opinion: {
         Args: {
           p_content: string

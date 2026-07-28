@@ -120,6 +120,7 @@ export function CommandPalette() {
     { id: "leagues", label: "Ligas", icon: Award, action: () => handleNavigate("/leagues"), keywords: ["competição", "ranking"], category: "navigation" },
     { id: "duels", label: "Duelos", icon: Swords, action: () => handleNavigate("/duelos"), keywords: ["batalha", "1v1"], category: "navigation" },
     { id: "lucky-wheel", label: "Roleta da Sorte", icon: Dices, action: () => handleNavigate("/roleta"), keywords: ["roleta", "sorte", "giro", "premio"], category: "navigation" },
+    { id: "card-album", label: "Álbum de Cartas", icon: Gift, action: () => handleNavigate("/album"), keywords: ["album", "cartas", "colecao", "troca", "pacote"], category: "navigation" },
     { id: "scratch-card", label: "Raspadinha Digital", icon: Gift, action: () => handleNavigate("/raspadinha"), keywords: ["raspadinha", "sorte", "premio", "surpresa"], category: "navigation" },
     { id: "lightning-quiz", label: "Verdadeiro ou Falso Relâmpago", icon: Gamepad2, action: () => handleNavigate("/relampago"), keywords: ["relampago", "verdadeiro", "falso", "quiz", "rapido"], category: "navigation" },
     { id: "bingo", label: "Bingo de Missões", icon: Grid3X3, action: () => handleNavigate("/bingo"), keywords: ["bingo", "cartela", "missoes", "linhas"], category: "navigation" },

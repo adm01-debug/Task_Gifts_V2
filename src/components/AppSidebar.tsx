@@ -5,7 +5,7 @@ import {
   Gamepad2, ShoppingBag, Swords, Heart, Award, Flag,
   
   ClipboardCheck, BarChart3, Megaphone, MessageSquare,
-  LayoutDashboard, GraduationCap, Users, Sparkles, Rocket, Activity, Dices, Gift, Zap, Grid3X3
+  LayoutDashboard, GraduationCap, Users, Sparkles, Rocket, Activity, Dices, Gift, Zap, Grid3X3, Layers
 } from "lucide-react";
 import { memo } from "react";
 import { SidebarNavGroup, SidebarUserStats, SidebarLogo, SidebarFooter } from "@/components/sidebar";
@@ -51,6 +51,7 @@ const navCategories = [
       { icon: Swords, label: "Duelos", path: "/duelos" },
       { icon: Dices, label: "Roleta da Sorte", path: "/roleta" },
       { icon: Gift, label: "Raspadinha", path: "/raspadinha" },
+      { icon: Layers, label: "Álbum de Cartas", path: "/album" },
       { icon: Zap, label: "V ou F Relâmpago", path: "/relampago" },
       { icon: Grid3X3, label: "Bingo de Missões", path: "/bingo" },
       { icon: Swords, label: "Torneio Mata-Mata", path: "/torneios" },
