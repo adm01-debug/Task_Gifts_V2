@@ -79,12 +79,42 @@ export interface OracleOptions {
 export const DEFAULT_SHRINKAGE_COINS = 500;
 export const DEFAULT_MIN_MARKETS = 3;
 
+/**
+ * Casas decimais preservadas nas métricas derivadas.
+ *
+ * Soma de ponto flutuante não é associativa: `(a+b)+c` pode diferir de
+ * `a+(b+c)` no último bit. Sem arredondar, dois recálculos do MESMO ledger
+ * lido em ordens diferentes gerariam pontuações distintas — e um ranking que
+ * não pode ser reproduzido não pode ser auditado nem contestado.
+ */
+const PRECISION = 1e9;
+
+function stabilize(value: number): number {
+  if (!Number.isFinite(value)) return 0;
+  return Math.round(value * PRECISION) / PRECISION;
+}
+
 /** Mantém a probabilidade em um intervalo utilizável, tolerando lixo do banco. */
 function sanitizeProbability(p: number): number {
   if (!Number.isFinite(p)) return 0.5;
   if (p <= 0) return 0;
   if (p >= 1) return 1;
   return p;
+}
+
+/**
+ * Ordem canônica de acumulação.
+ *
+ * Complementa o arredondamento: garante que o somatório percorra sempre a
+ * mesma sequência, independentemente da ordem em que o banco devolveu as
+ * linhas (que não é estável sem ORDER BY explícito).
+ */
+function canonicalOrder(a: OracleStake, b: OracleStake): number {
+  if (a.userId !== b.userId) return a.userId < b.userId ? -1 : 1;
+  if (a.marketId !== b.marketId) return a.marketId < b.marketId ? -1 : 1;
+  if (a.optionId !== b.optionId) return a.optionId < b.optionId ? -1 : 1;
+  if (a.amount !== b.amount) return a.amount - b.amount;
+  return (a.impliedProbability || 0) - (b.impliedProbability || 0);
 }
 
 /**
@@ -134,7 +164,7 @@ export function buildOracleRanking(
 
   const byUser = new Map<string, Accumulator>();
 
-  for (const stake of stakes) {
+  for (const stake of [...stakes].sort(canonicalOrder)) {
     // Aporte sem valor não carrega informação e distorceria as médias.
     if (!stake.userId || !stake.marketId || !(stake.amount > 0)) continue;
     if (!Number.isFinite(stake.amount)) continue;
@@ -177,7 +207,7 @@ export function buildOracleRanking(
 
     // Encolhimento empírico-bayesiano: o denominador cresce com o prior, então
     // volume baixo puxa a pontuação para zero em vez de para os extremos.
-    const score = acc.weightedEdge / (acc.totalStaked + shrinkage);
+    const score = stabilize(acc.weightedEdge / (acc.totalStaked + shrinkage));
 
     entries.push({
       userId: acc.userId,
@@ -188,9 +218,9 @@ export function buildOracleRanking(
       netCoins: acc.totalPayout - acc.totalStaked,
       hits: acc.hits,
       hitRate: acc.hits / acc.stakes,
-      edge: acc.weightedEdge / acc.totalStaked,
+      edge: stabilize(acc.weightedEdge / acc.totalStaked),
       score,
-      brier: acc.weightedBrier / acc.totalStaked,
+      brier: stabilize(acc.weightedBrier / acc.totalStaked),
       tier: tierOf(score),
       rank: 0,
     });
