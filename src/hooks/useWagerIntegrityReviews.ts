@@ -7,10 +7,15 @@ import {
 import type { WagerAnomalyCode } from "@/lib/wagerIntegrity";
 import type { WagerLeaderboardWindow } from "@/lib/wagerLeaderboard";
 import { useAuth } from "./useAuth";
+import {
+  wagerIntegrityReviewEventService,
+  type WagerIntegrityReviewEvent,
+} from "@/services/wagerIntegrityReviewEventService";
 
 export const wagerIntegrityKeys = {
   all: ["wagerIntegrityReviews"] as const,
   list: (days: number) => [...wagerIntegrityKeys.all, "list", days] as const,
+  events: (days: number) => [...wagerIntegrityKeys.all, "events", days] as const,
 };
 
 /** Apurações registradas para o período selecionado. */
@@ -41,5 +46,16 @@ export function useSaveWagerIntegrityReview() {
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: wagerIntegrityKeys.all });
     },
+  });
+}
+
+/** Histórico imutável de mudanças de desfecho no período selecionado. */
+export function useWagerIntegrityReviewEvents(days: WagerLeaderboardWindow) {
+  const { user } = useAuth();
+  return useQuery<WagerIntegrityReviewEvent[]>({
+    queryKey: wagerIntegrityKeys.events(days),
+    queryFn: () => wagerIntegrityReviewEventService.list(days),
+    enabled: !!user,
+    staleTime: 30 * 1000,
   });
 }
