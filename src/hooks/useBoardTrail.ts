@@ -107,3 +107,29 @@ export function useDeleteBoardTrail() {
     },
   });
 }
+
+export function useStuckBoardPlayers(
+  maxHours: number,
+  trailId: string | null,
+  enabled = true,
+) {
+  return useQuery({
+    queryKey: ["board-stuck-players", maxHours, trailId],
+    queryFn: () => boardTrailService.listStuckPlayers(maxHours, trailId),
+    enabled,
+    staleTime: 30 * 1000,
+    retry: false,
+  });
+}
+
+export function useUnblockBoardPlayers() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ maxHours, trailId }: { maxHours: number; trailId: string | null }) =>
+      boardTrailService.unblockPlayers(maxHours, trailId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["board-stuck-players"] });
+      queryClient.invalidateQueries({ queryKey: ["board-leaderboard"] });
+    },
+  });
+}
