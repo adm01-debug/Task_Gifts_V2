@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Users, Building2, HelpCircle, ShoppingBag, BookOpen, Settings, Shield, LayoutDashboard, Key, Award, ChevronRight, Search, Activity, BarChart3, Lock } from "lucide-react";
+import { Users, Building2, HelpCircle, ShoppingBag, BookOpen, Settings, Shield, LayoutDashboard, Key, Award, ChevronRight, Search, Activity, BarChart3, Lock, KeyRound } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
