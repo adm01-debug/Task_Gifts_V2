@@ -1,3 +1,4 @@
+import type { SetMilestone } from "@/lib/cardSetRewards";
 import { supabase } from "@/integrations/supabase/client";
 import type { CardRarity } from "@/lib/tradingCards";
 import { logger } from "./loggingService";
@@ -63,6 +64,32 @@ export interface TradeActionResult {
   reason?: string;
   trade_id?: string;
   status?: CardTradeStatus;
+}
+
+export interface SetMilestoneRow {
+  milestone: SetMilestone;
+  coins: number;
+  xp: number;
+  cards_required: number;
+  reached: boolean;
+  claimed: boolean;
+  claimable: boolean;
+}
+
+export interface SetRewardRow {
+  set_code: string;
+  total_cards: number;
+  owned_cards: number;
+  set_value: number;
+  milestones: SetMilestoneRow[];
+}
+
+export interface ClaimSetRewardResult {
+  success: boolean;
+  reason?: "invalid_milestone" | "unknown_set" | "empty_set" | "not_reached";
+  replayed?: boolean;
+  coins?: number;
+  xp?: number;
 }
 
 /**
@@ -172,5 +199,33 @@ export const tradingCardsService = {
       throw error;
     }
     return (data as unknown as TradeActionResult) ?? { success: false };
+  },
+
+  /**
+   * Progresso das recompensas de coleção. A agregação roda no servidor
+   * (`SECURITY DEFINER`) para que o cálculo do prêmio nunca dependa do cliente.
+   */
+  async listSetRewards(): Promise<SetRewardRow[]> {
+    const { data, error } = await supabase.rpc("get_card_set_rewards");
+
+    if (error) {
+      logger.error("Falha ao carregar recompensas de coleção", "tradingCardsService.listSetRewards", error);
+      throw error;
+    }
+    const rows = (data as unknown as SetRewardRow[]) || [];
+    return Array.isArray(rows) ? rows : [];
+  },
+
+  async claimSetReward(setCode: string, milestone: SetMilestone): Promise<ClaimSetRewardResult> {
+    const { data, error } = await supabase.rpc("claim_card_set_reward", {
+      p_set_code: setCode,
+      p_milestone: milestone,
+    });
+
+    if (error) {
+      logger.error("Falha ao resgatar recompensa de coleção", "tradingCardsService.claimSetReward", error);
+      throw error;
+    }
+    return (data as unknown as ClaimSetRewardResult) ?? { success: false };
   },
 };

@@ -1851,6 +1851,48 @@ export type Database = {
         }
         Relationships: []
       }
+      card_set_claims: {
+        Row: {
+          cards_owned: number
+          cards_total: number
+          coins_awarded: number
+          created_at: string
+          dedupe_key: string
+          id: string
+          milestone: number
+          set_code: string
+          updated_at: string
+          user_id: string
+          xp_awarded: number
+        }
+        Insert: {
+          cards_owned?: number
+          cards_total?: number
+          coins_awarded?: number
+          created_at?: string
+          dedupe_key: string
+          id?: string
+          milestone: number
+          set_code: string
+          updated_at?: string
+          user_id: string
+          xp_awarded?: number
+        }
+        Update: {
+          cards_owned?: number
+          cards_total?: number
+          coins_awarded?: number
+          created_at?: string
+          dedupe_key?: string
+          id?: string
+          milestone?: number
+          set_code?: string
+          updated_at?: string
+          user_id?: string
+          xp_awarded?: number
+        }
+        Relationships: []
+      }
       card_trades: {
         Row: {
           created_at: string
@@ -10319,6 +10361,14 @@ export type Database = {
       }
     }
     Functions: {
+      _card_rarity_value: { Args: { p_rarity: string }; Returns: number }
+      _card_set_milestone_split: {
+        Args: { p_total: number }
+        Returns: {
+          amount: number
+          milestone: number
+        }[]
+      }
       _require_admin: { Args: never; Returns: undefined }
       _require_manager_or_admin: { Args: never; Returns: undefined }
       acknowledge_security_alert: {
@@ -10406,6 +10456,10 @@ export type Database = {
       chi_square_critical: {
         Args: { p_alpha: number; p_df: number }
         Returns: number
+      }
+      claim_card_set_reward: {
+        Args: { p_milestone: number; p_set_code: string }
+        Returns: Json
       }
       claim_push_outbox: {
         Args: { p_limit?: number }
@@ -10597,6 +10651,7 @@ export type Database = {
         Args: { _minutes: number; _slo?: number }
         Returns: Json
       }
+      get_card_set_rewards: { Args: never; Returns: Json }
       get_department_metrics: { Args: never; Returns: Json }
       get_department_war_feed: {
         Args: { p_limit?: number; p_war_id: string }

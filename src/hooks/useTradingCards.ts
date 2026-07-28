@@ -1,5 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
+import type { SetMilestone } from "@/lib/cardSetRewards";
 import { tradingCardsService } from "@/services/tradingCardsService";
 import { useAuth } from "./useAuth";
 
@@ -9,6 +10,7 @@ export const tradingCardKeys = {
   owned: () => [...tradingCardKeys.all, "owned"] as const,
   packs: () => [...tradingCardKeys.all, "packs"] as const,
   trades: () => [...tradingCardKeys.all, "trades"] as const,
+  setRewards: () => [...tradingCardKeys.all, "setRewards"] as const,
 };
 
 export function useCardDefinitions() {
@@ -71,6 +73,30 @@ export function useRespondCardTrade() {
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: tradingCardKeys.trades() });
       void queryClient.invalidateQueries({ queryKey: tradingCardKeys.owned() });
+    },
+  });
+}
+
+export function useCardSetRewards() {
+  const { user } = useAuth();
+  return useQuery({
+    queryKey: tradingCardKeys.setRewards(),
+    queryFn: () => tradingCardsService.listSetRewards(),
+    enabled: !!user,
+    staleTime: 30_000,
+  });
+}
+
+export function useClaimCardSetReward() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (params: { setCode: string; milestone: SetMilestone }) =>
+      tradingCardsService.claimSetReward(params.setCode, params.milestone),
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: tradingCardKeys.setRewards() });
+      // O crédito altera moedas/XP do perfil exibidos no cabeçalho.
+      void queryClient.invalidateQueries({ queryKey: ["profile"] });
+      void queryClient.invalidateQueries({ queryKey: ["userStats"] });
     },
   });
 }
