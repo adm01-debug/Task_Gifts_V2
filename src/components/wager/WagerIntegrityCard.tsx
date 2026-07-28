@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { AlertTriangle, ShieldCheck, ShieldAlert, Info, Download } from "lucide-react";
+import { AlertTriangle, ShieldCheck, ShieldAlert, Info, Download, History } from "lucide-react";
 import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -11,6 +11,7 @@ import { useWagerLeaderboard } from "@/hooks/useDailyWager";
 import {
   useSaveWagerIntegrityReview,
   useWagerIntegrityReviews,
+  useWagerIntegrityReviewEvents,
 } from "@/hooks/useWagerIntegrityReviews";
 import {
   reviewKey,
@@ -63,8 +64,11 @@ export function WagerIntegrityCard({ className, limit = 50 }: WagerIntegrityCard
   const [days, setDays] = useState<WagerLeaderboardWindow>(30);
   const { data, isLoading } = useWagerLeaderboard(days, limit);
   const { data: reviews } = useWagerIntegrityReviews(days);
+  const { data: events } = useWagerIntegrityReviewEvents(days);
   const saveReview = useSaveWagerIntegrityReview();
   const [pendingKey, setPendingKey] = useState<string | null>(null);
+  /** Chaves com o histórico expandido. */
+  const [openHistory, setOpenHistory] = useState<Record<string, boolean>>({});
   /** Rascunhos de observação por anomalia; ausência = usar a nota já salva. */
   const [noteDrafts, setNoteDrafts] = useState<Record<string, string>>({});
 
@@ -82,6 +86,25 @@ export function WagerIntegrityCard({ className, limit = 50 }: WagerIntegrityCard
     }
     return map;
   }, [reviews]);
+
+  // Histórico agrupado por anomalia (usuário+código+janela), já ordenado desc.
+  const eventIndex = useMemo(() => {
+    const map = new Map<string, typeof events>();
+    for (const event of events ?? []) {
+      const key = reviewKey(event.targetUserId, event.anomalyCode, event.windowDays);
+      const bucket = map.get(key);
+      if (bucket) bucket.push(event);
+      else map.set(key, [event]);
+    }
+    return map;
+  }, [events]);
+
+  function formatMoment(iso: string): string {
+    const date = new Date(iso);
+    return Number.isFinite(date.getTime())
+      ? date.toLocaleString("pt-BR", { dateStyle: "short", timeStyle: "short" })
+      : "—";
+  }
 
   /** Nota exibida: rascunho em edição tem precedência sobre a persistida. */
   function noteValue(key: string): string {
