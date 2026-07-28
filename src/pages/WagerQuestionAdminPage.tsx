@@ -183,14 +183,14 @@ export default function WagerQuestionAdminPage() {
     <PageShell
       title="Perguntas do Dia"
       description="Agende, revise e acompanhe as perguntas com aposta"
-      icon={Dices}
+      icon={<Dices className="h-5 w-5" />}
     >
       <SEOHead
         title="Autoria da Pergunta do Dia | Task Gifts"
         description="Painel administrativo para agendar perguntas com aposta, definir multiplicadores e acompanhar a participação."
       />
 
-      <SectionErrorBoundary name="Autoria da Pergunta do Dia">
+      <SectionErrorBoundary sectionName="Autoria da Pergunta do Dia">
         <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_360px]">
           <Card>
             <CardHeader>
