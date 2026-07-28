@@ -1,5 +1,6 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
 import { corsHeaders } from "npm:@supabase/supabase-js@2/cors";
+import { guardInternalRequest } from "../_shared/security.ts";
 
 /**
  * Digest semanal de segurança.
@@ -28,6 +29,8 @@ function isoWeekKey(d: Date): string {
 
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
+  const denied = guardInternalRequest(req);
+  if (denied) return denied;
 
   const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
   const serviceRole = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;

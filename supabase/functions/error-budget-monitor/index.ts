@@ -5,6 +5,7 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from "npm:@supabase/supabase-js@2";
 import { corsHeaders } from "npm:@supabase/supabase-js@2/cors";
+import { guardInternalRequest } from "../_shared/security.ts";
 
 interface BudgetBlock {
   total: number;
@@ -40,6 +41,8 @@ function severityFor(bucket: "critical" | "high"): "critical" | "high" {
 
 serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
+  const denied = guardInternalRequest(req);
+  if (denied) return denied;
 
   try {
     const supabase = createClient(
