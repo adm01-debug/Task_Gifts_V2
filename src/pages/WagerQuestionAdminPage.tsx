@@ -489,6 +489,10 @@ export default function WagerQuestionAdminPage() {
               expectedPlayers={expectedPlayers}
               monthlyBudget={monthlyBudget}
               onMonthlyBudgetChange={setMonthlyBudget}
+              isDirty={budgetDirty}
+              isSaving={saveBudgetMutation.isPending}
+              onPersist={handleSaveBudget}
+              updatedAt={budgetSettings?.updatedAt ?? null}
             />
 
             <Card>
