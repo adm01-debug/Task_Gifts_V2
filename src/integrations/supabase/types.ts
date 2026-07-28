@@ -7082,6 +7082,57 @@ export type Database = {
           },
         ]
       }
+      push_outbox: {
+        Row: {
+          attempts: number
+          created_at: string
+          data: Json
+          dedupe_key: string
+          id: string
+          last_error: string | null
+          message: string
+          processed_at: string | null
+          status: string
+          title: string
+          type: string
+          updated_at: string
+          url: string | null
+          user_id: string
+        }
+        Insert: {
+          attempts?: number
+          created_at?: string
+          data?: Json
+          dedupe_key: string
+          id?: string
+          last_error?: string | null
+          message: string
+          processed_at?: string | null
+          status?: string
+          title: string
+          type: string
+          updated_at?: string
+          url?: string | null
+          user_id: string
+        }
+        Update: {
+          attempts?: number
+          created_at?: string
+          data?: Json
+          dedupe_key?: string
+          id?: string
+          last_error?: string | null
+          message?: string
+          processed_at?: string | null
+          status?: string
+          title?: string
+          type?: string
+          updated_at?: string
+          url?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       push_subscriptions: {
         Row: {
           auth: string
@@ -9995,6 +10046,18 @@ export type Database = {
         Returns: Json
       }
       engagement_min_respondents: { Args: never; Returns: number }
+      enqueue_push: {
+        Args: {
+          p_data?: Json
+          p_dedupe_key: string
+          p_message: string
+          p_title: string
+          p_type: string
+          p_url?: string
+          p_user_id: string
+        }
+        Returns: boolean
+      }
       erf_inverse: { Args: { x: number }; Returns: number }
       finish_lightning_round: { Args: { p_session_id: string }; Returns: Json }
       generate_action_plan_from_factor: {
