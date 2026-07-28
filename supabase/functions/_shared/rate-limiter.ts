@@ -70,7 +70,9 @@ export function getRateLimitIdentifier(req: Request, functionName: string): stri
       if (payload.sub) return `${functionName}:user:${payload.sub}`;
     } catch {}
   }
-  const ip = forwarded ? forwarded.split(",")[0].trim() : "unknown";
+  // Fallback anônimo: usa o IP inforjável do proxy. Um `x-forwarded-for`
+  // controlado pelo cliente permitiria burlar o limite trocando o header.
+  const ip = resolveClientIp(req).ip ?? "unknown";
   return `${functionName}:ip:${ip}`;
 }
 
