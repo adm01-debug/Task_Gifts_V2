@@ -56,6 +56,7 @@ const navCategories = [
       { icon: Grid3X3, label: "Bingo de Missões", path: "/bingo" },
       { icon: Brain, label: "Jogo da Memória", path: "/memoria" },
       { icon: ListOrdered, label: "Ordene a Sequência", path: "/sequencia" },
+      { icon: Dices, label: "Trilha Tabuleiro", path: "/tabuleiro" },
       { icon: Swords, label: "Torneio Mata-Mata", path: "/torneios" },
       { icon: Flag, label: "Guerra de Departamentos", path: "/guerra-departamentos" },
       { icon: Gavel, label: "Leilão de Recompensas", path: "/leilao" },

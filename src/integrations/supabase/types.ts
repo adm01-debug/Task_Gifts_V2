@@ -1283,6 +1283,209 @@ export type Database = {
         }
         Relationships: []
       }
+      board_moves: {
+        Row: {
+          coins_delta: number
+          created_at: string
+          dedupe_key: string
+          final_position: number
+          from_position: number
+          id: string
+          landed_position: number
+          move_index: number
+          roll: number
+          tile_type: string | null
+          trail_id: string
+          user_id: string
+          xp_delta: number
+        }
+        Insert: {
+          coins_delta?: number
+          created_at?: string
+          dedupe_key: string
+          final_position: number
+          from_position: number
+          id?: string
+          landed_position: number
+          move_index: number
+          roll: number
+          tile_type?: string | null
+          trail_id: string
+          user_id: string
+          xp_delta?: number
+        }
+        Update: {
+          coins_delta?: number
+          created_at?: string
+          dedupe_key?: string
+          final_position?: number
+          from_position?: number
+          id?: string
+          landed_position?: number
+          move_index?: number
+          roll?: number
+          tile_type?: string | null
+          trail_id?: string
+          user_id?: string
+          xp_delta?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "board_moves_trail_id_fkey"
+            columns: ["trail_id"]
+            isOneToOne: false
+            referencedRelation: "board_trails"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      board_player_states: {
+        Row: {
+          blocked_challenge_id: string | null
+          checkpoints: number[]
+          coins: number
+          created_at: string
+          finished_at: string | null
+          id: string
+          moves_count: number
+          position: number
+          trail_id: string
+          updated_at: string
+          user_id: string
+          xp: number
+        }
+        Insert: {
+          blocked_challenge_id?: string | null
+          checkpoints?: number[]
+          coins?: number
+          created_at?: string
+          finished_at?: string | null
+          id?: string
+          moves_count?: number
+          position?: number
+          trail_id: string
+          updated_at?: string
+          user_id: string
+          xp?: number
+        }
+        Update: {
+          blocked_challenge_id?: string | null
+          checkpoints?: number[]
+          coins?: number
+          created_at?: string
+          finished_at?: string | null
+          id?: string
+          moves_count?: number
+          position?: number
+          trail_id?: string
+          updated_at?: string
+          user_id?: string
+          xp?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "board_player_states_trail_id_fkey"
+            columns: ["trail_id"]
+            isOneToOne: false
+            referencedRelation: "board_trails"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      board_tiles: {
+        Row: {
+          challenge_id: string | null
+          coins: number
+          created_at: string
+          id: string
+          label: string
+          move_by: number
+          position: number
+          tile_type: string
+          trail_id: string
+          updated_at: string
+          xp: number
+        }
+        Insert: {
+          challenge_id?: string | null
+          coins?: number
+          created_at?: string
+          id?: string
+          label?: string
+          move_by?: number
+          position: number
+          tile_type?: string
+          trail_id: string
+          updated_at?: string
+          xp?: number
+        }
+        Update: {
+          challenge_id?: string | null
+          coins?: number
+          created_at?: string
+          id?: string
+          label?: string
+          move_by?: number
+          position?: number
+          tile_type?: string
+          trail_id?: string
+          updated_at?: string
+          xp?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "board_tiles_trail_id_fkey"
+            columns: ["trail_id"]
+            isOneToOne: false
+            referencedRelation: "board_trails"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      board_trails: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          department_id: string | null
+          description: string | null
+          id: string
+          max_moves_per_day: number
+          status: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          department_id?: string | null
+          description?: string | null
+          id?: string
+          max_moves_per_day?: number
+          status?: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          department_id?: string | null
+          description?: string | null
+          id?: string
+          max_moves_per_day?: number
+          status?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "board_trails_department_id_fkey"
+            columns: ["department_id"]
+            isOneToOne: false
+            referencedRelation: "departments"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       boss_battle_damage: {
         Row: {
           battle_id: string
@@ -11080,6 +11283,10 @@ export type Database = {
       acknowledge_security_alert: {
         Args: { _alert_id: string; _notes: string; _runbook_slug: string }
         Returns: undefined
+      }
+      advance_board_trail: {
+        Args: { p_dedupe_key: string; p_trail_id: string }
+        Returns: Json
       }
       answer_lightning_question: {
         Args: { p_answer: boolean; p_idx: number; p_session_id: string }

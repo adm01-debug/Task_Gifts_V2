@@ -1,0 +1,142 @@
+import { supabase } from "@/integrations/supabase/client";
+import { logger } from "./loggingService";
+import type { BoardTile, BoardTileType } from "@/lib/boardTrail";
+
+export interface BoardTrail {
+  id: string;
+  title: string;
+  description: string | null;
+  department_id: string | null;
+  status: "draft" | "active" | "archived";
+  max_moves_per_day: number;
+}
+
+export interface BoardTrailWithTiles extends BoardTrail {
+  tiles: BoardTile[];
+}
+
+export interface BoardPlayerRow {
+  position: number;
+  coins: number;
+  xp: number;
+  checkpoints: number[];
+  moves_count: number;
+  blocked_challenge_id: string | null;
+  finished_at: string | null;
+}
+
+export interface BoardAdvanceResult {
+  replayed: boolean;
+  roll: number;
+  from_position: number;
+  landed_position: number;
+  final_position: number;
+  coins_delta: number;
+  xp_delta: number;
+  position: number;
+  finished: boolean;
+  blocked_challenge_id?: string | null;
+}
+
+interface RawTile {
+  id: string;
+  position: number;
+  tile_type: BoardTileType;
+  label: string;
+  coins: number | null;
+  xp: number | null;
+  move_by: number | null;
+  challenge_id: string | null;
+}
+
+function mapTile(row: RawTile): BoardTile {
+  return {
+    id: row.id,
+    position: row.position,
+    type: row.tile_type,
+    label: row.label,
+    coins: row.coins,
+    xp: row.xp,
+    moveBy: row.move_by,
+    challengeId: row.challenge_id,
+  };
+}
+
+export const boardTrailService = {
+  /** Trilhas ativas disponíveis para jogar. */
+  async listTrails(): Promise<BoardTrail[]> {
+    const { data, error } = await supabase
+      .from("board_trails")
+      .select("id, title, description, department_id, status, max_moves_per_day")
+      .eq("status", "active")
+      .order("title", { ascending: true });
+
+    if (error) {
+      logger.error("Falha ao listar trilhas", "boardTrailService.listTrails", error);
+      throw error;
+    }
+    return (data as BoardTrail[]) || [];
+  },
+
+  /** Carrega uma trilha com o tabuleiro completo. */
+  async getTrail(trailId: string): Promise<BoardTrailWithTiles | null> {
+    const { data, error } = await supabase
+      .from("board_trails")
+      .select(
+        "id, title, description, department_id, status, max_moves_per_day, board_tiles(id, position, tile_type, label, coins, xp, move_by, challenge_id)",
+      )
+      .eq("id", trailId)
+      .maybeSingle();
+
+    if (error) {
+      logger.error("Falha ao carregar trilha", "boardTrailService.getTrail", error);
+      throw error;
+    }
+    if (!data) return null;
+
+    const row = data as BoardTrail & { board_tiles?: RawTile[] | null };
+    return {
+      id: row.id,
+      title: row.title,
+      description: row.description,
+      department_id: row.department_id,
+      status: row.status,
+      max_moves_per_day: row.max_moves_per_day,
+      tiles: (row.board_tiles || []).map(mapTile).sort((a, b) => a.position - b.position),
+    };
+  },
+
+  /** Progresso do próprio jogador (a RLS já restringe). */
+  async getPlayerState(trailId: string): Promise<BoardPlayerRow | null> {
+    const { data, error } = await supabase
+      .from("board_player_states")
+      .select("position, coins, xp, checkpoints, moves_count, blocked_challenge_id, finished_at")
+      .eq("trail_id", trailId)
+      .maybeSingle();
+
+    if (error) {
+      logger.error("Falha ao carregar progresso", "boardTrailService.getPlayerState", error);
+      throw error;
+    }
+    if (!data) return null;
+    const row = data as BoardPlayerRow;
+    return { ...row, checkpoints: row.checkpoints || [] };
+  },
+
+  /**
+   * Avança uma casa. O sorteio e o crédito acontecem exclusivamente na RPC
+   * `advance_board_trail` (SECURITY DEFINER) com chave idempotente.
+   */
+  async advance(trailId: string, dedupeKey: string): Promise<BoardAdvanceResult> {
+    const { data, error } = await supabase.rpc("advance_board_trail", {
+      p_trail_id: trailId,
+      p_dedupe_key: dedupeKey,
+    });
+
+    if (error) {
+      logger.error("Falha ao avançar na trilha", "boardTrailService.advance", error);
+      throw error;
+    }
+    return data as unknown as BoardAdvanceResult;
+  },
+};

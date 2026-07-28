@@ -58,6 +58,7 @@ const LightningQuizPage = lazy(() => import("./pages/LightningQuizPage"));
 const BingoPage = lazy(() => import("./pages/BingoPage"));
 const MemoryGamePage = lazy(() => import("./pages/MemoryGamePage"));
 const SequenceGamePage = lazy(() => import("./pages/SequenceGamePage"));
+const BoardTrailPage = lazy(() => import("./pages/BoardTrailPage"));
 const DailyWagerPage = lazy(() => import("./pages/DailyWagerPage"));
 const MemoryDeckAdminPage = lazy(() => import("./pages/MemoryDeckAdminPage"));
 const WagerQuestionAdminPage = lazy(() => import("./pages/WagerQuestionAdminPage"));
@@ -248,6 +249,7 @@ const AnimatedRoutes = () => {
         <Route path="/bingo" element={<ProtectedRoute><PageTransition><BingoPage /></PageTransition></ProtectedRoute>} />
         <Route path="/memoria" element={<ProtectedRoute><PageTransition><MemoryGamePage /></PageTransition></ProtectedRoute>} />
         <Route path="/sequencia" element={<ProtectedRoute><PageTransition><SequenceGamePage /></PageTransition></ProtectedRoute>} />
+        <Route path="/tabuleiro" element={<ProtectedRoute><PageTransition><BoardTrailPage /></PageTransition></ProtectedRoute>} />
         <Route path="/pergunta-do-dia" element={<ProtectedRoute><PageTransition><DailyWagerPage /></PageTransition></ProtectedRoute>} />
         <Route path="/sequencia/admin" element={<ProtectedRoute requiredRole="admin"><PageTransition><SequenceProcedureAdminPage /></PageTransition></ProtectedRoute>} />
         <Route path="/memoria/admin" element={<ProtectedRoute requiredRole="admin"><PageTransition><MemoryDeckAdminPage /></PageTransition></ProtectedRoute>} />
