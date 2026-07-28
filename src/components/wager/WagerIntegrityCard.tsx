@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Textarea } from "@/components/ui/textarea";
 import { useWagerLeaderboard } from "@/hooks/useDailyWager";
 import {
   useSaveWagerIntegrityReview,
@@ -64,21 +65,28 @@ export function WagerIntegrityCard({ className, limit = 50 }: WagerIntegrityCard
   const { data: reviews } = useWagerIntegrityReviews(days);
   const saveReview = useSaveWagerIntegrityReview();
   const [pendingKey, setPendingKey] = useState<string | null>(null);
+  /** Rascunhos de observação por anomalia; ausência = usar a nota já salva. */
+  const [noteDrafts, setNoteDrafts] = useState<Record<string, string>>({});
 
   const report = useMemo(() => analyzeWagerIntegrity(data ?? []), [data]);
   const summary = useMemo(() => integritySummary(report), [report]);
 
-  // Índice das apurações já registradas, para exibir o desfecho ao lado do alerta.
+  // Índice das apurações já registradas, para exibir desfecho e nota salva.
   const reviewIndex = useMemo(() => {
-    const map = new Map<string, WagerReviewStatus>();
+    const map = new Map<string, { status: WagerReviewStatus; notes: string }>();
     for (const review of reviews ?? []) {
-      map.set(
-        reviewKey(review.targetUserId, review.anomalyCode, review.windowDays),
-        review.status,
-      );
+      map.set(reviewKey(review.targetUserId, review.anomalyCode, review.windowDays), {
+        status: review.status,
+        notes: review.notes ?? "",
+      });
     }
     return map;
   }, [reviews]);
+
+  /** Nota exibida: rascunho em edição tem precedência sobre a persistida. */
+  function noteValue(key: string): string {
+    return noteDrafts[key] ?? reviewIndex.get(key)?.notes ?? "";
+  }
 
   async function handleReview(
     anomaly: (typeof report.anomalies)[number],
@@ -93,6 +101,13 @@ export function WagerIntegrityCard({ className, limit = 50 }: WagerIntegrityCard
         windowDays: days,
         status,
         metric: anomaly.metric,
+        notes: noteValue(key),
+      });
+      // Descarta o rascunho: a fonte da verdade volta a ser o servidor.
+      setNoteDrafts((prev) => {
+        const next = { ...prev };
+        delete next[key];
+        return next;
       });
       toast.success(`Apuração registrada: ${REVIEW_LABEL[status]}.`);
     } catch (err: unknown) {
@@ -217,6 +232,7 @@ export function WagerIntegrityCard({ className, limit = 50 }: WagerIntegrityCard
                             {
                               REVIEW_LABEL[
                                 reviewIndex.get(reviewKey(anomaly.userId, anomaly.code, days))!
+                                  .status
                               ]
                             }
                           </Badge>
@@ -224,6 +240,18 @@ export function WagerIntegrityCard({ className, limit = 50 }: WagerIntegrityCard
                       </div>
                       <p className="text-sm font-medium text-foreground">{anomaly.title}</p>
                       <p className="text-xs text-muted-foreground">{anomaly.detail}</p>
+                      <Textarea
+                        value={noteValue(reviewKey(anomaly.userId, anomaly.code, days))}
+                        onChange={(event) => {
+                          const key = reviewKey(anomaly.userId, anomaly.code, days);
+                          const value = event.target.value.slice(0, 2000);
+                          setNoteDrafts((prev) => ({ ...prev, [key]: value }));
+                        }}
+                        placeholder="Observações da apuração (evidências, contexto, decisão)"
+                        aria-label={`Observações da apuração de ${anomaly.displayName}`}
+                        rows={2}
+                        className="mt-2 min-h-[56px] resize-y bg-background/70 text-xs"
+                      />
                       <div className="flex flex-wrap gap-2 pt-1">
                         {(Object.keys(REVIEW_LABEL) as WagerReviewStatus[]).map((status) => (
                           <Button
