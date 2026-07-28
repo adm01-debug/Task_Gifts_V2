@@ -9,3 +9,4 @@ export { PredictionWatchdogPanel } from "./PredictionWatchdogPanel";
 export { OddsHistoryChart } from "./OddsHistoryChart";
 export { OracleLeaderboard } from "./OracleLeaderboard";
 export { MyGoalBetPosition } from "./MyGoalBetPosition";
+export { GoalBetHistoryPanel } from "./GoalBetHistoryPanel";
