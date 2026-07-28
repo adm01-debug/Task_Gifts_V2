@@ -5,6 +5,7 @@ import { PageShell } from "@/components/navigation";
 import { SEOHead } from "@/components/SEOHead";
 import { SectionErrorBoundary } from "@/components/SectionErrorBoundary";
 import {
+  GoalBetHistoryPanel,
   MyGoalBetPosition,
   OracleLeaderboard,
   PredictionMarketCard,
@@ -119,6 +120,10 @@ export default function PredictionMarketsPage() {
             impedir alguém de apostar. */}
         <SectionErrorBoundary sectionName="Ranking Oráculo">
           <OracleLeaderboard className="mt-6" />
+        </SectionErrorBoundary>
+
+        <SectionErrorBoundary sectionName="Meu histórico de apostas">
+          <GoalBetHistoryPanel markets={markets ?? []} stakes={myStakes} className="mt-6" />
         </SectionErrorBoundary>
 
         <StakeDialog
