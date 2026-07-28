@@ -127,7 +127,8 @@ describe("summarizeChanges", () => {
     ]);
     expect(result.inserted).toBe(1);
     expect(result.removed).toBe(1);
-    expect(result.reordered).toBe(true);
+    // "C" continua na posição 3, então não há reordenação real.
+    expect(result.reordered).toBe(false);
   });
 
   it("trata procedimento novo (sem etapas persistidas)", () => {
