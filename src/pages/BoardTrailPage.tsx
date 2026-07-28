@@ -11,6 +11,7 @@ import { PageShell } from "@/components/navigation";
 import { SEOHead } from "@/components/SEOHead";
 import { SectionErrorBoundary } from "@/components/SectionErrorBoundary";
 import { BoardPath } from "@/components/board/BoardPath";
+import { BoardChallengeDialog } from "@/components/board/BoardChallengeDialog";
 import {
   useAdvanceBoardTrail,
   useBoardPlayerState,
@@ -173,6 +174,16 @@ export default function BoardTrailPage() {
                         ? "Rolando..."
                         : "Rolar o dado"}
                 </Button>
+
+                {blocked && (
+                  <Button
+                    variant="secondary"
+                    className="w-full"
+                    onClick={() => setChallengeOpen(true)}
+                  >
+                    Responder desafio
+                  </Button>
+                )}
               </CardContent>
             </Card>
           ) : null}
