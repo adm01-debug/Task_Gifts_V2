@@ -104,6 +104,23 @@ export function WagerIntegrityCard({ className, limit = 50 }: WagerIntegrityCard
     }
   }
 
+  /** Extrai o snapshot auditável do período com o desfecho de cada apuração. */
+  function handleExport() {
+    if (report.anomalies.length === 0 && report.evaluated === 0) {
+      toast.info("Sem dados suficientes para exportar neste período.");
+      return;
+    }
+    const generatedAt = new Date();
+    const csv = buildWagerIntegrityCsv({
+      report,
+      reviews: reviews ?? [],
+      windowDays: days,
+      generatedAt,
+    });
+    downloadCSV(wagerIntegrityFileName(days, generatedAt), csv);
+    toast.success("Relatório de integridade exportado.");
+  }
+
   return (
     <Card className={cn("overflow-hidden", className)}>
       <CardHeader className="space-y-3">
@@ -123,6 +140,16 @@ export function WagerIntegrityCard({ className, limit = 50 }: WagerIntegrityCard
                 {windowLabel(value)}
               </Button>
             ))}
+            <Button
+              type="button"
+              size="sm"
+              variant="outline"
+              onClick={handleExport}
+              disabled={isLoading}
+              aria-label="Exportar relatório de integridade em CSV"
+            >
+              <Download className="h-4 w-4" />
+            </Button>
           </div>
         </div>
         <p className="text-sm text-muted-foreground">{summary}</p>
