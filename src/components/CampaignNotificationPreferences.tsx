@@ -9,9 +9,16 @@ import { toast } from "sonner";
 import { Trophy } from "lucide-react";
 import { logger } from "@/services/loggingService";
 
-type Channel = "in_app" | "push" | "email";
-type TypePrefEntry = { in_app?: boolean; push?: boolean; email?: boolean; priority?: string };
-type TypePrefs = Record<string, TypePrefEntry>;
+import type { Json } from "@/integrations/supabase/types";
+import {
+  type ChannelMap,
+  type NotificationChannel,
+  mergeChannelPreference,
+  normalizeTypePrefs,
+  resolveChannels,
+} from "@/lib/notificationTypePrefs";
+
+type Channel = NotificationChannel;
 
 type CampaignPrefKey =
   | "campaign_enrolled"
@@ -68,16 +75,11 @@ export function CampaignNotificationPreferences() {
           .eq("user_id", user.id)
           .maybeSingle();
         if (error) throw error;
-        const prefs = (data?.type_preferences as TypePrefs) || {};
-        const next = cloneDefaults();
-        (Object.keys(DEFAULTS) as CampaignPrefKey[]).forEach((k) => {
-          const entry = prefs[k];
-          if (entry && typeof entry === "object") {
-            CHANNELS.forEach((c) => {
-              if (typeof entry[c.key] === "boolean") next[k][c.key] = entry[c.key] as boolean;
-            });
-          }
-        });
+        const prefs = normalizeTypePrefs(data?.type_preferences);
+        const next = (Object.keys(DEFAULTS) as CampaignPrefKey[]).reduce((acc, k) => {
+          acc[k] = resolveChannels(prefs, k, DEFAULTS[k] as ChannelMap);
+          return acc;
+        }, cloneDefaults());
         setValues(next);
       } catch (err: unknown) {
         logger.error("Falha ao carregar preferências de campanhas", String(err));
@@ -94,24 +96,28 @@ export function CampaignNotificationPreferences() {
     const previous = values[key][channel];
     setValues((v) => ({ ...v, [key]: { ...v[key], [channel]: nextValue } }));
     try {
-      const { data: existing } = await supabase
+      const { data: existing, error: readError } = await supabase
         .from("notification_preferences")
         .select("type_preferences")
         .eq("user_id", user.id)
         .maybeSingle();
-      const current = (existing?.type_preferences as TypePrefs) || {};
-      const prior = current[key] || {};
-      const merged: TypePrefEntry = {
-        in_app:   prior.in_app ?? DEFAULTS[key].in_app,
-        push:     prior.push   ?? DEFAULTS[key].push,
-        email:    prior.email  ?? DEFAULTS[key].email,
-        priority: prior.priority ?? (key === "campaign_completed" ? "high" : "normal"),
-        [channel]: nextValue,
-      };
-      const next: TypePrefs = { ...current, [key]: merged };
+      if (readError) throw readError;
+      // Merge aditivo: preserva os demais canais, a prioridade previa e as
+      // preferencias escritas por outros modulos (jogos, relatorios).
+      const next = mergeChannelPreference(
+        existing?.type_preferences,
+        key,
+        channel,
+        nextValue,
+        DEFAULTS[key] as ChannelMap,
+        key === "campaign_completed" ? "high" : "normal",
+      );
       const { error } = await supabase
         .from("notification_preferences")
-        .upsert({ user_id: user.id, type_preferences: next }, { onConflict: "user_id" });
+        .upsert(
+          { user_id: user.id, type_preferences: next as unknown as Json },
+          { onConflict: "user_id" },
+        );
       if (error) throw error;
       toast.success("Preferência atualizada");
     } catch (err: unknown) {
