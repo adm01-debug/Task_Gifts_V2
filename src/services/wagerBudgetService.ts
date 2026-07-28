@@ -19,12 +19,18 @@ const MAX_PLAYERS = 100_000;
 
 /** Clamp defensivo espelhando os CHECK constraints do banco. */
 export function clampBudget(value: unknown): number {
+  if (value === null || value === undefined || value === "") {
+    return WAGER_BUDGET_DEFAULTS.monthlyCoinBudget;
+  }
   const n = Math.trunc(Number(value));
   if (!Number.isFinite(n)) return WAGER_BUDGET_DEFAULTS.monthlyCoinBudget;
   return Math.min(MAX_BUDGET, Math.max(0, n));
 }
 
 export function clampPlayers(value: unknown): number {
+  if (value === null || value === undefined || value === "") {
+    return WAGER_BUDGET_DEFAULTS.expectedPlayers;
+  }
   const n = Math.trunc(Number(value));
   if (!Number.isFinite(n)) return WAGER_BUDGET_DEFAULTS.expectedPlayers;
   return Math.min(MAX_PLAYERS, Math.max(0, n));
