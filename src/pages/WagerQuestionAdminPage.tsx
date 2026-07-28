@@ -191,6 +191,9 @@ export default function WagerQuestionAdminPage() {
       />
 
       <SectionErrorBoundary sectionName="Autoria da Pergunta do Dia">
+        <div className="mb-4 flex justify-end">
+          <WagerBulkImportDialog existingDates={scheduledDates} />
+        </div>
         <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_360px]">
           <Card>
             <CardHeader>
