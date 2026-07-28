@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { AlertTriangle, CalendarDays, Coins, Dices, Lock, Plus, Save, Trash2 } from "lucide-react";
+import { AlertTriangle, CalendarDays, Coins, Dices, Download, Lock, Plus, Save, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -35,6 +35,7 @@ import {
   type WagerQuestionDraft,
 } from "@/lib/wagerAuthoring";
 import { cn } from "@/lib/utils";
+import { buildWagerScheduleCsv, wagerScheduleFileName } from "@/lib/wagerScheduleExport";
 
 const DIFFICULTY_LABEL: Record<string, string> = {
   easy: "Fácil",
@@ -196,7 +197,17 @@ export default function WagerQuestionAdminPage() {
       />
 
       <SectionErrorBoundary sectionName="Autoria da Pergunta do Dia">
-        <div className="mb-4 flex justify-end">
+        <div className="mb-4 flex flex-wrap justify-end gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            className="gap-2"
+            disabled={(questions?.length ?? 0) === 0}
+            onClick={handleExport}
+          >
+            <Download className="h-4 w-4" />
+            Exportar CSV
+          </Button>
           <WagerBulkImportDialog existingDates={scheduledDates} />
         </div>
         <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_360px]">
