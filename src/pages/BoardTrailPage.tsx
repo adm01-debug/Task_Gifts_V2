@@ -12,6 +12,8 @@ import { SEOHead } from "@/components/SEOHead";
 import { SectionErrorBoundary } from "@/components/SectionErrorBoundary";
 import { BoardPath } from "@/components/board/BoardPath";
 import { BoardChallengeDialog } from "@/components/board/BoardChallengeDialog";
+import { BoardLeaderboard } from "@/components/board/BoardLeaderboard";
+import { BoardChallengeReport } from "@/components/board/BoardChallengeReport";
 import {
   useAdvanceBoardTrail,
   useBoardPlayerState,
@@ -193,6 +195,19 @@ export default function BoardTrailPage() {
               </CardContent>
             </Card>
           ) : null}
+
+          {trailId && (
+            <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+              <BoardLeaderboard
+                trailId={trailId}
+                totalTiles={tiles.length}
+                currentUserId={user?.id}
+              />
+              {hasRole("admin") || hasRole("manager") ? (
+                <BoardChallengeReport trailId={trailId} />
+              ) : null}
+            </div>
+          )}
         </div>
       </SectionErrorBoundary>
 
