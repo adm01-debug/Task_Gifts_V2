@@ -12686,6 +12686,10 @@ export type Database = {
         | "team_member_removed"
         | "role_assigned"
         | "role_removed"
+        | "api_key_created"
+        | "api_key_rotated"
+        | "api_key_status_changed"
+        | "api_key_deleted"
       climate_pillar:
         | "recognition"
         | "autonomy"
@@ -12894,6 +12898,10 @@ export const Constants = {
         "team_member_removed",
         "role_assigned",
         "role_removed",
+        "api_key_created",
+        "api_key_rotated",
+        "api_key_status_changed",
+        "api_key_deleted",
       ],
       climate_pillar: [
         "recognition",
