@@ -54,7 +54,7 @@ export function AuctionAdminTable({ auctions }: AuctionAdminTableProps) {
       if (action === "cancel") await cancel.mutateAsync(auction.id);
       toast.success(`Leilão "${auction.title}" atualizado.`);
     } catch (err: unknown) {
-      toast.error("A operação não pôde ser concluída.");
+      toast.error(err instanceof Error ? err.message : "A operação não pôde ser concluída.");
     } finally {
       setPending(null);
     }
