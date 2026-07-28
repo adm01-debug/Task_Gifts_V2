@@ -67,21 +67,21 @@ describe("useTypePreferences", () => {
   });
 
   it("hidrata valores existentes do banco", async () => {
-    stored = { campaign_progress: { channels: { in_app: false, push: false, email: true } } };
+    stored = { campaign_progress: { in_app: false, push: false, email: true } };
     const { result } = await setup();
     expect(result.current.values.campaign_progress.push).toBe(false);
     expect(result.current.values.campaign_progress.email).toBe(true);
   });
 
   it("escreve de forma aditiva, preservando tipos de outros modulos", async () => {
-    stored = { card_pack: { channels: { in_app: true, push: true, email: false } } };
+    stored = { card_pack: { in_app: true, push: true, email: false } };
     const { result } = await setup();
     await act(async () => {
       await result.current.setCell("campaign_enrolled", "push", false);
     });
     const written = upserts.at(-1)!;
     expect(written.card_pack).toBeDefined();
-    expect((written.campaign_enrolled as any).channels.push).toBe(false);
+    expect((written.campaign_enrolled as { push: boolean }).push).toBe(false);
   });
 
   it("aborta a escrita quando a leitura previa falha", async () => {
