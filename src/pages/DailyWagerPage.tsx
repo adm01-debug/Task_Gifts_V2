@@ -74,7 +74,7 @@ export default function DailyWagerPage() {
         return;
       }
       if (result.is_correct) {
-        haptics.success();
+        haptics.coinCollected();
         toast.success(`Acertou! +${result.coins_delta ?? 0} moedas e +${result.xp_awarded ?? 0} XP`);
       } else {
         haptics.error();
@@ -89,7 +89,7 @@ export default function DailyWagerPage() {
     <PageShell
       title="Pergunta do Dia"
       description="Aposte suas moedas no que você sabe. Acertou, multiplica. Errou, perde a aposta."
-      icon={Dices}
+      icon={<Dices className="h-5 w-5" />}
     >
       <SEOHead
         title="Pergunta do Dia com Aposta | Task Gifts"
@@ -277,7 +277,7 @@ export default function DailyWagerPage() {
             </CardContent>
           </Card>
 
-          <SectionErrorBoundary section="Histórico de apostas">
+          <SectionErrorBoundary sectionName="Histórico de apostas">
             <Card>
               <CardHeader className="pb-3">
                 <CardTitle className="text-base">Suas últimas apostas</CardTitle>
