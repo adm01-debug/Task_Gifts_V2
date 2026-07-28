@@ -5,10 +5,41 @@ export const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-request-id",
 };
 
+/**
+ * Erro com status HTTP explícito. Sem isto, falhas de autenticação eram
+ * lançadas como `Error` genérico e os handlers devolviam 500 — o cliente não
+ * conseguia distinguir "não autenticado" de "servidor quebrado", e o texto
+ * interno do erro vazava no corpo da resposta.
+ */
+export class HttpError extends Error {
+  constructor(public readonly status: number, message: string, public readonly publicMessage = message) {
+    super(message);
+    this.name = "HttpError";
+  }
+}
+
+/**
+ * Resposta de erro padronizada: preserva o status de `HttpError` e nunca
+ * expõe a mensagem de exceções inesperadas (mantidas apenas no log).
+ */
+export function errorResponse(error: unknown, requestId?: string): Response {
+  const isHttp = error instanceof HttpError;
+  const status = isHttp ? error.status : 500;
+  const body: Record<string, unknown> = {
+    error: isHttp ? error.publicMessage : "Erro interno do servidor",
+  };
+  if (requestId) body.requestId = requestId;
+  if (!isHttp) console.error("[errorResponse] erro não tratado", error);
+  return new Response(JSON.stringify(body), {
+    status,
+    headers: { ...corsHeaders, "Content-Type": "application/json" },
+  });
+}
+
 export async function verifyUser(req: Request) {
   const authHeader = req.headers.get("Authorization");
   if (!authHeader) {
-    throw new Error("Missing Authorization header");
+    throw new HttpError(401, "Missing Authorization header", "Não autenticado");
   }
 
   const supabaseClient = createClient(
@@ -27,7 +58,7 @@ export async function verifyUser(req: Request) {
   } = await supabaseClient.auth.getUser();
 
   if (error || !user) {
-    throw new Error("Invalid token");
+    throw new HttpError(401, "Invalid token", "Não autenticado");
   }
 
   return user;
@@ -54,12 +85,12 @@ function timingSafeEqual(a: string, b: string): boolean {
 export function verifyServiceRole(req: Request): true {
   const authHeader = req.headers.get("Authorization");
   if (!authHeader?.startsWith("Bearer ")) {
-    throw new Error("Unauthorized");
+    throw new HttpError(401, "Unauthorized");
   }
 
   const token = authHeader.slice("Bearer ".length).trim();
   if (!token) {
-    throw new Error("Unauthorized");
+    throw new HttpError(401, "Unauthorized");
   }
 
   // Segredos aceitos, em ordem de preferência. Valores vazios/ausentes nunca
@@ -77,7 +108,7 @@ export function verifyServiceRole(req: Request): true {
   }
 
   if (!ok) {
-    throw new Error("Unauthorized");
+    throw new HttpError(401, "Unauthorized");
   }
   return true;
 }
