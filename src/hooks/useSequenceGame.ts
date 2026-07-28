@@ -54,6 +54,8 @@ export function useSubmitSequence() {
 }
 export const sequenceAdminKeys = {
   procedures: () => [...sequenceGameKeys.all, "admin", "procedures"] as const,
+  stats: (procedureId: string, days: number) =>
+    [...sequenceGameKeys.all, "admin", "stats", procedureId, days] as const,
 };
 
 export function useAdminSequenceProcedures() {
@@ -91,5 +93,16 @@ export function useDeleteSequenceProcedure() {
       void queryClient.invalidateQueries({ queryKey: sequenceAdminKeys.procedures() });
       void queryClient.invalidateQueries({ queryKey: sequenceGameKeys.procedures() });
     },
+  });
+}
+
+/** Relatório do procedimento selecionado no painel admin. */
+export function useSequenceProcedureStats(procedureId: string | null, days = 30) {
+  const { user } = useAuth();
+  return useQuery({
+    queryKey: sequenceAdminKeys.stats(procedureId ?? "", days),
+    queryFn: () => sequenceProcedureAdminService.stats(procedureId as string, days),
+    enabled: !!user && !!procedureId,
+    staleTime: 60 * 1000,
   });
 }
