@@ -1,5 +1,8 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { sequenceGameService } from "@/services/sequenceGameService";
+import {
+  sequenceGameService,
+  sequenceProcedureAdminService,
+} from "@/services/sequenceGameService";
 import { useAuth } from "./useAuth";
 
 export const sequenceGameKeys = {
@@ -46,6 +49,47 @@ export function useSubmitSequence() {
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: sequenceGameKeys.history() });
       void queryClient.invalidateQueries({ queryKey: ["profile"] });
+    },
+  });
+}
+export const sequenceAdminKeys = {
+  procedures: () => [...sequenceGameKeys.all, "admin", "procedures"] as const,
+};
+
+export function useAdminSequenceProcedures() {
+  const { user } = useAuth();
+  return useQuery({
+    queryKey: sequenceAdminKeys.procedures(),
+    queryFn: () => sequenceProcedureAdminService.listAll(),
+    enabled: !!user,
+    staleTime: 60 * 1000,
+  });
+}
+
+export function useSaveSequenceProcedure() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (input: Parameters<typeof sequenceProcedureAdminService.save>[0]) =>
+      sequenceProcedureAdminService.save(input),
+    onSuccess: (_result, input) => {
+      void queryClient.invalidateQueries({ queryKey: sequenceAdminKeys.procedures() });
+      void queryClient.invalidateQueries({ queryKey: sequenceGameKeys.procedures() });
+      if (input.procedureId) {
+        void queryClient.invalidateQueries({
+          queryKey: sequenceGameKeys.procedure(input.procedureId),
+        });
+      }
+    },
+  });
+}
+
+export function useDeleteSequenceProcedure() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (procedureId: string) => sequenceProcedureAdminService.remove(procedureId),
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: sequenceAdminKeys.procedures() });
+      void queryClient.invalidateQueries({ queryKey: sequenceGameKeys.procedures() });
     },
   });
 }

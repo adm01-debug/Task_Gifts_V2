@@ -121,3 +121,83 @@ export const sequenceGameService = {
     return (data as SequenceAttempt[]) || [];
   },
 };
+export interface SequenceSaveResult {
+  success: boolean;
+  reason?:
+    | "unauthenticated"
+    | "forbidden"
+    | "not_found"
+    | "invalid_title"
+    | "invalid_description"
+    | "invalid_steps"
+    | "invalid_step_count"
+    | "invalid_label"
+    | "duplicate_label"
+    | "invalid_department";
+  procedure_id?: string;
+  inserted?: number;
+  updated?: number;
+  deleted?: number;
+}
+
+/** Autoria de procedimentos — exige papel admin (validado também no servidor). */
+export const sequenceProcedureAdminService = {
+  /** Lista todos os procedimentos, inclusive os inativos. */
+  async listAll(): Promise<SequenceProcedure[]> {
+    const { data, error } = await supabase
+      .from("sequence_procedures")
+      .select("id, title, description, department_id, is_active")
+      .order("title", { ascending: true });
+
+    if (error) {
+      logger.error(
+        "Falha ao listar procedimentos (admin)",
+        "sequenceProcedureAdminService.listAll",
+        error,
+      );
+      throw error;
+    }
+    return (data as SequenceProcedure[]) || [];
+  },
+
+  /**
+   * Salva procedimento + etapas em uma única transação no servidor.
+   * A reordenação depende da unique DEFERRABLE, por isso nunca é feita
+   * em requisições separadas a partir do cliente.
+   */
+  async save(input: {
+    procedureId: string | null;
+    title: string;
+    description: string | null;
+    departmentId: string | null;
+    isActive: boolean;
+    steps: Array<{ id?: string; label: string; hint?: string | null }>;
+  }): Promise<SequenceSaveResult> {
+    const { data, error } = await supabase.rpc("save_sequence_procedure", {
+      p_procedure_id: input.procedureId,
+      p_title: input.title,
+      p_description: input.description,
+      p_department_id: input.departmentId,
+      p_is_active: input.isActive,
+      p_steps: input.steps as unknown as never,
+    });
+
+    if (error) {
+      logger.error("Falha ao salvar procedimento", "sequenceProcedureAdminService.save", error);
+      throw error;
+    }
+    return (data as unknown as SequenceSaveResult) ?? { success: false };
+  },
+
+  /** Exclusão em cascata das etapas e tentativas (FK ON DELETE CASCADE). */
+  async remove(procedureId: string): Promise<void> {
+    const { error } = await supabase
+      .from("sequence_procedures")
+      .delete()
+      .eq("id", procedureId);
+    if (error) {
+      logger.error("Falha ao excluir procedimento", "sequenceProcedureAdminService.remove", error);
+      throw error;
+    }
+  },
+};
