@@ -35,6 +35,11 @@ export interface WagerSaveResponse {
   entries?: number;
 }
 
+export interface WagerBulkSaveResult {
+  saved: number;
+  failures: Array<{ date: string; reason: string }>;
+}
+
 function toInt(value: unknown, fallback = 0): number {
   const n = Number(value);
   return Number.isFinite(n) ? Math.trunc(n) : fallback;
@@ -127,6 +132,30 @@ export const wagerAdminService = {
       throw error;
     }
     return (data as unknown as WagerSaveResponse) ?? { success: false };
+  },
+
+  /**
+   * Importação em lote: salva sequencialmente para não estourar o rate limit
+   * e para que uma linha inválida não derrube as demais.
+   */
+  async saveMany(drafts: WagerQuestionDraft[]): Promise<WagerBulkSaveResult> {
+    const result: WagerBulkSaveResult = { saved: 0, failures: [] };
+    for (const draft of drafts) {
+      try {
+        const response = await wagerAdminService.save(draft);
+        if (response.success) {
+          result.saved += 1;
+        } else {
+          result.failures.push({ date: draft.scheduledDate, reason: response.reason ?? "unknown_error" });
+        }
+      } catch (err: unknown) {
+        result.failures.push({
+          date: draft.scheduledDate,
+          reason: err instanceof Error ? err.message : "unknown_error",
+        });
+      }
+    }
+    return result;
   },
 
   /** Só remove perguntas sem apostas (histórico financeiro é intocável). */

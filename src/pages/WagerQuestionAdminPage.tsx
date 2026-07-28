@@ -17,6 +17,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { PageShell } from "@/components/navigation";
+import { WagerBulkImportDialog } from "@/components/wager/WagerBulkImportDialog";
 import { SEOHead } from "@/components/SEOHead";
 import { SectionErrorBoundary } from "@/components/SectionErrorBoundary";
 import {
@@ -100,6 +101,10 @@ export default function WagerQuestionAdminPage() {
   const isLocked = lockedEntries > 0;
 
   const validation = useMemo(() => validateWagerDraft(draft), [draft]);
+  const scheduledDates = useMemo(
+    () => (questions ?? []).map((q) => q.scheduledDate),
+    [questions],
+  );
   const exposure = useMemo(
     () => estimateExposure(draft, expectedPlayers),
     [draft, expectedPlayers],
@@ -191,6 +196,9 @@ export default function WagerQuestionAdminPage() {
       />
 
       <SectionErrorBoundary sectionName="Autoria da Pergunta do Dia">
+        <div className="mb-4 flex justify-end">
+          <WagerBulkImportDialog existingDates={scheduledDates} />
+        </div>
         <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_360px]">
           <Card>
             <CardHeader>
