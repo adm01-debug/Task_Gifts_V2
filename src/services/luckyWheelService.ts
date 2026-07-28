@@ -19,6 +19,14 @@ export interface LuckyWheelPrize {
   is_active: boolean;
 }
 
+/**
+ * Visão exibida ao jogador: intencionalmente SEM `weight`. O peso é insumo de
+ * calibração de payout e revelá-lo permitiria estimar as chances reais e
+ * explorar a mecânica. A RLS da tabela restringe a leitura a admins e o
+ * jogador consome a RPC `get_lucky_wheel_prizes_display`.
+ */
+export type LuckyWheelPrizeDisplay = Omit<LuckyWheelPrize, "weight">;
+
 export interface LuckyWheelSpin {
   id: string;
   prize_label: string;
@@ -51,19 +59,14 @@ export interface LuckyWheelSpinResult {
 
 export const luckyWheelService = {
   /** Prêmios ativos, na mesma ordem determinística usada pelo sorteio no servidor. */
-  async getPrizes(): Promise<LuckyWheelPrize[]> {
-    const { data, error } = await supabase
-      .from("lucky_wheel_prizes")
-      .select("id, label, prize_type, amount, weight, color, icon, rarity, is_active")
-      .eq("is_active", true)
-      .order("created_at", { ascending: true })
-      .order("id", { ascending: true });
+  async getPrizes(): Promise<LuckyWheelPrizeDisplay[]> {
+    const { data, error } = await supabase.rpc("get_lucky_wheel_prizes_display");
 
     if (error) {
       logger.apiError("getLuckyWheelPrizes", error, "luckyWheelService");
       throw error;
     }
-    return (data ?? []) as LuckyWheelPrize[];
+    return (data ?? []) as LuckyWheelPrizeDisplay[];
   },
 
   async getStatus(): Promise<LuckyWheelStatus> {
