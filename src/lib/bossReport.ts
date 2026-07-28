@@ -148,7 +148,8 @@ export function buildBossReport(
   }
 
   const history = summarizeBossHistory(scoped, { departmentId: null, limit: 0 });
-  const trend = buildBossHistoryTrend(scoped, { months: days > 0 ? 0 : 12 });
+  // A janela já recortou o período; mantemos todos os meses resultantes.
+  const trend = buildBossHistoryTrend(scoped, { months: 0 });
   const comparison = compareDepartments(scoped, {
     from: fromMs === null ? null : new Date(fromMs).toISOString(),
     to: new Date(toMs).toISOString(),
