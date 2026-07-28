@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { Target, TrendingDown, TrendingUp, Minus, Save, RotateCcw } from "lucide-react";
+import { Target, TrendingDown, TrendingUp, Minus, Save, RotateCcw, BellRing } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -17,6 +17,7 @@ import {
   useBossWinRateGoals,
   useRemoveBossWinRateGoal,
   useSaveBossWinRateGoal,
+  useRunBossWinRateAlerts,
 } from "@/hooks/useBossWinRateGoals";
 import { NO_DEPARTMENT } from "@/lib/bossDepartmentComparison";
 import {
@@ -74,6 +75,7 @@ export function BossWinRateGoalsCard({ battles, className }: BossWinRateGoalsCar
   const { config, isLoading: goalsLoading } = useBossWinRateGoals();
   const saveGoal = useSaveBossWinRateGoal();
   const removeGoal = useRemoveBossWinRateGoal();
+  const runAlerts = useRunBossWinRateAlerts();
 
   // Hidrata os controles com o padrão global persistido apenas uma vez, para
   // não sobrescrever ajustes manuais do usuário durante a sessão.
@@ -154,6 +156,18 @@ export function BossWinRateGoalsCard({ battles, className }: BossWinRateGoalsCar
               Salvar padrão
             </Button>
           )}
+          {isAdmin && (
+            <Button
+              size="sm"
+              variant="outline"
+              className="h-9"
+              disabled={runAlerts.isPending}
+              onClick={() => runAlerts.mutate(Number(days))}
+            >
+              <BellRing className="mr-1.5 h-3.5 w-3.5" />
+              Verificar alertas
+            </Button>
+          )}
         </div>
       </CardHeader>
       <CardContent className="space-y-3">
@@ -161,6 +175,10 @@ export function BossWinRateGoalsCard({ battles, className }: BossWinRateGoalsCar
           {result.belowTarget} departamento(s) abaixo da meta ·{" "}
           {result.dropping} com queda em relação ao período anterior
           {config.global ? " · padrão carregado do banco" : ""}
+        </p>
+        <p className="text-[11px] text-muted-foreground">
+          Quedas críticas (≥ 20 p.p.) geram alerta push automático diário para
+          administradores e gestores do departamento.
         </p>
 
         <ul className="space-y-3">

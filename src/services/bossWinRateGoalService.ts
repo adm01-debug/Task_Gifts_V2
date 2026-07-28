@@ -116,4 +116,21 @@ export const bossWinRateGoalService = {
       throw error;
     }
   },
+
+  /**
+   * Dispara manualmente a varredura de quedas críticas de aproveitamento.
+   * A rotina também roda diariamente via agendamento no banco.
+   * @returns quantidade de alertas enfileirados.
+   */
+  async runCriticalAlerts(days: number): Promise<number> {
+    const safeDays = Math.trunc(clamp(days, 1, 3650));
+    const { data, error } = await supabase.rpc("run_boss_win_rate_alerts", {
+      p_days: safeDays,
+    });
+    if (error) {
+      logger.error(`Falha ao disparar alertas de aproveitamento: ${error.message}`);
+      throw error;
+    }
+    return Number(data ?? 0);
+  },
 };

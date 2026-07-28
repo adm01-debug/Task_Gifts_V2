@@ -10679,6 +10679,7 @@ export type Database = {
         Args: { p_subscription_id: string }
         Returns: Json
       }
+      check_boss_win_rate_alerts: { Args: { p_days?: number }; Returns: number }
       check_login_lockout: { Args: { p_email: string }; Returns: Json }
       check_overdue_postmortem_actions: { Args: never; Returns: Json }
       check_prediction_markets_health: { Args: never; Returns: number }
@@ -11474,6 +11475,7 @@ export type Database = {
         }
         Returns: Json
       }
+      run_boss_win_rate_alerts: { Args: { p_days?: number }; Returns: number }
       set_opinion_status: {
         Args: { p_opinion_id: string; p_status: string }
         Returns: undefined
