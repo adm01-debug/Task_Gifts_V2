@@ -11,6 +11,7 @@ import { PageShell } from "@/components/navigation";
 import { SEOHead } from "@/components/SEOHead";
 import { SectionErrorBoundary } from "@/components/SectionErrorBoundary";
 import { BoardPath } from "@/components/board/BoardPath";
+import { BoardChallengeDialog } from "@/components/board/BoardChallengeDialog";
 import {
   useAdvanceBoardTrail,
   useBoardPlayerState,
@@ -77,6 +78,12 @@ export default function BoardTrailPage() {
 
   const blocked = Boolean(playerState?.blocked_challenge_id);
   const finished = Boolean(playerState?.finished_at);
+  const [challengeOpen, setChallengeOpen] = useState(false);
+
+  // Abre o desafio automaticamente ao cair numa casa bloqueada.
+  useEffect(() => {
+    if (blocked) setChallengeOpen(true);
+  }, [blocked, playerState?.blocked_challenge_id]);
 
   return (
     <PageShell
@@ -173,11 +180,32 @@ export default function BoardTrailPage() {
                         ? "Rolando..."
                         : "Rolar o dado"}
                 </Button>
+
+                {blocked && (
+                  <Button
+                    variant="secondary"
+                    className="w-full"
+                    onClick={() => setChallengeOpen(true)}
+                  >
+                    Responder desafio
+                  </Button>
+                )}
               </CardContent>
             </Card>
           ) : null}
         </div>
       </SectionErrorBoundary>
+
+      {trailId && user?.id && playerState?.blocked_challenge_id && (
+        <BoardChallengeDialog
+          open={challengeOpen}
+          onOpenChange={setChallengeOpen}
+          trailId={trailId}
+          userId={user.id}
+          challengeId={playerState.blocked_challenge_id}
+          attemptsUsed={playerState.challenge_attempts ?? 0}
+        />
+      )}
     </PageShell>
   );
 }

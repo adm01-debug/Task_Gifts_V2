@@ -1342,6 +1342,7 @@ export type Database = {
       board_player_states: {
         Row: {
           blocked_challenge_id: string | null
+          challenge_attempts: number
           checkpoints: number[]
           coins: number
           created_at: string
@@ -1356,6 +1357,7 @@ export type Database = {
         }
         Insert: {
           blocked_challenge_id?: string | null
+          challenge_attempts?: number
           checkpoints?: number[]
           coins?: number
           created_at?: string
@@ -1370,6 +1372,7 @@ export type Database = {
         }
         Update: {
           blocked_challenge_id?: string | null
+          challenge_attempts?: number
           checkpoints?: number[]
           coins?: number
           created_at?: string
@@ -12166,6 +12169,10 @@ export type Database = {
       }
       reset_login_attempts: { Args: { p_email: string }; Returns: undefined }
       reset_push_failures: { Args: { _ids: string[] }; Returns: undefined }
+      resolve_board_challenge: {
+        Args: { p_dedupe_key: string; p_option_id: string; p_trail_id: string }
+        Returns: Json
+      }
       respond_card_trade: {
         Args: { p_action: string; p_trade_id: string }
         Returns: Json

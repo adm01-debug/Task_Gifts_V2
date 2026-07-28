@@ -22,7 +22,30 @@ export interface BoardPlayerRow {
   checkpoints: number[];
   moves_count: number;
   blocked_challenge_id: string | null;
+  /** Tentativas já feitas no desafio pendente (0 quando não há bloqueio). */
+  challenge_attempts: number;
   finished_at: string | null;
+}
+
+export interface BoardChallengeOption {
+  id: string;
+  text: string;
+}
+
+export interface BoardChallengeQuestion {
+  id: string;
+  question: string;
+  /** Alternativas SEM o gabarito — a correção acontece só no servidor. */
+  options: BoardChallengeOption[];
+}
+
+export interface BoardChallengeResult {
+  replayed: boolean;
+  correct: boolean;
+  coins_delta: number;
+  xp_delta: number;
+  unblocked: boolean;
+  attempts_left: number;
 }
 
 export interface BoardAdvanceResult {
@@ -110,7 +133,9 @@ export const boardTrailService = {
   async getPlayerState(trailId: string): Promise<BoardPlayerRow | null> {
     const { data, error } = await supabase
       .from("board_player_states")
-      .select("position, coins, xp, checkpoints, moves_count, blocked_challenge_id, finished_at")
+      .select(
+        "position, coins, xp, checkpoints, moves_count, blocked_challenge_id, challenge_attempts, finished_at",
+      )
       .eq("trail_id", trailId)
       .maybeSingle();
 
@@ -120,7 +145,11 @@ export const boardTrailService = {
     }
     if (!data) return null;
     const row = data as BoardPlayerRow;
-    return { ...row, checkpoints: row.checkpoints || [] };
+    return {
+      ...row,
+      checkpoints: row.checkpoints || [],
+      challenge_attempts: row.challenge_attempts ?? 0,
+    };
   },
 
   /**
@@ -138,6 +167,61 @@ export const boardTrailService = {
       throw error;
     }
     return data as unknown as BoardAdvanceResult;
+  },
+
+  /**
+   * Carrega a pergunta da casa de desafio. As alternativas são buscadas sem o
+   * campo `is_correct` para que o gabarito nunca trafegue até o cliente.
+   */
+  async getChallenge(challengeId: string): Promise<BoardChallengeQuestion | null> {
+    const { data, error } = await supabase
+      .from("quiz_questions")
+      .select("id, question, quiz_options(id, text, order_index)")
+      .eq("id", challengeId)
+      .maybeSingle();
+
+    if (error) {
+      logger.error("Falha ao carregar desafio", "boardTrailService.getChallenge", error);
+      throw error;
+    }
+    if (!data) return null;
+
+    const row = data as {
+      id: string;
+      question: string;
+      quiz_options?: Array<{ id: string; text: string; order_index: number | null }> | null;
+    };
+
+    return {
+      id: row.id,
+      question: row.question,
+      options: (row.quiz_options || [])
+        .slice()
+        .sort((a, b) => (a.order_index ?? 0) - (b.order_index ?? 0))
+        .map((o) => ({ id: o.id, text: o.text })),
+    };
+  },
+
+  /**
+   * Responde o desafio. A correção, o crédito e o desbloqueio acontecem
+   * exclusivamente na RPC `resolve_board_challenge`, com chave idempotente.
+   */
+  async resolveChallenge(
+    trailId: string,
+    optionId: string,
+    dedupeKey: string,
+  ): Promise<BoardChallengeResult> {
+    const { data, error } = await supabase.rpc("resolve_board_challenge", {
+      p_trail_id: trailId,
+      p_option_id: optionId,
+      p_dedupe_key: dedupeKey,
+    });
+
+    if (error) {
+      logger.error("Falha ao resolver desafio", "boardTrailService.resolveChallenge", error);
+      throw error;
+    }
+    return data as unknown as BoardChallengeResult;
   },
 
   /** Todas as trilhas (inclui rascunhos/arquivadas) — apenas admin/gestor pela RLS. */
