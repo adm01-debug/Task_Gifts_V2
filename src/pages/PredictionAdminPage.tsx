@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { Plus, ShieldCheck } from "lucide-react";
+import { Plus, ShieldCheck, Target } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -8,6 +8,7 @@ import { SEOHead } from "@/components/SEOHead";
 import { SectionErrorBoundary } from "@/components/SectionErrorBoundary";
 import {
   CreateMarketDialog,
+  GoalBetDialog,
   PredictionAdminRow,
   PredictionOverviewCards,
   SettleMarketDialog,
@@ -43,6 +44,7 @@ export default function PredictionAdminPage() {
   const { data: markets, isLoading } = usePredictionMarkets();
   const { data: events } = usePredictionAdminEvents();
   const [createOpen, setCreateOpen] = useState(false);
+  const [goalBetOpen, setGoalBetOpen] = useState(false);
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [settleTarget, setSettleTarget] = useState<PredictionMarketRow | null>(null);
 
@@ -94,7 +96,10 @@ export default function PredictionAdminPage() {
             </div>
           ) : (
             <div className="space-y-6">
-              <div className="flex justify-end">
+              <div className="flex flex-wrap justify-end gap-2">
+                <Button size="sm" variant="outline" onClick={() => setGoalBetOpen(true)}>
+                  <Target className="mr-1 h-4 w-4" /> Aposta de meta
+                </Button>
                 <Button size="sm" onClick={() => setCreateOpen(true)}>
                   <Plus className="mr-1 h-4 w-4" /> Novo mercado
                 </Button>
@@ -161,6 +166,7 @@ export default function PredictionAdminPage() {
       </PageShell>
 
       <CreateMarketDialog open={createOpen} onOpenChange={setCreateOpen} />
+      <GoalBetDialog open={goalBetOpen} onOpenChange={setGoalBetOpen} />
       <SettleMarketDialog
         market={settleTarget}
         open={!!settleTarget}

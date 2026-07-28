@@ -3,6 +3,7 @@ export { StakeDialog } from "./StakeDialog";
 export { PredictionOverviewCards } from "./PredictionOverviewCards";
 export { PredictionAdminRow } from "./PredictionAdminRow";
 export { CreateMarketDialog } from "./CreateMarketDialog";
+export { GoalBetDialog } from "./GoalBetDialog";
 export { SettleMarketDialog } from "./SettleMarketDialog";
 export { PredictionWatchdogPanel } from "./PredictionWatchdogPanel";
 export { OddsHistoryChart } from "./OddsHistoryChart";
