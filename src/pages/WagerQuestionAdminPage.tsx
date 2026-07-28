@@ -171,8 +171,26 @@ export default function WagerQuestionAdminPage() {
     }
   };
 
+  /** Exporta a agenda completa em CSV reimportável (round-trip). */
+  const handleExport = () => {
+    const rows = questions ?? [];
+    if (rows.length === 0) {
+      toast.error("Não há perguntas agendadas para exportar.");
+      return;
+    }
+    const blob = new Blob([`\uFEFF${buildWagerScheduleCsv(rows)}`], {
+      type: "text/csv;charset=utf-8;",
+    });
+    const url = URL.createObjectURL(blob);
+    const anchor = document.createElement("a");
+    anchor.href = url;
+    anchor.download = wagerScheduleFileName();
+    anchor.click();
+    URL.revokeObjectURL(url);
+    toast.success(`${rows.length} pergunta(s) exportada(s).`);
+  };
+
   const handleDelete = async (question: AdminWagerQuestion) => {
-    // eslint-disable-next-line no-empty
     if (question.totalEntries > 0) {
       toast.error("Perguntas com apostas registradas não podem ser excluídas.");
       return;
