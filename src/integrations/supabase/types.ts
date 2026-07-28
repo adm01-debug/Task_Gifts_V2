@@ -728,6 +728,41 @@ export type Database = {
         }
         Relationships: []
       }
+      auction_admin_events: {
+        Row: {
+          action: string
+          actor_id: string | null
+          auction_id: string | null
+          created_at: string
+          details: Json
+          id: string
+        }
+        Insert: {
+          action: string
+          actor_id?: string | null
+          auction_id?: string | null
+          created_at?: string
+          details?: Json
+          id?: string
+        }
+        Update: {
+          action?: string
+          actor_id?: string | null
+          auction_id?: string | null
+          created_at?: string
+          details?: Json
+          id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "auction_admin_events_auction_id_fkey"
+            columns: ["auction_id"]
+            isOneToOne: false
+            referencedRelation: "auctions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       auction_bids: {
         Row: {
           amount: number
@@ -9947,6 +9982,18 @@ export type Database = {
         }
         Returns: Json
       }
+      create_auction_draft: {
+        Args: {
+          p_description: string
+          p_ends_at: string
+          p_min_increment: number
+          p_reward_id?: string
+          p_starting_bid: number
+          p_starts_at: string
+          p_title: string
+        }
+        Returns: Json
+      }
       engagement_min_respondents: { Args: never; Returns: number }
       erf_inverse: { Args: { x: number }; Returns: number }
       finish_lightning_round: { Args: { p_session_id: string }; Returns: Json }
@@ -10398,6 +10445,10 @@ export type Database = {
       }
       join_tournament: { Args: { p_tournament_id: string }; Returns: Json }
       list_tournaments: { Args: never; Returns: Json }
+      log_auction_admin_event: {
+        Args: { p_action: string; p_auction_id: string; p_details?: Json }
+        Returns: undefined
+      }
       log_geo_access: {
         Args: {
           p_country_code: string
@@ -10455,6 +10506,7 @@ export type Database = {
         Args: { p_subscription_id: string }
         Returns: Json
       }
+      publish_auction: { Args: { p_auction_id: string }; Returns: Json }
       raise_lucky_wheel_window_alerts: {
         Args: {
           p_coins_per_spin_budget?: number
