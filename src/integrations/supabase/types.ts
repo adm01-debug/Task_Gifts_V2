@@ -12064,6 +12064,17 @@ export type Database = {
         Returns: boolean
       }
       join_tournament: { Args: { p_tournament_id: string }; Returns: Json }
+      list_stuck_board_players: {
+        Args: { p_max_hours?: number; p_trail_id?: string }
+        Returns: {
+          blocked_hours: number
+          display_name: string
+          position: number
+          trail_id: string
+          trail_title: string
+          user_id: string
+        }[]
+      }
       list_tournaments: { Args: never; Returns: Json }
       list_wager_questions: {
         Args: { p_from?: string; p_to?: string }
@@ -12366,6 +12377,17 @@ export type Database = {
       transition_prediction_market: {
         Args: { p_action: string; p_market_id: string }
         Returns: Json
+      }
+      unblock_board_players: {
+        Args: { p_max_hours?: number; p_trail_id?: string }
+        Returns: {
+          blocked_hours: number
+          display_name: string
+          position: number
+          trail_id: string
+          trail_title: string
+          user_id: string
+        }[]
       }
       update_certification_statuses: { Args: never; Returns: undefined }
       user_has_passkeys: { Args: { p_user_id: string }; Returns: boolean }
