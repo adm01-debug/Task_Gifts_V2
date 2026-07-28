@@ -20,6 +20,7 @@ import type {
   WagerReviewStatus,
 } from "@/services/wagerIntegrityReviewService";
 import { reviewKey } from "@/services/wagerIntegrityReviewService";
+import type { WagerIntegrityReviewEvent } from "@/services/wagerIntegrityReviewEventService";
 
 const RISKY_PREFIX = /^[=+\-@\t\r]/;
 const DELIMITER = ";";
@@ -78,6 +79,12 @@ function formatDateTime(date: Date): string {
 export interface WagerIntegrityExportInput {
   report: WagerIntegrityReport;
   reviews?: readonly WagerIntegrityReview[];
+  /**
+   * Histórico imutável de mudanças de desfecho. Exportado como bloco próprio
+   * porque eventos podem existir para anomalias que já não são detectadas —
+   * suprimi-los apagaria evidência de auditoria.
+   */
+  events?: readonly WagerIntegrityReviewEvent[];
   windowDays: number;
   generatedAt?: Date;
 }
@@ -99,7 +106,7 @@ export function buildReviewIndex(
  * que o arquivo seja autoexplicativo fora do sistema.
  */
 export function buildWagerIntegrityCsv(input: WagerIntegrityExportInput): string {
-  const { report, reviews, windowDays } = input;
+  const { report, reviews, events, windowDays } = input;
   const generatedAt = input.generatedAt ?? new Date();
   const index = buildReviewIndex(reviews);
 
@@ -143,6 +150,38 @@ export function buildWagerIntegrityCsv(input: WagerIntegrityExportInput): string
         review?.updatedAt ? formatDateTime(new Date(review.updatedAt)) : "",
       ]),
     );
+  }
+
+  const history = (events ?? []).filter(
+    (event) => !!event && typeof event.targetUserId === "string" && !!event.targetUserId,
+  );
+  if (history.length > 0) {
+    rows.push("");
+    rows.push(line(["Histórico de apurações", history.length]));
+    rows.push(
+      line([
+        "user_id",
+        "tipo",
+        "de",
+        "para",
+        "observacoes",
+        "autor",
+        "registrado_em",
+      ]),
+    );
+    for (const event of history) {
+      rows.push(
+        line([
+          event.targetUserId,
+          anomalyCodeLabel(event.anomalyCode),
+          event.previousStatus ? reviewStatusLabel(event.previousStatus) : "—",
+          reviewStatusLabel(event.newStatus),
+          event.notes ?? "",
+          event.changedByName ?? event.changedBy ?? "",
+          event.createdAt ? formatDateTime(new Date(event.createdAt)) : "",
+        ]),
+      );
+    }
   }
 
   return rows.join("\r\n");
