@@ -1,7 +1,7 @@
 import { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
- import { BookOpen, Sparkles, Filter, Link2, SearchX, Trophy } from "lucide-react";
+ import { BookOpen, Dices, Sparkles, Filter, Link2, SearchX, Trophy } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { SEOHead } from "@/components/SEOHead";
 import { useSEO } from "@/hooks/useSEO";
@@ -106,6 +106,33 @@ export default function LearningTrails() {
               className="relative z-10"
             >
               <TrailStatsCards totalTrails={trails.length} inProgressCount={inProgressCount} completedCount={completedCount} totalXpEarned={totalXpEarned} />
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1 }}
+              className="relative z-10 mt-6"
+            >
+              <Card className="border-primary/30 bg-primary/5 backdrop-blur-sm">
+                <CardContent className="flex flex-col gap-4 p-5 sm:flex-row sm:items-center sm:justify-between">
+                  <div className="flex items-start gap-3">
+                    <div className="rounded-xl bg-primary/15 p-2.5 text-primary">
+                      <Dices className="h-5 w-5" aria-hidden />
+                    </div>
+                    <div>
+                      <p className="font-bold leading-tight">Trilha Tipo Tabuleiro</p>
+                      <p className="text-sm text-muted-foreground">
+                        Avance por casas com bônus, penalidades e desafios — no lugar da lista linear.
+                      </p>
+                    </div>
+                  </div>
+                  <Button onClick={() => navigate("/tabuleiro")} className="gap-2 sm:min-w-[180px]">
+                    <Dices className="h-4 w-4" aria-hidden />
+                    Jogar tabuleiro
+                  </Button>
+                </CardContent>
+              </Card>
             </motion.div>
 
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 mt-8">
