@@ -204,7 +204,7 @@ export default function BoardTrailPage() {
                 currentUserId={user?.id}
               />
               {hasRole("admin") || hasRole("manager") ? (
-                <BoardChallengeReport trailId={trailId} />
+                <BoardChallengeReport trailId={trailId} trailLabel={trail?.title ?? null} />
               ) : null}
             </div>
           )}
