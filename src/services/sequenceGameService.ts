@@ -1,6 +1,10 @@
 import { supabase } from "@/integrations/supabase/client";
 import { logger } from "./loggingService";
 import type { SequenceStep } from "@/lib/sequenceGame";
+import {
+  parseSequenceProcedureStats,
+  type SequenceProcedureStats,
+} from "@/lib/sequenceProcedureStats";
 
 export interface SequenceProcedure {
   id: string;
@@ -203,5 +207,26 @@ export const sequenceProcedureAdminService = {
       logger.error("Falha ao excluir procedimento", "sequenceProcedureAdminService.remove", error);
       throw error;
     }
+  },
+
+  /**
+   * Relatório consolidado do procedimento (RPC admin-only).
+   * O saneamento fica no motor puro para manter a UI livre de lógica.
+   */
+  async stats(procedureId: string, days = 30): Promise<SequenceProcedureStats> {
+    const { data, error } = await supabase.rpc("get_sequence_procedure_stats", {
+      p_procedure_id: procedureId,
+      p_days: Math.min(365, Math.max(1, Math.floor(days))),
+    });
+
+    if (error) {
+      logger.error(
+        "Falha ao carregar estatísticas do procedimento",
+        "sequenceProcedureAdminService.stats",
+        error,
+      );
+      throw error;
+    }
+    return parseSequenceProcedureStats(data);
   },
 };
