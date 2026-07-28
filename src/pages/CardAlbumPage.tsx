@@ -59,8 +59,8 @@ export default function CardAlbumPage() {
   return (
     <PageShell
       title="Álbum de Cartas"
-      description="Colecione, complete o álbum e troque repetidas com os colegas."
-      icon={Layers}
+      subtitle="Colecione, complete o álbum e troque repetidas com os colegas."
+      icon={<Layers className="h-5 w-5" />}
     >
       <SEOHead
         title="Álbum de Cartas | Task Gifts"
@@ -78,7 +78,7 @@ export default function CardAlbumPage() {
         </div>
       ) : (
         <div className="space-y-6">
-          <SectionErrorBoundary section="Progresso do álbum">
+          <SectionErrorBoundary sectionName="Progresso do álbum">
             <CollectionProgressBar progress={progress} />
           </SectionErrorBoundary>
 
@@ -90,7 +90,7 @@ export default function CardAlbumPage() {
             </TabsList>
 
             <TabsContent value="album" className="mt-4">
-              <SectionErrorBoundary section="Cartas">
+              <SectionErrorBoundary sectionName="Cartas">
                 <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
                   {defs.map((card) => (
                     <CardTile
@@ -107,13 +107,13 @@ export default function CardAlbumPage() {
             </TabsContent>
 
             <TabsContent value="packs" className="mt-4">
-              <SectionErrorBoundary section="Pacotes">
+              <SectionErrorBoundary sectionName="Pacotes">
                 <PackList packs={packs || []} cardNames={cardNames} />
               </SectionErrorBoundary>
             </TabsContent>
 
             <TabsContent value="trades" className="mt-4">
-              <SectionErrorBoundary section="Trocas">
+              <SectionErrorBoundary sectionName="Trocas">
                 <TradeInbox
                   trades={trades || []}
                   currentUserId={user?.id ?? ""}
