@@ -195,6 +195,17 @@ export default function BoardTrailPage() {
           ) : null}
         </div>
       </SectionErrorBoundary>
+
+      {trailId && user?.id && playerState?.blocked_challenge_id && (
+        <BoardChallengeDialog
+          open={challengeOpen}
+          onOpenChange={setChallengeOpen}
+          trailId={trailId}
+          userId={user.id}
+          challengeId={playerState.blocked_challenge_id}
+          attemptsUsed={playerState.challenge_attempts ?? 0}
+        />
+      )}
     </PageShell>
   );
 }
