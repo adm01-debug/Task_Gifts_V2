@@ -13,6 +13,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { usePlacePredictionStake } from "@/hooks/usePredictionMarkets";
+import { computeGoalBetStakePreview } from "@/lib/goalBetStakePreview";
 import {
   STAKE_REJECTION_MESSAGES,
   type PredictionMarketRow,
@@ -47,15 +48,13 @@ export function StakeDialog({
   }, [open, market]);
 
   const parsed = Number.parseInt(amount, 10);
-  const remaining =
-    market && market.max_stake_per_user > 0
-      ? market.max_stake_per_user - alreadyStaked
-      : Number.POSITIVE_INFINITY;
-  const valid =
-    !!market &&
-    Number.isFinite(parsed) &&
-    parsed >= market.min_stake &&
-    parsed <= remaining;
+  const preview = computeGoalBetStakePreview({
+    market,
+    optionId,
+    amount: parsed,
+    alreadyStaked,
+  });
+  const valid = preview.valid;
 
   const handleSubmit = async () => {
     if (!market || !optionId || !valid || placeStake.isPending) return;
@@ -111,9 +110,34 @@ export function StakeDialog({
           <p className="text-xs text-muted-foreground">
             Mínimo {market?.min_stake ?? 0} moedas
             {market && market.max_stake_per_user > 0
-              ? ` · disponível neste mercado: ${Math.max(remaining, 0)}`
+              ? ` · disponível neste mercado: ${Math.max(preview.remaining, 0)}`
               : ""}
           </p>
+          {preview.valid ? (
+            <div className="rounded-lg border border-border/60 bg-muted/40 p-3 text-xs">
+              <div className="flex items-center justify-between">
+                <span className="text-muted-foreground">Multiplicador estimado</span>
+                <span className="font-semibold text-foreground">
+                  {preview.multiplierAfter.toFixed(2)}x
+                </span>
+              </div>
+              <div className="mt-1 flex items-center justify-between">
+                <span className="text-muted-foreground">Retorno projetado</span>
+                <span className="font-semibold text-foreground">
+                  {preview.projectedReturn} moedas
+                </span>
+              </div>
+              <p className="mt-2 text-muted-foreground">
+                {preview.concentrated
+                  ? preview.message
+                  : `Seu aporte reduz as odds desta opção em ${(preview.dilution * 100).toFixed(0)}%. Valor estimado, não garantido.`}
+              </p>
+            </div>
+          ) : (
+            amount.length > 0 && (
+              <p className="text-xs text-destructive">{preview.message}</p>
+            )
+          )}
         </div>
 
         <DialogFooter>
