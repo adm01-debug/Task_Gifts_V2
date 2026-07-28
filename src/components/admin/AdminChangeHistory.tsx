@@ -10,6 +10,7 @@ import {
   ChevronUp,
   Filter,
   RefreshCw,
+  KeyRound,
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -49,6 +50,10 @@ const adminActions: AuditAction[] = [
   "quest_created",
   "quest_updated",
   "quest_deleted",
+  "api_key_created",
+  "api_key_rotated",
+  "api_key_status_changed",
+  "api_key_deleted",
 ];
 
 const actionConfig: Record<string, { label: string; color: string; icon: React.ElementType }> = {
@@ -61,7 +66,19 @@ const actionConfig: Record<string, { label: string; color: string; icon: React.E
   quest_created: { label: "Quest Criada", color: "bg-purple-500/20 text-purple-500", icon: Calendar },
   quest_updated: { label: "Quest Atualizada", color: "bg-indigo-500/20 text-indigo-500", icon: Calendar },
   quest_deleted: { label: "Quest Excluída", color: "bg-rose-500/20 text-rose-500", icon: Calendar },
+  api_key_created: { label: "Chave de API Criada", color: "bg-cyan-500/20 text-cyan-500", icon: KeyRound },
+  api_key_rotated: { label: "Chave de API Rotacionada", color: "bg-amber-500/20 text-amber-500", icon: KeyRound },
+  api_key_status_changed: { label: "Chave de API Ativada/Desativada", color: "bg-sky-500/20 text-sky-500", icon: KeyRound },
+  api_key_deleted: { label: "Chave de API Excluída", color: "bg-red-500/20 text-red-500", icon: KeyRound },
 };
+
+const entityFilters: { value: string; label: string }[] = [
+  { value: "all", label: "Todas as entidades" },
+  { value: "external_api_key", label: "Chaves de API" },
+  { value: "user_roles", label: "Papéis de usuário" },
+  { value: "departments", label: "Departamentos" },
+  { value: "quests", label: "Quests" },
+];
 
 interface AuditLog {
   id: string;
@@ -75,9 +92,9 @@ interface AuditLog {
   created_at: string;
 }
 
-function useAdminAuditLogs(actionFilter: string) {
+function useAdminAuditLogs(actionFilter: string, entityFilter: string) {
   return useQuery({
-    queryKey: ["admin-audit-logs", actionFilter],
+    queryKey: ["admin-audit-logs", actionFilter, entityFilter],
     queryFn: async (): Promise<AuditLog[]> => {
       let query = supabase
         .from("audit_logs")
@@ -88,6 +105,10 @@ function useAdminAuditLogs(actionFilter: string) {
 
       if (actionFilter !== "all") {
         query = query.eq("action", actionFilter as AuditAction);
+      }
+
+      if (entityFilter !== "all") {
+        query = query.eq("entity_type", entityFilter);
       }
 
       const { data, error } = await query;
