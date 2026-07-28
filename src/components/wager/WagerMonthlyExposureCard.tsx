@@ -1,6 +1,7 @@
 import { useMemo } from "react";
 import { AlertTriangle, TrendingUp, Wallet } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -18,6 +19,12 @@ export interface WagerMonthlyExposureCardProps {
   expectedPlayers: number;
   monthlyBudget: number;
   onMonthlyBudgetChange: (value: number) => void;
+  /** Há alterações locais ainda não persistidas. */
+  isDirty?: boolean;
+  isSaving?: boolean;
+  /** Persiste orçamento e participantes esperados (somente admin). */
+  onPersist?: () => void | Promise<void>;
+  updatedAt?: string | null;
   className?: string;
 }
 
@@ -72,6 +79,10 @@ export function WagerMonthlyExposureCard({
   expectedPlayers,
   monthlyBudget,
   onMonthlyBudgetChange,
+  isDirty = false,
+  isSaving = false,
+  onPersist,
+  updatedAt = null,
   className,
 }: WagerMonthlyExposureCardProps) {
   const summary = useMemo(
@@ -105,6 +116,26 @@ export function WagerMonthlyExposureCard({
             Pior caso considera {NUMBER.format(Math.max(0, expectedPlayers))} participante(s)
             apostando o teto e acertando.
           </p>
+          {onPersist && (
+            <div className="flex flex-wrap items-center gap-2">
+              <Button
+                type="button"
+                size="sm"
+                variant={isDirty ? "default" : "outline"}
+                disabled={!isDirty || isSaving}
+                onClick={() => void onPersist()}
+              >
+                {isSaving ? "Salvando..." : "Salvar parâmetros"}
+              </Button>
+              <span className="text-[11px] text-muted-foreground">
+                {isDirty
+                  ? "Alterações não salvas"
+                  : updatedAt
+                    ? `Salvo em ${new Date(updatedAt).toLocaleString("pt-BR")}`
+                    : "Usando valores padrão"}
+              </span>
+            </div>
+          )}
         </div>
 
         {summary.months.length === 0 && (
