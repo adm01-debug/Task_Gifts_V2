@@ -10497,6 +10497,101 @@ export type Database = {
         }
         Relationships: []
       }
+      wager_entries: {
+        Row: {
+          chosen_option: string
+          coins_delta: number
+          created_at: string
+          id: string
+          is_correct: boolean
+          multiplier: number
+          question_id: string
+          stake_coins: number
+          user_id: string
+          xp_awarded: number
+        }
+        Insert: {
+          chosen_option: string
+          coins_delta: number
+          created_at?: string
+          id?: string
+          is_correct: boolean
+          multiplier: number
+          question_id: string
+          stake_coins: number
+          user_id: string
+          xp_awarded?: number
+        }
+        Update: {
+          chosen_option?: string
+          coins_delta?: number
+          created_at?: string
+          id?: string
+          is_correct?: boolean
+          multiplier?: number
+          question_id?: string
+          stake_coins?: number
+          user_id?: string
+          xp_awarded?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "wager_entries_question_id_fkey"
+            columns: ["question_id"]
+            isOneToOne: false
+            referencedRelation: "wager_questions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      wager_questions: {
+        Row: {
+          base_multiplier: number
+          correct_option: string
+          created_at: string
+          created_by: string | null
+          difficulty: string
+          explanation: string | null
+          id: string
+          is_active: boolean
+          max_stake: number
+          options: Json
+          question: string
+          scheduled_date: string
+          updated_at: string
+        }
+        Insert: {
+          base_multiplier?: number
+          correct_option: string
+          created_at?: string
+          created_by?: string | null
+          difficulty?: string
+          explanation?: string | null
+          id?: string
+          is_active?: boolean
+          max_stake?: number
+          options: Json
+          question: string
+          scheduled_date: string
+          updated_at?: string
+        }
+        Update: {
+          base_multiplier?: number
+          correct_option?: string
+          created_at?: string
+          created_by?: string | null
+          difficulty?: string
+          explanation?: string | null
+          id?: string
+          is_active?: boolean
+          max_stake?: number
+          options?: Json
+          question?: string
+          scheduled_date?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       webauthn_challenges: {
         Row: {
           challenge: string
@@ -11183,6 +11278,7 @@ export type Database = {
         Returns: Json
       }
       get_card_set_rewards: { Args: never; Returns: Json }
+      get_daily_wager: { Args: never; Returns: Json }
       get_department_metrics: { Args: never; Returns: Json }
       get_department_war_feed: {
         Args: { p_limit?: number; p_war_id: string }
@@ -11802,6 +11898,10 @@ export type Database = {
       start_lightning_round: { Args: never; Returns: Json }
       start_memory_session: { Args: { p_deck_id: string }; Returns: Json }
       start_tournament: { Args: { p_tournament_id: string }; Returns: Json }
+      submit_daily_wager: {
+        Args: { p_option: string; p_question_id: string; p_stake: number }
+        Returns: Json
+      }
       submit_engagement_answer: {
         Args: {
           p_cycle_id: string
