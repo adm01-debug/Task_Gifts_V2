@@ -290,11 +290,7 @@ Com base nessas informações, quais trilhas você recomenda e por quê?`;
 
   } catch (error) {
     console.error("Error in trail-recommendations:", error);
-    return new Response(
-      JSON.stringify({ error: error instanceof Error ? error.message : "Unknown error" }),
-      {
-        status: 500,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
+    return errorResponse(error);
       }
     );
   }
