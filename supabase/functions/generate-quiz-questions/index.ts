@@ -6,7 +6,7 @@ import {
   createRateLimitResponse,
   RATE_LIMITS 
 } from "../_shared/rate-limiter.ts";
-import { corsHeaders, verifyUser } from "../_shared/security.ts";
+import { corsHeaders, verifyUser, errorResponse } from "../_shared/security.ts";
 
 
 serve(async (req) => {
@@ -16,7 +16,7 @@ serve(async (req) => {
 
   // Apply rate limiting
   const identifier = getRateLimitIdentifier(req, "generate-quiz-questions");
-  const rateLimitResult = checkRateLimit(identifier, RATE_LIMITS.ai);
+  const rateLimitResult = await checkRateLimit(identifier, RATE_LIMITS.ai);
   
   if (!rateLimitResult.allowed) {
     console.log(`Rate limit exceeded for ${identifier}`);
@@ -221,9 +221,6 @@ Retorne APENAS um JSON válido no seguinte formato:
 
   } catch (error) {
     console.error('Error in generate-quiz-questions:', error);
-    return new Response(
-      JSON.stringify({ error: error instanceof Error ? error.message : 'Unknown error' }),
-      { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-    );
+    return errorResponse(error);
   }
 });

@@ -6,7 +6,7 @@ import {
   createRateLimitResponse,
   RATE_LIMITS 
 } from "../_shared/rate-limiter.ts";
-import { corsHeaders, verifyUser } from "../_shared/security.ts";
+import { corsHeaders, verifyUser, errorResponse } from "../_shared/security.ts";
 
 
 interface UserMetrics {
@@ -35,7 +35,7 @@ serve(async (req) => {
 
   // Apply rate limiting (AI function, stricter limits)
   const identifier = getRateLimitIdentifier(req, "churn-prediction");
-  const rateLimitResult = checkRateLimit(identifier, RATE_LIMITS.ai);
+  const rateLimitResult = await checkRateLimit(identifier, RATE_LIMITS.ai);
   
   if (!rateLimitResult.allowed) {
     console.log(`Rate limit exceeded for ${identifier}`);
@@ -277,10 +277,6 @@ Retorne apenas colaboradores com risco médio ou alto no formato JSON.`;
     });
   } catch (error) {
     console.error('Churn prediction error:', error);
-    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-    return new Response(JSON.stringify({ error: errorMessage }), {
-      status: 500,
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-    });
+    return errorResponse(error);
   }
 });

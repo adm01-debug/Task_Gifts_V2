@@ -6,7 +6,7 @@ import {
   createRateLimitResponse,
   RATE_LIMITS 
 } from "../_shared/rate-limiter.ts";
-import { corsHeaders, verifyUser } from "../_shared/security.ts";
+import { corsHeaders, verifyUser, errorResponse } from "../_shared/security.ts";
 import { withSentry, addBreadcrumb, captureException } from "../_shared/sentry.ts";
 
 const SYSTEM_PROMPT = `Você é o AI Coach do Task Gifts, uma plataforma de gamificação corporativa da Promo Brindes.
@@ -53,7 +53,7 @@ serve(withSentry("ai-coach", async (req, { requestId }) => {
 
   // Apply rate limiting
   const identifier = getRateLimitIdentifier(req, "ai-coach");
-  const rateLimitResult = checkRateLimit(identifier, RATE_LIMITS.ai);
+  const rateLimitResult = await checkRateLimit(identifier, RATE_LIMITS.ai);
   
   if (!rateLimitResult.allowed) {
     addBreadcrumb("ai-coach:rate-limited", { identifier, requestId }, "warning");
@@ -195,9 +195,6 @@ serve(withSentry("ai-coach", async (req, { requestId }) => {
     });
   } catch (e) {
     captureException(e, { fn: "ai-coach", requestId });
-    return new Response(JSON.stringify({ error: e instanceof Error ? e.message : "Erro desconhecido" }), {
-      status: 500,
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
-    });
+    return errorResponse(e, requestId);
   }
 }));

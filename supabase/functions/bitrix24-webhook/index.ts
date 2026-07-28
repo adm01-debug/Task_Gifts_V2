@@ -1,6 +1,5 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient, SupabaseClient } from "https://esm.sh/@supabase/supabase-js@2";
-import { crypto } from "https://deno.land/std@0.168.0/crypto/mod.ts";
 import { 
   checkRateLimit, 
   getRateLimitIdentifier, 
@@ -9,6 +8,13 @@ import {
 } from "../_shared/rate-limiter.ts";
 import { Bitrix24WebhookSchema, validatePayload, createValidationErrorResponse } from "../_shared/validation.ts";
 import { withSentry, addBreadcrumb, captureException } from "../_shared/sentry.ts";
+import {
+  verifySignedWebhook,
+  claimIdempotency,
+  completeIdempotency,
+  releaseIdempotency,
+  derivedIdempotencyKey,
+} from "../_shared/webhookSecurity.ts";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -42,31 +48,6 @@ interface Quest {
   coin_reward: number;
 }
 
-async function verifyHMAC(payload: string, signature: string, secret: string) {
-  const encoder = new TextEncoder();
-  const keyData = encoder.encode(secret);
-  const data = encoder.encode(payload);
-  
-  const key = await crypto.subtle.importKey(
-    "raw",
-    keyData,
-    { name: "HMAC", hash: "SHA-256" },
-    false,
-    ["verify"]
-  );
-  
-  const signatureBytes = new Uint8Array(
-    signature.match(/.{1,2}/g)!.map(byte => parseInt(byte, 16))
-  );
-  
-  return await crypto.subtle.verify(
-    "HMAC",
-    key,
-    signatureBytes,
-    data
-  );
-}
-
 serve(withSentry("bitrix24-webhook", async (req, { requestId }) => {
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
@@ -74,7 +55,7 @@ serve(withSentry("bitrix24-webhook", async (req, { requestId }) => {
 
   // Apply rate limiting (webhooks are more lenient)
   const identifier = getRateLimitIdentifier(req, "bitrix24-webhook");
-  const rateLimitResult = checkRateLimit(identifier, RATE_LIMITS.webhook);
+  const rateLimitResult = await checkRateLimit(identifier, RATE_LIMITS.webhook);
   
   if (!rateLimitResult.allowed) {
     addBreadcrumb("bitrix24-webhook:rate-limited", { identifier, requestId }, "warning");
@@ -91,16 +72,44 @@ serve(withSentry("bitrix24-webhook", async (req, { requestId }) => {
     const contentType = req.headers.get('content-type') || '';
     const rawBody = await req.text();
     
-    // HMAC Validation
-    const signature = req.headers.get('x-bitrix24-signature');
-    const secret = Deno.env.get('BITRIX24_WEBHOOK_SECRET');
-    
-    if (signature && secret) {
-      const isValid = await verifyHMAC(rawBody, signature, secret);
-      if (!isValid) {
-        return new Response(JSON.stringify({ error: 'Invalid HMAC' }), { status: 401, headers: corsHeaders });
-      }
+    // Assinatura HMAC OBRIGATÓRIA (fail-closed). Antes, omitir o header
+    // pulava a verificação e deixava o endpoint totalmente aberto.
+    const check = await verifySignedWebhook({
+      signedPayload: rawBody,
+      signature: req.headers.get('x-bitrix24-signature'),
+      secret: Deno.env.get('BITRIX24_WEBHOOK_SECRET'),
+    });
+
+    if (!check.ok) {
+      addBreadcrumb("bitrix24-webhook:rejected", { reason: check.reason, requestId }, "warning");
+      console.warn('[bitrix24-webhook] assinatura rejeitada', { reason: check.reason, requestId });
+      const unavailable = check.reason === 'missing_secret';
+      return new Response(
+        JSON.stringify({ error: unavailable ? 'Webhook não configurado' : 'Assinatura inválida' }),
+        { status: unavailable ? 503 : 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
+      );
     }
+
+    // Idempotência: o Bitrix24 reentrega eventos em caso de timeout. Sem isso,
+    // a mesma conclusão de tarefa creditaria XP/moedas mais de uma vez.
+    const idemKey = req.headers.get('x-idempotency-key')
+      ?? await derivedIdempotencyKey('bitrix24', rawBody);
+    const claim = await claimIdempotency(supabase, 'bitrix24', idemKey);
+
+    if (claim.state === 'duplicate') {
+      return new Response(
+        JSON.stringify({ success: true, duplicate: true }),
+        { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
+      );
+    }
+    if (claim.state === 'in_progress') {
+      // 409 sinaliza ao provedor que vale retentar mais tarde.
+      return new Response(
+        JSON.stringify({ error: 'Evento já em processamento' }),
+        { status: 409, headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
+      );
+    }
+    const idemTracked = claim.state === 'fresh';
 
     if (contentType.includes('application/json')) {
       payload = JSON.parse(rawBody);
@@ -119,6 +128,7 @@ serve(withSentry("bitrix24-webhook", async (req, { requestId }) => {
     const validation = validatePayload(Bitrix24WebhookSchema, payload);
     if (!validation.success) {
       console.error('Validation error:', validation.error);
+      if (idemTracked) await releaseIdempotency(supabase, claim.key);
       return createValidationErrorResponse(validation.error, corsHeaders);
     }
     
@@ -211,6 +221,15 @@ serve(withSentry("bitrix24-webhook", async (req, { requestId }) => {
         .eq('id', logEntry.id);
     }
 
+    if (idemTracked) {
+      if (processed) {
+        await completeIdempotency(supabase, claim.key, 'completed', { success: true });
+      } else {
+        // Libera para permitir reentrega do provedor após falha transitória.
+        await releaseIdempotency(supabase, claim.key);
+      }
+    }
+
     return new Response(
       JSON.stringify({ success: true }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
@@ -218,9 +237,10 @@ serve(withSentry("bitrix24-webhook", async (req, { requestId }) => {
 
   } catch (error) {
     captureException(error, { fn: "bitrix24-webhook", requestId });
-    const errorMessage = error instanceof Error ? error.message : 'Erro desconhecido';
+    // Não devolver a mensagem interna: ela pode vazar schema/detalhes do banco.
+    console.error('[bitrix24-webhook] erro inesperado', error);
     return new Response(
-      JSON.stringify({ error: errorMessage }),
+      JSON.stringify({ error: 'Erro interno ao processar webhook', requestId }),
       { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
   }

@@ -1,6 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-import { corsHeaders, verifyUser } from "../_shared/security.ts";
+import { corsHeaders, verifyUser, errorResponse } from "../_shared/security.ts";
 import { resolveClientIp } from "../_shared/clientIp.ts";
 import { withSentry, addBreadcrumb, captureException } from "../_shared/sentry.ts";
 
@@ -198,14 +198,7 @@ serve(withSentry("detect-new-device", async (req, { requestId }) => {
     );
     
   } catch (error: unknown) {
-    const message = error instanceof Error ? error.message : "Unknown error";
     captureException(error, { fn: "detect-new-device", requestId });
-    return new Response(
-      JSON.stringify({ error: message }),
-      { 
-        status: 500, 
-        headers: { ...corsHeaders, "Content-Type": "application/json" } 
-      }
-    );
+    return errorResponse(error, requestId);
   }
 }));

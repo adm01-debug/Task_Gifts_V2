@@ -6,7 +6,7 @@ import {
   createRateLimitResponse,
   RATE_LIMITS 
 } from "../_shared/rate-limiter.ts";
-import { corsHeaders, verifyUser } from "../_shared/security.ts";
+import { corsHeaders, verifyUser, errorResponse } from "../_shared/security.ts";
 
 
 interface CompetencyData {
@@ -352,10 +352,6 @@ serve(async (req) => {
     });
   } catch (error) {
     console.error('Competency alerts error:', error);
-    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-    return new Response(JSON.stringify({ error: errorMessage }), {
-      status: 500,
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-    });
+    return errorResponse(error);
   }
 });

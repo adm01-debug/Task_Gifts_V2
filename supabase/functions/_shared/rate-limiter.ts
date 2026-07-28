@@ -1,10 +1,11 @@
 /**
  * Hybrid Rate Limiter for Supabase Edge Functions
  * Uses Upstash Redis for global consistency, falls back to in-memory for performance/offline.
+ *
+ * ATENÇÃO: `checkRateLimit` é assíncrona. Chamar sem `await` faz
+ * `result.allowed` ser `undefined`, o que bloqueia 100% do tráfego com 429.
  */
 import { resolveClientIp } from "./clientIp.ts";
-/**
- */
 
 interface RateLimitConfig {
   windowMs: number;
@@ -24,6 +25,7 @@ export async function checkRateLimit(
   if (url && token) {
     try {
       const key = `rate_limit:${identifier}`;
+      const windowSeconds = Math.max(1, Math.floor(config.windowMs / 1000));
       const res = await fetch(`${url}/incr/${key}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -31,9 +33,26 @@ export async function checkRateLimit(
       const count = parseInt(data.result);
 
       if (count === 1) {
-        await fetch(`${url}/expire/${key}/${Math.floor(config.windowMs / 1000)}`, {
+        await fetch(`${url}/expire/${key}/${windowSeconds}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
+      } else if (count > config.maxRequests) {
+        // Rede de segurança: se o EXPIRE inicial falhou, a chave ficaria sem
+        // TTL e o identificador seria bloqueado para sempre. Reaplica o TTL
+        // quando detectamos uma chave persistente (-1 = sem expiração).
+        try {
+          const ttlRes = await fetch(`${url}/ttl/${key}`, {
+            headers: { Authorization: `Bearer ${token}` },
+          });
+          const ttl = parseInt((await ttlRes.json()).result);
+          if (ttl === -1) {
+            await fetch(`${url}/expire/${key}/${windowSeconds}`, {
+              headers: { Authorization: `Bearer ${token}` },
+            });
+          }
+        } catch (ttlError) {
+          console.error("Upstash TTL guard failed:", ttlError);
+        }
       }
 
       if (count > config.maxRequests) {

@@ -1,7 +1,7 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
-import { corsHeaders, verifyUser } from "../_shared/security.ts";
+import { corsHeaders, verifyUser, errorResponse } from "../_shared/security.ts";
 
 
 interface TelemetryPayload {
@@ -303,9 +303,6 @@ serve(async (req) => {
     }
   } catch (err) {
     console.error('❌ [external-db-bridge] Unhandled error:', err);
-    return new Response(
-      JSON.stringify({ error: 'Internal server error', message: String(err) }),
-      { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-    );
+    return errorResponse(err);
   }
 });
