@@ -1,5 +1,9 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { auctionService, auctionAdminService } from "@/services/auctionService";
+import {
+  auctionService,
+  auctionAdminService,
+  type CreateAuctionInput,
+} from "@/services/auctionService";
 import { useAuth } from "./useAuth";
 
 export const auctionKeys = {
@@ -73,6 +77,26 @@ export function useCloseAuction() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (auctionId: string) => auctionAdminService.close(auctionId),
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: auctionKeys.all });
+    },
+  });
+}
+
+export function useCreateAuction() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (input: CreateAuctionInput) => auctionAdminService.create(input),
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: auctionKeys.all });
+    },
+  });
+}
+
+export function usePublishAuction() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (auctionId: string) => auctionAdminService.publish(auctionId),
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: auctionKeys.all });
     },
