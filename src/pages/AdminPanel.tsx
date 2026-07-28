@@ -98,6 +98,7 @@ function AdminPanelContent() {
     { icon: Activity, title: "Observabilidade de Webhooks", description: "Métricas de entrega, latência P95/P99 (24h)", href: "/admin/webhooks", color: "#0ea5e9" },
     { icon: BarChart3, title: "Telemetria", description: "Queries lentas e métricas de performance", href: "/admin/telemetria", color: "#14b8a6" },
     { icon: Lock, title: "Permissões & Papéis", description: "Gerenciar roles e permissões", href: "/admin/permissions", color: "#a855f7" },
+    { icon: KeyRound, title: "Chaves de API", description: "Emitir, rotacionar e revogar credenciais externas", href: "/admin/api-keys", color: "#f59e0b" },
   ];
 
   const searchResults = useFuseSearch(quickLinks, ['title', 'description'], searchQuery, { ...SEARCH_PRESETS.commands, limit: 20 });
