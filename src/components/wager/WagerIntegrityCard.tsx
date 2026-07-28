@@ -153,6 +153,7 @@ export function WagerIntegrityCard({ className, limit = 50 }: WagerIntegrityCard
     const csv = buildWagerIntegrityCsv({
       report,
       reviews: reviews ?? [],
+      events: events ?? [],
       windowDays: days,
       generatedAt,
     });
