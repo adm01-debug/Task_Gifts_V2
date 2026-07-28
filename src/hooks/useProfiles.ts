@@ -12,7 +12,19 @@ export const profileKeys = {
   detail: (id: string) => [...profileKeys.details(), id] as const,
   leaderboard: (limit: number) => [...profileKeys.all, "leaderboard", limit] as const,
   current: () => [...profileKeys.all, "current"] as const,
+  publicByIds: (ids: string[]) =>
+    [...profileKeys.all, "public", [...ids].sort().join(",")] as const,
 };
+
+/** Nomes e avatares para exibir em rankings, sem expor dados pessoais. */
+export function useProfilesPublic(ids: string[]) {
+  return useQuery({
+    queryKey: profileKeys.publicByIds(ids),
+    queryFn: () => profilesService.getPublicByIds(ids),
+    enabled: ids.length > 0,
+    staleTime: 5 * 60_000,
+  });
+}
 
 export function useProfile(id: string) {
   return useQuery({

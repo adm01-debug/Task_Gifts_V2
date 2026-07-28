@@ -8,9 +8,35 @@ export type Profile = Tables<"profiles">;
 export type ProfileInsert = TablesInsert<"profiles">;
 export type ProfileUpdate = TablesUpdate<"profiles">;
 
+/** Recorte mínimo exibível em rankings — apenas identidade visual. */
+export interface PublicProfile {
+  id: string;
+  display_name: string | null;
+  avatar_url: string | null;
+}
+
 const PUBLIC_PROFILE_COLUMNS = "id, display_name, avatar_url, level, xp, coins, streak, best_streak, quests_completed, status, created_at, updated_at, email, employee_id, hire_date, last_access_at, contract_type" as const;
 
 export const profilesService = {
+  /**
+   * Nomes e avatares de um conjunto de usuários.
+   *
+   * Lê da view pública: nunca devolve e-mail ou qualquer outro dado pessoal
+   * que não seja exibível em ranking.
+   */
+  async getPublicByIds(ids: string[]): Promise<PublicProfile[]> {
+    const unique = [...new Set(ids.filter(Boolean))];
+    if (unique.length === 0) return [];
+
+    const { data, error } = await supabase
+      .from("profiles_public")
+      .select("id, display_name, avatar_url")
+      .in("id", unique);
+    if (error) throw error;
+
+    return ((data ?? []) as PublicProfile[]).filter((row) => !!row.id);
+  },
+
    getById: async (id: string): Promise<Profile | null> => {
      try {
        const { data, error } = await supabase.from("profiles").select("*").eq("id", id).maybeSingle();

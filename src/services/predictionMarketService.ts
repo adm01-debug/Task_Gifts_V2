@@ -1,6 +1,7 @@
 import { supabase } from "@/integrations/supabase/client";
 import { logger } from "./loggingService";
 import type { StakeRejection } from "@/lib/predictionMarket";
+import type { OracleAggregate } from "@/lib/predictionOracle";
 
 export type PredictionMarketStatus =
   | "draft"
@@ -238,6 +239,38 @@ export async function fetchOddsHistory(
   return ((data ?? []) as unknown as OddsHistoryRow[]).map((row) => ({
     ...row,
     amount: Number(row.amount),
+  }));
+}
+
+/** Linha crua devolvida pela agregação server-side do ranking Oráculo. */
+interface OracleAggregateRow {
+  user_id: string;
+  markets: number;
+  stakes: number;
+  total_staked: number | string;
+  total_payout: number | string;
+  hits: number;
+  weighted_edge: number | string;
+  weighted_brier: number | string;
+}
+
+export async function fetchOracleAggregates(): Promise<OracleAggregate[]> {
+  const { data, error } = await supabase.rpc("get_prediction_oracle_aggregates");
+  if (error) {
+    logger.error("Falha ao carregar ranking Oráculo", "predictionMarketService", error);
+    throw error;
+  }
+  // bigint e numeric chegam como string no protocolo; converter é obrigatório
+  // para não somar textos silenciosamente mais adiante.
+  return ((data ?? []) as unknown as OracleAggregateRow[]).map((row) => ({
+    userId: row.user_id,
+    markets: Number(row.markets),
+    stakes: Number(row.stakes),
+    totalStaked: Number(row.total_staked),
+    totalPayout: Number(row.total_payout),
+    hits: Number(row.hits),
+    weightedEdge: Number(row.weighted_edge),
+    weightedBrier: Number(row.weighted_brier),
   }));
 }
 
