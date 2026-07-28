@@ -76,6 +76,24 @@ export const profilesService = {
      return (data ?? []) as unknown as Profile[];
    },
 
+   /**
+    * Dados pessoais sensíveis do próprio usuário (CPF, telefone, e-mail
+    * pessoal, matrícula). Lido via função `SECURITY DEFINER` que filtra por
+    * `auth.uid()` — não existe caminho para ler os dados de terceiros.
+    */
+   getMyPrivate: async (): Promise<PrivateProfile | null> => {
+     try {
+       // eslint-disable-next-line @typescript-eslint/no-explicit-any
+       const { data, error } = await (supabase as any).rpc("get_my_profile_private");
+       if (error) throw error;
+       const rows = (data ?? []) as PrivateProfile[];
+       return rows[0] ?? null;
+     } catch (error) {
+       logger.apiError("getMyPrivateProfile", error, "ProfilesService");
+       return null;
+     }
+   },
+
    getLeaderboard: async (limit = 10): Promise<Profile[]> => {
      const { data, error } = await supabase.from("profiles").select(PUBLIC_PROFILE_COLUMNS).order("xp", { ascending: false }).limit(limit);
      if (error) throw error;
