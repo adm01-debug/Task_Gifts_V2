@@ -12057,6 +12057,10 @@ export type Database = {
           total_answers: number
         }[]
       }
+      get_quiz_lifeline: {
+        Args: { p_kind: string; p_question_id: string }
+        Returns: Json
+      }
       get_quiz_play_set: {
         Args: { p_limit?: number; p_quiz_type: string }
         Returns: Json
