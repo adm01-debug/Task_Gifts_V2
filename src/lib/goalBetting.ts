@@ -166,11 +166,9 @@ export interface GoalBetBuildResult {
 export function buildGoalBetDraft(input: GoalBetDraftInput): GoalBetBuildResult {
   const ranked = rankGoalBetCandidates(input.candidates);
   if (ranked.length === 0) return { ok: false, error: "no_candidates" };
-  if (ranked.length > MAX_GOAL_BET_CANDIDATES && !input.includeNoWinner) {
-    if (ranked.length > MAX_OPTIONS) return { ok: false, error: "too_many_candidates" };
-  } else if (ranked.length > MAX_GOAL_BET_CANDIDATES) {
-    return { ok: false, error: "too_many_candidates" };
-  }
+  // Com a saída "ninguém", sobra uma vaga a menos para candidatos.
+  const limit = input.includeNoWinner ? MAX_OPTIONS - 1 : MAX_OPTIONS;
+  if (ranked.length > limit) return { ok: false, error: "too_many_candidates" };
 
   const options = buildOptionLabels(ranked);
   if (input.includeNoWinner) options.push(NO_WINNER_LABEL);
