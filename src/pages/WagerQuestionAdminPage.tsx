@@ -18,6 +18,7 @@ import {
 } from "@/components/ui/select";
 import { PageShell } from "@/components/navigation";
 import { WagerBulkImportDialog } from "@/components/wager/WagerBulkImportDialog";
+import { WagerMonthlyExposureCard } from "@/components/wager/WagerMonthlyExposureCard";
 import { SEOHead } from "@/components/SEOHead";
 import { SectionErrorBoundary } from "@/components/SectionErrorBoundary";
 import {
@@ -93,6 +94,7 @@ export default function WagerQuestionAdminPage() {
 
   const [draft, setDraft] = useState<WagerQuestionDraft>(emptyDraft);
   const [expectedPlayers, setExpectedPlayers] = useState(30);
+  const [monthlyBudget, setMonthlyBudget] = useState(20000);
 
   // Quantas apostas a pergunta em edição já recebeu: define a imutabilidade.
   const lockedEntries = useMemo(() => {
