@@ -1,11 +1,20 @@
 import { useMemo, useState } from "react";
 import { AlertTriangle, ShieldCheck, ShieldAlert, Info } from "lucide-react";
+import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useWagerLeaderboard } from "@/hooks/useDailyWager";
+import {
+  useSaveWagerIntegrityReview,
+  useWagerIntegrityReviews,
+} from "@/hooks/useWagerIntegrityReviews";
+import {
+  reviewKey,
+  type WagerReviewStatus,
+} from "@/services/wagerIntegrityReviewService";
 import {
   analyzeWagerIntegrity,
   integritySummary,
@@ -16,6 +25,12 @@ import { windowLabel, type WagerLeaderboardWindow } from "@/lib/wagerLeaderboard
 import { cn } from "@/lib/utils";
 
 const WINDOWS: WagerLeaderboardWindow[] = [7, 30, 90];
+
+const REVIEW_LABEL: Record<WagerReviewStatus, string> = {
+  investigating: "Em apuração",
+  confirmed: "Confirmada",
+  false_positive: "Falso positivo",
+};
 
 const SEVERITY_STYLE: Record<WagerAnomalySeverity, string> = {
   critical: "border-destructive/40 bg-destructive/10 text-destructive",
@@ -41,9 +56,48 @@ export interface WagerIntegrityCardProps {
 export function WagerIntegrityCard({ className, limit = 50 }: WagerIntegrityCardProps) {
   const [days, setDays] = useState<WagerLeaderboardWindow>(30);
   const { data, isLoading } = useWagerLeaderboard(days, limit);
+  const { data: reviews } = useWagerIntegrityReviews(days);
+  const saveReview = useSaveWagerIntegrityReview();
+  const [pendingKey, setPendingKey] = useState<string | null>(null);
 
   const report = useMemo(() => analyzeWagerIntegrity(data ?? []), [data]);
   const summary = useMemo(() => integritySummary(report), [report]);
+
+  // Índice das apurações já registradas, para exibir o desfecho ao lado do alerta.
+  const reviewIndex = useMemo(() => {
+    const map = new Map<string, WagerReviewStatus>();
+    for (const review of reviews ?? []) {
+      map.set(
+        reviewKey(review.targetUserId, review.anomalyCode, review.windowDays),
+        review.status,
+      );
+    }
+    return map;
+  }, [reviews]);
+
+  async function handleReview(
+    anomaly: (typeof report.anomalies)[number],
+    status: WagerReviewStatus,
+  ) {
+    const key = reviewKey(anomaly.userId, anomaly.code, days);
+    setPendingKey(key);
+    try {
+      await saveReview.mutateAsync({
+        targetUserId: anomaly.userId,
+        anomalyCode: anomaly.code,
+        windowDays: days,
+        status,
+        metric: anomaly.metric,
+      });
+      toast.success(`Apuração registrada: ${REVIEW_LABEL[status]}.`);
+    } catch (err: unknown) {
+      const message =
+        err instanceof Error ? err.message : "Não foi possível registrar a apuração.";
+      toast.error(message);
+    } finally {
+      setPendingKey(null);
+    }
+  }
 
   return (
     <Card className={cn("overflow-hidden", className)}>
@@ -118,7 +172,7 @@ export function WagerIntegrityCard({ className, limit = 50 }: WagerIntegrityCard
                     )}
                   >
                     <SeverityIcon severity={anomaly.severity} />
-                    <div className="min-w-0 space-y-1">
+                    <div className="min-w-0 flex-1 space-y-1">
                       <div className="flex flex-wrap items-center gap-2">
                         <span className="text-sm font-semibold text-foreground">
                           {anomaly.displayName}
@@ -126,9 +180,33 @@ export function WagerIntegrityCard({ className, limit = 50 }: WagerIntegrityCard
                         <Badge variant="outline" className="text-[10px]">
                           {severityLabel(anomaly.severity)}
                         </Badge>
+                        {reviewIndex.has(reviewKey(anomaly.userId, anomaly.code, days)) && (
+                          <Badge variant="secondary" className="text-[10px]">
+                            {
+                              REVIEW_LABEL[
+                                reviewIndex.get(reviewKey(anomaly.userId, anomaly.code, days))!
+                              ]
+                            }
+                          </Badge>
+                        )}
                       </div>
                       <p className="text-sm font-medium text-foreground">{anomaly.title}</p>
                       <p className="text-xs text-muted-foreground">{anomaly.detail}</p>
+                      <div className="flex flex-wrap gap-2 pt-1">
+                        {(Object.keys(REVIEW_LABEL) as WagerReviewStatus[]).map((status) => (
+                          <Button
+                            key={status}
+                            type="button"
+                            size="sm"
+                            variant="outline"
+                            className="h-8"
+                            disabled={pendingKey === reviewKey(anomaly.userId, anomaly.code, days)}
+                            onClick={() => void handleReview(anomaly, status)}
+                          >
+                            {REVIEW_LABEL[status]}
+                          </Button>
+                        ))}
+                      </div>
                     </div>
                   </li>
                 ))}
