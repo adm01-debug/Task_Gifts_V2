@@ -28,6 +28,9 @@ import {
  *    um estado desconhecido).
  *  - UI otimista com rollback deterministico para o valor anterior ao clique.
  *  - Cleanup por `cancelled` para evitar setState apos unmount.
+ *  - Escritas serializadas numa fila (`chainRef`): dois cliques concorrentes
+ *    nunca fazem read-modify-write sobre o mesmo estado antigo (lost update).
+ *  - `mountedRef` impede setState apos unmount em qualquer caminho async.
  */
 
 export interface UseTypePreferencesOptions {
@@ -64,6 +67,31 @@ export function useTypePreferences(
   // render e nao devem re-disparar o efeito de carga.
   const optionsRef = useRef(options);
   optionsRef.current = options;
+
+  // Guarda de ciclo de vida: qualquer setState apos unmount e descartado.
+  const mountedRef = useRef(true);
+  useEffect(() => {
+    mountedRef.current = true;
+    return () => {
+      mountedRef.current = false;
+    };
+  }, []);
+
+  // Fila de serializacao das escritas: garante read-modify-write atomico
+  // do ponto de vista da UI (sem lost update entre cliques concorrentes).
+  const chainRef = useRef<Promise<void>>(Promise.resolve());
+  const enqueue = useCallback((task: () => Promise<void>): Promise<void> => {
+    const next = chainRef.current.then(task, task);
+    chainRef.current = next.catch(() => undefined);
+    return next;
+  }, []);
+
+  const safeSetValues = useCallback((updater: (v: PreferenceValues) => PreferenceValues) => {
+    if (mountedRef.current) setValues(updater);
+  }, []);
+  const safeSetSaving = useCallback((v: string | null) => {
+    if (mountedRef.current) setSaving(v);
+  }, []);
 
   const buildDefaults = useCallback((): PreferenceValues => {
     const { types: t, defaultsFor: d } = optionsRef.current;
@@ -140,32 +168,34 @@ export function useTypePreferences(
       if (!user?.id) return;
       const cellId = `${type}:${channel}`;
       const previous = values[type]?.[channel] ?? optionsRef.current.defaultsFor(type)[channel];
-      setSaving(cellId);
-      setValues((v) => ({
+      safeSetSaving(cellId);
+      safeSetValues((v) => ({
         ...v,
         [type]: { ...(v[type] ?? optionsRef.current.defaultsFor(type)), [channel]: value },
       }));
-      try {
-        const current = await readCurrent();
-        const next = mergeChannelPreference(
-          current,
-          type,
-          channel,
-          value,
-          optionsRef.current.defaultsFor(type),
-          optionsRef.current.priorityFor?.(type),
-        );
-        await write(next);
-        toast.success("Preferência atualizada");
-      } catch (err: unknown) {
-        logger.error(`Falha ao salvar preferência (${moduleName})`, String(err));
-        toast.error("Não foi possível salvar a preferência");
-        setValues((v) => ({ ...v, [type]: { ...v[type], [channel]: previous } }));
-      } finally {
-        setSaving(null);
-      }
+      await enqueue(async () => {
+        try {
+          const current = await readCurrent();
+          const next = mergeChannelPreference(
+            current,
+            type,
+            channel,
+            value,
+            optionsRef.current.defaultsFor(type),
+            optionsRef.current.priorityFor?.(type),
+          );
+          await write(next);
+          if (mountedRef.current) toast.success("Preferência atualizada");
+        } catch (err: unknown) {
+          logger.error(`Falha ao salvar preferência (${moduleName})`, String(err));
+          if (mountedRef.current) toast.error("Não foi possível salvar a preferência");
+          safeSetValues((v) => ({ ...v, [type]: { ...v[type], [channel]: previous } }));
+        } finally {
+          safeSetSaving(null);
+        }
+      });
     },
-    [user?.id, values, readCurrent, write, moduleName],
+    [user?.id, values, readCurrent, write, moduleName, enqueue, safeSetValues, safeSetSaving],
   );
 
   const setChannelForAll = useCallback(
@@ -173,8 +203,8 @@ export function useTypePreferences(
       if (!user?.id) return;
       const snapshot = values;
       const list = optionsRef.current.types;
-      setSaving(`bulk:${channel}`);
-      setValues((v) =>
+      safeSetSaving(`bulk:${channel}`);
+      safeSetValues((v) =>
         list.reduce<PreferenceValues>(
           (acc, type) => ({
             ...acc,
@@ -183,26 +213,28 @@ export function useTypePreferences(
           { ...v },
         ),
       );
-      try {
-        const current = await readCurrent();
-        const next = mergeManyChannelPreferences(
-          current,
-          list,
-          channel,
-          value,
-          optionsRef.current.defaultsFor,
-        );
-        await write(next);
-        toast.success("Preferências atualizadas");
-      } catch (err: unknown) {
-        logger.error(`Falha ao salvar preferências em lote (${moduleName})`, String(err));
-        toast.error("Não foi possível salvar as preferências");
-        setValues(snapshot);
-      } finally {
-        setSaving(null);
-      }
+      await enqueue(async () => {
+        try {
+          const current = await readCurrent();
+          const next = mergeManyChannelPreferences(
+            current,
+            list,
+            channel,
+            value,
+            optionsRef.current.defaultsFor,
+          );
+          await write(next);
+          if (mountedRef.current) toast.success("Preferências atualizadas");
+        } catch (err: unknown) {
+          logger.error(`Falha ao salvar preferências em lote (${moduleName})`, String(err));
+          if (mountedRef.current) toast.error("Não foi possível salvar as preferências");
+          safeSetValues(() => snapshot);
+        } finally {
+          safeSetSaving(null);
+        }
+      });
     },
-    [user?.id, values, readCurrent, write, moduleName],
+    [user?.id, values, readCurrent, write, moduleName, enqueue, safeSetValues, safeSetSaving],
   );
 
   return { loading, saving, values, setCell, setChannelForAll };
