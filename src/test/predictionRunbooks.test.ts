@@ -13,8 +13,20 @@ const HOUR = 3_600_000;
  */
 describe("cobertura de runbooks para os alertas de previsão", () => {
   const markets: WatchedMarket[] = [
-    { id: "m-open", title: "Aberto vencido", status: "open", locksAt: NOW - 6 * HOUR, totalPool: 4200 },
-    { id: "m-locked", title: "Travado sem apuração", status: "locked", locksAt: NOW - 96 * HOUR, totalPool: 9100 },
+    {
+      id: "m-open",
+      title: "Aberto vencido",
+      status: "open",
+      locksAt: new Date(NOW - 6 * HOUR).toISOString(),
+      totalPool: 4200,
+    },
+    {
+      id: "m-locked",
+      title: "Travado sem apuração",
+      status: "locked",
+      locksAt: new Date(NOW - 96 * HOUR).toISOString(),
+      totalPool: 9100,
+    },
   ];
 
   const report = runWatchdog(markets, NOW);
