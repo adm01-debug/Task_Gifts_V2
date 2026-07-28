@@ -11287,6 +11287,7 @@ export type Database = {
         }
         Returns: string
       }
+      _guard_manager_or_admin_if_user: { Args: never; Returns: undefined }
       _require_admin: { Args: never; Returns: undefined }
       _require_manager_or_admin: { Args: never; Returns: undefined }
       acknowledge_security_alert: {
@@ -11371,6 +11372,10 @@ export type Database = {
         Returns: Json
       }
       calculate_enps_score: { Args: { p_survey_id: string }; Returns: number }
+      calculate_enps_score_impl: {
+        Args: { p_survey_id: string }
+        Returns: number
+      }
       can_handle_opinion: {
         Args: { _opinion_id: string; _user_id: string }
         Returns: boolean
@@ -11381,6 +11386,10 @@ export type Database = {
         Returns: Json
       }
       check_boss_win_rate_alerts: { Args: { p_days?: number }; Returns: number }
+      check_boss_win_rate_alerts_impl: {
+        Args: { p_days?: number }
+        Returns: number
+      }
       check_login_lockout: { Args: { p_email: string }; Returns: Json }
       check_overdue_postmortem_actions: { Args: never; Returns: Json }
       check_prediction_markets_health: { Args: never; Returns: number }
@@ -11673,6 +11682,18 @@ export type Database = {
           score: number
         }[]
       }
+      get_engagement_factor_scores_impl: {
+        Args: { p_days?: number; p_department_id?: string }
+        Returns: {
+          factor_id: string
+          factor_key: string
+          factor_name: string
+          favorability: number
+          pillar: Database["public"]["Enums"]["climate_pillar"]
+          respondents: number
+          score: number
+        }[]
+      }
       get_engagement_nps: {
         Args: { p_days?: number; p_department_id?: string }
         Returns: {
@@ -11696,7 +11717,41 @@ export type Database = {
           score: number
         }[]
       }
+      get_engagement_nps_history_impl: {
+        Args: { p_bucket?: string; p_department_id?: string; p_months?: number }
+        Returns: {
+          detractors: number
+          metric: string
+          passives: number
+          period_start: string
+          promoters: number
+          respondents: number
+          score: number
+        }[]
+      }
+      get_engagement_nps_impl: {
+        Args: { p_days?: number; p_department_id?: string }
+        Returns: {
+          detractors: number
+          metric: string
+          passives: number
+          promoters: number
+          respondents: number
+          score: number
+        }[]
+      }
       get_engagement_overview: {
+        Args: { p_days?: number; p_department_id?: string }
+        Returns: {
+          answer_count: number
+          eligible_users: number
+          overall_favorability: number
+          overall_score: number
+          participation_rate: number
+          respondents: number
+        }[]
+      }
+      get_engagement_overview_impl: {
         Args: { p_days?: number; p_department_id?: string }
         Returns: {
           answer_count: number
@@ -11728,6 +11783,27 @@ export type Database = {
           score: number
         }[]
       }
+      get_engagement_pillar_benchmark_impl: {
+        Args: {
+          p_company_size?: string
+          p_days?: number
+          p_department_id?: string
+          p_industry?: string
+          p_region?: string
+        }
+        Returns: {
+          benchmark_average: number
+          benchmark_company_size: string
+          benchmark_industry: string
+          benchmark_sample_size: number
+          benchmark_top_10: number
+          benchmark_top_quartile: number
+          favorability: number
+          pillar: Database["public"]["Enums"]["climate_pillar"]
+          respondents: number
+          score: number
+        }[]
+      }
       get_engagement_pillar_correlations: {
         Args: { p_days?: number }
         Returns: {
@@ -11737,7 +11813,26 @@ export type Database = {
           sample_size: number
         }[]
       }
+      get_engagement_pillar_correlations_impl: {
+        Args: { p_days?: number }
+        Returns: {
+          correlation: number
+          pillar_a: Database["public"]["Enums"]["climate_pillar"]
+          pillar_b: Database["public"]["Enums"]["climate_pillar"]
+          sample_size: number
+        }[]
+      }
       get_engagement_pillar_scores: {
+        Args: { p_days?: number; p_department_id?: string }
+        Returns: {
+          answer_count: number
+          favorability: number
+          pillar: Database["public"]["Enums"]["climate_pillar"]
+          respondents: number
+          score: number
+        }[]
+      }
+      get_engagement_pillar_scores_impl: {
         Args: { p_days?: number; p_department_id?: string }
         Returns: {
           answer_count: number
@@ -11812,7 +11907,36 @@ export type Database = {
           severity_weight: number
         }[]
       }
+      get_nr1_risk_matrix_impl: {
+        Args: { p_days?: number; p_department_id?: string }
+        Returns: {
+          category_id: string
+          category_key: string
+          category_name: string
+          description: string
+          factors_evaluated: number
+          legal_reference: string
+          probability: number
+          respondents: number
+          risk_grade: number
+          risk_level: string
+          score: number
+          severity_weight: number
+        }[]
+      }
       get_nr1_summary: {
+        Args: { p_days?: number; p_department_id?: string }
+        Returns: {
+          avg_risk_grade: number
+          categories_evaluated: number
+          critical_count: number
+          high_count: number
+          low_count: number
+          max_risk_grade: number
+          moderate_count: number
+        }[]
+      }
+      get_nr1_summary_impl: {
         Args: { p_days?: number; p_department_id?: string }
         Returns: {
           avg_risk_grade: number
@@ -12178,7 +12302,15 @@ export type Database = {
         Args: { _campaign_id: string }
         Returns: undefined
       }
+      recalc_campaign_progress_impl: {
+        Args: { _campaign_id: string }
+        Returns: undefined
+      }
       recalc_campaign_teams: {
+        Args: { _campaign_id: string }
+        Returns: undefined
+      }
+      recalc_campaign_teams_impl: {
         Args: { _campaign_id: string }
         Returns: undefined
       }
