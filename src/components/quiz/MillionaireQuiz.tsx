@@ -8,11 +8,15 @@ import { Progress } from "@/components/ui/progress";
 import confetti from "canvas-confetti";
 import { useRecordAnswer } from "@/hooks/useQuizStats";
 import { AudienceHelp, PhoneHelp, PrizeLadder, GameOverScreen, PRIZE_LADDER, CHECKPOINTS, formatPrize } from "./MillionaireHelpers";
+import { quizPlayService } from "@/services/quizQuestionsService";
+import { logger } from "@/services/loggingService";
+import { toast } from "sonner";
 
 export interface MillionaireQuestion {
   id: string;
   question: string;
-  options: { id: string; text: string; isCorrect: boolean }[];
+  /** Alternativas sem gabarito — a correção é sempre feita no servidor. */
+  options: { id: string; text: string }[];
   difficulty: "easy" | "medium" | "hard";
   explanation?: string;
 }
@@ -27,6 +31,8 @@ export function MillionaireQuiz({ questions, title = "Show do Milhão", onComple
   const [currentLevel, setCurrentLevel] = useState(0);
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
   const [isRevealed, setIsRevealed] = useState(false);
+  const [correctOptionId, setCorrectOptionId] = useState<string | null>(null);
+  const [isGrading, setIsGrading] = useState(false);
   const [isGameOver, setIsGameOver] = useState(false);
   const [wonPrize, setWonPrize] = useState(0);
   const [timeLeft, setTimeLeft] = useState(30);
@@ -51,28 +57,37 @@ export function MillionaireQuiz({ questions, title = "Show do Milhão", onComple
     return () => clearTimeout(timer);
   }, [timeLeft, isRevealed, isGameOver, isTimerPaused, showAudience, showPhone]);
 
-  const handleConfirm = () => {
-    if (!selectedOption) return;
-    setIsRevealed(true);
-    const isCorrect = currentQuestion.options.find(o => o.id === selectedOption)?.isCorrect || false;
-    recordAnswer.mutate({ question_id: currentQuestion.id, selected_option_id: selectedOption, is_correct: isCorrect, time_spent_ms: Date.now() - questionStartTime.current });
-    if (isCorrect) confetti({ particleCount: 50, spread: 60, origin: { y: 0.7 }, colors: ['#fbbf24', '#f59e0b', '#d97706'] });
+  const handleConfirm = async () => {
+    if (!selectedOption || isGrading) return;
+    setIsGrading(true);
+    try {
+      const result = await quizPlayService.gradeAnswer(currentQuestion.id, selectedOption);
+      setCorrectOptionId(result.correct_option_id);
+      setIsRevealed(true);
+      recordAnswer.mutate({ question_id: currentQuestion.id, selected_option_id: selectedOption, is_correct: result.is_correct, time_spent_ms: Date.now() - questionStartTime.current });
+      if (result.is_correct) confetti({ particleCount: 50, spread: 60, origin: { y: 0.7 }, colors: ['#fbbf24', '#f59e0b', '#d97706'] });
+    } catch (err: unknown) {
+      logger.apiError("grade_quiz_answer", err, "MillionaireQuiz");
+      toast.error("Não foi possível validar sua resposta. Tente novamente.");
+    } finally {
+      setIsGrading(false);
+    }
   };
 
   const handleNext = () => {
-    const isCorrect = currentQuestion.options.find(o => o.id === selectedOption)?.isCorrect;
+    const isCorrect = correctOptionId !== null && selectedOption === correctOptionId;
     if (!isCorrect) { setIsGameOver(true); setWonPrize(guaranteedPrize); onComplete?.(currentLevel, guaranteedPrize); return; }
     if (currentLevel >= questions.length - 1) { setIsGameOver(true); setWonPrize(PRIZE_LADDER[currentLevel]); onComplete?.(currentLevel + 1, PRIZE_LADDER[currentLevel]); confetti({ particleCount: 200, spread: 120, origin: { y: 0.5 } }); return; }
-    setCurrentLevel(l => l + 1); setSelectedOption(null); setIsRevealed(false); setEliminatedOptions(new Set()); setTimeLeft(30 - Math.floor(currentLevel / 5) * 5);
+    setCurrentLevel(l => l + 1); setSelectedOption(null); setIsRevealed(false); setCorrectOptionId(null); setEliminatedOptions(new Set()); setTimeLeft(30 - Math.floor(currentLevel / 5) * 5);
   };
 
-  const handleRestart = () => { setCurrentLevel(0); setSelectedOption(null); setIsRevealed(false); setIsGameOver(false); setWonPrize(0); setTimeLeft(30); setUsedLifelines({ fifty: false, audience: false, phone: false }); setEliminatedOptions(new Set()); };
+  const handleRestart = () => { setCurrentLevel(0); setSelectedOption(null); setIsRevealed(false); setCorrectOptionId(null); setIsGameOver(false); setWonPrize(0); setTimeLeft(30); setUsedLifelines({ fifty: false, audience: false, phone: false }); setEliminatedOptions(new Set()); };
 
-  const getOptionStyle = (option: { id: string; isCorrect: boolean }) => {
+  const getOptionStyle = (option: { id: string }) => {
     if (eliminatedOptions.has(option.id)) return "opacity-30 pointer-events-none";
     if (!isRevealed) return selectedOption === option.id ? "border-amber-500 bg-amber-500/20 shadow-lg shadow-amber-500/20" : "border-border/50 hover:border-primary/50";
-    if (option.isCorrect) return "border-emerald-500 bg-emerald-500/20";
-    if (selectedOption === option.id && !option.isCorrect) return "border-red-500 bg-red-500/20";
+    if (option.id === correctOptionId) return "border-emerald-500 bg-emerald-500/20";
+    if (selectedOption === option.id) return "border-red-500 bg-red-500/20";
     return "border-border/30 opacity-50";
   };
 
@@ -92,7 +107,17 @@ export function MillionaireQuiz({ questions, title = "Show do Milhão", onComple
         <PrizeLadder currentLevel={currentLevel} />
         <div className="lg:col-span-3 space-y-6 order-1 lg:order-2">
           <div className="flex justify-center gap-3">
-            <Button variant="outline" size="lg" className={`gap-2 ${usedLifelines.fifty ? 'opacity-30 line-through' : ''}`} onClick={() => { if (usedLifelines.fifty) return; setUsedLifelines(p => ({ ...p, fifty: true })); const wrong = currentQuestion.options.filter(o => !o.isCorrect); setEliminatedOptions(new Set(wrong.slice(0, 2).map(o => o.id))); }} disabled={usedLifelines.fifty || isRevealed}><Percent className="w-4 h-4" />50/50</Button>
+            <Button variant="outline" size="lg" className={`gap-2 ${usedLifelines.fifty ? 'opacity-30 line-through' : ''}`} onClick={async () => {
+              if (usedLifelines.fifty) return;
+              setUsedLifelines(p => ({ ...p, fifty: true }));
+              try {
+                const wrongIds = await quizPlayService.fiftyFifty(currentQuestion.id);
+                setEliminatedOptions(new Set(wrongIds));
+              } catch (err: unknown) {
+                logger.apiError("quiz_fifty_fifty", err, "MillionaireQuiz");
+                toast.error("Não foi possível usar a ajuda agora.");
+              }
+            }} disabled={usedLifelines.fifty || isRevealed}><Percent className="w-4 h-4" />50/50</Button>
             <Button variant="outline" size="lg" className={`gap-2 ${usedLifelines.audience ? 'opacity-30 line-through' : ''}`} onClick={() => { if (usedLifelines.audience || isRevealed) return; setUsedLifelines(p => ({ ...p, audience: true })); setShowAudience(true); }} disabled={usedLifelines.audience || isRevealed}><Users className="w-4 h-4" />Plateia</Button>
             <Button variant="outline" size="lg" className={`gap-2 ${usedLifelines.phone ? 'opacity-30 line-through' : ''}`} onClick={() => { if (usedLifelines.phone || isRevealed) return; setUsedLifelines(p => ({ ...p, phone: true })); setShowPhone(true); }} disabled={usedLifelines.phone || isRevealed}><Phone className="w-4 h-4" />Ligar</Button>
           </div>
@@ -108,7 +133,7 @@ export function MillionaireQuiz({ questions, title = "Show do Milhão", onComple
                 onClick={() => { if (!isRevealed && !eliminatedOptions.has(option.id)) setSelectedOption(option.id); }} whileHover={!isRevealed && !eliminatedOptions.has(option.id) ? { scale: 1.02 } : {}} whileTap={!isRevealed ? { scale: 0.98 } : {}}>
                 <span className="w-8 h-8 rounded-full border-2 border-current flex items-center justify-center text-sm font-bold shrink-0">{String.fromCharCode(65 + idx)}</span>
                 <span className="text-sm font-medium">{option.text}</span>
-                {isRevealed && option.isCorrect && <Sparkles className="w-5 h-5 text-emerald-500 ml-auto" />}
+                {isRevealed && option.id === correctOptionId && <Sparkles className="w-5 h-5 text-emerald-500 ml-auto" />}
               </motion.button>
             ))}
           </div>
@@ -119,9 +144,9 @@ export function MillionaireQuiz({ questions, title = "Show do Milhão", onComple
             {!isRevealed ? (
               <>
                 <Button variant="outline" onClick={() => { const prize = currentLevel > 0 ? PRIZE_LADDER[currentLevel - 1] : 0; setIsGameOver(true); setWonPrize(prize); onComplete?.(currentLevel, prize); }}>Parar (garantir {formatPrize(currentLevel > 0 ? PRIZE_LADDER[currentLevel - 1] : 0)})</Button>
-                <Button onClick={handleConfirm} disabled={!selectedOption} size="lg" className="gap-2 bg-gradient-to-r from-amber-500 to-orange-500"><HelpCircle className="w-4 h-4" />Confirmar Resposta</Button>
+                <Button onClick={handleConfirm} disabled={!selectedOption || isGrading} size="lg" className="gap-2 bg-gradient-to-r from-amber-500 to-orange-500"><HelpCircle className="w-4 h-4" />{isGrading ? "Validando..." : "Confirmar Resposta"}</Button>
               </>
-            ) : <Button onClick={handleNext} size="lg" className="gap-2"><ChevronRight className="w-4 h-4" />{currentQuestion.options.find(o => o.id === selectedOption)?.isCorrect ? "Próxima Pergunta" : "Ver Resultado"}</Button>}
+            ) : <Button onClick={handleNext} size="lg" className="gap-2"><ChevronRight className="w-4 h-4" />{selectedOption === correctOptionId ? "Próxima Pergunta" : "Ver Resultado"}</Button>}
           </div>
         </div>
       </div>

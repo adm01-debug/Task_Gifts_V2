@@ -6,6 +6,8 @@ import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { motion } from "framer-motion";
 import type { MillionaireQuestion } from "./MillionaireQuiz";
+import { getQuizLifeline } from "@/services/quizQuestionsService";
+import { logger } from "@/services/loggingService";
 
 export const PRIZE_LADDER = [100, 200, 300, 500, 1000, 2000, 4000, 8000, 16000, 32000, 64000, 125000, 250000, 500000, 1000000];
 export const CHECKPOINTS = [4, 9, 14];
@@ -17,14 +19,24 @@ export function formatPrize(value: number): string {
 }
 
 export function AudienceHelp({ question, onClose }: { question: MillionaireQuestion; onClose: () => void }) {
+  // A distribuição é calculada no servidor: o gabarito nunca chega ao cliente.
   const [percentages, setPercentages] = useState<number[]>([]);
 
   useEffect(() => {
-    const correctIndex = question.options.findIndex(o => o.isCorrect);
-    const baseCorrect = question.difficulty === "easy" ? 70 : question.difficulty === "medium" ? 55 : 40;
-    const probs = question.options.map((_, idx) => idx === correctIndex ? baseCorrect + Math.random() * 15 : Math.random() * (100 - baseCorrect) / 3);
-    const total = probs.reduce((a, b) => a + b, 0);
-    setPercentages(probs.map(p => Math.round((p / total) * 100)));
+    let cancelled = false;
+    getQuizLifeline(question.id, "audience")
+      .then((result) => {
+        if (cancelled) return;
+        const byId = new Map((result.distribution || []).map((d) => [d.option_id, d.percent]));
+        setPercentages(question.options.map((o) => byId.get(o.id) ?? 0));
+      })
+      .catch((err: unknown) => {
+        logger.apiError("quiz_lifeline_audience", err, "MillionaireHelpers");
+        if (!cancelled) setPercentages(question.options.map(() => 0));
+      });
+    return () => {
+      cancelled = true;
+    };
   }, [question]);
 
   return (
@@ -49,10 +61,30 @@ export function AudienceHelp({ question, onClose }: { question: MillionaireQuest
 
 export function PhoneHelp({ question, onClose }: { question: MillionaireQuestion; onClose: () => void }) {
   const [message, setMessage] = useState("");
-  const correctLetter = String.fromCharCode(65 + question.options.findIndex(o => o.isCorrect));
+  const [suggestion, setSuggestion] = useState<{ letter: string; confidence: number } | null>(null);
 
   useEffect(() => {
-    const confidence = question.difficulty === "easy" ? "tenho certeza" : question.difficulty === "medium" ? "acho que" : "não tenho certeza, mas chuto";
+    let cancelled = false;
+    getQuizLifeline(question.id, "phone")
+      .then((result) => {
+        if (cancelled) return;
+        const idx = question.options.findIndex((o) => o.id === result.suggested_option_id);
+        if (idx < 0) return;
+        setSuggestion({ letter: String.fromCharCode(65 + idx), confidence: result.confidence ?? 60 });
+      })
+      .catch((err: unknown) => {
+        logger.apiError("quiz_lifeline_phone", err, "MillionaireHelpers");
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [question]);
+
+  useEffect(() => {
+    if (!suggestion) return;
+    const correctLetter = suggestion.letter;
+    const confidence =
+      suggestion.confidence >= 85 ? "tenho certeza" : suggestion.confidence >= 70 ? "acho que" : "não tenho certeza, mas chuto";
     const messages = [
       `Hmm, deixa eu pensar... Eu ${confidence} que é a alternativa ${correctLetter}!`,
       `Olha, ${confidence} a resposta é ${correctLetter}.`,
@@ -62,7 +94,7 @@ export function PhoneHelp({ question, onClose }: { question: MillionaireQuestion
     const selected = messages[Math.floor(Math.random() * messages.length)];
     const interval = setInterval(() => { if (idx <= selected.length) { setMessage(selected.slice(0, idx)); idx++; } else { clearInterval(interval); } }, 50);
     return () => clearInterval(interval);
-  }, [question, correctLetter]);
+  }, [suggestion]);
 
   return (
     <Dialog open onOpenChange={() => onClose()}>

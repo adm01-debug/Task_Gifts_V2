@@ -12057,6 +12057,14 @@ export type Database = {
           total_answers: number
         }[]
       }
+      get_quiz_lifeline: {
+        Args: { p_kind: string; p_question_id: string }
+        Returns: Json
+      }
+      get_quiz_play_set: {
+        Args: { p_limit?: number; p_quiz_type: string }
+        Returns: Json
+      }
       get_reliability_slo: { Args: { p_hours?: number }; Returns: Json }
       get_reliability_timeline: {
         Args: { p_hours?: number }
@@ -12174,6 +12182,10 @@ export type Database = {
         }[]
       }
       get_webhook_executive_metrics_7d: { Args: never; Returns: Json }
+      grade_quiz_answer: {
+        Args: { p_option_id: string; p_question_id: string }
+        Returns: Json
+      }
       grant_card_pack: {
         Args: {
           p_size?: number
@@ -12321,6 +12333,7 @@ export type Database = {
         Returns: Json
       }
       publish_auction: { Args: { p_auction_id: string }; Returns: Json }
+      quiz_fifty_fifty: { Args: { p_question_id: string }; Returns: string[] }
       raise_lucky_wheel_window_alerts: {
         Args: {
           p_coins_per_spin_budget?: number

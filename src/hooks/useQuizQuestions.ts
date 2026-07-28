@@ -1,12 +1,25 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { quizQuestionsService, QuizQuestion, CreateQuestionData, UpdateQuestionData } from "@/services/quizQuestionsService";
+import { quizQuestionsService, quizPlayService, QuizQuestion, QuizPlayQuestion, CreateQuestionData, UpdateQuestionData } from "@/services/quizQuestionsService";
 
 const questionKeys = {
   all: ['quiz-questions'] as const,
   list: (filters?: Record<string, unknown>) => [...questionKeys.all, 'list', filters] as const,
   detail: (id: string) => [...questionKeys.all, 'detail', id] as const,
   withOptions: (filters?: Record<string, unknown>) => [...questionKeys.all, 'with-options', filters] as const,
+  playSet: (quizType: string, limit: number) => [...questionKeys.all, 'play-set', quizType, limit] as const,
 };
+
+/**
+ * Conjunto jogável: perguntas e alternativas SEM o gabarito.
+ * A correção é feita exclusivamente no servidor.
+ */
+export function useQuizPlaySet(quizType: string, limit = 10) {
+  return useQuery<QuizPlayQuestion[]>({
+    queryKey: questionKeys.playSet(quizType, limit),
+    queryFn: () => quizPlayService.getPlaySet(quizType, limit),
+    staleTime: 5 * 60 * 1000,
+  });
+}
 
 export function useQuizQuestions(filters?: { 
   quiz_type?: string; 

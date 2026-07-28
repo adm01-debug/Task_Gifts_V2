@@ -9,8 +9,8 @@ import { MagicCardQuiz, QuizQuestion } from "@/components/quiz/MagicCardQuiz";
 import { MillionaireQuiz, MillionaireQuestion } from "@/components/quiz/MillionaireQuiz";
 import { QuizDailyRanking } from "@/components/quiz/QuizDailyRanking";
 import { useSaveQuizScore } from "@/hooks/useQuizScores";
-import { useQuizQuestionsWithOptions } from "@/hooks/useQuizQuestions";
-import { QuizQuestion as DbQuizQuestion } from "@/services/quizQuestionsService";
+import { useQuizPlaySet } from "@/hooks/useQuizQuestions";
+import { QuizPlayQuestion } from "@/services/quizQuestionsService";
 import { toast } from "sonner";
 import { SEOHead } from "@/components/SEOHead";
 import { useSEO } from "@/hooks/useSEO";
@@ -18,15 +18,14 @@ import { useSEO } from "@/hooks/useSEO";
  import { PageShell } from "@/components/navigation";
 import { useIsMobile } from "@/hooks/use-mobile";
 
-// Transform database questions to MagicCardQuiz format
-function transformToMagicQuestions(dbQuestions: DbQuizQuestion[]): QuizQuestion[] {
+// Transform database questions to MagicCardQuiz format (sem gabarito no cliente)
+function transformToMagicQuestions(dbQuestions: QuizPlayQuestion[]): QuizQuestion[] {
   return dbQuestions.map(q => ({
     id: q.id,
     question: q.question,
     options: (q.options || []).map(opt => ({
       id: opt.id,
       text: opt.text,
-      isCorrect: opt.is_correct,
     })),
     explanation: q.explanation || undefined,
     points: q.points,
@@ -34,7 +33,7 @@ function transformToMagicQuestions(dbQuestions: DbQuizQuestion[]): QuizQuestion[
 }
 
 // Transform database questions to MillionaireQuiz format
-function transformToMillionaireQuestions(dbQuestions: DbQuizQuestion[]): MillionaireQuestion[] {
+function transformToMillionaireQuestions(dbQuestions: QuizPlayQuestion[]): MillionaireQuestion[] {
   // Sort by difficulty: easy -> medium -> hard
   const difficultyOrder = { easy: 0, medium: 1, hard: 2 };
   const sorted = [...dbQuestions].sort((a, b) => 
@@ -48,7 +47,6 @@ function transformToMillionaireQuestions(dbQuestions: DbQuizQuestion[]): Million
     options: (q.options || []).map(opt => ({
       id: opt.id,
       text: opt.text,
-      isCorrect: opt.is_correct,
     })),
     difficulty: (q.difficulty as "easy" | "medium" | "hard") || "easy",
     explanation: q.explanation || undefined,
@@ -77,17 +75,8 @@ export default function DailyQuiz() {
   const saveScore = useSaveQuizScore();
 
   // Fetch questions from database
-  const { data: magicDbQuestions, isLoading: loadingMagic } = useQuizQuestionsWithOptions({
-    quiz_type: 'magic_cards',
-    is_active: true,
-    limit: 10,
-  });
-
-  const { data: millionaireDbQuestions, isLoading: loadingMillionaire } = useQuizQuestionsWithOptions({
-    quiz_type: 'millionaire',
-    is_active: true,
-    limit: 15,
-  });
+  const { data: magicDbQuestions, isLoading: loadingMagic } = useQuizPlaySet('magic_cards', 10);
+  const { data: millionaireDbQuestions, isLoading: loadingMillionaire } = useQuizPlaySet('millionaire', 15);
 
   // Transform and shuffle questions
   const magicQuestions = useMemo(() => {
