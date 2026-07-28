@@ -10571,6 +10571,56 @@ export type Database = {
           },
         ]
       }
+      wager_integrity_review_events: {
+        Row: {
+          anomaly_code: string
+          changed_by: string | null
+          created_at: string
+          id: string
+          metric: number
+          new_status: string
+          notes: string | null
+          previous_status: string | null
+          review_id: string
+          target_user_id: string
+          window_days: number
+        }
+        Insert: {
+          anomaly_code: string
+          changed_by?: string | null
+          created_at?: string
+          id?: string
+          metric?: number
+          new_status: string
+          notes?: string | null
+          previous_status?: string | null
+          review_id: string
+          target_user_id: string
+          window_days: number
+        }
+        Update: {
+          anomaly_code?: string
+          changed_by?: string | null
+          created_at?: string
+          id?: string
+          metric?: number
+          new_status?: string
+          notes?: string | null
+          previous_status?: string | null
+          review_id?: string
+          target_user_id?: string
+          window_days?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "wager_integrity_review_events_review_id_fkey"
+            columns: ["review_id"]
+            isOneToOne: false
+            referencedRelation: "wager_integrity_reviews"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       wager_integrity_reviews: {
         Row: {
           anomaly_code: string
