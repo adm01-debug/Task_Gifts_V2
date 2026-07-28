@@ -40,15 +40,6 @@ export interface WagerBulkSaveResult {
   failures: Array<{ date: string; reason: string }>;
 }
 
-interface RemovedWagerSaveResponse {
-  success: boolean;
-  reason?: string;
-  id?: string;
-  /** Pergunta já respondida: apenas explicação/ativação foram alteradas. */
-  locked?: boolean;
-  entries?: number;
-}
-
 function toInt(value: unknown, fallback = 0): number {
   const n = Number(value);
   return Number.isFinite(n) ? Math.trunc(n) : fallback;
