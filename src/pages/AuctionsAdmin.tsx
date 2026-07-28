@@ -4,7 +4,7 @@ import { Gavel } from "lucide-react";
 import { PageShell } from "@/components/navigation";
 import { SEOHead } from "@/components/SEOHead";
 import { SectionErrorBoundary } from "@/components/SectionErrorBoundary";
-import { AuctionAdminForm, AuctionAdminTable } from "@/components/auction";
+import { AuctionAdminForm, AuctionAdminTable, AuctionAuditTrail } from "@/components/auction";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -85,6 +85,8 @@ export default function AuctionsAdmin() {
                 <AuctionAdminTable auctions={auctions ?? []} />
               )}
             </div>
+
+            <AuctionAuditTrail />
           </div>
         </SectionErrorBoundary>
       </PageShell>
