@@ -56,7 +56,9 @@ function escapeCell(value: string): string {
 function cell(value: unknown): string {
   if (value === null || value === undefined) return escapeCell("");
   if (typeof value === "number") {
-    return escapeCell(Number.isFinite(value) ? String(value) : "");
+    // Números são seguros por definição: não recebem o apóstrofo defensivo,
+    // caso contrário valores negativos viriam como texto na planilha.
+    return Number.isFinite(value) ? `"${value}"` : '""';
   }
   return escapeCell(String(value));
 }
