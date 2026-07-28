@@ -5782,6 +5782,144 @@ export type Database = {
         }
         Relationships: []
       }
+      memory_decks: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          department_id: string | null
+          description: string | null
+          id: string
+          is_active: boolean
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          department_id?: string | null
+          description?: string | null
+          id?: string
+          is_active?: boolean
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          department_id?: string | null
+          description?: string | null
+          id?: string
+          is_active?: boolean
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "memory_decks_department_id_fkey"
+            columns: ["department_id"]
+            isOneToOne: false
+            referencedRelation: "departments"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      memory_pairs: {
+        Row: {
+          created_at: string
+          deck_id: string
+          id: string
+          match: string
+          term: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          deck_id: string
+          id?: string
+          match: string
+          term: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          deck_id?: string
+          id?: string
+          match?: string
+          term?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "memory_pairs_deck_id_fkey"
+            columns: ["deck_id"]
+            isOneToOne: false
+            referencedRelation: "memory_decks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      memory_sessions: {
+        Row: {
+          coins_awarded: number
+          created_at: string
+          deck_id: string
+          duration_ms: number
+          finished_at: string | null
+          id: string
+          matched_pairs: number
+          moves: number
+          pairs_total: number
+          session_date: string
+          started_at: string
+          status: string
+          updated_at: string
+          user_id: string
+          xp_awarded: number
+        }
+        Insert: {
+          coins_awarded?: number
+          created_at?: string
+          deck_id: string
+          duration_ms?: number
+          finished_at?: string | null
+          id?: string
+          matched_pairs?: number
+          moves?: number
+          pairs_total?: number
+          session_date?: string
+          started_at?: string
+          status?: string
+          updated_at?: string
+          user_id: string
+          xp_awarded?: number
+        }
+        Update: {
+          coins_awarded?: number
+          created_at?: string
+          deck_id?: string
+          duration_ms?: number
+          finished_at?: string | null
+          id?: string
+          matched_pairs?: number
+          moves?: number
+          pairs_total?: number
+          session_date?: string
+          started_at?: string
+          status?: string
+          updated_at?: string
+          user_id?: string
+          xp_awarded?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "memory_sessions_deck_id_fkey"
+            columns: ["deck_id"]
+            isOneToOne: false
+            referencedRelation: "memory_decks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       mentorship_mission_progress: {
         Row: {
           apprentice_completed_at: string | null
@@ -10791,6 +10929,10 @@ export type Database = {
       erf_inverse: { Args: { x: number }; Returns: number }
       expire_card_trades: { Args: never; Returns: number }
       finish_lightning_round: { Args: { p_session_id: string }; Returns: Json }
+      finish_memory_session: {
+        Args: { p_matched_pairs: number; p_moves: number; p_session_id: string }
+        Returns: Json
+      }
       generate_action_plan_from_factor: {
         Args: {
           p_days?: number
@@ -11495,6 +11637,7 @@ export type Database = {
       snapshot_push_outbox_health: { Args: never; Returns: string }
       spin_lucky_wheel: { Args: { p_dedupe_key?: string }; Returns: Json }
       start_lightning_round: { Args: never; Returns: Json }
+      start_memory_session: { Args: { p_deck_id: string }; Returns: Json }
       start_tournament: { Args: { p_tournament_id: string }; Returns: Json }
       submit_engagement_answer: {
         Args: {
