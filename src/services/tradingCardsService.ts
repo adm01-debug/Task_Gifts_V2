@@ -200,4 +200,32 @@ export const tradingCardsService = {
     }
     return (data as unknown as TradeActionResult) ?? { success: false };
   },
+
+  /**
+   * Progresso das recompensas de coleção. A agregação roda no servidor
+   * (`SECURITY DEFINER`) para que o cálculo do prêmio nunca dependa do cliente.
+   */
+  async listSetRewards(): Promise<SetRewardRow[]> {
+    const { data, error } = await supabase.rpc("get_card_set_rewards");
+
+    if (error) {
+      logger.error("Falha ao carregar recompensas de coleção", "tradingCardsService.listSetRewards", error);
+      throw error;
+    }
+    const rows = (data as unknown as SetRewardRow[]) || [];
+    return Array.isArray(rows) ? rows : [];
+  },
+
+  async claimSetReward(setCode: string, milestone: SetMilestone): Promise<ClaimSetRewardResult> {
+    const { data, error } = await supabase.rpc("claim_card_set_reward", {
+      p_set_code: setCode,
+      p_milestone: milestone,
+    });
+
+    if (error) {
+      logger.error("Falha ao resgatar recompensa de coleção", "tradingCardsService.claimSetReward", error);
+      throw error;
+    }
+    return (data as unknown as ClaimSetRewardResult) ?? { success: false };
+  },
 };
