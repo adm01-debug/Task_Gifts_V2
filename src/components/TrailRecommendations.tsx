@@ -6,11 +6,10 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useNavigate } from "react-router-dom";
-import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { toast } from "sonner";
 import { logger } from "@/services/loggingService";
-import { describeEdgeError } from "@/lib/edgeErrors";
+import { invokeEdgeSafe } from "@/lib/requestId";
 
 interface TrailRecommendation {
   trailId: string;
@@ -52,11 +51,21 @@ export function TrailRecommendations() {
     setError(null);
 
     try {
-      const { data, error: fnError } = await supabase.functions.invoke("trail-recommendations", {
-        body: { userId: user.id },
-      });
+      const { data, error: fnError, requestId } = await invokeEdgeSafe<RecommendationsResponse & { error?: unknown }>(
+        "trail-recommendations",
+        { body: { userId: user.id } },
+      );
 
-      if (fnError) throw fnError;
+      if (fnError) {
+        logger.apiError(
+          `fetchRecommendations (requestId=${requestId})`,
+          new Error(fnError.message),
+          "TrailRecommendations",
+        );
+        setError(fnError.message);
+        toast.error(fnError.message);
+        return;
+      }
 
       if (!data || typeof data !== "object") {
         throw new Error("Resposta inválida do serviço de recomendações.");
@@ -69,7 +78,7 @@ export function TrailRecommendations() {
       setRecommendations(data);
       toast.success("Recomendações geradas com sucesso!");
     } catch (err: unknown) {
-      const { message } = await describeEdgeError(err);
+      const message = err instanceof Error ? err.message : "Falha ao gerar recomendações.";
       logger.apiError(
         "fetchRecommendations",
         err instanceof Error ? err : new Error(message),

@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
+import { invokeEdgeSafe } from "@/lib/requestId";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -148,10 +149,10 @@ export default function WebhookSubscriptionDetail() {
     }
     const t = toast.loading("Reenviando webhook…");
     try {
-      const { error } = await supabase.functions.invoke("webhook-dispatcher", {
+      const { error } = await invokeEdgeSafe("webhook-dispatcher", {
         body: { subscription_id: id, event_type: eventType, payload: data },
       });
-      if (error) throw error;
+      if (error) throw new Error(error.message);
       toast.success("Webhook reenviado", { id: t });
       setTimeout(() => refetch(), 1500);
       return true;
@@ -203,10 +204,10 @@ export default function WebhookSubscriptionDetail() {
         continue;
       }
       try {
-        const { error } = await supabase.functions.invoke("webhook-dispatcher", {
+        const { error } = await invokeEdgeSafe("webhook-dispatcher", {
           body: { subscription_id: id, event_type: eventType, payload: data },
         });
-        if (error) throw error;
+        if (error) throw new Error(error.message);
         ok++;
       } catch {
         fail++;

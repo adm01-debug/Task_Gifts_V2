@@ -1,5 +1,6 @@
 import { supabase } from "@/integrations/supabase/client";
 import { logger } from "./loggingService";
+import { invokeEdgeSafe } from "@/lib/requestId";
 import {
   normalizeDeviceLabel,
   type PushSyncEvent,
@@ -62,9 +63,9 @@ export const pushSubscriptionService = {
 
   async getPublicKey(): Promise<string | null> {
     try {
-      const { data, error } = await supabase.functions.invoke("push-public-key");
+      const { data, error } = await invokeEdgeSafe<{ publicKey: string | null }>("push-public-key");
       if (error) return null;
-      return (data as { publicKey: string | null } | null)?.publicKey ?? null;
+      return data?.publicKey ?? null;
     } catch {
       return null;
     }
@@ -387,7 +388,7 @@ export const pushSubscriptionService = {
     const broadcast = buildRevocationBroadcast(entry);
     if (broadcast) {
       try {
-        await supabase.functions.invoke("push-device-revoked", {
+        await invokeEdgeSafe("push-device-revoked", {
           body: {
             exclude_subscription_id: broadcast.exclude_subscription_id,
             title: broadcast.title,

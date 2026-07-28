@@ -1,5 +1,5 @@
 import { supabase } from "@/integrations/supabase/client";
-import { describeEdgeError } from "@/lib/edgeErrors";
+import { invokeEdgeSafe } from "@/lib/requestId";
 
 export type AICourseJobStatus = "pending" | "processing" | "succeeded" | "failed";
 
@@ -54,13 +54,12 @@ export const aiCourseBuilderService = {
   },
 
   async triggerBuild(jobId: string): Promise<void> {
-    const { error } = await supabase.functions.invoke("ai-course-builder", {
+    const { error, requestId } = await invokeEdgeSafe("ai-course-builder", {
       body: { job_id: jobId },
     });
     if (error) {
-      // Preserva a causa original para telemetria, mas expõe mensagem tratada.
-      const { message } = await describeEdgeError(error);
-      const wrapped = new Error(message);
+      // Mensagem já tratada; requestId permite correlacionar com a edge function.
+      const wrapped = new Error(`${error.message} (ref: ${requestId})`);
       (wrapped as Error & { cause?: unknown }).cause = error;
       throw wrapped;
     }

@@ -1,5 +1,6 @@
 import { supabase } from "@/integrations/supabase/client";
 import { logger } from "./loggingService";
+import { invokeEdgeSafe } from "@/lib/requestId";
 import { profilesService } from "./profilesService";
 
 export interface SalesCampaign {
@@ -138,7 +139,7 @@ async function sendCampaignPush(params: {
 }): Promise<void> {
   if (!params.userIds.length) return;
   try {
-    await supabase.functions.invoke("send-campaign-push", {
+    await invokeEdgeSafe("send-campaign-push", {
       body: {
         user_ids: params.userIds,
         type: params.type,
