@@ -165,6 +165,8 @@ export function MagicCardQuiz({ questions, title = "Quiz Cartas Mágicas", onCom
   const [flippedCards, setFlippedCards] = useState<Set<number>>(new Set());
   const [answers, setAnswers] = useState<Map<number, string>>(new Map());
   const [score, setScore] = useState(0);
+  const [gradedAnswers, setGradedAnswers] = useState<Map<number, { correctOptionId: string | null; isCorrect: boolean }>>(new Map());
+  const [isGrading, setIsGrading] = useState(false);
   const [isComplete, setIsComplete] = useState(false);
   const [streak, setStreak] = useState(0);
   const questionStartTime = useRef<number>(Date.now());
@@ -176,23 +178,33 @@ export function MagicCardQuiz({ questions, title = "Quiz Cartas Mágicas", onCom
   const selectedAnswer = answers.get(currentIndex) || null;
 
   const totalPoints = questions.reduce((sum, q) => sum + q.points, 0);
-  const correctCount = Array.from(answers.entries()).filter(([idx, answerId]) => {
-    const q = questions[idx];
-    return q.options.find(o => o.id === answerId)?.isCorrect;
-  }).length;
+  const correctCount = Array.from(gradedAnswers.values()).filter(g => g.isCorrect).length;
+  const currentCorrectOptionId = gradedAnswers.get(currentIndex)?.correctOptionId ?? null;
 
   const handleFlip = () => {
     setFlippedCards(prev => new Set([...prev, currentIndex]));
     questionStartTime.current = Date.now();
   };
 
-  const handleAnswer = (optionId: string) => {
-    const selectedOption = currentQuestion.options.find(o => o.id === optionId);
-    const isCorrect = selectedOption?.isCorrect || false;
+  const handleAnswer = async (optionId: string) => {
+    if (isGrading) return;
     const timeSpent = Date.now() - questionStartTime.current;
-    
-    setAnswers(prev => new Map([...prev, [currentIndex, optionId]]));
-    
+    setIsGrading(true);
+
+    let isCorrect = false;
+    try {
+      const result = await quizPlayService.gradeAnswer(currentQuestion.id, optionId);
+      isCorrect = result.is_correct;
+      setAnswers(prev => new Map([...prev, [currentIndex, optionId]]));
+      setGradedAnswers(prev => new Map([...prev, [currentIndex, { correctOptionId: result.correct_option_id, isCorrect }]]));
+    } catch (err: unknown) {
+      logger.apiError("grade_quiz_answer", err, "MagicCardQuiz");
+      toast.error("Não foi possível validar sua resposta. Tente novamente.");
+      setIsGrading(false);
+      return;
+    }
+    setIsGrading(false);
+
     // Record answer for statistics
     recordAnswer.mutate({
       question_id: currentQuestion.id,
@@ -200,7 +212,7 @@ export function MagicCardQuiz({ questions, title = "Quiz Cartas Mágicas", onCom
       is_correct: isCorrect,
       time_spent_ms: timeSpent,
     });
-    
+
     if (isCorrect) {
       const streakBonus = streak >= 2 ? Math.floor(currentQuestion.points * 0.1 * streak) : 0;
       setScore(prev => prev + currentQuestion.points + streakBonus);
