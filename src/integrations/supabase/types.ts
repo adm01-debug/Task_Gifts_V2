@@ -11287,6 +11287,7 @@ export type Database = {
         }
         Returns: string
       }
+      _guard_manager_or_admin_if_user: { Args: never; Returns: undefined }
       _require_admin: { Args: never; Returns: undefined }
       _require_manager_or_admin: { Args: never; Returns: undefined }
       acknowledge_security_alert: {
