@@ -18,6 +18,7 @@ import {
   type BossHistoryInput,
 } from "@/lib/bossHistory";
 import { bossHistoryFileName, buildBossHistoryCsv } from "@/lib/bossHistoryExport";
+import { BossTrendChart } from "@/components/boss/BossTrendChart";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 
@@ -152,6 +153,8 @@ export function BossHistoryCard({
             hint={`atual: ${summary.currentVictoryStreak}`}
           />
         </div>
+
+        <BossTrendChart battles={battles} departmentId={effectiveDepartment} />
 
         {summary.awaitingSettlement > 0 && (
           <div className="flex items-start gap-2 rounded-lg border border-border/60 bg-muted/40 p-3 text-sm">
