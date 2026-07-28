@@ -1,22 +1,12 @@
-import { useEffect, useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
-import type { Json } from "@/integrations/supabase/types";
-import { useAuth } from "@/hooks/useAuth";
+import { useCallback } from "react";
 import { useRBAC } from "@/hooks/useRBAC";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Skeleton } from "@/components/ui/skeleton";
-import { toast } from "sonner";
 import { FileBarChart } from "lucide-react";
-import { logger } from "@/services/loggingService";
-import {
-  mergeChannelPreference,
-  normalizeTypePrefs,
-  resolveChannels,
-  type ChannelMap,
-  type NotificationChannel,
-} from "@/lib/notificationTypePrefs";
+import { useTypePreferences } from "@/hooks/useTypePreferences";
+import type { ChannelMap } from "@/lib/notificationTypePrefs";
 
 /** Tipo lido pelas RPCs `user_wants_*_notification`. */
 const EXECUTIVE_REPORT_TYPE = "executive_report";
@@ -32,85 +22,17 @@ const EXECUTIVE_REPORT_DEFAULTS: ChannelMap = {
 };
 
 export function ExecutiveReportPreferenceToggle() {
-  const { user } = useAuth();
   const { isAdmin, isLoading: rbacLoading } = useRBAC();
-  const [loading, setLoading] = useState(true);
-  const [saving, setSaving] = useState(false);
-  const [inApp, setInApp] = useState(true);
-  const [email, setEmail] = useState(true);
-
-  useEffect(() => {
-    if (!user?.id || !isAdmin) {
-      setLoading(false);
-      return;
-    }
-    (async () => {
-      try {
-        const { data, error } = await supabase
-          .from("notification_preferences")
-          .select("type_preferences")
-          .eq("user_id", user.id)
-          .maybeSingle();
-        if (error) throw error;
-        const resolved = resolveChannels(
-          normalizeTypePrefs(data?.type_preferences),
-          EXECUTIVE_REPORT_TYPE,
-          EXECUTIVE_REPORT_DEFAULTS,
-        );
-        setInApp(resolved.in_app);
-        setEmail(resolved.email);
-      } catch (err: unknown) {
-        logger.error("Falha ao carregar preferências do relatório executivo", String(err));
-      } finally {
-        setLoading(false);
-      }
-    })();
-  }, [user?.id, isAdmin]);
-
-  /**
-   * Persiste apenas a célula (tipo × canal) alterada.
-   *
-   * Regra crítica: se a leitura prévia falhar, abortamos em vez de gravar sobre
-   * um estado desconhecido — caso contrário apagaríamos as preferências dos
-   * demais módulos (campanhas, jogos) que compartilham o mesmo JSONB.
-   */
-  const persist = async (channel: NotificationChannel, value: boolean) => {
-    if (!user?.id) return;
-    const previous = channel === "in_app" ? inApp : email;
-    setSaving(true);
-    try {
-      const { data: existing, error: readError } = await supabase
-        .from("notification_preferences")
-        .select("type_preferences")
-        .eq("user_id", user.id)
-        .maybeSingle();
-      if (readError) throw readError;
-      const next = mergeChannelPreference(
-        existing?.type_preferences,
-        EXECUTIVE_REPORT_TYPE,
-        channel,
-        value,
-        EXECUTIVE_REPORT_DEFAULTS,
-        "high",
-      );
-      const { error } = await supabase
-        .from("notification_preferences")
-        .upsert(
-          { user_id: user.id, type_preferences: next as unknown as Json },
-          { onConflict: "user_id" },
-        );
-      if (error) throw error;
-      toast.success("Preferência atualizada");
-    } catch (err: unknown) {
-      logger.error("Falha ao salvar preferência do relatório executivo", String(err));
-      toast.error("Não foi possível salvar a preferência");
-      // Rollback determinístico para o valor anterior ao clique.
-      if (channel === "in_app") setInApp(previous);
-      else setEmail(previous);
-    } finally {
-      setSaving(false);
-    }
-  };
+  // Merge aditivo, rollback otimista e abort em falha de leitura vivem no hook.
+  const defaultsFor = useCallback((): ChannelMap => EXECUTIVE_REPORT_DEFAULTS, []);
+  const priorityFor = useCallback(() => "high", []);
+  const { loading, saving, values, setCell } = useTypePreferences({
+    types: [EXECUTIVE_REPORT_TYPE],
+    defaultsFor,
+    priorityFor,
+    moduleName: "relatório executivo",
+  });
+  const current = values[EXECUTIVE_REPORT_TYPE] ?? EXECUTIVE_REPORT_DEFAULTS;
 
   if (rbacLoading || !isAdmin) return null;
 
@@ -137,18 +59,18 @@ export function ExecutiveReportPreferenceToggle() {
               <Label htmlFor="exec-report-inapp" className="text-sm">Receber no app</Label>
               <Switch
                 id="exec-report-inapp"
-                checked={inApp}
-                disabled={saving}
-                onCheckedChange={(v) => { setInApp(v); persist("in_app", v); }}
+                checked={current.in_app}
+                disabled={saving !== null}
+                onCheckedChange={(v) => setCell(EXECUTIVE_REPORT_TYPE, "in_app", v)}
               />
             </div>
             <div className="flex items-center justify-between">
               <Label htmlFor="exec-report-email" className="text-sm">Receber por e-mail</Label>
               <Switch
                 id="exec-report-email"
-                checked={email}
-                disabled={saving}
-                onCheckedChange={(v) => { setEmail(v); persist("email", v); }}
+                checked={current.email}
+                disabled={saving !== null}
+                onCheckedChange={(v) => setCell(EXECUTIVE_REPORT_TYPE, "email", v)}
               />
             </div>
           </>
