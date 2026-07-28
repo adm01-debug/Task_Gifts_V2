@@ -60,6 +60,7 @@ const MemoryGamePage = lazy(() => import("./pages/MemoryGamePage"));
 const SequenceGamePage = lazy(() => import("./pages/SequenceGamePage"));
 const DailyWagerPage = lazy(() => import("./pages/DailyWagerPage"));
 const MemoryDeckAdminPage = lazy(() => import("./pages/MemoryDeckAdminPage"));
+const WagerQuestionAdminPage = lazy(() => import("./pages/WagerQuestionAdminPage"));
 const SequenceProcedureAdminPage = lazy(() => import("./pages/SequenceProcedureAdminPage"));
 const TournamentsPage = lazy(() => import("./pages/TournamentsPage"));
 const DepartmentWarPage = lazy(() => import("./pages/DepartmentWarPage"));
@@ -250,6 +251,7 @@ const AnimatedRoutes = () => {
         <Route path="/pergunta-do-dia" element={<ProtectedRoute><PageTransition><DailyWagerPage /></PageTransition></ProtectedRoute>} />
         <Route path="/sequencia/admin" element={<ProtectedRoute requiredRole="admin"><PageTransition><SequenceProcedureAdminPage /></PageTransition></ProtectedRoute>} />
         <Route path="/memoria/admin" element={<ProtectedRoute requiredRole="admin"><PageTransition><MemoryDeckAdminPage /></PageTransition></ProtectedRoute>} />
+        <Route path="/pergunta-do-dia/admin" element={<ProtectedRoute requiredRole="admin"><PageTransition><WagerQuestionAdminPage /></PageTransition></ProtectedRoute>} />
         <Route path="/torneios" element={<ProtectedRoute><PageTransition><TournamentsPage /></PageTransition></ProtectedRoute>} />
         <Route path="/guerra-departamentos" element={<ProtectedRoute><PageTransition><DepartmentWarPage /></PageTransition></ProtectedRoute>} />
         <Route path="/chefao" element={<ProtectedRoute><PageTransition><BossBattlePage /></PageTransition></ProtectedRoute>} />

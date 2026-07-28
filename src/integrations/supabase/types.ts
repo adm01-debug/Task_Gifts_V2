@@ -11683,6 +11683,10 @@ export type Database = {
       }
       join_tournament: { Args: { p_tournament_id: string }; Returns: Json }
       list_tournaments: { Args: never; Returns: Json }
+      list_wager_questions: {
+        Args: { p_from?: string; p_to?: string }
+        Returns: Json
+      }
       log_auction_admin_event: {
         Args: { p_action: string; p_auction_id: string; p_details?: Json }
         Returns: undefined
@@ -11874,6 +11878,21 @@ export type Database = {
           p_procedure_id: string
           p_steps: Json
           p_title: string
+        }
+        Returns: Json
+      }
+      save_wager_question: {
+        Args: {
+          p_correct_option: string
+          p_difficulty?: string
+          p_explanation?: string
+          p_id?: string
+          p_is_active?: boolean
+          p_max_stake?: number
+          p_multiplier?: number
+          p_options: Json
+          p_question: string
+          p_scheduled_date: string
         }
         Returns: Json
       }
