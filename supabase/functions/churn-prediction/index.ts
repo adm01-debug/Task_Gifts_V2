@@ -277,10 +277,6 @@ Retorne apenas colaboradores com risco médio ou alto no formato JSON.`;
     });
   } catch (error) {
     console.error('Churn prediction error:', error);
-    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-    return new Response(JSON.stringify({ error: errorMessage }), {
-      status: 500,
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-    });
+    return errorResponse(error);
   }
 });
