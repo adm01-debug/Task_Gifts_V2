@@ -7,14 +7,17 @@ import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import confetti from "canvas-confetti";
 import { useRecordAnswer } from "@/hooks/useQuizStats";
+import { quizPlayService } from "@/services/quizQuestionsService";
+import { logger } from "@/services/loggingService";
+import { toast } from "sonner";
 
 export interface QuizQuestion {
   id: string;
   question: string;
+  /** Alternativas sem gabarito — a correção acontece no servidor. */
   options: {
     id: string;
     text: string;
-    isCorrect: boolean;
   }[];
   explanation?: string;
   points: number;
@@ -31,6 +34,7 @@ function MagicCard({
   isFlipped,
   isAnswered,
   selectedAnswer,
+  correctOptionId,
   onFlip,
   onAnswer,
 }: {
@@ -38,13 +42,14 @@ function MagicCard({
   isFlipped: boolean;
   isAnswered: boolean;
   selectedAnswer: string | null;
+  correctOptionId: string | null;
   onFlip: () => void;
   onAnswer: (optionId: string) => void;
 }) {
-  const getOptionStyle = (option: { id: string; isCorrect: boolean }) => {
+  const getOptionStyle = (option: { id: string }) => {
     if (!isAnswered) return "border-border/50 hover:border-primary/50 hover:bg-primary/5";
-    if (option.isCorrect) return "border-emerald-500 bg-emerald-500/20 text-emerald-400";
-    if (selectedAnswer === option.id && !option.isCorrect) return "border-red-500 bg-red-500/20 text-red-400";
+    if (option.id === correctOptionId) return "border-emerald-500 bg-emerald-500/20 text-emerald-400";
+    if (selectedAnswer === option.id) return "border-red-500 bg-red-500/20 text-red-400";
     return "border-border/30 opacity-50";
   };
 
@@ -123,10 +128,10 @@ function MagicCard({
                     {String.fromCharCode(65 + index)}
                   </span>
                   <span className="flex-1 text-sm">{option.text}</span>
-                  {isAnswered && option.isCorrect && (
+                  {isAnswered && option.id === correctOptionId && (
                     <Check className="w-5 h-5 text-emerald-500 shrink-0" />
                   )}
-                  {isAnswered && selectedAnswer === option.id && !option.isCorrect && (
+                  {isAnswered && selectedAnswer === option.id && option.id !== correctOptionId && (
                     <X className="w-5 h-5 text-red-500 shrink-0" />
                   )}
                 </motion.button>
