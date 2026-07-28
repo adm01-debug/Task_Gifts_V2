@@ -17,21 +17,6 @@ import { WAGER_MAX_OPTIONS, optionKeyAt } from "./wagerAuthoring";
 const RISKY_PREFIX = /^[=+\-@\t\r]/;
 const DELIMITER = ";";
 
-export const WAGER_EXPORT_HEADER = [
-  "data",
-  ...Array.from({ length: WAGER_MAX_OPTIONS }, (_, i) => `alternativa_${optionKeyAt(i).toLowerCase()}`),
-  "correta",
-  "dificuldade",
-  "multiplicador",
-  "teto",
-  "explicacao",
-  "ativo",
-  "apostas",
-  "acertos",
-  "moedas_apostadas",
-  "saldo_moedas",
-] as const;
-
 function escapeCell(value: string): string {
   const safe = RISKY_PREFIX.test(value) ? `'${value}` : value;
   return `"${safe.replace(/"/g, '""')}"`;
