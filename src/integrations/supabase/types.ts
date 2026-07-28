@@ -10497,6 +10497,33 @@ export type Database = {
         }
         Relationships: []
       }
+      wager_budget_settings: {
+        Row: {
+          created_at: string
+          expected_players: number
+          id: boolean
+          monthly_coin_budget: number
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          created_at?: string
+          expected_players?: number
+          id?: boolean
+          monthly_coin_budget?: number
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          created_at?: string
+          expected_players?: number
+          id?: boolean
+          monthly_coin_budget?: number
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: []
+      }
       wager_entries: {
         Row: {
           chosen_option: string
