@@ -55,11 +55,6 @@ export default function PredictionAdminPage() {
         subtitle="Criação, publicação, travamento e apuração com trilha auditável completa."
         icon={<ShieldCheck className="h-5 w-5" />}
         backFallback="/previsoes"
-        actions={
-          <Button size="sm" onClick={() => setCreateOpen(true)}>
-            <Plus className="mr-1 h-4 w-4" /> Novo mercado
-          </Button>
-        }
       >
         <SectionErrorBoundary sectionName="Governança de Previsões">
           {isLoading ? (
@@ -70,6 +65,11 @@ export default function PredictionAdminPage() {
             </div>
           ) : (
             <div className="space-y-6">
+              <div className="flex justify-end">
+                <Button size="sm" onClick={() => setCreateOpen(true)}>
+                  <Plus className="mr-1 h-4 w-4" /> Novo mercado
+                </Button>
+              </div>
               <PredictionOverviewCards overview={overview} />
 
               <section className="space-y-3">
