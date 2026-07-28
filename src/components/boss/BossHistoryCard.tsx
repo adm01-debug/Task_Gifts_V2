@@ -1,6 +1,7 @@
-import { useMemo, useState } from "react";
-import { History, Timer, Trophy, AlertTriangle } from "lucide-react";
+import { useCallback, useMemo, useState } from "react";
+import { Download, History, Timer, Trophy, AlertTriangle } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Select,
@@ -16,6 +17,9 @@ import {
   summarizeBossHistory,
   type BossHistoryInput,
 } from "@/lib/bossHistory";
+import { bossHistoryFileName, buildBossHistoryCsv } from "@/lib/bossHistoryExport";
+import { logger } from "@/lib/logger";
+import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 
 const ALL = "__all__";
@@ -58,6 +62,28 @@ export function BossHistoryCard({
   );
 
   const totalConcluded = useMemo(() => summarizeBossHistory(battles).concluded, [battles]);
+
+  const scopeLabel = effectiveDepartment ? nameById.get(effectiveDepartment) ?? null : null;
+
+  const handleExport = useCallback(() => {
+    try {
+      const csv = buildBossHistoryCsv(battles, { departmentId: effectiveDepartment });
+      const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = bossHistoryFileName(scopeLabel);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      // Libera a memória apenas após o download ser iniciado pelo browser.
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+    } catch (err: unknown) {
+      logger.error("Falha ao exportar histórico do chefão", err);
+      toast.error("Não foi possível exportar o histórico.");
+    }
+  }, [battles, effectiveDepartment, scopeLabel]);
+
   if (totalConcluded === 0) return null;
 
   const showFilter = !departmentId && options.length > 1;
@@ -69,6 +95,7 @@ export function BossHistoryCard({
           <History className="h-4 w-4" />
           Hall da Fama
         </CardTitle>
+        <div className="flex flex-wrap items-center gap-2">
         {showFilter && (
           <Select value={scope} onValueChange={setScope}>
             <SelectTrigger className="h-9 w-full sm:w-[220px]" aria-label="Filtrar por departamento">
@@ -84,6 +111,19 @@ export function BossHistoryCard({
             </SelectContent>
           </Select>
         )}
+        <Button
+          type="button"
+          variant="outline"
+          size="sm"
+          className="h-9 gap-2"
+          onClick={handleExport}
+          disabled={summary.concluded === 0}
+          aria-label="Exportar histórico em CSV"
+        >
+          <Download className="h-4 w-4" />
+          <span className="hidden sm:inline">Exportar CSV</span>
+        </Button>
+        </div>
       </CardHeader>
       <CardContent className="space-y-4">
         {summary.concluded === 0 ? (
