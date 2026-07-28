@@ -75,6 +75,62 @@ export interface CreateAuctionInput {
   min_increment: number;
   starts_at: string;
   ends_at: string;
+  reward_id?: string | null;
+}
+
+export type AuctionAdminAction =
+  | "draft_created"
+  | "published"
+  | "settled"
+  | "cancelled"
+  | "stock_reserved"
+  | "stock_unavailable";
+
+export interface AuctionAdminEvent {
+  id: string;
+  auction_id: string | null;
+  actor_id: string | null;
+  action: AuctionAdminAction;
+  details: Record<string, unknown>;
+  created_at: string;
+}
+
+/** Motivos devolvidos pelas RPCs de governança — traduzidos na camada de UI. */
+export type AuctionAdminReason =
+  | "invalid_title"
+  | "invalid_economics"
+  | "invalid_window"
+  | "reward_unavailable"
+  | "not_found"
+  | "not_draft"
+  | "window_expired";
+
+interface AuctionRpcResult {
+  success: boolean;
+  reason?: AuctionAdminReason;
+  replayed?: boolean;
+  id?: string;
+}
+
+const ADMIN_REASON_LABELS: Record<AuctionAdminReason, string> = {
+  invalid_title: "Título inválido (mínimo de 3 caracteres).",
+  invalid_economics: "Lance inicial e incremento precisam ser de pelo menos 1 moeda.",
+  invalid_window: "A janela do leilão é inválida: o término deve ser após o início.",
+  reward_unavailable: "O item da loja vinculado não existe mais ou está inativo.",
+  not_found: "Leilão não encontrado.",
+  not_draft: "Somente rascunhos podem ser publicados.",
+  window_expired: "A janela do leilão já expirou — ajuste as datas antes de publicar.",
+};
+
+export class AuctionAdminError extends Error {
+  constructor(public readonly reason: AuctionAdminReason | "unknown") {
+    super(
+      reason === "unknown"
+        ? "Não foi possível concluir a operação do leilão."
+        : ADMIN_REASON_LABELS[reason],
+    );
+    this.name = "AuctionAdminError";
+  }
 }
 
 /**
@@ -153,40 +209,45 @@ export const auctionAdminService = {
     return (data ?? []) as Auction[];
   },
 
-  /** Cria o leilão como rascunho — publicação é uma ação explícita e auditável. */
-  async create(input: CreateAuctionInput): Promise<Auction> {
-    const { data, error } = await supabase
-      .from("auctions")
-      .insert({
-        title: input.title.trim(),
-        description: input.description?.trim() || null,
-        starting_bid: input.starting_bid,
-        min_increment: input.min_increment,
-        starts_at: input.starts_at,
-        ends_at: input.ends_at,
-        status: "draft",
-      })
-      .select(AUCTION_COLUMNS)
-      .single();
+  /**
+   * Cria o leilão como rascunho via RPC validada no servidor. A RPC é a única
+   * fonte de verdade das regras econômicas e registra a trilha auditável.
+   */
+  async create(input: CreateAuctionInput): Promise<string> {
+    const { data, error } = await supabase.rpc("create_auction_draft", {
+      p_title: input.title.trim(),
+      p_description: input.description?.trim() || null,
+      p_starting_bid: input.starting_bid,
+      p_min_increment: input.min_increment,
+      p_starts_at: input.starts_at,
+      p_ends_at: input.ends_at,
+      p_reward_id: input.reward_id ?? null,
+    });
 
     if (error) {
       logger.apiError("createAuction", error, "auctionAdminService");
       throw error;
     }
-    return data as Auction;
+    const result = (data as unknown as AuctionRpcResult) ?? { success: false };
+    if (!result.success || !result.id) {
+      throw new AuctionAdminError(result.reason ?? "unknown");
+    }
+    return result.id;
   },
 
-  /** Publica um rascunho. Só rascunhos são elegíveis (validado também no cliente). */
+  /** Publica um rascunho. A RPC revalida janela, economia e item vinculado. */
   async publish(auctionId: string): Promise<void> {
-    const { error } = await supabase
-      .from("auctions")
-      .update({ status: "active" })
-      .eq("id", auctionId)
-      .eq("status", "draft");
+    const { data, error } = await supabase.rpc("publish_auction", {
+      p_auction_id: auctionId,
+    });
 
     if (error) {
       logger.apiError("publishAuction", error, "auctionAdminService");
       throw error;
+    }
+    const result = (data as unknown as AuctionRpcResult) ?? { success: false };
+    if (!result.success) {
+      throw new AuctionAdminError(result.reason ?? "unknown");
     }
   },
 
@@ -204,5 +265,20 @@ export const auctionAdminService = {
       logger.apiError("cancelAuction", error, "auctionAdminService");
       throw error;
     }
+  },
+
+  /** Trilha auditável append-only (somente leitura, restrita a admins pela RLS). */
+  async events(limit = 50): Promise<AuctionAdminEvent[]> {
+    const { data, error } = await supabase
+      .from("auction_admin_events")
+      .select("id, auction_id, actor_id, action, details, created_at")
+      .order("created_at", { ascending: false })
+      .limit(limit);
+
+    if (error) {
+      logger.apiError("listAuctionAdminEvents", error, "auctionAdminService");
+      throw error;
+    }
+    return (data ?? []) as unknown as AuctionAdminEvent[];
   },
 };
