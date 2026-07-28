@@ -10,6 +10,54 @@
  */
 import { supabase } from "@/integrations/supabase/client";
 import { describeEdgeError, type EdgeErrorInfo } from "@/lib/edgeErrors";
+import * as Sentry from "@sentry/react";
+
+/**
+ * Correlação com o Sentry: cada invocação gera breadcrumb com `requestId`,
+ * e falhas marcam a tag `edge.request_id`. Isso permite cruzar o evento do
+ * front com os logs da edge function (`withSentry` injeta o mesmo id).
+ * Envolvido em try/catch porque telemetria jamais pode quebrar o fluxo.
+ */
+function breadcrumb(
+  fnName: string,
+  requestId: string,
+  level: "info" | "error",
+  extra?: Record<string, unknown>,
+): void {
+  try {
+    Sentry.addBreadcrumb({
+      category: "edge-function",
+      type: "http",
+      level,
+      message: `${fnName} (${requestId})`,
+      data: { fnName, requestId, ...extra },
+    });
+  } catch {
+    /* telemetria é best-effort */
+  }
+}
+
+function tagFailure(fnName: string, requestId: string, info: EdgeErrorInfo): void {
+  try {
+    Sentry.withScope((scope) => {
+      scope.setTag("edge.function", fnName);
+      scope.setTag("edge.request_id", requestId);
+      scope.setTag("edge.error_kind", info.kind);
+      scope.setContext("edge_error", {
+        status: info.status,
+        kind: info.kind,
+        retryable: info.retryable,
+        retryAfterSeconds: info.retryAfterSeconds,
+      });
+      // Erros de rate limit/permissão são esperados: registramos como mensagem,
+      // não como exceção, para não poluir o alerting com ruído operacional.
+      scope.setLevel(info.kind === "server_error" || info.kind === "network" ? "error" : "warning");
+      Sentry.captureMessage(`edge:${fnName}:${info.kind}`);
+    });
+  } catch {
+    /* telemetria é best-effort */
+  }
+}
 
 export function newRequestId(): string {
   if (typeof crypto !== "undefined" && "randomUUID" in crypto) {
@@ -34,6 +82,9 @@ export async function invokeEdge<T = unknown>(
   const result = await supabase.functions.invoke<T>(fnName, {
     ...options,
     headers,
+  });
+  breadcrumb(fnName, requestId, result.error ? "error" : "info", {
+    ok: !result.error,
   });
   return { ...result, requestId };
 }
@@ -79,6 +130,7 @@ export async function invokeEdgeSafe<T = unknown>(
     }
 
     lastError = await describeEdgeError(error);
+    tagFailure(fnName, requestId, lastError);
     if (!lastError.retryable || attempt >= maxAttempts) break;
 
     await new Promise((resolve) => setTimeout(resolve, backoffDelayMs(attempt)));
