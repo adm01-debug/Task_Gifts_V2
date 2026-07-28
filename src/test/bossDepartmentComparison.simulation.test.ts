@@ -100,7 +100,12 @@ describe("compareDepartments — simulação massiva", () => {
       })),
     ];
     const result = compareDepartments(battles, { priorWeight: 5 });
-    expect(result.rows[0].departmentId).toBe("big");
+    const small = result.rows.find((r) => r.departmentId === "small")!;
+    const big = result.rows.find((r) => r.departmentId === "big")!;
+    // Aproveitamento bruto de 100% com 1 batalha é puxado para a média global.
+    expect(small.winRate).toBe(1);
+    expect(small.adjustedWinRate).toBeLessThan(1);
+    expect(small.adjustedWinRate - big.adjustedWinRate).toBeLessThan(1 - big.winRate);
   });
 
   it("exclui batalhas sem data do comparativo", () => {
