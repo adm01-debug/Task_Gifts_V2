@@ -121,9 +121,10 @@ function useAdminAuditLogs(actionFilter: string, entityFilter: string) {
 
 export function AdminChangeHistory() {
   const [actionFilter, setActionFilter] = useState<string>("all");
+  const [entityFilter, setEntityFilter] = useState<string>("all");
   const [expandedLogs, setExpandedLogs] = useState<Set<string>>(new Set());
   
-  const { data: logs, isLoading, refetch, isFetching } = useAdminAuditLogs(actionFilter);
+  const { data: logs, isLoading, refetch, isFetching } = useAdminAuditLogs(actionFilter, entityFilter);
   const { data: profiles } = useProfiles();
 
   const profilesMap = new Map(profiles?.map((p) => [p.id, p]) || []);
@@ -211,6 +212,19 @@ export function AdminChangeHistory() {
                 {adminActions.map((action) => (
                   <SelectItem key={action} value={action}>
                     {actionConfig[action]?.label || action}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <Select value={entityFilter} onValueChange={setEntityFilter}>
+              <SelectTrigger className="w-[180px]">
+                <Filter className="w-4 h-4 mr-2" />
+                <SelectValue placeholder="Filtrar entidade" />
+              </SelectTrigger>
+              <SelectContent>
+                {entityFilters.map((entity) => (
+                  <SelectItem key={entity.value} value={entity.value}>
+                    {entity.label}
                   </SelectItem>
                 ))}
               </SelectContent>
