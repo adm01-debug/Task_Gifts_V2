@@ -67,14 +67,6 @@ export function useResolveBoardChallenge(trailId: string | null) {
   });
 }
 
-function useAdminBoardTrailsLegacy() {
-  return useQuery({
-    queryKey: ["board-trails", "admin"],
-    queryFn: () => boardTrailService.listAllTrails(),
-    staleTime: 60 * 1000,
-  });
-}
-
 export function useSaveBoardTrail() {
   const queryClient = useQueryClient();
   return useMutation({
