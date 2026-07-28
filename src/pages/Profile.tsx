@@ -175,6 +175,7 @@ const Profile = () => {
         <SectionErrorBoundary sectionName="Histórico de Push"><PushNotificationHistory /></SectionErrorBoundary>
         <InAppNotificationToggle />
         <CampaignNotificationPreferences />
+        <SectionErrorBoundary sectionName="Notificações dos Jogos"><GameNotificationPreferences /></SectionErrorBoundary>
         <ExecutiveReportPreferenceToggle />
          </div>
        </MobilePageLayout>
