@@ -137,9 +137,16 @@ export const TIER_LABEL: Record<OracleTier, string> = {
   contrarian: "Contrarian",
 };
 
-interface Accumulator {
+/**
+ * Totais consolidados de um usuário.
+ *
+ * É exatamente a forma que a RPC `get_prediction_oracle_aggregates` devolve.
+ * O ranking é calculado só a partir daqui, então a regra de pontuação existe
+ * em um único lugar — a mesma exercitada pela simulação.
+ */
+export interface OracleAggregate {
   userId: string;
-  markets: Set<string>;
+  markets: number;
   stakes: number;
   totalStaked: number;
   totalPayout: number;
@@ -148,32 +155,24 @@ interface Accumulator {
   weightedBrier: number;
 }
 
-/**
- * Constrói o ranking a partir do ledger de aportes de mercados já apurados.
- *
- * A função é pura e determinística: a mesma entrada, em qualquer ordem,
- * produz exatamente a mesma saída. Isso é o que torna o ranking auditável —
- * qualquer pessoa pode recalcular e conferir.
- */
-export function buildOracleRanking(
-  stakes: OracleStake[],
-  options: OracleOptions = {},
-): OracleEntry[] {
-  const shrinkage = Math.max(0, options.shrinkageCoins ?? DEFAULT_SHRINKAGE_COINS);
-  const minMarkets = Math.max(1, options.minMarkets ?? DEFAULT_MIN_MARKETS);
+interface Accumulator extends Omit<OracleAggregate, "markets"> {
+  marketIds: Set<string>;
+}
 
+/** Reduz o ledger bruto a totais por usuário (caminho de simulação/local). */
+export function aggregateStakes(stakes: OracleStake[]): OracleAggregate[] {
   const byUser = new Map<string, Accumulator>();
 
   for (const stake of [...stakes].sort(canonicalOrder)) {
     // Aporte sem valor não carrega informação e distorceria as médias.
-    if (!stake.userId || !stake.marketId || !(stake.amount > 0)) continue;
-    if (!Number.isFinite(stake.amount)) continue;
+    if (!stake.userId || !stake.marketId) continue;
+    if (!Number.isFinite(stake.amount) || !(stake.amount > 0)) continue;
 
     let acc = byUser.get(stake.userId);
     if (!acc) {
       acc = {
         userId: stake.userId,
-        markets: new Set(),
+        marketIds: new Set(),
         stakes: 0,
         totalStaked: 0,
         totalPayout: 0,
@@ -188,7 +187,7 @@ export function buildOracleRanking(
     const won = stake.optionId === stake.winningOptionId;
     const outcome = won ? 1 : 0;
 
-    acc.markets.add(stake.marketId);
+    acc.marketIds.add(stake.marketId);
     acc.stakes += 1;
     acc.totalStaked += stake.amount;
     acc.totalPayout += Number.isFinite(stake.payout) ? Math.max(0, stake.payout) : 0;
@@ -199,11 +198,31 @@ export function buildOracleRanking(
     acc.weightedBrier += (outcome - p) ** 2 * stake.amount;
   }
 
+  return [...byUser.values()].map(({ marketIds, ...rest }) => ({
+    ...rest,
+    markets: marketIds.size,
+  }));
+}
+
+/**
+ * Ordena e classifica os totais consolidados.
+ *
+ * A função é pura e determinística: a mesma entrada, em qualquer ordem,
+ * produz exatamente a mesma saída. Isso é o que torna o ranking auditável —
+ * qualquer pessoa pode recalcular e conferir.
+ */
+export function rankOracleAggregates(
+  aggregates: OracleAggregate[],
+  options: OracleOptions = {},
+): OracleEntry[] {
+  const shrinkage = Math.max(0, options.shrinkageCoins ?? DEFAULT_SHRINKAGE_COINS);
+  const minMarkets = Math.max(1, options.minMarkets ?? DEFAULT_MIN_MARKETS);
+
   const entries: OracleEntry[] = [];
 
-  for (const acc of byUser.values()) {
-    if (acc.markets.size < minMarkets) continue;
-    if (acc.totalStaked <= 0) continue;
+  for (const acc of aggregates) {
+    if (acc.markets < minMarkets) continue;
+    if (!(acc.totalStaked > 0) || !(acc.stakes > 0)) continue;
 
     // Encolhimento empírico-bayesiano: o denominador cresce com o prior, então
     // volume baixo puxa a pontuação para zero em vez de para os extremos.
@@ -211,7 +230,7 @@ export function buildOracleRanking(
 
     entries.push({
       userId: acc.userId,
-      markets: acc.markets.size,
+      markets: acc.markets,
       stakes: acc.stakes,
       totalStaked: acc.totalStaked,
       totalPayout: acc.totalPayout,
@@ -240,6 +259,14 @@ export function buildOracleRanking(
   });
 
   return entries;
+}
+
+/** Atalho de conveniência: ledger bruto para ranking classificado. */
+export function buildOracleRanking(
+  stakes: OracleStake[],
+  options: OracleOptions = {},
+): OracleEntry[] {
+  return rankOracleAggregates(aggregateStakes(stakes), options);
 }
 
 /** Formata a pontuação como pontos inteiros, mais legível que decimais. */
