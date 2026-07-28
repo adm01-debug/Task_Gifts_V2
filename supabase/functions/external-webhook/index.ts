@@ -89,8 +89,14 @@ serve(withSentry("external-webhook", async (req, { requestId }) => {
     const idemTracked = claim.state === 'fresh';
     if (idemTracked) idemKeyToRelease = claim.key;
 
-    // Parse and validate webhook payload
-    const payloadResult = JSON.parse(rawPayload);
+    // Parse and validate webhook payload (corpo inválido = 400, não 500)
+    let payloadResult: unknown;
+    try {
+      payloadResult = JSON.parse(rawPayload);
+    } catch {
+      if (idemTracked) await releaseIdempotency(supabase, claim.key);
+      return jsonResponse({ error: 'Corpo da requisição não é um JSON válido' }, 400);
+    }
     const validation = validatePayload(ExternalWebhookSchema, payloadResult);
     
     if (!validation.success) {
