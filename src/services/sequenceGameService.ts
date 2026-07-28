@@ -1,6 +1,6 @@
 import { supabase } from "@/integrations/supabase/client";
 import { logger } from "./loggingService";
-import type { SequencePlayStep } from "@/lib/sequenceGame";
+import type { SequencePlayStep, SequenceStep } from "@/lib/sequenceGame";
 import {
   parseSequenceProcedureStats,
   type SequenceProcedureStats,
@@ -17,6 +17,11 @@ export interface SequenceProcedure {
 export interface SequenceProcedureWithSteps extends SequenceProcedure {
   /** Etapas embaralhadas pelo servidor, sem o gabarito. */
   steps: SequencePlayStep[];
+}
+
+/** Visão de autoria: inclui a posição correta (restrita a admin/gestor pela RLS). */
+export interface SequenceProcedureAuthoring extends SequenceProcedure {
+  steps: SequenceStep[];
 }
 
 export interface SequenceAttempt {
