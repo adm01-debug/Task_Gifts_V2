@@ -70,7 +70,6 @@ export function getRateLimitIdentifier(req: Request, functionName: string): stri
       if (payload.sub) return `${functionName}:user:${payload.sub}`;
     } catch {}
   }
-  const forwarded = req.headers.get("x-forwarded-for");
   const ip = forwarded ? forwarded.split(",")[0].trim() : "unknown";
   return `${functionName}:ip:${ip}`;
 }
