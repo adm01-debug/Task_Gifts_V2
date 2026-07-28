@@ -124,6 +124,7 @@ export function CommandPalette() {
     { id: "scratch-card", label: "Raspadinha Digital", icon: Gift, action: () => handleNavigate("/raspadinha"), keywords: ["raspadinha", "sorte", "premio", "surpresa"], category: "navigation" },
     { id: "lightning-quiz", label: "Verdadeiro ou Falso Relâmpago", icon: Gamepad2, action: () => handleNavigate("/relampago"), keywords: ["relampago", "verdadeiro", "falso", "quiz", "rapido"], category: "navigation" },
     { id: "bingo", label: "Bingo de Missões", icon: Grid3X3, action: () => handleNavigate("/bingo"), keywords: ["bingo", "cartela", "missoes", "linhas"], category: "navigation" },
+    { id: "tabuleiro", label: "Trilha Tabuleiro", icon: Dices, action: () => handleNavigate("/tabuleiro"), keywords: ["tabuleiro", "trilha", "casas", "dado", "board", "desafio"], category: "navigation" },
     { id: "torneios", label: "Torneio Mata-Mata", icon: Swords, action: () => handleNavigate("/torneios"), keywords: ["torneio", "mata-mata", "chave", "bracket", "final"], category: "navigation" },
     { id: "leilao", label: "Leilão de Recompensas", icon: Gavel, action: () => handleNavigate("/leilao"), keywords: ["leilao", "lance", "moedas", "raro", "loja"], category: "navigation" },
     { id: "guerra-departamentos", label: "Guerra de Departamentos", icon: Flag, action: () => handleNavigate("/guerra-departamentos"), keywords: ["guerra", "departamento", "area", "time", "ranking"], category: "navigation" },
