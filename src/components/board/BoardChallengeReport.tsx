@@ -1,4 +1,4 @@
-import { AlertTriangle, BarChart3, CheckCircle2, Download, Lock } from "lucide-react";
+import { AlertTriangle, BarChart3, CheckCircle2, Download, FileText, Lock } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -58,6 +58,12 @@ export function BoardChallengeReport({ trailId, enabled = true, trailLabel }: Bo
     downloadCSV(boardChallengeFileName(trailLabel), csv.replace(/^\uFEFF/, ""));
   };
 
+  // jsPDF só entra no bundle quando o gestor realmente exporta.
+  const handleExportPdf = async () => {
+    const { exportBoardChallengePdf } = await import("@/lib/boardStatsPdf");
+    await exportBoardChallengePdf(data, { trailLabel });
+  };
+
   return (
     <Card>
       <CardHeader className="pb-3">
@@ -66,18 +72,32 @@ export function BoardChallengeReport({ trailId, enabled = true, trailLabel }: Bo
             <BarChart3 className="h-4 w-4 text-primary" aria-hidden />
             Calibração dos desafios
           </CardTitle>
-          <Button
-            type="button"
-            variant="outline"
-            size="sm"
-            onClick={handleExport}
-            disabled={!canExport}
-            aria-label="Exportar relatório de calibração em CSV"
-            className="min-h-[36px] shrink-0 gap-1"
-          >
-            <Download className="h-3.5 w-3.5" aria-hidden />
-            CSV
-          </Button>
+          <div className="flex shrink-0 gap-1">
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={handleExport}
+              disabled={!canExport}
+              aria-label="Exportar relatório de calibração em CSV"
+              className="min-h-[36px] gap-1"
+            >
+              <Download className="h-3.5 w-3.5" aria-hidden />
+              CSV
+            </Button>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={handleExportPdf}
+              disabled={!canExport}
+              aria-label="Exportar relatório de calibração em PDF"
+              className="min-h-[36px] gap-1"
+            >
+              <FileText className="h-3.5 w-3.5" aria-hidden />
+              PDF
+            </Button>
+          </div>
         </div>
         <CardDescription>
           Acerto global de {report.overallAccuracy}% em {report.totalAttempts} tentativas ·{" "}
