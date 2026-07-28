@@ -1,6 +1,7 @@
 import { supabase } from "@/integrations/supabase/client";
 import { logger } from "./loggingService";
 import type { StakeRejection } from "@/lib/predictionMarket";
+import type { OracleAggregate } from "@/lib/predictionOracle";
 
 export type PredictionMarketStatus =
   | "draft"
