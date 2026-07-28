@@ -1,7 +1,19 @@
 import { useState } from "react";
-import { AlertTriangle, BarChart3, Clock, Coins, Target, Trophy, Users } from "lucide-react";
+import {
+  AlertTriangle,
+  BarChart3,
+  Clock,
+  Coins,
+  Download,
+  FileText,
+  Target,
+  Trophy,
+  Users,
+} from "lucide-react";
+import { toast } from "sonner";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
@@ -13,9 +25,17 @@ import {
 } from "@/components/ui/select";
 import { useSequenceProcedureStats } from "@/hooks/useSequenceGame";
 import { formatDuration, weakestSteps } from "@/lib/sequenceProcedureStats";
+import {
+  buildSequenceStatsCsv,
+  exportSequenceStatsPdf,
+  sequenceStatsFileName,
+} from "@/lib/sequenceProcedureStatsExport";
+import { downloadCSV } from "@/lib/csvExport";
+import { logger } from "@/services/loggingService";
 
 export interface SequenceProcedureStatsCardProps {
   procedureId: string | null;
+  procedureTitle?: string;
   className?: string;
 }
 
@@ -48,9 +68,11 @@ function Metric({
 /** Ranking, diagnóstico por etapa e histórico do procedimento selecionado. */
 export function SequenceProcedureStatsCard({
   procedureId,
+  procedureTitle,
   className,
 }: SequenceProcedureStatsCardProps) {
   const [days, setDays] = useState<string>("30");
+  const [exportingPdf, setExportingPdf] = useState(false);
   const { data, isLoading, isError } = useSequenceProcedureStats(procedureId, Number(days));
 
   if (!procedureId) {
@@ -64,6 +86,38 @@ export function SequenceProcedureStatsCard({
   }
 
   const weak = data ? weakestSteps(data.steps) : [];
+  const exportMeta = {
+    procedureTitle: procedureTitle?.trim() || "Procedimento",
+    days: Number(days),
+  };
+
+  const handleCsv = () => {
+    if (!data) return;
+    try {
+      downloadCSV(
+        sequenceStatsFileName(exportMeta, "csv"),
+        buildSequenceStatsCsv(data, exportMeta),
+      );
+      toast.success("CSV gerado com sucesso");
+    } catch (err: unknown) {
+      logger.error("Falha ao exportar CSV do SOP", "SequenceProcedureStatsCard", err);
+      toast.error("Não foi possível gerar o CSV");
+    }
+  };
+
+  const handlePdf = async () => {
+    if (!data) return;
+    setExportingPdf(true);
+    try {
+      await exportSequenceStatsPdf(data, exportMeta);
+      toast.success("PDF gerado com sucesso");
+    } catch (err: unknown) {
+      logger.error("Falha ao exportar PDF do SOP", "SequenceProcedureStatsCard", err);
+      toast.error("Não foi possível gerar o PDF");
+    } finally {
+      setExportingPdf(false);
+    }
+  };
 
   return (
     <Card className={className}>
@@ -72,18 +126,38 @@ export function SequenceProcedureStatsCard({
           <BarChart3 className="h-4 w-4 text-primary" aria-hidden />
           Desempenho do procedimento
         </CardTitle>
-        <Select value={days} onValueChange={setDays}>
-          <SelectTrigger className="w-[170px]" aria-label="Período do relatório">
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            {PERIODS.map((period) => (
-              <SelectItem key={period.value} value={period.value}>
-                {period.label}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+        <div className="flex flex-wrap items-center justify-end gap-2">
+          <Select value={days} onValueChange={setDays}>
+            <SelectTrigger className="w-[170px]" aria-label="Período do relatório">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {PERIODS.map((period) => (
+                <SelectItem key={period.value} value={period.value}>
+                  {period.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={handleCsv}
+            disabled={!data || data.summary.attempts === 0}
+          >
+            <Download className="mr-1.5 h-4 w-4" aria-hidden />
+            CSV
+          </Button>
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={() => void handlePdf()}
+            disabled={!data || data.summary.attempts === 0 || exportingPdf}
+          >
+            <FileText className="mr-1.5 h-4 w-4" aria-hidden />
+            {exportingPdf ? "Gerando..." : "PDF"}
+          </Button>
+        </div>
       </CardHeader>
 
       <CardContent className="space-y-5">

@@ -418,6 +418,7 @@ export default function SequenceProcedureAdminPage() {
           <SectionErrorBoundary sectionName="Desempenho do procedimento">
             <SequenceProcedureStatsCard
               procedureId={selectedId}
+              procedureTitle={draft.title}
               className="mt-6 border-border/60 bg-card/70 backdrop-blur"
             />
           </SectionErrorBoundary>
