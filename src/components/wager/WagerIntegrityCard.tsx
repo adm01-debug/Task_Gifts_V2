@@ -377,6 +377,8 @@ export function WagerIntegrityCard({ className, limit = 50 }: WagerIntegrityCard
                   </li>
                 ))}
               </ul>
+                )}
+              </>
             )}
           </>
         )}
