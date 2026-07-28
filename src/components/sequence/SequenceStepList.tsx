@@ -2,10 +2,10 @@ import { motion } from "framer-motion";
 import { ArrowDown, ArrowUp, Check, GripVertical, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import type { SequenceStep } from "@/lib/sequenceGame";
+import type { SequencePlayStep } from "@/lib/sequenceGame";
 
 export interface SequenceStepListProps {
-  steps: SequenceStep[];
+  steps: SequencePlayStep[];
   /** Índices marcados como incorretos após a correção. */
   wrongIndexes?: number[];
   /** Quando verdadeiro, a lista fica somente leitura (após enviar). */

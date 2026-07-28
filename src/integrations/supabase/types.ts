@@ -12096,6 +12096,7 @@ export type Database = {
         }[]
       }
       get_security_stats: { Args: { p_hours?: number }; Returns: Json }
+      get_sequence_play_set: { Args: { p_procedure_id: string }; Returns: Json }
       get_sequence_procedure_stats: {
         Args: { p_days?: number; p_procedure_id: string }
         Returns: Json

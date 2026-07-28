@@ -33,7 +33,7 @@ import {
   useAdminSequenceProcedures,
   useDeleteSequenceProcedure,
   useSaveSequenceProcedure,
-  useSequenceProcedure,
+  useAdminSequenceProcedure,
 } from "@/hooks/useSequenceGame";
 import { moveItem } from "@/lib/sequenceGame";
 import {
@@ -79,7 +79,7 @@ export default function SequenceProcedureAdminPage() {
   const { data: procedures, isLoading } = useAdminSequenceProcedures();
   const { data: departments } = useDepartments();
   const [selectedId, setSelectedId] = useState<string | null>(null);
-  const { data: persisted, isLoading: loadingSteps } = useSequenceProcedure(selectedId);
+  const { data: persisted, isLoading: loadingSteps } = useAdminSequenceProcedure(selectedId);
   const saveMutation = useSaveSequenceProcedure();
   const deleteMutation = useDeleteSequenceProcedure();
 

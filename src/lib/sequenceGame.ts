@@ -25,6 +25,16 @@ export interface SequenceStep {
   position: number;
 }
 
+/**
+ * Etapa entregue ao jogador: nunca contém a posição correta.
+ * O gabarito só existe no servidor (RPC `get_sequence_play_set`).
+ */
+export interface SequencePlayStep {
+  id: string;
+  label: string;
+  hint?: string | null;
+}
+
 /** PRNG determinístico (mulberry32). */
 function createRandom(seed: number): () => number {
   let state = seed >>> 0;
@@ -45,6 +55,25 @@ export function seedFromString(value: string): number {
     hash = Math.imul(hash, 0x01000193);
   }
   return hash >>> 0;
+}
+
+/**
+ * Embaralhamento determinístico de etapas já anonimizadas (sem `position`).
+ * Usado no cliente apenas para variar a disposição entre tentativas.
+ */
+export function shufflePlaySteps<T extends { id: string }>(
+  steps: ReadonlyArray<T>,
+  seed: string | number,
+): T[] {
+  const ordered = [...steps];
+  if (ordered.length < 2) return ordered;
+
+  const random = createRandom(typeof seed === "number" ? seed : seedFromString(seed));
+  for (let i = ordered.length - 1; i > 0; i -= 1) {
+    const j = Math.floor(random() * (i + 1));
+    [ordered[i], ordered[j]] = [ordered[j], ordered[i]];
+  }
+  return ordered;
 }
 
 /** Ordena por `position` — a resposta correta canônica. */
