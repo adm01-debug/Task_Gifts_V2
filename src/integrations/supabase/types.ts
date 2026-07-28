@@ -1344,6 +1344,7 @@ export type Database = {
       }
       board_player_states: {
         Row: {
+          blocked_at: string | null
           blocked_challenge_id: string | null
           challenge_attempts: number
           checkpoints: number[]
@@ -1359,6 +1360,7 @@ export type Database = {
           xp: number
         }
         Insert: {
+          blocked_at?: string | null
           blocked_challenge_id?: string | null
           challenge_attempts?: number
           checkpoints?: number[]
@@ -1374,6 +1376,7 @@ export type Database = {
           xp?: number
         }
         Update: {
+          blocked_at?: string | null
           blocked_challenge_id?: string | null
           challenge_attempts?: number
           checkpoints?: number[]
@@ -11351,6 +11354,10 @@ export type Database = {
       }
       auto_lock_prediction_markets: { Args: never; Returns: number }
       auto_promote_expired_webhook_secrets: { Args: never; Returns: Json }
+      auto_unblock_board_players: {
+        Args: { p_max_hours?: number }
+        Returns: number
+      }
       award_campaign_team_split: {
         Args: { _campaign_id: string }
         Returns: Json
