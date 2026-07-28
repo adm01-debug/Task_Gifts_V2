@@ -18,6 +18,7 @@ import {
   type BossHistoryInput,
 } from "@/lib/bossHistory";
 import { bossHistoryFileName, buildBossHistoryCsv } from "@/lib/bossHistoryExport";
+import { BossTrendChart } from "@/components/boss/BossTrendChart";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 
