@@ -26,6 +26,19 @@ const commonWebhookLinks = [
   { label: "Reliability SLO", href: "/admin/reliability" },
 ];
 
+const predictionLinks = [
+  { label: "Admin de Previsões", href: "/previsoes/admin" },
+  { label: "Central de Segurança", href: "/admin/security" },
+];
+
+/**
+ * Converte o `alert_type` gravado em `security_alerts` no slug da rota
+ * `/admin/runbook/:type`. A convenção do projeto é underscore → hífen.
+ */
+export function alertTypeToRunbookSlug(alertType: string): string {
+  return alertType.replace(/_/g, "-");
+}
+
 export const RUNBOOKS: Record<string, Runbook> = {
   "burn-rate-fast": {
     slug: "burn-rate-fast",
@@ -125,6 +138,122 @@ export const RUNBOOKS: Record<string, Runbook> = {
     ],
     postmortem: ["Se voltou ao normal, documentar o que ajudou."],
     relatedLinks: commonWebhookLinks,
+  },
+  "prediction-lock-overdue": {
+    slug: "prediction-lock-overdue",
+    title: "Mercado de previsão vencido continua aberto",
+    severity: "critical",
+    summary:
+      "O mercado passou do horário de travamento e ainda aceita aportes. Enquanto isso, qualquer pessoa que já conheça o resultado pode apostar com risco zero e drenar o pote dos demais.",
+    owner: "Admin de Gamificação · Backend on-call",
+    sloImpact:
+      "Risco econômico direto: cada minuto extra permite aportes informados. Trave manualmente antes de qualquer investigação.",
+    diagnose: [
+      {
+        title: "Conferir o mercado no painel",
+        detail:
+          "Abrir o admin de previsões e localizar o mercado sinalizado. Confirmar o horário de travamento e o pote acumulado.",
+        cmd: "/previsoes/admin",
+      },
+      {
+        title: "Verificar se o agendamento está vivo",
+        detail:
+          "A rotina auto_lock_prediction_markets roda a cada 5 minutos. Se vários mercados estão atrasados ao mesmo tempo, o problema é o agendador, não o mercado.",
+      },
+      {
+        title: "Identificar aportes suspeitos",
+        detail:
+          "Listar os aportes registrados após o horário de travamento — eles são o material da eventual reversão.",
+      },
+    ],
+    mitigate: [
+      {
+        title: "Travar manualmente",
+        detail:
+          'Acionar a ação "Travar" no painel. Isso interrompe imediatamente novos aportes e é seguro mesmo com o cron degradado.',
+        cmd: "/previsoes/admin",
+      },
+      {
+        title: "Se o agendador caiu, travar todos os vencidos",
+        detail:
+          "Repetir a ação para cada mercado sinalizado antes de investigar a causa raiz do agendamento.",
+      },
+    ],
+    recover: [
+      {
+        title: "Decidir sobre os aportes tardios",
+        detail:
+          "Sem indício de informação privilegiada, manter os aportes. Havendo indício, anular o mercado — a anulação reembolsa 100% dos participantes sem reter taxa.",
+      },
+      {
+        title: "Confirmar o silêncio do alerta",
+        detail:
+          "A vigilância roda a cada 15 minutos. Após o travamento, nenhum novo alerta deste tipo deve surgir para o mercado.",
+      },
+    ],
+    postmortem: [
+      "Registrar por quanto tempo o mercado ficou aberto além do previsto e quantas moedas estavam em risco.",
+      "Se o agendador falhou, tratar a causa raiz — o travamento manual é contenção, não correção.",
+      "Avaliar se a tolerância de 15 minutos é adequada para o volume atual.",
+    ],
+    relatedLinks: predictionLinks,
+  },
+  "prediction-settlement-overdue": {
+    slug: "prediction-settlement-overdue",
+    title: "Mercado de previsão travado sem apuração",
+    severity: "high",
+    summary:
+      "O mercado está travado há mais de 24h sem resultado definido. As moedas dos participantes seguem imobilizadas e a confiança no formato cai a cada hora.",
+    owner: "Admin de Gamificação",
+    sloImpact:
+      "Não afeta disponibilidade, mas imobiliza saldo real dos usuários. Resolver dentro de um turno.",
+    diagnose: [
+      {
+        title: "Verificar se o resultado já é conhecido",
+        detail:
+          "A causa mais comum é operacional: o resultado existe no mundo real, mas ninguém apurou no sistema.",
+        cmd: "/previsoes/admin",
+      },
+      {
+        title: "Checar ambiguidade do enunciado",
+        detail:
+          "Se o resultado é disputável ou o evento não ocorreu, o caminho correto é a anulação, não uma apuração forçada.",
+      },
+      {
+        title: "Medir o impacto",
+        detail:
+          "O alerta traz as moedas imobilizadas e as horas de atraso — use esses números para priorizar entre mercados.",
+      },
+    ],
+    mitigate: [
+      {
+        title: "Apurar com o resultado real",
+        detail:
+          "Selecionar a opção vencedora no painel. O rateio distribui o pote proporcionalmente aos acertadores, já descontada a taxa configurada.",
+      },
+      {
+        title: "Anular quando não houver resultado claro",
+        detail:
+          "A anulação devolve o valor integral a cada participante, sem retenção de taxa. Prefira anular a apurar com dúvida.",
+      },
+    ],
+    recover: [
+      {
+        title: "Conferir a trilha auditável",
+        detail:
+          "Toda apuração ou anulação grava automaticamente autor, opção vencedora, pote e taxa. Confirme o registro no painel.",
+      },
+      {
+        title: "Validar os saldos",
+        detail:
+          "Amostrar dois ou três participantes e confirmar que o crédito bateu com o rateio esperado.",
+      },
+    ],
+    postmortem: [
+      "Se o atraso foi por enunciado ambíguo, corrigir o modelo de criação para exigir critério objetivo de resolução.",
+      "Se foi esquecimento, definir dono nomeado para apuração no momento da criação do mercado.",
+    ],
+    relatedLinks: predictionLinks,
   },
 };
 
