@@ -256,8 +256,30 @@ export function WagerIntegrityCard({ className, limit = 50 }: WagerIntegrityCard
                 ranking é atualizado.
               </p>
             ) : (
+              <>
+                <div className="flex flex-wrap gap-1" role="group" aria-label="Filtrar por desfecho">
+                  {FILTERS.map((option) => (
+                    <Button
+                      key={option.value}
+                      type="button"
+                      size="sm"
+                      variant={option.value === filter ? "secondary" : "ghost"}
+                      className="h-7 text-xs"
+                      aria-pressed={option.value === filter}
+                      onClick={() => setFilter(option.value)}
+                    >
+                      {option.label}
+                    </Button>
+                  ))}
+                </div>
+                {visibleAnomalies.length === 0 ? (
+                  <p className="rounded-lg border border-border bg-muted/30 p-3 text-sm text-muted-foreground">
+                    Nenhuma anomalia neste filtro. Ajuste a triagem para ver as demais
+                    ({report.anomalies.length} no período).
+                  </p>
+                ) : (
               <ul className="space-y-2">
-                {report.anomalies.map((anomaly, index) => (
+                {visibleAnomalies.map((anomaly, index) => (
                   <li
                     key={`${anomaly.code}-${anomaly.userId}-${index}`}
                     className={cn(
