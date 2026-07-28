@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
+import { Sparkles, TriangleAlert } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -12,6 +13,7 @@ import {
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useSettlePredictionMarket } from "@/hooks/usePredictionMarkets";
+import { useGoalBetSuggestion } from "@/hooks/useGoalBetSuggestion";
 import type { PredictionMarketRow } from "@/services/predictionMarketService";
 
 export interface SettleMarketDialogProps {
@@ -24,6 +26,20 @@ export interface SettleMarketDialogProps {
 export function SettleMarketDialog({ market, open, onOpenChange }: SettleMarketDialogProps) {
   const [winner, setWinner] = useState<string>("__refund__");
   const settle = useSettlePredictionMarket();
+  const { data: suggestion } = useGoalBetSuggestion(
+    market?.title,
+    market?.options,
+    open && !!market,
+  );
+
+  // Pré-seleciona apenas sugestões seguras; empates e casos ambíguos exigem
+  // escolha explícita do administrador.
+  useEffect(() => {
+    if (!open) return;
+    if (suggestion?.autoApplicable) {
+      setWinner(suggestion.optionId ?? "__refund__");
+    }
+  }, [open, suggestion]);
 
   if (!market) return null;
 
@@ -62,6 +78,28 @@ export function SettleMarketDialog({ market, open, onOpenChange }: SettleMarketD
             credita os acertadores imediatamente.
           </DialogDescription>
         </DialogHeader>
+
+        {suggestion ? (
+          <div
+            className={
+              suggestion.autoApplicable
+                ? "flex items-start gap-2 rounded-lg border border-primary/30 bg-primary/5 p-3 text-sm"
+                : "flex items-start gap-2 rounded-lg border border-destructive/30 bg-destructive/5 p-3 text-sm"
+            }
+          >
+            {suggestion.autoApplicable ? (
+              <Sparkles className="mt-0.5 h-4 w-4 text-primary" aria-hidden />
+            ) : (
+              <TriangleAlert className="mt-0.5 h-4 w-4 text-destructive" aria-hidden />
+            )}
+            <div>
+              <p className="font-medium">
+                {suggestion.autoApplicable ? "Sugestão da campanha" : "Revisão manual necessária"}
+              </p>
+              <p className="text-muted-foreground">{suggestion.message}</p>
+            </div>
+          </div>
+        ) : null}
 
         <RadioGroup value={winner} onValueChange={setWinner} className="space-y-2">
           {(market.options ?? []).map((option) => (
