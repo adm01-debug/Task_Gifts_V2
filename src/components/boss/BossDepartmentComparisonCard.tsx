@@ -1,6 +1,8 @@
-import { useMemo, useState } from "react";
-import { BarChart3, Medal } from "lucide-react";
+import { useCallback, useMemo, useState } from "react";
+import { BarChart3, Download, Medal } from "lucide-react";
+import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import {
@@ -17,6 +19,10 @@ import {
   lastDaysWindow,
   NO_DEPARTMENT,
 } from "@/lib/bossDepartmentComparison";
+import {
+  buildBossComparisonCsv,
+  bossComparisonFileName,
+} from "@/lib/bossDepartmentComparisonExport";
 import { cn } from "@/lib/utils";
 
 const WINDOWS = [
@@ -49,11 +55,38 @@ export function BossDepartmentComparisonCard({
     return map;
   }, [departments]);
 
-  const result = useMemo(() => {
+  const range = useMemo(() => {
     const days = Number(window);
-    const range = days > 0 ? lastDaysWindow(days) : {};
-    return compareDepartments(battles, range);
-  }, [battles, window]);
+    return days > 0 ? lastDaysWindow(days) : {};
+  }, [window]);
+
+  const result = useMemo(
+    () => compareDepartments(battles, range),
+    [battles, range],
+  );
+
+  const windowLabel =
+    WINDOWS.find((option) => option.value === window)?.label ?? "";
+
+  const handleExport = useCallback(() => {
+    try {
+      const csv = buildBossComparisonCsv(battles, {
+        ...range,
+        departmentNames: nameById,
+      });
+      const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = bossComparisonFileName(windowLabel);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+    } catch {
+      toast.error("Não foi possível exportar o comparativo.");
+    }
+  }, [battles, range, nameById, windowLabel]);
 
   if (result.rows.length < 2) return null;
 
@@ -64,18 +97,31 @@ export function BossDepartmentComparisonCard({
           <BarChart3 className="h-4 w-4" />
           Comparativo entre departamentos
         </CardTitle>
-        <Select value={window} onValueChange={setWindow}>
-          <SelectTrigger className="h-9 w-full sm:w-[190px]" aria-label="Período do comparativo">
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            {WINDOWS.map((option) => (
-              <SelectItem key={option.value} value={option.value}>
-                {option.label}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+        <div className="flex flex-wrap items-center gap-2">
+          <Select value={window} onValueChange={setWindow}>
+            <SelectTrigger className="h-9 w-full sm:w-[190px]" aria-label="Período do comparativo">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {WINDOWS.map((option) => (
+                <SelectItem key={option.value} value={option.value}>
+                  {option.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            className="h-9 gap-2"
+            onClick={handleExport}
+            aria-label="Exportar comparativo em CSV"
+          >
+            <Download className="h-4 w-4" />
+            <span className="hidden sm:inline">Exportar CSV</span>
+          </Button>
+        </div>
       </CardHeader>
       <CardContent className="space-y-3">
         <p className="text-xs text-muted-foreground">
