@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { AlertTriangle, CalendarDays, Coins, Dices, Download, Lock, Plus, Save, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
@@ -25,6 +25,8 @@ import {
   useAdminWagerQuestions,
   useDeleteWagerQuestion,
   useSaveWagerQuestion,
+  useSaveWagerBudgetSettings,
+  useWagerBudgetSettings,
 } from "@/hooks/useWagerAdmin";
 import type { AdminWagerQuestion } from "@/services/wagerAdminService";
 import {
@@ -91,10 +93,38 @@ export default function WagerQuestionAdminPage() {
   const { data: questions, isLoading } = useAdminWagerQuestions();
   const saveMutation = useSaveWagerQuestion();
   const deleteMutation = useDeleteWagerQuestion();
+  const { data: budgetSettings } = useWagerBudgetSettings();
+  const saveBudgetMutation = useSaveWagerBudgetSettings();
 
   const [draft, setDraft] = useState<WagerQuestionDraft>(emptyDraft);
   const [expectedPlayers, setExpectedPlayers] = useState(30);
   const [monthlyBudget, setMonthlyBudget] = useState(20000);
+
+  // Hidrata os controles quando a configuração persistida chega do banco.
+  useEffect(() => {
+    if (!budgetSettings) return;
+    setExpectedPlayers(budgetSettings.expectedPlayers);
+    setMonthlyBudget(budgetSettings.monthlyCoinBudget);
+  }, [budgetSettings]);
+
+  const budgetDirty =
+    !!budgetSettings &&
+    (budgetSettings.expectedPlayers !== expectedPlayers ||
+      budgetSettings.monthlyCoinBudget !== monthlyBudget);
+
+  const handleSaveBudget = async () => {
+    try {
+      await saveBudgetMutation.mutateAsync({
+        monthlyCoinBudget: monthlyBudget,
+        expectedPlayers,
+      });
+      toast.success("Parâmetros de orçamento salvos.");
+    } catch (err: unknown) {
+      toast.error(
+        err instanceof Error ? err.message : "Falha ao salvar os parâmetros de orçamento.",
+      );
+    }
+  };
 
   // Quantas apostas a pergunta em edição já recebeu: define a imutabilidade.
   const lockedEntries = useMemo(() => {
