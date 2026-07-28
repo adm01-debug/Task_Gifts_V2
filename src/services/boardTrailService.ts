@@ -163,8 +163,6 @@ export const boardTrailService = {
 
   /** Todas as trilhas (inclui rascunhos/arquivadas) — apenas admin/gestor pela RLS. */
   async listAllTrails(): Promise<BoardTrail[]> {
-    return listAllTrailsImpl();
-  },
     const { data, error } = await supabase
       .from("board_trails")
       .select("id, title, description, department_id, status, max_moves_per_day")
