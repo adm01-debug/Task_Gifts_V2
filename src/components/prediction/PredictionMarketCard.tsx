@@ -1,9 +1,11 @@
-import { Clock, Coins, TrendingUp } from "lucide-react";
+import { useState } from "react";
+import { ChartLine, Clock, Coins, TrendingUp } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { cn } from "@/lib/utils";
+import { OddsHistoryChart } from "./OddsHistoryChart";
 import type {
   PredictionMarketRow,
   PredictionStakeRow,
@@ -40,6 +42,9 @@ export function PredictionMarketCard({
   const myOptionId = mine[0]?.option_id;
   const myTotal = mine.reduce((acc, s) => acc + s.amount, 0);
   const locked = market.status !== "open" || new Date(market.locks_at) <= new Date();
+  const [showHistory, setShowHistory] = useState(false);
+  // Rascunho não tem série pública e mercado sem pote não tem o que mostrar.
+  const canShowHistory = market.status !== "draft" && market.total_pool > 0;
 
   return (
     <Card className="flex flex-col border-border/60 bg-card/80 backdrop-blur">
@@ -118,6 +123,23 @@ export function PredictionMarketCard({
               ? ` · retorno: ${mine.reduce((acc, s) => acc + (s.payout ?? 0), 0)} moedas`
               : ""}
           </p>
+        ) : null}
+
+        {canShowHistory ? (
+          <div className="mt-auto space-y-3 border-t border-border/60 pt-3">
+            <Button
+              size="sm"
+              variant="ghost"
+              className="h-8 w-full justify-center"
+              aria-expanded={showHistory}
+              onClick={() => setShowHistory((open) => !open)}
+            >
+              <ChartLine className="mr-1.5 h-3.5 w-3.5" aria-hidden />
+              {showHistory ? "Ocultar evolução" : "Ver evolução das cotações"}
+            </Button>
+            {/* Montagem tardia: a consulta só dispara quando o usuário abre. */}
+            {showHistory ? <OddsHistoryChart market={market} /> : null}
+          </div>
         ) : null}
       </CardContent>
     </Card>
