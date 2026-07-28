@@ -1285,6 +1285,7 @@ export type Database = {
       }
       board_moves: {
         Row: {
+          challenge_correct: boolean | null
           coins_delta: number
           created_at: string
           dedupe_key: string
@@ -1300,6 +1301,7 @@ export type Database = {
           xp_delta: number
         }
         Insert: {
+          challenge_correct?: boolean | null
           coins_delta?: number
           created_at?: string
           dedupe_key: string
@@ -1315,6 +1317,7 @@ export type Database = {
           xp_delta?: number
         }
         Update: {
+          challenge_correct?: boolean | null
           coins_delta?: number
           created_at?: string
           dedupe_key?: string
@@ -11589,6 +11592,33 @@ export type Database = {
         }[]
       }
       get_auction_summary: { Args: { p_auction_id: string }; Returns: Json }
+      get_board_challenge_stats: {
+        Args: { p_trail_id: string }
+        Returns: {
+          accuracy: number
+          attempts: number
+          blocked_players: number
+          challenge_id: string
+          correct_attempts: number
+          distinct_players: number
+          question: string
+          tile_position: number
+        }[]
+      }
+      get_board_trail_leaderboard: {
+        Args: { p_limit?: number; p_trail_id: string }
+        Returns: {
+          avatar_url: string
+          board_position: number
+          coins: number
+          display_name: string
+          finished_at: string
+          moves_count: number
+          rank: number
+          user_id: string
+          xp: number
+        }[]
+      }
       get_boss_battle_leaderboard: {
         Args: { _battle_id: string; _limit?: number }
         Returns: {
