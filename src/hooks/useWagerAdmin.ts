@@ -1,5 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { wagerAdminService } from "@/services/wagerAdminService";
+import { wagerBudgetService } from "@/services/wagerBudgetService";
 import type { WagerQuestionDraft } from "@/lib/wagerAuthoring";
 import { dailyWagerKeys } from "./useDailyWager";
 import { useAuth } from "./useAuth";
@@ -49,6 +50,31 @@ export function useBulkImportWagerQuestions() {
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: wagerAdminKeys.all });
       void queryClient.invalidateQueries({ queryKey: dailyWagerKeys.all });
+    },
+  });
+}
+export const wagerBudgetKeys = {
+  all: ["wagerBudget"] as const,
+};
+
+/** Configuração persistida de orçamento/participantes da Pergunta do Dia. */
+export function useWagerBudgetSettings() {
+  const { user } = useAuth();
+  return useQuery({
+    queryKey: wagerBudgetKeys.all,
+    queryFn: () => wagerBudgetService.get(),
+    enabled: !!user,
+    staleTime: 5 * 60 * 1000,
+  });
+}
+
+export function useSaveWagerBudgetSettings() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (input: { monthlyCoinBudget: number; expectedPlayers: number }) =>
+      wagerBudgetService.save(input),
+    onSuccess: (settings) => {
+      queryClient.setQueryData(wagerBudgetKeys.all, settings);
     },
   });
 }
