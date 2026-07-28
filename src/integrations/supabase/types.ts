@@ -10369,6 +10369,15 @@ export type Database = {
           milestone: number
         }[]
       }
+      _grant_card_pack_internal: {
+        Args: {
+          p_size: number
+          p_source: string
+          p_source_ref: string
+          p_user_id: string
+        }
+        Returns: string
+      }
       _require_admin: { Args: never; Returns: undefined }
       _require_manager_or_admin: { Args: never; Returns: undefined }
       acknowledge_security_alert: {
