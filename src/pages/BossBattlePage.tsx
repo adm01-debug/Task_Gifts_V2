@@ -10,6 +10,7 @@ import { PageShell } from "@/components/navigation";
 import { SEOHead } from "@/components/SEOHead";
 import { SectionErrorBoundary } from "@/components/SectionErrorBoundary";
 import { BossDamageSourcesCard } from "@/components/boss/BossDamageSourcesCard";
+import { BossContributorsCard } from "@/components/boss/BossContributorsCard";
 import { BossBattleAdminDialog } from "@/components/boss/BossBattleAdminDialog";
 import { useRBAC } from "@/hooks/useRBAC";
 import {
@@ -222,6 +223,16 @@ export default function BossBattlePage() {
             <BossDamageSourcesCard
               rules={activeBattle.damage_rules}
               perUserCap={activeBattle.per_user_cap}
+            />
+
+            <BossContributorsCard
+              battleId={activeBattle.id}
+              totalDamage={Math.max(0, activeBattle.total_hp - activeBattle.current_hp)}
+              coinsPool={activeBattle.coins_pool}
+              xpPool={activeBattle.xp_pool}
+              minShare={activeBattle.min_share}
+              perUserCoinsCap={activeBattle.per_user_coins_cap}
+              live={activeBattle.status === "running"}
             />
 
             <Card>

@@ -8,6 +8,8 @@ export const bossBattleKeys = {
   list: () => [...bossBattleKeys.all, "list"] as const,
   myDamage: (battleId: string, userId: string) =>
     [...bossBattleKeys.all, "damage", battleId, userId] as const,
+  leaderboard: (battleId: string, limit: number) =>
+    [...bossBattleKeys.all, "leaderboard", battleId, limit] as const,
 };
 
 export function useBossBattles() {
@@ -43,6 +45,18 @@ export function useSettleBossBattle() {
       queryClient.invalidateQueries({ queryKey: bossBattleKeys.all });
     },
     onError: () => toast.error("Não foi possível apurar a batalha."),
+  });
+}
+
+/** Ranking de contribuintes; atualiza sozinho enquanto a batalha está viva. */
+export function useBossLeaderboard(battleId?: string, limit = 20, live = true) {
+  const { user } = useAuth();
+  return useQuery({
+    queryKey: bossBattleKeys.leaderboard(battleId ?? "none", limit),
+    queryFn: () => bossBattleService.leaderboard(battleId as string, limit),
+    enabled: !!user?.id && !!battleId,
+    staleTime: 15_000,
+    refetchInterval: live ? 30_000 : false,
   });
 }
 

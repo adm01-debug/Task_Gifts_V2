@@ -10848,6 +10848,17 @@ export type Database = {
         }[]
       }
       get_auction_summary: { Args: { p_auction_id: string }; Returns: Json }
+      get_boss_battle_leaderboard: {
+        Args: { _battle_id: string; _limit?: number }
+        Returns: {
+          avatar_url: string
+          display_name: string
+          hits: number
+          share: number
+          total_damage: number
+          user_id: string
+        }[]
+      }
       get_burn_rate: {
         Args: { _minutes: number; _slo?: number }
         Returns: Json

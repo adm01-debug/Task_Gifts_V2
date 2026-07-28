@@ -42,6 +42,15 @@ export interface DealDamageResult {
   reason?: string;
 }
 
+export interface BossLeaderboardEntry {
+  userId: string;
+  displayName: string | null;
+  avatarUrl: string | null;
+  damage: number;
+  hits: number;
+  share: number;
+}
+
 /** Normaliza as regras vindas do JSONB para o formato do motor puro. */
 function parseRules(raw: unknown): BossDamageRules {
   if (!raw || typeof raw !== "object") return DEFAULT_DAMAGE_RULES;
@@ -223,5 +232,28 @@ export const bossBattleService = {
       xp: Number(payload.xp ?? 0),
       alreadySettled: Boolean(payload.already_settled),
     };
+  },
+
+  /**
+   * Ranking de contribuintes via RPC SECURITY DEFINER: a tabela de dano é
+   * restrita por RLS, então a agregação (com nome público) acontece no banco.
+   */
+  async leaderboard(battleId: string, limit = 20): Promise<BossLeaderboardEntry[]> {
+    const { data, error } = await supabase.rpc("get_boss_battle_leaderboard", {
+      _battle_id: battleId,
+      _limit: limit,
+    });
+    if (error) {
+      logger.error("Falha ao carregar ranking do chefão", String(error.message));
+      throw error;
+    }
+    return ((data ?? []) as Record<string, unknown>[]).map((row) => ({
+      userId: String(row.user_id),
+      displayName: (row.display_name as string | null) ?? null,
+      avatarUrl: (row.avatar_url as string | null) ?? null,
+      damage: Number(row.total_damage ?? 0),
+      hits: Number(row.hits ?? 0),
+      share: Number(row.share ?? 0),
+    }));
   },
 };
