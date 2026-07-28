@@ -1,11 +1,13 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { dailyWagerService } from "@/services/dailyWagerService";
 import { useAuth } from "./useAuth";
+import type { WagerLeaderboardWindow } from "@/lib/wagerLeaderboard";
 
 export const dailyWagerKeys = {
   all: ["dailyWager"] as const,
   today: () => [...dailyWagerKeys.all, "today"] as const,
   history: () => [...dailyWagerKeys.all, "history"] as const,
+  leaderboard: (days: number) => [...dailyWagerKeys.all, "leaderboard", days] as const,
 };
 
 export function useDailyWager() {
