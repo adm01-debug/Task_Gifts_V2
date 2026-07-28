@@ -31,7 +31,7 @@ export function AudienceHelp({ question, onClose }: { question: MillionaireQuest
         setPercentages(question.options.map((o) => byId.get(o.id) ?? 0));
       })
       .catch((err: unknown) => {
-        logger.error("Falha ao consultar ajuda da plateia", err);
+        logger.apiError("quiz_lifeline_audience", err, "MillionaireHelpers");
         if (!cancelled) setPercentages(question.options.map(() => 0));
       });
     return () => {
@@ -73,7 +73,7 @@ export function PhoneHelp({ question, onClose }: { question: MillionaireQuestion
         setSuggestion({ letter: String.fromCharCode(65 + idx), confidence: result.confidence ?? 60 });
       })
       .catch((err: unknown) => {
-        logger.error("Falha ao consultar ligação para um amigo", err);
+        logger.apiError("quiz_lifeline_phone", err, "MillionaireHelpers");
       });
     return () => {
       cancelled = true;
