@@ -18,7 +18,6 @@ import {
   type BossHistoryInput,
 } from "@/lib/bossHistory";
 import { bossHistoryFileName, buildBossHistoryCsv } from "@/lib/bossHistoryExport";
-import { logger } from "@/lib/logger";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 
@@ -79,7 +78,6 @@ export function BossHistoryCard({
       // Libera a memória apenas após o download ser iniciado pelo browser.
       setTimeout(() => URL.revokeObjectURL(url), 1000);
     } catch (err: unknown) {
-      logger.error("Falha ao exportar histórico do chefão", err);
       toast.error("Não foi possível exportar o histórico.");
     }
   }, [battles, effectiveDepartment, scopeLabel]);
