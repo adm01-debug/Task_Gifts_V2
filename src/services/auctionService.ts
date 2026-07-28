@@ -144,6 +144,43 @@ export const auctionAdminService = {
     return (data ?? []) as Auction[];
   },
 
+  /** Cria o leilão como rascunho — publicação é uma ação explícita e auditável. */
+  async create(input: CreateAuctionInput): Promise<Auction> {
+    const { data, error } = await supabase
+      .from("auctions")
+      .insert({
+        title: input.title.trim(),
+        description: input.description?.trim() || null,
+        starting_bid: input.starting_bid,
+        min_increment: input.min_increment,
+        starts_at: input.starts_at,
+        ends_at: input.ends_at,
+        status: "draft",
+      })
+      .select(AUCTION_COLUMNS)
+      .single();
+
+    if (error) {
+      logger.apiError("createAuction", error, "auctionAdminService");
+      throw error;
+    }
+    return data as Auction;
+  },
+
+  /** Publica um rascunho. Só rascunhos são elegíveis (validado também no cliente). */
+  async publish(auctionId: string): Promise<void> {
+    const { error } = await supabase
+      .from("auctions")
+      .update({ status: "active" })
+      .eq("id", auctionId)
+      .eq("status", "draft");
+
+    if (error) {
+      logger.apiError("publishAuction", error, "auctionAdminService");
+      throw error;
+    }
+  },
+
   async close(auctionId: string): Promise<void> {
     const { error } = await supabase.rpc("close_auction", { p_auction_id: auctionId });
     if (error) {
