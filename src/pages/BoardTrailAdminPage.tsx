@@ -19,6 +19,7 @@ import { PageShell } from "@/components/navigation";
 import { SEOHead } from "@/components/SEOHead";
 import { SectionErrorBoundary } from "@/components/SectionErrorBoundary";
 import { BoardTileRow } from "@/components/board/BoardTileRow";
+import { BoardStuckPlayersPanel } from "@/components/board/BoardStuckPlayersPanel";
 import {
   useAdminBoardTrails,
   useBoardTrail,
@@ -407,6 +408,15 @@ export default function BoardTrailAdminPage() {
               )}
             </CardContent>
           </Card>
+        </div>
+      </SectionErrorBoundary>
+
+      <SectionErrorBoundary sectionName="Desbloqueio de jogadores">
+        <div className="mt-4">
+          <BoardStuckPlayersPanel
+            trailId={selectedId === NEW_TRAIL ? null : selectedId}
+            trailTitle={selectedId === NEW_TRAIL ? null : (persisted?.title ?? draft.title)}
+          />
         </div>
       </SectionErrorBoundary>
     </PageShell>

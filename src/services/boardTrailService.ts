@@ -49,6 +49,16 @@ export interface BoardChallengeResult {
   attempts_left: number;
 }
 
+/** Linha de jogador travado num desafio (pré-visualização ou liberação). */
+export interface BoardStuckPlayer {
+  trail_id: string;
+  trail_title: string | null;
+  user_id: string;
+  display_name: string;
+  position: number;
+  blocked_hours: number;
+}
+
 export interface BoardAdvanceResult {
   replayed: boolean;
   roll: number;
@@ -311,5 +321,40 @@ export const boardTrailService = {
       logger.error("Falha ao excluir trilha", "boardTrailService.deleteTrail", error);
       throw error;
     }
+  },
+
+  /**
+   * Pré-visualização (somente leitura) de quem está travado há mais de
+   * `maxHours`. A RPC recusa quem não é gestor/admin.
+   */
+  async listStuckPlayers(maxHours: number, trailId: string | null): Promise<BoardStuckPlayer[]> {
+    const { data, error } = await supabase.rpc("list_stuck_board_players", {
+      p_max_hours: maxHours,
+      // Os tipos gerados não expressam parâmetros anuláveis; o SQL trata NULL.
+      p_trail_id: trailId as unknown as string,
+    });
+
+    if (error) {
+      logger.error("Falha ao listar travados", "boardTrailService.listStuckPlayers", error);
+      throw error;
+    }
+    return (data as unknown as BoardStuckPlayer[]) || [];
+  },
+
+  /**
+   * Executa o desbloqueio sob demanda. A autorização (admin) e o registro em
+   * `board_moves` acontecem dentro da RPC.
+   */
+  async unblockPlayers(maxHours: number, trailId: string | null): Promise<BoardStuckPlayer[]> {
+    const { data, error } = await supabase.rpc("unblock_board_players", {
+      p_max_hours: maxHours,
+      p_trail_id: trailId as unknown as string,
+    });
+
+    if (error) {
+      logger.error("Falha ao desbloquear jogadores", "boardTrailService.unblockPlayers", error);
+      throw error;
+    }
+    return (data as unknown as BoardStuckPlayer[]) || [];
   },
 };
