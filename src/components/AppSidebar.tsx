@@ -1,4 +1,5 @@
-import { motion } from "framer-motion";
+import {
+  Gavel, motion } from "framer-motion";
 import { 
   Home, Target, Trophy, TrendingUp, Clock, BookOpen, 
   Gamepad2, ShoppingBag, Swords, Heart, Award, Flag,
@@ -54,6 +55,7 @@ const navCategories = [
       { icon: Grid3X3, label: "Bingo de Missões", path: "/bingo" },
       { icon: Swords, label: "Torneio Mata-Mata", path: "/torneios" },
       { icon: Flag, label: "Guerra de Departamentos", path: "/guerra-departamentos" },
+      { icon: Gavel, label: "Leilão de Recompensas", path: "/leilao" },
       { icon: Rocket, label: "Campanhas", path: "/campanhas" },
     ],
   },
