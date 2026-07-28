@@ -9,6 +9,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "sonner";
 import { Gamepad2 } from "lucide-react";
 import { logger } from "@/services/loggingService";
+import type { Json } from "@/integrations/supabase/types";
 import {
   type ChannelMap,
   type NotificationChannel,
@@ -152,7 +153,7 @@ export function GameNotificationPreferences() {
       const next = mergeChannelPreference(current, type, channel, value, defaultsFor(type));
       const { error } = await supabase
         .from("notification_preferences")
-        .upsert({ user_id: user.id, type_preferences: next }, { onConflict: "user_id" });
+        .upsert({ user_id: user.id, type_preferences: next as unknown as Json }, { onConflict: "user_id" });
       if (error) throw error;
       toast.success("Preferência atualizada");
     } catch (err: unknown) {
@@ -176,7 +177,7 @@ export function GameNotificationPreferences() {
       const next = mergeManyChannelPreferences(current, ALL_KEYS, "push", value, defaultsFor);
       const { error } = await supabase
         .from("notification_preferences")
-        .upsert({ user_id: user.id, type_preferences: next }, { onConflict: "user_id" });
+        .upsert({ user_id: user.id, type_preferences: next as unknown as Json }, { onConflict: "user_id" });
       if (error) throw error;
       toast.success(value ? "Push de jogos ativado" : "Push de jogos silenciado");
     } catch (err: unknown) {
