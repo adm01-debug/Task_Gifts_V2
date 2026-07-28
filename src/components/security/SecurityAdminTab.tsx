@@ -2,10 +2,11 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Ban, ShieldAlert, Shield, Trash2, Globe, Loader2 } from "lucide-react";
+import { Ban, ShieldAlert, Shield, Trash2, Globe, Loader2, BellRing } from "lucide-react";
 import { BlockedIPsPanel } from "@/components/security/BlockedIPsPanel";
 import { LoginAttemptsPanel } from "@/components/security/LoginAttemptsPanel";
 import { RateLimitRulesPanel } from "@/components/security/RateLimitRulesPanel";
+import { PushOutboxHealthPanel } from "@/components/security/PushOutboxHealthPanel";
 
 interface SecurityAdminTabProps {
   stats: {
@@ -47,14 +48,16 @@ export function SecurityAdminTab({ stats, cleanupMutation }: SecurityAdminTabPro
       )}
 
       <Tabs defaultValue="blocked" className="space-y-4">
-        <TabsList className="grid w-full grid-cols-3">
+        <TabsList className="grid w-full grid-cols-2 md:grid-cols-4">
           <TabsTrigger value="blocked" className="flex items-center gap-2"><Ban className="w-4 h-4" />IPs Bloqueados</TabsTrigger>
           <TabsTrigger value="attempts" className="flex items-center gap-2"><ShieldAlert className="w-4 h-4" />Tentativas Login</TabsTrigger>
           <TabsTrigger value="rules" className="flex items-center gap-2"><Shield className="w-4 h-4" />Regras Rate Limit</TabsTrigger>
+          <TabsTrigger value="push" className="flex items-center gap-2"><BellRing className="w-4 h-4" />Fila de Push</TabsTrigger>
         </TabsList>
         <TabsContent value="blocked"><BlockedIPsPanel /></TabsContent>
         <TabsContent value="attempts"><LoginAttemptsPanel /></TabsContent>
         <TabsContent value="rules"><RateLimitRulesPanel /></TabsContent>
+        <TabsContent value="push"><PushOutboxHealthPanel /></TabsContent>
       </Tabs>
     </>
   );
