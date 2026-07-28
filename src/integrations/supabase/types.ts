@@ -10622,6 +10622,19 @@ export type Database = {
           option_id: string
         }[]
       }
+      get_prediction_oracle_aggregates: {
+        Args: never
+        Returns: {
+          hits: number
+          markets: number
+          stakes: number
+          total_payout: number
+          total_staked: number
+          user_id: string
+          weighted_brier: number
+          weighted_edge: number
+        }[]
+      }
       get_push_outbox_health: { Args: { p_hours?: number }; Returns: Json }
       get_push_outbox_health_trend: {
         Args: { p_hours?: number }
