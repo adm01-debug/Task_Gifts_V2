@@ -7133,6 +7133,54 @@ export type Database = {
         }
         Relationships: []
       }
+      push_outbox_health_snapshots: {
+        Row: {
+          alerts: Json
+          created_at: string
+          failed: number
+          id: string
+          minutes_since_last_dispatch: number | null
+          oldest_pending_minutes: number
+          pending: number
+          processing: number
+          score: number
+          sent: number
+          severity: string
+          skipped: number
+          stuck: number
+        }
+        Insert: {
+          alerts?: Json
+          created_at?: string
+          failed?: number
+          id?: string
+          minutes_since_last_dispatch?: number | null
+          oldest_pending_minutes?: number
+          pending?: number
+          processing?: number
+          score: number
+          sent?: number
+          severity: string
+          skipped?: number
+          stuck?: number
+        }
+        Update: {
+          alerts?: Json
+          created_at?: string
+          failed?: number
+          id?: string
+          minutes_since_last_dispatch?: number | null
+          oldest_pending_minutes?: number
+          pending?: number
+          processing?: number
+          score?: number
+          sent?: number
+          severity?: string
+          skipped?: number
+          stuck?: number
+        }
+        Relationships: []
+      }
       push_subscriptions: {
         Row: {
           auth: string
@@ -10374,6 +10422,17 @@ export type Database = {
         }[]
       }
       get_push_outbox_health: { Args: { p_hours?: number }; Returns: Json }
+      get_push_outbox_health_trend: {
+        Args: { p_hours?: number }
+        Returns: {
+          avg_score: number
+          bucket: string
+          critical_count: number
+          max_failed: number
+          max_pending: number
+          min_score: number
+        }[]
+      }
       get_quiz_category_stats: {
         Args: never
         Returns: {
@@ -10692,6 +10751,7 @@ export type Database = {
         Returns: Json
       }
       snapshot_lucky_wheel_payout: { Args: { p_date?: string }; Returns: Json }
+      snapshot_push_outbox_health: { Args: never; Returns: string }
       spin_lucky_wheel: { Args: { p_dedupe_key?: string }; Returns: Json }
       start_lightning_round: { Args: never; Returns: Json }
       start_tournament: { Args: { p_tournament_id: string }; Returns: Json }
