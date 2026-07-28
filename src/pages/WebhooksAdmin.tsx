@@ -161,7 +161,7 @@ export default function WebhooksAdmin() {
           },
         },
       });
-      if (error) throw error;
+      if (error) throw new Error(error.message);
       toast.success("Ping enviado — verifique a timeline em alguns segundos", { id: t });
     } catch (e) {
       toast.error(`Falha ao enviar ping: ${(e as Error).message}`, { id: t });
