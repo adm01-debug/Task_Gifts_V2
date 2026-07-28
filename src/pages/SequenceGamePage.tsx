@@ -18,9 +18,8 @@ import {
 import { useHaptics } from "@/hooks/useHaptics";
 import {
   moveItem,
-  scoreSequence,
-  shuffleSteps,
-  type SequenceStep,
+  shufflePlaySteps,
+  type SequencePlayStep,
 } from "@/lib/sequenceGame";
 
 function formatDuration(ms: number): string {
@@ -36,7 +35,7 @@ export default function SequenceGamePage() {
   const submitMutation = useSubmitSequence();
   const haptics = useHaptics();
 
-  const [order, setOrder] = useState<SequenceStep[]>([]);
+  const [order, setOrder] = useState<SequencePlayStep[]>([]);
   const [attemptSeed, setAttemptSeed] = useState(0);
   const [wrongIndexes, setWrongIndexes] = useState<number[] | null>(null);
   const [elapsedMs, setElapsedMs] = useState(0);
@@ -52,7 +51,7 @@ export default function SequenceGamePage() {
       setOrder([]);
       return;
     }
-    setOrder(shuffleSteps(procedure.steps, `${procedure.id}:${attemptSeed}`));
+    setOrder(shufflePlaySteps(procedure.steps, `${procedure.id}:${attemptSeed}`));
     setWrongIndexes(null);
     setElapsedMs(0);
     startedAtRef.current = Date.now();
@@ -69,11 +68,6 @@ export default function SequenceGamePage() {
   }, [order.length, wrongIndexes]);
 
   const revealed = wrongIndexes !== null;
-
-  const preview = useMemo(
-    () => scoreSequence(procedure?.steps ?? [], order.map((s) => s.id)),
-    [procedure?.steps, order],
-  );
 
   const handleMove = useCallback(
     (from: number, to: number) => {
@@ -102,7 +96,8 @@ export default function SequenceGamePage() {
         return;
       }
 
-      setWrongIndexes(preview.wrongIndexes);
+      // O gabarito vem exclusivamente do servidor, após a correção.
+      setWrongIndexes(result.wrong_indexes ?? []);
 
       if (result.is_perfect) {
         haptics.trigger("success");
@@ -120,7 +115,7 @@ export default function SequenceGamePage() {
     } catch {
       toast.error("Falha de conexão ao enviar a sequência.");
     }
-  }, [procedureId, order, revealed, submitMutation, preview.wrongIndexes, haptics]);
+  }, [procedureId, order, revealed, submitMutation, haptics]);
 
   const isLoading = loadingProcedures || loadingProcedure;
 
