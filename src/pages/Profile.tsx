@@ -18,6 +18,7 @@ import { PushSyncHistory } from "@/components/push/PushSyncHistory";
 import { PushDeviceList } from "@/components/push/PushDeviceList";
 import { CampaignNotificationPreferences } from "@/components/CampaignNotificationPreferences";
 import { InAppNotificationToggle } from "@/components/InAppNotificationToggle";
+import { GameNotificationPreferences } from "@/components/GameNotificationPreferences";
 import { ExecutiveReportPreferenceToggle } from "@/components/ExecutiveReportPreferenceToggle";
 import { SectionErrorBoundary } from "@/components/SectionErrorBoundary";
 import { TwoFactorSetup } from "@/components/auth/TwoFactorSetup";
@@ -175,6 +176,7 @@ const Profile = () => {
         <SectionErrorBoundary sectionName="Histórico de Push"><PushNotificationHistory /></SectionErrorBoundary>
         <InAppNotificationToggle />
         <CampaignNotificationPreferences />
+        <SectionErrorBoundary sectionName="Notificações dos Jogos"><GameNotificationPreferences /></SectionErrorBoundary>
         <ExecutiveReportPreferenceToggle />
          </div>
        </MobilePageLayout>
