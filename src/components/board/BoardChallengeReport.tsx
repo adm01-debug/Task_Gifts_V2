@@ -1,5 +1,6 @@
-import { AlertTriangle, BarChart3, CheckCircle2, Lock } from "lucide-react";
+import { AlertTriangle, BarChart3, CheckCircle2, Download, Lock } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -9,11 +10,15 @@ import {
   type ChallengeDifficulty,
   type ChallengeFlag,
 } from "@/lib/boardStats";
+import { buildBoardChallengeCsv, boardChallengeFileName } from "@/lib/boardStatsExport";
+import { downloadCSV } from "@/lib/csvExport";
 
 export interface BoardChallengeReportProps {
   trailId: string;
   /** Só habilite para gestores/admins — a RPC também bloqueia no servidor. */
   enabled?: boolean;
+  /** Nome da trilha usado no cabeçalho e no arquivo exportado. */
+  trailLabel?: string | null;
 }
 
 const DIFFICULTY_LABEL: Record<ChallengeDifficulty, string> = {
@@ -39,19 +44,41 @@ const FLAG_LABEL: Record<ChallengeFlag, string> = {
   "jogadores-travados": "Jogadores travados",
 };
 
-export function BoardChallengeReport({ trailId, enabled = true }: BoardChallengeReportProps) {
+export function BoardChallengeReport({ trailId, enabled = true, trailLabel }: BoardChallengeReportProps) {
   const { data, isLoading, error } = useBoardChallengeStats(trailId, enabled);
   const report = buildChallengeReport(data);
 
   if (!enabled) return null;
 
+  // O CSV reaproveita o mesmo motor da tela: planilha e UI nunca divergem.
+  const canExport = !isLoading && !error && report.items.length > 0;
+  const handleExport = () => {
+    const csv = buildBoardChallengeCsv(data, { trailLabel });
+    // downloadCSV já injeta o BOM; removemos o nosso para não duplicar.
+    downloadCSV(boardChallengeFileName(trailLabel), csv.replace(/^\uFEFF/, ""));
+  };
+
   return (
     <Card>
       <CardHeader className="pb-3">
-        <CardTitle className="flex items-center gap-2 text-base">
-          <BarChart3 className="h-4 w-4 text-primary" aria-hidden />
-          Calibração dos desafios
-        </CardTitle>
+        <div className="flex items-start justify-between gap-2">
+          <CardTitle className="flex items-center gap-2 text-base">
+            <BarChart3 className="h-4 w-4 text-primary" aria-hidden />
+            Calibração dos desafios
+          </CardTitle>
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={handleExport}
+            disabled={!canExport}
+            aria-label="Exportar relatório de calibração em CSV"
+            className="min-h-[36px] shrink-0 gap-1"
+          >
+            <Download className="h-3.5 w-3.5" aria-hidden />
+            CSV
+          </Button>
+        </div>
         <CardDescription>
           Acerto global de {report.overallAccuracy}% em {report.totalAttempts} tentativas ·{" "}
           {report.blockedPlayers} jogador(es) travado(s).
