@@ -41,3 +41,13 @@ export function useSubmitWager() {
     },
   });
 }
+
+export function useWagerLeaderboard(days: WagerLeaderboardWindow = 7, limit = 20) {
+  const { user } = useAuth();
+  return useQuery({
+    queryKey: dailyWagerKeys.leaderboard(days),
+    queryFn: () => dailyWagerService.leaderboard(days, limit),
+    enabled: !!user,
+    staleTime: 2 * 60 * 1000,
+  });
+}
