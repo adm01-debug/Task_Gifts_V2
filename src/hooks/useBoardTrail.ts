@@ -37,3 +37,33 @@ export function useAdvanceBoardTrail(trailId: string | null) {
     },
   });
 }
+
+export function useAdminBoardTrails() {
+  return useQuery({
+    queryKey: ["board-trails", "admin"],
+    queryFn: () => boardTrailService.listAllTrails(),
+    staleTime: 60 * 1000,
+  });
+}
+
+export function useSaveBoardTrail() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (input: Parameters<typeof boardTrailService.saveTrail>[0]) =>
+      boardTrailService.saveTrail(input),
+    onSuccess: (trailId) => {
+      queryClient.invalidateQueries({ queryKey: ["board-trails"] });
+      queryClient.invalidateQueries({ queryKey: ["board-trail", trailId] });
+    },
+  });
+}
+
+export function useDeleteBoardTrail() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (trailId: string) => boardTrailService.deleteTrail(trailId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["board-trails"] });
+    },
+  });
+}

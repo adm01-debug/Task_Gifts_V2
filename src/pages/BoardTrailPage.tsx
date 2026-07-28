@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { Coins, Dices, Flag, Sparkles } from "lucide-react";
+import { Link } from "react-router-dom";
+import { Coins, Dices, Flag, Settings, Sparkles } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -17,12 +18,14 @@ import {
   useBoardTrails,
 } from "@/hooks/useBoardTrail";
 import { useAuth } from "@/hooks/useAuth";
+import { useRBAC } from "@/hooks/useRBAC";
 import { useHaptics } from "@/hooks/useHaptics";
 import { boardProgressPercent, buildMoveDedupeKey, normalizeBoard } from "@/lib/boardTrail";
 import { getErrorMessage } from "@/lib/errorMessages";
 
 export default function BoardTrailPage() {
   const { user } = useAuth();
+  const { hasRole } = useRBAC();
   const haptics = useHaptics();
   const { data: trails, isLoading: loadingTrails } = useBoardTrails();
   const [trailId, setTrailId] = useState<string | null>(null);
@@ -88,6 +91,14 @@ export default function BoardTrailPage() {
 
       <SectionErrorBoundary sectionName="Trilha Tabuleiro">
         <div className="space-y-4">
+          {hasRole("admin") && (
+            <Button asChild variant="outline" size="sm">
+              <Link to="/tabuleiro/admin">
+                <Settings className="mr-2 h-4 w-4" aria-hidden />
+                Gerenciar trilhas
+              </Link>
+            </Button>
+          )}
           {loadingTrails ? (
             <Skeleton className="h-10 w-full" />
           ) : trails?.length ? (

@@ -139,4 +139,65 @@ export const boardTrailService = {
     }
     return data as unknown as BoardAdvanceResult;
   },
+
+  /** Todas as trilhas (inclui rascunhos/arquivadas) — apenas admin/gestor pela RLS. */
+  async listAllTrails(): Promise<BoardTrail[]> {
+    const { data, error } = await supabase
+      .from("board_trails")
+      .select("id, title, description, department_id, status, max_moves_per_day")
+      .order("created_at", { ascending: false });
+
+    if (error) {
+      logger.error("Falha ao listar trilhas (admin)", "boardTrailService.listAllTrails", error);
+      throw error;
+    }
+    return (data as BoardTrail[]) || [];
+  },
+
+  /**
+   * Cria/atualiza a trilha e substitui o tabuleiro inteiro numa única
+   * transação (RPC `save_board_trail`, que revalida tudo no servidor).
+   */
+  async saveTrail(input: {
+    trailId: string | null;
+    title: string;
+    description: string | null;
+    departmentId: string | null;
+    status: "draft" | "active" | "archived";
+    maxMovesPerDay: number;
+    tiles: ReadonlyArray<{
+      tile_type: BoardTileType;
+      label: string;
+      coins: number | null;
+      xp: number | null;
+      move_by: number | null;
+      challenge_id: string | null;
+    }>;
+  }): Promise<string> {
+    const { data, error } = await supabase.rpc("save_board_trail", {
+      // Os tipos gerados não expressam parâmetros anuláveis; o SQL trata NULL.
+      p_trail_id: input.trailId as unknown as string,
+      p_title: input.title,
+      p_description: input.description as unknown as string,
+      p_department_id: input.departmentId as unknown as string,
+      p_status: input.status,
+      p_max_moves_per_day: input.maxMovesPerDay,
+      p_tiles: input.tiles as unknown as never,
+    });
+
+    if (error) {
+      logger.error("Falha ao salvar trilha", "boardTrailService.saveTrail", error);
+      throw error;
+    }
+    return data as unknown as string;
+  },
+
+  /** Exclui a trilha e, em cascata, casas/progresso/jogadas. */
+  async deleteTrail(trailId: string): Promise<void> {
+    const { error } = await supabase.rpc("delete_board_trail", { p_trail_id: trailId });
+    if (error) {
+      logger.error("Falha ao excluir trilha", "boardTrailService.deleteTrail", error);
+      throw error;
+    }
+  },
 };
