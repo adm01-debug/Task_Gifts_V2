@@ -62,6 +62,12 @@ const ROWS: readonly GameRow[] = [
     description: "Confrontos agendados, resultados e avanço de chave.",
     defaults: { in_app: true, push: true, email: false },
   },
+  {
+    key: "boss_battle",
+    label: "Chefão departamental",
+    description: "Quando o chefão muda de fase (ferido, enfurecido, crítico) ou é derrotado.",
+    defaults: { in_app: true, push: true, email: false },
+  },
 ];
 
 const ALL_KEYS = ROWS.map((r) => r.key);
