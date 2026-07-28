@@ -1,6 +1,6 @@
 import { supabase } from "@/integrations/supabase/client";
 import { logger } from "./loggingService";
-import type { SequenceStep } from "@/lib/sequenceGame";
+import type { SequencePlayStep } from "@/lib/sequenceGame";
 import {
   parseSequenceProcedureStats,
   type SequenceProcedureStats,
@@ -15,7 +15,8 @@ export interface SequenceProcedure {
 }
 
 export interface SequenceProcedureWithSteps extends SequenceProcedure {
-  steps: SequenceStep[];
+  /** Etapas embaralhadas pelo servidor, sem o gabarito. */
+  steps: SequencePlayStep[];
 }
 
 export interface SequenceAttempt {
@@ -40,6 +41,10 @@ export interface SequenceSubmitResult {
   daily_limit_reached?: boolean;
   coins_awarded?: number;
   xp_awarded?: number;
+  /** Índices (base 0) incorretos — revelados apenas após o envio. */
+  wrong_indexes?: number[];
+  /** Ordem correta dos ids — revelada apenas após o envio. */
+  correct_order?: string[];
 }
 
 export const sequenceGameService = {
@@ -62,30 +67,33 @@ export const sequenceGameService = {
     return (data as SequenceProcedure[]) || [];
   },
 
-  /** Carrega um procedimento com suas etapas já ordenadas. */
+  /**
+   * Carrega o conjunto jogável via RPC (SECURITY DEFINER).
+   * A tabela `sequence_steps` não é legível por jogadores: a posição correta
+   * jamais trafega antes da correção no servidor.
+   */
   async getProcedure(procedureId: string): Promise<SequenceProcedureWithSteps | null> {
-    const { data, error } = await supabase
-      .from("sequence_procedures")
-      .select(
-        "id, title, description, department_id, is_active, sequence_steps(id, label, hint, position)",
-      )
-      .eq("id", procedureId)
-      .maybeSingle();
+    const { data, error } = await supabase.rpc("get_sequence_play_set", {
+      p_procedure_id: procedureId,
+    });
 
     if (error) {
       logger.error("Falha ao carregar procedimento", "sequenceGameService.getProcedure", error);
       throw error;
     }
-    if (!data) return null;
 
-    const row = data as SequenceProcedure & { sequence_steps?: SequenceStep[] | null };
+    const row = (data as unknown as
+      | (SequenceProcedure & { success: boolean; steps?: SequencePlayStep[] | null })
+      | null) ?? null;
+    if (!row?.success) return null;
+
     return {
       id: row.id,
       title: row.title,
       description: row.description,
       department_id: row.department_id,
       is_active: row.is_active,
-      steps: [...(row.sequence_steps || [])].sort((a, b) => a.position - b.position),
+      steps: row.steps || [],
     };
   },
 
