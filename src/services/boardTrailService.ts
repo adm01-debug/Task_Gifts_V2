@@ -25,6 +25,27 @@ export interface BoardPlayerRow {
   finished_at: string | null;
 }
 
+export interface BoardChallengeOption {
+  id: string;
+  text: string;
+}
+
+export interface BoardChallengeQuestion {
+  id: string;
+  question: string;
+  /** Alternativas SEM o gabarito — a correção acontece só no servidor. */
+  options: BoardChallengeOption[];
+}
+
+export interface BoardChallengeResult {
+  replayed: boolean;
+  correct: boolean;
+  coins_delta: number;
+  xp_delta: number;
+  unblocked: boolean;
+  attempts_left: number;
+}
+
 export interface BoardAdvanceResult {
   replayed: boolean;
   roll: number;
