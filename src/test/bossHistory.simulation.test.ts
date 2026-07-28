@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   formatDuration,
+  listHistoryDepartments,
   summarizeBossHistory,
   toHistoryRow,
   type BossHistoryInput,
@@ -128,6 +129,16 @@ describe("bossHistory — regras determinísticas", () => {
     expect(formatDuration(3 * 3_600_000 + 20 * 60_000)).toBe("3h 20min");
     expect(formatDuration(50 * 3_600_000)).toBe("2d 2h");
   });
+
+  it("lista apenas departamentos com batalhas concluídas", () => {
+    const options = listHistoryDepartments([
+      { id: "1", status: "running", total_hp: 10, current_hp: 5, department_id: "dep-a" },
+      { id: "2", status: "settled", total_hp: 10, current_hp: 0, department_id: "dep-b" },
+      { id: "3", status: "expired", total_hp: 10, current_hp: 3, department_id: "dep-b" },
+      { id: "4", status: "settled", total_hp: 10, current_hp: 0, department_id: null },
+    ]);
+    expect(options).toEqual([{ id: "dep-b", concluded: 2 }]);
+  });
 });
 
 describe("bossHistory — simulação de 600 cenários", () => {
@@ -159,6 +170,12 @@ describe("bossHistory — simulação de 600 cenários", () => {
       expect(other.victories).toBe(summary.victories);
       expect(other.totalHpDestroyed).toBe(summary.totalHpDestroyed);
       expect(other.longestVictoryStreak).toBe(summary.longestVictoryStreak);
+
+      // Cada filtro de departamento oferecido precisa render resultado não vazio.
+      for (const option of listHistoryDepartments(battles)) {
+        const scoped = summarizeBossHistory(battles, { departmentId: option.id });
+        expect(scoped.concluded).toBe(option.concluded);
+      }
     }
   });
 });

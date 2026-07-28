@@ -221,3 +221,28 @@ export function formatDuration(ms: number | null): string {
   const restHours = hours % 24;
   return restHours > 0 ? `${days}d ${restHours}h` : `${days}d`;
 }
+
+export interface HistoryDepartmentOption {
+  id: string;
+  concluded: number;
+}
+
+/**
+ * Departamentos que realmente possuem batalhas CONCLUÍDAS, com a contagem.
+ * Evita oferecer filtros que resultariam em uma lista vazia.
+ * Ordenação: mais batalhas primeiro, depois id (determinístico).
+ */
+export function listHistoryDepartments(
+  battles: readonly BossHistoryInput[],
+): HistoryDepartmentOption[] {
+  const counts = new Map<string, number>();
+  for (const battle of battles ?? []) {
+    if (!CONCLUDED.has(battle.status)) continue;
+    const id = battle.department_id;
+    if (!id) continue;
+    counts.set(id, (counts.get(id) ?? 0) + 1);
+  }
+  return [...counts.entries()]
+    .map(([id, concluded]) => ({ id, concluded }))
+    .sort((a, b) => (b.concluded - a.concluded) || (a.id < b.id ? -1 : a.id > b.id ? 1 : 0));
+}

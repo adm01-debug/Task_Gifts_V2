@@ -1,13 +1,28 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { History, Timer, Trophy, AlertTriangle } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { formatDuration, summarizeBossHistory, type BossHistoryInput } from "@/lib/bossHistory";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { useDepartments } from "@/hooks/useDepartments";
+import {
+  formatDuration,
+  listHistoryDepartments,
+  summarizeBossHistory,
+  type BossHistoryInput,
+} from "@/lib/bossHistory";
 import { cn } from "@/lib/utils";
+
+const ALL = "__all__";
 
 export interface BossHistoryCardProps {
   battles: readonly BossHistoryInput[];
-  /** Quando informado, restringe a retrospectiva a um departamento. */
+  /** Quando informado, fixa o departamento e esconde o seletor. */
   departmentId?: string | null;
   limit?: number;
   className?: string;
@@ -23,22 +38,60 @@ export function BossHistoryCard({
   limit = 8,
   className,
 }: BossHistoryCardProps) {
+  const [scope, setScope] = useState<string>(ALL);
+  const { data: departments } = useDepartments();
+
+  const options = useMemo(() => listHistoryDepartments(battles), [battles]);
+  const nameById = useMemo(() => {
+    const map = new Map<string, string>();
+    for (const dep of departments || []) map.set(dep.id, dep.name);
+    return map;
+  }, [departments]);
+
+  // Prop explícita vence o seletor; um escopo removido cai para "todos".
+  const effectiveDepartment =
+    departmentId ?? (scope !== ALL && options.some((o) => o.id === scope) ? scope : null);
+
   const summary = useMemo(
-    () => summarizeBossHistory(battles, { departmentId, limit }),
-    [battles, departmentId, limit],
+    () => summarizeBossHistory(battles, { departmentId: effectiveDepartment, limit }),
+    [battles, effectiveDepartment, limit],
   );
 
-  if (summary.concluded === 0) return null;
+  const totalConcluded = useMemo(() => summarizeBossHistory(battles).concluded, [battles]);
+  if (totalConcluded === 0) return null;
+
+  const showFilter = !departmentId && options.length > 1;
 
   return (
     <Card className={cn("border-border/60", className)}>
-      <CardHeader className="pb-3">
+      <CardHeader className="flex-row flex-wrap items-center justify-between gap-3 pb-3 space-y-0">
         <CardTitle className="flex items-center gap-2 text-base">
           <History className="h-4 w-4" />
           Hall da Fama
         </CardTitle>
+        {showFilter && (
+          <Select value={scope} onValueChange={setScope}>
+            <SelectTrigger className="h-9 w-full sm:w-[220px]" aria-label="Filtrar por departamento">
+              <SelectValue placeholder="Todos os departamentos" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value={ALL}>Todos os departamentos</SelectItem>
+              {options.map((option) => (
+                <SelectItem key={option.id} value={option.id}>
+                  {nameById.get(option.id) ?? "Departamento"} ({option.concluded})
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        )}
       </CardHeader>
       <CardContent className="space-y-4">
+        {summary.concluded === 0 ? (
+          <p className="py-6 text-center text-sm text-muted-foreground">
+            Nenhuma batalha concluída neste departamento ainda.
+          </p>
+        ) : (
+        <>
         <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
           <MiniStat
             label="Taxa de vitória"
@@ -98,6 +151,8 @@ export function BossHistoryCard({
             </li>
           ))}
         </ul>
+        </>
+        )}
       </CardContent>
     </Card>
   );
