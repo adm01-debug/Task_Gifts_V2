@@ -41,17 +41,9 @@ Deno.serve(async (req) => {
   }
 
   try {
-    // Get client IP from various headers
-    const forwardedFor = req.headers.get('x-forwarded-for');
-    const realIp = req.headers.get('x-real-ip');
-    const cfConnectingIp = req.headers.get('cf-connecting-ip');
-    
-    const clientIp = cfConnectingIp || 
-                     (forwardedFor ? forwardedFor.split(',')[0].trim() : null) || 
-                     realIp || 
-                     'unknown';
-
-    console.log('Checking geo for IP:', clientIp);
+    // Apenas `cf-connecting-ip` é inforjável. Ver _shared/clientIp.ts.
+    const { ip: resolvedIp, trusted } = resolveClientIp(req);
+    const clientIp = resolvedIp ?? 'unknown';
 
     // Initialize Supabase client
     const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
@@ -93,9 +85,36 @@ Deno.serve(async (req) => {
       );
     }
 
+    // Bloqueio geográfico LIGADO e origem não confiável: tratamos como país
+    // desconhecido, respeitando a política `block_unknown_countries` em vez de
+    // liberar cegamente (antes, um header forjado escolhia o país).
+    if (!trusted) {
+      const allowUnknown = !settings.block_unknown_countries;
+      await supabase.from('geo_access_logs').insert({
+        ip_address: 'unknown',
+        country_code: null,
+        country_name: null,
+        was_allowed: allowUnknown,
+        reason: 'untrusted_source_ip',
+        user_agent: req.headers.get('user-agent') || 'unknown',
+      });
+      return new Response(
+        JSON.stringify({
+          allowed: allowUnknown,
+          ip: 'unknown',
+          country_code: null,
+          country_name: null,
+          reason: 'untrusted_source_ip',
+          message: allowUnknown
+            ? 'Origem não identificada, acesso permitido'
+            : 'Não foi possível validar a origem da sua conexão',
+        }),
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: allowUnknown ? 200 : 403 }
+      );
+    }
+
     // Get geo information for the IP
     const geoInfo = await getGeoFromIP(clientIp);
-    console.log('Geo info:', geoInfo);
 
     let allowed = false;
     let reason = '';
