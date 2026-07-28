@@ -19,6 +19,7 @@ import {
 import { PageShell } from "@/components/navigation";
 import { WagerBulkImportDialog } from "@/components/wager/WagerBulkImportDialog";
 import { WagerMonthlyExposureCard } from "@/components/wager/WagerMonthlyExposureCard";
+import { WagerIntegrityCard } from "@/components/wager/WagerIntegrityCard";
 import { SEOHead } from "@/components/SEOHead";
 import { SectionErrorBoundary } from "@/components/SectionErrorBoundary";
 import {
@@ -494,6 +495,10 @@ export default function WagerQuestionAdminPage() {
               onPersist={handleSaveBudget}
               updatedAt={budgetSettings?.updatedAt ?? null}
             />
+
+            <SectionErrorBoundary>
+              <WagerIntegrityCard />
+            </SectionErrorBoundary>
 
             <Card>
               <CardHeader>
