@@ -121,7 +121,7 @@ export const bossBattleService = {
         current_hp: payload.totalHp,
         starts_at: payload.startsAt,
         ends_at: payload.endsAt,
-        damage_rules: payload.rules as unknown as Record<string, unknown>,
+        damage_rules: JSON.parse(JSON.stringify(payload.rules)),
         per_user_cap: payload.perUserCap,
         coins_pool: payload.coinsPool,
         xp_pool: payload.xpPool,
