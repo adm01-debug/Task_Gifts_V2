@@ -6816,6 +6816,149 @@ export type Database = {
           },
         ]
       }
+      prediction_markets: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          description: string | null
+          id: string
+          locks_at: string
+          max_stake_per_user: number
+          min_stake: number
+          rake_bps: number
+          rake_collected: number
+          resolves_at: string | null
+          settled_at: string | null
+          settled_by: string | null
+          status: string
+          title: string
+          total_pool: number
+          updated_at: string
+          winning_option_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          id?: string
+          locks_at: string
+          max_stake_per_user?: number
+          min_stake?: number
+          rake_bps?: number
+          rake_collected?: number
+          resolves_at?: string | null
+          settled_at?: string | null
+          settled_by?: string | null
+          status?: string
+          title: string
+          total_pool?: number
+          updated_at?: string
+          winning_option_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          id?: string
+          locks_at?: string
+          max_stake_per_user?: number
+          min_stake?: number
+          rake_bps?: number
+          rake_collected?: number
+          resolves_at?: string | null
+          settled_at?: string | null
+          settled_by?: string | null
+          status?: string
+          title?: string
+          total_pool?: number
+          updated_at?: string
+          winning_option_id?: string | null
+        }
+        Relationships: []
+      }
+      prediction_options: {
+        Row: {
+          created_at: string
+          id: string
+          label: string
+          market_id: string
+          pool: number
+          sort_order: number
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          label: string
+          market_id: string
+          pool?: number
+          sort_order?: number
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          label?: string
+          market_id?: string
+          pool?: number
+          sort_order?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "prediction_options_market_id_fkey"
+            columns: ["market_id"]
+            isOneToOne: false
+            referencedRelation: "prediction_markets"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      prediction_stakes: {
+        Row: {
+          amount: number
+          created_at: string
+          dedupe_key: string | null
+          id: string
+          market_id: string
+          option_id: string
+          payout: number | null
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          dedupe_key?: string | null
+          id?: string
+          market_id: string
+          option_id: string
+          payout?: number | null
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          dedupe_key?: string | null
+          id?: string
+          market_id?: string
+          option_id?: string
+          payout?: number | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "prediction_stakes_market_id_fkey"
+            columns: ["market_id"]
+            isOneToOne: false
+            referencedRelation: "prediction_markets"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "prediction_stakes_option_id_fkey"
+            columns: ["option_id"]
+            isOneToOne: false
+            referencedRelation: "prediction_options"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           avatar_url: string | null
@@ -10634,6 +10777,15 @@ export type Database = {
         Args: { p_amount: number; p_auction_id: string; p_dedupe_key?: string }
         Returns: Json
       }
+      place_prediction_stake: {
+        Args: {
+          p_amount: number
+          p_dedupe_key?: string
+          p_market_id: string
+          p_option_id: string
+        }
+        Returns: Json
+      }
       process_external_task: {
         Args: { p_external_task_id: string }
         Returns: Json
@@ -10746,6 +10898,10 @@ export type Database = {
       }
       settle_auction: { Args: { p_auction_id: string }; Returns: Json }
       settle_department_war: { Args: { p_war_id: string }; Returns: Json }
+      settle_prediction_market: {
+        Args: { p_market_id: string; p_winning_option_id?: string }
+        Returns: Json
+      }
       settle_tournament_rewards: {
         Args: { p_tournament_id: string }
         Returns: Json
