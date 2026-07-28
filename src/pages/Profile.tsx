@@ -72,7 +72,11 @@ const Profile = () => {
   const fetchProfile = async () => {
     if (!user) return;
     try {
-      const { data, error } = await supabase.from("profiles").select("*").eq("id", user.id).maybeSingle();
+      const { data, error } = await supabase
+        .from("profiles")
+        .select(PROFILE_SAFE_COLUMNS)
+        .eq("id", user.id)
+        .maybeSingle();
       if (error) throw error;
       if (data) setProfile(data as ProfileData);
     } catch (err: unknown) {
