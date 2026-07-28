@@ -200,8 +200,5 @@ serve(withSentry("detect-new-device", async (req, { requestId }) => {
   } catch (error: unknown) {
     captureException(error, { fn: "detect-new-device", requestId });
     return errorResponse(error, requestId);
-        headers: { ...corsHeaders, "Content-Type": "application/json" } 
-      }
-    );
   }
 }));
