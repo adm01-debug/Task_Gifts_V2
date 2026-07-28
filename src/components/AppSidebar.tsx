@@ -5,7 +5,7 @@ import {
   Gamepad2, ShoppingBag, Swords, Heart, Award, Flag,
   
   ClipboardCheck, BarChart3, Megaphone, MessageSquare,
-  LayoutDashboard, GraduationCap, Users, Sparkles, Rocket, Activity, Dices, Gift, Zap, Grid3X3, Layers, Brain
+  LayoutDashboard, GraduationCap, Users, Sparkles, Rocket, Activity, Dices, Gift, Zap, Grid3X3, Layers, Brain, ListOrdered
 } from "lucide-react";
 import { memo } from "react";
 import { SidebarNavGroup, SidebarUserStats, SidebarLogo, SidebarFooter } from "@/components/sidebar";
