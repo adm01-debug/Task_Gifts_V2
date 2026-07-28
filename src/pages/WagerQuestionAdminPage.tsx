@@ -454,6 +454,13 @@ export default function WagerQuestionAdminPage() {
               </CardContent>
             </Card>
 
+            <WagerMonthlyExposureCard
+              questions={questions}
+              expectedPlayers={expectedPlayers}
+              monthlyBudget={monthlyBudget}
+              onMonthlyBudgetChange={setMonthlyBudget}
+            />
+
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-base">
