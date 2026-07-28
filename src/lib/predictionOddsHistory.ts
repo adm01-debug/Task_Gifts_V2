@@ -90,8 +90,17 @@ export function buildOddsHistory(
   const first = ordered[0].ts;
   const last = ordered[ordered.length - 1].ts;
   const span = last - first;
-  const buckets = Math.max(1, Math.min(maxBuckets, ordered.length));
-  const width = span > 0 ? span / buckets : 1;
+
+  // Dois limites além do teto de baldes:
+  // - `ordered.length`: não faz sentido ter mais pontos do que aportes;
+  // - `floor(span)`: garante baldes de pelo menos 1ms, senão dois pontos
+  //   consecutivos colidiriam no eixo temporal após o arredondamento.
+  // Com span zero (todos os aportes no mesmo instante) resta um único ponto.
+  const buckets =
+    span > 0
+      ? Math.max(1, Math.min(maxBuckets, ordered.length, Math.floor(span)))
+      : 1;
+  const width = span > 0 ? span / buckets : 0;
 
   const pools: Record<string, number> = {};
   for (const option of options) pools[option.id] = 0;
