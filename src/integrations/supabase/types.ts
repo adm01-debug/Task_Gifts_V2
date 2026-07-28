@@ -11766,6 +11766,17 @@ export type Database = {
         Returns: Json
       }
       run_boss_win_rate_alerts: { Args: { p_days?: number }; Returns: number }
+      save_sequence_procedure: {
+        Args: {
+          p_department_id: string
+          p_description: string
+          p_is_active: boolean
+          p_procedure_id: string
+          p_steps: Json
+          p_title: string
+        }
+        Returns: Json
+      }
       set_opinion_status: {
         Args: { p_opinion_id: string; p_status: string }
         Returns: undefined
