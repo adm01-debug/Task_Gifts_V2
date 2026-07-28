@@ -195,6 +195,19 @@ export default function BoardTrailPage() {
               </CardContent>
             </Card>
           ) : null}
+
+          {trailId && (
+            <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+              <BoardLeaderboard
+                trailId={trailId}
+                totalTiles={tiles.length}
+                currentUserId={user?.id}
+              />
+              {hasRole("admin") || hasRole("manager") ? (
+                <BoardChallengeReport trailId={trailId} />
+              ) : null}
+            </div>
+          )}
         </div>
       </SectionErrorBoundary>
 
