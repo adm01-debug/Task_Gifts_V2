@@ -1,5 +1,4 @@
-import {
-  Gavel, useState, useEffect, useCallback, useMemo } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   CommandDialog,
@@ -11,6 +10,7 @@ import {
   CommandSeparator,
 } from "@/components/ui/command";
 import {
+  Gavel,
   Home, Target, Trophy, TrendingUp, Clock, BookOpen,
   Gamepad2, ShoppingBag, Swords, Heart, Award,
   ClipboardCheck, BarChart3, Megaphone, MessageSquare,

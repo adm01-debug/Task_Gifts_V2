@@ -1,6 +1,6 @@
+import { motion } from "framer-motion";
 import {
-  Gavel, motion } from "framer-motion";
-import { 
+  Gavel, 
   Home, Target, Trophy, TrendingUp, Clock, BookOpen, 
   Gamepad2, ShoppingBag, Swords, Heart, Award, Flag,
   
