@@ -119,4 +119,35 @@ describe("useTypePreferences", () => {
     expect(result.current.values.campaign_enrolled.push).toBe(false);
     expect(result.current.values.campaign_progress.push).toBe(false);
   });
+
+  it("serializa escritas concorrentes sem lost update", async () => {
+    const { result } = await setup();
+    await act(async () => {
+      await Promise.all([
+        result.current.setCell("campaign_enrolled", "push", false),
+        result.current.setCell("campaign_progress", "email", true),
+      ]);
+    });
+    // A ultima escrita precisa conter AMBAS as mudancas (read-modify-write
+    // serializado); sem a fila, a segunda leria o estado pre-primeira.
+    const written = upserts.at(-1)! as Record<string, { push?: boolean; email?: boolean }>;
+    expect(written.campaign_enrolled.push).toBe(false);
+    expect(written.campaign_progress.email).toBe(true);
+  });
+
+  it("nao faz setState apos unmount", async () => {
+    const errorSpy = vi.spyOn(console, "error").mockImplementation(() => undefined);
+    const hook = await setup();
+    writeError = { message: "denied" };
+    const pending = hook.result.current.setCell("campaign_enrolled", "push", false);
+    hook.unmount();
+    await act(async () => {
+      await pending;
+    });
+    expect(errorSpy).not.toHaveBeenCalledWith(
+      expect.stringContaining("unmounted component"),
+      expect.anything(),
+    );
+    errorSpy.mockRestore();
+  });
 });
