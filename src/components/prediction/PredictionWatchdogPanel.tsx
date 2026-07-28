@@ -1,6 +1,9 @@
-import { AlertTriangle } from "lucide-react";
+import { AlertTriangle, BookOpen } from "lucide-react";
+import { Link } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { alertTypeToRunbookSlug } from "@/lib/runbooks";
 import type { AlertSeverity, WatchdogReport } from "@/lib/predictionWatchdog";
 
 export interface PredictionWatchdogPanelProps {
@@ -32,7 +35,7 @@ export function PredictionWatchdogPanel({ report }: PredictionWatchdogPanelProps
         {report.alerts.map((alert) => (
           <li
             key={alert.dedupeKey}
-            className="flex items-start gap-2 rounded-lg bg-background/60 p-3 text-sm"
+            className="flex flex-wrap items-start gap-2 rounded-lg bg-background/60 p-3 text-sm"
           >
             <Badge
               variant={alert.severity === "low" ? "secondary" : "destructive"}
@@ -40,7 +43,13 @@ export function PredictionWatchdogPanel({ report }: PredictionWatchdogPanelProps
             >
               {SEVERITY_LABEL[alert.severity]}
             </Badge>
-            <span className="text-muted-foreground">{alert.description}</span>
+            <span className="min-w-[12rem] flex-1 text-muted-foreground">{alert.description}</span>
+            <Button asChild size="sm" variant="ghost" className="shrink-0">
+              <Link to={`/admin/runbook/${alertTypeToRunbookSlug(alert.type)}`}>
+                <BookOpen className="mr-1 h-3.5 w-3.5" />
+                Runbook
+              </Link>
+            </Button>
           </li>
         ))}
       </ul>
