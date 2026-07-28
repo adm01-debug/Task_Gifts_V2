@@ -6,7 +6,7 @@ import {
   createRateLimitResponse,
   RATE_LIMITS 
 } from "../_shared/rate-limiter.ts";
-import { corsHeaders, verifyUser } from "../_shared/security.ts";
+import { corsHeaders, verifyUser, errorResponse } from "../_shared/security.ts";
 import { withSentry, addBreadcrumb, captureException } from "../_shared/sentry.ts";
 
 const SYSTEM_PROMPT = `Você é o AI Coach do Task Gifts, uma plataforma de gamificação corporativa da Promo Brindes.
