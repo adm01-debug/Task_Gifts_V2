@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Users, Building2, HelpCircle, ShoppingBag, BookOpen, Settings, Shield, LayoutDashboard, Key, Award, ChevronRight, Search, Activity, BarChart3, Lock } from "lucide-react";
+import { Users, Building2, HelpCircle, ShoppingBag, BookOpen, Settings, Shield, LayoutDashboard, Key, Award, ChevronRight, Search, Activity, BarChart3, Lock, KeyRound } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -98,6 +98,7 @@ function AdminPanelContent() {
     { icon: Activity, title: "Observabilidade de Webhooks", description: "Métricas de entrega, latência P95/P99 (24h)", href: "/admin/webhooks", color: "#0ea5e9" },
     { icon: BarChart3, title: "Telemetria", description: "Queries lentas e métricas de performance", href: "/admin/telemetria", color: "#14b8a6" },
     { icon: Lock, title: "Permissões & Papéis", description: "Gerenciar roles e permissões", href: "/admin/permissions", color: "#a855f7" },
+    { icon: KeyRound, title: "Chaves de API", description: "Emitir, rotacionar e revogar credenciais externas", href: "/admin/api-keys", color: "#f59e0b" },
   ];
 
   const searchResults = useFuseSearch(quickLinks, ['title', 'description'], searchQuery, { ...SEARCH_PRESETS.commands, limit: 20 });
