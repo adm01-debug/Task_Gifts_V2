@@ -94,7 +94,10 @@ export function ExecutiveReportPreferenceToggle() {
       );
       const { error } = await supabase
         .from("notification_preferences")
-        .upsert({ user_id: user.id, type_preferences: next }, { onConflict: "user_id" });
+        .upsert(
+          { user_id: user.id, type_preferences: next as unknown as Record<string, never> },
+          { onConflict: "user_id" },
+        );
       if (error) throw error;
       toast.success("Preferência atualizada");
     } catch (err: unknown) {
