@@ -53,7 +53,7 @@ export default function BoardTrailPage() {
     const dedupeKey = buildMoveDedupeKey(trailId, user.id, playerState?.moves_count ?? 0);
     try {
       const result = await advance.mutateAsync(dedupeKey);
-      haptics.impact();
+      haptics.trigger("medium");
       if (result.replayed) {
         toast.info("Jogada já registrada — nada foi creditado novamente.");
         return;
@@ -78,7 +78,7 @@ export default function BoardTrailPage() {
   return (
     <PageShell
       title="Trilha Tabuleiro"
-      description="Avance pelas casas, colecione bônus e chegue ao final da trilha."
+      subtitle="Avance pelas casas, colecione bônus e chegue ao final da trilha."
       backFallback="/"
     >
       <SEOHead
