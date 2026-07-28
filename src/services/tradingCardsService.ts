@@ -1,3 +1,4 @@
+import type { SetMilestone } from "@/lib/cardSetRewards";
 import { supabase } from "@/integrations/supabase/client";
 import type { CardRarity } from "@/lib/tradingCards";
 import { logger } from "./loggingService";
@@ -63,6 +64,32 @@ export interface TradeActionResult {
   reason?: string;
   trade_id?: string;
   status?: CardTradeStatus;
+}
+
+export interface SetMilestoneRow {
+  milestone: SetMilestone;
+  coins: number;
+  xp: number;
+  cards_required: number;
+  reached: boolean;
+  claimed: boolean;
+  claimable: boolean;
+}
+
+export interface SetRewardRow {
+  set_code: string;
+  total_cards: number;
+  owned_cards: number;
+  set_value: number;
+  milestones: SetMilestoneRow[];
+}
+
+export interface ClaimSetRewardResult {
+  success: boolean;
+  reason?: "invalid_milestone" | "unknown_set" | "empty_set" | "not_reached";
+  replayed?: boolean;
+  coins?: number;
+  xp?: number;
 }
 
 /**
