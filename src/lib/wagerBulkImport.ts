@@ -113,7 +113,7 @@ function splitLine(line: string, delimiter: string): string[] {
     }
     if (char === '"') {
       quoted = true;
-said: continue;
+      continue;
     }
     if (char === delimiter) {
       out.push(field);
