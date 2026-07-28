@@ -10571,6 +10571,45 @@ export type Database = {
           },
         ]
       }
+      wager_integrity_reviews: {
+        Row: {
+          anomaly_code: string
+          created_at: string
+          id: string
+          metric: number
+          notes: string | null
+          reviewed_by: string | null
+          status: string
+          target_user_id: string
+          updated_at: string
+          window_days: number
+        }
+        Insert: {
+          anomaly_code: string
+          created_at?: string
+          id?: string
+          metric?: number
+          notes?: string | null
+          reviewed_by?: string | null
+          status?: string
+          target_user_id: string
+          updated_at?: string
+          window_days: number
+        }
+        Update: {
+          anomaly_code?: string
+          created_at?: string
+          id?: string
+          metric?: number
+          notes?: string | null
+          reviewed_by?: string | null
+          status?: string
+          target_user_id?: string
+          updated_at?: string
+          window_days?: number
+        }
+        Relationships: []
+      }
       wager_questions: {
         Row: {
           base_multiplier: number
