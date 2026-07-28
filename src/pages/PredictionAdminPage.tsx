@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 import { Plus, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { PageShell } from "@/components/navigation";
 import { SEOHead } from "@/components/SEOHead";
 import { SectionErrorBoundary } from "@/components/SectionErrorBoundary";
@@ -10,12 +11,14 @@ import {
   PredictionAdminRow,
   PredictionOverviewCards,
   SettleMarketDialog,
+  PredictionWatchdogPanel,
 } from "@/components/prediction";
 import {
   usePredictionAdminEvents,
   usePredictionMarkets,
 } from "@/hooks/usePredictionMarkets";
 import { summarizeMarkets, type PredictionStateView } from "@/lib/predictionAdmin";
+import { runWatchdog, type WatchedMarket } from "@/lib/predictionWatchdog";
 import type { PredictionMarketRow } from "@/services/predictionMarketService";
 
 const EVENT_LABEL: Record<string, string> = {
@@ -27,10 +30,20 @@ const EVENT_LABEL: Record<string, string> = {
   settled: "Apurado",
 };
 
+const STATUS_FILTERS = [
+  { value: "all", label: "Todos" },
+  { value: "draft", label: "Rascunhos" },
+  { value: "open", label: "Abertos" },
+  { value: "locked", label: "Travados" },
+  { value: "settled", label: "Apurados" },
+  { value: "voided", label: "Anulados" },
+] as const;
+
 export default function PredictionAdminPage() {
   const { data: markets, isLoading } = usePredictionMarkets();
   const { data: events } = usePredictionAdminEvents();
   const [createOpen, setCreateOpen] = useState(false);
+  const [statusFilter, setStatusFilter] = useState<string>("all");
   const [settleTarget, setSettleTarget] = useState<PredictionMarketRow | null>(null);
 
   const rows = useMemo(() => markets ?? [], [markets]);
@@ -43,6 +56,22 @@ export default function PredictionAdminPage() {
     }));
     return summarizeMarkets(views, Date.now());
   }, [rows]);
+
+  const watchdog = useMemo(() => {
+    const watched: WatchedMarket[] = rows.map((market) => ({
+      id: market.id,
+      title: market.title,
+      status: market.status,
+      locksAt: market.locks_at,
+      totalPool: market.total_pool,
+    }));
+    return runWatchdog(watched, Date.now());
+  }, [rows]);
+
+  const visibleRows = useMemo(
+    () => (statusFilter === "all" ? rows : rows.filter((m) => m.status === statusFilter)),
+    [rows, statusFilter],
+  );
 
   return (
     <>
@@ -71,17 +100,29 @@ export default function PredictionAdminPage() {
                 </Button>
               </div>
               <PredictionOverviewCards overview={overview} />
+              <PredictionWatchdogPanel report={watchdog} />
 
               <section className="space-y-3">
                 <h2 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
                   Mercados
                 </h2>
-                {rows.length === 0 ? (
+                <Tabs value={statusFilter} onValueChange={setStatusFilter}>
+                  <TabsList className="flex w-full flex-wrap justify-start">
+                    {STATUS_FILTERS.map((filter) => (
+                      <TabsTrigger key={filter.value} value={filter.value}>
+                        {filter.label}
+                      </TabsTrigger>
+                    ))}
+                  </TabsList>
+                </Tabs>
+                {visibleRows.length === 0 ? (
                   <div className="rounded-xl border border-dashed border-border/60 p-10 text-center text-sm text-muted-foreground">
-                    Nenhum mercado cadastrado. Comece criando um rascunho.
+                    {rows.length === 0
+                      ? "Nenhum mercado cadastrado. Comece criando um rascunho."
+                      : "Nenhum mercado neste status."}
                   </div>
                 ) : (
-                  rows.map((market) => (
+                  visibleRows.map((market) => (
                     <PredictionAdminRow
                       key={market.id}
                       market={market}
