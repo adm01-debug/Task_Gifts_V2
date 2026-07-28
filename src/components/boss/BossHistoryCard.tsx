@@ -165,6 +165,7 @@ export function BossHistoryCard({
         )}
 
         <ul className="divide-y divide-border/60">
+          {null}
           {summary.rows.map((row) => (
             <li key={row.id} className="flex items-center justify-between gap-3 py-3 text-sm">
               <div className="min-w-0">
