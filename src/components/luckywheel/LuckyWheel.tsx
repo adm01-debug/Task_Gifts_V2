@@ -2,10 +2,10 @@ import { useMemo, useRef, useState } from "react";
 import { motion, useAnimation } from "framer-motion";
 import { Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import type { LuckyWheelPrize } from "@/services/luckyWheelService";
+import type { LuckyWheelPrizeDisplay } from "@/services/luckyWheelService";
 
 export interface LuckyWheelProps {
-  prizes: LuckyWheelPrize[];
+  prizes: LuckyWheelPrizeDisplay[];
   /** Índice do prêmio sorteado pelo servidor. `null` enquanto não houver resultado. */
   targetIndex: number | null;
   spinning: boolean;
