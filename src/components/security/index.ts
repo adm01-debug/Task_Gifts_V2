@@ -9,3 +9,4 @@ export { ReauthProvider, useReauth } from "./ReauthProvider";
 export { SecurityNotificationsToggle } from "./SecurityNotificationsToggle";
 export { PasskeysPanel } from "./PasskeysPanel";
 export { PushOutboxHealthPanel } from "./PushOutboxHealthPanel";
+export { PushOutboxHealthTrend } from "./PushOutboxHealthTrend";
