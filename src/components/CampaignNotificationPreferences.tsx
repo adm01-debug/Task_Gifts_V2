@@ -2,8 +2,8 @@ import { useCallback } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import { BulkChannelActions } from "@/components/notifications/BulkChannelActions";
 import { Trophy } from "lucide-react";
 import { useTypePreferences } from "@/hooks/useTypePreferences";
 import type { ChannelMap, NotificationChannel } from "@/lib/notificationTypePrefs";
@@ -80,28 +80,7 @@ export function CampaignNotificationPreferences() {
           </>
         ) : (
           <>
-            <div className="flex flex-wrap items-center justify-end gap-2">
-              <Button
-                type="button"
-                variant="outline"
-                size="sm"
-                className="min-h-[36px]"
-                disabled={saving !== null}
-                onClick={() => setChannelForAll("push", false)}
-              >
-                Silenciar push
-              </Button>
-              <Button
-                type="button"
-                variant="secondary"
-                size="sm"
-                className="min-h-[36px]"
-                disabled={saving !== null}
-                onClick={() => setChannelForAll("push", true)}
-              >
-                Ativar push
-              </Button>
-            </div>
+            <BulkChannelActions saving={saving} onApply={setChannelForAll} />
             {ROWS.map((row) => (
               <div key={row.key} className="rounded-lg border border-border/40 bg-card/40 p-3">
                 <div className="mb-2">
