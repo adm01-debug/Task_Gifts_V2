@@ -58,7 +58,7 @@ export const bossWinRateGoalService = {
       .select("id, department_id, target_pct, tolerance_pp, window_days, notes, updated_at");
 
     if (error) {
-      logger.error("Falha ao carregar metas de aproveitamento", error);
+      logger.error(`Falha ao carregar metas de aproveitamento: ${error.message}`);
       throw error;
     }
     return ((data as GoalRow[] | null) || []).map(mapRow);
@@ -78,14 +78,13 @@ export const bossWinRateGoalService = {
 
     // O índice parcial impede duplicidade, mas `onConflict` só cobre colunas
     // não nulas: para o padrão global fazemos update explícito.
-    const existing = await supabase
-      .from("boss_win_rate_goals")
-      .select("id")
-      .is("department_id", payload.departmentId === null ? null : undefined)
-      .maybeSingle();
-
     let query;
     if (payload.departmentId === null) {
+      const existing = await supabase
+        .from("boss_win_rate_goals")
+        .select("id")
+        .is("department_id", null)
+        .maybeSingle();
       query = existing.data?.id
         ? supabase.from("boss_win_rate_goals").update(record).eq("id", existing.data.id)
         : supabase.from("boss_win_rate_goals").insert(record);
@@ -100,7 +99,7 @@ export const bossWinRateGoalService = {
       .maybeSingle();
 
     if (error || !data) {
-      logger.error("Falha ao salvar meta de aproveitamento", error);
+      logger.error(`Falha ao salvar meta de aproveitamento: ${error?.message ?? "sem retorno"}`);
       throw error ?? new Error("Meta não pôde ser salva");
     }
     return mapRow(data as GoalRow);
@@ -113,7 +112,7 @@ export const bossWinRateGoalService = {
       .delete()
       .eq("department_id", departmentId);
     if (error) {
-      logger.error("Falha ao remover meta de aproveitamento", error);
+      logger.error(`Falha ao remover meta de aproveitamento: ${error.message}`);
       throw error;
     }
   },
