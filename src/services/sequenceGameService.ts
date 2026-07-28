@@ -178,6 +178,40 @@ export const sequenceProcedureAdminService = {
   },
 
   /**
+   * Carrega procedimento + etapas com a posição correta.
+   * Apenas admin/gestor consegue ler `sequence_steps` (RLS).
+   */
+  async getForAuthoring(procedureId: string): Promise<SequenceProcedureAuthoring | null> {
+    const { data, error } = await supabase
+      .from("sequence_procedures")
+      .select(
+        "id, title, description, department_id, is_active, sequence_steps(id, label, hint, position)",
+      )
+      .eq("id", procedureId)
+      .maybeSingle();
+
+    if (error) {
+      logger.error(
+        "Falha ao carregar procedimento (admin)",
+        "sequenceProcedureAdminService.getForAuthoring",
+        error,
+      );
+      throw error;
+    }
+    if (!data) return null;
+
+    const row = data as SequenceProcedure & { sequence_steps?: SequenceStep[] | null };
+    return {
+      id: row.id,
+      title: row.title,
+      description: row.description,
+      department_id: row.department_id,
+      is_active: row.is_active,
+      steps: [...(row.sequence_steps || [])].sort((a, b) => a.position - b.position),
+    };
+  },
+
+  /**
    * Salva procedimento + etapas em uma única transação no servidor.
    * A reordenação depende da unique DEFERRABLE, por isso nunca é feita
    * em requisições separadas a partir do cliente.
