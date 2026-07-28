@@ -198,12 +198,8 @@ serve(withSentry("detect-new-device", async (req, { requestId }) => {
     );
     
   } catch (error: unknown) {
-    const message = error instanceof Error ? error.message : "Unknown error";
     captureException(error, { fn: "detect-new-device", requestId });
-    return new Response(
-      JSON.stringify({ error: message }),
-      { 
-        status: 500, 
+    return errorResponse(error, requestId);
         headers: { ...corsHeaders, "Content-Type": "application/json" } 
       }
     );
