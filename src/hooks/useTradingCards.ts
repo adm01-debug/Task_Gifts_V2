@@ -1,5 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
+import type { SetMilestone } from "@/lib/cardSetRewards";
 import { tradingCardsService } from "@/services/tradingCardsService";
 import { useAuth } from "./useAuth";
 
@@ -9,6 +10,7 @@ export const tradingCardKeys = {
   owned: () => [...tradingCardKeys.all, "owned"] as const,
   packs: () => [...tradingCardKeys.all, "packs"] as const,
   trades: () => [...tradingCardKeys.all, "trades"] as const,
+  setRewards: () => [...tradingCardKeys.all, "setRewards"] as const,
 };
 
 export function useCardDefinitions() {
