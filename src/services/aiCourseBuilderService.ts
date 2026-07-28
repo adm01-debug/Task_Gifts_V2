@@ -1,5 +1,5 @@
 import { supabase } from "@/integrations/supabase/client";
-import { describeEdgeError } from "@/lib/edgeErrors";
+import { invokeEdgeSafe } from "@/lib/requestId";
 
 export type AICourseJobStatus = "pending" | "processing" | "succeeded" | "failed";
 
