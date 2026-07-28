@@ -13,6 +13,12 @@
 import { createClient, type SupabaseClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const REPLAY_WINDOW_SECONDS = 300; // 5 minutos
+/**
+ * Uma reserva "processing" mais antiga que isso é considerada órfã: a execução
+ * anterior morreu (timeout/OOM) sem concluir nem liberar. Sem essa retomada, o
+ * evento ficaria travado em 409 para sempre e a reentrega nunca seria aceita.
+ */
+const STALE_PROCESSING_SECONDS = 300;
 
 /** Comparação em tempo constante entre dois buffers de bytes. */
 function timingSafeEqualBytes(a: Uint8Array, b: Uint8Array): boolean {
@@ -147,12 +153,33 @@ export async function claimIdempotency(
 
   const { data: existing } = await supabase
     .from("webhook_idempotency")
-    .select("status, response_body")
+    .select("status, response_body, created_at")
     .eq("idempotency_key", scopedKey)
     .maybeSingle();
 
   if (!existing) return { state: "fresh", key: scopedKey };
-  if (existing.status === "processing") return { state: "in_progress", key: scopedKey };
+
+  if (existing.status === "processing") {
+    const startedAt = existing.created_at ? Date.parse(existing.created_at) : Number.NaN;
+    const ageSeconds = Number.isFinite(startedAt) ? (Date.now() - startedAt) / 1000 : Infinity;
+    if (ageSeconds <= STALE_PROCESSING_SECONDS) {
+      return { state: "in_progress", key: scopedKey };
+    }
+    // Retoma a reserva órfã reencostando o created_at (evita que duas
+    // reentregas simultâneas retomem a mesma chave ao mesmo tempo).
+    const { data: reclaimed } = await supabase
+      .from("webhook_idempotency")
+      .update({ created_at: new Date().toISOString() })
+      .eq("idempotency_key", scopedKey)
+      .eq("status", "processing")
+      .lt("created_at", new Date(Date.now() - STALE_PROCESSING_SECONDS * 1000).toISOString())
+      .select("idempotency_key")
+      .maybeSingle();
+    return reclaimed
+      ? { state: "fresh", key: scopedKey }
+      : { state: "in_progress", key: scopedKey };
+  }
+
   return { state: "duplicate", key: scopedKey, status: existing.status, response: existing.response_body };
 }
 
