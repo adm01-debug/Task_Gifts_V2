@@ -11518,6 +11518,7 @@ export type Database = {
         Returns: Json
       }
       delete_board_trail: { Args: { p_trail_id: string }; Returns: boolean }
+      delete_external_api_key: { Args: { p_id: string }; Returns: boolean }
       engagement_min_respondents: { Args: never; Returns: number }
       enqueue_push: {
         Args: {
@@ -12257,6 +12258,23 @@ export type Database = {
         Returns: boolean
       }
       join_tournament: { Args: { p_tournament_id: string }; Returns: Json }
+      list_external_api_keys: {
+        Args: never
+        Returns: {
+          api_key: string
+          created_at: string
+          days_since_rotation: number
+          description: string
+          id: string
+          is_active: boolean
+          last_used_at: string
+          name: string
+          permissions: Json
+          rate_limit_per_minute: number
+          secret_last_rotated_at: string
+          system_type: string
+        }[]
+      }
       list_stuck_board_players: {
         Args: { p_max_hours?: number; p_trail_id?: string }
         Returns: {
@@ -12514,6 +12532,10 @@ export type Database = {
           p_scheduled_date: string
         }
         Returns: Json
+      }
+      set_external_api_key_active: {
+        Args: { p_active: boolean; p_id: string }
+        Returns: boolean
       }
       set_opinion_status: {
         Args: { p_opinion_id: string; p_status: string }
