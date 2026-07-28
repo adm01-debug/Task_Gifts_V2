@@ -1,7 +1,7 @@
 import { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
- import { BookOpen, Sparkles, Filter, Link2, SearchX, Trophy } from "lucide-react";
+ import { BookOpen, Dices, Sparkles, Filter, Link2, SearchX, Trophy } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { SEOHead } from "@/components/SEOHead";
 import { useSEO } from "@/hooks/useSEO";
