@@ -133,7 +133,9 @@ export const boardTrailService = {
   async getPlayerState(trailId: string): Promise<BoardPlayerRow | null> {
     const { data, error } = await supabase
       .from("board_player_states")
-      .select("position, coins, xp, checkpoints, moves_count, blocked_challenge_id, finished_at")
+      .select(
+        "position, coins, xp, checkpoints, moves_count, blocked_challenge_id, challenge_attempts, finished_at",
+      )
       .eq("trail_id", trailId)
       .maybeSingle();
 
@@ -143,7 +145,11 @@ export const boardTrailService = {
     }
     if (!data) return null;
     const row = data as BoardPlayerRow;
-    return { ...row, checkpoints: row.checkpoints || [] };
+    return {
+      ...row,
+      checkpoints: row.checkpoints || [],
+      challenge_attempts: row.challenge_attempts ?? 0,
+    };
   },
 
   /**
