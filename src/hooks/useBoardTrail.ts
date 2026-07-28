@@ -74,15 +74,6 @@ export function useBoardChallengeStats(trailId: string | null, enabled = true) {
   });
 }
 
-function useBoardChallengeLegacy(challengeId: string | null) {
-  return useQuery({
-    queryKey: ["board-challenge", challengeId],
-    queryFn: () => boardTrailService.getChallenge(challengeId as string),
-    enabled: Boolean(challengeId),
-    staleTime: 5 * 60 * 1000,
-  });
-}
-
 export function useResolveBoardChallenge(trailId: string | null) {
   const queryClient = useQueryClient();
   return useMutation({
