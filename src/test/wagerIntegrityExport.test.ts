@@ -145,3 +145,47 @@ describe("wagerIntegrityExport", () => {
     expect(csv.includes("\r\n")).toBe(true);
   });
 });
+
+describe("wagerIntegrityExport — histórico", () => {
+  const event = {
+    id: "e1",
+    targetUserId: "u1",
+    anomalyCode: "net_drain" as const,
+    windowDays: 30 as const,
+    previousStatus: "investigating" as const,
+    newStatus: "confirmed" as const,
+    notes: "=SOMA(1)",
+    changedBy: "admin-id",
+    changedByName: "Bruno",
+    createdAt: "2026-03-04T09:30:00",
+  };
+
+  it("exporta bloco de histórico com autor e transição", () => {
+    const csv = buildWagerIntegrityCsv({
+      report: report(),
+      events: [event],
+      windowDays: 30,
+      generatedAt: AT,
+    });
+    expect(csv).toContain('"Histórico de apurações";"1"');
+    expect(csv).toContain('"Em apuração";"Confirmada"');
+    expect(csv).toContain('"Bruno";"04/03/2026 09:30"');
+    expect(csv).toContain(`"'=SOMA(1)"`);
+  });
+
+  it("omite o bloco quando não há eventos", () => {
+    const csv = buildWagerIntegrityCsv({ report: report(), events: [], windowDays: 30, generatedAt: AT });
+    expect(csv).not.toContain("Histórico de apurações");
+  });
+
+  it("marca criação sem status anterior com travessão", () => {
+    const csv = buildWagerIntegrityCsv({
+      report: report(),
+      events: [{ ...event, previousStatus: null, notes: null, changedByName: null }],
+      windowDays: 30,
+      generatedAt: AT,
+    });
+    expect(csv).toContain('"—";"Confirmada"');
+    expect(csv).toContain('"admin-id"');
+  });
+});
