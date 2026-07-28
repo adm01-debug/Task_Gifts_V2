@@ -117,9 +117,9 @@ export const bossBattleService = {
       _battle_id: params.battleId,
       _source: params.source,
       _dedupe_key: params.dedupeKey,
-      _source_id: params.sourceId ?? null,
+      _source_id: params.sourceId ?? undefined,
       _multiplier: params.multiplier ?? 1,
-      _amount: params.amount ?? null,
+      _amount: params.amount ?? undefined,
     });
     if (error) {
       logger.error("Falha ao aplicar dano no chefão", String(error.message));
