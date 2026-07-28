@@ -17,6 +17,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { PageShell } from "@/components/navigation";
+import { WagerBulkImportDialog } from "@/components/wager/WagerBulkImportDialog";
 import { SEOHead } from "@/components/SEOHead";
 import { SectionErrorBoundary } from "@/components/SectionErrorBoundary";
 import {
@@ -100,6 +101,10 @@ export default function WagerQuestionAdminPage() {
   const isLocked = lockedEntries > 0;
 
   const validation = useMemo(() => validateWagerDraft(draft), [draft]);
+  const scheduledDates = useMemo(
+    () => (questions ?? []).map((q) => q.scheduledDate),
+    [questions],
+  );
   const exposure = useMemo(
     () => estimateExposure(draft, expectedPlayers),
     [draft, expectedPlayers],
