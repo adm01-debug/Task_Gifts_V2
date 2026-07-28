@@ -184,15 +184,16 @@ export default function BoardTrailAdminPage() {
   return (
     <PageShell
       title="Trilhas de Tabuleiro"
-      description="Monte o tabuleiro, valide as regras e simule o custo antes de publicar."
-      icon={Dices}
+      subtitle="Monte o tabuleiro, valide as regras e simule o custo antes de publicar."
+      backFallback="/admin"
+      icon={<Dices className="h-5 w-5" />}
     >
       <SEOHead
         title="Admin — Trilhas de Tabuleiro"
         description="Autoria de trilhas do jogo de tabuleiro com validação e simulação de economia."
       />
 
-      <SectionErrorBoundary title="Autoria de trilhas">
+      <SectionErrorBoundary sectionName="Autoria de trilhas">
         <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
           <Card className="lg:col-span-1">
             <CardHeader>
