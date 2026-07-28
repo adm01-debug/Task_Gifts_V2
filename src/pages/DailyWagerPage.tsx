@@ -10,6 +10,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { PageShell } from "@/components/navigation";
 import { SEOHead } from "@/components/SEOHead";
 import { SectionErrorBoundary } from "@/components/SectionErrorBoundary";
+import { WagerLeaderboardCard } from "@/components/wager/WagerLeaderboardCard";
 import { useDailyWager, useSubmitWager, useWagerHistory } from "@/hooks/useDailyWager";
 import { useHaptics } from "@/hooks/useHaptics";
 import {
@@ -314,6 +315,10 @@ export default function DailyWagerPage() {
                 )}
               </CardContent>
             </Card>
+          </SectionErrorBoundary>
+
+          <SectionErrorBoundary sectionName="Ranking de apostadores">
+            <WagerLeaderboardCard limit={15} />
           </SectionErrorBoundary>
         </div>
       </div>
