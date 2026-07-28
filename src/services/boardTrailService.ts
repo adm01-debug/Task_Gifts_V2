@@ -1,6 +1,7 @@
 import { supabase } from "@/integrations/supabase/client";
 import { logger } from "./loggingService";
 import type { BoardTile, BoardTileType } from "@/lib/boardTrail";
+import type { BoardChallengeStatRow, BoardLeaderboardRow } from "@/lib/boardStats";
 
 export interface BoardTrail {
   id: string;
@@ -222,6 +223,33 @@ export const boardTrailService = {
       throw error;
     }
     return data as unknown as BoardChallengeResult;
+  },
+
+  /** Ranking da trilha — visível a qualquer usuário autenticado. */
+  async getLeaderboard(trailId: string, limit = 50): Promise<BoardLeaderboardRow[]> {
+    const { data, error } = await supabase.rpc("get_board_trail_leaderboard", {
+      p_trail_id: trailId,
+      p_limit: limit,
+    });
+
+    if (error) {
+      logger.error("Falha ao carregar ranking", "boardTrailService.getLeaderboard", error);
+      throw error;
+    }
+    return (data as unknown as BoardLeaderboardRow[]) || [];
+  },
+
+  /** Relatório de acertos por desafio — a RPC recusa quem não é gestor/admin. */
+  async getChallengeStats(trailId: string): Promise<BoardChallengeStatRow[]> {
+    const { data, error } = await supabase.rpc("get_board_challenge_stats", {
+      p_trail_id: trailId,
+    });
+
+    if (error) {
+      logger.error("Falha ao carregar relatório de desafios", "boardTrailService.getChallengeStats", error);
+      throw error;
+    }
+    return (data as unknown as BoardChallengeStatRow[]) || [];
   },
 
   /** Todas as trilhas (inclui rascunhos/arquivadas) — apenas admin/gestor pela RLS. */
