@@ -16,6 +16,7 @@ import { CampaignProgressChart } from "@/components/campaigns/CampaignProgressCh
 import { CampaignImportDialog } from "@/components/campaigns/CampaignImportDialog";
 import { CampaignImportHistory } from "@/components/campaigns/CampaignImportHistory";
 import { CampaignTeamsPanel } from "@/components/campaigns/CampaignTeamsPanel";
+import { CampaignGoalBetPanel } from "@/components/campaigns/CampaignGoalBetPanel";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { cn } from "@/lib/utils";
@@ -231,6 +232,9 @@ export default function SalesCampaignDetail() {
       />
 
       {isAdmin && <CampaignImportHistory campaignId={campaign.id} canManage={isAdmin} />}
+
+      {/* Aposta de meta vinculada a esta campanha */}
+      <CampaignGoalBetPanel campaignName={campaign.name} />
 
       {/* Ranking coletivo por equipe */}
       <CampaignTeamsPanel
