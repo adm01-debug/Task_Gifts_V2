@@ -38,6 +38,12 @@ export interface WinRateGoalRow {
   severity: DropSeverity;
   /** Quantos pontos percentuais faltam para a meta (0 quando atingida). */
   gapToTargetPp: number;
+  /** Meta efetivamente aplicada a este departamento (0..1). */
+  target: number;
+  /** Tolerância (pp) efetivamente aplicada a este departamento. */
+  tolerancePp: number;
+  /** `true` quando existe meta específica persistida para o departamento. */
+  hasOverride: boolean;
 }
 
 export interface WinRateGoalsResult {
@@ -62,6 +68,11 @@ export interface WinRateGoalsOptions {
   priorWeight?: number;
   /** Mínimo de batalhas na janela atual para avaliar. Padrão 1. */
   minBattles?: number;
+  /**
+   * Metas específicas por departamento (persistidas no banco). Sobrescrevem
+   * `target`/`tolerancePp` apenas para os departamentos informados.
+   */
+  overrides?: Readonly<Record<string, { target?: number; tolerancePp?: number }>>;
   now?: Date;
 }
 
@@ -93,6 +104,7 @@ export function evaluateWinRateGoals(
   const tolerancePp = Math.max(0, Number(options.tolerancePp ?? 5) || 0);
   const priorWeight = Math.max(0, Number(options.priorWeight ?? 3) || 0);
   const minBattles = Math.max(1, Math.trunc(options.minBattles ?? 1));
+  const overrides = options.overrides ?? {};
   const nowMs = options.now?.getTime();
   const to = Number.isFinite(nowMs) ? (nowMs as number) : Date.now();
   const midpoint = to - days * DAY_MS;
@@ -126,14 +138,27 @@ export function evaluateWinRateGoals(
     const prev = prevById.get(row.departmentId) ?? null;
     const deltaPp =
       prev === null ? null : pp(row.adjustedWinRate - prev.adjustedWinRate);
-    const gap = target - row.winRate;
+    const override = Object.prototype.hasOwnProperty.call(overrides, row.departmentId)
+      ? overrides[row.departmentId]
+      : undefined;
+    const hasOverride =
+      override !== undefined &&
+      (Number.isFinite(Number(override.target)) ||
+        Number.isFinite(Number(override.tolerancePp)));
+    const rowTarget = Number.isFinite(Number(override?.target))
+      ? clamp01(Number(override?.target))
+      : target;
+    const rowTolerance = Number.isFinite(Number(override?.tolerancePp))
+      ? Math.max(0, Number(override?.tolerancePp))
+      : tolerancePp;
+    const gap = rowTarget - row.winRate;
     const gapToTargetPp = gap > 0 ? pp(gap) : 0;
     const status: GoalStatus =
       row.battles < minBattles
         ? "no_data"
         : gapToTargetPp === 0
           ? "on_track"
-          : gapToTargetPp <= tolerancePp
+          : gapToTargetPp <= rowTolerance
             ? "at_risk"
             : "below_target";
     return {
@@ -147,6 +172,9 @@ export function evaluateWinRateGoals(
       status,
       severity: severityFor(deltaPp),
       gapToTargetPp,
+      target: rowTarget,
+      tolerancePp: rowTolerance,
+      hasOverride,
     };
   });
 
