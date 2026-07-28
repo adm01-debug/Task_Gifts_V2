@@ -12,7 +12,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { useOracleAggregates } from "@/hooks/usePredictionMarkets";
-import { useProfilesPublic } from "@/hooks/useProfilesPublic";
+import { useProfilesPublic } from "@/hooks/useProfiles";
 import {
   formatOracleScore,
   rankOracleAggregates,
