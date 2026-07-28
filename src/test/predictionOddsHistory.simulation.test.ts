@@ -42,6 +42,7 @@ function scenario(rng: () => number) {
 }
 
 describe("histórico de cotações — simulação massiva", () => {
+  // 500 cenários × até 60 pontos × até 6 opções gera ~10^6 asserções.
   it("preserva conservação do pote, normalização e coerência dos multiplicadores", () => {
     for (let seed = 1; seed <= 500; seed += 1) {
       const rng = mulberry32(seed);
@@ -127,7 +128,7 @@ describe("histórico de cotações — simulação massiva", () => {
       // H8: líder coerente com o último ponto.
       expect(history.leaderId).toBe(leaderOf(lastPoint, options));
     }
-  });
+  }, 30_000);
 
   it("é determinístico e imune à ordem de chegada das linhas", () => {
     for (let seed = 900; seed < 1000; seed += 1) {
