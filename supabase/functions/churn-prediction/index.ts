@@ -35,7 +35,7 @@ serve(async (req) => {
 
   // Apply rate limiting (AI function, stricter limits)
   const identifier = getRateLimitIdentifier(req, "churn-prediction");
-  const rateLimitResult = checkRateLimit(identifier, RATE_LIMITS.ai);
+  const rateLimitResult = await checkRateLimit(identifier, RATE_LIMITS.ai);
   
   if (!rateLimitResult.allowed) {
     console.log(`Rate limit exceeded for ${identifier}`);

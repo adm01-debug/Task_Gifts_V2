@@ -55,7 +55,7 @@ serve(withSentry("bitrix24-webhook", async (req, { requestId }) => {
 
   // Apply rate limiting (webhooks are more lenient)
   const identifier = getRateLimitIdentifier(req, "bitrix24-webhook");
-  const rateLimitResult = checkRateLimit(identifier, RATE_LIMITS.webhook);
+  const rateLimitResult = await checkRateLimit(identifier, RATE_LIMITS.webhook);
   
   if (!rateLimitResult.allowed) {
     addBreadcrumb("bitrix24-webhook:rate-limited", { identifier, requestId }, "warning");
