@@ -1283,6 +1283,178 @@ export type Database = {
         }
         Relationships: []
       }
+      boss_battle_damage: {
+        Row: {
+          battle_id: string
+          created_at: string
+          damage: number
+          dedupe_key: string
+          department_id: string | null
+          id: string
+          source: string
+          source_id: string | null
+          user_id: string
+          wasted: number
+        }
+        Insert: {
+          battle_id: string
+          created_at?: string
+          damage: number
+          dedupe_key: string
+          department_id?: string | null
+          id?: string
+          source: string
+          source_id?: string | null
+          user_id: string
+          wasted?: number
+        }
+        Update: {
+          battle_id?: string
+          created_at?: string
+          damage?: number
+          dedupe_key?: string
+          department_id?: string | null
+          id?: string
+          source?: string
+          source_id?: string | null
+          user_id?: string
+          wasted?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "boss_battle_damage_battle_id_fkey"
+            columns: ["battle_id"]
+            isOneToOne: false
+            referencedRelation: "boss_battles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "boss_battle_damage_department_id_fkey"
+            columns: ["department_id"]
+            isOneToOne: false
+            referencedRelation: "departments"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      boss_battle_rewards: {
+        Row: {
+          battle_id: string
+          coins: number
+          created_at: string
+          damage: number
+          id: string
+          share: number
+          user_id: string
+          xp: number
+        }
+        Insert: {
+          battle_id: string
+          coins?: number
+          created_at?: string
+          damage?: number
+          id?: string
+          share?: number
+          user_id: string
+          xp?: number
+        }
+        Update: {
+          battle_id?: string
+          coins?: number
+          created_at?: string
+          damage?: number
+          id?: string
+          share?: number
+          user_id?: string
+          xp?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "boss_battle_rewards_battle_id_fkey"
+            columns: ["battle_id"]
+            isOneToOne: false
+            referencedRelation: "boss_battles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      boss_battles: {
+        Row: {
+          coins_pool: number
+          created_at: string
+          created_by: string | null
+          current_hp: number
+          damage_rules: Json
+          defeated_at: string | null
+          department_id: string | null
+          description: string | null
+          ends_at: string
+          id: string
+          min_share: number
+          per_user_cap: number
+          per_user_coins_cap: number
+          settled_at: string | null
+          starts_at: string
+          status: string
+          title: string
+          total_hp: number
+          updated_at: string
+          xp_pool: number
+        }
+        Insert: {
+          coins_pool?: number
+          created_at?: string
+          created_by?: string | null
+          current_hp: number
+          damage_rules?: Json
+          defeated_at?: string | null
+          department_id?: string | null
+          description?: string | null
+          ends_at: string
+          id?: string
+          min_share?: number
+          per_user_cap?: number
+          per_user_coins_cap?: number
+          settled_at?: string | null
+          starts_at?: string
+          status?: string
+          title: string
+          total_hp: number
+          updated_at?: string
+          xp_pool?: number
+        }
+        Update: {
+          coins_pool?: number
+          created_at?: string
+          created_by?: string | null
+          current_hp?: number
+          damage_rules?: Json
+          defeated_at?: string | null
+          department_id?: string | null
+          description?: string | null
+          ends_at?: string
+          id?: string
+          min_share?: number
+          per_user_cap?: number
+          per_user_coins_cap?: number
+          settled_at?: string | null
+          starts_at?: string
+          status?: string
+          title?: string
+          total_hp?: number
+          updated_at?: string
+          xp_pool?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "boss_battles_department_id_fkey"
+            columns: ["department_id"]
+            isOneToOne: false
+            referencedRelation: "departments"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       campaign_participants: {
         Row: {
           accepted_at: string | null
@@ -10538,6 +10710,17 @@ export type Database = {
         }
         Returns: Json
       }
+      deal_boss_damage: {
+        Args: {
+          _amount?: number
+          _battle_id: string
+          _dedupe_key: string
+          _multiplier?: number
+          _source: string
+          _source_id?: string
+        }
+        Returns: Json
+      }
       engagement_min_respondents: { Args: never; Returns: number }
       enqueue_push: {
         Args: {
@@ -11232,6 +11415,7 @@ export type Database = {
         Returns: undefined
       }
       settle_auction: { Args: { p_auction_id: string }; Returns: Json }
+      settle_boss_battle: { Args: { _battle_id: string }; Returns: Json }
       settle_department_war: { Args: { p_war_id: string }; Returns: Json }
       settle_prediction_market: {
         Args: { p_market_id: string; p_winning_option_id?: string }
