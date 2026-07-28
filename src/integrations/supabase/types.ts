@@ -10373,6 +10373,7 @@ export type Database = {
           user_id: string
         }[]
       }
+      get_push_outbox_health: { Args: { p_hours?: number }; Returns: Json }
       get_quiz_category_stats: {
         Args: never
         Returns: {
@@ -10633,6 +10634,10 @@ export type Database = {
         Returns: Json
       }
       request_password_reset: { Args: { p_user_id: string }; Returns: string }
+      requeue_push_outbox: {
+        Args: { p_ids?: string[]; p_include_stuck?: boolean }
+        Returns: number
+      }
       reset_login_attempts: { Args: { p_email: string }; Returns: undefined }
       reset_push_failures: { Args: { _ids: string[] }; Returns: undefined }
       respond_to_opinion: {
