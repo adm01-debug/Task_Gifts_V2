@@ -5,6 +5,7 @@ import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from "npm:@supabase/supabase-js@2";
 import { corsHeaders } from "npm:@supabase/supabase-js@2/cors";
 import { withSentry, captureMessage, captureException, recordMetric } from "../_shared/sentry.ts";
+import { guardInternalRequest } from "../_shared/security.ts";
 
 const THRESHOLD_PCT = Number(Deno.env.get("WEBHOOK_HEALTH_THRESHOLD") ?? "90");
 const MIN_SAMPLE = Number(Deno.env.get("WEBHOOK_HEALTH_MIN_SAMPLE") ?? "5");
@@ -21,6 +22,8 @@ interface StatRow {
 
 serve(withSentry("webhook-health-monitor", async (req, { requestId }) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
+  const denied = guardInternalRequest(req);
+  if (denied) return denied;
 
   const supabase = createClient(
     Deno.env.get("SUPABASE_URL")!,
