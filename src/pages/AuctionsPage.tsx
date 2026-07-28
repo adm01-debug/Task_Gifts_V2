@@ -7,7 +7,7 @@ import { SectionErrorBoundary } from "@/components/SectionErrorBoundary";
 import { AuctionCard, BidDialog } from "@/components/auction";
 import { useAuctions, useMyAuctionBids } from "@/hooks/useAuctions";
 import { useAuth } from "@/hooks/useAuth";
-import type { Auction } from "@/services/auctionService";
+import type { Auction, AuctionBid } from "@/services/auctionService";
 
 export default function AuctionsPage() {
   const { user } = useAuth();
@@ -19,7 +19,7 @@ export default function AuctionsPage() {
   const [dialogOpen, setDialogOpen] = useState(false);
 
   const bidsByAuction = useMemo(() => {
-    const map = new Map<string, (typeof myBids extends undefined ? never : NonNullable<typeof myBids>)[number]>();
+    const map = new Map<string, AuctionBid>();
     for (const bid of myBids ?? []) map.set(bid.auction_id, bid);
     return map;
   }, [myBids]);
