@@ -77,7 +77,7 @@ export const highPotentialService = {
     // Fetch profile
     const { data: profile } = await supabase
       .from("profiles")
-      .select("*")
+      .select(PROFILE_SAFE_COLUMNS)
       .eq("id", userId)
       .maybeSingle();
 
@@ -391,7 +391,7 @@ export const highPotentialService = {
     // Fetch all profiles (optionally filtered by department)
     let query = supabase
       .from("profiles")
-      .select("*, team_members(department_id, departments(name)), user_positions(positions(name))");
+      .select(`${PROFILE_SAFE_COLUMNS}, team_members(department_id, departments(name)), user_positions(positions(name))`);
 
     const { data: profiles } = await query;
 
