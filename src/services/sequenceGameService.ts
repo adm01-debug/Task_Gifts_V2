@@ -173,14 +173,18 @@ export const sequenceProcedureAdminService = {
     isActive: boolean;
     steps: Array<{ id?: string; label: string; hint?: string | null }>;
   }): Promise<SequenceSaveResult> {
-    const { data, error } = await supabase.rpc("save_sequence_procedure", {
+    // Os tipos gerados marcam os parâmetros como obrigatórios, mas a função
+    // aceita NULL em procedimento/descrição/departamento (novos e globais).
+    const args = {
       p_procedure_id: input.procedureId,
       p_title: input.title,
       p_description: input.description,
       p_department_id: input.departmentId,
       p_is_active: input.isActive,
-      p_steps: input.steps as unknown as never,
-    });
+      p_steps: input.steps,
+    } as unknown as Parameters<typeof supabase.rpc<"save_sequence_procedure">>[1];
+
+    const { data, error } = await supabase.rpc("save_sequence_procedure", args);
 
     if (error) {
       logger.error("Falha ao salvar procedimento", "sequenceProcedureAdminService.save", error);
