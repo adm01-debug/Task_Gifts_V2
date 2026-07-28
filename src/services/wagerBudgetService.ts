@@ -39,7 +39,7 @@ export const wagerBudgetService = {
       .maybeSingle();
 
     if (error) {
-      logger.error("wagerBudgetService.get", error);
+      logger.error("wagerBudgetService.get", error.message);
       throw error;
     }
     if (!data) return { ...WAGER_BUDGET_DEFAULTS };
@@ -71,7 +71,7 @@ export const wagerBudgetService = {
       .maybeSingle();
 
     if (error) {
-      logger.error("wagerBudgetService.save", error);
+      logger.error("wagerBudgetService.save", error.message);
       throw error;
     }
 
