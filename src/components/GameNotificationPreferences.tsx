@@ -1,23 +1,12 @@
-import { useCallback, useEffect, useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
-import { useAuth } from "@/hooks/useAuth";
+import { useCallback } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { toast } from "sonner";
 import { Gamepad2 } from "lucide-react";
-import { logger } from "@/services/loggingService";
-import type { Json } from "@/integrations/supabase/types";
-import {
-  type ChannelMap,
-  type NotificationChannel,
-  mergeChannelPreference,
-  mergeManyChannelPreferences,
-  normalizeTypePrefs,
-  resolveChannels,
-} from "@/lib/notificationTypePrefs";
+import { useTypePreferences } from "@/hooks/useTypePreferences";
+import type { ChannelMap, NotificationChannel } from "@/lib/notificationTypePrefs";
 
 const CHANNELS: Array<{ key: NotificationChannel; label: string }> = [
   { key: "in_app", label: "In-app" },
@@ -76,17 +65,7 @@ const ROWS: readonly GameRow[] = [
 ];
 
 const ALL_KEYS = ROWS.map((r) => r.key);
-const defaultsFor = (type: string): ChannelMap =>
-  ROWS.find((r) => r.key === type)?.defaults ?? { in_app: true, push: true, email: false };
-
-type Values = Record<string, ChannelMap>;
-
-function buildDefaults(): Values {
-  return ROWS.reduce<Values>((acc, row) => {
-    acc[row.key] = { ...row.defaults };
-    return acc;
-  }, {});
-}
+const FALLBACK: ChannelMap = { in_app: true, push: true, email: false };
 
 /**
  * Matriz de preferencias dos eventos de jogo (tipo x canal).
@@ -94,100 +73,15 @@ function buildDefaults(): Values {
  * aditivo - nao sobrescreve as preferencias de campanhas nem de relatorios.
  */
 export function GameNotificationPreferences() {
-  const { user } = useAuth();
-  const [loading, setLoading] = useState(true);
-  const [saving, setSaving] = useState<string | null>(null);
-  const [values, setValues] = useState<Values>(buildDefaults);
-
-  useEffect(() => {
-    if (!user?.id) {
-      setLoading(false);
-      return;
-    }
-    let cancelled = false;
-    (async () => {
-      try {
-        const { data, error } = await supabase
-          .from("notification_preferences")
-          .select("type_preferences")
-          .eq("user_id", user.id)
-          .maybeSingle();
-        if (error) throw error;
-        if (cancelled) return;
-        const prefs = normalizeTypePrefs(data?.type_preferences);
-        const next = ROWS.reduce<Values>((acc, row) => {
-          acc[row.key] = resolveChannels(prefs, row.key, row.defaults);
-          return acc;
-        }, {});
-        setValues(next);
-      } catch (err: unknown) {
-        logger.error("Falha ao carregar preferências de jogos", String(err));
-      } finally {
-        if (!cancelled) setLoading(false);
-      }
-    })();
-    return () => {
-      cancelled = true;
-    };
-  }, [user?.id]);
-
-  const readCurrent = useCallback(async (): Promise<unknown> => {
-    if (!user?.id) return {};
-    const { data, error } = await supabase
-      .from("notification_preferences")
-      .select("type_preferences")
-      .eq("user_id", user.id)
-      .maybeSingle();
-    if (error) throw error;
-    return data?.type_preferences ?? {};
-  }, [user?.id]);
-
-  const persistCell = async (type: string, channel: NotificationChannel, value: boolean) => {
-    if (!user?.id) return;
-    const cellId = `${type}:${channel}`;
-    const previous = values[type][channel];
-    setSaving(cellId);
-    setValues((v) => ({ ...v, [type]: { ...v[type], [channel]: value } }));
-    try {
-      const current = await readCurrent();
-      const next = mergeChannelPreference(current, type, channel, value, defaultsFor(type));
-      const { error } = await supabase
-        .from("notification_preferences")
-        .upsert({ user_id: user.id, type_preferences: next as unknown as Json }, { onConflict: "user_id" });
-      if (error) throw error;
-      toast.success("Preferência atualizada");
-    } catch (err: unknown) {
-      logger.error("Falha ao salvar preferência de jogo", String(err));
-      toast.error("Não foi possível salvar a preferência");
-      setValues((v) => ({ ...v, [type]: { ...v[type], [channel]: previous } }));
-    } finally {
-      setSaving(null);
-    }
-  };
-
-  const persistAllPush = async (value: boolean) => {
-    if (!user?.id) return;
-    const previous = values;
-    setSaving("bulk:push");
-    setValues((v) =>
-      ALL_KEYS.reduce<Values>((acc, k) => ({ ...acc, [k]: { ...v[k], push: value } }), { ...v }),
-    );
-    try {
-      const current = await readCurrent();
-      const next = mergeManyChannelPreferences(current, ALL_KEYS, "push", value, defaultsFor);
-      const { error } = await supabase
-        .from("notification_preferences")
-        .upsert({ user_id: user.id, type_preferences: next as unknown as Json }, { onConflict: "user_id" });
-      if (error) throw error;
-      toast.success(value ? "Push de jogos ativado" : "Push de jogos silenciado");
-    } catch (err: unknown) {
-      logger.error("Falha ao salvar preferências de jogos em lote", String(err));
-      toast.error("Não foi possível salvar as preferências");
-      setValues(previous);
-    } finally {
-      setSaving(null);
-    }
-  };
+  const defaultsFor = useCallback(
+    (type: string): ChannelMap => ROWS.find((r) => r.key === type)?.defaults ?? FALLBACK,
+    [],
+  );
+  const { loading, saving, values, setCell, setChannelForAll } = useTypePreferences({
+    types: ALL_KEYS,
+    defaultsFor,
+    moduleName: "jogos",
+  });
 
   return (
     <Card className="glass-card">
@@ -216,7 +110,7 @@ export function GameNotificationPreferences() {
                 size="sm"
                 className="min-h-[36px]"
                 disabled={saving !== null}
-                onClick={() => persistAllPush(false)}
+                onClick={() => setChannelForAll("push", false)}
               >
                 Silenciar push
               </Button>
@@ -226,7 +120,7 @@ export function GameNotificationPreferences() {
                 size="sm"
                 className="min-h-[36px]"
                 disabled={saving !== null}
-                onClick={() => persistAllPush(true)}
+                onClick={() => setChannelForAll("push", true)}
               >
                 Ativar push
               </Button>
@@ -250,9 +144,9 @@ export function GameNotificationPreferences() {
                         </Label>
                         <Switch
                           id={`game-pref-${cellId}`}
-                          checked={values[row.key][c.key]}
+                          checked={values[row.key]?.[c.key] ?? row.defaults[c.key]}
                           disabled={saving !== null}
-                          onCheckedChange={(v) => persistCell(row.key, c.key, v)}
+                          onCheckedChange={(v) => setCell(row.key, c.key, v)}
                           aria-label={`${row.label} - ${c.label}`}
                         />
                       </div>
