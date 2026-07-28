@@ -86,8 +86,8 @@ export default function AuctionsAdmin() {
               )}
             </div>
           </div>
-        </PageShell_PLACEHOLDER>
-      </SectionErrorBoundary>
+        </SectionErrorBoundary>
+      </PageShell>
     </>
   );
 }
