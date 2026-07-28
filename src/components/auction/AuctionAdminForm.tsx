@@ -7,9 +7,20 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { useCreateAuction } from "@/hooks/useAuctions";
+import { useShopRewards } from "@/hooks/useShop";
 import { hasBlockingIssues, validateAuctionDraft, type AuctionDraft } from "@/lib/auctionAdmin";
+
+/** Valor sentinela: Radix Select não aceita `value=""`. */
+const NO_REWARD = "none";
 
 /** Converte um `datetime-local` (hora local) em ISO UTC aceito pelo banco. */
 function toIso(value: string): string {
@@ -37,8 +48,16 @@ export function AuctionAdminForm() {
   const [minIncrement, setMinIncrement] = useState("10");
   const [startsAt, setStartsAt] = useState(defaultStart);
   const [endsAt, setEndsAt] = useState(defaultEnd);
+  const [rewardId, setRewardId] = useState<string>(NO_REWARD);
 
   const createAuction = useCreateAuction();
+  const { data: rewards } = useShopRewards();
+
+  const selectedReward = useMemo(
+    () => (rewards ?? []).find((reward) => reward.id === rewardId) ?? null,
+    [rewards, rewardId],
+  );
+  const outOfStock = selectedReward?.stock !== null && (selectedReward?.stock ?? 1) <= 0;
 
   const draft = useMemo<AuctionDraft>(
     () => ({
@@ -66,12 +85,14 @@ export function AuctionAdminForm() {
         min_increment: draft.minIncrement,
         starts_at: draft.startsAt,
         ends_at: draft.endsAt,
+        reward_id: rewardId === NO_REWARD ? null : rewardId,
       });
       toast.success("Leilão criado como rascunho. Publique quando estiver pronto.");
       setTitle("");
       setDescription("");
+      setRewardId(NO_REWARD);
     } catch (err: unknown) {
-      toast.error("Não foi possível criar o leilão.");
+      toast.error(err instanceof Error ? err.message : "Não foi possível criar o leilão.");
     }
   };
 
@@ -151,6 +172,35 @@ export function AuctionAdminForm() {
               onChange={(event) => setEndsAt(event.target.value)}
             />
           </div>
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="auction-reward">Item da loja (entrega automática)</Label>
+          <Select value={rewardId} onValueChange={setRewardId}>
+            <SelectTrigger id="auction-reward" className="min-h-[44px]">
+              <SelectValue placeholder="Sem vínculo com a loja" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value={NO_REWARD}>Sem vínculo com a loja</SelectItem>
+              {(rewards ?? []).map((reward) => (
+                <SelectItem key={reward.id} value={reward.id}>
+                  {reward.name}
+                  {reward.stock !== null ? ` · estoque ${reward.stock}` : ""}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <p className="text-xs text-muted-foreground">
+            Ao apurar, o vencedor recebe um pedido pendente na loja e o estoque é reservado
+            automaticamente. Sem estoque, a caução é estornada em vez de prometer o item.
+          </p>
+          {outOfStock && (
+            <Alert variant="destructive">
+              <AlertDescription>
+                Este item está com estoque zerado — reponha antes de publicar o leilão.
+              </AlertDescription>
+            </Alert>
+          )}
         </div>
 
         {issues.length > 0 && (
