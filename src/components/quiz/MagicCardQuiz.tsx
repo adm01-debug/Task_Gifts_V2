@@ -349,6 +349,7 @@ export function MagicCardQuiz({ questions, title = "Quiz Cartas Mágicas", onCom
         isFlipped={isCurrentFlipped}
         isAnswered={isCurrentAnswered}
         selectedAnswer={selectedAnswer}
+        correctOptionId={currentCorrectOptionId}
         onFlip={handleFlip}
         onAnswer={handleAnswer}
       />
