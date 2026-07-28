@@ -3,7 +3,11 @@ import { Link } from "react-router-dom";
 import { Dices } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { PredictionMarketCard, StakeDialog } from "@/components/prediction";
+import {
+  MyGoalBetPosition,
+  PredictionMarketCard,
+  StakeDialog,
+} from "@/components/prediction";
 import {
   useMyPredictionStakes,
   usePredictionMarkets,
@@ -53,6 +57,8 @@ export function CampaignGoalBetPanel({ campaignName }: CampaignGoalBetPanelProps
         myStakes={myStakes ?? []}
         onStake={(m, optionId) => setTarget({ market: m, optionId })}
       />
+
+      <MyGoalBetPosition market={market} stakes={myStakes ?? []} />
 
       <StakeDialog
         market={target?.market ?? null}

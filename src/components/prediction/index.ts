@@ -8,3 +8,4 @@ export { SettleMarketDialog } from "./SettleMarketDialog";
 export { PredictionWatchdogPanel } from "./PredictionWatchdogPanel";
 export { OddsHistoryChart } from "./OddsHistoryChart";
 export { OracleLeaderboard } from "./OracleLeaderboard";
+export { MyGoalBetPosition } from "./MyGoalBetPosition";
