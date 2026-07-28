@@ -6,11 +6,10 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useNavigate } from "react-router-dom";
-import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { toast } from "sonner";
 import { logger } from "@/services/loggingService";
-import { describeEdgeError } from "@/lib/edgeErrors";
+import { invokeEdgeSafe } from "@/lib/requestId";
 
 interface TrailRecommendation {
   trailId: string;
