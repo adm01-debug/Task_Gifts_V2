@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { Brain, Coins, RefreshCw, Timer, Zap } from "lucide-react";
+import { Brain, Coins, Layers, RefreshCw, Timer, Zap } from "lucide-react";
+import { Link } from "react-router-dom";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -8,7 +9,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { PageShell } from "@/components/navigation";
 import { SEOHead } from "@/components/SEOHead";
 import { SectionErrorBoundary } from "@/components/SectionErrorBoundary";
-import { MemoryBoard } from "@/components/memory";
+import { MemoryBoard, MemoryLeaderboard } from "@/components/memory";
 import {
   useFinishMemorySession,
   useMemoryDecks,
@@ -17,6 +18,7 @@ import {
   useStartMemorySession,
 } from "@/hooks/useMemoryGame";
 import { useHaptics } from "@/hooks/useHaptics";
+import { useRBAC } from "@/hooks/useRBAC";
 import { buildMemoryBoard, type MemoryCard } from "@/lib/memoryGame";
 
 const FLIP_BACK_DELAY_MS = 900;
@@ -34,6 +36,7 @@ export default function MemoryGamePage() {
   const startMutation = useStartMemorySession();
   const finishMutation = useFinishMemorySession();
   const haptics = useHaptics();
+  const { hasRole } = useRBAC();
 
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [seed, setSeed] = useState<string>("");
@@ -225,6 +228,14 @@ export default function MemoryGamePage() {
             </div>
 
             <div className="space-y-4">
+              {hasRole("admin") && (
+                <Button asChild variant="outline" className="w-full">
+                  <Link to="/memoria/admin">
+                    <Layers className="mr-2 h-4 w-4" aria-hidden />
+                    Gerenciar baralhos
+                  </Link>
+                </Button>
+              )}
               <Card className="border-border/60 bg-card/70 backdrop-blur">
                 <CardHeader>
                   <CardTitle className="text-base">Baralhos</CardTitle>
@@ -256,6 +267,8 @@ export default function MemoryGamePage() {
                   )}
                 </CardContent>
               </Card>
+
+              <MemoryLeaderboard deckId={deckId} />
 
               <Card className="border-border/60 bg-card/70 backdrop-blur">
                 <CardHeader>

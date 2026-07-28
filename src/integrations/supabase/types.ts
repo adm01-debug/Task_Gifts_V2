@@ -8830,6 +8830,138 @@ export type Database = {
         }
         Relationships: []
       }
+      sequence_attempts: {
+        Row: {
+          attempt_date: string
+          coins_awarded: number
+          correct_positions: number
+          created_at: string
+          duration_ms: number
+          id: string
+          is_perfect: boolean
+          procedure_id: string
+          steps_total: number
+          submitted_order: string[]
+          user_id: string
+          xp_awarded: number
+        }
+        Insert: {
+          attempt_date?: string
+          coins_awarded?: number
+          correct_positions?: number
+          created_at?: string
+          duration_ms?: number
+          id?: string
+          is_perfect?: boolean
+          procedure_id: string
+          steps_total?: number
+          submitted_order?: string[]
+          user_id: string
+          xp_awarded?: number
+        }
+        Update: {
+          attempt_date?: string
+          coins_awarded?: number
+          correct_positions?: number
+          created_at?: string
+          duration_ms?: number
+          id?: string
+          is_perfect?: boolean
+          procedure_id?: string
+          steps_total?: number
+          submitted_order?: string[]
+          user_id?: string
+          xp_awarded?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "sequence_attempts_procedure_id_fkey"
+            columns: ["procedure_id"]
+            isOneToOne: false
+            referencedRelation: "sequence_procedures"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      sequence_procedures: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          department_id: string | null
+          description: string | null
+          id: string
+          is_active: boolean
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          department_id?: string | null
+          description?: string | null
+          id?: string
+          is_active?: boolean
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          department_id?: string | null
+          description?: string | null
+          id?: string
+          is_active?: boolean
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "sequence_procedures_department_id_fkey"
+            columns: ["department_id"]
+            isOneToOne: false
+            referencedRelation: "departments"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      sequence_steps: {
+        Row: {
+          created_at: string
+          hint: string | null
+          id: string
+          label: string
+          position: number
+          procedure_id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          hint?: string | null
+          id?: string
+          label: string
+          position: number
+          procedure_id: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          hint?: string | null
+          id?: string
+          label?: string
+          position?: number
+          procedure_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "sequence_steps_procedure_id_fkey"
+            columns: ["procedure_id"]
+            isOneToOne: false
+            referencedRelation: "sequence_procedures"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       session_logs: {
         Row: {
           browser: string | null
@@ -11181,6 +11313,22 @@ export type Database = {
         Returns: Json
       }
       get_lucky_wheel_status: { Args: never; Returns: Json }
+      get_memory_leaderboard: {
+        Args: { p_days?: number; p_deck_id?: string; p_limit?: number }
+        Returns: {
+          avatar_url: string
+          coins_awarded: number
+          deck_id: string
+          display_name: string
+          duration_ms: number
+          matched_pairs: number
+          moves: number
+          pairs_total: number
+          played_at: string
+          rank: number
+          user_id: string
+        }[]
+      }
       get_monthly_trends: { Args: never; Returns: Json }
       get_nine_box_distribution: {
         Args: { p_department_id?: string; p_period?: string }
@@ -11648,6 +11796,14 @@ export type Database = {
           p_text_answer?: string
         }
         Returns: string
+      }
+      submit_sequence_attempt: {
+        Args: {
+          p_duration_ms?: number
+          p_order: string[]
+          p_procedure_id: string
+        }
+        Returns: Json
       }
       sync_bingo_card: { Args: { p_card_id: string }; Returns: Json }
       sync_department_war_headcount: {
