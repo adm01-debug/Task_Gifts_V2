@@ -1,6 +1,7 @@
 import { supabase } from "@/integrations/supabase/client";
 import { logger } from "./loggingService";
 import type { MemoryPair } from "@/lib/memoryGame";
+import type { DeckDraft, PairDiff } from "@/lib/memoryDeckAuthoring";
 
 export interface MemoryDeck {
   id: string;
@@ -43,6 +44,20 @@ export interface MemoryFinishResult {
   daily_limit_reached?: boolean;
   coins_awarded?: number;
   xp_awarded?: number;
+}
+
+export interface MemoryLeaderboardEntry {
+  user_id: string;
+  display_name: string;
+  avatar_url: string | null;
+  deck_id: string;
+  matched_pairs: number;
+  pairs_total: number;
+  moves: number;
+  duration_ms: number;
+  coins_awarded: number;
+  played_at: string;
+  rank: number;
 }
 
 /**
@@ -116,5 +131,130 @@ export const memoryGameService = {
       throw error;
     }
     return (data as MemorySession[]) || [];
+  },
+
+  /**
+   * Ranking da janela atual. A RPC é SECURITY DEFINER e só devolve nome público
+   * e avatar (via `profiles_public`) — nunca e-mail ou outro PII.
+   */
+  async leaderboard(deckId: string | null, days = 7, limit = 20): Promise<MemoryLeaderboardEntry[]> {
+    const { data, error } = await supabase.rpc("get_memory_leaderboard", {
+      ...(deckId ? { p_deck_id: deckId } : {}),
+      p_days: Math.min(90, Math.max(1, Math.floor(days))),
+      p_limit: Math.min(100, Math.max(1, Math.floor(limit))),
+    });
+
+    if (error) {
+      logger.error("Falha ao carregar ranking da memória", "memoryGameService.leaderboard", error);
+      throw error;
+    }
+    return (data as MemoryLeaderboardEntry[]) || [];
+  },
+};
+
+const DECK_COLUMNS = "id, title, description, department_id, is_active";
+
+/**
+ * Operações de autoria. A RLS de `memory_decks`/`memory_pairs` já restringe
+ * escrita a `has_role(auth.uid(), 'admin')` — o cliente não consegue alterar
+ * baralhos sem esse papel, mesmo chamando o endpoint diretamente.
+ */
+export const memoryDeckAdminService = {
+  /** Inclui baralhos inativos (visíveis apenas para admins pela policy de SELECT). */
+  async listAll(): Promise<MemoryDeck[]> {
+    const { data, error } = await supabase
+      .from("memory_decks")
+      .select(DECK_COLUMNS)
+      .order("created_at", { ascending: true });
+
+    if (error) {
+      logger.error("Falha ao listar baralhos", "memoryDeckAdminService.listAll", error);
+      throw error;
+    }
+    return (data as MemoryDeck[]) || [];
+  },
+
+  async createDeck(draft: DeckDraft): Promise<MemoryDeck> {
+    const { data, error } = await supabase
+      .from("memory_decks")
+      .insert({
+        title: draft.title,
+        description: draft.description || null,
+        department_id: draft.departmentId || null,
+        is_active: draft.isActive,
+      })
+      .select(DECK_COLUMNS)
+      .single();
+
+    if (error) {
+      logger.error("Falha ao criar baralho", "memoryDeckAdminService.createDeck", error);
+      throw error;
+    }
+    return data as MemoryDeck;
+  },
+
+  async updateDeck(id: string, draft: DeckDraft): Promise<void> {
+    const { error } = await supabase
+      .from("memory_decks")
+      .update({
+        title: draft.title,
+        description: draft.description || null,
+        department_id: draft.departmentId || null,
+        is_active: draft.isActive,
+      })
+      .eq("id", id);
+
+    if (error) {
+      logger.error("Falha ao atualizar baralho", "memoryDeckAdminService.updateDeck", error);
+      throw error;
+    }
+  },
+
+  async deleteDeck(id: string): Promise<void> {
+    const { error } = await supabase.from("memory_decks").delete().eq("id", id);
+    if (error) {
+      logger.error("Falha ao excluir baralho", "memoryDeckAdminService.deleteDeck", error);
+      throw error;
+    }
+  },
+
+  /**
+   * Aplica o diff calculado por `diffPairs`. As operações são sequenciais para
+   * que uma falha de RLS/constraint identifique exatamente o par que a causou.
+   */
+  async applyPairDiff(deckId: string, diff: PairDiff): Promise<void> {
+    if (diff.toDeleteIds.length > 0) {
+      const { error } = await supabase
+        .from("memory_pairs")
+        .delete()
+        .eq("deck_id", deckId)
+        .in("id", diff.toDeleteIds);
+      if (error) {
+        logger.error("Falha ao remover pares", "memoryDeckAdminService.applyPairDiff", error);
+        throw error;
+      }
+    }
+
+    for (const pair of diff.toUpdate) {
+      const { error } = await supabase
+        .from("memory_pairs")
+        .update({ term: pair.term, match: pair.match })
+        .eq("id", pair.id)
+        .eq("deck_id", deckId);
+      if (error) {
+        logger.error("Falha ao atualizar par", "memoryDeckAdminService.applyPairDiff", error);
+        throw error;
+      }
+    }
+
+    if (diff.toInsert.length > 0) {
+      const { error } = await supabase
+        .from("memory_pairs")
+        .insert(diff.toInsert.map((p) => ({ deck_id: deckId, term: p.term, match: p.match })));
+      if (error) {
+        logger.error("Falha ao inserir pares", "memoryDeckAdminService.applyPairDiff", error);
+        throw error;
+      }
+    }
   },
 };
