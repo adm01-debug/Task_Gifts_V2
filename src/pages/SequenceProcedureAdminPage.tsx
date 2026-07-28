@@ -142,7 +142,7 @@ export default function SequenceProcedureAdminPage() {
         procedureId: selectedId,
         title: draft.title.trim(),
         description: (draft.description ?? "").trim() || null,
-        departmentId: draft.departmentId,
+        departmentId: draft.departmentId ?? null,
         isActive: draft.isActive,
         steps: validation.normalizedSteps.map((s) => ({
           ...(s.id ? { id: s.id } : {}),
