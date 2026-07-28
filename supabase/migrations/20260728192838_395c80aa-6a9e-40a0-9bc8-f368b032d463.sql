@@ -1,0 +1,1 @@
+REVOKE EXECUTE ON FUNCTION public.get_lucky_wheel_prizes_display() FROM anon;
