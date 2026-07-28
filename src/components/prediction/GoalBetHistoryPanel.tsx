@@ -1,6 +1,11 @@
-import { History, Minus, TrendingDown, TrendingUp } from "lucide-react";
+import { Download, History, Minus, TrendingDown, TrendingUp } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { computeGoalBetHistory } from "@/lib/goalBetHistory";
+import {
+  buildGoalBetHistoryCsv,
+  goalBetHistoryCsvFilename,
+} from "@/lib/goalBetHistoryCsv";
 import type {
   PredictionMarketRow,
   PredictionStakeRow,
@@ -36,6 +41,19 @@ export function GoalBetHistoryPanel({
 
   const positive = history.netProfit >= 0;
 
+  const handleExport = () => {
+    // BOM garante acentuação correta ao abrir no Excel PT-BR.
+    const blob = new Blob(["\uFEFF", buildGoalBetHistoryCsv(history)], {
+      type: "text/csv;charset=utf-8;",
+    });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = goalBetHistoryCsvFilename();
+    link.click();
+    URL.revokeObjectURL(url);
+  };
+
   return (
     <section
       className={cn(
@@ -49,6 +67,7 @@ export function GoalBetHistoryPanel({
           <History className="h-4 w-4 text-primary" aria-hidden />
           Meu histórico
         </h2>
+        <div className="flex items-center gap-2">
         <span className="text-xs text-muted-foreground">
           {history.hits}/{history.decided} acertos · {pct(history.hitRate)} ·{" "}
           <strong className={positive ? "text-primary" : "text-destructive"}>
@@ -56,6 +75,18 @@ export function GoalBetHistoryPanel({
             {pct(history.roi)}
           </strong>
         </span>
+        <Button
+          type="button"
+          variant="ghost"
+          size="sm"
+          className="h-8 gap-1 px-2 text-xs"
+          onClick={handleExport}
+          aria-label="Exportar histórico de apostas em CSV"
+        >
+          <Download className="h-3.5 w-3.5" aria-hidden />
+          CSV
+        </Button>
+        </div>
       </div>
 
       <ul className="mt-3 divide-y divide-border/50">
