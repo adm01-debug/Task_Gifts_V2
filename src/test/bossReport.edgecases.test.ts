@@ -262,8 +262,9 @@ describe("buildBossReportCsv — casos-limite", () => {
     expect(
       bossReportFileName({ departmentLabel: "Operações & Logística", days: 0 }, "pdf", NOW),
     ).toBe("chefao-relatorio-operacoes-logistica-total-2026-07-28.pdf");
-    expect(
-      bossReportFileName({ departmentLabel: "A".repeat(80), days: 7 }, "csv", NOW).length,
-    ).toBeLessThanOrEqual(70);
+    // slug truncado em 40 caracteres, preservando janela e carimbo de data
+    expect(bossReportFileName({ departmentLabel: "A".repeat(80), days: 7 }, "csv", NOW)).toBe(
+      `chefao-relatorio-${"a".repeat(40)}-7d-2026-07-28.csv`,
+    );
   });
 });
