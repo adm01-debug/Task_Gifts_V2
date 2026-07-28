@@ -154,6 +154,8 @@ export function BossHistoryCard({
           />
         </div>
 
+        <BossTrendChart battles={battles} departmentId={effectiveDepartment} />
+
         {summary.awaitingSettlement > 0 && (
           <div className="flex items-start gap-2 rounded-lg border border-border/60 bg-muted/40 p-3 text-sm">
             <AlertTriangle className="mt-0.5 h-4 w-4 text-muted-foreground" />
@@ -165,7 +167,6 @@ export function BossHistoryCard({
         )}
 
         <ul className="divide-y divide-border/60">
-          {null}
           {summary.rows.map((row) => (
             <li key={row.id} className="flex items-center justify-between gap-3 py-3 text-sm">
               <div className="min-w-0">
