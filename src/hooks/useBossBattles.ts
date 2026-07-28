@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { bossBattleService } from "@/services/bossBattleService";
+import { bossBattleService, type BossBattleDraftPayload } from "@/services/bossBattleService";
 import { useAuth } from "./useAuth";
 
 export const bossBattleKeys = {
@@ -43,5 +43,45 @@ export function useSettleBossBattle() {
       queryClient.invalidateQueries({ queryKey: bossBattleKeys.all });
     },
     onError: () => toast.error("Não foi possível apurar a batalha."),
+  });
+}
+
+export function useCreateBossBattle() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (payload: BossBattleDraftPayload) => bossBattleService.create(payload),
+    onSuccess: (battle) => {
+      toast.success(
+        battle.status === "running"
+          ? `"${battle.title}" foi convocado e já está valendo.`
+          : `"${battle.title}" salvo como rascunho.`,
+      );
+      queryClient.invalidateQueries({ queryKey: bossBattleKeys.all });
+    },
+    onError: () => toast.error("Não foi possível criar a batalha."),
+  });
+}
+
+export function usePublishBossBattle() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (battleId: string) => bossBattleService.publish(battleId),
+    onSuccess: () => {
+      toast.success("Batalha publicada para o time.");
+      queryClient.invalidateQueries({ queryKey: bossBattleKeys.all });
+    },
+    onError: () => toast.error("Não foi possível publicar a batalha."),
+  });
+}
+
+export function useExpireBossBattle() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (battleId: string) => bossBattleService.expire(battleId),
+    onSuccess: () => {
+      toast.success("Batalha encerrada.");
+      queryClient.invalidateQueries({ queryKey: bossBattleKeys.all });
+    },
+    onError: () => toast.error("Não foi possível encerrar a batalha."),
   });
 }

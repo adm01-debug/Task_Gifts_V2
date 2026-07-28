@@ -10,8 +10,15 @@ import { PageShell } from "@/components/navigation";
 import { SEOHead } from "@/components/SEOHead";
 import { SectionErrorBoundary } from "@/components/SectionErrorBoundary";
 import { BossDamageSourcesCard } from "@/components/boss/BossDamageSourcesCard";
+import { BossBattleAdminDialog } from "@/components/boss/BossBattleAdminDialog";
 import { useRBAC } from "@/hooks/useRBAC";
-import { useBossBattles, useMyBossDamage, useSettleBossBattle } from "@/hooks/useBossBattles";
+import {
+  useBossBattles,
+  useExpireBossBattle,
+  useMyBossDamage,
+  usePublishBossBattle,
+  useSettleBossBattle,
+} from "@/hooks/useBossBattles";
 import { bossPhase, hpPercent, type BossPhase } from "@/lib/bossBattle";
 import type { BossBattleStatus } from "@/services/bossBattleService";
 import { cn } from "@/lib/utils";
@@ -53,6 +60,8 @@ export default function BossBattlePage() {
   const { isAdmin } = useRBAC();
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const settleMutation = useSettleBossBattle();
+  const publishMutation = usePublishBossBattle();
+  const expireMutation = useExpireBossBattle();
 
   const activeBattle = useMemo(() => {
     const list = battles || [];
@@ -82,6 +91,11 @@ export default function BossBattlePage() {
       />
 
       <SectionErrorBoundary>
+        {isAdmin && (
+          <div className="mb-4 flex justify-end">
+            <BossBattleAdminDialog />
+          </div>
+        )}
         {isLoading ? (
           <div className="space-y-4">
             <Skeleton className="h-40 w-full rounded-xl" />
@@ -172,6 +186,26 @@ export default function BossBattlePage() {
                         A apuração distribui os prêmios proporcionalmente ao dano causado, com rateio
                         determinístico no servidor.
                       </p>
+                      {activeBattle.status === "draft" && (
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => publishMutation.mutate(activeBattle.id)}
+                          disabled={publishMutation.isPending}
+                        >
+                          Publicar
+                        </Button>
+                      )}
+                      {(activeBattle.status === "draft" || activeBattle.status === "running") && (
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => expireMutation.mutate(activeBattle.id)}
+                          disabled={expireMutation.isPending}
+                        >
+                          Encerrar
+                        </Button>
+                      )}
                       <Button
                         size="sm"
                         onClick={() => settleMutation.mutate(activeBattle.id)}

@@ -75,6 +75,23 @@ function mapBattle(row: Record<string, unknown>): BossBattle {
   };
 }
 
+export interface BossBattleDraftPayload {
+  title: string;
+  description?: string | null;
+  departmentId?: string | null;
+  totalHp: number;
+  startsAt: string;
+  endsAt: string;
+  rules: BossDamageRules;
+  perUserCap: number;
+  coinsPool: number;
+  xpPool: number;
+  minShare: number;
+  perUserCoinsCap: number;
+  /** `draft` mantém a batalha invisível para o time até a publicação. */
+  status: Extract<BossBattleStatus, "draft" | "running">;
+}
+
 export const bossBattleService = {
   async list(): Promise<BossBattle[]> {
     const { data, error } = await supabase
@@ -87,6 +104,65 @@ export const bossBattleService = {
       throw error;
     }
     return (data || []).map((row) => mapBattle(row as Record<string, unknown>));
+  },
+
+  /**
+   * Cria a batalha. O HP corrente sempre nasce igual ao total — nunca
+   * confiamos em um valor vindo do cliente para isso.
+   */
+  async create(payload: BossBattleDraftPayload): Promise<BossBattle> {
+    const { data, error } = await supabase
+      .from("boss_battles")
+      .insert({
+        title: payload.title.trim(),
+        description: payload.description?.trim() || null,
+        department_id: payload.departmentId || null,
+        total_hp: payload.totalHp,
+        current_hp: payload.totalHp,
+        starts_at: payload.startsAt,
+        ends_at: payload.endsAt,
+        damage_rules: JSON.parse(JSON.stringify(payload.rules)),
+        per_user_cap: payload.perUserCap,
+        coins_pool: payload.coinsPool,
+        xp_pool: payload.xpPool,
+        min_share: payload.minShare,
+        per_user_coins_cap: payload.perUserCoinsCap,
+        status: payload.status,
+      })
+      .select("*")
+      .maybeSingle();
+    if (error) {
+      logger.error("Falha ao criar chefão", String(error.message));
+      throw error;
+    }
+    if (!data) throw new Error("Batalha não retornada após a criação.");
+    return mapBattle(data as Record<string, unknown>);
+  },
+
+  /** Publica um rascunho, tornando-o visível e atacável pelo time. */
+  async publish(battleId: string): Promise<void> {
+    const { error } = await supabase
+      .from("boss_battles")
+      .update({ status: "running" })
+      .eq("id", battleId)
+      .eq("status", "draft");
+    if (error) {
+      logger.error("Falha ao publicar chefão", String(error.message));
+      throw error;
+    }
+  },
+
+  /** Encerra a batalha sem apurar (usado para cancelamentos operacionais). */
+  async expire(battleId: string): Promise<void> {
+    const { error } = await supabase
+      .from("boss_battles")
+      .update({ status: "expired" })
+      .eq("id", battleId)
+      .in("status", ["draft", "running"]);
+    if (error) {
+      logger.error("Falha ao encerrar chefão", String(error.message));
+      throw error;
+    }
   },
 
   async myDamage(battleId: string, userId: string): Promise<BossDamageEntry[]> {
