@@ -22,6 +22,8 @@ export interface BoardPlayerRow {
   checkpoints: number[];
   moves_count: number;
   blocked_challenge_id: string | null;
+  /** Tentativas já feitas no desafio pendente (0 quando não há bloqueio). */
+  challenge_attempts: number;
   finished_at: string | null;
 }
 
