@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   predictionMarketService,
   fetchOddsHistory,
+  fetchOracleAggregates,
   type CreateMarketInput,
 } from "@/services/predictionMarketService";
 import { useAuth } from "./useAuth";
@@ -14,7 +15,17 @@ export const predictionKeys = {
     [...predictionKeys.all, "admin-events", marketId ?? "all"] as const,
   oddsHistory: (marketId: string) =>
     [...predictionKeys.all, "odds-history", marketId] as const,
+  oracle: () => [...predictionKeys.all, "oracle"] as const,
 };
+
+/** Totais consolidados do ranking Oráculo; a classificação acontece na UI. */
+export function useOracleAggregates() {
+  return useQuery({
+    queryKey: predictionKeys.oracle(),
+    queryFn: fetchOracleAggregates,
+    staleTime: 5 * 60_000,
+  });
+}
 
 /** Histórico agregado de cotações; só busca quando o gráfico está aberto. */
 export function usePredictionOddsHistory(marketId: string | null) {
