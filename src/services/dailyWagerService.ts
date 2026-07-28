@@ -1,6 +1,11 @@
 import { supabase } from "@/integrations/supabase/client";
 import { logger } from "./loggingService";
 import { parseDailyWager, type DailyWagerState } from "@/lib/dailyWager";
+import {
+  parseWagerLeaderboard,
+  type WagerLeaderboardRow,
+  type WagerLeaderboardWindow,
+} from "@/lib/wagerLeaderboard";
 
 export interface WagerSubmitResult {
   success: boolean;
