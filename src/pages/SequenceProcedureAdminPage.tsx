@@ -27,6 +27,7 @@ import {
 import { PageShell } from "@/components/navigation";
 import { SEOHead } from "@/components/SEOHead";
 import { SectionErrorBoundary } from "@/components/SectionErrorBoundary";
+import { SequenceProcedureStatsCard } from "@/components/sequence/SequenceProcedureStatsCard";
 import { useDepartments } from "@/hooks/useDepartments";
 import {
   useAdminSequenceProcedures,
@@ -413,6 +414,13 @@ export default function SequenceProcedureAdminPage() {
               </CardContent>
             </Card>
           </div>
+
+          <SectionErrorBoundary sectionName="Desempenho do procedimento">
+            <SequenceProcedureStatsCard
+              procedureId={selectedId}
+              className="mt-6 border-border/60 bg-card/70 backdrop-blur"
+            />
+          </SectionErrorBoundary>
         </SectionErrorBoundary>
       </PageShell>
     </>
