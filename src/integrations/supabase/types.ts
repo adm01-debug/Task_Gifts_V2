@@ -10560,6 +10560,15 @@ export type Database = {
         Args: { p_answer: boolean; p_idx: number; p_session_id: string }
         Returns: Json
       }
+      apply_boss_damage_internal: {
+        Args: {
+          _dedupe_key: string
+          _source: string
+          _source_id?: string
+          _user_id: string
+        }
+        Returns: string
+      }
       apply_campaign_import: { Args: { _import_id: string }; Returns: Json }
       apply_task_penalty: {
         Args: {

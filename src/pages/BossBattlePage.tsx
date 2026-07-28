@@ -9,6 +9,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { PageShell } from "@/components/navigation";
 import { SEOHead } from "@/components/SEOHead";
 import { SectionErrorBoundary } from "@/components/SectionErrorBoundary";
+import { BossDamageSourcesCard } from "@/components/boss/BossDamageSourcesCard";
 import { useRBAC } from "@/hooks/useRBAC";
 import { useBossBattles, useMyBossDamage, useSettleBossBattle } from "@/hooks/useBossBattles";
 import { bossPhase, hpPercent, type BossPhase } from "@/lib/bossBattle";
@@ -183,6 +184,11 @@ export default function BossBattlePage() {
                 </CardContent>
               </Card>
             </motion.div>
+
+            <BossDamageSourcesCard
+              rules={activeBattle.damage_rules}
+              perUserCap={activeBattle.per_user_cap}
+            />
 
             <Card>
               <CardHeader>
