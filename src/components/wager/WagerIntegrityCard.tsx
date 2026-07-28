@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { AlertTriangle, ShieldCheck, ShieldAlert, Info } from "lucide-react";
+import { AlertTriangle, ShieldCheck, ShieldAlert, Info, Download } from "lucide-react";
 import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -22,6 +22,11 @@ import {
   type WagerAnomalySeverity,
 } from "@/lib/wagerIntegrity";
 import { windowLabel, type WagerLeaderboardWindow } from "@/lib/wagerLeaderboard";
+import {
+  buildWagerIntegrityCsv,
+  wagerIntegrityFileName,
+} from "@/lib/wagerIntegrityExport";
+import { downloadCSV } from "@/lib/csvExport";
 import { cn } from "@/lib/utils";
 
 const WINDOWS: WagerLeaderboardWindow[] = [7, 30, 90];
