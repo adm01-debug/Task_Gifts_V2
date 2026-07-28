@@ -172,6 +172,7 @@ export default function WagerQuestionAdminPage() {
   };
 
   const handleDelete = async (question: AdminWagerQuestion) => {
+
     if (question.totalEntries > 0) {
       toast.error("Perguntas com apostas registradas não podem ser excluídas.");
       return;
