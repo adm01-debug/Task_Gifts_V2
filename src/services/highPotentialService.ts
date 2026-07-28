@@ -1,5 +1,6 @@
 import { supabase } from "@/integrations/supabase/client";
 import { logger } from "@/services/loggingService";
+import { PROFILE_SAFE_COLUMNS } from "@/services/profilesService";
 
 export interface HighPotentialScore {
   userId: string;
