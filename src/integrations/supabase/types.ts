@@ -11402,6 +11402,7 @@ export type Database = {
         Args: { p_subscription_id: string }
         Returns: Json
       }
+      check_api_key_rotation_overdue: { Args: never; Returns: number }
       check_boss_win_rate_alerts: { Args: { p_days?: number }; Returns: number }
       check_boss_win_rate_alerts_impl: {
         Args: { p_days?: number }
