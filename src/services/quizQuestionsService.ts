@@ -307,3 +307,27 @@ export const quizPlayService = {
     return (data as string[] | null) || [];
   },
 };
+
+export interface QuizAudienceSlice {
+  option_id: string;
+  percent: number;
+}
+
+export interface QuizLifelineResult {
+  distribution?: QuizAudienceSlice[];
+  suggested_option_id?: string;
+  confidence?: number;
+}
+
+/** Ajudas (plateia/ligação) calculadas no servidor, sem expor o gabarito. */
+export async function getQuizLifeline(
+  questionId: string,
+  kind: 'audience' | 'phone'
+): Promise<QuizLifelineResult> {
+  const { data, error } = await supabase.rpc('get_quiz_lifeline', {
+    p_question_id: questionId,
+    p_kind: kind,
+  });
+  if (error) throw error;
+  return (data as unknown as QuizLifelineResult) || {};
+}
