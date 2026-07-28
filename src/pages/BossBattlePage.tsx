@@ -14,6 +14,7 @@ import { BossContributorsCard } from "@/components/boss/BossContributorsCard";
 import { BossBattleAdminDialog } from "@/components/boss/BossBattleAdminDialog";
 import { BossHistoryCard } from "@/components/boss/BossHistoryCard";
 import { BossDepartmentComparisonCard } from "@/components/boss/BossDepartmentComparisonCard";
+import { BossExecutiveSummaryCard } from "@/components/boss/BossExecutiveSummaryCard";
 import { BossWinRateGoalsCard } from "@/components/boss/BossWinRateGoalsCard";
 import { BossConsolidatedReportCard } from "@/components/boss/BossConsolidatedReportCard";
 import { useRBAC } from "@/hooks/useRBAC";
@@ -282,6 +283,7 @@ export default function BossBattlePage() {
 
         {!isLoading && (battles || []).length > 0 && (
           <div className="mt-6">
+            <BossExecutiveSummaryCard battles={battles || []} />
             <BossHistoryCard battles={battles || []} />
             <BossDepartmentComparisonCard battles={battles || []} />
             <BossWinRateGoalsCard battles={battles || []} />
