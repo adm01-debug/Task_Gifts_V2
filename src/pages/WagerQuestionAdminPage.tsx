@@ -182,7 +182,7 @@ export default function WagerQuestionAdminPage() {
   return (
     <PageShell
       title="Perguntas do Dia"
-      description="Agende, revise e acompanhe as perguntas com aposta"
+      subtitle="Agende, revise e acompanhe as perguntas com aposta"
       icon={<Dices className="h-5 w-5" />}
     >
       <SEOHead
