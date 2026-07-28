@@ -1,38 +1,19 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-import { crypto } from "https://deno.land/std@0.168.0/crypto/mod.ts";
 import { ExternalWebhookSchema, validatePayload, createValidationErrorResponse } from "../_shared/validation.ts";
 import { withSentry, addBreadcrumb, captureException } from "../_shared/sentry.ts";
+import {
+  verifySignedWebhook,
+  claimIdempotency,
+  completeIdempotency,
+  releaseIdempotency,
+  derivedIdempotencyKey,
+} from "../_shared/webhookSecurity.ts";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, x-request-id, x-api-key, x-api-secret, x-webhook-signature, x-webhook-timestamp',
 };
-
-async function verifyHMAC(payload: string, signature: string, secret: string) {
-  const encoder = new TextEncoder();
-  const keyData = encoder.encode(secret);
-  const data = encoder.encode(payload);
-  
-  const key = await crypto.subtle.importKey(
-    "raw",
-    keyData,
-    { name: "HMAC", hash: "SHA-256" },
-    false,
-    ["verify"]
-  );
-  
-  const signatureBytes = new Uint8Array(
-    signature.match(/.{1,2}/g)!.map(byte => parseInt(byte, 16))
-  );
-  
-  return await crypto.subtle.verify(
-    "HMAC",
-    key,
-    signatureBytes,
-    data
-  );
-}
 
 serve(withSentry("external-webhook", async (req, { requestId }) => {
   // Handle CORS preflight
@@ -46,6 +27,9 @@ serve(withSentry("external-webhook", async (req, { requestId }) => {
   const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
   const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
   const supabase = createClient(supabaseUrl, supabaseServiceKey);
+
+  // Fora do try para que o catch possa liberar a reserva em caso de falha.
+  let idemKeyToRelease: string | null = null;
 
   try {
     // Validate API Key
@@ -72,30 +56,45 @@ serve(withSentry("external-webhook", async (req, { requestId }) => {
     console.log(`[Webhook] Authenticated: ${apiKeyInfo.name}`);
 
     const rawPayload = await req.text();
-    const signature = req.headers.get('x-webhook-signature');
-    const timestamp = req.headers.get('x-webhook-timestamp');
 
-    // HMAC Validation
-    if (signature && timestamp) {
-      // Validate signature with x-api-secret
-      const isValid = await verifyHMAC(`${timestamp}.${rawPayload}`, signature, apiSecret);
-      if (!isValid) {
-        console.error('[Webhook] Invalid HMAC signature');
-        return jsonResponse({ error: 'Invalid HMAC signature' }, 401);
-      }
-      
-      // Prevent Replay Attacks (5 min window)
-      const now = Math.floor(Date.now() / 1000);
-      if (Math.abs(now - parseInt(timestamp)) > 300) {
-        return jsonResponse({ error: 'Webhook timestamp expired' }, 401);
-      }
+    // Assinatura HMAC OBRIGATÓRIA com janela anti-replay de 5 min.
+    // Antes era opcional: bastava omitir os headers para pular a checagem,
+    // permitindo reenviar indefinidamente uma requisição capturada.
+    const sigCheck = await verifySignedWebhook({
+      signedPayload: `${req.headers.get('x-webhook-timestamp') ?? ''}.${rawPayload}`,
+      signature: req.headers.get('x-webhook-signature'),
+      secret: apiSecret,
+      timestamp: req.headers.get('x-webhook-timestamp'),
+    });
+
+    if (!sigCheck.ok) {
+      console.error('[Webhook] assinatura rejeitada', { reason: sigCheck.reason, requestId });
+      return jsonResponse({
+        error: 'Assinatura inválida ou ausente',
+        message: 'Envie x-webhook-timestamp e x-webhook-signature = HMAC-SHA256("<timestamp>.<body>", api_secret) em hex.',
+      }, 401);
     }
+
+    // Idempotência: entregas duplicadas não podem creditar XP/moedas 2x.
+    const idemKey = req.headers.get('x-idempotency-key')
+      ?? await derivedIdempotencyKey('external', `${apiKeyInfo.id ?? apiKey}.${rawPayload}`);
+    const claim = await claimIdempotency(supabase, 'external', idemKey);
+
+    if (claim.state === 'duplicate') {
+      return jsonResponse({ success: true, duplicate: true, result: claim.response }, 200);
+    }
+    if (claim.state === 'in_progress') {
+      return jsonResponse({ error: 'Evento já em processamento' }, 409);
+    }
+    const idemTracked = claim.state === 'fresh';
+    if (idemTracked) idemKeyToRelease = claim.key;
 
     // Parse and validate webhook payload
     const payloadResult = JSON.parse(rawPayload);
     const validation = validatePayload(ExternalWebhookSchema, payloadResult);
     
     if (!validation.success) {
+      if (idemTracked) await releaseIdempotency(supabase, claim.key);
       return createValidationErrorResponse(validation.error, corsHeaders);
     }
 
@@ -191,6 +190,7 @@ serve(withSentry("external-webhook", async (req, { requestId }) => {
         break;
 
       default:
+        if (idemTracked) await releaseIdempotency(supabase, claim.key);
         return jsonResponse({ 
           error: 'Unknown event type',
           event,
@@ -200,6 +200,11 @@ serve(withSentry("external-webhook", async (req, { requestId }) => {
 
     console.log(`[Webhook] Event ${event} processed:`, result);
 
+    if (idemTracked) {
+      await completeIdempotency(supabase, claim.key, 'completed', { event, result });
+      idemKeyToRelease = null;
+    }
+
     return jsonResponse({
       success: true,
       event,
@@ -207,11 +212,13 @@ serve(withSentry("external-webhook", async (req, { requestId }) => {
     }, 200);
 
   } catch (error: unknown) {
-    const message = error instanceof Error ? error.message : 'Unknown error';
     captureException(error, { fn: "external-webhook", requestId });
+    console.error('[Webhook] erro inesperado', error);
+    // Falha => libera a chave para que o provedor possa reentregar o evento.
+    if (idemKeyToRelease) await releaseIdempotency(supabase, idemKeyToRelease);
     return jsonResponse({ 
-      error: 'Internal server error', 
-      message 
+      error: 'Internal server error',
+      requestId
     }, 500);
   }
 }));
