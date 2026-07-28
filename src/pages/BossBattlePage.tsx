@@ -13,6 +13,7 @@ import { BossDamageSourcesCard } from "@/components/boss/BossDamageSourcesCard";
 import { BossContributorsCard } from "@/components/boss/BossContributorsCard";
 import { BossBattleAdminDialog } from "@/components/boss/BossBattleAdminDialog";
 import { BossHistoryCard } from "@/components/boss/BossHistoryCard";
+import { BossDepartmentComparisonCard } from "@/components/boss/BossDepartmentComparisonCard";
 import { useRBAC } from "@/hooks/useRBAC";
 import {
   useBossBattles,
@@ -280,6 +281,7 @@ export default function BossBattlePage() {
         {!isLoading && (battles || []).length > 0 && (
           <div className="mt-6">
             <BossHistoryCard battles={battles || []} />
+            <BossDepartmentComparisonCard battles={battles || []} />
           </div>
         )}
       </SectionErrorBoundary>
