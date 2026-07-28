@@ -1,0 +1,1 @@
+DELETE FROM public.external_api_keys WHERE api_key = 'tg_probe';
