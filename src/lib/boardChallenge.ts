@@ -40,21 +40,26 @@ function toSafeInt(value: unknown, fallback = 0): number {
   return Number.isFinite(parsed) ? Math.trunc(parsed) : fallback;
 }
 
+/** Normaliza a tentativa para 1..MAX; valores absurdos viram a última tentativa. */
+function normalizeAttempt(value: unknown): number {
+  const parsed = typeof value === "number" ? value : Number(value);
+  if (Number.isNaN(parsed)) return 1;
+  if (parsed === Number.POSITIVE_INFINITY) return BOARD_CHALLENGE_MAX_ATTEMPTS;
+  if (parsed === Number.NEGATIVE_INFINITY) return 1;
+  return Math.min(Math.max(Math.trunc(parsed), 1), BOARD_CHALLENGE_MAX_ATTEMPTS);
+}
+
 function clampReward(value: unknown, max: number): number {
   const raw = Math.abs(toSafeInt(value, 0));
   return Math.min(raw, max);
 }
 
 export function challengeRewardFactor(attempt: number): number {
-  const safe = Math.min(
-    Math.max(toSafeInt(attempt, 1), 1),
-    BOARD_CHALLENGE_MAX_ATTEMPTS,
-  );
-  return safe === 1 ? 1 : 0.5;
+  return normalizeAttempt(attempt) === 1 ? 1 : 0.5;
 }
 
 export function resolveChallenge(input: BoardChallengeInput): BoardChallengeOutcome {
-  const attempt = Math.max(toSafeInt(input.attempt, 1), 1);
+  const attempt = normalizeAttempt(input.attempt);
   const isLastAttempt = attempt >= BOARD_CHALLENGE_MAX_ATTEMPTS;
   const factor = challengeRewardFactor(attempt);
 
