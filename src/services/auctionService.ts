@@ -68,6 +68,15 @@ export interface PlaceBidResult {
 const AUCTION_COLUMNS =
   "id, reward_id, title, description, image_url, starting_bid, min_increment, starts_at, ends_at, status, winner_id, winning_bid, total_bids, closed_at, created_at";
 
+export interface CreateAuctionInput {
+  title: string;
+  description?: string | null;
+  starting_bid: number;
+  min_increment: number;
+  starts_at: string;
+  ends_at: string;
+}
+
 /**
  * Leilão de lance às cegas. O débito/estorno de moedas ocorre exclusivamente
  * em RPC SECURITY DEFINER — o cliente apenas dispara e exibe o estado.
