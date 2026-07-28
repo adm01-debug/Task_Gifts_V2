@@ -11879,6 +11879,19 @@ export type Database = {
         Args: { p_department_id?: string; p_limit?: number }
         Returns: Json
       }
+      get_lucky_wheel_prizes_display: {
+        Args: never
+        Returns: {
+          amount: number
+          color: string
+          icon: string
+          id: string
+          is_active: boolean
+          label: string
+          prize_type: string
+          rarity: string
+        }[]
+      }
       get_lucky_wheel_status: { Args: never; Returns: Json }
       get_memory_leaderboard: {
         Args: { p_days?: number; p_deck_id?: string; p_limit?: number }
