@@ -164,7 +164,11 @@ describe("preferencias compartilhadas entre modulos", () => {
       const twice = applyWrite(once, { type, channel, value });
       const thrice = applyWrite(twice, { type, channel, value });
       expect(thrice).toEqual(once);
-      expect(normalizeTypePrefs(thrice).campaign_ranking.email).toBe(false);
+      // A celula pre-existente so muda se for exatamente a celula reescrita.
+      const touchesCell = type === "campaign_ranking" && channel === "email";
+      expect(normalizeTypePrefs(thrice).campaign_ranking.email).toBe(
+        touchesCell ? value : false,
+      );
     }
   });
 
