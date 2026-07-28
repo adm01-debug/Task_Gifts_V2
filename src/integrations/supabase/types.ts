@@ -4351,7 +4351,6 @@ export type Database = {
       external_api_keys: {
         Row: {
           api_key: string
-          api_secret: string
           created_at: string
           created_by: string
           description: string | null
@@ -4361,12 +4360,14 @@ export type Database = {
           name: string
           permissions: Json
           rate_limit_per_minute: number
+          secret_hash: string
+          secret_last_rotated_at: string | null
+          secret_salt: string
           system_type: string
           updated_at: string
         }
         Insert: {
           api_key: string
-          api_secret: string
           created_at?: string
           created_by: string
           description?: string | null
@@ -4376,12 +4377,14 @@ export type Database = {
           name: string
           permissions?: Json
           rate_limit_per_minute?: number
+          secret_hash: string
+          secret_last_rotated_at?: string | null
+          secret_salt: string
           system_type?: string
           updated_at?: string
         }
         Update: {
           api_key?: string
-          api_secret?: string
           created_at?: string
           created_by?: string
           description?: string | null
@@ -4391,6 +4394,9 @@ export type Database = {
           name?: string
           permissions?: Json
           rate_limit_per_minute?: number
+          secret_hash?: string
+          secret_last_rotated_at?: string | null
+          secret_salt?: string
           system_type?: string
           updated_at?: string
         }
@@ -11473,6 +11479,20 @@ export type Database = {
         }
         Returns: Json
       }
+      create_external_api_key: {
+        Args: {
+          p_description?: string
+          p_name: string
+          p_permissions?: Json
+          p_rate_limit_per_minute?: number
+          p_system_type?: string
+        }
+        Returns: {
+          api_key: string
+          api_secret: string
+          id: string
+        }[]
+      }
       create_prediction_market: {
         Args: {
           p_description: string
@@ -12438,6 +12458,14 @@ export type Database = {
         Returns: {
           device_label: string
           revoked: boolean
+        }[]
+      }
+      rotate_external_api_secret: {
+        Args: { p_id: string }
+        Returns: {
+          api_key: string
+          api_secret: string
+          id: string
         }[]
       }
       rotate_webhook_secret: {
