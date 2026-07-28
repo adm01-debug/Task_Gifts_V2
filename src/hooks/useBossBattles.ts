@@ -60,22 +60,6 @@ export function useBossLeaderboard(battleId?: string, limit = 20, live = true) {
   });
 }
 
-function _unusedSettlePlaceholder() {
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: (battleId: string) => bossBattleService.settle(battleId),
-    onSuccess: (result) => {
-      if (result.alreadySettled) {
-        toast.info("Esta batalha já havia sido apurada.");
-      } else {
-        toast.success(`Batalha apurada: ${result.coins} moedas e ${result.xp} XP distribuídos.`);
-      }
-      queryClient.invalidateQueries({ queryKey: bossBattleKeys.all });
-    },
-    onError: () => toast.error("Não foi possível apurar a batalha."),
-  });
-}
-
 export function useCreateBossBattle() {
   const queryClient = useQueryClient();
   return useMutation({
