@@ -6,7 +6,7 @@ import { withSentry, addBreadcrumb, captureException } from "../_shared/sentry.t
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, x-api-key, x-api-secret, x-webhook-signature, x-webhook-timestamp',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, x-request-id, x-api-key, x-api-secret, x-webhook-signature, x-webhook-timestamp',
 };
 
 async function verifyHMAC(payload: string, signature: string, secret: string) {
