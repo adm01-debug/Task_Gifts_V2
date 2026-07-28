@@ -11463,6 +11463,7 @@ export type Database = {
         }
         Returns: Json
       }
+      delete_board_trail: { Args: { p_trail_id: string }; Returns: boolean }
       engagement_min_respondents: { Args: never; Returns: number }
       enqueue_push: {
         Args: {
@@ -12211,6 +12212,18 @@ export type Database = {
         Returns: Json
       }
       run_boss_win_rate_alerts: { Args: { p_days?: number }; Returns: number }
+      save_board_trail: {
+        Args: {
+          p_department_id: string
+          p_description: string
+          p_max_moves_per_day: number
+          p_status: string
+          p_tiles: Json
+          p_title: string
+          p_trail_id: string
+        }
+        Returns: string
+      }
       save_sequence_procedure: {
         Args: {
           p_department_id: string
