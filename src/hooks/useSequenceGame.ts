@@ -54,9 +54,21 @@ export function useSubmitSequence() {
 }
 export const sequenceAdminKeys = {
   procedures: () => [...sequenceGameKeys.all, "admin", "procedures"] as const,
+  procedure: (id: string) => [...sequenceGameKeys.all, "admin", "procedure", id] as const,
   stats: (procedureId: string, days: number) =>
     [...sequenceGameKeys.all, "admin", "stats", procedureId, days] as const,
 };
+
+/** Procedimento com gabarito, para a tela de autoria (admin/gestor). */
+export function useAdminSequenceProcedure(procedureId: string | null) {
+  const { user } = useAuth();
+  return useQuery({
+    queryKey: sequenceAdminKeys.procedure(procedureId ?? ""),
+    queryFn: () => sequenceProcedureAdminService.getForAuthoring(procedureId as string),
+    enabled: !!user && !!procedureId,
+    staleTime: 60 * 1000,
+  });
+}
 
 export function useAdminSequenceProcedures() {
   const { user } = useAuth();
@@ -77,6 +89,9 @@ export function useSaveSequenceProcedure() {
       void queryClient.invalidateQueries({ queryKey: sequenceAdminKeys.procedures() });
       void queryClient.invalidateQueries({ queryKey: sequenceGameKeys.procedures() });
       if (input.procedureId) {
+        void queryClient.invalidateQueries({
+          queryKey: sequenceAdminKeys.procedure(input.procedureId),
+        });
         void queryClient.invalidateQueries({
           queryKey: sequenceGameKeys.procedure(input.procedureId),
         });
