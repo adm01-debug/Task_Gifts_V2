@@ -10003,6 +10003,19 @@ export type Database = {
         Args: { p_alpha: number; p_df: number }
         Returns: number
       }
+      claim_push_outbox: {
+        Args: { p_limit?: number }
+        Returns: {
+          attempts: number
+          data: Json
+          id: string
+          message: string
+          title: string
+          type: string
+          url: string
+          user_id: string
+        }[]
+      }
       cleanup_expired_challenges: { Args: never; Returns: undefined }
       cleanup_expired_idempotency_keys: { Args: never; Returns: undefined }
       cleanup_old_security_logs:
