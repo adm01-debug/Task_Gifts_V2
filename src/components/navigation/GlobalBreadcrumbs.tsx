@@ -87,6 +87,7 @@ const routeConfig: Record<string, RouteConfig> = {
   // Administração
   "/admin": { label: "Painel Admin", icon: Settings, parent: "/", group: "admin" },
   "/admin/permissions": { label: "Permissões", icon: Shield, parent: "/admin", group: "admin" },
+  "/admin/api-keys": { label: "Chaves de API", icon: Shield, parent: "/admin", group: "admin" },
   "/manager": { label: "Painel Gestor", icon: Building2, parent: "/", group: "admin" },
   "/quest-builder": { label: "Criar Quest", icon: Zap, parent: "/manager", group: "admin" },
   "/audit": { label: "Logs de Auditoria", icon: FileText, parent: "/admin", group: "admin" },
