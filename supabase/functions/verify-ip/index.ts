@@ -1,4 +1,5 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { resolveClientIp } from "../_shared/clientIp.ts";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -12,16 +13,9 @@ Deno.serve(async (req) => {
   }
 
   try {
-    // Get client IP from headers (set by proxy/CDN)
-    const forwardedFor = req.headers.get('x-forwarded-for');
-    const realIp = req.headers.get('x-real-ip');
-    const cfConnectingIp = req.headers.get('cf-connecting-ip');
-    
-    // Priority: CF > X-Real-IP > X-Forwarded-For (first IP)
-    let clientIp = cfConnectingIp || realIp || (forwardedFor?.split(',')[0]?.trim()) || 'unknown';
-    
-    console.log(`[verify-ip] Checking IP: ${clientIp}`);
-    console.log(`[verify-ip] Headers - X-Forwarded-For: ${forwardedFor}, X-Real-IP: ${realIp}, CF-Connecting-IP: ${cfConnectingIp}`);
+    // Só o header sobrescrito pelo proxy é confiável. Ver _shared/clientIp.ts.
+    const { ip: resolvedIp, trusted } = resolveClientIp(req);
+    const clientIp = resolvedIp ?? 'unknown';
 
     // Initialize Supabase client with service role for admin access
     const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
@@ -29,8 +23,10 @@ Deno.serve(async (req) => {
     
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
-    // Check if whitelist is empty (if empty, allow all)
-    const { data: whitelistCount, error: countError } = await supabase
+    // Whitelist vazia => recurso desligado (libera geral). Usamos `count`,
+    // não `data.length`: com head:true o corpo vem nulo e a contagem antiga
+    // resultava sempre em 0, desativando a whitelist silenciosamente.
+    const { count: activeCount, error: countError } = await supabase
       .from('ip_whitelist')
       .select('id', { count: 'exact', head: true })
       .eq('is_active', true);
@@ -49,8 +45,7 @@ Deno.serve(async (req) => {
       );
     }
 
-    // If whitelist is empty, allow all IPs
-    const totalActive = whitelistCount?.length || 0;
+    const totalActive = activeCount ?? 0;
     if (totalActive === 0) {
       console.log('[verify-ip] Whitelist is empty, allowing all IPs');
       return new Response(
@@ -61,6 +56,26 @@ Deno.serve(async (req) => {
           message: 'Whitelist vazia, todos os IPs permitidos'
         }),
         { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    // Whitelist ATIVA e IP não determinável com confiança => fail closed.
+    if (!trusted) {
+      await supabase.from('ip_access_logs').insert({
+        ip_address: 'unknown',
+        endpoint: '/verify-ip',
+        was_allowed: false,
+        reason: 'IP de origem não pôde ser determinado com confiança',
+        user_agent: req.headers.get('user-agent') || null,
+      });
+      return new Response(
+        JSON.stringify({
+          allowed: false,
+          ip: 'unknown',
+          reason: 'untrusted_source_ip',
+          message: 'Não foi possível validar a origem da sua conexão',
+        }),
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 403 }
       );
     }
 
@@ -76,12 +91,12 @@ Deno.serve(async (req) => {
       console.error('[verify-ip] Error checking IP:', checkError);
       return new Response(
         JSON.stringify({ 
-          allowed: true, 
+          allowed: false,
           ip: clientIp,
           reason: 'check_error',
           message: 'Erro ao verificar IP'
         }),
-        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 503 }
       );
     }
 
