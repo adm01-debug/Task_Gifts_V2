@@ -64,6 +64,33 @@ export interface SettleResult {
   already_settled?: boolean;
 }
 
+export interface PredictionAdminEventRow {
+  id: string;
+  market_id: string;
+  action: string;
+  actor_id: string | null;
+  payload: Record<string, unknown> | null;
+  created_at: string;
+}
+
+export interface CreateMarketInput {
+  title: string;
+  description?: string | null;
+  options: string[];
+  minStake: number;
+  maxStakePerUser: number;
+  rakeBps: number;
+  locksAt: string;
+  resolvesAt?: string | null;
+}
+
+export interface AdminActionResult {
+  ok: boolean;
+  reason?: string;
+  market_id?: string;
+  action?: string;
+}
+
 const MARKET_COLUMNS =
   "id, title, description, status, min_stake, max_stake_per_user, rake_bps, locks_at, resolves_at, winning_option_id, total_pool, rake_collected, settled_at, created_at, options:prediction_options(id, market_id, label, sort_order, pool)";
 
@@ -83,7 +110,7 @@ export const predictionMarketService = {
       .order("locks_at", { ascending: false })
       .limit(50);
     if (error) {
-      logger.error("Falha ao listar mercados de previsão", error);
+      logger.error("Falha ao listar mercados de previsão", "predictionMarketService", error);
       throw error;
     }
     return sortOptions((data ?? []) as unknown as PredictionMarketRow[]);
@@ -97,7 +124,7 @@ export const predictionMarketService = {
       .order("created_at", { ascending: false })
       .limit(200);
     if (error) {
-      logger.error("Falha ao carregar aportes de previsão", error);
+      logger.error("Falha ao carregar aportes de previsão", "predictionMarketService", error);
       throw error;
     }
     return (data ?? []) as PredictionStakeRow[];
@@ -113,10 +140,10 @@ export const predictionMarketService = {
       p_market_id: marketId,
       p_option_id: optionId,
       p_amount: amount,
-      p_dedupe_key: dedupeKey ?? null,
+      p_dedupe_key: dedupeKey ?? undefined,
     });
     if (error) {
-      logger.error("Falha ao registrar aporte de previsão", error);
+      logger.error("Falha ao registrar aporte de previsão", "predictionMarketService", error);
       throw error;
     }
     return (data ?? { ok: false }) as unknown as PlaceStakeResult;
@@ -125,13 +152,64 @@ export const predictionMarketService = {
   async settle(marketId: string, winningOptionId: string | null): Promise<SettleResult> {
     const { data, error } = await supabase.rpc("settle_prediction_market", {
       p_market_id: marketId,
-      p_winning_option_id: winningOptionId,
+      p_winning_option_id: winningOptionId ?? undefined,
     });
     if (error) {
-      logger.error("Falha ao apurar mercado de previsão", error);
+      logger.error("Falha ao apurar mercado de previsão", "predictionMarketService", error);
       throw error;
     }
     return (data ?? { ok: false }) as unknown as SettleResult;
+  },
+
+  /** Cria mercado + opções em uma única transação auditada (admin-only). */
+  async createMarket(input: CreateMarketInput): Promise<AdminActionResult> {
+    const { data, error } = await supabase.rpc("create_prediction_market", {
+      p_title: input.title,
+      // A RPC normaliza string vazia para NULL; o tipo gerado não aceita undefined.
+      p_description: input.description ?? "",
+      p_options: input.options,
+      p_min_stake: input.minStake,
+      p_max_stake_per_user: input.maxStakePerUser,
+      p_rake_bps: input.rakeBps,
+      p_locks_at: input.locksAt,
+      p_resolves_at: input.resolvesAt ?? undefined,
+    });
+    if (error) {
+      logger.error("Falha ao criar mercado de previsão", "predictionMarketService", error);
+      throw error;
+    }
+    return (data ?? { ok: false }) as unknown as AdminActionResult;
+  },
+
+  async transition(
+    marketId: string,
+    action: "publish" | "lock" | "void",
+  ): Promise<AdminActionResult> {
+    const { data, error } = await supabase.rpc("transition_prediction_market", {
+      p_market_id: marketId,
+      p_action: action,
+    });
+    if (error) {
+      logger.error("Falha na transição do mercado de previsão", "predictionMarketService", error);
+      throw error;
+    }
+    return (data ?? { ok: false }) as unknown as AdminActionResult;
+  },
+
+  /** Trilha auditável — RLS restringe a administradores. */
+  async adminEvents(marketId?: string): Promise<PredictionAdminEventRow[]> {
+    let query = supabase
+      .from("prediction_admin_events")
+      .select("id, market_id, action, actor_id, payload, created_at")
+      .order("created_at", { ascending: false })
+      .limit(100);
+    if (marketId) query = query.eq("market_id", marketId);
+    const { data, error } = await query;
+    if (error) {
+      logger.error("Falha ao carregar trilha de previsões", "predictionMarketService", error);
+      throw error;
+    }
+    return (data ?? []) as unknown as PredictionAdminEventRow[];
   },
 };
 
@@ -145,4 +223,21 @@ export const STAKE_REJECTION_MESSAGES: Record<string, string> = {
   over_user_cap: "Você atingiu o teto de aporte deste mercado.",
   insufficient_coins: "Moedas insuficientes para este aporte.",
   option_switch_forbidden: "Você já apostou em outra opção deste mercado.",
+};
+
+export const ADMIN_REJECTION_MESSAGES: Record<string, string> = {
+  need_two_options: "O mercado precisa de ao menos 2 opções distintas.",
+  too_many_options: "O mercado aceita no máximo 6 opções.",
+  invalid_title: "A pergunta precisa ter entre 5 e 140 caracteres.",
+  invalid_min_stake: "O aporte mínimo deve ser um inteiro positivo.",
+  invalid_user_cap: "Teto por usuário inválido para o aporte mínimo definido.",
+  invalid_rake: "A taxa da casa deve ficar entre 0% e 20%.",
+  invalid_window: "O travamento precisa estar ao menos 15 minutos no futuro.",
+  invalid_resolves_at: "A apuração não pode ocorrer antes do travamento.",
+  market_not_found: "Mercado não encontrado.",
+  market_terminal: "Este mercado já foi apurado ou anulado.",
+  not_draft: "Apenas rascunhos podem ser publicados.",
+  not_open: "Apenas mercados abertos podem ser travados.",
+  window_expired: "A janela de aportes já venceu — ajuste a data antes de publicar.",
+  unknown_action: "Ação administrativa desconhecida.",
 };
