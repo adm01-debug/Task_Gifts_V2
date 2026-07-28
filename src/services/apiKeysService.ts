@@ -58,7 +58,7 @@ export async function listApiKeys(): Promise<ExternalApiKeySummary[]> {
 export async function createApiKey(input: CreateApiKeyInput): Promise<IssuedApiCredential> {
   const { data, error } = await supabase.rpc("create_external_api_key", {
     p_name: input.name,
-    p_description: input.description ?? null,
+    p_description: input.description ?? undefined,
     p_system_type: input.systemType ?? "generic",
     p_permissions: (input.permissions?.length ? input.permissions : ["read"]) as unknown as never,
     p_rate_limit_per_minute: input.rateLimitPerMinute ?? 60,
