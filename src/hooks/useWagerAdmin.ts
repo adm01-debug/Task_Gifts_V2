@@ -40,3 +40,15 @@ export function useDeleteWagerQuestion() {
     },
   });
 }
+
+/** Importação em lote de perguntas agendadas (CSV). */
+export function useBulkImportWagerQuestions() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (drafts: WagerQuestionDraft[]) => wagerAdminService.saveMany(drafts),
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: wagerAdminKeys.all });
+      void queryClient.invalidateQueries({ queryKey: dailyWagerKeys.all });
+    },
+  });
+}
