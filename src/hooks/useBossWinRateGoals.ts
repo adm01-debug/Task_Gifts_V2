@@ -77,3 +77,20 @@ export function useRemoveBossWinRateGoal() {
     },
   });
 }
+
+/** Dispara a varredura de quedas críticas e enfileira os alertas push. */
+export function useRunBossWinRateAlerts() {
+  return useMutation({
+    mutationFn: (days: number) => bossWinRateGoalService.runCriticalAlerts(days),
+    onSuccess: (sent) => {
+      toast.success(
+        sent > 0
+          ? `${sent} alerta(s) de queda crítica enviados`
+          : "Nenhuma queda crítica na janela selecionada",
+      );
+    },
+    onError: () => {
+      toast.error("Não foi possível verificar as quedas críticas");
+    },
+  });
+}
