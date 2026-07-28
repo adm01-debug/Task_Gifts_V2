@@ -11574,6 +11574,24 @@ export type Database = {
       }
       get_user_department_id: { Args: { p_user_id: string }; Returns: string }
       get_user_stats_api: { Args: { p_user_email: string }; Returns: Json }
+      get_wager_leaderboard: {
+        Args: { p_days?: number; p_limit?: number }
+        Returns: {
+          accuracy: number
+          avatar_url: string
+          best_streak: number
+          correct_count: number
+          current_streak: number
+          display_name: string
+          entries: number
+          last_played: string
+          net_coins: number
+          rank: number
+          staked_coins: number
+          user_id: string
+          xp_awarded: number
+        }[]
+      }
       get_webhook_delivery_hourly_24h: {
         Args: never
         Returns: {

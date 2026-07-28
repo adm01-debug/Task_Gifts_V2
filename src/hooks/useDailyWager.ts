@@ -1,11 +1,13 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { dailyWagerService } from "@/services/dailyWagerService";
 import { useAuth } from "./useAuth";
+import type { WagerLeaderboardWindow } from "@/lib/wagerLeaderboard";
 
 export const dailyWagerKeys = {
   all: ["dailyWager"] as const,
   today: () => [...dailyWagerKeys.all, "today"] as const,
   history: () => [...dailyWagerKeys.all, "history"] as const,
+  leaderboard: (days: number) => [...dailyWagerKeys.all, "leaderboard", days] as const,
 };
 
 export function useDailyWager() {
@@ -37,5 +39,15 @@ export function useSubmitWager() {
       void queryClient.invalidateQueries({ queryKey: dailyWagerKeys.all });
       void queryClient.invalidateQueries({ queryKey: ["profile"] });
     },
+  });
+}
+
+export function useWagerLeaderboard(days: WagerLeaderboardWindow = 7, limit = 20) {
+  const { user } = useAuth();
+  return useQuery({
+    queryKey: dailyWagerKeys.leaderboard(days),
+    queryFn: () => dailyWagerService.leaderboard(days, limit),
+    enabled: !!user,
+    staleTime: 2 * 60 * 1000,
   });
 }

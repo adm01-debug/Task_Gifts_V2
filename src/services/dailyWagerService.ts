@@ -1,6 +1,11 @@
 import { supabase } from "@/integrations/supabase/client";
 import { logger } from "./loggingService";
 import { parseDailyWager, type DailyWagerState } from "@/lib/dailyWager";
+import {
+  parseWagerLeaderboard,
+  type WagerLeaderboardRow,
+  type WagerLeaderboardWindow,
+} from "@/lib/wagerLeaderboard";
 
 export interface WagerSubmitResult {
   success: boolean;
@@ -68,5 +73,26 @@ export const dailyWagerService = {
       throw error;
     }
     return (data as unknown as WagerHistoryRow[]) || [];
+  },
+
+  /** Ranking de apostadores do período (agregação e sequências calculadas no banco). */
+  async leaderboard(
+    days: WagerLeaderboardWindow = 7,
+    limit = 20,
+  ): Promise<WagerLeaderboardRow[]> {
+    const { data, error } = await supabase.rpc("get_wager_leaderboard", {
+      p_days: days,
+      p_limit: Math.min(100, Math.max(1, Math.trunc(limit))),
+    });
+
+    if (error) {
+      logger.error(
+        "Falha ao carregar ranking de apostadores",
+        "dailyWagerService.leaderboard",
+        error,
+      );
+      throw error;
+    }
+    return parseWagerLeaderboard(data);
   },
 };
