@@ -248,3 +248,60 @@ export function resolveAuctionDelivery(input: DeliveryInput): DeliveryOutcome {
     stockAfter: input.stock,
   };
 }
+
+/** Participante considerado na apuração de notificações. */
+export interface AuctionNotifyParticipant {
+  userId: string;
+  escrowCoins: number;
+  /** Preferência de notificação in-app do usuário (RPC `user_wants_in_app_notification`). */
+  wantsInApp: boolean;
+}
+
+export type AuctionNotificationOutcome = "won" | "refunded" | "stock_unavailable";
+
+export interface AuctionNotification {
+  userId: string;
+  outcome: AuctionNotificationOutcome;
+  /** Moedas devolvidas (0 no caso de vitória efetiva). */
+  refundedCoins: number;
+}
+
+export interface AuctionNotifyInput {
+  delivery: DeliveryOutcome;
+  winner: AuctionNotifyParticipant | null;
+  losers: AuctionNotifyParticipant[];
+}
+
+/**
+ * Espelha as notificações emitidas por `settle_auction`. Regras:
+ * - cada participante recebe no máximo UMA notificação;
+ * - preferências desligadas suprimem a notificação, nunca o estorno;
+ * - vencedor sem estoque recebe `stock_unavailable` (e não `won`).
+ */
+export function resolveAuctionNotifications(input: AuctionNotifyInput): AuctionNotification[] {
+  const out: AuctionNotification[] = [];
+
+  for (const loser of input.losers) {
+    if (!loser.wantsInApp) continue;
+    out.push({
+      userId: loser.userId,
+      outcome: "refunded",
+      refundedCoins: Math.max(0, loser.escrowCoins),
+    });
+  }
+
+  const winner = input.winner;
+  if (winner && winner.wantsInApp) {
+    if (input.delivery.kind === "refunded_no_stock") {
+      out.push({
+        userId: winner.userId,
+        outcome: "stock_unavailable",
+        refundedCoins: Math.max(0, winner.escrowCoins),
+      });
+    } else if (input.delivery.kind === "reserved" || input.delivery.kind === "symbolic") {
+      out.push({ userId: winner.userId, outcome: "won", refundedCoins: 0 });
+    }
+  }
+
+  return out;
+}
