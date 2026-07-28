@@ -2,6 +2,9 @@
  * Hybrid Rate Limiter for Supabase Edge Functions
  * Uses Upstash Redis for global consistency, falls back to in-memory for performance/offline.
  */
+import { resolveClientIp } from "./clientIp.ts";
+/**
+ */
 
 interface RateLimitConfig {
   windowMs: number;

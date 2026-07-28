@@ -280,7 +280,7 @@ async function logRequest(
       request_body: requestBody,
       response_status: status,
       response_body: responseBody,
-      ip_address: req.headers.get('x-forwarded-for') || 'unknown',
+      ip_address: clientIpForLogging(req),
       user_agent: req.headers.get('user-agent'),
       duration_ms: duration
     });

@@ -43,9 +43,9 @@ serve(withSentry("detect-new-device", async (req, { requestId }) => {
       );
     }
     
-    // Get IP from request headers
-    const forwarded = req.headers.get("x-forwarded-for");
-    const ipAddress = forwarded ? forwarded.split(",")[0].trim() : "0.0.0.0";
+    // IP inforjável: alertas de novo dispositivo dependem disso para não serem
+    // burlados com um header falso. Ver _shared/clientIp.ts.
+    const ipAddress = resolveClientIp(req).ip ?? "0.0.0.0";
     
     console.log(`Registering device for user ${userId} from IP ${ipAddress}`);
     
