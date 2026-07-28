@@ -12,6 +12,8 @@ import { SEOHead } from "@/components/SEOHead";
 import { SectionErrorBoundary } from "@/components/SectionErrorBoundary";
 import { BoardPath } from "@/components/board/BoardPath";
 import { BoardChallengeDialog } from "@/components/board/BoardChallengeDialog";
+import { BoardLeaderboard } from "@/components/board/BoardLeaderboard";
+import { BoardChallengeReport } from "@/components/board/BoardChallengeReport";
 import {
   useAdvanceBoardTrail,
   useBoardPlayerState,
