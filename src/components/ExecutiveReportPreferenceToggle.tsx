@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import type { Json } from "@/integrations/supabase/types";
 import { useAuth } from "@/hooks/useAuth";
 import { useRBAC } from "@/hooks/useRBAC";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -95,7 +96,7 @@ export function ExecutiveReportPreferenceToggle() {
       const { error } = await supabase
         .from("notification_preferences")
         .upsert(
-          { user_id: user.id, type_preferences: next as unknown as Record<string, never> },
+          { user_id: user.id, type_preferences: next as unknown as Json },
           { onConflict: "user_id" },
         );
       if (error) throw error;
