@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { invokeEdgeSafe } from "@/lib/requestId";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -149,7 +150,7 @@ export default function WebhooksAdmin() {
     setPingingId(id);
     const t = toast.loading(`Enviando ping para ${name || id.slice(0, 8)}…`);
     try {
-      const { error } = await supabase.functions.invoke("webhook-dispatcher", {
+      const { error } = await invokeEdgeSafe("webhook-dispatcher", {
         body: {
           subscription_id: id,
           event_type: "test.ping",
