@@ -5,6 +5,7 @@ import { PageShell } from "@/components/navigation";
 import { SEOHead } from "@/components/SEOHead";
 import { SectionErrorBoundary } from "@/components/SectionErrorBoundary";
 import {
+  MyGoalBetPosition,
   OracleLeaderboard,
   PredictionMarketCard,
   StakeDialog,
@@ -13,6 +14,7 @@ import {
   useMyPredictionStakes,
   usePredictionMarkets,
 } from "@/hooks/usePredictionMarkets";
+import { computeGoalBetPosition } from "@/lib/goalBetPosition";
 import type { PredictionMarketRow } from "@/services/predictionMarketService";
 
 export default function PredictionMarketsPage() {
@@ -37,6 +39,22 @@ export default function PredictionMarketsPage() {
     setDialogOpen(true);
   };
 
+  /** Carteira consolidada: soma das posições do usuário em todos os mercados. */
+  const portfolio = useMemo(() => {
+    return (markets ?? []).reduce(
+      (acc, market) => {
+        const position = computeGoalBetPosition(market, myStakes);
+        if (position.entries.length === 0) return acc;
+        return {
+          markets: acc.markets + 1,
+          staked: acc.staked + position.totalStaked,
+          projected: acc.projected + position.projectedReturn,
+        };
+      },
+      { markets: 0, staked: 0, projected: 0 },
+    );
+  }, [markets, myStakes]);
+
   return (
     <>
       <SEOHead
@@ -50,6 +68,25 @@ export default function PredictionMarketsPage() {
         backFallback="/"
       >
         <SectionErrorBoundary sectionName="Mercado de Previsões">
+          {portfolio.markets > 0 && (
+            <div className="mb-4 flex flex-wrap items-center justify-between gap-2 rounded-xl border border-border/60 bg-card/60 p-4 text-sm backdrop-blur-sm">
+              <span className="font-semibold">
+                Minha carteira · {portfolio.markets}{" "}
+                {portfolio.markets === 1 ? "mercado" : "mercados"}
+              </span>
+              <span className="text-muted-foreground">
+                Apostado:{" "}
+                <strong className="text-foreground">
+                  {portfolio.staked.toLocaleString("pt-BR")}
+                </strong>{" "}
+                · Potencial:{" "}
+                <strong className="text-primary">
+                  {portfolio.projected.toLocaleString("pt-BR")}
+                </strong>{" "}
+                moedas
+              </span>
+            </div>
+          )}
           {isLoading ? (
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
               {Array.from({ length: 6 }).map((_, index) => (
@@ -65,12 +102,14 @@ export default function PredictionMarketsPage() {
           ) : (
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
               {(markets ?? []).map((market) => (
-                <PredictionMarketCard
-                  key={market.id}
-                  market={market}
-                  myStakes={myStakes}
-                  onStake={handleStake}
-                />
+                <div key={market.id} className="space-y-2">
+                  <PredictionMarketCard
+                    market={market}
+                    myStakes={myStakes}
+                    onStake={handleStake}
+                  />
+                  <MyGoalBetPosition market={market} stakes={myStakes} />
+                </div>
               ))}
             </div>
           )}
