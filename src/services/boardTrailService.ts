@@ -49,6 +49,16 @@ export interface BoardChallengeResult {
   attempts_left: number;
 }
 
+/** Linha de jogador travado num desafio (pré-visualização ou liberação). */
+export interface BoardStuckPlayer {
+  trail_id: string;
+  trail_title: string | null;
+  user_id: string;
+  display_name: string;
+  position: number;
+  blocked_hours: number;
+}
+
 export interface BoardAdvanceResult {
   replayed: boolean;
   roll: number;
