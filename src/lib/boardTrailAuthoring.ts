@@ -24,7 +24,7 @@ export const BOARD_TITLE_MAX = 80;
 export const BOARD_DESCRIPTION_MAX = 240;
 export const BOARD_LABEL_MAX = 60;
 export const BOARD_MIN_MOVES_PER_DAY = 1;
-export const BOARD_MAX_MOVES_PER_DAY = 50;
+export const BOARD_MAX_MOVES_PER_DAY = 20;
 
 export const BOARD_TILE_TYPES: ReadonlyArray<{ value: BoardTileType; label: string }> = [
   { value: "start", label: "Partida" },
