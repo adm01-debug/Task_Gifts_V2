@@ -46,6 +46,35 @@ export function useAdminBoardTrails() {
   });
 }
 
+export function useBoardChallenge(challengeId: string | null) {
+  return useQuery({
+    queryKey: ["board-challenge", challengeId],
+    queryFn: () => boardTrailService.getChallenge(challengeId as string),
+    enabled: Boolean(challengeId),
+    staleTime: 5 * 60 * 1000,
+  });
+}
+
+export function useResolveBoardChallenge(trailId: string | null) {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ optionId, dedupeKey }: { optionId: string; dedupeKey: string }) =>
+      boardTrailService.resolveChallenge(trailId as string, optionId, dedupeKey),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["board-player-state", trailId] });
+      queryClient.invalidateQueries({ queryKey: ["profile"] });
+    },
+  });
+}
+
+function useAdminBoardTrailsLegacy() {
+  return useQuery({
+    queryKey: ["board-trails", "admin"],
+    queryFn: () => boardTrailService.listAllTrails(),
+    staleTime: 60 * 1000,
+  });
+}
+
 export function useSaveBoardTrail() {
   const queryClient = useQueryClient();
   return useMutation({
