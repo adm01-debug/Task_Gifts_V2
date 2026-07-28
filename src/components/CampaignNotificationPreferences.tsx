@@ -1,22 +1,11 @@
-import { useEffect, useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
-import { useAuth } from "@/hooks/useAuth";
+import { useCallback } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Skeleton } from "@/components/ui/skeleton";
-import { toast } from "sonner";
 import { Trophy } from "lucide-react";
-import { logger } from "@/services/loggingService";
-
-import type { Json } from "@/integrations/supabase/types";
-import {
-  type ChannelMap,
-  type NotificationChannel,
-  mergeChannelPreference,
-  normalizeTypePrefs,
-  resolveChannels,
-} from "@/lib/notificationTypePrefs";
+import { useTypePreferences } from "@/hooks/useTypePreferences";
+import type { ChannelMap, NotificationChannel } from "@/lib/notificationTypePrefs";
 
 type Channel = NotificationChannel;
 
@@ -42,7 +31,7 @@ const CHANNELS: Array<{ key: Channel; label: string }> = [
 ];
 
 // Defaults por (tipo × canal). E-mail padrão só em marcos terminais.
-const DEFAULTS: Record<CampaignPrefKey, Record<Channel, boolean>> = {
+const DEFAULTS: Record<CampaignPrefKey, ChannelMap> = {
   campaign_enrolled:  { in_app: true, push: true, email: false },
   campaign_progress:  { in_app: true, push: true, email: false },
   campaign_milestone: { in_app: true, push: true, email: false },
@@ -50,84 +39,25 @@ const DEFAULTS: Record<CampaignPrefKey, Record<Channel, boolean>> = {
   campaign_closed:    { in_app: true, push: true, email: true  },
 };
 
-type Values = Record<CampaignPrefKey, Record<Channel, boolean>>;
-
-function cloneDefaults(): Values {
-  return (Object.keys(DEFAULTS) as CampaignPrefKey[]).reduce((acc, k) => {
-    acc[k] = { ...DEFAULTS[k] };
-    return acc;
-  }, {} as Values);
-}
+const TYPES = ROWS.map((r) => r.key);
+const FALLBACK: ChannelMap = { in_app: true, push: true, email: false };
 
 export function CampaignNotificationPreferences() {
-  const { user } = useAuth();
-  const [loading, setLoading] = useState(true);
-  const [saving, setSaving] = useState<string | null>(null); // `${key}:${channel}`
-  const [values, setValues] = useState<Values>(cloneDefaults);
-
-  useEffect(() => {
-    if (!user?.id) { setLoading(false); return; }
-    (async () => {
-      try {
-        const { data, error } = await supabase
-          .from("notification_preferences")
-          .select("type_preferences")
-          .eq("user_id", user.id)
-          .maybeSingle();
-        if (error) throw error;
-        const prefs = normalizeTypePrefs(data?.type_preferences);
-        const next = (Object.keys(DEFAULTS) as CampaignPrefKey[]).reduce((acc, k) => {
-          acc[k] = resolveChannels(prefs, k, DEFAULTS[k] as ChannelMap);
-          return acc;
-        }, cloneDefaults());
-        setValues(next);
-      } catch (err: unknown) {
-        logger.error("Falha ao carregar preferências de campanhas", String(err));
-      } finally {
-        setLoading(false);
-      }
-    })();
-  }, [user?.id]);
-
-  const persist = async (key: CampaignPrefKey, channel: Channel, nextValue: boolean) => {
-    if (!user?.id) return;
-    const cellId = `${key}:${channel}`;
-    setSaving(cellId);
-    const previous = values[key][channel];
-    setValues((v) => ({ ...v, [key]: { ...v[key], [channel]: nextValue } }));
-    try {
-      const { data: existing, error: readError } = await supabase
-        .from("notification_preferences")
-        .select("type_preferences")
-        .eq("user_id", user.id)
-        .maybeSingle();
-      if (readError) throw readError;
-      // Merge aditivo: preserva os demais canais, a prioridade previa e as
-      // preferencias escritas por outros modulos (jogos, relatorios).
-      const next = mergeChannelPreference(
-        existing?.type_preferences,
-        key,
-        channel,
-        nextValue,
-        DEFAULTS[key] as ChannelMap,
-        key === "campaign_completed" ? "high" : "normal",
-      );
-      const { error } = await supabase
-        .from("notification_preferences")
-        .upsert(
-          { user_id: user.id, type_preferences: next as unknown as Json },
-          { onConflict: "user_id" },
-        );
-      if (error) throw error;
-      toast.success("Preferência atualizada");
-    } catch (err: unknown) {
-      logger.error("Falha ao salvar preferência de campanha", String(err));
-      toast.error("Não foi possível salvar a preferência");
-      setValues((v) => ({ ...v, [key]: { ...v[key], [channel]: previous } }));
-    } finally {
-      setSaving(null);
-    }
-  };
+  // Toda a mecanica de ler/mesclar/gravar (aditiva entre modulos) vive no hook.
+  const defaultsFor = useCallback(
+    (type: string): ChannelMap => DEFAULTS[type as CampaignPrefKey] ?? FALLBACK,
+    [],
+  );
+  const priorityFor = useCallback(
+    (type: string) => (type === "campaign_completed" ? "high" : "normal"),
+    [],
+  );
+  const { loading, saving, values, setCell } = useTypePreferences({
+    types: TYPES,
+    defaultsFor,
+    priorityFor,
+    moduleName: "campanhas",
+  });
 
   return (
     <Card className="glass-card">
@@ -171,9 +101,9 @@ export function CampaignNotificationPreferences() {
                         </Label>
                         <Switch
                           id={`pref-${cellId}`}
-                          checked={values[row.key][c.key]}
+                          checked={values[row.key]?.[c.key] ?? DEFAULTS[row.key][c.key]}
                           disabled={saving === cellId}
-                          onCheckedChange={(v) => persist(row.key, c.key, v)}
+                          onCheckedChange={(v) => setCell(row.key, c.key, v)}
                           aria-label={`${row.label} · ${c.label}`}
                         />
                       </div>
