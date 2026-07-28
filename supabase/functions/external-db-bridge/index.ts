@@ -303,9 +303,6 @@ serve(async (req) => {
     }
   } catch (err) {
     console.error('❌ [external-db-bridge] Unhandled error:', err);
-    return new Response(
-      JSON.stringify({ error: 'Internal server error', message: String(err) }),
-      { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-    );
+    return errorResponse(err);
   }
 });
