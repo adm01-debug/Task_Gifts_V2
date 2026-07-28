@@ -11,7 +11,7 @@ import { Sparkles, Loader2, Check, BookOpen, AlertCircle } from "lucide-react";
 import { toast } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
 import { logger } from "@/services/loggingService";
-import { describeEdgeError } from "@/lib/edgeErrors";
+import { invokeEdgeSafe } from "@/lib/requestId";
 
 interface GeneratedQuestion {
   question: string;
@@ -49,11 +49,18 @@ export default function AIQuestionGenerator({ onQuestionsGenerated }: AIQuestion
     setGeneratedQuestions([]);
 
     try {
-      const { data, error } = await supabase.functions.invoke("generate-quiz-questions", {
-        body: { trailId: selectedTrail, quizType, questionCount }
+      const { data, error, requestId } = await invokeEdgeSafe<{
+        questions?: GeneratedQuestion[];
+        error?: unknown;
+      }>("generate-quiz-questions", {
+        body: { trailId: selectedTrail, quizType, questionCount },
       });
 
-      if (error) throw error;
+      if (error) {
+        logger.apiError(`handleGenerate (requestId=${requestId})`, new Error(error.message), 'AIQuestionGenerator');
+        toast.error(error.message);
+        return;
+      }
 
       if (!data || typeof data !== "object") {
         throw new Error("Resposta inválida do serviço de geração de perguntas.");
@@ -67,8 +74,7 @@ export default function AIQuestionGenerator({ onQuestionsGenerated }: AIQuestion
       toast.success(`${data.questions?.length || 0} perguntas geradas!`);
     } catch (err: unknown) {
       logger.apiError('handleGenerate', err, 'AIQuestionGenerator');
-      const { message } = await describeEdgeError(err);
-      toast.error(message);
+      toast.error(err instanceof Error ? err.message : "Falha ao gerar perguntas.");
     } finally {
       setIsGenerating(false);
     }
