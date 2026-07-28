@@ -11412,9 +11412,10 @@ export type Database = {
       }
       cleanup_expired_challenges: { Args: never; Returns: undefined }
       cleanup_expired_idempotency_keys: { Args: never; Returns: undefined }
-      cleanup_old_security_logs:
-        | { Args: never; Returns: undefined }
-        | { Args: { p_days_to_keep?: number }; Returns: Json }
+      cleanup_old_security_logs: {
+        Args: { p_days_to_keep?: number }
+        Returns: Json
+      }
       close_auction: { Args: { p_auction_id: string }; Returns: Json }
       close_expired_auctions: { Args: never; Returns: number }
       close_expired_sales_campaigns: {
