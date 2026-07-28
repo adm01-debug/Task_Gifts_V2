@@ -127,7 +127,7 @@ export default function SequenceGamePage() {
   return (
     <PageShell
       title="Ordene a Sequência"
-      description="Coloque as etapas do procedimento na ordem correta e ganhe moedas."
+      subtitle="Coloque as etapas do procedimento na ordem correta e ganhe moedas."
       icon={<ListOrdered className="h-5 w-5" aria-hidden />}
     >
       <SEOHead
