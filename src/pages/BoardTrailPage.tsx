@@ -78,6 +78,12 @@ export default function BoardTrailPage() {
 
   const blocked = Boolean(playerState?.blocked_challenge_id);
   const finished = Boolean(playerState?.finished_at);
+  const [challengeOpen, setChallengeOpen] = useState(false);
+
+  // Abre o desafio automaticamente ao cair numa casa bloqueada.
+  useEffect(() => {
+    if (blocked) setChallengeOpen(true);
+  }, [blocked, playerState?.blocked_challenge_id]);
 
   return (
     <PageShell
