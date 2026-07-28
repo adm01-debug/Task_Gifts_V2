@@ -4,7 +4,11 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { PageShell } from "@/components/navigation";
 import { SEOHead } from "@/components/SEOHead";
 import { SectionErrorBoundary } from "@/components/SectionErrorBoundary";
-import { PredictionMarketCard, StakeDialog } from "@/components/prediction";
+import {
+  OracleLeaderboard,
+  PredictionMarketCard,
+  StakeDialog,
+} from "@/components/prediction";
 import {
   useMyPredictionStakes,
   usePredictionMarkets,
@@ -70,6 +74,12 @@ export default function PredictionMarketsPage() {
               ))}
             </div>
           )}
+        </SectionErrorBoundary>
+
+        {/* Isolado do bloco de mercados: uma falha no ranking não pode
+            impedir alguém de apostar. */}
+        <SectionErrorBoundary sectionName="Ranking Oráculo">
+          <OracleLeaderboard className="mt-6" />
         </SectionErrorBoundary>
 
         <StakeDialog
