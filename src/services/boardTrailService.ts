@@ -161,6 +161,61 @@ export const boardTrailService = {
     return data as unknown as BoardAdvanceResult;
   },
 
+  /**
+   * Carrega a pergunta da casa de desafio. As alternativas são buscadas sem o
+   * campo `is_correct` para que o gabarito nunca trafegue até o cliente.
+   */
+  async getChallenge(challengeId: string): Promise<BoardChallengeQuestion | null> {
+    const { data, error } = await supabase
+      .from("quiz_questions")
+      .select("id, question, quiz_options(id, text, order_index)")
+      .eq("id", challengeId)
+      .maybeSingle();
+
+    if (error) {
+      logger.error("Falha ao carregar desafio", "boardTrailService.getChallenge", error);
+      throw error;
+    }
+    if (!data) return null;
+
+    const row = data as {
+      id: string;
+      question: string;
+      quiz_options?: Array<{ id: string; text: string; order_index: number | null }> | null;
+    };
+
+    return {
+      id: row.id,
+      question: row.question,
+      options: (row.quiz_options || [])
+        .slice()
+        .sort((a, b) => (a.order_index ?? 0) - (b.order_index ?? 0))
+        .map((o) => ({ id: o.id, text: o.text })),
+    };
+  },
+
+  /**
+   * Responde o desafio. A correção, o crédito e o desbloqueio acontecem
+   * exclusivamente na RPC `resolve_board_challenge`, com chave idempotente.
+   */
+  async resolveChallenge(
+    trailId: string,
+    optionId: string,
+    dedupeKey: string,
+  ): Promise<BoardChallengeResult> {
+    const { data, error } = await supabase.rpc("resolve_board_challenge", {
+      p_trail_id: trailId,
+      p_option_id: optionId,
+      p_dedupe_key: dedupeKey,
+    });
+
+    if (error) {
+      logger.error("Falha ao resolver desafio", "boardTrailService.resolveChallenge", error);
+      throw error;
+    }
+    return data as unknown as BoardChallengeResult;
+  },
+
   /** Todas as trilhas (inclui rascunhos/arquivadas) — apenas admin/gestor pela RLS. */
   async listAllTrails(): Promise<BoardTrail[]> {
     const { data, error } = await supabase
