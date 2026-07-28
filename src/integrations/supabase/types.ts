@@ -10614,6 +10614,14 @@ export type Database = {
           user_id: string
         }[]
       }
+      get_prediction_odds_history: {
+        Args: { p_buckets?: number; p_market_id: string }
+        Returns: {
+          amount: number
+          bucket_end: string
+          option_id: string
+        }[]
+      }
       get_push_outbox_health: { Args: { p_hours?: number }; Returns: Json }
       get_push_outbox_health_trend: {
         Args: { p_hours?: number }

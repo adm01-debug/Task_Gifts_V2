@@ -5,3 +5,4 @@ export { PredictionAdminRow } from "./PredictionAdminRow";
 export { CreateMarketDialog } from "./CreateMarketDialog";
 export { SettleMarketDialog } from "./SettleMarketDialog";
 export { PredictionWatchdogPanel } from "./PredictionWatchdogPanel";
+export { OddsHistoryChart } from "./OddsHistoryChart";
