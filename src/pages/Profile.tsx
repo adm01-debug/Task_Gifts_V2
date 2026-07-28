@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { PROFILE_SAFE_COLUMNS } from "@/services/profilesService";
 import { Zap, Flame, Star, Target, Edit2 } from "lucide-react";
 import { RankingBadge } from "@/components/RankingBadge";
 import { AvatarPreview } from "@/components/AvatarPreview";
