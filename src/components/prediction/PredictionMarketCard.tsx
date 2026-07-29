@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { cn } from "@/lib/utils";
 import { OddsHistoryChart } from "./OddsHistoryChart";
+import { GoalBetCountdownBadge } from "./GoalBetCountdownBadge";
 import type {
   PredictionMarketRow,
   PredictionStakeRow,
@@ -51,9 +52,12 @@ export function PredictionMarketCard({
       <CardHeader className="space-y-2 pb-3">
         <div className="flex items-start justify-between gap-2">
           <CardTitle className="text-base leading-tight">{market.title}</CardTitle>
-          <Badge variant={market.status === "open" ? "default" : "secondary"}>
-            {STATUS_LABEL[market.status] ?? market.status}
-          </Badge>
+          <div className="flex shrink-0 flex-col items-end gap-1">
+            <Badge variant={market.status === "open" ? "default" : "secondary"}>
+              {STATUS_LABEL[market.status] ?? market.status}
+            </Badge>
+            <GoalBetCountdownBadge market={market} />
+          </div>
         </div>
         {market.description ? (
           <p className="text-sm text-muted-foreground">{market.description}</p>
