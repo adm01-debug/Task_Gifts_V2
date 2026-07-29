@@ -7,6 +7,7 @@ import { SectionErrorBoundary } from "@/components/SectionErrorBoundary";
 import {
   GoalBetHistoryPanel,
   GoalBetExposureAlert,
+  GoalBetFilterBar,
   MyGoalBetPosition,
   OracleLeaderboard,
   PredictionMarketCard,
@@ -18,6 +19,11 @@ import {
 } from "@/hooks/usePredictionMarkets";
 import { useCurrentProfile } from "@/hooks/useProfiles";
 import { computeGoalBetExposure } from "@/lib/goalBetExposure";
+import {
+  countMarketsByFilter,
+  filterMarkets,
+  type GoalBetFilter,
+} from "@/lib/goalBetFilter";
 import { sortMarketsByUrgency } from "@/lib/goalBetOrdering";
 import { computeGoalBetPosition } from "@/lib/goalBetPosition";
 import type { PredictionMarketRow } from "@/services/predictionMarketService";
@@ -30,10 +36,19 @@ export default function PredictionMarketsPage() {
   const [selected, setSelected] = useState<PredictionMarketRow | null>(null);
   const [optionId, setOptionId] = useState<string | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [filter, setFilter] = useState<GoalBetFilter>("all");
 
   const myStakes = useMemo(() => stakes ?? [], [stakes]);
   /** Mercados prontos para render: abertos e mais urgentes primeiro. */
   const orderedMarkets = useMemo(() => sortMarketsByUrgency(markets), [markets]);
+  const filterCounts = useMemo(
+    () => countMarketsByFilter(orderedMarkets, myStakes),
+    [orderedMarkets, myStakes],
+  );
+  const visibleMarkets = useMemo(
+    () => filterMarkets(orderedMarkets, myStakes, filter),
+    [orderedMarkets, myStakes, filter],
+  );
   const alreadyStaked = useMemo(() => {
     if (!selected) return 0;
     return myStakes
