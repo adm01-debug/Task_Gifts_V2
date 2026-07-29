@@ -2,8 +2,8 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import type { GoalBetFilter } from "@/lib/goalBetFilter";
 import {
+  GOAL_BET_QUERY_MAX_LENGTH,
   readGoalBetUrlState,
-  sanitizeGoalBetQuery,
   writeGoalBetUrlState,
 } from "@/lib/goalBetUrlState";
 import { useGoalBetFilter } from "@/hooks/useGoalBetFilter";
@@ -47,8 +47,9 @@ export function useGoalBetUrlSync(): GoalBetViewState {
     setSearchParams(next, { replace: true });
   }, [filter, query, searchParams, setSearchParams]);
 
+  // Limite defensivo: evita URLs gigantes e buscas patológicas.
   const setQuery = useCallback((value: string) => {
-    setQueryState(sanitizeGoalBetQuery(value) === "" ? value.slice(0, 120) : value.slice(0, 120));
+    setQueryState(value.slice(0, GOAL_BET_QUERY_MAX_LENGTH));
   }, []);
 
   return { filter, setFilter: setStoredFilter, query, setQuery };
