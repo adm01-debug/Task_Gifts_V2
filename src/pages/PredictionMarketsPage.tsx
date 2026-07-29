@@ -146,6 +146,9 @@ export default function PredictionMarketsPage() {
           market={selected}
           optionId={optionId}
           alreadyStaked={alreadyStaked}
+          markets={markets ?? []}
+          stakes={myStakes}
+          balance={profile?.coins ?? 0}
           open={dialogOpen}
           onOpenChange={setDialogOpen}
         />
