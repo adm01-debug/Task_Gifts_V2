@@ -13,10 +13,13 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { usePlacePredictionStake } from "@/hooks/usePredictionMarkets";
+import { computeGoalBetExposure } from "@/lib/goalBetExposure";
 import { computeGoalBetStakePreview } from "@/lib/goalBetStakePreview";
+import { GoalBetExposureAlert } from "./GoalBetExposureAlert";
 import {
   STAKE_REJECTION_MESSAGES,
   type PredictionMarketRow,
+  type PredictionStakeRow,
 } from "@/services/predictionMarketService";
 
 export interface StakeDialogProps {
@@ -24,6 +27,11 @@ export interface StakeDialogProps {
   optionId: string | null;
   /** Total já aportado pelo usuário neste mercado, para respeitar o teto. */
   alreadyStaked: number;
+  /** Mercados e aportes do usuário para simular a exposição total. */
+  markets?: readonly PredictionMarketRow[];
+  stakes?: readonly PredictionStakeRow[];
+  /** Saldo atual de moedas do usuário. */
+  balance?: number;
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }
@@ -32,6 +40,9 @@ export function StakeDialog({
   market,
   optionId,
   alreadyStaked,
+  markets,
+  stakes,
+  balance,
   open,
   onOpenChange,
 }: StakeDialogProps) {
@@ -55,6 +66,14 @@ export function StakeDialog({
     alreadyStaked,
   });
   const valid = preview.valid;
+
+  // Exposição projetada caso este aporte seja confirmado agora.
+  const exposure = computeGoalBetExposure({
+    markets,
+    stakes,
+    balance,
+    extraStake: valid ? parsed : 0,
+  });
 
   const handleSubmit = async () => {
     if (!market || !optionId || !valid || placeStake.isPending) return;
@@ -137,6 +156,9 @@ export function StakeDialog({
             amount.length > 0 && (
               <p className="text-xs text-destructive">{preview.message}</p>
             )
+          )}
+          {valid && exposure.level !== "none" && (
+            <GoalBetExposureAlert exposure={exposure} compact />
           )}
         </div>
 

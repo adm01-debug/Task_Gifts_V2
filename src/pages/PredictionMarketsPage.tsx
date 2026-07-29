@@ -6,6 +6,7 @@ import { SEOHead } from "@/components/SEOHead";
 import { SectionErrorBoundary } from "@/components/SectionErrorBoundary";
 import {
   GoalBetHistoryPanel,
+  GoalBetExposureAlert,
   MyGoalBetPosition,
   OracleLeaderboard,
   PredictionMarketCard,
@@ -15,12 +16,15 @@ import {
   useMyPredictionStakes,
   usePredictionMarkets,
 } from "@/hooks/usePredictionMarkets";
+import { useCurrentProfile } from "@/hooks/useProfiles";
+import { computeGoalBetExposure } from "@/lib/goalBetExposure";
 import { computeGoalBetPosition } from "@/lib/goalBetPosition";
 import type { PredictionMarketRow } from "@/services/predictionMarketService";
 
 export default function PredictionMarketsPage() {
   const { data: markets, isLoading } = usePredictionMarkets();
   const { data: stakes } = useMyPredictionStakes();
+  const { data: profile } = useCurrentProfile();
 
   const [selected, setSelected] = useState<PredictionMarketRow | null>(null);
   const [optionId, setOptionId] = useState<string | null>(null);
@@ -56,6 +60,17 @@ export default function PredictionMarketsPage() {
     );
   }, [markets, myStakes]);
 
+  /** Exposição em mercados ainda em aberto frente ao saldo de moedas. */
+  const exposure = useMemo(
+    () =>
+      computeGoalBetExposure({
+        markets: markets ?? [],
+        stakes: myStakes,
+        balance: profile?.coins ?? 0,
+      }),
+    [markets, myStakes, profile?.coins],
+  );
+
   return (
     <>
       <SEOHead
@@ -69,6 +84,7 @@ export default function PredictionMarketsPage() {
         backFallback="/"
       >
         <SectionErrorBoundary sectionName="Mercado de Previsões">
+          <GoalBetExposureAlert exposure={exposure} className="mb-4" />
           {portfolio.markets > 0 && (
             <div className="mb-4 flex flex-wrap items-center justify-between gap-2 rounded-xl border border-border/60 bg-card/60 p-4 text-sm backdrop-blur-sm">
               <span className="font-semibold">
@@ -130,6 +146,9 @@ export default function PredictionMarketsPage() {
           market={selected}
           optionId={optionId}
           alreadyStaked={alreadyStaked}
+          markets={markets ?? []}
+          stakes={myStakes}
+          balance={profile?.coins ?? 0}
           open={dialogOpen}
           onOpenChange={setDialogOpen}
         />
