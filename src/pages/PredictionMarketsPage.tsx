@@ -84,6 +84,7 @@ export default function PredictionMarketsPage() {
         backFallback="/"
       >
         <SectionErrorBoundary sectionName="Mercado de Previsões">
+          <GoalBetExposureAlert exposure={exposure} className="mb-4" />
           {portfolio.markets > 0 && (
             <div className="mb-4 flex flex-wrap items-center justify-between gap-2 rounded-xl border border-border/60 bg-card/60 p-4 text-sm backdrop-blur-sm">
               <span className="font-semibold">
