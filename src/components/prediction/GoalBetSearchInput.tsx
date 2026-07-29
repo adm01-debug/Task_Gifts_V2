@@ -7,6 +7,8 @@ export interface GoalBetSearchInputProps {
   value: string;
   onChange: (value: string) => void;
   resultCount: number;
+  /** True enquanto a consulta digitada ainda não foi aplicada (debounce). */
+  pending?: boolean;
   className?: string;
 }
 
@@ -15,6 +17,7 @@ export function GoalBetSearchInput({
   value,
   onChange,
   resultCount,
+  pending = false,
   className,
 }: GoalBetSearchInputProps) {
   const hasQuery = value.trim().length > 0;
@@ -49,7 +52,9 @@ export function GoalBetSearchInput({
       </div>
       {hasQuery && (
         <p aria-live="polite" className="pl-4 text-xs text-muted-foreground">
-          {resultCount === 0
+          {pending
+            ? "Buscando..."
+            : resultCount === 0
             ? "Nenhum mercado encontrado"
             : `${resultCount} ${resultCount === 1 ? "mercado encontrado" : "mercados encontrados"}`}
         </p>
