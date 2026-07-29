@@ -18,6 +18,7 @@ import {
 } from "@/hooks/usePredictionMarkets";
 import { useCurrentProfile } from "@/hooks/useProfiles";
 import { computeGoalBetExposure } from "@/lib/goalBetExposure";
+import { sortMarketsByUrgency } from "@/lib/goalBetOrdering";
 import { computeGoalBetPosition } from "@/lib/goalBetPosition";
 import type { PredictionMarketRow } from "@/services/predictionMarketService";
 
@@ -31,6 +32,8 @@ export default function PredictionMarketsPage() {
   const [dialogOpen, setDialogOpen] = useState(false);
 
   const myStakes = useMemo(() => stakes ?? [], [stakes]);
+  /** Mercados prontos para render: abertos e mais urgentes primeiro. */
+  const orderedMarkets = useMemo(() => sortMarketsByUrgency(markets), [markets]);
   const alreadyStaked = useMemo(() => {
     if (!selected) return 0;
     return myStakes
@@ -110,7 +113,7 @@ export default function PredictionMarketsPage() {
                 <Skeleton key={`prediction-skeleton-${index}`} className="h-64 rounded-xl" />
               ))}
             </div>
-          ) : (markets ?? []).length === 0 ? (
+          ) : orderedMarkets.length === 0 ? (
             <div className="rounded-xl border border-dashed border-border/60 p-10 text-center">
               <p className="text-sm text-muted-foreground">
                 Nenhum mercado aberto no momento. Volte em breve para palpitar.
@@ -118,7 +121,7 @@ export default function PredictionMarketsPage() {
             </div>
           ) : (
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-              {(markets ?? []).map((market) => (
+              {orderedMarkets.map((market) => (
                 <div key={market.id} className="space-y-2">
                   <PredictionMarketCard
                     market={market}
