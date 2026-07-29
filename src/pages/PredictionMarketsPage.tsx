@@ -25,6 +25,7 @@ import {
   filterMarkets,
 } from "@/lib/goalBetFilter";
 import { useGoalBetFilter } from "@/hooks/useGoalBetFilter";
+import { useDebounce } from "@/hooks/useDebounce";
 import { sortMarketsByUrgency } from "@/lib/goalBetOrdering";
 import { searchMarkets } from "@/lib/goalBetSearch";
 import { computeGoalBetPosition } from "@/lib/goalBetPosition";
@@ -40,6 +41,8 @@ export default function PredictionMarketsPage() {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [filter, setFilter] = useGoalBetFilter();
   const [query, setQuery] = useState("");
+  /** Consulta aplicada ao filtro: evita refiltrar a cada tecla em listas grandes. */
+  const debouncedQuery = useDebounce(query, 250);
 
   const myStakes = useMemo(() => stakes ?? [], [stakes]);
   /** Mercados prontos para render: abertos e mais urgentes primeiro. */
@@ -49,8 +52,12 @@ export default function PredictionMarketsPage() {
     [orderedMarkets, myStakes],
   );
   const visibleMarkets = useMemo(
-    () => searchMarkets(filterMarkets(orderedMarkets, myStakes, filter), query),
-    [orderedMarkets, myStakes, filter, query],
+    () =>
+      searchMarkets(
+        filterMarkets(orderedMarkets, myStakes, filter),
+        debouncedQuery,
+      ),
+    [orderedMarkets, myStakes, filter, debouncedQuery],
   );
   const alreadyStaked = useMemo(() => {
     if (!selected) return 0;
