@@ -6,6 +6,7 @@ import { SEOHead } from "@/components/SEOHead";
 import { SectionErrorBoundary } from "@/components/SectionErrorBoundary";
 import {
   GoalBetHistoryPanel,
+  GoalBetExposureAlert,
   MyGoalBetPosition,
   OracleLeaderboard,
   PredictionMarketCard,
@@ -15,12 +16,15 @@ import {
   useMyPredictionStakes,
   usePredictionMarkets,
 } from "@/hooks/usePredictionMarkets";
+import { useCurrentProfile } from "@/hooks/useProfiles";
+import { computeGoalBetExposure } from "@/lib/goalBetExposure";
 import { computeGoalBetPosition } from "@/lib/goalBetPosition";
 import type { PredictionMarketRow } from "@/services/predictionMarketService";
 
 export default function PredictionMarketsPage() {
   const { data: markets, isLoading } = usePredictionMarkets();
   const { data: stakes } = useMyPredictionStakes();
+  const { data: profile } = useCurrentProfile();
 
   const [selected, setSelected] = useState<PredictionMarketRow | null>(null);
   const [optionId, setOptionId] = useState<string | null>(null);
@@ -55,6 +59,17 @@ export default function PredictionMarketsPage() {
       { markets: 0, staked: 0, projected: 0 },
     );
   }, [markets, myStakes]);
+
+  /** Exposição em mercados ainda em aberto frente ao saldo de moedas. */
+  const exposure = useMemo(
+    () =>
+      computeGoalBetExposure({
+        markets: markets ?? [],
+        stakes: myStakes,
+        balance: profile?.coins ?? 0,
+      }),
+    [markets, myStakes, profile?.coins],
+  );
 
   return (
     <>
