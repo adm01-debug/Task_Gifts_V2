@@ -58,3 +58,14 @@ export function countMarketsByFilter(
     closed: rows.filter(isClosed).length,
   };
 }
+
+/** Chave única de persistência do filtro escolhido pelo usuário. */
+export const GOAL_BET_FILTER_STORAGE_KEY = "taskgifts.prediction.filter";
+
+/** Valida um valor desconhecido vindo do storage (nunca confiar no cliente). */
+export function parseGoalBetFilter(value: unknown): GoalBetFilter | null {
+  return typeof value === "string" &&
+    (GOAL_BET_FILTERS as readonly string[]).includes(value)
+    ? (value as GoalBetFilter)
+    : null;
+}

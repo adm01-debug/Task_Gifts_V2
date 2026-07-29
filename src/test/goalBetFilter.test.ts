@@ -1,5 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { countMarketsByFilter, filterMarkets } from "@/lib/goalBetFilter";
+import {
+  countMarketsByFilter,
+  filterMarkets,
+  parseGoalBetFilter,
+} from "@/lib/goalBetFilter";
 import type {
   PredictionMarketRow,
   PredictionStakeRow,
@@ -90,5 +94,18 @@ describe("countMarketsByFilter", () => {
       mine: 0,
       closed: 0,
     });
+  });
+});
+
+describe("parseGoalBetFilter", () => {
+  it("aceita apenas filtros conhecidos", () => {
+    expect(parseGoalBetFilter("mine")).toBe("mine");
+    expect(parseGoalBetFilter("closed")).toBe("closed");
+  });
+
+  it("rejeita lixo vindo do storage", () => {
+    for (const value of [null, undefined, "", "todos", 3, {}, ["open"]]) {
+      expect(parseGoalBetFilter(value)).toBeNull();
+    }
   });
 });
