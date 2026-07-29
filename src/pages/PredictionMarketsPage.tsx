@@ -24,7 +24,7 @@ import {
   countMarketsByFilter,
   filterMarkets,
 } from "@/lib/goalBetFilter";
-import { useGoalBetFilter } from "@/hooks/useGoalBetFilter";
+import { useGoalBetUrlSync } from "@/hooks/useGoalBetUrlSync";
 import { useDebounce } from "@/hooks/useDebounce";
 import { sortMarketsByUrgency } from "@/lib/goalBetOrdering";
 import { searchMarkets } from "@/lib/goalBetSearch";
@@ -39,8 +39,7 @@ export default function PredictionMarketsPage() {
   const [selected, setSelected] = useState<PredictionMarketRow | null>(null);
   const [optionId, setOptionId] = useState<string | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [filter, setFilter] = useGoalBetFilter();
-  const [query, setQuery] = useState("");
+  const { filter, setFilter, query, setQuery } = useGoalBetUrlSync();
   /** Consulta aplicada ao filtro: evita refiltrar a cada tecla em listas grandes. */
   const debouncedQuery = useDebounce(query, 250);
 
