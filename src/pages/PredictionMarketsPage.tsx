@@ -135,18 +135,34 @@ export default function PredictionMarketsPage() {
               </p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-              {orderedMarkets.map((market) => (
-                <div key={market.id} className="space-y-2">
-                  <PredictionMarketCard
-                    market={market}
-                    myStakes={myStakes}
-                    onStake={handleStake}
-                  />
-                  <MyGoalBetPosition market={market} stakes={myStakes} />
+            <>
+              <GoalBetFilterBar
+                value={filter}
+                counts={filterCounts}
+                onChange={setFilter}
+                className="mb-4"
+              />
+              {visibleMarkets.length === 0 ? (
+                <div className="rounded-xl border border-dashed border-border/60 p-10 text-center">
+                  <p className="text-sm text-muted-foreground">
+                    Nenhum mercado nesse filtro. Tente “Todos”.
+                  </p>
                 </div>
-              ))}
-            </div>
+              ) : (
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+                  {visibleMarkets.map((market) => (
+                    <div key={market.id} className="space-y-2">
+                      <PredictionMarketCard
+                        market={market}
+                        myStakes={myStakes}
+                        onStake={handleStake}
+                      />
+                      <MyGoalBetPosition market={market} stakes={myStakes} />
+                    </div>
+                  ))}
+                </div>
+              )}
+            </>
           )}
         </SectionErrorBoundary>
 
