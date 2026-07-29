@@ -8,6 +8,7 @@ import {
   GoalBetHistoryPanel,
   GoalBetExposureAlert,
   GoalBetFilterBar,
+  GoalBetSearchInput,
   MyGoalBetPosition,
   OracleLeaderboard,
   PredictionMarketCard,
@@ -25,6 +26,7 @@ import {
 } from "@/lib/goalBetFilter";
 import { useGoalBetFilter } from "@/hooks/useGoalBetFilter";
 import { sortMarketsByUrgency } from "@/lib/goalBetOrdering";
+import { searchMarkets } from "@/lib/goalBetSearch";
 import { computeGoalBetPosition } from "@/lib/goalBetPosition";
 import type { PredictionMarketRow } from "@/services/predictionMarketService";
 
@@ -37,6 +39,7 @@ export default function PredictionMarketsPage() {
   const [optionId, setOptionId] = useState<string | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [filter, setFilter] = useGoalBetFilter();
+  const [query, setQuery] = useState("");
 
   const myStakes = useMemo(() => stakes ?? [], [stakes]);
   /** Mercados prontos para render: abertos e mais urgentes primeiro. */
@@ -46,8 +49,8 @@ export default function PredictionMarketsPage() {
     [orderedMarkets, myStakes],
   );
   const visibleMarkets = useMemo(
-    () => filterMarkets(orderedMarkets, myStakes, filter),
-    [orderedMarkets, myStakes, filter],
+    () => searchMarkets(filterMarkets(orderedMarkets, myStakes, filter), query),
+    [orderedMarkets, myStakes, filter, query],
   );
   const alreadyStaked = useMemo(() => {
     if (!selected) return 0;
@@ -140,12 +143,20 @@ export default function PredictionMarketsPage() {
                 value={filter}
                 counts={filterCounts}
                 onChange={setFilter}
+                className="mb-3"
+              />
+              <GoalBetSearchInput
+                value={query}
+                onChange={setQuery}
+                resultCount={visibleMarkets.length}
                 className="mb-4"
               />
               {visibleMarkets.length === 0 ? (
                 <div className="rounded-xl border border-dashed border-border/60 p-10 text-center">
                   <p className="text-sm text-muted-foreground">
-                    Nenhum mercado nesse filtro. Tente “Todos”.
+                    {query.trim()
+                      ? "Nenhum mercado corresponde à busca. Tente outro termo."
+                      : "Nenhum mercado nesse filtro. Tente “Todos”."}
                   </p>
                 </div>
               ) : (

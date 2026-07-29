@@ -13,3 +13,4 @@ export { GoalBetHistoryPanel } from "./GoalBetHistoryPanel";
 export { GoalBetExposureAlert } from "./GoalBetExposureAlert";
 export { GoalBetCountdownBadge } from "./GoalBetCountdownBadge";
 export { GoalBetFilterBar } from "./GoalBetFilterBar";
+export { GoalBetSearchInput } from "./GoalBetSearchInput";
