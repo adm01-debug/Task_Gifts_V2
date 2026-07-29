@@ -156,12 +156,13 @@ export default function PredictionMarketsPage() {
                 value={query}
                 onChange={setQuery}
                 resultCount={visibleMarkets.length}
+                pending={query !== debouncedQuery}
                 className="mb-4"
               />
               {visibleMarkets.length === 0 ? (
                 <div className="rounded-xl border border-dashed border-border/60 p-10 text-center">
                   <p className="text-sm text-muted-foreground">
-                    {query.trim()
+                    {debouncedQuery.trim()
                       ? "Nenhum mercado corresponde à busca. Tente outro termo."
                       : "Nenhum mercado nesse filtro. Tente “Todos”."}
                   </p>
