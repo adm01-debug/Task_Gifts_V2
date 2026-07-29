@@ -1,12 +1,19 @@
 import { describe, expect, it } from "vitest";
 import { computeGoalBetCountdown } from "@/lib/goalBetCountdown";
+import type { PredictionMarketRow } from "@/services/predictionMarketService";
 
 const NOW = new Date("2030-01-01T00:00:00Z");
 const at = (ms: number) => new Date(NOW.getTime() + ms).toISOString();
 
 describe("computeGoalBetCountdown", () => {
   it("ignora mercados que não estão abertos", () => {
-    for (const status of ["draft", "locked", "settled", "voided"]) {
+    const statuses: PredictionMarketRow["status"][] = [
+      "draft",
+      "locked",
+      "settled",
+      "voided",
+    ];
+    for (const status of statuses) {
       const r = computeGoalBetCountdown({ status, locks_at: at(60_000) }, NOW);
       expect(r.urgency).toBe("none");
       expect(r.label).toBe("");
