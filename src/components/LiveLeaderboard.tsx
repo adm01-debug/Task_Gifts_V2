@@ -304,7 +304,7 @@ export const LiveLeaderboard = memo(function LiveLeaderboard() {
       {/* View All */}
       <div className="p-4 bg-white/5 border-t border-white/5 relative z-10">
         <motion.button
-          whileHover={{ scale: 1.02, backgroundColor: "rgba(var(--primary-rgb), 0.15)" }}
+          whileHover={{ scale: 1.02, boxShadow: "0 0 24px rgba(var(--primary-rgb), 0.45)" }}
           whileTap={{ scale: 0.98 }}
           onClick={handleViewRanking}
           className="w-full py-4 rounded-2xl bg-white/5 border border-white/10 text-[10px] font-black uppercase tracking-[0.4em] text-primary transition-all duration-300 shadow-glow-sm"

@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { supabase } from "@/integrations/supabase/client";
 import { invokeEdgeSafe } from "@/lib/requestId";
+import { isFunctionDeployed } from "@/lib/edgeAvailability";
 import { logger } from "@/services/loggingService";
 
 interface IpAccessGuardProps {
@@ -24,6 +25,13 @@ export function IpAccessGuard({ children }: IpAccessGuardProps) {
   const [ipInfo, setIpInfo] = useState<IpVerificationResult | null>(null);
 
   const checkIpAccess = async () => {
+    // Allowlist: não chama a rede se verify-ip não está na lista de deployadas.
+    if (!isFunctionDeployed("verify-ip")) {
+      setIsAllowed(true);
+      setIsChecking(false);
+      return;
+    }
+
     setIsChecking(true);
     
     try {

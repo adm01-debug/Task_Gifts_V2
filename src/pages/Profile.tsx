@@ -1,5 +1,6 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { useEffect, useState } from "react";
@@ -60,6 +61,9 @@ const Profile = () => {
   const [profile, setProfile] = useState<ProfileData | null>(null);
   const [loadingProfile, setLoadingProfile] = useState(true);
   const [avatarOpen, setAvatarOpen] = useState(false);
+  const [editingName, setEditingName] = useState(false);
+  const [nameDraft, setNameDraft] = useState("");
+  const [savingName, setSavingName] = useState(false);
   const { data: rankData } = useUserRank();
   const { data: avatarConfig } = useAvatarConfig(user?.id);
   const isScrolled = useScrollHeader(10);
@@ -91,6 +95,33 @@ const Profile = () => {
   const xpForNextLevel = (level: number) => level * 500 + 500;
   const currentLevelXP = profile ? profile.xp % xpForNextLevel(profile.level) : 0;
   const xpProgress = profile ? (currentLevelXP / xpForNextLevel(profile.level)) * 100 : 0;
+
+  const saveDisplayName = async () => {
+    if (!user || !profile) return;
+    const trimmed = nameDraft.trim();
+    if (!trimmed || trimmed === profile.display_name) {
+      setEditingName(false);
+      setNameDraft("");
+      return;
+    }
+    setSavingName(true);
+    try {
+      const { error } = await supabase
+        .from("profiles")
+        .update({ display_name: trimmed })
+        .eq("id", user.id);
+      if (error) throw error;
+      setProfile({ ...profile, display_name: trimmed });
+      toast.success("Nome atualizado");
+    } catch (err) {
+      logger.apiError("Profile update name", err, "Profile");
+      toast.error("Erro ao atualizar nome");
+    } finally {
+      setSavingName(false);
+      setEditingName(false);
+      setNameDraft("");
+    }
+  };
 
   if (loading || loadingProfile) {
     return <div className="min-h-screen flex items-center justify-center bg-background"><motion.div animate={{ rotate: 360 }} transition={{ duration: 1, repeat: Infinity, ease: "linear" }} className="w-12 h-12 rounded-full border-4 border-primary border-t-transparent" /></div>;
@@ -135,8 +166,28 @@ const Profile = () => {
               </div>
               <div className="flex-1 text-center md:text-left">
                 <div className="flex items-center justify-center md:justify-start gap-2 mb-1">
-                  <h2 className="text-2xl font-bold">{profile?.display_name || "Jogador"}</h2>
-                  <motion.button whileHover={{ scale: 1.1 }} className="p-1 rounded hover:bg-muted"><Edit2 className="w-4 h-4 text-muted-foreground" /></motion.button>
+                  {editingName ? (
+                    <Input
+                      autoFocus
+                      value={nameDraft}
+                      onChange={(e) => setNameDraft(e.target.value)}
+                      onBlur={saveDisplayName}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") saveDisplayName();
+                        if (e.key === "Escape") { setEditingName(false); setNameDraft(""); }
+                      }}
+                      disabled={savingName}
+                      className="text-2xl font-bold h-10 max-w-xs"
+                      maxLength={60}
+                    />
+                  ) : (
+                    <>
+                      <h2 className="text-2xl font-bold">{profile?.display_name || "Jogador"}</h2>
+                      <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.95 }} onClick={() => { setNameDraft(profile?.display_name || ""); setEditingName(true); }} className="p-1 rounded hover:bg-muted" aria-label="Editar nome">
+                        <Edit2 className="w-4 h-4 text-muted-foreground" />
+                      </motion.button>
+                    </>
+                  )}
                 </div>
                 <p className="text-muted-foreground mb-4">{profile?.email}</p>
                 <div className="max-w-md">

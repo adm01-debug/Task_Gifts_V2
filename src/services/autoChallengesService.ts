@@ -212,11 +212,10 @@ export const autoChallengesService = {
  
      const { data: inserted, error: insertError } = await supabase
        .from("user_challenges")
-       .insert(newChallenges.map(c => ({
-         ...c,
-         user_id: userId,
-         id: undefined // Let DB generate UUID if applicable or keep custom ID
-       })))
+       .insert(newChallenges.map(c => {
+         const { id: _discard, ...rest } = c;
+         return { ...rest, user_id: userId };
+       }))
        .select();
  
      if (insertError) {

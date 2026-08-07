@@ -333,7 +333,14 @@ describe("Telemetry Data Computation", () => {
 describe("TelemetryCharts Component", () => {
   const wrapper = ({ children }: { children: React.ReactNode }) => (
     <QueryClientProvider client={new QueryClient()}>
-      <BrowserRouter>{children}</BrowserRouter>
+      <BrowserRouter
+          future={{
+            v7_startTransition: true,
+            v7_relativeSplatPath: true,
+          }}
+        >
+          {children}
+        </BrowserRouter>
     </QueryClientProvider>
   );
 

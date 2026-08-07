@@ -10,6 +10,12 @@
  */
 import { supabase } from "@/integrations/supabase/client";
 import { describeEdgeError, type EdgeErrorInfo } from "@/lib/edgeErrors";
+import {
+  isFunctionDeployed,
+  isEdgeAvailable,
+  isEdgeSkillsDisabled,
+  markEdgeUnavailable,
+} from "@/lib/edgeAvailability";
 import * as Sentry from "@sentry/react";
 
 /**
@@ -117,6 +123,41 @@ export async function invokeEdgeSafe<T = unknown>(
   options: InvokeOptions & { maxAttempts?: number } = {},
 ): Promise<SafeInvokeResult<T>> {
   const { maxAttempts = 3, ...invokeOptions } = options;
+
+  // Global kill-switch: when edge skills are disabled (set via
+  // localStorage "edge-skills:disabled"), every call short-circuits without
+  // touching the network. Useful while the functions are still being deployed.
+  // Layer 1 — compiled allowlist (zero network traffic for undeployed functions):
+  if (!isFunctionDeployed(fnName)) {
+    return {
+      data: null,
+      error: {
+        kind: "not_found",
+        status: 404,
+        retryAfterSeconds: null,
+        message: `Edge function '${fnName}' nao encontrada (allowlist)`,
+        retryable: false,
+      },
+      requestId: invokeOptions.requestId ?? newRequestId(),
+      attempts: 0,
+    };
+  }
+
+  if (isEdgeSkillsDisabled() || isEdgeAvailable(fnName) === false) {
+    return {
+      data: null,
+      error: {
+        kind: "not_found",
+        status: 404,
+        retryAfterSeconds: null,
+        message: `Edge function '${fnName}' desabilitada`,
+        retryable: false,
+      },
+      requestId: invokeOptions.requestId ?? newRequestId(),
+      attempts: 0,
+    };
+  }
+
   const requestId = invokeOptions.requestId ?? newRequestId();
   let lastError: EdgeErrorInfo | null = null;
   let usedAttempts = 0;
@@ -131,6 +172,13 @@ export async function invokeEdgeSafe<T = unknown>(
 
     lastError = await describeEdgeError(error);
     tagFailure(fnName, requestId, lastError);
+
+    // Remember 404 so subsequent calls short-circuit instead of retrying.
+    if (lastError.status === 404) {
+      markEdgeUnavailable(fnName);
+      break;
+    }
+
     if (!lastError.retryable || attempt >= maxAttempts) break;
 
     await new Promise((resolve) => setTimeout(resolve, backoffDelayMs(attempt)));

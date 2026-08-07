@@ -18,7 +18,7 @@ import type { LeagueHistory } from "@/services/leaguesService";
  export default function Leagues() {
    const navigate = useNavigate();
    const isMobile = useIsMobile();
-   const { myLeague, leaderboard, history, isLoading } = useLeagues();
+   const { myLeague, leaderboard, history, isLoading, error } = useLeagues();
  
    return (
      <PageShell 
@@ -46,6 +46,15 @@ import type { LeagueHistory } from "@/services/leaguesService";
                    <Skeleton className="h-[300px] w-full rounded-3xl" />
                    <Skeleton className="h-[300px] w-full rounded-3xl" />
                  </div>
+               </div>
+             ) : error ? (
+               <div className="rounded-3xl border border-destructive/30 bg-destructive/5 p-8">
+                 <h3 className="text-lg font-black uppercase tracking-wider text-destructive">
+                   Não foi possível carregar as ligas
+                 </h3>
+                 <p className="mt-2 text-sm text-muted-foreground">
+                   {(error as Error)?.message ?? "Erro desconhecido."}
+                 </p>
                </div>
              ) : (
                <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
@@ -170,7 +179,7 @@ import type { LeagueHistory } from "@/services/leaguesService";
                          </div>
                        </div>
                         <motion.button 
-                          whileHover={{ scale: 1.02, backgroundColor: "rgba(var(--primary-rgb), 0.9)" }}
+                          whileHover={{ scale: 1.02, boxShadow: "0 0 28px rgba(var(--primary-rgb), 0.7)" }}
                           whileTap={{ scale: 0.98 }}
                           className="w-full py-4 rounded-2xl bg-primary text-white font-black uppercase text-[10px] tracking-[0.3em] shadow-glow flex items-center justify-center gap-2 transition-all"
                         >

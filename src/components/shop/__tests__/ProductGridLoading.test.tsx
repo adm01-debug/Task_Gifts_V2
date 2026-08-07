@@ -6,6 +6,7 @@ import { useProfile } from '@/hooks/useProfiles';
 import { useAuth } from '@/hooks/useAuth';
 import { MemoryRouter } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { AccessibilityProvider } from '@/components/accessibility';
 import React from 'react';
 
 // Mock hooks
@@ -43,7 +44,9 @@ const queryClient = new QueryClient({
 const wrapper = ({ children }: { children: React.ReactNode }) => (
   <QueryClientProvider client={queryClient}>
     <MemoryRouter>
-      {children}
+      <AccessibilityProvider>
+        {children}
+      </AccessibilityProvider>
     </MemoryRouter>
   </QueryClientProvider>
 );

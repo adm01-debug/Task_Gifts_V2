@@ -307,22 +307,27 @@ const AnimatedRoutes = () => {
 const App = () => (
   <Providers>
     <GlobalErrorBoundary>
-      <BrowserRouter>
-      <OnboardingTourProvider>
-        <ScrollRestorationProvider>
-          <Suspense fallback={<PageLoader />}>
-            <TopLoadingBar />
-            <SkipLinks />
-            <KeyboardShortcutsHelp />
-            <CommandPalette />
-            <FloatingCommandHint />
-            <TourSpotlight />
-            <TourLauncher />
-            <MobileGlobalComponents />
-            <AnimatedRoutes />
-          </Suspense>
-        </ScrollRestorationProvider>
-      </OnboardingTourProvider>
+      <BrowserRouter
+        future={{
+          v7_startTransition: true,
+          v7_relativeSplatPath: true,
+        }}
+      >
+        <OnboardingTourProvider>
+          <ScrollRestorationProvider>
+            <Suspense fallback={<PageLoader />}>
+              <TopLoadingBar />
+              <SkipLinks />
+              <KeyboardShortcutsHelp />
+              <CommandPalette />
+              <FloatingCommandHint />
+              <TourSpotlight />
+              <TourLauncher />
+              <MobileGlobalComponents />
+              <AnimatedRoutes />
+            </Suspense>
+          </ScrollRestorationProvider>
+        </OnboardingTourProvider>
       </BrowserRouter>
     </GlobalErrorBoundary>
   </Providers>

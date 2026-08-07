@@ -16,6 +16,7 @@ export function useLeagues() {
   const myLeagueQuery = useQuery({
     queryKey: ["leagues", "mine"],
     queryFn: () => leaguesService.getMyLeague(),
+    retry: 1,
   });
 
   const leaderboardQuery = useQuery({
@@ -26,6 +27,7 @@ export function useLeagues() {
       return leaguesService.getLeagueLeaderboard(myLeague.league_id);
     },
     enabled: !!myLeagueQuery.data,
+    retry: 1,
   });
 
   const historyQuery = useQuery({
@@ -107,6 +109,7 @@ export function useLeagues() {
   const leaderboard = useMemo(() => leaderboardQuery.data ?? [], [leaderboardQuery.data]);
   const history = useMemo(() => historyQuery.data ?? [], [historyQuery.data]);
   const isLoading = leaguesQuery.isLoading || myLeagueQuery.isLoading;
+  const error = myLeagueQuery.error ?? leaguesQuery.error ?? null;
 
   const createLeague = createLeagueMutation.mutate;
   const updateLeague = updateLeagueMutation.mutate;
@@ -118,6 +121,7 @@ export function useLeagues() {
     leaderboard,
     history,
     isLoading,
+    error,
     createLeague,
     updateLeague,
     deleteLeague,
@@ -125,13 +129,14 @@ export function useLeagues() {
     isUpdating: updateLeagueMutation.isPending,
     isDeleting: deleteLeagueMutation.isPending,
   }), [
-    leagues, 
-    myLeague, 
-    leaderboard, 
-    history, 
-    isLoading, 
-    createLeague, 
-    updateLeague, 
+    leagues,
+    myLeague,
+    leaderboard,
+    history,
+    isLoading,
+    error,
+    createLeague,
+    updateLeague,
     deleteLeague,
     createLeagueMutation.isPending,
     updateLeagueMutation.isPending,

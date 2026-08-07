@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { Fragment, useMemo } from "react";
 import { useLocation, Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
@@ -229,27 +229,27 @@ export function GlobalBreadcrumbs({
           )}
           
           {breadcrumbs.map((item, index) => (
-            <BreadcrumbItem key={item.path}>
-              {item.isLast ? (
-                <BreadcrumbPage className="flex items-center gap-1.5">
-                  {item.icon && <item.icon className="h-3.5 w-3.5" />}
-                  <span>{item.label}</span>
-                </BreadcrumbPage>
-              ) : (
-                <>
+            <Fragment key={item.path}>
+              <BreadcrumbItem>
+                {item.isLast ? (
+                  <BreadcrumbPage className="flex items-center gap-1.5">
+                    {item.icon && <item.icon className="h-3.5 w-3.5" />}
+                    <span>{item.label}</span>
+                  </BreadcrumbPage>
+                ) : (
                   <BreadcrumbLink asChild>
-                    <Link 
-                      to={item.path} 
+                    <Link
+                      to={item.path}
                       className="flex items-center gap-1.5 hover:text-foreground transition-colors"
                     >
                       {item.icon && <item.icon className="h-3.5 w-3.5" />}
                       <span>{item.label}</span>
                     </Link>
                   </BreadcrumbLink>
-                  {index < breadcrumbs.length - 1 && <BreadcrumbSeparator />}
-                </>
-              )}
-            </BreadcrumbItem>
+                )}
+              </BreadcrumbItem>
+              {index < breadcrumbs.length - 1 && <BreadcrumbSeparator />}
+            </Fragment>
           ))}
         </BreadcrumbList>
       </Breadcrumb>

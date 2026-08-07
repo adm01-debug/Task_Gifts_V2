@@ -7,6 +7,7 @@ import { useLoginLockout } from "@/hooks/useLoginLockout";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { invokeEdgeSafe } from "@/lib/requestId";
+import { isFunctionDeployed } from "@/lib/edgeAvailability";
 import { logger } from "@/services/loggingService";
 import { passwordResetService } from "@/services/passwordResetService";
 import { twoFactorService } from "@/services/twoFactorService";
@@ -46,6 +47,13 @@ const Auth = () => {
   const { isLocked, failedAttempts, checkLockout, logFailedAttempt, resetAttempts, formatRemainingTime } = useLoginLockout(email);
 
   const checkIpAccess = async () => {
+    // Allowlist: não chama a rede se verify-ip não está na lista de deployadas.
+    if (!isFunctionDeployed("verify-ip")) {
+      setIsIpAllowed(true);
+      setIsCheckingIp(false);
+      return;
+    }
+
     setIsCheckingIp(true);
     try {
       const { data, error: fnError, requestId } = await invokeEdgeSafe<IpVerificationResult>('verify-ip');

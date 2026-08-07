@@ -25,14 +25,15 @@ serve(async (req) => {
     const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
-    // Check if user is admin (optional but recommended for admin-alerts)
-    const { data: profile } = await supabase
-      .from("profiles")
-      .select("role")
-      .eq("id", user.id)
-      .single();
-      
-    if (profile?.role !== "admin") {
+    // Check if user is admin via has_role RPC (profiles has no role column;
+    // roles live in user_roles and are exposed via the has_role security
+    // definer function).
+    const { data: isAdmin } = await supabase.rpc("has_role", {
+      _user_id: user.id,
+      _role: "admin",
+    });
+
+    if (!isAdmin) {
       return new Response(JSON.stringify({ error: "Unauthorized: Admin only" }), {
         status: 403,
         headers: { ...corsHeaders, "Content-Type": "application/json" },

@@ -70,17 +70,57 @@ export const leaguesService = {
       .maybeSingle();
 
     if (error) throw error;
-    
+
     if (!data) {
-      // Initialize user in Bronze league
+      // Initialize user in Bronze league (idempotent: safe under
+      // concurrent calls because user_id has a UNIQUE constraint).
       return this.initializeUserLeague(user.id);
     }
 
     return data as unknown as UserLeague;
   },
 
+  async ensureProfile(userId: string): Promise<void> {
+    // The auth.users → public.profiles trigger normally creates a profile
+    // on signup. If it's missing (trigger not recreated, or pre-existing
+    // user from before the trigger was applied), we create the row here
+    // using upsert on the primary key so the FK on user_leagues.user_id
+    // → profiles.id is satisfied.
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return;
+
+    const email = user.email ?? "";
+    const fallback = email.split("@")[0] || "user";
+    const { error } = await supabase
+      .from("profiles")
+      .upsert(
+        {
+          id: userId,
+          email,
+          display_name: fallback,
+        },
+        { onConflict: "id", ignoreDuplicates: true }
+      );
+
+    if (error) {
+      // Don't block initialization on a profiles issue — the FK below
+      // will surface the real error if the profile really is missing.
+      console.warn("[leaguesService] ensureProfile soft-fail:", error.message);
+    }
+  },
+
   async initializeUserLeague(userId: string): Promise<UserLeague> {
-    // Get Bronze league
+    // Race-free placement into the Bronze league. The previous `upsert`
+    // approach still produced 409 because PostgREST requires a unique
+    // index with a known name and the inline `UNIQUE` on user_id is
+    // anonymous. Strategy:
+    //   1) Ensure the user has a profile (handles stale rows where the
+    //      auth.users → public.profiles trigger didn't fire for any
+    //      reason — without a profile, the user_leagues FK rejects).
+    //   2) Single shot: try to INSERT; if it fails with 23505 (race winner
+    //      already inserted), swallow the error.
+    //   3) Always read the row back with the league relation.
+    //   4) Append the `initial` history row only once.
     const { data: bronzeLeague } = await supabase
       .from("leagues")
       .select("*")
@@ -89,29 +129,63 @@ export const leaguesService = {
 
     if (!bronzeLeague) throw new Error("Bronze league not found");
 
-    const { data, error } = await supabase
+    // Defense in depth: ensure a profile exists. The handle_new_user
+    // trigger normally creates it on signup, but if it's missing for any
+    // reason (e.g. trigger not yet recreated on the deployed DB), the FK
+    // on user_leagues.user_id → profiles.id will reject the insert below.
+    await this.ensureProfile(userId);
+
+    const { error: insertError } = await supabase
       .from("user_leagues")
       .insert({
         user_id: userId,
         league_id: bronzeLeague.id,
         weekly_xp: 0,
-      })
+      });
+
+    // 409 = another concurrent call already inserted our row. Any other
+    // error is real and should bubble up.
+    if (insertError && insertError.code !== "23505") {
+      throw insertError;
+    }
+
+    const { data, error } = await supabase
+      .from("user_leagues")
       .select(`
         *,
         league:leagues(*)
       `)
+      .eq("user_id", userId)
       .single();
 
     if (error) throw error;
 
-    // Log initial placement
-    await supabase.from("league_history").insert({
-      user_id: userId,
-      to_league_id: bronzeLeague.id,
-      change_type: 'initial',
-      weekly_xp: 0,
-      week_date: new Date().toISOString().split('T')[0],
-    });
+    // Log initial placement only if this is the first time (no history row yet).
+    const { data: existingHistory } = await supabase
+      .from("league_history")
+      .select("id")
+      .eq("user_id", userId)
+      .eq("change_type", "initial")
+      .limit(1)
+      .maybeSingle();
+
+    if (!existingHistory) {
+      const { error: historyError } = await supabase
+        .from("league_history")
+        .insert({
+          user_id: userId,
+          to_league_id: bronzeLeague.id,
+          change_type: "initial",
+          weekly_xp: 0,
+          week_date: new Date().toISOString().split("T")[0],
+        });
+
+      // 23505 here would mean another concurrent call already wrote the
+      // history row — that's fine, treat as success.
+      if (historyError && historyError.code !== "23505") {
+        throw historyError;
+      }
+    }
 
     return data as unknown as UserLeague;
   },

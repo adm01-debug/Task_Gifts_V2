@@ -7,11 +7,19 @@ import { createClient } from '@supabase/supabase-js';
 
 const supabaseUrl = process.env.VITE_SUPABASE_URL || '';
 const supabaseAnonKey = process.env.VITE_SUPABASE_ANON_KEY || '';
+const hasEnv = !!(supabaseUrl && supabaseAnonKey);
 
-describe('RLS Policies - Profiles Table', () => {
-  const anonClient = createClient(supabaseUrl, supabaseAnonKey);
+// Lazy initialization to avoid "supabaseKey is required" during module load
+const getAnonClient = () => {
+  if (!hasEnv) throw new Error('Missing VITE_SUPABASE_URL or VITE_SUPABASE_ANON_KEY');
+  return createClient(supabaseUrl, supabaseAnonKey);
+};
 
+const describeIf = hasEnv ? describe : describe.skip;
+
+describeIf('RLS Policies - Profiles Table', () => {
   it('Anon user should be able to read public profile fields', async () => {
+    const anonClient = getAnonClient();
     const { data, error } = await anonClient
       .from('profiles')
       .select('id, username, display_name')
@@ -36,10 +44,9 @@ describe('RLS Policies - Profiles Table', () => {
   });
 });
 
-describe('RLS Policies - Kudos Table', () => {
-  const anonClient = createClient(supabaseUrl, supabaseAnonKey);
-
+describeIf('RLS Policies - Kudos Table', () => {
   it('Anon user should NOT be able to view private kudos', async () => {
+    const anonClient = getAnonClient();
     const { data, error } = await anonClient
       .from('kudos')
       .select('*');
