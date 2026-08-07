@@ -1,0 +1,7 @@
+{
+  "mcpServers": {
+    "supabase": {
+      "url": "https://supabase-eidsaqymo-mcp.adm01.workers.dev/3b288f505e350e578410939525cf80e8/mcp"
+    }
+  }
+}

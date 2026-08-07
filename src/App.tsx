@@ -1,0 +1,336 @@
+import { TopLoadingBar } from "@/components/navigation/TopLoadingBar";
+import { BrowserRouter, Routes, Route, useLocation, useNavigate, Navigate } from "react-router-dom";
+import { AnimatePresence } from "framer-motion";
+import { PageTransition } from "@/components/navigation/PageTransition";
+import { OnboardingTourProvider } from "@/contexts/OnboardingTourContext";
+import { KeyboardShortcutsHelp } from "@/components/KeyboardShortcutsHelp";
+import { OfflineIndicator } from "@/components/OfflineIndicator";
+import { PWAInstallPrompt } from "@/components/PWAInstallPrompt";
+import { MobileBottomNav, ScrollToTopFAB, NetworkStatusBar } from "@/components/mobile";
+import { AccessibilityProvider, SkipLinks } from "@/components/accessibility";
+import { TourSpotlight, TourLauncher } from "@/components/onboarding";
+import { CommandPalette } from "@/components/CommandPalette";
+import { FloatingCommandHint } from "@/components/ui/command-trigger";
+import { useIsMobile } from "@/hooks/use-mobile";
+import { lazy, Suspense } from "react";
+import { motion } from "framer-motion";
+import { Shield } from "lucide-react";
+import { useScrollRestoration } from "@/hooks/useNavigationHelpers";
+ import { useSwipeNavigation } from "@/hooks/useSwipeNavigation";
+import { Providers } from "@/components/Providers";
+import { ProtectedRoute } from "@/components/rbac/ProtectedRoute";
+import { useAuth } from "@/hooks/useAuth";
+import { GlobalErrorBoundary } from "@/components/GlobalErrorBoundary";
+
+// Eagerly loaded routes (critical path)
+import Index from "./pages/Index";
+import Auth from "./pages/Auth";
+
+// Lazy loaded routes (code splitting)
+const Profile = lazy(() => import("./pages/Profile"));
+const CertificateVerify = lazy(() => import("./pages/CertificateVerify"));
+const ManagerDashboard = lazy(() => import("./pages/ManagerDashboard"));
+const QuestBuilder = lazy(() => import("./pages/QuestBuilder"));
+const EngagementReports = lazy(() => import("./pages/EngagementReports"));
+const AuditLogs = lazy(() => import("./pages/AuditLogs"));
+const RealTimeAnalytics = lazy(() => import("./pages/RealTimeAnalytics"));
+const LearningTrails = lazy(() => import("./pages/LearningTrails"));
+const TrailDetail = lazy(() => import("./pages/TrailDetail"));
+const Attendance = lazy(() => import("./pages/Attendance"));
+const ExecutiveDashboard = lazy(() => import("./pages/ExecutiveDashboard"));
+const Shop = lazy(() => import("./pages/Shop"));
+const ShopAdmin = lazy(() => import("./pages/ShopAdmin"));
+const SocialFeed = lazy(() => import("./pages/SocialFeed"));
+const Achievements = lazy(() => import("./pages/Achievements"));
+const NotFound = lazy(() => import("./pages/NotFound"));
+const PersonalStats = lazy(() => import("./pages/PersonalStats"));
+const SeasonalEventDetail = lazy(() => import("./pages/SeasonalEventDetail"));
+const Duels = lazy(() => import("./pages/Duels"));
+const LuckyWheelPage = lazy(() => import("./pages/LuckyWheelPage"));
+const PredictionMarketsPage = lazy(() => import("./pages/PredictionMarketsPage"));
+const PredictionAdminPage = lazy(() => import("./pages/PredictionAdminPage"));
+const LuckyWheelAdmin = lazy(() => import("./pages/LuckyWheelAdmin"));
+const ScratchCardPage = lazy(() => import("./pages/ScratchCardPage"));
+const CardAlbumPage = lazy(() => import("./pages/CardAlbumPage"));
+const AuctionsPage = lazy(() => import("./pages/AuctionsPage"));
+const AuctionsAdmin = lazy(() => import("./pages/AuctionsAdmin"));
+const LightningQuizPage = lazy(() => import("./pages/LightningQuizPage"));
+const BingoPage = lazy(() => import("./pages/BingoPage"));
+const MemoryGamePage = lazy(() => import("./pages/MemoryGamePage"));
+const SequenceGamePage = lazy(() => import("./pages/SequenceGamePage"));
+const BoardTrailPage = lazy(() => import("./pages/BoardTrailPage"));
+const DailyWagerPage = lazy(() => import("./pages/DailyWagerPage"));
+const MemoryDeckAdminPage = lazy(() => import("./pages/MemoryDeckAdminPage"));
+const BoardTrailAdminPage = lazy(() => import("./pages/BoardTrailAdminPage"));
+const WagerQuestionAdminPage = lazy(() => import("./pages/WagerQuestionAdminPage"));
+const SequenceProcedureAdminPage = lazy(() => import("./pages/SequenceProcedureAdminPage"));
+const TournamentsPage = lazy(() => import("./pages/TournamentsPage"));
+const DepartmentWarPage = lazy(() => import("./pages/DepartmentWarPage"));
+const BossBattlePage = lazy(() => import("./pages/BossBattlePage"));
+const DailyQuiz = lazy(() => import("./pages/DailyQuiz"));
+const QuizAdmin = lazy(() => import("./pages/QuizAdmin"));
+const AdminPanel = lazy(() => import("./pages/AdminPanel"));
+const BIDashboard = lazy(() => import("./pages/BIDashboard"));
+const Goals = lazy(() => import("./pages/Goals"));
+const ContinuousEngagement = lazy(() => import("./pages/ContinuousEngagement"));
+const ClimateDiagnostics = lazy(() => import("./pages/ClimateDiagnostics"));
+const OpinionChannel = lazy(() => import("./pages/OpinionChannel"));
+const ActionPlans = lazy(() => import("./pages/ActionPlans"));
+const Nr1Risks = lazy(() => import("./pages/Nr1Risks"));
+const Checkins = lazy(() => import("./pages/Checkins"));
+const Leagues = lazy(() => import("./pages/Leagues"));
+const Surveys = lazy(() => import("./pages/Surveys"));
+const Feedback = lazy(() => import("./pages/Feedback"));
+const Announcements = lazy(() => import("./pages/Announcements"));
+const ForgotPassword = lazy(() => import("./pages/ForgotPassword"));
+const ResetPassword = lazy(() => import("./pages/ResetPassword"));
+const RateLimitDashboard = lazy(() => import("./pages/RateLimitDashboard"));
+const SecurityDashboard = lazy(() => import("./pages/SecurityDashboard"));
+const PermissionsAdmin = lazy(() => import("./pages/PermissionsAdmin"));
+const ApiKeysAdmin = lazy(() => import("./pages/ApiKeysAdmin"));
+const AdminTelemetria = lazy(() => import("./pages/AdminTelemetria"));
+const WebhooksAdmin = lazy(() => import("./pages/WebhooksAdmin"));
+const WebhookSubscriptionDetail = lazy(() => import("./pages/WebhookSubscriptionDetail"));
+const WebhookSubscriptionNew = lazy(() => import("./pages/WebhookSubscriptionNew"));
+const WebhooksExecutive = lazy(() => import("./pages/WebhooksExecutive"));
+const SecurityRunbook = lazy(() => import("./pages/SecurityRunbook"));
+const SecurityDigests = lazy(() => import("./pages/SecurityDigests"));
+const ReliabilitySLO = lazy(() => import("./pages/ReliabilitySLO"));
+const ErrorBudget = lazy(() => import("./pages/ErrorBudget"));
+const BurnRate = lazy(() => import("./pages/BurnRate"));
+const Runbook = lazy(() => import("./pages/Runbook"));
+const IncidentMetrics = lazy(() => import("./pages/IncidentMetrics"));
+const Postmortems = lazy(() => import("./pages/Postmortems"));
+const ExecutiveMonthlyReport = lazy(() => import("./pages/ExecutiveMonthlyReport"));
+const SalesCampaigns = lazy(() => import("./pages/SalesCampaigns"));
+const SalesCampaignDetail = lazy(() => import("./pages/SalesCampaignDetail"));
+const CampaignTeamRanking = lazy(() => import("./pages/CampaignTeamRanking"));
+const CampaignTeamsDashboard = lazy(() => import("./pages/CampaignTeamsDashboard"));
+const CampaignHistory = lazy(() => import("./pages/CampaignHistory"));
+
+function PageLoader() {
+  return (
+    <div className="min-h-screen flex flex-col items-center justify-center bg-background p-6">
+      <div className="relative">
+        <motion.div
+          initial={{ scale: 0.8, opacity: 0 }}
+          animate={{ 
+            scale: [0.8, 1.1, 1],
+            opacity: 1,
+          }}
+          transition={{ duration: 0.5 }}
+          className="relative z-10"
+        >
+          <div className="w-20 h-20 rounded-2xl bg-primary/10 flex items-center justify-center border-2 border-primary/20 shadow-xl overflow-hidden">
+            <Shield className="w-10 h-10 text-primary" />
+            
+            {/* Shimmer effect inside the logo box */}
+            <motion.div 
+              className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -skew-x-12"
+              animate={{ x: ['100%', '-100%'] }}
+              transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
+            />
+          </div>
+        </motion.div>
+        
+        {/* Pulse rings */}
+        <motion.div 
+          className="absolute inset-0 rounded-2xl border-2 border-primary/30"
+          animate={{ scale: [1, 1.5], opacity: [0.5, 0] }}
+          transition={{ duration: 1.5, repeat: Infinity }}
+        />
+        <motion.div 
+          className="absolute inset-0 rounded-2xl border-2 border-primary/20"
+          animate={{ scale: [1, 2], opacity: [0.3, 0] }}
+          transition={{ duration: 1.5, repeat: Infinity, delay: 0.5 }}
+        />
+      </div>
+
+      <div className="mt-12 text-center max-w-xs">
+        <motion.h2 
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
+          className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-accent"
+        >
+          Gamificação Corporativa
+        </motion.h2>
+        <motion.div
+          initial={{ width: 0 }}
+          animate={{ width: "100%" }}
+          transition={{ duration: 2, repeat: Infinity }}
+          className="h-1 bg-muted rounded-full mt-4 overflow-hidden"
+        >
+          <motion.div 
+            className="h-full bg-primary"
+            animate={{ x: ["-100%", "100%"] }}
+            transition={{ duration: 1, repeat: Infinity, ease: "easeInOut" }}
+          />
+        </motion.div>
+        <motion.p 
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 0.6 }}
+          transition={{ delay: 0.4 }}
+          className="text-sm mt-3 font-medium text-muted-foreground animate-pulse"
+        >
+          Preparando sua experiência 10/10...
+        </motion.p>
+      </div>
+    </div>
+  );
+}
+
+// Global mobile components wrapper
+function MobileGlobalComponents() {
+  const isMobile = useIsMobile();
+  const location = useLocation();
+  
+  const hideBottomNav = location.pathname === "/auth" || 
+                        location.pathname === "/forgot-password" || 
+                        location.pathname === "/reset-password";
+  
+  if (!isMobile) return null;
+  
+  return (
+    <>
+      {!hideBottomNav && <MobileBottomNav />}
+      <ScrollToTopFAB />
+      <NetworkStatusBar />
+      <PWAInstallPrompt />
+    </>
+  );
+}
+
+// Scroll restoration wrapper
+function ScrollRestorationProvider({ children }: { children: React.ReactNode }) {
+  useScrollRestoration();
+   useSwipeNavigation();
+  return <>{children}</>;
+}
+
+const AnimatedRoutes = () => {
+  const { user } = useAuth();
+  const location = useLocation();
+  
+  return (
+    <AnimatePresence mode="wait">
+      <Routes location={location} key={location.pathname}>
+        <Route path="/" element={<ProtectedRoute><PageTransition><Index /></PageTransition></ProtectedRoute>} />
+        <Route path="/auth" element={user ? <Navigate to="/" replace /> : <PageTransition><Auth /></PageTransition>} />
+        <Route path="/forgot-password" element={user ? <Navigate to="/" replace /> : <PageTransition><ForgotPassword /></PageTransition>} />
+        <Route path="/reset-password" element={user ? <Navigate to="/" replace /> : <PageTransition><ResetPassword /></PageTransition>} />
+        {/* Verificação pública de certificados — acessível sem autenticação. */}
+        <Route path="/verificar" element={<PageTransition><CertificateVerify /></PageTransition>} />
+        <Route path="/verificar/:code" element={<PageTransition><CertificateVerify /></PageTransition>} />
+        <Route path="/security" element={<ProtectedRoute requiredRole="admin"><PageTransition><RateLimitDashboard /></PageTransition></ProtectedRoute>} />
+        <Route path="/profile" element={<ProtectedRoute><PageTransition><Profile /></PageTransition></ProtectedRoute>} />
+        <Route path="/manager" element={<ProtectedRoute requiredRole="manager"><PageTransition><ManagerDashboard /></PageTransition></ProtectedRoute>} />
+        <Route path="/quest-builder" element={<ProtectedRoute requiredRole="manager"><PageTransition><QuestBuilder /></PageTransition></ProtectedRoute>} />
+        <Route path="/reports" element={<ProtectedRoute requiredRole="manager"><PageTransition><EngagementReports /></PageTransition></ProtectedRoute>} />
+        <Route path="/audit" element={<ProtectedRoute requiredRole="admin"><PageTransition><AuditLogs /></PageTransition></ProtectedRoute>} />
+        <Route path="/analytics" element={<ProtectedRoute><PageTransition><RealTimeAnalytics /></PageTransition></ProtectedRoute>} />
+        <Route path="/trails" element={<ProtectedRoute><PageTransition><LearningTrails /></PageTransition></ProtectedRoute>} />
+        <Route path="/trails/:id" element={<ProtectedRoute><PageTransition><TrailDetail /></PageTransition></ProtectedRoute>} />
+        <Route path="/ponto" element={<ProtectedRoute><PageTransition><Attendance /></PageTransition></ProtectedRoute>} />
+        <Route path="/executivo" element={<ProtectedRoute requiredRole="admin"><PageTransition><ExecutiveDashboard /></PageTransition></ProtectedRoute>} />
+        <Route path="/feed" element={<ProtectedRoute><PageTransition><SocialFeed /></PageTransition></ProtectedRoute>} />
+        <Route path="/conquistas" element={<ProtectedRoute><PageTransition><Achievements /></PageTransition></ProtectedRoute>} />
+        <Route path="/estatisticas" element={<ProtectedRoute><PageTransition><PersonalStats /></PageTransition></ProtectedRoute>} />
+        <Route path="/loja" element={<ProtectedRoute><PageTransition><Shop /></PageTransition></ProtectedRoute>} />
+        <Route path="/eventos/:eventId" element={<ProtectedRoute><PageTransition><SeasonalEventDetail /></PageTransition></ProtectedRoute>} />
+        <Route path="/duelos" element={<ProtectedRoute><PageTransition><Duels /></PageTransition></ProtectedRoute>} />
+        <Route path="/roleta" element={<ProtectedRoute><PageTransition><LuckyWheelPage /></PageTransition></ProtectedRoute>} />
+        <Route path="/roleta/admin" element={<ProtectedRoute requiredRole="admin"><PageTransition><LuckyWheelAdmin /></PageTransition></ProtectedRoute>} />
+        <Route path="/leilao" element={<ProtectedRoute><PageTransition><AuctionsPage /></PageTransition></ProtectedRoute>} />
+        <Route path="/leilao/admin" element={<ProtectedRoute requiredRole="admin"><PageTransition><AuctionsAdmin /></PageTransition></ProtectedRoute>} />
+        <Route path="/previsoes" element={<ProtectedRoute><PageTransition><PredictionMarketsPage /></PageTransition></ProtectedRoute>} />
+        <Route path="/previsoes/admin" element={<ProtectedRoute requiredRole="admin"><PageTransition><PredictionAdminPage /></PageTransition></ProtectedRoute>} />
+        <Route path="/raspadinha" element={<ProtectedRoute><PageTransition><ScratchCardPage /></PageTransition></ProtectedRoute>} />
+        <Route path="/album" element={<ProtectedRoute><PageTransition><CardAlbumPage /></PageTransition></ProtectedRoute>} />
+        <Route path="/relampago" element={<ProtectedRoute><PageTransition><LightningQuizPage /></PageTransition></ProtectedRoute>} />
+        <Route path="/bingo" element={<ProtectedRoute><PageTransition><BingoPage /></PageTransition></ProtectedRoute>} />
+        <Route path="/memoria" element={<ProtectedRoute><PageTransition><MemoryGamePage /></PageTransition></ProtectedRoute>} />
+        <Route path="/sequencia" element={<ProtectedRoute><PageTransition><SequenceGamePage /></PageTransition></ProtectedRoute>} />
+        <Route path="/tabuleiro" element={<ProtectedRoute><PageTransition><BoardTrailPage /></PageTransition></ProtectedRoute>} />
+        <Route path="/pergunta-do-dia" element={<ProtectedRoute><PageTransition><DailyWagerPage /></PageTransition></ProtectedRoute>} />
+        <Route path="/sequencia/admin" element={<ProtectedRoute requiredRole="admin"><PageTransition><SequenceProcedureAdminPage /></PageTransition></ProtectedRoute>} />
+        <Route path="/memoria/admin" element={<ProtectedRoute requiredRole="admin"><PageTransition><MemoryDeckAdminPage /></PageTransition></ProtectedRoute>} />
+        <Route path="/tabuleiro/admin" element={<ProtectedRoute requiredRole="admin"><PageTransition><BoardTrailAdminPage /></PageTransition></ProtectedRoute>} />
+        <Route path="/pergunta-do-dia/admin" element={<ProtectedRoute requiredRole="admin"><PageTransition><WagerQuestionAdminPage /></PageTransition></ProtectedRoute>} />
+        <Route path="/torneios" element={<ProtectedRoute><PageTransition><TournamentsPage /></PageTransition></ProtectedRoute>} />
+        <Route path="/guerra-departamentos" element={<ProtectedRoute><PageTransition><DepartmentWarPage /></PageTransition></ProtectedRoute>} />
+        <Route path="/chefao" element={<ProtectedRoute><PageTransition><BossBattlePage /></PageTransition></ProtectedRoute>} />
+        <Route path="/quiz" element={<ProtectedRoute><PageTransition><DailyQuiz /></PageTransition></ProtectedRoute>} />
+        <Route path="/quiz/admin" element={<ProtectedRoute requiredRole="manager"><PageTransition><QuizAdmin /></PageTransition></ProtectedRoute>} />
+        <Route path="/admin" element={<ProtectedRoute requiredRole="admin"><PageTransition><AdminPanel /></PageTransition></ProtectedRoute>} />
+        <Route path="/bi" element={<ProtectedRoute requiredRole="manager"><PageTransition><BIDashboard /></PageTransition></ProtectedRoute>} />
+        <Route path="/goals" element={<ProtectedRoute><PageTransition><Goals /></PageTransition></ProtectedRoute>} />
+        <Route path="/engajamento" element={<ProtectedRoute><PageTransition><ContinuousEngagement /></PageTransition></ProtectedRoute>} />
+        <Route path="/engajamento/diagnostico" element={<ProtectedRoute requiredRole="manager"><PageTransition><ClimateDiagnostics /></PageTransition></ProtectedRoute>} />
+        <Route path="/engajamento/opinioes" element={<ProtectedRoute><PageTransition><OpinionChannel /></PageTransition></ProtectedRoute>} />
+        <Route path="/planos-acao" element={<ProtectedRoute requiredRole="manager"><PageTransition><ActionPlans /></PageTransition></ProtectedRoute>} />
+        <Route path="/engajamento/nr1" element={<ProtectedRoute requiredRole="manager"><PageTransition><Nr1Risks /></PageTransition></ProtectedRoute>} />
+        <Route path="/checkins" element={<ProtectedRoute requiredRole="manager"><PageTransition><Checkins /></PageTransition></ProtectedRoute>} />
+        <Route path="/leagues" element={<ProtectedRoute><PageTransition><Leagues /></PageTransition></ProtectedRoute>} />
+        <Route path="/surveys" element={<ProtectedRoute><PageTransition><Surveys /></PageTransition></ProtectedRoute>} />
+        <Route path="/feedback" element={<ProtectedRoute><PageTransition><Feedback /></PageTransition></ProtectedRoute>} />
+        <Route path="/announcements" element={<ProtectedRoute><PageTransition><Announcements /></PageTransition></ProtectedRoute>} />
+        <Route path="/security-dashboard" element={<ProtectedRoute><PageTransition><SecurityDashboard /></PageTransition></ProtectedRoute>} />
+        <Route path="/admin/permissions" element={<ProtectedRoute requiredRole="admin"><PageTransition><PermissionsAdmin /></PageTransition></ProtectedRoute>} />
+        <Route path="/admin/api-keys" element={<ProtectedRoute requiredRole="admin"><PageTransition><ApiKeysAdmin /></PageTransition></ProtectedRoute>} />
+        <Route path="/admin/telemetria" element={<ProtectedRoute requiredRole="admin"><PageTransition><AdminTelemetria /></PageTransition></ProtectedRoute>} />
+        <Route path="/admin/webhooks" element={<ProtectedRoute requiredRole="admin"><PageTransition><WebhooksAdmin /></PageTransition></ProtectedRoute>} />
+        <Route path="/admin/webhooks/executive" element={<ProtectedRoute requiredRole="admin"><PageTransition><WebhooksExecutive /></PageTransition></ProtectedRoute>} />
+        <Route path="/admin/security-runbook" element={<ProtectedRoute requiredRole="admin"><PageTransition><SecurityRunbook /></PageTransition></ProtectedRoute>} />
+        <Route path="/admin/security-digests" element={<ProtectedRoute requiredRole="admin"><PageTransition><SecurityDigests /></PageTransition></ProtectedRoute>} />
+        <Route path="/admin/reliability" element={<ProtectedRoute requiredRole="admin"><PageTransition><ReliabilitySLO /></PageTransition></ProtectedRoute>} />
+        <Route path="/admin/error-budget" element={<ProtectedRoute requiredRole="admin"><PageTransition><ErrorBudget /></PageTransition></ProtectedRoute>} />
+        <Route path="/admin/burn-rate" element={<ProtectedRoute requiredRole="admin"><PageTransition><BurnRate /></PageTransition></ProtectedRoute>} />
+        <Route path="/admin/runbook/:type" element={<ProtectedRoute requiredRole="admin"><PageTransition><Runbook /></PageTransition></ProtectedRoute>} />
+        <Route path="/admin/incident-metrics" element={<ProtectedRoute requiredRole="admin"><PageTransition><IncidentMetrics /></PageTransition></ProtectedRoute>} />
+        <Route path="/admin/postmortems" element={<ProtectedRoute requiredRole="admin"><PageTransition><Postmortems /></PageTransition></ProtectedRoute>} />
+        <Route path="/admin/executive-report" element={<ProtectedRoute requiredRole="admin"><PageTransition><ExecutiveMonthlyReport /></PageTransition></ProtectedRoute>} />
+        <Route path="/admin/webhooks/new" element={<ProtectedRoute requiredRole="admin"><PageTransition><WebhookSubscriptionNew /></PageTransition></ProtectedRoute>} />
+        <Route path="/admin/webhooks/:id" element={<ProtectedRoute requiredRole="admin"><PageTransition><WebhookSubscriptionDetail /></PageTransition></ProtectedRoute>} />
+        <Route path="/loja/admin" element={<ProtectedRoute requiredRole="admin"><PageTransition><ShopAdmin /></PageTransition></ProtectedRoute>} />
+        <Route path="/campanhas" element={<ProtectedRoute><PageTransition><SalesCampaigns /></PageTransition></ProtectedRoute>} />
+        <Route path="/campanhas/historico" element={<ProtectedRoute><PageTransition><CampaignHistory /></PageTransition></ProtectedRoute>} />
+        <Route path="/campanhas/equipes" element={<ProtectedRoute><PageTransition><CampaignTeamsDashboard /></PageTransition></ProtectedRoute>} />
+        <Route path="/campanhas/:id" element={<ProtectedRoute><PageTransition><SalesCampaignDetail /></PageTransition></ProtectedRoute>} />
+        <Route path="/campanhas/:id/ranking-equipes" element={<ProtectedRoute><PageTransition><CampaignTeamRanking /></PageTransition></ProtectedRoute>} />
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </AnimatePresence>
+  );
+};
+
+const App = () => (
+  <Providers>
+    <GlobalErrorBoundary>
+      <BrowserRouter
+        future={{
+          v7_startTransition: true,
+          v7_relativeSplatPath: true,
+        }}
+      >
+        <OnboardingTourProvider>
+          <ScrollRestorationProvider>
+            <Suspense fallback={<PageLoader />}>
+              <TopLoadingBar />
+              <SkipLinks />
+              <KeyboardShortcutsHelp />
+              <CommandPalette />
+              <FloatingCommandHint />
+              <TourSpotlight />
+              <TourLauncher />
+              <MobileGlobalComponents />
+              <AnimatedRoutes />
+            </Suspense>
+          </ScrollRestorationProvider>
+        </OnboardingTourProvider>
+      </BrowserRouter>
+    </GlobalErrorBoundary>
+  </Providers>
+);
+
+export default App;

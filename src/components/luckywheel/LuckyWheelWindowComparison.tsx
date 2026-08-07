@@ -1,0 +1,444 @@
+import { useEffect, useMemo, useState } from "react";
+import { AlertTriangle, ArrowRight, Minus, Save, ScaleIcon, TrendingDown, TrendingUp } from "lucide-react";
+import { toast } from "sonner";
+
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Skeleton } from "@/components/ui/skeleton";
+import { useLuckyWheelPayoutSnapshots } from "@/hooks/useLuckyWheel";
+import { logger } from "@/services/loggingService";
+import {
+  loadBudget,
+  saveBudget,
+  fetchRemoteBudget,
+  persistRemoteBudget,
+  fetchBudgetHistory,
+  type BudgetAuditEntry,
+} from "@/lib/luckyWheelBudget";
+import { decideComparisonAlerts, type ComparisonAlertSeverity } from "@/lib/luckyWheelComparisonAlerts";
+import {
+  defaultCandidates,
+  simulateBudgetScenarios,
+  persistWhatIfSnapshot,
+  fetchWhatIfSnapshots,
+  type WhatIfSnapshotRow,
+} from "@/lib/luckyWheelBudgetWhatIf";
+import { Button } from "@/components/ui/button";
+import {
+  comparePayoutWindows,
+  type SignificanceTest,
+  type SignificanceVerdict,
+} from "@/lib/luckyWheelPayoutComparison";
+import { buildPayoutTrend } from "@/lib/luckyWheelPayoutHistory";
+import { cn } from "@/lib/utils";
+
+const WINDOWS = [
+  { value: "7", label: "Semana atual × anterior" },
+  { value: "14", label: "Quinzena atual × anterior" },
+  { value: "30", label: "Mês atual × anterior" },
+] as const;
+
+const decimal = new Intl.NumberFormat("pt-BR", { maximumFractionDigits: 2 });
+const percent = new Intl.NumberFormat("pt-BR", { style: "percent", maximumFractionDigits: 1 });
+
+const VERDICT_LABEL: Record<SignificanceVerdict, string> = {
+  insufficient: "Amostra insuficiente",
+  stable: "Estável",
+  significant: "Variação significativa",
+};
+
+const SEVERITY_LABEL: Record<ComparisonAlertSeverity, string> = {
+  critical: "Crítico",
+  high: "Alto",
+  medium: "Médio",
+  low: "Baixo",
+};
+
+function formatValue(test: SignificanceTest, value: number): string {
+  return test.metric === "coinsDeviation" ? percent.format(value) : decimal.format(value);
+}
+
+function VerdictBadge({ verdict }: { verdict: SignificanceVerdict }) {
+  return (
+    <Badge
+      variant={verdict === "significant" ? "destructive" : verdict === "stable" ? "secondary" : "outline"}
+    >
+      {VERDICT_LABEL[verdict]}
+    </Badge>
+  );
+}
+
+/**
+ * Comparação estatística entre a janela atual e a anterior (teste t de Welch
+ * com beta incompleta exata). Todo o cálculo vem do motor puro
+ * `comparePayoutWindows` — este componente apenas apresenta.
+ */
+export function LuckyWheelWindowComparison() {
+  const [windowSize, setWindowSize] = useState<(typeof WINDOWS)[number]["value"]>("7");
+  const [budget, setBudget] = useState<number>(() => loadBudget());
+  const [budgetDraft, setBudgetDraft] = useState<string>(() => String(loadBudget()));
+  const [budgetSyncing, setBudgetSyncing] = useState(false);
+  const [budgetHistory, setBudgetHistory] = useState<BudgetAuditEntry[]>([]);
+  const windowDays = Number(windowSize);
+  const { data, isLoading, isError } = useLuckyWheelPayoutSnapshots(windowDays * 2);
+
+  const comparison = useMemo(() => {
+    const { points } = buildPayoutTrend(data ?? [], {
+      days: windowDays * 2,
+      endDate: new Date().toISOString().slice(0, 10),
+    });
+    return comparePayoutWindows(points, {
+      windowDays,
+      currentLabel: `Últimos ${windowDays} dias`,
+      previousLabel: `${windowDays} dias anteriores`,
+    });
+  }, [data, windowDays]);
+
+  const alerts = useMemo(
+    () => decideComparisonAlerts(comparison, { coinsPerSpinBudget: budget }),
+    [comparison, budget],
+  );
+
+  const whatIf = useMemo(
+    () => simulateBudgetScenarios(comparison, defaultCandidates(budget)),
+    [comparison, budget],
+  );
+
+  const [whatIfHistory, setWhatIfHistory] = useState<WhatIfSnapshotRow[]>([]);
+  const [savingWhatIf, setSavingWhatIf] = useState(false);
+
+  /** Carrega a auditoria histórica das simulações (silencioso em caso de falha). */
+  useEffect(() => {
+    let active = true;
+    void fetchWhatIfSnapshots(5)
+      .then((rows) => { if (active) setWhatIfHistory(rows); })
+      .catch((err: unknown) => {
+        logger.warn(
+          `Falha ao carregar histórico de simulações: ${String(err)}`,
+          "LuckyWheelWindowComparison",
+        );
+      });
+    return () => { active = false; };
+  }, []);
+
+  /** Registra o cenário atual; upsert por assinatura evita duplicatas. */
+  const saveWhatIf = async () => {
+    setSavingWhatIf(true);
+    try {
+      const saved = await persistWhatIfSnapshot(comparison, budget, whatIf);
+      if (!saved) {
+        toast.info("Sem janela válida para registrar ainda.");
+        return;
+      }
+      toast.success("Simulação registrada para auditoria.");
+      setWhatIfHistory(await fetchWhatIfSnapshots(5));
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : "Falha ao registrar a simulação";
+      logger.error(`Erro ao registrar simulação what-if: ${message}`, "LuckyWheelWindowComparison");
+      toast.error(message);
+    } finally {
+      setSavingWhatIf(false);
+    }
+  };
+
+  /**
+   * Hidrata o teto a partir do banco (fonte de verdade compartilhada com o
+   * cron diário). Falha de rede mantém o cache local — nunca quebra a tela.
+   */
+  useEffect(() => {
+    let active = true;
+    fetchRemoteBudget()
+      .then((remote) => {
+        if (!active) return;
+        setBudget(remote);
+        setBudgetDraft(String(remote));
+      })
+      .catch((err: unknown) => {
+        logger.warn(
+          `Falha ao carregar teto da Roleta; usando cache local: ${String(err)}`,
+          "LuckyWheelWindowComparison",
+        );
+      });
+    void fetchBudgetHistory(5).then((rows) => {
+      if (active) setBudgetHistory(rows);
+    });
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  /** Normaliza e persiste o teto ao sair do campo (nunca lança). */
+  const commitBudget = async () => {
+    const applied = saveBudget(budgetDraft);
+    setBudget(applied);
+    setBudgetDraft(String(applied));
+    setBudgetSyncing(true);
+    try {
+      await persistRemoteBudget(applied);
+      toast.success("Teto sincronizado com a rotina diária de alertas");
+      setBudgetHistory(await fetchBudgetHistory(5));
+    } catch (err: unknown) {
+      logger.error(
+        `Falha ao salvar teto da Roleta no banco: ${String(err)}`,
+        "LuckyWheelWindowComparison",
+      );
+      toast.error("Não foi possível salvar o teto no servidor (valor mantido localmente)");
+    } finally {
+      setBudgetSyncing(false);
+    }
+  };
+
+  if (isLoading) {
+    return (
+      <Card>
+        <CardHeader>
+          <CardTitle>Comparação de janelas</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-3">
+          {Array.from({ length: 3 }).map((_, i) => (
+            <Skeleton key={i} className="h-20 rounded-xl" />
+          ))}
+        </CardContent>
+      </Card>
+    );
+  }
+
+  if (isError) {
+    return (
+      <Alert variant="destructive">
+        <AlertTriangle className="h-4 w-4" />
+        <AlertTitle>Não foi possível comparar as janelas</AlertTitle>
+        <AlertDescription>Verifique sua permissão de administrador e tente novamente.</AlertDescription>
+      </Alert>
+    );
+  }
+
+  return (
+    <Card>
+      <CardHeader className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <CardTitle className="flex items-center gap-2">
+            <ScaleIcon className="h-5 w-5 text-primary" />
+            Comparação de janelas
+          </CardTitle>
+          <CardDescription>
+            Teste t de Welch sobre as séries diárias. Só marcamos variação quando ela sobrevive ao ruído
+            estatístico (p &lt; 0,05).
+          </CardDescription>
+        </div>
+        <Select value={windowSize} onValueChange={(value) => setWindowSize(value as typeof windowSize)}>
+          <SelectTrigger className="w-full sm:w-64">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            {WINDOWS.map((option) => (
+              <SelectItem key={option.value} value={option.value}>
+                {option.label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </CardHeader>
+
+      <CardContent className="space-y-4">
+        <div className="flex flex-wrap items-end gap-3 rounded-xl border border-border/60 bg-card/60 p-3 backdrop-blur">
+          <div className="space-y-1">
+            <Label htmlFor="coins-per-spin-budget" className="text-xs">
+              Teto de moedas por giro
+            </Label>
+            <Input
+              id="coins-per-spin-budget"
+              inputMode="decimal"
+              className="h-11 w-40"
+              value={budgetDraft}
+              disabled={budgetSyncing}
+              onChange={(event) => setBudgetDraft(event.target.value)}
+              onBlur={() => { void commitBudget(); }}
+              onKeyDown={(event) => {
+                if (event.key === "Enter") void commitBudget();
+              }}
+            />
+          </div>
+          <p className="text-xs text-muted-foreground">
+            Alerta de estouro dispara quando a janela atual paga acima de {decimal.format(budget)} moeda(s) por giro.
+            {" "}Este teto é compartilhado com a rotina diária de alertas do servidor.
+          </p>
+          <div className="w-full space-y-1 border-t border-border/60 pt-2">
+            <p className="text-xs font-medium text-muted-foreground">
+              Simulação “E se?” — alertas por teto
+              {whatIf.breakEvenBudget !== null && (
+                <span className="ml-1 font-normal">
+                  (teto mínimo sem estouro: {decimal.format(whatIf.breakEvenBudget)})
+                </span>
+              )}
+            </p>
+            <div className="flex flex-wrap gap-1.5">
+              {whatIf.scenarios.map((scenario) => (
+                <Badge
+                  key={scenario.budget}
+                  variant={scenario.overrun ? "destructive" : "secondary"}
+                  className={cn("gap-1 text-[11px]", scenario.budget === budget && "ring-1 ring-primary")}
+                >
+                  {decimal.format(scenario.budget)} → {scenario.alertCount} alerta(s)
+                </Badge>
+              ))}
+            </div>
+            <div className="flex flex-wrap items-center gap-2 pt-1">
+              <Button
+                size="sm"
+                variant="outline"
+                className="h-7 gap-1 text-xs"
+                disabled={savingWhatIf || whatIf.scenarios.length === 0}
+                onClick={() => { void saveWhatIf(); }}
+              >
+                <Save className="h-3.5 w-3.5" />
+                {savingWhatIf ? "Registrando…" : "Registrar simulação"}
+              </Button>
+              {whatIfHistory.length > 0 && (
+                <span className="text-[11px] text-muted-foreground">
+                  Último registro em{" "}
+                  {new Date(whatIfHistory[0].created_at).toLocaleString("pt-BR")} · teto{" "}
+                  {decimal.format(Number(whatIfHistory[0].active_budget))}
+                </span>
+              )}
+            </div>
+            {whatIfHistory.length > 0 && (
+              <ul className="space-y-0.5 pt-1 text-[11px] text-muted-foreground">
+                {whatIfHistory.slice(0, 5).map((row) => (
+                  <li key={row.id} className="flex flex-wrap items-center gap-1 tabular-nums">
+                    <span>{row.current_window_start} → {row.current_window_end}</span>
+                    <span>·</span>
+                    <span>teto {decimal.format(Number(row.active_budget))}</span>
+                    <span>·</span>
+                    <span>
+                      break-even{" "}
+                      {row.break_even_budget === null ? "—" : decimal.format(Number(row.break_even_budget))}
+                    </span>
+                    <span>·</span>
+                    <span>{Array.isArray(row.scenarios) ? row.scenarios.length : 0} cenário(s)</span>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+          {budgetHistory.length > 0 && (
+            <div className="w-full space-y-1 border-t border-border/60 pt-2">
+              <p className="text-xs font-medium text-muted-foreground">Últimas alterações do teto</p>
+              <ul className="space-y-0.5 text-xs text-muted-foreground">
+                {budgetHistory.map((entry) => (
+                  <li key={entry.id} className="flex flex-wrap items-center gap-1">
+                    <span className="tabular-nums">
+                      {new Date(entry.changedAt).toLocaleString("pt-BR")}
+                    </span>
+                    <span>·</span>
+                    <span>
+                      {entry.oldBudget === null ? "definido" : decimal.format(entry.oldBudget)}
+                    </span>
+                    <ArrowRight className="h-3 w-3" />
+                    <span className="font-medium text-foreground">
+                      {decimal.format(entry.newBudget)} moeda(s)/giro
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </div>
+
+        <div className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
+          <VerdictBadge verdict={comparison.verdict} />
+          <span>
+            {comparison.previous.startDate || "—"} → {comparison.previous.endDate || "—"}
+          </span>
+          <ArrowRight className="h-4 w-4" />
+          <span>
+            {comparison.current.startDate || "—"} → {comparison.current.endDate || "—"}
+          </span>
+        </div>
+
+        <div className="grid gap-3 md:grid-cols-3">
+          {comparison.tests.map((test) => {
+            const rising = test.delta > 0;
+            const Icon = test.delta === 0 ? Minus : rising ? TrendingUp : TrendingDown;
+            return (
+              <div
+                key={test.metric}
+                className={cn(
+                  "rounded-xl border border-border/60 bg-card/60 p-4 backdrop-blur",
+                  test.verdict === "significant" && "border-destructive/50",
+                )}
+              >
+                <div className="flex items-center justify-between gap-2">
+                  <span className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                    {test.label}
+                  </span>
+                  <Icon
+                    className={cn(
+                      "h-4 w-4",
+                      test.delta === 0
+                        ? "text-muted-foreground"
+                        : rising
+                          ? "text-destructive"
+                          : "text-emerald-600 dark:text-emerald-400",
+                    )}
+                  />
+                </div>
+                <p className="mt-2 text-2xl font-semibold tabular-nums">{formatValue(test, test.current)}</p>
+                <p className="text-xs text-muted-foreground">
+                  Anterior: {formatValue(test, test.previous)}
+                  {test.previous !== 0 ? ` (${percent.format(test.deltaRatio)})` : ""}
+                </p>
+                <div className="mt-3 flex flex-wrap items-center gap-2">
+                  <VerdictBadge verdict={test.verdict} />
+                  <span className="text-[11px] text-muted-foreground tabular-nums">
+                    p = {test.pValue < 0.0001 ? "<0,0001" : test.pValue.toFixed(4)} · d ={" "}
+                    {decimal.format(test.effectSize)}
+                  </span>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        <Alert variant={comparison.verdict === "significant" ? "destructive" : "default"}>
+          <AlertTriangle className="h-4 w-4" />
+          <AlertTitle>Leitura do período</AlertTitle>
+          <AlertDescription>
+            <ul className="list-disc space-y-1 pl-4">
+              {comparison.notes.map((note) => (
+                <li key={note}>{note}</li>
+              ))}
+            </ul>
+          </AlertDescription>
+        </Alert>
+
+        {alerts.length > 0 && (
+          <div className="space-y-2">
+            <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+              Alertas acionáveis
+            </p>
+            {alerts.map((alert) => (
+              <Alert
+                key={alert.dedupeKey}
+                variant={alert.severity === "critical" || alert.severity === "high" ? "destructive" : "default"}
+              >
+                <AlertTriangle className="h-4 w-4" />
+                <AlertTitle className="flex flex-wrap items-center gap-2">
+                  <Badge variant={alert.severity === "medium" || alert.severity === "low" ? "secondary" : "destructive"}>
+                    {SEVERITY_LABEL[alert.severity]}
+                  </Badge>
+                  {alert.title}
+                </AlertTitle>
+                <AlertDescription>{alert.description}</AlertDescription>
+              </Alert>
+            ))}
+          </div>
+        )}
+      </CardContent>
+    </Card>
+  );
+}

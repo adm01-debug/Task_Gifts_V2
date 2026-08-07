@@ -1,0 +1,134 @@
+/* Accessibility Styles */
+
+/* Reduced Motion */
+.reduce-motion *,
+.reduce-motion *::before,
+.reduce-motion *::after {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+  scroll-behavior: auto !important;
+}
+
+/* High Contrast Mode */
+.high-contrast {
+  --contrast-multiplier: 1.5;
+}
+
+.high-contrast body {
+  filter: contrast(var(--contrast-multiplier));
+}
+
+.high-contrast .border,
+.high-contrast [class*="border"] {
+  border-color: currentColor !important;
+}
+
+.high-contrast .text-muted-foreground {
+  color: hsl(var(--foreground)) !important;
+}
+
+/* Font Size Adjustments */
+.font-large {
+  font-size: 112.5%; /* 18px base */
+}
+
+.font-larger {
+  font-size: 125%; /* 20px base */
+}
+
+/* Focus Visible */
+.focus-visible-enabled *:focus-visible {
+  outline: 3px solid hsl(var(--primary)) !important;
+  outline-offset: 2px !important;
+}
+
+.focus-visible-enabled button:focus-visible,
+.focus-visible-enabled a:focus-visible,
+.focus-visible-enabled input:focus-visible,
+.focus-visible-enabled select:focus-visible,
+.focus-visible-enabled textarea:focus-visible {
+  box-shadow: 0 0 0 3px hsl(var(--primary) / 0.3) !important;
+}
+
+/* Skip Links Styling */
+.skip-links a:focus {
+  clip: auto !important;
+  clip-path: none !important;
+  height: auto !important;
+  width: auto !important;
+  overflow: visible !important;
+  white-space: normal !important;
+}
+
+/* Screen Reader Only - Improved */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+.sr-only:focus {
+  position: static;
+  width: auto;
+  height: auto;
+  padding: inherit;
+  margin: inherit;
+  overflow: visible;
+  clip: auto;
+  white-space: normal;
+}
+
+/* Improve tap targets for mobile */
+@media (pointer: coarse) {
+  button,
+  a,
+  input,
+  select,
+  textarea,
+  [role="button"],
+  [tabindex]:not([tabindex="-1"]) {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}
+
+/* Focus trap styles */
+[data-focus-trap] {
+  outline: none;
+}
+
+/* Ensure sufficient color contrast for warnings */
+.contrast-warning {
+  background-color: hsl(var(--warning));
+  color: hsl(var(--warning-foreground));
+}
+
+/* Motion-safe animations */
+@media (prefers-reduced-motion: no-preference) {
+  .motion-safe\:animate-pulse {
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+  
+  .motion-safe\:transition-all {
+    transition-property: all;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 150ms;
+  }
+}
+
+/* Keyboard navigation indicator */
+body.keyboard-navigation *:focus {
+  outline: 2px solid hsl(var(--primary));
+  outline-offset: 2px;
+}
+
+body:not(.keyboard-navigation) *:focus {
+  outline: none;
+}

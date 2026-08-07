@@ -1,0 +1,1 @@
+ALTER TABLE public.executive_monthly_reports ADD COLUMN IF NOT EXISTS commentary TEXT; ALTER TABLE public.executive_monthly_reports ADD COLUMN IF NOT EXISTS commentary_updated_at TIMESTAMPTZ; ALTER TABLE public.executive_monthly_reports ADD COLUMN IF NOT EXISTS commentary_updated_by UUID;
