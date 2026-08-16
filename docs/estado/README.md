@@ -12,6 +12,7 @@ Documento executivo: [`../../ESTADO_ATUAL.md`](../../ESTADO_ATUAL.md)
 | 06 | [Integrações](./06-integracoes.md) | terceiros, webhooks, filas |
 | 07 | [Infra, CI e testes](./07-infra-ci-testes.md) | pipeline, build, 1.618 casos |
 | 08 | [Migrations](./08-migrations.md) | 262 arquivos SQL |
+| 09 | [Validação e errata](./09-validacao-e-errata.md) | revisão adversarial da própria auditoria |
 | — | [Anexo: citações inexistentes](./anexo-citacoes-inexistentes.md) | 81 caminhos citados que não existem |
 
 **Legenda:** ✅ IMPLEMENTADO_TOTAL · 🟨 IMPLEMENTADO_PARCIAL · 🟦 SUGERIDO_OU_INICIADO · ⬛ MORTO_OU_ABANDONADO

@@ -8,6 +8,13 @@ somente leitura. Documentação do projeto tratada como hipótese, nunca como fo
 
 Detalhamento por dimensão em [`docs/estado/`](./docs/estado/).
 
+> ### ⚠️ Este documento passou por uma segunda passada de validação
+> Uma revisão adversarial tentou refutar cada conclusão e caçar o que ficou de fora. Ela achou
+> **um erro material** (a afirmação sobre Edge Functions estava errada), **uma lacuna crítica**
+> (segredo de banco versionado em `.mcp.json`), quatro achados exagerados e seis números incorretos.
+> Tudo está corrigido abaixo e documentado, com o original preservado, em
+> [`docs/estado/09-validacao-e-errata.md`](./docs/estado/09-validacao-e-errata.md).
+
 ---
 
 ## Veredito em uma tela
@@ -24,8 +31,10 @@ E, ainda assim:
   autenticaram e 2 administrativas, a última com login em 2026-08-06.
 - **70,4% das tabelas (164 de 233) nunca receberam uma única escrita.** A maior tabela do sistema
   tem 48 linhas.
-- **As 36 Edge Functions estão inalcançáveis pelo frontend** — um kill-switch de uma linha desliga
-  todas.
+- **34 das 36 Edge Functions estão inalcançáveis pelo frontend** — um kill-switch de uma linha
+  desliga quase todas. *(Corrigido: a versão original dizia "as 36" e afirmava não haver rota de
+  escape. Há duas.)*
+- **Um segredo de acesso total ao banco de produção está versionado no git** (`.mcp.json`).
 - **O CI nunca executou um único comando** desde que existe: o YAML é inválido. 372 execuções, 100%
   falha.
 - **Um job de produção falha a cada 30 minutos há 364 execuções seguidas**, em silêncio.
@@ -65,6 +74,13 @@ Aplicando a regra de ouro contra o banco vivo:
 Nenhuma funcionalidade de negócio deste sistema pode ser honestamente classificada ✅ hoje. Isso não
 é um defeito do código — é a constatação de que **o sistema nunca entrou em operação**.
 
+**Precisão sobre "uso"** *(refinado na validação)*: nenhum **usuário final** usou o sistema, mas
+houve **smoke-test manual de administrador** em algumas mecânicas, com rastro identificável —
+`user_achievements`, `user_cards` e `scratch_cards` contêm linhas pertencentes **apenas** às 2
+contas que de fato autenticaram, e raspadinha e cartas só geram registro por clique humano. Já
+`auction_bids`, `pulse_responses` e `department_war_contributions` pertencem às 4 contas que nunca
+logaram: são seed programático.
+
 > **Errata da minha própria condução.** Ao distribuir o trabalho, instruí os agentes de gamificação
 > e RH a tratar "tabela com linhas" como evidência de uso real. Isso estava errado: as linhas
 > existentes são seed e teste manual de administrador, feitas por contas que em 4 dos 6 casos nunca
@@ -72,7 +88,13 @@ Nenhuma funcionalidade de negócio deste sistema pode ser honestamente classific
 
 ### Código morto medido
 
-69 unidades sem nenhum caminho de execução, **≈9.500 linhas**, com os maiores blocos em:
+68 unidades sem caminho de execução **em produção**, com piso medido item a item de **7.852 linhas**
+(2.592 em 17 arquivos + 5.260 nas 18 Edge Functions sem chamador). *(Corrigido: o "≈9.500" original
+somava relatos de lote que eu nunca recontei; e eram 19 functions sem chamador, não 18 — `ai-coach`
+tem chamador via `fetch` cru.)*
+
+**Cuidado antes de apagar:** 8 dos 9 módulos órfãos de `src/lib` **são importados por testes**. Só
+`exportReports.ts` (537 linhas) tem zero consumidores em qualquer lugar. Os maiores blocos:
 `src/components/ui` (12 órfãos, incl. `sidebar.tsx` 643 ln), Edge Functions (19 sem chamador),
 `src/lib` (9 módulos, 1.475 ln, incl. `exportReports.ts` com 537 ln e zero referências),
 `src/components/social/` (diretório inteiro), `src/utils/formatters.ts` (49 ln, zero importadores,
@@ -83,6 +105,24 @@ No nível de função, e não de arquivo: **96 dos 486 hooks exportados (19,8%) 
 ---
 
 ## Riscos estruturais, por gravidade
+
+### 🔴 0. Um segredo de acesso total ao banco está versionado no repositório
+
+`.mcp.json:4` contém `https://supabase-eidsaqymo-mcp.adm01.workers.dev/<32 hex>/mcp`. O segmento
+hexadecimal do caminho é o **único fator de autenticação** desse gateway, e ele expõe execução de
+SQL arbitrário — `SELECT/INSERT/UPDATE/DELETE/DDL`, acesso total. Foi por esse endpoint que esta
+auditoria leu o banco.
+
+Versionado desde `df2d2d5`; o `.gitignore` não cobre o arquivo. **Quem tem acesso de leitura ao
+repositório tem controle total do banco de produção.** Atenuante: o repositório é privado — o que
+limita a exposição, mas não torna aceitável um segredo equivalente a bearer, sem rotação, em texto
+claro no controle de versão.
+
+Diferente do risco nº 2, este **não é condicional**. Recomendo rotacionar o segredo do gateway e
+remover o arquivo do versionamento antes de qualquer outra ação desta lista.
+
+*(Achado pela revisão de validação. A auditoria original leu este arquivo na Fase A e não o
+classificou.)*
 
 ### 🔴 1. Qualquer usuário autenticado pode se dar XP, moedas e nível arbitrários
 
@@ -130,12 +170,20 @@ a `public_key` armazenada nem confere o challenge — a autenticação se resolv
 > Mitigação de fato hoje: `user_two_factor` e `webauthn_credentials` estão **vazias** — ninguém
 > ativou 2FA nem passkey. O risco é de ativação, não de exploração corrente.
 
-### 🟠 4. As 36 Edge Functions estão desligadas por um kill-switch de uma linha
+### 🟠 4. 34 das 36 Edge Functions estão desligadas por um kill-switch de uma linha
 
 `.env:25` contém `VITE_DEPLOYED_EDGE_FUNCTIONS=` (vazio). `src/lib/edgeAvailability.ts:49` faz
 `if (allowlist.size === 0) return false`. `src/lib/requestId.ts:131` devolve um 404 sintético **sem
-tocar a rede**. Todas as 17 chamadas do frontend passam por `invokeEdgeSafe`; as duas únicas
-`functions.invoke` diretas do repositório são edge→edge. **Não há rota de escape.**
+tocar a rede**. São **18 call sites em 15 arquivos**, cobrindo 13 das 36 funções, todos por esse
+wrapper.
+
+> **Correção da versão original.** Eu havia escrito "as 36" e "não há rota de escape". Errado:
+> procurei `functions.invoke` e não procurei `fetch` cru. Duas funções escapam do kill-switch —
+> `ai-coach` (`src/hooks/useAICoach.ts:15`, `fetch` em `:54` e `:133`) e `trail-recommendations`
+> (`src/components/manager/TeamCompetencyDashboard.tsx:68`) — batendo direto em
+> `${VITE_SUPABASE_URL}/functions/v1/…`. Justamente as duas que **gastam créditos de IA**. Ambas
+> mandam a chave anônima como `Bearer` em vez do JWT do usuário, então a função não sabe quem
+> chamou, e ambas ficam fora do contrato de retry, erro e telemetria.
 
 Consequência direta e medida: IA (`ai_coach_messages`=0, `ai_course_jobs`=0), push
 (`push_subscriptions`=0, `push_outbox`=6 represados), webhooks (`webhook_delivery_logs`=0),
@@ -151,7 +199,11 @@ provavelmente a origem do problema.
   está na allowlist — que é sempre. Todos os caminhos de erro também liberam. A tela "Acesso Negado"
   é inalcançável. No servidor, `verify-ip/index.ts:139-145` e `verify-geo/index.ts:186-194` retornam
   `allowed:true` em qualquer exceção.
-- **Senha vazada:** `authValidations.ts:100,116` retorna `{isLeaked:false}` quando a API HIBP falha.
+- **Senha vazada — falha em 100% das execuções, não eventualmente:** `authValidations.ts:94` chama
+  `https://api.pwnedpasswords.com`, domínio **ausente** do `connect-src` da CSP (`index.html:6`). A
+  requisição é bloqueada pelo próprio navegador, sempre, e `:100,:116` retornam `{isLeaked:false}`.
+  A verificação de senha vazada nunca funcionou. *(Agravado pela validação; a versão original dizia
+  apenas "quando a API falha".)*
 - **Assinatura de webhook:** `webhook-dispatcher:266-284` gera uma assinatura falsa de 32 bits
   rotulada `sha256=` quando `createHmac` falha.
 - **Geolocalização por HTTP puro:** `verify-geo/index.ts:19` consulta `ip-api.com` sem TLS.
@@ -171,6 +223,13 @@ provavelmente a origem do problema.
   `src/pages/AdminTelemetria.tsx:60,44`); 12 casos de RLS/RPC estão desligados por uma env var que
   não existe; o E2E navega para rotas protegidas sem autenticar e usa seletores inexistentes.
 - O deploy real acontece pela plataforma Lovable, **fora** do GitHub Actions — portanto sem gate algum.
+- **Três lockfiles versionados** (`bun.lock`, `bun.lockb`, `package-lock.json`) e nenhum campo
+  `packageManager` em `package.json`. O CI usa `bun install`, então o `package-lock.json` é
+  decorativo e divergente — quem instalar com `npm` monta outra árvore de dependências.
+
+Números corrigidos nesta seção: são **347** execuções do `ci.yml` (o 372 original somava o workflow
+do Dependabot), e o "100% de falha" — antes extrapolado de uma amostra de 30 — agora é censo:
+`status=success` → 0; `status=failure` → 347.
 
 ### 🟠 7. O ambiente não é reconstruível a partir do repositório
 
@@ -260,15 +319,25 @@ Seria desonesto sair daqui só com a lista de problemas. Estes pontos foram medi
   `anon`/`public`. As 31 leituras públicas são quase todas de catálogo. 250 das 265 funções são
   `SECURITY DEFINER`, e apenas **1** (`audit_lucky_wheel_prize`) não fixa `search_path`.
 - **Higiene de código acima da média.** Em ~140 mil linhas auditadas em detalhe: praticamente nenhum
-  `TODO`/`FIXME`/`mock` abandonado, e os poucos `Math.random()` restantes são legítimos
-  (larguras de skeleton, IDs de request). O problema deste sistema não é código inacabado.
+  `TODO`/`FIXME`/`mock` abandonado. Em `src/lib` e `src/hooks` especificamente, os `Math.random()`
+  restantes são legítimos (larguras de skeleton, IDs de request, variação de frequência de áudio).
+  O problema deste sistema não é código inacabado. *(Corrigido: a versão original generalizava isso
+  para o sistema inteiro, contradizendo os próprios achados de `Math.random()` em códigos de backup
+  de 2FA e no heatmap de atividade.)*
+- **Nenhuma chave hardcoded em `src/`**, nenhum `eval`, e os 2 `dangerouslySetInnerHTML` estão
+  sanitizados com DOMPurify + allowlist (`ModuleViewer.tsx:143-154`). *(Achado positivo registrado
+  na validação.)*
 - **Arquitetura consistente.** Camadas bem separadas (pages → hooks → services → Supabase), padrão
   de erro canônico em `edgeErrors.ts`, retry que corretamente **não** repete 429/4xx, idempotência
   por `dedupeKey` nas mecânicas monetárias mais recentes.
 - **82 páginas, 83 rotas, zero órfãs e zero rotas apontando para componente inexistente.**
 - **RBAC de verdade no servidor.** `get_security_stats` exige `_require_admin()`; a RLS de
   `audit_logs` está correta. A defesa não depende do cliente.
-- **PWA configurada e funcional** (134 linhas de manifest/workbox), gerando service worker no build.
+- **PWA configurada** (134 linhas de manifest/workbox em `vite.config.ts:14-152`, incondicional).
+  *Sai da lista de "funcional" após a validação:* `public/` tem **três** service workers e só
+  `push-sw.js` é registrado (`pushSubscriptionService.ts:44,82`); `public/sw.js` colide com o
+  `dist/sw.js` que o próprio plugin gera — um sobrescreve o outro em silêncio — e `sw-push.js` não
+  tem registrador algum. É 🟨 com colisão de build a resolver, não ✅.
 - **Modelagem de dados madura**: 658 índices, 130 triggers, particionamento de responsabilidades
   claro, nomenclatura consistente em 233 tabelas.
 
@@ -285,6 +354,12 @@ Seria desonesto sair daqui só com a lista de problemas. Estes pontos foram medi
 - Corretude interna das 265 funções de banco, exceto as que falharam em execução real.
 - Acessibilidade, performance de runtime, qualidade visual e responsividade.
 - Backups, PITR, réplicas e configuração de rede do projeto Supabase.
+- **A raiz do repositório não foi fatiada.** Fatiei por `src/` e `supabase/functions/`, e deixei de
+  fora `index.html`, `.mcp.json`, os lockfiles e `docs/api/` — dois deles continham achado crítico,
+  encontrado só na segunda passada. Corrigido acima, mas é a lacuna estrutural do meu fatiamento.
+- **Bundle, assets e dependências não foram medidos** em profundidade: `manualChunks` importando o
+  barril de `lucide-react` (`vite.config.ts:157-164`), `public/pwa-192x192.png` com 916 KB, e
+  `xlsx@0.18.5` pinado sem caret são indícios levantados na validação, não análises completas.
 - **Cobertura de leitura:** 86,4% dos 1.110 arquivos `.ts/.tsx` foram citados nominalmente. Os 151
   restantes são `src/test` (101), `src/tests/unit` (15), `src/stories` (25) e parte de
   `src/components/ui` — todos cobertos **em altitude** (contados, categorizados e classificados em
@@ -301,18 +376,30 @@ Seria desonesto sair daqui só com a lista de problemas. Estes pontos foram medi
 2. **Corrigir o `typecheck`** para `tsc -b --noEmit` (ou apontar para `tsconfig.app.json`). Hoje o
    comando passa sem checar nada.
 3. **Corrigir a semântica invertida da allowlist** — decidir entre "vazio = tudo liberado" (alinhando
-   o código ao `.env.example`) ou corrigir o `.env.example`. Uma linha, e é o que reativa 36 Edge
-   Functions.
+   o código ao `.env.example`) ou corrigir o `.env.example`. Uma linha, e reativa **34** funções.
+   *(Corrigido: a versão original dizia 36 e tratava isto como suficiente.)* **Não fecha o
+   assunto:** `ai-coach` e `trail-recommendations` escapam por `fetch` cru e precisam migrar para
+   `invokeEdgeSafe` num segundo movimento — hoje elas mandam a chave anônima em vez do JWT do
+   usuário.
 4. **Adicionar `.env` ao `.gitignore`.** Hoje ele está versionado e o `.gitignore` não menciona
-   `env`. *(As variáveis atualmente no arquivo são a URL e a chave publishable — públicas por
+   `env`. *(As variáveis atualmente no arquivo são a URL e um JWT com `role: anon` — públicas por
    design, então não há vazamento hoje; o risco é o próximo segredo que alguém adicionar.)*
+   **Diferente de `.mcp.json`** (risco nº 0), que contém segredo real e exige rotação, não só
+   `.gitignore`.
+4b. **Corrigir a CSP** (`index.html:6`): incluir `api.pwnedpasswords.com` em `connect-src` para a
+   verificação de senha vazada voltar a funcionar, e declarar `frame-src`/`media-src` se o vídeo do
+   LMS for para produção.
+4c. **Escolher um gerenciador de pacotes** e remover os outros dois lockfiles; declarar
+   `packageManager` em `package.json`.
 5. **Corrigir `close_expired_sales_campaigns()`**: trocar `goal_amount` por `target_global`. Entrego
    a migration; aplicar é decisão sua.
 6. **Ligar os três subsistemas invisíveis** ao `AppSidebar`/`MobileDrawer` e renderizar os
    componentes importados e nunca montados. Ganho alto, risco quase nulo.
-7. **Remover as ~9.500 linhas de código morto** — com uma ressalva: antes de apagar qualquer coisa,
-   validar o critério de detecção. Os relatórios já checaram `lazy()` e import dinâmico, mas a lista
-   merece uma segunda passada antes de virar `git rm`.
+7. **Remover código morto** — começando pelo que é seguro. `src/lib/exportReports.ts` (537 linhas)
+   tem zero consumidores em qualquer lugar, incluindo testes: remoção limpa. Os outros 8 órfãos de
+   `src/lib` **são importados por arquivos de teste** — apagá-los quebra a suíte, então exigem
+   decidir antes se o teste também vai embora. *(Corrigido: a versão original dizia "~9.500 linhas
+   sem nenhum caminho de execução" e não avisava do acoplamento com os testes.)*
 8. **Substituir as métricas fictícias por "sem dado"** nos dashboards. Um painel vazio e honesto vale
    mais que um R$ inventado para a diretoria.
 9. **Reconciliar os 8 inventários existentes** — ou marcá-los como obsoletos. Detalhe abaixo.
@@ -368,6 +455,11 @@ O `README.md` também aponta para `audit_report.pdf`, que **não existe** no rep
 seria gerado pelo step de CI que nunca executou. E ainda contém `REPLACE_WITH_PROJECT_ID` em três
 lugares.
 
+Some-se à lista de obsoletos `docs/api/openapi.yaml`: 39 linhas, título de outro produto
+("Dashboard Elite Edge Functions API"), documenta 2 dos 36 endpoints e um deles
+(`/auth-email-hook`) não existe em `supabase/functions/`. *(Achado na validação; a auditoria
+original não o abriu.)*
+
 ---
 
 ## Como esta auditoria foi feita
@@ -384,5 +476,18 @@ lugares.
 - **Fase E** — runtime: banco de produção lido diretamente (tabelas, políticas, funções, jobs cron,
   histórico de execução, contas, storage). **Zero DDL, zero DML, zero deploy.**
 
+- **Segunda passada de validação** — revisão adversarial encarregada de *refutar* cada conclusão,
+  mais uma caça a lacunas, mais recontagem de escopo e aritmética. Resultado: 1 afirmação **errada**,
+  1 lacuna **crítica**, 4 achados exagerados/imprecisos, 6 números corrigidos, 2 autocontradições
+  do documento, e 1 caso em que eu havia sido conservador demais ao marcar `NAO_VERIFICADO`.
+  Registro completo, com o texto original preservado, em
+  [`09-validacao-e-errata.md`](./docs/estado/09-validacao-e-errata.md).
+
 Guard-rails cumpridos: produção somente leitura; nenhum artefato de outro agente editado; nenhum
 resultado afirmado sem execução; trabalho em branch própria.
+
+**Denominadores usados neste documento:** *1.110* = arquivos `.ts/.tsx` em `src/` (1.062) e
+`supabase/functions/` (48), base da recontagem de cobertura. *1.377* = todos os arquivos de código
+(`.ts`, `.tsx`, `.sql`, `.js`, `.css`) em `src/`, `supabase/`, `scripts/` e `tests/`, base do
+dimensionamento. *828 unidades* = os 934 arquivos dos escopos dos lotes, menos 106 por agrupamento e
+leitura em altitude. Os percentuais da tabela de contagem são **% de unidades**, não de arquivos.
