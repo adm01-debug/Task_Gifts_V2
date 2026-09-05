@@ -82,8 +82,8 @@ export function validateSlaDraft(draft: {
   if (rawMtta === null) errors.push("MTTA inválido: informe um número em minutos.");
   if (rawMttr === null) errors.push("MTTR inválido: informe um número em minutos.");
 
-  let mtta = clampMinutes(rawMtta ?? MIN_SLA_MINUTES);
-  let mttr = clampMinutes(rawMttr ?? MIN_SLA_MINUTES);
+  const mtta = clampMinutes(rawMtta ?? MIN_SLA_MINUTES);
+  const mttr = clampMinutes(rawMttr ?? MIN_SLA_MINUTES);
 
   if (rawMtta !== null && rawMtta !== mtta) {
     warnings.push(`MTTA ajustado para ${mtta} min (limites: ${MIN_SLA_MINUTES}–${MAX_SLA_MINUTES}).`);

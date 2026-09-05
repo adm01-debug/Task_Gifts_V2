@@ -309,6 +309,29 @@ export function buildResultRows(
 }
 
 /**
+ * Normaliza o valor de uma celula ExcelJS para um primitivo compativel com o
+ * pipeline canonico (paridade com `raw: true` + `defval: null` do parser XLSX
+ * anterior): datas seguem como Date, formulas resolvem pelo resultado e
+ * rich-text/hyperlink colapsam para string.
+ */
+function excelCellToPrimitive(value: import("exceljs").CellValue): string | number | Date | null {
+  if (value === null || value === undefined) return null;
+  if (value instanceof Date) return value;
+  if (typeof value === "object") {
+    const obj = value as Record<string, unknown>;
+    if ("result" in obj) return excelCellToPrimitive((obj.result ?? null) as import("exceljs").CellValue);
+    if ("richText" in obj && Array.isArray(obj.richText)) {
+      return (obj.richText as Array<{ text: string }>).map((t) => t.text).join("");
+    }
+    if ("text" in obj && typeof obj.text === "string") return obj.text;
+    if ("error" in obj) return null;
+    if ("formula" in obj) return null;
+    return String(value);
+  }
+  return value;
+}
+
+/**
  * Le um arquivo CSV ou XLSX no browser e devolve as linhas canonicas.
  * Bibliotecas pesadas sao carregadas sob demanda para nao inflar o bundle inicial.
  */
@@ -318,16 +341,36 @@ export async function parseCampaignResultFile(file: File): Promise<ParseResult> 
   let headers: string[] = [];
 
   if (isExcel) {
-    const XLSX = await import("xlsx");
+    // ExcelJS substitui a lib `xlsx` (CVE-2023-30533 / CVE-2024-22363) mantendo
+    // o carregamento sob demanda (chunk separado do bundle inicial).
+    const ExcelJS = await import("exceljs");
     const buffer = await file.arrayBuffer();
-    const workbook = XLSX.read(buffer, { type: "array", cellDates: true });
-    const sheetName = workbook.SheetNames[0];
-    if (!sheetName) throw new Error("A planilha nao possui abas legiveis.");
-    records = XLSX.utils.sheet_to_json<Record<string, unknown>>(workbook.Sheets[sheetName], {
-      defval: null,
-      raw: true,
+    const workbook = new ExcelJS.Workbook();
+    await workbook.xlsx.load(buffer);
+    const worksheet = workbook.worksheets[0];
+    if (!worksheet || worksheet.rowCount === 0) throw new Error("A planilha nao possui abas legiveis.");
+
+    // Primeira linha = cabecalho; demais = dados (paridade com XLSX.utils.sheet_to_json)
+    const columnsByIndex = new Map<number, string>();
+    worksheet.getRow(1).eachCell({ includeEmpty: false }, (cell, colNumber) => {
+      const raw = excelCellToPrimitive(cell.value);
+      if (raw != null && String(raw).trim() !== "") columnsByIndex.set(colNumber, String(raw).trim());
     });
-    headers = records.length > 0 ? Object.keys(records[0]) : [];
+    headers = [...columnsByIndex.values()];
+
+    records = [];
+    worksheet.eachRow((row, rowNumber) => {
+      if (rowNumber === 1) return;
+      const record: Record<string, unknown> = {};
+      let hasValue = false;
+      columnsByIndex.forEach((key, colNumber) => {
+        const value = excelCellToPrimitive(row.getCell(colNumber).value);
+        record[key] = value;
+        if (value !== null && value !== "") hasValue = true;
+      });
+      // Ignora linhas totalmente vazias (equivalente a skipEmptyLines do parser CSV)
+      if (hasValue) records.push(record);
+    });
   } else {
     const Papa = (await import("papaparse")).default;
     const text = await file.text();

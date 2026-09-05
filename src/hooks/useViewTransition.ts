@@ -9,13 +9,11 @@ export const useViewTransition = () => {
   const navigate = useNavigate();
 
   const navigateWithTransition = (to: To, options?: NavigateOptions) => {
-    // @ts-ignore - View Transitions API ainda não está no TS oficial em todos os lugares
     if (!document.startViewTransition) {
       navigate(to, options);
       return;
     }
 
-    // @ts-ignore
     document.startViewTransition(() => {
       flushSync(() => {
         navigate(to, options);
