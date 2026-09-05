@@ -62,7 +62,7 @@ export function useHapticClick<T extends (...args: unknown[]) => void>(
       }
       return handler(...args);
     }) as T,
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+     
     [haptic, handler, type]
   );
 }

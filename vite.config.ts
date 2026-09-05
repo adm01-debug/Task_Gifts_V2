@@ -85,6 +85,9 @@ export default defineConfig(() => ({
       },
       workbox: {
         navigateFallbackDenylist: [/^\/~oauth/],
+        // Margem acima do default (2 MiB) para que chunks legítimos de libs
+        // (vendor/radix) não fiquem fora do precache do service worker.
+        maximumFileSizeToCacheInBytes: 4 * 1024 * 1024,
         globPatterns: ["**/*.{js,css,html,ico,png,svg,woff2}"],
         runtimeCaching: [
           {
@@ -148,19 +151,27 @@ export default defineConfig(() => ({
   ].filter(Boolean),
   resolve: {
     alias: {
-      "@": path.resolve(__dirname, "./src"),
+      "@": path.join(import.meta.dirname, "src"),
     },
   },
   build: {
     rollupOptions: {
       output: {
-        manualChunks: {
-          vendor: ["react", "react-dom", "react-router-dom"],
-          ui: ["lucide-react"],
-          charts: ["recharts"],
-          animation: ["framer-motion"],
-          supabase: ["@supabase/supabase-js"],
-          query: ["@tanstack/react-query"],
+        // Vite 8 (rolldown) exige manualChunks como função; preserva a intenção
+        // original de separar libs pesadas em chunks próprios.
+        manualChunks(id: string) {
+          if (!id.includes("node_modules")) return undefined;
+          if (id.includes("recharts")) return "charts";
+          if (id.includes("framer-motion")) return "animation";
+          if (id.includes("@supabase")) return "supabase";
+          if (id.includes("@tanstack")) return "query";
+          if (id.includes("lucide-react")) return "ui";
+          if (id.includes("jspdf")) return "pdf";
+          if (id.includes("exceljs")) return "excel";
+          if (id.includes("@radix-ui")) return "radix";
+          if (id.includes("@sentry")) return "sentry";
+          if (id.includes("date-fns")) return "date";
+          return "vendor";
         },
       },
     },

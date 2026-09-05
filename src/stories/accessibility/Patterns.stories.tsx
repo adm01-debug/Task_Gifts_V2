@@ -143,7 +143,7 @@ export const ErrorMessages: StoryObj = {
 };
 
 export const PasswordToggle: StoryObj = {
-  render: () => {
+  render: function PasswordToggleDemo() {
     const [showPassword, setShowPassword] = useState(false);
     
     return (

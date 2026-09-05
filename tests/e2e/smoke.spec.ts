@@ -63,9 +63,15 @@ test.describe('Smoke — bootstrap da aplicação', () => {
 
   test('service worker/PWA manifest disponível', async ({ page, request }) => {
     await page.goto('/');
-    const manifest = await request.get('/manifest.json').catch(() => null);
-    // manifest é opcional, mas se existir deve ser JSON válido
-    if (manifest && manifest.ok()) {
+    // Aceita ambos os nomes usados pelo vite-plugin-pwa ao longo do tempo.
+    const manifest =
+      (await request.get('/manifest.webmanifest').catch(() => null)) ??
+      (await request.get('/manifest.json').catch(() => null));
+    // manifest é opcional, mas se existir deve ser JSON válido.
+    // No dev server o Vite devolve o fallback SPA (200 + HTML), então o
+    // content-type é checado antes do parse — o manifest real só existe no build.
+    const contentType = manifest?.headers()['content-type'] ?? '';
+    if (manifest && manifest.ok() && contentType.includes('json')) {
       const json = await manifest.json();
       expect(json).toHaveProperty('name');
     }

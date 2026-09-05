@@ -79,7 +79,7 @@ describe('Shop Skeleton and Loading State', () => {
   });
 
   it('should transition from skeletons to content smoothly', async () => {
-    let isLoading = true;
+    const isLoading = true;
     const mockRewards = [
       { id: '1', name: 'Elite Armor', description: 'Legendary protection', price_coins: 500, category: 'product', rarity: 'legendary', is_active: true },
     ];

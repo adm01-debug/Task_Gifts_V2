@@ -61,7 +61,7 @@ export const SlideUp: StoryObj = {
 };
 
 export const ScaleBounce: StoryObj = {
-  render: () => {
+  render: function ScaleBounceDemo() {
     const [key, setKey] = useState(0);
     
     return (
@@ -93,7 +93,7 @@ export const ScaleBounce: StoryObj = {
 };
 
 export const StaggeredList: StoryObj = {
-  render: () => {
+  render: function StaggeredListDemo() {
     const [key, setKey] = useState(0);
     const items = ['Item 1', 'Item 2', 'Item 3', 'Item 4', 'Item 5'];
     
@@ -184,7 +184,7 @@ export const HoverEffects: StoryObj = {
 };
 
 export const XPGainAnimation: StoryObj = {
-  render: () => {
+  render: function XPGainAnimationDemo() {
     const [show, setShow] = useState(false);
     
     return (
@@ -222,7 +222,7 @@ export const XPGainAnimation: StoryObj = {
 };
 
 export const AchievementUnlock: StoryObj = {
-  render: () => {
+  render: function AchievementUnlockDemo() {
     const [show, setShow] = useState(false);
     
     return (
