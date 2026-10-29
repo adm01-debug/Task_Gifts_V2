@@ -7,10 +7,24 @@ updates:
       day: "monday"
       time: "09:00"
     open-pull-requests-limit: 10
+    # Ignora majors de dependências cujo upgrade exige migração manual:
+    # - typescript: typescript-eslint@8.x só aceita TS < 6.1; TS 7+ quebra o lint
+    # - tailwindcss: v4 remove o plugin PostCSS nativo; exige @tailwindcss/postcss
+    # - @hookform/resolvers: v6 é major com breaking changes de API
+    ignore:
+      - dependency-name: "typescript"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "tailwindcss"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "@hookform/resolvers"
+        update-types: ["version-update:semver-major"]
     groups:
       dependencies:
         patterns:
           - "*"
+        update-types:
+          - "minor"
+          - "patch"
 
   - package-ecosystem: "github-actions"
     directory: "/"
