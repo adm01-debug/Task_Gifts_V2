@@ -2,8 +2,8 @@
 
 **Data:** 2026-10-29  
 **Agente:** Cline (VS Code)  
-**Branch de correção:** `fix/ci-bun-lockfile-h277835`  
-**PR:** [#16](https://github.com/adm01-debug/Task_Gifts_V2/pull/16)
+**Branch de correção:** `fix/ci-workflows-h281309`  
+**PR mergeado:** [#17](https://github.com/adm01-debug/Task_Gifts_V2/pull/17)
 
 ---
 
@@ -82,28 +82,46 @@ O [PR #11](https://github.com/adm01-debug/Task_Gifts_V2/pull/11) (Dependabot bum
 
 ---
 
-## 6. Status do CI no GitHub
+## 6. Status do CI no GitHub — RESULTADO FINAL ✅
 
-| Tentativa | Run | Conclusão | Causa |
-|-----------|-----|-----------|-------|
-| Attempt 1 | [#40878599026](https://github.com/adm01-debug/Task_Gifts_V2/actions/runs/40878599026) | ❌ failure (3s) | runner_id=0 — runner não alocado |
-| Attempt 2 | idem | ❌ failure (3s) | runner_id=0 — runner não alocado |
+| Run | Branch | Evento | Conclusão | Link |
+|-----|--------|--------|-----------|------|
+| #376 | `fix/ci-workflows-h281309` | pull_request | ✅ **success** | [ver](https://github.com/adm01-debug/Task_Gifts_V2/actions/runs/40884698538) |
+| #377 | `main` | push (merge do PR #17) | ✅ **success** | [ver](https://github.com/adm01-debug/Task_Gifts_V2/actions/runs/40885543800) |
 
-**O runner nunca foi alocado.** Nenhum step executou. Causa: quota de minutos do GitHub Actions esgotada na conta `adm01-debug`. Ver [PENDENCIAS.md](./PENDENCIAS.md).
+**O CI na main está verde.** PR #17 foi mergeado com squash em 2026-10-29 às ~13h50 UTC.
+
+> Nota: tentativas 1 e 2 do run #373 (PR #16) falharam porque o repositório era privado e os minutos de Actions estavam esgotados. Resolvido ao tornar o repositório público.
 
 ---
 
 ## 7. Workflows que estavam verdes — continuam verdes
 
-| Workflow | Status antes | Status após |
-|----------|-------------|-------------|
-| Dependabot Updates | ✅ success | ✅ não alterado |
-| Copilot | sem execuções | sem execuções |
+| Workflow | Status antes | Status após PR #17 | Status atual |
+|----------|-------------|---------------------|--------------|
+| Dependabot Updates | ✅ success | ✅ não alterado | ✅ run #46 success |
+| Copilot | sem execuções | sem execuções | — |
 
 ---
 
-## 8. Gaps e Melhorias (baixo risco)
+## 8. Gaps e Melhorias
 
-1. **`vitest.config.ts`:** Adicionar `pool: 'vmThreads'` para reutilizar o jsdom e reduzir tempo de testes em ~30% (recomendado pelo próprio vitest no output).
-2. **`typescript-eslint`:** Quando lançar versão 9.x estável com suporte a TS 7.x, fazer upgrade coordenado de ambos.
-3. **Dependabot:** Configurar `ignore` para `typescript` com versões major no `.github/dependabot.yml` para evitar recorrência.
+### 8.1 Implementadas (baixo risco, PR #19)
+
+| Item | Arquivo | Mudança |
+|------|---------|---------|
+| Dependabot bloqueia majors problemáticos | `.github/dependabot.yml` | `ignore` para TS, Tailwind e @hookform/resolvers majors; grupo limitado a minor/patch |
+
+### 8.2 Pendentes / documentadas
+
+1. **`vitest.config.ts`:** Adicionar `pool: 'vmThreads'` para reutilizar o jsdom e reduzir tempo de testes em ~30% (recomendado pelo próprio vitest no output). Baixo risco — pode ser feita isolada.
+2. **`typescript-eslint`:** Quando lançar versão 9.x estável com suporte a TS 7.x, fazer upgrade coordenado de ambos e remover o `ignore` de `typescript` no dependabot.yml.
+3. **`bun` no Dependabot:** O Dependabot usa `npm` para resolver dependências e não regenera o `bun.lock`. Solução de longo prazo: configurar ecosystem `bun` quando o Dependabot suportar oficialmente, ou adicionar um workflow de CI que detecte bun.lock desatualizado e atualiza automaticamente no PR.
+
+---
+
+## 9. PR #18 do Dependabot — fechado sem merge
+
+**Run:** [#378](https://github.com/adm01-debug/Task_Gifts_V2/actions/runs/40887067747) | **Conclusão:** ❌ failure (bun.lock frozen)  
+**Motivo do fechamento:** PR continha 60 atualizações incluindo majors (`@hookform/resolvers 5→6`, `@radix-ui` vários majors). Risco alto de regressão sem validação manual.  
+**Ação:** `.github/dependabot.yml` atualizado para impedir que futuros PRs do Dependabot incluam atualizações major problemáticas.
