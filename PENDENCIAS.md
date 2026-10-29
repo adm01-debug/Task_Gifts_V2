@@ -1,36 +1,36 @@
 # PENDÊNCIAS
 
-## ~~P-001 — CI do PR #16 falha por quota esgotada do GitHub Actions~~ ✅ RESOLVIDO
+## ~~P-001 — CI falha por quota esgotada do GitHub Actions~~ ✅ RESOLVIDO
 
-**Data:** 2026-10-29 | **Resolvido em:** 2026-10-29  
-**Causa:** Repositório era privado; minutos do GitHub Actions esgotados.  
-**Resolução:** Repositório convertido para público — Actions em repos públicos são gratuitos e ilimitados. PR #16 foi substituído pelo PR #17, que foi mergeado com CI verde (run #377: success).
+**Resolvido em:** 2026-10-29  
+**Resolução:** Repositório convertido para público — Actions em repos públicos são gratuitos. PR #17 mergeado com CI verde (run #377).
 
 ---
 
-## P-002 — PR #18 do Dependabot fechado: contém atualizações major incompatíveis
+## ~~P-002 — PR #18 do Dependabot fechado: majors incompatíveis~~ ✅ RESOLVIDO
 
-**Data:** 2026-10-29  
-**Workflow:** CI (`.github/workflows/ci.yml`)  
-**PR:** [#18 — build(deps): Bump 60 updates](https://github.com/adm01-debug/Task_Gifts_V2/pull/18)  
-**Run com falha:** [#378](https://github.com/adm01-debug/Task_Gifts_V2/actions/runs/40887067747) — `Install dependencies` falhou (bun.lock frozen)
+**Resolvido em:** 2026-10-29  
+**Resolução:** `.github/dependabot.yml` atualizado (PR #19) para ignorar majors problemáticos e limitar o grupo a minor/patch. O Dependabot recriou PRs seguros (#20–#26), todos revisados, com CI verde e mergeados.
 
-### Pacotes major problemáticos no PR #18
+---
 
-| Pacote | De | Para | Motivo do bloqueio |
-|--------|----|------|--------------------|
-| `@hookform/resolvers` | 5.9.1 | **6.0.0** | Major com breaking changes de API |
-| `@radix-ui/*` (vários) | 1.x/2.x | **1.x+1 / 2.x+1** | Mudanças de major — necessita validação manual |
-| `bun.lock` | — | desatualizado | Dependabot não regenera o bun.lock (usa npm) |
+## Estado atual
 
-### Ação tomada
+**Nenhuma pendência ativa.** Todos os workflows estão verdes e todos os PRs do Dependabot foram mergeados.
 
-- PR #18 **fechado** para evitar regressão.
-- `.github/dependabot.yml` atualizado para ignorar majors de `typescript`, `tailwindcss` e `@hookform/resolvers` e limitar o grupo a atualizações minor/patch.
-- O Dependabot recriará o PR com apenas atualizações seguras.
+| Item | Status |
+|------|--------|
+| `action_required` runs | 0 |
+| CI na main (run #408) | ✅ success |
+| PRs abertos | 0 |
+| Test Files | 137 passed \| 2 skipped |
 
-### O que o owner precisa fazer quando o próximo PR do Dependabot chegar
+---
 
-1. Verificar se o CI passa (install, lint, typecheck, tests, E2E).
-2. Se passar: fazer squash merge normalmente.
-3. Se falhar por `bun.lock frozen`: sinal de que o bun.lock não foi regenerado — abrir issue para configurar o Dependabot com `bun` como package manager.
+## Melhorias documentadas (sem urgência)
+
+Ver seção 8.2 do `RELATORIO_CI.md`:
+
+1. `vitest.config.ts` — `pool: 'vmThreads'` para testes mais rápidos
+2. `typescript-eslint@9` — upgrade quando suportar TS 7.x
+3. `bun` no Dependabot — ecosystem nativo quando disponível
