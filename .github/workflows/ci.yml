@@ -10,12 +10,16 @@ jobs:
   quality:
     runs-on: ubuntu-latest
     env:
-      VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
-      VITE_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.VITE_SUPABASE_PUBLISHABLE_KEY }}
+      # Em PRs do Dependabot, secrets não estão disponíveis por política do GitHub.
+      # Usamos fallback com URL/chave de placeholder válidos para que o Vite
+      # compile e o app renderize; o E2E Gate só verifica rotas públicas/guardas,
+      # não faz chamadas reais ao Supabase.
+      VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL || 'https://placeholder.supabase.co' }}
+      VITE_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.VITE_SUPABASE_PUBLISHABLE_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.placeholder' }}
     steps:
       - uses: actions/checkout@v4
 
-      - uses: oven-sh/setup-bun@v2
+      - uses: oven-sh/setup-bun@v1
         with:
           bun-version: latest
 
