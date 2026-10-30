@@ -12,7 +12,9 @@ dist
 dist-ssr
 *.local
 
-# Editor directories and files
+# Coverage report (gerado pelo CI, sobido como artifact — não versionar)
+coverage/
+
 .vscode/*
 !.vscode/extensions.json
 .idea
