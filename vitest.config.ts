@@ -11,6 +11,15 @@ export default defineConfig({
     include: ["src/**/*.{test,spec}.{ts,tsx}"],
     testTimeout: 60000,
     hookTimeout: 30000,
+    // vmThreads: reutiliza o worker por arquivo de teste (mantém isolamento
+    // por arquivo mas evita criar uma nova instância de jsdom a cada test file).
+    // Reduz o tempo de setup de ~65% para ~20-30% do total.
+    pool: "vmThreads",
+    poolOptions: {
+      vmThreads: {
+        useAtomics: true,
+      },
+    },
   },
   resolve: {
     alias: { "@": path.resolve(__dirname, "./src") },
