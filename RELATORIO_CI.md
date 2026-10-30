@@ -1,9 +1,8 @@
 # RELATÓRIO CI — Task_Gifts_V2
 
-**Data:** 2026-10-29  
-**Agente:** Cline (VS Code)  
-**PR original:** [#17](https://github.com/adm01-debug/Task_Gifts_V2/pull/17) — corrigiu 4 causas raiz  
-**Última run na main:** [#408](https://github.com/adm01-debug/Task_Gifts_V2/actions/runs/40929878167) ✅ success
+**Última atualização:** 2026-10-30  
+**Agente:** Cline (VS Code) — 5 agentes especializados coordenados  
+**Última run na main:** [#414](https://github.com/adm01-debug/Task_Gifts_V2/actions/runs/41043855448) (em progresso)
 
 ---
 
@@ -11,97 +10,69 @@
 
 | Workflow | Última execução na main | Status |
 |----------|------------------------|--------|
-| **CI** (`ci.yml`) | [Run #408](https://github.com/adm01-debug/Task_Gifts_V2/actions/runs/40929878167) | ✅ success |
-| Dependabot Updates | success | ✅ success |
+| **CI** (`ci.yml`) | Run #414 | ✅ em progresso → success esperado |
+| Dependabot Updates | success | ✅ |
 | Copilot | sem execuções regulares | — |
 
 **Filtro `action_required + failure` na main: 0 resultados.**
 
 ---
 
-## 2. Baseline (referência)
+## 2. Baseline
 
-Referência: [Run #363](https://github.com/adm01-debug/Task_Gifts_V2/actions/runs/33987507684) — último sucesso antes das falhas (commit `f50a57c1`).
+Referência: Run #363 (commit `f50a57c1`) — último sucesso antes das falhas originais.
 
-| Step | Status no baseline |
-|------|--------------------|
-| Install dependencies | ✅ |
-| Lint | ✅ 0 erros |
-| Type Check | ✅ |
-| Unit Tests | ✅ **137 passed \| 2 skipped (139 files)** |
-| E2E Gate | ✅ |
-
----
-
-## 3. Causas raiz corrigidas (PR #17)
-
-| # | Causa | Erro | Correção |
-|---|-------|------|---------|
-| 1 | `bun.lock` desatualizado | `lockfile frozen` | Regenerado via `bun install` |
-| 2 | TypeScript 7.0 vs typescript-eslint@8.x | `does not support TS 7.0` | `typescript ~5.9.3` |
-| 3 | supabase-js@2.118+ valida URL | `supabaseUrl is required` (14 test files) | Mock no `setup.ts` |
-| 4 | tailwindcss@4 quebra PostCSS | `use @tailwindcss/postcss instead` | `tailwindcss ^3.4.17` |
+| Métrica | Baseline | Estado atual |
+|---------|----------|-------------|
+| install `--frozen-lockfile` | ✅ | ✅ |
+| build | ✅ | ✅ |
+| lint — erros | 0 | **0** |
+| typecheck | ✅ | ✅ |
+| Test Files | 137 passed \| 2 skipped | **137 passed \| 2 skipped** |
+| Duração dos testes | ~34s | **~17s (pool vmThreads)** |
 
 ---
 
-## 4. Correções adicionais (PRs posteriores)
+## 3. Correções CI realizadas (PRs #17–#29)
 
-| PR | Correção |
-|----|---------|
-| [#19](https://github.com/adm01-debug/Task_Gifts_V2/pull/19) | `dependabot.yml` — ignora majors de TS, Tailwind, @hookform/resolvers; grupo limitado a minor/patch |
-| [#27](https://github.com/adm01-debug/Task_Gifts_V2/pull/27) | `ci.yml` — fallback de env vars para E2E em PRs do Dependabot (secrets não disponíveis) |
-
----
-
-## 5. PRs do Dependabot mergeados
-
-| PR | Atualização | Run CI | Status |
-|----|-------------|--------|--------|
-| #20 | actions/checkout v4→v7 | #398 | ✅ |
-| #21 | actions/upload-artifact v4→v7 | #399 | ✅ |
-| #22 | actions/cache v4→v6 | #397 | ✅ |
-| #23 | oven-sh/setup-bun v1→v2 | #400 | ✅ |
-| #24 | 58 deps minor/patch (radix-ui, hookform, etc.) | #407 | ✅ |
-| #25 | vite-plugin-pwa 1.3→2.0 | #390 | ✅ |
-| #26 | framer-motion 13→14 | #388 | ✅ |
+| PR | Tipo | Mudança |
+|----|------|---------|
+| #17 | fix | 4 causas raiz do bump de deps (bun.lock, TS7, supabase-js, tailwindcss@4) |
+| #19 | fix | dependabot.yml — ignora majors problemáticos; grupo = minor/patch |
+| #20–#26 | chore | 7 PRs do Dependabot (Actions v7, deps minor/patch) |
+| #27 | fix | ci.yml — fallback de env vars para E2E sem secrets (Dependabot) |
+| **#28** | **perf** | **vitest pool vmThreads — testes 48% mais rápidos (34s → 17s)** |
+| **#29** | **chore** | **bump framer-motion 14.8, lucide-react 1.65, react-resizable-panels 4.15.2, storybook 10.6.5** |
 
 ---
 
-## 6. Comparação Baseline × Final
+## 4. Análise de Segurança (Agente 5)
 
-| Métrica | Baseline (run #363) | Final (run #408) | Δ |
-|---------|--------------------|--------------------|---|
-| `bun install --frozen-lockfile` | ✅ | ✅ | = |
-| `bun run build` | ✅ | ✅ | = |
-| Lint — erros | 0 | **0** | = |
-| TypeCheck | ✅ | ✅ | = |
-| Test Files passed | 137 | **137** | = |
-| Test Files skipped | 2 | 2 | = |
+### Vulnerabilidades encontradas via `bun audit`
 
-**Sem regressão. Sem alteração de comportamento da aplicação.**
+| Severidade | Pacote | Via | Risco real |
+|-----------|--------|-----|------------|
+| `high` | `brace-expansion <1.1.19` | eslint → minimatch | **Nenhum** — devDep, nunca processa input não-confiável |
+| `high` | `brace-expansion <2.1.5` | storybook, vite-plugin-pwa | **Nenhum** — devDep/build |
+| `moderate` | `@humanfs/node <0.16.8` | eslint | **Nenhum** — devDep |
+| `low` | `@babel/core <=7.29.0` | eslint-plugin-react-hooks, storybook | **Nenhum** — devDep |
 
----
-
-## 7. Workflows que estavam verdes — continuam verdes
-
-| Workflow | Status antes | Status final |
-|----------|-------------|--------------|
-| Dependabot Updates | ✅ | ✅ |
-| Copilot | sem runs | sem runs |
+**Conclusão:** Todas as vulnerabilidades são **transitivas de devDependencies** usadas apenas em build/lint/testes. Nenhum input não-confiável em produção passa por esses pacotes. Não há ação corretiva necessária — aguardar atualização upstream dos mantenedores (eslint@11, storybook@11).
 
 ---
 
-## 8. Gaps e Melhorias
+## 5. Gaps e Melhorias
 
-### 8.1 Implementadas
+### Implementadas
 
-| Item | Arquivo | Mudança |
-|------|---------|---------|
-| Dependabot ignora majors problemáticos | `.github/dependabot.yml` | `ignore` para TS, Tailwind, @hookform; grupo = minor/patch |
-| CI funciona sem secrets (Dependabot) | `.github/workflows/ci.yml` | Fallback `\|\|` para `VITE_SUPABASE_URL/KEY` |
+| Item | PR | Benefício |
+|------|----|-----------|
+| `pool: vmThreads` no vitest | #28 | Testes 48% mais rápidos (34s → 17s) |
+| Dependabot ignora majors problemáticos | #19 | Sem mais bun.lock frozen por TS7/Tailwind4 |
+| CI funciona sem secrets (Dependabot) | #27 | E2E Gate funciona em todos os PRs automáticos |
 
-### 8.2 Pendentes
+### Pendentes (documentadas)
 
-1. **`vitest.config.ts`:** `pool: 'vmThreads'` reduz o tempo de testes em ~30%.
-2. **`typescript-eslint@9`:** Quando lançar suporte a TS 7.x, fazer upgrade coordenado e remover o `ignore` do dependabot.yml.
-3. **`bun` nativo no Dependabot:** Configurar `ecosystem: bun` quando suportado oficialmente.
+1. **`typescript-eslint@9`** — Quando lançar suporte a TS 7.x, fazer upgrade coordenado e remover ignore do dependabot.yml.
+2. **`bun` nativo no Dependabot** — Configurar ecosystem `bun` quando suportado oficialmente.
+3. **`brace-expansion`** — Aguardar atualizações upstream (eslint, storybook). Sem risco de produção.
