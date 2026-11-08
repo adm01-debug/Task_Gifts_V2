@@ -107,6 +107,10 @@ Repo `adm01-debug/Task_Gifts_V2`, branch `main`, **público**. Produção: https
   `.github/workflows/`. Um único workflow (`ci.yml`, job `quality`) e ele é o único check obrigatório.
 - **Regras de domínio** — ler `docs/agentes/regras-dominio.md` ao mexer em kudos, loja/resgates, missões,
   trilhas, ligas, push/e-mail ou integração Bitrix24.
+- **Contexto autônomo** — ler `docs/agentes/contexto-autonomo.md` ao mexer em `scripts/ai-context/`,
+  `scripts/regras_negocio/`, `scripts/supabase_snapshot/` ou `.github/workflows/contexto.yml`. Três
+  produtores regeneram o estado REAL (código, banco ao vivo, regras de negócio) a cada 10 min e publicam na
+  branch **`contexto`**; o job `banco` está desligado até o secret `SUPABASE_DB_URL` existir.
 
 ## Stack e comandos — detalhe em `docs/agentes/mapa-repo.md`
 - Vite 8 + React 19 + TS 5.9 (`src/`), Supabase (`supabase/functions/`, `supabase/migrations/`),
@@ -125,6 +129,9 @@ Repo `adm01-debug/Task_Gifts_V2`, branch `main`, **público**. Produção: https
 - Guarda do CI que você pode rodar antes do PR: `node scripts/ci/check-claude-md-integrity.mjs` (GA02 — se
   mexer em `AGENTS.md` ou `docs/agentes/`: exige os cabeçalhos do `AGENTS.md` e barra o conjunto
   `AGENTS.md` + `CLAUDE.md` + `docs/agentes/*.md` encolher >30%).
+- **Antes de qualquer tarefa**, leia o contexto gerado (é mais novo que qualquer relatório da raiz):
+  `git fetch origin contexto && git show origin/contexto:docs/contexto/00-INDEX.md`. Ele diz qual fonte
+  é dona de cada fato e o frescor de cada uma. Gerar local: `bun run contexto:codigo` / `contexto:regras`.
 - Antes de buscar por texto: `docs/agentes/mapa-repo.md` diz onde fica cada coisa. `docs/estado/`,
   `ESTADO_ATUAL.md`, `INVENTARIO_FUNCIONALIDADES.md`, `RELATORIO_CI.md` e os `*_AUDIT*.md` da raiz são
   auditoria de **2026-08**: contexto, **não** fonte de verdade (vários achados já foram corrigidos).

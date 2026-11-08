@@ -53,6 +53,15 @@ jobs:
           git fetch --no-tags --depth=1 origin main
           CLAUDE_MD_BASE=FETCH_HEAD node scripts/ci/check-claude-md-integrity.mjs
 
+      - name: Guardas das automacoes de contexto (ai-context, regras, snapshot, publicacao)
+        # Suites node:test dos geradores que mantem docs/contexto/ atualizado.
+        # Detalhe em docs/agentes/contexto-autonomo.md.
+        run: |
+          python3 -m pip install --quiet --break-system-packages --only-binary :all: -r scripts/supabase_snapshot/requirements.txt
+          node --test scripts/ai-context/gerar.unit.mjs scripts/ci/contexto-indice.unit.mjs \
+            scripts/ci/contexto-publicacao.unit.mjs scripts/ci/regras-negocio.unit.mjs \
+            scripts/ci/supabase-snapshot.unit.mjs
+
       - name: Unit Tests com Coverage
         run: bun run test:ci
         env:

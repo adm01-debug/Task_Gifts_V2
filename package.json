@@ -14,7 +14,10 @@
     "preview": "vite preview",
     "prepare": "husky",
     "graph:setup": "bash scripts/graphify/setup.sh",
-    "postinstall": "node ./scripts/patch-recharts.cjs"
+    "postinstall": "node ./scripts/patch-recharts.cjs",
+    "contexto:codigo": "node scripts/ai-context/gerar.mjs --out docs/contexto/codigo",
+    "contexto:regras": "python3 scripts/regras_negocio/generate.py --repo . --out docs/contexto/regras --profile regras --schema-snapshot docs/contexto/supabase --index-path docs/contexto/00-INDEX.md --no-pointer",
+    "contexto:test": "node --test scripts/ai-context/gerar.unit.mjs scripts/ci/contexto-indice.unit.mjs scripts/ci/contexto-publicacao.unit.mjs scripts/ci/regras-negocio.unit.mjs scripts/ci/supabase-snapshot.unit.mjs"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.9.2",

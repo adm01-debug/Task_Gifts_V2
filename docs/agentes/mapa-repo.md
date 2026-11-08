@@ -33,7 +33,10 @@ dela que você vá usar como base de um fix precisa ser reconfirmada no código/
 | `supabase/functions/` | 37 edge functions + `_shared/` |
 | `supabase/migrations/` | 266 arquivos `.sql` — sem ledger no banco (ver `banco.md`) |
 | `supabase/config.toml` | `project_id` **divergente** do projeto em uso + único `verify_jwt=false` |
-| `scripts/ci/` | guardas de repo: `check-claude-md-integrity.mjs` (GA02), `commit-msg-lint.mjs` |
+| `scripts/ci/` | guardas de repo: `check-claude-md-integrity.mjs` (GA02), `commit-msg-lint.mjs`, e os adaptadores `*.unit.mjs` das automações de contexto |
+| `scripts/ai-context/` | produtor `codigo/` do contexto: rotas, módulos, hooks, edges, grafo, testes, convenções |
+| `scripts/supabase_snapshot/` | produtor `supabase/` do contexto: retrato do banco ao vivo (exige `SUPABASE_DB_URL`) |
+| `scripts/regras_negocio/` | produtor `regras/` do contexto + `indice.py`, que monta `docs/contexto/00-INDEX.md` |
 | `scripts/graphify/` | setup do grafo de código (`setup.sh` + README) |
 | `scripts/patch-recharts.cjs` | `postinstall` que muta `node_modules` para silenciar um warning do recharts |
 | `docs/api/openapi.yaml` | contrato da API externa (`external-api`) |
