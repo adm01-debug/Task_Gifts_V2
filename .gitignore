@@ -27,3 +27,6 @@ coverage/
 
 # Secrets locais (nunca commitar)
 .env
+
+# Grafo de codigo (gerado por scripts/graphify/setup.sh; ~14 MB)
+graphify-out/

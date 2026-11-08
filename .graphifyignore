@@ -1,0 +1,23 @@
+# .graphifyignore — Task Gifts V2 / Promo Brindes
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*-baseline.json
+*.baseline.json
+supabase/functions/node_modules/
+dist/
+coverage/
+build/
+playwright-report/
+test-results/
+graphify-out/graph.json
+graphify-out/graph.html
+
+# Auditoria histórica (2026-08): ~2.000 nós de texto que poluem a busca do grafo e não são
+# fonte de verdade. Fonte viva: AGENTS.md + docs/agentes/.
+docs/estado/
+ESTADO_ATUAL.md
+INVENTARIO_FUNCIONALIDADES.md
+PADROES_LAYOUT_UX.md

@@ -13,6 +13,7 @@
     "test:ci": "vitest run --coverage --reporter=verbose",
     "preview": "vite preview",
     "prepare": "husky",
+    "graph:setup": "bash scripts/graphify/setup.sh",
     "postinstall": "node ./scripts/patch-recharts.cjs"
   },
   "dependencies": {
