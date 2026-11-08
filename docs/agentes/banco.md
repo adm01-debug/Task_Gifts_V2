@@ -90,7 +90,7 @@ credencial e decisão do dono), mas:
 | Divergência | Evidência | Efeito |
 |---|---|---|
 | `config.toml` aponta para outro projeto | `supabase/config.toml:1` vs `VITE_SUPABASE_URL` | CLI do Supabase mira no projeto errado sem `--project-ref` |
-| Sem ledger de migrations | ausência de `supabase_migrations.schema_migrations` | não há como provar que banco == repo |
+| Sem ledger de migrations | ausência de `supabase_migrations.schema_migrations` | não há como provar que banco == repo; o mais perto disso é `node scripts/db-audit/check-migration-drift.mjs --snapshot docs/contexto/supabase`, que confere idempotência das 266 migrations (fase 1) e as tabelas declaradas contra o catálogo real (fase 2) — ver `scripts/db-audit/README.md` |
 | `VITE_SUPABASE_ANON_KEY` no `.env.example`, `VITE_SUPABASE_PUBLISHABLE_KEY` no código | `.env.example:9` vs `src/integrations/supabase/client.ts:6` | quem seguir o example sobe o app sem chave; dois testes de segurança (`src/test/rls.test.ts`, `src/test/rpcAccess.test.ts`) ficam `skip` por causa dessa variável |
 | URL + anon key fixas em SQL de cron | `supabase/migrations/20260712194718_*.sql:4-5` | rotação de chave exige migration nova |
 

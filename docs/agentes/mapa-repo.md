@@ -37,6 +37,7 @@ dela que você vá usar como base de um fix precisa ser reconfirmada no código/
 | `scripts/ai-context/` | produtor `codigo/` do contexto: rotas, módulos, hooks, edges, grafo, testes, convenções |
 | `scripts/supabase_snapshot/` | produtor `supabase/` do contexto: retrato do banco ao vivo (exige `SUPABASE_DB_URL`) |
 | `scripts/regras_negocio/` | produtor `regras/` do contexto + `indice.py`, que monta `docs/contexto/00-INDEX.md` |
+| `scripts/db-audit/` | guarda das migrations: idempotência (ratchet) + drift das tabelas contra o snapshot do banco |
 | `scripts/graphify/` | setup do grafo de código (`setup.sh` + README) |
 | `scripts/patch-recharts.cjs` | `postinstall` que muta `node_modules` para silenciar um warning do recharts |
 | `docs/api/openapi.yaml` | contrato da API externa (`external-api`) |

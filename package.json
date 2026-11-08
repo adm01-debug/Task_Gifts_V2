@@ -17,7 +17,9 @@
     "postinstall": "node ./scripts/patch-recharts.cjs",
     "contexto:codigo": "node scripts/ai-context/gerar.mjs --out docs/contexto/codigo",
     "contexto:regras": "python3 scripts/regras_negocio/generate.py --repo . --out docs/contexto/regras --profile regras --index-path docs/contexto/00-INDEX.md --no-pointer",
-    "contexto:test": "node --test scripts/ai-context/gerar.unit.mjs scripts/ci/contexto-indice.unit.mjs scripts/ci/contexto-publicacao.unit.mjs scripts/ci/regras-negocio.unit.mjs scripts/ci/supabase-snapshot.unit.mjs"
+    "contexto:test": "node --test scripts/ai-context/gerar.unit.mjs scripts/ci/contexto-indice.unit.mjs scripts/ci/contexto-publicacao.unit.mjs scripts/ci/regras-negocio.unit.mjs scripts/ci/supabase-snapshot.unit.mjs",
+    "db:guard": "node scripts/db-audit/check-migration-drift.mjs --snapshot docs/contexto/supabase",
+    "db:guard:test": "node --test scripts/ci/check-migration-drift.unit.mjs"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.9.2",

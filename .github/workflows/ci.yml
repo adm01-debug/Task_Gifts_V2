@@ -62,6 +62,17 @@ jobs:
             scripts/ci/contexto-publicacao.unit.mjs scripts/ci/regras-negocio.unit.mjs \
             scripts/ci/supabase-snapshot.unit.mjs
 
+      - name: Guarda das migrations (idempotencia + drift contra o banco)
+        # Fase 1 sempre roda. Fase 2 compara com o snapshot do banco publicado na
+        # branch `contexto`; sem a branch ou sem o snapshot, a fase 2 e PULADA com aviso.
+        # Detalhe em scripts/db-audit/README.md.
+        run: |
+          node --test scripts/ci/check-migration-drift.unit.mjs
+          if git fetch --no-tags --depth=1 origin contexto 2>/dev/null; then
+            git archive FETCH_HEAD -- docs/contexto/supabase 2>/dev/null | tar -x || true
+          fi
+          node scripts/db-audit/check-migration-drift.mjs --snapshot docs/contexto/supabase
+
       - name: Unit Tests com Coverage
         run: bun run test:ci
         env:
