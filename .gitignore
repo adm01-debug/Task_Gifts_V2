@@ -30,3 +30,14 @@ coverage/
 
 # Grafo de codigo (gerado por scripts/graphify/setup.sh; ~14 MB)
 graphify-out/
+
+# Contexto para agentes de IA: gerado pelo contexto.yml e publicado na branch `contexto`,
+# nunca em main. Só `regras/manual/` (texto humano) é versionado aqui.
+docs/contexto/*
+!docs/contexto/regras/
+docs/contexto/regras/*
+!docs/contexto/regras/manual/
+
+# Bytecode Python dos geradores de contexto
+__pycache__/
+*.pyc
