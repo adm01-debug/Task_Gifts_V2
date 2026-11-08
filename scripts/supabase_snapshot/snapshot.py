@@ -179,7 +179,11 @@ def prepare_output_directory() -> None:
 
 
 def record_error(section: str, err: Exception | str) -> None:
-    text = str(err).strip().splitlines()[0] if str(err).strip() else repr(err)
+    # scrub() tambem aqui: texto de erro de subprocesso (pg_dump, gen types) carrega
+    # o DSN com senha, e ERRORS vai para errors.md / snapshot.json / manifest.json,
+    # publicados na branch publica `contexto`.
+    bruto = scrub(str(err)).strip()
+    text = bruto.splitlines()[0] if bruto else repr(err)
     ERRORS.append({"section": section, "error": text[:500]})
     log(f"ERRO em {section}: {text[:300]}")
 
@@ -308,8 +312,11 @@ SCRUB_RULES: list[tuple[re.Pattern, str]] = [
     (re.compile(r"sb_(?:secret|publishable)_[A-Za-z0-9_-]{8,}"), "[REDACTED_KEY]"),
     # Authorization: Bearer <token>  /  apikey: <token>
     (re.compile(r"(?i)(bearer\s+)[A-Za-z0-9._~+/=-]{16,}"), r"\1[REDACTED]"),
-    # valor precisa parecer token: >= 16 chars, sem espaço, com pelo menos um dígito (evita redigir prosa)
-    (re.compile(r"""(?i)((?:apikey|api_key|x-api-key|authorization|token|secret|password|passwd|service_role_key|anon_key)\s*["']?\s*[:=]\s*["']?)(?=[^"'\s,;)}]*\d)[^"'\s,;)}]{16,}"""), r"\1[REDACTED]"),
+    # Valor precedido de palavra de segredo: >= 8 chars e sem espaço. A exigência de
+    # dígito foi removida porque deixava passar `x-cron-secret: segredoCurto`,
+    # `pgrst.jwt_secret=umSegredoLongoSemDigitos` e `token=ABCDEFGHIJKLMNOPQRS`.
+    # A palavra-chave antes do `:`/`=` e' o que evita redigir prosa.
+    (re.compile(r"""(?i)((?:apikey|api[_-]?key|x-api-key|authorization|token|secret|jwt_secret|(?:aws_)?secret_access_key|password|passwd|service_role_key|anon_key)[\w.-]*\s*["']?\s*[:=]\s*["']?)[^"'\s,;)}]{8,}"""), r"\1[REDACTED]"),
     # PASSWORD 'x' em DDL de role
     (re.compile(r"(?i)(password\s+)'[^']*'"), r"\1'[REDACTED]'"),
     # DSN com senha

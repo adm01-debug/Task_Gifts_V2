@@ -5,8 +5,8 @@ qualquer tarefa ou planejamento que toque banco, RLS, functions, cron, storage o
 
 ## Onde está o resultado (neste repo)
 
-A main tem branch protection, então o snapshot **não** é comitado na main: o workflow
-O job `banco` de `.github/workflows/contexto.yml` roda a cada 10 min e publica em `docs/contexto/supabase/` da branch
+A main tem branch protection, então o snapshot **não** é comitado na main. O job `banco` de
+`.github/workflows/contexto.yml` roda a cada 10 min e publica em `docs/contexto/supabase/` da branch
 **`contexto`** (junto com `codigo/` e `regras/`; índice em `docs/contexto/00-INDEX.md`). Só há commit quando algo mudou.
 
 Como ler, sem trocar de branch:
@@ -50,21 +50,21 @@ Secret novo e dedicado: nenhum outro workflow deste repo recebe a connection str
 | Fonte | O que entra |
 |---|---|
 | Postgres (catálogo) | schemas (+USAGE das roles da API), tabelas (RLS on/forced, partições, replica identity), colunas (tipo, default, identity/generated, enum, comentário), constraints (PK/FK/UNIQUE/CHECK com ON DELETE/UPDATE e referências reversas), índices (método, colunas, predicado), views + materialized (security_invoker, dependências), functions/procedures (corpo, security definer, search_path, quem pode executar via RPC), triggers (timing/eventos; inclui `auth.users` e `storage.objects`), policies RLS (inclui `storage` e `realtime.messages`), enums (+ onde são usados)/domains/composites, extensões, sequences (owned by), grants (tabela, coluna, sequence, **default privileges**), roles (+`rolconfig`: timeouts por role) |
-| Supabase | `cron.job`, `pgmq` (filas), `supabase_migrations.schema_migrations` (com SQL), `storage.buckets`, `vault.secrets` (só nomes), Database Webhooks, realtime publications, foreign servers (credenciais redigidas) |
+| Supabase | `cron.job`, `pgmq` (filas), `supabase_migrations.schema_migrations` (com SQL) — **neste banco a tabela não existe**, a coleta devolve vazio em silêncio, `storage.buckets`, `vault.secrets` (nome, descrição e data de criação — nunca o valor), Database Webhooks, realtime publications, foreign servers (credenciais redigidas) |
 | Lints (`lints.md`) | RLS desabilitado / sem policies, tabela sem PK, FK sem índice, SECURITY DEFINER sem `search_path`, view em `public` sem `security_invoker`, função chamável por `anon`, extensão em `public`, policy com `auth.uid()` sem `(select …)`, tabela no Realtime sem REPLICA IDENTITY FULL |
 | Relacionamentos | todas as FKs + diagrama ER Mermaid (até 120 tabelas) |
 | Referências a cada função (`functions.md`, `snapshot.json` → `db.functions[].callers`) | referências estáticas (`.rpc('fn')` ou `fn(` em `src/`, `supabase/functions/`, migrations ativas, scripts operacionais…), jobs do pg_cron, triggers, outras funções e views |
 | Management API (opcional) | edge functions (versão, verify_jwt, entrypoint, URL), nomes dos secrets, auth (providers, hooks, config), PostgREST (schemas expostos, max_rows), Postgres/pooler/storage config, network/SSL, branches, PITR/backups — segredos redigidos |
 | Métricas voláteis (`stats.*`, `cron-runs.md`) | tamanho por tabela/schema, linhas e scans (aproximados), índices nunca usados, storage por bucket, auth (agregados), filas, top queries do `pg_stat_statements` (normalizadas), conexões, saúde dos serviços, últimas execuções do cron |
-| Ferramentas | `schema.sql` (pg_dump --schema-only), `types.ts` (supabase gen types) |
+| Ferramentas | `schema.sql` (pg_dump --schema-only), `types.ts` (supabase gen types) — **desligados neste repo** (`PGDUMP=false`, `GEN_TYPES=false`) |
 
 Nunca sai: linha de tabela, dado de usuário, valor de secret/chave/senha, connection string.
 
 ### Estatísticas de consultas
 
 O schema de `pg_stat_statements` é descoberto em `pg_extension`/`pg_namespace`; a consulta usa
-identificador delimitado e não depende do `search_path` (no projeto oficial, a view está em
-`extensions`). `STAT_STATEMENTS_TOP=0` ou extensão ausente apenas omitem essa coleta opcional.
+identificador delimitado e não depende do `search_path`. **NÃO VERIFICADO** em que schema a view está
+no projeto `eidsaqymojyuhprobfpn`: exigiria conexão ao banco, que esta sessão não tem. `STAT_STATEMENTS_TOP=0` ou extensão ausente apenas omitem essa coleta opcional.
 Falha no catálogo, na view ou no tratamento do resultado é registrada como `db_stats.top_queries`,
 preservando tamanho do banco, conexões, storage, filas e os agregados de auth que puderam ser lidos.
 Erro em auth permanece independente como `db_stats.auth`. Nenhuma permissão é concedida e nenhuma
@@ -99,6 +99,9 @@ create role snapshot_reader login password '<senha-forte>';
 grant pg_read_all_data to snapshot_reader;           -- leitura de todos os schemas
 grant usage on schema cron, vault, storage, auth, supabase_migrations to snapshot_reader;
 ```
+Antes de rodar: `grant usage on schema cron, vault, …` **falha** com "schema does not exist" se
+`pg_cron` ou `supabase_vault` não estiverem instalados neste projeto — rode só os schemas que existirem.
+
 `pg_read_all_data` cobre `cron.job`, `vault.secrets` (só metadados; o valor descriptografado fica em `vault.decrypted_secrets`, que o script não lê), `storage`, `auth` e `supabase_migrations`. Para `pg_stat_statements` e `pg_stat_activity` completos, adicione `grant pg_read_all_stats to snapshot_reader;`. Monte a `SUPABASE_DB_URL` com esse usuário.
 
 ## Variáveis opcionais (no workflow, bloco `env`)
@@ -114,7 +117,8 @@ grant usage on schema cron, vault, storage, auth, supabase_migrations to snapsho
 | `STAT_STATEMENTS_TOP` | `15` | consultas mais custosas em `stats.md` (0 desliga) |
 | `CRON_RUNS_PER_JOB` | `3` | execuções recentes guardadas por job do pg_cron |
 | `REPO_ROOT` | `.` | raiz do repo para cruzar funções × código (vazio desliga) |
-| `CODE_SCAN_DIRS` | `src,supabase/functions,supabase/migrations,scripts,…` | pastas varridas na busca de chamadas |
+| `CODE_SCAN_DIRS` | `src,supabase/functions,supabase/migrations,scripts,app,lib,server,api` | pastas varridas na busca de chamadas (`app`, `lib`, `server` e `api` não existem aqui: são ignoradas em silêncio) |
+| `CODE_SCAN_MAX_FILES` | `20000` | teto de arquivos varridos |
 
 ## Comportamento
 
@@ -127,7 +131,7 @@ grant usage on schema cron, vault, storage, auth, supabase_migrations to snapsho
 - A Management API devolve só o bundle compilado das edge functions, então o snapshot guarda metadados (`edge-functions/<slug>/README.md`); o fonte canônico é `supabase/functions/<slug>/` no repo.
 - Conexão com `prepare_threshold=None`: funciona tanto na conexão direta quanto no pooler (session ou transaction mode). `pg_dump` exige session mode ou conexão direta.
 - `concurrency` impede duas coletas simultâneas; push faz `pull --rebase` com 3 tentativas para conviver com outros agentes comitando na `main`.
-- Commits levam `[skip ci]` para não disparar deploy (Vercel/Lovable ignoram; se o deploy for por GitHub Actions, confira que o workflow respeita a flag ou adicione `paths-ignore: docs/supabase/**`).
+- Commits levam `[skip ci]` para não disparar deploy. Aqui a branch `contexto` também leva um `vercel.json` com `ignoreCommand: exit 0`, então o Vercel não a builda.
 
 ## Rodar localmente
 

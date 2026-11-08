@@ -31,9 +31,9 @@ on:
     paths:
       - 'src/**'
       - 'supabase/**'
-      - 'api/**'
-      - 'server/**'
       - 'scripts/ai-context/**'
+      - 'scripts/ci/*.unit.mjs'
+      - 'ai-context.config.json'
       - 'scripts/regras_negocio/**'
       - 'scripts/supabase_snapshot/**'
       - 'docs/contexto/regras/manual/**'
@@ -42,7 +42,7 @@ on:
       - '.env.example'
       - '.github/workflows/**'
   schedule:
-    - cron: '3-59/10 * * * *' # minuto 3: fora do minuto 0 (fila do GitHub) e dos outros crons do repo
+    - cron: '3-59/10 * * * *' # minuto 3: fora do minuto 0, onde a fila do GitHub se concentra
   workflow_dispatch:
     inputs:
       graphify:
@@ -55,7 +55,9 @@ on:
         default: false
 
 concurrency:
-  group: contexto
+  # Grupo por evento: o GitHub mantem so UM run pendente por grupo, entao com a fila
+  # acima de 10 min cada agendado cancelava o anterior e o push ficava atras deles.
+  group: contexto-${{ github.event_name }}
   cancel-in-progress: false # push em main nunca é cancelado; o gate por commit evita trabalho repetido
 
 permissions:
@@ -178,8 +180,9 @@ jobs:
       artifact-id: ${{ steps.upload.outputs.artifact-id }}
     env:
       SNAPSHOT_DIR: docs/contexto/supabase
-      # schema.sql exigiria pg_dump da versão do servidor (o runner tem o client 16) e `types.ts` sai do
-      # fluxo de tipos do repo; o snapshot descreve o banco em Markdown/JSON, que é o que o agente lê.
+      # schema.sql exigiria pg_dump da versão do servidor (o runner tem o client 16). `types.ts` fica
+      # desligado porque este repo versiona src/integrations/supabase/types.ts à mão (não há workflow de
+      # tipos). O que o agente lê é o Markdown/JSON do snapshot, não um dump.
       PGDUMP: 'false'
       GEN_TYPES: 'false'
     steps:
@@ -261,6 +264,10 @@ jobs:
         with:
           name: contexto-supabase
           path: docs/contexto/supabase
+          # snapshot.py grava `.supabase-snapshot-output` (marcador que o proprio
+          # coletor exige na coleta seguinte) e `.gitattributes`; o default da action
+          # e false e os dois ficavam de fora, podendo travar o job `banco`.
+          include-hidden-files: true
           if-no-files-found: error
           retention-days: 1
 
@@ -281,8 +288,11 @@ jobs:
 
       - name: Gerar regras/
         run: |
+          # Sem --schema-snapshot: no perfil `regras` ele so' decidiria o conteudo do
+          # 06-BANCO-DE-DADOS.md, que este perfil descarta. Passa-lo produzia um aviso
+          # falso ("06 reconstruido das migrations") em todo run.
           python3 scripts/regras_negocio/generate.py --repo . --out "$CONTEXTO_DIR/regras" \
-            --profile regras --schema-snapshot "$CONTEXTO_DIR/supabase" --index-path "$CONTEXTO_DIR/00-INDEX.md" --no-pointer
+            --profile regras --index-path "$CONTEXTO_DIR/00-INDEX.md" --no-pointer
           ls "$CONTEXTO_DIR/regras"
 
       - name: Guardar para o publicar
