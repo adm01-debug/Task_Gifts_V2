@@ -104,7 +104,8 @@ Repo `adm01-debug/Task_Gifts_V2`, branch `main`, **público**. Produção: https
   tudo para `/index.html`): **não há serverless**, logo nenhum segredo de servidor deveria existir lá —
   e existem (ver o doc). `VITE_*` entra no bundle e é público.
 - **GitHub/CI** — ler `docs/agentes/github-ci.md` ao mexer em settings, branch protection ou
-  `.github/workflows/`. Um único workflow (`ci.yml`, job `quality`) e ele é o único check obrigatório.
+  `.github/workflows/`. Dois workflows: `ci.yml` (job `quality`, **único check obrigatório**) e
+  `contexto.yml` (publica a branch gerada `contexto`; não gateia PR).
 - **Regras de domínio** — ler `docs/agentes/regras-dominio.md` ao mexer em kudos, loja/resgates, missões,
   trilhas, ligas, push/e-mail ou integração Bitrix24.
 - **Contexto autônomo** — ler `docs/agentes/contexto-autonomo.md` ao mexer em `scripts/ai-context/`,
