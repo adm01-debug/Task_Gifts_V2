@@ -46,6 +46,13 @@ jobs:
       - name: Type Check
         run: bun run typecheck
 
+      - name: Integridade das instrucoes de agente (GA02)
+        # Barra wipe/esvaziamento de AGENTS.md, CLAUDE.md e docs/agentes/ por sessao paralela.
+        # Detalhe em docs/agentes/github-ci.md > Guardas do CI.
+        run: |
+          git fetch --no-tags --depth=1 origin main
+          CLAUDE_MD_BASE=FETCH_HEAD node scripts/ci/check-claude-md-integrity.mjs
+
       - name: Unit Tests com Coverage
         run: bun run test:ci
         env:
