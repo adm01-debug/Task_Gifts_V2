@@ -1,0 +1,4 @@
+#!/bin/sh
+# Gate de mensagem de commit: a funcao do commitlint SEM dependencia nova. O git passa o caminho
+# do arquivo de mensagem em $1; o padrao cobrado e o de AGENTS.md > Fluxo Git.
+node scripts/ci/commit-msg-lint.mjs "$1"

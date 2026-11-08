@@ -1,0 +1,138 @@
+# Instincts for https://github.com/adm01-debug/Task_Gifts_V2
+# Escrito a mao a partir do AGENTS.md e de fatos medidos no repo em 2026-11-08.
+# NAO e saida de analise automatica: cada item abaixo tem evidencia em arquivo do repo.
+# Este arquivo suplementa (nao substitui) instincts curados que ja existam.
+
+---
+id: task-gifts-v2-commit-conventional
+trigger: "when writing a commit message"
+confidence: 0.95
+domain: git
+source: repo-rules
+source_repo: https://github.com/adm01-debug/Task_Gifts_V2
+---
+
+# Commits sao Conventional Commits, cobrados por hook
+
+## Action
+
+Use `<tipo>(<escopo>): <assunto>` em PT-BR, assunto com >= 10 caracteres e sem ponto final.
+Tipos aceitos: feat fix docs style refactor perf test build ci chore security revert.
+
+## Evidence
+
+- `scripts/ci/commit-msg-lint.mjs` (lista `TIPOS`, `SUBJECT_MIN_LENGTH = 10`)
+- `.husky/commit-msg` chama o lint
+- `AGENTS.md` > Fluxo Git
+
+---
+id: task-gifts-v2-typecheck-noop
+trigger: "before claiming types are fine"
+confidence: 0.9
+domain: build
+source: repo-rules
+source_repo: https://github.com/adm01-debug/Task_Gifts_V2
+---
+
+# `bun run typecheck` nao verifica nada
+
+## Action
+
+Rode `npx tsc --noEmit -p tsconfig.app.json` (ou `npx tsc -b`). Nunca cite `bun run typecheck`
+como prova de tipo correto.
+
+## Evidence
+
+- `tsconfig.json` tem `"files": []` + `"references"`; `tsc --noEmit` sem `-b` nao segue references
+- `package.json` > scripts.typecheck = `tsc --noEmit`
+
+---
+id: task-gifts-v2-edge-three-gates
+trigger: "when an edge function call does not work"
+confidence: 0.9
+domain: supabase
+source: repo-rules
+source_repo: https://github.com/adm01-debug/Task_Gifts_V2
+---
+
+# Tres portas derrubam a chamada antes do handler
+
+## Action
+
+Cheque nesta ordem: allowlist `VITE_DEPLOYED_EDGE_FUNCTIONS` (curto-circuita sem request),
+`verify_jwt` do `supabase/config.toml` (so `migrate-helper` esta aberto), e se a funcao foi
+realmente deployada (nao existe workflow de deploy).
+
+## Evidence
+
+- `src/lib/edgeAvailability.ts:35` e `src/lib/requestId.ts:128`
+- `supabase/config.toml`
+- `docs/agentes/edge-functions.md`
+
+---
+id: task-gifts-v2-banco-divergente
+trigger: "before running SQL or a migration"
+confidence: 0.9
+domain: database
+source: repo-rules
+source_repo: https://github.com/adm01-debug/Task_Gifts_V2
+---
+
+# O projeto do `config.toml` nao e o banco em uso
+
+## Action
+
+Banco em uso: `eidsaqymojyuhprobfpn` (o que o app le em `VITE_SUPABASE_URL`). `supabase/config.toml`
+declara `awzhgfmqwddzgbqzqusc`, outro projeto. Nao existe ledger de migrations: confirme o estado
+real por introspecao e escreva migration idempotente.
+
+## Evidence
+
+- `supabase/config.toml:1` vs `src/integrations/supabase/client.ts:5`
+- ausencia de `supabase_migrations.schema_migrations`
+- `docs/agentes/banco.md`
+
+---
+id: task-gifts-v2-repo-publico
+trigger: "before committing any file"
+confidence: 1.0
+domain: security
+source: repo-rules
+source_repo: https://github.com/adm01-debug/Task_Gifts_V2
+---
+
+# Repositorio publico e secret scanning desligado
+
+## Action
+
+Nenhum segredo em arquivo versionado — nao ha alerta automatico que pegue o erro. Segredo de edge
+vai em `supabase secrets set`; var de front com prefixo `VITE_` e publica por construcao.
+
+## Evidence
+
+- `github_get_repo`: `visibility: public`, `secret_scanning: disabled` (medido 2026-11-08)
+- `PENDENCIAS.md` P-001 (conversao para publico em 2026-10-29)
+- `docs/agentes/banco.md` > "Segredo exposto"
+
+---
+id: task-gifts-v2-merge-e-producao
+trigger: "before merging a PR"
+confidence: 0.95
+domain: deploy
+source: repo-rules
+source_repo: https://github.com/adm01-debug/Task_Gifts_V2
+---
+
+# Merge em `main` publica em producao
+
+## Action
+
+O Vercel faz deploy automatico no push da `main`. Depois do merge, confirme `latestDeployment`
+(`readyState: READY`, `target: production`) e reporte. Deixe a PR aberta e chame o dono quando
+envolver CI/workflows, segredos, branch protection, DDL de producao, delecao de dado ou custo.
+
+## Evidence
+
+- `mcp__Vercel__get_project` (projeto `task-gifts-v2`, team `juca1`)
+- `docs/agentes/vercel-deploy.md`
+- `AGENTS.md` > Fluxo Git
