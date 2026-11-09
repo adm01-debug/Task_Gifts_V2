@@ -79,8 +79,7 @@ Repo `adm01-debug/Task_Gifts_V2`, branch `main`, **público**. Produção: https
 
 ## Banco — ler `docs/agentes/banco.md` antes de SQL, migration ou deploy
 - **Em uso (produção): `eidsaqymojyuhprobfpn`** — é o que o app lê em `VITE_SUPABASE_URL` e o que o MCP
-  `supabase` do `.mcp.json` alcança. `supabase/config.toml:1` declara `awzhgfmqwddzgbqzqusc`, **outro
-  projeto**: não é o banco em uso; não aplique nada nele achando que é este.
+  `supabase` do `.mcp.json` alcança. `supabase/config.toml:1` está alinhado com produção (corrigido no PR #33).
 - SQL pelo MCP **`supabase`** (gateway em `.mcp.json`) — tem acesso total (DDL e DML). **Não existe
   `supabase_migrations.schema_migrations`:** as migrations de `supabase/migrations/` não estão rastreadas,
   então o ledger não serve de verdade — o estado real do banco é a verdade (`pg_get_functiondef`,
@@ -104,8 +103,7 @@ Repo `adm01-debug/Task_Gifts_V2`, branch `main`, **público**. Produção: https
   tudo para `/index.html`): **não há serverless**, logo nenhum segredo de servidor deveria existir lá —
   e existem (ver o doc). `VITE_*` entra no bundle e é público.
 - **GitHub/CI** — ler `docs/agentes/github-ci.md` ao mexer em settings, branch protection ou
-  `.github/workflows/`. Dois workflows: `ci.yml` (job `quality`, **único check obrigatório**) e
-  `contexto.yml` (publica a branch gerada `contexto`; não gateia PR).
+  `.github/workflows/`. Um único workflow (`ci.yml`, job `quality`) e ele é o único check obrigatório.
 - **Regras de domínio** — ler `docs/agentes/regras-dominio.md` ao mexer em kudos, loja/resgates, missões,
   trilhas, ligas, push/e-mail ou integração Bitrix24.
 - **Contexto autônomo** — ler `docs/agentes/contexto-autonomo.md` ao mexer em `scripts/ai-context/`,

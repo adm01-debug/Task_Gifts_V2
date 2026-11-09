@@ -38,10 +38,9 @@ neste repo.
 
 ### Projetos que NÃO são este (não escrever neles)
 
-- **`awzhgfmqwddzgbqzqusc`** — é o que `supabase/config.toml:1` declara (`project_id`) e o que aparece
-  hardcoded em migrations e em jobs de cron. **Não é o projeto que o app usa.** Enquanto essa divergência
-  existir, `supabase db push`/`supabase functions deploy` sem `--project-ref` explícito mira no projeto
-  errado.
+- **`awzhgfmqwddzgbqzqusc`** — era o `project_id` em `config.toml` e estava hardcoded em migrations/cron;
+  ambos foram corrigidos (PR #33 e fix de migrations 2026-11). **Não é o projeto que o app usa**; nunca
+  escreva nele.
 - **`pgxfvjmuubtbowutlide`** — MCP "SUPABASE - GESTÃO DE CLIENTES" (CRM). Projeto externo, **só leitura**.
 - **`doufsxqlfjyuvxuezpln`** — MCP "SUPABASE - GESTÃO DE PRODUTOS" (Catálogo). Projeto externo, **só leitura**.
 - Qualquer MCP com nome parecido carregado na sessão: **confira qual é** (`get_project_url` /
@@ -89,10 +88,9 @@ credencial e decisão do dono), mas:
 
 | Divergência | Evidência | Efeito |
 |---|---|---|
-| `config.toml` aponta para outro projeto | `supabase/config.toml:1` vs `VITE_SUPABASE_URL` | CLI do Supabase mira no projeto errado sem `--project-ref` |
-| Sem ledger de migrations | ausência de `supabase_migrations.schema_migrations` | não há como provar que banco == repo; o mais perto disso é `node scripts/db-audit/check-migration-drift.mjs --snapshot docs/contexto/supabase`, que confere idempotência das 266 migrations (fase 1) e as tabelas declaradas contra o catálogo real (fase 2) — ver `scripts/db-audit/README.md` |
+| Sem ledger de migrations | ausência de `supabase_migrations.schema_migrations` | não há como provar que banco == repo |
 | `VITE_SUPABASE_ANON_KEY` no `.env.example`, `VITE_SUPABASE_PUBLISHABLE_KEY` no código | `.env.example:9` vs `src/integrations/supabase/client.ts:6` | quem seguir o example sobe o app sem chave; dois testes de segurança (`src/test/rls.test.ts`, `src/test/rpcAccess.test.ts`) ficam `skip` por causa dessa variável |
-| URL + anon key fixas em SQL de cron | `supabase/migrations/20260712194718_*.sql:4-5` | rotação de chave exige migration nova |
+| Anon key errada em SQL de cron | `supabase/migrations/20260712194718_*.sql:5`, `20260712203400_*.sql:11` | URL corrigida; anon key ainda é de `awzhgfmqwddzgbqzqusc` — 2 jobs falham auth até o dono atualizar |
 
 Sessões paralelas commitam no mesmo repo e no mesmo banco: re-sync antes de editar e confira o estado
 real do objeto antes de criar/alterar.

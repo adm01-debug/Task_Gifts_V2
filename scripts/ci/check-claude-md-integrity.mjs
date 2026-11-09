@@ -62,10 +62,25 @@ function bytesAtuais() {
 // Tamanho na base de cada arquivo do conjunto: { total, porArquivo: Map(path -> bytes) } ou null
 // quando a base nao tem nenhum deles (ref inexistente, checkout raso sem a main).
 function bytesNaBase(base) {
+  // Verificar que a ref resolve; falhar ruidosamente em vez de silenciar e deixar a guarda inativa.
+  try {
+    execSync(`git rev-parse --verify ${base}`, { encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] });
+  } catch {
+    console.error(`::error::Guard GA02: ref '${base}' nao resolvida (git fetch rodou antes desta etapa?). Abortando para nao deixar a guarda desativada.`);
+    process.exitCode = 1;
+    process.exit();
+  }
+  // Usar merge-base para evitar falso-positivo quando a branch esta atras da main.
+  let resolvedBase = base;
+  try {
+    const mb = execSync(`git merge-base HEAD ${base}`, { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] }).trim();
+    if (mb) resolvedBase = mb;
+  } catch { /* HEAD pode ser o proprio base; seguir com base original */ }
+
   const porArquivo = new Map();
   const tamanho = (path) => {
     try {
-      const out = execSync(`git cat-file -s ${base}:${path}`, { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] });
+      const out = execSync(`git cat-file -s ${resolvedBase}:${path}`, { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] });
       porArquivo.set(path, Number.parseInt(out.trim(), 10) || 0);
     } catch {
       /* nao existe na base */
@@ -74,7 +89,7 @@ function bytesNaBase(base) {
   for (const f of CONJUNTO_RAIZ) tamanho(f);
   let lista = '';
   try {
-    lista = execSync(`git ls-tree -r --name-only ${base} -- ${DOCS_DIR}`, { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] });
+    lista = execSync(`git ls-tree -r --name-only ${resolvedBase} -- ${DOCS_DIR}`, { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] });
   } catch {
     lista = '';
   }
