@@ -1,6 +1,6 @@
 # 07 · REGRAS DE NEGÓCIO
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `59d2c2b493` · branch `main` · 2026-11-09 05:27 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `ffcff81d4b` · branch `main` · 2026-11-09 10:03 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## A. Regras escritas por humanos (`manual/` — prioridade máxima, nunca sobrescrito)
@@ -3326,7 +3326,7 @@ _nenhum item encontrado_
 | Não foi possível salvar o baralho. | `src/pages/MemoryDeckAdminPage.tsx` |
 | Falha ao registrar a partida. | `src/pages/MemoryGamePage.tsx` |
 | Não foi possível iniciar a partida. Tente novamente. | `src/pages/MemoryGamePage.tsx` |
-| … +164 linhas — lista completa em `context.json` | |
+| … +165 linhas — lista completa em `context.json` | |
 
 ## J. Controle de acesso no código (checagens de perfil/permissão)
 

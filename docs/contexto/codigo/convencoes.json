@@ -58,11 +58,11 @@
  "commits": {
   "convencao": "conventional commits (observado)",
   "exemplos": [
+   "fix: corrige URL do projeto nas migrations de cron, guard GA02 e docs (#37)",
    "feat(db-audit): guarda de migrations — idempotência ratchet + drift contra banco real",
    "fix(contexto): hardening do pacote — 2 vazamentos e inventário de edges",
    "feat(contexto): sistema autonomo de contexto para agentes de IA (#34)",
-   "fix(supabase): corrige project_id do config.toml para o projeto em uso",
-   "ci(guard): adiciona step GA02 de integridade das instruções de agente no CI"
+   "fix(supabase): corrige project_id do config.toml para o projeto em uso"
   ]
  },
  "pr_template": ".github/PULL_REQUEST_TEMPLATE.md",

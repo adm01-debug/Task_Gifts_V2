@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "59d2c2b493377ed90427126f52dad39e3c88fed0",
+  "commit": "ffcff81d4b5c63c9508b3b08b41bb1c5166b6d43",
   "branch": "main",
-  "data_commit": "2026-11-08T21:46:28-03:00",
+  "data_commit": "2026-11-09T07:02:59-03:00",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "ultimos_commits": [
+   {
+    "sha": "ffcff81",
+    "data": "2026-11-09",
+    "assunto": "fix: corrige URL do projeto nas migrations de cron, guard GA02 e docs (#37)"
+   },
    {
     "sha": "59d2c2b",
     "data": "2026-11-08",
@@ -126,14 +131,9 @@
     "sha": "f50a57c",
     "data": "2026-09-05",
     "assunto": "fix(deploy+db): SPA rewrite no Vercel + limpeza de policy residual de profiles (#7)"
-   },
-   {
-    "sha": "d7279b8",
-    "data": "2026-09-05",
-    "assunto": "fix(db): elimina version duplicada de migration (20260727221909 em 2 arquivos) (#6)"
    }
   ],
-  "arquivos_mudados_7d": 59,
+  "arquivos_mudados_7d": 65,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "package.json",
@@ -148,6 +148,10 @@
     "mudancas": 5
    },
    {
+    "pasta": "AGENTS.md",
+    "mudancas": 4
+   },
+   {
     "pasta": "RELATORIO_CI.md",
     "mudancas": 4
    },
@@ -156,11 +160,11 @@
     "mudancas": 3
    },
    {
-    "pasta": "AGENTS.md",
+    "pasta": "PENDENCIAS.md",
     "mudancas": 3
    },
    {
-    "pasta": "PENDENCIAS.md",
+    "pasta": "docs/agentes/banco.md",
     "mudancas": 3
    },
    {
@@ -177,10 +181,6 @@
    },
    {
     "pasta": "ai-context.config.json",
-    "mudancas": 2
-   },
-   {
-    "pasta": "docs/agentes/banco.md",
     "mudancas": 2
    },
    {
@@ -211,7 +211,7 @@
    },
    {
     "arquivo": "AGENTS.md",
-    "mudancas": 4
+    "mudancas": 5
    },
    {
     "arquivo": "RELATORIO_CI.md",
@@ -223,6 +223,10 @@
    },
    {
     "arquivo": "PENDENCIAS.md",
+    "mudancas": 3
+   },
+   {
+    "arquivo": "docs/agentes/banco.md",
     "mudancas": 3
    },
    {
@@ -242,10 +246,6 @@
     "mudancas": 2
    },
    {
-    "arquivo": "docs/agentes/banco.md",
-    "mudancas": 2
-   },
-   {
     "arquivo": "docs/agentes/contexto-autonomo.md",
     "mudancas": 2
    },
@@ -255,6 +255,10 @@
    },
    {
     "arquivo": "docs/estado/README.md",
+    "mudancas": 2
+   },
+   {
+    "arquivo": "scripts/ci/check-claude-md-integrity.mjs",
     "mudancas": 2
    },
    {
@@ -292,16 +296,12 @@
    {
     "arquivo": ".claude/hooks/session-start.sh",
     "mudancas": 1
-   },
-   {
-    "arquivo": ".claude/identity.json",
-    "mudancas": 1
    }
   ],
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 15
+    "commits": 16
    },
    {
     "autor": "dependabot[bot]",
@@ -310,9 +310,9 @@
   ]
  },
  "contagens": {
-  "arquivos_total": 1482,
+  "arquivos_total": 1483,
   "arquivos_codigo": 1136,
-  "linhas_codigo": 222000,
+  "linhas_codigo": 222015,
   "rotas": 83,
   "rotas_http_backend": 0,
   "vistas_por_id": 0,
@@ -322,7 +322,7 @@
   "hooks": 155,
   "edge_functions": 37,
   "tabelas": 236,
-  "migrations": 266,
+  "migrations": 267,
   "cron_jobs": 22,
   "testes": 151,
   "workflows": 2,
@@ -356,7 +356,7 @@
   },
   "scripts/ci": {
    "arquivos": 7,
-   "linhas": 1419
+   "linhas": 1434
   },
   "scripts/db-audit": {
    "arquivos": 1,

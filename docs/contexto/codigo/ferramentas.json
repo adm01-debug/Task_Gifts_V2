@@ -4,7 +4,7 @@
  "stack": {
   "linguagens": [
    "TypeScript (1118)",
-   "SQL (266)",
+   "SQL (267)",
    "Markdown (43)",
    "JavaScript (14)",
    "JSON (11)",
@@ -212,7 +212,7 @@
   {
    "arquivo": "AGENTS.md",
    "titulo": "AGENTS.md — Task Gifts V2",
-   "linhas": 147
+   "linhas": 145
   },
   {
    "arquivo": "AUDIT_INVENTORY_CHECKLIST.md",

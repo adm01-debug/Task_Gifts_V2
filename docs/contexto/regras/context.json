@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "59d2c2b493377ed90427126f52dad39e3c88fed0",
+  "sha": "ffcff81d4b5c63c9508b3b08b41bb1c5166b6d43",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
-  "generated_at": "2026-11-09 05:27 UTC",
-  "files_total": 1491,
-  "code_files": 1408,
-  "code_lines": 252721
+  "generated_at": "2026-11-09 10:03 UTC",
+  "files_total": 1492,
+  "code_files": 1409,
+  "code_lines": 252789
  },
  "version": "1.3.2",
- "facts_hash": "5409ff217279a654",
+ "facts_hash": "0db77eb17b0b080a",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -147,7 +147,7 @@
   "languages": {
    ".tsx": 564,
    ".ts": 556,
-   ".sql": 266,
+   ".sql": 267,
    ".mjs": 11,
    ".js": 5,
    ".py": 5,
@@ -27270,10 +27270,10 @@
     "args": "",
     "returns": "TRIGGER",
     "lang": "plpgsql",
-    "src": "supabase/migrations/20260712203400_c0990109-c9a3-4d2f-90e9-0a48ff66a5ed.sql",
+    "src": "supabase/migrations/20261109120000_fix_cron_wrong_project.sql",
     "security_definer": true,
     "search_path": true,
-    "body": "DECLARE v_project_url TEXT := 'https://awzhgfmqwddzgbqzqusc.supabase.co'; v_anon_key TEXT := '[REDACTED]'; BEGIN IF LOWER(COALESCE(NEW.severity, '')) NOT IN ('high', 'critical') THEN RETURN NEW; END IF; PERFORM net.http_post( url := v_project_url || '/functions/v1/dispatch-critical-alert', headers := jsonb_build_object( 'Content-Type', 'application/json', 'apikey', v_anon_key, 'Authorization', 'Bearer ' || v_anon_key ), body := jsonb_build_object( 'alert_id', NEW.id, 'alert_type', NEW.alert_type, 'severity', NEW.severity, 'title', NEW.title, 'description', NEW.description, 'metadata', NEW.metadata ) ); RETURN NEW; EXCEPTION WHEN OTHERS THEN RAISE WARNING 'dispatch-critical-alert failed: %', …",
+    "body": "DECLARE v_project_url TEXT := 'https://eidsaqymojyuhprobfpn.supabase.co'; v_anon_key TEXT := '[REDACTED]'; BEGIN IF LOWER(COALESCE(NEW.severity, '')) NOT IN ('high', 'critical') THEN RETURN NEW; END IF; PERFORM net.http_post( url := v_project_url || '/functions/v1/dispatch-critical-alert', headers := jsonb_build_object( 'Content-Type', 'application/json', 'apikey', v_anon_key, 'Authorization', 'Bearer ' || v_anon_key ), body := jsonb_build_object( 'alert_id', NEW.id, 'alert_type', NEW.alert_type, 'severity', NEW.severity, 'title', NEW.title, 'description', NEW.description, 'metadata', NEW.metadata ) ); RETURN NEW; EXCEPTION WHEN OTHERS THEN RAISE WARNING 'dispatch-critical-alert failed: %', …",
     "raises": [],
     "tables": []
    },
@@ -32932,7 +32932,7 @@
    {
     "job": "security-weekly-digest",
     "schedule": "0 13 * * 1",
-    "body": "SELECT net.http_post( url := 'https://awzhgfmqwddzgbqzqusc.supabase.co/functions/v1/security-weekly-digest', headers := jsonb_build_object('Content-Type', 'application/json'), body := '{}'::jsonb );",
+    "body": "SELECT net.http_post( url := 'https://eidsaqymojyuhprobfpn.supabase.co/functions/v1/security-weekly-digest', headers := jsonb_build_object('Content-Type', 'application/json'), body := '{}'::jsonb );",
     "src": "supabase/migrations/20260712212544_f5c57b6a-8da7-4609-9178-803cbf5741f6.sql"
    },
    {
@@ -32950,7 +32950,7 @@
    {
     "job": "push-outbox-dispatcher",
     "schedule": "* * * * *",
-    "body": "SELECT net.http_post( url := 'https://awzhgfmqwddzgbqzqusc.supabase.co/functions/v1/push-outbox-dispatcher', headers := jsonb_build_object('Content-Type', 'application/json'), body := '{}'::jsonb );",
+    "body": "SELECT net.http_post( url := 'https://eidsaqymojyuhprobfpn.supabase.co/functions/v1/push-outbox-dispatcher', headers := jsonb_build_object('Content-Type', 'application/json'), body := '{}'::jsonb );",
     "src": "supabase/migrations/20260728112123_ea25bb13-aa3c-4f75-9892-c58e2785e70b.sql"
    },
    {
@@ -33255,6 +33255,7 @@
    "supabase/migrations/20260906120000_posvalidacao_fixes.sql",
    "supabase/migrations/20260907120000_profiles_policy_cleanup.sql",
    "supabase/migrations/20261030120000_onda2_fk_explicit_delete.sql",
+   "supabase/migrations/20261109120000_fix_cron_wrong_project.sql",
    "src/integrations/supabase/types.ts"
   ],
   "rls": {
@@ -40693,6 +40694,14 @@
     "objkind": "function",
     "roles": "authenticated",
     "src": "supabase/migrations/20260807030000_fix_opinion_feed_rpc.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "execute",
+    "object": "trigger_dispatch_critical_alert",
+    "objkind": "function",
+    "roles": "PUBLIC",
+    "src": "supabase/migrations/20261109120000_fix_cron_wrong_project.sql"
    }
   ],
   "raises": [
@@ -47773,7 +47782,7 @@
   {
    "module": "scripts",
    "files": 17,
-   "lines": 8759,
+   "lines": 8774,
    "tables": [
     "a",
     "contacts",
@@ -49389,8 +49398,8 @@
   },
   {
    "module": "supabase/migrations",
-   "files": 266,
-   "lines": 29174,
+   "files": 267,
+   "lines": 29227,
    "tables": [],
    "exports": [],
    "docs": [],
@@ -57528,6 +57537,10 @@
    {
     "file": "supabase/migrations/20260728180730_1d09218b-0f91-4b02-9127-2009c4de7589.sql",
     "msg": ",\n    "
+   },
+   {
+    "file": "supabase/migrations/20261109120000_fix_cron_wrong_project.sql",
+    "msg": ",\n    headers := jsonb_build_object(\n      "
    }
   ],
   "role_checks": [
@@ -94722,10 +94735,10 @@
     "args": "",
     "returns": "TRIGGER",
     "lang": "plpgsql",
-    "src": "supabase/migrations/20260712203400_c0990109-c9a3-4d2f-90e9-0a48ff66a5ed.sql",
+    "src": "supabase/migrations/20261109120000_fix_cron_wrong_project.sql",
     "security_definer": true,
     "search_path": true,
-    "body": "DECLARE v_project_url TEXT := 'https://awzhgfmqwddzgbqzqusc.supabase.co'; v_anon_key TEXT := '[REDACTED]'; BEGIN IF LOWER(COALESCE(NEW.severity, '')) NOT IN ('high', 'critical') THEN RETURN NEW; END IF; PERFORM net.http_post( url := v_project_url || '/functions/v1/dispatch-critical-alert', headers := jsonb_build_object( 'Content-Type', 'application/json', 'apikey', v_anon_key, 'Authorization', 'Bearer ' || v_anon_key ), body := jsonb_build_object( 'alert_id', NEW.id, 'alert_type', NEW.alert_type, 'severity', NEW.severity, 'title', NEW.title, 'description', NEW.description, 'metadata', NEW.metadata ) ); RETURN NEW; EXCEPTION WHEN OTHERS THEN RAISE WARNING 'dispatch-critical-alert failed: %', …",
+    "body": "DECLARE v_project_url TEXT := 'https://eidsaqymojyuhprobfpn.supabase.co'; v_anon_key TEXT := '[REDACTED]'; BEGIN IF LOWER(COALESCE(NEW.severity, '')) NOT IN ('high', 'critical') THEN RETURN NEW; END IF; PERFORM net.http_post( url := v_project_url || '/functions/v1/dispatch-critical-alert', headers := jsonb_build_object( 'Content-Type', 'application/json', 'apikey', v_anon_key, 'Authorization', 'Bearer ' || v_anon_key ), body := jsonb_build_object( 'alert_id', NEW.id, 'alert_type', NEW.alert_type, 'severity', NEW.severity, 'title', NEW.title, 'description', NEW.description, 'metadata', NEW.metadata ) ); RETURN NEW; EXCEPTION WHEN OTHERS THEN RAISE WARNING 'dispatch-critical-alert failed: %', …",
     "raises": [],
     "tables": []
    },
@@ -112287,6 +112300,14 @@
     "objkind": "function",
     "roles": "authenticated",
     "src": "supabase/migrations/20260807030000_fix_opinion_feed_rpc.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "execute",
+    "object": "trigger_dispatch_critical_alert",
+    "objkind": "function",
+    "roles": "PUBLIC",
+    "src": "supabase/migrations/20261109120000_fix_cron_wrong_project.sql"
    }
   ],
   "guards": [
@@ -115852,7 +115873,7 @@
   },
   "scripts/ci/check-claude-md-integrity.mjs": {
    "path": "scripts/ci/check-claude-md-integrity.mjs",
-   "lines": 122,
+   "lines": 137,
    "env": [
     "CLAUDE_MD_BASE"
    ],
@@ -150069,7 +150090,7 @@
   },
   "supabase/migrations/20260712212544_f5c57b6a-8da7-4609-9178-803cbf5741f6.sql": {
    "path": "supabase/migrations/20260712212544_f5c57b6a-8da7-4609-9178-803cbf5741f6.sql",
-   "lines": 11
+   "lines": 12
   },
   "supabase/migrations/20260712214354_6b63ac45-5e2f-4e7d-bb4b-971d8333d889.sql": {
    "path": "supabase/migrations/20260712214354_6b63ac45-5e2f-4e7d-bb4b-971d8333d889.sql",
@@ -150500,7 +150521,7 @@
   },
   "supabase/migrations/20260728112123_ea25bb13-aa3c-4f75-9892-c58e2785e70b.sql": {
    "path": "supabase/migrations/20260728112123_ea25bb13-aa3c-4f75-9892-c58e2785e70b.sql",
-   "lines": 253,
+   "lines": 254,
    "uses_service_role": true
   },
   "supabase/migrations/20260728112223_9f86e736-fd1e-4ab5-a812-9fc5f1f6f009.sql": {
@@ -150904,6 +150925,13 @@
    "path": "supabase/migrations/20261030120000_onda2_fk_explicit_delete.sql",
    "lines": 169
   },
+  "supabase/migrations/20261109120000_fix_cron_wrong_project.sql": {
+   "path": "supabase/migrations/20261109120000_fix_cron_wrong_project.sql",
+   "lines": 51,
+   "errors": [
+    ",\n    headers := jsonb_build_object(\n      "
+   ]
+  },
   "tests/auth-flow.spec.ts": {
    "path": "tests/auth-flow.spec.ts",
    "lines": 34,
@@ -150957,10 +150985,27 @@
   }
  },
  "git": {
-  "sha": "59d2c2b493377ed90427126f52dad39e3c88fed0",
+  "sha": "ffcff81d4b5c63c9508b3b08b41bb1c5166b6d43",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "commits": [
+   {
+    "sha": "ffcff81",
+    "date": "2026-11-09",
+    "author": "adm01-debug",
+    "subject": "fix: corrige URL do projeto nas migrations de cron, guard GA02 e docs (#37)",
+    "files": [
+     ".husky/pre-commit",
+     "AGENTS.md",
+     "docs/agentes/banco.md",
+     "scripts/ci/check-claude-md-integrity.mjs",
+     "supabase/migrations/20260712194718_bff07c8c-5744-4682-bba1-33f9ca2a1ecb.sql",
+     "supabase/migrations/20260712203400_c0990109-c9a3-4d2f-90e9-0a48ff66a5ed.sql",
+     "supabase/migrations/20260712212544_f5c57b6a-8da7-4609-9178-803cbf5741f6.sql",
+     "supabase/migrations/20260728112123_ea25bb13-aa3c-4f75-9892-c58e2785e70b.sql",
+     "supabase/migrations/20261109120000_fix_cron_wrong_project.sql"
+    ]
+   },
    {
     "sha": "59d2c2b",
     "date": "2026-11-08",
@@ -151334,15 +151379,6 @@
      "supabase/config.toml",
      "supabase/functions/migrate-helper/index.ts"
     ]
-   },
-   {
-    "sha": "367dfb5",
-    "date": "2026-08-18",
-    "author": "adm01-debug",
-    "subject": "chore(hermes): adiciona .hermes.md (regras da casa Hermes)",
-    "files": [
-     ".hermes.md"
-    ]
    }
   ],
   "hot_files": [
@@ -151359,6 +151395,10 @@
     6
    ],
    [
+    "AGENTS.md",
+    4
+   ],
+   [
     ".gitignore",
     4
    ],
@@ -151371,7 +151411,7 @@
     4
    ],
    [
-    "AGENTS.md",
+    "docs/agentes/banco.md",
     3
    ],
    [
@@ -151383,7 +151423,7 @@
     3
    ],
    [
-    "docs/agentes/banco.md",
+    "scripts/ci/check-claude-md-integrity.mjs",
     2
    ],
    [
@@ -151420,10 +151460,6 @@
    ],
    [
     "scripts/supabase_snapshot/README.md",
-    2
-   ],
-   [
-    "scripts/supabase_snapshot/snapshot.py",
     2
    ]
   ]
