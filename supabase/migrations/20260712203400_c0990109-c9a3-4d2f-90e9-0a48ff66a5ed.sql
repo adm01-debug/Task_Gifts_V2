@@ -7,8 +7,8 @@ SECURITY DEFINER
 SET search_path = public
 AS $$
 DECLARE
-  v_project_url TEXT := 'https://awzhgfmqwddzgbqzqusc.supabase.co';
-  v_anon_key TEXT := 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF3emhnZm1xd2RkemdicXpxdXNjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg2ODE1ODQsImV4cCI6MjA5NDI1NzU4NH0.HIsoaKjV2MFzTc6sCJ0p6RcoVIPR5SRIoE885SVMXCc';
+  v_project_url TEXT := 'https://eidsaqymojyuhprobfpn.supabase.co';
+  v_anon_key TEXT := 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF3emhnZm1xd2RkemdicXpxdXNjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg2ODE1ODQsImV4cCI6MjA5NDI1NzU4NH0.HIsoaKjV2MFzTc6sCJ0p6RcoVIPR5SRIoE885SVMXCc'; -- FIXME: anon key de awzhgfmqwddzgbqzqusc; substituir pela de eidsaqymojyuhprobfpn
 BEGIN
   -- Escalonar apenas severidades altas
   IF LOWER(COALESCE(NEW.severity, '')) NOT IN ('high', 'critical') THEN
