@@ -6,7 +6,7 @@
    "TypeScript (1118)",
    "SQL (266)",
    "Markdown (42)",
-   "JavaScript (16)",
+   "JavaScript (12)",
    "JSON (10)",
    "Python (5)",
    "YAML (5)",
@@ -48,7 +48,7 @@
    "build": "vite build",
    "build:dev": "vite build --mode development",
    "contexto:codigo": "node scripts/ai-context/gerar.mjs --out docs/contexto/codigo",
-   "contexto:regras": "python3 scripts/regras_negocio/generate.py --repo . --out docs/contexto/regras --profile regras --schema-snapshot docs/contexto/supabase --index-path docs/contexto/00-INDEX.md --no-pointer",
+   "contexto:regras": "python3 scripts/regras_negocio/generate.py --repo . --out docs/contexto/regras --profile regras --index-path docs/contexto/00-INDEX.md --no-pointer",
    "contexto:test": "node --test scripts/ai-context/gerar.unit.mjs scripts/ci/contexto-indice.unit.mjs scripts/ci/contexto-publicacao.unit.mjs scripts/ci/regras-negocio.unit.mjs scripts/ci/supabase-snapshot.unit.mjs",
    "dev": "vite",
    "graph:setup": "bash scripts/graphify/setup.sh",
@@ -424,10 +424,6 @@
     "arquivos": 6
    },
    {
-    "host": "api.resend.com",
-    "arquivos": 2
-   },
-   {
     "host": "fcm.googleapis.com",
     "arquivos": 2
    },
@@ -444,10 +440,6 @@
     "arquivos": 2
    },
    {
-    "host": "x.supabase.co",
-    "arquivos": 2
-   },
-   {
     "host": "a.com",
     "arquivos": 1
    },
@@ -456,7 +448,7 @@
     "arquivos": 1
    },
    {
-    "host": "api.x.com",
+    "host": "api.resend.com",
     "arquivos": 1
    },
    {
@@ -540,7 +532,7 @@
   "papeis_no_codigo": [
    {
     "papel": "admin",
-    "ocorrencias": 14
+    "ocorrencias": 12
    },
    {
     "papel": "alert",
@@ -592,10 +584,6 @@
    },
    {
     "papel": "Cargos",
-    "ocorrencias": 1
-   },
-   {
-    "papel": "agent",
     "ocorrencias": 1
    },
    {
@@ -663,10 +651,6 @@
     "ocorrencias": 1
    },
    {
-    "papel": "sup",
-    "ocorrencias": 1
-   },
-   {
     "papel": "tab",
     "ocorrencias": 1
    }
@@ -707,21 +691,8 @@
   ]
  },
  "feature_flags": {
-  "total": 3,
-  "flags": [
-   {
-    "flag": "FEATURE_X",
-    "arquivos": 1
-   },
-   {
-    "flag": "nova-tela",
-    "arquivos": 1
-   },
-   {
-    "flag": "novo-inbox",
-    "arquivos": 1
-   }
-  ],
+  "total": 0,
+  "flags": [],
   "tabelas_de_flag": [
    "attendance_settings",
    "geo_settings",

@@ -1,45 +1,8 @@
 {
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
- "total": 10,
+ "total": 8,
  "scripts": [
-  {
-   "arquivo": "scripts/ai-context/cenarios.mjs",
-   "descricao": "Simulação de cenários do gerador: monta centenas de repositórios sintéticos (variantes de SQL, rotas, menus, edges, workflows, monorepo, Python, arquivos corrompidos, fuzz) e confere:",
-   "linhas": 173,
-   "env": [
-    "A",
-    "K",
-    "NODE_ENV",
-    "SCRIPT_ONLY",
-    "SRK",
-    "SUPABASE_URL",
-    "VITE_A",
-    "VITE_C",
-    "VITE_FEATURE_X",
-    "X"
-   ],
-   "npm_scripts": [],
-   "workflows": [],
-   "orfao": false
-  },
-  {
-   "arquivo": "scripts/ai-context/gerar.mjs",
-   "descricao": "Gera o contexto de projeto para agentes de IA (padrão: inventario/ia/*). Zero dependências. Node >= 18. Genérico: funciona em qualquer repositório.",
-   "linhas": 924,
-   "env": [
-    "AI_CONTEXT_DIR",
-    "AI_CONTEXT_PUBLICACAO",
-    "AI_CONTEXT_ROOT"
-   ],
-   "npm_scripts": [
-    "contexto:codigo"
-   ],
-   "workflows": [
-    "contexto.yml"
-   ],
-   "orfao": false
-  },
   {
    "arquivo": "scripts/ci/check-claude-md-integrity.mjs",
    "descricao": "* GA02: garante que as instrucoes para agentes nao foram apagadas ou esvaziadas por outra sessao.",
@@ -120,7 +83,7 @@
   {
    "arquivo": "scripts/supabase_snapshot/snapshot.py",
    "descricao": "Somente leitura no banco (sessão read-only, statement_timeout, lock_timeout). Nunca grava linhas de tabelas, valores de segredos, chaves, senhas ou DSN.",
-   "linhas": 1791,
+   "linhas": 1798,
    "env": [],
    "npm_scripts": [],
    "workflows": [

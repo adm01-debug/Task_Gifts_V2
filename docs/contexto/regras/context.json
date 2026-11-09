@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "5ffe6dbff44b165a9beed4d8acccd4abc35b8cd8",
+  "sha": "a270eb39be8bf7607ae75d4e057f935a4e72df77",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
-  "generated_at": "2026-11-09 03:34 UTC",
+  "generated_at": "2026-11-09 04:00 UTC",
   "files_total": 1487,
-  "code_files": 1407,
-  "code_lines": 251782
+  "code_files": 1406,
+  "code_lines": 251791
  },
  "version": "1.3.2",
- "facts_hash": "f6f7b65d40439746",
+ "facts_hash": "58b70c07449d087f",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -105,7 +105,7 @@
    "graph:setup": "bash scripts/graphify/setup.sh",
    "postinstall": "node ./scripts/patch-recharts.cjs",
    "contexto:codigo": "node scripts/ai-context/gerar.mjs --out docs/contexto/codigo",
-   "contexto:regras": "python3 scripts/regras_negocio/generate.py --repo . --out docs/contexto/regras --profile regras --schema-snapshot docs/contexto/supabase --index-path docs/contexto/00-INDEX.md --no-pointer",
+   "contexto:regras": "python3 scripts/regras_negocio/generate.py --repo . --out docs/contexto/regras --profile regras --index-path docs/contexto/00-INDEX.md --no-pointer",
    "contexto:test": "node --test scripts/ai-context/gerar.unit.mjs scripts/ci/contexto-indice.unit.mjs scripts/ci/contexto-publicacao.unit.mjs scripts/ci/regras-negocio.unit.mjs scripts/ci/supabase-snapshot.unit.mjs"
   },
   "infra": [
@@ -146,7 +146,7 @@
    ".tsx": 564,
    ".ts": 556,
    ".sql": 266,
-   ".mjs": 10,
+   ".mjs": 9,
    ".js": 5,
    ".py": 5,
    ".cjs": 1
@@ -27271,7 +27271,7 @@
     "src": "supabase/migrations/20260712203400_c0990109-c9a3-4d2f-90e9-0a48ff66a5ed.sql",
     "security_definer": true,
     "search_path": true,
-    "body": "DECLARE v_project_url TEXT := 'https://awzhgfmqwddzgbqzqusc.supabase.co'; v_anon_key TEXT := '[REDACTED].HIsoaKjV2MFzTc6sCJ0p6RcoVIPR5SRIoE885SVMXCc'; BEGIN IF LOWER(COALESCE(NEW.severity, '')) NOT IN ('high', 'critical') THEN RETURN NEW; END IF; PERFORM net.http_post( url := v_project_url || '/functions/v1/dispatch-critical-alert', headers := jsonb_build_object( 'Content-Type', 'application/json', 'apikey', v_anon_key, 'Authorization', 'Bearer ' || v_anon_key ), body := jsonb_build_object( 'alert_id', NEW.id, 'alert_type', NEW.alert_type, 'severity', NEW.severity, 'title', NEW.title, 'description', NEW.description, 'metadata', NEW.metadata ) ); RETURN NEW; EXCEPTION WHEN OTHERS THEN RAISE W …",
+    "body": "DECLARE v_project_url TEXT := 'https://awzhgfmqwddzgbqzqusc.supabase.co'; v_anon_key TEXT := '[REDACTED]'; BEGIN IF LOWER(COALESCE(NEW.severity, '')) NOT IN ('high', 'critical') THEN RETURN NEW; END IF; PERFORM net.http_post( url := v_project_url || '/functions/v1/dispatch-critical-alert', headers := jsonb_build_object( 'Content-Type', 'application/json', 'apikey', v_anon_key, 'Authorization', 'Bearer ' || v_anon_key ), body := jsonb_build_object( 'alert_id', NEW.id, 'alert_type', NEW.alert_type, 'severity', NEW.severity, 'title', NEW.title, 'description', NEW.description, 'metadata', NEW.metadata ) ); RETURN NEW; EXCEPTION WHEN OTHERS THEN RAISE WARNING 'dispatch-critical-alert failed: %', …",
     "raises": [],
     "tables": []
    },
@@ -47770,8 +47770,8 @@
   },
   {
    "module": "scripts",
-   "files": 16,
-   "lines": 7820,
+   "files": 15,
+   "lines": 7829,
    "tables": [
     "a",
     "contacts",
@@ -47802,8 +47802,8 @@
     "cenarios.mjs: Simulação de cenários do gerador: monta centenas de repositórios sintéticos (variantes de SQL, rotas, menus, edges, workflows, monorepo, Python, arquivos corrompidos, fuzz) e confere: não trava, erros_do_gerador vazio, saída determinística e extração esperada. Rodar: node scripts/ai-context/cenarios …",
     "gerar.mjs: !/usr/bin/env node Gera o contexto de projeto para agentes de IA (padrão: inventario/ia/*). Zero dependências. Node >= 18. Genérico: funciona em qualquer repositório. JS/TS (React, Next, Vue, Svelte, Nuxt, Remix, Astro, Express/Hono/Fastify/Nest), Python (FastAPI/Flask/Django), e qualquer outra ling …",
     "gerar.unit.mjs: Teste do gerador de contexto (scripts/ai-context/gerar.mjs). Monta um repositório sintético em pasta temporária cobrindo os casos que o gerador precisa entender (rotas aninhadas, lazy, menu, hooks, edge functions, migrations em ordem, barrel re-export, backend HTTP, Python, nested tsconfig) e confer …",
-    "ai-context-generator.unit.mjs: O CI obrigatório executa scripts/ci/*.unit.mjs; reutilize a suíte do produtor sem duplicá-la.",
-    "check-claude-md-integrity.mjs: !/usr/bin/env node"
+    "check-claude-md-integrity.mjs: !/usr/bin/env node",
+    "commit-msg-lint.mjs: !/usr/bin/env node"
    ],
    "deps": [
     "#",
@@ -47842,7 +47842,6 @@
     "scripts/ai-context/cenarios.mjs",
     "scripts/ai-context/gerar.mjs",
     "scripts/ai-context/gerar.unit.mjs",
-    "scripts/ci/ai-context-generator.unit.mjs",
     "scripts/ci/check-claude-md-integrity.mjs",
     "scripts/ci/commit-msg-lint.mjs",
     "scripts/ci/contexto-indice.unit.mjs",
@@ -94715,7 +94714,7 @@
     "src": "supabase/migrations/20260712203400_c0990109-c9a3-4d2f-90e9-0a48ff66a5ed.sql",
     "security_definer": true,
     "search_path": true,
-    "body": "DECLARE v_project_url TEXT := 'https://awzhgfmqwddzgbqzqusc.supabase.co'; v_anon_key TEXT := '[REDACTED].HIsoaKjV2MFzTc6sCJ0p6RcoVIPR5SRIoE885SVMXCc'; BEGIN IF LOWER(COALESCE(NEW.severity, '')) NOT IN ('high', 'critical') THEN RETURN NEW; END IF; PERFORM net.http_post( url := v_project_url || '/functions/v1/dispatch-critical-alert', headers := jsonb_build_object( 'Content-Type', 'application/json', 'apikey', v_anon_key, 'Authorization', 'Bearer ' || v_anon_key ), body := jsonb_build_object( 'alert_id', NEW.id, 'alert_type', NEW.alert_type, 'severity', NEW.severity, 'title', NEW.title, 'description', NEW.description, 'metadata', NEW.metadata ) ); RETURN NEW; EXCEPTION WHEN OTHERS THEN RAISE W …",
+    "body": "DECLARE v_project_url TEXT := 'https://awzhgfmqwddzgbqzqusc.supabase.co'; v_anon_key TEXT := '[REDACTED]'; BEGIN IF LOWER(COALESCE(NEW.severity, '')) NOT IN ('high', 'critical') THEN RETURN NEW; END IF; PERFORM net.http_post( url := v_project_url || '/functions/v1/dispatch-critical-alert', headers := jsonb_build_object( 'Content-Type', 'application/json', 'apikey', v_anon_key, 'Authorization', 'Bearer ' || v_anon_key ), body := jsonb_build_object( 'alert_id', NEW.id, 'alert_type', NEW.alert_type, 'severity', NEW.severity, 'title', NEW.title, 'description', NEW.description, 'metadata', NEW.metadata ) ); RETURN NEW; EXCEPTION WHEN OTHERS THEN RAISE WARNING 'dispatch-critical-alert failed: %', …",
     "raises": [],
     "tables": []
    },
@@ -115691,7 +115690,7 @@
   },
   "scripts/ai-context/gerar.mjs": {
    "path": "scripts/ai-context/gerar.mjs",
-   "lines": 924,
+   "lines": 929,
    "env": [
     "AI_CONTEXT_DIR",
     "AI_CONTEXT_PUBLICACAO",
@@ -115839,11 +115838,6 @@
     "invoke("
    ],
    "uses_service_role": true
-  },
-  "scripts/ci/ai-context-generator.unit.mjs": {
-   "path": "scripts/ci/ai-context-generator.unit.mjs",
-   "lines": 3,
-   "doc": "O CI obrigatório executa scripts/ci/*.unit.mjs; reutilize a suíte do produtor sem duplicá-la."
   },
   "scripts/ci/check-claude-md-integrity.mjs": {
    "path": "scripts/ci/check-claude-md-integrity.mjs",
@@ -116107,7 +116101,7 @@
   },
   "scripts/supabase_snapshot/snapshot.py": {
    "path": "scripts/supabase_snapshot/snapshot.py",
-   "lines": 1791,
+   "lines": 1798,
    "exports": [
     "def env_int",
     "def log",
@@ -150902,10 +150896,28 @@
   }
  },
  "git": {
-  "sha": "5ffe6dbff44b165a9beed4d8acccd4abc35b8cd8",
+  "sha": "a270eb39be8bf7607ae75d4e057f935a4e72df77",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "commits": [
+   {
+    "sha": "a270eb3",
+    "date": "2026-11-08",
+    "author": "adm01-debug",
+    "subject": "fix(contexto): hardening do pacote — 2 vazamentos e inventário de edges",
+    "files": [
+     ".github/workflows/contexto.yml",
+     "ai-context.config.json",
+     "package.json",
+     "scripts/ai-context/README.md",
+     "scripts/ai-context/gerar.mjs",
+     "scripts/ci/README.md",
+     "scripts/ci/ai-context-generator.unit.mjs",
+     "scripts/regras_negocio/generate.py",
+     "scripts/supabase_snapshot/README.md",
+     "scripts/supabase_snapshot/snapshot.py"
+    ]
+   },
    {
     "sha": "5ffe6db",
     "date": "2026-11-08",
@@ -151260,19 +151272,12 @@
     "files": [
      "AGENTS.md"
     ]
-   },
-   {
-    "sha": "e38ec29",
-    "date": "2026-08-16",
-    "author": "adm01-debug",
-    "subject": "Merge pull request #1 from adm01-debug/dependabot/npm_and_yarn/dependencies-6ccbdd549c",
-    "files": []
    }
   ],
   "hot_files": [
    [
     "package.json",
-    10
+    11
    ],
    [
     "bun.lock",
@@ -151303,6 +151308,38 @@
     3
    ],
    [
+    ".github/workflows/contexto.yml",
+    2
+   ],
+   [
+    "ai-context.config.json",
+    2
+   ],
+   [
+    "scripts/ai-context/README.md",
+    2
+   ],
+   [
+    "scripts/ai-context/gerar.mjs",
+    2
+   ],
+   [
+    "scripts/ci/ai-context-generator.unit.mjs",
+    2
+   ],
+   [
+    "scripts/regras_negocio/generate.py",
+    2
+   ],
+   [
+    "scripts/supabase_snapshot/README.md",
+    2
+   ],
+   [
+    "scripts/supabase_snapshot/snapshot.py",
+    2
+   ],
+   [
     "docs/agentes/mapa-repo.md",
     2
    ],
@@ -151317,38 +151354,6 @@
    [
     "vercel.json",
     2
-   ],
-   [
-    "vitest.config.ts",
-    2
-   ],
-   [
-    "supabase/functions/migrate-helper/index.ts",
-    2
-   ],
-   [
-    ".github/workflows/contexto.yml",
-    1
-   ],
-   [
-    "ai-context.config.json",
-    1
-   ],
-   [
-    "docs/agentes/contexto-autonomo.md",
-    1
-   ],
-   [
-    "docs/contexto/regras/manual/README.md",
-    1
-   ],
-   [
-    "docs/contexto/regras/manual/TEMPLATE-regras-de-negocio.md",
-    1
-   ],
-   [
-    "scripts/ai-context/README.md",
-    1
    ]
   ]
  }

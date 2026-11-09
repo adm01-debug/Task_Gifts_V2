@@ -238,7 +238,14 @@
     "useGlobalMessage"
    ],
    "edges": [
-    "ai-coach"
+    "ai-coach",
+    "churn-prediction",
+    "competency-alerts",
+    "detect-new-device",
+    "push-device-revoked",
+    "push-public-key",
+    "trail-recommendations",
+    "verify-ip"
    ],
    "tabelas": [
     "achievements",
@@ -360,7 +367,10 @@
     "user"
    ],
    "diretos": {
-    "edges": [],
+    "edges": [
+     "trail-recommendations",
+     "verify-ip"
+    ],
     "tabelas": [
      "attendance_records",
      "audit_logs",
@@ -656,7 +666,10 @@
    ],
    "hooks_definidos": [],
    "edges": [
-    "ai-coach"
+    "admin-alerts",
+    "ai-coach",
+    "competency-alerts",
+    "detect-new-device"
    ],
    "tabelas": [
     "achievements",
@@ -913,7 +926,10 @@
     "useUserPurchases"
    ],
    "hooks_definidos": [],
-   "edges": [],
+   "edges": [
+    "competency-alerts",
+    "detect-new-device"
+   ],
    "tabelas": [
     "auction_admin_events",
     "auction_bids",
@@ -1037,7 +1053,9 @@
     "useTwoFactor"
    ],
    "hooks_definidos": [],
-   "edges": [],
+   "edges": [
+    "detect-new-device"
+   ],
    "tabelas": [
     "new_device_alerts",
     "user_devices",
@@ -1244,7 +1262,9 @@
     "useUpdateDepartment"
    ],
    "hooks_definidos": [],
-   "edges": [],
+   "edges": [
+    "detect-new-device"
+   ],
    "tabelas": [
     "boss_battle_damage",
     "boss_battles",
@@ -1348,7 +1368,11 @@
     "useUpdateProfile"
    ],
    "hooks_definidos": [],
-   "edges": [],
+   "edges": [
+    "competency-alerts",
+    "detect-new-device",
+    "send-campaign-push"
+   ],
    "tabelas": [
     "audit_logs",
     "campaign_participants",
@@ -1456,7 +1480,9 @@
     "useSoundFeedback"
    ],
    "hooks_definidos": [],
-   "edges": [],
+   "edges": [
+    "detect-new-device"
+   ],
    "tabelas": [
     "card_definitions",
     "card_packs",
@@ -1533,7 +1559,10 @@
     "useUpdateProfile"
    ],
    "hooks_definidos": [],
-   "edges": [],
+   "edges": [
+    "competency-alerts",
+    "detect-new-device"
+   ],
    "tabelas": [
     "audit_logs",
     "certifications",
@@ -1598,7 +1627,9 @@
     "useSoundFeedback"
    ],
    "hooks_definidos": [],
-   "edges": [],
+   "edges": [
+    "competency-alerts"
+   ],
    "tabelas": [
     "audit_logs",
     "checkin_templates",
@@ -1853,7 +1884,9 @@
     "useDashboardTabs"
    ],
    "edges": [
-    "ai-coach"
+    "ai-coach",
+    "competency-alerts",
+    "detect-new-device"
    ],
    "tabelas": [
     "achievements",
@@ -2249,7 +2282,10 @@
     "useSoundFeedback"
    ],
    "hooks_definidos": [],
-   "edges": [],
+   "edges": [
+    "competency-alerts",
+    "detect-new-device"
+   ],
    "tabelas": [
     "achievements",
     "audit_logs",
@@ -2340,7 +2376,9 @@
     "useSpinLuckyWheel"
    ],
    "hooks_definidos": [],
-   "edges": [],
+   "edges": [
+    "detect-new-device"
+   ],
    "tabelas": [
     "lucky_wheel_payout_snapshots",
     "lucky_wheel_prize_audit",
@@ -2460,6 +2498,9 @@
    ],
    "hooks_definidos": [],
    "edges": [
+    "churn-prediction",
+    "competency-alerts",
+    "detect-new-device",
     "trail-recommendations"
    ],
    "tabelas": [
@@ -2564,7 +2605,9 @@
     "useStartMemorySession"
    ],
    "hooks_definidos": [],
-   "edges": [],
+   "edges": [
+    "detect-new-device"
+   ],
    "tabelas": [
     "memory_decks",
     "memory_pairs",
@@ -2753,7 +2796,9 @@
     "useCurrentRoute"
    ],
    "edges": [
-    "ai-coach"
+    "ai-coach",
+    "competency-alerts",
+    "detect-new-device"
    ],
    "tabelas": [
     "achievements",
@@ -2886,7 +2931,9 @@
     "useTour"
    ],
    "hooks_definidos": [],
-   "edges": [],
+   "edges": [
+    "detect-new-device"
+   ],
    "tabelas": [
     "new_device_alerts",
     "onboarding_progress",
@@ -3004,7 +3051,11 @@
     "useUpdateProfile"
    ],
    "hooks_definidos": [],
-   "edges": [],
+   "edges": [
+    "competency-alerts",
+    "detect-new-device",
+    "send-campaign-push"
+   ],
    "tabelas": [
     "audit_logs",
     "campaign_participants",
@@ -3095,7 +3146,9 @@
     "useUserAchievements"
    ],
    "hooks_definidos": [],
-   "edges": [],
+   "edges": [
+    "detect-new-device"
+   ],
    "tabelas": [
     "achievements",
     "audit_logs",
@@ -3155,7 +3208,10 @@
     "useSoundFeedback"
    ],
    "hooks_definidos": [],
-   "edges": [],
+   "edges": [
+    "push-device-revoked",
+    "push-public-key"
+   ],
    "tabelas": [
     "notifications",
     "push_subscriptions",
@@ -3282,7 +3338,11 @@
     "useUserTodayScores"
    ],
    "hooks_definidos": [],
-   "edges": [],
+   "edges": [
+    "competency-alerts",
+    "detect-new-device",
+    "generate-quiz-questions"
+   ],
    "tabelas": [
     "achievements",
     "audit_logs",
@@ -3334,7 +3394,9 @@
     "alert"
    ],
    "diretos": {
-    "edges": [],
+    "edges": [
+     "generate-quiz-questions"
+    ],
     "tabelas": [],
     "rpcs": []
    },
@@ -3381,7 +3443,9 @@
     "useRBACContext",
     "useRBACContext"
    ],
-   "edges": [],
+   "edges": [
+    "detect-new-device"
+   ],
    "tabelas": [
     "new_device_alerts",
     "permissions",
@@ -3527,7 +3591,11 @@
     "useReauth",
     "useReauth"
    ],
-   "edges": [],
+   "edges": [
+    "detect-new-device",
+    "push-device-revoked",
+    "push-public-key"
+   ],
    "tabelas": [
     "blocked_ips",
     "login_attempts",
@@ -3632,7 +3700,9 @@
     "useSubmitSequence"
    ],
    "hooks_definidos": [],
-   "edges": [],
+   "edges": [
+    "detect-new-device"
+   ],
    "tabelas": [
     "new_device_alerts",
     "sequence_attempts",
@@ -3707,7 +3777,10 @@
     "useUserPurchases"
    ],
    "hooks_definidos": [],
-   "edges": [],
+   "edges": [
+    "competency-alerts",
+    "detect-new-device"
+   ],
    "tabelas": [
     "audit_logs",
     "new_device_alerts",
@@ -3787,7 +3860,11 @@
     "useUserPurchases"
    ],
    "hooks_definidos": [],
-   "edges": [],
+   "edges": [
+    "competency-alerts",
+    "detect-new-device",
+    "reward-approval-review"
+   ],
    "tabelas": [
     "audit_logs",
     "new_device_alerts",
@@ -3866,7 +3943,10 @@
     "useUpdateProfile"
    ],
    "hooks_definidos": [],
-   "edges": [],
+   "edges": [
+    "competency-alerts",
+    "detect-new-device"
+   ],
    "tabelas": [
     "audit_logs",
     "new_device_alerts",
@@ -3999,7 +4079,9 @@
    "componentes": 2,
    "hooks_locais": [],
    "hooks_definidos": [],
-   "edges": [],
+   "edges": [
+    "competency-alerts"
+   ],
    "tabelas": [
     "attendance_records",
     "audit_logs",
@@ -4065,7 +4147,9 @@
     "useOrganization"
    ],
    "hooks_definidos": [],
-   "edges": [],
+   "edges": [
+    "detect-new-device"
+   ],
    "tabelas": [
     "new_device_alerts",
     "org_members",
@@ -4188,7 +4272,11 @@
     "useUserEnrollments"
    ],
    "hooks_definidos": [],
-   "edges": [],
+   "edges": [
+    "ai-course-builder",
+    "competency-alerts",
+    "detect-new-device"
+   ],
    "tabelas": [
     "achievements",
     "ai_course_jobs",
@@ -4443,7 +4531,9 @@
     "useWagerLeaderboard"
    ],
    "hooks_definidos": [],
-   "edges": [],
+   "edges": [
+    "detect-new-device"
+   ],
    "tabelas": [
     "new_device_alerts",
     "profiles_public",
@@ -4523,7 +4613,9 @@
     "useWarLeadershipWatch"
    ],
    "hooks_definidos": [],
-   "edges": [],
+   "edges": [
+    "detect-new-device"
+   ],
    "tabelas": [
     "department_war_contributions",
     "department_war_departments",
@@ -5724,7 +5816,15 @@
     "useWeeklyChallenge"
    ],
    "edges": [
-    "ai-coach"
+    "admin-alerts",
+    "ai-coach",
+    "churn-prediction",
+    "competency-alerts",
+    "detect-new-device",
+    "push-device-revoked",
+    "push-public-key",
+    "reward-approval-review",
+    "send-campaign-push"
    ],
    "tabelas": [
     "achievements",
@@ -6037,7 +6137,10 @@
    ],
    "diretos": {
     "edges": [
-     "ai-coach"
+     "admin-alerts",
+     "ai-coach",
+     "competency-alerts",
+     "detect-new-device"
     ],
     "tabelas": [
      "certifications",
@@ -6981,8 +7084,20 @@
    ],
    "hooks_definidos": [],
    "edges": [
+    "admin-alerts",
     "ai-coach",
-    "trail-recommendations"
+    "ai-course-builder",
+    "churn-prediction",
+    "competency-alerts",
+    "detect-new-device",
+    "generate-quiz-questions",
+    "push-device-revoked",
+    "push-public-key",
+    "reward-approval-review",
+    "send-campaign-push",
+    "trail-recommendations",
+    "verify-ip",
+    "webhook-dispatcher"
    ],
    "tabelas": [
     "achievements",
@@ -7366,7 +7481,10 @@
     "user"
    ],
    "diretos": {
-    "edges": [],
+    "edges": [
+     "verify-ip",
+     "webhook-dispatcher"
+    ],
     "tabelas": [
      "audit_logs",
      "campaign_participants",
@@ -7495,7 +7613,16 @@
     "useRBAC"
    ],
    "hooks_definidos": [],
-   "edges": [],
+   "edges": [
+    "ai-course-builder",
+    "churn-prediction",
+    "competency-alerts",
+    "detect-new-device",
+    "push-device-revoked",
+    "push-public-key",
+    "reward-approval-review",
+    "send-campaign-push"
+   ],
    "tabelas": [
     "achievements",
     "action_plan_items",
@@ -7797,7 +7924,15 @@
     "user"
    ],
    "diretos": {
-    "edges": [],
+    "edges": [
+     "ai-course-builder",
+     "churn-prediction",
+     "competency-alerts",
+     "push-device-revoked",
+     "push-public-key",
+     "reward-approval-review",
+     "send-campaign-push"
+    ],
     "tabelas": [
      "achievements",
      "action_plan_items",

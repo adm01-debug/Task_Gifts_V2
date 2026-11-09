@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "5ffe6dbff44b165a9beed4d8acccd4abc35b8cd8",
+  "commit": "a270eb39be8bf7607ae75d4e057f935a4e72df77",
   "branch": "main",
-  "data_commit": "2026-11-08T19:41:23-03:00",
+  "data_commit": "2026-11-08T21:38:57-03:00",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "ultimos_commits": [
+   {
+    "sha": "a270eb3",
+    "data": "2026-11-08",
+    "assunto": "fix(contexto): hardening do pacote — 2 vazamentos e inventário de edges"
+   },
    {
     "sha": "5ffe6db",
     "data": "2026-11-08",
@@ -126,18 +131,13 @@
     "sha": "e3c56e5",
     "data": "2026-09-05",
     "assunto": "fix(db): correções pós-validação adversarial — dedup de policy e endurecimento de entity_versions (#5)"
-   },
-   {
-    "sha": "355bc37",
-    "data": "2026-09-05",
-    "assunto": "fix(ci): destrava CI e build de produção — Onda 1 da auditoria (6,1 → 10) (#3)"
    }
   ],
-  "arquivos_mudados_7d": 54,
+  "arquivos_mudados_7d": 55,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "package.json",
-    "mudancas": 8
+    "mudancas": 9
    },
    {
     "pasta": "bun.lock",
@@ -164,7 +164,15 @@
     "mudancas": 2
    },
    {
+    "pasta": ".github/workflows/contexto.yml",
+    "mudancas": 2
+   },
+   {
     "pasta": "AGENTS.md",
+    "mudancas": 2
+   },
+   {
+    "pasta": "ai-context.config.json",
     "mudancas": 2
    },
    {
@@ -180,26 +188,18 @@
     "mudancas": 2
    },
    {
-    "pasta": "vitest.config.ts",
+    "pasta": "scripts/ai-context/README.md",
     "mudancas": 2
    },
    {
-    "pasta": ".claude/homunculus/instincts",
-    "mudancas": 1
-   },
-   {
-    "pasta": ".claude/hooks/session-start.sh",
-    "mudancas": 1
-   },
-   {
-    "pasta": ".claude/identity.json",
-    "mudancas": 1
+    "pasta": "scripts/ai-context/gerar.mjs",
+    "mudancas": 2
    }
   ],
   "arquivos_mais_mudados_90d": [
    {
     "arquivo": "package.json",
-    "mudancas": 10
+    "mudancas": 11
    },
    {
     "arquivo": "bun.lock",
@@ -226,7 +226,15 @@
     "mudancas": 3
    },
    {
+    "arquivo": ".github/workflows/contexto.yml",
+    "mudancas": 2
+   },
+   {
     "arquivo": "ESTADO_ATUAL.md",
+    "mudancas": 2
+   },
+   {
+    "arquivo": "ai-context.config.json",
     "mudancas": 2
    },
    {
@@ -235,6 +243,18 @@
    },
    {
     "arquivo": "docs/estado/README.md",
+    "mudancas": 2
+   },
+   {
+    "arquivo": "scripts/regras_negocio/generate.py",
+    "mudancas": 2
+   },
+   {
+    "arquivo": "scripts/supabase_snapshot/README.md",
+    "mudancas": 2
+   },
+   {
+    "arquivo": "scripts/supabase_snapshot/snapshot.py",
     "mudancas": 2
    },
    {
@@ -276,32 +296,12 @@
    {
     "arquivo": ".github/PULL_REQUEST_TEMPLATE.md",
     "mudancas": 1
-   },
-   {
-    "arquivo": ".github/dependabot.yml",
-    "mudancas": 1
-   },
-   {
-    "arquivo": ".github/workflows/contexto.yml",
-    "mudancas": 1
-   },
-   {
-    "arquivo": ".husky/commit-msg",
-    "mudancas": 1
-   },
-   {
-    "arquivo": "CLAUDE.md",
-    "mudancas": 1
-   },
-   {
-    "arquivo": "README.md",
-    "mudancas": 1
    }
   ],
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 13
+    "commits": 14
    },
    {
     "autor": "dependabot[bot]",
@@ -310,23 +310,23 @@
   ]
  },
  "contagens": {
-  "arquivos_total": 1482,
-  "arquivos_codigo": 1138,
-  "linhas_codigo": 222524,
+  "arquivos_total": 1478,
+  "arquivos_codigo": 1134,
+  "linhas_codigo": 221070,
   "rotas": 83,
-  "rotas_http_backend": 12,
+  "rotas_http_backend": 0,
   "vistas_por_id": 0,
   "itens_menu": 62,
   "modulos": 71,
   "componentes": 521,
-  "hooks": 156,
+  "hooks": 155,
   "edge_functions": 37,
-  "tabelas": 237,
+  "tabelas": 236,
   "migrations": 266,
   "cron_jobs": 22,
-  "testes": 152,
+  "testes": 150,
   "workflows": 2,
-  "scripts": 10,
+  "scripts": 8,
   "docs_md": 42
  },
  "por_pasta": {
@@ -354,13 +354,9 @@
    "arquivos": 1,
    "linhas": 316
   },
-  "scripts/ai-context": {
-   "arquivos": 3,
-   "linhas": 1458
-  },
   "scripts/ci": {
-   "arquivos": 7,
-   "linhas": 1096
+   "arquivos": 6,
+   "linhas": 1093
   },
   "scripts/patch-recharts.cjs": {
    "arquivos": 1,
@@ -372,7 +368,7 @@
   },
   "scripts/supabase_snapshot": {
    "arquivos": 2,
-   "linhas": 2669
+   "linhas": 2676
   },
   "src/App.tsx": {
    "arquivos": 1,
@@ -474,7 +470,7 @@
   },
   {
    "arquivo": "scripts/supabase_snapshot/snapshot.py",
-   "linhas": 1791
+   "linhas": 1798
   },
   {
    "arquivo": "src/pages/Postmortems.tsx",
@@ -483,10 +479,6 @@
   {
    "arquivo": "src/i18n/translations.ts",
    "linhas": 945
-  },
-  {
-   "arquivo": "scripts/ai-context/gerar.mjs",
-   "linhas": 924
   },
   {
    "arquivo": "src/components/lms/ModuleViewer.tsx",
@@ -563,29 +555,21 @@
   {
    "arquivo": "src/services/positionsService.ts",
    "linhas": 490
+  },
+  {
+   "arquivo": "src/components/war/DepartmentWarConfigDialog.tsx",
+   "linhas": 485
   }
  ],
  "qualidade": {
-  "any": 147,
-  "console_log": 100,
+  "any": 144,
+  "console_log": 97,
   "ts_ignore": 0,
-  "eslint_disable": 1,
-  "todos": 3,
-  "arquivos_acima_500_linhas": 23
+  "eslint_disable": 0,
+  "todos": 1,
+  "arquivos_acima_500_linhas": 22
  },
  "todos": [
-  {
-   "arquivo": "scripts/ai-context/gerar.mjs",
-   "linha": 188,
-   "tipo": "TODO",
-   "texto": "|FIXME|HACK|XXX)\\b[:\\s-]*([^\\n]{0,100})/.exec(line); if (m) todos.push({ linha: ln, tipo: m[1], text"
-  },
-  {
-   "arquivo": "scripts/ai-context/gerar.mjs",
-   "linha": 222,
-   "tipo": "TODO",
-   "texto": "|FIXME|HACK|XXX)\\b[:\\s-]*([^\\n]{0,100})/.exec(l); return m ? { linha: i + 1, tipo: m[1], texto: m[2]"
-  },
   {
    "arquivo": "scripts/regras_negocio/generate.py",
    "linha": 570,
@@ -618,34 +602,23 @@
    "Tudo Pronto! 🚀 -> complete"
   ],
   "edges_orfas": [
-   "admin-alerts",
-   "ai-course-builder",
    "birthday-celebrations",
    "bitrix24-api",
    "bitrix24-oauth",
    "bitrix24-webhook",
    "burn-rate-monitor",
    "checkin-reminders",
-   "churn-prediction",
    "cleanup-old-security-logs",
    "cleanup-rate-limit-logs",
-   "competency-alerts",
-   "detect-new-device",
    "error-budget-monitor",
    "external-api",
    "external-db-bridge",
    "external-webhook",
-   "generate-quiz-questions",
-   "push-device-revoked",
-   "push-public-key",
-   "reward-approval-review",
-   "send-campaign-push",
    "send-email-digest",
    "send-email-notifications",
    "send-rate-limit-alert",
    "survey-reminders",
    "verify-geo",
-   "verify-ip",
    "weekly-league-processing"
   ],
   "edges_chamadas_sem_pasta": [],
@@ -724,9 +697,7 @@
    "VITE_SUPABASE_PUBLISHABLE_KEY"
   ],
   "ciclos_de_import": 2,
-  "possiveis_segredos_no_codigo": [
-   "scripts/ai-context/cenarios.mjs:102"
-  ]
+  "possiveis_segredos_no_codigo": []
  },
  "erros_do_gerador": []
 }

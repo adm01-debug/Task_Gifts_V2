@@ -48,10 +48,12 @@
    "usa_shared": [
     "security.ts"
    ],
-   "chamada_pelo_front": [],
+   "chamada_pelo_front": [
+    "src/hooks/useAdminAlerts.ts"
+   ],
    "chamada_por_edges": [],
    "chamada_por_sql_ou_cron": false,
-   "orfa": true,
+   "orfa": false,
    "testes": 0
   },
   {
@@ -115,10 +117,12 @@
     "ai.gateway.lovable.dev"
    ],
    "usa_shared": [],
-   "chamada_pelo_front": [],
+   "chamada_pelo_front": [
+    "src/services/aiCourseBuilderService.ts"
+   ],
    "chamada_por_edges": [],
    "chamada_por_sql_ou_cron": false,
-   "orfa": true,
+   "orfa": false,
    "testes": 0
   },
   {
@@ -356,10 +360,12 @@
     "rate-limiter.ts",
     "security.ts"
    ],
-   "chamada_pelo_front": [],
+   "chamada_pelo_front": [
+    "src/services/churnPredictionService.ts"
+   ],
    "chamada_por_edges": [],
    "chamada_por_sql_ou_cron": false,
-   "orfa": true,
+   "orfa": false,
    "testes": 0
   },
   {
@@ -452,10 +458,13 @@
     "rate-limiter.ts",
     "security.ts"
    ],
-   "chamada_pelo_front": [],
+   "chamada_pelo_front": [
+    "src/hooks/useCompetencyAlerts.ts",
+    "src/services/notificationsService.ts"
+   ],
    "chamada_por_edges": [],
    "chamada_por_sql_ou_cron": false,
-   "orfa": true,
+   "orfa": false,
    "testes": 0
   },
   {
@@ -489,10 +498,12 @@
     "security.ts",
     "sentry.ts"
    ],
-   "chamada_pelo_front": [],
+   "chamada_pelo_front": [
+    "src/hooks/useDeviceDetection.ts"
+   ],
    "chamada_por_edges": [],
    "chamada_por_sql_ou_cron": false,
-   "orfa": true,
+   "orfa": false,
    "testes": 0
   },
   {
@@ -711,10 +722,12 @@
     "rate-limiter.ts",
     "security.ts"
    ],
-   "chamada_pelo_front": [],
+   "chamada_pelo_front": [
+    "src/components/quiz/AIQuestionGenerator.tsx"
+   ],
    "chamada_por_edges": [],
    "chamada_por_sql_ou_cron": false,
-   "orfa": true,
+   "orfa": false,
    "testes": 0
   },
   {
@@ -769,10 +782,12 @@
    "chama_edges": [],
    "hosts_externos": [],
    "usa_shared": [],
-   "chamada_pelo_front": [],
+   "chamada_pelo_front": [
+    "src/services/pushSubscriptionService.ts"
+   ],
    "chamada_por_edges": [],
    "chamada_por_sql_ou_cron": false,
-   "orfa": true,
+   "orfa": false,
    "testes": 0
   },
   {
@@ -829,10 +844,12 @@
    "chama_edges": [],
    "hosts_externos": [],
    "usa_shared": [],
-   "chamada_pelo_front": [],
+   "chamada_pelo_front": [
+    "src/services/pushSubscriptionService.ts"
+   ],
    "chamada_por_edges": [],
    "chamada_por_sql_ou_cron": false,
-   "orfa": true,
+   "orfa": false,
    "testes": 0
   },
   {
@@ -864,10 +881,12 @@
     "ai.gateway.lovable.dev"
    ],
    "usa_shared": [],
-   "chamada_pelo_front": [],
+   "chamada_pelo_front": [
+    "src/services/purchaseGovernanceService.ts"
+   ],
    "chamada_por_edges": [],
    "chamada_por_sql_ou_cron": false,
-   "orfa": true,
+   "orfa": false,
    "testes": 0
   },
   {
@@ -932,10 +951,12 @@
    "chama_edges": [],
    "hosts_externos": [],
    "usa_shared": [],
-   "chamada_pelo_front": [],
+   "chamada_pelo_front": [
+    "src/services/salesCampaignsService.ts"
+   ],
    "chamada_por_edges": [],
    "chamada_por_sql_ou_cron": false,
-   "orfa": true,
+   "orfa": false,
    "testes": 0
   },
   {
@@ -1107,6 +1128,7 @@
     "security.ts"
    ],
    "chamada_pelo_front": [
+    "src/components/TrailRecommendations.tsx",
     "src/components/manager/TeamCompetencyDashboard.tsx"
    ],
    "chamada_por_edges": [],
@@ -1171,10 +1193,13 @@
    "usa_shared": [
     "clientIp.ts"
    ],
-   "chamada_pelo_front": [],
+   "chamada_pelo_front": [
+    "src/components/IpAccessGuard.tsx",
+    "src/pages/Auth.tsx"
+   ],
    "chamada_por_edges": [],
    "chamada_por_sql_ou_cron": false,
-   "orfa": true,
+   "orfa": false,
    "testes": 0
   },
   {
@@ -1203,7 +1228,10 @@
     "sentry.ts",
     "validation.ts"
    ],
-   "chamada_pelo_front": [],
+   "chamada_pelo_front": [
+    "src/pages/WebhookSubscriptionDetail.tsx",
+    "src/pages/WebhooksAdmin.tsx"
+   ],
    "chamada_por_edges": [
     "external-webhook"
    ],

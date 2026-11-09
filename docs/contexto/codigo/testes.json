@@ -5,11 +5,11 @@
   "vitest",
   "playwright"
  ],
- "total": 152,
+ "total": 150,
  "por_tipo": {
   "e2e": 2,
   "pytest": 2,
-  "unit": 148
+  "unit": 146
  },
  "onde_ficam": [
   {
@@ -18,7 +18,7 @@
   },
   {
    "padrao": "outro",
-   "arquivos": 9
+   "arquivos": 7
   },
   {
    "padrao": "tests/",
@@ -30,20 +30,6 @@
   }
  ],
  "arquivos": [
-  {
-   "arquivo": "scripts/ai-context/gerar.unit.mjs",
-   "tipo": "unit",
-   "linhas": 361,
-   "testa": [],
-   "casos": 18
-  },
-  {
-   "arquivo": "scripts/ci/ai-context-generator.unit.mjs",
-   "tipo": "unit",
-   "linhas": 3,
-   "testa": [],
-   "casos": 0
-  },
   {
    "arquivo": "scripts/ci/contexto-indice.unit.mjs",
    "tipo": "unit",
@@ -1667,7 +1653,6 @@
    "src/pages/WebhooksExecutive.tsx"
   ],
   "hooks": [
-   "scripts/ai-context/cenarios.mjs",
    "src/components/accessibility/AccessibilityProvider.tsx",
    "src/components/AchievementSystem.tsx",
    "src/components/ActivityHeatmap.tsx",

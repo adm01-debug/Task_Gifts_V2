@@ -1,7 +1,7 @@
 # Contexto do projeto para agentes de IA
 
 GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.
-Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `5ffe6dbff44b165a9beed4d8acccd4abc35b8cd8` (2026-11-08T19:41:23-03:00).
+Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `a270eb39be8bf7607ae75d4e057f935a4e72df77` (2026-11-08T21:38:57-03:00).
 
 ## Como usar (leia antes de planejar ou executar qualquer tarefa)
 1. **Tela/rota/menu** → `rotas.json` (url/vista/menu → arquivo → hooks → tabelas → edges; `rotas_http_backend` para APIs) e `modulos.json` (módulo inteiro + dependências entre módulos).
@@ -14,7 +14,7 @@ Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR
 Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua tarefa; não carregue tudo.
 
 ## Stack
-- linguagens: TypeScript (1118), SQL (266), Markdown (42), JavaScript (16), JSON (10), Python (5), YAML (5), Shell (3)
+- linguagens: TypeScript (1118), SQL (266), Markdown (42), JavaScript (12), JSON (10), Python (5), YAML (5), Shell (3)
 - linguagem_principal: TypeScript
 - framework: React
 - backend_http: n/d
@@ -34,23 +34,23 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 ## Números
 | item | qtd |
 |---|---|
-| arquivos_total | 1482 |
-| arquivos_codigo | 1138 |
-| linhas_codigo | 222524 |
+| arquivos_total | 1478 |
+| arquivos_codigo | 1134 |
+| linhas_codigo | 221070 |
 | rotas | 83 |
-| rotas_http_backend | 12 |
+| rotas_http_backend | 0 |
 | vistas_por_id | 0 |
 | itens_menu | 62 |
 | modulos | 71 |
 | componentes | 521 |
-| hooks | 156 |
+| hooks | 155 |
 | edge_functions | 37 |
-| tabelas | 237 |
+| tabelas | 236 |
 | migrations | 266 |
 | cron_jobs | 22 |
-| testes | 152 |
+| testes | 150 |
 | workflows | 2 |
-| scripts | 10 |
+| scripts | 8 |
 | docs_md | 42 |
 
 ## Onde ficam as coisas
@@ -58,10 +58,10 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - componentes: src/components (432), src/pages (82), src/contexts (4)
 - hooks: src/hooks (129), src/components (22), src/contexts (4)
 - servicos_logica: src/lib (106), src/services (99), src/integrations (3)
-- testes: co-localizado (*.test) (139), outro (9), tests/ (3)
+- testes: co-localizado (*.test) (139), outro (7), tests/ (3)
 - edge_functions: supabase/functions
 - migrations: supabase/migrations
-- scripts: scripts/regras_negocio (3), scripts/ai-context (2), scripts/ci (2)
+- scripts: scripts/regras_negocio (3), scripts/ci (2), scripts/graphify (1)
 - docs: (raiz) (15), .github (1)
 - nomenclatura: {"componentes":"PascalCase (88%)","hooks":"use + PascalCase","servicos":"camelCase (100%)","edge_functions":"kebab-case (100%)","tabelas":"snake_case (91%)"}
 - instruções para agentes no repo: AGENTS.md, CLAUDE.md
@@ -69,37 +69,37 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 ## Módulos (menu → domínio)
 | módulo | itens de menu | telas/rotas | arquivos | hooks locais | edges | tabelas |
 |---|---|---|---|---|---|---|
-| components | 0 | 0 | 81 | 217 | 1 | 76 |
+| components | 0 | 0 | 81 | 217 | 8 | 76 |
 | components/accessibility | 0 | 0 | 5 | 2 | 0 | 0 |
-| components/admin | 0 | 0 | 46 | 149 | 1 | 66 |
+| components/admin | 0 | 0 | 46 | 149 | 4 | 66 |
 | components/analytics | 0 | 0 | 5 | 0 | 0 | 0 |
-| components/auction | 0 | 0 | 7 | 30 | 0 | 12 |
-| components/auth | 0 | 0 | 7 | 6 | 0 | 5 |
+| components/auction | 0 | 0 | 7 | 30 | 2 | 12 |
+| components/auth | 0 | 0 | 7 | 6 | 1 | 5 |
 | components/bi | 0 | 0 | 5 | 2 | 0 | 0 |
 | components/board | 0 | 0 | 6 | 15 | 0 | 3 |
-| components/boss | 0 | 0 | 9 | 29 | 0 | 10 |
-| components/campaigns | 0 | 0 | 11 | 43 | 0 | 21 |
-| components/cards | 0 | 0 | 6 | 13 | 0 | 6 |
-| components/dashboard | 0 | 0 | 7 | 156 | 1 | 54 |
+| components/boss | 0 | 0 | 9 | 29 | 1 | 10 |
+| components/campaigns | 0 | 0 | 11 | 43 | 3 | 21 |
+| components/cards | 0 | 0 | 6 | 13 | 1 | 6 |
+| components/dashboard | 0 | 0 | 7 | 156 | 3 | 54 |
 | components/effects | 0 | 0 | 8 | 1 | 0 | 0 |
 | components/engagement | 0 | 0 | 19 | 13 | 0 | 9 |
-| components/luckywheel | 0 | 0 | 7 | 16 | 0 | 10 |
-| components/manager | 0 | 0 | 10 | 55 | 1 | 35 |
+| components/luckywheel | 0 | 0 | 7 | 16 | 1 | 10 |
+| components/manager | 0 | 0 | 10 | 55 | 4 | 35 |
 | components/mobile | 0 | 0 | 15 | 11 | 0 | 0 |
-| components/navigation | 0 | 1 | 7 | 72 | 1 | 27 |
-| components/onboarding | 0 | 0 | 6 | 11 | 0 | 4 |
-| components/prediction | 0 | 0 | 17 | 31 | 0 | 14 |
-| components/quiz | 0 | 0 | 9 | 39 | 0 | 25 |
-| components/rbac | 0 | 0 | 9 | 10 | 0 | 7 |
-| components/security | 0 | 0 | 16 | 14 | 0 | 14 |
-| components/shop-admin | 0 | 0 | 7 | 23 | 0 | 10 |
-| components/sidebar | 0 | 0 | 5 | 20 | 0 | 9 |
-| components/trails | 0 | 0 | 5 | 25 | 0 | 22 |
+| components/navigation | 0 | 1 | 7 | 72 | 3 | 27 |
+| components/onboarding | 0 | 0 | 6 | 11 | 1 | 4 |
+| components/prediction | 0 | 0 | 17 | 31 | 3 | 14 |
+| components/quiz | 0 | 0 | 9 | 39 | 3 | 25 |
+| components/rbac | 0 | 0 | 9 | 10 | 1 | 7 |
+| components/security | 0 | 0 | 16 | 14 | 3 | 14 |
+| components/shop-admin | 0 | 0 | 7 | 23 | 3 | 10 |
+| components/sidebar | 0 | 0 | 5 | 20 | 2 | 9 |
+| components/trails | 0 | 0 | 5 | 25 | 3 | 22 |
 | components/ui | 0 | 0 | 67 | 12 | 0 | 0 |
-| hooks | 0 | 0 | 129 | 477 | 1 | 155 |
+| hooks | 0 | 0 | 129 | 477 | 9 | 155 |
 | lib | 0 | 0 | 106 | 0 | 0 | 16 |
-| pages | 43 | 82 | 82 | 473 | 2 | 169 |
-| services | 0 | 0 | 96 | 7 | 0 | 162 |
+| pages | 43 | 82 | 82 | 473 | 14 | 169 |
+| services | 0 | 0 | 96 | 7 | 8 | 162 |
 | stories | 0 | 0 | 29 | 5 | 0 | 0 |
 
 ## Rotas (url → arquivo)
@@ -188,58 +188,47 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - `/verificar/:code` [tela] → src/pages/CertificateVerify.tsx
 
 ## Rotas HTTP de backend
-- `GET /{t}` → scripts/ai-context/cenarios.mjs
-- `GET /a` → scripts/ai-context/cenarios.mjs
-- `GET /a` → scripts/ai-context/cenarios.mjs
-- `POST /b` → scripts/ai-context/cenarios.mjs
-- `POST /b` → scripts/ai-context/cenarios.mjs
-- `DELETE /c` → scripts/ai-context/cenarios.mjs
-- `PUT /d` → scripts/ai-context/cenarios.mjs
-- `GET /items` → scripts/ai-context/gerar.unit.mjs
-- `GET /u` → scripts/ai-context/cenarios.mjs
-- `GET /users` → scripts/ai-context/cenarios.mjs
-- `POST /users/:id` → scripts/ai-context/cenarios.mjs
-- `GET /x` → scripts/ai-context/cenarios.mjs
+- (nenhum)
 
 ## Vistas por id (menu/ViewRouter → arquivo)
 - (nenhum)
 
 ## Edge functions
-- `admin-alerts` — tabelas: attendance_records, audit_logs, profiles, shop_purchases, user_certifications; chamada por 0 arquivo(s) do front — **ÓRFÃ**
+- `admin-alerts` — tabelas: attendance_records, audit_logs, profiles, shop_purchases, user_certifications; chamada por 1 arquivo(s) do front
 - `ai-coach` — tabelas: -; chamada por 1 arquivo(s) do front
-- `ai-course-builder` — tabelas: ai_course_jobs, learning_trails, quiz_options, quiz_questions, trail_modules; chamada por 0 arquivo(s) do front — **ÓRFÃ**
+- `ai-course-builder` — tabelas: ai_course_jobs, learning_trails, quiz_options, quiz_questions, trail_modules; chamada por 1 arquivo(s) do front
 - `birthday-celebrations` — tabelas: celebrations, notifications, profiles; chamada por 0 arquivo(s) do front — **ÓRFÃ**
 - `bitrix24-api` — tabelas: bitrix24_tokens, bitrix24_webhook_logs; chamada por 0 arquivo(s) do front — **ÓRFÃ**
 - `bitrix24-oauth` — tabelas: bitrix24_tokens; chamada por 0 arquivo(s) do front — **ÓRFÃ**
 - `bitrix24-webhook` — tabelas: bitrix24_sync_mappings, bitrix24_webhook_logs, custom_quests, notifications, quest_assignments, user_roles; chamada por 0 arquivo(s) do front — **ÓRFÃ**
 - `burn-rate-monitor` — tabelas: security_alerts; chamada por 0 arquivo(s) do front — **ÓRFÃ**
 - `checkin-reminders` — tabelas: checkins, notifications; chamada por 0 arquivo(s) do front — **ÓRFÃ**
-- `churn-prediction` — tabelas: attendance_records, audit_logs, kudos, profiles, trail_enrollments, user_combos; chamada por 0 arquivo(s) do front — **ÓRFÃ**
+- `churn-prediction` — tabelas: attendance_records, audit_logs, kudos, profiles, trail_enrollments, user_combos; chamada por 1 arquivo(s) do front
 - `cleanup-old-security-logs` — tabelas: -; chamada por 0 arquivo(s) do front — **ÓRFÃ**
 - `cleanup-rate-limit-logs` — tabelas: audit_logs; chamada por 0 arquivo(s) do front — **ÓRFÃ**
-- `competency-alerts` — tabelas: attendance_streaks, kudos, module_progress, notifications, profiles, quest_assignments, user_achievements; chamada por 0 arquivo(s) do front — **ÓRFÃ**
-- `detect-new-device` — tabelas: profiles, security_alerts; chamada por 0 arquivo(s) do front — **ÓRFÃ**
+- `competency-alerts` — tabelas: attendance_streaks, kudos, module_progress, notifications, profiles, quest_assignments, user_achievements; chamada por 2 arquivo(s) do front
+- `detect-new-device` — tabelas: profiles, security_alerts; chamada por 1 arquivo(s) do front
 - `dispatch-critical-alert` — tabelas: notifications, user_roles; chamada por 0 arquivo(s) do front, por SQL/cron
 - `error-budget-monitor` — tabelas: security_alerts; chamada por 0 arquivo(s) do front — **ÓRFÃ**
 - `external-api` — tabelas: achievements, api_request_logs, departments, external_tasks, positions, profiles, user_achievements, webhook_subscriptions; chamada por 0 arquivo(s) do front — **ÓRFÃ**
 - `external-db-bridge` — tabelas: query_telemetry; chamada por 0 arquivo(s) do front — **ÓRFÃ**
 - `external-webhook` — tabelas: achievements, attendance_records, attendance_settings, external_tasks, profiles, task_penalties, user_achievements, webhook_subscriptions; chamada por 0 arquivo(s) do front — **ÓRFÃ**
-- `generate-quiz-questions` — tabelas: learning_trails, trail_modules; chamada por 0 arquivo(s) do front — **ÓRFÃ**
+- `generate-quiz-questions` — tabelas: learning_trails, trail_modules; chamada por 1 arquivo(s) do front
 - `migrate-helper` (verify_jwt=false) — tabelas: -; chamada por 0 arquivo(s) do front
-- `push-device-revoked` — tabelas: push_notification_logs, push_subscriptions; chamada por 0 arquivo(s) do front — **ÓRFÃ**
+- `push-device-revoked` — tabelas: push_notification_logs, push_subscriptions; chamada por 1 arquivo(s) do front
 - `push-outbox-dispatcher` — tabelas: push_notification_logs, push_outbox, push_subscriptions; chamada por 0 arquivo(s) do front, por SQL/cron
-- `push-public-key` — tabelas: -; chamada por 0 arquivo(s) do front — **ÓRFÃ**
-- `reward-approval-review` — tabelas: audit_logs, profiles, purchase_approvals, shop_purchases, user_roles; chamada por 0 arquivo(s) do front — **ÓRFÃ**
+- `push-public-key` — tabelas: -; chamada por 1 arquivo(s) do front
+- `reward-approval-review` — tabelas: audit_logs, profiles, purchase_approvals, shop_purchases, user_roles; chamada por 1 arquivo(s) do front
 - `security-weekly-digest` — tabelas: notifications, security_alerts, user_roles; chamada por 0 arquivo(s) do front, por SQL/cron
-- `send-campaign-push` — tabelas: push_notification_logs, push_subscriptions; chamada por 0 arquivo(s) do front — **ÓRFÃ**
+- `send-campaign-push` — tabelas: push_notification_logs, push_subscriptions; chamada por 1 arquivo(s) do front
 - `send-email-digest` — tabelas: attendance_streaks, coin_transactions, profiles, user_achievements, user_quests, xp_transactions; chamada por 0 arquivo(s) do front — **ÓRFÃ**
 - `send-email-notifications` — tabelas: audit_logs, celebrations, checkins, feedback_requests, notifications, profiles, pulse_surveys; chamada por 0 arquivo(s) do front — **ÓRFÃ**
 - `send-rate-limit-alert` — tabelas: blocked_ips, notifications, rate_limit_logs, user_roles; chamada por 0 arquivo(s) do front — **ÓRFÃ**
 - `survey-reminders` — tabelas: notifications, profiles, pulse_responses, pulse_surveys; chamada por 0 arquivo(s) do front — **ÓRFÃ**
-- `trail-recommendations` — tabelas: learning_trails, module_progress, profiles, quest_assignments, team_members, trail_enrollments; chamada por 1 arquivo(s) do front
+- `trail-recommendations` — tabelas: learning_trails, module_progress, profiles, quest_assignments, team_members, trail_enrollments; chamada por 2 arquivo(s) do front
 - `verify-geo` — tabelas: geo_access_logs, geo_allowed_countries, geo_settings; chamada por 0 arquivo(s) do front — **ÓRFÃ**
-- `verify-ip` — tabelas: ip_access_logs, ip_whitelist; chamada por 0 arquivo(s) do front — **ÓRFÃ**
-- `webhook-dispatcher` — tabelas: webhook_delivery_logs, webhook_subscriptions; chamada por 0 arquivo(s) do front
+- `verify-ip` — tabelas: ip_access_logs, ip_whitelist; chamada por 2 arquivo(s) do front
+- `webhook-dispatcher` — tabelas: webhook_delivery_logs, webhook_subscriptions; chamada por 2 arquivo(s) do front
 - `webhook-health-monitor` — tabelas: -; chamada por 0 arquivo(s) do front, por SQL/cron
 - `weekly-league-processing` — tabelas: league_history, league_members, leagues, notifications; chamada por 0 arquivo(s) do front — **ÓRFÃ**
 
@@ -269,21 +258,21 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 
 ## Integrações externas
 - SDKs: Sentry, Supabase, react-query, zod
-- hosts mais citados: ai.gateway.lovable.dev, api.resend.com, fcm.googleapis.com, i.pravatar.cc, taskgifts.app, www.youtube.com, x.supabase.co, a.com, api.pwnedpasswords.com, api.x.com, app.exemplo.com, exemplo.com, ip-api.com, linkedin.com, lovable.dev
+- hosts mais citados: ai.gateway.lovable.dev, fcm.googleapis.com, i.pravatar.cc, taskgifts.app, www.youtube.com, a.com, api.pwnedpasswords.com, api.resend.com, app.exemplo.com, exemplo.com, ip-api.com, linkedin.com, lovable.dev, push.example, test.supabase.co
 - webhooks recebidos: migrate-helper
 - env de integração (só nomes): BITRIX24_CLIENT_ID, BITRIX24_CLIENT_SECRET, BITRIX24_WEBHOOK_SECRET, CRON_SECRET, INTERNAL_FUNCTION_SECRET, LOVABLE_API_KEY, RESEND_API_KEY, SENTRY_DSN, SENTRY_ENV, SLACK_ALERT_WEBHOOK_URL, UPSTASH_REDIS_REST_TOKEN, UPSTASH_REDIS_REST_URL, VITE_BITRIX_WEBHOOK_URL, VITE_SENTRY_DSN, WEBHOOK_HEALTH_MIN_SAMPLE, WEBHOOK_HEALTH_THRESHOLD
 
 ## Permissões / papéis
-- papéis no código: admin (14), alert (9), user (8), manager (6), system (6), button (5), status (5), group (3), assistant (2), grid (2), navigation (2), radio (2), radiogroup (2), Cargos (1), agent (1), banner (1), contentinfo (1), dialog (1), gridcell (1), img (1), link (1), list (1), listitem (1), long (1), menu (1), menuitem (1), presentation (1), region (1), role_assigned (1), separator (1), short (1), sup (1), tab (1)
+- papéis no código: admin (12), alert (9), user (8), manager (6), system (6), button (5), status (5), group (3), assistant (2), grid (2), navigation (2), radio (2), radiogroup (2), Cargos (1), banner (1), contentinfo (1), dialog (1), gridcell (1), img (1), link (1), list (1), listitem (1), long (1), menu (1), menuitem (1), presentation (1), region (1), role_assigned (1), separator (1), short (1), tab (1)
 - enums de papel: app_role: admin|manager|employee
 - guards: src/components/IpAccessGuard.tsx, src/components/engagement/diagnostics/AnonymityGuardNotice.tsx, src/components/rbac/AccessControl.tsx, src/components/rbac/ProtectedRoute.tsx · rotas protegidas: 78 · públicas: /*, /forgot-password, /reset-password, /verificar, /verificar/:code
-- feature flags: FEATURE_X, nova-tela, novo-inbox
+- feature flags: nenhuma
 
 ## Alertas (baseline.json → alertas)
 - rotas_sem_arquivo: 0
 - componentes_ambiguos: 0
 - menu_sem_destino: 19 — ex.: Ações Rápidas -> quick-actions, Acompanhe o Progresso -> goal-progress, Bem-vindo ao Dashboard! 🎉 -> welcome
-- edges_orfas: 29 — ex.: admin-alerts, ai-course-builder, birthday-celebrations
+- edges_orfas: 18 — ex.: birthday-celebrations, bitrix24-api, bitrix24-oauth
 - edges_chamadas_sem_pasta: 0
 - tabelas_sem_rls: 1 — ex.: lucky_wheel_prizes
 - tabelas_usadas_sem_definicao: 4 — ex.: coin_transactions, league_members, user_quests
@@ -294,30 +283,30 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - scripts_orfaos: 0
 - env_usadas_nao_declaradas: 7 — ex.: DEV, MODE, NODE_ENV
 - ciclos_de_import: 2
-- possiveis_segredos_no_codigo: 1 — ex.: scripts/ai-context/cenarios.mjs:102
+- possiveis_segredos_no_codigo: 0
 
 ## Grafo de código (graphify)
-- 9665 nós · 26896 arestas · 606 comunidades · grafo do commit `5ffe6dbf`
-- comunidades maiores: App.tsx (228), card.tsx (189), badge.tsx (164), @tanstack/react-query (126), react (124), cn (109), client.ts (103), snapshot.py (102), skeleton.tsx (102), profilesService.ts (102), select.tsx (100), Modals.stories.tsx (89)
+- 9668 nós · 26901 arestas · 596 comunidades · grafo do commit `a270eb39`
+- comunidades maiores: lucide-react (238), react (201), badge.tsx (176), cn (165), select.tsx (157), react-router-dom (114), Skeleton (108), navigation/index.ts (103), WagerQuestionAdminPage.tsx (98), profilesService.ts (97), gerar.mjs (86), App.tsx (82)
 - símbolos mais chamados: cn() (src/lib/utils.ts), useAuth() (src/hooks/useAuth.tsx), useIsMobile() (src/hooks/use-mobile.tsx), q() (scripts/supabase_snapshot/snapshot.py), useDepartments() (src/hooks/useDepartments.ts), useToast() (src/hooks/use-toast.ts), useRBAC() (src/hooks/useRBAC.ts), useProfiles() (src/hooks/useProfiles.ts), useSEO() (src/hooks/useSEO.ts), useSoundEffects() (src/hooks/useSoundEffects.tsx), .collect() (scripts/supabase_snapshot/test_snapshot.py), excluded_sql() (scripts/supabase_snapshot/snapshot.py)
 - consulta local: `graphify query "<pergunta>"`, `graphify path "<A>" "<B>"`, `graphify explain "<X>"`
 
 ## Hotspots (arquivos mais alterados, 90 dias)
-- package.json (10)
+- package.json (11)
 - bun.lock (8)
 - .github/workflows/ci.yml (5)
 - RELATORIO_CI.md (4)
 - package-lock.json (4)
 - AGENTS.md (3)
 - PENDENCIAS.md (3)
+- .github/workflows/contexto.yml (2)
 - ESTADO_ATUAL.md (2)
+- ai-context.config.json (2)
 - docs/agentes/mapa-repo.md (2)
 - docs/estado/README.md (2)
-- supabase/config.toml (2)
-- supabase/functions/migrate-helper/index.ts (2)
-- vercel.json (2)
-- vitest.config.ts (2)
-- .claude/homunculus/instincts/inherited/task-gifts-v2-instincts.yaml (1)
+- scripts/regras_negocio/generate.py (2)
+- scripts/supabase_snapshot/README.md (2)
+- scripts/supabase_snapshot/snapshot.py (2)
 
 ## Workflows
 - `ci.yml` — CI (pull_request, push)
@@ -336,7 +325,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - `graph:setup`: `bash scripts/graphify/setup.sh`
 - `postinstall`: `node ./scripts/patch-recharts.cjs`
 - `contexto:codigo`: `node scripts/ai-context/gerar.mjs --out docs/contexto/codigo`
-- `contexto:regras`: `python3 scripts/regras_negocio/generate.py --repo . --out docs/contexto/regras --profile regras --schema-snapshot docs/contexto/supabase --index-path docs/contexto/00-INDEX.md --no-pointer`
+- `contexto:regras`: `python3 scripts/regras_negocio/generate.py --repo . --out docs/contexto/regras --profile regras --index-path docs/contexto/00-INDEX.md --no-pointer`
 - `contexto:test`: `node --test scripts/ai-context/gerar.unit.mjs scripts/ci/contexto-indice.unit.mjs scripts/ci/contexto-publicacao.unit.mjs scripts/ci/regras-negocio.unit.mjs scripts/ci/supabase-snapshot.unit.mjs`
 
 ## Documentos (raiz e docs/)
@@ -360,6 +349,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 
 
 ## Últimos commits
+- 2026-11-08 `a270eb3` fix(contexto): hardening do pacote — 2 vazamentos e inventário de edges
 - 2026-11-08 `5ffe6db` feat(contexto): sistema autonomo de contexto para agentes de IA (#34)
 - 2026-11-08 `6d497c7` fix(supabase): corrige project_id do config.toml para o projeto em uso
 - 2026-11-08 `522ab99` ci(guard): adiciona step GA02 de integridade das instruções de agente no CI
@@ -374,7 +364,6 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - 2026-10-29 `e469532` build(deps): bump framer-motion de 13.4.3 para 14.6.0 (#26)
 - 2026-10-29 `21eeea8` build(deps-dev): bump vite-plugin-pwa de 1.3.0 para 2.0.0 (#25)
 - 2026-10-29 `27fcb23` build(deps): bump oven-sh/setup-bun de v1 para v2 (#23)
-- 2026-10-29 `6fc8009` build(deps): bump actions/cache de v4 para v6 (#22)
 
 ## Arquivos deste diretório
 - `docs/contexto/codigo/rotas.json`
