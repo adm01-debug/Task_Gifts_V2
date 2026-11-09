@@ -5,11 +5,11 @@
   "vitest",
   "playwright"
  ],
- "total": 151,
+ "total": 152,
  "por_tipo": {
   "e2e": 2,
   "pytest": 2,
-  "unit": 147
+  "unit": 148
  },
  "onde_ficam": [
   {
@@ -18,7 +18,7 @@
   },
   {
    "padrao": "outro",
-   "arquivos": 8
+   "arquivos": 9
   },
   {
    "padrao": "tests/",
@@ -31,13 +31,18 @@
  ],
  "arquivos": [
   {
-   "arquivo": "scripts/ci/check-migration-drift.unit.mjs",
+   "arquivo": "scripts/ai-context/gerar.unit.mjs",
    "tipo": "unit",
-   "linhas": 326,
-   "testa": [
-    "scripts/db-audit/check-migration-drift.mjs"
-   ],
-   "casos": 41
+   "linhas": 361,
+   "testa": [],
+   "casos": 18
+  },
+  {
+   "arquivo": "scripts/ci/ai-context-generator.unit.mjs",
+   "tipo": "unit",
+   "linhas": 3,
+   "testa": [],
+   "casos": 0
   },
   {
    "arquivo": "scripts/ci/contexto-indice.unit.mjs",
@@ -1440,7 +1445,6 @@
  ],
  "sql": [],
  "cobertura_por_arquivo": {
-  "scripts/db-audit/check-migration-drift.mjs": 1,
   "src/components/accessibility/index.ts": 1,
   "src/components/admin/telemetry/TelemetryCharts.tsx": 1,
   "src/components/rbac/ProtectedRoute.tsx": 1,
@@ -1663,6 +1667,7 @@
    "src/pages/WebhooksExecutive.tsx"
   ],
   "hooks": [
+   "scripts/ai-context/cenarios.mjs",
    "src/components/accessibility/AccessibilityProvider.tsx",
    "src/components/AchievementSystem.tsx",
    "src/components/ActivityHeatmap.tsx",

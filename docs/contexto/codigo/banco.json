@@ -3,8 +3,10 @@
  "format_version": 2,
  "nota": "Reconstruído de migrations/schemas/types do repo — visão do CÓDIGO, não do banco vivo. `drift` compara colunas (migrations) com colunas_types (types.ts).",
  "fonte": [
+  "drizzle",
   "src/integrations/supabase/types.ts",
-  "supabase/migrations"
+  "supabase/migrations",
+  "typeorm"
  ],
  "migrations": 266,
  "seeds": [],
@@ -29787,6 +29789,34 @@
    ],
    "sem_rls": false,
    "nao_usada": false
+  },
+  "users": {
+   "colunas": {
+    "id": {
+     "tipo": "uuid",
+     "nn": true,
+     "pk": false,
+     "default": null,
+     "ref": null
+    },
+    "name": {
+     "tipo": "text",
+     "nn": true,
+     "pk": false,
+     "default": null,
+     "ref": null
+    }
+   },
+   "rls": false,
+   "policies": [],
+   "indices": [],
+   "fks": [],
+   "criada_em": "scripts/ai-context/cenarios.mjs",
+   "usada_no_front": 0,
+   "usada_em_edges": [],
+   "triggers": [],
+   "sem_rls": false,
+   "nao_usada": true
   },
   "wager_budget_settings": {
    "colunas": {

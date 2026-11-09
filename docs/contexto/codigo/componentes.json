@@ -3131,9 +3131,7 @@
    "dominio": "components",
    "hooks_locais": [],
    "tabelas": [],
-   "edges": [
-    "verify-ip"
-   ],
+   "edges": [],
    "usado_por": 1,
    "orfao": false
   },
@@ -4672,9 +4670,7 @@
     "usePublishedTrails"
    ],
    "tabelas": [],
-   "edges": [
-    "generate-quiz-questions"
-   ],
+   "edges": [],
    "usado_por": 1,
    "orfao": false
   },
@@ -5760,9 +5756,7 @@
     "useAuth"
    ],
    "tabelas": [],
-   "edges": [
-    "trail-recommendations"
-   ],
+   "edges": [],
    "usado_por": 1,
    "orfao": false
   },
@@ -7519,9 +7513,7 @@
    "tabelas": [
     "profiles"
    ],
-   "edges": [
-    "verify-ip"
-   ],
+   "edges": [],
    "usado_por": 1,
    "orfao": false
   },
@@ -8807,9 +8799,7 @@
    "tabelas": [
     "webhook_subscriptions"
    ],
-   "edges": [
-    "webhook-dispatcher"
-   ],
+   "edges": [],
    "usado_por": 1,
    "orfao": false
   },
@@ -8840,9 +8830,7 @@
     "security_alerts",
     "webhook_subscriptions"
    ],
-   "edges": [
-    "webhook-dispatcher"
-   ],
+   "edges": [],
    "usado_por": 1,
    "orfao": false
   },

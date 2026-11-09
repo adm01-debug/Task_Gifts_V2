@@ -197,7 +197,7 @@
     "valid_previous_snapshot",
     "write"
    ],
-   "linhas": 1798,
+   "linhas": 1791,
    "tabelas": [],
    "rpcs": [],
    "edges": [],
@@ -4183,9 +4183,7 @@
     "ai_course_jobs"
    ],
    "rpcs": [],
-   "edges": [
-    "ai-course-builder"
-   ],
+   "edges": [],
    "env": [],
    "externos": [],
    "zod_schemas": 0,
@@ -4877,9 +4875,7 @@
    "linhas": 54,
    "tabelas": [],
    "rpcs": [],
-   "edges": [
-    "churn-prediction"
-   ],
+   "edges": [],
    "env": [],
    "externos": [],
    "zod_schemas": 0,
@@ -5877,9 +5873,7 @@
     "notifications"
    ],
    "rpcs": [],
-   "edges": [
-    "competency-alerts"
-   ],
+   "edges": [],
    "env": [],
    "externos": [],
    "zod_schemas": 0,
@@ -6396,9 +6390,7 @@
    "rpcs": [
     "review_purchase"
    ],
-   "edges": [
-    "reward-approval-review"
-   ],
+   "edges": [],
    "env": [],
    "externos": [],
    "zod_schemas": 0,
@@ -6459,10 +6451,7 @@
     "revoke_device_by_fingerprint",
     "revoke_push_device"
    ],
-   "edges": [
-    "push-device-revoked",
-    "push-public-key"
-   ],
+   "edges": [],
    "env": [],
    "externos": [],
    "zod_schemas": 0,
@@ -6672,9 +6661,7 @@
     "recalc_campaign_progress",
     "user_wants_in_app_notification"
    ],
-   "edges": [
-    "send-campaign-push"
-   ],
+   "edges": [],
    "env": [],
    "externos": [],
    "zod_schemas": 0,

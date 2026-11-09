@@ -3,7 +3,7 @@
  "format_version": 2,
  "resumo": {
   "urls": 83,
-  "rotas_http_backend": 0,
+  "rotas_http_backend": 12,
   "vistas_por_id": 0,
   "itens_menu": 62,
   "lazy": 80
@@ -482,9 +482,7 @@
     "verify_certificate"
    ],
    "edges": [
-    "ai-coach",
-    "competency-alerts",
-    "detect-new-device"
+    "ai-coach"
    ],
    "canais_realtime": [
     "activity-comments-${activityId}",
@@ -1024,10 +1022,7 @@
     "verify_certificate"
    ],
    "edges": [
-    "admin-alerts",
-    "ai-coach",
-    "competency-alerts",
-    "detect-new-device"
+    "ai-coach"
    ],
    "canais_realtime": [
     "league-realtime",
@@ -1258,9 +1253,7 @@
     "verify_certificate"
    ],
    "edges": [
-    "ai-coach",
-    "competency-alerts",
-    "detect-new-device"
+    "ai-coach"
    ],
    "canais_realtime": [],
    "flags": [],
@@ -1660,9 +1653,7 @@
     "verify_certificate"
    ],
    "edges": [
-    "ai-coach",
-    "competency-alerts",
-    "detect-new-device"
+    "ai-coach"
    ],
    "canais_realtime": [],
    "flags": [],
@@ -1893,9 +1884,7 @@
     "get_alert_heatmap_30d",
     "get_alert_mttr_by_type_7d"
    ],
-   "edges": [
-    "detect-new-device"
-   ],
+   "edges": [],
    "canais_realtime": [],
    "flags": [],
    "papeis": [],
@@ -2121,9 +2110,7 @@
     "verify_certificate"
    ],
    "edges": [
-    "ai-coach",
-    "competency-alerts",
-    "detect-new-device"
+    "ai-coach"
    ],
    "canais_realtime": [],
    "flags": [],
@@ -2177,9 +2164,7 @@
     "promote_webhook_secret",
     "rotate_webhook_secret"
    ],
-   "edges": [
-    "webhook-dispatcher"
-   ],
+   "edges": [],
    "canais_realtime": [],
    "flags": [],
    "papeis": [
@@ -2220,9 +2205,7 @@
     "webhook_subscriptions"
    ],
    "rpcs": [],
-   "edges": [
-    "webhook-dispatcher"
-   ],
+   "edges": [],
    "canais_realtime": [],
    "flags": [],
    "papeis": [],
@@ -2537,9 +2520,7 @@
     "verify_certificate"
    ],
    "edges": [
-    "ai-coach",
-    "competency-alerts",
-    "detect-new-device"
+    "ai-coach"
    ],
    "canais_realtime": [],
    "flags": [],
@@ -2776,9 +2757,7 @@
     "verify_certificate"
    ],
    "edges": [
-    "ai-coach",
-    "competency-alerts",
-    "detect-new-device"
+    "ai-coach"
    ],
    "canais_realtime": [
     "audit-realtime"
@@ -3036,9 +3015,7 @@
     "verify_certificate"
    ],
    "edges": [
-    "ai-coach",
-    "competency-alerts",
-    "detect-new-device"
+    "ai-coach"
    ],
    "canais_realtime": [],
    "flags": [],
@@ -3267,9 +3244,7 @@
     "verify_certificate"
    ],
    "edges": [
-    "ai-coach",
-    "competency-alerts",
-    "detect-new-device"
+    "ai-coach"
    ],
    "canais_realtime": [],
    "flags": [],
@@ -3547,9 +3522,7 @@
     "verify_certificate"
    ],
    "edges": [
-    "ai-coach",
-    "competency-alerts",
-    "detect-new-device"
+    "ai-coach"
    ],
    "canais_realtime": [],
    "flags": [],
@@ -3779,9 +3752,7 @@
     "verify_certificate"
    ],
    "edges": [
-    "ai-coach",
-    "competency-alerts",
-    "detect-new-device"
+    "ai-coach"
    ],
    "canais_realtime": [],
    "flags": [],
@@ -3892,11 +3863,7 @@
     "recalc_campaign_progress",
     "user_wants_in_app_notification"
    ],
-   "edges": [
-    "competency-alerts",
-    "detect-new-device",
-    "send-campaign-push"
-   ],
+   "edges": [],
    "canais_realtime": [],
    "flags": [],
    "papeis": [
@@ -4046,11 +4013,7 @@
     "transition_prediction_market",
     "user_wants_in_app_notification"
    ],
-   "edges": [
-    "competency-alerts",
-    "detect-new-device",
-    "send-campaign-push"
-   ],
+   "edges": [],
    "canais_realtime": [],
    "flags": [],
    "papeis": [
@@ -4130,10 +4093,7 @@
     "revert_campaign_team_split",
     "user_wants_in_app_notification"
    ],
-   "edges": [
-    "competency-alerts",
-    "send-campaign-push"
-   ],
+   "edges": [],
    "canais_realtime": [],
    "flags": [],
    "papeis": [],
@@ -4192,10 +4152,7 @@
     "revert_campaign_team_split",
     "user_wants_in_app_notification"
    ],
-   "edges": [
-    "competency-alerts",
-    "send-campaign-push"
-   ],
+   "edges": [],
    "canais_realtime": [],
    "flags": [],
    "papeis": [],
@@ -4242,9 +4199,7 @@
     "user_devices"
    ],
    "rpcs": [],
-   "edges": [
-    "detect-new-device"
-   ],
+   "edges": [],
    "canais_realtime": [],
    "flags": [],
    "papeis": [],
@@ -4490,9 +4445,7 @@
     "verify_certificate"
    ],
    "edges": [
-    "ai-coach",
-    "competency-alerts",
-    "detect-new-device"
+    "ai-coach"
    ],
    "canais_realtime": [],
    "flags": [],
@@ -4751,9 +4704,7 @@
     "verify_certificate"
    ],
    "edges": [
-    "ai-coach",
-    "competency-alerts",
-    "detect-new-device"
+    "ai-coach"
    ],
    "canais_realtime": [],
    "flags": [],
@@ -5001,9 +4952,7 @@
     "verify_certificate"
    ],
    "edges": [
-    "ai-coach",
-    "competency-alerts",
-    "detect-new-device"
+    "ai-coach"
    ],
    "canais_realtime": [],
    "flags": [],
@@ -5251,9 +5200,7 @@
     "verify_certificate"
    ],
    "edges": [
-    "ai-coach",
-    "competency-alerts",
-    "detect-new-device"
+    "ai-coach"
    ],
    "canais_realtime": [
     "duels-changes"
@@ -5519,9 +5466,7 @@
     "verify_certificate"
    ],
    "edges": [
-    "ai-coach",
-    "competency-alerts",
-    "detect-new-device"
+    "ai-coach"
    ],
    "canais_realtime": [],
    "flags": [],
@@ -5799,9 +5744,7 @@
     "verify_certificate"
    ],
    "edges": [
-    "ai-coach",
-    "competency-alerts",
-    "detect-new-device"
+    "ai-coach"
    ],
    "canais_realtime": [],
    "flags": [],
@@ -6060,9 +6003,7 @@
     "verify_certificate"
    ],
    "edges": [
-    "ai-coach",
-    "competency-alerts",
-    "detect-new-device"
+    "ai-coach"
    ],
    "canais_realtime": [],
    "flags": [],
@@ -6330,9 +6271,7 @@
     "verify_certificate"
    ],
    "edges": [
-    "ai-coach",
-    "competency-alerts",
-    "detect-new-device"
+    "ai-coach"
    ],
    "canais_realtime": [],
    "flags": [],
@@ -6606,9 +6545,7 @@
     "verify_certificate"
    ],
    "edges": [
-    "ai-coach",
-    "competency-alerts",
-    "detect-new-device"
+    "ai-coach"
    ],
    "canais_realtime": [
     "org-${query.data.id}"
@@ -6841,9 +6778,7 @@
     "verify_certificate"
    ],
    "edges": [
-    "ai-coach",
-    "competency-alerts",
-    "detect-new-device"
+    "ai-coach"
    ],
    "canais_realtime": [
     "seasonal-events-realtime",
@@ -7084,9 +7019,7 @@
     "verify_certificate"
    ],
    "edges": [
-    "ai-coach",
-    "competency-alerts",
-    "detect-new-device"
+    "ai-coach"
    ],
    "canais_realtime": [],
    "flags": [],
@@ -7328,9 +7261,7 @@
     "verify_certificate"
    ],
    "edges": [
-    "ai-coach",
-    "competency-alerts",
-    "detect-new-device"
+    "ai-coach"
    ],
    "canais_realtime": [
     "social-feed-realtime"
@@ -7566,9 +7497,7 @@
     "verify_certificate"
    ],
    "edges": [
-    "ai-coach",
-    "competency-alerts",
-    "detect-new-device"
+    "ai-coach"
    ],
    "canais_realtime": [],
    "flags": [],
@@ -7624,9 +7553,7 @@
     "user_devices"
    ],
    "rpcs": [],
-   "edges": [
-    "detect-new-device"
-   ],
+   "edges": [],
    "canais_realtime": [],
    "flags": [],
    "papeis": [
@@ -7857,9 +7784,7 @@
     "verify_certificate"
    ],
    "edges": [
-    "ai-coach",
-    "competency-alerts",
-    "detect-new-device"
+    "ai-coach"
    ],
    "canais_realtime": [],
    "flags": [],
@@ -8125,9 +8050,7 @@
     "verify_certificate"
    ],
    "edges": [
-    "ai-coach",
-    "competency-alerts",
-    "detect-new-device"
+    "ai-coach"
    ],
    "canais_realtime": [
     "war-feed-${warId}"
@@ -8376,9 +8299,7 @@
     "verify_certificate"
    ],
    "edges": [
-    "ai-coach",
-    "competency-alerts",
-    "detect-new-device"
+    "ai-coach"
    ],
    "canais_realtime": [
     "league-realtime"
@@ -8663,9 +8584,7 @@
     "verify_certificate"
    ],
    "edges": [
-    "ai-coach",
-    "competency-alerts",
-    "detect-new-device"
+    "ai-coach"
    ],
    "canais_realtime": [],
    "flags": [],
@@ -8948,9 +8867,7 @@
     "verify_certificate"
    ],
    "edges": [
-    "ai-coach",
-    "competency-alerts",
-    "detect-new-device"
+    "ai-coach"
    ],
    "canais_realtime": [],
    "flags": [],
@@ -9212,9 +9129,7 @@
     "verify_certificate"
    ],
    "edges": [
-    "ai-coach",
-    "competency-alerts",
-    "detect-new-device"
+    "ai-coach"
    ],
    "canais_realtime": [],
    "flags": [],
@@ -9476,10 +9391,7 @@
     "verify_certificate"
    ],
    "edges": [
-    "ai-coach",
-    "competency-alerts",
-    "detect-new-device",
-    "reward-approval-review"
+    "ai-coach"
    ],
    "canais_realtime": [],
    "flags": [],
@@ -9797,9 +9709,6 @@
    ],
    "edges": [
     "ai-coach",
-    "churn-prediction",
-    "competency-alerts",
-    "detect-new-device",
     "trail-recommendations"
    ],
    "canais_realtime": [],
@@ -10055,9 +9964,7 @@
     "verify_certificate"
    ],
    "edges": [
-    "ai-coach",
-    "competency-alerts",
-    "detect-new-device"
+    "ai-coach"
    ],
    "canais_realtime": [],
    "flags": [],
@@ -10305,9 +10212,7 @@
     "verify_certificate"
    ],
    "edges": [
-    "ai-coach",
-    "competency-alerts",
-    "detect-new-device"
+    "ai-coach"
    ],
    "canais_realtime": [],
    "flags": [],
@@ -10540,9 +10445,7 @@
     "verify_certificate"
    ],
    "edges": [
-    "ai-coach",
-    "competency-alerts",
-    "detect-new-device"
+    "ai-coach"
    ],
    "canais_realtime": [],
    "flags": [],
@@ -10799,9 +10702,7 @@
     "verify_certificate"
    ],
    "edges": [
-    "ai-coach",
-    "competency-alerts",
-    "detect-new-device"
+    "ai-coach"
    ],
    "canais_realtime": [],
    "flags": [],
@@ -11066,9 +10967,7 @@
     "verify_certificate"
    ],
    "edges": [
-    "ai-coach",
-    "competency-alerts",
-    "detect-new-device"
+    "ai-coach"
    ],
    "canais_realtime": [],
    "flags": [],
@@ -11333,9 +11232,7 @@
     "verify_certificate"
    ],
    "edges": [
-    "ai-coach",
-    "competency-alerts",
-    "detect-new-device"
+    "ai-coach"
    ],
    "canais_realtime": [],
    "flags": [],
@@ -11602,10 +11499,7 @@
     "verify_certificate"
    ],
    "edges": [
-    "ai-coach",
-    "competency-alerts",
-    "detect-new-device",
-    "send-campaign-push"
+    "ai-coach"
    ],
    "canais_realtime": [],
    "flags": [],
@@ -11868,10 +11762,7 @@
     "verify_certificate"
    ],
    "edges": [
-    "ai-coach",
-    "competency-alerts",
-    "detect-new-device",
-    "send-campaign-push"
+    "ai-coach"
    ],
    "canais_realtime": [],
    "flags": [],
@@ -12252,11 +12143,7 @@
     "verify_certificate"
    ],
    "edges": [
-    "ai-coach",
-    "competency-alerts",
-    "detect-new-device",
-    "push-device-revoked",
-    "push-public-key"
+    "ai-coach"
    ],
    "canais_realtime": [
     "kudos-realtime",
@@ -12482,9 +12369,7 @@
     "verify_certificate"
    ],
    "edges": [
-    "ai-coach",
-    "competency-alerts",
-    "detect-new-device"
+    "ai-coach"
    ],
    "canais_realtime": [],
    "flags": [],
@@ -12767,9 +12652,7 @@
     "verify_certificate"
    ],
    "edges": [
-    "ai-coach",
-    "competency-alerts",
-    "detect-new-device"
+    "ai-coach"
    ],
    "canais_realtime": [
     "quiz-scores-realtime"
@@ -13033,10 +12916,7 @@
     "verify_certificate"
    ],
    "edges": [
-    "ai-coach",
-    "competency-alerts",
-    "detect-new-device",
-    "generate-quiz-questions"
+    "ai-coach"
    ],
    "canais_realtime": [],
    "flags": [],
@@ -13267,9 +13147,7 @@
     "verify_certificate"
    ],
    "edges": [
-    "ai-coach",
-    "competency-alerts",
-    "detect-new-device"
+    "ai-coach"
    ],
    "canais_realtime": [],
    "flags": [],
@@ -13503,9 +13381,7 @@
     "verify_certificate"
    ],
    "edges": [
-    "ai-coach",
-    "competency-alerts",
-    "detect-new-device"
+    "ai-coach"
    ],
    "canais_realtime": [],
    "flags": [],
@@ -13742,9 +13618,7 @@
     "verify_certificate"
    ],
    "edges": [
-    "ai-coach",
-    "competency-alerts",
-    "detect-new-device"
+    "ai-coach"
    ],
    "canais_realtime": [],
    "flags": [],
@@ -13801,9 +13675,7 @@
     "user_devices"
    ],
    "rpcs": [],
-   "edges": [
-    "detect-new-device"
-   ],
+   "edges": [],
    "canais_realtime": [],
    "flags": [],
    "papeis": [
@@ -14061,9 +13933,7 @@
     "verify_certificate"
    ],
    "edges": [
-    "ai-coach",
-    "competency-alerts",
-    "detect-new-device"
+    "ai-coach"
    ],
    "canais_realtime": [],
    "flags": [],
@@ -14320,9 +14190,7 @@
     "verify_certificate"
    ],
    "edges": [
-    "ai-coach",
-    "competency-alerts",
-    "detect-new-device"
+    "ai-coach"
    ],
    "canais_realtime": [],
    "flags": [],
@@ -14560,9 +14428,7 @@
     "verify_certificate"
    ],
    "edges": [
-    "ai-coach",
-    "competency-alerts",
-    "detect-new-device"
+    "ai-coach"
    ],
    "canais_realtime": [
     "security-alerts-realtime"
@@ -14658,11 +14524,7 @@
     "revoke_push_device",
     "user_has_passkeys"
    ],
-   "edges": [
-    "detect-new-device",
-    "push-device-revoked",
-    "push-public-key"
-   ],
+   "edges": [],
    "canais_realtime": [
     "blocked-ips-push",
     "device-alerts-push",
@@ -14908,9 +14770,7 @@
     "verify_certificate"
    ],
    "edges": [
-    "ai-coach",
-    "competency-alerts",
-    "detect-new-device"
+    "ai-coach"
    ],
    "canais_realtime": [],
    "flags": [],
@@ -15155,9 +15015,7 @@
     "verify_certificate"
    ],
    "edges": [
-    "ai-coach",
-    "competency-alerts",
-    "detect-new-device"
+    "ai-coach"
    ],
    "canais_realtime": [],
    "flags": [],
@@ -15409,9 +15267,7 @@
     "verify_certificate"
    ],
    "edges": [
-    "ai-coach",
-    "competency-alerts",
-    "detect-new-device"
+    "ai-coach"
    ],
    "canais_realtime": [],
    "flags": [],
@@ -15678,9 +15534,7 @@
     "verify_certificate"
    ],
    "edges": [
-    "ai-coach",
-    "competency-alerts",
-    "detect-new-device"
+    "ai-coach"
    ],
    "canais_realtime": [],
    "flags": [],
@@ -15965,9 +15819,7 @@
     "verify_certificate"
    ],
    "edges": [
-    "ai-coach",
-    "competency-alerts",
-    "detect-new-device"
+    "ai-coach"
    ],
    "canais_realtime": [],
    "flags": [],
@@ -16213,9 +16065,7 @@
     "verify_certificate"
    ],
    "edges": [
-    "ai-coach",
-    "competency-alerts",
-    "detect-new-device"
+    "ai-coach"
    ],
    "canais_realtime": [],
    "flags": [],
@@ -16461,11 +16311,7 @@
     "verify_certificate"
    ],
    "edges": [
-    "ai-coach",
-    "ai-course-builder",
-    "competency-alerts",
-    "detect-new-device",
-    "trail-recommendations"
+    "ai-coach"
    ],
    "canais_realtime": [],
    "flags": [],
@@ -16698,9 +16544,7 @@
     "verify_certificate"
    ],
    "edges": [
-    "ai-coach",
-    "competency-alerts",
-    "detect-new-device"
+    "ai-coach"
    ],
    "canais_realtime": [],
    "flags": [],
@@ -16752,9 +16596,7 @@
    "rpcs": [
     "verify_certificate"
    ],
-   "edges": [
-    "competency-alerts"
-   ],
+   "edges": [],
    "canais_realtime": [],
    "flags": [],
    "papeis": [],
@@ -16796,16 +16638,311 @@
    "rpcs": [
     "verify_certificate"
    ],
-   "edges": [
-    "competency-alerts"
-   ],
+   "edges": [],
    "canais_realtime": [],
    "flags": [],
    "papeis": [],
    "arquivos_puxados": 16
   }
  ],
- "rotas_http_backend": [],
+ "rotas_http_backend": [
+  {
+   "metodo": "GET",
+   "caminho": "/{t}",
+   "arquivo": "scripts/ai-context/cenarios.mjs",
+   "tabelas": [
+    "a",
+    "fantasma",
+    "so_teste",
+    "t",
+    "t1",
+    "tx"
+   ],
+   "env": [
+    "A",
+    "K",
+    "NODE_ENV",
+    "SCRIPT_ONLY",
+    "SRK",
+    "SUPABASE_URL",
+    "VITE_A",
+    "VITE_C",
+    "VITE_FEATURE_X",
+    "X"
+   ]
+  },
+  {
+   "metodo": "GET",
+   "caminho": "/a",
+   "arquivo": "scripts/ai-context/cenarios.mjs",
+   "tabelas": [
+    "a",
+    "fantasma",
+    "so_teste",
+    "t",
+    "t1",
+    "tx"
+   ],
+   "env": [
+    "A",
+    "K",
+    "NODE_ENV",
+    "SCRIPT_ONLY",
+    "SRK",
+    "SUPABASE_URL",
+    "VITE_A",
+    "VITE_C",
+    "VITE_FEATURE_X",
+    "X"
+   ]
+  },
+  {
+   "metodo": "GET",
+   "caminho": "/a",
+   "arquivo": "scripts/ai-context/cenarios.mjs",
+   "tabelas": [
+    "a",
+    "fantasma",
+    "so_teste",
+    "t",
+    "t1",
+    "tx"
+   ],
+   "env": [
+    "A",
+    "K",
+    "NODE_ENV",
+    "SCRIPT_ONLY",
+    "SRK",
+    "SUPABASE_URL",
+    "VITE_A",
+    "VITE_C",
+    "VITE_FEATURE_X",
+    "X"
+   ]
+  },
+  {
+   "metodo": "POST",
+   "caminho": "/b",
+   "arquivo": "scripts/ai-context/cenarios.mjs",
+   "tabelas": [
+    "a",
+    "fantasma",
+    "so_teste",
+    "t",
+    "t1",
+    "tx"
+   ],
+   "env": [
+    "A",
+    "K",
+    "NODE_ENV",
+    "SCRIPT_ONLY",
+    "SRK",
+    "SUPABASE_URL",
+    "VITE_A",
+    "VITE_C",
+    "VITE_FEATURE_X",
+    "X"
+   ]
+  },
+  {
+   "metodo": "POST",
+   "caminho": "/b",
+   "arquivo": "scripts/ai-context/cenarios.mjs",
+   "tabelas": [
+    "a",
+    "fantasma",
+    "so_teste",
+    "t",
+    "t1",
+    "tx"
+   ],
+   "env": [
+    "A",
+    "K",
+    "NODE_ENV",
+    "SCRIPT_ONLY",
+    "SRK",
+    "SUPABASE_URL",
+    "VITE_A",
+    "VITE_C",
+    "VITE_FEATURE_X",
+    "X"
+   ]
+  },
+  {
+   "metodo": "DELETE",
+   "caminho": "/c",
+   "arquivo": "scripts/ai-context/cenarios.mjs",
+   "tabelas": [
+    "a",
+    "fantasma",
+    "so_teste",
+    "t",
+    "t1",
+    "tx"
+   ],
+   "env": [
+    "A",
+    "K",
+    "NODE_ENV",
+    "SCRIPT_ONLY",
+    "SRK",
+    "SUPABASE_URL",
+    "VITE_A",
+    "VITE_C",
+    "VITE_FEATURE_X",
+    "X"
+   ]
+  },
+  {
+   "metodo": "PUT",
+   "caminho": "/d",
+   "arquivo": "scripts/ai-context/cenarios.mjs",
+   "tabelas": [
+    "a",
+    "fantasma",
+    "so_teste",
+    "t",
+    "t1",
+    "tx"
+   ],
+   "env": [
+    "A",
+    "K",
+    "NODE_ENV",
+    "SCRIPT_ONLY",
+    "SRK",
+    "SUPABASE_URL",
+    "VITE_A",
+    "VITE_C",
+    "VITE_FEATURE_X",
+    "X"
+   ]
+  },
+  {
+   "metodo": "GET",
+   "caminho": "/items",
+   "arquivo": "scripts/ai-context/gerar.unit.mjs",
+   "tabelas": [
+    "contacts",
+    "dashboard_table",
+    "emails",
+    "fixture_table",
+    "ghost_table",
+    "payments",
+    "runtime_table",
+    "tools_runtime"
+   ],
+   "env": [
+    "DB_URL",
+    "RESEND_API_KEY",
+    "VITE_ANON",
+    "VITE_SUPABASE_URL"
+   ]
+  },
+  {
+   "metodo": "GET",
+   "caminho": "/u",
+   "arquivo": "scripts/ai-context/cenarios.mjs",
+   "tabelas": [
+    "a",
+    "fantasma",
+    "so_teste",
+    "t",
+    "t1",
+    "tx"
+   ],
+   "env": [
+    "A",
+    "K",
+    "NODE_ENV",
+    "SCRIPT_ONLY",
+    "SRK",
+    "SUPABASE_URL",
+    "VITE_A",
+    "VITE_C",
+    "VITE_FEATURE_X",
+    "X"
+   ]
+  },
+  {
+   "metodo": "GET",
+   "caminho": "/users",
+   "arquivo": "scripts/ai-context/cenarios.mjs",
+   "tabelas": [
+    "a",
+    "fantasma",
+    "so_teste",
+    "t",
+    "t1",
+    "tx"
+   ],
+   "env": [
+    "A",
+    "K",
+    "NODE_ENV",
+    "SCRIPT_ONLY",
+    "SRK",
+    "SUPABASE_URL",
+    "VITE_A",
+    "VITE_C",
+    "VITE_FEATURE_X",
+    "X"
+   ]
+  },
+  {
+   "metodo": "POST",
+   "caminho": "/users/:id",
+   "arquivo": "scripts/ai-context/cenarios.mjs",
+   "tabelas": [
+    "a",
+    "fantasma",
+    "so_teste",
+    "t",
+    "t1",
+    "tx"
+   ],
+   "env": [
+    "A",
+    "K",
+    "NODE_ENV",
+    "SCRIPT_ONLY",
+    "SRK",
+    "SUPABASE_URL",
+    "VITE_A",
+    "VITE_C",
+    "VITE_FEATURE_X",
+    "X"
+   ]
+  },
+  {
+   "metodo": "GET",
+   "caminho": "/x",
+   "arquivo": "scripts/ai-context/cenarios.mjs",
+   "tabelas": [
+    "a",
+    "fantasma",
+    "so_teste",
+    "t",
+    "t1",
+    "tx"
+   ],
+   "env": [
+    "A",
+    "K",
+    "NODE_ENV",
+    "SCRIPT_ONLY",
+    "SRK",
+    "SUPABASE_URL",
+    "VITE_A",
+    "VITE_C",
+    "VITE_FEATURE_X",
+    "X"
+   ]
+  }
+ ],
  "vistas": [],
  "menu": [
   {
