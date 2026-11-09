@@ -97,6 +97,9 @@ do `contexto.yml` contra um Git local — mexer no job `publicar` sem atualizar 
   `docs/contexto/codigo/rotas.json`.
 - `scripts/inventario/gerar-repo.mjs`: redundante — `docs/contexto/codigo/edge-functions.json` traz o
   mesmo e mais (`verify_jwt`, tabelas, RPCs, env, quem chama do front/edges/SQL-cron).
-- `scripts/talkx/`, `scripts/edge-deploy/`, `scripts/db-audit/`, `scripts/e2e-isolated/`: domínio,
-  infraestrutura de deploy e guardas vivos de banco do Zapp; dependem de secrets, workflows e tabelas
-  que não existem aqui.
+- `scripts/talkx/`, `scripts/edge-deploy/`, `scripts/e2e-isolated/`: domínio, infraestrutura de deploy
+  e guardas vivos de banco do Zapp; dependem de secrets, workflows e tabelas que não existem aqui.
+- `scripts/db-audit/check-migration-drift.mjs` **foi** portado, mas reescrito: o original compara
+  arquivo × ledger (`supabase_migrations.schema_migrations`), que aqui não existe. Ver
+  `scripts/db-audit/README.md`. O resto de `scripts/db-audit/` do Zapp (≈180 arquivos de guarda vivo)
+  não veio.

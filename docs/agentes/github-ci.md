@@ -56,9 +56,14 @@ Consequências práticas disso:
 
 ## Workflows
 
-Hoje existe **1** arquivo em `.github/workflows/`: `ci.yml` (job `quality`, `runs-on: ubuntu-latest`),
-disparado em `push` e `pull_request` nas branches `main`/`master`. Não há workflow de deploy (o Vercel
-publica por conta própria) nem de deploy de edge functions.
+Hoje existem **2** arquivos em `.github/workflows/`:
+
+- `ci.yml` — job `quality`, `runs-on: ubuntu-latest`, disparado em `push` e `pull_request` nas branches
+  `main`/`master`. **É o único check obrigatório.**
+- `contexto.yml` — publica a branch gerada `contexto` (ver `docs/agentes/contexto-autonomo.md`). Não
+  gateia PR: só roda sobre `refs/heads/main`, em push, no cron de 10 min e em dispatch.
+
+Não há workflow de deploy (o Vercel publica por conta própria) nem de deploy de edge functions.
 
 Passos do job `quality`, em ordem (`.github/workflows/ci.yml`):
 
@@ -69,12 +74,15 @@ Passos do job `quality`, em ordem (`.github/workflows/ci.yml`):
 | 3 | **Security Audit** — `bun audit --audit-level=high`, falha só com `high`/`critical` de runtime | ✅ |
 | 4 | `bun run lint` | ✅ |
 | 5 | `bun run typecheck` | ✅ (mas é no-op — ver `AGENTS.md` > Stack) |
-| 6 | `bun run test:ci` (vitest + coverage, thresholds em `vitest.config.ts`) | ✅ |
-| 7 | Cache + `bun playwright install --with-deps chromium` | — |
-| 8 | **E2E Gate** — `tests/e2e/smoke.spec.ts` + `tests/auth-flow.spec.ts` | ✅ |
-| 9 | E2E não-bloqueante — `tests/e2e/happy-paths.spec.ts` | `continue-on-error: true` |
-| 10 | Generate Audit PDF (`md-to-pdf audit_report.md`) | `continue-on-error: true` |
-| 11 | Upload Artifacts (`ci-artifacts`: PDF, `playwright-report/`, `coverage/`) | `if: always()` |
+| 6 | **Integridade das instruções de agente (GA02)** — `scripts/ci/check-claude-md-integrity.mjs` | ✅ |
+| 7 | **Guardas das automações de contexto** — 89 suítes `node:test` dos produtores (`docs/agentes/contexto-autonomo.md`) | ✅ |
+| 8 | **Guarda das migrations** — `scripts/db-audit/check-migration-drift.mjs` (`scripts/db-audit/README.md`) | ✅ |
+| 9 | `bun run test:ci` (vitest + coverage, thresholds em `vitest.config.ts`) | ✅ |
+| 10 | Cache + `bun playwright install --with-deps chromium` | — |
+| 11 | **E2E Gate** — `tests/e2e/smoke.spec.ts` + `tests/auth-flow.spec.ts` | ✅ |
+| 12 | E2E não-bloqueante — `tests/e2e/happy-paths.spec.ts` | `continue-on-error: true` |
+| 13 | Generate Audit PDF (`md-to-pdf audit_report.md`) | `continue-on-error: true` |
+| 14 | Upload Artifacts (`ci-artifacts`: PDF, `playwright-report/`, `coverage/`) | `if: always()` |
 
 Fatos que já custaram retrabalho:
 
