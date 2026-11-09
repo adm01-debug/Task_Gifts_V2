@@ -7,8 +7,11 @@ FastAPI/Flask/Django, Supabase/Prisma/Drizzle/TypeORM/SQL. Saída determinístic
 
 **Como rodar:** `node scripts/ai-context/gerar.mjs [--root <dir>] [--out <dir>] [--quiet]`
 (padrão de saída `inventario/ia`, ou `ai-context.config.json → out`, ou env `AI_CONTEXT_DIR`).
-Testes: `node --test scripts/ai-context/gerar.unit.mjs`. Cenários: `cenarios.mjs`.
-O CI obrigatório também executa a mesma suíte pelo adaptador `scripts/ci/ai-context-generator.unit.mjs`.
+Testes: `node --test scripts/ai-context/gerar.unit.mjs` (no CI, pelo passo "Guardas das automações de
+contexto" do `ci.yml`). `cenarios.mjs` é o corpus de cenários do pacote original e **não é executado
+neste repo**; `ai-context.config.json` traz `skipDirs: ["ai-context"]` justamente para as fixtures dele
+não entrarem no inventário (sem isso, saíam 12 rotas HTTP inexistentes, uma tabela `users` e fontes
+`drizzle`/`typeorm` que este projeto não usa).
 
 **Config opcional** (`ai-context.config.json` na raiz): `out`, `skipDirs`, `srcDirs`, `menuFiles`,
 `routeFiles`, `aliases`, `typesFile`, `maxFileMB`, `publicacao` (texto do rodapé do `INDEX.md` dizendo
@@ -30,3 +33,14 @@ onde o contexto é publicado neste repo; env `AI_CONTEXT_PUBLICACAO` tem preced�
 - As relações são extraídas estaticamente: referência encontrada não prova execução; ausência de
   chamador no mapa não prova que uma edge não tenha consumidor externo. Marcadores `TODO` também são
   candidatos para revisão — texto em português sem pontuação pode ser ambíguo.
+
+## Divergência do pacote original
+
+`RE.invoke` (`gerar.mjs`) foi estendido para reconhecer `invokeEdge(` e `invokeEdgeSafe(`, que é como
+este repo chama edge functions (`src/lib/requestId.ts`). O pacote original só detecta
+`functions.invoke('nome')` e `/functions/v1/nome`; com o helper, o nome chega como variável e 12 edges
+em uso apareciam com `chamada_pelo_front: []` — 11 delas afirmadas **ÓRFÃ** no `INDEX.md`.
+
+`baseline.json` **não** é determinístico no tempo (contraria a nota de saída determinística acima): ele
+usa `git log --since=7/30/90 days`, então o mesmo commit gera números diferentes em dias diferentes.
+Não causa republicação porque o gate do `contexto.yml` compara o commit, não o conteúdo.

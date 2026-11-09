@@ -154,7 +154,12 @@ const RE = {
   hook: /\b(use[A-Z]\w*)\s*\(/g,
   from: /\.from\(\s*['"`]([\w.]+)['"`]/g,
   rpc: /\.rpc\(\s*['"`](\w+)['"`]/g,
-  invoke: /functions\.invoke\(\s*['"`]([\w-]+)['"`]/g,
+  // DIVERGE do pacote original: este repo chama edge por `invokeEdgeSafe("nome")`
+  // (src/lib/requestId.ts), que repassa o nome como VARIAVEL para functions.invoke.
+  // Sem isto, 12 edges em uso apareciam com chamada_pelo_front: [] e 11 eram
+  // afirmadas ORFA no INDEX.md. [^(]{0,300} atravessa o generico multilinha
+  // (`invokeEdgeSafe<{...}>(`) sem poder passar de um `(`.
+  invoke: /(?:functions\.invoke|invokeEdge(?:Safe)?)[^(]{0,300}\(\s*['"`]([\w-]+)['"`]/g,
   fnUrl: /\/functions\/v1\/([\w-]+)/g,
   envVite: /import\.meta\.env\.(\w+)/g,
   envNode: /process\.env\.(\w+)/g,
