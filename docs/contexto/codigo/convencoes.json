@@ -23,15 +23,15 @@
   ],
   "testes": [
    "co-localizado (*.test) (139)",
-   "outro (9)",
+   "outro (8)",
    "tests/ (3)"
   ],
   "edge_functions": "supabase/functions",
   "migrations": "supabase/migrations",
   "scripts": [
    "scripts/regras_negocio (3)",
-   "scripts/ai-context (2)",
-   "scripts/ci (2)"
+   "scripts/ci (2)",
+   "scripts/db-audit (1)"
   ],
   "docs": [
    "(raiz) (15)",
@@ -58,11 +58,11 @@
  "commits": {
   "convencao": "conventional commits (observado)",
   "exemplos": [
+   "feat(db-audit): guarda de migrations — idempotência ratchet + drift contra banco real",
+   "fix(contexto): hardening do pacote — 2 vazamentos e inventário de edges",
    "feat(contexto): sistema autonomo de contexto para agentes de IA (#34)",
    "fix(supabase): corrige project_id do config.toml para o projeto em uso",
-   "ci(guard): adiciona step GA02 de integridade das instruções de agente no CI",
-   "docs(agentes): replica o padrao de AGENTS.md/CLAUDE.md do Zapp Web V2 (#31)",
-   "feat(onda2): CORS allowlist, CSP header, coverage, audit CI, FKs, README (#30)"
+   "ci(guard): adiciona step GA02 de integridade das instruções de agente no CI"
   ]
  },
  "pr_template": ".github/PULL_REQUEST_TEMPLATE.md",
