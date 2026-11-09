@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "a270eb39be8bf7607ae75d4e057f935a4e72df77",
+  "sha": "59d2c2b493377ed90427126f52dad39e3c88fed0",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
-  "generated_at": "2026-11-09 04:00 UTC",
-  "files_total": 1487,
-  "code_files": 1406,
-  "code_lines": 251791
+  "generated_at": "2026-11-09 04:10 UTC",
+  "files_total": 1491,
+  "code_files": 1408,
+  "code_lines": 252721
  },
  "version": "1.3.2",
- "facts_hash": "58b70c07449d087f",
+ "facts_hash": "5409ff217279a654",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -106,7 +106,9 @@
    "postinstall": "node ./scripts/patch-recharts.cjs",
    "contexto:codigo": "node scripts/ai-context/gerar.mjs --out docs/contexto/codigo",
    "contexto:regras": "python3 scripts/regras_negocio/generate.py --repo . --out docs/contexto/regras --profile regras --index-path docs/contexto/00-INDEX.md --no-pointer",
-   "contexto:test": "node --test scripts/ai-context/gerar.unit.mjs scripts/ci/contexto-indice.unit.mjs scripts/ci/contexto-publicacao.unit.mjs scripts/ci/regras-negocio.unit.mjs scripts/ci/supabase-snapshot.unit.mjs"
+   "contexto:test": "node --test scripts/ai-context/gerar.unit.mjs scripts/ci/contexto-indice.unit.mjs scripts/ci/contexto-publicacao.unit.mjs scripts/ci/regras-negocio.unit.mjs scripts/ci/supabase-snapshot.unit.mjs",
+   "db:guard": "node scripts/db-audit/check-migration-drift.mjs --snapshot docs/contexto/supabase",
+   "db:guard:test": "node --test scripts/ci/check-migration-drift.unit.mjs"
   },
   "infra": [
    {
@@ -146,7 +148,7 @@
    ".tsx": 564,
    ".ts": 556,
    ".sql": 266,
-   ".mjs": 9,
+   ".mjs": 11,
    ".js": 5,
    ".py": 5,
    ".cjs": 1
@@ -47770,8 +47772,8 @@
   },
   {
    "module": "scripts",
-   "files": 15,
-   "lines": 7829,
+   "files": 17,
+   "lines": 8759,
    "tables": [
     "a",
     "contacts",
@@ -47791,6 +47793,7 @@
    "exports": [
     "gerar.unit.mjs: AppRoutes, useContacts",
     "commit-msg-lint.mjs: TIPOS, SUBJECT_MIN_LENGTH, cabecalhoDaMensagem, validarMensagem, main",
+    "check-migration-drift.mjs: TIPOS, limparCorpo, tokenizar, faixaDe, nomeObjeto, analisarArquivo",
     "generate.py: is_app_code, log, read_text, redact, rel, is_archived_sql",
     "indice.py: git, parse_dt, read_manifest, producer_health, entry_file, main",
     "test_generate.py: CurrentSqlSourcesTests",
@@ -47803,7 +47806,7 @@
     "gerar.mjs: !/usr/bin/env node Gera o contexto de projeto para agentes de IA (padrão: inventario/ia/*). Zero dependências. Node >= 18. Genérico: funciona em qualquer repositório. JS/TS (React, Next, Vue, Svelte, Nuxt, Remix, Astro, Express/Hono/Fastify/Nest), Python (FastAPI/Flask/Django), e qualquer outra ling …",
     "gerar.unit.mjs: Teste do gerador de contexto (scripts/ai-context/gerar.mjs). Monta um repositório sintético em pasta temporária cobrindo os casos que o gerador precisa entender (rotas aninhadas, lazy, menu, hooks, edge functions, migrations em ordem, barrel re-export, backend HTTP, Python, nested tsconfig) e confer …",
     "check-claude-md-integrity.mjs: !/usr/bin/env node",
-    "commit-msg-lint.mjs: !/usr/bin/env node"
+    "check-migration-drift.unit.mjs: Guarda das migrations: fixtures sinteticas, nenhum acesso a banco ou rede. Os casos marcados REGRESSAO vem da auditoria adversarial de 2026-11-08, que quebrou a primeira versao deste guarda (dispensa por arquivo, lexer de dollar-quoting, drop de outro objeto, ratchet cego a repeticao, fase 2 sem led …"
    ],
    "deps": [
     "#",
@@ -47843,11 +47846,13 @@
     "scripts/ai-context/gerar.mjs",
     "scripts/ai-context/gerar.unit.mjs",
     "scripts/ci/check-claude-md-integrity.mjs",
+    "scripts/ci/check-migration-drift.unit.mjs",
     "scripts/ci/commit-msg-lint.mjs",
     "scripts/ci/contexto-indice.unit.mjs",
     "scripts/ci/contexto-publicacao.unit.mjs",
     "scripts/ci/regras-negocio.unit.mjs",
     "scripts/ci/supabase-snapshot.unit.mjs",
+    "scripts/db-audit/check-migration-drift.mjs",
     "scripts/regras_negocio/generate.py",
     "scripts/regras_negocio/indice.py",
     "scripts/regras_negocio/test_generate.py",
@@ -52760,6 +52765,12 @@
     "supabase/functions/generate-quiz-questions/index.ts",
     "supabase/functions/reward-approval-review/index.ts",
     "supabase/functions/trail-recommendations/index.ts"
+   ],
+   "MIGRATIONS_DIR": [
+    "scripts/db-audit/check-migration-drift.mjs"
+   ],
+   "MIGRATION_BASELINE": [
+    "scripts/db-audit/check-migration-drift.mjs"
    ],
    "MODE": [
     "src/main.tsx"
@@ -115873,6 +115884,14 @@
     "// com >= 50% do tamanho de la. CLAUDE.md fica de fora: e so `@AGENTS.md` por design."
    ]
   },
+  "scripts/ci/check-migration-drift.unit.mjs": {
+   "path": "scripts/ci/check-migration-drift.unit.mjs",
+   "lines": 326,
+   "rule_comments": [
+    "Consertar METADE do problema nao pode reprovar (era o bug: a chave tinha (Nx))."
+   ],
+   "doc": "Guarda das migrations: fixtures sinteticas, nenhum acesso a banco ou rede. Os casos marcados REGRESSAO vem da auditoria adversarial de 2026-11-08, que quebrou a primeira versao deste guarda (dispensa por arquivo, lexer de dollar-quoting, drop de outro objeto, ratchet cego a repeticao, fase 2 sem led …"
+  },
   "scripts/ci/commit-msg-lint.mjs": {
    "path": "scripts/ci/commit-msg-lint.mjs",
    "lines": 108,
@@ -115953,6 +115972,48 @@
     "test('snapshot Supabase preserva SQL durante coletas parciais (offline)', { timeout: 30_000 }, () => {",
     "timeout: 25_000,"
    ]
+  },
+  "scripts/db-audit/check-migration-drift.mjs": {
+   "path": "scripts/db-audit/check-migration-drift.mjs",
+   "lines": 604,
+   "exports": [
+    "const TIPOS",
+    "function limparCorpo",
+    "function tokenizar",
+    "function faixaDe",
+    "function nomeObjeto",
+    "function analisarArquivo",
+    "function ledgerDeTabelas",
+    "function lerMigrations",
+    "function auditar",
+    "function compararComSnapshot",
+    "function contar",
+    "const chave",
+    "function registrar",
+    "function comparar"
+   ],
+   "env": [
+    "MIGRATIONS_DIR",
+    "MIGRATION_BASELINE"
+   ],
+   "params": [
+    {
+     "name": "LIMITE_LISTA",
+     "value": "20"
+    },
+    {
+     "name": "ALVO",
+     "value": "'(?:\""
+    }
+   ],
+   "rule_comments": [
+    "* LIMITE CONHECIDO: analise estatica por token, nao um parser de PostgreSQL.",
+    "dispensa apenas os statements DAQUELE corpo, nunca o resto do arquivo.",
+    "(`execute format('create table ...')`) fica invisivel — limite documentado no",
+    "Sucesso vazio (ex.: role sem permissao) nao e' \"o banco nao tem tabela\":",
+    "nao pode deixar o CI vermelho."
+   ],
+   "doc": "!/usr/bin/env node"
   },
   "scripts/regras_negocio/generate.py": {
    "path": "scripts/regras_negocio/generate.py",
@@ -150896,10 +150957,29 @@
   }
  },
  "git": {
-  "sha": "a270eb39be8bf7607ae75d4e057f935a4e72df77",
+  "sha": "59d2c2b493377ed90427126f52dad39e3c88fed0",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "commits": [
+   {
+    "sha": "59d2c2b",
+    "date": "2026-11-08",
+    "author": "adm01-debug",
+    "subject": "feat(db-audit): guarda de migrations — idempotência ratchet + drift contra banco real",
+    "files": [
+     ".github/workflows/ci.yml",
+     "AGENTS.md",
+     "docs/agentes/banco.md",
+     "docs/agentes/contexto-autonomo.md",
+     "docs/agentes/github-ci.md",
+     "docs/agentes/mapa-repo.md",
+     "package.json",
+     "scripts/ci/check-migration-drift.unit.mjs",
+     "scripts/db-audit/README.md",
+     "scripts/db-audit/check-migration-drift.mjs",
+     "scripts/db-audit/migration-baseline.json"
+    ]
+   },
    {
     "sha": "a270eb3",
     "date": "2026-11-08",
@@ -151263,21 +151343,12 @@
     "files": [
      ".hermes.md"
     ]
-   },
-   {
-    "sha": "b2be31f",
-    "date": "2026-08-18",
-    "author": "adm01-debug",
-    "subject": "chore(agents): adiciona AGENTS.md padrao (contexto multi-agente)",
-    "files": [
-     "AGENTS.md"
-    ]
    }
   ],
   "hot_files": [
    [
     "package.json",
-    11
+    12
    ],
    [
     "bun.lock",
@@ -151285,7 +151356,7 @@
    ],
    [
     ".github/workflows/ci.yml",
-    5
+    6
    ],
    [
     ".gitignore",
@@ -151304,8 +151375,24 @@
     3
    ],
    [
+    "docs/agentes/mapa-repo.md",
+    3
+   ],
+   [
     "PENDENCIAS.md",
     3
+   ],
+   [
+    "docs/agentes/banco.md",
+    2
+   ],
+   [
+    "docs/agentes/contexto-autonomo.md",
+    2
+   ],
+   [
+    "docs/agentes/github-ci.md",
+    2
    ],
    [
     ".github/workflows/contexto.yml",
@@ -151337,22 +151424,6 @@
    ],
    [
     "scripts/supabase_snapshot/snapshot.py",
-    2
-   ],
-   [
-    "docs/agentes/mapa-repo.md",
-    2
-   ],
-   [
-    "supabase/config.toml",
-    2
-   ],
-   [
-    ".hermes.md",
-    2
-   ],
-   [
-    "vercel.json",
     2
    ]
   ]

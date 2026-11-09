@@ -5,9 +5,9 @@
   "linguagens": [
    "TypeScript (1118)",
    "SQL (266)",
-   "Markdown (42)",
-   "JavaScript (12)",
-   "JSON (10)",
+   "Markdown (43)",
+   "JavaScript (14)",
+   "JSON (11)",
    "Python (5)",
    "YAML (5)",
    "Shell (3)"
@@ -50,6 +50,8 @@
    "contexto:codigo": "node scripts/ai-context/gerar.mjs --out docs/contexto/codigo",
    "contexto:regras": "python3 scripts/regras_negocio/generate.py --repo . --out docs/contexto/regras --profile regras --index-path docs/contexto/00-INDEX.md --no-pointer",
    "contexto:test": "node --test scripts/ai-context/gerar.unit.mjs scripts/ci/contexto-indice.unit.mjs scripts/ci/contexto-publicacao.unit.mjs scripts/ci/regras-negocio.unit.mjs scripts/ci/supabase-snapshot.unit.mjs",
+   "db:guard": "node scripts/db-audit/check-migration-drift.mjs --snapshot docs/contexto/supabase",
+   "db:guard:test": "node --test scripts/ci/check-migration-drift.unit.mjs",
    "dev": "vite",
    "graph:setup": "bash scripts/graphify/setup.sh",
    "lint": "eslint .",
@@ -125,7 +127,8 @@
    ],
    "permissoes": [],
    "scripts_usados": [
-    "scripts/ci/check-claude-md-integrity.mjs"
+    "scripts/ci/check-claude-md-integrity.mjs",
+    "scripts/db-audit/check-migration-drift.mjs"
    ],
    "npm_scripts": [
     "lint",
@@ -209,7 +212,7 @@
   {
    "arquivo": "AGENTS.md",
    "titulo": "AGENTS.md — Task Gifts V2",
-   "linhas": 146
+   "linhas": 147
   },
   {
    "arquivo": "AUDIT_INVENTORY_CHECKLIST.md",

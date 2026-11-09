@@ -5,11 +5,11 @@
   "vitest",
   "playwright"
  ],
- "total": 150,
+ "total": 151,
  "por_tipo": {
   "e2e": 2,
   "pytest": 2,
-  "unit": 146
+  "unit": 147
  },
  "onde_ficam": [
   {
@@ -18,7 +18,7 @@
   },
   {
    "padrao": "outro",
-   "arquivos": 7
+   "arquivos": 8
   },
   {
    "padrao": "tests/",
@@ -30,6 +30,15 @@
   }
  ],
  "arquivos": [
+  {
+   "arquivo": "scripts/ci/check-migration-drift.unit.mjs",
+   "tipo": "unit",
+   "linhas": 326,
+   "testa": [
+    "scripts/db-audit/check-migration-drift.mjs"
+   ],
+   "casos": 41
+  },
   {
    "arquivo": "scripts/ci/contexto-indice.unit.mjs",
    "tipo": "unit",
@@ -1431,6 +1440,7 @@
  ],
  "sql": [],
  "cobertura_por_arquivo": {
+  "scripts/db-audit/check-migration-drift.mjs": 1,
   "src/components/accessibility/index.ts": 1,
   "src/components/admin/telemetry/TelemetryCharts.tsx": 1,
   "src/components/rbac/ProtectedRoute.tsx": 1,
