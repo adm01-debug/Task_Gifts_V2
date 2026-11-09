@@ -1,0 +1,342 @@
+{
+ "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
+ "format_version": 2,
+ "nos": 986,
+ "arestas": 4251,
+ "hubs": [
+  {
+   "arquivo": "src/components/ui/card.tsx",
+   "importado_por": 291
+  },
+  {
+   "arquivo": "src/components/ui/button.tsx",
+   "importado_por": 287
+  },
+  {
+   "arquivo": "src/components/ui/badge.tsx",
+   "importado_por": 243
+  },
+  {
+   "arquivo": "src/lib/utils.ts",
+   "importado_por": 214
+  },
+  {
+   "arquivo": "src/integrations/supabase/client.ts",
+   "importado_por": 176
+  },
+  {
+   "arquivo": "src/components/ui/skeleton.tsx",
+   "importado_por": 154
+  },
+  {
+   "arquivo": "src/services/loggingService.ts",
+   "importado_por": 102
+  },
+  {
+   "arquivo": "src/hooks/useAuth.tsx",
+   "importado_por": 97
+  },
+  {
+   "arquivo": "src/components/ui/input.tsx",
+   "importado_por": 91
+  },
+  {
+   "arquivo": "src/components/ui/select.tsx",
+   "importado_por": 90
+  },
+  {
+   "arquivo": "src/components/ui/progress.tsx",
+   "importado_por": 86
+  },
+  {
+   "arquivo": "src/components/ui/label.tsx",
+   "importado_por": 78
+  },
+  {
+   "arquivo": "src/components/ui/dialog.tsx",
+   "importado_por": 75
+  },
+  {
+   "arquivo": "src/components/navigation/index.ts",
+   "importado_por": 58
+  },
+  {
+   "arquivo": "src/components/ui/textarea.tsx",
+   "importado_por": 53
+  },
+  {
+   "arquivo": "src/components/ui/avatar.tsx",
+   "importado_por": 44
+  },
+  {
+   "arquivo": "src/components/SEOHead.tsx",
+   "importado_por": 41
+  },
+  {
+   "arquivo": "src/components/ui/switch.tsx",
+   "importado_por": 39
+  },
+  {
+   "arquivo": "src/components/ui/tabs.tsx",
+   "importado_por": 37
+  },
+  {
+   "arquivo": "src/hooks/useProfiles.ts",
+   "importado_por": 35
+  },
+  {
+   "arquivo": "src/components/SectionErrorBoundary.tsx",
+   "importado_por": 34
+  },
+  {
+   "arquivo": "src/components/ui/scroll-area.tsx",
+   "importado_por": 32
+  },
+  {
+   "arquivo": "src/hooks/useHaptics.ts",
+   "importado_por": 30
+  },
+  {
+   "arquivo": "src/services/predictionMarketService.ts",
+   "importado_por": 30
+  },
+  {
+   "arquivo": "src/hooks/useRBAC.ts",
+   "importado_por": 28
+  },
+  {
+   "arquivo": "src/hooks/useDepartments.ts",
+   "importado_por": 27
+  },
+  {
+   "arquivo": "src/hooks/use-mobile.tsx",
+   "importado_por": 25
+  },
+  {
+   "arquivo": "supabase/functions/_shared/security.ts",
+   "importado_por": 24
+  },
+  {
+   "arquivo": "src/hooks/use-toast.ts",
+   "importado_por": 22
+  },
+  {
+   "arquivo": "src/lib/bossHistory.ts",
+   "importado_por": 22
+  },
+  {
+   "arquivo": "src/components/ui/table.tsx",
+   "importado_por": 21
+  },
+  {
+   "arquivo": "src/hooks/useSEO.ts",
+   "importado_por": 19
+  },
+  {
+   "arquivo": "src/services/profilesService.ts",
+   "importado_por": 19
+  },
+  {
+   "arquivo": "src/components/ui/tooltip.tsx",
+   "importado_por": 18
+  },
+  {
+   "arquivo": "src/components/ui/alert.tsx",
+   "importado_por": 17
+  },
+  {
+   "arquivo": "src/hooks/useSoundEffects.tsx",
+   "importado_por": 17
+  },
+  {
+   "arquivo": "src/lib/requestId.ts",
+   "importado_por": 17
+  },
+  {
+   "arquivo": "src/components/ui/empty-state.tsx",
+   "importado_por": 15
+  },
+  {
+   "arquivo": "src/components/mobile/index.ts",
+   "importado_por": 14
+  },
+  {
+   "arquivo": "src/integrations/supabase/types.ts",
+   "importado_por": 14
+  }
+ ],
+ "ciclos": {
+  "total": 2,
+  "maiores": [
+   {
+    "tamanho": 3,
+    "arquivos": [
+     "src/components/admin/telemetry/TelemetryStatsCards.tsx",
+     "src/components/admin/telemetry/TopOffendersCard.tsx",
+     "src/pages/AdminTelemetria.tsx"
+    ]
+   },
+   {
+    "tamanho": 2,
+    "arquivos": [
+     "src/components/quiz/MillionaireHelpers.tsx",
+     "src/components/quiz/MillionaireQuiz.tsx"
+    ]
+   }
+  ]
+ },
+ "orfaos": [
+  "public/push-sw.js",
+  "public/sw-push.js",
+  "public/sw.js",
+  "src/components/MobilePullToRefresh.tsx",
+  "src/components/PageTransition.tsx",
+  "src/components/admin/metrics/AdminMetricsCharts.tsx",
+  "src/components/admin/permissions/PermissionModuleAccordion.tsx",
+  "src/components/admin/telemetry/TelemetryTable.tsx",
+  "src/components/analytics/AnalyticsBottomSection.tsx",
+  "src/components/auth/PasskeyLogin.tsx",
+  "src/components/checkins/CheckinDetailDialog.tsx",
+  "src/components/copilot/CopilotAlertCard.tsx",
+  "src/components/dashboard/DashboardTabs.tsx",
+  "src/components/security/index.ts",
+  "src/components/shop-admin/index.ts",
+  "src/components/social/ActivityItem.tsx",
+  "src/components/social/FeedFilters.tsx",
+  "src/components/social/FeedStatsBar.tsx",
+  "src/components/ui/aspect-ratio.tsx",
+  "src/components/ui/carousel.tsx",
+  "src/components/ui/context-menu.tsx",
+  "src/components/ui/hover-card.tsx",
+  "src/components/ui/menubar.tsx",
+  "src/components/ui/micro-interactions.tsx",
+  "src/components/ui/navigation-menu.tsx",
+  "src/components/ui/pagination.tsx",
+  "src/components/ui/responsive-dialog.tsx",
+  "src/components/ui/sidebar.tsx",
+  "src/components/ui/spinner.tsx",
+  "src/components/ui/use-toast.ts",
+  "src/components/weekly/WeeklyMetricCards.tsx",
+  "src/constants/texts.ts",
+  "src/hooks/useClimateSurveys.ts",
+  "src/hooks/useLeaderboard.ts",
+  "src/hooks/usePDI.ts",
+  "src/hooks/useUnsavedChanges.ts",
+  "src/lib/auctionEngine.ts",
+  "src/lib/bossAlerts.ts",
+  "src/lib/bossAutoHooks.ts",
+  "src/lib/campaignTeamSplitRevert.ts",
+  "src/lib/cardPackNotifications.ts",
+  "src/lib/exportReports.ts",
+  "src/lib/pushOutbox.ts",
+  "src/lib/warAutoHooks.ts",
+  "src/services/feedback360Service.ts",
+  "src/services/predictiveFeedbackService.ts",
+  "src/services/xpBalancingService.ts",
+  "src/utils/formatters.ts",
+  "src/utils/validators.ts"
+ ],
+ "modulos_mais_acoplados": [
+  {
+   "modulo": "components/ui",
+   "depende_de": 2,
+   "importado_por": 54
+  },
+  {
+   "modulo": "pages",
+   "depende_de": 51,
+   "importado_por": 1
+  },
+  {
+   "modulo": "hooks",
+   "depende_de": 8,
+   "importado_por": 41
+  },
+  {
+   "modulo": "lib",
+   "depende_de": 2,
+   "importado_por": 41
+  },
+  {
+   "modulo": "services",
+   "depende_de": 4,
+   "importado_por": 29
+  },
+  {
+   "modulo": "components",
+   "depende_de": 16,
+   "importado_por": 9
+  },
+  {
+   "modulo": "integrations/supabase",
+   "depende_de": 0,
+   "importado_por": 13
+  },
+  {
+   "modulo": "components/admin",
+   "depende_de": 7,
+   "importado_por": 1
+  },
+  {
+   "modulo": "components/campaigns",
+   "depende_de": 6,
+   "importado_por": 1
+  },
+  {
+   "modulo": "components/navigation",
+   "depende_de": 5,
+   "importado_por": 2
+  },
+  {
+   "modulo": "components/trails",
+   "depende_de": 6,
+   "importado_por": 1
+  },
+  {
+   "modulo": "contexts",
+   "depende_de": 3,
+   "importado_por": 4
+  },
+  {
+   "modulo": "components/auth",
+   "depende_de": 5,
+   "importado_por": 1
+  },
+  {
+   "modulo": "components/lms",
+   "depende_de": 4,
+   "importado_por": 2
+  },
+  {
+   "modulo": "components/manager",
+   "depende_de": 5,
+   "importado_por": 1
+  },
+  {
+   "modulo": "components/mobile",
+   "depende_de": 3,
+   "importado_por": 3
+  },
+  {
+   "modulo": "components/onboarding",
+   "depende_de": 5,
+   "importado_por": 1
+  },
+  {
+   "modulo": "components/prediction",
+   "depende_de": 4,
+   "importado_por": 2
+  },
+  {
+   "modulo": "components/quiz",
+   "depende_de": 5,
+   "importado_por": 1
+  },
+  {
+   "modulo": "components/security",
+   "depende_de": 5,
+   "importado_por": 1
+  }
+ ],
+ "arestas_em": "docs/contexto/codigo/grafo-arestas.json"
+}

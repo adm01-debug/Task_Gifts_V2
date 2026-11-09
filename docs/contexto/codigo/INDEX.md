@@ -1,0 +1,395 @@
+# Contexto do projeto para agentes de IA
+
+GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.
+Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `5ffe6dbff44b165a9beed4d8acccd4abc35b8cd8` (2026-11-08T19:41:23-03:00).
+
+## Como usar (leia antes de planejar ou executar qualquer tarefa)
+1. **Tela/rota/menu** → `rotas.json` (url/vista/menu → arquivo → hooks → tabelas → edges; `rotas_http_backend` para APIs) e `modulos.json` (módulo inteiro + dependências entre módulos).
+2. **Hook/serviço/lógica** → `hooks.json`, `logica.json` (quem usa, o que toca, se tem teste).
+3. **Edge function / serverless** → `edge-functions.json` (verify_jwt, tabelas, env, quem chama, órfãs).
+4. **Banco** → `banco.json` (colunas, RLS, policies, índices, FKs, triggers, cron jobs, buckets, drift migration×types, uso no código) — visão do código; para o banco vivo use o MCP.
+5. **Antes de criar arquivo** → `convencoes.json` (onde ficam as coisas, nomenclatura, alias), `componentes.json` (nomes duplicados, órfãos), `grafo.json` (hubs, ciclos de import) e `grafo-graphify.json` (grafo por AST: comunidades, símbolos mais chamados, comunidade de cada arquivo).
+6. **CI/scripts/deploy/env/integrações/permissões/flags** → `ferramentas.json` e `scripts.json`.
+7. **Antes de abrir PR** → `testes.json` (o que tem e não tem teste, onde os testes ficam), `baseline.json` (alertas, TODOs, hotspots, últimos commits).
+Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua tarefa; não carregue tudo.
+
+## Stack
+- linguagens: TypeScript (1118), SQL (266), Markdown (42), JavaScript (16), JSON (10), Python (5), YAML (5), Shell (3)
+- linguagem_principal: TypeScript
+- framework: React
+- backend_http: n/d
+- bundler: Vite
+- roteador: react-router
+- banco: Supabase
+- testes: vitest, playwright
+- ui: tailwind, radix/shadcn
+- estado: react-query
+- gerenciador_pacotes: bun
+- node: n/d
+- python: n/d
+- deploy: vercel
+- monorepo: n/d
+- pastas_fonte: src
+
+## Números
+| item | qtd |
+|---|---|
+| arquivos_total | 1482 |
+| arquivos_codigo | 1138 |
+| linhas_codigo | 222524 |
+| rotas | 83 |
+| rotas_http_backend | 12 |
+| vistas_por_id | 0 |
+| itens_menu | 62 |
+| modulos | 71 |
+| componentes | 521 |
+| hooks | 156 |
+| edge_functions | 37 |
+| tabelas | 237 |
+| migrations | 266 |
+| cron_jobs | 22 |
+| testes | 152 |
+| workflows | 2 |
+| scripts | 10 |
+| docs_md | 42 |
+
+## Onde ficam as coisas
+- telas: src/pages (81), src/components (1)
+- componentes: src/components (432), src/pages (82), src/contexts (4)
+- hooks: src/hooks (129), src/components (22), src/contexts (4)
+- servicos_logica: src/lib (106), src/services (99), src/integrations (3)
+- testes: co-localizado (*.test) (139), outro (9), tests/ (3)
+- edge_functions: supabase/functions
+- migrations: supabase/migrations
+- scripts: scripts/regras_negocio (3), scripts/ai-context (2), scripts/ci (2)
+- docs: (raiz) (15), .github (1)
+- nomenclatura: {"componentes":"PascalCase (88%)","hooks":"use + PascalCase","servicos":"camelCase (100%)","edge_functions":"kebab-case (100%)","tabelas":"snake_case (91%)"}
+- instruções para agentes no repo: AGENTS.md, CLAUDE.md
+
+## Módulos (menu → domínio)
+| módulo | itens de menu | telas/rotas | arquivos | hooks locais | edges | tabelas |
+|---|---|---|---|---|---|---|
+| components | 0 | 0 | 81 | 217 | 1 | 76 |
+| components/accessibility | 0 | 0 | 5 | 2 | 0 | 0 |
+| components/admin | 0 | 0 | 46 | 149 | 1 | 66 |
+| components/analytics | 0 | 0 | 5 | 0 | 0 | 0 |
+| components/auction | 0 | 0 | 7 | 30 | 0 | 12 |
+| components/auth | 0 | 0 | 7 | 6 | 0 | 5 |
+| components/bi | 0 | 0 | 5 | 2 | 0 | 0 |
+| components/board | 0 | 0 | 6 | 15 | 0 | 3 |
+| components/boss | 0 | 0 | 9 | 29 | 0 | 10 |
+| components/campaigns | 0 | 0 | 11 | 43 | 0 | 21 |
+| components/cards | 0 | 0 | 6 | 13 | 0 | 6 |
+| components/dashboard | 0 | 0 | 7 | 156 | 1 | 54 |
+| components/effects | 0 | 0 | 8 | 1 | 0 | 0 |
+| components/engagement | 0 | 0 | 19 | 13 | 0 | 9 |
+| components/luckywheel | 0 | 0 | 7 | 16 | 0 | 10 |
+| components/manager | 0 | 0 | 10 | 55 | 1 | 35 |
+| components/mobile | 0 | 0 | 15 | 11 | 0 | 0 |
+| components/navigation | 0 | 1 | 7 | 72 | 1 | 27 |
+| components/onboarding | 0 | 0 | 6 | 11 | 0 | 4 |
+| components/prediction | 0 | 0 | 17 | 31 | 0 | 14 |
+| components/quiz | 0 | 0 | 9 | 39 | 0 | 25 |
+| components/rbac | 0 | 0 | 9 | 10 | 0 | 7 |
+| components/security | 0 | 0 | 16 | 14 | 0 | 14 |
+| components/shop-admin | 0 | 0 | 7 | 23 | 0 | 10 |
+| components/sidebar | 0 | 0 | 5 | 20 | 0 | 9 |
+| components/trails | 0 | 0 | 5 | 25 | 0 | 22 |
+| components/ui | 0 | 0 | 67 | 12 | 0 | 0 |
+| hooks | 0 | 0 | 129 | 477 | 1 | 155 |
+| lib | 0 | 0 | 106 | 0 | 0 | 16 |
+| pages | 43 | 82 | 82 | 473 | 2 | 169 |
+| services | 0 | 0 | 96 | 7 | 0 | 162 |
+| stories | 0 | 0 | 29 | 5 | 0 | 0 |
+
+## Rotas (url → arquivo)
+- `/` [tela] → src/pages/Index.tsx (protegida)
+- `/*` [tela] → src/pages/NotFound.tsx
+- `/admin` [tela] → src/pages/AdminPanel.tsx (protegida)
+- `/admin/api-keys` [tela] → src/pages/ApiKeysAdmin.tsx (protegida)
+- `/admin/burn-rate` [tela] → src/pages/BurnRate.tsx (protegida)
+- `/admin/error-budget` [tela] → src/pages/ErrorBudget.tsx (protegida)
+- `/admin/executive-report` [tela] → src/pages/ExecutiveMonthlyReport.tsx (protegida)
+- `/admin/incident-metrics` [tela] → src/pages/IncidentMetrics.tsx (protegida)
+- `/admin/permissions` [tela] → src/pages/PermissionsAdmin.tsx (protegida)
+- `/admin/postmortems` [tela] → src/pages/Postmortems.tsx (protegida)
+- `/admin/reliability` [tela] → src/pages/ReliabilitySLO.tsx (protegida)
+- `/admin/runbook/:type` [tela] → src/pages/Runbook.tsx (protegida)
+- `/admin/security-digests` [tela] → src/pages/SecurityDigests.tsx (protegida)
+- `/admin/security-runbook` [tela] → src/pages/SecurityRunbook.tsx (protegida)
+- `/admin/telemetria` [tela] → src/pages/AdminTelemetria.tsx (protegida)
+- `/admin/webhooks` [tela] → src/pages/WebhooksAdmin.tsx (protegida)
+- `/admin/webhooks/:id` [tela] → src/pages/WebhookSubscriptionDetail.tsx (protegida)
+- `/admin/webhooks/executive` [tela] → src/pages/WebhooksExecutive.tsx (protegida)
+- `/admin/webhooks/new` [tela] → src/pages/WebhookSubscriptionNew.tsx (protegida)
+- `/album` [tela] → src/pages/CardAlbumPage.tsx (protegida)
+- `/analytics` [tela] → src/pages/RealTimeAnalytics.tsx (protegida)
+- `/announcements` [tela] → src/pages/Announcements.tsx (protegida)
+- `/audit` [tela] → src/pages/AuditLogs.tsx (protegida)
+- `/auth` [tela] → src/components/navigation/PageTransition.tsx (protegida)
+- `/bi` [tela] → src/pages/BIDashboard.tsx (protegida)
+- `/bingo` [tela] → src/pages/BingoPage.tsx (protegida)
+- `/campanhas` [tela] → src/pages/SalesCampaigns.tsx (protegida)
+- `/campanhas/:id` [tela] → src/pages/SalesCampaignDetail.tsx (protegida)
+- `/campanhas/:id/ranking-equipes` [tela] → src/pages/CampaignTeamRanking.tsx (protegida)
+- `/campanhas/equipes` [tela] → src/pages/CampaignTeamsDashboard.tsx (protegida)
+- `/campanhas/historico` [tela] → src/pages/CampaignHistory.tsx (protegida)
+- `/checkins` [tela] → src/pages/Checkins.tsx (protegida)
+- `/chefao` [tela] → src/pages/BossBattlePage.tsx (protegida)
+- `/conquistas` [tela] → src/pages/Achievements.tsx (protegida)
+- `/duelos` [tela] → src/pages/Duels.tsx (protegida)
+- `/engajamento` [tela] → src/pages/ContinuousEngagement.tsx (protegida)
+- `/engajamento/diagnostico` [tela] → src/pages/ClimateDiagnostics.tsx (protegida)
+- `/engajamento/nr1` [tela] → src/pages/Nr1Risks.tsx (protegida)
+- `/engajamento/opinioes` [tela] → src/pages/OpinionChannel.tsx (protegida)
+- `/estatisticas` [tela] → src/pages/PersonalStats.tsx (protegida)
+- `/eventos/:eventId` [tela] → src/pages/SeasonalEventDetail.tsx (protegida)
+- `/executivo` [tela] → src/pages/ExecutiveDashboard.tsx (protegida)
+- `/feed` [tela] → src/pages/SocialFeed.tsx (protegida)
+- `/feedback` [tela] → src/pages/Feedback.tsx (protegida)
+- `/forgot-password` [tela] → src/pages/ForgotPassword.tsx
+- `/goals` [tela] → src/pages/Goals.tsx (protegida)
+- `/guerra-departamentos` [tela] → src/pages/DepartmentWarPage.tsx (protegida)
+- `/leagues` [tela] → src/pages/Leagues.tsx (protegida)
+- `/leilao` [tela] → src/pages/AuctionsPage.tsx (protegida)
+- `/leilao/admin` [tela] → src/pages/AuctionsAdmin.tsx (protegida)
+- `/loja` [tela] → src/pages/Shop.tsx (protegida)
+- `/loja/admin` [tela] → src/pages/ShopAdmin.tsx (protegida)
+- `/manager` [tela] → src/pages/ManagerDashboard.tsx (protegida)
+- `/memoria` [tela] → src/pages/MemoryGamePage.tsx (protegida)
+- `/memoria/admin` [tela] → src/pages/MemoryDeckAdminPage.tsx (protegida)
+- `/pergunta-do-dia` [tela] → src/pages/DailyWagerPage.tsx (protegida)
+- `/pergunta-do-dia/admin` [tela] → src/pages/WagerQuestionAdminPage.tsx (protegida)
+- `/planos-acao` [tela] → src/pages/ActionPlans.tsx (protegida)
+- `/ponto` [tela] → src/pages/Attendance.tsx (protegida)
+- `/previsoes` [tela] → src/pages/PredictionMarketsPage.tsx (protegida)
+- `/previsoes/admin` [tela] → src/pages/PredictionAdminPage.tsx (protegida)
+- `/profile` [tela] → src/pages/Profile.tsx (protegida)
+- `/quest-builder` [tela] → src/pages/QuestBuilder.tsx (protegida)
+- `/quiz` [tela] → src/pages/DailyQuiz.tsx (protegida)
+- `/quiz/admin` [tela] → src/pages/QuizAdmin.tsx (protegida)
+- `/raspadinha` [tela] → src/pages/ScratchCardPage.tsx (protegida)
+- `/relampago` [tela] → src/pages/LightningQuizPage.tsx (protegida)
+- `/reports` [tela] → src/pages/EngagementReports.tsx (protegida)
+- `/reset-password` [tela] → src/pages/ResetPassword.tsx
+- `/roleta` [tela] → src/pages/LuckyWheelPage.tsx (protegida)
+- `/roleta/admin` [tela] → src/pages/LuckyWheelAdmin.tsx (protegida)
+- `/security` [tela] → src/pages/RateLimitDashboard.tsx (protegida)
+- `/security-dashboard` [tela] → src/pages/SecurityDashboard.tsx (protegida)
+- `/sequencia` [tela] → src/pages/SequenceGamePage.tsx (protegida)
+- `/sequencia/admin` [tela] → src/pages/SequenceProcedureAdminPage.tsx (protegida)
+- `/surveys` [tela] → src/pages/Surveys.tsx (protegida)
+- `/tabuleiro` [tela] → src/pages/BoardTrailPage.tsx (protegida)
+- `/tabuleiro/admin` [tela] → src/pages/BoardTrailAdminPage.tsx (protegida)
+- `/torneios` [tela] → src/pages/TournamentsPage.tsx (protegida)
+- `/trails` [tela] → src/pages/LearningTrails.tsx (protegida)
+- `/trails/:id` [tela] → src/pages/TrailDetail.tsx (protegida)
+- `/verificar` [tela] → src/pages/CertificateVerify.tsx
+- `/verificar/:code` [tela] → src/pages/CertificateVerify.tsx
+
+## Rotas HTTP de backend
+- `GET /{t}` → scripts/ai-context/cenarios.mjs
+- `GET /a` → scripts/ai-context/cenarios.mjs
+- `GET /a` → scripts/ai-context/cenarios.mjs
+- `POST /b` → scripts/ai-context/cenarios.mjs
+- `POST /b` → scripts/ai-context/cenarios.mjs
+- `DELETE /c` → scripts/ai-context/cenarios.mjs
+- `PUT /d` → scripts/ai-context/cenarios.mjs
+- `GET /items` → scripts/ai-context/gerar.unit.mjs
+- `GET /u` → scripts/ai-context/cenarios.mjs
+- `GET /users` → scripts/ai-context/cenarios.mjs
+- `POST /users/:id` → scripts/ai-context/cenarios.mjs
+- `GET /x` → scripts/ai-context/cenarios.mjs
+
+## Vistas por id (menu/ViewRouter → arquivo)
+- (nenhum)
+
+## Edge functions
+- `admin-alerts` — tabelas: attendance_records, audit_logs, profiles, shop_purchases, user_certifications; chamada por 0 arquivo(s) do front — **ÓRFÃ**
+- `ai-coach` — tabelas: -; chamada por 1 arquivo(s) do front
+- `ai-course-builder` — tabelas: ai_course_jobs, learning_trails, quiz_options, quiz_questions, trail_modules; chamada por 0 arquivo(s) do front — **ÓRFÃ**
+- `birthday-celebrations` — tabelas: celebrations, notifications, profiles; chamada por 0 arquivo(s) do front — **ÓRFÃ**
+- `bitrix24-api` — tabelas: bitrix24_tokens, bitrix24_webhook_logs; chamada por 0 arquivo(s) do front — **ÓRFÃ**
+- `bitrix24-oauth` — tabelas: bitrix24_tokens; chamada por 0 arquivo(s) do front — **ÓRFÃ**
+- `bitrix24-webhook` — tabelas: bitrix24_sync_mappings, bitrix24_webhook_logs, custom_quests, notifications, quest_assignments, user_roles; chamada por 0 arquivo(s) do front — **ÓRFÃ**
+- `burn-rate-monitor` — tabelas: security_alerts; chamada por 0 arquivo(s) do front — **ÓRFÃ**
+- `checkin-reminders` — tabelas: checkins, notifications; chamada por 0 arquivo(s) do front — **ÓRFÃ**
+- `churn-prediction` — tabelas: attendance_records, audit_logs, kudos, profiles, trail_enrollments, user_combos; chamada por 0 arquivo(s) do front — **ÓRFÃ**
+- `cleanup-old-security-logs` — tabelas: -; chamada por 0 arquivo(s) do front — **ÓRFÃ**
+- `cleanup-rate-limit-logs` — tabelas: audit_logs; chamada por 0 arquivo(s) do front — **ÓRFÃ**
+- `competency-alerts` — tabelas: attendance_streaks, kudos, module_progress, notifications, profiles, quest_assignments, user_achievements; chamada por 0 arquivo(s) do front — **ÓRFÃ**
+- `detect-new-device` — tabelas: profiles, security_alerts; chamada por 0 arquivo(s) do front — **ÓRFÃ**
+- `dispatch-critical-alert` — tabelas: notifications, user_roles; chamada por 0 arquivo(s) do front, por SQL/cron
+- `error-budget-monitor` — tabelas: security_alerts; chamada por 0 arquivo(s) do front — **ÓRFÃ**
+- `external-api` — tabelas: achievements, api_request_logs, departments, external_tasks, positions, profiles, user_achievements, webhook_subscriptions; chamada por 0 arquivo(s) do front — **ÓRFÃ**
+- `external-db-bridge` — tabelas: query_telemetry; chamada por 0 arquivo(s) do front — **ÓRFÃ**
+- `external-webhook` — tabelas: achievements, attendance_records, attendance_settings, external_tasks, profiles, task_penalties, user_achievements, webhook_subscriptions; chamada por 0 arquivo(s) do front — **ÓRFÃ**
+- `generate-quiz-questions` — tabelas: learning_trails, trail_modules; chamada por 0 arquivo(s) do front — **ÓRFÃ**
+- `migrate-helper` (verify_jwt=false) — tabelas: -; chamada por 0 arquivo(s) do front
+- `push-device-revoked` — tabelas: push_notification_logs, push_subscriptions; chamada por 0 arquivo(s) do front — **ÓRFÃ**
+- `push-outbox-dispatcher` — tabelas: push_notification_logs, push_outbox, push_subscriptions; chamada por 0 arquivo(s) do front, por SQL/cron
+- `push-public-key` — tabelas: -; chamada por 0 arquivo(s) do front — **ÓRFÃ**
+- `reward-approval-review` — tabelas: audit_logs, profiles, purchase_approvals, shop_purchases, user_roles; chamada por 0 arquivo(s) do front — **ÓRFÃ**
+- `security-weekly-digest` — tabelas: notifications, security_alerts, user_roles; chamada por 0 arquivo(s) do front, por SQL/cron
+- `send-campaign-push` — tabelas: push_notification_logs, push_subscriptions; chamada por 0 arquivo(s) do front — **ÓRFÃ**
+- `send-email-digest` — tabelas: attendance_streaks, coin_transactions, profiles, user_achievements, user_quests, xp_transactions; chamada por 0 arquivo(s) do front — **ÓRFÃ**
+- `send-email-notifications` — tabelas: audit_logs, celebrations, checkins, feedback_requests, notifications, profiles, pulse_surveys; chamada por 0 arquivo(s) do front — **ÓRFÃ**
+- `send-rate-limit-alert` — tabelas: blocked_ips, notifications, rate_limit_logs, user_roles; chamada por 0 arquivo(s) do front — **ÓRFÃ**
+- `survey-reminders` — tabelas: notifications, profiles, pulse_responses, pulse_surveys; chamada por 0 arquivo(s) do front — **ÓRFÃ**
+- `trail-recommendations` — tabelas: learning_trails, module_progress, profiles, quest_assignments, team_members, trail_enrollments; chamada por 1 arquivo(s) do front
+- `verify-geo` — tabelas: geo_access_logs, geo_allowed_countries, geo_settings; chamada por 0 arquivo(s) do front — **ÓRFÃ**
+- `verify-ip` — tabelas: ip_access_logs, ip_whitelist; chamada por 0 arquivo(s) do front — **ÓRFÃ**
+- `webhook-dispatcher` — tabelas: webhook_delivery_logs, webhook_subscriptions; chamada por 0 arquivo(s) do front
+- `webhook-health-monitor` — tabelas: -; chamada por 0 arquivo(s) do front, por SQL/cron
+- `weekly-league-processing` — tabelas: league_history, league_members, leagues, notifications; chamada por 0 arquivo(s) do front — **ÓRFÃ**
+
+## Cron jobs (pg_cron / vercel)
+- `api-key-rotation-overdue-weekly` 0 9 * * 1 (20260728210216_01d79f58-57ea-48d9-a859-ef3ddf891190.sql)
+- `auto-lock-prediction-markets` */5 * * * * (20260728114514_7f6f6bd8-8c0c-4762-9f48-2e4474ed0b2b.sql)
+- `auto-promote-expired-webhook-secrets` 0 3 * * * (20260712200006_664f7c03-75c3-4a12-9b8d-1d6da5c917d2.sql)
+- `board-auto-unblock-daily` 0 4 * * * (20260728175346_9062e6fd-34a2-4490-82cd-d4877f2beafd.sql)
+- `check-prediction-markets-health` */15 * * * * (20260728115201_58fcd8a8-c7ad-4a49-863c-74e07cdbc8e5.sql)
+- `close-expired-auctions` */5 * * * * (20260728103701_298e9bca-0b39-4dba-aef0-058a9b24a556.sql)
+- `close-expired-sales-campaigns` 15 0 * * * (20260723150852_6048cf0f-c3a4-48e7-9f40-e2b293b020b9.sql)
+- `daily-cleanup-idempotency` 25 3 * * * (20260712115320_24a903a0-f49b-4374-b87b-b0775838c874.sql)
+- `daily-cleanup-security-logs-30d` 20 3 * * * (20260712115320_24a903a0-f49b-4374-b87b-b0775838c874.sql)
+- `daily-cleanup-security-logs-90d` 15 3 * * * (20260712115320_24a903a0-f49b-4374-b87b-b0775838c874.sql)
+- `exec_monthly_report_generation` 0 6 1 * * (20260712222455_cdcbc232-1f35-4c6c-9c2c-0e4bf903e241.sql)
+- `expire-card-trades-daily` 15 3 * * * (20260728121542_4ac8cbd1-0d6d-410d-8734-4fd032804ddc.sql)
+- `lucky-wheel-payout-snapshot` 0 7 * * * (20260727211017_30d9a02a-0c84-4b45-8702-4bab7e71f005.sql)
+- `lucky-wheel-window-alerts` 5 6 * * * (20260727213924_1ac322ab-1677-4094-96a8-c1ad0812647f.sql)
+- `postmortem_overdue_daily_check` 0 9 * * * (20260712222316_d8f7eabc-3e3b-437f-b041-70b9f3b88f9b.sql)
+- `push-outbox-dispatcher` * * * * * → edge push-outbox-dispatcher (20260728112123_ea25bb13-aa3c-4f75-9892-c58e2785e70b.sql)
+- `push-outbox-health-snapshot` */15 * * * * (20260728112815_fd49db87-3ae3-448d-b394-dfe7f248adae.sql)
+- `security-weekly-digest` 0 13 * * 1 → edge security-weekly-digest (20260712212544_f5c57b6a-8da7-4609-9178-803cbf5741f6.sql)
+- `sla_breach_weekly_check` 0 8 * * 1 (20260712222009_147eee74-b689-46b7-b92b-d903d1e4754b.sql)
+- `webhook-health-monitor-every-15min` */15 * * * * (20260712194718_bff07c8c-5744-4682-bba1-33f9ca2a1ecb.sql)
+- `webhook-sla-daily-check` 0 4 * * * (20260712203117_fac39bdd-c966-4e9e-96f4-feee404f2a82.sql)
+- `weekly-cleanup-expired-challenges` 30 3 * * 0 (20260712115320_24a903a0-f49b-4374-b87b-b0775838c874.sql)
+
+## Integrações externas
+- SDKs: Sentry, Supabase, react-query, zod
+- hosts mais citados: ai.gateway.lovable.dev, api.resend.com, fcm.googleapis.com, i.pravatar.cc, taskgifts.app, www.youtube.com, x.supabase.co, a.com, api.pwnedpasswords.com, api.x.com, app.exemplo.com, exemplo.com, ip-api.com, linkedin.com, lovable.dev
+- webhooks recebidos: migrate-helper
+- env de integração (só nomes): BITRIX24_CLIENT_ID, BITRIX24_CLIENT_SECRET, BITRIX24_WEBHOOK_SECRET, CRON_SECRET, INTERNAL_FUNCTION_SECRET, LOVABLE_API_KEY, RESEND_API_KEY, SENTRY_DSN, SENTRY_ENV, SLACK_ALERT_WEBHOOK_URL, UPSTASH_REDIS_REST_TOKEN, UPSTASH_REDIS_REST_URL, VITE_BITRIX_WEBHOOK_URL, VITE_SENTRY_DSN, WEBHOOK_HEALTH_MIN_SAMPLE, WEBHOOK_HEALTH_THRESHOLD
+
+## Permissões / papéis
+- papéis no código: admin (14), alert (9), user (8), manager (6), system (6), button (5), status (5), group (3), assistant (2), grid (2), navigation (2), radio (2), radiogroup (2), Cargos (1), agent (1), banner (1), contentinfo (1), dialog (1), gridcell (1), img (1), link (1), list (1), listitem (1), long (1), menu (1), menuitem (1), presentation (1), region (1), role_assigned (1), separator (1), short (1), sup (1), tab (1)
+- enums de papel: app_role: admin|manager|employee
+- guards: src/components/IpAccessGuard.tsx, src/components/engagement/diagnostics/AnonymityGuardNotice.tsx, src/components/rbac/AccessControl.tsx, src/components/rbac/ProtectedRoute.tsx · rotas protegidas: 78 · públicas: /*, /forgot-password, /reset-password, /verificar, /verificar/:code
+- feature flags: FEATURE_X, nova-tela, novo-inbox
+
+## Alertas (baseline.json → alertas)
+- rotas_sem_arquivo: 0
+- componentes_ambiguos: 0
+- menu_sem_destino: 19 — ex.: Ações Rápidas -> quick-actions, Acompanhe o Progresso -> goal-progress, Bem-vindo ao Dashboard! 🎉 -> welcome
+- edges_orfas: 29 — ex.: admin-alerts, ai-course-builder, birthday-celebrations
+- edges_chamadas_sem_pasta: 0
+- tabelas_sem_rls: 1 — ex.: lucky_wheel_prizes
+- tabelas_usadas_sem_definicao: 4 — ex.: coin_transactions, league_members, user_quests
+- tabelas_com_drift_migration_vs_types: 11 — ex.: achievements, engagement_factors, lucky_wheel_prizes
+- rpcs_sem_definicao: 4 — ex.: add_user_rewards, add_user_xp, get_lucky_wheel_status
+- componentes_orfaos: 24 — ex.: src/components/admin/metrics/AdminMetricsCharts.tsx, src/components/admin/permissions/PermissionModuleAccordion.tsx, src/components/admin/telemetry/TelemetryTable.tsx
+- componentes_com_nome_duplicado: 8 — ex.: CopilotAlert, LevelUpCelebration, PageTransition
+- scripts_orfaos: 0
+- env_usadas_nao_declaradas: 7 — ex.: DEV, MODE, NODE_ENV
+- ciclos_de_import: 2
+- possiveis_segredos_no_codigo: 1 — ex.: scripts/ai-context/cenarios.mjs:102
+
+## Grafo de código (graphify)
+- 9665 nós · 26896 arestas · 606 comunidades · grafo do commit `5ffe6dbf`
+- comunidades maiores: App.tsx (228), card.tsx (189), badge.tsx (164), @tanstack/react-query (126), react (124), cn (109), client.ts (103), snapshot.py (102), skeleton.tsx (102), profilesService.ts (102), select.tsx (100), Modals.stories.tsx (89)
+- símbolos mais chamados: cn() (src/lib/utils.ts), useAuth() (src/hooks/useAuth.tsx), useIsMobile() (src/hooks/use-mobile.tsx), q() (scripts/supabase_snapshot/snapshot.py), useDepartments() (src/hooks/useDepartments.ts), useToast() (src/hooks/use-toast.ts), useRBAC() (src/hooks/useRBAC.ts), useProfiles() (src/hooks/useProfiles.ts), useSEO() (src/hooks/useSEO.ts), useSoundEffects() (src/hooks/useSoundEffects.tsx), .collect() (scripts/supabase_snapshot/test_snapshot.py), excluded_sql() (scripts/supabase_snapshot/snapshot.py)
+- consulta local: `graphify query "<pergunta>"`, `graphify path "<A>" "<B>"`, `graphify explain "<X>"`
+
+## Hotspots (arquivos mais alterados, 90 dias)
+- package.json (10)
+- bun.lock (8)
+- .github/workflows/ci.yml (5)
+- RELATORIO_CI.md (4)
+- package-lock.json (4)
+- AGENTS.md (3)
+- PENDENCIAS.md (3)
+- ESTADO_ATUAL.md (2)
+- docs/agentes/mapa-repo.md (2)
+- docs/estado/README.md (2)
+- supabase/config.toml (2)
+- supabase/functions/migrate-helper/index.ts (2)
+- vercel.json (2)
+- vitest.config.ts (2)
+- .claude/homunculus/instincts/inherited/task-gifts-v2-instincts.yaml (1)
+
+## Workflows
+- `ci.yml` — CI (pull_request, push)
+- `contexto.yml` — Contexto para agentes de IA (10 min) (push, schedule, workflow_dispatch; cron 3-59/10 * * * *)
+
+## Scripts npm
+- `dev`: `vite`
+- `build`: `vite build`
+- `build:dev`: `vite build --mode development`
+- `lint`: `eslint .`
+- `typecheck`: `tsc --noEmit`
+- `test`: `vitest run`
+- `test:ci`: `vitest run --coverage --reporter=verbose`
+- `preview`: `vite preview`
+- `prepare`: `husky`
+- `graph:setup`: `bash scripts/graphify/setup.sh`
+- `postinstall`: `node ./scripts/patch-recharts.cjs`
+- `contexto:codigo`: `node scripts/ai-context/gerar.mjs --out docs/contexto/codigo`
+- `contexto:regras`: `python3 scripts/regras_negocio/generate.py --repo . --out docs/contexto/regras --profile regras --schema-snapshot docs/contexto/supabase --index-path docs/contexto/00-INDEX.md --no-pointer`
+- `contexto:test`: `node --test scripts/ai-context/gerar.unit.mjs scripts/ci/contexto-indice.unit.mjs scripts/ci/contexto-publicacao.unit.mjs scripts/ci/regras-negocio.unit.mjs scripts/ci/supabase-snapshot.unit.mjs`
+
+## Documentos (raiz e docs/)
+- `.github/PULL_REQUEST_TEMPLATE.md` (33 linhas)
+- `AGENTS.md` — AGENTS.md — Task Gifts V2 (146 linhas)
+- `AUDIT_INVENTORY_CHECKLIST.md` — ✅ Checklist de Inventário Auditável (24 linhas)
+- `CLAUDE.md` (2 linhas)
+- `DESIGN_SYSTEM_REPORT.md` — 📊 Task Gifts - Relatório Completo do Design System (360 linhas)
+- `ENTERPRISE_AUDIT_REPORT.md` — 🏆 Relatório de Auditoria de Software Enterprise (111 linhas)
+- `ESTADO_ATUAL.md` — Estado Atual do Sistema — TaskGifts v2 (494 linhas)
+- `GAMIFICATION_AUDIT_REPORT.md` — 🎮 Auditoria de Gamificação - Status de Implementação (44 linhas)
+- `INVENTARIO_FUNCIONALIDADES.md` — 📋 INVENTÁRIO COMPLETO DE FUNCIONALIDADES E FERRAMENTAS (1065 linhas)
+- `PADROES_LAYOUT_UX.md` — 📐 PADRÕES DE LAYOUT/UX - TASK GIFTS (1584 linhas)
+- `PENDENCIAS.md` — PENDÊNCIAS (37 linhas)
+- `README.md` — Task Gifts V2 — Plataforma de Gamificação Corporativa (85 linhas)
+- `RELATORIO_CI.md` — RELATÓRIO CI — Task_Gifts_V2 (79 linhas)
+- `SYSTEM_INVENTORY_AUDIT.md` — 📊 Relatório de Auditoria Enterprise & Inventário Minucioso do Sistema (81 linhas)
+- `SYSTEM_RELIABILITY_AUDIT.md` — 🛡️ Relatório de Auditoria de Confiabilidade e Robustez (Versão 10/10) (49 linhas)
+- `audit_report.md` — 📊 Relatório de Auditoria Enterprise & Inventário Minucioso do Sistema (81 linhas)
+- subpastas de docs/: docs/estado (11), docs/agentes (7), docs/contexto (2)
+
+
+## Últimos commits
+- 2026-11-08 `5ffe6db` feat(contexto): sistema autonomo de contexto para agentes de IA (#34)
+- 2026-11-08 `6d497c7` fix(supabase): corrige project_id do config.toml para o projeto em uso
+- 2026-11-08 `522ab99` ci(guard): adiciona step GA02 de integridade das instruções de agente no CI
+- 2026-11-08 `3860817` docs(agentes): replica o padrao de AGENTS.md/CLAUDE.md do Zapp Web V2 (#31)
+- 2026-10-30 `97ee4cd` feat(onda2): CORS allowlist, CSP header, coverage, audit CI, FKs, README (#30)
+- 2026-10-30 `842cd96` docs(ci): RELATORIO_CI.md — adiciona PRs #28/#29 e análise de segurança
+- 2026-10-30 `f599b1c` chore(deps): bump framer-motion, lucide-react, react-resizable-panels, storybook (#29)
+- 2026-10-30 `50f1d15` perf(test): pool vmThreads no vitest — testes 48% mais rápidos (#28)
+- 2026-10-29 `7598fe3` docs(ci): PENDENCIAS.md — todas as pendências resolvidas ou documentadas
+- 2026-10-29 `afb0724` docs(ci): RELATORIO_CI.md — estado final com todos os PRs mergeados
+- 2026-10-29 `d8f78ee` build(deps): bump grupo de 58 dependências minor/patch (#24)
+- 2026-10-29 `e469532` build(deps): bump framer-motion de 13.4.3 para 14.6.0 (#26)
+- 2026-10-29 `21eeea8` build(deps-dev): bump vite-plugin-pwa de 1.3.0 para 2.0.0 (#25)
+- 2026-10-29 `27fcb23` build(deps): bump oven-sh/setup-bun de v1 para v2 (#23)
+- 2026-10-29 `6fc8009` build(deps): bump actions/cache de v4 para v6 (#22)
+
+## Arquivos deste diretório
+- `docs/contexto/codigo/rotas.json`
+- `docs/contexto/codigo/modulos.json`
+- `docs/contexto/codigo/componentes.json`
+- `docs/contexto/codigo/hooks.json`
+- `docs/contexto/codigo/edge-functions.json`
+- `docs/contexto/codigo/banco.json`
+- `docs/contexto/codigo/ferramentas.json`
+- `docs/contexto/codigo/scripts.json`
+- `docs/contexto/codigo/testes.json`
+- `docs/contexto/codigo/logica.json`
+- `docs/contexto/codigo/grafo.json`
+- `docs/contexto/codigo/grafo-arestas.json`
+- `docs/contexto/codigo/convencoes.json`
+- `docs/contexto/codigo/grafo-graphify.json`
+- `docs/contexto/codigo/baseline.json`
+- `docs/contexto/codigo/manifest.json` (commit, data, hashes, erros — único arquivo com data/hora)

@@ -1,0 +1,1931 @@
+{
+ "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
+ "format_version": 2,
+ "frameworks": [
+  "vitest",
+  "playwright"
+ ],
+ "total": 152,
+ "por_tipo": {
+  "e2e": 2,
+  "pytest": 2,
+  "unit": 148
+ },
+ "onde_ficam": [
+  {
+   "padrao": "co-localizado (*.test)",
+   "arquivos": 139
+  },
+  {
+   "padrao": "outro",
+   "arquivos": 9
+  },
+  {
+   "padrao": "tests/",
+   "arquivos": 3
+  },
+  {
+   "padrao": "co-localizado (__tests__)",
+   "arquivos": 1
+  }
+ ],
+ "arquivos": [
+  {
+   "arquivo": "scripts/ai-context/gerar.unit.mjs",
+   "tipo": "unit",
+   "linhas": 361,
+   "testa": [],
+   "casos": 18
+  },
+  {
+   "arquivo": "scripts/ci/ai-context-generator.unit.mjs",
+   "tipo": "unit",
+   "linhas": 3,
+   "testa": [],
+   "casos": 0
+  },
+  {
+   "arquivo": "scripts/ci/contexto-indice.unit.mjs",
+   "tipo": "unit",
+   "linhas": 135,
+   "testa": [],
+   "casos": 18
+  },
+  {
+   "arquivo": "scripts/ci/contexto-publicacao.unit.mjs",
+   "tipo": "unit",
+   "linhas": 421,
+   "testa": [],
+   "casos": 16
+  },
+  {
+   "arquivo": "scripts/ci/regras-negocio.unit.mjs",
+   "tipo": "unit",
+   "linhas": 288,
+   "testa": [],
+   "casos": 5
+  },
+  {
+   "arquivo": "scripts/ci/supabase-snapshot.unit.mjs",
+   "tipo": "unit",
+   "linhas": 19,
+   "testa": [],
+   "casos": 1
+  },
+  {
+   "arquivo": "scripts/regras_negocio/test_generate.py",
+   "tipo": "pytest",
+   "linhas": 164,
+   "testa": [],
+   "casos": 0
+  },
+  {
+   "arquivo": "scripts/supabase_snapshot/test_snapshot.py",
+   "tipo": "pytest",
+   "linhas": 878,
+   "testa": [],
+   "casos": 0
+  },
+  {
+   "arquivo": "src/components/shop/__tests__/ProductGridLoading.test.tsx",
+   "tipo": "unit",
+   "linhas": 140,
+   "testa": [
+    "src/components/accessibility/index.ts",
+    "src/hooks/useAuth.tsx",
+    "src/hooks/useProfiles.ts",
+    "src/hooks/useShop.ts",
+    "src/pages/Shop.tsx"
+   ],
+   "casos": 3
+  },
+  {
+   "arquivo": "src/test/auction.simulation.test.ts",
+   "tipo": "unit",
+   "linhas": 155,
+   "testa": [
+    "src/lib/auctionEngine.ts"
+   ],
+   "casos": 9
+  },
+  {
+   "arquivo": "src/test/auctionAdmin.simulation.test.ts",
+   "tipo": "unit",
+   "linhas": 183,
+   "testa": [
+    "src/lib/auctionAdmin.ts"
+   ],
+   "casos": 12
+  },
+  {
+   "arquivo": "src/test/auctionDelivery.simulation.test.ts",
+   "tipo": "unit",
+   "linhas": 132,
+   "testa": [
+    "src/lib/auctionAdmin.ts"
+   ],
+   "casos": 7
+  },
+  {
+   "arquivo": "src/test/auctionNotifications.simulation.test.ts",
+   "tipo": "unit",
+   "linhas": 119,
+   "testa": [
+    "src/lib/auctionAdmin.ts"
+   ],
+   "casos": 4
+  },
+  {
+   "arquivo": "src/test/bingo.simulation.test.ts",
+   "tipo": "unit",
+   "linhas": 165,
+   "testa": [
+    "src/lib/bingoEngine.ts"
+   ],
+   "casos": 9
+  },
+  {
+   "arquivo": "src/test/bingoRpc.simulation.test.ts",
+   "tipo": "unit",
+   "linhas": 500,
+   "testa": [
+    "src/services/bingoService.ts"
+   ],
+   "casos": 16
+  },
+  {
+   "arquivo": "src/test/boardChallenge.simulation.test.ts",
+   "tipo": "unit",
+   "linhas": 108,
+   "testa": [
+    "src/lib/boardChallenge.ts",
+    "src/lib/boardTrail.ts"
+   ],
+   "casos": 9
+  },
+  {
+   "arquivo": "src/test/boardStats.simulation.test.ts",
+   "tipo": "unit",
+   "linhas": 161,
+   "testa": [
+    "src/lib/boardStats.ts"
+   ],
+   "casos": 12
+  },
+  {
+   "arquivo": "src/test/boardStatsExport.simulation.test.ts",
+   "tipo": "unit",
+   "linhas": 105,
+   "testa": [
+    "src/lib/boardStats.ts",
+    "src/lib/boardStatsExport.ts"
+   ],
+   "casos": 6
+  },
+  {
+   "arquivo": "src/test/boardStatsPdf.simulation.test.ts",
+   "tipo": "unit",
+   "linhas": 68,
+   "testa": [
+    "src/lib/boardStats.ts",
+    "src/lib/boardStatsPdf.ts"
+   ],
+   "casos": 3
+  },
+  {
+   "arquivo": "src/test/boardTrail.simulation.test.ts",
+   "tipo": "unit",
+   "linhas": 124,
+   "testa": [
+    "src/lib/boardTrail.ts"
+   ],
+   "casos": 9
+  },
+  {
+   "arquivo": "src/test/boardTrailAuthoring.test.ts",
+   "tipo": "unit",
+   "linhas": 184,
+   "testa": [
+    "src/lib/boardTrailAuthoring.ts"
+   ],
+   "casos": 19
+  },
+  {
+   "arquivo": "src/test/bossAlerts.simulation.test.ts",
+   "tipo": "unit",
+   "linhas": 106,
+   "testa": [
+    "src/lib/bossAlerts.ts"
+   ],
+   "casos": 9
+  },
+  {
+   "arquivo": "src/test/bossAutoHooks.simulation.test.ts",
+   "tipo": "unit",
+   "linhas": 175,
+   "testa": [
+    "src/lib/bossAutoHooks.ts"
+   ],
+   "casos": 12
+  },
+  {
+   "arquivo": "src/test/bossBattle.simulation.test.ts",
+   "tipo": "unit",
+   "linhas": 185,
+   "testa": [
+    "src/lib/bossBattle.ts"
+   ],
+   "casos": 12
+  },
+  {
+   "arquivo": "src/test/bossBattlePlanner.simulation.test.ts",
+   "tipo": "unit",
+   "linhas": 253,
+   "testa": [
+    "src/lib/bossBattle.ts",
+    "src/lib/bossBattlePlanner.ts"
+   ],
+   "casos": 14
+  },
+  {
+   "arquivo": "src/test/bossDepartmentComparison.simulation.test.ts",
+   "tipo": "unit",
+   "linhas": 125,
+   "testa": [
+    "src/lib/bossDepartmentComparison.ts",
+    "src/lib/bossHistory.ts"
+   ],
+   "casos": 6
+  },
+  {
+   "arquivo": "src/test/bossDepartmentComparisonExport.simulation.test.ts",
+   "tipo": "unit",
+   "linhas": 130,
+   "testa": [
+    "src/lib/bossDepartmentComparison.ts",
+    "src/lib/bossDepartmentComparisonExport.ts",
+    "src/lib/bossHistory.ts"
+   ],
+   "casos": 5
+  },
+  {
+   "arquivo": "src/test/bossHistory.simulation.test.ts",
+   "tipo": "unit",
+   "linhas": 181,
+   "testa": [
+    "src/lib/bossHistory.ts"
+   ],
+   "casos": 10
+  },
+  {
+   "arquivo": "src/test/bossHistoryExport.simulation.test.ts",
+   "tipo": "unit",
+   "linhas": 97,
+   "testa": [
+    "src/lib/bossHistory.ts",
+    "src/lib/bossHistoryExport.ts"
+   ],
+   "casos": 5
+  },
+  {
+   "arquivo": "src/test/bossHistoryTrend.simulation.test.ts",
+   "tipo": "unit",
+   "linhas": 91,
+   "testa": [
+    "src/lib/bossHistory.ts",
+    "src/lib/bossHistoryTrend.ts"
+   ],
+   "casos": 4
+  },
+  {
+   "arquivo": "src/test/bossLeaderboard.simulation.test.ts",
+   "tipo": "unit",
+   "linhas": 187,
+   "testa": [
+    "src/lib/bossLeaderboard.ts"
+   ],
+   "casos": 14
+  },
+  {
+   "arquivo": "src/test/bossReport.edgecases.test.ts",
+   "tipo": "unit",
+   "linhas": 270,
+   "testa": [
+    "src/lib/bossDepartmentComparison.ts",
+    "src/lib/bossHistory.ts",
+    "src/lib/bossReport.ts"
+   ],
+   "casos": 20
+  },
+  {
+   "arquivo": "src/test/bossReport.simulation.test.ts",
+   "tipo": "unit",
+   "linhas": 122,
+   "testa": [
+    "src/lib/bossHistory.ts",
+    "src/lib/bossReport.ts"
+   ],
+   "casos": 6
+  },
+  {
+   "arquivo": "src/test/bossWinRateGoals.simulation.test.ts",
+   "tipo": "unit",
+   "linhas": 125,
+   "testa": [
+    "src/lib/bossHistory.ts",
+    "src/lib/bossWinRateGoals.ts"
+   ],
+   "casos": 5
+  },
+  {
+   "arquivo": "src/test/campaignImport.simulation.test.ts",
+   "tipo": "unit",
+   "linhas": 336,
+   "testa": [
+    "src/lib/campaignImport.ts"
+   ],
+   "casos": 25
+  },
+  {
+   "arquivo": "src/test/campaignTeamHealth.simulation.test.ts",
+   "tipo": "unit",
+   "linhas": 182,
+   "testa": [
+    "src/lib/campaignTeamHealth.ts"
+   ],
+   "casos": 13
+  },
+  {
+   "arquivo": "src/test/campaignTeamMetrics.test.ts",
+   "tipo": "unit",
+   "linhas": 122,
+   "testa": [
+    "src/lib/campaignTeamMetrics.ts"
+   ],
+   "casos": 8
+  },
+  {
+   "arquivo": "src/test/campaignTeamSplit.simulation.test.ts",
+   "tipo": "unit",
+   "linhas": 508,
+   "testa": [
+    "src/lib/campaignTeamSplit.ts"
+   ],
+   "casos": 22
+  },
+  {
+   "arquivo": "src/test/campaignTeamSplitRevert.simulation.test.ts",
+   "tipo": "unit",
+   "linhas": 231,
+   "testa": [
+    "src/lib/campaignTeamSplitRevert.ts"
+   ],
+   "casos": 8
+  },
+  {
+   "arquivo": "src/test/cardPackNotifications.simulation.test.ts",
+   "tipo": "unit",
+   "linhas": 68,
+   "testa": [
+    "src/lib/cardPackNotifications.ts",
+    "src/lib/cardPackTriggers.ts"
+   ],
+   "casos": 6
+  },
+  {
+   "arquivo": "src/test/cardPackTriggers.simulation.test.ts",
+   "tipo": "unit",
+   "linhas": 183,
+   "testa": [
+    "src/lib/cardPackTriggers.ts"
+   ],
+   "casos": 16
+  },
+  {
+   "arquivo": "src/test/cardSetRewards.simulation.test.ts",
+   "tipo": "unit",
+   "linhas": 267,
+   "testa": [
+    "src/lib/cardSetRewards.ts",
+    "src/lib/tradingCards.ts"
+   ],
+   "casos": 17
+  },
+  {
+   "arquivo": "src/test/certificates.simulation.test.ts",
+   "tipo": "unit",
+   "linhas": 63,
+   "testa": [
+    "src/lib/certificatePdf.ts"
+   ],
+   "casos": 5
+  },
+  {
+   "arquivo": "src/test/climateBenchmark.simulation.test.ts",
+   "tipo": "unit",
+   "linhas": 208,
+   "testa": [
+    "src/lib/climateBenchmark.ts"
+   ],
+   "casos": 12
+  },
+  {
+   "arquivo": "src/test/climateBenchmarkSegments.simulation.test.ts",
+   "tipo": "unit",
+   "linhas": 163,
+   "testa": [
+    "src/lib/climateBenchmark.ts"
+   ],
+   "casos": 12
+  },
+  {
+   "arquivo": "src/test/continuousEngagement.simulation.test.ts",
+   "tipo": "unit",
+   "linhas": 242,
+   "testa": [
+    "src/services/continuousEngagementService.ts"
+   ],
+   "casos": 15
+  },
+  {
+   "arquivo": "src/test/dailyWager.test.ts",
+   "tipo": "unit",
+   "linhas": 212,
+   "testa": [
+    "src/lib/dailyWager.ts"
+   ],
+   "casos": 16
+  },
+  {
+   "arquivo": "src/test/departmentWar.simulation.test.ts",
+   "tipo": "unit",
+   "linhas": 304,
+   "testa": [
+    "src/lib/departmentWar.ts"
+   ],
+   "casos": 15
+  },
+  {
+   "arquivo": "src/test/departmentWarConfig.simulation.test.ts",
+   "tipo": "unit",
+   "linhas": 375,
+   "testa": [
+    "src/lib/departmentWarConfig.ts"
+   ],
+   "casos": 17
+  },
+  {
+   "arquivo": "src/test/deviceLabel.simulation.test.ts",
+   "tipo": "unit",
+   "linhas": 183,
+   "testa": [
+    "src/lib/deviceLabel.ts"
+   ],
+   "casos": 14
+  },
+  {
+   "arquivo": "src/test/edgeErrors.simulation.test.ts",
+   "tipo": "unit",
+   "linhas": 169,
+   "testa": [
+    "src/lib/edgeErrors.ts"
+   ],
+   "casos": 12
+  },
+  {
+   "arquivo": "src/test/engagementDiagnostics.simulation.test.ts",
+   "tipo": "unit",
+   "linhas": 354,
+   "testa": [
+    "src/services/climateSurveyService.ts",
+    "src/services/engagementDiagnosticsService.ts"
+   ],
+   "casos": 24
+  },
+  {
+   "arquivo": "src/test/engagementInsights.simulation.test.ts",
+   "tipo": "unit",
+   "linhas": 284,
+   "testa": [
+    "src/lib/climateBenchmark.ts",
+    "src/lib/engagementInsights.ts"
+   ],
+   "casos": 13
+  },
+  {
+   "arquivo": "src/test/external-db-bridge.test.ts",
+   "tipo": "unit",
+   "linhas": 1100,
+   "testa": [],
+   "casos": 165
+  },
+  {
+   "arquivo": "src/test/goalBetCountdown.test.ts",
+   "tipo": "unit",
+   "linhas": 77,
+   "testa": [
+    "src/lib/goalBetCountdown.ts",
+    "src/services/predictionMarketService.ts"
+   ],
+   "casos": 6
+  },
+  {
+   "arquivo": "src/test/goalBetExposure.test.ts",
+   "tipo": "unit",
+   "linhas": 129,
+   "testa": [
+    "src/lib/goalBetExposure.ts",
+    "src/services/predictionMarketService.ts"
+   ],
+   "casos": 8
+  },
+  {
+   "arquivo": "src/test/goalBetFilter.test.ts",
+   "tipo": "unit",
+   "linhas": 111,
+   "testa": [
+    "src/lib/goalBetFilter.ts",
+    "src/services/predictionMarketService.ts"
+   ],
+   "casos": 9
+  },
+  {
+   "arquivo": "src/test/goalBetHistory.test.ts",
+   "tipo": "unit",
+   "linhas": 116,
+   "testa": [
+    "src/lib/goalBetHistory.ts",
+    "src/services/predictionMarketService.ts"
+   ],
+   "casos": 8
+  },
+  {
+   "arquivo": "src/test/goalBetHistoryCsv.test.ts",
+   "tipo": "unit",
+   "linhas": 87,
+   "testa": [
+    "src/lib/goalBetHistory.ts",
+    "src/lib/goalBetHistoryCsv.ts"
+   ],
+   "casos": 6
+  },
+  {
+   "arquivo": "src/test/goalBetOrdering.test.ts",
+   "tipo": "unit",
+   "linhas": 76,
+   "testa": [
+    "src/lib/goalBetOrdering.ts",
+    "src/services/predictionMarketService.ts"
+   ],
+   "casos": 6
+  },
+  {
+   "arquivo": "src/test/goalBetPosition.test.ts",
+   "tipo": "unit",
+   "linhas": 130,
+   "testa": [
+    "src/lib/goalBetPosition.ts",
+    "src/services/predictionMarketService.ts"
+   ],
+   "casos": 11
+  },
+  {
+   "arquivo": "src/test/goalBetSearch.test.ts",
+   "tipo": "unit",
+   "linhas": 105,
+   "testa": [
+    "src/lib/goalBetSearch.ts",
+    "src/services/predictionMarketService.ts"
+   ],
+   "casos": 11
+  },
+  {
+   "arquivo": "src/test/goalBetSettlement.test.ts",
+   "tipo": "unit",
+   "linhas": 116,
+   "testa": [
+    "src/lib/goalBetSettlement.ts",
+    "src/lib/goalBetting.ts"
+   ],
+   "casos": 9
+  },
+  {
+   "arquivo": "src/test/goalBetShowcase.test.ts",
+   "tipo": "unit",
+   "linhas": 46,
+   "testa": [
+    "src/lib/goalBetShowcase.ts"
+   ],
+   "casos": 4
+  },
+  {
+   "arquivo": "src/test/goalBetStakePreview.test.ts",
+   "tipo": "unit",
+   "linhas": 111,
+   "testa": [
+    "src/lib/goalBetStakePreview.ts",
+    "src/services/predictionMarketService.ts"
+   ],
+   "casos": 12
+  },
+  {
+   "arquivo": "src/test/goalBetting.test.ts",
+   "tipo": "unit",
+   "linhas": 123,
+   "testa": [
+    "src/lib/goalBetting.ts",
+    "src/lib/predictionAdmin.ts"
+   ],
+   "casos": 6
+  },
+  {
+   "arquivo": "src/test/goalBetUrlState.test.ts",
+   "tipo": "unit",
+   "linhas": 72,
+   "testa": [
+    "src/lib/goalBetUrlState.ts"
+   ],
+   "casos": 9
+  },
+  {
+   "arquivo": "src/test/i18n.test.ts",
+   "tipo": "unit",
+   "linhas": 36,
+   "testa": [
+    "src/hooks/useI18n.ts",
+    "src/i18n/translations.ts"
+   ],
+   "casos": 4
+  },
+  {
+   "arquivo": "src/test/invokeEdgeSafe.simulation.test.ts",
+   "tipo": "unit",
+   "linhas": 47,
+   "testa": [
+    "src/lib/edgeErrors.ts",
+    "src/lib/requestId.ts"
+   ],
+   "casos": 4
+  },
+  {
+   "arquivo": "src/test/lightningQuiz.simulation.test.ts",
+   "tipo": "unit",
+   "linhas": 145,
+   "testa": [
+    "src/lib/lightningQuizScoring.ts"
+   ],
+   "casos": 8
+  },
+  {
+   "arquivo": "src/test/luckyWheelAudit.simulation.test.ts",
+   "tipo": "unit",
+   "linhas": 309,
+   "testa": [
+    "src/lib/luckyWheelAudit.ts",
+    "src/lib/luckyWheelOdds.ts"
+   ],
+   "casos": 25
+  },
+  {
+   "arquivo": "src/test/luckyWheelBudget.simulation.test.ts",
+   "tipo": "unit",
+   "linhas": 44,
+   "testa": [
+    "src/lib/luckyWheelBudget.ts"
+   ],
+   "casos": 4
+  },
+  {
+   "arquivo": "src/test/luckyWheelBudgetWhatIf.simulation.test.ts",
+   "tipo": "unit",
+   "linhas": 97,
+   "testa": [
+    "src/lib/luckyWheelBudgetWhatIf.ts",
+    "src/lib/luckyWheelPayoutComparison.ts",
+    "src/lib/luckyWheelPayoutHistory.ts"
+   ],
+   "casos": 4
+  },
+  {
+   "arquivo": "src/test/luckyWheelComparisonAlerts.simulation.test.ts",
+   "tipo": "unit",
+   "linhas": 160,
+   "testa": [
+    "src/lib/luckyWheelComparisonAlerts.ts",
+    "src/lib/luckyWheelPayoutComparison.ts",
+    "src/lib/luckyWheelPayoutHistory.ts"
+   ],
+   "casos": 9
+  },
+  {
+   "arquivo": "src/test/luckyWheelOdds.simulation.test.ts",
+   "tipo": "unit",
+   "linhas": 288,
+   "testa": [
+    "src/lib/luckyWheelOdds.ts"
+   ],
+   "casos": 18
+  },
+  {
+   "arquivo": "src/test/luckyWheelPayout.simulation.test.ts",
+   "tipo": "unit",
+   "linhas": 325,
+   "testa": [
+    "src/lib/luckyWheelOdds.ts",
+    "src/lib/luckyWheelPayout.ts"
+   ],
+   "casos": 18
+  },
+  {
+   "arquivo": "src/test/luckyWheelPayoutAlerts.simulation.test.ts",
+   "tipo": "unit",
+   "linhas": 222,
+   "testa": [
+    "src/lib/luckyWheelOdds.ts",
+    "src/lib/luckyWheelPayout.ts",
+    "src/lib/luckyWheelPayoutAlerts.ts"
+   ],
+   "casos": 16
+  },
+  {
+   "arquivo": "src/test/luckyWheelPayoutComparison.simulation.test.ts",
+   "tipo": "unit",
+   "linhas": 206,
+   "testa": [
+    "src/lib/luckyWheelPayoutComparison.ts",
+    "src/lib/luckyWheelPayoutHistory.ts"
+   ],
+   "casos": 13
+  },
+  {
+   "arquivo": "src/test/luckyWheelPayoutCsv.simulation.test.ts",
+   "tipo": "unit",
+   "linhas": 232,
+   "testa": [
+    "src/lib/luckyWheelOdds.ts",
+    "src/lib/luckyWheelPayout.ts"
+   ],
+   "casos": 12
+  },
+  {
+   "arquivo": "src/test/luckyWheelPayoutHistory.simulation.test.ts",
+   "tipo": "unit",
+   "linhas": 241,
+   "testa": [
+    "src/lib/luckyWheelPayoutHistory.ts"
+   ],
+   "casos": 15
+  },
+  {
+   "arquivo": "src/test/luckyWheelPayoutTrendCsv.simulation.test.ts",
+   "tipo": "unit",
+   "linhas": 150,
+   "testa": [
+    "src/lib/luckyWheelPayoutHistory.ts"
+   ],
+   "casos": 7
+  },
+  {
+   "arquivo": "src/test/luckyWheelWhatIfSignature.simulation.test.ts",
+   "tipo": "unit",
+   "linhas": 73,
+   "testa": [
+    "src/lib/luckyWheelBudgetWhatIf.ts",
+    "src/lib/luckyWheelPayoutComparison.ts"
+   ],
+   "casos": 4
+  },
+  {
+   "arquivo": "src/test/memoryDeckAuthoring.simulation.test.ts",
+   "tipo": "unit",
+   "linhas": 154,
+   "testa": [
+    "src/lib/memoryDeckAuthoring.ts"
+   ],
+   "casos": 14
+  },
+  {
+   "arquivo": "src/test/memoryGame.simulation.test.ts",
+   "tipo": "unit",
+   "linhas": 131,
+   "testa": [
+    "src/lib/memoryGame.ts"
+   ],
+   "casos": 11
+  },
+  {
+   "arquivo": "src/test/notificationPrefsCrossModule.simulation.test.ts",
+   "tipo": "unit",
+   "linhas": 193,
+   "testa": [
+    "src/lib/notificationTypePrefs.ts"
+   ],
+   "casos": 5
+  },
+  {
+   "arquivo": "src/test/notificationTypePrefs.simulation.test.ts",
+   "tipo": "unit",
+   "linhas": 150,
+   "testa": [
+    "src/lib/notificationTypePrefs.ts"
+   ],
+   "casos": 13
+  },
+  {
+   "arquivo": "src/test/npsHistory.simulation.test.ts",
+   "tipo": "unit",
+   "linhas": 195,
+   "testa": [
+    "src/lib/npsHistory.ts"
+   ],
+   "casos": 16
+  },
+  {
+   "arquivo": "src/test/nr1ActionPlan.simulation.test.ts",
+   "tipo": "unit",
+   "linhas": 52,
+   "testa": [
+    "src/services/nr1RiskService.ts"
+   ],
+   "casos": 4
+  },
+  {
+   "arquivo": "src/test/nr1Export.simulation.test.ts",
+   "tipo": "unit",
+   "linhas": 63,
+   "testa": [
+    "src/lib/nr1Export.ts",
+    "src/services/nr1RiskService.ts"
+   ],
+   "casos": 3
+  },
+  {
+   "arquivo": "src/test/nr1Risk.simulation.test.ts",
+   "tipo": "unit",
+   "linhas": 156,
+   "testa": [
+    "src/services/nr1RiskService.ts"
+   ],
+   "casos": 15
+  },
+  {
+   "arquivo": "src/test/opinionChannel.simulation.test.ts",
+   "tipo": "unit",
+   "linhas": 293,
+   "testa": [
+    "src/lib/opinionChannel.ts"
+   ],
+   "casos": 14
+  },
+  {
+   "arquivo": "src/test/playerResume.simulation.test.ts",
+   "tipo": "unit",
+   "linhas": 146,
+   "testa": [
+    "src/lib/playerResume.ts"
+   ],
+   "casos": 9
+  },
+  {
+   "arquivo": "src/test/predictionAdmin.simulation.test.ts",
+   "tipo": "unit",
+   "linhas": 246,
+   "testa": [
+    "src/lib/predictionAdmin.ts"
+   ],
+   "casos": 11
+  },
+  {
+   "arquivo": "src/test/predictionMarket.simulation.test.ts",
+   "tipo": "unit",
+   "linhas": 262,
+   "testa": [
+    "src/lib/predictionMarket.ts"
+   ],
+   "casos": 14
+  },
+  {
+   "arquivo": "src/test/predictionOddsHistory.simulation.test.ts",
+   "tipo": "unit",
+   "linhas": 210,
+   "testa": [
+    "src/lib/predictionOddsHistory.ts"
+   ],
+   "casos": 5
+  },
+  {
+   "arquivo": "src/test/predictionOracle.simulation.test.ts",
+   "tipo": "unit",
+   "linhas": 245,
+   "testa": [
+    "src/lib/predictionOracle.ts"
+   ],
+   "casos": 6
+  },
+  {
+   "arquivo": "src/test/predictionRunbooks.test.ts",
+   "tipo": "unit",
+   "linhas": 66,
+   "testa": [
+    "src/lib/predictionWatchdog.ts",
+    "src/lib/runbooks.ts"
+   ],
+   "casos": 4
+  },
+  {
+   "arquivo": "src/test/predictionWatchdog.simulation.test.ts",
+   "tipo": "unit",
+   "linhas": 160,
+   "testa": [
+    "src/lib/predictionAdmin.ts",
+    "src/lib/predictionWatchdog.ts"
+   ],
+   "casos": 7
+  },
+  {
+   "arquivo": "src/test/predictiveFeedback.test.ts",
+   "tipo": "unit",
+   "linhas": 79,
+   "testa": [
+    "src/services/predictiveFeedbackService.ts"
+   ],
+   "casos": 10
+  },
+  {
+   "arquivo": "src/test/purchaseRisk.simulation.test.ts",
+   "tipo": "unit",
+   "linhas": 226,
+   "testa": [
+    "src/lib/purchaseRisk.ts"
+   ],
+   "casos": 15
+  },
+  {
+   "arquivo": "src/test/pushDevices.simulation.test.ts",
+   "tipo": "unit",
+   "linhas": 405,
+   "testa": [
+    "src/lib/pushDevices.ts"
+   ],
+   "casos": 33
+  },
+  {
+   "arquivo": "src/test/pushFlow.simulation.test.ts",
+   "tipo": "unit",
+   "linhas": 343,
+   "testa": [],
+   "casos": 8
+  },
+  {
+   "arquivo": "src/test/pushOutbox.simulation.test.ts",
+   "tipo": "unit",
+   "linhas": 110,
+   "testa": [
+    "src/lib/pushOutbox.ts"
+   ],
+   "casos": 7
+  },
+  {
+   "arquivo": "src/test/pushOutboxHealth.simulation.test.ts",
+   "tipo": "unit",
+   "linhas": 133,
+   "testa": [
+    "src/lib/pushOutboxHealth.ts"
+   ],
+   "casos": 9
+  },
+  {
+   "arquivo": "src/test/pushRevocationBroadcast.simulation.test.ts",
+   "tipo": "unit",
+   "linhas": 58,
+   "testa": [
+    "src/lib/pushDevices.ts"
+   ],
+   "casos": 2
+  },
+  {
+   "arquivo": "src/test/pushRevocationNotice.simulation.test.ts",
+   "tipo": "unit",
+   "linhas": 63,
+   "testa": [
+    "src/lib/pushDevices.ts"
+   ],
+   "casos": 2
+  },
+  {
+   "arquivo": "src/test/rls.test.ts",
+   "tipo": "unit",
+   "linhas": 62,
+   "testa": [],
+   "casos": 3
+  },
+  {
+   "arquivo": "src/test/rpcAccess.test.ts",
+   "tipo": "unit",
+   "linhas": 79,
+   "testa": [],
+   "casos": 5
+  },
+  {
+   "arquivo": "src/test/scratchCardOdds.simulation.test.ts",
+   "tipo": "unit",
+   "linhas": 87,
+   "testa": [
+    "src/lib/luckyWheelOdds.ts"
+   ],
+   "casos": 5
+  },
+  {
+   "arquivo": "src/test/sequenceGame.simulation.test.ts",
+   "tipo": "unit",
+   "linhas": 160,
+   "testa": [
+    "src/lib/sequenceGame.ts"
+   ],
+   "casos": 13
+  },
+  {
+   "arquivo": "src/test/sequenceProcedureAuthoring.test.ts",
+   "tipo": "unit",
+   "linhas": 139,
+   "testa": [
+    "src/lib/sequenceProcedureAuthoring.ts"
+   ],
+   "casos": 13
+  },
+  {
+   "arquivo": "src/test/sequenceProcedureStats.test.ts",
+   "tipo": "unit",
+   "linhas": 107,
+   "testa": [
+    "src/lib/sequenceProcedureStats.ts"
+   ],
+   "casos": 6
+  },
+  {
+   "arquivo": "src/test/sequenceProcedureStatsExport.test.ts",
+   "tipo": "unit",
+   "linhas": 83,
+   "testa": [
+    "src/lib/sequenceProcedureStats.ts",
+    "src/lib/sequenceProcedureStatsExport.ts"
+   ],
+   "casos": 7
+  },
+  {
+   "arquivo": "src/test/setup.ts",
+   "tipo": "unit",
+   "linhas": 30,
+   "testa": [],
+   "casos": 0
+  },
+  {
+   "arquivo": "src/test/slaTargets.simulation.test.ts",
+   "tipo": "unit",
+   "linhas": 99,
+   "testa": [
+    "src/lib/slaTargets.ts"
+   ],
+   "casos": 8
+  },
+  {
+   "arquivo": "src/test/telemetry.test.tsx",
+   "tipo": "unit",
+   "linhas": 598,
+   "testa": [
+    "src/components/admin/telemetry/TelemetryCharts.tsx"
+   ],
+   "casos": 55
+  },
+  {
+   "arquivo": "src/test/tournamentBracket.simulation.test.ts",
+   "tipo": "unit",
+   "linhas": 284,
+   "testa": [
+    "src/lib/tournamentBracket.ts"
+   ],
+   "casos": 17
+  },
+  {
+   "arquivo": "src/test/tradingCards.simulation.test.ts",
+   "tipo": "unit",
+   "linhas": 237,
+   "testa": [
+    "src/lib/tradingCards.ts"
+   ],
+   "casos": 9
+  },
+  {
+   "arquivo": "src/test/unifiedDevices.simulation.test.ts",
+   "tipo": "unit",
+   "linhas": 240,
+   "testa": [
+    "src/lib/deviceFingerprint.ts",
+    "src/lib/pushDevices.ts"
+   ],
+   "casos": 14
+  },
+  {
+   "arquivo": "src/test/useTypePreferences.test.tsx",
+   "tipo": "unit",
+   "linhas": 154,
+   "testa": [
+    "src/hooks/useTypePreferences.ts"
+   ],
+   "casos": 8
+  },
+  {
+   "arquivo": "src/test/wagerAuthoring.test.ts",
+   "tipo": "unit",
+   "linhas": 121,
+   "testa": [
+    "src/lib/wagerAuthoring.ts"
+   ],
+   "casos": 13
+  },
+  {
+   "arquivo": "src/test/wagerBudgetSettings.test.ts",
+   "tipo": "unit",
+   "linhas": 25,
+   "testa": [
+    "src/services/wagerBudgetService.ts"
+   ],
+   "casos": 12
+  },
+  {
+   "arquivo": "src/test/wagerBulkImport.test.ts",
+   "tipo": "unit",
+   "linhas": 158,
+   "testa": [
+    "src/lib/wagerBulkImport.ts"
+   ],
+   "casos": 24
+  },
+  {
+   "arquivo": "src/test/wagerIntegrity.test.ts",
+   "tipo": "unit",
+   "linhas": 304,
+   "testa": [
+    "src/lib/wagerIntegrity.ts",
+    "src/lib/wagerLeaderboard.ts"
+   ],
+   "casos": 38
+  },
+  {
+   "arquivo": "src/test/wagerIntegrityExport.test.ts",
+   "tipo": "unit",
+   "linhas": 192,
+   "testa": [
+    "src/lib/wagerIntegrity.ts",
+    "src/lib/wagerIntegrityExport.ts",
+    "src/services/wagerIntegrityReviewService.ts"
+   ],
+   "casos": 14
+  },
+  {
+   "arquivo": "src/test/wagerLeaderboard.test.ts",
+   "tipo": "unit",
+   "linhas": 143,
+   "testa": [
+    "src/lib/wagerLeaderboard.ts"
+   ],
+   "casos": 17
+  },
+  {
+   "arquivo": "src/test/wagerMonthlyExposure.test.ts",
+   "tipo": "unit",
+   "linhas": 192,
+   "testa": [
+    "src/lib/wagerMonthlyExposure.ts",
+    "src/services/wagerAdminService.ts"
+   ],
+   "casos": 26
+  },
+  {
+   "arquivo": "src/test/wagerScheduleExport.test.ts",
+   "tipo": "unit",
+   "linhas": 155,
+   "testa": [
+    "src/lib/wagerBulkImport.ts",
+    "src/lib/wagerScheduleExport.ts",
+    "src/services/wagerAdminService.ts"
+   ],
+   "casos": 18
+  },
+  {
+   "arquivo": "src/test/warAutoHooks.simulation.test.ts",
+   "tipo": "unit",
+   "linhas": 284,
+   "testa": [
+    "src/lib/warAutoHooks.ts"
+   ],
+   "casos": 13
+  },
+  {
+   "arquivo": "src/test/warFeed.simulation.test.ts",
+   "tipo": "unit",
+   "linhas": 217,
+   "testa": [
+    "src/lib/warFeed.ts"
+   ],
+   "casos": 14
+  },
+  {
+   "arquivo": "src/test/warLeadership.simulation.test.ts",
+   "tipo": "unit",
+   "linhas": 173,
+   "testa": [
+    "src/lib/warLeadership.ts"
+   ],
+   "casos": 15
+  },
+  {
+   "arquivo": "src/test/xpBalancing.test.ts",
+   "tipo": "unit",
+   "linhas": 85,
+   "testa": [
+    "src/services/xpBalancingService.ts"
+   ],
+   "casos": 10
+  },
+  {
+   "arquivo": "src/tests/unit/access.test.tsx",
+   "tipo": "unit",
+   "linhas": 64,
+   "testa": [
+    "src/components/rbac/ProtectedRoute.tsx",
+    "src/hooks/useAuth.tsx",
+    "src/hooks/useRBAC.ts"
+   ],
+   "casos": 3
+  },
+  {
+   "arquivo": "src/tests/unit/achievements.test.ts",
+   "tipo": "unit",
+   "linhas": 59,
+   "testa": [
+    "src/integrations/supabase/client.ts",
+    "src/services/achievementsService.ts"
+   ],
+   "casos": 2
+  },
+  {
+   "arquivo": "src/tests/unit/audit.test.ts",
+   "tipo": "unit",
+   "linhas": 45,
+   "testa": [
+    "src/integrations/supabase/client.ts",
+    "src/services/auditService.ts"
+   ],
+   "casos": 2
+  },
+  {
+   "arquivo": "src/tests/unit/badges.test.ts",
+   "tipo": "unit",
+   "linhas": 48,
+   "testa": [
+    "src/services/behavioralBadges/badges.ts",
+    "src/services/behavioralBadges/types.ts"
+   ],
+   "casos": 3
+  },
+  {
+   "arquivo": "src/tests/unit/checkins.test.ts",
+   "tipo": "unit",
+   "linhas": 64,
+   "testa": [
+    "src/integrations/supabase/client.ts",
+    "src/services/checkinsService.ts"
+   ],
+   "casos": 1
+  },
+  {
+   "arquivo": "src/tests/unit/combo.test.ts",
+   "tipo": "unit",
+   "linhas": 115,
+   "testa": [
+    "src/integrations/supabase/client.ts",
+    "src/services/comboService.ts"
+   ],
+   "casos": 9
+  },
+  {
+   "arquivo": "src/tests/unit/device.test.ts",
+   "tipo": "unit",
+   "linhas": 41,
+   "testa": [
+    "src/hooks/useDeviceDetection.ts"
+   ],
+   "casos": 2
+  },
+  {
+   "arquivo": "src/tests/unit/feedback.test.ts",
+   "tipo": "unit",
+   "linhas": 50,
+   "testa": [
+    "src/integrations/supabase/client.ts",
+    "src/services/feedbackService.ts"
+   ],
+   "casos": 1
+  },
+  {
+   "arquivo": "src/tests/unit/kudos.test.ts",
+   "tipo": "unit",
+   "linhas": 90,
+   "testa": [
+    "src/integrations/supabase/client.ts",
+    "src/services/comboService.ts",
+    "src/services/kudosService.ts",
+    "src/services/profilesService.ts"
+   ],
+   "casos": 1
+  },
+  {
+   "arquivo": "src/tests/unit/leagues.test.ts",
+   "tipo": "unit",
+   "linhas": 65,
+   "testa": [
+    "src/integrations/supabase/client.ts",
+    "src/services/leaguesService.ts"
+   ],
+   "casos": 1
+  },
+  {
+   "arquivo": "src/tests/unit/logger.test.ts",
+   "tipo": "unit",
+   "linhas": 26,
+   "testa": [
+    "src/services/loggingService.ts"
+   ],
+   "casos": 2
+  },
+  {
+   "arquivo": "src/tests/unit/notifications.test.ts",
+   "tipo": "unit",
+   "linhas": 58,
+   "testa": [
+    "src/integrations/supabase/client.ts",
+    "src/services/notificationsService.ts"
+   ],
+   "casos": 2
+  },
+  {
+   "arquivo": "src/tests/unit/onboarding.test.ts",
+   "tipo": "unit",
+   "linhas": 49,
+   "testa": [
+    "src/integrations/supabase/client.ts",
+    "src/services/onboardingService.ts"
+   ],
+   "casos": 2
+  },
+  {
+   "arquivo": "src/tests/unit/profiles.test.ts",
+   "tipo": "unit",
+   "linhas": 80,
+   "testa": [
+    "src/integrations/supabase/client.ts",
+    "src/services/profilesService.ts"
+   ],
+   "casos": 3
+  },
+  {
+   "arquivo": "src/tests/unit/shop.test.ts",
+   "tipo": "unit",
+   "linhas": 83,
+   "testa": [
+    "src/integrations/supabase/client.ts",
+    "src/services/profilesService.ts",
+    "src/services/shopService.ts"
+   ],
+   "casos": 3
+  },
+  {
+   "arquivo": "src/tests/unit/trails.test.ts",
+   "tipo": "unit",
+   "linhas": 75,
+   "testa": [
+    "src/integrations/supabase/client.ts",
+    "src/services/comboService.ts",
+    "src/services/profilesService.ts",
+    "src/services/trailsService.ts"
+   ],
+   "casos": 1
+  },
+  {
+   "arquivo": "supabase/functions/external-webhook/validation.test.ts",
+   "tipo": "unit",
+   "linhas": 99,
+   "testa": [
+    "supabase/functions/_shared/validation.ts"
+   ],
+   "casos": 8
+  },
+  {
+   "arquivo": "tests/auth-flow.spec.ts",
+   "tipo": "unit",
+   "linhas": 34,
+   "testa": [],
+   "casos": 3
+  },
+  {
+   "arquivo": "tests/e2e/happy-paths.spec.ts",
+   "tipo": "e2e",
+   "linhas": 57,
+   "testa": [],
+   "casos": 5
+  },
+  {
+   "arquivo": "tests/e2e/smoke.spec.ts",
+   "tipo": "e2e",
+   "linhas": 92,
+   "testa": [],
+   "casos": 9
+  }
+ ],
+ "sql": [],
+ "cobertura_por_arquivo": {
+  "src/components/accessibility/index.ts": 1,
+  "src/components/admin/telemetry/TelemetryCharts.tsx": 1,
+  "src/components/rbac/ProtectedRoute.tsx": 1,
+  "src/hooks/useAuth.tsx": 2,
+  "src/hooks/useDeviceDetection.ts": 1,
+  "src/hooks/useI18n.ts": 1,
+  "src/hooks/useProfiles.ts": 1,
+  "src/hooks/useRBAC.ts": 1,
+  "src/hooks/useShop.ts": 1,
+  "src/hooks/useTypePreferences.ts": 1,
+  "src/i18n/translations.ts": 1,
+  "src/integrations/supabase/client.ts": 12,
+  "src/lib/auctionAdmin.ts": 3,
+  "src/lib/auctionEngine.ts": 1,
+  "src/lib/bingoEngine.ts": 1,
+  "src/lib/boardChallenge.ts": 1,
+  "src/lib/boardStats.ts": 3,
+  "src/lib/boardStatsExport.ts": 1,
+  "src/lib/boardStatsPdf.ts": 1,
+  "src/lib/boardTrail.ts": 2,
+  "src/lib/boardTrailAuthoring.ts": 1,
+  "src/lib/bossAlerts.ts": 1,
+  "src/lib/bossAutoHooks.ts": 1,
+  "src/lib/bossBattle.ts": 2,
+  "src/lib/bossBattlePlanner.ts": 1,
+  "src/lib/bossDepartmentComparison.ts": 3,
+  "src/lib/bossDepartmentComparisonExport.ts": 1,
+  "src/lib/bossHistory.ts": 8,
+  "src/lib/bossHistoryExport.ts": 1,
+  "src/lib/bossHistoryTrend.ts": 1,
+  "src/lib/bossLeaderboard.ts": 1,
+  "src/lib/bossReport.ts": 2,
+  "src/lib/bossWinRateGoals.ts": 1,
+  "src/lib/campaignImport.ts": 1,
+  "src/lib/campaignTeamHealth.ts": 1,
+  "src/lib/campaignTeamMetrics.ts": 1,
+  "src/lib/campaignTeamSplit.ts": 1,
+  "src/lib/campaignTeamSplitRevert.ts": 1,
+  "src/lib/cardPackNotifications.ts": 1,
+  "src/lib/cardPackTriggers.ts": 2,
+  "src/lib/cardSetRewards.ts": 1,
+  "src/lib/certificatePdf.ts": 1,
+  "src/lib/climateBenchmark.ts": 3,
+  "src/lib/dailyWager.ts": 1,
+  "src/lib/departmentWar.ts": 1,
+  "src/lib/departmentWarConfig.ts": 1,
+  "src/lib/deviceFingerprint.ts": 1,
+  "src/lib/deviceLabel.ts": 1,
+  "src/lib/edgeErrors.ts": 2,
+  "src/lib/engagementInsights.ts": 1,
+  "src/lib/goalBetCountdown.ts": 1,
+  "src/lib/goalBetExposure.ts": 1,
+  "src/lib/goalBetFilter.ts": 1,
+  "src/lib/goalBetHistory.ts": 2,
+  "src/lib/goalBetHistoryCsv.ts": 1,
+  "src/lib/goalBetOrdering.ts": 1,
+  "src/lib/goalBetPosition.ts": 1,
+  "src/lib/goalBetSearch.ts": 1,
+  "src/lib/goalBetSettlement.ts": 1,
+  "src/lib/goalBetShowcase.ts": 1,
+  "src/lib/goalBetStakePreview.ts": 1,
+  "src/lib/goalBetUrlState.ts": 1,
+  "src/lib/goalBetting.ts": 2,
+  "src/lib/lightningQuizScoring.ts": 1,
+  "src/lib/luckyWheelAudit.ts": 1,
+  "src/lib/luckyWheelBudget.ts": 1,
+  "src/lib/luckyWheelBudgetWhatIf.ts": 2,
+  "src/lib/luckyWheelComparisonAlerts.ts": 1,
+  "src/lib/luckyWheelOdds.ts": 6,
+  "src/lib/luckyWheelPayout.ts": 3,
+  "src/lib/luckyWheelPayoutAlerts.ts": 1,
+  "src/lib/luckyWheelPayoutComparison.ts": 4,
+  "src/lib/luckyWheelPayoutHistory.ts": 5,
+  "src/lib/memoryDeckAuthoring.ts": 1,
+  "src/lib/memoryGame.ts": 1,
+  "src/lib/notificationTypePrefs.ts": 2,
+  "src/lib/npsHistory.ts": 1,
+  "src/lib/nr1Export.ts": 1,
+  "src/lib/opinionChannel.ts": 1,
+  "src/lib/playerResume.ts": 1,
+  "src/lib/predictionAdmin.ts": 3,
+  "src/lib/predictionMarket.ts": 1,
+  "src/lib/predictionOddsHistory.ts": 1,
+  "src/lib/predictionOracle.ts": 1,
+  "src/lib/predictionWatchdog.ts": 2,
+  "src/lib/purchaseRisk.ts": 1,
+  "src/lib/pushDevices.ts": 4,
+  "src/lib/pushOutbox.ts": 1,
+  "src/lib/pushOutboxHealth.ts": 1,
+  "src/lib/requestId.ts": 1,
+  "src/lib/runbooks.ts": 1,
+  "src/lib/sequenceGame.ts": 1,
+  "src/lib/sequenceProcedureAuthoring.ts": 1,
+  "src/lib/sequenceProcedureStats.ts": 2,
+  "src/lib/sequenceProcedureStatsExport.ts": 1,
+  "src/lib/slaTargets.ts": 1,
+  "src/lib/tournamentBracket.ts": 1,
+  "src/lib/tradingCards.ts": 2,
+  "src/lib/wagerAuthoring.ts": 1,
+  "src/lib/wagerBulkImport.ts": 2,
+  "src/lib/wagerIntegrity.ts": 2,
+  "src/lib/wagerIntegrityExport.ts": 1,
+  "src/lib/wagerLeaderboard.ts": 2,
+  "src/lib/wagerMonthlyExposure.ts": 1,
+  "src/lib/wagerScheduleExport.ts": 1,
+  "src/lib/warAutoHooks.ts": 1,
+  "src/lib/warFeed.ts": 1,
+  "src/lib/warLeadership.ts": 1,
+  "src/pages/Shop.tsx": 1,
+  "src/services/achievementsService.ts": 1,
+  "src/services/auditService.ts": 1,
+  "src/services/behavioralBadges/badges.ts": 1,
+  "src/services/behavioralBadges/types.ts": 1,
+  "src/services/bingoService.ts": 1,
+  "src/services/checkinsService.ts": 1,
+  "src/services/climateSurveyService.ts": 1,
+  "src/services/comboService.ts": 3,
+  "src/services/continuousEngagementService.ts": 1,
+  "src/services/engagementDiagnosticsService.ts": 1,
+  "src/services/feedbackService.ts": 1,
+  "src/services/kudosService.ts": 1,
+  "src/services/leaguesService.ts": 1,
+  "src/services/loggingService.ts": 1,
+  "src/services/notificationsService.ts": 1,
+  "src/services/nr1RiskService.ts": 3,
+  "src/services/onboardingService.ts": 1,
+  "src/services/predictionMarketService.ts": 8,
+  "src/services/predictiveFeedbackService.ts": 1,
+  "src/services/profilesService.ts": 4,
+  "src/services/shopService.ts": 1,
+  "src/services/trailsService.ts": 1,
+  "src/services/wagerAdminService.ts": 2,
+  "src/services/wagerBudgetService.ts": 1,
+  "src/services/wagerIntegrityReviewService.ts": 1,
+  "src/services/xpBalancingService.ts": 1,
+  "supabase/functions/_shared/validation.ts": 1
+ },
+ "sem_teste": {
+  "telas": [
+   "src/components/navigation/PageTransition.tsx",
+   "src/pages/Achievements.tsx",
+   "src/pages/ActionPlans.tsx",
+   "src/pages/AdminPanel.tsx",
+   "src/pages/AdminTelemetria.tsx",
+   "src/pages/Announcements.tsx",
+   "src/pages/ApiKeysAdmin.tsx",
+   "src/pages/Attendance.tsx",
+   "src/pages/AuctionsAdmin.tsx",
+   "src/pages/AuctionsPage.tsx",
+   "src/pages/AuditLogs.tsx",
+   "src/pages/BIDashboard.tsx",
+   "src/pages/BingoPage.tsx",
+   "src/pages/BoardTrailAdminPage.tsx",
+   "src/pages/BoardTrailPage.tsx",
+   "src/pages/BossBattlePage.tsx",
+   "src/pages/BurnRate.tsx",
+   "src/pages/CampaignHistory.tsx",
+   "src/pages/CampaignTeamRanking.tsx",
+   "src/pages/CampaignTeamsDashboard.tsx",
+   "src/pages/CardAlbumPage.tsx",
+   "src/pages/CertificateVerify.tsx",
+   "src/pages/Checkins.tsx",
+   "src/pages/ClimateDiagnostics.tsx",
+   "src/pages/ContinuousEngagement.tsx",
+   "src/pages/DailyQuiz.tsx",
+   "src/pages/DailyWagerPage.tsx",
+   "src/pages/DepartmentWarPage.tsx",
+   "src/pages/Duels.tsx",
+   "src/pages/EngagementReports.tsx",
+   "src/pages/ErrorBudget.tsx",
+   "src/pages/ExecutiveDashboard.tsx",
+   "src/pages/ExecutiveMonthlyReport.tsx",
+   "src/pages/Feedback.tsx",
+   "src/pages/ForgotPassword.tsx",
+   "src/pages/Goals.tsx",
+   "src/pages/IncidentMetrics.tsx",
+   "src/pages/Index.tsx",
+   "src/pages/Leagues.tsx",
+   "src/pages/LearningTrails.tsx",
+   "src/pages/LightningQuizPage.tsx",
+   "src/pages/LuckyWheelAdmin.tsx",
+   "src/pages/LuckyWheelPage.tsx",
+   "src/pages/ManagerDashboard.tsx",
+   "src/pages/MemoryDeckAdminPage.tsx",
+   "src/pages/MemoryGamePage.tsx",
+   "src/pages/NotFound.tsx",
+   "src/pages/Nr1Risks.tsx",
+   "src/pages/OpinionChannel.tsx",
+   "src/pages/PermissionsAdmin.tsx",
+   "src/pages/PersonalStats.tsx",
+   "src/pages/Postmortems.tsx",
+   "src/pages/PredictionAdminPage.tsx",
+   "src/pages/PredictionMarketsPage.tsx",
+   "src/pages/Profile.tsx",
+   "src/pages/QuestBuilder.tsx",
+   "src/pages/QuizAdmin.tsx",
+   "src/pages/RateLimitDashboard.tsx",
+   "src/pages/RealTimeAnalytics.tsx",
+   "src/pages/ReliabilitySLO.tsx",
+   "src/pages/ResetPassword.tsx",
+   "src/pages/Runbook.tsx",
+   "src/pages/SalesCampaignDetail.tsx",
+   "src/pages/SalesCampaigns.tsx",
+   "src/pages/ScratchCardPage.tsx",
+   "src/pages/SeasonalEventDetail.tsx",
+   "src/pages/SecurityDashboard.tsx",
+   "src/pages/SecurityDigests.tsx",
+   "src/pages/SecurityRunbook.tsx",
+   "src/pages/SequenceGamePage.tsx",
+   "src/pages/SequenceProcedureAdminPage.tsx",
+   "src/pages/ShopAdmin.tsx",
+   "src/pages/SocialFeed.tsx",
+   "src/pages/Surveys.tsx",
+   "src/pages/TournamentsPage.tsx",
+   "src/pages/TrailDetail.tsx",
+   "src/pages/WagerQuestionAdminPage.tsx",
+   "src/pages/WebhookSubscriptionDetail.tsx",
+   "src/pages/WebhookSubscriptionNew.tsx",
+   "src/pages/WebhooksAdmin.tsx",
+   "src/pages/WebhooksExecutive.tsx"
+  ],
+  "hooks": [
+   "scripts/ai-context/cenarios.mjs",
+   "src/components/accessibility/AccessibilityProvider.tsx",
+   "src/components/AchievementSystem.tsx",
+   "src/components/ActivityHeatmap.tsx",
+   "src/components/ConfirmDialog.tsx",
+   "src/components/dashboard/DashboardTabs.tsx",
+   "src/components/GlobalMessageProvider.tsx",
+   "src/components/mobile/GestureHandler.tsx",
+   "src/components/mobile/HapticWrapper.tsx",
+   "src/components/mobile/index.ts",
+   "src/components/navigation/GlobalBreadcrumbs.tsx",
+   "src/components/navigation/index.ts",
+   "src/components/rbac/index.ts",
+   "src/components/rbac/RBACProvider.tsx",
+   "src/components/security/index.ts",
+   "src/components/security/ReauthProvider.tsx",
+   "src/components/ui/form.tsx",
+   "src/components/ui/level-up-celebration.tsx",
+   "src/components/ui/lucky-drop.tsx",
+   "src/components/ui/micro-interactions.tsx",
+   "src/components/ui/sidebar.tsx",
+   "src/components/ui/use-toast.ts",
+   "src/contexts/AchievementNotificationContext.tsx",
+   "src/contexts/GamificationContext.tsx",
+   "src/contexts/OnboardingTourContext.tsx",
+   "src/contexts/SoundSettingsContext.tsx",
+   "src/hooks/use-mobile.tsx",
+   "src/hooks/use-toast.ts",
+   "src/hooks/useAchievements.ts",
+   "src/hooks/useActionPlanGenerator.ts",
+   "src/hooks/useActionPlans.ts",
+   "src/hooks/useActivityComments.ts",
+   "src/hooks/useActivityReactions.ts",
+   "src/hooks/useAdminAlerts.ts",
+   "src/hooks/useAdminUsers.ts",
+   "src/hooks/useAICoach.ts",
+   "src/hooks/useAnnouncements.ts",
+   "src/hooks/useAttendance.ts",
+   "src/hooks/useAuctions.ts",
+   "src/hooks/useAudit.ts",
+   "src/hooks/useAutoChallenges.ts",
+   "src/hooks/useAvatar.ts",
+   "src/hooks/useBehavioralBadges.ts",
+   "src/hooks/useBingo.ts",
+   "src/hooks/useBoardTrail.ts",
+   "src/hooks/useBossBattles.ts",
+   "src/hooks/useBossWinRateGoals.ts",
+   "src/hooks/useCampaignImports.ts",
+   "src/hooks/useCampaignTeams.ts",
+   "src/hooks/useCampaignTeamsDashboard.ts",
+   "src/hooks/useCelebrations.ts",
+   "src/hooks/useCertifications.ts",
+   "src/hooks/useCheckins.ts",
+   "src/hooks/useChurnPrediction.ts",
+   "src/hooks/useClickOutside.ts",
+   "src/hooks/useClimateSurveys.ts",
+   "src/hooks/useCombo.ts",
+   "src/hooks/useCompetencies.ts",
+   "src/hooks/useCompetencyAlerts.ts",
+   "src/hooks/useContinuousEngagement.ts",
+   "src/hooks/useDailyWager.ts",
+   "src/hooks/useDebounce.ts",
+   "src/hooks/useDepartments.ts",
+   "src/hooks/useDepartmentWars.ts",
+   "src/hooks/useDevelopmentPlans.ts",
+   "src/hooks/useDuels.ts",
+   "src/hooks/useEngagementDiagnostics.ts",
+   "src/hooks/useEngagementReports.ts",
+   "src/hooks/useENPS.ts",
+   "src/hooks/useExecutiveMetrics.ts",
+   "src/hooks/useFeedback.ts",
+   "src/hooks/useFeedback360.ts",
+   "src/hooks/useFirstTimeIndicator.ts",
+   "src/hooks/useFuseSearch.ts",
+   "src/hooks/useGoalBetFilter.ts",
+   "src/hooks/useGoalBetSuggestion.ts",
+   "src/hooks/useGoalBetUrlSync.ts",
+   "src/hooks/useGoals.ts",
+   "src/hooks/useHaptics.ts",
+   "src/hooks/useHighPotentials.ts",
+   "src/hooks/useIpWhitelist.ts",
+   "src/hooks/useKeyboardShortcuts.ts",
+   "src/hooks/useKudos.ts",
+   "src/hooks/useLeaderboard.ts",
+   "src/hooks/useLeagues.ts",
+   "src/hooks/useLightningQuiz.ts",
+   "src/hooks/useListenToRankChanges.ts",
+   "src/hooks/useLoginLockout.ts",
+   "src/hooks/useLuckyWheel.ts",
+   "src/hooks/useMemoryGame.ts",
+   "src/hooks/useMissions.ts",
+   "src/hooks/useMoodTracker.ts",
+   "src/hooks/useNavigationHelpers.ts",
+   "src/hooks/useNetworkStatus.ts",
+   "src/hooks/useNineBox.ts",
+   "src/hooks/useNotifications.ts",
+   "src/hooks/useNr1Risk.ts",
+   "src/hooks/useOnboarding.ts",
+   "src/hooks/useOneOnOnePreparation.ts",
+   "src/hooks/useOnlineStatus.ts",
+   "src/hooks/useOpinions.ts",
+   "src/hooks/useOrganization.ts",
+   "src/hooks/usePasswordResetRealtime.ts",
+   "src/hooks/usePDI.ts",
+   "src/hooks/usePDIAlerts.ts",
+   "src/hooks/usePerformanceTrack.ts",
+   "src/hooks/usePermissions.ts",
+   "src/hooks/usePositions.ts",
+   "src/hooks/usePredictionMarkets.ts",
+   "src/hooks/usePullToRefresh.ts",
+   "src/hooks/usePulseSurveys.ts",
+   "src/hooks/usePurchaseGovernance.ts",
+   "src/hooks/usePushDevice.ts",
+   "src/hooks/usePushHistory.ts",
+   "src/hooks/usePushNotifications.ts",
+   "src/hooks/usePushSubscription.ts",
+   "src/hooks/usePWAInstall.ts",
+   "src/hooks/useQuests.ts",
+   "src/hooks/useQuizQuestions.ts",
+   "src/hooks/useQuizScores.ts",
+   "src/hooks/useQuizStats.ts",
+   "src/hooks/useReducedMotion.ts",
+   "src/hooks/useSalesCampaigns.ts",
+   "src/hooks/useScratchCards.ts",
+   "src/hooks/useScrollDirection.ts",
+   "src/hooks/useScrollHeader.ts",
+   "src/hooks/useSeasonalEvents.ts",
+   "src/hooks/useSecurityPushNotifications.ts",
+   "src/hooks/useSEO.ts",
+   "src/hooks/useSequenceGame.ts",
+   "src/hooks/useSocialFeed.ts",
+   "src/hooks/useSoundEffects.tsx",
+   "src/hooks/useSuccession.ts",
+   "src/hooks/useSwipeBack.ts",
+   "src/hooks/useSwipeNavigation.ts",
+   "src/hooks/useTheme.tsx",
+   "src/hooks/useTournaments.ts",
+   "src/hooks/useTradingCards.ts",
+   "src/hooks/useTrails.ts",
+   "src/hooks/useTwoFactor.ts",
+   "src/hooks/useUnsavedChanges.ts",
+   "src/hooks/useUserRank.ts",
+   "src/hooks/useViewTransition.ts",
+   "src/hooks/useWagerAdmin.ts",
+   "src/hooks/useWagerIntegrityReviews.ts",
+   "src/hooks/useWarLeadership.ts",
+   "src/hooks/useWebAuthn.ts",
+   "src/hooks/useWeeklyChallenge.ts"
+  ],
+  "edges": [
+   "admin-alerts",
+   "ai-coach",
+   "ai-course-builder",
+   "birthday-celebrations",
+   "bitrix24-api",
+   "bitrix24-oauth",
+   "bitrix24-webhook",
+   "burn-rate-monitor",
+   "checkin-reminders",
+   "churn-prediction",
+   "cleanup-old-security-logs",
+   "cleanup-rate-limit-logs",
+   "competency-alerts",
+   "detect-new-device",
+   "dispatch-critical-alert",
+   "error-budget-monitor",
+   "external-api",
+   "generate-quiz-questions",
+   "migrate-helper",
+   "push-device-revoked",
+   "push-outbox-dispatcher",
+   "push-public-key",
+   "reward-approval-review",
+   "security-weekly-digest",
+   "send-campaign-push",
+   "send-email-digest",
+   "send-email-notifications",
+   "send-rate-limit-alert",
+   "survey-reminders",
+   "trail-recommendations",
+   "verify-geo",
+   "verify-ip",
+   "webhook-dispatcher",
+   "webhook-health-monitor",
+   "weekly-league-processing"
+  ],
+  "servicos": [
+   "src/services/actionPlanGeneratorService.ts",
+   "src/services/actionPlansService.ts",
+   "src/services/activityCommentsService.ts",
+   "src/services/activityReactionsService.ts",
+   "src/services/adminService.ts",
+   "src/services/aiCoachService.ts",
+   "src/services/aiCourseBuilderService.ts",
+   "src/services/announcementsService.ts",
+   "src/services/apiKeysService.ts",
+   "src/services/attendanceService.ts",
+   "src/services/auctionService.ts",
+   "src/services/autoChallengesService.ts",
+   "src/services/avatarService.ts",
+   "src/services/behavioralBadges/index.ts",
+   "src/services/behavioralBadgesService.ts",
+   "src/services/boardTrailService.ts",
+   "src/services/bossBattleService.ts",
+   "src/services/bossWinRateGoalService.ts",
+   "src/services/campaignImportService.ts",
+   "src/services/campaignTeamsService.ts",
+   "src/services/celebrationsService.ts",
+   "src/services/certificationsService.ts",
+   "src/services/churnPredictionService.ts",
+   "src/services/competencyService.ts",
+   "src/services/dailyWagerService.ts",
+   "src/services/departmentsService.ts",
+   "src/services/departmentWarAdminService.ts",
+   "src/services/departmentWarService.ts",
+   "src/services/developmentPlanService.ts",
+   "src/services/duelsService.ts",
+   "src/services/engagementReportsService.ts",
+   "src/services/enpsService.ts",
+   "src/services/executiveService.ts",
+   "src/services/goalsService.ts",
+   "src/services/highPotentialService.ts",
+   "src/services/ipWhitelistService.ts",
+   "src/services/lightningQuizService.ts",
+   "src/services/luckyWheelService.ts",
+   "src/services/memoryGameService.ts",
+   "src/services/missionsService.ts",
+   "src/services/moodTrackerService.ts",
+   "src/services/nineBoxService.ts",
+   "src/services/oneOnOnePreparationService.ts",
+   "src/services/opinionsService.ts",
+   "src/services/organizationService.ts",
+   "src/services/passwordResetService.ts",
+   "src/services/pdiGeneratorService.ts",
+   "src/services/pdiService.ts",
+   "src/services/permissionsService.ts",
+   "src/services/positionsService.ts",
+   "src/services/pulseSurveysService.ts",
+   "src/services/purchaseGovernanceService.ts",
+   "src/services/pushHistoryService.ts",
+   "src/services/pushSubscriptionService.ts",
+   "src/services/questsService.ts",
+   "src/services/quizQuestionsService.ts",
+   "src/services/quizService.ts",
+   "src/services/quizStatsService.ts",
+   "src/services/rbacService.ts",
+   "src/services/salesCampaignsService.ts",
+   "src/services/scratchCardService.ts",
+   "src/services/seasonalEventsService.ts",
+   "src/services/securityService.ts",
+   "src/services/sequenceGameService.ts",
+   "src/services/socialFeedService.ts",
+   "src/services/successionService.ts",
+   "src/services/tournamentService.ts",
+   "src/services/tradingCardsService.ts",
+   "src/services/twoFactorService.ts",
+   "src/services/wagerIntegrityReviewEventService.ts",
+   "src/services/webauthnService.ts",
+   "src/services/weeklyChallengesService.ts"
+  ]
+ }
+}

@@ -1,0 +1,7359 @@
+{
+ "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
+ "format_version": 2,
+ "total": 214,
+ "por_camada": {
+  "integrations": 3,
+  "lib": 106,
+  "python": 3,
+  "services": 99,
+  "utils": 3
+ },
+ "arquivos": [
+  {
+   "arquivo": "scripts/regras_negocio/generate.py",
+   "camada": "python",
+   "exports": [
+    "analyze_code_file",
+    "balanced",
+    "detect_stack",
+    "dir_tree",
+    "extract_html_constraints",
+    "extract_zod",
+    "files_cell",
+    "git",
+    "header",
+    "is_app_code",
+    "is_archived_sql",
+    "is_test_file",
+    "llm_synthesis",
+    "log",
+    "main",
+    "md_table",
+    "op_from_chain",
+    "read_text",
+    "redact",
+    "rel",
+    "render_access",
+    "render_architecture",
+    "render_changes",
+    "render_database",
+    "render_database_pointer",
+    "render_dataflow",
+    "render_features",
+    "render_glossary",
+    "render_index",
+    "render_integrations",
+    "render_modules",
+    "render_overview",
+    "render_rules",
+    "squash",
+    "stable_hash",
+    "strip_sql_comments",
+    "trunc",
+    "upsert_pointer",
+    "walk_repo"
+   ],
+   "linhas": 2138,
+   "tabelas": [],
+   "rpcs": [],
+   "edges": [],
+   "env": [
+    "AI_CONTEXT_INDEX",
+    "AI_CONTEXT_MODEL",
+    "AI_CONTEXT_PROFILE",
+    "AI_CONTEXT_SCHEMA_SNAPSHOT",
+    "ANTHROPIC_API_KEY"
+   ],
+   "externos": [
+    "__future__",
+    "argparse",
+    "collections",
+    "datetime",
+    "hashlib",
+    "json",
+    "os",
+    "pathlib",
+    "re",
+    "subprocess",
+    "sys",
+    "urllib"
+   ],
+   "rotas_http": 0,
+   "usado_por": 0,
+   "usado_por_modulos": [],
+   "coberto_por_testes": 0,
+   "orfao": true
+  },
+  {
+   "arquivo": "scripts/regras_negocio/indice.py",
+   "camada": "python",
+   "exports": [
+    "entry_file",
+    "git",
+    "main",
+    "parse_dt",
+    "producer_health",
+    "read_manifest"
+   ],
+   "linhas": 237,
+   "tabelas": [],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [
+    "__future__",
+    "argparse",
+    "datetime",
+    "json",
+    "pathlib",
+    "re",
+    "subprocess",
+    "sys"
+   ],
+   "rotas_http": 0,
+   "usado_por": 0,
+   "usado_por_modulos": [],
+   "coberto_por_testes": 0,
+   "orfao": true
+  },
+  {
+   "arquivo": "scripts/supabase_snapshot/snapshot.py",
+   "camada": "python",
+   "exports": [
+    "api",
+    "api_section",
+    "approx",
+    "banner",
+    "build_function_callers",
+    "callers_status_table",
+    "code",
+    "diff_fingerprints",
+    "dumps",
+    "env_int",
+    "excluded_sql",
+    "fingerprints",
+    "get_columns",
+    "get_constraints",
+    "get_cron",
+    "get_cron_runs",
+    "get_db_stats",
+    "get_extensions",
+    "get_foreign",
+    "get_functions",
+    "get_grants",
+    "get_index_stats",
+    "get_indexes",
+    "get_lints",
+    "get_migrations",
+    "get_policies",
+    "get_queues",
+    "get_realtime",
+    "get_roles",
+    "get_schemas",
+    "get_sequences",
+    "get_server",
+    "get_storage",
+    "get_table_stats",
+    "get_tables",
+    "get_triggers",
+    "get_types",
+    "get_vault",
+    "get_views",
+    "get_webhooks",
+    "group",
+    "has_ext",
+    "has_table",
+    "human_bytes",
+    "introspect_api",
+    "introspect_db",
+    "is_caller_source",
+    "jsonable",
+    "log",
+    "main",
+    "md_cell",
+    "md_table",
+    "prepare_output_directory",
+    "q",
+    "record_error",
+    "redact",
+    "render_readme",
+    "render_relationships",
+    "render_simple",
+    "render_stats",
+    "render_tables",
+    "run_gen_types",
+    "run_pg_dump",
+    "rx_name_keys",
+    "scan_code_files",
+    "scrub",
+    "scrub_value",
+    "section",
+    "sha",
+    "slug",
+    "sql_without_routine_declarations",
+    "update_changelog",
+    "uslug",
+    "valid_previous_snapshot",
+    "write"
+   ],
+   "linhas": 1791,
+   "tabelas": [],
+   "rpcs": [],
+   "edges": [],
+   "env": [
+    "CODE_SCAN_DIRS",
+    "GEN_TYPES",
+    "PGDUMP",
+    "PGDUMP_SCHEMAS",
+    "REPO_ROOT",
+    "SNAPSHOT_DIR",
+    "SNAPSHOT_EXCLUDE_SCHEMAS",
+    "SNAPSHOT_INCLUDE_SCHEMAS",
+    "SUPABASE_ACCESS_TOKEN",
+    "SUPABASE_DB_URL",
+    "SUPABASE_PROJECT_REF",
+    "SUPABASE_SNAPSHOT_PUBLICACAO"
+   ],
+   "externos": [
+    "__future__",
+    "datetime",
+    "decimal",
+    "hashlib",
+    "json",
+    "os",
+    "pathlib",
+    "psycopg",
+    "re",
+    "shutil",
+    "subprocess",
+    "sys",
+    "typing",
+    "urllib"
+   ],
+   "rotas_http": 0,
+   "usado_por": 0,
+   "usado_por_modulos": [],
+   "coberto_por_testes": 0,
+   "orfao": true
+  },
+  {
+   "arquivo": "src/integrations/lovable/index.ts",
+   "camada": "integrations",
+   "exports": [
+    "lovable"
+   ],
+   "export_default": null,
+   "linhas": 39,
+   "tabelas": [],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [
+    "@lovable.dev/cloud-auth-js"
+   ],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 1,
+   "usado_por_modulos": [
+    "pages"
+   ],
+   "coberto_por_testes": 0,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/integrations/supabase/client.ts",
+   "camada": "integrations",
+   "exports": [
+    "supabase"
+   ],
+   "export_default": null,
+   "linhas": 17,
+   "tabelas": [],
+   "rpcs": [],
+   "edges": [],
+   "env": [
+    "VITE_SUPABASE_PUBLISHABLE_KEY",
+    "VITE_SUPABASE_URL"
+   ],
+   "externos": [
+    "@supabase/supabase-js"
+   ],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 164,
+   "usado_por_modulos": [
+    "components",
+    "components/admin",
+    "components/auth",
+    "components/campaigns",
+    "components/quiz",
+    "components/security",
+    "components/webhooks",
+    "hooks",
+    "integrations/lovable",
+    "lib",
+    "pages",
+    "services",
+    "services/behavioralBadges"
+   ],
+   "coberto_por_testes": 12,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/integrations/supabase/types.ts",
+   "camada": "integrations",
+   "exports": [
+    "CompositeTypes",
+    "Constants",
+    "Database",
+    "Enums",
+    "Json",
+    "Tables",
+    "TablesInsert",
+    "TablesUpdate"
+   ],
+   "export_default": null,
+   "linhas": 12973,
+   "tabelas": [],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 14,
+   "usado_por_modulos": [
+    "components/admin",
+    "hooks",
+    "integrations/supabase",
+    "lib",
+    "services"
+   ],
+   "coberto_por_testes": 0,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/lib/auctionAdmin.ts",
+   "camada": "lib",
+   "exports": [
+    "AdminAction",
+    "AdminOverview",
+    "AuctionAdminStatus",
+    "AuctionDraft",
+    "AuctionNotification",
+    "AuctionNotificationOutcome",
+    "AuctionNotifyInput",
+    "AuctionNotifyParticipant",
+    "AuctionStateView",
+    "DeliveryInput",
+    "DeliveryOutcome",
+    "DraftIssue",
+    "ENDING_SOON_MS",
+    "IssueLevel",
+    "MAX_DESCRIPTION_LENGTH",
+    "MAX_TITLE_LENGTH",
+    "MAX_WINDOW_MS",
+    "MIN_WINDOW_MS",
+    "canPerform",
+    "describeAction",
+    "hasBlockingIssues",
+    "resolveAuctionDelivery",
+    "resolveAuctionNotifications",
+    "summarizeAuctions",
+    "validateAuctionDraft"
+   ],
+   "export_default": null,
+   "linhas": 308,
+   "tabelas": [],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 3,
+   "usado_por_modulos": [
+    "components/auction",
+    "pages"
+   ],
+   "coberto_por_testes": 3,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/lib/auctionEngine.ts",
+   "camada": "lib",
+   "exports": [
+    "BidOutcome",
+    "BidRejection",
+    "EngineAuction",
+    "EngineBid",
+    "SettlementResult",
+    "applyBid",
+    "cancelRefunds",
+    "escrowDelta",
+    "minNextBid",
+    "settle"
+   ],
+   "export_default": null,
+   "linhas": 104,
+   "tabelas": [],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 0,
+   "usado_por_modulos": [],
+   "coberto_por_testes": 1,
+   "orfao": true
+  },
+  {
+   "arquivo": "src/lib/authValidations.ts",
+   "camada": "lib",
+   "exports": [
+    "LoginFormData",
+    "SignupFormData",
+    "checkPasswordLeaked",
+    "displayNameSchema",
+    "emailSchema",
+    "getPasswordStrength",
+    "loginSchema",
+    "passwordSchema",
+    "signupSchema"
+   ],
+   "export_default": null,
+   "linhas": 121,
+   "tabelas": [],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [
+    "zod"
+   ],
+   "zod_schemas": 2,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 2,
+   "usado_por_modulos": [
+    "components",
+    "pages"
+   ],
+   "coberto_por_testes": 0,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/lib/bingoEngine.ts",
+   "camada": "lib",
+   "exports": [
+    "BINGO_CELLS",
+    "BINGO_FREE_POSITION",
+    "BINGO_SIZE",
+    "BINGO_TOTAL_LINES",
+    "BingoAward",
+    "BingoCell",
+    "BingoRewardRules",
+    "bingoLineIndexes",
+    "bingoProgressPercent",
+    "calculateBingoAward",
+    "completedLinePositions",
+    "countCompletedLines",
+    "isCellAchieved",
+    "isFullHouse"
+   ],
+   "export_default": null,
+   "linhas": 122,
+   "tabelas": [],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 2,
+   "usado_por_modulos": [
+    "pages",
+    "services"
+   ],
+   "coberto_por_testes": 1,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/lib/boardChallenge.ts",
+   "camada": "lib",
+   "exports": [
+    "BOARD_CHALLENGE_MAX_ATTEMPTS",
+    "BoardChallengeInput",
+    "BoardChallengeOutcome",
+    "buildChallengeDedupeKey",
+    "challengeRewardFactor",
+    "resolveChallenge"
+   ],
+   "export_default": null,
+   "linhas": 96,
+   "tabelas": [],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 1,
+   "usado_por_modulos": [
+    "components/board"
+   ],
+   "coberto_por_testes": 1,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/lib/boardStats.ts",
+   "camada": "lib",
+   "exports": [
+    "AnalyzedChallenge",
+    "BoardChallengeReport",
+    "BoardChallengeStatRow",
+    "BoardLeaderboardRow",
+    "BoardMedal",
+    "ChallengeDifficulty",
+    "ChallengeFlag",
+    "MIN_SAMPLE_FOR_CALIBRATION",
+    "analyzeChallenge",
+    "buildChallengeReport",
+    "classifyDifficulty",
+    "medalForRank",
+    "trailProgressPct"
+   ],
+   "export_default": null,
+   "linhas": 158,
+   "tabelas": [],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 5,
+   "usado_por_modulos": [
+    "components/board",
+    "lib",
+    "services"
+   ],
+   "coberto_por_testes": 3,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/lib/boardStatsExport.ts",
+   "camada": "lib",
+   "exports": [
+    "BOARD_CHALLENGE_CSV_HEADERS",
+    "BoardChallengeCsvOptions",
+    "boardChallengeFileName",
+    "buildBoardChallengeCsv"
+   ],
+   "export_default": null,
+   "linhas": 131,
+   "tabelas": [],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 2,
+   "usado_por_modulos": [
+    "components/board",
+    "lib"
+   ],
+   "coberto_por_testes": 1,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/lib/boardStatsPdf.ts",
+   "camada": "lib",
+   "exports": [
+    "BoardChallengePdfModel",
+    "BoardChallengePdfOptions",
+    "buildBoardChallengePdfModel",
+    "exportBoardChallengePdf"
+   ],
+   "export_default": null,
+   "linhas": 145,
+   "tabelas": [],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [
+    "jspdf",
+    "jspdf-autotable"
+   ],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 1,
+   "usado_por_modulos": [
+    "components/board"
+   ],
+   "coberto_por_testes": 1,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/lib/boardTrail.ts",
+   "camada": "lib",
+   "exports": [
+    "BOARD_DICE_FACES",
+    "BOARD_MAX_COINS_PER_MOVE",
+    "BOARD_MAX_TILES",
+    "BOARD_MAX_XP_PER_MOVE",
+    "BOARD_MIN_TILES",
+    "BoardMoveOutcome",
+    "BoardPlayerState",
+    "BoardTile",
+    "BoardTileType",
+    "applyMove",
+    "boardProgressPercent",
+    "buildMoveDedupeKey",
+    "createInitialState",
+    "findTile",
+    "isPlayableBoard",
+    "normalizeBoard",
+    "rollDice",
+    "seedFromString"
+   ],
+   "export_default": null,
+   "linhas": 272,
+   "tabelas": [],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 6,
+   "usado_por_modulos": [
+    "components/board",
+    "lib",
+    "pages",
+    "services"
+   ],
+   "coberto_por_testes": 2,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/lib/boardTrailAuthoring.ts",
+   "camada": "lib",
+   "exports": [
+    "BOARD_DESCRIPTION_MAX",
+    "BOARD_LABEL_MAX",
+    "BOARD_MAX_MOVES_PER_DAY",
+    "BOARD_MIN_MOVES_PER_DAY",
+    "BOARD_TILE_TYPES",
+    "BOARD_TITLE_MAX",
+    "BoardEconomics",
+    "BoardIssue",
+    "BoardValidation",
+    "TileDraft",
+    "TrailDraft",
+    "createStarterTiles",
+    "draftsToTiles",
+    "simulateBoardEconomics",
+    "tilesToDrafts",
+    "validateTrailDraft"
+   ],
+   "export_default": null,
+   "linhas": 370,
+   "tabelas": [],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 2,
+   "usado_por_modulos": [
+    "components/board",
+    "pages"
+   ],
+   "coberto_por_testes": 1,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/lib/bossAlerts.ts",
+   "camada": "lib",
+   "exports": [
+    "ALERT_PHASES",
+    "BossAlert",
+    "BossAlertInput",
+    "BossAlertPhase",
+    "applyBossAlert",
+    "buildBossAlertDedupeKey",
+    "detectBossAlert"
+   ],
+   "export_default": null,
+   "linhas": 124,
+   "tabelas": [],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 0,
+   "usado_por_modulos": [],
+   "coberto_por_testes": 1,
+   "orfao": true
+  },
+  {
+   "arquivo": "src/lib/bossAutoHooks.ts",
+   "camada": "lib",
+   "exports": [
+    "AttendanceStreakRow",
+    "BOSS_DEDUPE_KEY_MAX",
+    "BossBattleTarget",
+    "BossDamageEvent",
+    "BossHookContext",
+    "TaskCompletionStatus",
+    "TaskScoreRow",
+    "TrailEnrollmentRow",
+    "applyBossEvent",
+    "buildBossDedupeKey",
+    "evaluateAttendanceDamage",
+    "evaluateTaskScoreDamage",
+    "evaluateTrailDamage",
+    "isBattleEligible",
+    "selectTargetBattle"
+   ],
+   "export_default": null,
+   "linhas": 220,
+   "tabelas": [],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 0,
+   "usado_por_modulos": [],
+   "coberto_por_testes": 1,
+   "orfao": true
+  },
+  {
+   "arquivo": "src/lib/bossBattle.ts",
+   "camada": "lib",
+   "exports": [
+    "BossBattleState",
+    "BossDamageRules",
+    "BossDamageSource",
+    "BossPhase",
+    "ContributorDamage",
+    "DEFAULT_DAMAGE_RULES",
+    "DamageOutcome",
+    "DamageRequest",
+    "RewardOptions",
+    "RewardShare",
+    "applyDamage",
+    "bossPhase",
+    "computeRawDamage",
+    "distributeRewards",
+    "hpPercent"
+   ],
+   "export_default": null,
+   "linhas": 246,
+   "tabelas": [],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 8,
+   "usado_por_modulos": [
+    "components/boss",
+    "lib",
+    "pages",
+    "services"
+   ],
+   "coberto_por_testes": 2,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/lib/bossBattlePlanner.ts",
+   "camada": "lib",
+   "exports": [
+    "BossPaceAssumptions",
+    "BossPlanInput",
+    "BossPlanProjection",
+    "BossPlanReview",
+    "DEFAULT_PACE",
+    "PlanIssue",
+    "PlanLevel",
+    "projectCapacity",
+    "suggestTotalHp",
+    "validateBossPlan",
+    "windowDays"
+   ],
+   "export_default": null,
+   "linhas": 277,
+   "tabelas": [],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 1,
+   "usado_por_modulos": [
+    "components/boss"
+   ],
+   "coberto_por_testes": 1,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/lib/bossDepartmentComparison.ts",
+   "camada": "lib",
+   "exports": [
+    "ComparisonOptions",
+    "DepartmentComparisonResult",
+    "DepartmentComparisonRow",
+    "NO_DEPARTMENT",
+    "compareDepartments",
+    "lastDaysWindow"
+   ],
+   "export_default": null,
+   "linhas": 181,
+   "tabelas": [],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 7,
+   "usado_por_modulos": [
+    "components/boss",
+    "lib"
+   ],
+   "coberto_por_testes": 3,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/lib/bossDepartmentComparisonExport.ts",
+   "camada": "lib",
+   "exports": [
+    "BOSS_COMPARISON_CSV_HEADERS",
+    "BossComparisonCsvOptions",
+    "bossComparisonFileName",
+    "buildBossComparisonCsv"
+   ],
+   "export_default": null,
+   "linhas": 120,
+   "tabelas": [],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 1,
+   "usado_por_modulos": [
+    "components/boss"
+   ],
+   "coberto_por_testes": 1,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/lib/bossExecutiveSummary.ts",
+   "camada": "lib",
+   "exports": [
+    "BossExecutiveAlert",
+    "BossExecutiveDepartmentRow",
+    "BossExecutiveOptions",
+    "BossExecutiveSummary",
+    "ExecutiveAlertKind",
+    "ExecutiveAlertLevel",
+    "buildBossExecutiveSummary"
+   ],
+   "export_default": null,
+   "linhas": 260,
+   "tabelas": [],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 1,
+   "usado_por_modulos": [
+    "components/boss"
+   ],
+   "coberto_por_testes": 0,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/lib/bossHistory.ts",
+   "camada": "lib",
+   "exports": [
+    "BossHistoryInput",
+    "BossHistoryRow",
+    "BossHistoryStatus",
+    "BossHistorySummary",
+    "HistoryDepartmentOption",
+    "SummarizeOptions",
+    "formatDuration",
+    "listHistoryDepartments",
+    "summarizeBossHistory",
+    "toHistoryRow"
+   ],
+   "export_default": null,
+   "linhas": 248,
+   "tabelas": [],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 14,
+   "usado_por_modulos": [
+    "components/boss",
+    "lib"
+   ],
+   "coberto_por_testes": 8,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/lib/bossHistoryExport.ts",
+   "camada": "lib",
+   "exports": [
+    "BOSS_HISTORY_CSV_HEADERS",
+    "BossHistoryCsvOptions",
+    "bossHistoryFileName",
+    "buildBossHistoryCsv"
+   ],
+   "export_default": null,
+   "linhas": 104,
+   "tabelas": [],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 1,
+   "usado_por_modulos": [
+    "components/boss"
+   ],
+   "coberto_por_testes": 1,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/lib/bossHistoryTrend.ts",
+   "camada": "lib",
+   "exports": [
+    "BossTrendOptions",
+    "BossTrendPoint",
+    "BossTrendResult",
+    "buildBossHistoryTrend"
+   ],
+   "export_default": null,
+   "linhas": 155,
+   "tabelas": [],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 2,
+   "usado_por_modulos": [
+    "components/boss",
+    "lib"
+   ],
+   "coberto_por_testes": 1,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/lib/bossLeaderboard.ts",
+   "camada": "lib",
+   "exports": [
+    "BuildLeaderboardOptions",
+    "LeaderboardInput",
+    "LeaderboardResult",
+    "LeaderboardRow",
+    "buildBossLeaderboard",
+    "formatShare",
+    "rankLabel"
+   ],
+   "export_default": null,
+   "linhas": 155,
+   "tabelas": [],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 1,
+   "usado_por_modulos": [
+    "components/boss"
+   ],
+   "coberto_por_testes": 1,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/lib/bossReport.ts",
+   "camada": "lib",
+   "exports": [
+    "BOSS_REPORT_SECTIONS",
+    "BossReport",
+    "BossReportFilters",
+    "BossReportMeta",
+    "DepartmentNames",
+    "GOAL_STATUS_LABEL",
+    "SEVERITY_LABEL",
+    "bossReportFileName",
+    "buildBossReport",
+    "buildBossReportCsv",
+    "pct",
+    "resolveDepartmentName"
+   ],
+   "export_default": null,
+   "linhas": 340,
+   "tabelas": [],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 2,
+   "usado_por_modulos": [
+    "components/boss",
+    "lib"
+   ],
+   "coberto_por_testes": 2,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/lib/bossReportPdf.ts",
+   "camada": "lib",
+   "exports": [
+    "exportBossReportPdf"
+   ],
+   "export_default": null,
+   "linhas": 118,
+   "tabelas": [],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [
+    "jspdf",
+    "jspdf-autotable"
+   ],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 1,
+   "usado_por_modulos": [
+    "components/boss"
+   ],
+   "coberto_por_testes": 0,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/lib/bossWinRateGoals.ts",
+   "camada": "lib",
+   "exports": [
+    "DropSeverity",
+    "GoalStatus",
+    "WinRateGoalRow",
+    "WinRateGoalsOptions",
+    "WinRateGoalsResult",
+    "evaluateWinRateGoals"
+   ],
+   "export_default": null,
+   "linhas": 201,
+   "tabelas": [],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 3,
+   "usado_por_modulos": [
+    "components/boss",
+    "lib"
+   ],
+   "coberto_por_testes": 1,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/lib/campaignImport.ts",
+   "camada": "lib",
+   "exports": [
+    "DetectedColumns",
+    "DirectoryCandidate",
+    "DirectoryEntry",
+    "DirectoryIndex",
+    "IMPORT_TEMPLATE_CSV",
+    "MAX_IMPORT_ROWS",
+    "ParseResult",
+    "ParsedResultRow",
+    "ReconciliationEntry",
+    "ReconciliationIssue",
+    "ReconciliationOverrides",
+    "ReconciliationReport",
+    "ResolvedResultRow",
+    "buildDedupeKey",
+    "buildDirectoryIndex",
+    "buildReconciliationReport",
+    "buildResultRows",
+    "detectColumns",
+    "findDirectoryCandidates",
+    "normalizeHeader",
+    "normalizeOverrideId",
+    "normalizeSellerIdentifier",
+    "parseAmount",
+    "parseCampaignResultFile",
+    "parseReferenceDate",
+    "reconciliationIssueLabel",
+    "reprocessWithOverrides",
+    "resolveRows",
+    "summarizeBySeller"
+   ],
+   "export_default": null,
+   "linhas": 772,
+   "tabelas": [],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [
+    "exceljs",
+    "papaparse",
+    "zod"
+   ],
+   "zod_schemas": 1,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 3,
+   "usado_por_modulos": [
+    "components/campaigns",
+    "services"
+   ],
+   "coberto_por_testes": 1,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/lib/campaignTeamHealth.ts",
+   "camada": "lib",
+   "exports": [
+    "HealthMember",
+    "HealthParticipant",
+    "HealthTeam",
+    "TeamHealthCode",
+    "TeamHealthIssue",
+    "TeamHealthReport",
+    "TeamHealthSeverity",
+    "analyzeTeamHealth",
+    "summarizeTeamHealth"
+   ],
+   "export_default": null,
+   "linhas": 252,
+   "tabelas": [],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 2,
+   "usado_por_modulos": [
+    "components/campaigns"
+   ],
+   "coberto_por_testes": 1,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/lib/campaignTeamMetrics.ts",
+   "camada": "lib",
+   "exports": [
+    "MetricsCampaign",
+    "MetricsTeam",
+    "PERIOD_OPTIONS",
+    "PeriodPreset",
+    "PeriodRange",
+    "TeamMetricRow",
+    "TeamMetricsSummary",
+    "buildTeamMetrics",
+    "campaignInPeriod",
+    "resolvePeriod",
+    "summarizeTeamMetrics"
+   ],
+   "export_default": null,
+   "linhas": 178,
+   "tabelas": [],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 2,
+   "usado_por_modulos": [
+    "hooks",
+    "pages"
+   ],
+   "coberto_por_testes": 1,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/lib/campaignTeamSplit.ts",
+   "camada": "lib",
+   "exports": [
+    "MemberSharePreview",
+    "SimCampaignState",
+    "SimParticipant",
+    "SimTeam",
+    "TeamShareMode",
+    "TeamSplitOutcome",
+    "TeamSplitRule",
+    "awardCampaignTeamSplit",
+    "pgRound",
+    "previewTeamShares",
+    "recalcCampaignTeams"
+   ],
+   "export_default": null,
+   "linhas": 216,
+   "tabelas": [],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 1,
+   "usado_por_modulos": [
+    "pages"
+   ],
+   "coberto_por_testes": 1,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/lib/campaignTeamSplitRevert.ts",
+   "camada": "lib",
+   "exports": [
+    "RevertBalances",
+    "RevertBatch",
+    "RevertEntry",
+    "RevertFailure",
+    "RevertOutcome",
+    "RevertState",
+    "revertCampaignTeamSplit"
+   ],
+   "export_default": null,
+   "linhas": 137,
+   "tabelas": [],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 0,
+   "usado_por_modulos": [],
+   "coberto_por_testes": 1,
+   "orfao": true
+  },
+  {
+   "arquivo": "src/lib/cardPackNotifications.ts",
+   "camada": "lib",
+   "exports": [
+    "CARD_PACK_URL",
+    "CardPackPushPayload",
+    "CardPackRow",
+    "PUSH_MESSAGE_MAX",
+    "PUSH_TITLE_MAX",
+    "PUSH_TYPE_CARD_PACK",
+    "buildCardPackPush"
+   ],
+   "export_default": null,
+   "linhas": 85,
+   "tabelas": [],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 0,
+   "usado_por_modulos": [],
+   "coberto_por_testes": 1,
+   "orfao": true
+  },
+  {
+   "arquivo": "src/lib/cardPackTriggers.ts",
+   "camada": "lib",
+   "exports": [
+    "AttendanceStreakRow",
+    "CARD_PACK_MAX_SIZE",
+    "CARD_PACK_MIN_SIZE",
+    "CardPackGrant",
+    "CardPackSource",
+    "PACK_SIZE_STREAK_MILESTONE",
+    "PACK_SIZE_TASK_ON_TIME",
+    "PACK_SIZE_TRAIL_COMPLETED",
+    "STREAK_MILESTONE_MAX",
+    "STREAK_MILESTONE_STEP",
+    "TaskCompletionStatus",
+    "TaskScoreRow",
+    "TrailEnrollmentRow",
+    "applyGrant",
+    "buildPackDedupeKey",
+    "evaluateAttendanceStreakPack",
+    "evaluateTaskScorePack",
+    "evaluateTrailEnrollmentPack",
+    "highestStreakMilestone"
+   ],
+   "export_default": null,
+   "linhas": 153,
+   "tabelas": [],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 1,
+   "usado_por_modulos": [
+    "lib"
+   ],
+   "coberto_por_testes": 2,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/lib/cardSetRewards.ts",
+   "camada": "lib",
+   "exports": [
+    "COINS_PER_VALUE_POINT",
+    "SET_CLAIM_REJECTION_LABEL",
+    "SET_LABEL",
+    "SET_MILESTONES",
+    "SetClaimRejection",
+    "SetClaimVerdict",
+    "SetMilestone",
+    "SetMilestoneReward",
+    "SetProgress",
+    "SetRewardClaim",
+    "XP_PER_VALUE_POINT",
+    "cardsRequiredFor",
+    "checkSetClaim",
+    "setLabel",
+    "setRewardDedupeKey",
+    "splitByMilestone",
+    "summarizeSetRewards"
+   ],
+   "export_default": null,
+   "linhas": 245,
+   "tabelas": [],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 4,
+   "usado_por_modulos": [
+    "components/cards",
+    "hooks",
+    "pages",
+    "services"
+   ],
+   "coberto_por_testes": 1,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/lib/certificatePdf.ts",
+   "camada": "lib",
+   "exports": [
+    "CertificatePdfInput",
+    "buildCertificateFileName",
+    "buildVerificationUrl",
+    "downloadCertificatePdf",
+    "generateCertificatePdf"
+   ],
+   "export_default": null,
+   "linhas": 153,
+   "tabelas": [],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [
+    "date-fns",
+    "jspdf",
+    "qrcode"
+   ],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 1,
+   "usado_por_modulos": [
+    "components/certifications"
+   ],
+   "coberto_por_testes": 1,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/lib/climateBenchmark.ts",
+   "camada": "lib",
+   "exports": [
+    "BENCHMARK_COMPANY_SIZES",
+    "BENCHMARK_INDUSTRIES",
+    "BENCHMARK_POSITION_CLASS",
+    "BENCHMARK_POSITION_LABEL",
+    "BenchmarkCompanySize",
+    "BenchmarkIndustry",
+    "BenchmarkPosition",
+    "BenchmarkSummary",
+    "DEFAULT_BENCHMARK_COMPANY_SIZE",
+    "DEFAULT_BENCHMARK_INDUSTRY",
+    "PillarBenchmarkComparison",
+    "PillarBenchmarkRow",
+    "benchmarkFallbackChain",
+    "benchmarkPosition",
+    "buildBenchmarkComparisons",
+    "companySizeLabel",
+    "describeAppliedSegment",
+    "formatGap",
+    "industryLabel",
+    "normalizeCompanySize",
+    "normalizeIndustry",
+    "normalizeThresholds",
+    "safeNumber",
+    "summarizeBenchmark",
+    "toComparison"
+   ],
+   "export_default": null,
+   "linhas": 320,
+   "tabelas": [],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 4,
+   "usado_por_modulos": [
+    "components/engagement",
+    "lib",
+    "pages",
+    "services"
+   ],
+   "coberto_por_testes": 3,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/lib/csvExport.ts",
+   "camada": "lib",
+   "exports": [
+    "downloadCSV",
+    "toCSV"
+   ],
+   "export_default": null,
+   "linhas": 31,
+   "tabelas": [],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 13,
+   "usado_por_modulos": [
+    "components/board",
+    "components/boss",
+    "components/luckywheel",
+    "components/security",
+    "components/sequence",
+    "components/wager",
+    "lib",
+    "pages"
+   ],
+   "coberto_por_testes": 0,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/lib/dailyWager.ts",
+   "camada": "lib",
+   "exports": [
+    "DailyWagerEntry",
+    "DailyWagerQuestion",
+    "DailyWagerState",
+    "WAGER_REASON_MESSAGES",
+    "WagerOption",
+    "WagerPreview",
+    "clampStake",
+    "maxAllowedStake",
+    "parseDailyWager",
+    "parseWagerOptions",
+    "previewWager",
+    "stakePresets",
+    "wagerReasonMessage"
+   ],
+   "export_default": null,
+   "linhas": 212,
+   "tabelas": [],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 2,
+   "usado_por_modulos": [
+    "pages",
+    "services"
+   ],
+   "coberto_por_testes": 1,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/lib/departmentWar.ts",
+   "camada": "lib",
+   "exports": [
+    "DEFAULT_WAR_REWARDS",
+    "DEFAULT_WAR_SCORING",
+    "WarContributionInput",
+    "WarDepartmentInput",
+    "WarMetricWeight",
+    "WarReward",
+    "WarRewardConfig",
+    "WarScoringConfig",
+    "WarStanding",
+    "computeWarStandings",
+    "distributeWarRewards",
+    "normalizeScoringConfig",
+    "warProgress"
+   ],
+   "export_default": null,
+   "linhas": 315,
+   "tabelas": [],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 5,
+   "usado_por_modulos": [
+    "components/war",
+    "hooks",
+    "lib",
+    "pages",
+    "services"
+   ],
+   "coberto_por_testes": 1,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/lib/departmentWarConfig.ts",
+   "camada": "lib",
+   "exports": [
+    "WAR_LIMITS",
+    "WarConfigDraft",
+    "WarConfigIssue",
+    "WarConfigIssueLevel",
+    "WarConfigReview",
+    "WarCostProjection",
+    "WarDepartmentDraft",
+    "WarMetricDraft",
+    "emptyWarDraft",
+    "normalizeWarDraft",
+    "projectWarCost",
+    "reviewWarDraft"
+   ],
+   "export_default": null,
+   "linhas": 422,
+   "tabelas": [],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 3,
+   "usado_por_modulos": [
+    "components/war",
+    "hooks",
+    "services"
+   ],
+   "coberto_por_testes": 1,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/lib/deviceFingerprint.ts",
+   "camada": "lib",
+   "exports": [
+    "FINGERPRINT_LENGTH",
+    "FingerprintSignals",
+    "collectFingerprintSignals",
+    "computeDeviceFingerprint",
+    "getDeviceFingerprint"
+   ],
+   "export_default": null,
+   "linhas": 95,
+   "tabelas": [],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 3,
+   "usado_por_modulos": [
+    "hooks",
+    "services"
+   ],
+   "coberto_por_testes": 1,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/lib/deviceLabel.ts",
+   "camada": "lib",
+   "exports": [
+    "DEVICE_LABEL_MAX_LENGTH",
+    "PushSyncEntry",
+    "PushSyncEvent",
+    "PushSyncEventType",
+    "buildSyncHistory",
+    "displayDeviceLabel",
+    "isValidDeviceLabel",
+    "normalizeDeviceLabel",
+    "relativeTime",
+    "suggestDeviceLabel"
+   ],
+   "export_default": null,
+   "linhas": 200,
+   "tabelas": [],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 5,
+   "usado_por_modulos": [
+    "components",
+    "components/push",
+    "hooks",
+    "lib",
+    "services"
+   ],
+   "coberto_por_testes": 1,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/lib/edgeAvailability.ts",
+   "camada": "lib",
+   "exports": [
+    "clearEdgeAvailabilityCache",
+    "isEdgeAvailable",
+    "isEdgeSkillsDisabled",
+    "isFunctionDeployed",
+    "markEdgeAvailable",
+    "markEdgeUnavailable",
+    "setEdgeSkillsDisabled"
+   ],
+   "export_default": null,
+   "linhas": 109,
+   "tabelas": [],
+   "rpcs": [],
+   "edges": [],
+   "env": [
+    "VITE_DEPLOYED_EDGE_FUNCTIONS"
+   ],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 3,
+   "usado_por_modulos": [
+    "components",
+    "lib",
+    "pages"
+   ],
+   "coberto_por_testes": 0,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/lib/edgeErrors.ts",
+   "camada": "lib",
+   "exports": [
+    "EdgeErrorInfo",
+    "EdgeErrorKind",
+    "EdgeErrorPayload",
+    "classifyEdgeError",
+    "describeEdgeError",
+    "describeEdgeErrorMessage",
+    "normalizeRetryAfter"
+   ],
+   "export_default": null,
+   "linhas": 236,
+   "tabelas": [],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 1,
+   "usado_por_modulos": [
+    "lib"
+   ],
+   "coberto_por_testes": 2,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/lib/engagementInsights.ts",
+   "camada": "lib",
+   "exports": [
+    "EngagementInsight",
+    "INSIGHT_MIN_BENCHMARK_SAMPLE",
+    "INSIGHT_MIN_RESPONDENTS",
+    "InsightEngineInput",
+    "InsightFactorInput",
+    "InsightKind",
+    "InsightNpsInput",
+    "InsightOverviewInput",
+    "InsightPillarInput",
+    "InsightSeverity",
+    "InsightSummary",
+    "SEVERITY_CLASS",
+    "SEVERITY_LABEL",
+    "buildEngagementInsights",
+    "summarizeInsights"
+   ],
+   "export_default": null,
+   "linhas": 348,
+   "tabelas": [],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 1,
+   "usado_por_modulos": [
+    "components/engagement"
+   ],
+   "coberto_por_testes": 1,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/lib/errorMessages.ts",
+   "camada": "lib",
+   "exports": [
+    "errorHandlers",
+    "getErrorMessage",
+    "showErrorToast",
+    "showSuccessToast"
+   ],
+   "export_default": null,
+   "linhas": 105,
+   "tabelas": [],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [
+    "sonner"
+   ],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 6,
+   "usado_por_modulos": [
+    "components/board",
+    "hooks",
+    "pages"
+   ],
+   "coberto_por_testes": 0,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/lib/exportReports.ts",
+   "camada": "lib",
+   "exports": [
+    "ExportOptions",
+    "ReportData",
+    "ReportSection",
+    "createEngagementReport",
+    "createTeamPerformanceReport",
+    "exportReport",
+    "exportToCSV",
+    "exportToExcel",
+    "exportToPDF"
+   ],
+   "export_default": null,
+   "linhas": 538,
+   "tabelas": [],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [
+    "date-fns"
+   ],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 0,
+   "usado_por_modulos": [],
+   "coberto_por_testes": 0,
+   "orfao": true
+  },
+  {
+   "arquivo": "src/lib/goalBetCountdown.ts",
+   "camada": "lib",
+   "exports": [
+    "COUNTDOWN_SOON_MS",
+    "COUNTDOWN_URGENT_MS",
+    "CountdownUrgency",
+    "GoalBetCountdown",
+    "computeGoalBetCountdown"
+   ],
+   "export_default": null,
+   "linhas": 89,
+   "tabelas": [],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 1,
+   "usado_por_modulos": [
+    "components/prediction"
+   ],
+   "coberto_por_testes": 1,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/lib/goalBetExposure.ts",
+   "camada": "lib",
+   "exports": [
+    "EXPOSURE_ATTENTION_RATIO",
+    "EXPOSURE_HIGH_RATIO",
+    "ExposureLevel",
+    "GoalBetExposure",
+    "computeGoalBetExposure"
+   ],
+   "export_default": null,
+   "linhas": 111,
+   "tabelas": [],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 3,
+   "usado_por_modulos": [
+    "components/prediction",
+    "pages"
+   ],
+   "coberto_por_testes": 1,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/lib/goalBetFilter.ts",
+   "camada": "lib",
+   "exports": [
+    "GOAL_BET_FILTERS",
+    "GOAL_BET_FILTER_LABELS",
+    "GOAL_BET_FILTER_STORAGE_KEY",
+    "GoalBetFilter",
+    "countMarketsByFilter",
+    "filterMarkets",
+    "parseGoalBetFilter"
+   ],
+   "export_default": null,
+   "linhas": 71,
+   "tabelas": [],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 5,
+   "usado_por_modulos": [
+    "components/prediction",
+    "hooks",
+    "lib",
+    "pages"
+   ],
+   "coberto_por_testes": 1,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/lib/goalBetHistory.ts",
+   "camada": "lib",
+   "exports": [
+    "GoalBetHistoryItem",
+    "GoalBetHistorySummary",
+    "computeGoalBetHistory"
+   ],
+   "export_default": null,
+   "linhas": 105,
+   "tabelas": [],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 2,
+   "usado_por_modulos": [
+    "components/prediction",
+    "lib"
+   ],
+   "coberto_por_testes": 2,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/lib/goalBetHistoryCsv.ts",
+   "camada": "lib",
+   "exports": [
+    "GOAL_BET_CSV_HEADER",
+    "buildGoalBetHistoryCsv",
+    "escapeCsvField",
+    "goalBetHistoryCsvFilename"
+   ],
+   "export_default": null,
+   "linhas": 79,
+   "tabelas": [],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 1,
+   "usado_por_modulos": [
+    "components/prediction"
+   ],
+   "coberto_por_testes": 1,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/lib/goalBetOrdering.ts",
+   "camada": "lib",
+   "exports": [
+    "sortMarketsByUrgency"
+   ],
+   "export_default": null,
+   "linhas": 55,
+   "tabelas": [],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 1,
+   "usado_por_modulos": [
+    "pages"
+   ],
+   "coberto_por_testes": 1,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/lib/goalBetPosition.ts",
+   "camada": "lib",
+   "exports": [
+    "GoalBetPositionEntry",
+    "GoalBetPositionSummary",
+    "computeGoalBetPosition"
+   ],
+   "export_default": null,
+   "linhas": 139,
+   "tabelas": [],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 3,
+   "usado_por_modulos": [
+    "components/prediction",
+    "lib",
+    "pages"
+   ],
+   "coberto_por_testes": 1,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/lib/goalBetSearch.ts",
+   "camada": "lib",
+   "exports": [
+    "buildMarketSearchIndex",
+    "marketMatchesTerms",
+    "normalizeSearchText",
+    "parseSearchTerms",
+    "searchMarkets"
+   ],
+   "export_default": null,
+   "linhas": 65,
+   "tabelas": [],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 1,
+   "usado_por_modulos": [
+    "pages"
+   ],
+   "coberto_por_testes": 1,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/lib/goalBetSettlement.ts",
+   "camada": "lib",
+   "exports": [
+    "GOAL_ACHIEVED_PERCENT",
+    "GoalBetOption",
+    "GoalBetOutcome",
+    "GoalBetOutcomeKind",
+    "ResolveGoalBetInput",
+    "extractGoalBetCampaignName",
+    "resolveGoalBetOutcome"
+   ],
+   "export_default": null,
+   "linhas": 178,
+   "tabelas": [],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 2,
+   "usado_por_modulos": [
+    "hooks",
+    "lib"
+   ],
+   "coberto_por_testes": 1,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/lib/goalBetShowcase.ts",
+   "camada": "lib",
+   "exports": [
+    "GoalBetShowcaseMarket",
+    "goalBetMarketsForCampaign",
+    "pickGoalBetMarket"
+   ],
+   "export_default": null,
+   "linhas": 60,
+   "tabelas": [],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 1,
+   "usado_por_modulos": [
+    "components/campaigns"
+   ],
+   "coberto_por_testes": 1,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/lib/goalBetStakePreview.ts",
+   "camada": "lib",
+   "exports": [
+    "GoalBetStakePreview",
+    "StakePreviewBlock",
+    "computeGoalBetStakePreview"
+   ],
+   "export_default": null,
+   "linhas": 128,
+   "tabelas": [],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 1,
+   "usado_por_modulos": [
+    "components/prediction"
+   ],
+   "coberto_por_testes": 1,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/lib/goalBetting.ts",
+   "camada": "lib",
+   "exports": [
+    "GOAL_BET_ERROR_MESSAGES",
+    "GoalBetBuildError",
+    "GoalBetBuildResult",
+    "GoalBetCampaign",
+    "GoalBetCandidate",
+    "GoalBetDraftInput",
+    "LOCK_BUFFER_MS",
+    "MAX_GOAL_BET_CANDIDATES",
+    "NO_WINNER_LABEL",
+    "buildGoalBetDraft",
+    "buildOptionLabels",
+    "goalBetTitle",
+    "impliedProbabilities",
+    "rankGoalBetCandidates",
+    "suggestGoalBetLocksAt"
+   ],
+   "export_default": null,
+   "linhas": 195,
+   "tabelas": [],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 2,
+   "usado_por_modulos": [
+    "components/prediction",
+    "lib"
+   ],
+   "coberto_por_testes": 2,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/lib/goalBetUrlState.ts",
+   "camada": "lib",
+   "exports": [
+    "GOAL_BET_FILTER_PARAM",
+    "GOAL_BET_QUERY_MAX_LENGTH",
+    "GOAL_BET_QUERY_PARAM",
+    "GoalBetUrlState",
+    "readGoalBetUrlState",
+    "sanitizeGoalBetQuery",
+    "writeGoalBetUrlState"
+   ],
+   "export_default": null,
+   "linhas": 73,
+   "tabelas": [],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 1,
+   "usado_por_modulos": [
+    "hooks"
+   ],
+   "coberto_por_testes": 1,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/lib/lightningQuizScoring.ts",
+   "camada": "lib",
+   "exports": [
+    "LIGHTNING_COINS_PER_CORRECT",
+    "LIGHTNING_DAILY_ROUNDS",
+    "LIGHTNING_MAX_COINS",
+    "LIGHTNING_MAX_XP",
+    "LIGHTNING_QUESTIONS_PER_ROUND",
+    "LIGHTNING_ROUND_SECONDS",
+    "LIGHTNING_STREAK_COIN_BONUS",
+    "LIGHTNING_STREAK_THRESHOLD",
+    "LIGHTNING_STREAK_XP_BONUS",
+    "LIGHTNING_XP_PER_CORRECT",
+    "LightningReward",
+    "LightningRewardInput",
+    "accuracyPercent",
+    "bestStreakOf",
+    "calculateLightningReward",
+    "secondsRemaining"
+   ],
+   "export_default": null,
+   "linhas": 83,
+   "tabelas": [],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 1,
+   "usado_por_modulos": [
+    "pages"
+   ],
+   "coberto_por_testes": 1,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/lib/luckyWheelAudit.ts",
+   "camada": "lib",
+   "exports": [
+    "AUDITED_FIELDS",
+    "AuditEntry",
+    "AuditOperation",
+    "AuditRecord",
+    "AuditSummary",
+    "AuditedField",
+    "EconomicImpact",
+    "FIELD_LABELS",
+    "FieldChange",
+    "PrizeSnapshot",
+    "buildAuditTimeline",
+    "diffSnapshots",
+    "formatFieldValue",
+    "measureEconomicImpact",
+    "summarizeAudit"
+   ],
+   "export_default": null,
+   "linhas": 262,
+   "tabelas": [],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 2,
+   "usado_por_modulos": [
+    "components/luckywheel",
+    "services"
+   ],
+   "coberto_por_testes": 1,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/lib/luckyWheelBudget.ts",
+   "camada": "lib",
+   "exports": [
+    "BudgetAuditEntry",
+    "DEFAULT_COINS_PER_SPIN_BUDGET",
+    "MAX_COINS_PER_SPIN_BUDGET",
+    "MIN_COINS_PER_SPIN_BUDGET",
+    "fetchBudgetHistory",
+    "fetchRemoteBudget",
+    "loadBudget",
+    "parseBudget",
+    "persistRemoteBudget",
+    "saveBudget"
+   ],
+   "export_default": null,
+   "linhas": 114,
+   "tabelas": [
+    "lucky_wheel_settings",
+    "lucky_wheel_settings_audit"
+   ],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 2,
+   "usado_por_modulos": [
+    "components/luckywheel",
+    "lib"
+   ],
+   "coberto_por_testes": 1,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/lib/luckyWheelBudgetWhatIf.ts",
+   "camada": "lib",
+   "exports": [
+    "WhatIfReport",
+    "WhatIfScenario",
+    "WhatIfSnapshotRow",
+    "buildWhatIfSignature",
+    "defaultCandidates",
+    "fetchWhatIfSnapshots",
+    "normalizeCandidates",
+    "persistWhatIfSnapshot",
+    "simulateBudgetScenarios"
+   ],
+   "export_default": null,
+   "linhas": 221,
+   "tabelas": [
+    "lucky_wheel_whatif_snapshots"
+   ],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 1,
+   "usado_por_modulos": [
+    "components/luckywheel"
+   ],
+   "coberto_por_testes": 2,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/lib/luckyWheelComparisonAlerts.ts",
+   "camada": "lib",
+   "exports": [
+    "ComparisonAlertDecision",
+    "ComparisonAlertOptions",
+    "ComparisonAlertSeverity",
+    "comparisonWindowKey",
+    "decideComparisonAlerts"
+   ],
+   "export_default": null,
+   "linhas": 180,
+   "tabelas": [],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 2,
+   "usado_por_modulos": [
+    "components/luckywheel",
+    "lib"
+   ],
+   "coberto_por_testes": 1,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/lib/luckyWheelOdds.ts",
+   "camada": "lib",
+   "exports": [
+    "OddsPrize",
+    "OddsPrizeType",
+    "PrizeOdds",
+    "WheelBudget",
+    "WheelBudgetInput",
+    "WheelIssue",
+    "WheelIssueLevel",
+    "WheelProjection",
+    "WheelValidationOptions",
+    "hasBlockingIssues",
+    "projectBudget",
+    "projectWheel",
+    "resolvePrizeIndex",
+    "validateWheelConfig"
+   ],
+   "export_default": null,
+   "linhas": 311,
+   "tabelas": [],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 4,
+   "usado_por_modulos": [
+    "components/luckywheel",
+    "lib",
+    "pages"
+   ],
+   "coberto_por_testes": 6,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/lib/luckyWheelPayout.ts",
+   "camada": "lib",
+   "exports": [
+    "DailyPayout",
+    "PayoutAlert",
+    "PayoutAlertLevel",
+    "PayoutCsvMeta",
+    "PayoutOptions",
+    "PayoutReport",
+    "PayoutSpin",
+    "PayoutTotals",
+    "PrizeReconciliation",
+    "ReconciliationStatus",
+    "buildPayoutCsv",
+    "buildPayoutReport",
+    "payoutCsvFilename",
+    "payoutSeverity"
+   ],
+   "export_default": null,
+   "linhas": 540,
+   "tabelas": [],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 3,
+   "usado_por_modulos": [
+    "components/luckywheel",
+    "lib",
+    "services"
+   ],
+   "coberto_por_testes": 3,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/lib/luckyWheelPayoutAlerts.ts",
+   "camada": "lib",
+   "exports": [
+    "PayoutAlertDecision",
+    "PayoutAlertOptions",
+    "PayoutAlertSeverity",
+    "chiSquareCritical",
+    "decidePayoutAlerts",
+    "payoutDegreesOfFreedom"
+   ],
+   "export_default": null,
+   "linhas": 190,
+   "tabelas": [],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 1,
+   "usado_por_modulos": [
+    "lib"
+   ],
+   "coberto_por_testes": 1,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/lib/luckyWheelPayoutComparison.ts",
+   "camada": "lib",
+   "exports": [
+    "SignificanceTest",
+    "SignificanceVerdict",
+    "WindowAggregate",
+    "WindowComparison",
+    "WindowComparisonOptions",
+    "comparePayoutWindows",
+    "erf",
+    "normalCdf",
+    "regularizedIncompleteBeta",
+    "tTestPValue",
+    "welchTest"
+   ],
+   "export_default": null,
+   "linhas": 400,
+   "tabelas": [],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 3,
+   "usado_por_modulos": [
+    "components/luckywheel",
+    "lib"
+   ],
+   "coberto_por_testes": 4,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/lib/luckyWheelPayoutHistory.ts",
+   "camada": "lib",
+   "exports": [
+    "PayoutSnapshotRow",
+    "PayoutTrendCsvMeta",
+    "PayoutTrendOptions",
+    "PayoutTrendPoint",
+    "PayoutTrendResult",
+    "PayoutTrendStatus",
+    "PayoutTrendSummary",
+    "buildPayoutTrend",
+    "buildPayoutTrendCsv",
+    "isValidDay"
+   ],
+   "export_default": null,
+   "linhas": 441,
+   "tabelas": [],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 4,
+   "usado_por_modulos": [
+    "components/luckywheel",
+    "lib",
+    "services"
+   ],
+   "coberto_por_testes": 5,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/lib/memoryDeckAuthoring.ts",
+   "camada": "lib",
+   "exports": [
+    "DeckDraft",
+    "DeckValidation",
+    "MEMORY_CARD_TEXT_MAX",
+    "MEMORY_DESCRIPTION_MAX",
+    "MEMORY_MAX_PAIRS_PER_DECK",
+    "MEMORY_MIN_PAIRS",
+    "MEMORY_TITLE_MAX",
+    "PairDiff",
+    "PairDraft",
+    "ValidationIssue",
+    "comparisonKey",
+    "diffPairs",
+    "normalizeCardText",
+    "validateDeckDraft"
+   ],
+   "export_default": null,
+   "linhas": 203,
+   "tabelas": [],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 3,
+   "usado_por_modulos": [
+    "hooks",
+    "pages",
+    "services"
+   ],
+   "coberto_por_testes": 1,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/lib/memoryGame.ts",
+   "camada": "lib",
+   "exports": [
+    "MEMORY_COINS_PER_PAIR",
+    "MEMORY_DAILY_REWARDED_SESSIONS",
+    "MEMORY_MAX_COINS",
+    "MEMORY_MAX_XP",
+    "MEMORY_PERFECT_COIN_BONUS",
+    "MEMORY_PERFECT_MOVE_FACTOR",
+    "MEMORY_PERFECT_XP_BONUS",
+    "MEMORY_SPEED_COIN_BONUS",
+    "MEMORY_SPEED_MS_PER_PAIR",
+    "MEMORY_SPEED_XP_BONUS",
+    "MEMORY_XP_PER_PAIR",
+    "MemoryCard",
+    "MemoryPair",
+    "MemoryReward",
+    "MemoryRewardInput",
+    "buildMemoryBoard",
+    "calculateMemoryReward",
+    "seedFromString"
+   ],
+   "export_default": null,
+   "linhas": 150,
+   "tabelas": [],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 3,
+   "usado_por_modulos": [
+    "components/memory",
+    "pages",
+    "services"
+   ],
+   "coberto_por_testes": 1,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/lib/notificationTypePrefs.ts",
+   "camada": "lib",
+   "exports": [
+    "ChannelMap",
+    "NOTIFICATION_CHANNELS",
+    "NotificationChannel",
+    "TypePrefEntry",
+    "TypePrefs",
+    "mergeChannelPreference",
+    "mergeManyChannelPreferences",
+    "normalizeTypePrefs",
+    "resolveChannels"
+   ],
+   "export_default": null,
+   "linhas": 110,
+   "tabelas": [],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 5,
+   "usado_por_modulos": [
+    "components",
+    "components/notifications",
+    "hooks"
+   ],
+   "coberto_por_testes": 2,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/lib/npsHistory.ts",
+   "camada": "lib",
+   "exports": [
+    "NPS_ZONE_LABEL",
+    "NpsHistoryPoint",
+    "NpsMetricKey",
+    "NpsSeries",
+    "NpsSeriesPoint",
+    "NpsTrend",
+    "NpsZone",
+    "buildNpsSeries",
+    "computeNpsScore",
+    "formatPeriodLabel",
+    "npsTrend",
+    "npsZone"
+   ],
+   "export_default": null,
+   "linhas": 183,
+   "tabelas": [],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 3,
+   "usado_por_modulos": [
+    "components/engagement",
+    "pages",
+    "services"
+   ],
+   "coberto_por_testes": 1,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/lib/nr1Export.ts",
+   "camada": "lib",
+   "exports": [
+    "Nr1ExportContext",
+    "Nr1ExportRow",
+    "buildNr1ExportRows",
+    "exportNr1Csv",
+    "exportNr1Pdf",
+    "nr1ExportFilename"
+   ],
+   "export_default": null,
+   "linhas": 126,
+   "tabelas": [],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [
+    "date-fns",
+    "jspdf",
+    "jspdf-autotable"
+   ],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 1,
+   "usado_por_modulos": [
+    "pages"
+   ],
+   "coberto_por_testes": 1,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/lib/opinionChannel.ts",
+   "camada": "lib",
+   "exports": [
+    "CATEGORY_LABELS",
+    "CLOSED_STATUSES",
+    "NormalizedOpinionDraft",
+    "OPINION_CATEGORIES",
+    "OPINION_CONTENT_MAX",
+    "OPINION_CONTENT_MIN",
+    "OPINION_MIN_AGGREGATE",
+    "OPINION_STATUSES",
+    "OPINION_SUBJECT_MAX",
+    "OPINION_URGENCIES",
+    "OpinionCategory",
+    "OpinionDraft",
+    "OpinionDraftValidation",
+    "OpinionFeedEntry",
+    "OpinionFeedSummary",
+    "OpinionStatus",
+    "OpinionUrgency",
+    "RawOpinionRow",
+    "SLA_HOURS_BY_URGENCY",
+    "STATUS_LABELS",
+    "SlaInfo",
+    "SlaState",
+    "URGENCY_LABELS",
+    "buildOpinionActionPlanSeed",
+    "computeOpinionSla",
+    "sanitizeOpinionText",
+    "sortOpinionQueue",
+    "summarizeOpinionFeed",
+    "toOpinionFeedEntry",
+    "validateOpinionDraft"
+   ],
+   "export_default": null,
+   "linhas": 423,
+   "tabelas": [],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 6,
+   "usado_por_modulos": [
+    "components/engagement",
+    "hooks",
+    "pages",
+    "services"
+   ],
+   "coberto_por_testes": 1,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/lib/playerResume.ts",
+   "camada": "lib",
+   "exports": [
+    "RESUME_TTL_MS",
+    "ResumableContentType",
+    "ResumeState",
+    "clearResume",
+    "describeResume",
+    "loadResume",
+    "normalizeResume",
+    "resumeKey",
+    "safeResumePosition",
+    "saveResume"
+   ],
+   "export_default": null,
+   "linhas": 156,
+   "tabelas": [],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 1,
+   "usado_por_modulos": [
+    "components/lms"
+   ],
+   "coberto_por_testes": 1,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/lib/predictionAdmin.ts",
+   "camada": "lib",
+   "exports": [
+    "DraftIssue",
+    "IssueLevel",
+    "LOCKING_SOON_MS",
+    "MAX_DESCRIPTION_LENGTH",
+    "MAX_OPTIONS",
+    "MAX_OPTION_LENGTH",
+    "MAX_RAKE_BPS",
+    "MAX_TITLE_LENGTH",
+    "MAX_WINDOW_MS",
+    "MIN_OPTIONS",
+    "MIN_TITLE_LENGTH",
+    "MIN_WINDOW_MS",
+    "PredictionAdminAction",
+    "PredictionAdminOverview",
+    "PredictionAdminStatus",
+    "PredictionDraft",
+    "PredictionStateView",
+    "canPerform",
+    "describeAction",
+    "hasBlockingIssues",
+    "normalizeDraft",
+    "summarizeMarkets",
+    "validatePredictionDraft"
+   ],
+   "export_default": null,
+   "linhas": 273,
+   "tabelas": [],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 7,
+   "usado_por_modulos": [
+    "components/prediction",
+    "lib",
+    "pages"
+   ],
+   "coberto_por_testes": 3,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/lib/predictionMarket.ts",
+   "camada": "lib",
+   "exports": [
+    "Payout",
+    "PredictionMarket",
+    "PredictionStake",
+    "PredictionStatus",
+    "SettlementResult",
+    "StakeOutcome",
+    "StakeRejection",
+    "applyStake",
+    "impliedOdds",
+    "isConserved",
+    "poolByOption",
+    "refundAll",
+    "settleMarket",
+    "totalPool",
+    "userOption",
+    "userTotal"
+   ],
+   "export_default": null,
+   "linhas": 255,
+   "tabelas": [],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 1,
+   "usado_por_modulos": [
+    "services"
+   ],
+   "coberto_por_testes": 1,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/lib/predictionOddsHistory.ts",
+   "camada": "lib",
+   "exports": [
+    "MAX_BUCKETS",
+    "OddsHistory",
+    "OddsOption",
+    "OddsPoint",
+    "OddsStake",
+    "buildOddsHistory",
+    "formatMultiplier",
+    "formatProbability",
+    "leaderOf"
+   ],
+   "export_default": null,
+   "linhas": 187,
+   "tabelas": [],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 1,
+   "usado_por_modulos": [
+    "components/prediction"
+   ],
+   "coberto_por_testes": 1,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/lib/predictionOracle.ts",
+   "camada": "lib",
+   "exports": [
+    "DEFAULT_MIN_MARKETS",
+    "DEFAULT_SHRINKAGE_COINS",
+    "OracleAggregate",
+    "OracleEntry",
+    "OracleOptions",
+    "OracleStake",
+    "OracleTier",
+    "TIER_LABEL",
+    "aggregateStakes",
+    "buildOracleRanking",
+    "formatOracleScore",
+    "rankOracleAggregates",
+    "tierOf"
+   ],
+   "export_default": null,
+   "linhas": 275,
+   "tabelas": [],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 2,
+   "usado_por_modulos": [
+    "components/prediction",
+    "services"
+   ],
+   "coberto_por_testes": 1,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/lib/predictionWatchdog.ts",
+   "camada": "lib",
+   "exports": [
+    "AlertSeverity",
+    "LOCK_GRACE_MS",
+    "PredictionAlert",
+    "PredictionAlertType",
+    "SETTLEMENT_GRACE_MS",
+    "WatchdogReport",
+    "WatchedMarket",
+    "evaluateMarket",
+    "hourBucket",
+    "runWatchdog",
+    "severityFor"
+   ],
+   "export_default": null,
+   "linhas": 161,
+   "tabelas": [],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 2,
+   "usado_por_modulos": [
+    "components/prediction",
+    "pages"
+   ],
+   "coberto_por_testes": 2,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/lib/purchaseRisk.ts",
+   "camada": "lib",
+   "exports": [
+    "DUAL_APPROVAL_THRESHOLD",
+    "PurchaseRiskAssessment",
+    "PurchaseRiskSignals",
+    "RISK_LEVEL_CONFIG",
+    "RiskFactor",
+    "RiskLevel",
+    "applyAiAdjustment",
+    "assessPurchaseRisk",
+    "clampScore",
+    "normalizeSignals",
+    "riskLevelFromScore"
+   ],
+   "export_default": null,
+   "linhas": 299,
+   "tabelas": [],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 3,
+   "usado_por_modulos": [
+    "components/shop-admin",
+    "services"
+   ],
+   "coberto_por_testes": 1,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/lib/pushDevices.ts",
+   "camada": "lib",
+   "exports": [
+    "NewDeviceAlertInput",
+    "PushDeviceEntry",
+    "PushDeviceKind",
+    "PushDeviceRow",
+    "PushDeviceStatus",
+    "RevocationBroadcast",
+    "RevocationNotice",
+    "STALE_DEVICE_DAYS",
+    "buildDeviceList",
+    "buildNewDeviceMessage",
+    "buildRevocationBroadcast",
+    "buildRevocationNotice",
+    "canRevokeDevice",
+    "describeAlertDevice",
+    "describeDevice",
+    "sameEndpoint",
+    "summarizeDevices"
+   ],
+   "export_default": null,
+   "linhas": 440,
+   "tabelas": [],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 4,
+   "usado_por_modulos": [
+    "components/push",
+    "hooks",
+    "services"
+   ],
+   "coberto_por_testes": 4,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/lib/pushOutbox.ts",
+   "camada": "lib",
+   "exports": [
+    "DispatchResult",
+    "MAX_PUSH_ATTEMPTS",
+    "OutboxItem",
+    "OutboxStatus",
+    "applyDispatch",
+    "claimBatch",
+    "isTerminal"
+   ],
+   "export_default": null,
+   "linhas": 84,
+   "tabelas": [],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 0,
+   "usado_por_modulos": [],
+   "coberto_por_testes": 1,
+   "orfao": true
+  },
+  {
+   "arquivo": "src/lib/pushOutboxHealth.ts",
+   "camada": "lib",
+   "exports": [
+    "HealthAlert",
+    "HealthSeverity",
+    "OUTBOX_THRESHOLDS",
+    "OutboxHealthReport",
+    "OutboxHealthSnapshot",
+    "evaluateOutboxHealth"
+   ],
+   "export_default": null,
+   "linhas": 149,
+   "tabelas": [],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 1,
+   "usado_por_modulos": [
+    "components/security"
+   ],
+   "coberto_por_testes": 1,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/lib/requestId.ts",
+   "camada": "lib",
+   "exports": [
+    "SafeInvokeResult",
+    "backoffDelayMs",
+    "invokeEdge",
+    "invokeEdgeSafe",
+    "newRequestId"
+   ],
+   "export_default": null,
+   "linhas": 189,
+   "tabelas": [],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [
+    "@sentry/react"
+   ],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 16,
+   "usado_por_modulos": [
+    "components",
+    "components/quiz",
+    "hooks",
+    "pages",
+    "services"
+   ],
+   "coberto_por_testes": 1,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/lib/runbooks.ts",
+   "camada": "lib",
+   "exports": [
+    "RUNBOOKS",
+    "Runbook",
+    "RunbookStep",
+    "alertTypeToRunbookSlug",
+    "getRunbook"
+   ],
+   "export_default": null,
+   "linhas": 262,
+   "tabelas": [],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 2,
+   "usado_por_modulos": [
+    "components/prediction",
+    "pages"
+   ],
+   "coberto_por_testes": 1,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/lib/sequenceGame.ts",
+   "camada": "lib",
+   "exports": [
+    "OrderValidation",
+    "SEQUENCE_COINS_PER_CORRECT",
+    "SEQUENCE_DAILY_REWARDED_ATTEMPTS",
+    "SEQUENCE_MAX_COINS",
+    "SEQUENCE_MAX_STEPS",
+    "SEQUENCE_MAX_XP",
+    "SEQUENCE_MIN_STEPS",
+    "SEQUENCE_PERFECT_COIN_BONUS",
+    "SEQUENCE_PERFECT_XP_BONUS",
+    "SEQUENCE_XP_PER_CORRECT",
+    "SequencePlayStep",
+    "SequenceScore",
+    "SequenceStep",
+    "moveItem",
+    "renumberSteps",
+    "scoreSequence",
+    "seedFromString",
+    "shufflePlaySteps",
+    "shuffleSteps",
+    "sortByPosition",
+    "validateOrder"
+   ],
+   "export_default": null,
+   "linhas": 219,
+   "tabelas": [],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 4,
+   "usado_por_modulos": [
+    "components/sequence",
+    "pages",
+    "services"
+   ],
+   "coberto_por_testes": 1,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/lib/sequenceProcedureAuthoring.ts",
+   "camada": "lib",
+   "exports": [
+    "AuthoringIssue",
+    "PersistedStep",
+    "ProcedureChangeSummary",
+    "ProcedureDraft",
+    "ProcedureValidation",
+    "SOP_DESCRIPTION_MAX",
+    "SOP_HINT_MAX",
+    "SOP_LABEL_MAX",
+    "SOP_MAX_STEPS",
+    "SOP_MIN_STEPS",
+    "SOP_TITLE_MAX",
+    "StepDraft",
+    "comparisonKey",
+    "normalizeText",
+    "summarizeChanges",
+    "validateProcedureDraft"
+   ],
+   "export_default": null,
+   "linhas": 203,
+   "tabelas": [],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 1,
+   "usado_por_modulos": [
+    "pages"
+   ],
+   "coberto_por_testes": 1,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/lib/sequenceProcedureStats.ts",
+   "camada": "lib",
+   "exports": [
+    "SequenceDailyPoint",
+    "SequenceProcedureStats",
+    "SequenceRecentAttempt",
+    "SequenceStatsLeader",
+    "SequenceStatsSummary",
+    "SequenceStepStat",
+    "formatDuration",
+    "parseSequenceProcedureStats",
+    "toCount",
+    "toPercent",
+    "weakestSteps"
+   ],
+   "export_default": null,
+   "linhas": 202,
+   "tabelas": [],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 3,
+   "usado_por_modulos": [
+    "components/sequence",
+    "lib",
+    "services"
+   ],
+   "coberto_por_testes": 2,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/lib/sequenceProcedureStatsExport.ts",
+   "camada": "lib",
+   "exports": [
+    "SEQUENCE_REPORT_SECTIONS",
+    "SequenceExportMeta",
+    "buildSequenceStatsCsv",
+    "exportSequenceStatsPdf",
+    "sequenceStatsFileName"
+   ],
+   "export_default": null,
+   "linhas": 271,
+   "tabelas": [],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [
+    "jspdf",
+    "jspdf-autotable"
+   ],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 1,
+   "usado_por_modulos": [
+    "components/sequence"
+   ],
+   "coberto_por_testes": 1,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/lib/slaTargets.ts",
+   "camada": "lib",
+   "exports": [
+    "MAX_SLA_MINUTES",
+    "MIN_SLA_MINUTES",
+    "SlaTargetDraft",
+    "SlaTargetRow",
+    "SlaValidationResult",
+    "draftToRow",
+    "fetchSlaTargets",
+    "formatMinutes",
+    "parseMinutes",
+    "rowToDraft",
+    "saveSlaTarget",
+    "validateSlaDraft"
+   ],
+   "export_default": null,
+   "linhas": 160,
+   "tabelas": [
+    "sla_targets"
+   ],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 1,
+   "usado_por_modulos": [
+    "components/security"
+   ],
+   "coberto_por_testes": 1,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/lib/tournamentBracket.ts",
+   "camada": "lib",
+   "exports": [
+    "BracketMatch",
+    "BracketPlan",
+    "BracketSeed",
+    "MAX_BRACKET_PARTICIPANTS",
+    "MIN_BRACKET_PARTICIPANTS",
+    "MatchResultInput",
+    "TournamentAward",
+    "TournamentRewardRules",
+    "awardFor",
+    "bracketRounds",
+    "bracketSize",
+    "buildBracket",
+    "nextSide",
+    "nextSlot",
+    "rankSeeds",
+    "resolveWinner",
+    "roundLabel",
+    "seedOrder",
+    "tournamentProgress"
+   ],
+   "export_default": null,
+   "linhas": 211,
+   "tabelas": [],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 2,
+   "usado_por_modulos": [
+    "components/tournament",
+    "pages"
+   ],
+   "coberto_por_testes": 1,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/lib/tradingCards.ts",
+   "camada": "lib",
+   "exports": [
+    "CARD_RARITIES",
+    "CardDefinition",
+    "CardRarity",
+    "CollectionProgress",
+    "DrawnCard",
+    "OwnedCard",
+    "PACK_GUARANTEED_RARITY",
+    "PACK_SIZE",
+    "PackResult",
+    "RARITY_LABEL",
+    "RARITY_VALUE",
+    "RARITY_WEIGHTS",
+    "TRADE_REJECTION_LABEL",
+    "TRADE_VALUE_RATIO",
+    "TradeCheck",
+    "TradeRejection",
+    "checkTrade",
+    "drawPack",
+    "drawablePool",
+    "isCardRarity",
+    "rarityOdds",
+    "summarizeCollection"
+   ],
+   "export_default": null,
+   "linhas": 327,
+   "tabelas": [],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 6,
+   "usado_por_modulos": [
+    "components/cards",
+    "lib",
+    "pages",
+    "services"
+   ],
+   "coberto_por_testes": 2,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/lib/trailAuthoring.ts",
+   "camada": "lib",
+   "exports": [
+    "CONTENT_TYPE_LABELS",
+    "MODULE_CONTENT_TYPES",
+    "ModuleContentType",
+    "ModuleDraft",
+    "ModuleValidationResult",
+    "OrderableModule",
+    "checklistItemSchema",
+    "diffOrder",
+    "draftToContent",
+    "duplicateTitle",
+    "emptyDraft",
+    "flashcardSchema",
+    "isSafeMediaUrl",
+    "moduleDraftSchema",
+    "moduleToDraft",
+    "normalizeOrder",
+    "quizQuestionSchema",
+    "reorderModules",
+    "validateModuleDraft"
+   ],
+   "export_default": null,
+   "linhas": 310,
+   "tabelas": [],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [
+    "zod"
+   ],
+   "zod_schemas": 3,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 2,
+   "usado_por_modulos": [
+    "components/trails"
+   ],
+   "coberto_por_testes": 0,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/lib/utils.ts",
+   "camada": "lib",
+   "exports": [
+    "cn"
+   ],
+   "export_default": null,
+   "linhas": 7,
+   "tabelas": [],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [
+    "clsx",
+    "tailwind-merge"
+   ],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 214,
+   "usado_por_modulos": [
+    "components",
+    "components/accessibility",
+    "components/achievements",
+    "components/analytics",
+    "components/audit",
+    "components/board",
+    "components/boss",
+    "components/campaigns",
+    "components/cards",
+    "components/dashboard",
+    "components/engagement",
+    "components/goals",
+    "components/luckywheel",
+    "components/memory",
+    "components/mobile",
+    "components/navigation",
+    "components/onboarding",
+    "components/prediction",
+    "components/profile",
+    "components/push",
+    "components/scratchcard",
+    "components/search",
+    "components/security",
+    "components/sequence",
+    "components/shop",
+    "components/shop-admin",
+    "components/sidebar",
+    "components/social",
+    "components/tournament",
+    "components/ui",
+    "components/wager",
+    "components/war",
+    "pages"
+   ],
+   "coberto_por_testes": 0,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/lib/validations.ts",
+   "camada": "lib",
+   "exports": [
+    "DepartmentData",
+    "GiveKudosData",
+    "LearningTrailData",
+    "LoginFormData",
+    "ProfileUpdateData",
+    "QuestFormData",
+    "QuizQuestionData",
+    "ShopRewardData",
+    "SignupFormData",
+    "TrailModuleData",
+    "aiCoachMessageSchema",
+    "commentSchema",
+    "departmentSchema",
+    "displayNameSchema",
+    "emailSchema",
+    "forgotPasswordSchema",
+    "getFirstError",
+    "giveKudosSchema",
+    "kudosMessageSchema",
+    "learningTrailSchema",
+    "loginFormSchema",
+    "passwordSchema",
+    "profileUpdateSchema",
+    "questDescriptionSchema",
+    "questFormSchema",
+    "questStepSchema",
+    "questTitleSchema",
+    "quizOptionSchema",
+    "quizQuestionSchema",
+    "quizQuestionWithOptionsSchema",
+    "searchQuerySchema",
+    "shopRewardSchema",
+    "signupFormSchema",
+    "strongPasswordSchema",
+    "trailModuleSchema",
+    "validateData"
+   ],
+   "export_default": null,
+   "linhas": 354,
+   "tabelas": [],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [
+    "zod"
+   ],
+   "zod_schemas": 13,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 2,
+   "usado_por_modulos": [
+    "components"
+   ],
+   "coberto_por_testes": 0,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/lib/wagerAuthoring.ts",
+   "camada": "lib",
+   "exports": [
+    "WAGER_EXPLANATION_MAX",
+    "WAGER_MAX_MULTIPLIER",
+    "WAGER_MAX_OPTIONS",
+    "WAGER_MAX_STAKE",
+    "WAGER_MIN_MULTIPLIER",
+    "WAGER_MIN_OPTIONS",
+    "WAGER_MIN_STAKE",
+    "WAGER_OPTION_MAX",
+    "WAGER_QUESTION_MAX",
+    "WAGER_QUESTION_MIN",
+    "WAGER_SAVE_REASONS",
+    "WagerAuthoringIssue",
+    "WagerOptionDraft",
+    "WagerQuestionDraft",
+    "WagerValidation",
+    "clampMaxStake",
+    "clampMultiplier",
+    "comparisonKey",
+    "estimateExposure",
+    "isValidISODate",
+    "normalizeText",
+    "optionKeyAt",
+    "validateWagerDraft",
+    "wagerSaveMessage"
+   ],
+   "export_default": null,
+   "linhas": 214,
+   "tabelas": [],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 5,
+   "usado_por_modulos": [
+    "hooks",
+    "lib",
+    "pages",
+    "services"
+   ],
+   "coberto_por_testes": 1,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/lib/wagerBulkImport.ts",
+   "camada": "lib",
+   "exports": [
+    "WAGER_IMPORT_MAX_ROWS",
+    "WAGER_IMPORT_TEMPLATE",
+    "WagerImportReport",
+    "WagerImportRow",
+    "parseWagerImportCsv",
+    "splitCsvLines"
+   ],
+   "export_default": null,
+   "linhas": 313,
+   "tabelas": [],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 1,
+   "usado_por_modulos": [
+    "components/wager"
+   ],
+   "coberto_por_testes": 2,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/lib/wagerIntegrity.ts",
+   "camada": "lib",
+   "exports": [
+    "WagerAnomaly",
+    "WagerAnomalyCode",
+    "WagerAnomalySeverity",
+    "WagerIntegrityOptions",
+    "WagerIntegrityReport",
+    "accuracyZScore",
+    "analyzeWagerIntegrity",
+    "integritySummary",
+    "severityLabel",
+    "sortAnomalies"
+   ],
+   "export_default": null,
+   "linhas": 289,
+   "tabelas": [],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 5,
+   "usado_por_modulos": [
+    "components/wager",
+    "hooks",
+    "lib",
+    "services"
+   ],
+   "coberto_por_testes": 2,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/lib/wagerIntegrityExport.ts",
+   "camada": "lib",
+   "exports": [
+    "WagerIntegrityExportInput",
+    "anomalyCodeLabel",
+    "buildReviewIndex",
+    "buildWagerIntegrityCsv",
+    "reviewStatusLabel",
+    "wagerIntegrityFileName"
+   ],
+   "export_default": null,
+   "linhas": 196,
+   "tabelas": [],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 1,
+   "usado_por_modulos": [
+    "components/wager"
+   ],
+   "coberto_por_testes": 1,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/lib/wagerLeaderboard.ts",
+   "camada": "lib",
+   "exports": [
+    "WagerLeaderboardRow",
+    "WagerLeaderboardWindow",
+    "formatNet",
+    "parseWagerLeaderboard",
+    "summarizeLeaderboard",
+    "windowLabel"
+   ],
+   "export_default": null,
+   "linhas": 115,
+   "tabelas": [],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 8,
+   "usado_por_modulos": [
+    "components/wager",
+    "hooks",
+    "lib",
+    "services"
+   ],
+   "coberto_por_testes": 2,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/lib/wagerMonthlyExposure.ts",
+   "camada": "lib",
+   "exports": [
+    "WagerExposureSummary",
+    "WagerMonthExposure",
+    "aggregateMonthlyExposure",
+    "budgetUsage",
+    "monthKeyOf",
+    "monthLabel",
+    "questionWorstCase"
+   ],
+   "export_default": null,
+   "linhas": 167,
+   "tabelas": [],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 1,
+   "usado_por_modulos": [
+    "components/wager"
+   ],
+   "coberto_por_testes": 1,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/lib/wagerScheduleExport.ts",
+   "camada": "lib",
+   "exports": [
+    "buildWagerScheduleCsv",
+    "sanitizeExportedCell",
+    "wagerScheduleFileName"
+   ],
+   "export_default": null,
+   "linhas": 107,
+   "tabelas": [],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 2,
+   "usado_por_modulos": [
+    "lib",
+    "pages"
+   ],
+   "coberto_por_testes": 1,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/lib/warAutoHooks.ts",
+   "camada": "lib",
+   "exports": [
+    "AUTO_METRIC_KEYS",
+    "AutoMetricKey",
+    "MAX_CONTRIBUTION_AMOUNT",
+    "WarContributionIntent",
+    "WarSourceEvent",
+    "deriveWarIntents",
+    "filterNewIntents",
+    "normalizeAmount"
+   ],
+   "export_default": null,
+   "linhas": 262,
+   "tabelas": [],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 0,
+   "usado_por_modulos": [],
+   "coberto_por_testes": 1,
+   "orfao": true
+  },
+  {
+   "arquivo": "src/lib/warFeed.ts",
+   "camada": "lib",
+   "exports": [
+    "WarFeedItem",
+    "WarFeedPulse",
+    "normalizeFeed",
+    "normalizeFeedItem",
+    "relativeTime",
+    "summarizeFeed"
+   ],
+   "export_default": null,
+   "linhas": 151,
+   "tabelas": [],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 2,
+   "usado_por_modulos": [
+    "components/war",
+    "services"
+   ],
+   "coberto_por_testes": 1,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/lib/warLeadership.ts",
+   "camada": "lib",
+   "exports": [
+    "WarLeadEvent",
+    "WarLeadEventKind",
+    "WarLeadInput",
+    "WarLeadSeverity",
+    "WarLeadSnapshot",
+    "buildLeadSnapshot",
+    "detectLeadEvents",
+    "pointsToNextPosition",
+    "prioritizeLeadEvents"
+   ],
+   "export_default": null,
+   "linhas": 250,
+   "tabelas": [],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 2,
+   "usado_por_modulos": [
+    "components/war",
+    "hooks"
+   ],
+   "coberto_por_testes": 1,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/services/achievementsService.ts",
+   "camada": "services",
+   "exports": [
+    "Achievement",
+    "UserAchievement",
+    "achievementsService"
+   ],
+   "export_default": null,
+   "linhas": 283,
+   "tabelas": [
+    "achievements",
+    "kudos",
+    "notifications",
+    "profiles",
+    "trail_enrollments",
+    "user_achievements"
+   ],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 7,
+   "usado_por_modulos": [
+    "hooks",
+    "services",
+    "services/behavioralBadges"
+   ],
+   "coberto_por_testes": 1,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/services/actionPlanGeneratorService.ts",
+   "camada": "services",
+   "exports": [
+    "GenerateActionPlanInput",
+    "actionPlanGeneratorService"
+   ],
+   "export_default": null,
+   "linhas": 47,
+   "tabelas": [],
+   "rpcs": [
+    "generate_action_plan_from_factor"
+   ],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 1,
+   "usado_por_modulos": [
+    "hooks"
+   ],
+   "coberto_por_testes": 0,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/services/actionPlansService.ts",
+   "camada": "services",
+   "exports": [
+    "ActionItemPriority",
+    "ActionItemStatus",
+    "ActionPlan",
+    "ActionPlanItem",
+    "ActionPlanStatus",
+    "ITEM_STATUS_LABEL",
+    "PLAN_STATUS_LABEL",
+    "PRIORITY_CLASS",
+    "PRIORITY_LABEL",
+    "actionPlansService"
+   ],
+   "export_default": null,
+   "linhas": 148,
+   "tabelas": [
+    "action_plan_items",
+    "action_plans"
+   ],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 4,
+   "usado_por_modulos": [
+    "components/engagement",
+    "hooks",
+    "pages"
+   ],
+   "coberto_por_testes": 0,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/services/activityCommentsService.ts",
+   "camada": "services",
+   "exports": [
+    "ActivityComment",
+    "activityCommentsService"
+   ],
+   "export_default": null,
+   "linhas": 111,
+   "tabelas": [
+    "activity_comments",
+    "profiles"
+   ],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [
+    "sonner"
+   ],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 1,
+   "usado_por_modulos": [
+    "hooks"
+   ],
+   "coberto_por_testes": 0,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/services/activityReactionsService.ts",
+   "camada": "services",
+   "exports": [
+    "AVAILABLE_REACTIONS",
+    "ActivityReaction",
+    "ReactionCount",
+    "activityReactionsService"
+   ],
+   "export_default": null,
+   "linhas": 105,
+   "tabelas": [
+    "activity_reactions"
+   ],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [
+    "sonner"
+   ],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 2,
+   "usado_por_modulos": [
+    "components",
+    "hooks"
+   ],
+   "coberto_por_testes": 0,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/services/adminService.ts",
+   "camada": "services",
+   "exports": [
+    "adminService"
+   ],
+   "export_default": null,
+   "linhas": 69,
+   "tabelas": [
+    "attendance_records",
+    "profiles",
+    "quiz_scores",
+    "trail_enrollments"
+   ],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [
+    "date-fns"
+   ],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 1,
+   "usado_por_modulos": [
+    "components/admin"
+   ],
+   "coberto_por_testes": 0,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/services/aiCoachService.ts",
+   "camada": "services",
+   "exports": [
+    "AICoachMessage",
+    "aiCoachService"
+   ],
+   "export_default": null,
+   "linhas": 62,
+   "tabelas": [
+    "ai_coach_messages"
+   ],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [
+    "sonner"
+   ],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [
+    "user"
+   ],
+   "usado_por": 1,
+   "usado_por_modulos": [
+    "hooks"
+   ],
+   "coberto_por_testes": 0,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/services/aiCourseBuilderService.ts",
+   "camada": "services",
+   "exports": [
+    "AICourseJob",
+    "AICourseJobStatus",
+    "aiCourseBuilderService"
+   ],
+   "export_default": null,
+   "linhas": 87,
+   "tabelas": [
+    "ai_course_jobs"
+   ],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 1,
+   "usado_por_modulos": [
+    "components/trails"
+   ],
+   "coberto_por_testes": 0,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/services/announcementsService.ts",
+   "camada": "services",
+   "exports": [
+    "Announcement",
+    "AnnouncementInsert",
+    "AnnouncementReaction",
+    "CATEGORY_CONFIG",
+    "announcementsService"
+   ],
+   "export_default": null,
+   "linhas": 229,
+   "tabelas": [
+    "announcement_reactions",
+    "announcement_reads",
+    "announcements"
+   ],
+   "rpcs": [
+    "increment_announcement_views"
+   ],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 2,
+   "usado_por_modulos": [
+    "components",
+    "hooks"
+   ],
+   "coberto_por_testes": 0,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/services/apiKeysService.ts",
+   "camada": "services",
+   "exports": [
+    "CreateApiKeyInput",
+    "ExternalApiKeySummary",
+    "IssuedApiCredential",
+    "ROTATION_MAX_AGE_DAYS",
+    "createApiKey",
+    "deleteApiKey",
+    "keysNeedingRotation",
+    "listApiKeys",
+    "rotateApiSecret",
+    "setApiKeyActive"
+   ],
+   "export_default": null,
+   "linhas": 94,
+   "tabelas": [],
+   "rpcs": [
+    "create_external_api_key",
+    "delete_external_api_key",
+    "list_external_api_keys",
+    "rotate_external_api_secret",
+    "set_external_api_key_active"
+   ],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 3,
+   "usado_por_modulos": [
+    "components/admin",
+    "pages"
+   ],
+   "coberto_por_testes": 0,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/services/attendanceService.ts",
+   "camada": "services",
+   "exports": [
+    "AttendanceRecord",
+    "AttendanceSettings",
+    "AttendanceStreak",
+    "CheckInResult",
+    "attendanceService"
+   ],
+   "export_default": null,
+   "linhas": 357,
+   "tabelas": [
+    "attendance_records",
+    "attendance_settings",
+    "attendance_streaks"
+   ],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 2,
+   "usado_por_modulos": [
+    "components",
+    "hooks"
+   ],
+   "coberto_por_testes": 0,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/services/auctionService.ts",
+   "camada": "services",
+   "exports": [
+    "Auction",
+    "AuctionAdminAction",
+    "AuctionAdminError",
+    "AuctionAdminEvent",
+    "AuctionAdminReason",
+    "AuctionBid",
+    "AuctionBidStatus",
+    "AuctionStatus",
+    "AuctionSummary",
+    "CreateAuctionInput",
+    "PlaceBidResult",
+    "auctionAdminService",
+    "auctionService"
+   ],
+   "export_default": null,
+   "linhas": 285,
+   "tabelas": [
+    "auction_admin_events",
+    "auction_bids",
+    "auctions"
+   ],
+   "rpcs": [
+    "cancel_auction",
+    "close_auction",
+    "create_auction_draft",
+    "get_auction_summary",
+    "place_auction_bid",
+    "publish_auction"
+   ],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 6,
+   "usado_por_modulos": [
+    "components/auction",
+    "hooks",
+    "pages"
+   ],
+   "coberto_por_testes": 0,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/services/auditService.ts",
+   "camada": "services",
+   "exports": [
+    "AuditAction",
+    "AuditLog",
+    "AuditLogInsert",
+    "auditService"
+   ],
+   "export_default": null,
+   "linhas": 221,
+   "tabelas": [
+    "audit_logs"
+   ],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 7,
+   "usado_por_modulos": [
+    "hooks",
+    "services"
+   ],
+   "coberto_por_testes": 1,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/services/autoChallengesService.ts",
+   "camada": "services",
+   "exports": [
+    "AutoChallenge",
+    "autoChallengesService"
+   ],
+   "export_default": null,
+   "linhas": 300,
+   "tabelas": [
+    "user_challenges"
+   ],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 1,
+   "usado_por_modulos": [
+    "hooks"
+   ],
+   "coberto_por_testes": 0,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/services/avatarService.ts",
+   "camada": "services",
+   "exports": [
+    "AvatarCategory",
+    "AvatarItem",
+    "AvatarItemWithOwnership",
+    "AvatarRarity",
+    "UnlockType",
+    "UserAvatarConfig",
+    "UserAvatarItem",
+    "avatarService"
+   ],
+   "export_default": null,
+   "linhas": 233,
+   "tabelas": [
+    "avatar_items",
+    "profiles",
+    "user_avatar_config",
+    "user_avatar_items"
+   ],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 2,
+   "usado_por_modulos": [
+    "components",
+    "hooks"
+   ],
+   "coberto_por_testes": 0,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/services/behavioralBadges/badges.ts",
+   "camada": "services",
+   "exports": [
+    "BEHAVIORAL_BADGES"
+   ],
+   "export_default": null,
+   "linhas": 336,
+   "tabelas": [],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 2,
+   "usado_por_modulos": [
+    "services",
+    "services/behavioralBadges"
+   ],
+   "coberto_por_testes": 1,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/services/behavioralBadges/index.ts",
+   "camada": "services",
+   "exports": [
+    "behavioralBadgesService"
+   ],
+   "export_default": null,
+   "linhas": 206,
+   "tabelas": [
+    "achievements",
+    "activity_comments",
+    "activity_reactions",
+    "ai_coach_messages",
+    "announcements",
+    "attendance_records",
+    "checkins",
+    "development_plan_actions",
+    "goals",
+    "kudos",
+    "mentorship_pairs",
+    "mood_entries",
+    "trail_enrollments"
+   ],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 1,
+   "usado_por_modulos": [
+    "services"
+   ],
+   "coberto_por_testes": 0,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/services/behavioralBadges/types.ts",
+   "camada": "services",
+   "exports": [
+    "BehaviorMetrics",
+    "BehavioralBadge"
+   ],
+   "export_default": null,
+   "linhas": 37,
+   "tabelas": [],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 3,
+   "usado_por_modulos": [
+    "services",
+    "services/behavioralBadges"
+   ],
+   "coberto_por_testes": 1,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/services/behavioralBadgesService.ts",
+   "camada": "services",
+   "exports": [],
+   "export_default": null,
+   "linhas": 4,
+   "tabelas": [],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 1,
+   "usado_por_modulos": [
+    "hooks"
+   ],
+   "coberto_por_testes": 0,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/services/bingoService.ts",
+   "camada": "services",
+   "exports": [
+    "BingoBoardSummary",
+    "BingoCardResult",
+    "BingoMarkRow",
+    "BingoSyncResult",
+    "bingoService"
+   ],
+   "export_default": null,
+   "linhas": 101,
+   "tabelas": [
+    "bingo_marks"
+   ],
+   "rpcs": [
+    "get_or_create_bingo_card",
+    "sync_bingo_card"
+   ],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 1,
+   "usado_por_modulos": [
+    "hooks"
+   ],
+   "coberto_por_testes": 1,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/services/boardTrailService.ts",
+   "camada": "services",
+   "exports": [
+    "BoardAdvanceResult",
+    "BoardChallengeOption",
+    "BoardChallengeQuestion",
+    "BoardChallengeResult",
+    "BoardPlayerRow",
+    "BoardStuckPlayer",
+    "BoardTrail",
+    "BoardTrailWithTiles",
+    "boardTrailService"
+   ],
+   "export_default": null,
+   "linhas": 360,
+   "tabelas": [
+    "board_player_states",
+    "board_trails",
+    "quiz_questions"
+   ],
+   "rpcs": [
+    "advance_board_trail",
+    "delete_board_trail",
+    "get_board_challenge_stats",
+    "get_board_trail_leaderboard",
+    "list_stuck_board_players",
+    "resolve_board_challenge",
+    "save_board_trail",
+    "unblock_board_players"
+   ],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 1,
+   "usado_por_modulos": [
+    "hooks"
+   ],
+   "coberto_por_testes": 0,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/services/bossBattleService.ts",
+   "camada": "services",
+   "exports": [
+    "BossBattle",
+    "BossBattleDraftPayload",
+    "BossBattleStatus",
+    "BossDamageEntry",
+    "BossLeaderboardEntry",
+    "DealDamageResult",
+    "bossBattleService"
+   ],
+   "export_default": null,
+   "linhas": 259,
+   "tabelas": [
+    "boss_battle_damage",
+    "boss_battles"
+   ],
+   "rpcs": [
+    "deal_boss_damage",
+    "get_boss_battle_leaderboard",
+    "settle_boss_battle"
+   ],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 2,
+   "usado_por_modulos": [
+    "hooks",
+    "pages"
+   ],
+   "coberto_por_testes": 0,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/services/bossWinRateGoalService.ts",
+   "camada": "services",
+   "exports": [
+    "BossWinRateGoal",
+    "BossWinRateGoalPayload",
+    "bossWinRateGoalService"
+   ],
+   "export_default": null,
+   "linhas": 137,
+   "tabelas": [
+    "boss_win_rate_goals"
+   ],
+   "rpcs": [
+    "run_boss_win_rate_alerts"
+   ],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 1,
+   "usado_por_modulos": [
+    "hooks"
+   ],
+   "coberto_por_testes": 0,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/services/campaignImportService.ts",
+   "camada": "services",
+   "exports": [
+    "CampaignImport",
+    "CampaignImportRow",
+    "CampaignUserResult",
+    "campaignImportService"
+   ],
+   "export_default": null,
+   "linhas": 264,
+   "tabelas": [
+    "campaign_result_imports",
+    "campaign_result_rows"
+   ],
+   "rpcs": [
+    "admin_profile_directory",
+    "apply_campaign_import",
+    "revert_campaign_import"
+   ],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 4,
+   "usado_por_modulos": [
+    "components/campaigns",
+    "hooks",
+    "pages"
+   ],
+   "coberto_por_testes": 0,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/services/campaignTeamsService.ts",
+   "camada": "services",
+   "exports": [
+    "CampaignTeam",
+    "CampaignTeamInsert",
+    "CampaignTeamMember",
+    "TeamSplitBatch",
+    "TeamSplitEntry",
+    "TeamSplitResult",
+    "TeamSplitRevertResult",
+    "campaignTeamsService"
+   ],
+   "export_default": null,
+   "linhas": 324,
+   "tabelas": [
+    "campaign_team_members",
+    "campaign_team_split_batches",
+    "campaign_team_split_entries",
+    "campaign_teams",
+    "profiles_public"
+   ],
+   "rpcs": [
+    "award_campaign_team_split",
+    "recalc_campaign_teams",
+    "revert_campaign_team_split"
+   ],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 3,
+   "usado_por_modulos": [
+    "components/campaigns",
+    "hooks"
+   ],
+   "coberto_por_testes": 0,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/services/celebrationsService.ts",
+   "camada": "services",
+   "exports": [
+    "Celebration",
+    "CelebrationInsert",
+    "celebrationsService"
+   ],
+   "export_default": null,
+   "linhas": 191,
+   "tabelas": [
+    "celebrations",
+    "profiles"
+   ],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 1,
+   "usado_por_modulos": [
+    "hooks"
+   ],
+   "coberto_por_testes": 0,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/services/certificationsService.ts",
+   "camada": "services",
+   "exports": [
+    "CertificateVerification",
+    "Certification",
+    "UserCertification",
+    "certificationsService"
+   ],
+   "export_default": null,
+   "linhas": 364,
+   "tabelas": [
+    "certifications",
+    "team_members",
+    "user_certifications"
+   ],
+   "rpcs": [
+    "verify_certificate"
+   ],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 5,
+   "usado_por_modulos": [
+    "components",
+    "components/certifications",
+    "hooks",
+    "pages",
+    "services"
+   ],
+   "coberto_por_testes": 0,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/services/checkinsService.ts",
+   "camada": "services",
+   "exports": [
+    "ActionItem",
+    "Checkin",
+    "CheckinInsert",
+    "CheckinQuestion",
+    "CheckinTemplate",
+    "checkinsService"
+   ],
+   "export_default": null,
+   "linhas": 210,
+   "tabelas": [
+    "checkin_templates",
+    "checkins"
+   ],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 4,
+   "usado_por_modulos": [
+    "components/checkins",
+    "hooks",
+    "pages"
+   ],
+   "coberto_por_testes": 1,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/services/churnPredictionService.ts",
+   "camada": "services",
+   "exports": [
+    "ChurnPrediction",
+    "ChurnPredictionResponse",
+    "ChurnPredictionSummary",
+    "churnPredictionService"
+   ],
+   "export_default": null,
+   "linhas": 54,
+   "tabelas": [],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 2,
+   "usado_por_modulos": [
+    "components",
+    "hooks"
+   ],
+   "coberto_por_testes": 0,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/services/climateSurveyService.ts",
+   "camada": "services",
+   "exports": [
+    "ClimatePillar",
+    "ClimatePillarScore",
+    "ClimateSurvey",
+    "ClimateSurveyQuestion",
+    "PILLAR_LABELS",
+    "climateSurveyService"
+   ],
+   "export_default": null,
+   "linhas": 251,
+   "tabelas": [
+    "climate_pillar_scores",
+    "climate_question_answers",
+    "climate_survey_questions",
+    "climate_survey_responses",
+    "climate_surveys"
+   ],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 11,
+   "usado_por_modulos": [
+    "components/engagement",
+    "hooks",
+    "lib",
+    "services"
+   ],
+   "coberto_por_testes": 1,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/services/comboService.ts",
+   "camada": "services",
+   "exports": [
+    "COMBO_TIERS",
+    "UserCombo",
+    "comboService"
+   ],
+   "export_default": null,
+   "linhas": 155,
+   "tabelas": [
+    "user_combos"
+   ],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 7,
+   "usado_por_modulos": [
+    "components",
+    "hooks",
+    "services"
+   ],
+   "coberto_por_testes": 3,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/services/competencyService.ts",
+   "camada": "services",
+   "exports": [
+    "CompetencyData",
+    "competencyService"
+   ],
+   "export_default": null,
+   "linhas": 160,
+   "tabelas": [
+    "attendance_streaks",
+    "kudos",
+    "module_progress",
+    "quest_assignments",
+    "user_achievements"
+   ],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 2,
+   "usado_por_modulos": [
+    "components/manager",
+    "hooks"
+   ],
+   "coberto_por_testes": 0,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/services/continuousEngagementService.ts",
+   "camada": "services",
+   "exports": [
+    "EngagementAnswerFormat",
+    "EngagementAssignment",
+    "EngagementCycle",
+    "EngagementProgress",
+    "SubmitAnswerInput",
+    "applyReverse",
+    "continuousEngagementService",
+    "normalizeAnswer"
+   ],
+   "export_default": null,
+   "linhas": 145,
+   "tabelas": [],
+   "rpcs": [
+    "assign_engagement_questions",
+    "get_active_engagement_cycle",
+    "get_engagement_cycle_progress",
+    "submit_engagement_answer"
+   ],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 3,
+   "usado_por_modulos": [
+    "components/engagement",
+    "hooks"
+   ],
+   "coberto_por_testes": 1,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/services/dailyWagerService.ts",
+   "camada": "services",
+   "exports": [
+    "WagerHistoryRow",
+    "WagerSubmitResult",
+    "dailyWagerService"
+   ],
+   "export_default": null,
+   "linhas": 98,
+   "tabelas": [
+    "wager_entries"
+   ],
+   "rpcs": [
+    "get_daily_wager",
+    "get_wager_leaderboard",
+    "submit_daily_wager"
+   ],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 1,
+   "usado_por_modulos": [
+    "hooks"
+   ],
+   "coberto_por_testes": 0,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/services/departmentsService.ts",
+   "camada": "services",
+   "exports": [
+    "Department",
+    "DepartmentInsert",
+    "DepartmentUpdate",
+    "DepartmentWithMembers",
+    "TeamMember",
+    "departmentsService"
+   ],
+   "export_default": null,
+   "linhas": 125,
+   "tabelas": [
+    "departments",
+    "team_members"
+   ],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 3,
+   "usado_por_modulos": [
+    "components/admin",
+    "hooks"
+   ],
+   "coberto_por_testes": 0,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/services/departmentWarAdminService.ts",
+   "camada": "services",
+   "exports": [
+    "CreateWarResult",
+    "WarDepartmentOption",
+    "departmentWarAdminService"
+   ],
+   "export_default": null,
+   "linhas": 219,
+   "tabelas": [
+    "department_war_departments",
+    "department_war_metrics",
+    "department_wars",
+    "departments"
+   ],
+   "rpcs": [
+    "sync_department_war_headcount"
+   ],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 1,
+   "usado_por_modulos": [
+    "hooks"
+   ],
+   "coberto_por_testes": 0,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/services/departmentWarService.ts",
+   "camada": "services",
+   "exports": [
+    "DepartmentWar",
+    "DepartmentWarBoard",
+    "DepartmentWarMetric",
+    "DepartmentWarStatus",
+    "WarContributionRow",
+    "departmentWarService"
+   ],
+   "export_default": null,
+   "linhas": 228,
+   "tabelas": [
+    "department_war_contributions",
+    "department_war_metrics",
+    "department_wars"
+   ],
+   "rpcs": [
+    "get_department_war_feed",
+    "get_department_war_standings",
+    "settle_department_war",
+    "sync_department_war_headcount"
+   ],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 3,
+   "usado_por_modulos": [
+    "hooks",
+    "pages",
+    "services"
+   ],
+   "coberto_por_testes": 0,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/services/developmentPlanService.ts",
+   "camada": "services",
+   "exports": [
+    "ACTION_TYPES",
+    "Competency",
+    "DevelopmentPlan",
+    "DevelopmentPlanAction",
+    "PRIORITY_COLORS",
+    "developmentPlanService"
+   ],
+   "export_default": null,
+   "linhas": 236,
+   "tabelas": [
+    "competencies",
+    "development_plan_actions",
+    "development_plans"
+   ],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 4,
+   "usado_por_modulos": [
+    "components",
+    "components/admin",
+    "hooks"
+   ],
+   "coberto_por_testes": 0,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/services/duelsService.ts",
+   "camada": "services",
+   "exports": [
+    "DirectDuel",
+    "DuelWithProfiles",
+    "duelsService"
+   ],
+   "export_default": null,
+   "linhas": 310,
+   "tabelas": [
+    "direct_duels",
+    "profiles"
+   ],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 2,
+   "usado_por_modulos": [
+    "components/duels",
+    "hooks"
+   ],
+   "coberto_por_testes": 0,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/services/engagementDiagnosticsService.ts",
+   "camada": "services",
+   "exports": [
+    "DiagnosticsFilters",
+    "EngagementOverview",
+    "FactorScore",
+    "MIN_RESPONDENTS",
+    "NpsMetric",
+    "PillarCorrelation",
+    "PillarScore",
+    "ScoreZone",
+    "ZONE_CLASS",
+    "ZONE_LABEL",
+    "engagementDiagnosticsService",
+    "getPillarBenchmark",
+    "scoreZone"
+   ],
+   "export_default": null,
+   "linhas": 187,
+   "tabelas": [],
+   "rpcs": [
+    "get_engagement_factor_scores",
+    "get_engagement_nps",
+    "get_engagement_nps_history",
+    "get_engagement_overview",
+    "get_engagement_pillar_benchmark",
+    "get_engagement_pillar_correlations",
+    "get_engagement_pillar_scores"
+   ],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 10,
+   "usado_por_modulos": [
+    "components/engagement",
+    "hooks",
+    "pages",
+    "services"
+   ],
+   "coberto_por_testes": 1,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/services/engagementReportsService.ts",
+   "camada": "services",
+   "exports": [
+    "CompletionTrendData",
+    "DepartmentPerformanceData",
+    "EngagementMetrics",
+    "QuestDifficultyData",
+    "StrugglingAreaData",
+    "TopQuestData",
+    "WeeklyEngagementData",
+    "engagementReportsService"
+   ],
+   "export_default": null,
+   "linhas": 401,
+   "tabelas": [
+    "attendance_records",
+    "custom_quests",
+    "departments",
+    "module_progress",
+    "profiles",
+    "quest_assignments",
+    "team_members",
+    "trail_enrollments",
+    "user_certifications"
+   ],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [
+    "date-fns"
+   ],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 1,
+   "usado_por_modulos": [
+    "hooks"
+   ],
+   "coberto_por_testes": 0,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/services/enpsService.ts",
+   "camada": "services",
+   "exports": [
+    "ENPSResponse",
+    "ENPSStats",
+    "ENPSSurvey",
+    "EngagementSnapshot",
+    "enpsService"
+   ],
+   "export_default": null,
+   "linhas": 282,
+   "tabelas": [
+    "engagement_snapshots",
+    "enps_responses",
+    "enps_surveys"
+   ],
+   "rpcs": [
+    "calculate_enps_score",
+    "generate_engagement_snapshot"
+   ],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 1,
+   "usado_por_modulos": [
+    "hooks"
+   ],
+   "coberto_por_testes": 0,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/services/executiveService.ts",
+   "camada": "services",
+   "exports": [
+    "DepartmentMetric",
+    "ExecutiveMetrics",
+    "MonthlyTrend",
+    "executiveService"
+   ],
+   "export_default": null,
+   "linhas": 80,
+   "tabelas": [],
+   "rpcs": [
+    "get_department_metrics",
+    "get_executive_metrics",
+    "get_monthly_trends"
+   ],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 1,
+   "usado_por_modulos": [
+    "hooks"
+   ],
+   "coberto_por_testes": 0,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/services/feedback360Service.ts",
+   "camada": "services",
+   "exports": [
+    "FeedbackCycle",
+    "FeedbackEvaluation",
+    "FeedbackQuestion",
+    "FeedbackResult",
+    "feedback360Service"
+   ],
+   "export_default": null,
+   "linhas": 214,
+   "tabelas": [
+    "feedback_cycles",
+    "feedback_evaluations",
+    "feedback_questions",
+    "feedback_results"
+   ],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [
+    "sonner"
+   ],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 0,
+   "usado_por_modulos": [],
+   "coberto_por_testes": 0,
+   "orfao": true
+  },
+  {
+   "arquivo": "src/services/feedbackService.ts",
+   "camada": "services",
+   "exports": [
+    "CycleInsert",
+    "FeedbackCycle",
+    "FeedbackQuestion",
+    "FeedbackRequest",
+    "FeedbackResponse",
+    "feedbackService"
+   ],
+   "export_default": null,
+   "linhas": 287,
+   "tabelas": [
+    "feedback_cycles",
+    "feedback_requests",
+    "feedback_responses"
+   ],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 2,
+   "usado_por_modulos": [
+    "hooks",
+    "pages"
+   ],
+   "coberto_por_testes": 1,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/services/goalsService.ts",
+   "camada": "services",
+   "exports": [
+    "Goal",
+    "GoalInsert",
+    "GoalUpdate",
+    "KeyResult",
+    "KeyResultInsert",
+    "goalsService"
+   ],
+   "export_default": null,
+   "linhas": 264,
+   "tabelas": [
+    "goal_updates",
+    "goals",
+    "key_results"
+   ],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 1,
+   "usado_por_modulos": [
+    "hooks"
+   ],
+   "coberto_por_testes": 0,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/services/highPotentialService.ts",
+   "camada": "services",
+   "exports": [
+    "HiPoMetrics",
+    "HighPotentialScore",
+    "highPotentialService"
+   ],
+   "export_default": null,
+   "linhas": 457,
+   "tabelas": [
+    "attendance_records",
+    "checkins",
+    "development_plan_actions",
+    "development_plans",
+    "goals",
+    "kudos",
+    "mentorship_pairs",
+    "mood_entries",
+    "nine_box_evaluations",
+    "profiles",
+    "trail_enrollments",
+    "user_certifications"
+   ],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 3,
+   "usado_por_modulos": [
+    "components/manager",
+    "hooks",
+    "services"
+   ],
+   "coberto_por_testes": 0,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/services/ipWhitelistService.ts",
+   "camada": "services",
+   "exports": [
+    "CreateIpWhitelistInput",
+    "IpAccessLog",
+    "IpWhitelistEntry",
+    "UpdateIpWhitelistInput",
+    "ipWhitelistService"
+   ],
+   "export_default": null,
+   "linhas": 151,
+   "tabelas": [
+    "ip_access_logs",
+    "ip_whitelist"
+   ],
+   "rpcs": [
+    "is_ip_whitelisted",
+    "log_ip_access"
+   ],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 1,
+   "usado_por_modulos": [
+    "hooks"
+   ],
+   "coberto_por_testes": 0,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/services/kudosService.ts",
+   "camada": "services",
+   "exports": [
+    "Kudos",
+    "KudosBadge",
+    "KudosInsert",
+    "KudosWithDetails",
+    "kudosService"
+   ],
+   "export_default": null,
+   "linhas": 278,
+   "tabelas": [
+    "kudos",
+    "kudos_badges",
+    "profiles"
+   ],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 2,
+   "usado_por_modulos": [
+    "components",
+    "hooks"
+   ],
+   "coberto_por_testes": 1,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/services/leaguesService.ts",
+   "camada": "services",
+   "exports": [
+    "League",
+    "LeagueHistory",
+    "UserLeague",
+    "leaguesService"
+   ],
+   "export_default": null,
+   "linhas": 325,
+   "tabelas": [
+    "league_history",
+    "leagues",
+    "profiles",
+    "user_leagues"
+   ],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 3,
+   "usado_por_modulos": [
+    "components/admin",
+    "hooks",
+    "pages"
+   ],
+   "coberto_por_testes": 1,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/services/lightningQuizService.ts",
+   "camada": "services",
+   "exports": [
+    "LightningAnswerResult",
+    "LightningDifficulty",
+    "LightningFinishResult",
+    "LightningQuestion",
+    "LightningSessionRow",
+    "LightningStartResult",
+    "lightningQuizService"
+   ],
+   "export_default": null,
+   "linhas": 122,
+   "tabelas": [
+    "lightning_quiz_sessions"
+   ],
+   "rpcs": [
+    "answer_lightning_question",
+    "finish_lightning_round",
+    "start_lightning_round"
+   ],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 2,
+   "usado_por_modulos": [
+    "hooks",
+    "pages"
+   ],
+   "coberto_por_testes": 0,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/services/loggingService.ts",
+   "camada": "services",
+   "exports": [
+    "logger"
+   ],
+   "export_default": null,
+   "linhas": 108,
+   "tabelas": [],
+   "rpcs": [],
+   "edges": [],
+   "env": [
+    "DEV"
+   ],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 101,
+   "usado_por_modulos": [
+    "components",
+    "components/auth",
+    "components/certifications",
+    "components/luckywheel",
+    "components/quiz",
+    "components/security",
+    "components/sequence",
+    "hooks",
+    "pages",
+    "services",
+    "services/behavioralBadges"
+   ],
+   "coberto_por_testes": 1,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/services/luckyWheelService.ts",
+   "camada": "services",
+   "exports": [
+    "LuckyWheelPrize",
+    "LuckyWheelPrizeDisplay",
+    "LuckyWheelPrizeInput",
+    "LuckyWheelPrizeType",
+    "LuckyWheelRarity",
+    "LuckyWheelSpin",
+    "LuckyWheelSpinResult",
+    "LuckyWheelStatus",
+    "luckyWheelAdminService",
+    "luckyWheelAuditService",
+    "luckyWheelPayoutService",
+    "luckyWheelService"
+   ],
+   "export_default": null,
+   "linhas": 308,
+   "tabelas": [
+    "lucky_wheel_payout_snapshots",
+    "lucky_wheel_prize_audit",
+    "lucky_wheel_prizes",
+    "lucky_wheel_spins",
+    "profiles_public"
+   ],
+   "rpcs": [
+    "get_lucky_wheel_prizes_display",
+    "get_lucky_wheel_status",
+    "spin_lucky_wheel"
+   ],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 4,
+   "usado_por_modulos": [
+    "components/luckywheel",
+    "hooks",
+    "pages"
+   ],
+   "coberto_por_testes": 0,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/services/memoryGameService.ts",
+   "camada": "services",
+   "exports": [
+    "MemoryDeck",
+    "MemoryFinishResult",
+    "MemoryLeaderboardEntry",
+    "MemorySession",
+    "MemoryStartResult",
+    "memoryDeckAdminService",
+    "memoryGameService"
+   ],
+   "export_default": null,
+   "linhas": 260,
+   "tabelas": [
+    "memory_decks",
+    "memory_pairs",
+    "memory_sessions"
+   ],
+   "rpcs": [
+    "finish_memory_session",
+    "get_memory_leaderboard",
+    "start_memory_session"
+   ],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 1,
+   "usado_por_modulos": [
+    "hooks"
+   ],
+   "coberto_por_testes": 0,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/services/missionsService.ts",
+   "camada": "services",
+   "exports": [
+    "DepartmentMission",
+    "DepartmentRanking",
+    "MissionWithProgress",
+    "UserMissionProgress",
+    "missionsService"
+   ],
+   "export_default": null,
+   "linhas": 282,
+   "tabelas": [
+    "department_missions",
+    "department_rankings",
+    "user_mission_progress"
+   ],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 7,
+   "usado_por_modulos": [
+    "components",
+    "hooks",
+    "services"
+   ],
+   "coberto_por_testes": 0,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/services/moodTrackerService.ts",
+   "camada": "services",
+   "exports": [
+    "MOOD_FACTORS",
+    "MOOD_OPTIONS",
+    "MoodEntry",
+    "MoodInsert",
+    "TeamMoodStats",
+    "moodTrackerService"
+   ],
+   "export_default": null,
+   "linhas": 208,
+   "tabelas": [
+    "mood_entries",
+    "team_members"
+   ],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 2,
+   "usado_por_modulos": [
+    "components",
+    "hooks"
+   ],
+   "coberto_por_testes": 0,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/services/nineBoxService.ts",
+   "camada": "services",
+   "exports": [
+    "BOX_LABELS",
+    "NineBoxDistribution",
+    "NineBoxEvaluation",
+    "nineBoxService"
+   ],
+   "export_default": null,
+   "linhas": 128,
+   "tabelas": [
+    "nine_box_evaluations"
+   ],
+   "rpcs": [
+    "get_nine_box_distribution"
+   ],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 8,
+   "usado_por_modulos": [
+    "components",
+    "components/admin",
+    "components/manager",
+    "hooks",
+    "services"
+   ],
+   "coberto_por_testes": 0,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/services/notificationsService.ts",
+   "camada": "services",
+   "exports": [
+    "Notification",
+    "NotificationInsert",
+    "notificationsService"
+   ],
+   "export_default": null,
+   "linhas": 187,
+   "tabelas": [
+    "notifications"
+   ],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 10,
+   "usado_por_modulos": [
+    "components",
+    "hooks",
+    "services"
+   ],
+   "coberto_por_testes": 1,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/services/nr1RiskService.ts",
+   "camada": "services",
+   "exports": [
+    "GenerateNr1PlanInput",
+    "Nr1RiskLevel",
+    "Nr1RiskRow",
+    "Nr1Summary",
+    "RISK_LEVEL_CLASS",
+    "RISK_LEVEL_DEADLINE_DAYS",
+    "RISK_LEVEL_LABEL",
+    "RISK_THRESHOLDS",
+    "generateActionPlanFromNr1Category",
+    "nr1PlanDeadlineDays",
+    "nr1PlanTargetScore",
+    "nr1RiskService",
+    "requiresActionPlan",
+    "riskGrade",
+    "riskLevel"
+   ],
+   "export_default": null,
+   "linhas": 156,
+   "tabelas": [],
+   "rpcs": [
+    "generate_action_plan_from_nr1_category",
+    "get_nr1_risk_matrix",
+    "get_nr1_summary"
+   ],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 4,
+   "usado_por_modulos": [
+    "components/engagement",
+    "hooks",
+    "lib"
+   ],
+   "coberto_por_testes": 3,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/services/onboardingService.ts",
+   "camada": "services",
+   "exports": [
+    "ONBOARDING_STEPS",
+    "OnboardingProgress",
+    "OnboardingStep",
+    "onboardingService"
+   ],
+   "export_default": null,
+   "linhas": 250,
+   "tabelas": [
+    "onboarding_progress",
+    "profiles"
+   ],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 3,
+   "usado_por_modulos": [
+    "components/onboarding",
+    "hooks"
+   ],
+   "coberto_por_testes": 1,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/services/oneOnOnePreparationService.ts",
+   "camada": "services",
+   "exports": [
+    "OneOnOneContext",
+    "OneOnOnePreparation",
+    "SuggestedAgenda",
+    "oneOnOnePreparationService"
+   ],
+   "export_default": null,
+   "linhas": 452,
+   "tabelas": [
+    "checkins",
+    "development_plan_actions",
+    "development_plans",
+    "goals",
+    "kudos",
+    "mood_entries",
+    "nine_box_evaluations",
+    "profiles"
+   ],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 2,
+   "usado_por_modulos": [
+    "components/checkins",
+    "hooks"
+   ],
+   "coberto_por_testes": 0,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/services/opinionsService.ts",
+   "camada": "services",
+   "exports": [
+    "OpinionResponseEntry",
+    "OpinionScope",
+    "opinionsService"
+   ],
+   "export_default": null,
+   "linhas": 159,
+   "tabelas": [
+    "opinion_responses",
+    "opinions"
+   ],
+   "rpcs": [
+    "generate_action_plan_from_opinion",
+    "get_opinion_feed",
+    "respond_to_opinion",
+    "set_opinion_status",
+    "toggle_opinion_support"
+   ],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 1,
+   "usado_por_modulos": [
+    "hooks"
+   ],
+   "coberto_por_testes": 0,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/services/organizationService.ts",
+   "camada": "services",
+   "exports": [
+    "Organization",
+    "OrganizationUpdate",
+    "organizationService"
+   ],
+   "export_default": null,
+   "linhas": 96,
+   "tabelas": [
+    "org_members",
+    "org_theme_history",
+    "organizations"
+   ],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 2,
+   "usado_por_modulos": [
+    "components/admin",
+    "hooks"
+   ],
+   "coberto_por_testes": 0,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/services/passwordResetService.ts",
+   "camada": "services",
+   "exports": [
+    "PasswordResetRequest",
+    "passwordResetService"
+   ],
+   "export_default": null,
+   "linhas": 204,
+   "tabelas": [
+    "password_reset_requests",
+    "profiles"
+   ],
+   "rpcs": [
+    "approve_password_reset",
+    "reject_password_reset",
+    "request_password_reset"
+   ],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 2,
+   "usado_por_modulos": [
+    "components/admin",
+    "pages"
+   ],
+   "coberto_por_testes": 0,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/services/pdiGeneratorService.ts",
+   "camada": "services",
+   "exports": [
+    "pdiGeneratorService"
+   ],
+   "export_default": null,
+   "linhas": 171,
+   "tabelas": [
+    "development_plan_actions",
+    "development_plans"
+   ],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 1,
+   "usado_por_modulos": [
+    "components/admin"
+   ],
+   "coberto_por_testes": 0,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/services/pdiService.ts",
+   "camada": "services",
+   "exports": [
+    "PDICheckin",
+    "PDIMentor",
+    "PDITemplate",
+    "pdiService"
+   ],
+   "export_default": null,
+   "linhas": 112,
+   "tabelas": [
+    "development_plan_actions",
+    "pdi_checkins",
+    "pdi_mentors",
+    "pdi_templates"
+   ],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 1,
+   "usado_por_modulos": [
+    "hooks"
+   ],
+   "coberto_por_testes": 0,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/services/permissionsService.ts",
+   "camada": "services",
+   "exports": [
+    "Permission",
+    "Role",
+    "RolePermission",
+    "UserRole",
+    "permissionsService"
+   ],
+   "export_default": null,
+   "linhas": 137,
+   "tabelas": [
+    "permissions",
+    "role_permissions",
+    "roles",
+    "user_roles"
+   ],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 1,
+   "usado_por_modulos": [
+    "hooks"
+   ],
+   "coberto_por_testes": 0,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/services/positionsService.ts",
+   "camada": "services",
+   "exports": [
+    "PenaltyRule",
+    "Position",
+    "PositionTaskTemplate",
+    "TaskPenalty",
+    "TaskScore",
+    "UserPosition",
+    "positionsService"
+   ],
+   "export_default": null,
+   "linhas": 490,
+   "tabelas": [
+    "penalty_rules",
+    "position_task_templates",
+    "positions",
+    "task_penalties",
+    "task_scores",
+    "user_positions"
+   ],
+   "rpcs": [
+    "apply_task_penalty",
+    "complete_task_score"
+   ],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 3,
+   "usado_por_modulos": [
+    "components/admin",
+    "hooks"
+   ],
+   "coberto_por_testes": 0,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/services/predictionMarketService.ts",
+   "camada": "services",
+   "exports": [
+    "ADMIN_REJECTION_MESSAGES",
+    "AdminActionResult",
+    "CreateMarketInput",
+    "OddsHistoryRow",
+    "PlaceStakeResult",
+    "PredictionAdminEventRow",
+    "PredictionMarketRow",
+    "PredictionMarketStatus",
+    "PredictionOptionRow",
+    "PredictionStakeRow",
+    "STAKE_REJECTION_MESSAGES",
+    "SettleResult",
+    "fetchOddsHistory",
+    "fetchOracleAggregates",
+    "predictionMarketService"
+   ],
+   "export_default": null,
+   "linhas": 305,
+   "tabelas": [
+    "prediction_admin_events",
+    "prediction_markets",
+    "prediction_stakes"
+   ],
+   "rpcs": [
+    "create_prediction_market",
+    "get_prediction_odds_history",
+    "get_prediction_oracle_aggregates",
+    "place_prediction_stake",
+    "settle_prediction_market",
+    "transition_prediction_market"
+   ],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 22,
+   "usado_por_modulos": [
+    "components/campaigns",
+    "components/prediction",
+    "hooks",
+    "lib",
+    "pages"
+   ],
+   "coberto_por_testes": 8,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/services/predictiveFeedbackService.ts",
+   "camada": "services",
+   "exports": [
+    "EngagementSignals",
+    "EngagementTrend",
+    "PredictiveFeedback",
+    "classifyTrend",
+    "computeEngagementScore",
+    "predictEngagement",
+    "predictiveFeedbackService"
+   ],
+   "export_default": null,
+   "linhas": 127,
+   "tabelas": [],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 0,
+   "usado_por_modulos": [],
+   "coberto_por_testes": 1,
+   "orfao": true
+  },
+  {
+   "arquivo": "src/services/profilesService.ts",
+   "camada": "services",
+   "exports": [
+    "PROFILE_SAFE_COLUMNS",
+    "PrivateProfile",
+    "Profile",
+    "ProfileInsert",
+    "ProfileUpdate",
+    "PublicProfile",
+    "profilesService"
+   ],
+   "export_default": null,
+   "linhas": 192,
+   "tabelas": [
+    "profiles",
+    "profiles_public"
+   ],
+   "rpcs": [
+    "get_my_profile_private"
+   ],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 15,
+   "usado_por_modulos": [
+    "components/manager",
+    "hooks",
+    "pages",
+    "services"
+   ],
+   "coberto_por_testes": 4,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/services/pulseSurveysService.ts",
+   "camada": "services",
+   "exports": [
+    "PulseResponse",
+    "PulseSurvey",
+    "QuestionStats",
+    "SurveyAnalytics",
+    "SurveyInsert",
+    "SurveyQuestion",
+    "pulseSurveysService"
+   ],
+   "export_default": null,
+   "linhas": 252,
+   "tabelas": [
+    "pulse_responses",
+    "pulse_surveys"
+   ],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 2,
+   "usado_por_modulos": [
+    "components/admin",
+    "hooks"
+   ],
+   "coberto_por_testes": 0,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/services/purchaseGovernanceService.ts",
+   "camada": "services",
+   "exports": [
+    "ApprovalAction",
+    "PurchaseApprovalEntry",
+    "ReviewResult",
+    "RiskAnalysisResult",
+    "purchaseGovernanceService"
+   ],
+   "export_default": null,
+   "linhas": 119,
+   "tabelas": [
+    "profiles",
+    "purchase_approvals"
+   ],
+   "rpcs": [
+    "review_purchase"
+   ],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 2,
+   "usado_por_modulos": [
+    "components/shop-admin",
+    "hooks"
+   ],
+   "coberto_por_testes": 0,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/services/pushHistoryService.ts",
+   "camada": "services",
+   "exports": [
+    "PushLogStatus",
+    "PushNotificationLog",
+    "pushHistoryService"
+   ],
+   "export_default": null,
+   "linhas": 66,
+   "tabelas": [
+    "push_notification_logs",
+    "push_subscriptions"
+   ],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 2,
+   "usado_por_modulos": [
+    "components",
+    "hooks"
+   ],
+   "coberto_por_testes": 0,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/services/pushSubscriptionService.ts",
+   "camada": "services",
+   "exports": [
+    "pushSubscriptionService"
+   ],
+   "export_default": null,
+   "linhas": 465,
+   "tabelas": [
+    "notifications",
+    "push_subscriptions",
+    "push_sync_events"
+   ],
+   "rpcs": [
+    "get_account_devices",
+    "revoke_device_by_fingerprint",
+    "revoke_push_device"
+   ],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 2,
+   "usado_por_modulos": [
+    "hooks"
+   ],
+   "coberto_por_testes": 0,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/services/questsService.ts",
+   "camada": "services",
+   "exports": [
+    "Quest",
+    "QuestAssignment",
+    "QuestDifficulty",
+    "QuestInsert",
+    "QuestStatus",
+    "QuestStep",
+    "QuestStepInsert",
+    "QuestUpdate",
+    "QuestWithSteps",
+    "questsService"
+   ],
+   "export_default": null,
+   "linhas": 314,
+   "tabelas": [
+    "custom_quests",
+    "quest_assignments",
+    "quest_steps"
+   ],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 4,
+   "usado_por_modulos": [
+    "components/manager",
+    "hooks"
+   ],
+   "coberto_por_testes": 0,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/services/quizQuestionsService.ts",
+   "camada": "services",
+   "exports": [
+    "CreateQuestionData",
+    "QuizAudienceSlice",
+    "QuizGradeResult",
+    "QuizLifelineResult",
+    "QuizOption",
+    "QuizPlayOption",
+    "QuizPlayQuestion",
+    "QuizQuestion",
+    "UpdateQuestionData",
+    "getQuizLifeline",
+    "quizPlayService",
+    "quizQuestionsService"
+   ],
+   "export_default": null,
+   "linhas": 334,
+   "tabelas": [
+    "quiz_options",
+    "quiz_questions"
+   ],
+   "rpcs": [
+    "get_quiz_lifeline",
+    "get_quiz_play_set",
+    "grade_quiz_answer",
+    "quiz_fifty_fifty"
+   ],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 5,
+   "usado_por_modulos": [
+    "components/quiz",
+    "hooks",
+    "pages"
+   ],
+   "coberto_por_testes": 0,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/services/quizService.ts",
+   "camada": "services",
+   "exports": [
+    "DailyRankingEntry",
+    "QuizScore",
+    "quizService"
+   ],
+   "export_default": null,
+   "linhas": 136,
+   "tabelas": [
+    "profiles",
+    "quiz_scores"
+   ],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 1,
+   "usado_por_modulos": [
+    "hooks"
+   ],
+   "coberto_por_testes": 0,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/services/quizStatsService.ts",
+   "camada": "services",
+   "exports": [
+    "CategoryStats",
+    "QuizAnswer",
+    "quizStatsService"
+   ],
+   "export_default": null,
+   "linhas": 166,
+   "tabelas": [
+    "quiz_answers",
+    "quiz_questions"
+   ],
+   "rpcs": [
+    "get_quiz_category_stats"
+   ],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 1,
+   "usado_por_modulos": [
+    "hooks"
+   ],
+   "coberto_por_testes": 0,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/services/rbacService.ts",
+   "camada": "services",
+   "exports": [
+    "Permission",
+    "Role",
+    "RolePermission",
+    "UserRole",
+    "UserRoleWithProfile",
+    "rbacService"
+   ],
+   "export_default": null,
+   "linhas": 380,
+   "tabelas": [
+    "permissions",
+    "profiles",
+    "role_permissions",
+    "roles",
+    "user_roles"
+   ],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 4,
+   "usado_por_modulos": [
+    "components/rbac"
+   ],
+   "coberto_por_testes": 0,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/services/salesCampaignsService.ts",
+   "camada": "services",
+   "exports": [
+    "CampaignInsert",
+    "CampaignParticipant",
+    "SalesCampaign",
+    "salesCampaignsService"
+   ],
+   "export_default": null,
+   "linhas": 512,
+   "tabelas": [
+    "campaign_participants",
+    "campaign_progress_events",
+    "notification_preferences",
+    "notifications",
+    "profiles_public",
+    "sales_campaigns",
+    "team_members"
+   ],
+   "rpcs": [
+    "recalc_campaign_progress",
+    "user_wants_in_app_notification"
+   ],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 7,
+   "usado_por_modulos": [
+    "components/campaigns",
+    "components/prediction",
+    "hooks",
+    "pages"
+   ],
+   "coberto_por_testes": 0,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/services/scratchCardService.ts",
+   "camada": "services",
+   "exports": [
+    "ScratchCard",
+    "ScratchCardSource",
+    "ScratchGrantResult",
+    "ScratchPrizeType",
+    "ScratchRarity",
+    "ScratchRevealResult",
+    "scratchCardService"
+   ],
+   "export_default": null,
+   "linhas": 80,
+   "tabelas": [
+    "scratch_cards"
+   ],
+   "rpcs": [
+    "grant_scratch_card",
+    "reveal_scratch_card"
+   ],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 2,
+   "usado_por_modulos": [
+    "hooks",
+    "pages"
+   ],
+   "coberto_por_testes": 0,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/services/seasonalEventsService.ts",
+   "camada": "services",
+   "exports": [
+    "SeasonalChallenge",
+    "SeasonalEvent",
+    "UserSeasonalProgress",
+    "seasonalEventsService"
+   ],
+   "export_default": null,
+   "linhas": 225,
+   "tabelas": [
+    "profiles",
+    "seasonal_challenges",
+    "seasonal_events",
+    "user_seasonal_progress"
+   ],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 1,
+   "usado_por_modulos": [
+    "hooks"
+   ],
+   "coberto_por_testes": 0,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/services/securityService.ts",
+   "camada": "services",
+   "exports": [
+    "BlockedIP",
+    "RateLimitRule",
+    "securityService"
+   ],
+   "export_default": null,
+   "linhas": 98,
+   "tabelas": [
+    "blocked_ips",
+    "rate_limit_rules"
+   ],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 2,
+   "usado_por_modulos": [
+    "components/security"
+   ],
+   "coberto_por_testes": 0,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/services/sequenceGameService.ts",
+   "camada": "services",
+   "exports": [
+    "SequenceAttempt",
+    "SequenceProcedure",
+    "SequenceProcedureAuthoring",
+    "SequenceProcedureWithSteps",
+    "SequenceSaveResult",
+    "SequenceSubmitResult",
+    "sequenceGameService",
+    "sequenceProcedureAdminService"
+   ],
+   "export_default": null,
+   "linhas": 280,
+   "tabelas": [
+    "sequence_attempts",
+    "sequence_procedures"
+   ],
+   "rpcs": [
+    "get_sequence_play_set",
+    "get_sequence_procedure_stats",
+    "save_sequence_procedure",
+    "submit_sequence_attempt"
+   ],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 1,
+   "usado_por_modulos": [
+    "hooks"
+   ],
+   "coberto_por_testes": 0,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/services/shopService.ts",
+   "camada": "services",
+   "exports": [
+    "CreatePromotionInput",
+    "CreateRewardInput",
+    "PurchaseStatus",
+    "RewardCategory",
+    "RewardRarity",
+    "ShopPromotion",
+    "ShopPurchase",
+    "ShopReward",
+    "UpdatePromotionInput",
+    "UpdateRewardInput",
+    "shopService"
+   ],
+   "export_default": null,
+   "linhas": 479,
+   "tabelas": [
+    "profiles",
+    "shop_promotions",
+    "shop_purchases",
+    "shop_rewards"
+   ],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 11,
+   "usado_por_modulos": [
+    "components",
+    "components/shop",
+    "components/shop-admin",
+    "hooks",
+    "pages"
+   ],
+   "coberto_por_testes": 1,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/services/socialFeedService.ts",
+   "camada": "services",
+   "exports": [
+    "AuditAction",
+    "AuditLog",
+    "FeedActivity",
+    "socialFeedService"
+   ],
+   "export_default": null,
+   "linhas": 166,
+   "tabelas": [
+    "audit_logs",
+    "profiles"
+   ],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 2,
+   "usado_por_modulos": [
+    "components",
+    "hooks"
+   ],
+   "coberto_por_testes": 0,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/services/successionService.ts",
+   "camada": "services",
+   "exports": [
+    "CriticalPosition",
+    "SuccessionPlan",
+    "SuccessorCandidate",
+    "successionService"
+   ],
+   "export_default": null,
+   "linhas": 364,
+   "tabelas": [
+    "departments",
+    "positions",
+    "profiles",
+    "user_positions"
+   ],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 4,
+   "usado_por_modulos": [
+    "components/manager",
+    "components/succession",
+    "hooks"
+   ],
+   "coberto_por_testes": 0,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/services/tournamentService.ts",
+   "camada": "services",
+   "exports": [
+    "TournamentActionResult",
+    "TournamentBracket",
+    "TournamentMatch",
+    "TournamentParticipant",
+    "TournamentStatus",
+    "TournamentSummary",
+    "tournamentService"
+   ],
+   "export_default": null,
+   "linhas": 144,
+   "tabelas": [],
+   "rpcs": [
+    "get_tournament_bracket",
+    "join_tournament",
+    "list_tournaments",
+    "report_tournament_match",
+    "start_tournament"
+   ],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 3,
+   "usado_por_modulos": [
+    "components/tournament",
+    "hooks",
+    "pages"
+   ],
+   "coberto_por_testes": 0,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/services/tradingCardsService.ts",
+   "camada": "services",
+   "exports": [
+    "CardDefinitionRow",
+    "CardPackRow",
+    "CardPackSource",
+    "CardTradeRow",
+    "CardTradeStatus",
+    "ClaimSetRewardResult",
+    "OpenPackResult",
+    "OpenedCard",
+    "SetMilestoneRow",
+    "SetRewardRow",
+    "TradeActionResult",
+    "UserCardRow",
+    "tradingCardsService"
+   ],
+   "export_default": null,
+   "linhas": 232,
+   "tabelas": [
+    "card_definitions",
+    "card_packs",
+    "card_trades",
+    "user_cards"
+   ],
+   "rpcs": [
+    "claim_card_set_reward",
+    "get_card_set_rewards",
+    "open_card_pack",
+    "propose_card_trade",
+    "respond_card_trade"
+   ],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 4,
+   "usado_por_modulos": [
+    "components/cards",
+    "hooks"
+   ],
+   "coberto_por_testes": 0,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/services/trailsService.ts",
+   "camada": "services",
+   "exports": [
+    "CreateModuleInput",
+    "CreateTrailInput",
+    "LearningTrail",
+    "ModuleProgress",
+    "TrailEnrollment",
+    "TrailModule",
+    "TrailPrerequisite",
+    "TrailWithModules",
+    "trailsService"
+   ],
+   "export_default": null,
+   "linhas": 535,
+   "tabelas": [
+    "certifications",
+    "learning_trails",
+    "module_progress",
+    "trail_enrollments",
+    "trail_modules",
+    "trail_prerequisites"
+   ],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 7,
+   "usado_por_modulos": [
+    "components",
+    "components/lms",
+    "components/trails",
+    "hooks",
+    "pages"
+   ],
+   "coberto_por_testes": 1,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/services/twoFactorService.ts",
+   "camada": "services",
+   "exports": [
+    "TwoFactorSettings",
+    "TwoFactorSetupData",
+    "twoFactorService"
+   ],
+   "export_default": null,
+   "linhas": 206,
+   "tabelas": [
+    "user_two_factor"
+   ],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [
+    "otpauth"
+   ],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 2,
+   "usado_por_modulos": [
+    "hooks",
+    "pages"
+   ],
+   "coberto_por_testes": 0,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/services/wagerAdminService.ts",
+   "camada": "services",
+   "exports": [
+    "AdminWagerQuestion",
+    "WagerBulkSaveResult",
+    "WagerSaveResponse",
+    "wagerAdminService"
+   ],
+   "export_default": null,
+   "linhas": 169,
+   "tabelas": [
+    "wager_questions"
+   ],
+   "rpcs": [
+    "list_wager_questions",
+    "save_wager_question"
+   ],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 5,
+   "usado_por_modulos": [
+    "components/wager",
+    "hooks",
+    "lib",
+    "pages"
+   ],
+   "coberto_por_testes": 2,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/services/wagerBudgetService.ts",
+   "camada": "services",
+   "exports": [
+    "WAGER_BUDGET_DEFAULTS",
+    "WagerBudgetSettings",
+    "clampBudget",
+    "clampPlayers",
+    "wagerBudgetService"
+   ],
+   "export_default": null,
+   "linhas": 91,
+   "tabelas": [
+    "wager_budget_settings"
+   ],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 1,
+   "usado_por_modulos": [
+    "hooks"
+   ],
+   "coberto_por_testes": 1,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/services/wagerIntegrityReviewEventService.ts",
+   "camada": "services",
+   "exports": [
+    "WagerIntegrityReviewEvent",
+    "wagerIntegrityReviewEventService"
+   ],
+   "export_default": null,
+   "linhas": 111,
+   "tabelas": [
+    "profiles_public",
+    "wager_integrity_review_events"
+   ],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 3,
+   "usado_por_modulos": [
+    "components/wager",
+    "hooks",
+    "lib"
+   ],
+   "coberto_por_testes": 0,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/services/wagerIntegrityReviewService.ts",
+   "camada": "services",
+   "exports": [
+    "WagerIntegrityReview",
+    "WagerReviewStatus",
+    "reviewKey",
+    "wagerIntegrityReviewService"
+   ],
+   "export_default": null,
+   "linhas": 129,
+   "tabelas": [
+    "wager_integrity_reviews"
+   ],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 4,
+   "usado_por_modulos": [
+    "components/wager",
+    "hooks",
+    "lib",
+    "services"
+   ],
+   "coberto_por_testes": 1,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/services/webauthnService.ts",
+   "camada": "services",
+   "exports": [
+    "AuthenticationOptions",
+    "RegistrationOptions",
+    "WebAuthnCredential",
+    "isBiometricAvailable",
+    "isWebAuthnSupported",
+    "webauthnService"
+   ],
+   "export_default": null,
+   "linhas": 421,
+   "tabelas": [
+    "webauthn_challenges",
+    "webauthn_credentials"
+   ],
+   "rpcs": [
+    "get_passkeys_by_email",
+    "user_has_passkeys"
+   ],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 2,
+   "usado_por_modulos": [
+    "components/auth",
+    "hooks"
+   ],
+   "coberto_por_testes": 0,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/services/weeklyChallengesService.ts",
+   "camada": "services",
+   "exports": [
+    "WeeklyChallenge",
+    "weeklyChallengesService"
+   ],
+   "export_default": null,
+   "linhas": 157,
+   "tabelas": [
+    "profiles",
+    "weekly_challenges"
+   ],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 1,
+   "usado_por_modulos": [
+    "hooks"
+   ],
+   "coberto_por_testes": 0,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/services/xpBalancingService.ts",
+   "camada": "services",
+   "exports": [
+    "EconomyHealth",
+    "XpBalancingRecommendation",
+    "XpDistributionSample",
+    "computeGini",
+    "mean",
+    "median",
+    "recommendBalancing",
+    "xpBalancingService"
+   ],
+   "export_default": null,
+   "linhas": 173,
+   "tabelas": [],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 0,
+   "usado_por_modulos": [],
+   "coberto_por_testes": 1,
+   "orfao": true
+  },
+  {
+   "arquivo": "src/utils/colorContrast.ts",
+   "camada": "utils",
+   "exports": [
+    "getContrastRatio",
+    "hexToHslString",
+    "meetsWCAG_AA"
+   ],
+   "export_default": null,
+   "linhas": 83,
+   "tabelas": [],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 2,
+   "usado_por_modulos": [
+    "components/admin",
+    "components/theme"
+   ],
+   "coberto_por_testes": 0,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/utils/formatters.ts",
+   "camada": "utils",
+   "exports": [
+    "formatCurrency",
+    "formatDate",
+    "formatNumber",
+    "formatRelativeTime"
+   ],
+   "export_default": null,
+   "linhas": 50,
+   "tabelas": [],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 0,
+   "usado_por_modulos": [],
+   "coberto_por_testes": 0,
+   "orfao": true
+  },
+  {
+   "arquivo": "src/utils/validators.ts",
+   "camada": "utils",
+   "exports": [
+    "isStrongPassword",
+    "isValidEmail"
+   ],
+   "export_default": null,
+   "linhas": 19,
+   "tabelas": [],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 0,
+   "usado_por_modulos": [],
+   "coberto_por_testes": 0,
+   "orfao": true
+  }
+ ]
+}

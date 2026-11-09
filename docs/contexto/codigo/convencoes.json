@@ -1,0 +1,84 @@
+{
+ "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
+ "format_version": 2,
+ "onde_ficam": {
+  "telas": [
+   "src/pages (81)",
+   "src/components (1)"
+  ],
+  "componentes": [
+   "src/components (432)",
+   "src/pages (82)",
+   "src/contexts (4)"
+  ],
+  "hooks": [
+   "src/hooks (129)",
+   "src/components (22)",
+   "src/contexts (4)"
+  ],
+  "servicos_logica": [
+   "src/lib (106)",
+   "src/services (99)",
+   "src/integrations (3)"
+  ],
+  "testes": [
+   "co-localizado (*.test) (139)",
+   "outro (9)",
+   "tests/ (3)"
+  ],
+  "edge_functions": "supabase/functions",
+  "migrations": "supabase/migrations",
+  "scripts": [
+   "scripts/regras_negocio (3)",
+   "scripts/ai-context (2)",
+   "scripts/ci (2)"
+  ],
+  "docs": [
+   "(raiz) (15)",
+   ".github (1)"
+  ]
+ },
+ "nomenclatura": {
+  "componentes": "PascalCase (88%)",
+  "hooks": "use + PascalCase",
+  "servicos": "camelCase (100%)",
+  "edge_functions": "kebab-case (100%)",
+  "tabelas": "snake_case (91%)"
+ },
+ "barrels_index": 14,
+ "extensao_componentes": [
+  ".tsx (521)"
+ ],
+ "alias_imports": {
+  "(raiz)": {
+   "@/": "src/",
+   "~/": "src/"
+  }
+ },
+ "commits": {
+  "convencao": "conventional commits (observado)",
+  "exemplos": [
+   "feat(contexto): sistema autonomo de contexto para agentes de IA (#34)",
+   "fix(supabase): corrige project_id do config.toml para o projeto em uso",
+   "ci(guard): adiciona step GA02 de integridade das instruções de agente no CI",
+   "docs(agentes): replica o padrao de AGENTS.md/CLAUDE.md do Zapp Web V2 (#31)",
+   "feat(onda2): CORS allowlist, CSP header, coverage, audit CI, FKs, README (#30)"
+  ]
+ },
+ "pr_template": ".github/PULL_REQUEST_TEMPLATE.md",
+ "codeowners": null,
+ "contributing": null,
+ "instrucoes_agentes": [
+  "AGENTS.md",
+  "CLAUDE.md"
+ ],
+ "typescript": {
+  "strict": true,
+  "noImplicitAny": true,
+  "tsconfigs": [
+   "tsconfig.app.json",
+   "tsconfig.json",
+   "tsconfig.node.json"
+  ]
+ }
+}

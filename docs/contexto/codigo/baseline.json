@@ -1,0 +1,732 @@
+{
+ "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
+ "format_version": 2,
+ "git": {
+  "commit": "5ffe6dbff44b165a9beed4d8acccd4abc35b8cd8",
+  "branch": "main",
+  "data_commit": "2026-11-08T19:41:23-03:00",
+  "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
+  "ultimos_commits": [
+   {
+    "sha": "5ffe6db",
+    "data": "2026-11-08",
+    "assunto": "feat(contexto): sistema autonomo de contexto para agentes de IA (#34)"
+   },
+   {
+    "sha": "6d497c7",
+    "data": "2026-11-08",
+    "assunto": "fix(supabase): corrige project_id do config.toml para o projeto em uso"
+   },
+   {
+    "sha": "522ab99",
+    "data": "2026-11-08",
+    "assunto": "ci(guard): adiciona step GA02 de integridade das instruções de agente no CI"
+   },
+   {
+    "sha": "3860817",
+    "data": "2026-11-08",
+    "assunto": "docs(agentes): replica o padrao de AGENTS.md/CLAUDE.md do Zapp Web V2 (#31)"
+   },
+   {
+    "sha": "97ee4cd",
+    "data": "2026-10-30",
+    "assunto": "feat(onda2): CORS allowlist, CSP header, coverage, audit CI, FKs, README (#30)"
+   },
+   {
+    "sha": "842cd96",
+    "data": "2026-10-30",
+    "assunto": "docs(ci): RELATORIO_CI.md — adiciona PRs #28/#29 e análise de segurança"
+   },
+   {
+    "sha": "f599b1c",
+    "data": "2026-10-30",
+    "assunto": "chore(deps): bump framer-motion, lucide-react, react-resizable-panels, storybook (#29)"
+   },
+   {
+    "sha": "50f1d15",
+    "data": "2026-10-30",
+    "assunto": "perf(test): pool vmThreads no vitest — testes 48% mais rápidos (#28)"
+   },
+   {
+    "sha": "7598fe3",
+    "data": "2026-10-29",
+    "assunto": "docs(ci): PENDENCIAS.md — todas as pendências resolvidas ou documentadas"
+   },
+   {
+    "sha": "afb0724",
+    "data": "2026-10-29",
+    "assunto": "docs(ci): RELATORIO_CI.md — estado final com todos os PRs mergeados"
+   },
+   {
+    "sha": "d8f78ee",
+    "data": "2026-10-29",
+    "assunto": "build(deps): bump grupo de 58 dependências minor/patch (#24)"
+   },
+   {
+    "sha": "e469532",
+    "data": "2026-10-29",
+    "assunto": "build(deps): bump framer-motion de 13.4.3 para 14.6.0 (#26)"
+   },
+   {
+    "sha": "21eeea8",
+    "data": "2026-10-29",
+    "assunto": "build(deps-dev): bump vite-plugin-pwa de 1.3.0 para 2.0.0 (#25)"
+   },
+   {
+    "sha": "27fcb23",
+    "data": "2026-10-29",
+    "assunto": "build(deps): bump oven-sh/setup-bun de v1 para v2 (#23)"
+   },
+   {
+    "sha": "6fc8009",
+    "data": "2026-10-29",
+    "assunto": "build(deps): bump actions/cache de v4 para v6 (#22)"
+   },
+   {
+    "sha": "7597bad",
+    "data": "2026-10-29",
+    "assunto": "build(deps): bump actions/upload-artifact de v4 para v7 (#21)"
+   },
+   {
+    "sha": "0af8c0f",
+    "data": "2026-10-29",
+    "assunto": "build(deps): bump actions/checkout de v4 para v7 (#20)"
+   },
+   {
+    "sha": "e8fca68",
+    "data": "2026-10-29",
+    "assunto": "fix(ci): fallback de env vars para E2E em PRs do Dependabot (#27)"
+   },
+   {
+    "sha": "e226e12",
+    "data": "2026-10-29",
+    "assunto": "fix(ci): dependabot ignora majors incompatíveis + docs finais de CI (#19)"
+   },
+   {
+    "sha": "d83349c",
+    "data": "2026-10-29",
+    "assunto": "fix(ci): corrige 4 causas de falha do CI introduzidas pelo bump de deps (#17)"
+   },
+   {
+    "sha": "785fa87",
+    "data": "2026-10-03",
+    "assunto": "build(deps): Bump the dependencies group across 1 directory with 46 updates (#11)"
+   },
+   {
+    "sha": "f50a57c",
+    "data": "2026-09-05",
+    "assunto": "fix(deploy+db): SPA rewrite no Vercel + limpeza de policy residual de profiles (#7)"
+   },
+   {
+    "sha": "d7279b8",
+    "data": "2026-09-05",
+    "assunto": "fix(db): elimina version duplicada de migration (20260727221909 em 2 arquivos) (#6)"
+   },
+   {
+    "sha": "e3c56e5",
+    "data": "2026-09-05",
+    "assunto": "fix(db): correções pós-validação adversarial — dedup de policy e endurecimento de entity_versions (#5)"
+   },
+   {
+    "sha": "355bc37",
+    "data": "2026-09-05",
+    "assunto": "fix(ci): destrava CI e build de produção — Onda 1 da auditoria (6,1 → 10) (#3)"
+   }
+  ],
+  "arquivos_mudados_7d": 54,
+  "pastas_mais_mudadas_30d": [
+   {
+    "pasta": "package.json",
+    "mudancas": 8
+   },
+   {
+    "pasta": "bun.lock",
+    "mudancas": 6
+   },
+   {
+    "pasta": ".github/workflows/ci.yml",
+    "mudancas": 4
+   },
+   {
+    "pasta": "RELATORIO_CI.md",
+    "mudancas": 4
+   },
+   {
+    "pasta": ".gitignore",
+    "mudancas": 3
+   },
+   {
+    "pasta": "PENDENCIAS.md",
+    "mudancas": 3
+   },
+   {
+    "pasta": ".agents/skills/task-gifts-v2",
+    "mudancas": 2
+   },
+   {
+    "pasta": "AGENTS.md",
+    "mudancas": 2
+   },
+   {
+    "pasta": "docs/agentes/mapa-repo.md",
+    "mudancas": 2
+   },
+   {
+    "pasta": "docs/contexto/regras",
+    "mudancas": 2
+   },
+   {
+    "pasta": "package-lock.json",
+    "mudancas": 2
+   },
+   {
+    "pasta": "vitest.config.ts",
+    "mudancas": 2
+   },
+   {
+    "pasta": ".claude/homunculus/instincts",
+    "mudancas": 1
+   },
+   {
+    "pasta": ".claude/hooks/session-start.sh",
+    "mudancas": 1
+   },
+   {
+    "pasta": ".claude/identity.json",
+    "mudancas": 1
+   }
+  ],
+  "arquivos_mais_mudados_90d": [
+   {
+    "arquivo": "package.json",
+    "mudancas": 10
+   },
+   {
+    "arquivo": "bun.lock",
+    "mudancas": 8
+   },
+   {
+    "arquivo": ".github/workflows/ci.yml",
+    "mudancas": 5
+   },
+   {
+    "arquivo": "RELATORIO_CI.md",
+    "mudancas": 4
+   },
+   {
+    "arquivo": "package-lock.json",
+    "mudancas": 4
+   },
+   {
+    "arquivo": "AGENTS.md",
+    "mudancas": 3
+   },
+   {
+    "arquivo": "PENDENCIAS.md",
+    "mudancas": 3
+   },
+   {
+    "arquivo": "ESTADO_ATUAL.md",
+    "mudancas": 2
+   },
+   {
+    "arquivo": "docs/agentes/mapa-repo.md",
+    "mudancas": 2
+   },
+   {
+    "arquivo": "docs/estado/README.md",
+    "mudancas": 2
+   },
+   {
+    "arquivo": "supabase/config.toml",
+    "mudancas": 2
+   },
+   {
+    "arquivo": "supabase/functions/migrate-helper/index.ts",
+    "mudancas": 2
+   },
+   {
+    "arquivo": "vercel.json",
+    "mudancas": 2
+   },
+   {
+    "arquivo": "vitest.config.ts",
+    "mudancas": 2
+   },
+   {
+    "arquivo": ".claude/homunculus/instincts/inherited/task-gifts-v2-instincts.yaml",
+    "mudancas": 1
+   },
+   {
+    "arquivo": ".claude/hooks/session-start.sh",
+    "mudancas": 1
+   },
+   {
+    "arquivo": ".claude/identity.json",
+    "mudancas": 1
+   },
+   {
+    "arquivo": ".claude/settings.json",
+    "mudancas": 1
+   },
+   {
+    "arquivo": ".claude/skills/task-gifts-v2/SKILL.md",
+    "mudancas": 1
+   },
+   {
+    "arquivo": ".github/PULL_REQUEST_TEMPLATE.md",
+    "mudancas": 1
+   },
+   {
+    "arquivo": ".github/dependabot.yml",
+    "mudancas": 1
+   },
+   {
+    "arquivo": ".github/workflows/contexto.yml",
+    "mudancas": 1
+   },
+   {
+    "arquivo": ".husky/commit-msg",
+    "mudancas": 1
+   },
+   {
+    "arquivo": "CLAUDE.md",
+    "mudancas": 1
+   },
+   {
+    "arquivo": "README.md",
+    "mudancas": 1
+   }
+  ],
+  "autores_30d": [
+   {
+    "autor": "adm01-debug",
+    "commits": 13
+   },
+   {
+    "autor": "dependabot[bot]",
+    "commits": 7
+   }
+  ]
+ },
+ "contagens": {
+  "arquivos_total": 1482,
+  "arquivos_codigo": 1138,
+  "linhas_codigo": 222524,
+  "rotas": 83,
+  "rotas_http_backend": 12,
+  "vistas_por_id": 0,
+  "itens_menu": 62,
+  "modulos": 71,
+  "componentes": 521,
+  "hooks": 156,
+  "edge_functions": 37,
+  "tabelas": 237,
+  "migrations": 266,
+  "cron_jobs": 22,
+  "testes": 152,
+  "workflows": 2,
+  "scripts": 10,
+  "docs_md": 42
+ },
+ "por_pasta": {
+  "eslint.config.js": {
+   "arquivos": 1,
+   "linhas": 58
+  },
+  "playwright.config.ts": {
+   "arquivos": 1,
+   "linhas": 26
+  },
+  "postcss.config.js": {
+   "arquivos": 1,
+   "linhas": 7
+  },
+  "public/push-sw.js": {
+   "arquivos": 1,
+   "linhas": 33
+  },
+  "public/sw-push.js": {
+   "arquivos": 1,
+   "linhas": 97
+  },
+  "public/sw.js": {
+   "arquivos": 1,
+   "linhas": 316
+  },
+  "scripts/ai-context": {
+   "arquivos": 3,
+   "linhas": 1458
+  },
+  "scripts/ci": {
+   "arquivos": 7,
+   "linhas": 1096
+  },
+  "scripts/patch-recharts.cjs": {
+   "arquivos": 1,
+   "linhas": 58
+  },
+  "scripts/regras_negocio": {
+   "arquivos": 3,
+   "linhas": 2539
+  },
+  "scripts/supabase_snapshot": {
+   "arquivos": 2,
+   "linhas": 2669
+  },
+  "src/App.tsx": {
+   "arquivos": 1,
+   "linhas": 337
+  },
+  "src/components": {
+   "arquivos": 461,
+   "linhas": 77441
+  },
+  "src/constants": {
+   "arquivos": 1,
+   "linhas": 61
+  },
+  "src/contexts": {
+   "arquivos": 4,
+   "linhas": 520
+  },
+  "src/hooks": {
+   "arquivos": 129,
+   "linhas": 14447
+  },
+  "src/i18n": {
+   "arquivos": 1,
+   "linhas": 945
+  },
+  "src/integrations": {
+   "arquivos": 3,
+   "linhas": 13029
+  },
+  "src/lib": {
+   "arquivos": 106,
+   "linhas": 22041
+  },
+  "src/main.tsx": {
+   "arquivos": 1,
+   "linhas": 67
+  },
+  "src/pages": {
+   "arquivos": 82,
+   "linhas": 22334
+  },
+  "src/services": {
+   "arquivos": 99,
+   "linhas": 21589
+  },
+  "src/stories": {
+   "arquivos": 29,
+   "linhas": 7136
+  },
+  "src/test": {
+   "arquivos": 123,
+   "linhas": 22026
+  },
+  "src/tests": {
+   "arquivos": 16,
+   "linhas": 1012
+  },
+  "src/types": {
+   "arquivos": 2,
+   "linhas": 231
+  },
+  "src/utils": {
+   "arquivos": 3,
+   "linhas": 152
+  },
+  "supabase/functions": {
+   "arquivos": 49,
+   "linhas": 10127
+  },
+  "tailwind.config.ts": {
+   "arquivos": 1,
+   "linhas": 259
+  },
+  "tests/auth-flow.spec.ts": {
+   "arquivos": 1,
+   "linhas": 34
+  },
+  "tests/e2e": {
+   "arquivos": 2,
+   "linhas": 149
+  },
+  "vite.config.ts": {
+   "arquivos": 1,
+   "linhas": 180
+  },
+  "vitest.config.ts": {
+   "arquivos": 1,
+   "linhas": 50
+  }
+ },
+ "maiores_arquivos": [
+  {
+   "arquivo": "src/integrations/supabase/types.ts",
+   "linhas": 12973
+  },
+  {
+   "arquivo": "scripts/regras_negocio/generate.py",
+   "linhas": 2138
+  },
+  {
+   "arquivo": "scripts/supabase_snapshot/snapshot.py",
+   "linhas": 1791
+  },
+  {
+   "arquivo": "src/pages/Postmortems.tsx",
+   "linhas": 1063
+  },
+  {
+   "arquivo": "src/i18n/translations.ts",
+   "linhas": 945
+  },
+  {
+   "arquivo": "scripts/ai-context/gerar.mjs",
+   "linhas": 924
+  },
+  {
+   "arquivo": "src/components/lms/ModuleViewer.tsx",
+   "linhas": 855
+  },
+  {
+   "arquivo": "supabase/functions/external-webhook/index.ts",
+   "linhas": 826
+  },
+  {
+   "arquivo": "supabase/functions/external-api/index.ts",
+   "linhas": 823
+  },
+  {
+   "arquivo": "src/lib/campaignImport.ts",
+   "linhas": 772
+  },
+  {
+   "arquivo": "src/pages/ExecutiveMonthlyReport.tsx",
+   "linhas": 751
+  },
+  {
+   "arquivo": "src/hooks/useSoundEffects.tsx",
+   "linhas": 705
+  },
+  {
+   "arquivo": "src/components/ui/skeleton.tsx",
+   "linhas": 701
+  },
+  {
+   "arquivo": "src/components/ui/sidebar.tsx",
+   "linhas": 644
+  },
+  {
+   "arquivo": "src/pages/WagerQuestionAdminPage.tsx",
+   "linhas": 578
+  },
+  {
+   "arquivo": "src/pages/SecurityRunbook.tsx",
+   "linhas": 569
+  },
+  {
+   "arquivo": "src/pages/TrailDetail.tsx",
+   "linhas": 546
+  },
+  {
+   "arquivo": "src/components/admin/RolePermissionsManager.tsx",
+   "linhas": 544
+  },
+  {
+   "arquivo": "src/lib/luckyWheelPayout.ts",
+   "linhas": 540
+  },
+  {
+   "arquivo": "src/lib/exportReports.ts",
+   "linhas": 538
+  },
+  {
+   "arquivo": "src/services/trailsService.ts",
+   "linhas": 535
+  },
+  {
+   "arquivo": "src/pages/WebhookSubscriptionDetail.tsx",
+   "linhas": 520
+  },
+  {
+   "arquivo": "src/services/salesCampaignsService.ts",
+   "linhas": 512
+  },
+  {
+   "arquivo": "src/pages/IncidentMetrics.tsx",
+   "linhas": 490
+  },
+  {
+   "arquivo": "src/services/positionsService.ts",
+   "linhas": 490
+  }
+ ],
+ "qualidade": {
+  "any": 147,
+  "console_log": 100,
+  "ts_ignore": 0,
+  "eslint_disable": 1,
+  "todos": 3,
+  "arquivos_acima_500_linhas": 23
+ },
+ "todos": [
+  {
+   "arquivo": "scripts/ai-context/gerar.mjs",
+   "linha": 188,
+   "tipo": "TODO",
+   "texto": "|FIXME|HACK|XXX)\\b[:\\s-]*([^\\n]{0,100})/.exec(line); if (m) todos.push({ linha: ln, tipo: m[1], text"
+  },
+  {
+   "arquivo": "scripts/ai-context/gerar.mjs",
+   "linha": 222,
+   "tipo": "TODO",
+   "texto": "|FIXME|HACK|XXX)\\b[:\\s-]*([^\\n]{0,100})/.exec(l); return m ? { linha: i + 1, tipo: m[1], texto: m[2]"
+  },
+  {
+   "arquivo": "scripts/regras_negocio/generate.py",
+   "linha": 570,
+   "tipo": "TODO",
+   "texto": "\", \"http\", \"import\")) and \"://\" not in c:"
+  }
+ ],
+ "alertas": {
+  "rotas_sem_arquivo": [],
+  "componentes_ambiguos": [],
+  "menu_sem_destino": [
+   "Ações Rápidas -> quick-actions",
+   "Acompanhe o Progresso -> goal-progress",
+   "Bem-vindo ao Dashboard! 🎉 -> welcome",
+   "Criar Nova Meta -> create-goal",
+   "CRM Bitrix24 -> /bitrix24",
+   "Desafios Diários 🎯 -> daily-challenges",
+   "Lucky Drops 🎁 -> lucky-drops",
+   "Mentoria -> /mentoria",
+   "Menu de Navegação -> sidebar",
+   "Micro Quests ⚡ -> micro-quests",
+   "Missões do Dia -> missions",
+   "Progresso nas Trilhas -> trail-progress",
+   "Quests Ativas -> quests",
+   "Ranking & Ligas -> leaderboard",
+   "Sistema de Metas -> goals-intro",
+   "Streak de Fogo 🔥 -> streak-tracker",
+   "Suas Estatísticas -> stats",
+   "Trilhas de Aprendizado -> trails-intro",
+   "Tudo Pronto! 🚀 -> complete"
+  ],
+  "edges_orfas": [
+   "admin-alerts",
+   "ai-course-builder",
+   "birthday-celebrations",
+   "bitrix24-api",
+   "bitrix24-oauth",
+   "bitrix24-webhook",
+   "burn-rate-monitor",
+   "checkin-reminders",
+   "churn-prediction",
+   "cleanup-old-security-logs",
+   "cleanup-rate-limit-logs",
+   "competency-alerts",
+   "detect-new-device",
+   "error-budget-monitor",
+   "external-api",
+   "external-db-bridge",
+   "external-webhook",
+   "generate-quiz-questions",
+   "push-device-revoked",
+   "push-public-key",
+   "reward-approval-review",
+   "send-campaign-push",
+   "send-email-digest",
+   "send-email-notifications",
+   "send-rate-limit-alert",
+   "survey-reminders",
+   "verify-geo",
+   "verify-ip",
+   "weekly-league-processing"
+  ],
+  "edges_chamadas_sem_pasta": [],
+  "tabelas_sem_rls": [
+   "lucky_wheel_prizes"
+  ],
+  "tabelas_usadas_sem_definicao": [
+   "coin_transactions",
+   "league_members",
+   "user_quests",
+   "xp_transactions"
+  ],
+  "tabelas_com_drift_migration_vs_types": [
+   "achievements",
+   "engagement_factors",
+   "lucky_wheel_prizes",
+   "lucky_wheel_spins",
+   "notification_preferences",
+   "notification_templates",
+   "nr1_risk_categories",
+   "permissions",
+   "profiles",
+   "roles",
+   "trail_modules"
+  ],
+  "rpcs_sem_definicao": [
+   "add_user_rewards",
+   "add_user_xp",
+   "get_lucky_wheel_status",
+   "increment_user_xp_coins"
+  ],
+  "componentes_orfaos": [
+   "src/components/admin/metrics/AdminMetricsCharts.tsx",
+   "src/components/admin/permissions/PermissionModuleAccordion.tsx",
+   "src/components/admin/telemetry/TelemetryTable.tsx",
+   "src/components/analytics/AnalyticsBottomSection.tsx",
+   "src/components/auth/PasskeyLogin.tsx",
+   "src/components/checkins/CheckinDetailDialog.tsx",
+   "src/components/copilot/CopilotAlertCard.tsx",
+   "src/components/dashboard/DashboardTabs.tsx",
+   "src/components/MobilePullToRefresh.tsx",
+   "src/components/PageTransition.tsx",
+   "src/components/social/ActivityItem.tsx",
+   "src/components/social/FeedFilters.tsx",
+   "src/components/social/FeedStatsBar.tsx",
+   "src/components/ui/carousel.tsx",
+   "src/components/ui/context-menu.tsx",
+   "src/components/ui/hover-card.tsx",
+   "src/components/ui/menubar.tsx",
+   "src/components/ui/micro-interactions.tsx",
+   "src/components/ui/navigation-menu.tsx",
+   "src/components/ui/pagination.tsx",
+   "src/components/ui/responsive-dialog.tsx",
+   "src/components/ui/sidebar.tsx",
+   "src/components/ui/spinner.tsx",
+   "src/components/weekly/WeeklyMetricCards.tsx"
+  ],
+  "componentes_com_nome_duplicado": [
+   "CopilotAlert",
+   "LevelUpCelebration",
+   "PageTransition",
+   "SidebarFooter",
+   "SkeletonList",
+   "StatCard",
+   "TeamChallenges",
+   "Toaster"
+  ],
+  "scripts_orfaos": [],
+  "env_usadas_nao_declaradas": [
+   "DEV",
+   "MODE",
+   "NODE_ENV",
+   "VITE_APP_VERSION",
+   "VITE_DEPLOYED_EDGE_FUNCTIONS",
+   "VITE_SENTRY_DSN",
+   "VITE_SUPABASE_PUBLISHABLE_KEY"
+  ],
+  "ciclos_de_import": 2,
+  "possiveis_segredos_no_codigo": [
+   "scripts/ai-context/cenarios.mjs:102"
+  ]
+ },
+ "erros_do_gerador": []
+}

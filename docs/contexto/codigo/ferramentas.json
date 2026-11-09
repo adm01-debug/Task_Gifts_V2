@@ -1,0 +1,747 @@
+{
+ "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
+ "format_version": 2,
+ "stack": {
+  "linguagens": [
+   "TypeScript (1118)",
+   "SQL (266)",
+   "Markdown (42)",
+   "JavaScript (16)",
+   "JSON (10)",
+   "Python (5)",
+   "YAML (5)",
+   "Shell (3)"
+  ],
+  "linguagem_principal": "TypeScript",
+  "framework": "React",
+  "backend_http": [],
+  "bundler": "Vite",
+  "roteador": "react-router",
+  "banco": "Supabase",
+  "testes": [
+   "vitest",
+   "playwright"
+  ],
+  "ui": [
+   "tailwind",
+   "radix/shadcn"
+  ],
+  "estado": [
+   "react-query"
+  ],
+  "gerenciador_pacotes": "bun",
+  "node": null,
+  "python": null,
+  "deploy": [
+   "vercel"
+  ],
+  "monorepo": null,
+  "pastas_fonte": [
+   "src"
+  ]
+ },
+ "workspaces": [],
+ "package": {
+  "nome": "vite_react_shadcn_ts",
+  "versao": "0.0.0",
+  "scripts": {
+   "build": "vite build",
+   "build:dev": "vite build --mode development",
+   "contexto:codigo": "node scripts/ai-context/gerar.mjs --out docs/contexto/codigo",
+   "contexto:regras": "python3 scripts/regras_negocio/generate.py --repo . --out docs/contexto/regras --profile regras --schema-snapshot docs/contexto/supabase --index-path docs/contexto/00-INDEX.md --no-pointer",
+   "contexto:test": "node --test scripts/ai-context/gerar.unit.mjs scripts/ci/contexto-indice.unit.mjs scripts/ci/contexto-publicacao.unit.mjs scripts/ci/regras-negocio.unit.mjs scripts/ci/supabase-snapshot.unit.mjs",
+   "dev": "vite",
+   "graph:setup": "bash scripts/graphify/setup.sh",
+   "lint": "eslint .",
+   "postinstall": "node ./scripts/patch-recharts.cjs",
+   "prepare": "husky",
+   "preview": "vite preview",
+   "test": "vitest run",
+   "test:ci": "vitest run --coverage --reporter=verbose",
+   "typecheck": "tsc --noEmit"
+  },
+  "dependencias": 63,
+  "dev_dependencias": 38,
+  "principais": {
+   "@supabase/supabase-js": "^2.118.0",
+   "@tanstack/react-query": "^5.105.0",
+   "date-fns": "^4.4.0",
+   "framer-motion": "^14.8.0",
+   "next-themes": "^0.4.6",
+   "react": "^19.3.1",
+   "react-day-picker": "^10.0.2",
+   "react-dom": "^19.3.1",
+   "react-error-boundary": "^6.1.6",
+   "react-hook-form": "^7.91.0",
+   "react-resizable-panels": "^4.15.2",
+   "react-router-dom": "^7.18.4",
+   "recharts": "^3.10.1",
+   "tailwindcss-animate": "^1.0.7",
+   "zod": "^4.6.7"
+  },
+  "engines": null,
+  "packageManager": null
+ },
+ "python": {
+  "dependencias": [
+   "psycopg"
+  ]
+ },
+ "configs": [
+  ".github/PULL_REQUEST_TEMPLATE.md",
+  ".github/dependabot.yml",
+  ".husky/commit-msg",
+  ".husky/pre-commit",
+  "ai-context.config.json",
+  "components.json",
+  "eslint.config.js",
+  "package.json",
+  "playwright.config.ts",
+  "postcss.config.js",
+  "supabase/config.toml",
+  "tailwind.config.ts",
+  "tsconfig.app.json",
+  "tsconfig.json",
+  "tsconfig.node.json",
+  "vercel.json",
+  "vite.config.ts",
+  "vitest.config.ts"
+ ],
+ "workflows": [
+  {
+   "arquivo": ".github/workflows/ci.yml",
+   "nome": "CI",
+   "gatilhos": [
+    "pull_request",
+    "push"
+   ],
+   "crons": [],
+   "branches": [
+    "main",
+    "master"
+   ],
+   "jobs": [
+    "quality"
+   ],
+   "permissoes": [],
+   "scripts_usados": [
+    "scripts/ci/check-claude-md-integrity.mjs"
+   ],
+   "npm_scripts": [
+    "lint",
+    "test:ci",
+    "typecheck"
+   ],
+   "secrets": [
+    "VITE_SUPABASE_PUBLISHABLE_KEY",
+    "VITE_SUPABASE_URL"
+   ],
+   "actions": [
+    "actions/cache",
+    "actions/checkout",
+    "actions/upload-artifact",
+    "oven-sh/setup-bun"
+   ]
+  },
+  {
+   "arquivo": ".github/workflows/contexto.yml",
+   "nome": "Contexto para agentes de IA (10 min)",
+   "gatilhos": [
+    "push",
+    "schedule",
+    "workflow_dispatch"
+   ],
+   "crons": [
+    "3-59/10 * * * *"
+   ],
+   "branches": [
+    "main"
+   ],
+   "jobs": [
+    "gate",
+    "codigo",
+    "banco",
+    "regras",
+    "publicar"
+   ],
+   "permissoes": [
+    "contents: read"
+   ],
+   "scripts_usados": [
+    "scripts/ai-context/gerar.mjs",
+    "scripts/regras_negocio/generate.py",
+    "scripts/regras_negocio/indice.py",
+    "scripts/supabase_snapshot/snapshot.py"
+   ],
+   "npm_scripts": [],
+   "secrets": [
+    "SUPABASE_DB_URL"
+   ],
+   "actions": [
+    "actions/cache",
+    "actions/checkout",
+    "actions/download-artifact",
+    "actions/setup-node",
+    "actions/upload-artifact"
+   ]
+  }
+ ],
+ "hooks_git": [
+  {
+   "arquivo": ".husky/commit-msg",
+   "comandos": [
+    "node scripts/ci/commit-msg-lint.mjs \"$1\""
+   ]
+  },
+  {
+   "arquivo": ".husky/pre-commit",
+   "comandos": [
+    "npx lint-staged"
+   ]
+  }
+ ],
+ "docs_raiz": [
+  {
+   "arquivo": ".github/PULL_REQUEST_TEMPLATE.md",
+   "titulo": null,
+   "linhas": 33
+  },
+  {
+   "arquivo": "AGENTS.md",
+   "titulo": "AGENTS.md — Task Gifts V2",
+   "linhas": 146
+  },
+  {
+   "arquivo": "AUDIT_INVENTORY_CHECKLIST.md",
+   "titulo": "✅ Checklist de Inventário Auditável",
+   "linhas": 24
+  },
+  {
+   "arquivo": "CLAUDE.md",
+   "titulo": null,
+   "linhas": 2
+  },
+  {
+   "arquivo": "DESIGN_SYSTEM_REPORT.md",
+   "titulo": "📊 Task Gifts - Relatório Completo do Design System",
+   "linhas": 360
+  },
+  {
+   "arquivo": "ENTERPRISE_AUDIT_REPORT.md",
+   "titulo": "🏆 Relatório de Auditoria de Software Enterprise",
+   "linhas": 111
+  },
+  {
+   "arquivo": "ESTADO_ATUAL.md",
+   "titulo": "Estado Atual do Sistema — TaskGifts v2",
+   "linhas": 494
+  },
+  {
+   "arquivo": "GAMIFICATION_AUDIT_REPORT.md",
+   "titulo": "🎮 Auditoria de Gamificação - Status de Implementação",
+   "linhas": 44
+  },
+  {
+   "arquivo": "INVENTARIO_FUNCIONALIDADES.md",
+   "titulo": "📋 INVENTÁRIO COMPLETO DE FUNCIONALIDADES E FERRAMENTAS",
+   "linhas": 1065
+  },
+  {
+   "arquivo": "PADROES_LAYOUT_UX.md",
+   "titulo": "📐 PADRÕES DE LAYOUT/UX - TASK GIFTS",
+   "linhas": 1584
+  },
+  {
+   "arquivo": "PENDENCIAS.md",
+   "titulo": "PENDÊNCIAS",
+   "linhas": 37
+  },
+  {
+   "arquivo": "README.md",
+   "titulo": "Task Gifts V2 — Plataforma de Gamificação Corporativa",
+   "linhas": 85
+  },
+  {
+   "arquivo": "RELATORIO_CI.md",
+   "titulo": "RELATÓRIO CI — Task_Gifts_V2",
+   "linhas": 79
+  },
+  {
+   "arquivo": "SYSTEM_INVENTORY_AUDIT.md",
+   "titulo": "📊 Relatório de Auditoria Enterprise & Inventário Minucioso do Sistema",
+   "linhas": 81
+  },
+  {
+   "arquivo": "SYSTEM_RELIABILITY_AUDIT.md",
+   "titulo": "🛡️ Relatório de Auditoria de Confiabilidade e Robustez (Versão 10/10)",
+   "linhas": 49
+  },
+  {
+   "arquivo": "audit_report.md",
+   "titulo": "📊 Relatório de Auditoria Enterprise & Inventário Minucioso do Sistema",
+   "linhas": 81
+  }
+ ],
+ "docs_em_subpastas": [
+  {
+   "pasta": "docs/estado",
+   "arquivos_md": 11
+  },
+  {
+   "pasta": "docs/agentes",
+   "arquivos_md": 7
+  },
+  {
+   "pasta": "docs/contexto",
+   "arquivos_md": 2
+  }
+ ],
+ "changelog_topo": null,
+ "env": {
+  "declaradas_no_env_example": [
+   "VITE_APP_ENV",
+   "VITE_APP_NAME",
+   "VITE_BITRIX_WEBHOOK_URL",
+   "VITE_ENABLE_ANALYTICS",
+   "VITE_ENABLE_DEBUG",
+   "VITE_SUPABASE_ANON_KEY",
+   "VITE_SUPABASE_URL"
+  ],
+  "usadas_no_front": [
+   "DEV",
+   "MODE",
+   "NODE_ENV",
+   "VITE_APP_VERSION",
+   "VITE_DEPLOYED_EDGE_FUNCTIONS",
+   "VITE_SENTRY_DSN",
+   "VITE_SUPABASE_ANON_KEY",
+   "VITE_SUPABASE_PUBLISHABLE_KEY",
+   "VITE_SUPABASE_URL"
+  ],
+  "usadas_nas_edges": [
+   "ALLOWED_ORIGINS",
+   "BITRIX24_CLIENT_ID",
+   "BITRIX24_CLIENT_SECRET",
+   "BITRIX24_DOMAIN",
+   "BITRIX24_WEBHOOK_SECRET",
+   "CRON_SECRET",
+   "FRONTEND_URL",
+   "INTERNAL_FUNCTION_SECRET",
+   "LOVABLE_API_KEY",
+   "RESEND_API_KEY",
+   "SENTRY_DSN",
+   "SENTRY_ENV",
+   "SLACK_ALERT_WEBHOOK_URL",
+   "SLO_TARGET",
+   "SUPABASE_ANON_KEY",
+   "SUPABASE_DB_URL",
+   "SUPABASE_SERVICE_ROLE_KEY",
+   "SUPABASE_URL",
+   "UPSTASH_REDIS_REST_TOKEN",
+   "UPSTASH_REDIS_REST_URL",
+   "VAPID_PRIVATE_KEY",
+   "VAPID_PUBLIC_KEY",
+   "VAPID_SUBJECT",
+   "WEBHOOK_HEALTH_MIN_SAMPLE",
+   "WEBHOOK_HEALTH_THRESHOLD"
+  ],
+  "usadas_no_python": [
+   "AI_CONTEXT_INDEX",
+   "AI_CONTEXT_MODEL",
+   "AI_CONTEXT_PROFILE",
+   "AI_CONTEXT_SCHEMA_SNAPSHOT",
+   "ANTHROPIC_API_KEY",
+   "CODE_SCAN_DIRS",
+   "GEN_TYPES",
+   "PGDUMP",
+   "PGDUMP_SCHEMAS",
+   "REPO_ROOT",
+   "SNAPSHOT_DIR",
+   "SNAPSHOT_EXCLUDE_SCHEMAS",
+   "SNAPSHOT_INCLUDE_SCHEMAS",
+   "SUPABASE_ACCESS_TOKEN",
+   "SUPABASE_DB_URL",
+   "SUPABASE_PROJECT_REF",
+   "SUPABASE_SNAPSHOT_PUBLICACAO"
+  ],
+  "usadas_mas_nao_declaradas": [
+   "DEV",
+   "MODE",
+   "NODE_ENV",
+   "VITE_APP_VERSION",
+   "VITE_DEPLOYED_EDGE_FUNCTIONS",
+   "VITE_SENTRY_DSN",
+   "VITE_SUPABASE_PUBLISHABLE_KEY"
+  ],
+  "secrets_em_workflows": [
+   "SUPABASE_DB_URL",
+   "VITE_SUPABASE_PUBLISHABLE_KEY",
+   "VITE_SUPABASE_URL"
+  ]
+ },
+ "deploy": {
+  "alvos": [
+   "vercel"
+  ],
+  "dockerfiles": [],
+  "compose": [],
+  "vercel": {
+   "framework": null,
+   "build": null,
+   "rewrites": 1,
+   "redirects": 0,
+   "headers": 1,
+   "ignore_command": null,
+   "crons": []
+  }
+ },
+ "integracoes": {
+  "sdks": [
+   {
+    "pacote": "@tanstack/react-query",
+    "servico": "react-query",
+    "versao": "^5.105.0"
+   },
+   {
+    "pacote": "@sentry/react",
+    "servico": "Sentry",
+    "versao": "^11.9.0"
+   },
+   {
+    "pacote": "@supabase/supabase-js",
+    "servico": "Supabase",
+    "versao": "^2.118.0"
+   },
+   {
+    "pacote": "zod",
+    "servico": "zod",
+    "versao": "^4.6.7"
+   }
+  ],
+  "hosts_externos": [
+   {
+    "host": "ai.gateway.lovable.dev",
+    "arquivos": 6
+   },
+   {
+    "host": "api.resend.com",
+    "arquivos": 2
+   },
+   {
+    "host": "fcm.googleapis.com",
+    "arquivos": 2
+   },
+   {
+    "host": "i.pravatar.cc",
+    "arquivos": 2
+   },
+   {
+    "host": "taskgifts.app",
+    "arquivos": 2
+   },
+   {
+    "host": "www.youtube.com",
+    "arquivos": 2
+   },
+   {
+    "host": "x.supabase.co",
+    "arquivos": 2
+   },
+   {
+    "host": "a.com",
+    "arquivos": 1
+   },
+   {
+    "host": "api.pwnedpasswords.com",
+    "arquivos": 1
+   },
+   {
+    "host": "api.x.com",
+    "arquivos": 1
+   },
+   {
+    "host": "app.exemplo.com",
+    "arquivos": 1
+   },
+   {
+    "host": "exemplo.com",
+    "arquivos": 1
+   },
+   {
+    "host": "ip-api.com",
+    "arquivos": 1
+   },
+   {
+    "host": "linkedin.com",
+    "arquivos": 1
+   },
+   {
+    "host": "lovable.dev",
+    "arquivos": 1
+   },
+   {
+    "host": "push.example",
+    "arquivos": 1
+   },
+   {
+    "host": "test.supabase.co",
+    "arquivos": 1
+   },
+   {
+    "host": "twitter.com",
+    "arquivos": 1
+   }
+  ],
+  "env_de_integracao": [
+   "BITRIX24_CLIENT_ID",
+   "BITRIX24_CLIENT_SECRET",
+   "BITRIX24_WEBHOOK_SECRET",
+   "CRON_SECRET",
+   "INTERNAL_FUNCTION_SECRET",
+   "LOVABLE_API_KEY",
+   "RESEND_API_KEY",
+   "SENTRY_DSN",
+   "SENTRY_ENV",
+   "SLACK_ALERT_WEBHOOK_URL",
+   "UPSTASH_REDIS_REST_TOKEN",
+   "UPSTASH_REDIS_REST_URL",
+   "VITE_BITRIX_WEBHOOK_URL",
+   "VITE_SENTRY_DSN",
+   "WEBHOOK_HEALTH_MIN_SAMPLE",
+   "WEBHOOK_HEALTH_THRESHOLD"
+  ],
+  "webhooks_recebidos": [
+   "migrate-helper"
+  ],
+  "realtime": [
+   "activity-comments-${activityId}",
+   "activity-reactions-realtime",
+   "audit-realtime",
+   "blocked-ips-push",
+   "device-alerts-push",
+   "duels-changes",
+   "kudos-realtime",
+   "league-realtime",
+   "login-attempts-push",
+   "notifications-realtime",
+   "org-${query.data.id}",
+   "password-reset-notifications",
+   "quiz-scores-realtime",
+   "seasonal-events-realtime",
+   "seasonal-progress-${eventId}",
+   "security-alerts-push",
+   "security-alerts-realtime",
+   "social-feed-realtime",
+   "war-feed-${warId}",
+   "weekly-challenges-updates"
+  ]
+ },
+ "permissoes": {
+  "papeis_no_codigo": [
+   {
+    "papel": "admin",
+    "ocorrencias": 14
+   },
+   {
+    "papel": "alert",
+    "ocorrencias": 9
+   },
+   {
+    "papel": "user",
+    "ocorrencias": 8
+   },
+   {
+    "papel": "manager",
+    "ocorrencias": 6
+   },
+   {
+    "papel": "system",
+    "ocorrencias": 6
+   },
+   {
+    "papel": "button",
+    "ocorrencias": 5
+   },
+   {
+    "papel": "status",
+    "ocorrencias": 5
+   },
+   {
+    "papel": "group",
+    "ocorrencias": 3
+   },
+   {
+    "papel": "assistant",
+    "ocorrencias": 2
+   },
+   {
+    "papel": "grid",
+    "ocorrencias": 2
+   },
+   {
+    "papel": "navigation",
+    "ocorrencias": 2
+   },
+   {
+    "papel": "radio",
+    "ocorrencias": 2
+   },
+   {
+    "papel": "radiogroup",
+    "ocorrencias": 2
+   },
+   {
+    "papel": "Cargos",
+    "ocorrencias": 1
+   },
+   {
+    "papel": "agent",
+    "ocorrencias": 1
+   },
+   {
+    "papel": "banner",
+    "ocorrencias": 1
+   },
+   {
+    "papel": "contentinfo",
+    "ocorrencias": 1
+   },
+   {
+    "papel": "dialog",
+    "ocorrencias": 1
+   },
+   {
+    "papel": "gridcell",
+    "ocorrencias": 1
+   },
+   {
+    "papel": "img",
+    "ocorrencias": 1
+   },
+   {
+    "papel": "link",
+    "ocorrencias": 1
+   },
+   {
+    "papel": "list",
+    "ocorrencias": 1
+   },
+   {
+    "papel": "listitem",
+    "ocorrencias": 1
+   },
+   {
+    "papel": "long",
+    "ocorrencias": 1
+   },
+   {
+    "papel": "menu",
+    "ocorrencias": 1
+   },
+   {
+    "papel": "menuitem",
+    "ocorrencias": 1
+   },
+   {
+    "papel": "presentation",
+    "ocorrencias": 1
+   },
+   {
+    "papel": "region",
+    "ocorrencias": 1
+   },
+   {
+    "papel": "role_assigned",
+    "ocorrencias": 1
+   },
+   {
+    "papel": "separator",
+    "ocorrencias": 1
+   },
+   {
+    "papel": "short",
+    "ocorrencias": 1
+   },
+   {
+    "papel": "sup",
+    "ocorrencias": 1
+   },
+   {
+    "papel": "tab",
+    "ocorrencias": 1
+   }
+  ],
+  "enums_de_papel": [
+   {
+    "enum": "app_role",
+    "valores": [
+     "admin",
+     "manager",
+     "employee"
+    ]
+   }
+  ],
+  "rpcs_de_autorizacao": [
+   "admin_profile_directory",
+   "has_role",
+   "is_ip_whitelisted",
+   "user_has_passkeys"
+  ],
+  "guards": [
+   "src/components/IpAccessGuard.tsx",
+   "src/components/engagement/diagnostics/AnonymityGuardNotice.tsx",
+   "src/components/rbac/AccessControl.tsx",
+   "src/components/rbac/ProtectedRoute.tsx"
+  ],
+  "rotas_protegidas": 78,
+  "rotas_publicas": [
+   "/*",
+   "/forgot-password",
+   "/reset-password",
+   "/verificar",
+   "/verificar/:code"
+  ],
+  "menu_com_papeis": [],
+  "tabelas_sem_rls": [
+   "lucky_wheel_prizes"
+  ]
+ },
+ "feature_flags": {
+  "total": 3,
+  "flags": [
+   {
+    "flag": "FEATURE_X",
+    "arquivos": 1
+   },
+   {
+    "flag": "nova-tela",
+    "arquivos": 1
+   },
+   {
+    "flag": "novo-inbox",
+    "arquivos": 1
+   }
+  ],
+  "tabelas_de_flag": [
+   "attendance_settings",
+   "geo_settings",
+   "lucky_wheel_settings",
+   "lucky_wheel_settings_audit",
+   "wager_budget_settings"
+  ]
+ },
+ "providers": {
+  "entrada": "src/main.tsx",
+  "providers": [
+   "BrowserRouter",
+   "GlobalErrorBoundary",
+   "OnboardingTourProvider",
+   "ScrollRestorationProvider"
+  ]
+ },
+ "i18n": {
+  "arquivos": 1,
+  "idiomas": [],
+  "lib": []
+ }
+}
