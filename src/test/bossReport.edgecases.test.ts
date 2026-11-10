@@ -179,7 +179,7 @@ describe("buildBossReport — meses vazios na tendência", () => {
       { days: 0, now: NOW },
     );
     // último mês (jul) tem batalha e o anterior (jun) está vazio → sem delta
-    expect(report.trend.points.at(-2)?.battles).toBe(0);
+    expect(report.trend.points[report.trend.points.length - 2]?.battles).toBe(0);
     expect(report.trend.winRateDeltaPp).toBeNull();
   });
 });
