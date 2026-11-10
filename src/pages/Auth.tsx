@@ -117,16 +117,16 @@ const Auth = () => {
     const newErrors: typeof errors = {};
     if (view === "forgot-password") {
       const r = emailSchema.safeParse(email);
-      if (!r.success) newErrors.email = r.error.errors[0].message;
+      if (!r.success) newErrors.email = r.error.issues[0].message;
     } else if (view === "login") {
       const r = loginSchema.safeParse({ email, password });
-      if (!r.success) r.error.errors.forEach((e) => {
+      if (!r.success) r.error.issues.forEach((e) => {
         if (e.path[0] === "email") newErrors.email = e.message;
         if (e.path[0] === "password") newErrors.password = e.message;
       });
     } else {
       const r = signupSchema.safeParse({ email, password, displayName: displayName || undefined });
-      if (!r.success) r.error.errors.forEach((e) => {
+      if (!r.success) r.error.issues.forEach((e) => {
         if (e.path[0] === "email") newErrors.email = e.message;
         if (e.path[0] === "password") newErrors.password = e.message;
         if (e.path[0] === "displayName") newErrors.displayName = e.message;
@@ -138,7 +138,7 @@ const Auth = () => {
 
   const handleForgotPassword = async () => {
     const r = emailSchema.safeParse(email);
-    if (!r.success) { setErrors({ email: r.error.errors[0].message }); return; }
+    if (!r.success) { setErrors({ email: r.error.issues[0].message }); return; }
     setLoading(true);
     try {
       const { data: userData, error: userError } = await supabase

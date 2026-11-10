@@ -139,9 +139,10 @@ export const enpsService = {
   },
 
   async updateSurvey(id: string, updates: Partial<ENPSSurvey>) {
+    const { departments: _departments, response_count: _responseCount, enps_score: _score, ...columns } = updates;
     const { data, error } = await supabase
       .from("enps_surveys")
-      .update({ ...updates, updated_at: new Date().toISOString() })
+      .update({ ...columns, updated_at: new Date().toISOString() })
       .eq("id", id)
       .select()
       .single();

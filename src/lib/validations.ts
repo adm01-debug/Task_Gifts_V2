@@ -17,7 +17,7 @@ const createStringSchema = (
   maxLength: number = 255
 ) =>
   z
-    .string({ required_error: `${fieldName} é obrigatório` })
+    .string({ error: (issue) => issue.input === undefined ? `${fieldName} é obrigatório` : undefined })
     .min(minLength, `${fieldName} deve ter pelo menos ${minLength} caractere(s)`)
     .max(maxLength, `${fieldName} deve ter no máximo ${maxLength} caracteres`)
     .transform(sanitizeString);
@@ -27,19 +27,19 @@ const createStringSchema = (
 // ============================================
 
 export const emailSchema = z
-  .string({ required_error: "Email é obrigatório" })
+  .string({ error: (issue) => issue.input === undefined ? "Email é obrigatório" : undefined})
   .min(1, "Email é obrigatório")
   .email("Email inválido")
   .max(255, "Email deve ter no máximo 255 caracteres")
   .transform((val) => val.toLowerCase().trim());
 
 export const passwordSchema = z
-  .string({ required_error: "Senha é obrigatória" })
+  .string({ error: (issue) => issue.input === undefined ? "Senha é obrigatória" : undefined})
   .min(6, "Senha deve ter pelo menos 6 caracteres")
   .max(100, "Senha deve ter no máximo 100 caracteres");
 
 export const strongPasswordSchema = z
-  .string({ required_error: "Senha é obrigatória" })
+  .string({ error: (issue) => issue.input === undefined ? "Senha é obrigatória" : undefined})
   .min(8, "Senha deve ter pelo menos 8 caracteres")
   .max(100, "Senha deve ter no máximo 100 caracteres")
   .regex(/[A-Z]/, "Senha deve conter pelo menos uma letra maiúscula")
@@ -112,7 +112,7 @@ export const questFormSchema = z.object({
   description: questDescriptionSchema,
   icon: z.string().max(10, "Ícone inválido").default("📚"),
   difficulty: z.enum(["easy", "medium", "hard", "expert"], {
-    required_error: "Selecione a dificuldade",
+    error: (issue) => issue.input === undefined ? "Selecione a dificuldade" : undefined,
   }),
   xpReward: z
     .number()
@@ -146,7 +146,7 @@ export const questFormSchema = z.object({
 // ============================================
 
 export const kudosMessageSchema = z
-  .string({ required_error: "Mensagem é obrigatória" })
+  .string({ error: (issue) => issue.input === undefined ? "Mensagem é obrigatória" : undefined})
   .min(5, "Mensagem deve ter pelo menos 5 caracteres")
   .max(500, "Mensagem deve ter no máximo 500 caracteres")
   .transform(sanitizeString);
@@ -290,7 +290,7 @@ export const trailModuleSchema = z.object({
 // ============================================
 
 export const commentSchema = z
-  .string({ required_error: "Comentário é obrigatório" })
+  .string({ error: (issue) => issue.input === undefined ? "Comentário é obrigatório" : undefined})
   .min(1, "Comentário não pode estar vazio")
   .max(1000, "Comentário muito longo (máximo 1000 caracteres)")
   .transform(sanitizeString);
@@ -321,7 +321,7 @@ export function validateData<T extends z.ZodSchema>(
     return { success: true, data: result.data };
   }
   
-  const errors = result.error.errors.map((e) => e.message);
+  const errors = result.error.issues.map((e) => e.message);
   return { success: false, errors };
 }
 

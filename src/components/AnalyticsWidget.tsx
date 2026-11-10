@@ -14,7 +14,7 @@ const renderCustomTooltip = ({ active, payload, label }: RechartsTooltipProps) =
         <p className="font-semibold text-sm mb-1">{label}</p>
         {payload.map((entry: RechartsTooltipPayloadItem, i: number) => (
           <p key={i} className="text-xs" style={{ color: entry.color }}>
-            {entry.name}: {entry.value.toLocaleString()}
+            {entry.name}: {entry.value?.toLocaleString() ?? ""}
           </p>
         ))}
       </div>

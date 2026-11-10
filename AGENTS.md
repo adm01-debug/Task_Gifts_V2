@@ -118,9 +118,9 @@ Repo `adm01-debug/Task_Gifts_V2`, branch `main`, **público**. Produção: https
   versionado, mas o CI e o Vercel usam `bun.lock` — mexeu em dependência, atualize o `bun.lock`.
 - `bun run lint` · `bun run test` (vitest) · `bun run test:ci` (coverage, thresholds em `vitest.config.ts`) ·
   `bun playwright test tests/e2e/smoke.spec.ts tests/auth-flow.spec.ts` (o gate do CI).
-- **`bun run typecheck` passa vacuamente**: `tsconfig.json` tem `"files": []` + `references`, e
-  `tsc --noEmit` sem `-b` não segue references — compila zero arquivo. Para conferir de verdade:
-  `npx tsc --noEmit -p tsconfig.app.json` (ou `npx tsc -b`).
+- **`bun run typecheck` verifica app e configuração Vite** com `-p tsconfig.app.json` e
+  `-p tsconfig.node.json`, sem emitir arquivos. Preserve os projetos explícitos: `tsconfig.json` tem
+  `"files": []` + `references`, e `tsc --noEmit` sozinho não segue essas referências.
 - `postinstall` roda `scripts/patch-recharts.cjs`, que **muta `node_modules`** (silencia um `console.warn`
   do recharts); cache de CI que restaura `node_modules` sem rodar `postinstall` perde o patch.
 - Hooks do husky: `pre-commit` (`npx lint-staged` → `eslint --fix` + `vitest related` nos `.ts/.tsx`,

@@ -314,18 +314,17 @@ export function buildResultRows(
  * anterior): datas seguem como Date, formulas resolvem pelo resultado e
  * rich-text/hyperlink colapsam para string.
  */
-function excelCellToPrimitive(value: import("exceljs").CellValue): string | number | Date | null {
+function excelCellToPrimitive(value: import("exceljs").CellValue): string | number | boolean | Date | null {
   if (value === null || value === undefined) return null;
   if (value instanceof Date) return value;
   if (typeof value === "object") {
-    const obj = value as Record<string, unknown>;
-    if ("result" in obj) return excelCellToPrimitive((obj.result ?? null) as import("exceljs").CellValue);
-    if ("richText" in obj && Array.isArray(obj.richText)) {
-      return (obj.richText as Array<{ text: string }>).map((t) => t.text).join("");
+    if ("result" in value) return excelCellToPrimitive(value.result ?? null);
+    if ("richText" in value) {
+      return value.richText.map((t) => t.text).join("");
     }
-    if ("text" in obj && typeof obj.text === "string") return obj.text;
-    if ("error" in obj) return null;
-    if ("formula" in obj) return null;
+    if ("text" in value && typeof value.text === "string") return value.text;
+    if ("error" in value) return null;
+    if ("formula" in value) return null;
     return String(value);
   }
   return value;

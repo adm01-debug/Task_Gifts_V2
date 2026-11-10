@@ -73,7 +73,7 @@ Passos do job `quality`, em ordem (`.github/workflows/ci.yml`):
 | 2 | `bun install --frozen-lockfile` | ✅ |
 | 3 | **Security Audit** — `bun audit --audit-level=high`, falha só com `high`/`critical` de runtime | ✅ |
 | 4 | `bun run lint` | ✅ |
-| 5 | `bun run typecheck` | ✅ (mas é no-op — ver `AGENTS.md` > Stack) |
+| 5 | `bun run typecheck` (projetos app e node explícitos, sem emissão) | ✅ |
 | 6 | **Integridade das instruções de agente (GA02)** — `scripts/ci/check-claude-md-integrity.mjs` | ✅ |
 | 7 | **Guardas das automações de contexto** — 89 suítes `node:test` dos produtores (`docs/agentes/contexto-autonomo.md`) | ✅ |
 | 8 | **Guarda das migrations** — `scripts/db-audit/check-migration-drift.mjs` (`scripts/db-audit/README.md`) | ✅ |
@@ -94,8 +94,8 @@ Fatos que já custaram retrabalho:
   a conta e corrigir os seletores.
 - **O gate só cobre rotas públicas e guardas de auth.** Nenhum fluxo logado é verificado em CI; não trate
   CI verde como prova de que uma tela logada funciona.
-- **`bun run typecheck` passa sem checar nada** (`tsconfig.json` com `"files": []` + `references`). O
-  portão existe no YAML e não existe de fato — confira com `npx tsc --noEmit -p tsconfig.app.json`.
+- **`bun run typecheck` verifica app e node explicitamente**. `tsc --noEmit` sozinho na raiz não verifica
+  nada (`tsconfig.json` com `"files": []` + `references`); preserve os dois `-p` no script.
 - **Dependabot** (`.github/dependabot.yml`): npm semanal segunda 09:00, limite 10 PRs, grupo único
   `dependencies` restrito a `minor`+`patch`, com majors de `typescript`, `tailwindcss` e
   `@hookform/resolvers` ignorados (upgrade exige migração manual); `github-actions` semanal, limite 5.

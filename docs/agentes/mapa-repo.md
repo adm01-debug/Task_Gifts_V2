@@ -59,9 +59,9 @@ O repo usa **bun** (`bun.lock`); `package-lock.json` também está versionado, m
 - testes unitários só do que você tocou: `npx vitest run <caminho>` (a suíte inteira são ~137 arquivos);
 - cobertura como no CI: `bun run test:ci` (thresholds em `vitest.config.ts`: statements 30, branches 25,
   functions 25, lines 30 — **não baixe**);
-- **typecheck de verdade:** `npx tsc --noEmit -p tsconfig.app.json` (ou `npx tsc -b`).
-  `bun run typecheck` é no-op: `tsconfig.json` tem `"files": []` + `references` e `tsc --noEmit` sem
-  `-b` não segue references;
+- **typecheck:** `bun run typecheck` verifica `tsconfig.app.json` e `tsconfig.node.json` explicitamente,
+  sem emitir arquivos. Não substitua por `tsc --noEmit` sozinho: `tsconfig.json` tem `"files": []` +
+  `references`, e esse comando não segue as referências;
 - lint dos arquivos tocados: `npx eslint <arquivos>`; a suíte toda: `bun run lint`;
 - E2E como no CI: `bun playwright test tests/e2e/smoke.spec.ts tests/auth-flow.spec.ts`
   (o `webServer` sobe `bun run dev` em `http://localhost:8080`);

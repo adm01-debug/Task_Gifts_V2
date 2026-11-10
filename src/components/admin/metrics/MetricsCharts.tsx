@@ -108,7 +108,7 @@ export function MetricsCharts({
                           <Cell key={`cell-${index}`} fill={entry.color} />
                         ))}
                       </Pie>
-                      <Tooltip contentStyle={tooltipStyle} formatter={(value: number) => [`${value} membros`, '']} />
+                      <Tooltip contentStyle={tooltipStyle} formatter={(value) => [`${value} membros`, '']} />
                       <Legend layout="vertical" align="right" verticalAlign="middle" formatter={(value) => <span className="text-xs">{value}</span>} />
                     </PieChart>
                   </ResponsiveContainer>
@@ -134,7 +134,7 @@ export function MetricsCharts({
                     <CartesianGrid strokeDasharray="3 3" className="stroke-border/30" />
                     <XAxis type="number" className="text-xs" tick={{ fill: tickFill }} />
                     <YAxis type="category" dataKey="name" className="text-xs" tick={{ fill: tickFill }} width={50} />
-                    <Tooltip contentStyle={tooltipStyle} formatter={(value: number) => [`${value} usuários`, '']} />
+                    <Tooltip contentStyle={tooltipStyle} formatter={(value) => [`${value} usuários`, '']} />
                     <Bar dataKey="value" radius={[0, 4, 4, 0]}>
                       {levelDistribution.map((entry, index) => (
                         <Cell key={`cell-${index}`} fill={entry.color} />

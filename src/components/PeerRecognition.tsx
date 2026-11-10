@@ -40,7 +40,7 @@ const GiveKudosForm = forwardRef<HTMLDivElement, GiveKudosFormProps>(({ onSucces
   const validateMessage = useCallback((value: string) => {
     const result = kudosMessageSchema.safeParse(value);
     if (!result.success) {
-      setMessageError(result.error.errors[0].message);
+      setMessageError(result.error.issues[0].message);
       return false;
     }
     setMessageError(null);

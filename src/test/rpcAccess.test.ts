@@ -50,6 +50,7 @@ describeIf('RPC Access Control — Manager/Admin functions', () => {
   });
 
   it('anon deve receber erro ao chamar get_user_stats_api', async () => {
+    const anon = getAnonClient();
     const { error } = await anon.rpc('get_user_stats_api', {
       p_user_email: 'x@x.com',
     });
