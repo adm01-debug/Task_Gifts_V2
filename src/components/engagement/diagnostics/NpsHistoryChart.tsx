@@ -144,8 +144,8 @@ export function NpsHistoryChart({
                         fontSize: "0.75rem",
                         color: "hsl(var(--popover-foreground))",
                       }}
-                      formatter={(value: number | string) => [String(value), "Score"]}
-                      labelFormatter={(label: string) => `Período ${label}`}
+                      formatter={(value) => [String(value), "Score"]}
+                      labelFormatter={(label) => `Período ${label}`}
                     />
                     <Line
                       type="monotone"

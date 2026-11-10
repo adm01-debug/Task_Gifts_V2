@@ -79,7 +79,7 @@ describe("useTypePreferences", () => {
     await act(async () => {
       await result.current.setCell("campaign_enrolled", "push", false);
     });
-    const written = upserts.at(-1)!;
+    const written = upserts[upserts.length - 1]!;
     expect(written.card_pack).toBeDefined();
     expect((written.campaign_enrolled as { push: boolean }).push).toBe(false);
   });
@@ -130,7 +130,7 @@ describe("useTypePreferences", () => {
     });
     // A ultima escrita precisa conter AMBAS as mudancas (read-modify-write
     // serializado); sem a fila, a segunda leria o estado pre-primeira.
-    const written = upserts.at(-1)! as Record<string, { push?: boolean; email?: boolean }>;
+    const written = upserts[upserts.length - 1]! as Record<string, { push?: boolean; email?: boolean }>;
     expect(written.campaign_enrolled.push).toBe(false);
     expect(written.campaign_progress.email).toBe(true);
   });

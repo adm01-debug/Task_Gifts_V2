@@ -204,7 +204,7 @@ describe("purchaseRisk — blindagem contra respostas anômalas da IA", () => {
   it("registra o ajuste da IA como fator auditável quando não é zero", () => {
     const base = assessPurchaseRisk({ totalCoins: 3000, accountAgeDays: 10 });
     const adjusted = applyAiAdjustment(base, 10, "  Padrão atípico de resgates.  ");
-    expect(adjusted.factors.at(-1)?.code).toBe("ai_adjustment");
+    expect(adjusted.factors[adjusted.factors.length - 1]?.code).toBe("ai_adjustment");
     expect(adjusted.aiSummary).toBe("Padrão atípico de resgates.");
   });
 

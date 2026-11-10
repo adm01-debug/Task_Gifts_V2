@@ -81,7 +81,7 @@ export function AuditFilters({
                 <Calendar className="mr-2 h-4 w-4" />{startDate ? format(startDate, "dd/MM/yyyy") : "Data início"}
               </Button>
             </PopoverTrigger>
-            <PopoverContent className="w-auto p-0" align="start"><CalendarComponent mode="single" selected={startDate} onSelect={onStartDateChange} initialFocus className="pointer-events-auto" /></PopoverContent>
+            <PopoverContent className="w-auto p-0" align="start"><CalendarComponent mode="single" selected={startDate} onSelect={onStartDateChange} autoFocus className="pointer-events-auto" /></PopoverContent>
           </Popover>
           <Popover>
             <PopoverTrigger asChild>
@@ -89,7 +89,7 @@ export function AuditFilters({
                 <Calendar className="mr-2 h-4 w-4" />{endDate ? format(endDate, "dd/MM/yyyy") : "Data fim"}
               </Button>
             </PopoverTrigger>
-            <PopoverContent className="w-auto p-0" align="start"><CalendarComponent mode="single" selected={endDate} onSelect={onEndDateChange} initialFocus className="pointer-events-auto" /></PopoverContent>
+            <PopoverContent className="w-auto p-0" align="start"><CalendarComponent mode="single" selected={endDate} onSelect={onEndDateChange} autoFocus className="pointer-events-auto" /></PopoverContent>
           </Popover>
         </div>
       </CardContent>

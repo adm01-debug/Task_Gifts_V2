@@ -31,7 +31,7 @@ if (SENTRY_DSN) {
     tracesSampleRate: IS_PROD ? 0.1 : 1.0,
     replaysSessionSampleRate: IS_PROD ? 0.05 : 0,
     replaysOnErrorSampleRate: 1.0,
-    sendDefaultPii: false,
+    dataCollection: { userInfo: false },
     ignoreErrors: [
       "ResizeObserver loop limit exceeded",
       "ResizeObserver loop completed with undelivered notifications.",
