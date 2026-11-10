@@ -112,7 +112,7 @@ export const questFormSchema = z.object({
   description: questDescriptionSchema,
   icon: z.string().max(10, "Ícone inválido").default("📚"),
   difficulty: z.enum(["easy", "medium", "hard", "expert"], {
-    error: (issue) => issue.input === undefined ? "Selecione a dificuldade",: undefined
+    error: (issue) => issue.input === undefined ? "Selecione a dificuldade" : undefined,
   }),
   xpReward: z
     .number()
