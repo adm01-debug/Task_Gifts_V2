@@ -1,4 +1,5 @@
 import { supabase } from "@/integrations/supabase/client";
+import type { Database } from "@/integrations/supabase/types";
 
 export interface Celebration {
   id: string;
@@ -100,7 +101,7 @@ export const celebrationsService = {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) throw new Error("Not authenticated");
 
-    const updates: Record<string, string | undefined> = {};
+    const updates: Pick<Database["public"]["Tables"]["profiles"]["Update"], "birth_date" | "hire_date"> = {};
     if (birthDate) updates.birth_date = birthDate;
     if (hireDate) updates.hire_date = hireDate;
 

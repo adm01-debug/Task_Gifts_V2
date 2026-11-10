@@ -29,7 +29,7 @@ export function AttendanceCharts({ weeklyTrendData, checkInTimesData, targetMinu
                 <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
                 <XAxis dataKey="week" stroke="hsl(var(--muted-foreground))" fontSize={12} />
                 <YAxis stroke="hsl(var(--muted-foreground))" fontSize={12} domain={[0, 100]} tickFormatter={(v) => `${v}%`} />
-                <Tooltip contentStyle={tooltipStyle} formatter={(value: number) => [`${value}%`, 'Taxa de Pontualidade']} />
+                <Tooltip contentStyle={tooltipStyle} formatter={(value) => [`${value}%`, 'Taxa de Pontualidade']} />
                 <Line type="monotone" dataKey="rate" stroke="hsl(var(--primary))" strokeWidth={3} dot={{ fill: 'hsl(var(--primary))', strokeWidth: 2, r: 4 }} activeDot={{ r: 6 }} />
               </LineChart>
             </ResponsiveContainer>

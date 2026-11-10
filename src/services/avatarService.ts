@@ -1,4 +1,5 @@
 import { supabase } from "@/integrations/supabase/client";
+import type { Database } from "@/integrations/supabase/types";
 import { logger } from "./loggingService";
 
 export type AvatarCategory = 'background' | 'frame' | 'accessory' | 'effect' | 'badge_style';
@@ -165,15 +166,17 @@ export const avatarService = {
     category: AvatarCategory,
     itemId: string | null
   ): Promise<UserAvatarConfig> {
-    const columnMap: Record<AvatarCategory, string> = {
+    const columnMap = {
       background: 'selected_background',
       frame: 'selected_frame',
       accessory: 'selected_accessory',
       effect: 'selected_effect',
       badge_style: 'selected_badge_style',
-    };
+    } as const;
 
     const column = columnMap[category];
+    const changes: Database["public"]["Tables"]["user_avatar_config"]["Update"] = {};
+    changes[column] = itemId;
     
     // Check if config exists
     const existingConfig = await this.getUserConfig(userId);
@@ -181,7 +184,7 @@ export const avatarService = {
     if (existingConfig) {
       const { data, error } = await supabase
         .from("user_avatar_config")
-        .update({ [column]: itemId })
+        .update(changes)
         .eq("user_id", userId)
         .select()
         .maybeSingle();
@@ -192,7 +195,7 @@ export const avatarService = {
     } else {
       const { data, error } = await supabase
         .from("user_avatar_config")
-        .insert({ user_id: userId, [column]: itemId })
+        .insert({ user_id: userId, ...changes })
         .select()
         .maybeSingle();
 

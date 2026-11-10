@@ -166,7 +166,7 @@ export function CampaignProgressChart({
                 borderRadius: 8,
                 fontSize: 12,
               }}
-              formatter={(value: number, name: string) => [
+              formatter={(value, name) => [
                 `${Number(value).toLocaleString("pt-BR")} ${metricUnit}`,
                 name === "global" ? "Global" : "Você",
               ]}

@@ -80,7 +80,7 @@ export function BossTrendChart({
                 fontSize: 12,
                 color: "hsl(var(--popover-foreground))",
               }}
-              formatter={(value: number, _name, item) => {
+              formatter={(value, _name, item) => {
                 const point = item?.payload as { defeats?: number } | undefined;
                 return [`${value} vitória(s) · ${point?.defeats ?? 0} derrota(s)`, "Resultado"];
               }}

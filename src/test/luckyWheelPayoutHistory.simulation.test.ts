@@ -68,7 +68,7 @@ describe("buildPayoutTrend — invariantes estruturais", () => {
     ] as PayoutSnapshotRow[];
     const result = buildPayoutTrend(rows);
     expect(result.summary.daysWithData).toBe(1);
-    expect(result.points.at(-1)?.date).toBe("2026-03-05");
+    expect(result.points[result.points.length - 1]?.date).toBe("2026-03-05");
   });
 
   it("valida o calendário em isValidDay", () => {
@@ -236,6 +236,6 @@ describe("buildPayoutTrend — classificação estatística", () => {
   it("limita a janela solicitada a 365 dias", () => {
     const result = buildPayoutTrend([{ snapshot_date: day(0), spins: 1 }], { days: 5_000 });
     expect(result.points.length).toBe(365);
-    expect(result.points.at(-1)?.date).toBe(day(0));
+    expect(result.points[result.points.length - 1]?.date).toBe(day(0));
   });
 });

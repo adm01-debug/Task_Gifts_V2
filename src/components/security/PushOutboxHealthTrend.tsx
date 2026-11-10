@@ -126,7 +126,7 @@ export function PushOutboxHealthTrend() {
                   borderRadius: 8,
                   color: "hsl(var(--foreground))",
                 }}
-                formatter={(value: number, name: string) => [value, name === "avg_score" ? "Score médio" : name]}
+                formatter={(value, name) => [value, name === "avg_score" ? "Score médio" : name]}
               />
               <Area
                 type="monotone"

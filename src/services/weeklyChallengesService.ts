@@ -68,11 +68,11 @@ export const weeklyChallengesService = {
     isChallenger: boolean,
     xpGained: number
   ): Promise<void> {
-    const updateField = isChallenger ? "challenger_xp_gained" : "opponent_xp_gained";
+    const updates = isChallenger ? { challenger_xp_gained: xpGained } : { opponent_xp_gained: xpGained };
     
     const { error } = await supabase
       .from("weekly_challenges")
-      .update({ [updateField]: xpGained })
+      .update(updates)
       .eq("id", challengeId);
 
     if (error) throw error;
