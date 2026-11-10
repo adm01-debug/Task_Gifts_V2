@@ -1,7 +1,7 @@
 # Contexto do projeto para agentes de IA
 
 GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.
-Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `ffcff81d4b5c63c9508b3b08b41bb1c5166b6d43` (2026-11-09T07:02:59-03:00).
+Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `ca1a6e4efd53d9b513f9397493992c3e782f107f` (2026-11-10T10:50:31-03:00).
 
 ## Como usar (leia antes de planejar ou executar qualquer tarefa)
 1. **Tela/rota/menu** → `rotas.json` (url/vista/menu → arquivo → hooks → tabelas → edges; `rotas_http_backend` para APIs) e `modulos.json` (módulo inteiro + dependências entre módulos).
@@ -14,7 +14,7 @@ Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR
 Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua tarefa; não carregue tudo.
 
 ## Stack
-- linguagens: TypeScript (1118), SQL (267), Markdown (43), JavaScript (14), JSON (11), Python (5), YAML (5), Shell (3)
+- linguagens: TypeScript (1122), SQL (267), Markdown (43), JavaScript (14), JSON (11), Python (5), YAML (5), Shell (3)
 - linguagem_principal: TypeScript
 - framework: React
 - backend_http: n/d
@@ -34,9 +34,9 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 ## Números
 | item | qtd |
 |---|---|
-| arquivos_total | 1483 |
-| arquivos_codigo | 1136 |
-| linhas_codigo | 222015 |
+| arquivos_total | 1487 |
+| arquivos_codigo | 1140 |
+| linhas_codigo | 222229 |
 | rotas | 83 |
 | rotas_http_backend | 0 |
 | vistas_por_id | 0 |
@@ -48,7 +48,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 | tabelas | 236 |
 | migrations | 267 |
 | cron_jobs | 22 |
-| testes | 151 |
+| testes | 155 |
 | workflows | 2 |
 | scripts | 9 |
 | docs_md | 43 |
@@ -58,7 +58,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - componentes: src/components (432), src/pages (82), src/contexts (4)
 - hooks: src/hooks (129), src/components (22), src/contexts (4)
 - servicos_logica: src/lib (106), src/services (99), src/integrations (3)
-- testes: co-localizado (*.test) (139), outro (8), tests/ (3)
+- testes: co-localizado (*.test) (143), outro (8), tests/ (3)
 - edge_functions: supabase/functions
 - migrations: supabase/migrations
 - scripts: scripts/regras_negocio (3), scripts/ci (2), scripts/db-audit (1)
@@ -258,7 +258,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 
 ## Integrações externas
 - SDKs: Sentry, Supabase, react-query, zod
-- hosts mais citados: ai.gateway.lovable.dev, fcm.googleapis.com, i.pravatar.cc, taskgifts.app, www.youtube.com, a.com, api.pwnedpasswords.com, api.resend.com, app.exemplo.com, exemplo.com, ip-api.com, linkedin.com, lovable.dev, push.example, test.supabase.co
+- hosts mais citados: ai.gateway.lovable.dev, fcm.googleapis.com, i.pravatar.cc, taskgifts.app, www.youtube.com, a.com, api.pwnedpasswords.com, api.resend.com, app.exemplo.com, example.test, exemplo.com, ip-api.com, linkedin.com, lovable.dev, push.example
 - webhooks recebidos: migrate-helper
 - env de integração (só nomes): BITRIX24_CLIENT_ID, BITRIX24_CLIENT_SECRET, BITRIX24_WEBHOOK_SECRET, CRON_SECRET, INTERNAL_FUNCTION_SECRET, LOVABLE_API_KEY, RESEND_API_KEY, SENTRY_DSN, SENTRY_ENV, SLACK_ALERT_WEBHOOK_URL, UPSTASH_REDIS_REST_TOKEN, UPSTASH_REDIS_REST_URL, VITE_BITRIX_WEBHOOK_URL, VITE_SENTRY_DSN, WEBHOOK_HEALTH_MIN_SAMPLE, WEBHOOK_HEALTH_THRESHOLD
 
@@ -286,26 +286,26 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - possiveis_segredos_no_codigo: 0
 
 ## Grafo de código (graphify)
-- 9712 nós · 26986 arestas · 605 comunidades · grafo do commit `ffcff81d`
-- comunidades maiores: lucide-react (232), react (217), badge.tsx (187), cn (130), client.ts (125), useAuth (118), AdminPanel.tsx (105), profilesService.ts (104), useToast (102), Shop.tsx (94), @tanstack/react-query (85), gerar.mjs (80)
+- 9723 nós · 27050 arestas · 620 comunidades · grafo do commit `ca1a6e4e`
+- comunidades maiores: lucide-react (312), react (192), @tanstack/react-query (181), select.tsx (149), cn (117), useToast (94), DevelopmentPlanManager.tsx (87), client.ts (84), questsService.ts (82), gerar.mjs (80), UsersManager.tsx (80), DepartmentWarPage.tsx (79)
 - símbolos mais chamados: cn() (src/lib/utils.ts), useAuth() (src/hooks/useAuth.tsx), useIsMobile() (src/hooks/use-mobile.tsx), q() (scripts/supabase_snapshot/snapshot.py), useDepartments() (src/hooks/useDepartments.ts), useToast() (src/hooks/use-toast.ts), useRBAC() (src/hooks/useRBAC.ts), useProfiles() (src/hooks/useProfiles.ts), useSEO() (src/hooks/useSEO.ts), useSoundEffects() (src/hooks/useSoundEffects.tsx), .collect() (scripts/supabase_snapshot/test_snapshot.py), excluded_sql() (scripts/supabase_snapshot/snapshot.py)
 - consulta local: `graphify query "<pergunta>"`, `graphify path "<A>" "<B>"`, `graphify explain "<X>"`
 
 ## Hotspots (arquivos mais alterados, 90 dias)
-- package.json (12)
+- package.json (13)
 - bun.lock (8)
 - .github/workflows/ci.yml (6)
-- AGENTS.md (5)
+- AGENTS.md (6)
 - RELATORIO_CI.md (4)
+- docs/agentes/mapa-repo.md (4)
 - package-lock.json (4)
 - PENDENCIAS.md (3)
 - docs/agentes/banco.md (3)
-- docs/agentes/mapa-repo.md (3)
+- docs/agentes/github-ci.md (3)
 - .github/workflows/contexto.yml (2)
 - ESTADO_ATUAL.md (2)
 - ai-context.config.json (2)
 - docs/agentes/contexto-autonomo.md (2)
-- docs/agentes/github-ci.md (2)
 - docs/estado/README.md (2)
 
 ## Workflows
@@ -317,7 +317,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - `build`: `vite build`
 - `build:dev`: `vite build --mode development`
 - `lint`: `eslint .`
-- `typecheck`: `tsc --noEmit`
+- `typecheck`: `tsc --noEmit -p tsconfig.app.json && tsc --noEmit -p tsconfig.node.json`
 - `test`: `vitest run`
 - `test:ci`: `vitest run --coverage --reporter=verbose`
 - `preview`: `vite preview`
@@ -351,6 +351,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 
 
 ## Últimos commits
+- 2026-11-10 `ca1a6e4` fix(tipos): corrige contratos e ativa verificação real da aplicação
 - 2026-11-09 `ffcff81` fix: corrige URL do projeto nas migrations de cron, guard GA02 e docs (#37)
 - 2026-11-08 `59d2c2b` feat(db-audit): guarda de migrations — idempotência ratchet + drift contra banco real
 - 2026-11-08 `a270eb3` fix(contexto): hardening do pacote — 2 vazamentos e inventário de edges
@@ -365,7 +366,6 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - 2026-10-29 `7598fe3` docs(ci): PENDENCIAS.md — todas as pendências resolvidas ou documentadas
 - 2026-10-29 `afb0724` docs(ci): RELATORIO_CI.md — estado final com todos os PRs mergeados
 - 2026-10-29 `d8f78ee` build(deps): bump grupo de 58 dependências minor/patch (#24)
-- 2026-10-29 `e469532` build(deps): bump framer-motion de 13.4.3 para 14.6.0 (#26)
 
 ## Arquivos deste diretório
 - `docs/contexto/codigo/rotas.json`

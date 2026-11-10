@@ -325,7 +325,7 @@
    "zod_schemas": 0,
    "flags": [],
    "papeis": [],
-   "usado_por": 14,
+   "usado_por": 18,
    "usado_por_modulos": [
     "components/admin",
     "hooks",
@@ -1147,7 +1147,7 @@
     "summarizeBySeller"
    ],
    "export_default": null,
-   "linhas": 772,
+   "linhas": 771,
    "tabelas": [],
    "rpcs": [],
    "edges": [],
@@ -1165,7 +1165,7 @@
     "components/campaigns",
     "services"
    ],
-   "coberto_por_testes": 1,
+   "coberto_por_testes": 2,
    "orfao": false
   },
   {
@@ -3634,7 +3634,7 @@
    "usado_por_modulos": [
     "components"
    ],
-   "coberto_por_testes": 0,
+   "coberto_por_testes": 1,
    "orfao": false
   },
   {
@@ -4420,7 +4420,7 @@
     "avatarService"
    ],
    "export_default": null,
-   "linhas": 233,
+   "linhas": 236,
    "tabelas": [
     "avatar_items",
     "profiles",
@@ -4439,7 +4439,7 @@
     "components",
     "hooks"
    ],
-   "coberto_por_testes": 0,
+   "coberto_por_testes": 1,
    "orfao": false
   },
   {
@@ -4776,7 +4776,7 @@
     "celebrationsService"
    ],
    "export_default": null,
-   "linhas": 191,
+   "linhas": 192,
    "tabelas": [
     "celebrations",
     "profiles"
@@ -4792,7 +4792,7 @@
    "usado_por_modulos": [
     "hooks"
    ],
-   "coberto_por_testes": 0,
+   "coberto_por_testes": 1,
    "orfao": false
   },
   {
@@ -5172,7 +5172,7 @@
     "developmentPlanService"
    ],
    "export_default": null,
-   "linhas": 236,
+   "linhas": 239,
    "tabelas": [
     "competencies",
     "development_plan_actions",
@@ -5191,7 +5191,7 @@
     "components/admin",
     "hooks"
    ],
-   "coberto_por_testes": 0,
+   "coberto_por_testes": 1,
    "orfao": false
   },
   {
@@ -5322,7 +5322,7 @@
     "enpsService"
    ],
    "export_default": null,
-   "linhas": 282,
+   "linhas": 283,
    "tabelas": [
     "engagement_snapshots",
     "enps_responses",
@@ -5342,7 +5342,7 @@
    "usado_por_modulos": [
     "hooks"
    ],
-   "coberto_por_testes": 0,
+   "coberto_por_testes": 1,
    "orfao": false
   },
   {
@@ -5839,7 +5839,7 @@
     "nineBoxService"
    ],
    "export_default": null,
-   "linhas": 128,
+   "linhas": 129,
    "tabelas": [
     "nine_box_evaluations"
    ],
@@ -5860,7 +5860,7 @@
     "hooks",
     "services"
    ],
-   "coberto_por_testes": 0,
+   "coberto_por_testes": 1,
    "orfao": false
   },
   {
@@ -6201,7 +6201,7 @@
     "positionsService"
    ],
    "export_default": null,
-   "linhas": 490,
+   "linhas": 492,
    "tabelas": [
     "penalty_rules",
     "position_task_templates",
@@ -6225,7 +6225,7 @@
     "components/admin",
     "hooks"
    ],
-   "coberto_por_testes": 0,
+   "coberto_por_testes": 1,
    "orfao": false
   },
   {
@@ -6530,7 +6530,7 @@
     "quizQuestionsService"
    ],
    "export_default": null,
-   "linhas": 334,
+   "linhas": 335,
    "tabelas": [
     "quiz_options",
     "quiz_questions"
@@ -6553,7 +6553,7 @@
     "hooks",
     "pages"
    ],
-   "coberto_por_testes": 0,
+   "coberto_por_testes": 1,
    "orfao": false
   },
   {
@@ -7265,7 +7265,7 @@
    "usado_por_modulos": [
     "hooks"
    ],
-   "coberto_por_testes": 0,
+   "coberto_por_testes": 1,
    "orfao": false
   },
   {

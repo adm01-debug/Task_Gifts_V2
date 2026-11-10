@@ -44,7 +44,7 @@
     "App"
    ],
    "export_default": "App",
-   "linhas": 337,
+   "linhas": 333,
    "dominio": null,
    "hooks_locais": [
     "useAuth",
@@ -5989,7 +5989,7 @@
     "CalendarProps"
    ],
    "export_default": null,
-   "linhas": 55,
+   "linhas": 53,
    "dominio": "components/ui",
    "hooks_locais": [],
    "tabelas": [],
@@ -6584,7 +6584,7 @@
     "ResizablePanelGroup"
    ],
    "export_default": null,
-   "linhas": 38,
+   "linhas": 57,
    "dominio": "components/ui",
    "hooks_locais": [],
    "tabelas": [],

@@ -3,7 +3,7 @@
  "format_version": 2,
  "stack": {
   "linguagens": [
-   "TypeScript (1118)",
+   "TypeScript (1122)",
    "SQL (267)",
    "Markdown (43)",
    "JavaScript (14)",
@@ -60,7 +60,7 @@
    "preview": "vite preview",
    "test": "vitest run",
    "test:ci": "vitest run --coverage --reporter=verbose",
-   "typecheck": "tsc --noEmit"
+   "typecheck": "tsc --noEmit -p tsconfig.app.json && tsc --noEmit -p tsconfig.node.json"
   },
   "dependencias": 63,
   "dev_dependencias": 38,
@@ -456,6 +456,10 @@
    },
    {
     "host": "app.exemplo.com",
+    "arquivos": 1
+   },
+   {
+    "host": "example.test",
     "arquivos": 1
    },
    {

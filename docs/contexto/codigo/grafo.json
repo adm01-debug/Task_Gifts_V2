@@ -2,7 +2,7 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "nos": 985,
- "arestas": 4251,
+ "arestas": 4255,
  "hubs": [
   {
    "arquivo": "src/components/ui/card.tsx",
@@ -141,6 +141,10 @@
    "importado_por": 18
   },
   {
+   "arquivo": "src/integrations/supabase/types.ts",
+   "importado_por": 18
+  },
+  {
    "arquivo": "src/components/ui/alert.tsx",
    "importado_por": 17
   },
@@ -158,10 +162,6 @@
   },
   {
    "arquivo": "src/components/mobile/index.ts",
-   "importado_por": 14
-  },
-  {
-   "arquivo": "src/integrations/supabase/types.ts",
    "importado_por": 14
   }
  ],

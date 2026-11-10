@@ -5,16 +5,16 @@
   "vitest",
   "playwright"
  ],
- "total": 151,
+ "total": 155,
  "por_tipo": {
   "e2e": 2,
   "pytest": 2,
-  "unit": 147
+  "unit": 151
  },
  "onde_ficam": [
   {
    "padrao": "co-localizado (*.test)",
-   "arquivos": 139
+   "arquivos": 143
   },
   {
    "padrao": "outro",
@@ -414,6 +414,22 @@
     "src/lib/certificatePdf.ts"
    ],
    "casos": 5
+  },
+  {
+   "arquivo": "src/test/clientUpdatePayloads.test.ts",
+   "tipo": "unit",
+   "linhas": 86,
+   "testa": [
+    "src/services/avatarService.ts",
+    "src/services/celebrationsService.ts",
+    "src/services/developmentPlanService.ts",
+    "src/services/enpsService.ts",
+    "src/services/nineBoxService.ts",
+    "src/services/positionsService.ts",
+    "src/services/quizQuestionsService.ts",
+    "src/services/weeklyChallengesService.ts"
+   ],
+   "casos": 12
   },
   {
    "arquivo": "src/test/climateBenchmark.simulation.test.ts",
@@ -1010,14 +1026,14 @@
   {
    "arquivo": "src/test/rls.test.ts",
    "tipo": "unit",
-   "linhas": 62,
+   "linhas": 63,
    "testa": [],
    "casos": 3
   },
   {
    "arquivo": "src/test/rpcAccess.test.ts",
    "tipo": "unit",
-   "linhas": 79,
+   "linhas": 80,
    "testa": [],
    "casos": 5
   },
@@ -1029,6 +1045,15 @@
     "src/lib/luckyWheelOdds.ts"
    ],
    "casos": 5
+  },
+  {
+   "arquivo": "src/test/sentryPrivacy.test.ts",
+   "tipo": "unit",
+   "linhas": 14,
+   "testa": [
+    "src/main.tsx"
+   ],
+   "casos": 1
   },
   {
    "arquivo": "src/test/sequenceGame.simulation.test.ts",
@@ -1086,7 +1111,7 @@
   {
    "arquivo": "src/test/telemetry.test.tsx",
    "tipo": "unit",
-   "linhas": 598,
+   "linhas": 595,
    "testa": [
     "src/components/admin/telemetry/TelemetryCharts.tsx"
    ],
@@ -1111,6 +1136,17 @@
    "casos": 9
   },
   {
+   "arquivo": "src/test/uiLibraryContracts.test.tsx",
+   "tipo": "unit",
+   "linhas": 51,
+   "testa": [
+    "src/components/ui/calendar.tsx",
+    "src/components/ui/chart.tsx",
+    "src/components/ui/resizable.tsx"
+   ],
+   "casos": 4
+  },
+  {
    "arquivo": "src/test/unifiedDevices.simulation.test.ts",
    "tipo": "unit",
    "linhas": 240,
@@ -1128,6 +1164,16 @@
     "src/hooks/useTypePreferences.ts"
    ],
    "casos": 8
+  },
+  {
+   "arquivo": "src/test/validationLibraryContracts.test.ts",
+   "tipo": "unit",
+   "linhas": 35,
+   "testa": [
+    "src/lib/campaignImport.ts",
+    "src/lib/validations.ts"
+   ],
+   "casos": 3
   },
   {
    "arquivo": "src/test/wagerAuthoring.test.ts",
@@ -1246,7 +1292,7 @@
   {
    "arquivo": "src/tests/unit/access.test.tsx",
    "tipo": "unit",
-   "linhas": 64,
+   "linhas": 65,
    "testa": [
     "src/components/rbac/ProtectedRoute.tsx",
     "src/hooks/useAuth.tsx",
@@ -1444,6 +1490,9 @@
   "src/components/accessibility/index.ts": 1,
   "src/components/admin/telemetry/TelemetryCharts.tsx": 1,
   "src/components/rbac/ProtectedRoute.tsx": 1,
+  "src/components/ui/calendar.tsx": 1,
+  "src/components/ui/chart.tsx": 1,
+  "src/components/ui/resizable.tsx": 1,
   "src/hooks/useAuth.tsx": 2,
   "src/hooks/useDeviceDetection.ts": 1,
   "src/hooks/useI18n.ts": 1,
@@ -1474,7 +1523,7 @@
   "src/lib/bossLeaderboard.ts": 1,
   "src/lib/bossReport.ts": 2,
   "src/lib/bossWinRateGoals.ts": 1,
-  "src/lib/campaignImport.ts": 1,
+  "src/lib/campaignImport.ts": 2,
   "src/lib/campaignTeamHealth.ts": 1,
   "src/lib/campaignTeamMetrics.ts": 1,
   "src/lib/campaignTeamSplit.ts": 1,
@@ -1539,6 +1588,7 @@
   "src/lib/slaTargets.ts": 1,
   "src/lib/tournamentBracket.ts": 1,
   "src/lib/tradingCards.ts": 2,
+  "src/lib/validations.ts": 1,
   "src/lib/wagerAuthoring.ts": 1,
   "src/lib/wagerBulkImport.ts": 2,
   "src/lib/wagerIntegrity.ts": 2,
@@ -1549,32 +1599,41 @@
   "src/lib/warAutoHooks.ts": 1,
   "src/lib/warFeed.ts": 1,
   "src/lib/warLeadership.ts": 1,
+  "src/main.tsx": 1,
   "src/pages/Shop.tsx": 1,
   "src/services/achievementsService.ts": 1,
   "src/services/auditService.ts": 1,
+  "src/services/avatarService.ts": 1,
   "src/services/behavioralBadges/badges.ts": 1,
   "src/services/behavioralBadges/types.ts": 1,
   "src/services/bingoService.ts": 1,
+  "src/services/celebrationsService.ts": 1,
   "src/services/checkinsService.ts": 1,
   "src/services/climateSurveyService.ts": 1,
   "src/services/comboService.ts": 3,
   "src/services/continuousEngagementService.ts": 1,
+  "src/services/developmentPlanService.ts": 1,
   "src/services/engagementDiagnosticsService.ts": 1,
+  "src/services/enpsService.ts": 1,
   "src/services/feedbackService.ts": 1,
   "src/services/kudosService.ts": 1,
   "src/services/leaguesService.ts": 1,
   "src/services/loggingService.ts": 1,
+  "src/services/nineBoxService.ts": 1,
   "src/services/notificationsService.ts": 1,
   "src/services/nr1RiskService.ts": 3,
   "src/services/onboardingService.ts": 1,
+  "src/services/positionsService.ts": 1,
   "src/services/predictionMarketService.ts": 8,
   "src/services/predictiveFeedbackService.ts": 1,
   "src/services/profilesService.ts": 4,
+  "src/services/quizQuestionsService.ts": 1,
   "src/services/shopService.ts": 1,
   "src/services/trailsService.ts": 1,
   "src/services/wagerAdminService.ts": 2,
   "src/services/wagerBudgetService.ts": 1,
   "src/services/wagerIntegrityReviewService.ts": 1,
+  "src/services/weeklyChallengesService.ts": 1,
   "src/services/xpBalancingService.ts": 1,
   "supabase/functions/_shared/validation.ts": 1
  },
@@ -1861,7 +1920,6 @@
    "src/services/attendanceService.ts",
    "src/services/auctionService.ts",
    "src/services/autoChallengesService.ts",
-   "src/services/avatarService.ts",
    "src/services/behavioralBadges/index.ts",
    "src/services/behavioralBadgesService.ts",
    "src/services/boardTrailService.ts",
@@ -1869,7 +1927,6 @@
    "src/services/bossWinRateGoalService.ts",
    "src/services/campaignImportService.ts",
    "src/services/campaignTeamsService.ts",
-   "src/services/celebrationsService.ts",
    "src/services/certificationsService.ts",
    "src/services/churnPredictionService.ts",
    "src/services/competencyService.ts",
@@ -1877,10 +1934,8 @@
    "src/services/departmentsService.ts",
    "src/services/departmentWarAdminService.ts",
    "src/services/departmentWarService.ts",
-   "src/services/developmentPlanService.ts",
    "src/services/duelsService.ts",
    "src/services/engagementReportsService.ts",
-   "src/services/enpsService.ts",
    "src/services/executiveService.ts",
    "src/services/goalsService.ts",
    "src/services/highPotentialService.ts",
@@ -1890,7 +1945,6 @@
    "src/services/memoryGameService.ts",
    "src/services/missionsService.ts",
    "src/services/moodTrackerService.ts",
-   "src/services/nineBoxService.ts",
    "src/services/oneOnOnePreparationService.ts",
    "src/services/opinionsService.ts",
    "src/services/organizationService.ts",
@@ -1898,13 +1952,11 @@
    "src/services/pdiGeneratorService.ts",
    "src/services/pdiService.ts",
    "src/services/permissionsService.ts",
-   "src/services/positionsService.ts",
    "src/services/pulseSurveysService.ts",
    "src/services/purchaseGovernanceService.ts",
    "src/services/pushHistoryService.ts",
    "src/services/pushSubscriptionService.ts",
    "src/services/questsService.ts",
-   "src/services/quizQuestionsService.ts",
    "src/services/quizService.ts",
    "src/services/quizStatsService.ts",
    "src/services/rbacService.ts",
@@ -1919,8 +1971,7 @@
    "src/services/tradingCardsService.ts",
    "src/services/twoFactorService.ts",
    "src/services/wagerIntegrityReviewEventService.ts",
-   "src/services/webauthnService.ts",
-   "src/services/weeklyChallengesService.ts"
+   "src/services/webauthnService.ts"
   ]
  }
 }

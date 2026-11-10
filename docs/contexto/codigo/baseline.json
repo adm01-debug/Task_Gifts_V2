@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "ffcff81d4b5c63c9508b3b08b41bb1c5166b6d43",
+  "commit": "ca1a6e4efd53d9b513f9397493992c3e782f107f",
   "branch": "main",
-  "data_commit": "2026-11-09T07:02:59-03:00",
+  "data_commit": "2026-11-10T10:50:31-03:00",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "ultimos_commits": [
+   {
+    "sha": "ca1a6e4",
+    "data": "2026-11-10",
+    "assunto": "fix(tipos): corrige contratos e ativa verificação real da aplicação"
+   },
    {
     "sha": "ffcff81",
     "data": "2026-11-09",
@@ -126,18 +131,13 @@
     "sha": "785fa87",
     "data": "2026-10-03",
     "assunto": "build(deps): Bump the dependencies group across 1 directory with 46 updates (#11)"
-   },
-   {
-    "sha": "f50a57c",
-    "data": "2026-09-05",
-    "assunto": "fix(deploy+db): SPA rewrite no Vercel + limpeza de policy residual de profiles (#7)"
    }
   ],
-  "arquivos_mudados_7d": 65,
+  "arquivos_mudados_7d": 115,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "package.json",
-    "mudancas": 10
+    "mudancas": 11
    },
    {
     "pasta": "bun.lock",
@@ -149,10 +149,14 @@
    },
    {
     "pasta": "AGENTS.md",
-    "mudancas": 4
+    "mudancas": 5
    },
    {
     "pasta": "RELATORIO_CI.md",
+    "mudancas": 4
+   },
+   {
+    "pasta": "docs/agentes/mapa-repo.md",
     "mudancas": 4
    },
    {
@@ -168,7 +172,15 @@
     "mudancas": 3
    },
    {
-    "pasta": "docs/agentes/mapa-repo.md",
+    "pasta": "docs/agentes/github-ci.md",
+    "mudancas": 3
+   },
+   {
+    "pasta": "src/components/admin",
+    "mudancas": 3
+   },
+   {
+    "pasta": "src/components/ui",
     "mudancas": 3
    },
    {
@@ -182,24 +194,12 @@
    {
     "pasta": "ai-context.config.json",
     "mudancas": 2
-   },
-   {
-    "pasta": "docs/agentes/contexto-autonomo.md",
-    "mudancas": 2
-   },
-   {
-    "pasta": "docs/agentes/github-ci.md",
-    "mudancas": 2
-   },
-   {
-    "pasta": "docs/contexto/regras",
-    "mudancas": 2
    }
   ],
   "arquivos_mais_mudados_90d": [
    {
     "arquivo": "package.json",
-    "mudancas": 12
+    "mudancas": 13
    },
    {
     "arquivo": "bun.lock",
@@ -211,10 +211,14 @@
    },
    {
     "arquivo": "AGENTS.md",
-    "mudancas": 5
+    "mudancas": 6
    },
    {
     "arquivo": "RELATORIO_CI.md",
+    "mudancas": 4
+   },
+   {
+    "arquivo": "docs/agentes/mapa-repo.md",
     "mudancas": 4
    },
    {
@@ -230,7 +234,7 @@
     "mudancas": 3
    },
    {
-    "arquivo": "docs/agentes/mapa-repo.md",
+    "arquivo": "docs/agentes/github-ci.md",
     "mudancas": 3
    },
    {
@@ -247,10 +251,6 @@
    },
    {
     "arquivo": "docs/agentes/contexto-autonomo.md",
-    "mudancas": 2
-   },
-   {
-    "arquivo": "docs/agentes/github-ci.md",
     "mudancas": 2
    },
    {
@@ -274,6 +274,10 @@
     "mudancas": 2
    },
    {
+    "arquivo": "src/lib/campaignImport.ts",
+    "mudancas": 2
+   },
+   {
     "arquivo": "supabase/config.toml",
     "mudancas": 2
    },
@@ -292,16 +296,12 @@
    {
     "arquivo": ".claude/homunculus/instincts/inherited/task-gifts-v2-instincts.yaml",
     "mudancas": 1
-   },
-   {
-    "arquivo": ".claude/hooks/session-start.sh",
-    "mudancas": 1
    }
   ],
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 16
+    "commits": 17
    },
    {
     "autor": "dependabot[bot]",
@@ -310,9 +310,9 @@
   ]
  },
  "contagens": {
-  "arquivos_total": 1483,
-  "arquivos_codigo": 1136,
-  "linhas_codigo": 222015,
+  "arquivos_total": 1487,
+  "arquivos_codigo": 1140,
+  "linhas_codigo": 222229,
   "rotas": 83,
   "rotas_http_backend": 0,
   "vistas_por_id": 0,
@@ -324,7 +324,7 @@
   "tabelas": 236,
   "migrations": 267,
   "cron_jobs": 22,
-  "testes": 151,
+  "testes": 155,
   "workflows": 2,
   "scripts": 9,
   "docs_md": 43
@@ -376,11 +376,11 @@
   },
   "src/App.tsx": {
    "arquivos": 1,
-   "linhas": 337
+   "linhas": 333
   },
   "src/components": {
    "arquivos": 461,
-   "linhas": 77441
+   "linhas": 77458
   },
   "src/constants": {
    "arquivos": 1,
@@ -404,11 +404,11 @@
   },
   "src/lib": {
    "arquivos": 106,
-   "linhas": 22041
+   "linhas": 22040
   },
   "src/main.tsx": {
    "arquivos": 1,
-   "linhas": 67
+   "linhas": 80
   },
   "src/pages": {
    "arquivos": 82,
@@ -416,23 +416,23 @@
   },
   "src/services": {
    "arquivos": 99,
-   "linhas": 21589
+   "linhas": 21601
   },
   "src/stories": {
    "arquivos": 29,
    "linhas": 7136
   },
   "src/test": {
-   "arquivos": 123,
-   "linhas": 22026
+   "arquivos": 127,
+   "linhas": 22211
   },
   "src/tests": {
    "arquivos": 16,
-   "linhas": 1012
+   "linhas": 1013
   },
   "src/types": {
    "arquivos": 2,
-   "linhas": 231
+   "linhas": 222
   },
   "src/utils": {
    "arquivos": 3,
@@ -498,7 +498,7 @@
   },
   {
    "arquivo": "src/lib/campaignImport.ts",
-   "linhas": 772
+   "linhas": 771
   },
   {
    "arquivo": "src/pages/ExecutiveMonthlyReport.tsx",
@@ -557,16 +557,16 @@
    "linhas": 512
   },
   {
-   "arquivo": "src/pages/IncidentMetrics.tsx",
-   "linhas": 490
+   "arquivo": "src/services/positionsService.ts",
+   "linhas": 492
   },
   {
-   "arquivo": "src/services/positionsService.ts",
+   "arquivo": "src/pages/IncidentMetrics.tsx",
    "linhas": 490
   }
  ],
  "qualidade": {
-  "any": 144,
+  "any": 142,
   "console_log": 109,
   "ts_ignore": 0,
   "eslint_disable": 0,

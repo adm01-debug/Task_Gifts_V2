@@ -22,7 +22,7 @@
    "src/integrations (3)"
   ],
   "testes": [
-   "co-localizado (*.test) (139)",
+   "co-localizado (*.test) (143)",
    "outro (8)",
    "tests/ (3)"
   ],
@@ -58,11 +58,11 @@
  "commits": {
   "convencao": "conventional commits (observado)",
   "exemplos": [
+   "fix(tipos): corrige contratos e ativa verificação real da aplicação",
    "fix: corrige URL do projeto nas migrations de cron, guard GA02 e docs (#37)",
    "feat(db-audit): guarda de migrations — idempotência ratchet + drift contra banco real",
    "fix(contexto): hardening do pacote — 2 vazamentos e inventário de edges",
-   "feat(contexto): sistema autonomo de contexto para agentes de IA (#34)",
-   "fix(supabase): corrige project_id do config.toml para o projeto em uso"
+   "feat(contexto): sistema autonomo de contexto para agentes de IA (#34)"
   ]
  },
  "pr_template": ".github/PULL_REQUEST_TEMPLATE.md",

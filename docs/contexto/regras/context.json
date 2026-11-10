@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "ffcff81d4b5c63c9508b3b08b41bb1c5166b6d43",
+  "sha": "ca1a6e4efd53d9b513f9397493992c3e782f107f",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
-  "generated_at": "2026-11-09 10:03 UTC",
-  "files_total": 1492,
-  "code_files": 1409,
-  "code_lines": 252789
+  "generated_at": "2026-11-10 13:51 UTC",
+  "files_total": 1496,
+  "code_files": 1413,
+  "code_lines": 253003
  },
  "version": "1.3.2",
- "facts_hash": "0db77eb17b0b080a",
+ "facts_hash": "351224517f063812",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -97,7 +97,7 @@
    "build": "vite build",
    "build:dev": "vite build --mode development",
    "lint": "eslint .",
-   "typecheck": "tsc --noEmit",
+   "typecheck": "tsc --noEmit -p tsconfig.app.json && tsc --noEmit -p tsconfig.node.json",
    "test": "vitest run",
    "test:ci": "vitest run --coverage --reporter=verbose",
    "preview": "vite preview",
@@ -145,8 +145,8 @@
   ],
   "package_manager": "bun",
   "languages": {
-   ".tsx": 564,
-   ".ts": 556,
+   ".tsx": 565,
+   ".ts": 559,
    ".sql": 267,
    ".mjs": 11,
    ".js": 5,
@@ -47872,7 +47872,7 @@
   {
    "module": "src",
    "files": 3,
-   "lines": 406,
+   "lines": 415,
    "tables": [],
    "exports": [
     "App.tsx: App"
@@ -47905,7 +47905,7 @@
   {
    "module": "src/components",
    "files": 461,
-   "lines": 77441,
+   "lines": 77458,
    "tables": [
     "attendance_records",
     "audit_logs",
@@ -48345,7 +48345,7 @@
   {
    "module": "src/lib",
    "files": 106,
-   "lines": 22041,
+   "lines": 22040,
    "tables": [
     "lucky_wheel_settings",
     "lucky_wheel_settings_audit",
@@ -48677,7 +48677,7 @@
   {
    "module": "src/services",
    "files": 99,
-   "lines": 21589,
+   "lines": 21601,
    "tables": [
     "achievements",
     "action_plan_items",
@@ -49059,8 +49059,8 @@
   },
   {
    "module": "src/test",
-   "files": 123,
-   "lines": 22026,
+   "files": 127,
+   "lines": 22211,
    "tables": [
     "kudos",
     "profiles"
@@ -49080,6 +49080,7 @@
     "@testing-library/jest-dom",
     "@testing-library/react",
     "date-fns",
+    "react",
     "react-router-dom",
     "vitest"
    ],
@@ -49125,6 +49126,7 @@
     "src/test/cardPackTriggers.simulation.test.ts",
     "src/test/cardSetRewards.simulation.test.ts",
     "src/test/certificates.simulation.test.ts",
+    "src/test/clientUpdatePayloads.test.ts",
     "src/test/climateBenchmark.simulation.test.ts",
     "src/test/climateBenchmarkSegments.simulation.test.ts",
     "src/test/continuousEngagement.simulation.test.ts",
@@ -49169,18 +49171,18 @@
     "src/test/notificationPrefsCrossModule.simulation.test.ts",
     "src/test/notificationTypePrefs.simulation.test.ts",
     "src/test/npsHistory.simulation.test.ts",
-    "src/test/nr1ActionPlan.simulation.test.ts",
-    "src/test/nr1Export.simulation.test.ts"
+    "src/test/nr1ActionPlan.simulation.test.ts"
    ]
   },
   {
    "module": "src/tests",
    "files": 16,
-   "lines": 1012,
+   "lines": 1013,
    "tables": [],
    "exports": [],
    "docs": [],
    "deps": [
+    "@testing-library/jest-dom",
     "@testing-library/react",
     "react",
     "react-router-dom",
@@ -49214,17 +49216,18 @@
   {
    "module": "src/types",
    "files": 2,
-   "lines": 231,
+   "lines": 222,
    "tables": [],
    "exports": [
     "charts.ts: RechartsTooltipPayloadItem, RechartsTooltipProps, TrendData, DepartmentData, WeeklyEngagementData, BitrixTimemanSettings",
     "goals.ts: KeyResult, Goal, GoalUpdate"
    ],
    "docs": [
-    "charts.ts: Recharts Tooltip Types",
     "goals.ts: @fileoverview OKR (Objectives and Key Results) type definitions @module types/goals"
    ],
-   "deps": [],
+   "deps": [
+    "recharts"
+   ],
    "imports_modules": [],
    "file_list": [
     "src/types/charts.ts",
@@ -54205,7 +54208,7 @@
     "file": "src/lib/validations.ts",
     "name": "emailSchema",
     "kind": "string",
-    "body": "{ required_error: \"Email é obrigatório\" }",
+    "body": "{ error: (issue) => issue.input === undefined ? \"Email é obrigatório\" : undefined}",
     "refines": [],
     "chain": [
      "transform"
@@ -54215,7 +54218,7 @@
     "file": "src/lib/validations.ts",
     "name": "passwordSchema",
     "kind": "string",
-    "body": "{ required_error: \"Senha é obrigatória\" }",
+    "body": "{ error: (issue) => issue.input === undefined ? \"Senha é obrigatória\" : undefined}",
     "refines": [],
     "chain": []
    },
@@ -54223,7 +54226,7 @@
     "file": "src/lib/validations.ts",
     "name": "strongPasswordSchema",
     "kind": "string",
-    "body": "{ required_error: \"Senha é obrigatória\" }",
+    "body": "{ error: (issue) => issue.input === undefined ? \"Senha é obrigatória\" : undefined}",
     "refines": [],
     "chain": []
    },
@@ -54282,7 +54285,7 @@
     "file": "src/lib/validations.ts",
     "name": "questFormSchema",
     "kind": "object",
-    "body": "{ title: questTitleSchema, description: questDescriptionSchema, icon: z.string().max(10, \"Ícone inválido\").default(\"📚\"), difficulty: z.enum([\"easy\", \"medium\", \"hard\", \"expert\"], { required_error: \"Selecione a dificuldade\", }), xpReward: z .number() .min(0, \"XP não pode ser negativo\") .max(50000, \"XP máximo é 50.000\"), coinReward: z .number() .min(0, \"Moedas não podem ser negativas\") .max(50000, \"Moedas máximas são 50.000\"), deadlineDays: z .number() .min(1, \"Prazo mínimo é 1 dia\") .max(365, \"Prazo máximo é 365 dias\") .nullable() .optional(), maxParticipants: z .number() .min(1, \"Mínimo de 1 participante\") .max(10000, \"Máximo de 10.000 participantes\") .nullable() .optional(), tags: z .array(z.string().max(30, \"Tag muito longa\")) .max(10, \"Máximo de 10 tags\") .optional(), steps: z.array(ques …",
+    "body": "{ title: questTitleSchema, description: questDescriptionSchema, icon: z.string().max(10, \"Ícone inválido\").default(\"📚\"), difficulty: z.enum([\"easy\", \"medium\", \"hard\", \"expert\"], { error: (issue) => issue.input === undefined ? \"Selecione a dificuldade\" : undefined, }), xpReward: z .number() .min(0, \"XP não pode ser negativo\") .max(50000, \"XP máximo é 50.000\"), coinReward: z .number() .min(0, \"Moedas não podem ser negativas\") .max(50000, \"Moedas máximas são 50.000\"), deadlineDays: z .number() .min(1, \"Prazo mínimo é 1 dia\") .max(365, \"Prazo máximo é 365 dias\") .nullable() .optional(), maxParticipants: z .number() .min(1, \"Mínimo de 1 participante\") .max(10000, \"Máximo de 10.000 participantes\") .nullable() .optional(), tags: z .array(z.string().max(30, \"Tag muito longa\")) .max(10, \"Máximo de …",
     "refines": [],
     "chain": []
    },
@@ -54290,7 +54293,7 @@
     "file": "src/lib/validations.ts",
     "name": "kudosMessageSchema",
     "kind": "string",
-    "body": "{ required_error: \"Mensagem é obrigatória\" }",
+    "body": "{ error: (issue) => issue.input === undefined ? \"Mensagem é obrigatória\" : undefined}",
     "refines": [],
     "chain": [
      "transform"
@@ -54366,7 +54369,7 @@
     "file": "src/lib/validations.ts",
     "name": "commentSchema",
     "kind": "string",
-    "body": "{ required_error: \"Comentário é obrigatório\" }",
+    "body": "{ error: (issue) => issue.input === undefined ? \"Comentário é obrigatório\" : undefined}",
     "refines": [],
     "chain": [
      "transform"
@@ -77802,7 +77805,7 @@
     "file": "src/pages/Auth.tsx",
     "name": "validateForm",
     "params": "",
-    "body": "const newErrors: typeof errors = {}; if (view === \"forgot-password\") { const r = emailSchema.safeParse(email); if (!r.success) newErrors.email = r.error.errors[0].message; } else if (view === \"login\") { const r = loginSchema.safeParse({ email, password }); if (!r.success) r.error.errors.forEach((e) => { if (e.path[0] === \"email\") newErrors.email = e.message; if (e.path[0] === \"password\") newErrors.password = e.message; }); } else { const r = signupSchema.safeParse({ email, password, displayName: …"
+    "body": "const newErrors: typeof errors = {}; if (view === \"forgot-password\") { const r = emailSchema.safeParse(email); if (!r.success) newErrors.email = r.error.issues[0].message; } else if (view === \"login\") { const r = loginSchema.safeParse({ email, password }); if (!r.success) r.error.issues.forEach((e) => { if (e.path[0] === \"email\") newErrors.email = e.message; if (e.path[0] === \"password\") newErrors.password = e.message; }); } else { const r = signupSchema.safeParse({ email, password, displayName: …"
    },
    {
     "file": "src/pages/CampaignHistory.tsx",
@@ -81537,6 +81540,58 @@
     "name": "produz nomes de arquivo seguros para títulos arbitrários (300 cenários)"
    },
    {
+    "file": "src/test/clientUpdatePayloads.test.ts",
+    "name": "payloads de atualização respeitam colunas reais"
+   },
+   {
+    "file": "src/test/clientUpdatePayloads.test.ts",
+    "name": "avatar %s atualiza somente %s"
+   },
+   {
+    "file": "src/test/clientUpdatePayloads.test.ts",
+    "name": "avatar novo mantém user_id e permite limpar a seleção"
+   },
+   {
+    "file": "src/test/clientUpdatePayloads.test.ts",
+    "name": "datas do perfil não alteram outros campos"
+   },
+   {
+    "file": "src/test/clientUpdatePayloads.test.ts",
+    "name": "não envia update vazio de datas"
+   },
+   {
+    "file": "src/test/clientUpdatePayloads.test.ts",
+    "name": "plano não envia perfil nem lista de ações ao banco"
+   },
+   {
+    "file": "src/test/clientUpdatePayloads.test.ts",
+    "name": "concluir ação preserva progresso automático e remove competência expandida"
+   },
+   {
+    "file": "src/test/clientUpdatePayloads.test.ts",
+    "name": "pesquisa não tenta gravar departamento nem estatísticas derivadas"
+   },
+   {
+    "file": "src/test/clientUpdatePayloads.test.ts",
+    "name": "avaliação não tenta gravar perfil expandido"
+   },
+   {
+    "file": "src/test/clientUpdatePayloads.test.ts",
+    "name": "cargo não envia join de departamento"
+   },
+   {
+    "file": "src/test/clientUpdatePayloads.test.ts",
+    "name": "modelo de tarefa não envia cargo expandido"
+   },
+   {
+    "file": "src/test/clientUpdatePayloads.test.ts",
+    "name": "questão preserva a atualização parcial de campos"
+   },
+   {
+    "file": "src/test/clientUpdatePayloads.test.ts",
+    "name": "XP do desafio atualiza o participante correto: %s"
+   },
+   {
     "file": "src/test/climateBenchmark.simulation.test.ts",
     "name": "normalizeThresholds — monotonicidade garantida"
    },
@@ -85197,6 +85252,10 @@
     "name": "nunca retorna índice fora do intervalo, mesmo com pesos zerados"
    },
    {
+    "file": "src/test/sentryPrivacy.test.ts",
+    "name": "configuração Sentry 11 mantém coleta restritiva sem corpos ou entradas de IA"
+   },
+   {
     "file": "src/test/sequenceGame.simulation.test.ts",
     "name": "shuffleSteps"
    },
@@ -85857,6 +85916,26 @@
     "name": "é simétrico: inverter as pontas nunca muda o veredito de equilíbrio"
    },
    {
+    "file": "src/test/uiLibraryContracts.test.tsx",
+    "name": "contratos das bibliotecas de UI instaladas"
+   },
+   {
+    "file": "src/test/uiLibraryContracts.test.tsx",
+    "name": "calendário seleciona uma data e navega para o próximo mês"
+   },
+   {
+    "file": "src/test/uiLibraryContracts.test.tsx",
+    "name": "painéis preservam orientação e tamanhos percentuais da API anterior"
+   },
+   {
+    "file": "src/test/uiLibraryContracts.test.tsx",
+    "name": "tooltip entrega o payload inteiro como quinto argumento do formatter"
+   },
+   {
+    "file": "src/test/uiLibraryContracts.test.tsx",
+    "name": "legenda aceita payload readonly sem perder rótulos e cores"
+   },
+   {
     "file": "src/test/unifiedDevices.simulation.test.ts",
     "name": "fingerprint — estabilidade e unicidade"
    },
@@ -85959,6 +86038,22 @@
    {
     "file": "src/test/useTypePreferences.test.tsx",
     "name": "nao faz setState apos unmount"
+   },
+   {
+    "file": "src/test/validationLibraryContracts.test.ts",
+    "name": "migração de validação preserva mensagens e resultados"
+   },
+   {
+    "file": "src/test/validationLibraryContracts.test.ts",
+    "name": "mantém mensagem obrigatória em entrada ausente"
+   },
+   {
+    "file": "src/test/validationLibraryContracts.test.ts",
+    "name": "validateData retorna mensagens Zod 4 sem lançar exceção"
+   },
+   {
+    "file": "src/test/validationLibraryContracts.test.ts",
+    "name": "XLSX preserva fórmulas/rich text e rejeita erros/booleanos como crédito"
    },
    {
     "file": "src/test/wagerAuthoring.test.ts",
@@ -116347,7 +116442,7 @@
   },
   "src/App.tsx": {
    "path": "src/App.tsx",
-   "lines": 337,
+   "lines": 333,
    "exports": [
     "default App"
    ],
@@ -117007,7 +117102,7 @@
   },
   "src/main.tsx": {
    "path": "src/main.tsx",
-   "lines": 67,
+   "lines": 80,
    "env": [
     "MODE",
     "VITE_APP_VERSION",
@@ -123536,7 +123631,7 @@
   },
   "src/components/ui/calendar.tsx": {
    "path": "src/components/ui/calendar.tsx",
-   "lines": 55,
+   "lines": 53,
    "exports": [
     "type CalendarProps"
    ]
@@ -123972,7 +124067,7 @@
   },
   "src/components/ui/resizable.tsx": {
    "path": "src/components/ui/resizable.tsx",
-   "lines": 38
+   "lines": 57
   },
   "src/components/ui/responsive-dialog.tsx": {
    "path": "src/components/ui/responsive-dialog.tsx",
@@ -128837,7 +128932,7 @@
   },
   "src/lib/campaignImport.ts": {
    "path": "src/lib/campaignImport.ts",
-   "lines": 772,
+   "lines": 771,
    "exports": [
     "interface ParsedResultRow",
     "type ReconciliationIssue",
@@ -132117,7 +132212,7 @@
     {
      "name": "emailSchema",
      "kind": "string",
-     "body": "{ required_error: \"Email é obrigatório\" }",
+     "body": "{ error: (issue) => issue.input === undefined ? \"Email é obrigatório\" : undefined}",
      "refines": [],
      "chain": [
       "transform"
@@ -132126,14 +132221,14 @@
     {
      "name": "passwordSchema",
      "kind": "string",
-     "body": "{ required_error: \"Senha é obrigatória\" }",
+     "body": "{ error: (issue) => issue.input === undefined ? \"Senha é obrigatória\" : undefined}",
      "refines": [],
      "chain": []
     },
     {
      "name": "strongPasswordSchema",
      "kind": "string",
-     "body": "{ required_error: \"Senha é obrigatória\" }",
+     "body": "{ error: (issue) => issue.input === undefined ? \"Senha é obrigatória\" : undefined}",
      "refines": [],
      "chain": []
     },
@@ -132185,14 +132280,14 @@
     {
      "name": "questFormSchema",
      "kind": "object",
-     "body": "{ title: questTitleSchema, description: questDescriptionSchema, icon: z.string().max(10, \"Ícone inválido\").default(\"📚\"), difficulty: z.enum([\"easy\", \"medium\", \"hard\", \"expert\"], { required_error: \"Selecione a dificuldade\", }), xpReward: z .number() .min(0, \"XP não pode ser negativo\") .max(50000, \"XP máximo é 50.000\"), coinReward: z .number() .min(0, \"Moedas não podem ser negativas\") .max(50000, \"Moedas máximas são 50.000\"), deadlineDays: z .number() .min(1, \"Prazo mínimo é 1 dia\") .max(365, \"Prazo máximo é 365 dias\") .nullable() .optional(), maxParticipants: z .number() .min(1, \"Mínimo de 1 participante\") .max(10000, \"Máximo de 10.000 participantes\") .nullable() .optional(), tags: z .array(z.string().max(30, \"Tag muito longa\")) .max(10, \"Máximo de 10 tags\") .optional(), steps: z.array(ques …",
+     "body": "{ title: questTitleSchema, description: questDescriptionSchema, icon: z.string().max(10, \"Ícone inválido\").default(\"📚\"), difficulty: z.enum([\"easy\", \"medium\", \"hard\", \"expert\"], { error: (issue) => issue.input === undefined ? \"Selecione a dificuldade\" : undefined, }), xpReward: z .number() .min(0, \"XP não pode ser negativo\") .max(50000, \"XP máximo é 50.000\"), coinReward: z .number() .min(0, \"Moedas não podem ser negativas\") .max(50000, \"Moedas máximas são 50.000\"), deadlineDays: z .number() .min(1, \"Prazo mínimo é 1 dia\") .max(365, \"Prazo máximo é 365 dias\") .nullable() .optional(), maxParticipants: z .number() .min(1, \"Mínimo de 1 participante\") .max(10000, \"Máximo de 10.000 participantes\") .nullable() .optional(), tags: z .array(z.string().max(30, \"Tag muito longa\")) .max(10, \"Máximo de …",
      "refines": [],
      "chain": []
     },
     {
      "name": "kudosMessageSchema",
      "kind": "string",
-     "body": "{ required_error: \"Mensagem é obrigatória\" }",
+     "body": "{ error: (issue) => issue.input === undefined ? \"Mensagem é obrigatória\" : undefined}",
      "refines": [],
      "chain": [
       "transform"
@@ -132259,7 +132354,7 @@
     {
      "name": "commentSchema",
      "kind": "string",
-     "body": "{ required_error: \"Comentário é obrigatório\" }",
+     "body": "{ error: (issue) => issue.input === undefined ? \"Comentário é obrigatório\" : undefined}",
      "refines": [],
      "chain": [
       "transform"
@@ -132854,7 +132949,7 @@
     {
      "name": "validateForm",
      "params": "",
-     "body": "const newErrors: typeof errors = {}; if (view === \"forgot-password\") { const r = emailSchema.safeParse(email); if (!r.success) newErrors.email = r.error.errors[0].message; } else if (view === \"login\") { const r = loginSchema.safeParse({ email, password }); if (!r.success) r.error.errors.forEach((e) => { if (e.path[0] === \"email\") newErrors.email = e.message; if (e.path[0] === \"password\") newErrors.password = e.message; }); } else { const r = signupSchema.safeParse({ email, password, displayName: …"
+     "body": "const newErrors: typeof errors = {}; if (view === \"forgot-password\") { const r = emailSchema.safeParse(email); if (!r.success) newErrors.email = r.error.issues[0].message; } else if (view === \"login\") { const r = loginSchema.safeParse({ email, password }); if (!r.success) r.error.issues.forEach((e) => { if (e.path[0] === \"email\") newErrors.email = e.message; if (e.path[0] === \"password\") newErrors.password = e.message; }); } else { const r = signupSchema.safeParse({ email, password, displayName: …"
     }
    ]
   },
@@ -135652,7 +135747,7 @@
   },
   "src/services/avatarService.ts": {
    "path": "src/services/avatarService.ts",
-   "lines": 233,
+   "lines": 236,
    "exports": [
     "type AvatarCategory",
     "type AvatarRarity",
@@ -136236,7 +136331,7 @@
   },
   "src/services/celebrationsService.ts": {
    "path": "src/services/celebrationsService.ts",
-   "lines": 191,
+   "lines": 192,
    "exports": [
     "interface Celebration",
     "interface CelebrationInsert",
@@ -137021,7 +137116,7 @@
   },
   "src/services/developmentPlanService.ts": {
    "path": "src/services/developmentPlanService.ts",
-   "lines": 236,
+   "lines": 239,
    "exports": [
     "interface DevelopmentPlan",
     "interface DevelopmentPlanAction",
@@ -137488,7 +137583,7 @@
   },
   "src/services/enpsService.ts": {
    "path": "src/services/enpsService.ts",
-   "lines": 282,
+   "lines": 283,
    "exports": [
     "interface ENPSSurvey",
     "interface ENPSResponse",
@@ -138790,7 +138885,7 @@
   },
   "src/services/nineBoxService.ts": {
    "path": "src/services/nineBoxService.ts",
-   "lines": 128,
+   "lines": 129,
    "exports": [
     "interface NineBoxEvaluation",
     "interface NineBoxDistribution",
@@ -139539,7 +139634,7 @@
   },
   "src/services/positionsService.ts": {
    "path": "src/services/positionsService.ts",
-   "lines": 490,
+   "lines": 492,
    "exports": [
     "interface Position",
     "interface PositionTaskTemplate",
@@ -140286,7 +140381,7 @@
   },
   "src/services/quizQuestionsService.ts": {
    "path": "src/services/quizQuestionsService.ts",
-   "lines": 334,
+   "lines": 335,
    "exports": [
     "interface QuizOption",
     "interface QuizQuestion",
@@ -143630,6 +143725,26 @@
     "produz nomes de arquivo seguros para títulos arbitrários (300 cenários)"
    ]
   },
+  "src/test/clientUpdatePayloads.test.ts": {
+   "path": "src/test/clientUpdatePayloads.test.ts",
+   "lines": 86,
+   "is_test": true,
+   "tests": [
+    "payloads de atualização respeitam colunas reais",
+    "avatar %s atualiza somente %s",
+    "avatar novo mantém user_id e permite limpar a seleção",
+    "datas do perfil não alteram outros campos",
+    "não envia update vazio de datas",
+    "plano não envia perfil nem lista de ações ao banco",
+    "concluir ação preserva progresso automático e remove competência expandida",
+    "pesquisa não tenta gravar departamento nem estatísticas derivadas",
+    "avaliação não tenta gravar perfil expandido",
+    "cargo não envia join de departamento",
+    "modelo de tarefa não envia cargo expandido",
+    "questão preserva a atualização parcial de campos",
+    "XP do desafio atualiza o participante correto: %s"
+   ]
+  },
   "src/test/climateBenchmark.simulation.test.ts": {
    "path": "src/test/climateBenchmark.simulation.test.ts",
    "lines": 208,
@@ -145118,7 +145233,7 @@
   },
   "src/test/rls.test.ts": {
    "path": "src/test/rls.test.ts",
-   "lines": 62,
+   "lines": 63,
    "is_test": true,
    "tables": [
     {
@@ -145162,7 +145277,7 @@
   },
   "src/test/rpcAccess.test.ts": {
    "path": "src/test/rpcAccess.test.ts",
-   "lines": 79,
+   "lines": 80,
    "is_test": true,
    "rpc": [
     "get_2fa_status",
@@ -145200,6 +145315,14 @@
     "mantém o teto de custo esperado por carta abaixo de 45 moedas equivalentes",
     "Raspadinha — 500 grades aleatórias hostis",
     "nunca retorna índice fora do intervalo, mesmo com pesos zerados"
+   ]
+  },
+  "src/test/sentryPrivacy.test.ts": {
+   "path": "src/test/sentryPrivacy.test.ts",
+   "lines": 14,
+   "is_test": true,
+   "tests": [
+    "configuração Sentry 11 mantém coleta restritiva sem corpos ou entradas de IA"
    ]
   },
   "src/test/sequenceGame.simulation.test.ts": {
@@ -145310,7 +145433,7 @@
   },
   "src/test/telemetry.test.tsx": {
    "path": "src/test/telemetry.test.tsx",
-   "lines": 598,
+   "lines": 595,
    "is_test": true,
    "calc_fns": [
     {
@@ -145446,6 +145569,18 @@
     "é simétrico: inverter as pontas nunca muda o veredito de equilíbrio"
    ]
   },
+  "src/test/uiLibraryContracts.test.tsx": {
+   "path": "src/test/uiLibraryContracts.test.tsx",
+   "lines": 51,
+   "is_test": true,
+   "tests": [
+    "contratos das bibliotecas de UI instaladas",
+    "calendário seleciona uma data e navega para o próximo mês",
+    "painéis preservam orientação e tamanhos percentuais da API anterior",
+    "tooltip entrega o payload inteiro como quinto argumento do formatter",
+    "legenda aceita payload readonly sem perder rótulos e cores"
+   ]
+  },
   "src/test/unifiedDevices.simulation.test.ts": {
    "path": "src/test/unifiedDevices.simulation.test.ts",
    "lines": 240,
@@ -145484,6 +145619,17 @@
     "aplica canal em lote para todos os tipos e faz rollback total em falha",
     "serializa escritas concorrentes sem lost update",
     "nao faz setState apos unmount"
+   ]
+  },
+  "src/test/validationLibraryContracts.test.ts": {
+   "path": "src/test/validationLibraryContracts.test.ts",
+   "lines": 35,
+   "is_test": true,
+   "tests": [
+    "migração de validação preserva mensagens e resultados",
+    "mantém mensagem obrigatória em entrada ausente",
+    "validateData retorna mensagens Zod 4 sem lançar exceção",
+    "XLSX preserva fórmulas/rich text e rejeita erros/booleanos como crédito"
    ]
   },
   "src/test/wagerAuthoring.test.ts": {
@@ -145822,7 +145968,7 @@
   },
   "src/tests/unit/access.test.tsx": {
    "path": "src/tests/unit/access.test.tsx",
-   "lines": 64,
+   "lines": 65,
    "is_test": true,
    "guards": [
     "ProtectedRoute",
@@ -146019,10 +146165,10 @@
   },
   "src/types/charts.ts": {
    "path": "src/types/charts.ts",
-   "lines": 129,
+   "lines": 120,
    "exports": [
-    "interface RechartsTooltipPayloadItem",
-    "interface RechartsTooltipProps",
+    "type RechartsTooltipPayloadItem",
+    "type RechartsTooltipProps",
     "interface TrendData",
     "interface DepartmentData",
     "interface WeeklyEngagementData",
@@ -146034,8 +146180,7 @@
     "interface ShopPurchaseRow",
     "interface AchievementRecord",
     "interface ProfileBasic"
-   ],
-   "doc": "Recharts Tooltip Types"
+   ]
   },
   "src/types/goals.ts": {
    "path": "src/types/goals.ts",
@@ -150985,10 +151130,72 @@
   }
  },
  "git": {
-  "sha": "ffcff81d4b5c63c9508b3b08b41bb1c5166b6d43",
+  "sha": "ca1a6e4efd53d9b513f9397493992c3e782f107f",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "commits": [
+   {
+    "sha": "ca1a6e4",
+    "date": "2026-11-10",
+    "author": "adm01-debug",
+    "subject": "fix(tipos): corrige contratos e ativa verificação real da aplicação",
+    "files": [
+     "AGENTS.md",
+     "docs/agentes/github-ci.md",
+     "docs/agentes/mapa-repo.md",
+     "package.json",
+     "src/App.tsx",
+     "src/components/AnalyticsWidget.tsx",
+     "src/components/CompetencyRadar.tsx",
+     "src/components/PeerRecognition.tsx",
+     "src/components/WeeklyPerformanceComparison.tsx",
+     "src/components/admin/enps/ENPSSubComponents.tsx",
+     "src/components/admin/metrics/AdminMetricsCharts.tsx",
+     "src/components/admin/metrics/MetricsCharts.tsx",
+     "src/components/attendance/AttendanceCharts.tsx",
+     "src/components/audit/AuditFilters.tsx",
+     "src/components/bi/BIDepartmentsTab.tsx",
+     "src/components/boss/BossTrendChart.tsx",
+     "src/components/campaigns/CampaignProgressChart.tsx",
+     "src/components/engagement/diagnostics/NpsHistoryChart.tsx",
+     "src/components/mobile/GestureHandler.tsx",
+     "src/components/prediction/OddsHistoryChart.tsx",
+     "src/components/security/PushOutboxHealthTrend.tsx",
+     "src/components/ui/calendar.tsx",
+     "src/components/ui/chart.tsx",
+     "src/components/ui/resizable.tsx",
+     "src/hooks/useClickOutside.ts",
+     "src/lib/campaignImport.ts",
+     "src/lib/validations.ts",
+     "src/main.tsx",
+     "src/pages/AdminTelemetria.tsx",
+     "src/pages/Auth.tsx",
+     "src/pages/ExecutiveDashboard.tsx",
+     "src/pages/ExecutiveMonthlyReport.tsx",
+     "src/services/avatarService.ts",
+     "src/services/celebrationsService.ts",
+     "src/services/developmentPlanService.ts",
+     "src/services/enpsService.ts",
+     "src/services/nineBoxService.ts",
+     "src/services/positionsService.ts",
+     "src/services/quizQuestionsService.ts",
+     "src/services/weeklyChallengesService.ts",
+     "src/stories/data-display/Charts.stories.tsx",
+     "src/test/bossReport.edgecases.test.ts",
+     "src/test/clientUpdatePayloads.test.ts",
+     "src/test/luckyWheelPayoutHistory.simulation.test.ts",
+     "src/test/purchaseRisk.simulation.test.ts",
+     "src/test/rls.test.ts",
+     "src/test/rpcAccess.test.ts",
+     "src/test/sentryPrivacy.test.ts",
+     "src/test/telemetry.test.tsx",
+     "src/test/uiLibraryContracts.test.tsx",
+     "src/test/useTypePreferences.test.tsx",
+     "src/test/validationLibraryContracts.test.ts",
+     "src/tests/unit/access.test.tsx",
+     "src/types/charts.ts"
+    ]
+   },
    {
     "sha": "ffcff81",
     "date": "2026-11-09",
@@ -151368,27 +151575,16 @@
     "files": [
      "supabase/functions/migrate-helper/index.ts"
     ]
-   },
-   {
-    "sha": "8571298",
-    "date": "2026-08-27",
-    "author": "gpt-engineer-app[bot]",
-    "subject": "Visual edit in Lovable",
-    "files": [
-     "bun.lock",
-     "supabase/config.toml",
-     "supabase/functions/migrate-helper/index.ts"
-    ]
    }
   ],
   "hot_files": [
    [
     "package.json",
-    12
+    13
    ],
    [
     "bun.lock",
-    8
+    7
    ],
    [
     ".github/workflows/ci.yml",
@@ -151396,6 +151592,10 @@
    ],
    [
     "AGENTS.md",
+    5
+   ],
+   [
+    "docs/agentes/mapa-repo.md",
     4
    ],
    [
@@ -151411,11 +151611,11 @@
     4
    ],
    [
-    "docs/agentes/banco.md",
+    "docs/agentes/github-ci.md",
     3
    ],
    [
-    "docs/agentes/mapa-repo.md",
+    "docs/agentes/banco.md",
     3
    ],
    [
@@ -151423,15 +151623,15 @@
     3
    ],
    [
+    "src/lib/campaignImport.ts",
+    2
+   ],
+   [
     "scripts/ci/check-claude-md-integrity.mjs",
     2
    ],
    [
     "docs/agentes/contexto-autonomo.md",
-    2
-   ],
-   [
-    "docs/agentes/github-ci.md",
     2
    ],
    [
@@ -151456,10 +151656,6 @@
    ],
    [
     "scripts/regras_negocio/generate.py",
-    2
-   ],
-   [
-    "scripts/supabase_snapshot/README.md",
     2
    ]
   ]

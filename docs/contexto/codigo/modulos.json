@@ -4348,7 +4348,7 @@
    "modulo": "components/ui",
    "arquivos": 67,
    "testes": 0,
-   "linhas": 9723,
+   "linhas": 9740,
    "itens_menu": [],
    "telas": [],
    "rotas_http": [],
@@ -6344,7 +6344,7 @@
    "modulo": "lib",
    "arquivos": 106,
    "testes": 0,
-   "linhas": 22041,
+   "linhas": 22040,
    "itens_menu": [],
    "telas": [],
    "rotas_http": [],
@@ -7598,7 +7598,7 @@
    "modulo": "services",
    "arquivos": 96,
    "testes": 0,
-   "linhas": 21010,
+   "linhas": 21022,
    "itens_menu": [],
    "telas": [],
    "rotas_http": [],
@@ -8382,7 +8382,7 @@
   {
    "modulo": "test",
    "arquivos": 0,
-   "testes": 123,
+   "testes": 127,
    "linhas": 0,
    "itens_menu": [],
    "telas": [],
@@ -8439,7 +8439,7 @@
    "modulo": "types",
    "arquivos": 2,
    "testes": 0,
-   "linhas": 231,
+   "linhas": 222,
    "itens_menu": [],
    "telas": [],
    "rotas_http": [],
@@ -8466,7 +8466,9 @@
     "pages"
    ],
    "depende_de_modulos": [],
-   "pacotes_externos": []
+   "pacotes_externos": [
+    "recharts"
+   ]
   },
   {
    "modulo": "utils",

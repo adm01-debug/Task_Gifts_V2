@@ -1,6 +1,6 @@
 # 07 · REGRAS DE NEGÓCIO
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `ffcff81d4b` · branch `main` · 2026-11-09 10:03 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `ca1a6e4efd` · branch `main` · 2026-11-10 13:51 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## A. Regras escritas por humanos (`manual/` — prioridade máxima, nunca sobrescrito)
@@ -1492,15 +1492,15 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
   - Regras cruzadas (refine): “Informe a URL do vídeo”
 - **emailSchema** (`src/lib/validations.ts`, z.string, encadeia transform):
   ```ts
-  { required_error: "Email é obrigatório" }
+  { error: (issue) => issue.input === undefined ? "Email é obrigatório" : undefined}
   ```
 - **passwordSchema** (`src/lib/validations.ts`, z.string):
   ```ts
-  { required_error: "Senha é obrigatória" }
+  { error: (issue) => issue.input === undefined ? "Senha é obrigatória" : undefined}
   ```
 - **strongPasswordSchema** (`src/lib/validations.ts`, z.string):
   ```ts
-  { required_error: "Senha é obrigatória" }
+  { error: (issue) => issue.input === undefined ? "Senha é obrigatória" : undefined}
   ```
 - **displayNameSchema** (`src/lib/validations.ts`, z.string, encadeia optional, transform):
   ```ts
@@ -1528,11 +1528,11 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
   ```
 - **questFormSchema** (`src/lib/validations.ts`, z.object):
   ```ts
-  { title: questTitleSchema, description: questDescriptionSchema, icon: z.string().max(10, "Ícone inválido").default("📚"), difficulty: z.enum(["easy", "medium", "hard", "expert"], { required_error: "Selecione a dificuldade", }), xpReward: z .number() .min(0, "XP não pode ser negativo") .max(50000, "XP máximo é 50.000"), coinReward: z .number() .min(0, "Moedas não podem ser negativas") .max(50000, "Moedas máximas são 50.000"), deadlineDays: z .number() .min(1, "Prazo mínimo é 1 dia") .max(365, "Prazo máximo é 365 dias") .nullable() .optional(), maxParticipants: z .number() .min(1, "Mínimo de 1 participante") .max(10000, "Máximo de 10.000 participantes") .nullable() .optional(), tags: z .array(z.string().max(30, "Tag muito longa")) .max(10, "Máximo de 10 tags") .optional(), steps: z.array(ques …
+  { title: questTitleSchema, description: questDescriptionSchema, icon: z.string().max(10, "Ícone inválido").default("📚"), difficulty: z.enum(["easy", "medium", "hard", "expert"], { error: (issue) => issue.input === undefined ? "Selecione a dificuldade" : undefined, }), xpReward: z .number() .min(0, "XP não pode ser negativo") .max(50000, "XP máximo é 50.000"), coinReward: z .number() .min(0, "Moedas não podem ser negativas") .max(50000, "Moedas máximas são 50.000"), deadlineDays: z .number() .min(1, "Prazo mínimo é 1 dia") .max(365, "Prazo máximo é 365 dias") .nullable() .optional(), maxParticipants: z .number() .min(1, "Mínimo de 1 participante") .max(10000, "Máximo de 10.000 participantes") .nullable() .optional(), tags: z .array(z.string().max(30, "Tag muito longa")) .max(10, "Máximo de …
   ```
 - **kudosMessageSchema** (`src/lib/validations.ts`, z.string, encadeia transform):
   ```ts
-  { required_error: "Mensagem é obrigatória" }
+  { error: (issue) => issue.input === undefined ? "Mensagem é obrigatória" : undefined}
   ```
 - **giveKudosSchema** (`src/lib/validations.ts`, z.object):
   ```ts
@@ -1568,7 +1568,7 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
   ```
 - **commentSchema** (`src/lib/validations.ts`, z.string, encadeia transform):
   ```ts
-  { required_error: "Comentário é obrigatório" }
+  { error: (issue) => issue.input === undefined ? "Comentário é obrigatório" : undefined}
   ```
 - **searchQuerySchema** (`src/lib/validations.ts`, z.string, encadeia transform):
   ```ts
@@ -2118,7 +2118,7 @@ _nenhum item encontrado_
   ```
 - **validateForm()** — `src/pages/Auth.tsx`
   ```
-  const newErrors: typeof errors = {}; if (view === "forgot-password") { const r = emailSchema.safeParse(email); if (!r.success) newErrors.email = r.error.errors[0].message; } else if (view === "login") { const r = loginSchema.safeParse({ email, password }); if (!r.success) r.error.errors.forEach((e) => { if (e.path[0] === "email") newErrors.email = e.message; if (e.path[0] === "password") newErrors.password = e.message; }); } else { const r = signupSchema.safeParse({ email, password, displayName: …
+  const newErrors: typeof errors = {}; if (view === "forgot-password") { const r = emailSchema.safeParse(email); if (!r.success) newErrors.email = r.error.issues[0].message; } else if (view === "login") { const r = loginSchema.safeParse({ email, password }); if (!r.success) r.error.issues.forEach((e) => { if (e.path[0] === "email") newErrors.email = e.message; if (e.path[0] === "password") newErrors.password = e.message; }); } else { const r = signupSchema.safeParse({ email, password, displayName: …
   ```
 - **rankMedal(position: number | null)** — `src/pages/CampaignHistory.tsx`
   ```
@@ -3381,7 +3381,7 @@ _nenhum item encontrado_
 | `admin` | `supabase/migrations/20260807030000_fix_opinion_feed_rpc.sql` |
 | `manager` | `supabase/migrations/20260807030000_fix_opinion_feed_rpc.sql` |
 
-## K. Testes como especificação (1905 testes em 143 arquivos — nomes completos em `context.json`)
+## K. Testes como especificação (1928 testes em 147 arquivos — nomes completos em `context.json`)
 
 | Arquivo | Testes | Exemplos do que o sistema DEVE fazer |
 |---|---|---|
@@ -3447,6 +3447,7 @@ _nenhum item encontrado_
 | `src/tests/unit/combo.test.ts` | 14 | comboService · getComboTier — tier logic (pure) · returns Normal tier when actionsCount = 0 · returns correct tier at each threshold boundary … |
 | `src/test/bingo.simulation.test.ts` | 13 | Bingo — geometria da cartela · possui exatamente 12 linhas de 5 casas, sem índices fora do intervalo · cada casa participa de pelo menos duas linhas (linha + coluna) · Bingo — detecção de linhas (cenários exaustivos por linha) … |
 | `src/test/boardTrail.simulation.test.ts` | 13 | boardTrail — normalização · ordena, deduplica posições e sanea valores · rejeita tabuleiros curtos ou sem chegada · boardTrail — dado determinístico … |
+| `src/test/clientUpdatePayloads.test.ts` | 13 | payloads de atualização respeitam colunas reais · avatar %s atualiza somente %s · avatar novo mantém user_id e permite limpar a seleção · datas do perfil não alteram outros campos … |
 | `src/test/goalBetStakePreview.test.ts` | 13 | computeGoalBetStakePreview · bloqueia sem mercado · bloqueia opção inexistente · bloqueia mercado fora de  … |
 | `src/test/memoryGame.simulation.test.ts` | 13 | buildMemoryBoard · gera duas cartas por par e limita o tamanho do tabuleiro · é determinístico para o mesmo seed e varia entre seeds · descarta pares com texto vazio e tolera baralhos menores que o limite … |
 | `src/test/auction.simulation.test.ts` | 12 | auctionEngine — regras de lance · exige o lance inicial no primeiro lance · exige incremento mínimo ao aumentar o próprio lance · retém apenas a diferença ao aumentar (caução incremental) … |
@@ -3508,11 +3509,13 @@ _nenhum item encontrado_
 | `src/test/nr1ActionPlan.simulation.test.ts` | 5 | NR-1 → plano de tratativa (simulação combinatória) · gera prazo legal coerente para todos os graus possíveis · prazo é monotonicamente menor conforme o risco cresce · meta de score nunca ultrapassa 10 nem regride … |
 | `src/test/predictionRunbooks.test.ts` | 5 | cobertura de runbooks para os alertas de previsão · gera exatamente um alerta de cada tipo no cenário base · todo alerta emitido resolve para um runbook existente · os runbooks de previsão têm as quatro fases preenchidas … |
 | `src/test/rpcAccess.test.ts` | 5 | anon deve receber 42501 ao chamar ${fn} · anon deve receber erro ao chamar get_leaderboard_api · anon deve receber erro ao chamar get_user_stats_api · anon deve receber erro ao chamar get_2fa_status de outro usuário … |
+| `src/test/uiLibraryContracts.test.tsx` | 5 | contratos das bibliotecas de UI instaladas · calendário seleciona uma data e navega para o próximo mês · painéis preservam orientação e tamanhos percentuais da API anterior · tooltip entrega o payload inteiro como quinto argumento do formatter … |
 | `src/tests/unit/notifications.test.ts` | 5 | notificationsService · create · should insert a notification and return it · markAsRead … |
 | `src/tests/unit/onboarding.test.ts` | 5 | onboardingService · completeStep · should return true on success · isOnboardingComplete … |
 | `src/tests/unit/shop.test.ts` | 5 | shopService · purchaseReward · should throw error if user has insufficient coins · should throw error if item is out of stock … |
 | `src/components/shop/__tests__/ProductGridLoading.test.tsx` | 4 | Shop Skeleton and Loading State · should display skeletons while rewards are loading · should transition from skeletons to content smoothly · should maintain layout stability during search/filtering loading |
 | `src/test/nr1Export.simulation.test.ts` | 4 | Exportação NR-1 (simulação combinatória) · nunca emite célula vazia ou  · marca plano obrigatório exatamente para riscos alto e crítico · gera nome de arquivo seguro para recortes com acentos e símbolos |
+| `src/test/validationLibraryContracts.test.ts` | 4 | migração de validação preserva mensagens e resultados · mantém mensagem obrigatória em entrada ausente · validateData retorna mensagens Zod 4 sem lançar exceção · XLSX preserva fórmulas/rich text e rejeita erros/booleanos como crédito |
 | `src/tests/unit/access.test.tsx` | 4 | ProtectedRoute · should redirect to login if not authenticated · should show content if authenticated and no RBAC check needed · should show access denied if RBAC check fails |
 | `src/tests/unit/achievements.test.ts` | 4 | achievementsService · unlockAchievement · should award rewards and create notification if not already unlocked · should return alreadyUnlocked if already has it |
 | `src/tests/unit/audit.test.ts` | 4 | auditService · log · should insert an audit log into the database · should silently handle errors |
@@ -3528,6 +3531,7 @@ _nenhum item encontrado_
 | `src/tests/unit/leagues.test.ts` | 3 | leaguesService · addWeeklyXP · should update weekly XP if user league exists |
 | `src/tests/unit/logger.test.ts` | 3 | LoggingService · should store logs and keep them under max limit · should format message with context correctly |
 | `src/tests/unit/trails.test.ts` | 3 | trailsService · completeModule · should register action in comboService and add XP to profile |
+| `src/test/sentryPrivacy.test.ts` | 1 | configuração Sentry 11 mantém coleta restritiva sem corpos ou entradas de IA |
 
 ## L. Eventos de webhook tratados (contratos com sistemas externos)
 

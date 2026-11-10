@@ -5301,6 +5301,7 @@
   ],
   "src/services/avatarService.ts": [
    "src/integrations/supabase/client.ts",
+   "src/integrations/supabase/types.ts",
    "src/services/loggingService.ts"
   ],
   "src/services/behavioralBadges/badges.ts": [
@@ -5349,7 +5350,8 @@
    "src/services/loggingService.ts"
   ],
   "src/services/celebrationsService.ts": [
-   "src/integrations/supabase/client.ts"
+   "src/integrations/supabase/client.ts",
+   "src/integrations/supabase/types.ts"
   ],
   "src/services/certificationsService.ts": [
    "src/integrations/supabase/client.ts",
@@ -5402,7 +5404,8 @@
    "src/integrations/supabase/types.ts"
   ],
   "src/services/developmentPlanService.ts": [
-   "src/integrations/supabase/client.ts"
+   "src/integrations/supabase/client.ts",
+   "src/integrations/supabase/types.ts"
   ],
   "src/services/duelsService.ts": [
    "src/integrations/supabase/client.ts"
@@ -5576,7 +5579,8 @@
    "src/services/profilesService.ts"
   ],
   "src/services/quizQuestionsService.ts": [
-   "src/integrations/supabase/client.ts"
+   "src/integrations/supabase/client.ts",
+   "src/integrations/supabase/types.ts"
   ],
   "src/services/quizService.ts": [
    "src/integrations/supabase/client.ts"
