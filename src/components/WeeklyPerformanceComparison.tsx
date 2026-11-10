@@ -149,8 +149,8 @@ function ComparisonBarChart({ data }: { data: ChartDataItem[] }) {
               borderRadius: '8px',
               fontSize: '12px'
             }}
-            formatter={(value: number, name: string) => [
-              value.toLocaleString('pt-BR'),
+            formatter={(value, name) => [
+              typeof value === 'number' ? value.toLocaleString('pt-BR') : String(value ?? ''),
               name === 'atual' ? 'Esta semana' : 'Semana anterior'
             ]}
           />

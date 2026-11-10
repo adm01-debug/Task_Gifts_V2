@@ -135,8 +135,8 @@ export function OddsHistoryChart({ market }: OddsHistoryChartProps) {
                 borderRadius: "0.75rem",
                 fontSize: "0.8rem",
               }}
-              formatter={(value: number, name: string) => [
-                `${value.toFixed(1)}%`,
+              formatter={(value, name) => [
+                `${typeof value === "number" ? value.toFixed(1) : String(value ?? "")}%`,
                 options.find((o) => o.id === name)?.label ?? name,
               ]}
             />

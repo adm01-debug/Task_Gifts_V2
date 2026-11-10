@@ -43,7 +43,7 @@ export const GestureHandler = memo(function GestureHandler({
   const haptic = useHapticFeedback();
   const dragControls = useDragControls();
   
-  const longPressTimer = useRef<NodeJS.Timeout>();
+  const longPressTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   const lastTap = useRef<number>(0);
   const isLongPressing = useRef(false);
 

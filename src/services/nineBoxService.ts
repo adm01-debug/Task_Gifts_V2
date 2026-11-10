@@ -92,9 +92,10 @@ export const nineBoxService = {
   },
 
   async updateEvaluation(id: string, updates: Partial<NineBoxEvaluation>) {
+    const { profiles: _profiles, ...columns } = updates;
     const { data, error } = await supabase
       .from("nine_box_evaluations")
-      .update({ ...updates, updated_at: new Date().toISOString() })
+      .update({ ...columns, updated_at: new Date().toISOString() })
       .eq("id", id)
       .select()
       .single();

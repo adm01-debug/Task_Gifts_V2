@@ -739,7 +739,7 @@ function Kpi({ label, value, hint, tone = "neutral", delta, spark, sparkLowerIsB
                 cursor={false}
                 contentStyle={{ fontSize: 11, padding: "4px 8px", borderRadius: 6 }}
                 labelFormatter={(l) => String(l)}
-                formatter={(v: number) => [v, label]}
+                formatter={(v) => [v, label]}
               />
               <Line type="monotone" dataKey="v" stroke={sparkStroke} strokeWidth={1.5} dot={false} isAnimationActive={false} />
             </LineChart>
