@@ -4,6 +4,10 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
+    "maintenance:doctor": "sh scripts/maintenance/run.sh doctor --root .",
+    "maintenance:check": "sh scripts/maintenance/run.sh check --root . --ref origin/main",
+    "maintenance:heal": "sh scripts/maintenance/run.sh heal --root . --ref origin/main",
+    "test:maintenance": "node --test scripts/maintenance/maintenance.unit.mjs",
     "dev": "vite",
     "build": "vite build",
     "build:dev": "vite build --mode development",
@@ -19,7 +23,16 @@
     "contexto:regras": "python3 scripts/regras_negocio/generate.py --repo . --out docs/contexto/regras --profile regras --index-path docs/contexto/00-INDEX.md --no-pointer",
     "contexto:test": "node --test scripts/ai-context/gerar.unit.mjs scripts/ci/contexto-indice.unit.mjs scripts/ci/contexto-publicacao.unit.mjs scripts/ci/regras-negocio.unit.mjs scripts/ci/supabase-snapshot.unit.mjs",
     "db:guard": "node scripts/db-audit/check-migration-drift.mjs --snapshot docs/contexto/supabase",
-    "db:guard:test": "node --test scripts/ci/check-migration-drift.unit.mjs"
+    "db:guard:test": "node --test scripts/ci/check-migration-drift.unit.mjs",
+    "automation:doctor": "node scripts/automation.mjs doctor",
+    "automation:test": "node scripts/automation.mjs test",
+    "automation:check": "node scripts/automation.mjs check --ref HEAD",
+    "automation:heal": "node scripts/automation.mjs heal --ref origin/main",
+    "automation:nightly": "node scripts/automation.mjs nightly --ref origin/main",
+    "automation:graph": "node scripts/automation.mjs graph",
+    "automation:status": "node scripts/automation.mjs graph status",
+    "automation:install-hooks": "node scripts/automation.mjs install-hooks",
+    "automation:uninstall-hooks": "node scripts/automation.mjs uninstall-hooks"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.9.2",
