@@ -1,10 +1,40 @@
 import { useState, useRef, useEffect, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
- import { Lightbulb, Copy, Check, Volume2, VolumeX, RotateCcw, Maximize2, Minimize2, Sparkles, Send, X, Trash2, Bot, User, Loader2, BookOpen, Clock, Zap, Target, Trophy, Flame, TrendingUp, AlertCircle } from "lucide-react";
- import { useHaptics } from "@/hooks/useHaptics";
- import { useSoundEffects } from "@/hooks/useSoundEffects";
+import {
+  Lightbulb,
+  Copy,
+  Check,
+  Volume2,
+  VolumeX,
+  RotateCcw,
+  Maximize2,
+  Minimize2,
+  Sparkles,
+  Send,
+  X,
+  Trash2,
+  Bot,
+  User,
+  Loader2,
+  BookOpen,
+  Clock,
+  Zap,
+  Target,
+  Trophy,
+  Flame,
+  TrendingUp,
+  AlertCircle,
+} from "lucide-react";
+import { useHaptics } from "@/hooks/useHaptics";
+import { useSoundEffects } from "@/hooks/useSoundEffects";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
@@ -85,25 +115,36 @@ export function AICoachDialog({ trigger }: AICoachDialogProps = {}) {
   const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
   const [isExpanded, setIsExpanded] = useState(false);
   const [activeTab, setActiveTab] = useState<"chat" | "stats">("chat");
-   const { messages, suggestions, isLoading, error, sendMessage, clearMessages } = useAICoach();
-   const { vibrate } = useHaptics();
-   const { playClickSound, playXPSound } = useSoundEffects();
+  const {
+    messages,
+    suggestions,
+    isLoading,
+    error,
+    sendMessage,
+    clearMessages,
+  } = useAICoach();
+  const { vibrate } = useHaptics();
+  const { playClickSound, playXPSound } = useSoundEffects();
   const { data: trails } = usePublishedTrails();
   const { data: profile } = useCurrentProfile();
   const navigate = useNavigate();
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
-   useEffect(() => {
-     if (scrollRef.current) {
-       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
-     }
- 
-     if (messages.length > 0 && messages[messages.length - 1].role === "assistant" && !isLoading) {
-       vibrate("medium");
-       playXPSound();
-     }
-   }, [messages, isLoading, vibrate, playXPSound]);
+  useEffect(() => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+    }
+
+    if (
+      messages.length > 0 &&
+      messages[messages.length - 1].role === "assistant" &&
+      !isLoading
+    ) {
+      vibrate("medium");
+      playXPSound();
+    }
+  }, [messages, isLoading, vibrate, playXPSound]);
 
   useEffect(() => {
     if (open && inputRef.current) {
@@ -111,28 +152,28 @@ export function AICoachDialog({ trigger }: AICoachDialogProps = {}) {
     }
   }, [open]);
 
-   const handleSubmit = (e: React.FormEvent) => {
-     e.preventDefault();
-     if (input.trim() && !isLoading) {
-       vibrate("light");
-       playClickSound();
-       sendMessage(input);
-       setInput("");
-     }
-   };
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (input.trim() && !isLoading) {
+      vibrate("light");
+      playClickSound();
+      sendMessage(input);
+      setInput("");
+    }
+  };
 
-   const handleQuickPrompt = (prompt: string) => {
-     vibrate("light");
-     playClickSound();
-     sendMessage(prompt);
-   };
+  const handleQuickPrompt = (prompt: string) => {
+    vibrate("light");
+    playClickSound();
+    sendMessage(prompt);
+  };
 
-   const handleNavigateToTrail = (trailId: string) => {
-     vibrate("medium");
-     playClickSound();
-     setOpen(false);
-     navigate(`/trails/${trailId}`);
-   };
+  const handleNavigateToTrail = (trailId: string) => {
+    vibrate("medium");
+    playClickSound();
+    setOpen(false);
+    navigate(`/trails/${trailId}`);
+  };
 
   const handleCopyMessage = async (content: string, index: number) => {
     try {
@@ -147,7 +188,9 @@ export function AICoachDialog({ trigger }: AICoachDialogProps = {}) {
 
   const handleRetryMessage = () => {
     if (messages.length > 0) {
-      const lastUserMessage = [...messages].reverse().find(m => m.role === "user");
+      const lastUserMessage = [...messages]
+        .reverse()
+        .find((m) => m.role === "user");
       if (lastUserMessage) {
         clearMessages();
         setTimeout(() => sendMessage(lastUserMessage.content), 100);
@@ -158,21 +201,23 @@ export function AICoachDialog({ trigger }: AICoachDialogProps = {}) {
   // Find trails mentioned in a message
   const findMentionedTrails = (content: string) => {
     if (!trails) return [];
-    
+
     const mentionedTrails: typeof trails = [];
     const lowerContent = content.toLowerCase();
-    
+
     for (const trail of trails) {
       // Check if trail title is mentioned (case insensitive)
       const trailTitleLower = trail.title.toLowerCase();
-      if (lowerContent.includes(trailTitleLower) || 
-          lowerContent.includes(`"${trailTitleLower}"`) ||
-          lowerContent.includes(`"${trail.title}"`) ||
-          lowerContent.includes(trail.title)) {
+      if (
+        lowerContent.includes(trailTitleLower) ||
+        lowerContent.includes(`"${trailTitleLower}"`) ||
+        lowerContent.includes(`"${trail.title}"`) ||
+        lowerContent.includes(trail.title)
+      ) {
         mentionedTrails.push(trail);
       }
     }
-    
+
     return mentionedTrails.slice(0, 5); // Limit to 5 trails
   };
 
@@ -188,7 +233,9 @@ export function AICoachDialog({ trigger }: AICoachDialogProps = {}) {
         <p className="whitespace-pre-wrap">{content}</p>
         {mentionedTrails.length > 0 && (
           <div className="space-y-2 pt-2 border-t border-border/50">
-            <p className="text-xs text-muted-foreground font-medium">Trilhas mencionadas:</p>
+            <p className="text-xs text-muted-foreground font-medium">
+              Trilhas mencionadas:
+            </p>
             {mentionedTrails.map((trail) => (
               <TrailCard
                 key={trail.id}
@@ -246,9 +293,12 @@ export function AICoachDialog({ trigger }: AICoachDialogProps = {}) {
                   <Sparkles className="w-8 h-8 text-accent" />
                 </div>
                 <div>
-                  <h3 className="font-semibold text-foreground">Olá! Sou seu AI Coach</h3>
+                  <h3 className="font-semibold text-foreground">
+                    Olá! Sou seu AI Coach
+                  </h3>
                   <p className="text-sm text-muted-foreground mt-1">
-                    Posso ajudar com dúvidas sobre gamificação, sugerir trilhas e dar dicas personalizadas.
+                    Posso ajudar com dúvidas sobre gamificação, sugerir trilhas
+                    e dar dicas personalizadas.
                   </p>
                 </div>
                 <div className="flex flex-wrap justify-center gap-2 pt-2">
@@ -276,7 +326,7 @@ export function AICoachDialog({ trigger }: AICoachDialogProps = {}) {
                     exit={{ opacity: 0, y: -10 }}
                     className={cn(
                       "flex gap-3",
-                      msg.role === "user" ? "justify-end" : "justify-start"
+                      msg.role === "user" ? "justify-end" : "justify-start",
                     )}
                   >
                     {msg.role === "assistant" && (
@@ -289,10 +339,13 @@ export function AICoachDialog({ trigger }: AICoachDialogProps = {}) {
                         "max-w-[85%] rounded-2xl px-4 py-2.5 text-sm",
                         msg.role === "user"
                           ? "bg-primary text-primary-foreground rounded-br-md"
-                          : "bg-muted rounded-bl-md"
+                          : "bg-muted rounded-bl-md",
                       )}
                     >
-                      {renderMessageContent(msg.content, msg.role === "assistant")}
+                      {renderMessageContent(
+                        msg.content,
+                        msg.role === "assistant",
+                      )}
                     </div>
                     {msg.role === "user" && (
                       <div className="w-7 h-7 rounded-full bg-muted flex items-center justify-center flex-shrink-0">
@@ -301,92 +354,106 @@ export function AICoachDialog({ trigger }: AICoachDialogProps = {}) {
                     )}
                   </motion.div>
                 ))}
-                {isLoading && messages[messages.length - 1]?.role === "user" && (
-                  <motion.div
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className="flex gap-3"
-                  >
-                    <motion.div 
-                      className="w-7 h-7 rounded-full bg-gradient-to-br from-accent to-primary flex items-center justify-center flex-shrink-0"
-                      animate={{ scale: [1, 1.1, 1] }}
-                      transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+                {isLoading &&
+                  messages[messages.length - 1]?.role === "user" && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="flex gap-3"
                     >
-                      <Bot className="w-3.5 h-3.5 text-white" />
-                    </motion.div>
-                    <div className="bg-muted rounded-2xl rounded-bl-md px-4 py-3">
-                      <div className="flex items-center gap-1.5">
-                        {[0, 1, 2].map((i) => (
+                      <motion.div
+                        className="w-7 h-7 rounded-full bg-gradient-to-br from-accent to-primary flex items-center justify-center flex-shrink-0"
+                        animate={{ scale: [1, 1.1, 1] }}
+                        transition={{
+                          duration: 1.5,
+                          repeat: Infinity,
+                          ease: "easeInOut",
+                        }}
+                      >
+                        <Bot className="w-3.5 h-3.5 text-white" />
+                      </motion.div>
+                      <div className="bg-muted rounded-2xl rounded-bl-md px-4 py-3">
+                        <div className="flex items-center gap-1.5">
+                          {[0, 1, 2].map((i) => (
+                            <motion.span
+                              key={i}
+                              className="w-2 h-2 bg-gradient-to-br from-accent to-primary rounded-full"
+                              animate={{
+                                y: [0, -6, 0],
+                                opacity: [0.5, 1, 0.5],
+                                scale: [0.9, 1.1, 0.9],
+                              }}
+                              transition={{
+                                duration: 0.8,
+                                repeat: Infinity,
+                                delay: i * 0.15,
+                                ease: "easeInOut",
+                              }}
+                            />
+                          ))}
                           <motion.span
-                            key={i}
-                            className="w-2 h-2 bg-gradient-to-br from-accent to-primary rounded-full"
-                            animate={{
-                              y: [0, -6, 0],
-                              opacity: [0.5, 1, 0.5],
-                              scale: [0.9, 1.1, 0.9],
-                            }}
-                            transition={{
-                              duration: 0.8,
-                              repeat: Infinity,
-                              delay: i * 0.15,
-                              ease: "easeInOut",
-                            }}
-                          />
-                        ))}
-                        <motion.span
-                          initial={{ opacity: 0, width: 0 }}
-                          animate={{ opacity: 1, width: "auto" }}
-                          transition={{ delay: 0.5 }}
-                          className="text-xs text-muted-foreground ml-2"
-                        >
-                          Pensando...
-                        </motion.span>
+                            initial={{ opacity: 0, width: 0 }}
+                            animate={{ opacity: 1, width: "auto" }}
+                            transition={{ delay: 0.5 }}
+                            className="text-xs text-muted-foreground ml-2"
+                          >
+                            Pensando...
+                          </motion.span>
+                        </div>
                       </div>
-                    </div>
-                  </motion.div>
-                )}
+                    </motion.div>
+                  )}
                 {/* Follow-up suggestions */}
-                {!isLoading && suggestions.length > 0 && messages.length > 0 && messages[messages.length - 1]?.role === "assistant" && (
-                  <motion.div
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.3 }}
-                    className="flex flex-col gap-2 pt-2"
-                  >
-                    <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                      <Lightbulb className="w-3 h-3" />
-                      <span>Sugestões:</span>
-                    </div>
-                    <div className="flex flex-wrap gap-1.5">
-                      {suggestions.map((suggestion, idx) => (
-                        <motion.button
-                          key={idx}
-                          initial={{ opacity: 0, scale: 0.9 }}
-                          animate={{ opacity: 1, scale: 1 }}
-                          transition={{ delay: 0.4 + idx * 0.1 }}
-                          whileHover={{ scale: 1.03 }}
-                          whileTap={{ scale: 0.97 }}
-                          onClick={() => sendMessage(suggestion)}
-                          className="text-xs px-3 py-1.5 rounded-full bg-gradient-to-r from-accent/10 to-primary/10 border border-accent/20 hover:border-accent/40 text-foreground transition-colors"
-                        >
-                          {suggestion}
-                        </motion.button>
-                      ))}
-                    </div>
-                  </motion.div>
-                )}
+                {!isLoading &&
+                  suggestions.length > 0 &&
+                  messages.length > 0 &&
+                  messages[messages.length - 1]?.role === "assistant" && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.3 }}
+                      className="flex flex-col gap-2 pt-2"
+                    >
+                      <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                        <Lightbulb className="w-3 h-3" />
+                        <span>Sugestões:</span>
+                      </div>
+                      <div className="flex flex-wrap gap-1.5">
+                        {suggestions.map((suggestion, idx) => (
+                          <motion.button
+                            key={idx}
+                            initial={{ opacity: 0, scale: 0.9 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            transition={{ delay: 0.4 + idx * 0.1 }}
+                            whileHover={{ scale: 1.03 }}
+                            whileTap={{ scale: 0.97 }}
+                            onClick={() => sendMessage(suggestion)}
+                            className="text-xs px-3 py-1.5 rounded-full bg-gradient-to-r from-accent/10 to-primary/10 border border-accent/20 hover:border-accent/40 text-foreground transition-colors"
+                          >
+                            {suggestion}
+                          </motion.button>
+                        ))}
+                      </div>
+                    </motion.div>
+                  )}
               </AnimatePresence>
             )}
           </div>
         </ScrollArea>
 
         {error && (
-          <div role="alert" className="px-4 py-2 bg-destructive/10 text-destructive text-sm flex-shrink-0">
+          <div
+            role="alert"
+            className="px-4 py-2 bg-destructive/10 text-destructive text-sm flex-shrink-0"
+          >
             {error}
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="p-4 border-t border-border flex gap-2 flex-shrink-0">
+        <form
+          onSubmit={handleSubmit}
+          className="p-4 border-t border-border flex gap-2 flex-shrink-0"
+        >
           <input
             ref={inputRef}
             type="text"
