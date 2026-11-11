@@ -792,12 +792,14 @@ function excludeIdentity(path, fd) {
     throw fail("info/exclude mudou de identidade; alteração recusada");
 }
 function excludeFlags(append) {
-  if (typeof constants.O_NOFOLLOW !== "number")
+  const hasNoFollow =
+    typeof constants.O_NOFOLLOW === "number" &&
+    typeof constants.O_NONBLOCK === "number";
+  if (!hasNoFollow && process.platform !== "win32")
     throw fail("O_NOFOLLOW indisponível; alteração de info/exclude bloqueada");
   return (
     constants.O_RDWR |
-    constants.O_NOFOLLOW |
-    constants.O_NONBLOCK |
+    (hasNoFollow ? constants.O_NOFOLLOW | constants.O_NONBLOCK : 0) |
     (append ? constants.O_APPEND | constants.O_CREAT : 0)
   );
 }
