@@ -5,12 +5,12 @@
   "linguagens": [
    "TypeScript (1122)",
    "SQL (267)",
-   "Markdown (43)",
-   "JavaScript (14)",
-   "JSON (11)",
+   "Markdown (45)",
+   "JavaScript (22)",
+   "JSON (15)",
+   "YAML (6)",
    "Python (5)",
-   "YAML (5)",
-   "Shell (3)"
+   "Shell (4)"
   ],
   "linguagem_principal": "TypeScript",
   "framework": "React",
@@ -45,6 +45,15 @@
   "nome": "vite_react_shadcn_ts",
   "versao": "0.0.0",
   "scripts": {
+   "automation:check": "node scripts/automation.mjs check --ref HEAD",
+   "automation:doctor": "node scripts/automation.mjs doctor",
+   "automation:graph": "node scripts/automation.mjs graph",
+   "automation:heal": "node scripts/automation.mjs heal --ref origin/main",
+   "automation:install-hooks": "node scripts/automation.mjs install-hooks",
+   "automation:nightly": "node scripts/automation.mjs nightly --ref origin/main",
+   "automation:status": "node scripts/automation.mjs graph status",
+   "automation:test": "node scripts/automation.mjs test",
+   "automation:uninstall-hooks": "node scripts/automation.mjs uninstall-hooks",
    "build": "vite build",
    "build:dev": "vite build --mode development",
    "contexto:codigo": "node scripts/ai-context/gerar.mjs --out docs/contexto/codigo",
@@ -55,11 +64,15 @@
    "dev": "vite",
    "graph:setup": "bash scripts/graphify/setup.sh",
    "lint": "eslint .",
+   "maintenance:check": "sh scripts/maintenance/run.sh check --root . --ref origin/main",
+   "maintenance:doctor": "sh scripts/maintenance/run.sh doctor --root .",
+   "maintenance:heal": "sh scripts/maintenance/run.sh heal --root . --ref origin/main",
    "postinstall": "node ./scripts/patch-recharts.cjs",
    "prepare": "husky",
    "preview": "vite preview",
    "test": "vitest run",
    "test:ci": "vitest run --coverage --reporter=verbose",
+   "test:maintenance": "node --test scripts/maintenance/maintenance.unit.mjs",
    "typecheck": "tsc --noEmit -p tsconfig.app.json && tsc --noEmit -p tsconfig.node.json"
   },
   "dependencias": 63,
@@ -110,6 +123,34 @@
   "vitest.config.ts"
  ],
  "workflows": [
+  {
+   "arquivo": ".github/workflows/automation-local.yml",
+   "nome": "Automação local",
+   "gatilhos": [
+    "pull_request",
+    "push",
+    "workflow_dispatch"
+   ],
+   "crons": [],
+   "branches": [
+    "main"
+   ],
+   "jobs": [
+    "contracts"
+   ],
+   "permissoes": [
+    "contents: read"
+   ],
+   "scripts_usados": [
+    "scripts/automation.mjs"
+   ],
+   "npm_scripts": [],
+   "secrets": [],
+   "actions": [
+    "actions/checkout",
+    "actions/setup-node"
+   ]
+  },
   {
    "arquivo": ".github/workflows/ci.yml",
    "nome": "CI",
@@ -283,6 +324,11 @@
    "arquivo": "audit_report.md",
    "titulo": "📊 Relatório de Auditoria Enterprise & Inventário Minucioso do Sistema",
    "linhas": 81
+  },
+  {
+   "arquivo": "docs/AUTOMACAO_LOCAL.md",
+   "titulo": "Automação local — Task_Gifts_V2",
+   "linhas": 82
   }
  ],
  "docs_em_subpastas": [
@@ -476,6 +522,18 @@
    },
    {
     "host": "lovable.dev",
+    "arquivos": 1
+   },
+   {
+    "host": "maintenance.invalid",
+    "arquivos": 1
+   },
+   {
+    "host": "production.invalid",
+    "arquivos": 1
+   },
+   {
+    "host": "production.supabase.co",
     "arquivos": 1
    },
    {

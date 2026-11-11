@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "ca1a6e4efd53d9b513f9397493992c3e782f107f",
+  "commit": "940efb8eef8e6541caa604713cef48930de37ba5",
   "branch": "main",
-  "data_commit": "2026-11-10T10:50:31-03:00",
+  "data_commit": "2026-11-11T14:54:53-03:00",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "ultimos_commits": [
+   {
+    "sha": "940efb8",
+    "data": "2026-11-11",
+    "assunto": "chore(automacao): conecta testes, grafo e manutenção aos gatilhos (#38)"
+   },
    {
     "sha": "ca1a6e4",
     "data": "2026-11-10",
@@ -126,18 +131,13 @@
     "sha": "d83349c",
     "data": "2026-10-29",
     "assunto": "fix(ci): corrige 4 causas de falha do CI introduzidas pelo bump de deps (#17)"
-   },
-   {
-    "sha": "785fa87",
-    "data": "2026-10-03",
-    "assunto": "build(deps): Bump the dependencies group across 1 directory with 46 updates (#11)"
    }
   ],
-  "arquivos_mudados_7d": 115,
+  "arquivos_mudados_7d": 131,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "package.json",
-    "mudancas": 11
+    "mudancas": 12
    },
    {
     "pasta": "bun.lock",
@@ -152,16 +152,16 @@
     "mudancas": 5
    },
    {
+    "pasta": ".gitignore",
+    "mudancas": 4
+   },
+   {
     "pasta": "RELATORIO_CI.md",
     "mudancas": 4
    },
    {
     "pasta": "docs/agentes/mapa-repo.md",
     "mudancas": 4
-   },
-   {
-    "pasta": ".gitignore",
-    "mudancas": 3
    },
    {
     "pasta": "PENDENCIAS.md",
@@ -199,7 +199,7 @@
   "arquivos_mais_mudados_90d": [
    {
     "arquivo": "package.json",
-    "mudancas": 13
+    "mudancas": 14
    },
    {
     "arquivo": "bun.lock",
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 17
+    "commits": 18
    },
    {
     "autor": "dependabot[bot]",
@@ -310,9 +310,9 @@
   ]
  },
  "contagens": {
-  "arquivos_total": 1487,
-  "arquivos_codigo": 1140,
-  "linhas_codigo": 222229,
+  "arquivos_total": 1503,
+  "arquivos_codigo": 1148,
+  "linhas_codigo": 228998,
   "rotas": 83,
   "rotas_http_backend": 0,
   "vistas_por_id": 0,
@@ -324,10 +324,10 @@
   "tabelas": 236,
   "migrations": 267,
   "cron_jobs": 22,
-  "testes": 155,
-  "workflows": 2,
-  "scripts": 9,
-  "docs_md": 43
+  "testes": 158,
+  "workflows": 3,
+  "scripts": 15,
+  "docs_md": 45
  },
  "por_pasta": {
   "eslint.config.js": {
@@ -354,6 +354,14 @@
    "arquivos": 1,
    "linhas": 316
   },
+  "scripts/automation.mjs": {
+   "arquivos": 1,
+   "linhas": 1187
+  },
+  "scripts/automation.unit.mjs": {
+   "arquivos": 1,
+   "linhas": 689
+  },
   "scripts/ci": {
    "arquivos": 7,
    "linhas": 1434
@@ -361,6 +369,18 @@
   "scripts/db-audit": {
    "arquivos": 1,
    "linhas": 604
+  },
+  "scripts/graphify-local.mjs": {
+   "arquivos": 1,
+   "linhas": 1271
+  },
+  "scripts/graphify-local.unit.mjs": {
+   "arquivos": 1,
+   "linhas": 577
+  },
+  "scripts/maintenance": {
+   "arquivos": 4,
+   "linhas": 3045
   },
   "scripts/patch-recharts.cjs": {
    "arquivos": 1,
@@ -477,12 +497,28 @@
    "linhas": 1798
   },
   {
+   "arquivo": "scripts/graphify-local.mjs",
+   "linhas": 1271
+  },
+  {
+   "arquivo": "scripts/automation.mjs",
+   "linhas": 1187
+  },
+  {
    "arquivo": "src/pages/Postmortems.tsx",
    "linhas": 1063
   },
   {
    "arquivo": "src/i18n/translations.ts",
    "linhas": 945
+  },
+  {
+   "arquivo": "scripts/maintenance/lib.mjs",
+   "linhas": 937
+  },
+  {
+   "arquivo": "scripts/maintenance/run.mjs",
+   "linhas": 899
   },
   {
    "arquivo": "src/components/lms/ModuleViewer.tsx",
@@ -547,31 +583,15 @@
   {
    "arquivo": "src/services/trailsService.ts",
    "linhas": 535
-  },
-  {
-   "arquivo": "src/pages/WebhookSubscriptionDetail.tsx",
-   "linhas": 520
-  },
-  {
-   "arquivo": "src/services/salesCampaignsService.ts",
-   "linhas": 512
-  },
-  {
-   "arquivo": "src/services/positionsService.ts",
-   "linhas": 492
-  },
-  {
-   "arquivo": "src/pages/IncidentMetrics.tsx",
-   "linhas": 490
   }
  ],
  "qualidade": {
   "any": 142,
-  "console_log": 109,
+  "console_log": 126,
   "ts_ignore": 0,
   "eslint_disable": 0,
   "todos": 1,
-  "arquivos_acima_500_linhas": 23
+  "arquivos_acima_500_linhas": 27
  },
  "todos": [
   {

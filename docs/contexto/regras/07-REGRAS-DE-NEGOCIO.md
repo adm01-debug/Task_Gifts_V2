@@ -1,6 +1,6 @@
 # 07 · REGRAS DE NEGÓCIO
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `ca1a6e4efd` · branch `main` · 2026-11-10 13:51 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `940efb8eef` · branch `main` · 2026-11-11 18:16 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## A. Regras escritas por humanos (`manual/` — prioridade máxima, nunca sobrescrito)
@@ -3028,9 +3028,16 @@ _nenhum item encontrado_
 |---|---|
 | :       url =  | `public/sw.js` |
 | :     case  | `public/sw.js` |
+| falha fixture | `scripts/automation.unit.mjs` |
 | ${msg}: esperado ${JSON.stringify(b)} obtido ${JSON.stringify(a)} | `scripts/ai-context/cenarios.mjs` |
 | Artifact-id sem arquivo correspondente | `scripts/ci/contexto-publicacao.unit.mjs` |
 | Download simulado falhou: ${failDownload} | `scripts/ci/contexto-publicacao.unit.mjs` |
+| failed | `scripts/maintenance/lib.mjs` |
+| missing_dependencies | `scripts/maintenance/lib.mjs` |
+| skipped_busy | `scripts/maintenance/lib.mjs` |
+| formatter fixture failed | `scripts/maintenance/maintenance.unit.mjs` |
+| blocked_network_sandbox | `scripts/maintenance/run.mjs` |
+| pending_patch | `scripts/maintenance/run.mjs` |
 | O teste offline não permite consultas ao banco | `scripts/supabase_snapshot/test_snapshot.py` |
 | banco indisponível na fixture | `scripts/supabase_snapshot/test_snapshot.py` |
 | catálogo indisponível na fixture | `scripts/supabase_snapshot/test_snapshot.py` |
@@ -3319,14 +3326,7 @@ _nenhum item encontrado_
 | Corrija os erros de configuração antes de salvar. | `src/pages/LuckyWheelAdmin.tsx` |
 | Não foi possível criar o prêmio. | `src/pages/LuckyWheelAdmin.tsx` |
 | Não foi possível remover o prêmio. | `src/pages/LuckyWheelAdmin.tsx` |
-| Não foi possível salvar a calibração. | `src/pages/LuckyWheelAdmin.tsx` |
-| Não foi possível girar a roleta. Tente novamente. | `src/pages/LuckyWheelPage.tsx` |
-| Corrija os avisos antes de salvar. | `src/pages/MemoryDeckAdminPage.tsx` |
-| Não foi possível excluir o baralho. | `src/pages/MemoryDeckAdminPage.tsx` |
-| Não foi possível salvar o baralho. | `src/pages/MemoryDeckAdminPage.tsx` |
-| Falha ao registrar a partida. | `src/pages/MemoryGamePage.tsx` |
-| Não foi possível iniciar a partida. Tente novamente. | `src/pages/MemoryGamePage.tsx` |
-| … +165 linhas — lista completa em `context.json` | |
+| … +172 linhas — lista completa em `context.json` | |
 
 ## J. Controle de acesso no código (checagens de perfil/permissão)
 

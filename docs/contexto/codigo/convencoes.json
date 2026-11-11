@@ -23,19 +23,20 @@
   ],
   "testes": [
    "co-localizado (*.test) (143)",
-   "outro (8)",
+   "outro (11)",
    "tests/ (3)"
   ],
   "edge_functions": "supabase/functions",
   "migrations": "supabase/migrations",
   "scripts": [
+   "scripts/maintenance (4)",
    "scripts/regras_negocio (3)",
-   "scripts/ci (2)",
-   "scripts/db-audit (1)"
+   "scripts/ci (2)"
   ],
   "docs": [
    "(raiz) (15)",
-   ".github (1)"
+   ".github (1)",
+   "docs (1)"
   ]
  },
  "nomenclatura": {
@@ -58,11 +59,11 @@
  "commits": {
   "convencao": "conventional commits (observado)",
   "exemplos": [
+   "chore(automacao): conecta testes, grafo e manutenção aos gatilhos (#38)",
    "fix(tipos): corrige contratos e ativa verificação real da aplicação",
    "fix: corrige URL do projeto nas migrations de cron, guard GA02 e docs (#37)",
    "feat(db-audit): guarda de migrations — idempotência ratchet + drift contra banco real",
-   "fix(contexto): hardening do pacote — 2 vazamentos e inventário de edges",
-   "feat(contexto): sistema autonomo de contexto para agentes de IA (#34)"
+   "fix(contexto): hardening do pacote — 2 vazamentos e inventário de edges"
   ]
  },
  "pr_template": ".github/PULL_REQUEST_TEMPLATE.md",

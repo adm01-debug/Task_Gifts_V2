@@ -1,7 +1,7 @@
 # Contexto do projeto para agentes de IA
 
 GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.
-Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `ca1a6e4efd53d9b513f9397493992c3e782f107f` (2026-11-10T10:50:31-03:00).
+Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `940efb8eef8e6541caa604713cef48930de37ba5` (2026-11-11T14:54:53-03:00).
 
 ## Como usar (leia antes de planejar ou executar qualquer tarefa)
 1. **Tela/rota/menu** → `rotas.json` (url/vista/menu → arquivo → hooks → tabelas → edges; `rotas_http_backend` para APIs) e `modulos.json` (módulo inteiro + dependências entre módulos).
@@ -14,7 +14,7 @@ Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR
 Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua tarefa; não carregue tudo.
 
 ## Stack
-- linguagens: TypeScript (1122), SQL (267), Markdown (43), JavaScript (14), JSON (11), Python (5), YAML (5), Shell (3)
+- linguagens: TypeScript (1122), SQL (267), Markdown (45), JavaScript (22), JSON (15), YAML (6), Python (5), Shell (4)
 - linguagem_principal: TypeScript
 - framework: React
 - backend_http: n/d
@@ -34,9 +34,9 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 ## Números
 | item | qtd |
 |---|---|
-| arquivos_total | 1487 |
-| arquivos_codigo | 1140 |
-| linhas_codigo | 222229 |
+| arquivos_total | 1503 |
+| arquivos_codigo | 1148 |
+| linhas_codigo | 228998 |
 | rotas | 83 |
 | rotas_http_backend | 0 |
 | vistas_por_id | 0 |
@@ -48,21 +48,21 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 | tabelas | 236 |
 | migrations | 267 |
 | cron_jobs | 22 |
-| testes | 155 |
-| workflows | 2 |
-| scripts | 9 |
-| docs_md | 43 |
+| testes | 158 |
+| workflows | 3 |
+| scripts | 15 |
+| docs_md | 45 |
 
 ## Onde ficam as coisas
 - telas: src/pages (81), src/components (1)
 - componentes: src/components (432), src/pages (82), src/contexts (4)
 - hooks: src/hooks (129), src/components (22), src/contexts (4)
 - servicos_logica: src/lib (106), src/services (99), src/integrations (3)
-- testes: co-localizado (*.test) (143), outro (8), tests/ (3)
+- testes: co-localizado (*.test) (143), outro (11), tests/ (3)
 - edge_functions: supabase/functions
 - migrations: supabase/migrations
-- scripts: scripts/regras_negocio (3), scripts/ci (2), scripts/db-audit (1)
-- docs: (raiz) (15), .github (1)
+- scripts: scripts/maintenance (4), scripts/regras_negocio (3), scripts/ci (2)
+- docs: (raiz) (15), .github (1), docs (1)
 - nomenclatura: {"componentes":"PascalCase (88%)","hooks":"use + PascalCase","servicos":"camelCase (100%)","edge_functions":"kebab-case (100%)","tabelas":"snake_case (91%)"}
 - instruções para agentes no repo: AGENTS.md, CLAUDE.md
 
@@ -258,7 +258,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 
 ## Integrações externas
 - SDKs: Sentry, Supabase, react-query, zod
-- hosts mais citados: ai.gateway.lovable.dev, fcm.googleapis.com, i.pravatar.cc, taskgifts.app, www.youtube.com, a.com, api.pwnedpasswords.com, api.resend.com, app.exemplo.com, example.test, exemplo.com, ip-api.com, linkedin.com, lovable.dev, push.example
+- hosts mais citados: ai.gateway.lovable.dev, fcm.googleapis.com, i.pravatar.cc, taskgifts.app, www.youtube.com, a.com, api.pwnedpasswords.com, api.resend.com, app.exemplo.com, example.test, exemplo.com, ip-api.com, linkedin.com, lovable.dev, maintenance.invalid
 - webhooks recebidos: migrate-helper
 - env de integração (só nomes): BITRIX24_CLIENT_ID, BITRIX24_CLIENT_SECRET, BITRIX24_WEBHOOK_SECRET, CRON_SECRET, INTERNAL_FUNCTION_SECRET, LOVABLE_API_KEY, RESEND_API_KEY, SENTRY_DSN, SENTRY_ENV, SLACK_ALERT_WEBHOOK_URL, UPSTASH_REDIS_REST_TOKEN, UPSTASH_REDIS_REST_URL, VITE_BITRIX_WEBHOOK_URL, VITE_SENTRY_DSN, WEBHOOK_HEALTH_MIN_SAMPLE, WEBHOOK_HEALTH_THRESHOLD
 
@@ -286,13 +286,13 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - possiveis_segredos_no_codigo: 0
 
 ## Grafo de código (graphify)
-- 9723 nós · 27050 arestas · 620 comunidades · grafo do commit `ca1a6e4e`
-- comunidades maiores: lucide-react (312), react (192), @tanstack/react-query (181), select.tsx (149), cn (117), useToast (94), DevelopmentPlanManager.tsx (87), client.ts (84), questsService.ts (82), gerar.mjs (80), UsersManager.tsx (80), DepartmentWarPage.tsx (79)
+- 9896 nós · 27584 arestas · 616 comunidades · grafo do commit `940efb8e`
+- comunidades maiores: lucide-react (207), App.tsx (180), button.tsx (150), client.ts (147), cn (134), mobile/index.ts (110), react (109), AdminPanel.tsx (95), StatsAndTables.stories.tsx (92), QuizAdmin.tsx (85), progress.tsx (83), useProfiles.ts (81)
 - símbolos mais chamados: cn() (src/lib/utils.ts), useAuth() (src/hooks/useAuth.tsx), useIsMobile() (src/hooks/use-mobile.tsx), q() (scripts/supabase_snapshot/snapshot.py), useDepartments() (src/hooks/useDepartments.ts), useToast() (src/hooks/use-toast.ts), useRBAC() (src/hooks/useRBAC.ts), useProfiles() (src/hooks/useProfiles.ts), useSEO() (src/hooks/useSEO.ts), useSoundEffects() (src/hooks/useSoundEffects.tsx), .collect() (scripts/supabase_snapshot/test_snapshot.py), excluded_sql() (scripts/supabase_snapshot/snapshot.py)
 - consulta local: `graphify query "<pergunta>"`, `graphify path "<A>" "<B>"`, `graphify explain "<X>"`
 
 ## Hotspots (arquivos mais alterados, 90 dias)
-- package.json (13)
+- package.json (14)
 - bun.lock (8)
 - .github/workflows/ci.yml (6)
 - AGENTS.md (6)
@@ -309,10 +309,15 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - docs/estado/README.md (2)
 
 ## Workflows
+- `automation-local.yml` — Automação local (pull_request, push, workflow_dispatch)
 - `ci.yml` — CI (pull_request, push)
 - `contexto.yml` — Contexto para agentes de IA (10 min) (push, schedule, workflow_dispatch; cron 3-59/10 * * * *)
 
 ## Scripts npm
+- `maintenance:doctor`: `sh scripts/maintenance/run.sh doctor --root .`
+- `maintenance:check`: `sh scripts/maintenance/run.sh check --root . --ref origin/main`
+- `maintenance:heal`: `sh scripts/maintenance/run.sh heal --root . --ref origin/main`
+- `test:maintenance`: `node --test scripts/maintenance/maintenance.unit.mjs`
 - `dev`: `vite`
 - `build`: `vite build`
 - `build:dev`: `vite build --mode development`
@@ -329,6 +334,15 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - `contexto:test`: `node --test scripts/ai-context/gerar.unit.mjs scripts/ci/contexto-indice.unit.mjs scripts/ci/contexto-publicacao.unit.mjs scripts/ci/regras-negocio.unit.mjs scripts/ci/supabase-snapshot.unit.mjs`
 - `db:guard`: `node scripts/db-audit/check-migration-drift.mjs --snapshot docs/contexto/supabase`
 - `db:guard:test`: `node --test scripts/ci/check-migration-drift.unit.mjs`
+- `automation:doctor`: `node scripts/automation.mjs doctor`
+- `automation:test`: `node scripts/automation.mjs test`
+- `automation:check`: `node scripts/automation.mjs check --ref HEAD`
+- `automation:heal`: `node scripts/automation.mjs heal --ref origin/main`
+- `automation:nightly`: `node scripts/automation.mjs nightly --ref origin/main`
+- `automation:graph`: `node scripts/automation.mjs graph`
+- `automation:status`: `node scripts/automation.mjs graph status`
+- `automation:install-hooks`: `node scripts/automation.mjs install-hooks`
+- `automation:uninstall-hooks`: `node scripts/automation.mjs uninstall-hooks`
 
 ## Documentos (raiz e docs/)
 - `.github/PULL_REQUEST_TEMPLATE.md` (33 linhas)
@@ -347,10 +361,12 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - `SYSTEM_INVENTORY_AUDIT.md` — 📊 Relatório de Auditoria Enterprise & Inventário Minucioso do Sistema (81 linhas)
 - `SYSTEM_RELIABILITY_AUDIT.md` — 🛡️ Relatório de Auditoria de Confiabilidade e Robustez (Versão 10/10) (49 linhas)
 - `audit_report.md` — 📊 Relatório de Auditoria Enterprise & Inventário Minucioso do Sistema (81 linhas)
+- `docs/AUTOMACAO_LOCAL.md` — Automação local — Task_Gifts_V2 (82 linhas)
 - subpastas de docs/: docs/estado (11), docs/agentes (7), docs/contexto (2)
 
 
 ## Últimos commits
+- 2026-11-11 `940efb8` chore(automacao): conecta testes, grafo e manutenção aos gatilhos (#38)
 - 2026-11-10 `ca1a6e4` fix(tipos): corrige contratos e ativa verificação real da aplicação
 - 2026-11-09 `ffcff81` fix: corrige URL do projeto nas migrations de cron, guard GA02 e docs (#37)
 - 2026-11-08 `59d2c2b` feat(db-audit): guarda de migrations — idempotência ratchet + drift contra banco real
@@ -365,7 +381,6 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - 2026-10-30 `50f1d15` perf(test): pool vmThreads no vitest — testes 48% mais rápidos (#28)
 - 2026-10-29 `7598fe3` docs(ci): PENDENCIAS.md — todas as pendências resolvidas ou documentadas
 - 2026-10-29 `afb0724` docs(ci): RELATORIO_CI.md — estado final com todos os PRs mergeados
-- 2026-10-29 `d8f78ee` build(deps): bump grupo de 58 dependências minor/patch (#24)
 
 ## Arquivos deste diretório
 - `docs/contexto/codigo/rotas.json`

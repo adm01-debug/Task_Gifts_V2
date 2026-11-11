@@ -5,11 +5,11 @@
   "vitest",
   "playwright"
  ],
- "total": 155,
+ "total": 158,
  "por_tipo": {
   "e2e": 2,
   "pytest": 2,
-  "unit": 151
+  "unit": 154
  },
  "onde_ficam": [
   {
@@ -18,7 +18,7 @@
   },
   {
    "padrao": "outro",
-   "arquivos": 8
+   "arquivos": 11
   },
   {
    "padrao": "tests/",
@@ -30,6 +30,15 @@
   }
  ],
  "arquivos": [
+  {
+   "arquivo": "scripts/automation.unit.mjs",
+   "tipo": "unit",
+   "linhas": 689,
+   "testa": [
+    "scripts/automation.mjs"
+   ],
+   "casos": 32
+  },
   {
    "arquivo": "scripts/ci/check-migration-drift.unit.mjs",
    "tipo": "unit",
@@ -66,6 +75,25 @@
    "linhas": 19,
    "testa": [],
    "casos": 1
+  },
+  {
+   "arquivo": "scripts/graphify-local.unit.mjs",
+   "tipo": "unit",
+   "linhas": 577,
+   "testa": [
+    "scripts/graphify-local.mjs"
+   ],
+   "casos": 24
+  },
+  {
+   "arquivo": "scripts/maintenance/maintenance.unit.mjs",
+   "tipo": "unit",
+   "linhas": 1099,
+   "testa": [
+    "scripts/maintenance/lib.mjs",
+    "scripts/maintenance/run.mjs"
+   ],
+   "casos": 44
   },
   {
    "arquivo": "scripts/regras_negocio/test_generate.py",
@@ -1486,7 +1514,11 @@
  ],
  "sql": [],
  "cobertura_por_arquivo": {
+  "scripts/automation.mjs": 1,
   "scripts/db-audit/check-migration-drift.mjs": 1,
+  "scripts/graphify-local.mjs": 1,
+  "scripts/maintenance/lib.mjs": 1,
+  "scripts/maintenance/run.mjs": 1,
   "src/components/accessibility/index.ts": 1,
   "src/components/admin/telemetry/TelemetryCharts.tsx": 1,
   "src/components/rbac/ProtectedRoute.tsx": 1,
