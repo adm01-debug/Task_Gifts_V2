@@ -91,7 +91,21 @@ jobs:
           restore-keys: playwright-${{ runner.os }}-
 
       - name: Install Playwright Browsers
-        run: bun playwright install --with-deps chromium
+        # `--with-deps` roda apt-get junto e falha o passo inteiro se o mirror
+        # azure.archive.ubuntu.com cair por DNS transitório do runner (recorrente
+        # em 2026-11-11). Separamos a instalação do browser (sem apt, via CDN do
+        # Playwright e cacheado) das dependências de sistema, com retry +
+        # --fix-missing no apt.
+        run: |
+          bun playwright install chromium
+          for attempt in 1 2 3; do
+            if sudo apt-get update --fix-missing && bun playwright install-deps chromium; then
+              exit 0
+            fi
+            echo "::warning::deps apt falhou na tentativa $attempt (DNS do runner); tentando de novo"
+            sleep 15
+          done
+          exit 1
 
       - name: E2E Gate (rotas publicas e guardas de auth)
         run: bun playwright test tests/e2e/smoke.spec.ts tests/auth-flow.spec.ts
