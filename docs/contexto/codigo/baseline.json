@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "eb088482a257d0c32580e5503fcd97b642d636ca",
+  "commit": "82ffc0bec8a5eba270ac9173d64a9bd99c2986ca",
   "branch": "main",
-  "data_commit": "2026-11-11T15:47:25-03:00",
+  "data_commit": "2026-11-11T19:08:37-03:00",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "ultimos_commits": [
+   {
+    "sha": "82ffc0b",
+    "data": "2026-11-11",
+    "assunto": "fix(automacao): tolera ausência de O_NOFOLLOW em win32 (#43)"
+   },
    {
     "sha": "eb08848",
     "data": "2026-11-11",
@@ -126,11 +131,6 @@
     "sha": "0af8c0f",
     "data": "2026-10-29",
     "assunto": "build(deps): bump actions/checkout de v4 para v7 (#20)"
-   },
-   {
-    "sha": "e8fca68",
-    "data": "2026-10-29",
-    "assunto": "fix(ci): fallback de env vars para E2E em PRs do Dependabot (#27)"
    }
   ],
   "arquivos_mudados_7d": 131,
@@ -176,6 +176,10 @@
     "mudancas": 3
    },
    {
+    "pasta": "scripts/automation.mjs",
+    "mudancas": 3
+   },
+   {
     "pasta": "src/components/admin",
     "mudancas": 3
    },
@@ -189,10 +193,6 @@
    },
    {
     "pasta": ".github/workflows/contexto.yml",
-    "mudancas": 2
-   },
-   {
-    "pasta": "ai-context.config.json",
     "mudancas": 2
    }
   ],
@@ -238,6 +238,10 @@
     "mudancas": 3
    },
    {
+    "arquivo": "scripts/automation.mjs",
+    "mudancas": 3
+   },
+   {
     "arquivo": ".github/workflows/contexto.yml",
     "mudancas": 2
    },
@@ -255,10 +259,6 @@
    },
    {
     "arquivo": "docs/estado/README.md",
-    "mudancas": 2
-   },
-   {
-    "arquivo": "scripts/automation.mjs",
     "mudancas": 2
    },
    {
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 20
+    "commits": 21
    },
    {
     "autor": "dependabot[bot]",
@@ -312,7 +312,7 @@
  "contagens": {
   "arquivos_total": 1503,
   "arquivos_codigo": 1148,
-  "linhas_codigo": 228999,
+  "linhas_codigo": 229001,
   "rotas": 83,
   "rotas_http_backend": 0,
   "vistas_por_id": 0,
@@ -356,7 +356,7 @@
   },
   "scripts/automation.mjs": {
    "arquivos": 1,
-   "linhas": 1188
+   "linhas": 1190
   },
   "scripts/automation.unit.mjs": {
    "arquivos": 1,
@@ -502,7 +502,7 @@
   },
   {
    "arquivo": "scripts/automation.mjs",
-   "linhas": 1188
+   "linhas": 1190
   },
   {
    "arquivo": "src/pages/Postmortems.tsx",

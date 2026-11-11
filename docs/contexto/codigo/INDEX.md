@@ -1,7 +1,7 @@
 # Contexto do projeto para agentes de IA
 
 GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.
-Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `eb088482a257d0c32580e5503fcd97b642d636ca` (2026-11-11T15:47:25-03:00).
+Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `82ffc0bec8a5eba270ac9173d64a9bd99c2986ca` (2026-11-11T19:08:37-03:00).
 
 ## Como usar (leia antes de planejar ou executar qualquer tarefa)
 1. **Tela/rota/menu** → `rotas.json` (url/vista/menu → arquivo → hooks → tabelas → edges; `rotas_http_backend` para APIs) e `modulos.json` (módulo inteiro + dependências entre módulos).
@@ -36,7 +36,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 |---|---|
 | arquivos_total | 1503 |
 | arquivos_codigo | 1148 |
-| linhas_codigo | 228999 |
+| linhas_codigo | 229001 |
 | rotas | 83 |
 | rotas_http_backend | 0 |
 | vistas_por_id | 0 |
@@ -286,7 +286,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - possiveis_segredos_no_codigo: 0
 
 ## Grafo de código (graphify)
-- 9896 nós · 27584 arestas · 616 comunidades · grafo do commit `eb088482`
+- 9896 nós · 27584 arestas · 616 comunidades · grafo do commit `82ffc0be`
 - comunidades maiores: lucide-react (207), App.tsx (180), button.tsx (150), client.ts (147), cn (134), mobile/index.ts (110), react (109), AdminPanel.tsx (95), StatsAndTables.stories.tsx (92), QuizAdmin.tsx (85), progress.tsx (83), useProfiles.ts (81)
 - símbolos mais chamados: cn() (src/lib/utils.ts), useAuth() (src/hooks/useAuth.tsx), useIsMobile() (src/hooks/use-mobile.tsx), q() (scripts/supabase_snapshot/snapshot.py), useDepartments() (src/hooks/useDepartments.ts), useToast() (src/hooks/use-toast.ts), useRBAC() (src/hooks/useRBAC.ts), useProfiles() (src/hooks/useProfiles.ts), useSEO() (src/hooks/useSEO.ts), useSoundEffects() (src/hooks/useSoundEffects.tsx), .collect() (scripts/supabase_snapshot/test_snapshot.py), excluded_sql() (scripts/supabase_snapshot/snapshot.py)
 - consulta local: `graphify query "<pergunta>"`, `graphify path "<A>" "<B>"`, `graphify explain "<X>"`
@@ -302,11 +302,11 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - PENDENCIAS.md (3)
 - docs/agentes/banco.md (3)
 - docs/agentes/github-ci.md (3)
+- scripts/automation.mjs (3)
 - .github/workflows/contexto.yml (2)
 - ESTADO_ATUAL.md (2)
 - ai-context.config.json (2)
 - docs/agentes/contexto-autonomo.md (2)
-- docs/estado/README.md (2)
 
 ## Workflows
 - `automation-local.yml` — Automação local (pull_request, push, workflow_dispatch)
@@ -366,6 +366,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 
 
 ## Últimos commits
+- 2026-11-11 `82ffc0b` fix(automacao): tolera ausência de O_NOFOLLOW em win32 (#43)
 - 2026-11-11 `eb08848` fix(automacao): tolera CRLF no parse de workflows locais (#41)
 - 2026-11-11 `c4d87b6` fix(ci): separa browser Playwright das deps apt com retry no passo de instalação (#40)
 - 2026-11-11 `940efb8` chore(automacao): conecta testes, grafo e manutenção aos gatilhos (#38)
@@ -380,7 +381,6 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - 2026-10-30 `97ee4cd` feat(onda2): CORS allowlist, CSP header, coverage, audit CI, FKs, README (#30)
 - 2026-10-30 `842cd96` docs(ci): RELATORIO_CI.md — adiciona PRs #28/#29 e análise de segurança
 - 2026-10-30 `f599b1c` chore(deps): bump framer-motion, lucide-react, react-resizable-panels, storybook (#29)
-- 2026-10-30 `50f1d15` perf(test): pool vmThreads no vitest — testes 48% mais rápidos (#28)
 
 ## Arquivos deste diretório
 - `docs/contexto/codigo/rotas.json`
