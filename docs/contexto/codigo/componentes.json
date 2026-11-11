@@ -156,7 +156,7 @@
     "ActivityComments"
    ],
    "export_default": null,
-   "linhas": 168,
+   "linhas": 181,
    "dominio": "components",
    "hooks_locais": [
     "useActivityComments",
@@ -191,7 +191,7 @@
     "ActivityReactions"
    ],
    "export_default": null,
-   "linhas": 87,
+   "linhas": 105,
    "dominio": "components",
    "hooks_locais": [
     "useAuth",
@@ -973,7 +973,7 @@
     "AICoachDialog"
    ],
    "export_default": null,
-   "linhas": 416,
+   "linhas": 483,
    "dominio": "components",
    "hooks_locais": [
     "useAICoach",

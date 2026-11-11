@@ -2,11 +2,21 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "82ffc0bec8a5eba270ac9173d64a9bd99c2986ca",
+  "commit": "984b77c686164150643d5e54c6224e7f7c176272",
   "branch": "main",
-  "data_commit": "2026-11-11T19:08:37-03:00",
+  "data_commit": "2026-11-11T20:03:23-03:00",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "ultimos_commits": [
+   {
+    "sha": "984b77c",
+    "data": "2026-11-11",
+    "assunto": "style(manutencao): aplica correcoes locais verificadas (#42)"
+   },
+   {
+    "sha": "e39fc6c",
+    "data": "2026-11-11",
+    "assunto": "fix(automacao): destrava grafo local no Windows e exige venv ignorado (#44)"
+   },
    {
     "sha": "82ffc0b",
     "data": "2026-11-11",
@@ -121,19 +131,9 @@
     "sha": "6fc8009",
     "data": "2026-10-29",
     "assunto": "build(deps): bump actions/cache de v4 para v6 (#22)"
-   },
-   {
-    "sha": "7597bad",
-    "data": "2026-10-29",
-    "assunto": "build(deps): bump actions/upload-artifact de v4 para v7 (#21)"
-   },
-   {
-    "sha": "0af8c0f",
-    "data": "2026-10-29",
-    "assunto": "build(deps): bump actions/checkout de v4 para v7 (#20)"
    }
   ],
-  "arquivos_mudados_7d": 131,
+  "arquivos_mudados_7d": 135,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "package.json",
@@ -148,12 +148,12 @@
     "mudancas": 6
    },
    {
-    "pasta": "AGENTS.md",
+    "pasta": ".gitignore",
     "mudancas": 5
    },
    {
-    "pasta": ".gitignore",
-    "mudancas": 4
+    "pasta": "AGENTS.md",
+    "mudancas": 5
    },
    {
     "pasta": "RELATORIO_CI.md",
@@ -161,6 +161,10 @@
    },
    {
     "pasta": "docs/agentes/mapa-repo.md",
+    "mudancas": 4
+   },
+   {
+    "pasta": "src/components/admin",
     "mudancas": 4
    },
    {
@@ -177,10 +181,6 @@
    },
    {
     "pasta": "scripts/automation.mjs",
-    "mudancas": 3
-   },
-   {
-    "pasta": "src/components/admin",
     "mudancas": 3
    },
    {
@@ -266,6 +266,10 @@
     "mudancas": 2
    },
    {
+    "arquivo": "scripts/graphify-local.mjs",
+    "mudancas": 2
+   },
+   {
     "arquivo": "scripts/regras_negocio/generate.py",
     "mudancas": 2
    },
@@ -292,16 +296,12 @@
    {
     "arquivo": "vercel.json",
     "mudancas": 2
-   },
-   {
-    "arquivo": "vitest.config.ts",
-    "mudancas": 2
    }
   ],
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 21
+    "commits": 23
    },
    {
     "autor": "dependabot[bot]",
@@ -312,7 +312,7 @@
  "contagens": {
   "arquivos_total": 1503,
   "arquivos_codigo": 1148,
-  "linhas_codigo": 229001,
+  "linhas_codigo": 229102,
   "rotas": 83,
   "rotas_http_backend": 0,
   "vistas_por_id": 0,
@@ -372,7 +372,7 @@
   },
   "scripts/graphify-local.mjs": {
    "arquivos": 1,
-   "linhas": 1271
+   "linhas": 1274
   },
   "scripts/graphify-local.unit.mjs": {
    "arquivos": 1,
@@ -400,7 +400,7 @@
   },
   "src/components": {
    "arquivos": 461,
-   "linhas": 77458
+   "linhas": 77556
   },
   "src/constants": {
    "arquivos": 1,
@@ -498,7 +498,7 @@
   },
   {
    "arquivo": "scripts/graphify-local.mjs",
-   "linhas": 1271
+   "linhas": 1274
   },
   {
    "arquivo": "scripts/automation.mjs",

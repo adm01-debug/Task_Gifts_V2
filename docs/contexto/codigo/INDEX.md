@@ -1,7 +1,7 @@
 # Contexto do projeto para agentes de IA
 
 GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.
-Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `82ffc0bec8a5eba270ac9173d64a9bd99c2986ca` (2026-11-11T19:08:37-03:00).
+Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `984b77c686164150643d5e54c6224e7f7c176272` (2026-11-11T20:03:23-03:00).
 
 ## Como usar (leia antes de planejar ou executar qualquer tarefa)
 1. **Tela/rota/menu** → `rotas.json` (url/vista/menu → arquivo → hooks → tabelas → edges; `rotas_http_backend` para APIs) e `modulos.json` (módulo inteiro + dependências entre módulos).
@@ -36,7 +36,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 |---|---|
 | arquivos_total | 1503 |
 | arquivos_codigo | 1148 |
-| linhas_codigo | 229001 |
+| linhas_codigo | 229102 |
 | rotas | 83 |
 | rotas_http_backend | 0 |
 | vistas_por_id | 0 |
@@ -286,7 +286,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - possiveis_segredos_no_codigo: 0
 
 ## Grafo de código (graphify)
-- 9896 nós · 27584 arestas · 616 comunidades · grafo do commit `82ffc0be`
+- 9896 nós · 27584 arestas · 616 comunidades · grafo do commit `984b77c6`
 - comunidades maiores: lucide-react (207), App.tsx (180), button.tsx (150), client.ts (147), cn (134), mobile/index.ts (110), react (109), AdminPanel.tsx (95), StatsAndTables.stories.tsx (92), QuizAdmin.tsx (85), progress.tsx (83), useProfiles.ts (81)
 - símbolos mais chamados: cn() (src/lib/utils.ts), useAuth() (src/hooks/useAuth.tsx), useIsMobile() (src/hooks/use-mobile.tsx), q() (scripts/supabase_snapshot/snapshot.py), useDepartments() (src/hooks/useDepartments.ts), useToast() (src/hooks/use-toast.ts), useRBAC() (src/hooks/useRBAC.ts), useProfiles() (src/hooks/useProfiles.ts), useSEO() (src/hooks/useSEO.ts), useSoundEffects() (src/hooks/useSoundEffects.tsx), .collect() (scripts/supabase_snapshot/test_snapshot.py), excluded_sql() (scripts/supabase_snapshot/snapshot.py)
 - consulta local: `graphify query "<pergunta>"`, `graphify path "<A>" "<B>"`, `graphify explain "<X>"`
@@ -366,6 +366,8 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 
 
 ## Últimos commits
+- 2026-11-11 `984b77c` style(manutencao): aplica correcoes locais verificadas (#42)
+- 2026-11-11 `e39fc6c` fix(automacao): destrava grafo local no Windows e exige venv ignorado (#44)
 - 2026-11-11 `82ffc0b` fix(automacao): tolera ausência de O_NOFOLLOW em win32 (#43)
 - 2026-11-11 `eb08848` fix(automacao): tolera CRLF no parse de workflows locais (#41)
 - 2026-11-11 `c4d87b6` fix(ci): separa browser Playwright das deps apt com retry no passo de instalação (#40)
@@ -379,8 +381,6 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - 2026-11-08 `522ab99` ci(guard): adiciona step GA02 de integridade das instruções de agente no CI
 - 2026-11-08 `3860817` docs(agentes): replica o padrao de AGENTS.md/CLAUDE.md do Zapp Web V2 (#31)
 - 2026-10-30 `97ee4cd` feat(onda2): CORS allowlist, CSP header, coverage, audit CI, FKs, README (#30)
-- 2026-10-30 `842cd96` docs(ci): RELATORIO_CI.md — adiciona PRs #28/#29 e análise de segurança
-- 2026-10-30 `f599b1c` chore(deps): bump framer-motion, lucide-react, react-resizable-panels, storybook (#29)
 
 ## Arquivos deste diretório
 - `docs/contexto/codigo/rotas.json`

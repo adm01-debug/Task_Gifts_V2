@@ -67,8 +67,10 @@
   {
    "arquivo": "scripts/graphify-local.mjs",
    "descricao": null,
-   "linhas": 1271,
-   "env": [],
+   "linhas": 1274,
+   "env": [
+    "PATH"
+   ],
    "npm_scripts": [],
    "workflows": [],
    "orfao": false

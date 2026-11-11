@@ -1,6 +1,6 @@
 # 07 · REGRAS DE NEGÓCIO
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `82ffc0bec8` · branch `main` · 2026-11-11 22:54 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `984b77c686` · branch `main` · 2026-11-11 23:22 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## A. Regras escritas por humanos (`manual/` — prioridade máxima, nunca sobrescrito)
@@ -3046,7 +3046,7 @@ _nenhum item encontrado_
 | statement timeout simulado | `scripts/supabase_snapshot/test_snapshot.py` |
 | view removida depois da consulta ao catálogo | `scripts/supabase_snapshot/test_snapshot.py` |
 | view sem permissão na fixture | `scripts/supabase_snapshot/test_snapshot.py` |
-|  className= | `src/components/AICoachDialog.tsx` |
+|              className= | `src/components/AICoachDialog.tsx` |
 | Erro ao copiar | `src/components/AICoachDialog.tsx` |
 | useGlobalMessage must be used within GlobalMessageProvider | `src/components/GlobalMessageProvider.tsx` |
 | Não foi possível salvar a preferência | `src/components/InAppNotificationToggle.tsx` |
