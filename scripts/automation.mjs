@@ -515,9 +515,19 @@ async function statePath(root) {
     await git(root, ["config", "--get", "core.hooksPath"], [0, 1])
   ).stdout.trim();
   const hooks = value ? resolve(root, value) : "";
-  return hooks.endsWith("/.tools/repo-automation/hooks")
-    ? join(dirname(hooks), "state.json")
-    : join(root, ".tools/repo-automation/state.json");
+  if (hooks.endsWith("/.tools/repo-automation/hooks"))
+    return join(dirname(hooks), "state.json");
+  const local = join(root, ".tools/repo-automation/state.json");
+  if (existsSync(local)) return local;
+  const common = (
+    await git(root, ["rev-parse", "--path-format=absolute", "--git-common-dir"])
+  ).stdout.trim();
+  const candidate = join(
+    dirname(common),
+    ".tools/repo-automation/state.json",
+  );
+  if (existsSync(candidate)) return candidate;
+  return local;
 }
 async function doctor(ctx, staticOnly) {
   const { root, c, config } = ctx;
@@ -1033,7 +1043,14 @@ async function hook(ctx, args) {
   );
   if (state.common !== common)
     throw fail("estado pertence a outro repositório");
-  if (process.env.REPO_AUTOMATION_CHAINING)
+  const [chainedId, chainedEvent] = (
+      process.env.REPO_AUTOMATION_CHAINING || ""
+    ).split(":");
+    if (
+      process.env.REPO_AUTOMATION_CHAINING &&
+      chainedId === state.id &&
+      chainedEvent === event
+    )
     throw fail("recursão de hook recusada");
   let original = isAbsolute(state.previousPath)
       ? join(state.previousPath, event)

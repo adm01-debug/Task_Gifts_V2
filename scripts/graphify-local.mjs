@@ -18,6 +18,7 @@ import {
 import path from "node:path";
 import { homedir, loadavg, availableParallelism } from "node:os";
 import { fileURLToPath } from "node:url";
+import { StringDecoder } from "node:string_decoder";
 
 const extensions = new Set(
   ".ts .tsx .js .jsx .mjs .cjs .py .sql .sh .bash .go .rs .java .c .h .cpp .hpp .cs .php .rb .kt .swift .lua .zig .f .f90 .scala .groovy .ex .exs .json .toml .yaml .yml".split(
@@ -133,12 +134,17 @@ export function run(command, cwd, env, timeoutMs = 120000) {
       detached: true,
       stdio: ["ignore", "pipe", "pipe"],
     });
-    let output = "",
+    let bytes = 0,
+          output = "",
       timedOut = false,
       overflow = false,
       canceled = false,
       settled = false,
       hard;
+        const decoders = {
+          stdout: new StringDecoder("utf8"),
+          stderr: new StringDecoder("utf8"),
+        };
     const kill = (signal) => {
       if (child.pid)
         try {
@@ -154,7 +160,9 @@ export function run(command, cwd, env, timeoutMs = 120000) {
       clearTimeout(hard);
       active.delete(cancel);
       kill("SIGKILL");
-      child.stdout.destroy();
+      decoders.stdout.end();
+            decoders.stderr.end();
+            child.stdout.destroy();
       child.stderr.destroy();
       resolve({
         code: timedOut || overflow || canceled ? 1 : (code ?? 1),
@@ -180,14 +188,17 @@ export function run(command, cwd, env, timeoutMs = 120000) {
       timedOut = true;
       stop();
     }, timeoutMs);
-    const collect = (chunk) => {
-      if (Buffer.byteLength(output) + chunk.length > 4 * 1024 * 1024) {
+    const collect = (stream) => (chunk) => {
+          if (bytes + chunk.length > 4 * 1024 * 1024) {
         overflow = true;
         stop();
-      } else output += chunk;
+          } else {
+            bytes += chunk.length;
+            output += decoders[stream].write(chunk);
+          }
     };
-    child.stdout.on("data", collect);
-    child.stderr.on("data", collect);
+        child.stdout.on("data", collect("stdout"));
+        child.stderr.on("data", collect("stderr"));
     child.once("error", () => finish(1));
     child.once("close", finish);
   });
@@ -231,6 +242,29 @@ async function atomic(file, value) {
   await writeFile(temp, JSON.stringify(value, null, 2) + "\n", { mode: 0o600 });
   await rename(temp, file);
 }
+async function staleDirectory(directory) {
+  try {
+    const owner = JSON.parse(
+      await readFile(path.join(directory, "owner.json"), "utf8"),
+    );
+    if (Number.isSafeInteger(owner.pid) && owner.pid > 1) {
+      try {
+        process.kill(owner.pid, 0);
+        return false;
+      } catch (error) {
+        return error.code === "ESRCH";
+      }
+    }
+  } catch (error) {
+    if (!["ENOENT", "SyntaxError"].includes(error.code || error.name))
+      throw error;
+  }
+  const info = await lstat(directory).catch((error) => {
+    if (error.code === "ENOENT") return null;
+    throw error;
+  });
+  return info === null || Date.now() - info.mtimeMs > 300000;
+}
 export async function acquire(dir) {
   await mkdir(path.dirname(dir), { recursive: true, mode: 0o700 });
   try {
@@ -241,24 +275,14 @@ export async function acquire(dir) {
     try {
       await mkdir(recovery, { mode: 0o700 });
     } catch {
-      fail("Trava em recuperação por outro executor", "busy");
+      if (!(await staleDirectory(recovery)))
+        fail("Trava em recuperação por outro executor", "busy");
+      await rm(recovery, { recursive: true, force: true });
+      await mkdir(recovery, { mode: 0o700 });
     }
     try {
-      let owner;
-      try {
-        owner = await json(path.join(dir, "owner.json"));
-      } catch {
-        fail("Trava sem dono verificável", "busy");
-      }
-      if (!Number.isSafeInteger(owner.pid) || owner.pid <= 1)
-        fail("Dono da trava inválido", "busy");
-      let stale = false;
-      try {
-        process.kill(owner.pid, 0);
-      } catch (error) {
-        stale = error.code === "ESRCH";
-      }
-      if (!stale) fail("Outra execução usa o grafo", "busy");
+      if (!(await staleDirectory(dir)))
+        fail("Outra execução usa o grafo", "busy");
       const old = `${dir}.stale-${randomUUID()}`;
       await rename(dir, old);
       try {

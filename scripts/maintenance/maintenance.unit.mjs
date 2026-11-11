@@ -15,6 +15,7 @@ import { spawn } from "node:child_process";
 import { once } from "node:events";
 import os from "node:os";
 import path from "node:path";
+import { fileURLToPath } from "node:url";
 import { main, parseArgs, networkPrefix } from "./run.mjs";
 import {
   git,
@@ -110,7 +111,7 @@ async function fixture(
         name === "types"
           ? [
               "node",
-              new URL("./typecheck.mjs", import.meta.url).pathname,
+              fileURLToPath(new URL("./typecheck.mjs", import.meta.url)),
               "tsconfig.app.json",
             ]
           : ["node", "scripts/gate.mjs", name],
