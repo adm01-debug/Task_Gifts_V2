@@ -59,11 +59,11 @@
  "commits": {
   "convencao": "conventional commits (observado)",
   "exemplos": [
+   "fix(ci): separa browser Playwright das deps apt com retry no passo de instalação (#40)",
    "chore(automacao): conecta testes, grafo e manutenção aos gatilhos (#38)",
    "fix(tipos): corrige contratos e ativa verificação real da aplicação",
    "fix: corrige URL do projeto nas migrations de cron, guard GA02 e docs (#37)",
-   "feat(db-audit): guarda de migrations — idempotência ratchet + drift contra banco real",
-   "fix(contexto): hardening do pacote — 2 vazamentos e inventário de edges"
+   "feat(db-audit): guarda de migrations — idempotência ratchet + drift contra banco real"
   ]
  },
  "pr_template": ".github/PULL_REQUEST_TEMPLATE.md",

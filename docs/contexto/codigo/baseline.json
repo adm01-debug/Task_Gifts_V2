@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "940efb8eef8e6541caa604713cef48930de37ba5",
+  "commit": "c4d87b67d3f27bcc8a1c9777d38df69606bc5f0c",
   "branch": "main",
-  "data_commit": "2026-11-11T14:54:53-03:00",
+  "data_commit": "2026-11-11T14:55:08-03:00",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "ultimos_commits": [
+   {
+    "sha": "c4d87b6",
+    "data": "2026-11-11",
+    "assunto": "fix(ci): separa browser Playwright das deps apt com retry no passo de instalação (#40)"
+   },
    {
     "sha": "940efb8",
     "data": "2026-11-11",
@@ -126,11 +131,6 @@
     "sha": "e226e12",
     "data": "2026-10-29",
     "assunto": "fix(ci): dependabot ignora majors incompatíveis + docs finais de CI (#19)"
-   },
-   {
-    "sha": "d83349c",
-    "data": "2026-10-29",
-    "assunto": "fix(ci): corrige 4 causas de falha do CI introduzidas pelo bump de deps (#17)"
    }
   ],
   "arquivos_mudados_7d": 131,
@@ -140,12 +140,12 @@
     "mudancas": 12
    },
    {
-    "pasta": "bun.lock",
+    "pasta": ".github/workflows/ci.yml",
     "mudancas": 6
    },
    {
-    "pasta": ".github/workflows/ci.yml",
-    "mudancas": 5
+    "pasta": "bun.lock",
+    "mudancas": 6
    },
    {
     "pasta": "AGENTS.md",
@@ -207,7 +207,7 @@
    },
    {
     "arquivo": ".github/workflows/ci.yml",
-    "mudancas": 6
+    "mudancas": 7
    },
    {
     "arquivo": "AGENTS.md",
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 18
+    "commits": 19
    },
    {
     "autor": "dependabot[bot]",

@@ -1,9 +1,9 @@
 {
  "meta": {
-  "sha": "940efb8eef8e6541caa604713cef48930de37ba5",
+  "sha": "c4d87b67d3f27bcc8a1c9777d38df69606bc5f0c",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
-  "generated_at": "2026-11-11 18:16 UTC",
+  "generated_at": "2026-11-11 18:46 UTC",
   "files_total": 1512,
   "code_files": 1421,
   "code_lines": 259772
@@ -151409,10 +151409,19 @@
   }
  },
  "git": {
-  "sha": "940efb8eef8e6541caa604713cef48930de37ba5",
+  "sha": "c4d87b67d3f27bcc8a1c9777d38df69606bc5f0c",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "commits": [
+   {
+    "sha": "c4d87b6",
+    "date": "2026-11-11",
+    "author": "adm01-debug",
+    "subject": "fix(ci): separa browser Playwright das deps apt com retry no passo de instalação (#40)",
+    "files": [
+     ".github/workflows/ci.yml"
+    ]
+   },
    {
     "sha": "940efb8",
     "date": "2026-11-11",
@@ -151841,58 +151850,28 @@
     "files": [
      "supabase/migrations/20260906120000_posvalidacao_fixes.sql"
     ]
-   },
-   {
-    "sha": "355bc37",
-    "date": "2026-09-05",
-    "author": "adm01-debug",
-    "subject": "fix(ci): destrava CI e build de produção — Onda 1 da auditoria (6,1 → 10) (#3)",
-    "files": [
-     ".env",
-     ".github/workflows/ci.yml",
-     ".gitignore",
-     ".storybook/main.ts",
-     "bun.lock",
-     "bun.lockb",
-     "eslint.config.js",
-     "package-lock.json",
-     "package.json",
-     "src/components/mobile/HapticWrapper.tsx",
-     "src/components/shop/__tests__/ProductGridLoading.test.tsx",
-     "src/hooks/useViewTransition.ts",
-     "src/lib/campaignImport.ts",
-     "src/lib/slaTargets.ts",
-     "src/services/behavioralBadges/index.ts",
-     "src/services/highPotentialService.ts",
-     "src/stories/accessibility/Patterns.stories.tsx",
-     "src/stories/animations/FramerMotion.stories.tsx",
-     "supabase/migrations/20260905120000_onda1_security_fixes.sql",
-     "tailwind.config.ts",
-     "tests/e2e/smoke.spec.ts",
-     "vite.config.ts"
-    ]
    }
   ],
   "hot_files": [
    [
     "package.json",
-    14
-   ],
-   [
-    "bun.lock",
-    7
+    13
    ],
    [
     ".github/workflows/ci.yml",
     6
    ],
    [
-    ".gitignore",
-    5
+    "bun.lock",
+    6
    ],
    [
     "AGENTS.md",
     5
+   ],
+   [
+    ".gitignore",
+    4
    ],
    [
     "docs/agentes/mapa-repo.md",
@@ -151900,10 +151879,6 @@
    ],
    [
     "RELATORIO_CI.md",
-    4
-   ],
-   [
-    "package-lock.json",
     4
    ],
    [
@@ -151919,8 +151894,8 @@
     3
    ],
    [
-    "src/lib/campaignImport.ts",
-    2
+    "package-lock.json",
+    3
    ],
    [
     "scripts/ci/check-claude-md-integrity.mjs",
@@ -151952,6 +151927,10 @@
    ],
    [
     "scripts/regras_negocio/generate.py",
+    2
+   ],
+   [
+    "scripts/supabase_snapshot/README.md",
     2
    ]
   ]
