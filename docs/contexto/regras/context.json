@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "c4d87b67d3f27bcc8a1c9777d38df69606bc5f0c",
+  "sha": "eb088482a257d0c32580e5503fcd97b642d636ca",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
-  "generated_at": "2026-11-11 18:46 UTC",
+  "generated_at": "2026-11-11 20:10 UTC",
   "files_total": 1512,
   "code_files": 1421,
-  "code_lines": 259772
+  "code_lines": 259773
  },
  "version": "1.3.2",
- "facts_hash": "4f5399f657c32dc4",
+ "facts_hash": "451d1d6c7c5df090",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -47804,7 +47804,7 @@
   {
    "module": "scripts",
    "files": 25,
-   "lines": 15543,
+   "lines": 15544,
    "tables": [
     "a",
     "contacts",
@@ -115647,7 +115647,7 @@
   },
   "scripts/automation.mjs": {
    "path": "scripts/automation.mjs",
-   "lines": 1187,
+   "lines": 1188,
    "exports": [
     "function parseArgs",
     "function validateConfig",
@@ -151409,10 +151409,19 @@
   }
  },
  "git": {
-  "sha": "c4d87b67d3f27bcc8a1c9777d38df69606bc5f0c",
+  "sha": "eb088482a257d0c32580e5503fcd97b642d636ca",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "commits": [
+   {
+    "sha": "eb08848",
+    "date": "2026-11-11",
+    "author": "adm01-debug",
+    "subject": "fix(automacao): tolera CRLF no parse de workflows locais (#41)",
+    "files": [
+     "scripts/automation.mjs"
+    ]
+   },
    {
     "sha": "c4d87b6",
     "date": "2026-11-11",
@@ -151841,15 +151850,6 @@
     "files": [
      "supabase/migrations/20260727221910_f26719a2_lightning_relampago_schema.sql"
     ]
-   },
-   {
-    "sha": "e3c56e5",
-    "date": "2026-09-05",
-    "author": "adm01-debug",
-    "subject": "fix(db): correções pós-validação adversarial — dedup de policy e endurecimento de entity_versions (#5)",
-    "files": [
-     "supabase/migrations/20260906120000_posvalidacao_fixes.sql"
-    ]
    }
   ],
   "hot_files": [
@@ -151898,6 +151898,10 @@
     3
    ],
    [
+    "scripts/automation.mjs",
+    2
+   ],
+   [
     "scripts/ci/check-claude-md-integrity.mjs",
     2
    ],
@@ -151927,10 +151931,6 @@
    ],
    [
     "scripts/regras_negocio/generate.py",
-    2
-   ],
-   [
-    "scripts/supabase_snapshot/README.md",
     2
    ]
   ]
