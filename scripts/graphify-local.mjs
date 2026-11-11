@@ -205,7 +205,10 @@ export function run(command, cwd, env, timeoutMs = 120000) {
 }
 function environment(extra = {}) {
   return {
-    PATH: `${path.dirname(process.execPath)}:${path.join(homedir(), ".local/bin")}:/usr/local/bin:/usr/bin:/bin`,
+    PATH:
+      process.platform === "win32"
+        ? process.env.PATH
+        : `${path.dirname(process.execPath)}:${path.join(homedir(), ".local/bin")}:/usr/local/bin:/usr/bin:/bin`,
     HOME: homedir(),
     LANG: "C.UTF-8",
     TZ: "America/Sao_Paulo",
