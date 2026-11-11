@@ -484,6 +484,7 @@ function workflowEvent(text, event) {
     : /\bpush\b/.test(block) && /\bmain\b/.test(block);
 }
 function workflowRuns(text, commandText) {
+  text = text.replace(/\r\n/g, "\n");
   const lines = text.split("\n");
   let indent = -1;
   for (const line of lines) {
