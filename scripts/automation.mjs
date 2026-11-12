@@ -1046,14 +1046,12 @@ async function hook(ctx, args) {
   );
   if (state.common !== common)
     throw fail("estado pertence a outro repositório");
-  const [chainedId, chainedEvent] = (
-      process.env.REPO_AUTOMATION_CHAINING || ""
-    ).split(":");
-    if (
-      process.env.REPO_AUTOMATION_CHAINING &&
-      chainedId === state.id &&
-      chainedEvent === event
-    )
+  // Cadeia "id:evento,id:evento": só o MESMO evento já na cadeia é recursão. Antes só o último elo era comparado,
+  // então pre-commit → post-checkout → pre-commit (recursão indireta) passava e repetia sem fim.
+  const chain = (process.env.REPO_AUTOMATION_CHAINING || "")
+    .split(",")
+    .filter(Boolean);
+  if (chain.includes(state.id + ":" + event))
     throw fail("recursão de hook recusada");
   let original = isAbsolute(state.previousPath)
       ? join(state.previousPath, event)
@@ -1076,7 +1074,7 @@ async function hook(ctx, args) {
         timeout: ctx.c.timeoutMs || 300000,
         env: {
           ...process.env,
-          REPO_AUTOMATION_CHAINING: state.id + ":" + event,
+          REPO_AUTOMATION_CHAINING: [...chain, state.id + ":" + event].join(","),
         },
       },
     );
