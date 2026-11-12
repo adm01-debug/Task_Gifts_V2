@@ -21,7 +21,9 @@ export function CelebrationsBanner() {
   const { todayCelebrations } = useCelebrations();
   const [dismissedIds, setDismissedIds] = useState<Set<string>>(new Set());
 
-  const visibleCelebrations = todayCelebrations.filter(c => !dismissedIds.has(c.id));
+  const visibleCelebrations = todayCelebrations.filter(
+    (c) => !dismissedIds.has(c.id),
+  );
 
   if (visibleCelebrations.length === 0) return null;
 
@@ -36,23 +38,28 @@ export function CelebrationsBanner() {
             exit={{ opacity: 0, x: 100, scale: 0.95 }}
             transition={{ delay: index * 0.1 }}
             className={`relative overflow-hidden rounded-xl bg-gradient-to-r ${
-              CELEBRATION_COLORS[celebration.celebration_type] || "from-primary to-primary/80"
+              CELEBRATION_COLORS[celebration.celebration_type] ||
+              "from-primary to-primary/80"
             } text-white p-4`}
           >
             <div className="absolute inset-0 opacity-20">
               <div className="absolute top-0 left-0 w-20 h-20 bg-white rounded-full blur-3xl" />
               <div className="absolute bottom-0 right-0 w-32 h-32 bg-white rounded-full blur-3xl" />
             </div>
-            
+
             <div className="relative flex items-center gap-4">
               <div className="p-3 bg-white/20 rounded-full backdrop-blur-sm">
-                {CELEBRATION_ICONS[celebration.celebration_type] || <PartyPopper className="h-5 w-5" />}
+                {CELEBRATION_ICONS[celebration.celebration_type] || (
+                  <PartyPopper className="h-5 w-5" />
+                )}
               </div>
-              
+
               <div className="flex-1">
                 <h3 className="font-bold text-lg">{celebration.title}</h3>
                 {celebration.description && (
-                  <p className="text-sm text-white/80">{celebration.description}</p>
+                  <p className="text-sm text-white/80">
+                    {celebration.description}
+                  </p>
                 )}
                 <div className="flex items-center gap-2 mt-1 text-xs text-white/70">
                   <span>+{celebration.xp_reward} XP</span>
@@ -62,7 +69,9 @@ export function CelebrationsBanner() {
               </div>
 
               <button
-                onClick={() => setDismissedIds(prev => new Set([...prev, celebration.id]))}
+                onClick={() =>
+                  setDismissedIds((prev) => new Set([...prev, celebration.id]))
+                }
                 className="p-1 hover:bg-white/20 rounded-full transition-colors"
               >
                 <X className="h-4 w-4" />
