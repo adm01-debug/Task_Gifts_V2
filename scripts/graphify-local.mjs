@@ -499,9 +499,13 @@ export async function fingerprint(root, config) {
     hash: digest({ pin: config.pin, configHash, head, files, metadata }),
   };
 }
+const isWin = process.platform === "win32";
+function envBin(ctx) {
+  return isWin ? "Scripts" : "bin";
+}
 async function runtime(ctx) {
-  const python = path.join(ctx.envRoot, "bin/python"),
-    binary = path.join(ctx.envRoot, "bin/graphify");
+  const python = path.join(ctx.envRoot, envBin(ctx), isWin ? "python.exe" : "python"),
+    binary = path.join(ctx.envRoot, envBin(ctx), isWin ? "graphify.exe" : "graphify");
   if ((await exists(binary)) && (await lstat(binary)).isSymbolicLink())
     fail(
       "Executável local não pode apontar para CLI compartilhada",
@@ -995,10 +999,12 @@ export async function main(args = process.argv.slice(2), options = {}) {
       fixtureOfflinePrefix: options.fixtureOfflinePrefix,
       resourceProbe: options.resourceProbe,
     };
-    ctx.python = path.join(ctx.envRoot, "bin/python");
-    ctx.binary = path.join(ctx.envRoot, "bin/graphify");
+    ctx.python = path.join(ctx.envRoot, envBin(ctx), isWin ? "python.exe" : "python");
+    ctx.binary = path.join(ctx.envRoot, envBin(ctx), isWin ? "graphify.exe" : "graphify");
     ctx.env = environment({
-      PATH: `${ctx.envRoot}/bin:${path.dirname(process.execPath)}:/usr/local/bin:/usr/bin:/bin`,
+      PATH: isWin
+        ? process.env.PATH
+        : `${ctx.envRoot}/bin:${path.dirname(process.execPath)}:/usr/local/bin:/usr/bin:/bin`,
     });
     ctx.graph = path.join(ctx.outputRoot, "graph.json");
     ctx.provenance = path.join(
