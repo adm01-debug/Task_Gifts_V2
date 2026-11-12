@@ -52,7 +52,12 @@ Deno.test("External Webhook Contract - Invalid (Missing Event)", () => {
   const result = ExternalWebhookSchema.safeParse(payload);
   assertEquals(result.success, false);
   if (!result.success) {
-    assertEquals(result.error.errors[0].path[0], "event");
+    // ExternalWebhookSchema é z.union([V1, V2]): o zod reporta UM erro invalid_union com path [] e guarda os
+    // erros de cada alternativa em unionErrors — o campo faltante aparece lá dentro.
+    const caminhos = result.error.errors.flatMap((e) =>
+      e.code === "invalid_union" ? e.unionErrors.flatMap((u) => u.errors.map((i) => i.path[0])) : [e.path[0]]
+    );
+    assertEquals(caminhos.includes("event"), true);
   }
 });
 

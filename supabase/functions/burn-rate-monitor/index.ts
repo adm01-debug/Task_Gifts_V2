@@ -3,7 +3,7 @@
 //  - Fast page:  1h  AND 5min   burn >= 14.4x  -> critical (2% budget in 1h)
 //  - Slow page:  6h  AND 30min  burn >= 6x     -> high     (5% budget in 6h)
 // Alert only when BOTH long and short windows exceed the threshold (reduces noise).
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
+import { createClient, type SupabaseClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
 import { corsHeaders } from "npm:@supabase/supabase-js@2/cors";
 import { guardInternalRequest } from "../_shared/security.ts";
 
@@ -18,7 +18,7 @@ const PAIRS: Pair[] = [
   { name: "slow", long: 360, short: 30, threshold: 6, severity: "high" },
 ];
 
-async function burn(sb: ReturnType<typeof createClient>, minutes: number) {
+async function burn(sb: SupabaseClient, minutes: number) {
   const { data, error } = await sb.rpc("get_burn_rate", { _minutes: minutes, _slo: SLO });
   if (error) throw new Error(`get_burn_rate(${minutes}): ${error.message}`);
   return data as Record<string, any>;

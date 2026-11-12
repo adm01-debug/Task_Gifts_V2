@@ -1,5 +1,5 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { createClient, type SupabaseClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 import { corsHeaders, verifyUser, errorResponse } from "../_shared/security.ts";
 
@@ -61,7 +61,7 @@ function severityIcon(severity: string): string {
 }
 
 function emitTelemetryFireAndForget(
-  supabase: ReturnType<typeof createClient>,
+  supabase: SupabaseClient,
   row: Record<string, unknown>
 ) {
   const severity = row.severity as string;
@@ -177,7 +177,7 @@ serve(async (req) => {
             error_message: p.error_message ?? null,
             user_id: userId,
           };
-        }).filter(Boolean);
+        }).filter((r): r is NonNullable<typeof r> => r !== null);
 
         if (errors.length > 0) {
           return new Response(
@@ -222,7 +222,7 @@ serve(async (req) => {
 
         const startMs = Date.now();
         const q = body.query;
-        let result: { data: unknown; error: unknown; count?: number } = { data: null, error: null };
+        let result: { data: unknown; error: unknown; count?: number | null } = { data: null, error: null };
 
         try {
           if (q.operation === 'select') {

@@ -3,7 +3,7 @@
 // - claim atômico das linhas pendentes (evita duplo envio entre execuções);
 // - envio Web Push com retry/backoff e invalidação de endpoints mortos;
 // - transição terminal por linha (sent | failed | skipped) com log auditável.
-import { createClient } from "npm:@supabase/supabase-js@2";
+import { createClient, type SupabaseClient } from "npm:@supabase/supabase-js@2";
 import { corsHeaders } from "npm:@supabase/supabase-js@2/cors";
 import webpush from "npm:web-push@3.6.7";
 import { guardInternalRequest } from "../_shared/security.ts";
@@ -42,9 +42,11 @@ Deno.serve(async (req) => {
   );
 
   // Claim atômico: só esta execução assume as linhas marcadas.
-  const { data: claimed, error: claimErr } = await admin
-    .rpc("claim_push_outbox", { p_limit: BATCH_SIZE })
-    .returns<OutboxRow[]>();
+  const { data: claimedData, error: claimErr } = await admin.rpc("claim_push_outbox", {
+    p_limit: BATCH_SIZE,
+  });
+  // A RPC devolve um conjunto de linhas da outbox (setof); a API nova recusa .returns<T[]>() aqui.
+  const claimed = claimedData as OutboxRow[] | null;
   if (claimErr) return json({ error: claimErr.message }, 500);
   if (!claimed || claimed.length === 0) return json({ processed: 0 });
 
@@ -129,7 +131,7 @@ Deno.serve(async (req) => {
 });
 
 async function finish(
-  admin: ReturnType<typeof createClient>,
+  admin: SupabaseClient,
   id: string,
   status: string,
   attempts: number,

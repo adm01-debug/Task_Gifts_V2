@@ -120,10 +120,20 @@ Deno.serve(async (req) => {
       .in("id", invalidIds);
   }
   if (failedIds.length > 0) {
-    await supabase.rpc("increment_push_failures", { _ids: failedIds }).catch(() => {});
+    // O builder do Supabase não tem .catch (só then): a forma antiga lançava TypeError e derrubava a função.
+    // Falha aqui é tolerada de propósito (contador auxiliar), como na intenção original.
+    try {
+      await supabase.rpc("increment_push_failures", { _ids: failedIds });
+    } catch {
+      /* contador auxiliar: falha tolerada */
+    }
   }
   if (successIds.length > 0) {
-    await supabase.rpc("reset_push_failures", { _ids: successIds }).catch(() => {});
+    try {
+      await supabase.rpc("reset_push_failures", { _ids: successIds });
+    } catch {
+      /* contador auxiliar: falha tolerada */
+    }
   }
 
   if (logRows.length > 0) {
