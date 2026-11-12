@@ -67,7 +67,7 @@
   {
    "arquivo": "scripts/graphify-local.mjs",
    "descricao": null,
-   "linhas": 1274,
+   "linhas": 1280,
    "env": [
     "PATH"
    ],

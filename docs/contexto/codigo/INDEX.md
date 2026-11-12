@@ -1,7 +1,7 @@
 # Contexto do projeto para agentes de IA
 
 GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.
-Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `984b77c686164150643d5e54c6224e7f7c176272` (2026-11-11T20:03:23-03:00).
+Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `e80a3802e596073873908c029d7c76f2fa0ae5a5` (2026-11-11T22:06:41-03:00).
 
 ## Como usar (leia antes de planejar ou executar qualquer tarefa)
 1. **Tela/rota/menu** → `rotas.json` (url/vista/menu → arquivo → hooks → tabelas → edges; `rotas_http_backend` para APIs) e `modulos.json` (módulo inteiro + dependências entre módulos).
@@ -36,7 +36,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 |---|---|
 | arquivos_total | 1503 |
 | arquivos_codigo | 1148 |
-| linhas_codigo | 229102 |
+| linhas_codigo | 229108 |
 | rotas | 83 |
 | rotas_http_backend | 0 |
 | vistas_por_id | 0 |
@@ -286,8 +286,8 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - possiveis_segredos_no_codigo: 0
 
 ## Grafo de código (graphify)
-- 9896 nós · 27584 arestas · 616 comunidades · grafo do commit `984b77c6`
-- comunidades maiores: lucide-react (207), App.tsx (180), button.tsx (150), client.ts (147), cn (134), mobile/index.ts (110), react (109), AdminPanel.tsx (95), StatsAndTables.stories.tsx (92), QuizAdmin.tsx (85), progress.tsx (83), useProfiles.ts (81)
+- 9897 nós · 27587 arestas · 631 comunidades · grafo do commit `e80a3802`
+- comunidades maiores: lucide-react (232), react (207), cn (123), useAuth (106), button.tsx (101), sonner (100), select.tsx (99), Shop.tsx (92), mobile/index.ts (88), Skeleton (85), useToast (80), gerar.mjs (79)
 - símbolos mais chamados: cn() (src/lib/utils.ts), useAuth() (src/hooks/useAuth.tsx), useIsMobile() (src/hooks/use-mobile.tsx), q() (scripts/supabase_snapshot/snapshot.py), useDepartments() (src/hooks/useDepartments.ts), useToast() (src/hooks/use-toast.ts), useRBAC() (src/hooks/useRBAC.ts), useProfiles() (src/hooks/useProfiles.ts), useSEO() (src/hooks/useSEO.ts), useSoundEffects() (src/hooks/useSoundEffects.tsx), .collect() (scripts/supabase_snapshot/test_snapshot.py), excluded_sql() (scripts/supabase_snapshot/snapshot.py)
 - consulta local: `graphify query "<pergunta>"`, `graphify path "<A>" "<B>"`, `graphify explain "<X>"`
 
@@ -303,10 +303,10 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - docs/agentes/banco.md (3)
 - docs/agentes/github-ci.md (3)
 - scripts/automation.mjs (3)
+- scripts/graphify-local.mjs (3)
 - .github/workflows/contexto.yml (2)
 - ESTADO_ATUAL.md (2)
 - ai-context.config.json (2)
-- docs/agentes/contexto-autonomo.md (2)
 
 ## Workflows
 - `automation-local.yml` — Automação local (pull_request, push, workflow_dispatch)
@@ -366,6 +366,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 
 
 ## Últimos commits
+- 2026-11-11 `e80a380` fix(automacao): reconhece layout Windows (Scripts/) no venv do graphify (#45)
 - 2026-11-11 `984b77c` style(manutencao): aplica correcoes locais verificadas (#42)
 - 2026-11-11 `e39fc6c` fix(automacao): destrava grafo local no Windows e exige venv ignorado (#44)
 - 2026-11-11 `82ffc0b` fix(automacao): tolera ausência de O_NOFOLLOW em win32 (#43)
@@ -380,7 +381,6 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - 2026-11-08 `6d497c7` fix(supabase): corrige project_id do config.toml para o projeto em uso
 - 2026-11-08 `522ab99` ci(guard): adiciona step GA02 de integridade das instruções de agente no CI
 - 2026-11-08 `3860817` docs(agentes): replica o padrao de AGENTS.md/CLAUDE.md do Zapp Web V2 (#31)
-- 2026-10-30 `97ee4cd` feat(onda2): CORS allowlist, CSP header, coverage, audit CI, FKs, README (#30)
 
 ## Arquivos deste diretório
 - `docs/contexto/codigo/rotas.json`

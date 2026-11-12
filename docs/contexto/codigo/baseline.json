@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "984b77c686164150643d5e54c6224e7f7c176272",
+  "commit": "e80a3802e596073873908c029d7c76f2fa0ae5a5",
   "branch": "main",
-  "data_commit": "2026-11-11T20:03:23-03:00",
+  "data_commit": "2026-11-11T22:06:41-03:00",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "ultimos_commits": [
+   {
+    "sha": "e80a380",
+    "data": "2026-11-11",
+    "assunto": "fix(automacao): reconhece layout Windows (Scripts/) no venv do graphify (#45)"
+   },
    {
     "sha": "984b77c",
     "data": "2026-11-11",
@@ -126,11 +131,6 @@
     "sha": "27fcb23",
     "data": "2026-10-29",
     "assunto": "build(deps): bump oven-sh/setup-bun de v1 para v2 (#23)"
-   },
-   {
-    "sha": "6fc8009",
-    "data": "2026-10-29",
-    "assunto": "build(deps): bump actions/cache de v4 para v6 (#22)"
    }
   ],
   "arquivos_mudados_7d": 135,
@@ -184,15 +184,15 @@
     "mudancas": 3
    },
    {
+    "pasta": "scripts/graphify-local.mjs",
+    "mudancas": 3
+   },
+   {
     "pasta": "src/components/ui",
     "mudancas": 3
    },
    {
     "pasta": ".agents/skills/task-gifts-v2",
-    "mudancas": 2
-   },
-   {
-    "pasta": ".github/workflows/contexto.yml",
     "mudancas": 2
    }
   ],
@@ -242,6 +242,10 @@
     "mudancas": 3
    },
    {
+    "arquivo": "scripts/graphify-local.mjs",
+    "mudancas": 3
+   },
+   {
     "arquivo": ".github/workflows/contexto.yml",
     "mudancas": 2
    },
@@ -263,10 +267,6 @@
    },
    {
     "arquivo": "scripts/ci/check-claude-md-integrity.mjs",
-    "mudancas": 2
-   },
-   {
-    "arquivo": "scripts/graphify-local.mjs",
     "mudancas": 2
    },
    {
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 23
+    "commits": 24
    },
    {
     "autor": "dependabot[bot]",
@@ -312,7 +312,7 @@
  "contagens": {
   "arquivos_total": 1503,
   "arquivos_codigo": 1148,
-  "linhas_codigo": 229102,
+  "linhas_codigo": 229108,
   "rotas": 83,
   "rotas_http_backend": 0,
   "vistas_por_id": 0,
@@ -372,7 +372,7 @@
   },
   "scripts/graphify-local.mjs": {
    "arquivos": 1,
-   "linhas": 1274
+   "linhas": 1280
   },
   "scripts/graphify-local.unit.mjs": {
    "arquivos": 1,
@@ -498,7 +498,7 @@
   },
   {
    "arquivo": "scripts/graphify-local.mjs",
-   "linhas": 1274
+   "linhas": 1280
   },
   {
    "arquivo": "scripts/automation.mjs",

@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "984b77c686164150643d5e54c6224e7f7c176272",
+  "sha": "e80a3802e596073873908c029d7c76f2fa0ae5a5",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
-  "generated_at": "2026-11-11 23:22 UTC",
+  "generated_at": "2026-11-12 02:19 UTC",
   "files_total": 1512,
   "code_files": 1421,
-  "code_lines": 259876
+  "code_lines": 259882
  },
  "version": "1.3.2",
- "facts_hash": "7f0ec8fb326f71a9",
+ "facts_hash": "1ea6092bc1ab6b3a",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -47804,7 +47804,7 @@
   {
    "module": "scripts",
    "files": 25,
-   "lines": 15549,
+   "lines": 15555,
    "tables": [
     "a",
     "contacts",
@@ -115693,7 +115693,7 @@
   },
   "scripts/graphify-local.mjs": {
    "path": "scripts/graphify-local.mjs",
-   "lines": 1274,
+   "lines": 1280,
    "exports": [
     "class GraphError",
     "function run",
@@ -151413,10 +151413,19 @@
   }
  },
  "git": {
-  "sha": "984b77c686164150643d5e54c6224e7f7c176272",
+  "sha": "e80a3802e596073873908c029d7c76f2fa0ae5a5",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "commits": [
+   {
+    "sha": "e80a380",
+    "date": "2026-11-11",
+    "author": "adm01-debug",
+    "subject": "fix(automacao): reconhece layout Windows (Scripts/) no venv do graphify (#45)",
+    "files": [
+     "scripts/graphify-local.mjs"
+    ]
+   },
    {
     "sha": "984b77c",
     "date": "2026-11-11",
@@ -151843,32 +151852,15 @@
      "PENDENCIAS.md",
      "RELATORIO_CI.md"
     ]
-   },
-   {
-    "sha": "d83349c",
-    "date": "2026-10-29",
-    "author": "adm01-debug",
-    "subject": "fix(ci): corrige 4 causas de falha do CI introduzidas pelo bump de deps (#17)",
-    "files": [
-     "PENDENCIAS.md",
-     "RELATORIO_CI.md",
-     "bun.lock",
-     "package.json",
-     "src/test/setup.ts"
-    ]
    }
   ],
   "hot_files": [
    [
     "package.json",
-    12
+    11
    ],
    [
     ".github/workflows/ci.yml",
-    6
-   ],
-   [
-    "bun.lock",
     6
    ],
    [
@@ -151880,12 +151872,16 @@
     5
    ],
    [
+    "bun.lock",
+    5
+   ],
+   [
     "docs/agentes/mapa-repo.md",
     4
    ],
    [
-    "RELATORIO_CI.md",
-    4
+    "scripts/graphify-local.mjs",
+    3
    ],
    [
     "scripts/automation.mjs",
@@ -151900,12 +151896,8 @@
     3
    ],
    [
-    "PENDENCIAS.md",
+    "RELATORIO_CI.md",
     3
-   ],
-   [
-    "scripts/graphify-local.mjs",
-    2
    ],
    [
     "scripts/ci/check-claude-md-integrity.mjs",
@@ -151937,6 +151929,10 @@
    ],
    [
     "scripts/regras_negocio/generate.py",
+    2
+   ],
+   [
+    "scripts/supabase_snapshot/README.md",
     2
    ]
   ]
