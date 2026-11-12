@@ -1,9 +1,9 @@
 {
  "meta": {
-  "sha": "e661bb4e5153b0720be03da705ff693950999655",
+  "sha": "348cdce33b014c053efee7854b87a51519de5931",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
-  "generated_at": "2026-11-12 11:56 UTC",
+  "generated_at": "2026-11-12 12:09 UTC",
   "files_total": 1512,
   "code_files": 1421,
   "code_lines": 260075
@@ -151413,10 +151413,38 @@
   }
  },
  "git": {
-  "sha": "e661bb4e5153b0720be03da705ff693950999655",
+  "sha": "348cdce33b014c053efee7854b87a51519de5931",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "commits": [
+   {
+    "sha": "348cdce",
+    "date": "2026-11-12",
+    "author": "dependabot[bot]",
+    "subject": "build(deps): bump actions/checkout from 6.1.0 to 7.0.1 (#48)",
+    "files": [
+     ".github/workflows/automation-local.yml",
+     ".github/workflows/ci.yml"
+    ]
+   },
+   {
+    "sha": "4f95e63",
+    "date": "2026-11-12",
+    "author": "dependabot[bot]",
+    "subject": "build(deps): bump actions/setup-node from 6.5.0 to 7.1.0 (#47)",
+    "files": [
+     ".github/workflows/automation-local.yml"
+    ]
+   },
+   {
+    "sha": "933629b",
+    "date": "2026-11-12",
+    "author": "dependabot[bot]",
+    "subject": "build(deps): bump actions/download-artifact from 7.0.0 to 8.0.2 (#46)",
+    "files": [
+     ".github/workflows/contexto.yml"
+    ]
+   },
    {
     "sha": "e661bb4",
     "date": "2026-11-12",
@@ -151830,29 +151858,6 @@
     "author": "dependabot[bot]",
     "subject": "build(deps): bump actions/cache de v4 para v6 (#22)",
     "files": []
-   },
-   {
-    "sha": "7597bad",
-    "date": "2026-10-29",
-    "author": "dependabot[bot]",
-    "subject": "build(deps): bump actions/upload-artifact de v4 para v7 (#21)",
-    "files": []
-   },
-   {
-    "sha": "0af8c0f",
-    "date": "2026-10-29",
-    "author": "dependabot[bot]",
-    "subject": "build(deps): bump actions/checkout de v4 para v7 (#20)",
-    "files": []
-   },
-   {
-    "sha": "e8fca68",
-    "date": "2026-10-29",
-    "author": "adm01-debug",
-    "subject": "fix(ci): fallback de env vars para E2E em PRs do Dependabot (#27)",
-    "files": [
-     ".github/workflows/ci.yml"
-    ]
    }
   ],
   "hot_files": [
@@ -151879,6 +151884,14 @@
    [
     "docs/agentes/mapa-repo.md",
     4
+   ],
+   [
+    ".github/workflows/automation-local.yml",
+    3
+   ],
+   [
+    ".github/workflows/contexto.yml",
+    3
    ],
    [
     "scripts/graphify-local.mjs",
@@ -151909,10 +151922,6 @@
     2
    ],
    [
-    ".github/workflows/contexto.yml",
-    2
-   ],
-   [
     "ai-context.config.json",
     2
    ],
@@ -151930,10 +151939,6 @@
    ],
    [
     "scripts/regras_negocio/generate.py",
-    2
-   ],
-   [
-    "scripts/supabase_snapshot/README.md",
     2
    ]
   ]

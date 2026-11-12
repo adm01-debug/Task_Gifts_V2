@@ -1,7 +1,7 @@
 # Contexto do projeto para agentes de IA
 
 GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.
-Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `e661bb4e5153b0720be03da705ff693950999655` (2026-11-12T08:41:23-03:00).
+Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `348cdce33b014c053efee7854b87a51519de5931` (2026-11-12T08:43:09-03:00).
 
 ## Como usar (leia antes de planejar ou executar qualquer tarefa)
 1. **Tela/rota/menu** → `rotas.json` (url/vista/menu → arquivo → hooks → tabelas → edges; `rotas_http_backend` para APIs) e `modulos.json` (módulo inteiro + dependências entre módulos).
@@ -286,27 +286,27 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - possiveis_segredos_no_codigo: 0
 
 ## Grafo de código (graphify)
-- 9897 nós · 27587 arestas · 631 comunidades · grafo do commit `e661bb4e`
+- 9897 nós · 27587 arestas · 631 comunidades · grafo do commit `348cdce3`
 - comunidades maiores: lucide-react (232), react (207), cn (123), useAuth (106), button.tsx (101), sonner (100), select.tsx (99), Shop.tsx (92), mobile/index.ts (88), Skeleton (85), useToast (80), gerar.mjs (79)
 - símbolos mais chamados: cn() (src/lib/utils.ts), useAuth() (src/hooks/useAuth.tsx), useIsMobile() (src/hooks/use-mobile.tsx), q() (scripts/supabase_snapshot/snapshot.py), useDepartments() (src/hooks/useDepartments.ts), useToast() (src/hooks/use-toast.ts), useRBAC() (src/hooks/useRBAC.ts), useProfiles() (src/hooks/useProfiles.ts), useSEO() (src/hooks/useSEO.ts), useSoundEffects() (src/hooks/useSoundEffects.tsx), .collect() (scripts/supabase_snapshot/test_snapshot.py), excluded_sql() (scripts/supabase_snapshot/snapshot.py)
 - consulta local: `graphify query "<pergunta>"`, `graphify path "<A>" "<B>"`, `graphify explain "<X>"`
 
 ## Hotspots (arquivos mais alterados, 90 dias)
 - package.json (14)
+- .github/workflows/ci.yml (8)
 - bun.lock (8)
-- .github/workflows/ci.yml (7)
 - AGENTS.md (6)
 - RELATORIO_CI.md (4)
 - docs/agentes/mapa-repo.md (4)
 - package-lock.json (4)
+- .github/workflows/automation-local.yml (3)
+- .github/workflows/contexto.yml (3)
 - PENDENCIAS.md (3)
 - docs/agentes/banco.md (3)
 - docs/agentes/github-ci.md (3)
 - scripts/automation.mjs (3)
 - scripts/graphify-local.mjs (3)
-- .github/workflows/contexto.yml (2)
 - ESTADO_ATUAL.md (2)
-- ai-context.config.json (2)
 
 ## Workflows
 - `automation-local.yml` — Automação local (pull_request, push, workflow_dispatch)
@@ -366,6 +366,9 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 
 
 ## Últimos commits
+- 2026-11-12 `348cdce` build(deps): bump actions/checkout from 6.1.0 to 7.0.1 (#48)
+- 2026-11-12 `4f95e63` build(deps): bump actions/setup-node from 6.5.0 to 7.1.0 (#47)
+- 2026-11-12 `933629b` build(deps): bump actions/download-artifact from 7.0.0 to 8.0.2 (#46)
 - 2026-11-12 `e661bb4` style(manutencao): aplica correcoes locais verificadas (#49)
 - 2026-11-11 `e80a380` fix(automacao): reconhece layout Windows (Scripts/) no venv do graphify (#45)
 - 2026-11-11 `984b77c` style(manutencao): aplica correcoes locais verificadas (#42)
@@ -378,9 +381,6 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - 2026-11-09 `ffcff81` fix: corrige URL do projeto nas migrations de cron, guard GA02 e docs (#37)
 - 2026-11-08 `59d2c2b` feat(db-audit): guarda de migrations — idempotência ratchet + drift contra banco real
 - 2026-11-08 `a270eb3` fix(contexto): hardening do pacote — 2 vazamentos e inventário de edges
-- 2026-11-08 `5ffe6db` feat(contexto): sistema autonomo de contexto para agentes de IA (#34)
-- 2026-11-08 `6d497c7` fix(supabase): corrige project_id do config.toml para o projeto em uso
-- 2026-11-08 `522ab99` ci(guard): adiciona step GA02 de integridade das instruções de agente no CI
 
 ## Arquivos deste diretório
 - `docs/contexto/codigo/rotas.json`

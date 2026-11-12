@@ -2,11 +2,26 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "e661bb4e5153b0720be03da705ff693950999655",
+  "commit": "348cdce33b014c053efee7854b87a51519de5931",
   "branch": "main",
-  "data_commit": "2026-11-12T08:41:23-03:00",
+  "data_commit": "2026-11-12T08:43:09-03:00",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "ultimos_commits": [
+   {
+    "sha": "348cdce",
+    "data": "2026-11-12",
+    "assunto": "build(deps): bump actions/checkout from 6.1.0 to 7.0.1 (#48)"
+   },
+   {
+    "sha": "4f95e63",
+    "data": "2026-11-12",
+    "assunto": "build(deps): bump actions/setup-node from 6.5.0 to 7.1.0 (#47)"
+   },
+   {
+    "sha": "933629b",
+    "data": "2026-11-12",
+    "assunto": "build(deps): bump actions/download-artifact from 7.0.0 to 8.0.2 (#46)"
+   },
    {
     "sha": "e661bb4",
     "data": "2026-11-12",
@@ -116,21 +131,6 @@
     "sha": "afb0724",
     "data": "2026-10-29",
     "assunto": "docs(ci): RELATORIO_CI.md — estado final com todos os PRs mergeados"
-   },
-   {
-    "sha": "d8f78ee",
-    "data": "2026-10-29",
-    "assunto": "build(deps): bump grupo de 58 dependências minor/patch (#24)"
-   },
-   {
-    "sha": "e469532",
-    "data": "2026-10-29",
-    "assunto": "build(deps): bump framer-motion de 13.4.3 para 14.6.0 (#26)"
-   },
-   {
-    "sha": "21eeea8",
-    "data": "2026-10-29",
-    "assunto": "build(deps-dev): bump vite-plugin-pwa de 1.3.0 para 2.0.0 (#25)"
    }
   ],
   "arquivos_mudados_7d": 138,
@@ -141,7 +141,7 @@
    },
    {
     "pasta": ".github/workflows/ci.yml",
-    "mudancas": 6
+    "mudancas": 7
    },
    {
     "pasta": "bun.lock",
@@ -168,6 +168,14 @@
     "mudancas": 4
    },
    {
+    "pasta": ".github/workflows/automation-local.yml",
+    "mudancas": 3
+   },
+   {
+    "pasta": ".github/workflows/contexto.yml",
+    "mudancas": 3
+   },
+   {
     "pasta": "PENDENCIAS.md",
     "mudancas": 3
    },
@@ -186,14 +194,6 @@
    {
     "pasta": "scripts/graphify-local.mjs",
     "mudancas": 3
-   },
-   {
-    "pasta": "src/components/ui",
-    "mudancas": 3
-   },
-   {
-    "pasta": ".agents/skills/task-gifts-v2",
-    "mudancas": 2
    }
   ],
   "arquivos_mais_mudados_90d": [
@@ -202,12 +202,12 @@
     "mudancas": 14
    },
    {
-    "arquivo": "bun.lock",
+    "arquivo": ".github/workflows/ci.yml",
     "mudancas": 8
    },
    {
-    "arquivo": ".github/workflows/ci.yml",
-    "mudancas": 7
+    "arquivo": "bun.lock",
+    "mudancas": 8
    },
    {
     "arquivo": "AGENTS.md",
@@ -224,6 +224,14 @@
    {
     "arquivo": "package-lock.json",
     "mudancas": 4
+   },
+   {
+    "arquivo": ".github/workflows/automation-local.yml",
+    "mudancas": 3
+   },
+   {
+    "arquivo": ".github/workflows/contexto.yml",
+    "mudancas": 3
    },
    {
     "arquivo": "PENDENCIAS.md",
@@ -244,10 +252,6 @@
    {
     "arquivo": "scripts/graphify-local.mjs",
     "mudancas": 3
-   },
-   {
-    "arquivo": ".github/workflows/contexto.yml",
-    "mudancas": 2
    },
    {
     "arquivo": "ESTADO_ATUAL.md",
@@ -292,10 +296,6 @@
    {
     "arquivo": "supabase/config.toml",
     "mudancas": 2
-   },
-   {
-    "arquivo": "supabase/functions/migrate-helper/index.ts",
-    "mudancas": 2
    }
   ],
   "autores_30d": [
@@ -305,7 +305,7 @@
    },
    {
     "autor": "dependabot[bot]",
-    "commits": 7
+    "commits": 10
    }
   ]
  },

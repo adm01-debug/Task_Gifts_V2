@@ -59,11 +59,11 @@
  "commits": {
   "convencao": "conventional commits (observado)",
   "exemplos": [
+   "build(deps): bump actions/checkout from 6.1.0 to 7.0.1 (#48)",
+   "build(deps): bump actions/setup-node from 6.5.0 to 7.1.0 (#47)",
+   "build(deps): bump actions/download-artifact from 7.0.0 to 8.0.2 (#46)",
    "style(manutencao): aplica correcoes locais verificadas (#49)",
-   "fix(automacao): reconhece layout Windows (Scripts/) no venv do graphify (#45)",
-   "style(manutencao): aplica correcoes locais verificadas (#42)",
-   "fix(automacao): destrava grafo local no Windows e exige venv ignorado (#44)",
-   "fix(automacao): tolera ausência de O_NOFOLLOW em win32 (#43)"
+   "fix(automacao): reconhece layout Windows (Scripts/) no venv do graphify (#45)"
   ]
  },
  "pr_template": ".github/PULL_REQUEST_TEMPLATE.md",
