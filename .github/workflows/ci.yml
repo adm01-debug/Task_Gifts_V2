@@ -17,14 +17,28 @@ jobs:
       VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL || 'https://placeholder.supabase.co' }}
       VITE_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.VITE_SUPABASE_PUBLISHABLE_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.placeholder' }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7.0.1
 
-      - uses: oven-sh/setup-bun@v1
+      - uses: oven-sh/setup-bun@v2
         with:
           bun-version: latest
 
       - name: Install dependencies
         run: bun install --frozen-lockfile
+
+      - name: Security Audit
+        # Falha apenas em vulnerabilidades de runtime (high/critical).
+        # DevDeps como eslint/storybook com CVEs transitivas de build não bloqueiam
+        # (documentado em RELATORIO_CI.md §4). Usar --omit=dev quando suportado.
+        run: |
+          bun audit --audit-level=high 2>&1 | tee /tmp/audit_out.txt || true
+          if grep -qE '^(critical|high)' /tmp/audit_out.txt 2>/dev/null; then
+            echo "::error::Vulnerabilidade HIGH/CRITICAL encontrada em dependências de RUNTIME"
+            cat /tmp/audit_out.txt
+            exit 1
+          fi
+          echo "Audit OK — nenhuma vulnerabilidade high/critical em runtime."
+        continue-on-error: false
 
       - name: Lint
         run: bun run lint
@@ -32,18 +46,66 @@ jobs:
       - name: Type Check
         run: bun run typecheck
 
-      - name: Unit Tests
-        run: bun run test
+      - name: Integridade das instrucoes de agente (GA02)
+        # Barra wipe/esvaziamento de AGENTS.md, CLAUDE.md e docs/agentes/ por sessao paralela.
+        # Detalhe em docs/agentes/github-ci.md > Guardas do CI.
+        run: |
+          git fetch --no-tags --depth=1 origin main
+          CLAUDE_MD_BASE=FETCH_HEAD node scripts/ci/check-claude-md-integrity.mjs
+
+      - name: Guardas das automacoes de contexto (ai-context, regras, snapshot, publicacao)
+        # Suites node:test dos geradores que mantem docs/contexto/ atualizado.
+        # Detalhe em docs/agentes/contexto-autonomo.md.
+        run: |
+          python3 -m pip install --quiet --break-system-packages --only-binary :all: -r scripts/supabase_snapshot/requirements.txt
+          node --test scripts/ai-context/gerar.unit.mjs scripts/ci/contexto-indice.unit.mjs \
+            scripts/ci/contexto-publicacao.unit.mjs scripts/ci/regras-negocio.unit.mjs \
+            scripts/ci/supabase-snapshot.unit.mjs
+
+      - name: Guarda das migrations (idempotencia + drift contra o banco)
+        # Fase 1 sempre roda. Fase 2 compara com o snapshot do banco publicado na
+        # branch `contexto`; sem a branch ou sem o snapshot, a fase 2 e PULADA com aviso.
+        # O snapshot e extraido para RUNNER_TEMP, nunca para o checkout: dentro do
+        # repo ele deixaria docs/contexto/supabase/ nao rastreado em todo run de CI.
+        # Detalhe em scripts/db-audit/README.md.
+        run: |
+          node --test scripts/ci/check-migration-drift.unit.mjs
+          SNAP="$RUNNER_TEMP/snapshot-banco"
+          mkdir -p "$SNAP"
+          if git fetch --no-tags --depth=1 origin contexto 2>/dev/null; then
+            git archive FETCH_HEAD docs/contexto/supabase 2>/dev/null \
+              | tar -x -C "$SNAP" --strip-components=3 2>/dev/null || true
+          fi
+          node scripts/db-audit/check-migration-drift.mjs --snapshot "$SNAP"
+
+      - name: Unit Tests com Coverage
+        run: bun run test:ci
+        env:
+          CI: true
 
       - name: Cache Playwright browsers
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: ~/.cache/ms-playwright
           key: playwright-${{ runner.os }}-chromium-v1
           restore-keys: playwright-${{ runner.os }}-
 
       - name: Install Playwright Browsers
-        run: bun playwright install --with-deps chromium
+        # `--with-deps` roda apt-get junto e falha o passo inteiro se o mirror
+        # azure.archive.ubuntu.com cair por DNS transitório do runner (recorrente
+        # em 2026-11-11). Separamos a instalação do browser (sem apt, via CDN do
+        # Playwright e cacheado) das dependências de sistema, com retry +
+        # --fix-missing no apt.
+        run: |
+          bun playwright install chromium
+          for attempt in 1 2 3; do
+            if sudo apt-get update --fix-missing && bun playwright install-deps chromium; then
+              exit 0
+            fi
+            echo "::warning::deps apt falhou na tentativa $attempt (DNS do runner); tentando de novo"
+            sleep 15
+          done
+          exit 1
 
       - name: E2E Gate (rotas publicas e guardas de auth)
         run: bun playwright test tests/e2e/smoke.spec.ts tests/auth-flow.spec.ts
@@ -66,9 +128,11 @@ jobs:
 
       - name: Upload Artifacts
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: ci-artifacts
           path: |
             audit_report.pdf
             playwright-report/
+            coverage/
+

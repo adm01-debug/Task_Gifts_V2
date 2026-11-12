@@ -1,8 +1,12 @@
-# Welcome to your Lovable project
+# Task Gifts V2 — Plataforma de Gamificação Corporativa
 
-## Project info
+> **Promo Brindes** · Stack: React 19 + Vite 8 + TypeScript 5.9 + Supabase + Vercel
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
+[![CI](https://github.com/adm01-debug/Task_Gifts_V2/actions/workflows/ci.yml/badge.svg)](https://github.com/adm01-debug/Task_Gifts_V2/actions/workflows/ci.yml)
+
+## 🚀 Produção
+
+**URL:** https://task-gifts-v2.vercel.app
 
 ## How can I edit this code?
 

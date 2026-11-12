@@ -1,4 +1,5 @@
 import { supabase } from "@/integrations/supabase/client";
+import type { Database } from "@/integrations/supabase/types";
 
 export interface QuizOption {
   id: string;
@@ -177,7 +178,7 @@ export const quizQuestionsService = {
   },
 
   async updateQuestion(questionId: string, data: UpdateQuestionData): Promise<QuizQuestion> {
-    const updateData: Record<string, unknown> = {};
+    const updateData: Database["public"]["Tables"]["quiz_questions"]["Update"] = {};
     
     if (data.quiz_type !== undefined) updateData.quiz_type = data.quiz_type;
     if (data.question !== undefined) updateData.question = data.question;

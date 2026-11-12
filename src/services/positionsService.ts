@@ -146,9 +146,10 @@ export const positionsService = {
   },
 
   async updatePosition(id: string, updates: Partial<Position>): Promise<Position> {
+    const { departments: _departments, ...columns } = updates;
     const { data, error } = await supabase
       .from("positions")
-      .update(updates)
+      .update(columns)
       .eq("id", id)
       .select("*, departments(name, color)")
       .single();
@@ -208,9 +209,10 @@ export const positionsService = {
   },
 
   async updateTaskTemplate(id: string, updates: Partial<PositionTaskTemplate>): Promise<PositionTaskTemplate> {
+    const { positions: _positions, ...columns } = updates;
     const { data, error } = await supabase
       .from("position_task_templates")
-      .update(updates)
+      .update(columns)
       .eq("id", id)
       .select("*, positions(name)")
       .single();

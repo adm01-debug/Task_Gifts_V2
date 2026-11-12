@@ -1,17 +1,8 @@
-// Recharts Tooltip Types
-export interface RechartsTooltipPayloadItem {
-  name: string;
-  value: number;
-  color: string;
-  dataKey?: string;
-  payload?: Record<string, unknown>;
-}
+import type { TooltipContentProps } from "recharts";
 
-export interface RechartsTooltipProps {
-  active?: boolean;
-  payload?: any[];
-  label?: string | number;
-}
+// Tipos do conteúdo efetivamente entregue pelo Recharts, incluindo payload readonly.
+export type RechartsTooltipPayloadItem = TooltipContentProps["payload"][number];
+export type RechartsTooltipProps = Partial<Pick<TooltipContentProps, "active" | "payload" | "label">>;
 
 // BI Dashboard Types
 export interface TrendData {

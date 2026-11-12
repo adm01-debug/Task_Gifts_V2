@@ -6,7 +6,11 @@ import { Send, Trash2, MessageCircle } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useActivityComments, useAddComment, useDeleteComment } from "@/hooks/useActivityComments";
+import {
+  useActivityComments,
+  useAddComment,
+  useDeleteComment,
+} from "@/hooks/useActivityComments";
 import { useAuth } from "@/hooks/useAuth";
 import { cn } from "@/lib/utils";
 
@@ -17,12 +21,10 @@ interface ActivityCommentsProps {
   commentCount: number;
 }
 
-export const ActivityComments = forwardRef<HTMLDivElement, ActivityCommentsProps>(({ 
-  activityId, 
-  isOpen, 
-  onToggle, 
-  commentCount 
-}, ref) => {
+export const ActivityComments = forwardRef<
+  HTMLDivElement,
+  ActivityCommentsProps
+>(({ activityId, isOpen, onToggle, commentCount }, ref) => {
   const { user } = useAuth();
   const { comments, isLoading } = useActivityComments(activityId);
   const addComment = useAddComment();
@@ -36,7 +38,7 @@ export const ActivityComments = forwardRef<HTMLDivElement, ActivityCommentsProps
 
     addComment.mutate(
       { activityId, userId: user.id, content: newComment },
-      { onSuccess: () => setNewComment("") }
+      { onSuccess: () => setNewComment("") },
     );
   };
 
@@ -54,7 +56,7 @@ export const ActivityComments = forwardRef<HTMLDivElement, ActivityCommentsProps
         onClick={onToggle}
         className={cn(
           "flex items-center gap-1 text-xs transition-colors",
-          isOpen ? "text-primary" : "text-muted-foreground hover:text-primary"
+          isOpen ? "text-primary" : "text-muted-foreground hover:text-primary",
         )}
       >
         <MessageCircle className="h-3.5 w-3.5" />
@@ -73,9 +75,13 @@ export const ActivityComments = forwardRef<HTMLDivElement, ActivityCommentsProps
             <div className="mt-3 space-y-3 border-t border-border/50 pt-3">
               {/* Comments list */}
               {isLoading ? (
-                <div className="text-xs text-muted-foreground">Carregando...</div>
+                <div className="text-xs text-muted-foreground">
+                  Carregando...
+                </div>
               ) : comments.length === 0 ? (
-                <div className="text-xs text-muted-foreground">Nenhum comentário ainda. Seja o primeiro!</div>
+                <div className="text-xs text-muted-foreground">
+                  Nenhum comentário ainda. Seja o primeiro!
+                </div>
               ) : (
                 <div className="space-y-2 max-h-48 overflow-y-auto">
                   {comments.map((comment, index) => (
@@ -87,7 +93,9 @@ export const ActivityComments = forwardRef<HTMLDivElement, ActivityCommentsProps
                       className="flex items-start gap-2 group"
                     >
                       <Avatar className="h-6 w-6">
-                        <AvatarImage src={comment.user?.avatar_url || undefined} />
+                        <AvatarImage
+                          src={comment.user?.avatar_url || undefined}
+                        />
                         <AvatarFallback className="text-[10px] bg-primary/10">
                           {comment.user?.display_name?.charAt(0) || "U"}
                         </AvatarFallback>
@@ -104,7 +112,9 @@ export const ActivityComments = forwardRef<HTMLDivElement, ActivityCommentsProps
                             })}
                           </span>
                         </div>
-                        <p className="text-xs text-foreground/80 break-words">{comment.content}</p>
+                        <p className="text-xs text-foreground/80 break-words">
+                          {comment.content}
+                        </p>
                       </div>
                       {user?.id === comment.user_id && (
                         <Button
@@ -115,9 +125,9 @@ export const ActivityComments = forwardRef<HTMLDivElement, ActivityCommentsProps
                           disabled={deletingId === comment.id}
                         >
                           {deletingId === comment.id ? (
-                            <motion.div 
-                              animate={{ rotate: 360 }} 
-                              transition={{ repeat: Infinity, duration: 1 }} 
+                            <motion.div
+                              animate={{ rotate: 360 }}
+                              transition={{ repeat: Infinity, duration: 1 }}
                               className="w-3 h-3 border border-current border-t-transparent rounded-full"
                             />
                           ) : (
@@ -132,7 +142,10 @@ export const ActivityComments = forwardRef<HTMLDivElement, ActivityCommentsProps
 
               {/* Add comment form */}
               {user && (
-                <form onSubmit={handleSubmit} className="flex items-center gap-2">
+                <form
+                  onSubmit={handleSubmit}
+                  className="flex items-center gap-2"
+                >
                   <Avatar className="h-6 w-6">
                     <AvatarImage src={user.user_metadata?.avatar_url} />
                     <AvatarFallback className="text-[10px] bg-primary/10">

@@ -35,6 +35,7 @@ describeIf('RLS Policies - Profiles Table', () => {
   });
 
   it('Anon user should NOT be able to insert into profiles', async () => {
+    const anonClient = getAnonClient();
     const { error } = await anonClient
       .from('profiles')
       .insert({ id: '00000000-0000-0000-0000-000000000000', username: 'test' });

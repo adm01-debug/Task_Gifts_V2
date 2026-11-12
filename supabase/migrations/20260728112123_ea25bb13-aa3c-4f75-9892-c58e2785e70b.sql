@@ -245,7 +245,7 @@ SELECT cron.schedule(
   '* * * * *',
   $$
   SELECT net.http_post(
-    url := 'https://awzhgfmqwddzgbqzqusc.supabase.co/functions/v1/push-outbox-dispatcher',
+    url := 'https://eidsaqymojyuhprobfpn.supabase.co/functions/v1/push-outbox-dispatcher',
     headers := jsonb_build_object('Content-Type', 'application/json'),
     body := '{}'::jsonb
   );

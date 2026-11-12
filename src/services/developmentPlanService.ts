@@ -1,4 +1,5 @@
 import { supabase } from "@/integrations/supabase/client";
+import type { Database } from "@/integrations/supabase/types";
 
 export interface DevelopmentPlan {
   id: string;
@@ -133,9 +134,10 @@ export const developmentPlanService = {
   },
 
   async updatePlan(id: string, updates: Partial<DevelopmentPlan>) {
+    const { profiles: _profiles, actions: _actions, ...columns } = updates;
     const { data, error } = await supabase
       .from("development_plans")
-      .update({ ...updates, updated_at: new Date().toISOString() })
+      .update({ ...columns, updated_at: new Date().toISOString() })
       .eq("id", id)
       .select()
       .single();
@@ -174,7 +176,8 @@ export const developmentPlanService = {
   },
 
   async updateAction(id: string, updates: Partial<DevelopmentPlanAction>) {
-    const updateData: Record<string, unknown> = { ...updates, updated_at: new Date().toISOString() };
+    const { competencies: _competencies, ...columns } = updates;
+    const updateData: Database["public"]["Tables"]["development_plan_actions"]["Update"] = { ...columns, updated_at: new Date().toISOString() };
     
     if (updates.status === "completed" && !updates.completed_at) {
       updateData.completed_at = new Date().toISOString();

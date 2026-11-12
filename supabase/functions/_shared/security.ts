@@ -1,9 +1,49 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.39.7";
 
+// ──────────────────────────────────────────────────────────────────
+// CORS: origens permitidas (Onda 2 — 2026-10-30).
+// Em produção lemos ALLOWED_ORIGINS do environment da Edge Function
+// (separadas por vírgula). Se a variável não estiver definida, o
+// comportamento cai para wildcard apenas em dev local (deno serve).
+// ──────────────────────────────────────────────────────────────────
+function buildCorsHeaders(req: Request): Record<string, string> {
+  const raw = Deno.env.get("ALLOWED_ORIGINS") ?? "";
+  const origin = req.headers.get("origin") ?? "";
+  const allowed = raw.split(",").map((s) => s.trim()).filter(Boolean);
+
+  let allowOrigin = "null"; // restritivo por padrão
+  if (allowed.length === 0) {
+    allowOrigin = origin || "*"; // só em dev local (sem secret)
+  } else if (
+    allowed.some(
+      (o) =>
+        o === origin ||
+        (o.endsWith("*") && origin.startsWith(o.slice(0, -1)))
+    )
+  ) {
+    allowOrigin = origin; // origem está na allowlist
+  }
+
+  return {
+    "Access-Control-Allow-Origin": allowOrigin,
+    "Access-Control-Allow-Headers":
+      "authorization, x-client-info, apikey, content-type, x-request-id",
+    "Vary": "Origin",
+  };
+}
+
+/** Compatibilidade: código existente que usa corsHeaders diretamente. */
 export const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-request-id",
+  "Access-Control-Allow-Headers":
+    "authorization, x-client-info, apikey, content-type, x-request-id",
 };
+
+/** Retorna os cabeçalhos CORS corretos para a origem da request. */
+export function getCorsHeaders(req: Request): Record<string, string> {
+  return buildCorsHeaders(req);
+}
+
 
 /**
  * Erro com status HTTP explícito. Sem isto, falhas de autenticação eram
@@ -22,7 +62,7 @@ export class HttpError extends Error {
  * Resposta de erro padronizada: preserva o status de `HttpError` e nunca
  * expõe a mensagem de exceções inesperadas (mantidas apenas no log).
  */
-export function errorResponse(error: unknown, requestId?: string): Response {
+export function errorResponse(error: unknown, requestId?: string, req?: Request): Response {
   const isHttp = error instanceof HttpError;
   const status = isHttp ? error.status : 500;
   const body: Record<string, unknown> = {
@@ -30,9 +70,10 @@ export function errorResponse(error: unknown, requestId?: string): Response {
   };
   if (requestId) body.requestId = requestId;
   if (!isHttp) console.error("[errorResponse] erro não tratado", error);
+  const headers = req ? getCorsHeaders(req) : corsHeaders;
   return new Response(JSON.stringify(body), {
     status,
-    headers: { ...corsHeaders, "Content-Type": "application/json" },
+    headers: { ...headers, "Content-Type": "application/json" },
   });
 }
 
@@ -122,9 +163,10 @@ export function guardInternalRequest(req: Request): Response | null {
     verifyServiceRole(req);
     return null;
   } catch {
+    const headers = getCorsHeaders(req);
     return new Response(JSON.stringify({ error: "Unauthorized" }), {
       status: 401,
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
+      headers: { ...headers, "Content-Type": "application/json" },
     });
   }
 }
