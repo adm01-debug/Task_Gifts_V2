@@ -76,7 +76,7 @@
    "hooks_exportados": [
     "useActivityHeatmapData"
    ],
-   "linhas": 304,
+   "linhas": 342,
    "dominio": "components",
    "tabelas": [],
    "rpcs": [],

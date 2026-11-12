@@ -175,7 +175,7 @@
     "ActivityHeatmap"
    ],
    "export_default": null,
-   "linhas": 304,
+   "linhas": 342,
    "dominio": "components",
    "hooks_locais": [
     "useActivityHeatmapData"
@@ -1063,7 +1063,7 @@
     "AnalyticsWidget"
    ],
    "export_default": null,
-   "linhas": 220,
+   "linhas": 325,
    "dominio": "components",
    "hooks_locais": [
     "useLeaderboard"
@@ -1095,7 +1095,7 @@
     "AppSidebar"
    ],
    "export_default": null,
-   "linhas": 130,
+   "linhas": 171,
    "dominio": "components",
    "hooks_locais": [],
    "tabelas": [],
@@ -2073,7 +2073,7 @@
     "CelebrationsBanner"
    ],
    "export_default": null,
-   "linhas": 106,
+   "linhas": 115,
    "dominio": "components",
    "hooks_locais": [
     "useCelebrations"

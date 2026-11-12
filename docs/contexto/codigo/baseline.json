@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "e80a3802e596073873908c029d7c76f2fa0ae5a5",
+  "commit": "e661bb4e5153b0720be03da705ff693950999655",
   "branch": "main",
-  "data_commit": "2026-11-11T22:06:41-03:00",
+  "data_commit": "2026-11-12T08:41:23-03:00",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "ultimos_commits": [
+   {
+    "sha": "e661bb4",
+    "data": "2026-11-12",
+    "assunto": "style(manutencao): aplica correcoes locais verificadas (#49)"
+   },
    {
     "sha": "e80a380",
     "data": "2026-11-11",
@@ -126,14 +131,9 @@
     "sha": "21eeea8",
     "data": "2026-10-29",
     "assunto": "build(deps-dev): bump vite-plugin-pwa de 1.3.0 para 2.0.0 (#25)"
-   },
-   {
-    "sha": "27fcb23",
-    "data": "2026-10-29",
-    "assunto": "build(deps): bump oven-sh/setup-bun de v1 para v2 (#23)"
    }
   ],
-  "arquivos_mudados_7d": 135,
+  "arquivos_mudados_7d": 138,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "package.json",
@@ -282,6 +282,10 @@
     "mudancas": 2
    },
    {
+    "arquivo": "src/components/AnalyticsWidget.tsx",
+    "mudancas": 2
+   },
+   {
     "arquivo": "src/lib/campaignImport.ts",
     "mudancas": 2
    },
@@ -292,16 +296,12 @@
    {
     "arquivo": "supabase/functions/migrate-helper/index.ts",
     "mudancas": 2
-   },
-   {
-    "arquivo": "vercel.json",
-    "mudancas": 2
    }
   ],
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 24
+    "commits": 25
    },
    {
     "autor": "dependabot[bot]",
@@ -312,7 +312,7 @@
  "contagens": {
   "arquivos_total": 1503,
   "arquivos_codigo": 1148,
-  "linhas_codigo": 229108,
+  "linhas_codigo": 229301,
   "rotas": 83,
   "rotas_http_backend": 0,
   "vistas_por_id": 0,
@@ -400,7 +400,7 @@
   },
   "src/components": {
    "arquivos": 461,
-   "linhas": 77556
+   "linhas": 77749
   },
   "src/constants": {
    "arquivos": 1,

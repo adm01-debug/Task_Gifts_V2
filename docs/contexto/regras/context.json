@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "e80a3802e596073873908c029d7c76f2fa0ae5a5",
+  "sha": "e661bb4e5153b0720be03da705ff693950999655",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
-  "generated_at": "2026-11-12 02:19 UTC",
+  "generated_at": "2026-11-12 11:56 UTC",
   "files_total": 1512,
   "code_files": 1421,
-  "code_lines": 259882
+  "code_lines": 260075
  },
  "version": "1.3.2",
- "facts_hash": "1ea6092bc1ab6b3a",
+ "facts_hash": "9ec3ef5721c5e199",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -47944,7 +47944,7 @@
   {
    "module": "src/components",
    "files": 461,
-   "lines": 77556,
+   "lines": 77749,
    "tables": [
     "attendance_records",
     "audit_logs",
@@ -117529,7 +117529,7 @@
   },
   "src/components/ActivityHeatmap.tsx": {
    "path": "src/components/ActivityHeatmap.tsx",
-   "lines": 304,
+   "lines": 342,
    "exports": [
     "function ActivityHeatmap",
     "function useActivityHeatmapData"
@@ -117566,7 +117566,7 @@
   },
   "src/components/AnalyticsWidget.tsx": {
    "path": "src/components/AnalyticsWidget.tsx",
-   "lines": 220,
+   "lines": 325,
    "exports": [
     "const AnalyticsWidget"
    ],
@@ -117586,7 +117586,7 @@
   },
   "src/components/AppSidebar.tsx": {
    "path": "src/components/AppSidebar.tsx",
-   "lines": 130,
+   "lines": 171,
    "exports": [
     "const AppSidebar"
    ]
@@ -117849,7 +117849,7 @@
   },
   "src/components/CelebrationsBanner.tsx": {
    "path": "src/components/CelebrationsBanner.tsx",
-   "lines": 106,
+   "lines": 115,
    "exports": [
     "function CelebrationsBanner"
    ],
@@ -151413,10 +151413,22 @@
   }
  },
  "git": {
-  "sha": "e80a3802e596073873908c029d7c76f2fa0ae5a5",
+  "sha": "e661bb4e5153b0720be03da705ff693950999655",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "commits": [
+   {
+    "sha": "e661bb4",
+    "date": "2026-11-12",
+    "author": "adm01-debug",
+    "subject": "style(manutencao): aplica correcoes locais verificadas (#49)",
+    "files": [
+     "src/components/ActivityHeatmap.tsx",
+     "src/components/AnalyticsWidget.tsx",
+     "src/components/AppSidebar.tsx",
+     "src/components/CelebrationsBanner.tsx"
+    ]
+   },
    {
     "sha": "e80a380",
     "date": "2026-11-11",
@@ -151841,17 +151853,6 @@
     "files": [
      ".github/workflows/ci.yml"
     ]
-   },
-   {
-    "sha": "e226e12",
-    "date": "2026-10-29",
-    "author": "adm01-debug",
-    "subject": "fix(ci): dependabot ignora majors incompatíveis + docs finais de CI (#19)",
-    "files": [
-     ".github/dependabot.yml",
-     "PENDENCIAS.md",
-     "RELATORIO_CI.md"
-    ]
    }
   ],
   "hot_files": [
@@ -151896,8 +151897,8 @@
     3
    ],
    [
-    "RELATORIO_CI.md",
-    3
+    "src/components/AnalyticsWidget.tsx",
+    2
    ],
    [
     "scripts/ci/check-claude-md-integrity.mjs",
