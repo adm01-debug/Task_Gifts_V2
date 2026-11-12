@@ -1,14 +1,43 @@
 import { motion } from "framer-motion";
 import {
-  Gavel, 
-  Home, Target, Trophy, TrendingUp, Clock, BookOpen, 
-  Gamepad2, ShoppingBag, Swords, Heart, Award, Flag,
-  
-  ClipboardCheck, BarChart3, Megaphone, MessageSquare,
-  LayoutDashboard, GraduationCap, Users, Sparkles, Rocket, Activity, Dices, Gift, Zap, Grid3X3, Layers, Brain, ListOrdered
+  Gavel,
+  Home,
+  Target,
+  Trophy,
+  TrendingUp,
+  Clock,
+  BookOpen,
+  Gamepad2,
+  ShoppingBag,
+  Swords,
+  Heart,
+  Award,
+  Flag,
+  ClipboardCheck,
+  BarChart3,
+  Megaphone,
+  MessageSquare,
+  LayoutDashboard,
+  GraduationCap,
+  Users,
+  Sparkles,
+  Rocket,
+  Activity,
+  Dices,
+  Gift,
+  Zap,
+  Grid3X3,
+  Layers,
+  Brain,
+  ListOrdered,
 } from "lucide-react";
 import { memo } from "react";
-import { SidebarNavGroup, SidebarUserStats, SidebarLogo, SidebarFooter } from "@/components/sidebar";
+import {
+  SidebarNavGroup,
+  SidebarUserStats,
+  SidebarLogo,
+  SidebarFooter,
+} from "@/components/sidebar";
 
 // Navigation structure with categories
 const navCategories = [
@@ -58,7 +87,11 @@ const navCategories = [
       { icon: ListOrdered, label: "Ordene a Sequência", path: "/sequencia" },
       { icon: Dices, label: "Trilha Tabuleiro", path: "/tabuleiro" },
       { icon: Swords, label: "Torneio Mata-Mata", path: "/torneios" },
-      { icon: Flag, label: "Guerra de Departamentos", path: "/guerra-departamentos" },
+      {
+        icon: Flag,
+        label: "Guerra de Departamentos",
+        path: "/guerra-departamentos",
+      },
       { icon: Gavel, label: "Leilão de Recompensas", path: "/leilao" },
       { icon: Rocket, label: "Campanhas", path: "/campanhas" },
     ],
@@ -69,7 +102,11 @@ const navCategories = [
     defaultOpen: false,
     items: [
       { icon: Activity, label: "Engajamento", path: "/engajamento" },
-      { icon: MessageSquare, label: "Canal de Opiniões", path: "/engajamento/opinioes" },
+      {
+        icon: MessageSquare,
+        label: "Canal de Opiniões",
+        path: "/engajamento/opinioes",
+      },
       { icon: BarChart3, label: "Pulse Surveys", path: "/surveys" },
       { icon: MessageSquare, label: "Feedback 360°", path: "/feedback" },
       { icon: Megaphone, label: "Anúncios", path: "/announcements" },
@@ -79,9 +116,7 @@ const navCategories = [
     title: "Recompensas",
     icon: ShoppingBag,
     defaultOpen: false,
-    items: [
-      { icon: ShoppingBag, label: "Loja", path: "/loja", badge: 2 },
-    ],
+    items: [{ icon: ShoppingBag, label: "Loja", path: "/loja", badge: 2 }],
   },
 ];
 
@@ -90,7 +125,10 @@ interface AppSidebarProps {
   onToggle: () => void;
 }
 
-export const AppSidebar = memo(function AppSidebar({ collapsed, onToggle }: AppSidebarProps) {
+export const AppSidebar = memo(function AppSidebar({
+  collapsed,
+  onToggle,
+}: AppSidebarProps) {
   return (
     <motion.aside
       data-tour="sidebar"
@@ -109,7 +147,10 @@ export const AppSidebar = memo(function AppSidebar({ collapsed, onToggle }: AppS
       <SidebarUserStats collapsed={collapsed} />
 
       {/* Navigation with Categories */}
-      <nav className="flex-1 p-2 space-y-2 overflow-y-auto scrollbar-thin" aria-label="Navegação principal">
+      <nav
+        className="flex-1 p-2 space-y-2 overflow-y-auto scrollbar-thin"
+        aria-label="Navegação principal"
+      >
         {navCategories.map((category) => (
           <SidebarNavGroup
             key={category.title}

@@ -1,13 +1,36 @@
 import { motion } from "framer-motion";
-import { TrendingUp, Users, Target, Zap, ArrowUpRight, ArrowDownRight } from "lucide-react";
-import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, BarChart, Bar } from "recharts";
+import {
+  TrendingUp,
+  Users,
+  Target,
+  Zap,
+  ArrowUpRight,
+  ArrowDownRight,
+} from "lucide-react";
+import {
+  AreaChart,
+  Area,
+  XAxis,
+  YAxis,
+  Tooltip,
+  ResponsiveContainer,
+  BarChart,
+  Bar,
+} from "recharts";
 import { useNavigate } from "react-router-dom";
 import { useLeaderboard } from "@/hooks/useProfiles";
 import { Skeleton } from "@/components/ui/skeleton";
-import { RechartsTooltipProps, RechartsTooltipPayloadItem } from "@/types/charts";
+import {
+  RechartsTooltipProps,
+  RechartsTooltipPayloadItem,
+} from "@/types/charts";
 
 // Tooltip content function - avoids forwardRef warning from recharts
-const renderCustomTooltip = ({ active, payload, label }: RechartsTooltipProps) => {
+const renderCustomTooltip = ({
+  active,
+  payload,
+  label,
+}: RechartsTooltipProps) => {
   if (active && payload && payload.length) {
     return (
       <div className="glass rounded-lg p-3 border border-border">
@@ -25,17 +48,20 @@ const renderCustomTooltip = ({ active, payload, label }: RechartsTooltipProps) =
 
 export const AnalyticsWidget = () => {
   const navigate = useNavigate();
-  const { data: profiles = [], isLoading: profilesLoading } = useLeaderboard(50);
+  const { data: profiles = [], isLoading: profilesLoading } =
+    useLeaderboard(50);
 
   const isLoading = profilesLoading;
 
   // Calculate real metrics from profiles
   const totalUsers = profiles.length;
-  const activeUsers = profiles.filter(p => p.xp > 0).length;
+  const activeUsers = profiles.filter((p) => p.xp > 0).length;
   const totalXp = profiles.reduce((sum, p) => sum + p.xp, 0);
   const totalQuests = profiles.reduce((sum, p) => sum + p.quests_completed, 0);
-  const engagementRate = totalUsers > 0 ? Math.round((activeUsers / totalUsers) * 100) : 0;
-  const avgQuestsPerUser = totalUsers > 0 ? Math.round(totalQuests / totalUsers) : 0;
+  const engagementRate =
+    totalUsers > 0 ? Math.round((activeUsers / totalUsers) * 100) : 0;
+  const avgQuestsPerUser =
+    totalUsers > 0 ? Math.round(totalQuests / totalUsers) : 0;
 
   // Build XP data from top users
   const topUsers = profiles.slice(0, 7);
@@ -47,18 +73,68 @@ export const AnalyticsWidget = () => {
 
   // Group users by level ranges for team data
   const levelGroups = [
-    { team: "Lv 1-5", score: profiles.filter(p => p.level >= 1 && p.level <= 5).reduce((s, p) => s + p.xp, 0) },
-    { team: "Lv 6-10", score: profiles.filter(p => p.level >= 6 && p.level <= 10).reduce((s, p) => s + p.xp, 0) },
-    { team: "Lv 11-20", score: profiles.filter(p => p.level >= 11 && p.level <= 20).reduce((s, p) => s + p.xp, 0) },
-    { team: "Lv 21-50", score: profiles.filter(p => p.level >= 21 && p.level <= 50).reduce((s, p) => s + p.xp, 0) },
-    { team: "Lv 50+", score: profiles.filter(p => p.level > 50).reduce((s, p) => s + p.xp, 0) },
-  ].filter(g => g.score > 0);
+    {
+      team: "Lv 1-5",
+      score: profiles
+        .filter((p) => p.level >= 1 && p.level <= 5)
+        .reduce((s, p) => s + p.xp, 0),
+    },
+    {
+      team: "Lv 6-10",
+      score: profiles
+        .filter((p) => p.level >= 6 && p.level <= 10)
+        .reduce((s, p) => s + p.xp, 0),
+    },
+    {
+      team: "Lv 11-20",
+      score: profiles
+        .filter((p) => p.level >= 11 && p.level <= 20)
+        .reduce((s, p) => s + p.xp, 0),
+    },
+    {
+      team: "Lv 21-50",
+      score: profiles
+        .filter((p) => p.level >= 21 && p.level <= 50)
+        .reduce((s, p) => s + p.xp, 0),
+    },
+    {
+      team: "Lv 50+",
+      score: profiles.filter((p) => p.level > 50).reduce((s, p) => s + p.xp, 0),
+    },
+  ].filter((g) => g.score > 0);
 
   const metrics = [
-    { label: "Usuários Ativos", value: activeUsers.toString(), change: totalUsers > 0 ? `${totalUsers} total` : "0", positive: true, icon: Users },
-    { label: "Taxa de Engajamento", value: `${engagementRate}%`, change: activeUsers > 0 ? "+ativo" : "-", positive: engagementRate > 50, icon: TrendingUp },
-    { label: "Quests/Usuário", value: avgQuestsPerUser.toString(), change: `${totalQuests} total`, positive: avgQuestsPerUser > 0, icon: Target },
-    { label: "XP Distribuído", value: totalXp >= 1000 ? `${(totalXp / 1000).toFixed(1)}K` : totalXp.toString(), change: "+acumulado", positive: true, icon: Zap },
+    {
+      label: "Usuários Ativos",
+      value: activeUsers.toString(),
+      change: totalUsers > 0 ? `${totalUsers} total` : "0",
+      positive: true,
+      icon: Users,
+    },
+    {
+      label: "Taxa de Engajamento",
+      value: `${engagementRate}%`,
+      change: activeUsers > 0 ? "+ativo" : "-",
+      positive: engagementRate > 50,
+      icon: TrendingUp,
+    },
+    {
+      label: "Quests/Usuário",
+      value: avgQuestsPerUser.toString(),
+      change: `${totalQuests} total`,
+      positive: avgQuestsPerUser > 0,
+      icon: Target,
+    },
+    {
+      label: "XP Distribuído",
+      value:
+        totalXp >= 1000
+          ? `${(totalXp / 1000).toFixed(1)}K`
+          : totalXp.toString(),
+      change: "+acumulado",
+      positive: true,
+      icon: Zap,
+    },
   ];
 
   if (isLoading) {
@@ -66,7 +142,11 @@ export const AnalyticsWidget = () => {
       <div className="bg-card/80 rounded-2xl border border-border/60 overflow-hidden">
         <div className="p-4 border-b border-border">
           <div className="flex items-center gap-2">
-            <Skeleton variant="glow" shape="card" className="w-8 h-8 rounded-lg" />
+            <Skeleton
+              variant="glow"
+              shape="card"
+              className="w-8 h-8 rounded-lg"
+            />
             <div className="space-y-1">
               <Skeleton variant="shimmer" className="h-4 w-24" />
               <Skeleton variant="shimmer" className="h-3 w-16" />
@@ -77,7 +157,11 @@ export const AnalyticsWidget = () => {
           {[1, 2, 3, 4].map((i) => (
             <div key={i} className="p-3 rounded-xl bg-muted/30 space-y-2">
               <div className="flex justify-between">
-                <Skeleton variant="shimmer" shape="circle" className="w-4 h-4" />
+                <Skeleton
+                  variant="shimmer"
+                  shape="circle"
+                  className="w-4 h-4"
+                />
                 <Skeleton variant="shimmer" shape="pill" className="w-10 h-3" />
               </div>
               <Skeleton variant="glow" className="h-6 w-3/4" />
@@ -89,7 +173,12 @@ export const AnalyticsWidget = () => {
           <Skeleton variant="shimmer" className="h-4 w-1/3 mb-3" />
           <div className="flex items-end gap-2 h-32">
             {[40, 60, 30, 80, 50, 90, 70].map((h, i) => (
-              <Skeleton key={i} variant="glow" className="flex-1 rounded-t-md" style={{ height: `${h}%` }} />
+              <Skeleton
+                key={i}
+                variant="glow"
+                className="flex-1 rounded-t-md"
+                style={{ height: `${h}%` }}
+              />
             ))}
           </div>
         </div>
@@ -113,7 +202,9 @@ export const AnalyticsWidget = () => {
             </div>
             <div>
               <h3 className="font-bold">Analytics</h3>
-              <p className="text-xs text-muted-foreground">Dados em tempo real</p>
+              <p className="text-xs text-muted-foreground">
+                Dados em tempo real
+              </p>
             </div>
           </div>
           <motion.button
@@ -138,10 +229,16 @@ export const AnalyticsWidget = () => {
           >
             <div className="flex items-center justify-between mb-1">
               <metric.icon className="w-4 h-4 text-muted-foreground" />
-              <div className={`flex items-center gap-0.5 text-[10px] font-medium ${
-                metric.positive ? "text-success" : "text-destructive"
-              }`}>
-                {metric.positive ? <ArrowUpRight className="w-3 h-3" /> : <ArrowDownRight className="w-3 h-3" />}
+              <div
+                className={`flex items-center gap-0.5 text-[10px] font-medium ${
+                  metric.positive ? "text-success" : "text-destructive"
+                }`}
+              >
+                {metric.positive ? (
+                  <ArrowUpRight className="w-3 h-3" />
+                ) : (
+                  <ArrowDownRight className="w-3 h-3" />
+                )}
                 {metric.change}
               </div>
             </div>
@@ -160,13 +257,21 @@ export const AnalyticsWidget = () => {
               <AreaChart data={engagementData}>
                 <defs>
                   <linearGradient id="xpGradient" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="hsl(var(--success))" stopOpacity={0.3}/>
-                    <stop offset="95%" stopColor="hsl(var(--success))" stopOpacity={0}/>
+                    <stop
+                      offset="5%"
+                      stopColor="hsl(var(--success))"
+                      stopOpacity={0.3}
+                    />
+                    <stop
+                      offset="95%"
+                      stopColor="hsl(var(--success))"
+                      stopOpacity={0}
+                    />
                   </linearGradient>
                 </defs>
-                <XAxis 
-                  dataKey="day" 
-                  axisLine={false} 
+                <XAxis
+                  dataKey="day"
+                  axisLine={false}
                   tickLine={false}
                   tick={{ fontSize: 10, fill: "hsl(var(--muted-foreground))" }}
                 />
@@ -194,10 +299,10 @@ export const AnalyticsWidget = () => {
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={levelGroups} layout="vertical">
                 <XAxis type="number" hide />
-                <YAxis 
-                  type="category" 
-                  dataKey="team" 
-                  axisLine={false} 
+                <YAxis
+                  type="category"
+                  dataKey="team"
+                  axisLine={false}
                   tickLine={false}
                   tick={{ fontSize: 10, fill: "hsl(var(--muted-foreground))" }}
                   width={50}
