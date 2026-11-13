@@ -1,7 +1,7 @@
 {
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
- "gerado_em": "2026-11-13T18:54:10.827Z",
+ "gerado_em": "2026-11-13T19:06:49.086Z",
  "commit": "2978195e107ee63f180d9ad47b5fc4b561dbad8d",
  "branch": "main",
  "gerador": "scripts/ai-context/gerar.mjs",
