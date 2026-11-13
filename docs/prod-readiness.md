@@ -33,10 +33,10 @@ Rodados nesta sessão no clone WSL (mesmo comando da CI):
 
 | Gate | Resultado | Evidência |
 |---|---|---|
-| typecheck | **exit 0** | `TYPECHECK_EXIT=0` |
-| testes unit+component | **1886 passed / 12 skipped** | vitest, 141 arquivos (143 total, 2 skipped) |
-| lint | **0 erros / 325 warnings** (pré-existentes) | `bun run lint` |
-| build | **exit 0** (3.96 s, PWA, 166 entries precache) | `bun run build` |
+| typecheck | **exit 0** | `bun run typecheck` → `TYPECHECK_EXIT=0` (worktree limpo do main `e1b0f368`) |
+| testes unit+component | **1886 passed / 12 skipped** | `bun run test:ci`: 141 files passed, 143 total — igual à baseline, nenhum removido |
+| lint | **0 erros / 328 warnings** (pré-existentes, exit 0) | `bun run lint` nesta sessão |
+| build | **exit 0** (3.56 s, PWA, 166 entries precache) | `bun run build` nesta sessão |
 
 **12 skip**: `rls.test.ts` (3) e `rpcAccess.test.ts` (9) usam `describeIf(hasEnv)` com fallback `describe.skip` quando `VITE_SUPABASE_URL`/`ANON_KEY` não existem — design pré-existente (CI sem secrets), não é teste afrouxado. Nenhum teste removido; total >= linha de base.
 
