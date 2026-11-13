@@ -59,14 +59,14 @@ Rodados nesta sessão no clone WSL (mesmo comando da CI):
 
 ---
 
-## 5. Sem código pela metade — NÃO APROVADO (2 achados comprovados no código)
+## 5. Sem código pela metade — APROVADO
 
-Varredura em `src/`: **0 TODO/FIXME/WIP reais** (as 318 ocorrências de "TODO" eram identificadores `TodoList`/`Todos` — falsos positivos). Porém **2 mocks/hardcodes alcançáveis em produção** (evidência arquivo:linha):
+Varredura em `src/`: **0 TODO/FIXME/WIP reais** (as 318 ocorrências de "TODO" eram identificadores `TodoList`/`Todos` — falsos positivos). Dois mocks/hardcodes alcançáveis em produção foram **corrigidos** na PR [#52](https://github.com/adm01-debug/Task_Gifts_V2/pull/52) (merge `2978195e`, CI `quality` verde, CodeQL/Contratos verdes, deploy Vercel confirmado):
 
-1. `src/components/admin/MoodAnalytics.tsx:52-58` — `// Mock team data for demonstration` com médias/participantes **fictícios por departamento**, renderizados em `:214-231` e expostos na aba de humor de `/admin` (`src/pages/AdminPanel.tsx:176`, `src/App.tsx:265`).
-2. `src/pages/Profile.tsx:147` — botão de configurações do perfil apenas mostra `toast.info("Configurações em breve")` (sem ação real).
+1. `src/components/admin/MoodAnalytics.tsx` — mock `teamMoodData` (`:52-58`, médias/participantes fictícios por departamento, renderizados em `:214-231`) **removido**; o componente agora consome a fonte real `teamStats` do `useMoodTracker` (agrega `mood_entries` reais no Supabase via `moodTrackerService.getTeamMoodStats`). Hardcode `78%` do card Participação substituído por card **Registros/dia** com a média real de `total_entries` (ou "—" sem dados). Card "Por Departamento" virou **Média por Dia** (últimos 6 dias reais com `average_mood`/`total_entries` e `EmptyState`). Verificado: `grep` sem ocorrências de `teamMoodData|78%|useDepartments|participationRate`.
+2. `src/pages/Profile.tsx:147` — botão de configurações **dá ação real**: `navigate("/security-dashboard")` (rota existente, protegida, `src/App.tsx:278`), com `aria-label` novo.
 
-**Resolução pendente**: remover o mock de humor (ou marcá-lo como dados de exemplo) e implementar/remover o botão de configurações. Item 5 fica **VERMELHO** até lá.
+Validação do fix (exit 0, na branch do fix): `npx tsc --noEmit` ✓ · `eslint` nos 2 arquivos: 0 erros (2 warnings pré-existentes de `exhaustive-deps` no `fetchProfile`, não tocados) ✓ · `vitest run`: 141 arquivos, **1886 testes passed / 12 skipped** (baseline mantida) ✓ · `npm run build` ✓.
 
 ---
 
@@ -139,7 +139,7 @@ Varredura estática sobre **267 migrations** (script Python com regex validada):
 | 2 | Cobertura OK(prova)/BLOQUEADO(erro), zero "não verificado" | 🟢 feito — exceto itens BLOQUEADO acima, todos com erro exato |
 | 3 | Qualidade exit 0, testes >= início | 🟢 verificado |
 | 4 | GHA verdes em main pós-merge | 🟢 verificado (Contexto cancelled = fila, documentado) |
-| 5 | Sem código pela metade | 🔴 **NÃO** — mock de humor `MoodAnalytics.tsx:52` (renderizado p/ admin) + botão sem ação `Profile.tsx:147` |
+| 5 | Sem código pela metade | 🟢 **OK** — 2 mocks corrigidos na PR #52 (merge `2978195e`): humor do admin usa `teamStats` real, botão de configurações navega p/ `/security-dashboard`; CI verde + testes 1886 |
 | 6 | RLS/policies/migrations | 🟡 OK parcial — RLS 228/228; migrations vs banco real BLOQUEADO (sem snapshot) |
 | 7 | Produção sem erro novo, fluxos respondendo | 🔴 BLOQUEADO — 27 edge functions 404 + sem logs |
 | 8 | Entregas via PR verde | 🟢 0 PRs abertas; fluxo respeitado |
