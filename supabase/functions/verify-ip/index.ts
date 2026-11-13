@@ -137,10 +137,10 @@ Deno.serve(async (req) => {
     console.error('[verify-ip] Unexpected error:', error);
     return new Response(
       JSON.stringify({ 
-        allowed: true, 
+        allowed: false, 
         ip: 'unknown',
         reason: 'error',
-        message: 'Erro interno, acesso permitido temporariamente'
+        message: 'Erro interno, acesso bloqueado' 
       }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 500 }
     );

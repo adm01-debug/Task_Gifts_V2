@@ -97,19 +97,19 @@ Varredura estática sobre **267 migrations** (script Python com regex validada):
 ### Supabase no ar (probe HTTP real, 2026-11-13)
 - `https://eidsaqymojyuhprobfpn.supabase.co` responde; REST com credencial inválida → **HTTP 401** (correto).
 
-### Edge functions — **24 de 36 não respondem**
+### Edge functions — poda executada (PR #54)
 
-| Função | HTTP |
+| Função | Estado pós-decisão |
 |---|---|
-| `push-public-key` | 200 |
-| `ai-coach`, `ai-course-builder`, `churn-prediction`, `competency-alerts`, `migrate-helper`, `push-device-revoked`, `reward-approval-review` | 401 |
-| `push-outbox-dispatcher` | 403 |
-| `admin-alerts`, `birthday-celebrations`, `bitrix24-*`, `burn-rate-monitor`, `checkin-reminders`, `cleanup-*`, `detect-new-device`, `dispatch-critical-alert`, `error-budget-monitor`, `external-*`, `generate-quiz-questions`, `push-*` (demais), `security-weekly-digest`, `send-*`, `survey-reminders`, `trail-recommendations`, `verify-geo`, `verify-ip`, `webhook-*`, `weekly-league-processing` | **404** |
+| `push-public-key`, `push-outbox-dispatcher` | OK no ar (200) |
+| `ai-coach`, `ai-course-builder` | 503 "AI não configurada" (aguarda config) |
+| `churn-prediction`, `competency-alerts`, `migrate-helper`, `push-device-revoked`, `reward-approval-review` | 401 sem JWT (esperado: exigem auth) |
+| 21 functions podadas (PR #54) | removidas — mortas, nunca deployadas, sem chamador |
+| `verify-ip`, `webhook-dispatcher`, `trail-recommendations`, `admin-alerts`, `detect-new-device`, `generate-quiz-questions`, `send-campaign-push` | no código; sem deploy (404) |
 
-> GET e POST testados (404 persiste) — não é questão de método. `push-public-key` responde 200 no ar sem JWT, **mas o repo não explica isso**: `supabase/config.toml` só tem `verify_jwt = false` para `migrate-helper`, não para `push-public-key`. Divergência produção × repositório **NÃO VERIFICADA**.
+**Decisão — poda + mitigação (PR #54)**: das 36 functions no código, 27 nunca foram deployadas no projeto `eidsaqymojyuhprobfpn` (probe HTTP por function com service-role → 404) e o front nunca as invoca (allowlist `VITE_DEPLOYED_EDGE_FUNCTIONS=` vazia → `invokeEdgeSafe` retorna 404 sintético sem rede). Foram podadas as 21 sem chamador em `src/` e com bugs fatais (bypass RLS em `external-db-bridge`, stubs de email, queries em tabela inexistente, coluna errada, anon key do projeto antigo). As 4 vivas/possíveis com falha de segurança foram mitigadas: `verify-ip` (fail-open→fail-closed), `churn-prediction` (role-check admin/manager), `trail-recommendations` (bloqueio de IDOR), `webhook-dispatcher` (assinatura forjável removida). **Nenhuma funcionalidade perde o ar** — o front está com edge functions desligadas por allowlist.
 
-**BLOQUEADO G7-1 — edge functions 404**: 27 de 36 functions do código retornam 404 em produção (lista acima). Sem CLI `supabase` (não instalado no WSL nem no Windows) e sem `SUPABASE_SERVICE_ROLE_KEY`/credencial de deploy nesta sessão, **não é possível publicar** nem confirmar se o deploy parou de acontecer ou nunca foi configurado. Os repos não têm workflow de deploy de edge functions (só snapshot). **Requires decisão**: configurar deploy (CI com `supabase functions deploy` ou ação) ou revisar funções obsoletas; nenhuma função essencial de autenticação (auth) depende delas.
-
+**BLOQUEADO G7-1 — deploy de edge functions**: as demais no código (`verify-ip`, `webhook-dispatcher`, `trail-recommendations`, `admin-alerts`, `detect-new-device`, `generate-quiz-questions`, `send-campaign-push`) não estão no ar por falta de deploy, não por bug do front. Publicá-las exige `SUPABASE_ACCESS_TOKEN` (PAT) nos secrets do repo — ausente; service-role key retorna 401 na Management API (testado). Sem o PAT o workflow de deploy não existe; decisão do dono. Nenhuma função essencial de autenticação (auth) depende delas.
 **BLOQUEADO G7-2 — logs/banco em produção**: sem CLI supabase/vercel instalado e sem acesso a logs de edge functions/banco nesta sessão → impossível confirmar ausência de erro novo pós-deploy. Evidência mínima coletada: app 200 e REST/auth respondendo (acima).
 
 ---
@@ -117,7 +117,7 @@ Varredura estática sobre **267 migrations** (script Python com regex validada):
 ## 8. Entrega
 
 - Correções desta rodada seguem o fluxo: branch própria `claude/<tipo>-<slug>-<AAMMDD-HHMM>` a partir de `main` atualizado, CI verde e merge documentado.
-- **0 PRs abertas** neste momento (nada pendente de revisão humana em Task_Gifts_V2).
+- **PR #54 aberta** (poda edge functions + mitigações) — aguardando CI e decisão de merge (regra 8: deleção de código/arquitetura).
 
 ---
 
@@ -125,7 +125,7 @@ Varredura estática sobre **267 migrations** (script Python com regex validada):
 
 | Item | Estado | O que falta |
 |---|---|---|
-| Deploy de edge functions (27×404) | **AGUARDANDO** | decisão de arquitetura: workflow de deploy × poda de obsoletas; acesso Supabase |
+| Deploy das edge functions mantidas | **BLOQUEADO** | requer `SUPABASE_ACCESS_TOKEN` (PAT) nos secrets (ausente); service-role key 401 na Management API. Poda/mitigação na PR #54 aguardando merge |
 | Drift fase 2 vs banco real | **BLOQUEADO** | snapshot `docs/contexto/supabase/` nunca é publicado (secret `SUPABASE_DB_URL` ausente no repo → job `banco` do `contexto.yml` pula com warning). Migrations iguais ao banco **não confirmado**; fase 1 offline green |
 | Advisors de segurança / logs de produção | **BLOQUEADO** | sem supabase CLI/credencial nesta sessão |
 

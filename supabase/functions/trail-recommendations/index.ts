@@ -67,11 +67,21 @@ serve(async (req) => {
     const { userId: bodyUserId } = await req.json();
     const userId = bodyUserId || authenticatedUser.id;
     
-    // Safety check: users can only get their own recommendations unless they are managers/admins
-    // For now, we'll enforce that the authenticated user gets their own data
+    // Security: usuário só consulta a si mesmo, exceto admin/gestor.
     if (bodyUserId && bodyUserId !== authenticatedUser.id) {
-      console.log(`User ${authenticatedUser.id} attempted to get recommendations for ${bodyUserId}`);
-      // In a more complex system, we'd check if authenticatedUser is a manager of bodyUserId
+      const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
+      const supabaseKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+      const admin = createClient(supabaseUrl, supabaseKey);
+      const { data: roleRows } = await admin
+        .from('user_roles').select('role').eq('user_id', authenticatedUser.id);
+      const roles = (roleRows ?? []).map((r: { role: string }) => r.role);
+      if (!roles.includes('admin') && !roles.includes('manager')) {
+        console.warn(`[trail-recommendations] ${authenticatedUser.id} tentou ler dados de ${bodyUserId}`);
+        return new Response(JSON.stringify({ error: "Não autorizado a consultar dados de outro usuário" }), {
+          status: 403,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
     }
 
     
