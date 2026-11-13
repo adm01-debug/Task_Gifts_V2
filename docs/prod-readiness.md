@@ -84,9 +84,9 @@ Varredura estática sobre **267 migrations** (script Python com regex validada):
 - **A − B = 0** → toda tabela criada no repo tem RLS habilitada.
 - **B − C = 0** → toda tabela com RLS tem ao menos uma policy (228 tabelas com policy; 580 policies no total, 9 delas em tabelas fora do projeto: `geo_access_logs`/`geo_blocking_rules` geridas no Dashboard e `storage.objects` gerida pelo Supabase).
 - Tabelas com policy sem `CREATE TABLE` no repo: `geo_access_logs`, `geo_blocking_rules` (geridas fora do repo, via Dashboard; tipos confirmados em `src/integrations/supabase/types.ts`) e `storage` (Supabase gerido) — **não** são gap de RLS do projeto.
-- Advisors de segurança: **NÃO VERIFICADO** — consulta real ao banco não disponível nesta sessão e o snapshot nunca foi publicado; a garantia anterior de “sem item ERROR” foi **removida por falta de fonte real** (ver BLOQUEADO abaixo).
+- Advisors de segurança: **BLOQUEADO** — a `SUPABASE_SECRET_KEY` autoriza REST (HTTP 200, OpenAPI com 472 paths; 228/228 tabelas das migrations presentes no banco) mas **não** a Management API (401, exige PAT) nem conexão TCP ao banco; sem SQL direto não há como rodar o advisor de segurança. A garantia anterior de “sem item ERROR” foi **removida por falta de fonte real** (ver BLOQUEADO G6).
 
-**Drift migrations**: guard `check-migration-drift.mjs` fase 1 (idempotência vs baseline) **exit 0**, 0 casos novos (`migrations: 267`, `nao_idempotente: 1062`, `ddl_destrutivo: 39` — todos no baseline). Fase 2 (comparação com banco real) usa snapshot do banco publicado na branch `contexto` — **ver BLOQUEADO G6-2**.
+**Drift migrations**: guard `check-migration-drift.mjs` fase 1 (idempotência vs baseline) **exit 0**, 0 casos novos (`migrations: 267`, `nao_idempotente: 1062`, `ddl_destrutivo: 39` — todos no baseline). Fase 2 (comparação com banco real) — **com a `SUPABASE_SECRET_KEY` do dono**: probe real no PostgREST via `curl` (HTTP 200 + OpenAPI com 472 paths) e diff contra os `CREATE TABLE` das migrations: **228/228 tabelas do repo presentes no banco vivo, 0 ausentes** (13 a mais no ar = views/fonte externa); a comparação de colunas/policies via snapshot continua **BLOQUEADA** — o secret key autoriza REST, mas não a Management API (`api.supabase.com` → **401**, exigiria PAT) nem conexão TCP direta (`db.eidsaqymojyuhprobfpn.supabase.co` → IPv6 sem rota local; pooler → `ENOTFOUND tenant`). Guard de RLS do repo é offline; advisors de segurança acima referenciam o **BLOQUEADO** da seção 6.
 
 ---
 
@@ -131,8 +131,8 @@ Varredura estática sobre **267 migrations** (script Python com regex validada):
 | Item | Estado | O que falta |
 |---|---|---|
 | Deploy das edge functions mantidas (7) | **BLOQUEADO** | PR #55 aberta; requer `SUPABASE_ACCESS_TOKEN` (PAT) nos secrets (ausente — service-role key 401 na Management API, testado). Decisão do dono (regra 8) |
-| Drift fase 2 vs banco real | **BLOQUEADO** | secret `SUPABASE_DB_URL` ausente → snapshot `docs/contexto/supabase/` nunca é publicado (job `banco` do `contexto.yml` pula com warning; confirmado na release de 21:14Z). Migrations iguais ao banco **não confirmado**; fase 1 offline green (exit 0, 0 casos novos) |
-| Advisors de segurança / logs de produção | **BLOQUEADO** | sem supabase CLI/credencial que acesse logs nesta sessão |
+| Drift fase 2 vs banco real | 🟡 parcial | **228/228 tabelas das migrations presentes no banco vivo** (0 ausentes; diff OpenAPI real via secret key, 2026-11-13); comparação de colunas/policies via snapshot segue **BLOQUEADO** — secret `SUPABASE_DB_URL` ausente e secret key não autoriza Management API (401) nem TCP ao banco; fase 1 offline green (exit 0, 0 casos novos) |
+| Advisors de segurança / logs de produção | **BLOQUEADO** | REST OK via secret key; Management API 401 (precisa PAT); sem SQL direto/CLI → advisors e logs de edge functions inacessíveis nesta sessão |
 | Fila de runners da org | info | runs `queued`/`cancelled` (ex.: `Contexto` 21:08Z, `21:14Z`) são overrun da fila, não falha de código — padrão documentado |
 
 ---
@@ -146,7 +146,7 @@ Varredura estática sobre **267 migrations** (script Python com regex validada):
 | 3 | Qualidade exit 0, testes >= início | 🟢 revalidado em worktree limpo do main `e1b0f368`: typecheck 0 · testes **1886 pass / 12 skip** (143 files) · lint **0 erros** · build 0 (3.56s) |
 | 4 | GHA verdes em main pós-merge | 🟢 CI `43507331092` success + Automação local `43507331317` success no commit final; Contexto cancelled = fila (documentado) |
 | 5 | Sem código pela metade | 🟢 varredura `src/`+`supabase/functions/`: 0 marcadores TODO/FIXME/WIP reais; mocks fechados na #52 (merge `2978195e`) |
-| 6 | RLS/policies/migrations | 🟡 fase 1 exit 0 (267 migrations, 0 casos novos); fase 2 vs banco BLOQUEADO (sem `SUPABASE_DB_URL`) |
+| 6 | RLS/policies/migrations | 🟡 228/228 tabelas do repo no banco vivo (0 ausentes, diff OpenAPI real); fase 1 exit 0 (267 migrations, 0 casos novos); advisors BLOQUEADO (secret key não acessa SQL direto) |
 | 7 | Produção sem erro novo, fluxos respondendo | 🟡 app 200 / REST 401 correto / 2 edge functions vivas; 7 não deployadas BLOQUEADO (falta PAT) · logs BLOQUEADO (sem CLI/credencial) |
 | 8 | Entregas via PR verde | 🟢 1 PR aberta (#55, regra 8); merges #52/#53/#54 com CI verde e deploy confirmado |
 | 9 | Relatório fechado | 🟢 este documento reflete o main `e1b0f368`; apenas itens BLOQUEADO/dono permanecem em aberto |
