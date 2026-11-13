@@ -1481,10 +1481,7 @@
     ]
    },
    "usada_no_front": 2,
-   "usada_em_edges": [
-    "external-api",
-    "external-webhook"
-   ],
+   "usada_em_edges": [],
    "triggers": [],
    "sem_rls": false,
    "nao_usada": false
@@ -2937,12 +2934,10 @@
     "so_no_types": []
    },
    "usada_no_front": 0,
-   "usada_em_edges": [
-    "external-api"
-   ],
+   "usada_em_edges": [],
    "triggers": [],
    "sem_rls": false,
-   "nao_usada": false
+   "nao_usada": true
   },
   "attendance_records": {
    "colunas": {
@@ -3052,8 +3047,7 @@
    "usada_no_front": 6,
    "usada_em_edges": [
     "admin-alerts",
-    "churn-prediction",
-    "external-webhook"
+    "churn-prediction"
    ],
    "triggers": [],
    "sem_rls": false,
@@ -3169,9 +3163,7 @@
     "so_no_types": []
    },
    "usada_no_front": 1,
-   "usada_em_edges": [
-    "external-webhook"
-   ],
+   "usada_em_edges": [],
    "triggers": [],
    "sem_rls": false,
    "nao_usada": false
@@ -3269,8 +3261,7 @@
    },
    "usada_no_front": 2,
    "usada_em_edges": [
-    "competency-alerts",
-    "send-email-digest"
+    "competency-alerts"
    ],
    "triggers": [
     "trg_boss_damage_attendance_streaks",
@@ -3818,9 +3809,7 @@
    "usada_em_edges": [
     "admin-alerts",
     "churn-prediction",
-    "cleanup-rate-limit-logs",
-    "reward-approval-review",
-    "send-email-notifications"
+    "reward-approval-review"
    ],
    "triggers": [],
    "sem_rls": false,
@@ -4515,14 +4504,12 @@
     "so_no_types": []
    },
    "usada_no_front": 0,
-   "usada_em_edges": [
-    "bitrix24-webhook"
-   ],
+   "usada_em_edges": [],
    "triggers": [
     "update_bitrix24_sync_mappings_updated_at"
    ],
    "sem_rls": false,
-   "nao_usada": false
+   "nao_usada": true
   },
   "bitrix24_tokens": {
    "colunas": {
@@ -4618,15 +4605,12 @@
     "so_no_types": []
    },
    "usada_no_front": 0,
-   "usada_em_edges": [
-    "bitrix24-api",
-    "bitrix24-oauth"
-   ],
+   "usada_em_edges": [],
    "triggers": [
     "update_bitrix24_tokens_updated_at"
    ],
    "sem_rls": false,
-   "nao_usada": false
+   "nao_usada": true
   },
   "bitrix24_webhook_logs": {
    "colunas": {
@@ -4710,13 +4694,10 @@
     "so_no_types": []
    },
    "usada_no_front": 0,
-   "usada_em_edges": [
-    "bitrix24-api",
-    "bitrix24-webhook"
-   ],
+   "usada_em_edges": [],
    "triggers": [],
    "sem_rls": false,
-   "nao_usada": false
+   "nao_usada": true
   },
   "blocked_ips": {
    "colunas": {
@@ -4855,9 +4836,7 @@
     "so_no_types": []
    },
    "usada_no_front": 1,
-   "usada_em_edges": [
-    "send-rate-limit-alert"
-   ],
+   "usada_em_edges": [],
    "triggers": [],
    "sem_rls": false,
    "nao_usada": false
@@ -7897,10 +7876,7 @@
     "so_no_types": []
    },
    "usada_no_front": 1,
-   "usada_em_edges": [
-    "birthday-celebrations",
-    "send-email-notifications"
-   ],
+   "usada_em_edges": [],
    "triggers": [],
    "sem_rls": false,
    "nao_usada": false
@@ -8296,10 +8272,7 @@
     "so_no_types": []
    },
    "usada_no_front": 4,
-   "usada_em_edges": [
-    "checkin-reminders",
-    "send-email-notifications"
-   ],
+   "usada_em_edges": [],
    "triggers": [
     "update_checkins_updated_at"
    ],
@@ -9552,9 +9525,7 @@
     "so_no_types": []
    },
    "usada_no_front": 3,
-   "usada_em_edges": [
-    "bitrix24-webhook"
-   ],
+   "usada_em_edges": [],
    "triggers": [
     "update_custom_quests_updated_at"
    ],
@@ -10902,9 +10873,7 @@
     "so_no_types": []
    },
    "usada_no_front": 4,
-   "usada_em_edges": [
-    "external-api"
-   ],
+   "usada_em_edges": [],
    "triggers": [
     "update_departments_updated_at"
    ],
@@ -13319,15 +13288,12 @@
     "so_no_types": []
    },
    "usada_no_front": 0,
-   "usada_em_edges": [
-    "external-api",
-    "external-webhook"
-   ],
+   "usada_em_edges": [],
    "triggers": [
     "update_external_tasks_updated_at"
    ],
    "sem_rls": false,
-   "nao_usada": false
+   "nao_usada": true
   },
   "feedback_cycles": {
    "colunas": {
@@ -13911,9 +13877,7 @@
     "so_no_types": []
    },
    "usada_no_front": 1,
-   "usada_em_edges": [
-    "send-email-notifications"
-   ],
+   "usada_em_edges": [],
    "triggers": [
     "update_feedback_requests_updated_at"
    ],
@@ -14329,12 +14293,10 @@
     "was_allowed": "boolean"
    },
    "usada_no_front": 0,
-   "usada_em_edges": [
-    "verify-geo"
-   ],
+   "usada_em_edges": [],
    "triggers": [],
    "sem_rls": false,
-   "nao_usada": false
+   "nao_usada": true
   },
   "geo_allowed_countries": {
    "colunas": {
@@ -14428,12 +14390,10 @@
     "so_no_types": []
    },
    "usada_no_front": 0,
-   "usada_em_edges": [
-    "verify-geo"
-   ],
+   "usada_em_edges": [],
    "triggers": [],
    "sem_rls": false,
-   "nao_usada": false
+   "nao_usada": true
   },
   "geo_blocking_rules": {
    "colunas": {},
@@ -14542,12 +14502,10 @@
     "so_no_types": []
    },
    "usada_no_front": 0,
-   "usada_em_edges": [
-    "verify-geo"
-   ],
+   "usada_em_edges": [],
    "triggers": [],
    "sem_rls": false,
-   "nao_usada": false
+   "nao_usada": true
   },
   "goal_updates": {
    "colunas": {
@@ -15502,9 +15460,7 @@
     "so_no_types": []
    },
    "usada_no_front": 1,
-   "usada_em_edges": [
-    "weekly-league-processing"
-   ],
+   "usada_em_edges": [],
    "triggers": [],
    "sem_rls": false,
    "nao_usada": false
@@ -15658,9 +15614,7 @@
     "so_no_types": []
    },
    "usada_no_front": 1,
-   "usada_em_edges": [
-    "weekly-league-processing"
-   ],
+   "usada_em_edges": [],
    "triggers": [],
    "sem_rls": false,
    "nao_usada": false
@@ -18833,16 +18787,7 @@
    },
    "usada_no_front": 4,
    "usada_em_edges": [
-    "birthday-celebrations",
-    "bitrix24-webhook",
-    "checkin-reminders",
-    "competency-alerts",
-    "dispatch-critical-alert",
-    "security-weekly-digest",
-    "send-email-notifications",
-    "send-rate-limit-alert",
-    "survey-reminders",
-    "weekly-league-processing"
+    "competency-alerts"
    ],
    "triggers": [],
    "sem_rls": false,
@@ -20975,9 +20920,7 @@
     "so_no_types": []
    },
    "usada_no_front": 2,
-   "usada_em_edges": [
-    "external-api"
-   ],
+   "usada_em_edges": [],
    "triggers": [
     "update_positions_updated_at"
    ],
@@ -21949,16 +21892,10 @@
    "usada_no_front": 27,
    "usada_em_edges": [
     "admin-alerts",
-    "birthday-celebrations",
     "churn-prediction",
     "competency-alerts",
     "detect-new-device",
-    "external-api",
-    "external-webhook",
     "reward-approval-review",
-    "send-email-digest",
-    "send-email-notifications",
-    "survey-reminders",
     "trail-recommendations"
    ],
    "triggers": [
@@ -22043,9 +21980,7 @@
     "so_no_types": []
    },
    "usada_no_front": 1,
-   "usada_em_edges": [
-    "survey-reminders"
-   ],
+   "usada_em_edges": [],
    "triggers": [],
    "sem_rls": false,
    "nao_usada": false
@@ -22176,10 +22111,7 @@
     "so_no_types": []
    },
    "usada_no_front": 1,
-   "usada_em_edges": [
-    "send-email-notifications",
-    "survey-reminders"
-   ],
+   "usada_em_edges": [],
    "triggers": [
     "update_pulse_surveys_updated_at"
    ],
@@ -23194,9 +23126,7 @@
     "so_no_types": []
    },
    "usada_no_front": 1,
-   "usada_em_edges": [
-    "external-db-bridge"
-   ],
+   "usada_em_edges": [],
    "triggers": [],
    "sem_rls": false,
    "nao_usada": false
@@ -23303,7 +23233,6 @@
    },
    "usada_no_front": 4,
    "usada_em_edges": [
-    "bitrix24-webhook",
     "competency-alerts",
     "trail-recommendations"
    ],
@@ -24020,12 +23949,10 @@
     "so_no_types": []
    },
    "usada_no_front": 0,
-   "usada_em_edges": [
-    "send-rate-limit-alert"
-   ],
+   "usada_em_edges": [],
    "triggers": [],
    "sem_rls": false,
-   "nao_usada": false
+   "nao_usada": true
   },
   "rate_limit_rules": {
    "colunas": {
@@ -25529,10 +25456,7 @@
    },
    "usada_no_front": 3,
    "usada_em_edges": [
-    "burn-rate-monitor",
-    "detect-new-device",
-    "error-budget-monitor",
-    "security-weekly-digest"
+    "detect-new-device"
    ],
    "triggers": [
     "trg_auto_create_postmortem",
@@ -26773,9 +26697,7 @@
     "so_no_types": []
    },
    "usada_no_front": 1,
-   "usada_em_edges": [
-    "external-webhook"
-   ],
+   "usada_em_edges": [],
    "triggers": [],
    "sem_rls": false,
    "nao_usada": false
@@ -27968,10 +27890,7 @@
    },
    "usada_no_front": 3,
    "usada_em_edges": [
-    "competency-alerts",
-    "external-api",
-    "external-webhook",
-    "send-email-digest"
+    "competency-alerts"
    ],
    "triggers": [],
    "sem_rls": false,
@@ -29471,11 +29390,9 @@
    },
    "usada_no_front": 5,
    "usada_em_edges": [
-    "bitrix24-webhook",
-    "dispatch-critical-alert",
+    "churn-prediction",
     "reward-approval-review",
-    "security-weekly-digest",
-    "send-rate-limit-alert"
+    "trail-recommendations"
    ],
    "triggers": [],
    "sem_rls": false,
@@ -31015,8 +30932,6 @@
    },
    "usada_no_front": 4,
    "usada_em_edges": [
-    "external-api",
-    "external-webhook",
     "webhook-dispatcher"
    ],
    "triggers": [
@@ -31193,26 +31108,11 @@
    "nao_usada": false
   }
  },
- "tabelas_usadas_no_codigo_sem_definicao": [
-  "coin_transactions",
-  "league_members",
-  "user_quests",
-  "xp_transactions"
- ],
+ "tabelas_usadas_no_codigo_sem_definicao": [],
  "rpcs_usadas_no_codigo": [
   {
    "nome": "acknowledge_security_alert",
    "definida": true,
-   "usada_em": 1
-  },
-  {
-   "nome": "add_user_rewards",
-   "definida": false,
-   "usada_em": 1
-  },
-  {
-   "nome": "add_user_xp",
-   "definida": false,
    "usada_em": 1
   },
   {
@@ -31247,11 +31147,6 @@
   },
   {
    "nome": "assign_engagement_questions",
-   "definida": true,
-   "usada_em": 1
-  },
-  {
-   "nome": "auto_block_ip",
    "definida": true,
    "usada_em": 1
   },
@@ -31298,17 +31193,12 @@
   {
    "nome": "cleanup_old_security_logs",
    "definida": true,
-   "usada_em": 4
+   "usada_em": 2
   },
   {
    "nome": "close_auction",
    "definida": true,
    "usada_em": 1
-  },
-  {
-   "nome": "complete_external_task",
-   "definida": true,
-   "usada_em": 2
   },
   {
    "nome": "complete_task_score",
@@ -31423,7 +31313,7 @@
   {
    "nome": "get_burn_rate",
    "definida": true,
-   "usada_em": 2
+   "usada_em": 1
   },
   {
    "nome": "get_card_set_rewards",
@@ -31491,22 +31381,12 @@
    "usada_em": 1
   },
   {
-   "nome": "get_error_budget_30d",
-   "definida": true,
-   "usada_em": 1
-  },
-  {
    "nome": "get_executive_metrics",
    "definida": true,
-   "usada_em": 2
+   "usada_em": 1
   },
   {
    "nome": "get_incident_metrics",
-   "definida": true,
-   "usada_em": 1
-  },
-  {
-   "nome": "get_leaderboard_api",
    "definida": true,
    "usada_em": 1
   },
@@ -31631,11 +31511,6 @@
    "usada_em": 1
   },
   {
-   "nome": "get_user_stats_api",
-   "definida": true,
-   "usada_em": 1
-  },
-  {
    "nome": "get_wager_leaderboard",
    "definida": true,
    "usada_em": 1
@@ -31648,7 +31523,7 @@
   {
    "nome": "get_webhook_delivery_stats_1h",
    "definida": true,
-   "usada_em": 2
+   "usada_em": 1
   },
   {
    "nome": "get_webhook_delivery_stats_24h",
@@ -31683,11 +31558,6 @@
   {
    "nome": "increment_push_failures",
    "definida": true,
-   "usada_em": 1
-  },
-  {
-   "nome": "increment_user_xp_coins",
-   "definida": false,
    "usada_em": 1
   },
   {
@@ -31749,11 +31619,6 @@
    "nome": "place_prediction_stake",
    "definida": true,
    "usada_em": 1
-  },
-  {
-   "nome": "process_external_task",
-   "definida": true,
-   "usada_em": 2
   },
   {
    "nome": "promote_webhook_secret",
@@ -31994,11 +31859,6 @@
    "nome": "user_wants_push_notification",
    "definida": true,
    "usada_em": 1
-  },
-  {
-   "nome": "validate_api_key",
-   "definida": true,
-   "usada_em": 2
   },
   {
    "nome": "verify_certificate",

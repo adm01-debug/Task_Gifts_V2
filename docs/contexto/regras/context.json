@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "a489fe2e64109c54de531ae464a8b3a81d9eaee7",
+  "sha": "e1b0f368dd6361901fb60cb8bb6ca8326664cf8d",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
-  "generated_at": "2026-11-13 20:35 UTC",
-  "files_total": 1513,
-  "code_files": 1421,
-  "code_lines": 260097
+  "generated_at": "2026-11-13 21:47 UTC",
+  "files_total": 1491,
+  "code_files": 1399,
+  "code_lines": 254681
  },
  "version": "1.3.2",
- "facts_hash": "8524f1bc32fc4b8a",
+ "facts_hash": "c894a1131ce24777",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -168,7 +168,7 @@
   "package_manager": "bun",
   "languages": {
    ".tsx": 565,
-   ".ts": 559,
+   ".ts": 537,
    ".sql": 267,
    ".mjs": 19,
    ".js": 5,
@@ -43506,182 +43506,6 @@
     "idempotency": false
    },
    {
-    "name": "birthday-celebrations",
-    "file": "supabase/functions/birthday-celebrations/index.ts",
-    "methods": [
-     "OPTIONS"
-    ],
-    "auth": "service_role (ignora RLS) — NÃO valida usuário no código",
-    "tables": [
-     "celebrations",
-     "notifications",
-     "profiles"
-    ],
-    "env": [
-     "SUPABASE_SERVICE_ROLE_KEY",
-     "SUPABASE_URL"
-    ],
-    "external": [],
-    "invokes": [],
-    "doc": "",
-    "errors": [],
-    "side_effects": [],
-    "webhook_events": [],
-    "idempotency": false
-   },
-   {
-    "name": "bitrix24-api",
-    "file": "supabase/functions/bitrix24-api/index.ts",
-    "methods": [
-     "OPTIONS"
-    ],
-    "auth": "service_role (ignora RLS) + valida JWT do usuário",
-    "tables": [
-     "bitrix24_tokens",
-     "bitrix24_webhook_logs"
-    ],
-    "env": [
-     "BITRIX24_CLIENT_ID",
-     "BITRIX24_CLIENT_SECRET",
-     "SUPABASE_SERVICE_ROLE_KEY",
-     "SUPABASE_URL"
-    ],
-    "external": [
-     "https://${tokenRecord.domain}/oauth/token/…"
-    ],
-    "invokes": [],
-    "doc": "",
-    "errors": [
-     "Bitrix24 API Error: ${data.error_description || data.error}",
-     "Bitrix24 não conectado",
-     "CRM action não suportada: ${action}",
-     "Calendar action não suportada: ${action}",
-     "IM action não suportada: ${action}",
-     "Módulo não suportado: ${module}",
-     "Notify action não suportada: ${action}",
-     "Tasks action não suportada: ${action}"
-    ],
-    "side_effects": [
-     "notify"
-    ],
-    "webhook_events": [],
-    "idempotency": false
-   },
-   {
-    "name": "bitrix24-oauth",
-    "file": "supabase/functions/bitrix24-oauth/index.ts",
-    "methods": [
-     "OPTIONS"
-    ],
-    "auth": "service_role (ignora RLS) + valida JWT do usuário",
-    "tables": [
-     "bitrix24_tokens"
-    ],
-    "env": [
-     "BITRIX24_CLIENT_ID",
-     "BITRIX24_CLIENT_SECRET",
-     "BITRIX24_DOMAIN",
-     "FRONTEND_URL",
-     "SUPABASE_ANON_KEY",
-     "SUPABASE_SERVICE_ROLE_KEY",
-     "SUPABASE_URL"
-    ],
-    "external": [
-     "https://${bitrixDomain}/oauth/token/…",
-     "https://${tokenRecord.domain}/oauth/token/…"
-    ],
-    "invokes": [],
-    "doc": "",
-    "errors": [
-     "Código de autorização não fornecido"
-    ],
-    "side_effects": [],
-    "webhook_events": [],
-    "idempotency": false
-   },
-   {
-    "name": "bitrix24-webhook",
-    "file": "supabase/functions/bitrix24-webhook/index.ts",
-    "methods": [
-     "OPTIONS"
-    ],
-    "auth": "service_role (ignora RLS) — NÃO valida usuário no código",
-    "tables": [
-     "bitrix24_sync_mappings",
-     "bitrix24_webhook_logs",
-     "custom_quests",
-     "notifications",
-     "quest_assignments",
-     "user_roles",
-     "webhook_idempotency"
-    ],
-    "env": [
-     "BITRIX24_WEBHOOK_SECRET",
-     "SUPABASE_SERVICE_ROLE_KEY",
-     "SUPABASE_URL"
-    ],
-    "external": [],
-    "invokes": [],
-    "doc": "",
-    "errors": [],
-    "side_effects": [],
-    "webhook_events": [],
-    "idempotency": true
-   },
-   {
-    "name": "burn-rate-monitor",
-    "file": "supabase/functions/burn-rate-monitor/index.ts",
-    "methods": [
-     "OPTIONS"
-    ],
-    "auth": "service_role (ignora RLS) — NÃO valida usuário no código",
-    "tables": [
-     "security_alerts"
-    ],
-    "env": [
-     "SLO_TARGET",
-     "SUPABASE_SERVICE_ROLE_KEY",
-     "SUPABASE_URL"
-    ],
-    "external": [],
-    "invokes": [
-     "dispatch-critical-alert"
-    ],
-    "doc": "Multi-window burn-rate alerts (Google SRE style) Windows evaluated: - Fast page: 1h AND 5min burn >= 14.4x -> critical (2% budget in 1h) - Slow page: 6h AND 30min burn >= 6x -> high (5% budget in 6h) Alert only when BOTH long and short windows exceed the threshold (reduces noise).",
-    "errors": [
-     ", insErr); continue; }\n\n          triggered.push({ alertType, severity: pair.severity, id: alert?.id });\n\n          try {\n            await sb.functions.invoke(",
-     "get_burn_rate(${minutes}): ${error.message}"
-    ],
-    "side_effects": [
-     "invoke("
-    ],
-    "webhook_events": [],
-    "idempotency": true
-   },
-   {
-    "name": "checkin-reminders",
-    "file": "supabase/functions/checkin-reminders/index.ts",
-    "methods": [
-     "OPTIONS"
-    ],
-    "auth": "service_role (ignora RLS) — NÃO valida usuário no código",
-    "tables": [
-     "checkins",
-     "notifications"
-    ],
-    "env": [
-     "SUPABASE_SERVICE_ROLE_KEY",
-     "SUPABASE_URL"
-    ],
-    "external": [],
-    "invokes": [],
-    "doc": "",
-    "errors": [],
-    "side_effects": [],
-    "webhook_events": [],
-    "idempotency": false
-   },
-   {
     "name": "churn-prediction",
     "file": "supabase/functions/churn-prediction/index.ts",
     "methods": [
@@ -43694,7 +43518,8 @@
      "kudos",
      "profiles",
      "trail_enrollments",
-     "user_combos"
+     "user_combos",
+     "user_roles"
     ],
     "env": [
      "LOVABLE_API_KEY",
@@ -43711,48 +43536,6 @@
      "LOVABLE_API_KEY is not configured",
      "No tool call in AI response"
     ],
-    "side_effects": [],
-    "webhook_events": [],
-    "idempotency": false
-   },
-   {
-    "name": "cleanup-old-security-logs",
-    "file": "supabase/functions/cleanup-old-security-logs/index.ts",
-    "methods": [
-     "OPTIONS"
-    ],
-    "auth": "service_role (ignora RLS) — NÃO valida usuário no código",
-    "tables": [],
-    "env": [
-     "SUPABASE_SERVICE_ROLE_KEY",
-     "SUPABASE_URL"
-    ],
-    "external": [],
-    "invokes": [],
-    "doc": "",
-    "errors": [],
-    "side_effects": [],
-    "webhook_events": [],
-    "idempotency": false
-   },
-   {
-    "name": "cleanup-rate-limit-logs",
-    "file": "supabase/functions/cleanup-rate-limit-logs/index.ts",
-    "methods": [
-     "OPTIONS"
-    ],
-    "auth": "service_role (ignora RLS) — NÃO valida usuário no código",
-    "tables": [
-     "audit_logs"
-    ],
-    "env": [
-     "SUPABASE_SERVICE_ROLE_KEY",
-     "SUPABASE_URL"
-    ],
-    "external": [],
-    "invokes": [],
-    "doc": "",
-    "errors": [],
     "side_effects": [],
     "webhook_events": [],
     "idempotency": false
@@ -43810,160 +43593,6 @@
     "side_effects": [],
     "webhook_events": [],
     "idempotency": false
-   },
-   {
-    "name": "dispatch-critical-alert",
-    "file": "supabase/functions/dispatch-critical-alert/index.ts",
-    "methods": [
-     "OPTIONS"
-    ],
-    "auth": "service_role (ignora RLS) — NÃO valida usuário no código",
-    "tables": [
-     "notifications",
-     "user_roles"
-    ],
-    "env": [
-     "SLACK_ALERT_WEBHOOK_URL",
-     "SUPABASE_SERVICE_ROLE_KEY",
-     "SUPABASE_URL"
-    ],
-    "external": [],
-    "invokes": [],
-    "doc": "",
-    "errors": [],
-    "side_effects": [],
-    "webhook_events": [],
-    "idempotency": false
-   },
-   {
-    "name": "error-budget-monitor",
-    "file": "supabase/functions/error-budget-monitor/index.ts",
-    "methods": [
-     "OPTIONS"
-    ],
-    "auth": "service_role (ignora RLS) + valida JWT do usuário",
-    "tables": [
-     "security_alerts"
-    ],
-    "env": [
-     "SUPABASE_SERVICE_ROLE_KEY",
-     "SUPABASE_URL"
-    ],
-    "external": [],
-    "invokes": [],
-    "doc": "Error Budget Monitor — avalia burn% do orçamento de erros (30d) para webhooks e API externa. Ao cruzar 75% ou 90%, cria um security_alert e dispara o dispatch-critical-alert (Slack + notificação in-app), com deduplicação por dia+tipo+bucket para não spammar.",
-    "errors": [
-     ";\n    const serviceRole = Deno.env.get("
-    ],
-    "side_effects": [],
-    "webhook_events": [],
-    "idempotency": true
-   },
-   {
-    "name": "external-api",
-    "file": "supabase/functions/external-api/index.ts",
-    "methods": [
-     "DELETE",
-     "GET",
-     "OPTIONS",
-     "POST",
-     "PUT"
-    ],
-    "auth": "service_role (ignora RLS) + valida JWT do usuário",
-    "tables": [
-     "achievements",
-     "api_request_logs",
-     "departments",
-     "external_tasks",
-     "positions",
-     "profiles",
-     "user_achievements",
-     "webhook_subscriptions"
-    ],
-    "env": [
-     "SUPABASE_SERVICE_ROLE_KEY",
-     "SUPABASE_URL"
-    ],
-    "external": [],
-    "invokes": [],
-    "doc": "",
-    "errors": [],
-    "side_effects": [],
-    "webhook_events": [],
-    "idempotency": false
-   },
-   {
-    "name": "external-db-bridge",
-    "file": "supabase/functions/external-db-bridge/index.ts",
-    "methods": [
-     "OPTIONS"
-    ],
-    "auth": "service_role (ignora RLS) — NÃO valida usuário no código",
-    "tables": [
-     "query_telemetry"
-    ],
-    "env": [
-     "SUPABASE_SERVICE_ROLE_KEY",
-     "SUPABASE_URL"
-    ],
-    "external": [],
-    "invokes": [],
-    "doc": "",
-    "errors": [],
-    "side_effects": [],
-    "webhook_events": [],
-    "idempotency": false
-   },
-   {
-    "name": "external-webhook",
-    "file": "supabase/functions/external-webhook/index.ts",
-    "methods": [
-     "OPTIONS"
-    ],
-    "auth": "service_role (ignora RLS) — NÃO valida usuário no código",
-    "tables": [
-     "achievements",
-     "attendance_records",
-     "attendance_settings",
-     "external_tasks",
-     "profiles",
-     "task_penalties",
-     "user_achievements",
-     "webhook_idempotency",
-     "webhook_subscriptions"
-    ],
-    "env": [
-     "SUPABASE_SERVICE_ROLE_KEY",
-     "SUPABASE_URL"
-    ],
-    "external": [],
-    "invokes": [
-     "webhook-dispatcher"
-    ],
-    "doc": "",
-    "errors": [],
-    "side_effects": [
-     "invoke("
-    ],
-    "webhook_events": [
-     "achievement.grant",
-     "batch.complete",
-     "batch.tasks",
-     "task.completed",
-     "task.created",
-     "task.deleted",
-     "task.late",
-     "task.rejected",
-     "task.rework",
-     "task.started",
-     "task.updated",
-     "user.award_coins",
-     "user.award_xp",
-     "user.checkin",
-     "user.checkout",
-     "user.penalty"
-    ],
-    "idempotency": true
    },
    {
     "name": "generate-quiz-questions",
@@ -44122,31 +43751,6 @@
     "idempotency": false
    },
    {
-    "name": "security-weekly-digest",
-    "file": "supabase/functions/security-weekly-digest/index.ts",
-    "methods": [
-     "OPTIONS"
-    ],
-    "auth": "service_role (ignora RLS) — NÃO valida usuário no código",
-    "tables": [
-     "notifications",
-     "security_alerts",
-     "user_roles"
-    ],
-    "env": [
-     "SLACK_ALERT_WEBHOOK_URL",
-     "SUPABASE_SERVICE_ROLE_KEY",
-     "SUPABASE_URL"
-    ],
-    "external": [],
-    "invokes": [],
-    "doc": "",
-    "errors": [],
-    "side_effects": [],
-    "webhook_events": [],
-    "idempotency": true
-   },
-   {
     "name": "send-campaign-push",
     "file": "supabase/functions/send-campaign-push/index.ts",
     "methods": [
@@ -44175,115 +43779,6 @@
     "idempotency": false
    },
    {
-    "name": "send-email-digest",
-    "file": "supabase/functions/send-email-digest/index.ts",
-    "methods": [
-     "OPTIONS"
-    ],
-    "auth": "service_role (ignora RLS) — NÃO valida usuário no código",
-    "tables": [
-     "attendance_streaks",
-     "coin_transactions",
-     "profiles",
-     "user_achievements",
-     "user_quests",
-     "xp_transactions"
-    ],
-    "env": [
-     "SUPABASE_SERVICE_ROLE_KEY",
-     "SUPABASE_URL"
-    ],
-    "external": [],
-    "invokes": [],
-    "doc": "",
-    "errors": [],
-    "side_effects": [],
-    "webhook_events": [],
-    "idempotency": false
-   },
-   {
-    "name": "send-email-notifications",
-    "file": "supabase/functions/send-email-notifications/index.ts",
-    "methods": [
-     "OPTIONS"
-    ],
-    "auth": "service_role (ignora RLS) — NÃO valida usuário no código",
-    "tables": [
-     "audit_logs",
-     "celebrations",
-     "checkins",
-     "feedback_requests",
-     "notifications",
-     "profiles",
-     "pulse_surveys"
-    ],
-    "env": [
-     "SUPABASE_SERVICE_ROLE_KEY",
-     "SUPABASE_URL"
-    ],
-    "external": [],
-    "invokes": [],
-    "doc": "",
-    "errors": [],
-    "side_effects": [
-     "notify"
-    ],
-    "webhook_events": [],
-    "idempotency": false
-   },
-   {
-    "name": "send-rate-limit-alert",
-    "file": "supabase/functions/send-rate-limit-alert/index.ts",
-    "methods": [
-     "OPTIONS"
-    ],
-    "auth": "service_role (ignora RLS) — NÃO valida usuário no código",
-    "tables": [
-     "blocked_ips",
-     "notifications",
-     "rate_limit_logs",
-     "user_roles"
-    ],
-    "env": [
-     "SUPABASE_SERVICE_ROLE_KEY",
-     "SUPABASE_URL"
-    ],
-    "external": [],
-    "invokes": [],
-    "doc": "",
-    "errors": [],
-    "side_effects": [
-     "notify"
-    ],
-    "webhook_events": [],
-    "idempotency": false
-   },
-   {
-    "name": "survey-reminders",
-    "file": "supabase/functions/survey-reminders/index.ts",
-    "methods": [
-     "OPTIONS"
-    ],
-    "auth": "service_role (ignora RLS) — NÃO valida usuário no código",
-    "tables": [
-     "notifications",
-     "profiles",
-     "pulse_responses",
-     "pulse_surveys"
-    ],
-    "env": [
-     "SUPABASE_SERVICE_ROLE_KEY",
-     "SUPABASE_URL"
-    ],
-    "external": [],
-    "invokes": [],
-    "doc": "",
-    "errors": [],
-    "side_effects": [],
-    "webhook_events": [],
-    "idempotency": false
-   },
-   {
     "name": "trail-recommendations",
     "file": "supabase/functions/trail-recommendations/index.ts",
     "methods": [
@@ -44296,7 +43791,8 @@
      "profiles",
      "quest_assignments",
      "team_members",
-     "trail_enrollments"
+     "trail_enrollments",
+     "user_roles"
     ],
     "env": [
      "LOVABLE_API_KEY",
@@ -44313,32 +43809,6 @@
      "LOVABLE_API_KEY is not configured",
      "No content in AI response"
     ],
-    "side_effects": [],
-    "webhook_events": [],
-    "idempotency": false
-   },
-   {
-    "name": "verify-geo",
-    "file": "supabase/functions/verify-geo/index.ts",
-    "methods": [
-     "OPTIONS"
-    ],
-    "auth": "service_role (ignora RLS) — NÃO valida usuário no código",
-    "tables": [
-     "geo_access_logs",
-     "geo_allowed_countries",
-     "geo_settings"
-    ],
-    "env": [
-     "SUPABASE_SERVICE_ROLE_KEY",
-     "SUPABASE_URL"
-    ],
-    "external": [
-     "http://ip-api.com/json/…"
-    ],
-    "invokes": [],
-    "doc": "",
-    "errors": [],
     "side_effects": [],
     "webhook_events": [],
     "idempotency": false
@@ -44376,53 +43846,6 @@
     "tables": [
      "webhook_delivery_logs",
      "webhook_subscriptions"
-    ],
-    "env": [
-     "SUPABASE_SERVICE_ROLE_KEY",
-     "SUPABASE_URL"
-    ],
-    "external": [],
-    "invokes": [],
-    "doc": "",
-    "errors": [],
-    "side_effects": [],
-    "webhook_events": [],
-    "idempotency": false
-   },
-   {
-    "name": "webhook-health-monitor",
-    "file": "supabase/functions/webhook-health-monitor/index.ts",
-    "methods": [
-     "OPTIONS"
-    ],
-    "auth": "service_role (ignora RLS) — NÃO valida usuário no código",
-    "tables": [],
-    "env": [
-     "SUPABASE_SERVICE_ROLE_KEY",
-     "SUPABASE_URL",
-     "WEBHOOK_HEALTH_MIN_SAMPLE",
-     "WEBHOOK_HEALTH_THRESHOLD"
-    ],
-    "external": [],
-    "invokes": [],
-    "doc": "Monitor de saúde de webhooks — dispara alertas Sentry quando taxa de sucesso por assinatura cai abaixo do limiar (default 90%) na última hora. Executado via pg_cron (a cada 15 min) ou invocação manual admin.",
-    "errors": [],
-    "side_effects": [],
-    "webhook_events": [],
-    "idempotency": false
-   },
-   {
-    "name": "weekly-league-processing",
-    "file": "supabase/functions/weekly-league-processing/index.ts",
-    "methods": [
-     "OPTIONS"
-    ],
-    "auth": "service_role (ignora RLS) — NÃO valida usuário no código",
-    "tables": [
-     "league_history",
-     "league_members",
-     "leagues",
-     "notifications"
     ],
     "env": [
      "SUPABASE_SERVICE_ROLE_KEY",
@@ -49298,67 +48721,39 @@
   },
   {
    "module": "supabase/functions",
-   "files": 49,
-   "lines": 10127,
+   "files": 27,
+   "lines": 4711,
    "tables": [
-    "achievements",
     "ai_course_jobs",
-    "api_request_logs",
     "attendance_records",
-    "attendance_settings",
     "attendance_streaks",
     "audit_logs",
-    "bitrix24_sync_mappings",
-    "bitrix24_tokens",
-    "bitrix24_webhook_logs",
-    "blocked_ips",
-    "celebrations",
-    "checkins",
-    "coin_transactions",
-    "custom_quests",
-    "departments",
-    "external_tasks",
-    "feedback_requests",
-    "geo_access_logs",
-    "geo_allowed_countries",
-    "geo_settings",
     "ip_access_logs",
     "ip_whitelist",
     "kudos",
-    "league_history",
-    "league_members",
-    "leagues",
     "learning_trails",
     "module_progress",
     "notifications",
-    "positions",
     "profiles",
-    "pulse_responses",
-    "pulse_surveys",
     "purchase_approvals",
     "push_notification_logs",
     "push_outbox",
     "push_subscriptions",
-    "query_telemetry",
     "quest_assignments",
     "quiz_options",
     "quiz_questions",
-    "rate_limit_logs",
     "security_alerts",
     "shop_purchases",
-    "task_penalties",
     "team_members",
     "trail_enrollments",
     "trail_modules",
     "user_achievements",
     "user_certifications",
     "user_combos",
-    "user_quests",
     "user_roles",
     "webhook_delivery_logs",
     "webhook_idempotency",
-    "webhook_subscriptions",
-    "xp_transactions"
+    "webhook_subscriptions"
    ],
    "exports": [
     "cache.ts: getCache, setCache",
@@ -49377,7 +48772,7 @@
     "rate-limiter.ts: Hybrid Rate Limiter for Supabase Edge Functions Uses Upstash Redis for global consistency, falls back to in-memory for performance/offline. ATENÇÃO: `checkRateLimit` é assíncrona. Chamar sem `await` faz `result.allowed` ser `undefined`, o que bloqueia 100% do tráfego com 429.",
     "sentry.ts: Dynamic import keeps Sentry optional and avoids type-check pulling the module. deno-lint-ignore no-explicit-any",
     "webhookSecurity.ts: Segurança de webhooks de entrada: assinatura HMAC obrigatória, proteção contra replay e idempotência persistente. Por que obrigatória ------------------- O padrão anterior era `if (signature && secret) { validar }`, que só valida quando o chamador COOPERA. Um atacante simplesmente omite o header e o …",
-    "index.ts: Multi-window burn-rate alerts (Google SRE style) Windows evaluated: - Fast page: 1h AND 5min burn >= 14.4x -> critical (2% budget in 1h) - Slow page: 6h AND 30min burn >= 6x -> high (5% budget in 6h) Alert only when BOTH long and short windows exceed the threshold (reduces noise)."
+    "index.ts: Edge function temporária para migração de banco. Cole em: Cloud > Edge Functions > migrate-helper > View code Após a migração, remova esta função."
    ],
    "deps": [
     "https:",
@@ -49400,23 +48795,9 @@
     "supabase/functions/admin-alerts/index.ts",
     "supabase/functions/ai-coach/index.ts",
     "supabase/functions/ai-course-builder/index.ts",
-    "supabase/functions/birthday-celebrations/index.ts",
-    "supabase/functions/bitrix24-api/index.ts",
-    "supabase/functions/bitrix24-oauth/index.ts",
-    "supabase/functions/bitrix24-webhook/index.ts",
-    "supabase/functions/burn-rate-monitor/index.ts",
-    "supabase/functions/checkin-reminders/index.ts",
     "supabase/functions/churn-prediction/index.ts",
-    "supabase/functions/cleanup-old-security-logs/index.ts",
-    "supabase/functions/cleanup-rate-limit-logs/index.ts",
     "supabase/functions/competency-alerts/index.ts",
     "supabase/functions/detect-new-device/index.ts",
-    "supabase/functions/dispatch-critical-alert/index.ts",
-    "supabase/functions/error-budget-monitor/index.ts",
-    "supabase/functions/external-api/index.ts",
-    "supabase/functions/external-db-bridge/index.ts",
-    "supabase/functions/external-webhook/index.ts",
-    "supabase/functions/external-webhook/validation.test.ts",
     "supabase/functions/generate-quiz-questions/index.ts",
     "supabase/functions/migrate-helper/index.ts",
     "supabase/functions/push-device-revoked/index.ts",
@@ -49424,18 +48805,10 @@
     "supabase/functions/push-public-key/index.ts",
     "supabase/functions/reward-approval-review/index.ts",
     "supabase/functions/reward-approval-review/risk.ts",
-    "supabase/functions/security-weekly-digest/index.ts",
     "supabase/functions/send-campaign-push/index.ts",
-    "supabase/functions/send-email-digest/index.ts",
-    "supabase/functions/send-email-notifications/index.ts",
-    "supabase/functions/send-rate-limit-alert/index.ts",
-    "supabase/functions/survey-reminders/index.ts",
     "supabase/functions/trail-recommendations/index.ts",
-    "supabase/functions/verify-geo/index.ts",
     "supabase/functions/verify-ip/index.ts",
-    "supabase/functions/webhook-dispatcher/index.ts",
-    "supabase/functions/webhook-health-monitor/index.ts",
-    "supabase/functions/weekly-league-processing/index.ts"
+    "supabase/functions/webhook-dispatcher/index.ts"
    ]
   },
   {
@@ -49558,9 +48931,7 @@
    "achievements": {
     "select": [
      "src/services/achievementsService.ts",
-     "src/services/behavioralBadges/index.ts",
-     "supabase/functions/external-api/index.ts",
-     "supabase/functions/external-webhook/index.ts"
+     "src/services/behavioralBadges/index.ts"
     ],
     "insert": [
      "src/services/behavioralBadges/index.ts"
@@ -49664,11 +49035,6 @@
      "src/services/announcementsService.ts"
     ]
    },
-   "api_request_logs": {
-    "insert": [
-     "supabase/functions/external-api/index.ts"
-    ]
-   },
    "attendance_records": {
     "select": [
      "src/components/WeeklyPerformanceComparison.tsx",
@@ -49678,30 +49044,25 @@
      "src/services/engagementReportsService.ts",
      "src/services/highPotentialService.ts",
      "supabase/functions/admin-alerts/index.ts",
-     "supabase/functions/churn-prediction/index.ts",
-     "supabase/functions/external-webhook/index.ts"
+     "supabase/functions/churn-prediction/index.ts"
     ],
     "insert": [
-     "src/services/attendanceService.ts",
-     "supabase/functions/external-webhook/index.ts"
+     "src/services/attendanceService.ts"
     ],
     "update": [
-     "src/services/attendanceService.ts",
-     "supabase/functions/external-webhook/index.ts"
+     "src/services/attendanceService.ts"
     ]
    },
    "attendance_settings": {
     "select": [
-     "src/services/attendanceService.ts",
-     "supabase/functions/external-webhook/index.ts"
+     "src/services/attendanceService.ts"
     ]
    },
    "attendance_streaks": {
     "select": [
      "src/services/attendanceService.ts",
      "src/services/competencyService.ts",
-     "supabase/functions/competency-alerts/index.ts",
-     "supabase/functions/send-email-digest/index.ts"
+     "supabase/functions/competency-alerts/index.ts"
     ],
     "insert": [
      "src/services/attendanceService.ts"
@@ -49737,9 +49098,7 @@
      "supabase/functions/reward-approval-review/index.ts"
     ],
     "insert": [
-     "src/services/auditService.ts",
-     "supabase/functions/cleanup-rate-limit-logs/index.ts",
-     "supabase/functions/send-email-notifications/index.ts"
+     "src/services/auditService.ts"
     ]
    },
    "avatar_items": {
@@ -49752,46 +49111,9 @@
      "src/services/bingoService.ts"
     ]
    },
-   "bitrix24_sync_mappings": {
-    "upsert": [
-     "supabase/functions/bitrix24-webhook/index.ts"
-    ],
-    "update": [
-     "supabase/functions/bitrix24-webhook/index.ts"
-    ],
-    "select": [
-     "supabase/functions/bitrix24-webhook/index.ts"
-    ]
-   },
-   "bitrix24_tokens": {
-    "select": [
-     "supabase/functions/bitrix24-api/index.ts",
-     "supabase/functions/bitrix24-oauth/index.ts"
-    ],
-    "update": [
-     "supabase/functions/bitrix24-api/index.ts",
-     "supabase/functions/bitrix24-oauth/index.ts"
-    ],
-    "upsert": [
-     "supabase/functions/bitrix24-oauth/index.ts"
-    ]
-   },
-   "bitrix24_webhook_logs": {
-    "insert": [
-     "supabase/functions/bitrix24-api/index.ts",
-     "supabase/functions/bitrix24-webhook/index.ts"
-    ],
-    "select": [
-     "supabase/functions/bitrix24-webhook/index.ts"
-    ],
-    "update": [
-     "supabase/functions/bitrix24-webhook/index.ts"
-    ]
-   },
    "blocked_ips": {
     "select": [
-     "src/services/securityService.ts",
-     "supabase/functions/send-rate-limit-alert/index.ts"
+     "src/services/securityService.ts"
     ],
     "delete": [
      "src/services/securityService.ts"
@@ -49935,13 +49257,10 @@
    },
    "celebrations": {
     "select": [
-     "src/services/celebrationsService.ts",
-     "supabase/functions/birthday-celebrations/index.ts",
-     "supabase/functions/send-email-notifications/index.ts"
+     "src/services/celebrationsService.ts"
     ],
     "insert": [
-     "src/services/celebrationsService.ts",
-     "supabase/functions/birthday-celebrations/index.ts"
+     "src/services/celebrationsService.ts"
     ],
     "upsert": [
      "src/services/celebrationsService.ts"
@@ -49964,9 +49283,7 @@
      "src/services/behavioralBadges/index.ts",
      "src/services/checkinsService.ts",
      "src/services/highPotentialService.ts",
-     "src/services/oneOnOnePreparationService.ts",
-     "supabase/functions/checkin-reminders/index.ts",
-     "supabase/functions/send-email-notifications/index.ts"
+     "src/services/oneOnOnePreparationService.ts"
     ],
     "insert": [
      "src/services/checkinsService.ts"
@@ -50015,11 +49332,6 @@
      "src/services/climateSurveyService.ts"
     ]
    },
-   "coin_transactions": {
-    "select": [
-     "supabase/functions/send-email-digest/index.ts"
-    ]
-   },
    "competencies": {
     "select": [
      "src/services/developmentPlanService.ts"
@@ -50041,8 +49353,7 @@
     "select": [
      "src/pages/QuestBuilder.tsx",
      "src/services/engagementReportsService.ts",
-     "src/services/questsService.ts",
-     "supabase/functions/bitrix24-webhook/index.ts"
+     "src/services/questsService.ts"
     ],
     "update": [
      "src/services/questsService.ts"
@@ -50104,8 +49415,7 @@
      "src/services/departmentWarAdminService.ts",
      "src/services/departmentsService.ts",
      "src/services/engagementReportsService.ts",
-     "src/services/successionService.ts",
-     "supabase/functions/external-api/index.ts"
+     "src/services/successionService.ts"
     ],
     "insert": [
      "src/services/departmentsService.ts"
@@ -50209,23 +49519,6 @@
      "src/pages/ExecutiveMonthlyReport.tsx"
     ]
    },
-   "external_tasks": {
-    "insert": [
-     "supabase/functions/external-api/index.ts",
-     "supabase/functions/external-webhook/index.ts"
-    ],
-    "select": [
-     "supabase/functions/external-api/index.ts",
-     "supabase/functions/external-webhook/index.ts"
-    ],
-    "update": [
-     "supabase/functions/external-api/index.ts",
-     "supabase/functions/external-webhook/index.ts"
-    ],
-    "delete": [
-     "supabase/functions/external-webhook/index.ts"
-    ]
-   },
    "fantasma": {
     "ref": [
      "scripts/ai-context/cenarios.mjs"
@@ -50263,8 +49556,7 @@
    },
    "feedback_requests": {
     "select": [
-     "src/services/feedbackService.ts",
-     "supabase/functions/send-email-notifications/index.ts"
+     "src/services/feedbackService.ts"
     ],
     "insert": [
      "src/services/feedbackService.ts"
@@ -50289,21 +49581,6 @@
    "fixture_table": {
     "select": [
      "scripts/ai-context/gerar.unit.mjs"
-    ]
-   },
-   "geo_access_logs": {
-    "insert": [
-     "supabase/functions/verify-geo/index.ts"
-    ]
-   },
-   "geo_allowed_countries": {
-    "select": [
-     "supabase/functions/verify-geo/index.ts"
-    ]
-   },
-   "geo_settings": {
-    "select": [
-     "supabase/functions/verify-geo/index.ts"
     ]
    },
    "ghost_table": {
@@ -50400,22 +49677,12 @@
      "src/services/leaguesService.ts"
     ],
     "insert": [
-     "src/services/leaguesService.ts",
-     "supabase/functions/weekly-league-processing/index.ts"
-    ]
-   },
-   "league_members": {
-    "select": [
-     "supabase/functions/weekly-league-processing/index.ts"
-    ],
-    "update": [
-     "supabase/functions/weekly-league-processing/index.ts"
+     "src/services/leaguesService.ts"
     ]
    },
    "leagues": {
     "select": [
-     "src/services/leaguesService.ts",
-     "supabase/functions/weekly-league-processing/index.ts"
+     "src/services/leaguesService.ts"
     ],
     "insert": [
      "src/services/leaguesService.ts"
@@ -50610,21 +49877,11 @@
      "src/services/notificationsService.ts",
      "src/services/pushSubscriptionService.ts",
      "src/services/salesCampaignsService.ts",
-     "supabase/functions/birthday-celebrations/index.ts",
-     "supabase/functions/bitrix24-webhook/index.ts",
-     "supabase/functions/checkin-reminders/index.ts",
-     "supabase/functions/competency-alerts/index.ts",
-     "supabase/functions/dispatch-critical-alert/index.ts",
-     "supabase/functions/send-rate-limit-alert/index.ts",
-     "supabase/functions/survey-reminders/index.ts",
-     "supabase/functions/weekly-league-processing/index.ts"
+     "supabase/functions/competency-alerts/index.ts"
     ],
     "select": [
      "src/services/notificationsService.ts",
-     "supabase/functions/checkin-reminders/index.ts",
-     "supabase/functions/competency-alerts/index.ts",
-     "supabase/functions/send-email-notifications/index.ts",
-     "supabase/functions/survey-reminders/index.ts"
+     "supabase/functions/competency-alerts/index.ts"
     ],
     "update": [
      "src/services/notificationsService.ts"
@@ -50634,9 +49891,6 @@
     ],
     "ref": [
      "supabase/functions/competency-alerts/index.ts"
-    ],
-    "upsert": [
-     "supabase/functions/security-weekly-digest/index.ts"
     ]
    },
    "onboarding_progress": {
@@ -50761,8 +50015,7 @@
    "positions": {
     "select": [
      "src/services/positionsService.ts",
-     "src/services/successionService.ts",
-     "supabase/functions/external-api/index.ts"
+     "src/services/successionService.ts"
     ],
     "insert": [
      "src/services/positionsService.ts"
@@ -50844,16 +50097,10 @@
      "src/services/weeklyChallengesService.ts",
      "src/test/rls.test.ts",
      "supabase/functions/admin-alerts/index.ts",
-     "supabase/functions/birthday-celebrations/index.ts",
      "supabase/functions/churn-prediction/index.ts",
      "supabase/functions/competency-alerts/index.ts",
      "supabase/functions/detect-new-device/index.ts",
-     "supabase/functions/external-api/index.ts",
-     "supabase/functions/external-webhook/index.ts",
      "supabase/functions/reward-approval-review/index.ts",
-     "supabase/functions/send-email-digest/index.ts",
-     "supabase/functions/send-email-notifications/index.ts",
-     "supabase/functions/survey-reminders/index.ts",
      "supabase/functions/trail-recommendations/index.ts"
     ],
     "update": [
@@ -50864,9 +50111,7 @@
      "src/services/onboardingService.ts",
      "src/services/profilesService.ts",
      "src/services/seasonalEventsService.ts",
-     "src/services/shopService.ts",
-     "supabase/functions/external-api/index.ts",
-     "supabase/functions/external-webhook/index.ts"
+     "src/services/shopService.ts"
     ],
     "ref": [
      "src/services/highPotentialService.ts"
@@ -50889,8 +50134,7 @@
    },
    "pulse_responses": {
     "select": [
-     "src/services/pulseSurveysService.ts",
-     "supabase/functions/survey-reminders/index.ts"
+     "src/services/pulseSurveysService.ts"
     ],
     "insert": [
      "src/services/pulseSurveysService.ts"
@@ -50898,9 +50142,7 @@
    },
    "pulse_surveys": {
     "select": [
-     "src/services/pulseSurveysService.ts",
-     "supabase/functions/send-email-notifications/index.ts",
-     "supabase/functions/survey-reminders/index.ts"
+     "src/services/pulseSurveysService.ts"
     ],
     "insert": [
      "src/services/pulseSurveysService.ts"
@@ -50958,21 +50200,12 @@
      "src/services/pushSubscriptionService.ts"
     ]
    },
-   "query_telemetry": {
-    "insert": [
-     "supabase/functions/external-db-bridge/index.ts"
-    ],
-    "select": [
-     "supabase/functions/external-db-bridge/index.ts"
-    ]
-   },
    "quest_assignments": {
     "select": [
      "src/pages/PersonalStats.tsx",
      "src/services/competencyService.ts",
      "src/services/engagementReportsService.ts",
      "src/services/questsService.ts",
-     "supabase/functions/bitrix24-webhook/index.ts",
      "supabase/functions/competency-alerts/index.ts",
      "supabase/functions/trail-recommendations/index.ts"
     ],
@@ -50980,8 +50213,7 @@
      "src/services/questsService.ts"
     ],
     "update": [
-     "src/services/questsService.ts",
-     "supabase/functions/bitrix24-webhook/index.ts"
+     "src/services/questsService.ts"
     ]
    },
    "quest_steps": {
@@ -51043,11 +50275,6 @@
     ],
     "insert": [
      "src/services/quizService.ts"
-    ]
-   },
-   "rate_limit_logs": {
-    "insert": [
-     "supabase/functions/send-rate-limit-alert/index.ts"
     ]
    },
    "rate_limit_rules": {
@@ -51141,18 +50368,13 @@
     "select": [
      "src/components/security/SecurityAlertsPanel.tsx",
      "src/pages/BurnRate.tsx",
-     "src/pages/WebhookSubscriptionDetail.tsx",
-     "supabase/functions/burn-rate-monitor/index.ts",
-     "supabase/functions/error-budget-monitor/index.ts",
-     "supabase/functions/security-weekly-digest/index.ts"
+     "src/pages/WebhookSubscriptionDetail.tsx"
     ],
     "update": [
      "src/components/security/SecurityAlertsPanel.tsx"
     ],
     "insert": [
-     "supabase/functions/burn-rate-monitor/index.ts",
-     "supabase/functions/detect-new-device/index.ts",
-     "supabase/functions/error-budget-monitor/index.ts"
+     "supabase/functions/detect-new-device/index.ts"
     ]
    },
    "sequence_attempts": {
@@ -51255,9 +50477,6 @@
    "task_penalties": {
     "select": [
      "src/services/positionsService.ts"
-    ],
-    "insert": [
-     "supabase/functions/external-webhook/index.ts"
     ]
    },
    "task_scores": {
@@ -51351,15 +50570,10 @@
      "src/pages/PersonalStats.tsx",
      "src/services/achievementsService.ts",
      "src/services/competencyService.ts",
-     "supabase/functions/competency-alerts/index.ts",
-     "supabase/functions/external-api/index.ts",
-     "supabase/functions/external-webhook/index.ts",
-     "supabase/functions/send-email-digest/index.ts"
+     "supabase/functions/competency-alerts/index.ts"
     ],
     "insert": [
-     "src/services/achievementsService.ts",
-     "supabase/functions/external-api/index.ts",
-     "supabase/functions/external-webhook/index.ts"
+     "src/services/achievementsService.ts"
     ]
    },
    "user_avatar_config": {
@@ -51477,11 +50691,6 @@
      "src/services/positionsService.ts"
     ]
    },
-   "user_quests": {
-    "select": [
-     "supabase/functions/send-email-digest/index.ts"
-    ]
-   },
    "user_roles": {
     "select": [
      "src/hooks/useAdminUsers.ts",
@@ -51489,11 +50698,9 @@
      "src/pages/PermissionsAdmin.tsx",
      "src/services/permissionsService.ts",
      "src/services/rbacService.ts",
-     "supabase/functions/bitrix24-webhook/index.ts",
-     "supabase/functions/dispatch-critical-alert/index.ts",
+     "supabase/functions/churn-prediction/index.ts",
      "supabase/functions/reward-approval-review/index.ts",
-     "supabase/functions/security-weekly-digest/index.ts",
-     "supabase/functions/send-rate-limit-alert/index.ts"
+     "supabase/functions/trail-recommendations/index.ts"
     ],
     "insert": [
      "src/hooks/useAdminUsers.ts",
@@ -51605,8 +50812,6 @@
      "src/components/webhooks/EditWebhookDialog.tsx",
      "src/pages/WebhookSubscriptionDetail.tsx",
      "src/pages/WebhooksAdmin.tsx",
-     "supabase/functions/external-api/index.ts",
-     "supabase/functions/external-webhook/index.ts",
      "supabase/functions/webhook-dispatcher/index.ts"
     ],
     "update": [
@@ -51615,12 +50820,6 @@
     ],
     "ref": [
      "src/pages/WebhookSubscriptionNew.tsx"
-    ],
-    "insert": [
-     "supabase/functions/external-api/index.ts"
-    ],
-    "delete": [
-     "supabase/functions/external-api/index.ts"
     ]
    },
    "weekly_challenges": {
@@ -51633,24 +50832,12 @@
     "update": [
      "src/services/weeklyChallengesService.ts"
     ]
-   },
-   "xp_transactions": {
-    "select": [
-     "supabase/functions/send-email-digest/index.ts"
-    ]
    }
   },
   "table_cols": {
    "achievements": [
-    "category",
-    "coin_reward",
-    "description",
-    "icon",
     "id",
-    "key",
-    "name",
-    "rarity",
-    "xp_reward"
+    "key"
    ],
    "action_plan_items": [
     "id",
@@ -51695,13 +50882,9 @@
    ],
    "attendance_records": [
     "check_in",
-    "check_out",
     "id",
     "is_punctual",
     "user_id"
-   ],
-   "attendance_settings": [
-    "department_id"
    ],
    "attendance_streaks": [
     "best_streak",
@@ -51750,23 +50933,8 @@
     "observed_value",
     "position"
    ],
-   "bitrix24_sync_mappings": [
-    "bitrix_entity_type",
-    "bitrix_id"
-   ],
-   "bitrix24_tokens": [
-    "domain",
-    "expires_at",
-    "id",
-    "member_id"
-   ],
-   "bitrix24_webhook_logs": [
-    "id"
-   ],
    "blocked_ips": [
-    "id",
-    "ip_address",
-    "violation_count"
+    "id"
    ],
    "board_player_states": [
     "blocked_challenge_id",
@@ -51887,8 +51055,6 @@
    ],
    "celebrations": [
     "celebration_date",
-    "celebration_type",
-    "id",
     "is_public",
     "user_id"
    ],
@@ -51918,22 +51084,15 @@
    "climate_surveys": [
     "id"
    ],
-   "coin_transactions": [
-    "amount",
-    "created_at",
-    "user_id"
-   ],
    "competencies": [
     "is_active"
    ],
    "custom_quests": [
-    "coin_reward",
     "created_by",
     "difficulty",
     "id",
     "status",
-    "title",
-    "xp_reward"
+    "title"
    ],
    "department_missions": [
     "id",
@@ -51964,8 +51123,6 @@
     "id"
    ],
    "departments": [
-    "color",
-    "description",
     "id",
     "name"
    ],
@@ -52006,11 +51163,6 @@
    "executive_monthly_reports": [
     "id"
    ],
-   "external_tasks": [
-    "external_id",
-    "external_system",
-    "id"
-   ],
    "feedback_cycles": [
     "id",
     "status"
@@ -52035,10 +51187,6 @@
    ],
    "feedback_results": [
     "user_id"
-   ],
-   "geo_allowed_countries": [
-    "country_code",
-    "is_active"
    ],
    "goal_updates": [
     "goal_id"
@@ -52079,10 +51227,6 @@
    "league_history": [
     "change_type",
     "id",
-    "user_id"
-   ],
-   "league_members": [
-    "league_id",
     "user_id"
    ],
    "leagues": [
@@ -52286,12 +51430,8 @@
     "id"
    ],
    "positions": [
-    "department_id",
-    "description",
     "id",
-    "is_active",
-    "level",
-    "name"
+    "is_active"
    ],
    "postmortem_actions": [
     "due_date",
@@ -52329,10 +51469,8 @@
     "birth_date",
     "coins",
     "created_at",
-    "digest_enabled",
     "display_name",
     "email",
-    "full_name",
     "hire_date",
     "id",
     "level",
@@ -52389,9 +51527,6 @@
     "event",
     "id",
     "user_id"
-   ],
-   "query_telemetry": [
-    "id"
    ],
    "quest_assignments": [
     "completed_at",
@@ -52486,8 +51621,6 @@
     "description",
     "id",
     "metadata",
-    "resolved",
-    "resolved_at",
     "runbook_slug",
     "severity",
     "title"
@@ -52634,11 +51767,6 @@
     "position_id",
     "user_id"
    ],
-   "user_quests": [
-    "completed_at",
-    "status",
-    "user_id"
-   ],
    "user_roles": [
     "id",
     "role",
@@ -52715,8 +51843,6 @@
     "status"
    ],
    "webhook_subscriptions": [
-    "api_key_id",
-    "created_at",
     "events",
     "id",
     "is_active",
@@ -52731,11 +51857,6 @@
     "id",
     "status",
     "week_start"
-   ],
-   "xp_transactions": [
-    "created_at",
-    "user_id",
-    "xp_amount"
    ]
   },
   "env": {
@@ -52766,20 +51887,6 @@
    "ANTHROPIC_API_KEY": [
     "scripts/regras_negocio/generate.py"
    ],
-   "BITRIX24_CLIENT_ID": [
-    "supabase/functions/bitrix24-api/index.ts",
-    "supabase/functions/bitrix24-oauth/index.ts"
-   ],
-   "BITRIX24_CLIENT_SECRET": [
-    "supabase/functions/bitrix24-api/index.ts",
-    "supabase/functions/bitrix24-oauth/index.ts"
-   ],
-   "BITRIX24_DOMAIN": [
-    "supabase/functions/bitrix24-oauth/index.ts"
-   ],
-   "BITRIX24_WEBHOOK_SECRET": [
-    "supabase/functions/bitrix24-webhook/index.ts"
-   ],
    "CI": [
     "playwright.config.ts"
    ],
@@ -52802,9 +51909,6 @@
    ],
    "FIXTURE_GRAPH_EXIT": [
     "scripts/automation.unit.mjs"
-   ],
-   "FRONTEND_URL": [
-    "supabase/functions/bitrix24-oauth/index.ts"
    ],
    "GEN_TYPES": [
     "scripts/supabase_snapshot/snapshot.py"
@@ -52886,13 +51990,6 @@
    "SENTRY_ENV": [
     "supabase/functions/_shared/sentry.ts"
    ],
-   "SLACK_ALERT_WEBHOOK_URL": [
-    "supabase/functions/dispatch-critical-alert/index.ts",
-    "supabase/functions/security-weekly-digest/index.ts"
-   ],
-   "SLO_TARGET": [
-    "supabase/functions/burn-rate-monitor/index.ts"
-   ],
    "SNAPSHOT_DIR": [
     "scripts/supabase_snapshot/snapshot.py"
    ],
@@ -52911,7 +52008,6 @@
    "SUPABASE_ANON_KEY": [
     "supabase/functions/_shared/security.ts",
     "supabase/functions/ai-course-builder/index.ts",
-    "supabase/functions/bitrix24-oauth/index.ts",
     "supabase/functions/reward-approval-review/index.ts"
    ],
    "SUPABASE_DB_URL": [
@@ -52925,39 +52021,18 @@
     "supabase/functions/_shared/security.ts",
     "supabase/functions/admin-alerts/index.ts",
     "supabase/functions/ai-course-builder/index.ts",
-    "supabase/functions/birthday-celebrations/index.ts",
-    "supabase/functions/bitrix24-api/index.ts",
-    "supabase/functions/bitrix24-oauth/index.ts",
-    "supabase/functions/bitrix24-webhook/index.ts",
-    "supabase/functions/burn-rate-monitor/index.ts",
-    "supabase/functions/checkin-reminders/index.ts",
     "supabase/functions/churn-prediction/index.ts",
-    "supabase/functions/cleanup-old-security-logs/index.ts",
-    "supabase/functions/cleanup-rate-limit-logs/index.ts",
     "supabase/functions/competency-alerts/index.ts",
     "supabase/functions/detect-new-device/index.ts",
-    "supabase/functions/dispatch-critical-alert/index.ts",
-    "supabase/functions/error-budget-monitor/index.ts",
-    "supabase/functions/external-api/index.ts",
-    "supabase/functions/external-db-bridge/index.ts",
-    "supabase/functions/external-webhook/index.ts",
     "supabase/functions/generate-quiz-questions/index.ts",
     "supabase/functions/migrate-helper/index.ts",
     "supabase/functions/push-device-revoked/index.ts",
     "supabase/functions/push-outbox-dispatcher/index.ts",
     "supabase/functions/reward-approval-review/index.ts",
-    "supabase/functions/security-weekly-digest/index.ts",
     "supabase/functions/send-campaign-push/index.ts",
-    "supabase/functions/send-email-digest/index.ts",
-    "supabase/functions/send-email-notifications/index.ts",
-    "supabase/functions/send-rate-limit-alert/index.ts",
-    "supabase/functions/survey-reminders/index.ts",
     "supabase/functions/trail-recommendations/index.ts",
-    "supabase/functions/verify-geo/index.ts",
     "supabase/functions/verify-ip/index.ts",
-    "supabase/functions/webhook-dispatcher/index.ts",
-    "supabase/functions/webhook-health-monitor/index.ts",
-    "supabase/functions/weekly-league-processing/index.ts"
+    "supabase/functions/webhook-dispatcher/index.ts"
    ],
    "SUPABASE_SNAPSHOT_PUBLICACAO": [
     "scripts/supabase_snapshot/snapshot.py"
@@ -52967,39 +52042,18 @@
     "supabase/functions/_shared/security.ts",
     "supabase/functions/admin-alerts/index.ts",
     "supabase/functions/ai-course-builder/index.ts",
-    "supabase/functions/birthday-celebrations/index.ts",
-    "supabase/functions/bitrix24-api/index.ts",
-    "supabase/functions/bitrix24-oauth/index.ts",
-    "supabase/functions/bitrix24-webhook/index.ts",
-    "supabase/functions/burn-rate-monitor/index.ts",
-    "supabase/functions/checkin-reminders/index.ts",
     "supabase/functions/churn-prediction/index.ts",
-    "supabase/functions/cleanup-old-security-logs/index.ts",
-    "supabase/functions/cleanup-rate-limit-logs/index.ts",
     "supabase/functions/competency-alerts/index.ts",
     "supabase/functions/detect-new-device/index.ts",
-    "supabase/functions/dispatch-critical-alert/index.ts",
-    "supabase/functions/error-budget-monitor/index.ts",
-    "supabase/functions/external-api/index.ts",
-    "supabase/functions/external-db-bridge/index.ts",
-    "supabase/functions/external-webhook/index.ts",
     "supabase/functions/generate-quiz-questions/index.ts",
     "supabase/functions/migrate-helper/index.ts",
     "supabase/functions/push-device-revoked/index.ts",
     "supabase/functions/push-outbox-dispatcher/index.ts",
     "supabase/functions/reward-approval-review/index.ts",
-    "supabase/functions/security-weekly-digest/index.ts",
     "supabase/functions/send-campaign-push/index.ts",
-    "supabase/functions/send-email-digest/index.ts",
-    "supabase/functions/send-email-notifications/index.ts",
-    "supabase/functions/send-rate-limit-alert/index.ts",
-    "supabase/functions/survey-reminders/index.ts",
     "supabase/functions/trail-recommendations/index.ts",
-    "supabase/functions/verify-geo/index.ts",
     "supabase/functions/verify-ip/index.ts",
-    "supabase/functions/webhook-dispatcher/index.ts",
-    "supabase/functions/webhook-health-monitor/index.ts",
-    "supabase/functions/weekly-league-processing/index.ts"
+    "supabase/functions/webhook-dispatcher/index.ts"
    ],
    "UPSTASH_REDIS_REST_TOKEN": [
     "supabase/functions/_shared/cache.ts",
@@ -53072,12 +52126,6 @@
     "src/test/rpcAccess.test.ts",
     "src/test/setup.ts"
    ],
-   "WEBHOOK_HEALTH_MIN_SAMPLE": [
-    "supabase/functions/webhook-health-monitor/index.ts"
-   ],
-   "WEBHOOK_HEALTH_THRESHOLD": [
-    "supabase/functions/webhook-health-monitor/index.ts"
-   ],
    "XDG_STATE_HOME": [
     "scripts/maintenance/run.mjs"
    ]
@@ -53085,12 +52133,6 @@
   "rpc": {
    "acknowledge_security_alert": [
     "src/pages/BurnRate.tsx"
-   ],
-   "add_user_rewards": [
-    "supabase/functions/external-webhook/index.ts"
-   ],
-   "add_user_xp": [
-    "supabase/functions/bitrix24-webhook/index.ts"
    ],
    "admin_profile_directory": [
     "src/services/campaignImportService.ts"
@@ -53112,9 +52154,6 @@
    ],
    "assign_engagement_questions": [
     "src/services/continuousEngagementService.ts"
-   ],
-   "auto_block_ip": [
-    "supabase/functions/send-rate-limit-alert/index.ts"
    ],
    "award_campaign_team_split": [
     "src/services/campaignTeamsService.ts"
@@ -53142,16 +52181,10 @@
    ],
    "cleanup_old_security_logs": [
     "src/pages/RateLimitDashboard.tsx",
-    "src/pages/SecurityDashboard.tsx",
-    "supabase/functions/cleanup-old-security-logs/index.ts",
-    "supabase/functions/cleanup-rate-limit-logs/index.ts"
+    "src/pages/SecurityDashboard.tsx"
    ],
    "close_auction": [
     "src/services/auctionService.ts"
-   ],
-   "complete_external_task": [
-    "supabase/functions/external-api/index.ts",
-    "supabase/functions/external-webhook/index.ts"
    ],
    "complete_task_score": [
     "src/services/positionsService.ts"
@@ -53235,8 +52268,7 @@
     "src/services/bossBattleService.ts"
    ],
    "get_burn_rate": [
-    "src/pages/BurnRate.tsx",
-    "supabase/functions/burn-rate-monitor/index.ts"
+    "src/pages/BurnRate.tsx"
    ],
    "get_card_set_rewards": [
     "src/services/tradingCardsService.ts"
@@ -53277,19 +52309,14 @@
    "get_engagement_pillar_scores": [
     "src/services/engagementDiagnosticsService.ts"
    ],
-   "get_error_budget_30d": [
-    "supabase/functions/error-budget-monitor/index.ts"
-   ],
    "get_executive_metrics": [
-    "src/services/executiveService.ts",
-    "supabase/functions/external-api/index.ts"
+    "src/services/executiveService.ts"
    ],
    "get_incident_metrics": [
     "src/pages/IncidentMetrics.tsx"
    ],
    "get_leaderboard_api": [
-    "src/test/rpcAccess.test.ts",
-    "supabase/functions/external-api/index.ts"
+    "src/test/rpcAccess.test.ts"
    ],
    "get_lucky_wheel_prizes_display": [
     "src/services/luckyWheelService.ts"
@@ -53365,8 +52392,7 @@
     "src/hooks/useWarLeadership.ts"
    ],
    "get_user_stats_api": [
-    "src/test/rpcAccess.test.ts",
-    "supabase/functions/external-api/index.ts"
+    "src/test/rpcAccess.test.ts"
    ],
    "get_wager_leaderboard": [
     "src/services/dailyWagerService.ts"
@@ -53375,8 +52401,7 @@
     "src/pages/WebhooksAdmin.tsx"
    ],
    "get_webhook_delivery_stats_1h": [
-    "src/pages/WebhooksAdmin.tsx",
-    "supabase/functions/webhook-health-monitor/index.ts"
+    "src/pages/WebhooksAdmin.tsx"
    ],
    "get_webhook_delivery_stats_24h": [
     "src/pages/WebhooksAdmin.tsx"
@@ -53401,9 +52426,6 @@
    ],
    "increment_push_failures": [
     "supabase/functions/send-campaign-push/index.ts"
-   ],
-   "increment_user_xp_coins": [
-    "supabase/functions/birthday-celebrations/index.ts"
    ],
    "is_admin": [
     "scripts/ai-context/gerar.unit.mjs"
@@ -53446,10 +52468,6 @@
    ],
    "place_prediction_stake": [
     "src/services/predictionMarketService.ts"
-   ],
-   "process_external_task": [
-    "supabase/functions/external-api/index.ts",
-    "supabase/functions/external-webhook/index.ts"
    ],
    "promote_webhook_secret": [
     "src/components/webhooks/EditWebhookDialog.tsx"
@@ -53605,10 +52623,6 @@
    "user_wants_push_notification": [
     "supabase/functions/send-campaign-push/index.ts"
    ],
-   "validate_api_key": [
-    "supabase/functions/external-api/index.ts",
-    "supabase/functions/external-webhook/index.ts"
-   ],
    "validate_reset_token": [
     "src/test/rpcAccess.test.ts"
    ],
@@ -53619,9 +52633,6 @@
   "invokes": {
    "dashboard-edge": [
     "scripts/ai-context/gerar.unit.mjs"
-   ],
-   "dispatch-critical-alert": [
-    "supabase/functions/burn-rate-monitor/index.ts"
    ],
    "fixture-edge": [
     "scripts/ai-context/gerar.unit.mjs"
@@ -53649,9 +52660,6 @@
    ],
    "tools-edge": [
     "scripts/ai-context/gerar.unit.mjs"
-   ],
-   "webhook-dispatcher": [
-    "supabase/functions/external-webhook/index.ts"
    ]
   },
   "storage": {
@@ -53728,16 +52736,6 @@
    "http://192.0.2.1:9": [
     "scripts/maintenance/maintenance.unit.mjs"
    ],
-   "http://ip-api.com": [
-    "supabase/functions/verify-geo/index.ts"
-   ],
-   "https://${bitrixDomain}": [
-    "supabase/functions/bitrix24-oauth/index.ts"
-   ],
-   "https://${tokenRecord.domain}": [
-    "supabase/functions/bitrix24-api/index.ts",
-    "supabase/functions/bitrix24-oauth/index.ts"
-   ],
    "https://ai.gateway.lovable.dev": [
     "supabase/functions/ai-coach/index.ts",
     "supabase/functions/ai-course-builder/index.ts",
@@ -53761,10 +52759,6 @@
    {
     "file": "scripts/regras_negocio/generate.py",
     "count": 2
-   },
-   {
-    "file": "supabase/functions/external-db-bridge/index.ts",
-    "count": 4
    }
   ],
   "cascade_chains": {
@@ -54093,29 +53087,29 @@
   },
   "tables_only_in_code": [
    "a",
-   "coin_transactions",
    "contacts",
    "dashboard_table",
    "emails",
    "fantasma",
    "fixture_table",
    "ghost_table",
-   "league_members",
    "payments",
    "runtime_table",
    "so_teste",
    "t",
    "t1",
    "tools_runtime",
-   "tx",
-   "user_quests",
-   "xp_transactions"
+   "tx"
   ],
   "tables_only_in_schema": [
    "action_plan_updates",
+   "api_request_logs",
    "bingo_board_tasks",
    "bingo_boards",
    "bingo_cards",
+   "bitrix24_sync_mappings",
+   "bitrix24_tokens",
+   "bitrix24_webhook_logs",
    "board_moves",
    "board_tiles",
    "boss_battle_rewards",
@@ -54134,8 +53128,12 @@
    "engagement_question_pool",
    "entity_versions",
    "external_api_keys",
+   "external_tasks",
    "gamification_themes",
+   "geo_access_logs",
+   "geo_allowed_countries",
    "geo_blocking_rules",
+   "geo_settings",
    "level_configs",
    "lightning_quiz_answers",
    "lightning_quiz_questions",
@@ -54151,6 +53149,8 @@
    "position_competencies",
    "prediction_options",
    "push_outbox_health_snapshots",
+   "query_telemetry",
+   "rate_limit_logs",
    "saved_filters",
    "scratch_card_prizes",
    "sequence_steps",
@@ -54164,18 +53164,6 @@
    "webhook_delivery_stats_24h"
   ],
   "columns_unknown": [
-   {
-    "table": "security_alerts",
-    "column": "resolved"
-   },
-   {
-    "table": "profiles",
-    "column": "digest_enabled"
-   },
-   {
-    "table": "profiles",
-    "column": "full_name"
-   },
    {
     "table": "profiles",
     "column": "role"
@@ -57544,62 +56532,6 @@
     "msg": "Não foi possível extrair texto suficiente do PDF (pode ser um PDF escaneado)."
    },
    {
-    "file": "supabase/functions/bitrix24-api/index.ts",
-    "msg": "Bitrix24 API Error: ${data.error_description || data.error}"
-   },
-   {
-    "file": "supabase/functions/bitrix24-api/index.ts",
-    "msg": "Bitrix24 não conectado"
-   },
-   {
-    "file": "supabase/functions/bitrix24-api/index.ts",
-    "msg": "CRM action não suportada: ${action}"
-   },
-   {
-    "file": "supabase/functions/bitrix24-api/index.ts",
-    "msg": "Calendar action não suportada: ${action}"
-   },
-   {
-    "file": "supabase/functions/bitrix24-api/index.ts",
-    "msg": "IM action não suportada: ${action}"
-   },
-   {
-    "file": "supabase/functions/bitrix24-api/index.ts",
-    "msg": "Módulo não suportado: ${module}"
-   },
-   {
-    "file": "supabase/functions/bitrix24-api/index.ts",
-    "msg": "Notify action não suportada: ${action}"
-   },
-   {
-    "file": "supabase/functions/bitrix24-api/index.ts",
-    "msg": "Tasks action não suportada: ${action}"
-   },
-   {
-    "file": "supabase/functions/bitrix24-api/index.ts",
-    "msg": "Timeman action não suportada: ${action}"
-   },
-   {
-    "file": "supabase/functions/bitrix24-api/index.ts",
-    "msg": "Token refresh failed: ${tokenData.error_description || tokenData.error}"
-   },
-   {
-    "file": "supabase/functions/bitrix24-api/index.ts",
-    "msg": "Users action não suportada: ${action}"
-   },
-   {
-    "file": "supabase/functions/bitrix24-oauth/index.ts",
-    "msg": "Código de autorização não fornecido"
-   },
-   {
-    "file": "supabase/functions/burn-rate-monitor/index.ts",
-    "msg": ", insErr); continue; }\n\n          triggered.push({ alertType, severity: pair.severity, id: alert?.id });\n\n          try {\n            await sb.functions.invoke("
-   },
-   {
-    "file": "supabase/functions/burn-rate-monitor/index.ts",
-    "msg": "get_burn_rate(${minutes}): ${error.message}"
-   },
-   {
     "file": "supabase/functions/churn-prediction/index.ts",
     "msg": "AI gateway error: ${aiResponse.status}"
    },
@@ -57610,10 +56542,6 @@
    {
     "file": "supabase/functions/churn-prediction/index.ts",
     "msg": "No tool call in AI response"
-   },
-   {
-    "file": "supabase/functions/error-budget-monitor/index.ts",
-    "msg": ";\n    const serviceRole = Deno.env.get("
    },
    {
     "file": "supabase/functions/migrate-helper/index.ts",
@@ -57734,31 +56662,31 @@
     "value": "permissionKey"
    },
    {
+    "file": "supabase/functions/churn-prediction/index.ts",
+    "value": "admin"
+   },
+   {
+    "file": "supabase/functions/churn-prediction/index.ts",
+    "value": "manager"
+   },
+   {
     "file": "supabase/functions/competency-alerts/index.ts",
     "value": "admin"
    },
    {
-    "file": "supabase/functions/external-api/index.ts",
-    "value": "admin"
-   },
-   {
-    "file": "supabase/functions/external-api/index.ts",
-    "value": "read"
-   },
-   {
-    "file": "supabase/functions/external-api/index.ts",
-    "value": "required"
-   },
-   {
-    "file": "supabase/functions/external-api/index.ts",
-    "value": "write"
-   },
-   {
     "file": "supabase/functions/reward-approval-review/index.ts",
     "value": "admin"
    },
    {
     "file": "supabase/functions/reward-approval-review/index.ts",
+    "value": "manager"
+   },
+   {
+    "file": "supabase/functions/trail-recommendations/index.ts",
+    "value": "admin"
+   },
+   {
+    "file": "supabase/functions/trail-recommendations/index.ts",
     "value": "manager"
    },
    {
@@ -58894,18 +57822,6 @@
    {
     "file": "supabase/functions/send-campaign-push/index.ts",
     "text": "Máximo de 3 tentativas totais. Backoff base: 500ms, cap 8s."
-   },
-   {
-    "file": "supabase/functions/send-rate-limit-alert/index.ts",
-    "text": "2. Log the rate limit violation"
-   },
-   {
-    "file": "supabase/functions/verify-geo/index.ts",
-    "text": "Use ip-api.com (free, no API key required, 45 requests per minute)"
-   },
-   {
-    "file": "supabase/functions/verify-geo/index.ts",
-    "text": "Apenas `cf-connecting-ip` é inforjável. Ver _shared/clientIp.ts."
    },
    {
     "file": "supabase/functions/webhook-dispatcher/index.ts",
@@ -70494,16 +69410,6 @@
     "value": "300"
    },
    {
-    "file": "supabase/functions/error-budget-monitor/index.ts",
-    "name": "BURN_HIGH",
-    "value": "75"
-   },
-   {
-    "file": "supabase/functions/error-budget-monitor/index.ts",
-    "name": "BURN_CRITICAL",
-    "value": "90"
-   },
-   {
     "file": "supabase/functions/push-device-revoked/index.ts",
     "name": "TYPE",
     "value": "\"security_device_revoked\""
@@ -76570,126 +75476,6 @@
     "kind": "compara"
    },
    {
-    "file": "supabase/functions/birthday-celebrations/index.ts",
-    "field": "type",
-    "value": "celebration",
-    "kind": "escreve"
-   },
-   {
-    "file": "supabase/functions/birthday-celebrations/index.ts",
-    "field": "type",
-    "value": "celebration",
-    "kind": "escreve"
-   },
-   {
-    "file": "supabase/functions/bitrix24-api/index.ts",
-    "field": "type",
-    "value": "user",
-    "kind": "escreve"
-   },
-   {
-    "file": "supabase/functions/bitrix24-webhook/index.ts",
-    "field": "sync_status",
-    "value": "synced",
-    "kind": "escreve"
-   },
-   {
-    "file": "supabase/functions/bitrix24-webhook/index.ts",
-    "field": "sync_status",
-    "value": "deleted",
-    "kind": "escreve"
-   },
-   {
-    "file": "supabase/functions/bitrix24-webhook/index.ts",
-    "field": "type",
-    "value": "bitrix24",
-    "kind": "escreve"
-   },
-   {
-    "file": "supabase/functions/bitrix24-webhook/index.ts",
-    "field": "sync_status",
-    "value": "synced",
-    "kind": "escreve"
-   },
-   {
-    "file": "supabase/functions/bitrix24-webhook/index.ts",
-    "field": "state",
-    "value": "duplicate",
-    "kind": "compara"
-   },
-   {
-    "file": "supabase/functions/bitrix24-webhook/index.ts",
-    "field": "state",
-    "value": "in_progress",
-    "kind": "compara"
-   },
-   {
-    "file": "supabase/functions/bitrix24-webhook/index.ts",
-    "field": "state",
-    "value": "fresh",
-    "kind": "compara"
-   },
-   {
-    "file": "supabase/functions/bitrix24-webhook/index.ts",
-    "field": "role",
-    "value": "admin",
-    "kind": "filtra"
-   },
-   {
-    "file": "supabase/functions/checkin-reminders/index.ts",
-    "field": "type",
-    "value": "checkin_reminder",
-    "kind": "escreve"
-   },
-   {
-    "file": "supabase/functions/checkin-reminders/index.ts",
-    "field": "type",
-    "value": "checkin_reminder",
-    "kind": "escreve"
-   },
-   {
-    "file": "supabase/functions/checkin-reminders/index.ts",
-    "field": "type",
-    "value": "checkin_reminder",
-    "kind": "escreve"
-   },
-   {
-    "file": "supabase/functions/checkin-reminders/index.ts",
-    "field": "type",
-    "value": "checkin_reminder",
-    "kind": "escreve"
-   },
-   {
-    "file": "supabase/functions/checkin-reminders/index.ts",
-    "field": "type",
-    "value": "checkin_overdue",
-    "kind": "escreve"
-   },
-   {
-    "file": "supabase/functions/checkin-reminders/index.ts",
-    "field": "status",
-    "value": "scheduled",
-    "kind": "filtra"
-   },
-   {
-    "file": "supabase/functions/checkin-reminders/index.ts",
-    "field": "type",
-    "value": "checkin_reminder",
-    "kind": "filtra"
-   },
-   {
-    "file": "supabase/functions/checkin-reminders/index.ts",
-    "field": "type",
-    "value": "checkin_reminder",
-    "kind": "filtra"
-   },
-   {
-    "file": "supabase/functions/checkin-reminders/index.ts",
-    "field": "status",
-    "value": "scheduled",
-    "kind": "filtra"
-   },
-   {
     "file": "supabase/functions/churn-prediction/index.ts",
     "field": "role",
     "value": "system",
@@ -76882,84 +75668,6 @@
     "kind": "filtra"
    },
    {
-    "file": "supabase/functions/dispatch-critical-alert/index.ts",
-    "field": "type",
-    "value": "security",
-    "kind": "escreve"
-   },
-   {
-    "file": "supabase/functions/dispatch-critical-alert/index.ts",
-    "field": "role",
-    "value": "admin",
-    "kind": "filtra"
-   },
-   {
-    "file": "supabase/functions/error-budget-monitor/index.ts",
-    "field": "status",
-    "value": "healthy",
-    "kind": "escreve"
-   },
-   {
-    "file": "supabase/functions/external-api/index.ts",
-    "field": "status",
-    "value": "ok",
-    "kind": "escreve"
-   },
-   {
-    "file": "supabase/functions/external-db-bridge/index.ts",
-    "field": "status",
-    "value": "ok",
-    "kind": "escreve"
-   },
-   {
-    "file": "supabase/functions/external-webhook/index.ts",
-    "field": "status",
-    "value": "late",
-    "kind": "escreve"
-   },
-   {
-    "file": "supabase/functions/external-webhook/index.ts",
-    "field": "status",
-    "value": "rejected",
-    "kind": "escreve"
-   },
-   {
-    "file": "supabase/functions/external-webhook/index.ts",
-    "field": "status",
-    "value": "rework",
-    "kind": "escreve"
-   },
-   {
-    "file": "supabase/functions/external-webhook/index.ts",
-    "field": "status",
-    "value": "in_progress",
-    "kind": "escreve"
-   },
-   {
-    "file": "supabase/functions/external-webhook/index.ts",
-    "field": "state",
-    "value": "duplicate",
-    "kind": "compara"
-   },
-   {
-    "file": "supabase/functions/external-webhook/index.ts",
-    "field": "state",
-    "value": "in_progress",
-    "kind": "compara"
-   },
-   {
-    "file": "supabase/functions/external-webhook/index.ts",
-    "field": "state",
-    "value": "fresh",
-    "kind": "compara"
-   },
-   {
-    "file": "supabase/functions/external-webhook/index.ts",
-    "field": "status",
-    "value": "on_time",
-    "kind": "compara"
-   },
-   {
     "file": "supabase/functions/generate-quiz-questions/index.ts",
     "field": "role",
     "value": "system",
@@ -77104,18 +75812,6 @@
     "kind": "compara"
    },
    {
-    "file": "supabase/functions/security-weekly-digest/index.ts",
-    "field": "type",
-    "value": "security_weekly_digest",
-    "kind": "escreve"
-   },
-   {
-    "file": "supabase/functions/security-weekly-digest/index.ts",
-    "field": "role",
-    "value": "admin",
-    "kind": "filtra"
-   },
-   {
     "file": "supabase/functions/send-campaign-push/index.ts",
     "field": "status",
     "value": "sent",
@@ -77174,126 +75870,6 @@
     "field": "status",
     "value": "invalidated",
     "kind": "compara"
-   },
-   {
-    "file": "supabase/functions/send-email-digest/index.ts",
-    "field": "status",
-    "value": "generated",
-    "kind": "escreve"
-   },
-   {
-    "file": "supabase/functions/send-email-digest/index.ts",
-    "field": "status",
-    "value": "completed",
-    "kind": "filtra"
-   },
-   {
-    "file": "supabase/functions/send-email-notifications/index.ts",
-    "field": "type",
-    "value": "digest",
-    "kind": "escreve"
-   },
-   {
-    "file": "supabase/functions/send-email-notifications/index.ts",
-    "field": "type",
-    "value": "digest",
-    "kind": "escreve"
-   },
-   {
-    "file": "supabase/functions/send-email-notifications/index.ts",
-    "field": "type",
-    "value": "reminder",
-    "kind": "escreve"
-   },
-   {
-    "file": "supabase/functions/send-email-notifications/index.ts",
-    "field": "type",
-    "value": "celebration",
-    "kind": "escreve"
-   },
-   {
-    "file": "supabase/functions/send-email-notifications/index.ts",
-    "field": "status",
-    "value": "logged",
-    "kind": "escreve"
-   },
-   {
-    "file": "supabase/functions/send-email-notifications/index.ts",
-    "field": "status",
-    "value": "logged",
-    "kind": "escreve"
-   },
-   {
-    "file": "supabase/functions/send-email-notifications/index.ts",
-    "field": "status",
-    "value": "error",
-    "kind": "escreve"
-   },
-   {
-    "file": "supabase/functions/send-email-notifications/index.ts",
-    "field": "status",
-    "value": "active",
-    "kind": "filtra"
-   },
-   {
-    "file": "supabase/functions/send-email-notifications/index.ts",
-    "field": "status",
-    "value": "scheduled",
-    "kind": "filtra"
-   },
-   {
-    "file": "supabase/functions/send-email-notifications/index.ts",
-    "field": "status",
-    "value": "pending",
-    "kind": "filtra"
-   },
-   {
-    "file": "supabase/functions/send-email-notifications/index.ts",
-    "field": "type",
-    "value": "digest",
-    "kind": "compara"
-   },
-   {
-    "file": "supabase/functions/send-email-notifications/index.ts",
-    "field": "type",
-    "value": "reminder",
-    "kind": "compara"
-   },
-   {
-    "file": "supabase/functions/send-rate-limit-alert/index.ts",
-    "field": "type",
-    "value": "security_alert",
-    "kind": "escreve"
-   },
-   {
-    "file": "supabase/functions/send-rate-limit-alert/index.ts",
-    "field": "role",
-    "value": "admin",
-    "kind": "filtra"
-   },
-   {
-    "file": "supabase/functions/survey-reminders/index.ts",
-    "field": "type",
-    "value": "survey_reminder",
-    "kind": "escreve"
-   },
-   {
-    "file": "supabase/functions/survey-reminders/index.ts",
-    "field": "type",
-    "value": "survey_reminder",
-    "kind": "escreve"
-   },
-   {
-    "file": "supabase/functions/survey-reminders/index.ts",
-    "field": "status",
-    "value": "active",
-    "kind": "filtra"
-   },
-   {
-    "file": "supabase/functions/survey-reminders/index.ts",
-    "field": "type",
-    "value": "survey_reminder",
-    "kind": "filtra"
    },
    {
     "file": "supabase/functions/trail-recommendations/index.ts",
@@ -77314,21 +75890,9 @@
     "kind": "filtra"
    },
    {
-    "file": "supabase/functions/verify-geo/index.ts",
-    "field": "status",
-    "value": "success",
-    "kind": "compara"
-   },
-   {
     "file": "supabase/functions/webhook-dispatcher/index.ts",
     "field": "status",
     "value": "network_error",
-    "kind": "escreve"
-   },
-   {
-    "file": "supabase/functions/weekly-league-processing/index.ts",
-    "field": "type",
-    "value": "league",
     "kind": "escreve"
    },
    {
@@ -78168,12 +76732,6 @@
     "body": "const competencies: CompetencyData[] = []; // Fetch completed modules const { data: moduleProgress } = await supabase .from(\"module_progress\") .select(\"id, score, completed_at, module_id\") .eq(\"user_id\", userId) .not(\"completed_at\", \"is\", null) as { data: ModuleProgressItem[] | null }; // Fetch completed quests const { data: questAssignments } = await supabase .from(\"quest_assignments\") .select(\"id, completed_at, quest_id\") .eq(\"user_id\", userId) .not(\"completed_at\", \"is\", null) as { data: Quest …"
    },
    {
-    "file": "supabase/functions/external-db-bridge/index.ts",
-    "name": "validateTelemetryPayload",
-    "params": "payload: TelemetryPayload",
-    "body": "if (!payload.operation || typeof payload.operation !== 'string') { return 'operation is required and must be a string'; } if (typeof payload.duration_ms !== 'number' || payload.duration_ms < 0) { return 'duration_ms must be a non-negative number'; } const validOps = ['select', 'insert', 'update', 'delete', 'rpc', 'count', 'upsert']; if (!validOps.includes(payload.operation)) { return `operation must be one of: ${validOps.join(', ')}`; } return null;"
-   },
-   {
     "file": "supabase/functions/reward-approval-review/risk.ts",
     "name": "clampScore",
     "params": "value: number",
@@ -78192,16 +76750,10 @@
     "body": "const exp = Math.min(MAX_BACKOFF_MS, BASE_BACKOFF_MS * Math.pow(2, attempt - 1)); const jitter = Math.floor(Math.random() * (exp / 2)); return exp + jitter;"
    },
    {
-    "file": "supabase/functions/send-email-digest/index.ts",
-    "name": "generateEmailHTML",
-    "params": "data: DigestData",
-    "body": "const rankChangeIcon = data.rankChange > 0 ? \"📈\" : data.rankChange < 0 ? \"📉\" : \"➡️\"; const rankChangeText = data.rankChange > 0 ? `+${data.rankChange}` : data.rankChange.toString(); return ` <!DOCTYPE html> <html> <head> <meta charset=\"utf-8\"> <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"> <title>Seu Resumo Semanal</title> <style> body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; background: #1a1a2e; } .container { max-width: 600p …"
-   },
-   {
     "file": "supabase/functions/webhook-dispatcher/index.ts",
     "name": "generateSignature",
     "params": "payload: string, secret: string",
-    "body": "try { const hmac = createHmac('sha256', secret); hmac.update(payload); return 'sha256=' + hmac.digest('hex'); } catch { // Fallback for Deno const encoder = new TextEncoder(); const keyData = encoder.encode(secret); const data = encoder.encode(payload); // Simple hash for fallback let hash = 0; for (let i = 0; i < data.length; i++) { hash = ((hash << 5) - hash) + data[i]; hash = hash & hash; } return 'sha256=' + Math.abs(hash).toString(16).padStart(16, '0'); }"
+    "body": "const hmac = createHmac('sha256', secret); hmac.update(payload); return 'sha256=' + hmac.digest('hex');"
    }
   ],
   "temporal": [
@@ -78746,10 +77298,6 @@
     "line": "await new Promise((resolve) => setTimeout(resolve, 2000));"
    },
    {
-    "file": "supabase/functions/bitrix24-api/index.ts",
-    "line": "const now = new Date(Date.now() + 5 * 60 * 1000);"
-   },
-   {
     "file": "supabase/functions/churn-prediction/index.ts",
     "line": "const daysInactive = Math.floor((now.getTime() - lastActive.getTime()) / (1000 * 60 * 60 * 24));"
    },
@@ -78764,14 +77312,6 @@
    {
     "file": "supabase/functions/competency-alerts/index.ts",
     "line": ".gte('created_at', new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString())"
-   },
-   {
-    "file": "supabase/functions/security-weekly-digest/index.ts",
-    "line": "const since = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();"
-   },
-   {
-    "file": "supabase/functions/survey-reminders/index.ts",
-    "line": "const daysUntilEnd = Math.ceil((endsAt.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));"
    },
    {
     "file": "supabase/migrations/20260520162624_05dce903-e1a2-49e8-93a1-64ec4f6421b4.sql",
@@ -79828,24 +78368,12 @@
     "line": "* `result.allowed` ser `undefined`, o que bloqueia 100% do tráfego com 429."
    },
    {
-    "file": "supabase/functions/burn-rate-monitor/index.ts",
-    "line": "// - Fast page: 1h AND 5min burn >= 14.4x -> critical (2% budget in 1h)"
-   },
-   {
-    "file": "supabase/functions/burn-rate-monitor/index.ts",
-    "line": "// - Slow page: 6h AND 30min burn >= 6x -> high (5% budget in 6h)"
-   },
-   {
     "file": "supabase/functions/competency-alerts/index.ts",
     "line": "// Celebrate strengths if all competencies are above 70%"
    },
    {
     "file": "supabase/functions/competency-alerts/index.ts",
     "line": "const technicalValue = Math.min(100, (moduleProgress?.length || 0) * 10 + avgScore * 0.5);"
-   },
-   {
-    "file": "supabase/functions/error-budget-monitor/index.ts",
-    "line": "// e API externa. Ao cruzar 75% ou 90%, cria um security_alert e dispara o"
    }
   ],
   "tests": [
@@ -87450,38 +85978,6 @@
     "name": "should register action in comboService and add XP to profile"
    },
    {
-    "file": "supabase/functions/external-webhook/validation.test.ts",
-    "name": "Bitrix24 Webhook Contract - Valid Lead Event"
-   },
-   {
-    "file": "supabase/functions/external-webhook/validation.test.ts",
-    "name": "Bitrix24 Webhook Contract - Invalid (Missing ID)"
-   },
-   {
-    "file": "supabase/functions/external-webhook/validation.test.ts",
-    "name": "External Webhook Contract - Valid Task Event"
-   },
-   {
-    "file": "supabase/functions/external-webhook/validation.test.ts",
-    "name": "External Webhook Contract - Invalid (Missing Event)"
-   },
-   {
-    "file": "supabase/functions/external-webhook/validation.test.ts",
-    "name": "Webhook Dispatcher Contract - Valid Payload"
-   },
-   {
-    "file": "supabase/functions/external-webhook/validation.test.ts",
-    "name": "Webhook Dispatcher Contract - Invalid UUID"
-   },
-   {
-    "file": "supabase/functions/external-webhook/validation.test.ts",
-    "name": "External Webhook Versioning - v1 compatibility"
-   },
-   {
-    "file": "supabase/functions/external-webhook/validation.test.ts",
-    "name": "External Webhook Versioning - v2 support"
-   },
-   {
     "file": "tests/auth-flow.spec.ts",
     "name": "Autenticação e Proteção de Rotas 10/10"
    },
@@ -87574,70 +86070,6 @@
    {
     "file": "public/sw.js",
     "event": "SKIP_WAITING"
-   },
-   {
-    "file": "supabase/functions/external-webhook/index.ts",
-    "event": "achievement.grant"
-   },
-   {
-    "file": "supabase/functions/external-webhook/index.ts",
-    "event": "batch.complete"
-   },
-   {
-    "file": "supabase/functions/external-webhook/index.ts",
-    "event": "batch.tasks"
-   },
-   {
-    "file": "supabase/functions/external-webhook/index.ts",
-    "event": "task.completed"
-   },
-   {
-    "file": "supabase/functions/external-webhook/index.ts",
-    "event": "task.created"
-   },
-   {
-    "file": "supabase/functions/external-webhook/index.ts",
-    "event": "task.deleted"
-   },
-   {
-    "file": "supabase/functions/external-webhook/index.ts",
-    "event": "task.late"
-   },
-   {
-    "file": "supabase/functions/external-webhook/index.ts",
-    "event": "task.rejected"
-   },
-   {
-    "file": "supabase/functions/external-webhook/index.ts",
-    "event": "task.rework"
-   },
-   {
-    "file": "supabase/functions/external-webhook/index.ts",
-    "event": "task.started"
-   },
-   {
-    "file": "supabase/functions/external-webhook/index.ts",
-    "event": "task.updated"
-   },
-   {
-    "file": "supabase/functions/external-webhook/index.ts",
-    "event": "user.award_coins"
-   },
-   {
-    "file": "supabase/functions/external-webhook/index.ts",
-    "event": "user.award_xp"
-   },
-   {
-    "file": "supabase/functions/external-webhook/index.ts",
-    "event": "user.checkin"
-   },
-   {
-    "file": "supabase/functions/external-webhook/index.ts",
-    "event": "user.checkout"
-   },
-   {
-    "file": "supabase/functions/external-webhook/index.ts",
-    "event": "user.penalty"
    }
   ],
   "side_effects": [
@@ -87782,18 +86214,6 @@
     "call": "notify"
    },
    {
-    "file": "supabase/functions/bitrix24-api/index.ts",
-    "call": "notify"
-   },
-   {
-    "file": "supabase/functions/burn-rate-monitor/index.ts",
-    "call": "invoke("
-   },
-   {
-    "file": "supabase/functions/external-webhook/index.ts",
-    "call": "invoke("
-   },
-   {
     "file": "supabase/functions/push-device-revoked/index.ts",
     "call": "sendNotification"
    },
@@ -87804,14 +86224,6 @@
    {
     "file": "supabase/functions/send-campaign-push/index.ts",
     "call": "sendNotification"
-   },
-   {
-    "file": "supabase/functions/send-email-notifications/index.ts",
-    "call": "notify"
-   },
-   {
-    "file": "supabase/functions/send-rate-limit-alert/index.ts",
-    "call": "notify"
    },
    {
     "file": "supabase/migrations/20260712222653_8d3916b2-c16d-4d4e-9a18-7fde8939b0fe.sql",
@@ -99476,32 +97888,12 @@
     "limit": "50"
    },
    {
-    "file": "supabase/functions/burn-rate-monitor/index.ts",
-    "limit": "1"
-   },
-   {
     "file": "supabase/functions/competency-alerts/index.ts",
-    "limit": "1"
-   },
-   {
-    "file": "supabase/functions/error-budget-monitor/index.ts",
     "limit": "1"
    },
    {
     "file": "supabase/functions/reward-approval-review/index.ts",
     "limit": "500"
-   },
-   {
-    "file": "supabase/functions/send-email-digest/index.ts",
-    "limit": "5"
-   },
-   {
-    "file": "supabase/functions/send-email-notifications/index.ts",
-    "limit": "5"
-   },
-   {
-    "file": "supabase/functions/verify-geo/index.ts",
-    "limit": "1"
    }
   ],
   "state_machines": {
@@ -100344,8 +98736,7 @@
      "security_alert": [
       "compara:public/sw.js",
       "escreve:src/components/security/SecurityNotificationsToggle.tsx",
-      "escreve:src/hooks/useSecurityPushNotifications.ts",
-      "escreve:supabase/functions/send-rate-limit-alert/index.ts"
+      "escreve:src/hooks/useSecurityPushNotifications.ts"
      ],
      "new_device": [
       "compara:public/sw.js",
@@ -100443,8 +98834,7 @@
      ],
      "user": [
       "compara:src/components/GlobalSearch.tsx",
-      "compara:src/components/search/SearchResultsList.tsx",
-      "escreve:supabase/functions/bitrix24-api/index.ts"
+      "compara:src/components/search/SearchResultsList.tsx"
      ],
      "tween": [
       "escreve:src/components/PageTransition.tsx",
@@ -100810,44 +99200,9 @@
      "boolean": [
       "escreve:supabase/functions/ai-course-builder/index.ts"
      ],
-     "celebration": [
-      "escreve:supabase/functions/birthday-celebrations/index.ts",
-      "escreve:supabase/functions/send-email-notifications/index.ts"
-     ],
-     "bitrix24": [
-      "escreve:supabase/functions/bitrix24-webhook/index.ts"
-     ],
-     "checkin_reminder": [
-      "escreve:supabase/functions/checkin-reminders/index.ts",
-      "filtra:supabase/functions/checkin-reminders/index.ts"
-     ],
-     "checkin_overdue": [
-      "escreve:supabase/functions/checkin-reminders/index.ts"
-     ],
      "competency_celebration": [
       "escreve:supabase/functions/competency-alerts/index.ts",
       "filtra:supabase/functions/competency-alerts/index.ts"
-     ],
-     "security": [
-      "escreve:supabase/functions/dispatch-critical-alert/index.ts"
-     ],
-     "security_weekly_digest": [
-      "escreve:supabase/functions/security-weekly-digest/index.ts"
-     ],
-     "digest": [
-      "compara:supabase/functions/send-email-notifications/index.ts",
-      "escreve:supabase/functions/send-email-notifications/index.ts"
-     ],
-     "reminder": [
-      "compara:supabase/functions/send-email-notifications/index.ts",
-      "escreve:supabase/functions/send-email-notifications/index.ts"
-     ],
-     "survey_reminder": [
-      "escreve:supabase/functions/survey-reminders/index.ts",
-      "filtra:supabase/functions/survey-reminders/index.ts"
-     ],
-     "league": [
-      "escreve:supabase/functions/weekly-league-processing/index.ts"
      ]
     },
     "role": {
@@ -100870,11 +99225,7 @@
      "admin": [
       "compara:src/components/rbac/UserRolesTab.tsx",
       "compara:supabase/functions/competency-alerts/index.ts",
-      "compara:supabase/functions/reward-approval-review/index.ts",
-      "filtra:supabase/functions/bitrix24-webhook/index.ts",
-      "filtra:supabase/functions/dispatch-critical-alert/index.ts",
-      "filtra:supabase/functions/security-weekly-digest/index.ts",
-      "filtra:supabase/functions/send-rate-limit-alert/index.ts"
+      "compara:supabase/functions/reward-approval-review/index.ts"
      ],
      "long": [
       "compara:src/pages/BurnRate.tsx",
@@ -100917,8 +99268,7 @@
      ],
      "late": [
       "compara:src/components/AttendanceCalendar.tsx",
-      "compara:src/services/positionsService.ts",
-      "escreve:supabase/functions/external-webhook/index.ts"
+      "compara:src/services/positionsService.ts"
      ],
      "active": [
       "compara:src/components/CertificationsPanel.tsx",
@@ -100970,9 +99320,7 @@
       "filtra:src/services/oneOnOnePreparationService.ts",
       "filtra:src/services/pulseSurveysService.ts",
       "filtra:src/services/weeklyChallengesService.ts",
-      "filtra:supabase/functions/admin-alerts/index.ts",
-      "filtra:supabase/functions/send-email-notifications/index.ts",
-      "filtra:supabase/functions/survey-reminders/index.ts"
+      "filtra:supabase/functions/admin-alerts/index.ts"
      ],
      "completed": [
       "compara:src/components/GoalsWidget.tsx",
@@ -101006,16 +99354,14 @@
       "filtra:src/services/checkinsService.ts",
       "filtra:src/services/highPotentialService.ts",
       "filtra:src/services/oneOnOnePreparationService.ts",
-      "filtra:src/services/weeklyChallengesService.ts",
-      "filtra:supabase/functions/send-email-digest/index.ts"
+      "filtra:src/services/weeklyChallengesService.ts"
      ],
      "in_progress": [
       "compara:src/components/MyDevelopmentPlanWidget.tsx",
       "compara:src/components/checkins/CheckinCard.tsx",
       "compara:src/components/engagement/plans/ActionPlanItemList.tsx",
       "compara:src/pages/Postmortems.tsx",
-      "compara:src/services/actionPlansService.ts",
-      "escreve:supabase/functions/external-webhook/index.ts"
+      "compara:src/services/actionPlansService.ts"
      ],
      "all": [
       "compara:src/components/PushNotificationHistory.tsx",
@@ -101054,8 +99400,7 @@
       "filtra:src/services/duelsService.ts",
       "filtra:src/services/feedbackService.ts",
       "filtra:src/services/passwordResetService.ts",
-      "filtra:supabase/functions/admin-alerts/index.ts",
-      "filtra:supabase/functions/send-email-notifications/index.ts"
+      "filtra:supabase/functions/admin-alerts/index.ts"
      ],
      "draft": [
       "compara:src/components/admin/SurveyCreator.tsx",
@@ -101247,8 +99592,7 @@
       "compara:src/hooks/useAdminUsers.ts"
      ],
      "rejected": [
-      "compara:src/hooks/useAdminUsers.ts",
-      "escreve:supabase/functions/external-webhook/index.ts"
+      "compara:src/hooks/useAdminUsers.ts"
      ],
      "running": [
       "compara:src/hooks/useBossBattles.ts",
@@ -101268,7 +99612,6 @@
       "compara:src/lib/bossAutoHooks.ts",
       "compara:src/lib/cardPackTriggers.ts",
       "compara:src/services/positionsService.ts",
-      "compara:supabase/functions/external-webhook/index.ts",
       "escreve:src/hooks/usePositions.ts",
       "escreve:src/services/positionsService.ts"
      ],
@@ -101348,17 +99691,14 @@
      "scheduled": [
       "escreve:src/services/checkinsService.ts",
       "escreve:src/services/continuousEngagementService.ts",
-      "filtra:src/services/checkinsService.ts",
-      "filtra:supabase/functions/checkin-reminders/index.ts",
-      "filtra:supabase/functions/send-email-notifications/index.ts"
+      "filtra:src/services/checkinsService.ts"
      ],
      "submitted": [
       "escreve:src/services/feedbackService.ts",
       "filtra:src/services/feedbackService.ts"
      ],
      "rework": [
-      "compara:src/services/positionsService.ts",
-      "escreve:supabase/functions/external-webhook/index.ts"
+      "compara:src/services/positionsService.ts"
      ],
      "investigating": [
       "escreve:src/services/wagerIntegrityReviewService.ts"
@@ -101385,16 +99725,10 @@
       "escreve:src/stories/user/AvatarAndProfile.stories.tsx"
      ],
      "ok": [
-      "escreve:supabase/functions/_shared/sentry.ts",
-      "escreve:supabase/functions/external-api/index.ts",
-      "escreve:supabase/functions/external-db-bridge/index.ts"
+      "escreve:supabase/functions/_shared/sentry.ts"
      ],
      "error": [
-      "escreve:supabase/functions/_shared/sentry.ts",
-      "escreve:supabase/functions/send-email-notifications/index.ts"
-     ],
-     "healthy": [
-      "escreve:supabase/functions/error-budget-monitor/index.ts"
+      "escreve:supabase/functions/_shared/sentry.ts"
      ],
      "invalidated": [
       "compara:supabase/functions/push-outbox-dispatcher/index.ts",
@@ -101402,15 +99736,6 @@
       "escreve:supabase/functions/push-device-revoked/index.ts",
       "escreve:supabase/functions/push-outbox-dispatcher/index.ts",
       "escreve:supabase/functions/send-campaign-push/index.ts"
-     ],
-     "generated": [
-      "escreve:supabase/functions/send-email-digest/index.ts"
-     ],
-     "logged": [
-      "escreve:supabase/functions/send-email-notifications/index.ts"
-     ],
-     "success": [
-      "compara:supabase/functions/verify-geo/index.ts"
      ],
      "network_error": [
       "escreve:supabase/functions/webhook-dispatcher/index.ts"
@@ -101460,18 +99785,12 @@
       "escreve:src/lib/opinionChannel.ts"
      ],
      "fresh": [
-      "compara:supabase/functions/bitrix24-webhook/index.ts",
-      "compara:supabase/functions/external-webhook/index.ts",
       "escreve:supabase/functions/_shared/webhookSecurity.ts"
      ],
      "duplicate": [
-      "compara:supabase/functions/bitrix24-webhook/index.ts",
-      "compara:supabase/functions/external-webhook/index.ts",
       "escreve:supabase/functions/_shared/webhookSecurity.ts"
      ],
      "in_progress": [
-      "compara:supabase/functions/bitrix24-webhook/index.ts",
-      "compara:supabase/functions/external-webhook/index.ts",
       "escreve:supabase/functions/_shared/webhookSecurity.ts"
      ],
      "unavailable": [
@@ -101533,14 +99852,6 @@
      "draft": [
       "escreve:src/integrations/supabase/types.ts"
      ]
-    },
-    "sync_status": {
-     "synced": [
-      "escreve:supabase/functions/bitrix24-webhook/index.ts"
-     ],
-     "deleted": [
-      "escreve:supabase/functions/bitrix24-webhook/index.ts"
-     ]
     }
    }
   }
@@ -101557,10 +99868,7 @@
    "long",
    "manager",
    "permission",
-   "read",
-   "required",
-   "user",
-   "write"
+   "user"
   ],
   "role_tables": [
    "user_roles",
@@ -104914,39 +103222,18 @@
    "supabase/functions/_shared/security.ts",
    "supabase/functions/admin-alerts/index.ts",
    "supabase/functions/ai-course-builder/index.ts",
-   "supabase/functions/birthday-celebrations/index.ts",
-   "supabase/functions/bitrix24-api/index.ts",
-   "supabase/functions/bitrix24-oauth/index.ts",
-   "supabase/functions/bitrix24-webhook/index.ts",
-   "supabase/functions/burn-rate-monitor/index.ts",
-   "supabase/functions/checkin-reminders/index.ts",
    "supabase/functions/churn-prediction/index.ts",
-   "supabase/functions/cleanup-old-security-logs/index.ts",
-   "supabase/functions/cleanup-rate-limit-logs/index.ts",
    "supabase/functions/competency-alerts/index.ts",
    "supabase/functions/detect-new-device/index.ts",
-   "supabase/functions/dispatch-critical-alert/index.ts",
-   "supabase/functions/error-budget-monitor/index.ts",
-   "supabase/functions/external-api/index.ts",
-   "supabase/functions/external-db-bridge/index.ts",
-   "supabase/functions/external-webhook/index.ts",
    "supabase/functions/generate-quiz-questions/index.ts",
    "supabase/functions/migrate-helper/index.ts",
    "supabase/functions/push-device-revoked/index.ts",
    "supabase/functions/push-outbox-dispatcher/index.ts",
    "supabase/functions/reward-approval-review/index.ts",
-   "supabase/functions/security-weekly-digest/index.ts",
    "supabase/functions/send-campaign-push/index.ts",
-   "supabase/functions/send-email-digest/index.ts",
-   "supabase/functions/send-email-notifications/index.ts",
-   "supabase/functions/send-rate-limit-alert/index.ts",
-   "supabase/functions/survey-reminders/index.ts",
    "supabase/functions/trail-recommendations/index.ts",
-   "supabase/functions/verify-geo/index.ts",
    "supabase/functions/verify-ip/index.ts",
    "supabase/functions/webhook-dispatcher/index.ts",
-   "supabase/functions/webhook-health-monitor/index.ts",
-   "supabase/functions/weekly-league-processing/index.ts",
    "supabase/migrations/20260306000318_cc14b254-e622-48a0-a219-de592646bf75.sql",
    "supabase/migrations/20260520162642_60bbdd93-a248-4b2d-8f18-548974872356.sql",
    "supabase/migrations/20260520163657_25dfdf55-387e-4b6a-87a8-b1fb2491ce04.sql",
@@ -114833,20 +113120,6 @@
    },
    {
     "kind": "status",
-    "msg": "valor `generated` para `status` usado no código não existe em nenhum enum do banco/TS",
-    "where": [
-     "escreve:supabase/functions/send-email-digest/index.ts"
-    ]
-   },
-   {
-    "kind": "status",
-    "msg": "valor `logged` para `status` usado no código não existe em nenhum enum do banco/TS",
-    "where": [
-     "escreve:supabase/functions/send-email-notifications/index.ts"
-    ]
-   },
-   {
-    "kind": "status",
     "msg": "valor `network_error` para `status` usado no código não existe em nenhum enum do banco/TS",
     "where": [
      "escreve:supabase/functions/webhook-dispatcher/index.ts"
@@ -114905,8 +113178,6 @@
     "kind": "status",
     "msg": "valor `fresh` para `state` usado no código não existe em nenhum enum do banco/TS",
     "where": [
-     "compara:supabase/functions/bitrix24-webhook/index.ts",
-     "compara:supabase/functions/external-webhook/index.ts",
      "escreve:supabase/functions/_shared/webhookSecurity.ts"
     ]
    },
@@ -114960,35 +113231,6 @@
     ]
    },
    {
-    "kind": "status",
-    "msg": "valor `synced` para `sync_status` usado no código não existe em nenhum enum do banco/TS",
-    "where": [
-     "escreve:supabase/functions/bitrix24-webhook/index.ts"
-    ]
-   },
-   {
-    "kind": "status",
-    "msg": "valor `deleted` para `sync_status` usado no código não existe em nenhum enum do banco/TS",
-    "where": [
-     "escreve:supabase/functions/bitrix24-webhook/index.ts"
-    ]
-   },
-   {
-    "kind": "coluna",
-    "msg": "coluna `resolved` usada no código não existe no schema de `security_alerts`",
-    "where": []
-   },
-   {
-    "kind": "coluna",
-    "msg": "coluna `digest_enabled` usada no código não existe no schema de `profiles`",
-    "where": []
-   },
-   {
-    "kind": "coluna",
-    "msg": "coluna `full_name` usada no código não existe no schema de `profiles`",
-    "where": []
-   },
-   {
     "kind": "coluna",
     "msg": "coluna `role` usada no código não existe no schema de `profiles`",
     "where": []
@@ -115003,13 +113245,6 @@
     "msg": "tabela `a` usada no código não existe nas migrations/types do repo",
     "where": [
      "scripts/ai-context/cenarios.mjs"
-    ]
-   },
-   {
-    "kind": "tabela",
-    "msg": "tabela `coin_transactions` usada no código não existe nas migrations/types do repo",
-    "where": [
-     "supabase/functions/send-email-digest/index.ts"
     ]
    },
    {
@@ -115052,13 +113287,6 @@
     "msg": "tabela `ghost_table` usada no código não existe nas migrations/types do repo",
     "where": [
      "scripts/ai-context/gerar.unit.mjs"
-    ]
-   },
-   {
-    "kind": "tabela",
-    "msg": "tabela `league_members` usada no código não existe nas migrations/types do repo",
-    "where": [
-     "supabase/functions/weekly-league-processing/index.ts"
     ]
    },
    {
@@ -115108,20 +113336,6 @@
     "msg": "tabela `tx` usada no código não existe nas migrations/types do repo",
     "where": [
      "scripts/ai-context/cenarios.mjs"
-    ]
-   },
-   {
-    "kind": "tabela",
-    "msg": "tabela `user_quests` usada no código não existe nas migrations/types do repo",
-    "where": [
-     "supabase/functions/send-email-digest/index.ts"
-    ]
-   },
-   {
-    "kind": "tabela",
-    "msg": "tabela `xp_transactions` usada no código não existe nas migrations/types do repo",
-    "where": [
-     "supabase/functions/send-email-digest/index.ts"
     ]
    },
    {
@@ -115295,20 +113509,6 @@
    },
    {
     "kind": "rpc",
-    "msg": "RPC `add_user_rewards` chamada mas não definida nas migrations/types",
-    "where": [
-     "supabase/functions/external-webhook/index.ts"
-    ]
-   },
-   {
-    "kind": "rpc",
-    "msg": "RPC `add_user_xp` chamada mas não definida nas migrations/types",
-    "where": [
-     "supabase/functions/bitrix24-webhook/index.ts"
-    ]
-   },
-   {
-    "kind": "rpc",
     "msg": "RPC `dashboard_rpc` chamada mas não definida nas migrations/types",
     "where": [
      "scripts/ai-context/gerar.unit.mjs"
@@ -115340,13 +113540,6 @@
     "msg": "RPC `ghost_rpc` chamada mas não definida nas migrations/types",
     "where": [
      "scripts/ai-context/gerar.unit.mjs"
-    ]
-   },
-   {
-    "kind": "rpc",
-    "msg": "RPC `increment_user_xp_coins` chamada mas não definida nas migrations/types",
-    "where": [
-     "supabase/functions/birthday-celebrations/index.ts"
     ]
    },
    {
@@ -115389,13 +113582,6 @@
     "msg": "2 chamada(s) `.from(variável)` — tabela só conhecida em runtime",
     "where": [
      "scripts/regras_negocio/generate.py"
-    ]
-   },
-   {
-    "kind": "dinâmico",
-    "msg": "4 chamada(s) `.from(variável)` — tabela só conhecida em runtime",
-    "where": [
-     "supabase/functions/external-db-bridge/index.ts"
     ]
    },
    {
@@ -147262,465 +145448,14 @@
    ],
    "uses_service_role": true
   },
-  "supabase/functions/birthday-celebrations/index.ts": {
-   "path": "supabase/functions/birthday-celebrations/index.ts",
-   "lines": 194,
+  "supabase/functions/churn-prediction/index.ts": {
+   "path": "supabase/functions/churn-prediction/index.ts",
+   "lines": 295,
    "tables": [
-    {
-     "table": "profiles",
-     "op": "select"
-    },
-    {
-     "table": "celebrations",
-     "op": "select"
-    },
-    {
-     "table": "celebrations",
-     "op": "insert"
-    },
-    {
-     "table": "notifications",
-     "op": "insert"
-    },
-    {
-     "table": "celebrations",
-     "op": "select"
-    },
-    {
-     "table": "celebrations",
-     "op": "insert"
-    },
-    {
-     "table": "notifications",
-     "op": "insert"
-    }
-   ],
-   "table_cols": {
-    "profiles": [
-     "birth_date",
-     "display_name",
-     "hire_date",
-     "id"
-    ],
-    "celebrations": [
-     "celebration_date",
-     "celebration_type",
-     "id",
-     "user_id"
-    ]
-   },
-   "rpc": [
-    "increment_user_xp_coins"
-   ],
-   "env": [
-    "SUPABASE_SERVICE_ROLE_KEY",
-    "SUPABASE_URL"
-   ],
-   "status_values": [
-    {
-     "field": "type",
-     "value": "celebration",
-     "kind": "escreve"
-    },
-    {
-     "field": "type",
-     "value": "celebration",
-     "kind": "escreve"
-    }
-   ],
-   "uses_service_role": true
-  },
-  "supabase/functions/bitrix24-api/index.ts": {
-   "path": "supabase/functions/bitrix24-api/index.ts",
-   "lines": 430,
-   "tables": [
-    {
-     "table": "bitrix24_tokens",
-     "op": "select"
-    },
-    {
-     "table": "bitrix24_tokens",
-     "op": "update"
-    },
-    {
-     "table": "bitrix24_webhook_logs",
-     "op": "insert"
-    }
-   ],
-   "table_cols": {
-    "bitrix24_tokens": [
-     "id"
-    ]
-   },
-   "external_urls": [
-    "https://${tokenRecord.domain}/oauth/token/…"
-   ],
-   "env": [
-    "BITRIX24_CLIENT_ID",
-    "BITRIX24_CLIENT_SECRET",
-    "SUPABASE_SERVICE_ROLE_KEY",
-    "SUPABASE_URL"
-   ],
-   "errors": [
-    "Bitrix24 API Error: ${data.error_description || data.error}",
-    "Bitrix24 não conectado",
-    "CRM action não suportada: ${action}",
-    "Calendar action não suportada: ${action}",
-    "IM action não suportada: ${action}",
-    "Módulo não suportado: ${module}",
-    "Notify action não suportada: ${action}",
-    "Tasks action não suportada: ${action}",
-    "Timeman action não suportada: ${action}",
-    "Token refresh failed: ${tokenData.error_description || tokenData.error}",
-    "Users action não suportada: ${action}"
-   ],
-   "status_values": [
-    {
-     "field": "type",
-     "value": "user",
-     "kind": "escreve"
-    }
-   ],
-   "temporal": [
-    "const now = new Date(Date.now() + 5 * 60 * 1000);"
-   ],
-   "side_effects": [
-    "notify"
-   ],
-   "uses_service_role": true
-  },
-  "supabase/functions/bitrix24-oauth/index.ts": {
-   "path": "supabase/functions/bitrix24-oauth/index.ts",
-   "lines": 210,
-   "tables": [
-    {
-     "table": "bitrix24_tokens",
-     "op": "upsert"
-    },
-    {
-     "table": "bitrix24_tokens",
-     "op": "select"
-    },
-    {
-     "table": "bitrix24_tokens",
-     "op": "update"
-    },
-    {
-     "table": "bitrix24_tokens",
-     "op": "select"
-    }
-   ],
-   "table_cols": {
-    "bitrix24_tokens": [
-     "domain",
-     "expires_at",
-     "id",
-     "member_id"
-    ]
-   },
-   "external_urls": [
-    "https://${bitrixDomain}/oauth/token/…",
-    "https://${tokenRecord.domain}/oauth/token/…"
-   ],
-   "env": [
-    "BITRIX24_CLIENT_ID",
-    "BITRIX24_CLIENT_SECRET",
-    "BITRIX24_DOMAIN",
-    "FRONTEND_URL",
-    "SUPABASE_ANON_KEY",
-    "SUPABASE_SERVICE_ROLE_KEY",
-    "SUPABASE_URL"
-   ],
-   "errors": [
-    "Código de autorização não fornecido"
-   ],
-   "uses_service_role": true
-  },
-  "supabase/functions/bitrix24-webhook/index.ts": {
-   "path": "supabase/functions/bitrix24-webhook/index.ts",
-   "lines": 380,
-   "tables": [
-    {
-     "table": "bitrix24_webhook_logs",
-     "op": "insert,select"
-    },
-    {
-     "table": "bitrix24_webhook_logs",
-     "op": "update"
-    },
-    {
-     "table": "bitrix24_sync_mappings",
-     "op": "upsert"
-    },
-    {
-     "table": "bitrix24_sync_mappings",
-     "op": "update"
-    },
     {
      "table": "user_roles",
      "op": "select"
     },
-    {
-     "table": "notifications",
-     "op": "insert"
-    },
-    {
-     "table": "bitrix24_sync_mappings",
-     "op": "select"
-    },
-    {
-     "table": "quest_assignments",
-     "op": "select"
-    },
-    {
-     "table": "quest_assignments",
-     "op": "update"
-    },
-    {
-     "table": "custom_quests",
-     "op": "select"
-    },
-    {
-     "table": "bitrix24_sync_mappings",
-     "op": "upsert"
-    },
-    {
-     "table": "bitrix24_sync_mappings",
-     "op": "upsert"
-    }
-   ],
-   "table_cols": {
-    "bitrix24_webhook_logs": [
-     "id"
-    ],
-    "bitrix24_sync_mappings": [
-     "bitrix_entity_type",
-     "bitrix_id"
-    ],
-    "user_roles": [
-     "role",
-     "user_id"
-    ],
-    "quest_assignments": [
-     "completed_at",
-     "id"
-    ],
-    "custom_quests": [
-     "coin_reward",
-     "id",
-     "xp_reward"
-    ]
-   },
-   "rpc": [
-    "add_user_xp"
-   ],
-   "env": [
-    "BITRIX24_WEBHOOK_SECRET",
-    "SUPABASE_SERVICE_ROLE_KEY",
-    "SUPABASE_URL"
-   ],
-   "status_values": [
-    {
-     "field": "sync_status",
-     "value": "synced",
-     "kind": "escreve"
-    },
-    {
-     "field": "sync_status",
-     "value": "deleted",
-     "kind": "escreve"
-    },
-    {
-     "field": "type",
-     "value": "bitrix24",
-     "kind": "escreve"
-    },
-    {
-     "field": "sync_status",
-     "value": "synced",
-     "kind": "escreve"
-    },
-    {
-     "field": "state",
-     "value": "duplicate",
-     "kind": "compara"
-    },
-    {
-     "field": "state",
-     "value": "in_progress",
-     "kind": "compara"
-    },
-    {
-     "field": "state",
-     "value": "fresh",
-     "kind": "compara"
-    },
-    {
-     "field": "role",
-     "value": "admin",
-     "kind": "filtra"
-    }
-   ],
-   "uses_service_role": true
-  },
-  "supabase/functions/burn-rate-monitor/index.ts": {
-   "path": "supabase/functions/burn-rate-monitor/index.ts",
-   "lines": 99,
-   "tables": [
-    {
-     "table": "security_alerts",
-     "op": "select"
-    },
-    {
-     "table": "security_alerts",
-     "op": "insert,select"
-    }
-   ],
-   "table_cols": {
-    "security_alerts": [
-     "alert_type",
-     "created_at",
-     "id"
-    ]
-   },
-   "rpc": [
-    "get_burn_rate"
-   ],
-   "invokes": [
-    "dispatch-critical-alert"
-   ],
-   "env": [
-    "SLO_TARGET",
-    "SUPABASE_SERVICE_ROLE_KEY",
-    "SUPABASE_URL"
-   ],
-   "errors": [
-    ", insErr); continue; }\n\n          triggered.push({ alertType, severity: pair.severity, id: alert?.id });\n\n          try {\n            await sb.functions.invoke(",
-    "get_burn_rate(${minutes}): ${error.message}"
-   ],
-   "doc": "Multi-window burn-rate alerts (Google SRE style) Windows evaluated: - Fast page: 1h AND 5min burn >= 14.4x -> critical (2% budget in 1h) - Slow page: 6h AND 30min burn >= 6x -> high (5% budget in 6h) Alert only when BOTH long and short windows exceed the threshold (reduces noise).",
-   "percents": [
-    "// - Fast page: 1h AND 5min burn >= 14.4x -> critical (2% budget in 1h)",
-    "// - Slow page: 6h AND 30min burn >= 6x -> high (5% budget in 6h)"
-   ],
-   "side_effects": [
-    "invoke("
-   ],
-   "pagination": [
-    "1"
-   ],
-   "uses_service_role": true
-  },
-  "supabase/functions/checkin-reminders/index.ts": {
-   "path": "supabase/functions/checkin-reminders/index.ts",
-   "lines": 237,
-   "tables": [
-    {
-     "table": "checkins",
-     "op": "select"
-    },
-    {
-     "table": "notifications",
-     "op": "select"
-    },
-    {
-     "table": "notifications",
-     "op": "insert"
-    },
-    {
-     "table": "notifications",
-     "op": "select"
-    },
-    {
-     "table": "notifications",
-     "op": "insert"
-    },
-    {
-     "table": "notifications",
-     "op": "insert"
-    },
-    {
-     "table": "notifications",
-     "op": "insert"
-    },
-    {
-     "table": "checkins",
-     "op": "select"
-    },
-    {
-     "table": "notifications",
-     "op": "insert"
-    }
-   ],
-   "table_cols": {
-    "checkins": [
-     "scheduled_at",
-     "status"
-    ],
-    "notifications": [
-     "created_at",
-     "id",
-     "type",
-     "user_id"
-    ]
-   },
-   "env": [
-    "SUPABASE_SERVICE_ROLE_KEY",
-    "SUPABASE_URL"
-   ],
-   "status_values": [
-    {
-     "field": "type",
-     "value": "checkin_reminder",
-     "kind": "escreve"
-    },
-    {
-     "field": "type",
-     "value": "checkin_reminder",
-     "kind": "escreve"
-    },
-    {
-     "field": "type",
-     "value": "checkin_reminder",
-     "kind": "escreve"
-    },
-    {
-     "field": "type",
-     "value": "checkin_reminder",
-     "kind": "escreve"
-    },
-    {
-     "field": "type",
-     "value": "checkin_overdue",
-     "kind": "escreve"
-    },
-    {
-     "field": "status",
-     "value": "scheduled",
-     "kind": "filtra"
-    },
-    {
-     "field": "type",
-     "value": "checkin_reminder",
-     "kind": "filtra"
-    },
-    {
-     "field": "type",
-     "value": "checkin_reminder",
-     "kind": "filtra"
-    },
-    {
-     "field": "status",
-     "value": "scheduled",
-     "kind": "filtra"
-    }
-   ],
-   "uses_service_role": true
-  },
-  "supabase/functions/churn-prediction/index.ts": {
-   "path": "supabase/functions/churn-prediction/index.ts",
-   "lines": 283,
-   "tables": [
     {
      "table": "profiles",
      "op": "select"
@@ -147751,6 +145486,10 @@
     }
    ],
    "table_cols": {
+    "user_roles": [
+     "role",
+     "user_id"
+    ],
     "profiles": [
      "display_name",
      "email",
@@ -147927,40 +145666,14 @@
      "kind": "escreve"
     }
    ],
+   "role_checks": [
+    "admin",
+    "manager"
+   ],
    "temporal": [
     "const daysInactive = Math.floor((now.getTime() - lastActive.getTime()) / (1000 * 60 * 60 * 24));",
     "const sevenDaysAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);",
     "const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);"
-   ],
-   "uses_service_role": true
-  },
-  "supabase/functions/cleanup-old-security-logs/index.ts": {
-   "path": "supabase/functions/cleanup-old-security-logs/index.ts",
-   "lines": 47,
-   "rpc": [
-    "cleanup_old_security_logs"
-   ],
-   "env": [
-    "SUPABASE_SERVICE_ROLE_KEY",
-    "SUPABASE_URL"
-   ],
-   "uses_service_role": true
-  },
-  "supabase/functions/cleanup-rate-limit-logs/index.ts": {
-   "path": "supabase/functions/cleanup-rate-limit-logs/index.ts",
-   "lines": 63,
-   "tables": [
-    {
-     "table": "audit_logs",
-     "op": "insert"
-    }
-   ],
-   "rpc": [
-    "cleanup_old_security_logs"
-   ],
-   "env": [
-    "SUPABASE_SERVICE_ROLE_KEY",
-    "SUPABASE_URL"
    ],
    "uses_service_role": true
   },
@@ -148157,552 +145870,6 @@
     "SUPABASE_URL"
    ],
    "uses_service_role": true
-  },
-  "supabase/functions/dispatch-critical-alert/index.ts": {
-   "path": "supabase/functions/dispatch-critical-alert/index.ts",
-   "lines": 125,
-   "tables": [
-    {
-     "table": "user_roles",
-     "op": "select"
-    },
-    {
-     "table": "notifications",
-     "op": "insert"
-    }
-   ],
-   "table_cols": {
-    "user_roles": [
-     "role",
-     "user_id"
-    ]
-   },
-   "env": [
-    "SLACK_ALERT_WEBHOOK_URL",
-    "SUPABASE_SERVICE_ROLE_KEY",
-    "SUPABASE_URL"
-   ],
-   "status_values": [
-    {
-     "field": "type",
-     "value": "security",
-     "kind": "escreve"
-    },
-    {
-     "field": "role",
-     "value": "admin",
-     "kind": "filtra"
-    }
-   ],
-   "uses_service_role": true
-  },
-  "supabase/functions/error-budget-monitor/index.ts": {
-   "path": "supabase/functions/error-budget-monitor/index.ts",
-   "lines": 170,
-   "tables": [
-    {
-     "table": "security_alerts",
-     "op": "select"
-    },
-    {
-     "table": "security_alerts",
-     "op": "insert,select"
-    }
-   ],
-   "table_cols": {
-    "security_alerts": [
-     "alert_type",
-     "created_at",
-     "id"
-    ]
-   },
-   "rpc": [
-    "get_error_budget_30d"
-   ],
-   "env": [
-    "SUPABASE_SERVICE_ROLE_KEY",
-    "SUPABASE_URL"
-   ],
-   "errors": [
-    ";\n    const serviceRole = Deno.env.get("
-   ],
-   "params": [
-    {
-     "name": "BURN_HIGH",
-     "value": "75"
-    },
-    {
-     "name": "BURN_CRITICAL",
-     "value": "90"
-    }
-   ],
-   "status_values": [
-    {
-     "field": "status",
-     "value": "healthy",
-     "kind": "escreve"
-    }
-   ],
-   "doc": "Error Budget Monitor — avalia burn% do orçamento de erros (30d) para webhooks e API externa. Ao cruzar 75% ou 90%, cria um security_alert e dispara o dispatch-critical-alert (Slack + notificação in-app), com deduplicação por dia+tipo+bucket para não spammar.",
-   "percents": [
-    "// e API externa. Ao cruzar 75% ou 90%, cria um security_alert e dispara o"
-   ],
-   "pagination": [
-    "1"
-   ],
-   "uses_service_role": true
-  },
-  "supabase/functions/external-api/index.ts": {
-   "path": "supabase/functions/external-api/index.ts",
-   "lines": 823,
-   "tables": [
-    {
-     "table": "api_request_logs",
-     "op": "insert"
-    },
-    {
-     "table": "external_tasks",
-     "op": "insert,select"
-    },
-    {
-     "table": "external_tasks",
-     "op": "select"
-    },
-    {
-     "table": "external_tasks",
-     "op": "select"
-    },
-    {
-     "table": "external_tasks",
-     "op": "select,update"
-    },
-    {
-     "table": "profiles",
-     "op": "select"
-    },
-    {
-     "table": "profiles",
-     "op": "select"
-    },
-    {
-     "table": "profiles",
-     "op": "update"
-    },
-    {
-     "table": "profiles",
-     "op": "select"
-    },
-    {
-     "table": "profiles",
-     "op": "update"
-    },
-    {
-     "table": "departments",
-     "op": "select"
-    },
-    {
-     "table": "positions",
-     "op": "select"
-    },
-    {
-     "table": "achievements",
-     "op": "select"
-    },
-    {
-     "table": "profiles",
-     "op": "select"
-    },
-    {
-     "table": "user_achievements",
-     "op": "select"
-    },
-    {
-     "table": "profiles",
-     "op": "select"
-    },
-    {
-     "table": "achievements",
-     "op": "select"
-    },
-    {
-     "table": "user_achievements",
-     "op": "select"
-    },
-    {
-     "table": "user_achievements",
-     "op": "insert"
-    },
-    {
-     "table": "profiles",
-     "op": "update"
-    },
-    {
-     "table": "webhook_subscriptions",
-     "op": "select"
-    },
-    {
-     "table": "webhook_subscriptions",
-     "op": "insert,select"
-    },
-    {
-     "table": "webhook_subscriptions",
-     "op": "delete"
-    }
-   ],
-   "table_cols": {
-    "external_tasks": [
-     "external_id",
-     "external_system"
-    ],
-    "profiles": [
-     "coins",
-     "created_at",
-     "display_name",
-     "email",
-     "id",
-     "level",
-     "quests_completed",
-     "streak",
-     "xp"
-    ],
-    "departments": [
-     "color",
-     "description",
-     "id",
-     "name"
-    ],
-    "positions": [
-     "department_id",
-     "description",
-     "id",
-     "is_active",
-     "level",
-     "name"
-    ],
-    "achievements": [
-     "category",
-     "coin_reward",
-     "description",
-     "icon",
-     "id",
-     "key",
-     "name",
-     "rarity",
-     "xp_reward"
-    ],
-    "user_achievements": [
-     "achievement_id",
-     "id",
-     "unlocked_at",
-     "user_id"
-    ],
-    "webhook_subscriptions": [
-     "api_key_id",
-     "created_at",
-     "events",
-     "id",
-     "is_active",
-     "last_status",
-     "last_triggered_at",
-     "name",
-     "url"
-    ]
-   },
-   "rpc": [
-    "complete_external_task",
-    "get_executive_metrics",
-    "get_leaderboard_api",
-    "get_user_stats_api",
-    "process_external_task",
-    "validate_api_key"
-   ],
-   "env": [
-    "SUPABASE_SERVICE_ROLE_KEY",
-    "SUPABASE_URL"
-   ],
-   "status_values": [
-    {
-     "field": "status",
-     "value": "ok",
-     "kind": "escreve"
-    }
-   ],
-   "role_checks": [
-    "admin",
-    "read",
-    "required",
-    "write"
-   ],
-   "uses_service_role": true
-  },
-  "supabase/functions/external-db-bridge/index.ts": {
-   "path": "supabase/functions/external-db-bridge/index.ts",
-   "lines": 309,
-   "tables": [
-    {
-     "table": "query_telemetry",
-     "op": "insert"
-    },
-    {
-     "table": "query_telemetry",
-     "op": "insert,select"
-    }
-   ],
-   "table_cols": {
-    "query_telemetry": [
-     "id"
-    ]
-   },
-   "dyn_from": 4,
-   "env": [
-    "SUPABASE_SERVICE_ROLE_KEY",
-    "SUPABASE_URL"
-   ],
-   "status_values": [
-    {
-     "field": "status",
-     "value": "ok",
-     "kind": "escreve"
-    }
-   ],
-   "calc_fns": [
-    {
-     "name": "validateTelemetryPayload",
-     "params": "payload: TelemetryPayload",
-     "body": "if (!payload.operation || typeof payload.operation !== 'string') { return 'operation is required and must be a string'; } if (typeof payload.duration_ms !== 'number' || payload.duration_ms < 0) { return 'duration_ms must be a non-negative number'; } const validOps = ['select', 'insert', 'update', 'delete', 'rpc', 'count', 'upsert']; if (!validOps.includes(payload.operation)) { return `operation must be one of: ${validOps.join(', ')}`; } return null;"
-    }
-   ],
-   "uses_service_role": true
-  },
-  "supabase/functions/external-webhook/index.ts": {
-   "path": "supabase/functions/external-webhook/index.ts",
-   "lines": 826,
-   "tables": [
-    {
-     "table": "external_tasks",
-     "op": "select"
-    },
-    {
-     "table": "external_tasks",
-     "op": "insert,select"
-    },
-    {
-     "table": "external_tasks",
-     "op": "update"
-    },
-    {
-     "table": "external_tasks",
-     "op": "update"
-    },
-    {
-     "table": "external_tasks",
-     "op": "delete"
-    },
-    {
-     "table": "profiles",
-     "op": "select"
-    },
-    {
-     "table": "attendance_settings",
-     "op": "select"
-    },
-    {
-     "table": "attendance_records",
-     "op": "insert,select"
-    },
-    {
-     "table": "profiles",
-     "op": "update"
-    },
-    {
-     "table": "profiles",
-     "op": "select"
-    },
-    {
-     "table": "attendance_records",
-     "op": "select,update"
-    },
-    {
-     "table": "profiles",
-     "op": "select"
-    },
-    {
-     "table": "profiles",
-     "op": "update"
-    },
-    {
-     "table": "profiles",
-     "op": "select"
-    },
-    {
-     "table": "profiles",
-     "op": "update"
-    },
-    {
-     "table": "profiles",
-     "op": "select"
-    },
-    {
-     "table": "profiles",
-     "op": "update"
-    },
-    {
-     "table": "task_penalties",
-     "op": "insert"
-    },
-    {
-     "table": "profiles",
-     "op": "select"
-    },
-    {
-     "table": "achievements",
-     "op": "select"
-    },
-    {
-     "table": "user_achievements",
-     "op": "select"
-    },
-    {
-     "table": "user_achievements",
-     "op": "insert"
-    },
-    {
-     "table": "webhook_subscriptions",
-     "op": "select"
-    }
-   ],
-   "table_cols": {
-    "external_tasks": [
-     "external_id",
-     "external_system",
-     "id"
-    ],
-    "profiles": [
-     "coins",
-     "email",
-     "id",
-     "xp"
-    ],
-    "attendance_settings": [
-     "department_id"
-    ],
-    "attendance_records": [
-     "check_in",
-     "check_out",
-     "user_id"
-    ],
-    "achievements": [
-     "coin_reward",
-     "id",
-     "key",
-     "name",
-     "xp_reward"
-    ],
-    "user_achievements": [
-     "achievement_id",
-     "id",
-     "user_id"
-    ],
-    "webhook_subscriptions": [
-     "events",
-     "is_active"
-    ]
-   },
-   "rpc": [
-    "add_user_rewards",
-    "complete_external_task",
-    "process_external_task",
-    "validate_api_key"
-   ],
-   "invokes": [
-    "webhook-dispatcher"
-   ],
-   "env": [
-    "SUPABASE_SERVICE_ROLE_KEY",
-    "SUPABASE_URL"
-   ],
-   "status_values": [
-    {
-     "field": "status",
-     "value": "late",
-     "kind": "escreve"
-    },
-    {
-     "field": "status",
-     "value": "rejected",
-     "kind": "escreve"
-    },
-    {
-     "field": "status",
-     "value": "rework",
-     "kind": "escreve"
-    },
-    {
-     "field": "status",
-     "value": "in_progress",
-     "kind": "escreve"
-    },
-    {
-     "field": "state",
-     "value": "duplicate",
-     "kind": "compara"
-    },
-    {
-     "field": "state",
-     "value": "in_progress",
-     "kind": "compara"
-    },
-    {
-     "field": "state",
-     "value": "fresh",
-     "kind": "compara"
-    },
-    {
-     "field": "status",
-     "value": "on_time",
-     "kind": "compara"
-    }
-   ],
-   "webhook_events": [
-    "achievement.grant",
-    "batch.complete",
-    "batch.tasks",
-    "task.completed",
-    "task.created",
-    "task.deleted",
-    "task.late",
-    "task.rejected",
-    "task.rework",
-    "task.started",
-    "task.updated",
-    "user.award_coins",
-    "user.award_xp",
-    "user.checkin",
-    "user.checkout",
-    "user.penalty"
-   ],
-   "side_effects": [
-    "invoke("
-   ],
-   "uses_service_role": true
-  },
-  "supabase/functions/external-webhook/validation.test.ts": {
-   "path": "supabase/functions/external-webhook/validation.test.ts",
-   "lines": 99,
-   "is_test": true,
-   "rule_comments": [
-    "If we want it required, we should update the schema."
-   ],
-   "tests": [
-    "Bitrix24 Webhook Contract - Valid Lead Event",
-    "Bitrix24 Webhook Contract - Invalid (Missing ID)",
-    "External Webhook Contract - Valid Task Event",
-    "External Webhook Contract - Invalid (Missing Event)",
-    "Webhook Dispatcher Contract - Valid Payload",
-    "Webhook Dispatcher Contract - Invalid UUID",
-    "External Webhook Versioning - v1 compatibility",
-    "External Webhook Versioning - v2 support"
-   ]
   },
   "supabase/functions/generate-quiz-questions/index.ts": {
    "path": "supabase/functions/generate-quiz-questions/index.ts",
@@ -149157,59 +146324,6 @@
     }
    ]
   },
-  "supabase/functions/security-weekly-digest/index.ts": {
-   "path": "supabase/functions/security-weekly-digest/index.ts",
-   "lines": 133,
-   "tables": [
-    {
-     "table": "security_alerts",
-     "op": "select"
-    },
-    {
-     "table": "user_roles",
-     "op": "select"
-    },
-    {
-     "table": "notifications",
-     "op": "upsert"
-    }
-   ],
-   "table_cols": {
-    "security_alerts": [
-     "alert_type",
-     "created_at",
-     "id",
-     "resolved",
-     "resolved_at",
-     "severity"
-    ],
-    "user_roles": [
-     "role",
-     "user_id"
-    ]
-   },
-   "env": [
-    "SLACK_ALERT_WEBHOOK_URL",
-    "SUPABASE_SERVICE_ROLE_KEY",
-    "SUPABASE_URL"
-   ],
-   "status_values": [
-    {
-     "field": "type",
-     "value": "security_weekly_digest",
-     "kind": "escreve"
-    },
-    {
-     "field": "role",
-     "value": "admin",
-     "kind": "filtra"
-    }
-   ],
-   "temporal": [
-    "const since = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();"
-   ],
-   "uses_service_role": true
-  },
   "supabase/functions/send-campaign-push/index.ts": {
    "path": "supabase/functions/send-campaign-push/index.ts",
    "lines": 227,
@@ -149341,398 +146455,14 @@
    ],
    "uses_service_role": true
   },
-  "supabase/functions/send-email-digest/index.ts": {
-   "path": "supabase/functions/send-email-digest/index.ts",
-   "lines": 277,
+  "supabase/functions/trail-recommendations/index.ts": {
+   "path": "supabase/functions/trail-recommendations/index.ts",
+   "lines": 306,
    "tables": [
-    {
-     "table": "profiles",
-     "op": "select"
-    },
-    {
-     "table": "xp_transactions",
-     "op": "select"
-    },
-    {
-     "table": "coin_transactions",
-     "op": "select"
-    },
-    {
-     "table": "user_quests",
-     "op": "select"
-    },
-    {
-     "table": "user_achievements",
-     "op": "select"
-    },
-    {
-     "table": "attendance_streaks",
-     "op": "select"
-    },
-    {
-     "table": "profiles",
-     "op": "select"
-    }
-   ],
-   "table_cols": {
-    "profiles": [
-     "digest_enabled",
-     "email",
-     "full_name",
-     "id"
-    ],
-    "xp_transactions": [
-     "created_at",
-     "user_id",
-     "xp_amount"
-    ],
-    "coin_transactions": [
-     "amount",
-     "created_at",
-     "user_id"
-    ],
-    "user_quests": [
-     "completed_at",
-     "status",
-     "user_id"
-    ],
-    "user_achievements": [
-     "unlocked_at",
-     "user_id"
-    ],
-    "attendance_streaks": [
-     "current_streak",
-     "user_id"
-    ]
-   },
-   "env": [
-    "SUPABASE_SERVICE_ROLE_KEY",
-    "SUPABASE_URL"
-   ],
-   "status_values": [
-    {
-     "field": "status",
-     "value": "generated",
-     "kind": "escreve"
-    },
-    {
-     "field": "status",
-     "value": "completed",
-     "kind": "filtra"
-    }
-   ],
-   "calc_fns": [
-    {
-     "name": "generateEmailHTML",
-     "params": "data: DigestData",
-     "body": "const rankChangeIcon = data.rankChange > 0 ? \"📈\" : data.rankChange < 0 ? \"📉\" : \"➡️\"; const rankChangeText = data.rankChange > 0 ? `+${data.rankChange}` : data.rankChange.toString(); return ` <!DOCTYPE html> <html> <head> <meta charset=\"utf-8\"> <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"> <title>Seu Resumo Semanal</title> <style> body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; background: #1a1a2e; } .container { max-width: 600p …"
-    }
-   ],
-   "pagination": [
-    "5"
-   ],
-   "uses_service_role": true
-  },
-  "supabase/functions/send-email-notifications/index.ts": {
-   "path": "supabase/functions/send-email-notifications/index.ts",
-   "lines": 244,
-   "tables": [
-    {
-     "table": "profiles",
-     "op": "select"
-    },
-    {
-     "table": "profiles",
-     "op": "select"
-    },
-    {
-     "table": "profiles",
-     "op": "select"
-    },
-    {
-     "table": "notifications",
-     "op": "select"
-    },
-    {
-     "table": "pulse_surveys",
-     "op": "select"
-    },
-    {
-     "table": "checkins",
-     "op": "select"
-    },
-    {
-     "table": "feedback_requests",
-     "op": "select"
-    },
-    {
-     "table": "celebrations",
-     "op": "select"
-    },
-    {
-     "table": "audit_logs",
-     "op": "insert"
-    }
-   ],
-   "table_cols": {
-    "profiles": [
-     "coins",
-     "display_name",
-     "email",
-     "id",
-     "level",
-     "quests_completed",
-     "streak",
-     "xp"
-    ],
-    "notifications": [
-     "id",
-     "read",
-     "user_id"
-    ],
-    "pulse_surveys": [
-     "id",
-     "status"
-    ],
-    "checkins": [
-     "employee_id",
-     "id",
-     "status"
-    ],
-    "feedback_requests": [
-     "from_user_id",
-     "id",
-     "status"
-    ],
-    "celebrations": [
-     "celebration_date",
-     "user_id"
-    ]
-   },
-   "env": [
-    "SUPABASE_SERVICE_ROLE_KEY",
-    "SUPABASE_URL"
-   ],
-   "status_values": [
-    {
-     "field": "type",
-     "value": "digest",
-     "kind": "escreve"
-    },
-    {
-     "field": "type",
-     "value": "digest",
-     "kind": "escreve"
-    },
-    {
-     "field": "type",
-     "value": "reminder",
-     "kind": "escreve"
-    },
-    {
-     "field": "type",
-     "value": "celebration",
-     "kind": "escreve"
-    },
-    {
-     "field": "status",
-     "value": "logged",
-     "kind": "escreve"
-    },
-    {
-     "field": "status",
-     "value": "logged",
-     "kind": "escreve"
-    },
-    {
-     "field": "status",
-     "value": "error",
-     "kind": "escreve"
-    },
-    {
-     "field": "status",
-     "value": "active",
-     "kind": "filtra"
-    },
-    {
-     "field": "status",
-     "value": "scheduled",
-     "kind": "filtra"
-    },
-    {
-     "field": "status",
-     "value": "pending",
-     "kind": "filtra"
-    },
-    {
-     "field": "type",
-     "value": "digest",
-     "kind": "compara"
-    },
-    {
-     "field": "type",
-     "value": "reminder",
-     "kind": "compara"
-    }
-   ],
-   "side_effects": [
-    "notify"
-   ],
-   "pagination": [
-    "5"
-   ],
-   "uses_service_role": true
-  },
-  "supabase/functions/send-rate-limit-alert/index.ts": {
-   "path": "supabase/functions/send-rate-limit-alert/index.ts",
-   "lines": 123,
-   "tables": [
-    {
-     "table": "rate_limit_logs",
-     "op": "insert"
-    },
     {
      "table": "user_roles",
      "op": "select"
     },
-    {
-     "table": "notifications",
-     "op": "insert"
-    },
-    {
-     "table": "blocked_ips",
-     "op": "select"
-    }
-   ],
-   "table_cols": {
-    "user_roles": [
-     "role",
-     "user_id"
-    ],
-    "blocked_ips": [
-     "ip_address",
-     "violation_count"
-    ]
-   },
-   "rpc": [
-    "auto_block_ip"
-   ],
-   "env": [
-    "SUPABASE_SERVICE_ROLE_KEY",
-    "SUPABASE_URL"
-   ],
-   "status_values": [
-    {
-     "field": "type",
-     "value": "security_alert",
-     "kind": "escreve"
-    },
-    {
-     "field": "role",
-     "value": "admin",
-     "kind": "filtra"
-    }
-   ],
-   "rule_comments": [
-    "2. Log the rate limit violation"
-   ],
-   "side_effects": [
-    "notify"
-   ],
-   "uses_service_role": true
-  },
-  "supabase/functions/survey-reminders/index.ts": {
-   "path": "supabase/functions/survey-reminders/index.ts",
-   "lines": 163,
-   "tables": [
-    {
-     "table": "pulse_surveys",
-     "op": "select"
-    },
-    {
-     "table": "profiles",
-     "op": "select"
-    },
-    {
-     "table": "pulse_responses",
-     "op": "select"
-    },
-    {
-     "table": "notifications",
-     "op": "select"
-    },
-    {
-     "table": "notifications",
-     "op": "insert"
-    },
-    {
-     "table": "profiles",
-     "op": "select"
-    },
-    {
-     "table": "pulse_responses",
-     "op": "select"
-    },
-    {
-     "table": "notifications",
-     "op": "insert"
-    }
-   ],
-   "table_cols": {
-    "pulse_surveys": [
-     "ends_at",
-     "status"
-    ],
-    "profiles": [
-     "display_name",
-     "id"
-    ],
-    "pulse_responses": [
-     "survey_id",
-     "user_id"
-    ],
-    "notifications": [
-     "created_at",
-     "id",
-     "type",
-     "user_id"
-    ]
-   },
-   "env": [
-    "SUPABASE_SERVICE_ROLE_KEY",
-    "SUPABASE_URL"
-   ],
-   "status_values": [
-    {
-     "field": "type",
-     "value": "survey_reminder",
-     "kind": "escreve"
-    },
-    {
-     "field": "type",
-     "value": "survey_reminder",
-     "kind": "escreve"
-    },
-    {
-     "field": "status",
-     "value": "active",
-     "kind": "filtra"
-    },
-    {
-     "field": "type",
-     "value": "survey_reminder",
-     "kind": "filtra"
-    }
-   ],
-   "temporal": [
-    "const daysUntilEnd = Math.ceil((endsAt.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));"
-   ],
-   "uses_service_role": true
-  },
-  "supabase/functions/trail-recommendations/index.ts": {
-   "path": "supabase/functions/trail-recommendations/index.ts",
-   "lines": 296,
-   "tables": [
     {
      "table": "profiles",
      "op": "select"
@@ -149759,6 +146489,10 @@
     }
    ],
    "table_cols": {
+    "user_roles": [
+     "role",
+     "user_id"
+    ],
     "profiles": [
      "id"
     ],
@@ -149824,55 +146558,9 @@
      "kind": "filtra"
     }
    ],
-   "uses_service_role": true
-  },
-  "supabase/functions/verify-geo/index.ts": {
-   "path": "supabase/functions/verify-geo/index.ts",
-   "lines": 198,
-   "tables": [
-    {
-     "table": "geo_settings",
-     "op": "select"
-    },
-    {
-     "table": "geo_access_logs",
-     "op": "insert"
-    },
-    {
-     "table": "geo_allowed_countries",
-     "op": "select"
-    },
-    {
-     "table": "geo_access_logs",
-     "op": "insert"
-    }
-   ],
-   "table_cols": {
-    "geo_allowed_countries": [
-     "country_code",
-     "is_active"
-    ]
-   },
-   "external_urls": [
-    "http://ip-api.com/json/…"
-   ],
-   "env": [
-    "SUPABASE_SERVICE_ROLE_KEY",
-    "SUPABASE_URL"
-   ],
-   "status_values": [
-    {
-     "field": "status",
-     "value": "success",
-     "kind": "compara"
-    }
-   ],
-   "rule_comments": [
-    "Use ip-api.com (free, no API key required, 45 requests per minute)",
-    "Apenas `cf-connecting-ip` é inforjável. Ver _shared/clientIp.ts."
-   ],
-   "pagination": [
-    "1"
+   "role_checks": [
+    "admin",
+    "manager"
    ],
    "uses_service_role": true
   },
@@ -149914,7 +146602,7 @@
   },
   "supabase/functions/webhook-dispatcher/index.ts": {
    "path": "supabase/functions/webhook-dispatcher/index.ts",
-   "lines": 286,
+   "lines": 271,
    "tables": [
     {
      "table": "webhook_subscriptions",
@@ -149953,66 +146641,7 @@
     {
      "name": "generateSignature",
      "params": "payload: string, secret: string",
-     "body": "try { const hmac = createHmac('sha256', secret); hmac.update(payload); return 'sha256=' + hmac.digest('hex'); } catch { // Fallback for Deno const encoder = new TextEncoder(); const keyData = encoder.encode(secret); const data = encoder.encode(payload); // Simple hash for fallback let hash = 0; for (let i = 0; i < data.length; i++) { hash = ((hash << 5) - hash) + data[i]; hash = hash & hash; } return 'sha256=' + Math.abs(hash).toString(16).padStart(16, '0'); }"
-    }
-   ],
-   "uses_service_role": true
-  },
-  "supabase/functions/webhook-health-monitor/index.ts": {
-   "path": "supabase/functions/webhook-health-monitor/index.ts",
-   "lines": 86,
-   "rpc": [
-    "get_webhook_delivery_stats_1h"
-   ],
-   "env": [
-    "SUPABASE_SERVICE_ROLE_KEY",
-    "SUPABASE_URL",
-    "WEBHOOK_HEALTH_MIN_SAMPLE",
-    "WEBHOOK_HEALTH_THRESHOLD"
-   ],
-   "doc": "Monitor de saúde de webhooks — dispara alertas Sentry quando taxa de sucesso por assinatura cai abaixo do limiar (default 90%) na última hora. Executado via pg_cron (a cada 15 min) ou invocação manual admin.",
-   "uses_service_role": true
-  },
-  "supabase/functions/weekly-league-processing/index.ts": {
-   "path": "supabase/functions/weekly-league-processing/index.ts",
-   "lines": 187,
-   "tables": [
-    {
-     "table": "leagues",
-     "op": "select"
-    },
-    {
-     "table": "league_members",
-     "op": "select"
-    },
-    {
-     "table": "league_history",
-     "op": "insert"
-    },
-    {
-     "table": "league_members",
-     "op": "update"
-    },
-    {
-     "table": "notifications",
-     "op": "insert"
-    }
-   ],
-   "table_cols": {
-    "league_members": [
-     "league_id",
-     "user_id"
-    ]
-   },
-   "env": [
-    "SUPABASE_SERVICE_ROLE_KEY",
-    "SUPABASE_URL"
-   ],
-   "status_values": [
-    {
-     "field": "type",
-     "value": "league",
-     "kind": "escreve"
+     "body": "const hmac = createHmac('sha256', secret); hmac.update(payload); return 'sha256=' + hmac.digest('hex');"
     }
    ],
    "uses_service_role": true
@@ -151414,10 +148043,45 @@
   }
  },
  "git": {
-  "sha": "a489fe2e64109c54de531ae464a8b3a81d9eaee7",
+  "sha": "e1b0f368dd6361901fb60cb8bb6ca8326664cf8d",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "commits": [
+   {
+    "sha": "e1b0f36",
+    "date": "2026-11-13",
+    "author": "adm01-debug",
+    "subject": "chore(functions): poda 21 edge functions mortas + mitiga 4 vulnerabilidades (#54)",
+    "files": [
+     "docs/prod-readiness.md",
+     "supabase/functions/birthday-celebrations/index.ts",
+     "supabase/functions/bitrix24-api/index.ts",
+     "supabase/functions/bitrix24-oauth/index.ts",
+     "supabase/functions/bitrix24-webhook/index.ts",
+     "supabase/functions/burn-rate-monitor/index.ts",
+     "supabase/functions/checkin-reminders/index.ts",
+     "supabase/functions/churn-prediction/index.ts",
+     "supabase/functions/cleanup-old-security-logs/index.ts",
+     "supabase/functions/cleanup-rate-limit-logs/index.ts",
+     "supabase/functions/dispatch-critical-alert/index.ts",
+     "supabase/functions/error-budget-monitor/index.ts",
+     "supabase/functions/external-api/index.ts",
+     "supabase/functions/external-db-bridge/index.ts",
+     "supabase/functions/external-webhook/index.ts",
+     "supabase/functions/external-webhook/validation.test.ts",
+     "supabase/functions/security-weekly-digest/index.ts",
+     "supabase/functions/send-email-digest/index.ts",
+     "supabase/functions/send-email-notifications/index.ts",
+     "supabase/functions/send-rate-limit-alert/index.ts",
+     "supabase/functions/survey-reminders/index.ts",
+     "supabase/functions/trail-recommendations/index.ts",
+     "supabase/functions/verify-geo/index.ts",
+     "supabase/functions/verify-ip/index.ts",
+     "supabase/functions/webhook-dispatcher/index.ts",
+     "supabase/functions/webhook-health-monitor/index.ts",
+     "supabase/functions/weekly-league-processing/index.ts"
+    ]
+   },
    {
     "sha": "a489fe2",
     "date": "2026-11-13",
@@ -151851,22 +148515,12 @@
     "files": [
      "RELATORIO_CI.md"
     ]
-   },
-   {
-    "sha": "d8f78ee",
-    "date": "2026-10-29",
-    "author": "dependabot[bot]",
-    "subject": "build(deps): bump grupo de 58 dependências minor/patch (#24)",
-    "files": [
-     "bun.lock",
-     "package.json"
-    ]
    }
   ],
   "hot_files": [
    [
     "package.json",
-    9
+    8
    ],
    [
     ".github/workflows/ci.yml",
@@ -151889,6 +148543,10 @@
     4
    ],
    [
+    "docs/prod-readiness.md",
+    3
+   ],
+   [
     ".github/workflows/automation-local.yml",
     3
    ],
@@ -151907,14 +148565,6 @@
    [
     "docs/agentes/banco.md",
     3
-   ],
-   [
-    "bun.lock",
-    3
-   ],
-   [
-    "docs/prod-readiness.md",
-    2
    ],
    [
     "scripts/automation.unit.mjs",
@@ -151942,6 +148592,10 @@
    ],
    [
     "scripts/ai-context/gerar.mjs",
+    2
+   ],
+   [
+    "scripts/ci/ai-context-generator.unit.mjs",
     2
    ]
   ]

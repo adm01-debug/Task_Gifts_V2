@@ -1,8 +1,8 @@
 {
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
- "nos": 990,
- "arestas": 4257,
+ "nos": 969,
+ "arestas": 4230,
  "hubs": [
   {
    "arquivo": "src/components/ui/card.tsx",
@@ -113,10 +113,6 @@
    "importado_por": 25
   },
   {
-   "arquivo": "supabase/functions/_shared/security.ts",
-   "importado_por": 24
-  },
-  {
    "arquivo": "src/hooks/use-toast.ts",
    "importado_por": 22
   },
@@ -163,6 +159,10 @@
   {
    "arquivo": "src/components/mobile/index.ts",
    "importado_por": 14
+  },
+  {
+   "arquivo": "src/components/PageWrapper.tsx",
+   "importado_por": 13
   }
  ],
  "ciclos": {

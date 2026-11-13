@@ -1,7 +1,7 @@
 # Contexto do projeto para agentes de IA
 
 GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.
-Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `a489fe2e64109c54de531ae464a8b3a81d9eaee7` (2026-11-13T15:39:44-03:00).
+Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `e1b0f368dd6361901fb60cb8bb6ca8326664cf8d` (2026-11-13T18:04:14-03:00).
 
 ## Como usar (leia antes de planejar ou executar qualquer tarefa)
 1. **Tela/rota/menu** → `rotas.json` (url/vista/menu → arquivo → hooks → tabelas → edges; `rotas_http_backend` para APIs) e `modulos.json` (módulo inteiro + dependências entre módulos).
@@ -14,7 +14,7 @@ Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR
 Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua tarefa; não carregue tudo.
 
 ## Stack
-- linguagens: TypeScript (1122), SQL (267), Markdown (46), JavaScript (22), JSON (15), YAML (6), Python (5), Shell (4)
+- linguagens: TypeScript (1100), SQL (267), Markdown (46), JavaScript (22), JSON (15), YAML (6), Python (5), Shell (4)
 - linguagem_principal: TypeScript
 - framework: React
 - backend_http: n/d
@@ -34,9 +34,9 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 ## Números
 | item | qtd |
 |---|---|
-| arquivos_total | 1504 |
-| arquivos_codigo | 1148 |
-| linhas_codigo | 229323 |
+| arquivos_total | 1482 |
+| arquivos_codigo | 1126 |
+| linhas_codigo | 223907 |
 | rotas | 83 |
 | rotas_http_backend | 0 |
 | vistas_por_id | 0 |
@@ -44,11 +44,11 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 | modulos | 71 |
 | componentes | 521 |
 | hooks | 155 |
-| edge_functions | 37 |
+| edge_functions | 16 |
 | tabelas | 236 |
 | migrations | 267 |
 | cron_jobs | 22 |
-| testes | 158 |
+| testes | 157 |
 | workflows | 3 |
 | scripts | 15 |
 | docs_md | 46 |
@@ -58,7 +58,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - componentes: src/components (432), src/pages (82), src/contexts (4)
 - hooks: src/hooks (129), src/components (22), src/contexts (4)
 - servicos_logica: src/lib (106), src/services (99), src/integrations (3)
-- testes: co-localizado (*.test) (143), outro (11), tests/ (3)
+- testes: co-localizado (*.test) (142), outro (11), tests/ (3)
 - edge_functions: supabase/functions
 - migrations: supabase/migrations
 - scripts: scripts/maintenance (4), scripts/regras_negocio (3), scripts/ci (2)
@@ -197,40 +197,19 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - `admin-alerts` — tabelas: attendance_records, audit_logs, profiles, shop_purchases, user_certifications; chamada por 1 arquivo(s) do front
 - `ai-coach` — tabelas: -; chamada por 1 arquivo(s) do front
 - `ai-course-builder` — tabelas: ai_course_jobs, learning_trails, quiz_options, quiz_questions, trail_modules; chamada por 1 arquivo(s) do front
-- `birthday-celebrations` — tabelas: celebrations, notifications, profiles; chamada por 0 arquivo(s) do front — **ÓRFÃ**
-- `bitrix24-api` — tabelas: bitrix24_tokens, bitrix24_webhook_logs; chamada por 0 arquivo(s) do front — **ÓRFÃ**
-- `bitrix24-oauth` — tabelas: bitrix24_tokens; chamada por 0 arquivo(s) do front — **ÓRFÃ**
-- `bitrix24-webhook` — tabelas: bitrix24_sync_mappings, bitrix24_webhook_logs, custom_quests, notifications, quest_assignments, user_roles; chamada por 0 arquivo(s) do front — **ÓRFÃ**
-- `burn-rate-monitor` — tabelas: security_alerts; chamada por 0 arquivo(s) do front — **ÓRFÃ**
-- `checkin-reminders` — tabelas: checkins, notifications; chamada por 0 arquivo(s) do front — **ÓRFÃ**
-- `churn-prediction` — tabelas: attendance_records, audit_logs, kudos, profiles, trail_enrollments, user_combos; chamada por 1 arquivo(s) do front
-- `cleanup-old-security-logs` — tabelas: -; chamada por 0 arquivo(s) do front — **ÓRFÃ**
-- `cleanup-rate-limit-logs` — tabelas: audit_logs; chamada por 0 arquivo(s) do front — **ÓRFÃ**
+- `churn-prediction` — tabelas: attendance_records, audit_logs, kudos, profiles, trail_enrollments, user_combos, user_roles; chamada por 1 arquivo(s) do front
 - `competency-alerts` — tabelas: attendance_streaks, kudos, module_progress, notifications, profiles, quest_assignments, user_achievements; chamada por 2 arquivo(s) do front
 - `detect-new-device` — tabelas: profiles, security_alerts; chamada por 1 arquivo(s) do front
-- `dispatch-critical-alert` — tabelas: notifications, user_roles; chamada por 0 arquivo(s) do front, por SQL/cron
-- `error-budget-monitor` — tabelas: security_alerts; chamada por 0 arquivo(s) do front — **ÓRFÃ**
-- `external-api` — tabelas: achievements, api_request_logs, departments, external_tasks, positions, profiles, user_achievements, webhook_subscriptions; chamada por 0 arquivo(s) do front — **ÓRFÃ**
-- `external-db-bridge` — tabelas: query_telemetry; chamada por 0 arquivo(s) do front — **ÓRFÃ**
-- `external-webhook` — tabelas: achievements, attendance_records, attendance_settings, external_tasks, profiles, task_penalties, user_achievements, webhook_subscriptions; chamada por 0 arquivo(s) do front — **ÓRFÃ**
 - `generate-quiz-questions` — tabelas: learning_trails, trail_modules; chamada por 1 arquivo(s) do front
 - `migrate-helper` (verify_jwt=false) — tabelas: -; chamada por 0 arquivo(s) do front
 - `push-device-revoked` — tabelas: push_notification_logs, push_subscriptions; chamada por 1 arquivo(s) do front
 - `push-outbox-dispatcher` — tabelas: push_notification_logs, push_outbox, push_subscriptions; chamada por 0 arquivo(s) do front, por SQL/cron
 - `push-public-key` — tabelas: -; chamada por 1 arquivo(s) do front
 - `reward-approval-review` — tabelas: audit_logs, profiles, purchase_approvals, shop_purchases, user_roles; chamada por 1 arquivo(s) do front
-- `security-weekly-digest` — tabelas: notifications, security_alerts, user_roles; chamada por 0 arquivo(s) do front, por SQL/cron
 - `send-campaign-push` — tabelas: push_notification_logs, push_subscriptions; chamada por 1 arquivo(s) do front
-- `send-email-digest` — tabelas: attendance_streaks, coin_transactions, profiles, user_achievements, user_quests, xp_transactions; chamada por 0 arquivo(s) do front — **ÓRFÃ**
-- `send-email-notifications` — tabelas: audit_logs, celebrations, checkins, feedback_requests, notifications, profiles, pulse_surveys; chamada por 0 arquivo(s) do front — **ÓRFÃ**
-- `send-rate-limit-alert` — tabelas: blocked_ips, notifications, rate_limit_logs, user_roles; chamada por 0 arquivo(s) do front — **ÓRFÃ**
-- `survey-reminders` — tabelas: notifications, profiles, pulse_responses, pulse_surveys; chamada por 0 arquivo(s) do front — **ÓRFÃ**
-- `trail-recommendations` — tabelas: learning_trails, module_progress, profiles, quest_assignments, team_members, trail_enrollments; chamada por 2 arquivo(s) do front
-- `verify-geo` — tabelas: geo_access_logs, geo_allowed_countries, geo_settings; chamada por 0 arquivo(s) do front — **ÓRFÃ**
+- `trail-recommendations` — tabelas: learning_trails, module_progress, profiles, quest_assignments, team_members, trail_enrollments, user_roles; chamada por 2 arquivo(s) do front
 - `verify-ip` — tabelas: ip_access_logs, ip_whitelist; chamada por 2 arquivo(s) do front
 - `webhook-dispatcher` — tabelas: webhook_delivery_logs, webhook_subscriptions; chamada por 2 arquivo(s) do front
-- `webhook-health-monitor` — tabelas: -; chamada por 0 arquivo(s) do front, por SQL/cron
-- `weekly-league-processing` — tabelas: league_history, league_members, leagues, notifications; chamada por 0 arquivo(s) do front — **ÓRFÃ**
 
 ## Cron jobs (pg_cron / vercel)
 - `api-key-rotation-overdue-weekly` 0 9 * * 1 (20260728210216_01d79f58-57ea-48d9-a859-ef3ddf891190.sql)
@@ -258,12 +237,12 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 
 ## Integrações externas
 - SDKs: Sentry, Supabase, react-query, zod
-- hosts mais citados: ai.gateway.lovable.dev, fcm.googleapis.com, i.pravatar.cc, taskgifts.app, www.youtube.com, a.com, api.pwnedpasswords.com, api.resend.com, app.exemplo.com, example.test, exemplo.com, ip-api.com, linkedin.com, lovable.dev, maintenance.invalid
+- hosts mais citados: ai.gateway.lovable.dev, fcm.googleapis.com, i.pravatar.cc, taskgifts.app, www.youtube.com, a.com, api.pwnedpasswords.com, api.resend.com, app.exemplo.com, example.test, exemplo.com, linkedin.com, maintenance.invalid, production.invalid, production.supabase.co
 - webhooks recebidos: migrate-helper
-- env de integração (só nomes): BITRIX24_CLIENT_ID, BITRIX24_CLIENT_SECRET, BITRIX24_WEBHOOK_SECRET, CRON_SECRET, INTERNAL_FUNCTION_SECRET, LOVABLE_API_KEY, RESEND_API_KEY, SENTRY_DSN, SENTRY_ENV, SLACK_ALERT_WEBHOOK_URL, UPSTASH_REDIS_REST_TOKEN, UPSTASH_REDIS_REST_URL, VITE_BITRIX_WEBHOOK_URL, VITE_SENTRY_DSN, WEBHOOK_HEALTH_MIN_SAMPLE, WEBHOOK_HEALTH_THRESHOLD
+- env de integração (só nomes): CRON_SECRET, INTERNAL_FUNCTION_SECRET, LOVABLE_API_KEY, RESEND_API_KEY, SENTRY_DSN, SENTRY_ENV, UPSTASH_REDIS_REST_TOKEN, UPSTASH_REDIS_REST_URL, VITE_BITRIX_WEBHOOK_URL, VITE_SENTRY_DSN
 
 ## Permissões / papéis
-- papéis no código: admin (12), alert (9), user (8), manager (6), system (6), button (5), status (5), group (3), assistant (2), grid (2), navigation (2), radio (2), radiogroup (2), Cargos (1), banner (1), contentinfo (1), dialog (1), gridcell (1), img (1), link (1), list (1), listitem (1), long (1), menu (1), menuitem (1), presentation (1), region (1), role_assigned (1), separator (1), short (1), tab (1)
+- papéis no código: admin (14), alert (9), manager (8), user (8), system (6), button (5), status (5), group (3), assistant (2), grid (2), navigation (2), radio (2), radiogroup (2), Cargos (1), banner (1), contentinfo (1), dialog (1), gridcell (1), img (1), link (1), list (1), listitem (1), long (1), menu (1), menuitem (1), presentation (1), region (1), role_assigned (1), separator (1), short (1), tab (1)
 - enums de papel: app_role: admin|manager|employee
 - guards: src/components/IpAccessGuard.tsx, src/components/engagement/diagnostics/AnonymityGuardNotice.tsx, src/components/rbac/AccessControl.tsx, src/components/rbac/ProtectedRoute.tsx · rotas protegidas: 78 · públicas: /*, /forgot-password, /reset-password, /verificar, /verificar/:code
 - feature flags: nenhuma
@@ -272,12 +251,12 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - rotas_sem_arquivo: 0
 - componentes_ambiguos: 0
 - menu_sem_destino: 19 — ex.: Ações Rápidas -> quick-actions, Acompanhe o Progresso -> goal-progress, Bem-vindo ao Dashboard! 🎉 -> welcome
-- edges_orfas: 18 — ex.: birthday-celebrations, bitrix24-api, bitrix24-oauth
+- edges_orfas: 0
 - edges_chamadas_sem_pasta: 0
 - tabelas_sem_rls: 1 — ex.: lucky_wheel_prizes
-- tabelas_usadas_sem_definicao: 4 — ex.: coin_transactions, league_members, user_quests
+- tabelas_usadas_sem_definicao: 0
 - tabelas_com_drift_migration_vs_types: 11 — ex.: achievements, engagement_factors, lucky_wheel_prizes
-- rpcs_sem_definicao: 4 — ex.: add_user_rewards, add_user_xp, get_lucky_wheel_status
+- rpcs_sem_definicao: 1 — ex.: get_lucky_wheel_status
 - componentes_orfaos: 24 — ex.: src/components/admin/metrics/AdminMetricsCharts.tsx, src/components/admin/permissions/PermissionModuleAccordion.tsx, src/components/admin/telemetry/TelemetryTable.tsx
 - componentes_com_nome_duplicado: 8 — ex.: CopilotAlert, LevelUpCelebration, PageTransition
 - scripts_orfaos: 0
@@ -286,8 +265,8 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - possiveis_segredos_no_codigo: 0
 
 ## Grafo de código (graphify)
-- 9910 nós · 27600 arestas · 622 comunidades · grafo do commit `a489fe2e`
-- comunidades maiores: App.tsx (198), framer-motion (184), card.tsx (180), Button (152), cn (141), CardContent (123), QuizAdmin.tsx (105), client.ts (101), lucide-react (96), useToast (87), mobile/index.ts (86), LuckyWheelAdmin.tsx (85)
+- 9797 nós · 27378 arestas · 625 comunidades · grafo do commit `e1b0f368`
+- comunidades maiores: lucide-react (373), react (259), App.tsx (223), skeleton.tsx (147), cn (147), mobile/index.ts (113), client.ts (109), gerar.mjs (79), QuizAdmin.tsx (76), generate.py (75), CampaignNotificationPreferences.tsx (71), StatsGrid.tsx (71)
 - símbolos mais chamados: cn() (src/lib/utils.ts), useAuth() (src/hooks/useAuth.tsx), useIsMobile() (src/hooks/use-mobile.tsx), q() (scripts/supabase_snapshot/snapshot.py), useDepartments() (src/hooks/useDepartments.ts), useToast() (src/hooks/use-toast.ts), useRBAC() (src/hooks/useRBAC.ts), useProfiles() (src/hooks/useProfiles.ts), useSEO() (src/hooks/useSEO.ts), useSoundEffects() (src/hooks/useSoundEffects.tsx), .collect() (scripts/supabase_snapshot/test_snapshot.py), excluded_sql() (scripts/supabase_snapshot/snapshot.py)
 - consulta local: `graphify query "<pergunta>"`, `graphify path "<A>" "<B>"`, `graphify explain "<X>"`
 
@@ -305,8 +284,8 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - PENDENCIAS.md (3)
 - docs/agentes/banco.md (3)
 - docs/agentes/github-ci.md (3)
+- docs/prod-readiness.md (3)
 - scripts/graphify-local.mjs (3)
-- ESTADO_ATUAL.md (2)
 
 ## Workflows
 - `automation-local.yml` — Automação local (pull_request, push, workflow_dispatch)
@@ -367,6 +346,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 
 
 ## Últimos commits
+- 2026-11-13 `e1b0f36` chore(functions): poda 21 edge functions mortas + mitiga 4 vulnerabilidades (#54)
 - 2026-11-13 `a489fe2` docs: marca item 5 do prod-readiness como aprovado após PR #52 (#53)
 - 2026-11-13 `2978195` fix: remove mocks do admin de humor e dá ação real ao botão de configurações (#52)
 - 2026-11-13 `f9d5fbd` docs: relatório prod-readiness com evidências do estado real do main (#51)
@@ -381,7 +361,6 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - 2026-11-11 `82ffc0b` fix(automacao): tolera ausência de O_NOFOLLOW em win32 (#43)
 - 2026-11-11 `eb08848` fix(automacao): tolera CRLF no parse de workflows locais (#41)
 - 2026-11-11 `c4d87b6` fix(ci): separa browser Playwright das deps apt com retry no passo de instalação (#40)
-- 2026-11-11 `940efb8` chore(automacao): conecta testes, grafo e manutenção aos gatilhos (#38)
 
 ## Arquivos deste diretório
 - `docs/contexto/codigo/rotas.json`

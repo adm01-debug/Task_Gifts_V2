@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "a489fe2e64109c54de531ae464a8b3a81d9eaee7",
+  "commit": "e1b0f368dd6361901fb60cb8bb6ca8326664cf8d",
   "branch": "main",
-  "data_commit": "2026-11-13T15:39:44-03:00",
+  "data_commit": "2026-11-13T18:04:14-03:00",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "ultimos_commits": [
+   {
+    "sha": "e1b0f36",
+    "data": "2026-11-13",
+    "assunto": "chore(functions): poda 21 edge functions mortas + mitiga 4 vulnerabilidades (#54)"
+   },
    {
     "sha": "a489fe2",
     "data": "2026-11-13",
@@ -126,14 +131,9 @@
     "sha": "97ee4cd",
     "data": "2026-10-30",
     "assunto": "feat(onda2): CORS allowlist, CSP header, coverage, audit CI, FKs, README (#30)"
-   },
-   {
-    "sha": "842cd96",
-    "data": "2026-10-30",
-    "assunto": "docs(ci): RELATORIO_CI.md — adiciona PRs #28/#29 e análise de segurança"
    }
   ],
-  "arquivos_mudados_7d": 141,
+  "arquivos_mudados_7d": 167,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "package.json",
@@ -192,7 +192,7 @@
     "mudancas": 3
    },
    {
-    "pasta": "scripts/graphify-local.mjs",
+    "pasta": "docs/prod-readiness.md",
     "mudancas": 3
    }
   ],
@@ -250,6 +250,10 @@
     "mudancas": 3
    },
    {
+    "arquivo": "docs/prod-readiness.md",
+    "mudancas": 3
+   },
+   {
     "arquivo": "scripts/graphify-local.mjs",
     "mudancas": 3
    },
@@ -267,10 +271,6 @@
    },
    {
     "arquivo": "docs/estado/README.md",
-    "mudancas": 2
-   },
-   {
-    "arquivo": "docs/prod-readiness.md",
     "mudancas": 2
    },
    {
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 29
+    "commits": 30
    },
    {
     "autor": "dependabot[bot]",
@@ -310,9 +310,9 @@
   ]
  },
  "contagens": {
-  "arquivos_total": 1504,
-  "arquivos_codigo": 1148,
-  "linhas_codigo": 229323,
+  "arquivos_total": 1482,
+  "arquivos_codigo": 1126,
+  "linhas_codigo": 223907,
   "rotas": 83,
   "rotas_http_backend": 0,
   "vistas_por_id": 0,
@@ -320,11 +320,11 @@
   "modulos": 71,
   "componentes": 521,
   "hooks": 155,
-  "edge_functions": 37,
+  "edge_functions": 16,
   "tabelas": 236,
   "migrations": 267,
   "cron_jobs": 22,
-  "testes": 158,
+  "testes": 157,
   "workflows": 3,
   "scripts": 15,
   "docs_md": 46
@@ -459,8 +459,8 @@
    "linhas": 152
   },
   "supabase/functions": {
-   "arquivos": 49,
-   "linhas": 10127
+   "arquivos": 27,
+   "linhas": 4711
   },
   "tailwind.config.ts": {
    "arquivos": 1,
@@ -525,14 +525,6 @@
    "linhas": 855
   },
   {
-   "arquivo": "supabase/functions/external-webhook/index.ts",
-   "linhas": 826
-  },
-  {
-   "arquivo": "supabase/functions/external-api/index.ts",
-   "linhas": 823
-  },
-  {
    "arquivo": "src/lib/campaignImport.ts",
    "linhas": 771
   },
@@ -583,15 +575,23 @@
   {
    "arquivo": "src/services/trailsService.ts",
    "linhas": 535
+  },
+  {
+   "arquivo": "src/pages/WebhookSubscriptionDetail.tsx",
+   "linhas": 520
+  },
+  {
+   "arquivo": "src/services/salesCampaignsService.ts",
+   "linhas": 512
   }
  ],
  "qualidade": {
-  "any": 142,
-  "console_log": 126,
+  "any": 69,
+  "console_log": 75,
   "ts_ignore": 0,
   "eslint_disable": 0,
   "todos": 1,
-  "arquivos_acima_500_linhas": 27
+  "arquivos_acima_500_linhas": 25
  },
  "todos": [
   {
@@ -625,36 +625,12 @@
    "Trilhas de Aprendizado -> trails-intro",
    "Tudo Pronto! 🚀 -> complete"
   ],
-  "edges_orfas": [
-   "birthday-celebrations",
-   "bitrix24-api",
-   "bitrix24-oauth",
-   "bitrix24-webhook",
-   "burn-rate-monitor",
-   "checkin-reminders",
-   "cleanup-old-security-logs",
-   "cleanup-rate-limit-logs",
-   "error-budget-monitor",
-   "external-api",
-   "external-db-bridge",
-   "external-webhook",
-   "send-email-digest",
-   "send-email-notifications",
-   "send-rate-limit-alert",
-   "survey-reminders",
-   "verify-geo",
-   "weekly-league-processing"
-  ],
+  "edges_orfas": [],
   "edges_chamadas_sem_pasta": [],
   "tabelas_sem_rls": [
    "lucky_wheel_prizes"
   ],
-  "tabelas_usadas_sem_definicao": [
-   "coin_transactions",
-   "league_members",
-   "user_quests",
-   "xp_transactions"
-  ],
+  "tabelas_usadas_sem_definicao": [],
   "tabelas_com_drift_migration_vs_types": [
    "achievements",
    "engagement_factors",
@@ -669,10 +645,7 @@
    "trail_modules"
   ],
   "rpcs_sem_definicao": [
-   "add_user_rewards",
-   "add_user_xp",
-   "get_lucky_wheel_status",
-   "increment_user_xp_coins"
+   "get_lucky_wheel_status"
   ],
   "componentes_orfaos": [
    "src/components/admin/metrics/AdminMetricsCharts.tsx",

@@ -5,16 +5,16 @@
   "vitest",
   "playwright"
  ],
- "total": 158,
+ "total": 157,
  "por_tipo": {
   "e2e": 2,
   "pytest": 2,
-  "unit": 154
+  "unit": 153
  },
  "onde_ficam": [
   {
    "padrao": "co-localizado (*.test)",
-   "arquivos": 143
+   "arquivos": 142
   },
   {
    "padrao": "outro",
@@ -1482,15 +1482,6 @@
    "casos": 1
   },
   {
-   "arquivo": "supabase/functions/external-webhook/validation.test.ts",
-   "tipo": "unit",
-   "linhas": 99,
-   "testa": [
-    "supabase/functions/_shared/validation.ts"
-   ],
-   "casos": 8
-  },
-  {
    "arquivo": "tests/auth-flow.spec.ts",
    "tipo": "unit",
    "linhas": 34,
@@ -1666,8 +1657,7 @@
   "src/services/wagerBudgetService.ts": 1,
   "src/services/wagerIntegrityReviewService.ts": 1,
   "src/services/weeklyChallengesService.ts": 1,
-  "src/services/xpBalancingService.ts": 1,
-  "supabase/functions/_shared/validation.ts": 1
+  "src/services/xpBalancingService.ts": 1
  },
  "sem_teste": {
   "telas": [
@@ -1906,38 +1896,19 @@
    "admin-alerts",
    "ai-coach",
    "ai-course-builder",
-   "birthday-celebrations",
-   "bitrix24-api",
-   "bitrix24-oauth",
-   "bitrix24-webhook",
-   "burn-rate-monitor",
-   "checkin-reminders",
    "churn-prediction",
-   "cleanup-old-security-logs",
-   "cleanup-rate-limit-logs",
    "competency-alerts",
    "detect-new-device",
-   "dispatch-critical-alert",
-   "error-budget-monitor",
-   "external-api",
    "generate-quiz-questions",
    "migrate-helper",
    "push-device-revoked",
    "push-outbox-dispatcher",
    "push-public-key",
    "reward-approval-review",
-   "security-weekly-digest",
    "send-campaign-push",
-   "send-email-digest",
-   "send-email-notifications",
-   "send-rate-limit-alert",
-   "survey-reminders",
    "trail-recommendations",
-   "verify-geo",
    "verify-ip",
-   "webhook-dispatcher",
-   "webhook-health-monitor",
-   "weekly-league-processing"
+   "webhook-dispatcher"
   ],
   "servicos": [
    "src/services/actionPlanGeneratorService.ts",

@@ -3,7 +3,7 @@
  "format_version": 2,
  "stack": {
   "linguagens": [
-   "TypeScript (1122)",
+   "TypeScript (1100)",
    "SQL (267)",
    "Markdown (46)",
    "JavaScript (22)",
@@ -374,19 +374,12 @@
   ],
   "usadas_nas_edges": [
    "ALLOWED_ORIGINS",
-   "BITRIX24_CLIENT_ID",
-   "BITRIX24_CLIENT_SECRET",
-   "BITRIX24_DOMAIN",
-   "BITRIX24_WEBHOOK_SECRET",
    "CRON_SECRET",
-   "FRONTEND_URL",
    "INTERNAL_FUNCTION_SECRET",
    "LOVABLE_API_KEY",
    "RESEND_API_KEY",
    "SENTRY_DSN",
    "SENTRY_ENV",
-   "SLACK_ALERT_WEBHOOK_URL",
-   "SLO_TARGET",
    "SUPABASE_ANON_KEY",
    "SUPABASE_DB_URL",
    "SUPABASE_SERVICE_ROLE_KEY",
@@ -395,9 +388,7 @@
    "UPSTASH_REDIS_REST_URL",
    "VAPID_PRIVATE_KEY",
    "VAPID_PUBLIC_KEY",
-   "VAPID_SUBJECT",
-   "WEBHOOK_HEALTH_MIN_SAMPLE",
-   "WEBHOOK_HEALTH_THRESHOLD"
+   "VAPID_SUBJECT"
   ],
   "usadas_no_python": [
    "AI_CONTEXT_INDEX",
@@ -518,15 +509,7 @@
     "arquivos": 1
    },
    {
-    "host": "ip-api.com",
-    "arquivos": 1
-   },
-   {
     "host": "linkedin.com",
-    "arquivos": 1
-   },
-   {
-    "host": "lovable.dev",
     "arquivos": 1
    },
    {
@@ -555,22 +538,16 @@
    }
   ],
   "env_de_integracao": [
-   "BITRIX24_CLIENT_ID",
-   "BITRIX24_CLIENT_SECRET",
-   "BITRIX24_WEBHOOK_SECRET",
    "CRON_SECRET",
    "INTERNAL_FUNCTION_SECRET",
    "LOVABLE_API_KEY",
    "RESEND_API_KEY",
    "SENTRY_DSN",
    "SENTRY_ENV",
-   "SLACK_ALERT_WEBHOOK_URL",
    "UPSTASH_REDIS_REST_TOKEN",
    "UPSTASH_REDIS_REST_URL",
    "VITE_BITRIX_WEBHOOK_URL",
-   "VITE_SENTRY_DSN",
-   "WEBHOOK_HEALTH_MIN_SAMPLE",
-   "WEBHOOK_HEALTH_THRESHOLD"
+   "VITE_SENTRY_DSN"
   ],
   "webhooks_recebidos": [
    "migrate-helper"
@@ -602,19 +579,19 @@
   "papeis_no_codigo": [
    {
     "papel": "admin",
-    "ocorrencias": 12
+    "ocorrencias": 14
    },
    {
     "papel": "alert",
     "ocorrencias": 9
    },
    {
-    "papel": "user",
+    "papel": "manager",
     "ocorrencias": 8
    },
    {
-    "papel": "manager",
-    "ocorrencias": 6
+    "papel": "user",
+    "ocorrencias": 8
    },
    {
     "papel": "system",

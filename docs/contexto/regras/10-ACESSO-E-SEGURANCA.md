@@ -1,11 +1,11 @@
 # 10 · ACESSO E SEGURANÇA — quem pode o quê
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `a489fe2e64` · branch `main` · 2026-11-13 20:35 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `e1b0f368dd` · branch `main` · 2026-11-13 21:47 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## Perfis / roles identificados
 
-`admin`, `assistant`, `default`, `denied`, `employee`, `granted`, `key`, `long`, `manager`, `permission`, `read`, `required`, `user`, `write`
+`admin`, `assistant`, `default`, `denied`, `employee`, `granted`, `key`, `long`, `manager`, `permission`, `user`
 
 - Tabelas de perfil/permissão: `user_roles`, `team_members`, `permissions`, `roles`, `role_permissions`, `org_members`, `campaign_team_members`, `permission_groups`, `user_permission_groups`
 - Colunas de perfil: `user_roles.role` (app_role NOT NULL DEFAULT 'employee'), `ai_coach_messages.role` (text NOT NULL CHECK (role IN ('user', 'assistant'))), `pdi_mentors.role` (TEXT DEFAULT 'mentor'), `org_members.role` (TEXT NOT NULL DEFAULT 'member' CHECK (role IN ('admin','member')))
@@ -256,7 +256,7 @@
 
 > `—` com RLS ligado = ninguém além de service_role. `sem RLS` = qualquer chave anon lê/escreve tudo.
 
-## Onde o RLS é IGNORADO (service_role) — 147 arquivo(s)
+## Onde o RLS é IGNORADO (service_role) — 126 arquivo(s)
 
 - `scripts/ai-context/cenarios.mjs`
 - `scripts/ai-context/gerar.unit.mjs`
@@ -265,39 +265,18 @@
 - `supabase/functions/_shared/security.ts`
 - `supabase/functions/admin-alerts/index.ts`
 - `supabase/functions/ai-course-builder/index.ts`
-- `supabase/functions/birthday-celebrations/index.ts`
-- `supabase/functions/bitrix24-api/index.ts`
-- `supabase/functions/bitrix24-oauth/index.ts`
-- `supabase/functions/bitrix24-webhook/index.ts`
-- `supabase/functions/burn-rate-monitor/index.ts`
-- `supabase/functions/checkin-reminders/index.ts`
 - `supabase/functions/churn-prediction/index.ts`
-- `supabase/functions/cleanup-old-security-logs/index.ts`
-- `supabase/functions/cleanup-rate-limit-logs/index.ts`
 - `supabase/functions/competency-alerts/index.ts`
 - `supabase/functions/detect-new-device/index.ts`
-- `supabase/functions/dispatch-critical-alert/index.ts`
-- `supabase/functions/error-budget-monitor/index.ts`
-- `supabase/functions/external-api/index.ts`
-- `supabase/functions/external-db-bridge/index.ts`
-- `supabase/functions/external-webhook/index.ts`
 - `supabase/functions/generate-quiz-questions/index.ts`
 - `supabase/functions/migrate-helper/index.ts`
 - `supabase/functions/push-device-revoked/index.ts`
 - `supabase/functions/push-outbox-dispatcher/index.ts`
 - `supabase/functions/reward-approval-review/index.ts`
-- `supabase/functions/security-weekly-digest/index.ts`
 - `supabase/functions/send-campaign-push/index.ts`
-- `supabase/functions/send-email-digest/index.ts`
-- `supabase/functions/send-email-notifications/index.ts`
-- `supabase/functions/send-rate-limit-alert/index.ts`
-- `supabase/functions/survey-reminders/index.ts`
 - `supabase/functions/trail-recommendations/index.ts`
-- `supabase/functions/verify-geo/index.ts`
 - `supabase/functions/verify-ip/index.ts`
 - `supabase/functions/webhook-dispatcher/index.ts`
-- `supabase/functions/webhook-health-monitor/index.ts`
-- `supabase/functions/weekly-league-processing/index.ts`
 - `supabase/migrations/20260306000318_cc14b254-e622-48a0-a219-de592646bf75.sql`
 - `supabase/migrations/20260520162642_60bbdd93-a248-4b2d-8f18-548974872356.sql`
 - `supabase/migrations/20260520163657_25dfdf55-387e-4b6a-87a8-b1fb2491ce04.sql`

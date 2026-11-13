@@ -1,6 +1,6 @@
 # 11 · GLOSSÁRIO, DADOS DE REFERÊNCIA E LACUNAS
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `a489fe2e64` · branch `main` · 2026-11-13 20:35 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `e1b0f368dd` · branch `main` · 2026-11-13 21:47 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## Glossário do domínio (entidades do sistema)
@@ -335,8 +335,6 @@ _nenhum item encontrado_
 | status | valor `Ausente` para `status` usado no código não existe em nenhum enum do banco/TS | `escreve:src/stories/user/AvatarAndProfile.stories.tsx` |
 | status | valor `Ocupado` para `status` usado no código não existe em nenhum enum do banco/TS | `escreve:src/stories/user/AvatarAndProfile.stories.tsx` |
 | status | valor `Offline` para `status` usado no código não existe em nenhum enum do banco/TS | `escreve:src/stories/user/AvatarAndProfile.stories.tsx` |
-| status | valor `generated` para `status` usado no código não existe em nenhum enum do banco/TS | `escreve:supabase/functions/send-email-digest/index.ts` |
-| status | valor `logged` para `status` usado no código não existe em nenhum enum do banco/TS | `escreve:supabase/functions/send-email-notifications/index.ts` |
 | status | valor `network_error` para `status` usado no código não existe em nenhum enum do banco/TS | `escreve:supabase/functions/webhook-dispatcher/index.ts` |
 | status | valor `parsing` para `stage` usado no código não existe em nenhum enum do banco/TS | `compara:src/components/campaigns/CampaignImportDialog.tsx` |
 | status | valor `preview` para `stage` usado no código não existe em nenhum enum do banco/TS | `compara:src/components/campaigns/CampaignImportDialog.tsx` |
@@ -345,7 +343,7 @@ _nenhum item encontrado_
 | status | valor `claimed` para `state` usado no código não existe em nenhum enum do banco/TS | `compara:src/components/cards/SetRewardsPanel.tsx` |
 | status | valor `expanded` para `state` usado no código não existe em nenhum enum do banco/TS | `escreve:src/components/ui/sidebar.tsx` |
 | status | valor `collapsed` para `state` usado no código não existe em nenhum enum do banco/TS | `compara:src/components/ui/sidebar.tsx` |
-| status | valor `fresh` para `state` usado no código não existe em nenhum enum do banco/TS | `compara:supabase/functions/bitrix24-webhook/index.ts`<br>`compara:supabase/functions/external-webhook/index.ts`<br>`escreve:supabase/functions/_shared/webhookSecurity.ts` |
+| status | valor `fresh` para `state` usado no código não existe em nenhum enum do banco/TS | `escreve:supabase/functions/_shared/webhookSecurity.ts` |
 | status | valor `unavailable` para `state` usado no código não existe em nenhum enum do banco/TS | `escreve:supabase/functions/_shared/webhookSecurity.ts` |
 | status | valor `password` para `step` usado no código não existe em nenhum enum do banco/TS | `compara:src/components/security/ReauthProvider.tsx` |
 | status | valor `intro` para `phase` usado no código não existe em nenhum enum do banco/TS | `compara:src/components/ui/lucky-drop.tsx` |
@@ -353,22 +351,15 @@ _nenhum item encontrado_
 | status | valor `reveal` para `phase` usado no código não existe em nenhum enum do banco/TS | `compara:src/components/ui/lucky-drop.tsx` |
 | status | valor `playing` para `phase` usado no código não existe em nenhum enum do banco/TS | `compara:src/pages/LightningQuizPage.tsx` |
 | status | valor `result` para `phase` usado no código não existe em nenhum enum do banco/TS | `compara:src/pages/LightningQuizPage.tsx` |
-| status | valor `synced` para `sync_status` usado no código não existe em nenhum enum do banco/TS | `escreve:supabase/functions/bitrix24-webhook/index.ts` |
-| status | valor `deleted` para `sync_status` usado no código não existe em nenhum enum do banco/TS | `escreve:supabase/functions/bitrix24-webhook/index.ts` |
-| coluna | coluna `resolved` usada no código não existe no schema de `security_alerts` |  |
-| coluna | coluna `digest_enabled` usada no código não existe no schema de `profiles` |  |
-| coluna | coluna `full_name` usada no código não existe no schema de `profiles` |  |
 | coluna | coluna `role` usada no código não existe no schema de `profiles` |  |
 | coluna | coluna `username` usada no código não existe no schema de `profiles` |  |
 | tabela | tabela `a` usada no código não existe nas migrations/types do repo | `scripts/ai-context/cenarios.mjs` |
-| tabela | tabela `coin_transactions` usada no código não existe nas migrations/types do repo | `supabase/functions/send-email-digest/index.ts` |
 | tabela | tabela `contacts` usada no código não existe nas migrations/types do repo | `scripts/ai-context/gerar.unit.mjs` |
 | tabela | tabela `dashboard_table` usada no código não existe nas migrations/types do repo | `scripts/ai-context/gerar.unit.mjs` |
 | tabela | tabela `emails` usada no código não existe nas migrations/types do repo | `scripts/ai-context/gerar.unit.mjs` |
 | tabela | tabela `fantasma` usada no código não existe nas migrations/types do repo | `scripts/ai-context/cenarios.mjs` |
 | tabela | tabela `fixture_table` usada no código não existe nas migrations/types do repo | `scripts/ai-context/gerar.unit.mjs` |
 | tabela | tabela `ghost_table` usada no código não existe nas migrations/types do repo | `scripts/ai-context/gerar.unit.mjs` |
-| tabela | tabela `league_members` usada no código não existe nas migrations/types do repo | `supabase/functions/weekly-league-processing/index.ts` |
 | tabela | tabela `payments` usada no código não existe nas migrations/types do repo | `scripts/ai-context/gerar.unit.mjs` |
 | tabela | tabela `runtime_table` usada no código não existe nas migrations/types do repo | `scripts/ai-context/gerar.unit.mjs` |
 | tabela | tabela `so_teste` usada no código não existe nas migrations/types do repo | `scripts/ai-context/cenarios.mjs` |
@@ -376,8 +367,6 @@ _nenhum item encontrado_
 | tabela | tabela `t1` usada no código não existe nas migrations/types do repo | `scripts/ai-context/cenarios.mjs` |
 | tabela | tabela `tools_runtime` usada no código não existe nas migrations/types do repo | `scripts/ai-context/gerar.unit.mjs` |
 | tabela | tabela `tx` usada no código não existe nas migrations/types do repo | `scripts/ai-context/cenarios.mjs` |
-| tabela | tabela `user_quests` usada no código não existe nas migrations/types do repo | `supabase/functions/send-email-digest/index.ts` |
-| tabela | tabela `xp_transactions` usada no código não existe nas migrations/types do repo | `supabase/functions/send-email-digest/index.ts` |
 | rls | `attendance_records`: front faz UPDATE mas nenhuma política RLS permite UPDATE → vai falhar/retornar vazio para usuários | `src/services/attendanceService.ts` |
 | rls | `development_plans`: front faz DELETE mas nenhuma política RLS permite DELETE → vai falhar/retornar vazio para usuários | `src/services/developmentPlanService.ts` |
 | rls | `lucky_wheel_prizes`: acessada do front (1 arquivo(s)) sem RLS (não encontrado) | `src/services/luckyWheelService.ts` |
@@ -401,21 +390,17 @@ _nenhum item encontrado_
 | edge | edge function `runtime-missing` invocada mas não existe em supabase/functions/ | `scripts/ai-context/gerar.unit.mjs` |
 | edge | edge function `send-email` invocada mas não existe em supabase/functions/ | `scripts/ai-context/gerar.unit.mjs` |
 | edge | edge function `tools-edge` invocada mas não existe em supabase/functions/ | `scripts/ai-context/gerar.unit.mjs` |
-| rpc | RPC `add_user_rewards` chamada mas não definida nas migrations/types | `supabase/functions/external-webhook/index.ts` |
-| rpc | RPC `add_user_xp` chamada mas não definida nas migrations/types | `supabase/functions/bitrix24-webhook/index.ts` |
 | rpc | RPC `dashboard_rpc` chamada mas não definida nas migrations/types | `scripts/ai-context/gerar.unit.mjs` |
 | rpc | RPC `demo` chamada mas não definida nas migrations/types | `scripts/supabase_snapshot/test_snapshot.py` |
 | rpc | RPC `fixture_rpc` chamada mas não definida nas migrations/types | `scripts/ai-context/gerar.unit.mjs` |
 | rpc | RPC `fn` chamada mas não definida nas migrations/types | `scripts/supabase_snapshot/snapshot.py` |
 | rpc | RPC `ghost_rpc` chamada mas não definida nas migrations/types | `scripts/ai-context/gerar.unit.mjs` |
-| rpc | RPC `increment_user_xp_coins` chamada mas não definida nas migrations/types | `supabase/functions/birthday-celebrations/index.ts` |
 | rpc | RPC `is_admin` chamada mas não definida nas migrations/types | `scripts/ai-context/gerar.unit.mjs` |
 | rpc | RPC `nome` chamada mas não definida nas migrations/types | `scripts/supabase_snapshot/snapshot.py` |
 | rpc | RPC `r1` chamada mas não definida nas migrations/types | `scripts/ai-context/cenarios.mjs` |
 | rpc | RPC `runtime_rpc` chamada mas não definida nas migrations/types | `scripts/ai-context/gerar.unit.mjs` |
 | rpc | RPC `tools_rpc` chamada mas não definida nas migrations/types | `scripts/ai-context/gerar.unit.mjs` |
 | dinâmico | 2 chamada(s) `.from(variável)` — tabela só conhecida em runtime | `scripts/regras_negocio/generate.py` |
-| dinâmico | 4 chamada(s) `.from(variável)` — tabela só conhecida em runtime | `supabase/functions/external-db-bridge/index.ts` |
 | segurança | função `increment_announcement_views` é SECURITY DEFINER sem `set search_path` (risco de escalação) | `supabase/migrations/20260513182957_06fe3260-2448-4d8d-af2c-95782b57ef58.sql` |
 | segurança | função `cleanup_expired_idempotency_keys` é SECURITY DEFINER sem `set search_path` (risco de escalação) | `supabase/migrations/20260520163657_25dfdf55-387e-4b6a-87a8-b1fb2491ce04.sql` |
 

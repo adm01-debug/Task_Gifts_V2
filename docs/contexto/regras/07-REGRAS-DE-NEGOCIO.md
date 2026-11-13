@@ -1,6 +1,6 @@
 # 07 · REGRAS DE NEGÓCIO
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `a489fe2e64` · branch `main` · 2026-11-13 20:35 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `e1b0f368dd` · branch `main` · 2026-11-13 21:47 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## A. Regras escritas por humanos (`manual/` — prioridade máxima, nunca sobrescrito)
@@ -1037,7 +1037,6 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `type` | `authentication` | escreve | `src/services/webauthnService.ts` |
 | `type` | `badge` | compara, escreve | `src/components/ui/lucky-drop.tsx` |
 | `type` | `basic` | compara | `public/sw.js` |
-| `type` | `bitrix24` | escreve | `supabase/functions/bitrix24-webhook/index.ts` |
 | `type` | `bonus` | compara, escreve | `src/lib/boardTrail.ts`<br>`src/lib/boardTrailAuthoring.ts` |
 | `type` | `boolean` | escreve | `supabase/functions/ai-course-builder/index.ts` |
 | `type` | `boost` | compara, escreve | `src/components/ui/lucky-drop.tsx` |
@@ -1048,12 +1047,9 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `type` | `campaign_enrolled` | escreve | `src/services/salesCampaignsService.ts` |
 | `type` | `campaign_milestone` | escreve | `src/services/salesCampaignsService.ts` |
 | `type` | `cancel` | compara, escreve | `src/components/duels/DuelCard.tsx`<br>`src/pages/Duels.tsx` |
-| `type` | `celebration` | escreve | `supabase/functions/birthday-celebrations/index.ts`<br>`supabase/functions/send-email-notifications/index.ts` |
 | `type` | `certification_expiring` | escreve | `src/hooks/usePDIAlerts.ts` |
 | `type` | `challenge` | compara, escreve | `src/hooks/useWeeklyChallenge.ts`<br>`src/lib/boardTrail.ts`<br>`src/lib/boardTrailAuthoring.ts` |
 | `type` | `checkin` | compara, escreve | `public/sw.js`<br>`src/services/autoChallengesService.ts` |
-| `type` | `checkin_overdue` | escreve | `supabase/functions/checkin-reminders/index.ts` |
-| `type` | `checkin_reminder` | escreve, filtra | `supabase/functions/checkin-reminders/index.ts` |
 | `type` | `checkpoint` | compara, escreve | `src/lib/boardTrail.ts`<br>`src/lib/boardTrailAuthoring.ts` |
 | `type` | `churn_alert` | compara | `public/sw.js` |
 | `type` | `click` | compara | `src/hooks/useFeedback.ts` |
@@ -1064,7 +1060,6 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `type` | `competitive` | escreve | `src/components/ui/team-challenges.tsx` |
 | `type` | `decline` | compara, escreve | `src/components/duels/DuelCard.tsx`<br>`src/pages/Duels.tsx` |
 | `type` | `development_tip` | compara, escreve | `public/sw.js`<br>`src/services/notificationsService.ts`<br>`supabase/functions/competency-alerts/index.ts` |
-| `type` | `digest` | compara, escreve | `supabase/functions/send-email-notifications/index.ts` |
 | `type` | `duel` | compara | `public/sw.js` |
 | `type` | `duel-challenge` | compara | `public/sw.js` |
 | `type` | `epic` | escreve | `src/components/CelebrationEffect.tsx`<br>`src/pages/Shop.tsx` |
@@ -1085,7 +1080,6 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `type` | `kudos_given` | compara | `src/pages/SocialFeed.tsx` |
 | `type` | `kudos_received` | compara | `src/pages/SocialFeed.tsx` |
 | `type` | `leaderboard` | escreve | `src/services/notificationsService.ts` |
-| `type` | `league` | escreve | `supabase/functions/weekly-league-processing/index.ts` |
 | `type` | `learning` | escreve | `src/services/autoChallengesService.ts` |
 | `type` | `learning_trail` | escreve | `src/services/trailsService.ts` |
 | `type` | `legendary` | compara, escreve | `src/components/CelebrationEffect.tsx`<br>`src/pages/Shop.tsx` |
@@ -1121,11 +1115,8 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `type` | `rating` | compara, escreve | `src/components/PulseSurveyWidget.tsx`<br>`src/components/admin/SurveyCreator.tsx`<br>`src/services/feedbackService.ts`<br>`src/services/pulseSurveysService.ts` |
 | `type` | `recovery` | compara | `src/pages/ResetPassword.tsx` |
 | `type` | `registration` | escreve | `src/services/webauthnService.ts` |
-| `type` | `reminder` | compara, escreve | `supabase/functions/send-email-notifications/index.ts` |
-| `type` | `security` | escreve | `supabase/functions/dispatch-critical-alert/index.ts` |
-| `type` | `security_alert` | compara, escreve | `public/sw.js`<br>`src/components/security/SecurityNotificationsToggle.tsx`<br>`src/hooks/useSecurityPushNotifications.ts`<br>`supabase/functions/send-rate-limit-alert/index.ts` |
+| `type` | `security_alert` | compara, escreve | `public/sw.js`<br>`src/components/security/SecurityNotificationsToggle.tsx`<br>`src/hooks/useSecurityPushNotifications.ts` |
 | `type` | `security_device_revoked` | escreve | `src/lib/pushDevices.ts` |
-| `type` | `security_weekly_digest` | escreve | `supabase/functions/security-weekly-digest/index.ts` |
 | `type` | `select` | compara, escreve | `src/components/PulseSurveyWidget.tsx`<br>`src/components/accessibility/AccessibilitySettings.tsx`<br>`src/services/pulseSurveysService.ts` |
 | `type` | `selection` | compara, escreve | `src/components/mobile/GestureHandler.tsx`<br>`src/components/mobile/HapticWrapper.tsx` |
 | `type` | `spring` | escreve | `src/components/AchievementSystem.tsx`<br>`src/components/ActivityHeatmap.tsx`<br>`src/components/ENPSSurveyWidget.tsx`<br>`src/components/ErrorBoundary.tsx`<br>`src/components/LeagueCard.tsx`<br>… +32 |
@@ -1135,7 +1126,6 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `type` | `success` | compara, escreve | `src/components/GlobalMessageProvider.tsx`<br>`src/components/mobile/HapticWrapper.tsx`<br>`src/hooks/useFeedback.ts`<br>`src/stories/feedback/Notifications.stories.tsx` |
 | `type` | `suggestion` | compara | `src/components/copilot/CopilotAlertCard.tsx`<br>`src/components/copilot/CopilotAlertSection.tsx` |
 | `type` | `summary` | escreve | `src/lib/exportReports.ts` |
-| `type` | `survey_reminder` | escreve, filtra | `supabase/functions/survey-reminders/index.ts` |
 | `type` | `suspicious_login` | compara | `src/components/security/SecurityAlertsPanel.tsx` |
 | `type` | `table` | escreve | `src/lib/exportReports.ts` |
 | `type` | `tablet` | compara | `src/components/security/DevicesPanel.tsx` |
@@ -1148,7 +1138,7 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `type` | `trophy` | compara | `src/components/effects/MiniConfetti.tsx` |
 | `type` | `tween` | escreve | `src/components/PageTransition.tsx`<br>`src/components/mobile/PullToRefresh.tsx`<br>`src/components/mobile/SwipeablePage.tsx` |
 | `type` | `urgent` | compara, escreve | `src/components/copilot/CopilotAlertCard.tsx`<br>`src/components/copilot/CopilotAlertSection.tsx`<br>`src/components/manager/AICopilotDashboard.tsx` |
-| `type` | `user` | compara, escreve | `src/components/GlobalSearch.tsx`<br>`src/components/search/SearchResultsList.tsx`<br>`supabase/functions/bitrix24-api/index.ts` |
+| `type` | `user` | compara | `src/components/GlobalSearch.tsx`<br>`src/components/search/SearchResultsList.tsx` |
 | `type` | `victory` | escreve | `src/hooks/useWeeklyChallenge.ts` |
 | `type` | `warning` | compara, escreve | `src/components/GlobalMessageProvider.tsx`<br>`src/components/copilot/CopilotAlertCard.tsx`<br>`src/components/copilot/CopilotAlertSection.tsx`<br>`src/components/manager/AICopilotDashboard.tsx`<br>`src/services/certificationsService.ts` |
 | `type` | `webhook_sla_below_threshold` | compara | `src/components/security/SecurityAlertsPanel.tsx` |
@@ -1156,7 +1146,7 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `type` | `xp` | compara, escreve | `src/components/ui/lucky-drop.tsx`<br>`src/components/ui/micro-interactions.tsx`<br>`src/lib/luckyWheelPayout.ts`<br>`src/services/notificationsService.ts` |
 | `type` | `xp_gained` | compara, escreve | `src/pages/SocialFeed.tsx`<br>`src/services/socialFeedService.ts` |
 | `type` | `zero_engagement` | escreve | `supabase/functions/admin-alerts/index.ts` |
-| `role` | `admin` | compara, filtra | `src/components/rbac/UserRolesTab.tsx`<br>`supabase/functions/bitrix24-webhook/index.ts`<br>`supabase/functions/competency-alerts/index.ts`<br>`supabase/functions/dispatch-critical-alert/index.ts`<br>`supabase/functions/reward-approval-review/index.ts`<br>… +2 |
+| `role` | `admin` | compara | `src/components/rbac/UserRolesTab.tsx`<br>`supabase/functions/competency-alerts/index.ts`<br>`supabase/functions/reward-approval-review/index.ts` |
 | `role` | `assistant` | compara, escreve | `src/components/AICoachDialog.tsx`<br>`src/hooks/useAICoach.ts` |
 | `role` | `long` | compara, escreve | `src/pages/BurnRate.tsx` |
 | `role` | `manager` | compara | `supabase/functions/reward-approval-review/index.ts` |
@@ -1170,7 +1160,7 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `status` | `SUBSCRIBED` | compara | `src/hooks/useNotifications.ts` |
 | `status` | `absent` | compara, escreve | `src/components/AttendanceCalendar.tsx` |
 | `status` | `accepted` | compara | `src/components/duels/DuelCard.tsx` |
-| `status` | `active` | compara, escreve, filtra | `src/components/CertificationsPanel.tsx`<br>`src/components/GoalsWidget.tsx`<br>`src/components/MyDevelopmentPlanWidget.tsx`<br>`src/components/TeamChallenges.tsx`<br>`src/components/admin/DevelopmentPlanManager.tsx`<br>… +38 |
+| `status` | `active` | compara, escreve, filtra | `src/components/CertificationsPanel.tsx`<br>`src/components/GoalsWidget.tsx`<br>`src/components/MyDevelopmentPlanWidget.tsx`<br>`src/components/TeamChallenges.tsx`<br>`src/components/admin/DevelopmentPlanManager.tsx`<br>… +36 |
 | `status` | `all` | compara | `src/components/PushNotificationHistory.tsx`<br>`src/components/manager/QuestsList.tsx`<br>`src/services/actionPlansService.ts` |
 | `status` | `anomaly` | compara | `src/lib/luckyWheelPayout.ts` |
 | `status` | `applied` | compara, filtra | `src/components/campaigns/CampaignImportHistory.tsx`<br>`src/services/campaignImportService.ts` |
@@ -1182,13 +1172,13 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `status` | `bye` | compara | `src/components/tournament/TournamentBracketView.tsx`<br>`src/pages/TournamentsPage.tsx` |
 | `status` | `cancelled` | compara, escreve | `src/components/checkins/CheckinCard.tsx`<br>`src/components/duels/DuelCard.tsx`<br>`src/components/shop-admin/PurchaseGovernanceDialog.tsx`<br>`src/lib/auctionAdmin.ts`<br>`src/services/duelsService.ts`<br>… +1 |
 | `status` | `closed` | compara, escreve | `src/components/admin/SurveyCreator.tsx`<br>`src/components/auction/AuctionCard.tsx`<br>`src/lib/auctionAdmin.ts`<br>`src/services/pulseSurveysService.ts` |
-| `status` | `completed` | compara, escreve, filtra | `src/components/GoalsWidget.tsx`<br>`src/components/MyDevelopmentPlanWidget.tsx`<br>`src/components/admin/DevelopmentPlanManager.tsx`<br>`src/components/admin/pdi/PlanDetailView.tsx`<br>`src/components/campaigns/CampaignTeamSplitTrail.tsx`<br>… +22 |
+| `status` | `completed` | compara, escreve, filtra | `src/components/GoalsWidget.tsx`<br>`src/components/MyDevelopmentPlanWidget.tsx`<br>`src/components/admin/DevelopmentPlanManager.tsx`<br>`src/components/admin/pdi/PlanDetailView.tsx`<br>`src/components/campaigns/CampaignTeamSplitTrail.tsx`<br>… +21 |
 | `status` | `critical` | compara | `src/lib/luckyWheelPayoutHistory.ts`<br>`src/pages/ErrorBudget.tsx` |
 | `status` | `decided` | compara | `src/components/tournament/TournamentBracketView.tsx`<br>`src/pages/TournamentsPage.tsx` |
 | `status` | `declined` | compara, escreve | `src/components/duels/DuelCard.tsx`<br>`src/services/duelsService.ts` |
 | `status` | `delivered` | compara | `src/components/shop-admin/PurchaseGovernanceDialog.tsx` |
 | `status` | `draft` | compara, escreve, filtra | `src/components/admin/SurveyCreator.tsx`<br>`src/components/auction/AuctionAdminForm.tsx`<br>`src/components/boss/BossBattleAdminDialog.tsx`<br>`src/components/campaigns/CampaignGoalBetPanel.tsx`<br>`src/components/campaigns/CreateCampaignDialog.tsx`<br>… +27 |
-| `status` | `error` | escreve | `supabase/functions/_shared/sentry.ts`<br>`supabase/functions/send-email-notifications/index.ts` |
+| `status` | `error` | escreve | `supabase/functions/_shared/sentry.ts` |
 | `status` | `expired` | compara, escreve, filtra | `src/lib/bossHistory.ts`<br>`src/services/bossBattleService.ts`<br>`src/services/certificationsService.ts`<br>`supabase/migrations/20251213164818_77e12a61-a727-4556-b33b-03828d080ab1.sql` |
 | `status` | `expiring_soon` | compara | `src/services/certificationsService.ts` |
 | `status` | `failed` | compara, escreve | `src/components/trails/AICourseBuilderDialog.tsx`<br>`src/lib/pushOutbox.ts`<br>`src/services/campaignImportService.ts`<br>`supabase/functions/ai-course-builder/index.ts`<br>`supabase/functions/push-device-revoked/index.ts`<br>… +2 |
@@ -1196,49 +1186,45 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `status` | `fulfilled` | compara | `src/hooks/useAdminUsers.ts` |
 | `status` | `future` | compara, escreve | `src/components/AttendanceCalendar.tsx` |
 | `status` | `gap` | escreve | `src/lib/luckyWheelPayoutHistory.ts` |
-| `status` | `generated` | escreve | `supabase/functions/send-email-digest/index.ts` |
-| `status` | `healthy` | escreve | `supabase/functions/error-budget-monitor/index.ts` |
 | `status` | `high` | compara | `src/pages/ErrorBudget.tsx` |
 | `status` | `idle` | compara | `src/components/ui/micro-quest-card.tsx` |
-| `status` | `in_progress` | compara, escreve | `src/components/MyDevelopmentPlanWidget.tsx`<br>`src/components/checkins/CheckinCard.tsx`<br>`src/components/engagement/plans/ActionPlanItemList.tsx`<br>`src/pages/Postmortems.tsx`<br>`src/services/actionPlansService.ts`<br>… +1 |
+| `status` | `in_progress` | compara | `src/components/MyDevelopmentPlanWidget.tsx`<br>`src/components/checkins/CheckinCard.tsx`<br>`src/components/engagement/plans/ActionPlanItemList.tsx`<br>`src/pages/Postmortems.tsx`<br>`src/services/actionPlansService.ts` |
 | `status` | `insufficient` | compara | `src/lib/luckyWheelPayout.ts` |
 | `status` | `invalid` | escreve | `src/lib/campaignImport.ts` |
 | `status` | `invalidated` | compara, escreve | `supabase/functions/push-device-revoked/index.ts`<br>`supabase/functions/push-outbox-dispatcher/index.ts`<br>`supabase/functions/send-campaign-push/index.ts` |
 | `status` | `investigating` | escreve | `src/services/wagerIntegrityReviewService.ts` |
-| `status` | `late` | compara, escreve | `src/components/AttendanceCalendar.tsx`<br>`src/services/positionsService.ts`<br>`supabase/functions/external-webhook/index.ts` |
+| `status` | `late` | compara | `src/components/AttendanceCalendar.tsx`<br>`src/services/positionsService.ts` |
 | `status` | `locked` | compara | `src/components/trails/TrailCard.tsx`<br>`src/lib/predictionAdmin.ts`<br>`src/stories/gamification/Quests.stories.tsx` |
-| `status` | `logged` | escreve | `supabase/functions/send-email-notifications/index.ts` |
 | `status` | `network_error` | escreve | `supabase/functions/webhook-dispatcher/index.ts` |
 | `status` | `no_data` | compara | `src/lib/bossExecutiveSummary.ts` |
 | `status` | `number` | compara | `src/lib/edgeErrors.ts` |
 | `status` | `offline` | escreve | `src/stories/data-display/StatsAndTables.stories.tsx` |
-| `status` | `ok` | escreve | `supabase/functions/_shared/sentry.ts`<br>`supabase/functions/external-api/index.ts`<br>`supabase/functions/external-db-bridge/index.ts` |
-| `status` | `on_time` | compara, escreve | `src/hooks/usePositions.ts`<br>`src/lib/bossAutoHooks.ts`<br>`src/lib/cardPackTriggers.ts`<br>`src/services/positionsService.ts`<br>`supabase/functions/external-webhook/index.ts` |
+| `status` | `ok` | escreve | `supabase/functions/_shared/sentry.ts` |
+| `status` | `on_time` | compara, escreve | `src/hooks/usePositions.ts`<br>`src/lib/bossAutoHooks.ts`<br>`src/lib/cardPackTriggers.ts`<br>`src/services/positionsService.ts` |
 | `status` | `on_track` | compara | `src/components/boss/BossExecutiveSummaryCard.tsx`<br>`src/lib/bossExecutiveSummary.ts`<br>`src/services/behavioralBadges/index.ts` |
 | `status` | `online` | escreve | `src/stories/data-display/StatsAndTables.stories.tsx` |
 | `status` | `open` | compara, escreve | `src/components/prediction/PredictionAdminRow.tsx`<br>`src/components/prediction/PredictionMarketCard.tsx`<br>`src/lib/goalBetCountdown.ts`<br>`src/lib/goalBetFilter.ts`<br>`src/lib/goalBetStakePreview.ts`<br>… +4 |
 | `status` | `opened` | compara | `src/components/cards/PackList.tsx` |
-| `status` | `pending` | compara, escreve, filtra | `src/components/admin/PasswordResetApprovalPanel.tsx`<br>`src/components/cards/TradeInbox.tsx`<br>`src/components/duels/DuelCard.tsx`<br>`src/components/engagement/plans/ActionPlanItemList.tsx`<br>`src/components/shop-admin/PurchaseGovernanceDialog.tsx`<br>… +23 |
+| `status` | `pending` | compara, escreve, filtra | `src/components/admin/PasswordResetApprovalPanel.tsx`<br>`src/components/cards/TradeInbox.tsx`<br>`src/components/duels/DuelCard.tsx`<br>`src/components/engagement/plans/ActionPlanItemList.tsx`<br>`src/components/shop-admin/PurchaseGovernanceDialog.tsx`<br>… +22 |
 | `status` | `processing` | compara, escreve, filtra | `src/components/trails/AICourseBuilderDialog.tsx`<br>`src/lib/pushOutbox.ts`<br>`supabase/functions/_shared/webhookSecurity.ts`<br>`supabase/functions/ai-course-builder/index.ts` |
 | `status` | `published` | compara, filtra | `src/pages/Postmortems.tsx`<br>`src/services/trailsService.ts`<br>`supabase/functions/trail-recommendations/index.ts` |
 | `status` | `punctual` | compara | `src/components/AttendanceCalendar.tsx` |
 | `status` | `ready` | compara | `src/components/tournament/TournamentBracketView.tsx` |
 | `status` | `refunded` | compara | `src/components/auction/AuctionCard.tsx` |
 | `status` | `registration` | compara | `src/pages/TournamentsPage.tsx` |
-| `status` | `rejected` | compara, escreve | `src/hooks/useAdminUsers.ts`<br>`supabase/functions/external-webhook/index.ts` |
+| `status` | `rejected` | compara | `src/hooks/useAdminUsers.ts` |
 | `status` | `revealed` | compara | `src/pages/ScratchCardPage.tsx` |
 | `status` | `reverted` | compara | `src/lib/campaignTeamSplitRevert.ts` |
 | `status` | `revoked` | compara | `src/components/push/PushDeviceList.tsx`<br>`src/lib/pushDevices.ts`<br>`supabase/migrations/20251213164818_77e12a61-a727-4556-b33b-03828d080ab1.sql` |
-| `status` | `rework` | compara, escreve | `src/services/positionsService.ts`<br>`supabase/functions/external-webhook/index.ts` |
+| `status` | `rework` | compara | `src/services/positionsService.ts` |
 | `status` | `running` | compara, escreve | `src/hooks/useBossBattles.ts`<br>`src/hooks/useDepartmentWars.ts`<br>`src/lib/bossAutoHooks.ts`<br>`src/lib/bossExecutiveSummary.ts`<br>`src/pages/BossBattlePage.tsx`<br>… +3 |
-| `status` | `scheduled` | escreve, filtra | `src/services/checkinsService.ts`<br>`src/services/continuousEngagementService.ts`<br>`supabase/functions/checkin-reminders/index.ts`<br>`supabase/functions/send-email-notifications/index.ts` |
+| `status` | `scheduled` | escreve, filtra | `src/services/checkinsService.ts`<br>`src/services/continuousEngagementService.ts` |
 | `status` | `sealed` | compara, escreve | `src/components/cards/PackList.tsx`<br>`src/pages/CardAlbumPage.tsx`<br>`src/services/tradingCardsService.ts` |
 | `status` | `sent` | compara, escreve | `src/lib/pushOutbox.ts`<br>`supabase/functions/push-device-revoked/index.ts`<br>`supabase/functions/push-outbox-dispatcher/index.ts`<br>`supabase/functions/send-campaign-push/index.ts` |
 | `status` | `settled` | compara | `src/components/prediction/PredictionMarketCard.tsx`<br>`src/lib/bossHistory.ts`<br>`src/lib/goalBetExposure.ts`<br>`src/lib/goalBetFilter.ts`<br>`src/lib/goalBetHistory.ts`<br>… +3 |
 | `status` | `skipped` | compara, escreve | `src/components/campaigns/CampaignTeamSplitTrail.tsx`<br>`src/lib/pushOutbox.ts` |
 | `status` | `submitted` | escreve, filtra | `src/services/feedbackService.ts` |
 | `status` | `succeeded` | compara, escreve | `src/components/trails/AICourseBuilderDialog.tsx`<br>`supabase/functions/ai-course-builder/index.ts` |
-| `status` | `success` | compara | `supabase/functions/verify-geo/index.ts` |
 | `status` | `today-pending` | compara, escreve | `src/components/AttendanceCalendar.tsx` |
 | `status` | `unconfigured` | compara, escreve | `src/lib/luckyWheelPayout.ts` |
 | `status` | `valid` | compara, escreve | `src/components/campaigns/CampaignImportDialog.tsx`<br>`src/lib/campaignImport.ts`<br>`src/services/campaignImportService.ts` |
@@ -1256,10 +1242,10 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `state` | `closed` | escreve | `src/lib/opinionChannel.ts` |
 | `state` | `collapsed` | compara | `src/components/ui/sidebar.tsx` |
 | `state` | `due_soon` | escreve | `src/lib/opinionChannel.ts` |
-| `state` | `duplicate` | compara, escreve | `supabase/functions/_shared/webhookSecurity.ts`<br>`supabase/functions/bitrix24-webhook/index.ts`<br>`supabase/functions/external-webhook/index.ts` |
+| `state` | `duplicate` | escreve | `supabase/functions/_shared/webhookSecurity.ts` |
 | `state` | `expanded` | escreve | `src/components/ui/sidebar.tsx` |
-| `state` | `fresh` | compara, escreve | `supabase/functions/_shared/webhookSecurity.ts`<br>`supabase/functions/bitrix24-webhook/index.ts`<br>`supabase/functions/external-webhook/index.ts` |
-| `state` | `in_progress` | compara, escreve | `supabase/functions/_shared/webhookSecurity.ts`<br>`supabase/functions/bitrix24-webhook/index.ts`<br>`supabase/functions/external-webhook/index.ts` |
+| `state` | `fresh` | escreve | `supabase/functions/_shared/webhookSecurity.ts` |
+| `state` | `in_progress` | escreve | `supabase/functions/_shared/webhookSecurity.ts` |
 | `state` | `locked` | compara | `src/components/cards/SetRewardsPanel.tsx` |
 | `state` | `on_track` | escreve | `src/lib/opinionChannel.ts` |
 | `state` | `overdue` | compara, escreve | `src/lib/opinionChannel.ts` |
@@ -1278,8 +1264,6 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `purchase_status` | `pending` | escreve | `src/integrations/supabase/types.ts` |
 | `quest_status` | `draft` | escreve | `src/integrations/supabase/types.ts` |
 | `trail_status` | `draft` | escreve | `src/integrations/supabase/types.ts` |
-| `sync_status` | `deleted` | escreve | `supabase/functions/bitrix24-webhook/index.ts` |
-| `sync_status` | `synced` | escreve | `supabase/functions/bitrix24-webhook/index.ts` |
 
 ### E.4 Enums e listas de valores
 
@@ -2292,10 +2276,6 @@ _nenhum item encontrado_
   ```
   const competencies: CompetencyData[] = []; // Fetch completed modules const { data: moduleProgress } = await supabase .from("module_progress") .select("id, score, completed_at, module_id") .eq("user_id", userId) .not("completed_at", "is", null) as { data: ModuleProgressItem[] | null }; // Fetch completed quests const { data: questAssignments } = await supabase .from("quest_assignments") .select("id, completed_at, quest_id") .eq("user_id", userId) .not("completed_at", "is", null) as { data: Quest …
   ```
-- **validateTelemetryPayload(payload: TelemetryPayload)** — `supabase/functions/external-db-bridge/index.ts`
-  ```
-  if (!payload.operation || typeof payload.operation !== 'string') { return 'operation is required and must be a string'; } if (typeof payload.duration_ms !== 'number' || payload.duration_ms < 0) { return 'duration_ms must be a non-negative number'; } const validOps = ['select', 'insert', 'update', 'delete', 'rpc', 'count', 'upsert']; if (!validOps.includes(payload.operation)) { return `operation must be one of: ${validOps.join(', ')}`; } return null;
-  ```
 - **clampScore(value: number)** — `supabase/functions/reward-approval-review/risk.ts`
   ```
   if (!Number.isFinite(value)) return MIN_SCORE; return Math.max(MIN_SCORE, Math.min(MAX_SCORE, Math.round(value)));
@@ -2308,13 +2288,9 @@ _nenhum item encontrado_
   ```
   const exp = Math.min(MAX_BACKOFF_MS, BASE_BACKOFF_MS * Math.pow(2, attempt - 1)); const jitter = Math.floor(Math.random() * (exp / 2)); return exp + jitter;
   ```
-- **generateEmailHTML(data: DigestData)** — `supabase/functions/send-email-digest/index.ts`
-  ```
-  const rankChangeIcon = data.rankChange > 0 ? "📈" : data.rankChange < 0 ? "📉" : "➡️"; const rankChangeText = data.rankChange > 0 ? `+${data.rankChange}` : data.rankChange.toString(); return ` <!DOCTYPE html> <html> <head> <meta charset="utf-8"> <meta name="viewport" content="width=device-width, initial-scale=1.0"> <title>Seu Resumo Semanal</title> <style> body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; background: #1a1a2e; } .container { max-width: 600p …
-  ```
 - **generateSignature(payload: string, secret: string)** — `supabase/functions/webhook-dispatcher/index.ts`
   ```
-  try { const hmac = createHmac('sha256', secret); hmac.update(payload); return 'sha256=' + hmac.digest('hex'); } catch { // Fallback for Deno const encoder = new TextEncoder(); const keyData = encoder.encode(secret); const data = encoder.encode(payload); // Simple hash for fallback let hash = 0; for (let i = 0; i < data.length; i++) { hash = ((hash << 5) - hash) + data[i]; hash = hash & hash; } return 'sha256=' + Math.abs(hash).toString(16).padStart(16, '0'); }
+  const hmac = createHmac('sha256', secret); hmac.update(payload); return 'sha256=' + hmac.digest('hex');
   ```
 
 ### G.4 Percentuais e multiplicadores no código
@@ -2544,11 +2520,8 @@ _nenhum item encontrado_
 | `<span>67% concluído</span>` | `src/stories/components/Progress.stories.tsx` |
 | `<span>45%</span>` | `src/stories/feedback/LoadingStates.stories.tsx` |
 | `* `result.allowed` ser `undefined`, o que bloqueia 100% do tráfego com 429.` | `supabase/functions/_shared/rate-limiter.ts` |
-| `// - Fast page: 1h AND 5min burn >= 14.4x -> critical (2% budget in 1h)` | `supabase/functions/burn-rate-monitor/index.ts` |
-| `// - Slow page: 6h AND 30min burn >= 6x -> high (5% budget in 6h)` | `supabase/functions/burn-rate-monitor/index.ts` |
 | `// Celebrate strengths if all competencies are above 70%` | `supabase/functions/competency-alerts/index.ts` |
 | `const technicalValue = Math.min(100, (moduleProgress?.length \|\| 0) * 10 + avgScore * 0.5);` | `supabase/functions/competency-alerts/index.ts` |
-| `// e API externa. Ao cruzar 75% ou 90%, cria um security_alert e dispara o` | `supabase/functions/error-budget-monitor/index.ts` |
 
 ## H. Parâmetros de negócio (constantes, prazos, limites)
 
@@ -2769,8 +2742,6 @@ _nenhum item encontrado_
 | `MAX_PLAYERS` | `100` | `src/services/wagerBudgetService.ts` |
 | `REPLAY_WINDOW_SECONDS` | `300` | `supabase/functions/_shared/webhookSecurity.ts` |
 | `STALE_PROCESSING_SECONDS` | `300` | `supabase/functions/_shared/webhookSecurity.ts` |
-| `BURN_HIGH` | `75` | `supabase/functions/error-budget-monitor/index.ts` |
-| `BURN_CRITICAL` | `90` | `supabase/functions/error-budget-monitor/index.ts` |
 | `TYPE` | `"security_device_revoked"` | `supabase/functions/push-device-revoked/index.ts` |
 | `BATCH_SIZE` | `100` | `supabase/functions/push-outbox-dispatcher/index.ts` |
 | `MAX_ATTEMPTS` | `3` | `supabase/functions/push-outbox-dispatcher/index.ts` |
@@ -2922,13 +2893,10 @@ _nenhum item encontrado_
 | `tenure = Math.floor((new Date().getTime() - createdAt.getTime()) / (1000 * 60 * 60 * 24 * 365));` | `src/services/successionService.ts` |
 | `timeout: 60000,` | `src/services/webauthnService.ts` |
 | `await new Promise((resolve) => setTimeout(resolve, 2000));` | `src/stories/mobile/MobileComponents.stories.tsx` |
-| `const now = new Date(Date.now() + 5 * 60 * 1000);` | `supabase/functions/bitrix24-api/index.ts` |
 | `const daysInactive = Math.floor((now.getTime() - lastActive.getTime()) / (1000 * 60 * 60 * 24));` | `supabase/functions/churn-prediction/index.ts` |
 | `const sevenDaysAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);` | `supabase/functions/churn-prediction/index.ts` |
 | `const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);` | `supabase/functions/churn-prediction/index.ts` |
 | `.gte('created_at', new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString())` | `supabase/functions/competency-alerts/index.ts` |
-| `const since = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();` | `supabase/functions/security-weekly-digest/index.ts` |
-| `const daysUntilEnd = Math.ceil((endsAt.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));` | `supabase/functions/survey-reminders/index.ts` |
 | `WHERE created_at < now() - interval '90 days';` | `supabase/migrations/20260520162624_05dce903-e1a2-49e8-93a1-64ec4f6421b4.sql` |
 | `WHERE processed = true AND created_at < now() - interval '30 days';` | `supabase/migrations/20260520162624_05dce903-e1a2-49e8-93a1-64ec4f6421b4.sql` |
 | `expires_at TIMESTAMP WITH TIME ZONE DEFAULT (now() + interval '7 days')` | `supabase/migrations/20260520163657_25dfdf55-387e-4b6a-87a8-b1fb2491ce04.sql` |
@@ -3014,13 +2982,8 @@ _nenhum item encontrado_
 | 50 | `src/services/predictionMarketService.ts` |
 | 50 | `src/services/scratchCardService.ts` |
 | 50 | `src/services/tradingCardsService.ts` |
-| 1 | `supabase/functions/burn-rate-monitor/index.ts` |
 | 1 | `supabase/functions/competency-alerts/index.ts` |
-| 1 | `supabase/functions/error-budget-monitor/index.ts` |
 | 500 | `supabase/functions/reward-approval-review/index.ts` |
-| 5 | `supabase/functions/send-email-digest/index.ts` |
-| 5 | `supabase/functions/send-email-notifications/index.ts` |
-| 1 | `supabase/functions/verify-geo/index.ts` |
 
 ## I. Regras implícitas em mensagens de erro/validação
 
@@ -3326,7 +3289,7 @@ _nenhum item encontrado_
 | Corrija os erros de configuração antes de salvar. | `src/pages/LuckyWheelAdmin.tsx` |
 | Não foi possível criar o prêmio. | `src/pages/LuckyWheelAdmin.tsx` |
 | Não foi possível remover o prêmio. | `src/pages/LuckyWheelAdmin.tsx` |
-| … +172 linhas — lista completa em `context.json` | |
+| … +157 linhas — lista completa em `context.json` | |
 
 ## J. Controle de acesso no código (checagens de perfil/permissão)
 
@@ -3353,13 +3316,13 @@ _nenhum item encontrado_
 | `manager` | `src/pages/SalesCampaigns.tsx` |
 | `admin` | `src/services/rbacService.ts` |
 | `permissionKey` | `src/services/rbacService.ts` |
+| `admin` | `supabase/functions/churn-prediction/index.ts` |
+| `manager` | `supabase/functions/churn-prediction/index.ts` |
 | `admin` | `supabase/functions/competency-alerts/index.ts` |
-| `admin` | `supabase/functions/external-api/index.ts` |
-| `read` | `supabase/functions/external-api/index.ts` |
-| `required` | `supabase/functions/external-api/index.ts` |
-| `write` | `supabase/functions/external-api/index.ts` |
 | `admin` | `supabase/functions/reward-approval-review/index.ts` |
 | `manager` | `supabase/functions/reward-approval-review/index.ts` |
+| `admin` | `supabase/functions/trail-recommendations/index.ts` |
+| `manager` | `supabase/functions/trail-recommendations/index.ts` |
 | `admin` | `supabase/migrations/20260712214816_6fc5c315-ea1a-4b7e-90af-4cd2960bd17a.sql` |
 | `admin` | `supabase/migrations/20260726160940_73598534-820c-416f-8663-cb0272ff160a.sql` |
 | `manager` | `supabase/migrations/20260726160940_73598534-820c-416f-8663-cb0272ff160a.sql` |
@@ -3381,7 +3344,7 @@ _nenhum item encontrado_
 | `admin` | `supabase/migrations/20260807030000_fix_opinion_feed_rpc.sql` |
 | `manager` | `supabase/migrations/20260807030000_fix_opinion_feed_rpc.sql` |
 
-## K. Testes como especificação (1928 testes em 147 arquivos — nomes completos em `context.json`)
+## K. Testes como especificação (1920 testes em 146 arquivos — nomes completos em `context.json`)
 
 | Arquivo | Testes | Exemplos do que o sistema DEVE fazer |
 |---|---|---|
@@ -3478,7 +3441,6 @@ _nenhum item encontrado_
 | `src/test/useTypePreferences.test.tsx` | 9 | useTypePreferences · aplica defaults quando o banco esta vazio · hidrata valores existentes do banco · escreve de forma aditiva, preservando tipos de outros modulos … |
 | `src/test/luckyWheelPayoutTrendCsv.simulation.test.ts` | 8 | buildPayoutTrendCsv — simulação massiva · mantém uma linha por dia da janela em 200 cenários aleatórios · nunca emite quebras de linha extras dentro das células · neutraliza tentativas de CSV injection no rótulo do período … |
 | `src/test/pushOutbox.simulation.test.ts` | 8 | fila de push — máquina de estados · entrega no primeiro sucesso · erro permanente não consome retries extras · erro transitório volta para a fila até esgotar tentativas … |
-| `supabase/functions/external-webhook/validation.test.ts` | 8 | Bitrix24 Webhook Contract - Valid Lead Event · Bitrix24 Webhook Contract - Invalid (Missing ID) · External Webhook Contract - Valid Task Event · External Webhook Contract - Invalid (Missing Event) … |
 | `src/test/boardStatsExport.simulation.test.ts` | 7 | boardStatsExport — invariantes · mantém cabeçalho estável e uma linha por desafio · neutraliza CSV injection e escapa aspas/vírgulas/quebras · não quebra com payload vazio, nulo ou corrompido … |
 | `src/test/bossDepartmentComparison.simulation.test.ts` | 7 | compareDepartments — simulação massiva · mantém invariantes em 800 cenários · normaliza janela invertida · agrupa batalhas sem departamento em bucket explícito … |
 | `src/test/cardPackNotifications.simulation.test.ts` | 7 | notificação de pacote de cartas · gera payload válido para toda origem e tamanho 1..20 (120 cenários) · chave de dedupe é única por pacote (1000 cenários) · mesmo pacote sempre produz a mesma chave (determinismo) … |
@@ -3540,22 +3502,6 @@ _nenhum item encontrado_
 | `CACHE_ASSETS` | `public/sw.js` |
 | `SHOW_NOTIFICATION` | `public/sw.js` |
 | `SKIP_WAITING` | `public/sw.js` |
-| `achievement.grant` | `supabase/functions/external-webhook/index.ts` |
-| `batch.complete` | `supabase/functions/external-webhook/index.ts` |
-| `batch.tasks` | `supabase/functions/external-webhook/index.ts` |
-| `task.completed` | `supabase/functions/external-webhook/index.ts` |
-| `task.created` | `supabase/functions/external-webhook/index.ts` |
-| `task.deleted` | `supabase/functions/external-webhook/index.ts` |
-| `task.late` | `supabase/functions/external-webhook/index.ts` |
-| `task.rejected` | `supabase/functions/external-webhook/index.ts` |
-| `task.rework` | `supabase/functions/external-webhook/index.ts` |
-| `task.started` | `supabase/functions/external-webhook/index.ts` |
-| `task.updated` | `supabase/functions/external-webhook/index.ts` |
-| `user.award_coins` | `supabase/functions/external-webhook/index.ts` |
-| `user.award_xp` | `supabase/functions/external-webhook/index.ts` |
-| `user.checkin` | `supabase/functions/external-webhook/index.ts` |
-| `user.checkout` | `supabase/functions/external-webhook/index.ts` |
-| `user.penalty` | `supabase/functions/external-webhook/index.ts` |
 
 ## M. Efeitos colaterais (e-mail, SMS, cobrança, fila — não são idempotentes por padrão)
 
@@ -3596,14 +3542,9 @@ _nenhum item encontrado_
 | `notifyRevocation` | `src/services/pushSubscriptionService.ts` |
 | `notifyQuestAssigned` | `src/services/questsService.ts` |
 | `notify` | `src/services/shopService.ts` |
-| `notify` | `supabase/functions/bitrix24-api/index.ts` |
-| `invoke(` | `supabase/functions/burn-rate-monitor/index.ts` |
-| `invoke(` | `supabase/functions/external-webhook/index.ts` |
 | `sendNotification` | `supabase/functions/push-device-revoked/index.ts` |
 | `sendNotification` | `supabase/functions/push-outbox-dispatcher/index.ts` |
 | `sendNotification` | `supabase/functions/send-campaign-push/index.ts` |
-| `notify` | `supabase/functions/send-email-notifications/index.ts` |
-| `notify` | `supabase/functions/send-rate-limit-alert/index.ts` |
 | `notify_admins_of_monthly_report` | `supabase/migrations/20260712222653_8d3916b2-c16d-4d4e-9a18-7fde8939b0fe.sql` |
 | `notify_admins_of_monthly_report` | `supabase/migrations/20260712222801_f2380764-d126-47be-b005-692d6449061f.sql` |
 
@@ -3874,9 +3815,6 @@ _nenhum item encontrado_
 | Apenas gestores/administradores podem disparar a análise. | `supabase/functions/reward-approval-review/index.ts` |
 | * A IA nunca decide sozinha: ela apenas ajusta a pontuação heurística dentro | `supabase/functions/reward-approval-review/risk.ts` |
 | Máximo de 3 tentativas totais. Backoff base: 500ms, cap 8s. | `supabase/functions/send-campaign-push/index.ts` |
-| 2. Log the rate limit violation | `supabase/functions/send-rate-limit-alert/index.ts` |
-| Use ip-api.com (free, no API key required, 45 requests per minute) | `supabase/functions/verify-geo/index.ts` |
-| Apenas `cf-connecting-ip` é inforjável. Ver _shared/clientIp.ts. | `supabase/functions/verify-geo/index.ts` |
 | Limit response body size | `supabase/functions/webhook-dispatcher/index.ts` |
 | INTO v_settings FROM geo_settings LIMIT 1; | `supabase/migrations/20251231131217_c2ec197f-c709-4fd4-8202-2738c37dddf7.sql` |
 | # O que precisa ser preenchido\n\n1. Descreva o cenário em uma frase (o quê, quando, quem foi afetado).\n2. Confirme se o impacto foi apenas SLA ou também usuário final.'; | `supabase/migrations/20260712222124_0a235aa5-fd55-4549-b78b-f1de5dff2dbd.sql` |

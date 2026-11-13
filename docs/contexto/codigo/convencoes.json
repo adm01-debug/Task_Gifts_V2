@@ -22,7 +22,7 @@
    "src/integrations (3)"
   ],
   "testes": [
-   "co-localizado (*.test) (143)",
+   "co-localizado (*.test) (142)",
    "outro (11)",
    "tests/ (3)"
   ],
@@ -59,11 +59,11 @@
  "commits": {
   "convencao": "conventional commits (observado)",
   "exemplos": [
+   "chore(functions): poda 21 edge functions mortas + mitiga 4 vulnerabilidades (#54)",
    "docs: marca item 5 do prod-readiness como aprovado após PR #52 (#53)",
    "fix: remove mocks do admin de humor e dá ação real ao botão de configurações (#52)",
    "docs: relatório prod-readiness com evidências do estado real do main (#51)",
-   "fix(automation): recusar recursão indireta de hooks pela cadeia de eventos (#50)",
-   "build(deps): bump actions/checkout from 6.1.0 to 7.0.1 (#48)"
+   "fix(automation): recusar recursão indireta de hooks pela cadeia de eventos (#50)"
   ]
  },
  "pr_template": ".github/PULL_REQUEST_TEMPLATE.md",
