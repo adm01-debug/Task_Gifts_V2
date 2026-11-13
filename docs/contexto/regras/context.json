@@ -1,9 +1,9 @@
 {
  "meta": {
-  "sha": "2978195e107ee63f180d9ad47b5fc4b561dbad8d",
+  "sha": "a489fe2e64109c54de531ae464a8b3a81d9eaee7",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
-  "generated_at": "2026-11-13 19:06 UTC",
+  "generated_at": "2026-11-13 20:35 UTC",
   "files_total": 1513,
   "code_files": 1421,
   "code_lines": 260097
@@ -151414,10 +151414,19 @@
   }
  },
  "git": {
-  "sha": "2978195e107ee63f180d9ad47b5fc4b561dbad8d",
+  "sha": "a489fe2e64109c54de531ae464a8b3a81d9eaee7",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "commits": [
+   {
+    "sha": "a489fe2",
+    "date": "2026-11-13",
+    "author": "adm01-debug",
+    "subject": "docs: marca item 5 do prod-readiness como aprovado após PR #52 (#53)",
+    "files": [
+     "docs/prod-readiness.md"
+    ]
+   },
    {
     "sha": "2978195",
     "date": "2026-11-13",
@@ -151852,23 +151861,12 @@
      "bun.lock",
      "package.json"
     ]
-   },
-   {
-    "sha": "e469532",
-    "date": "2026-10-29",
-    "author": "dependabot[bot]",
-    "subject": "build(deps): bump framer-motion de 13.4.3 para 14.6.0 (#26)",
-    "files": [
-     "bun.lock",
-     "package-lock.json",
-     "package.json"
-    ]
    }
   ],
   "hot_files": [
    [
     "package.json",
-    10
+    9
    ],
    [
     ".github/workflows/ci.yml",
@@ -151891,10 +151889,6 @@
     4
    ],
    [
-    "bun.lock",
-    4
-   ],
-   [
     ".github/workflows/automation-local.yml",
     3
    ],
@@ -151913,6 +151907,14 @@
    [
     "docs/agentes/banco.md",
     3
+   ],
+   [
+    "bun.lock",
+    3
+   ],
+   [
+    "docs/prod-readiness.md",
+    2
    ],
    [
     "scripts/automation.unit.mjs",
@@ -151940,10 +151942,6 @@
    ],
    [
     "scripts/ai-context/gerar.mjs",
-    2
-   ],
-   [
-    "scripts/ci/ai-context-generator.unit.mjs",
     2
    ]
   ]

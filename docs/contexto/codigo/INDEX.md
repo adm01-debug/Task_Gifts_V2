@@ -1,7 +1,7 @@
 # Contexto do projeto para agentes de IA
 
 GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.
-Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `2978195e107ee63f180d9ad47b5fc4b561dbad8d` (2026-11-13T15:03:46-03:00).
+Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `a489fe2e64109c54de531ae464a8b3a81d9eaee7` (2026-11-13T15:39:44-03:00).
 
 ## Como usar (leia antes de planejar ou executar qualquer tarefa)
 1. **Tela/rota/menu** → `rotas.json` (url/vista/menu → arquivo → hooks → tabelas → edges; `rotas_http_backend` para APIs) e `modulos.json` (módulo inteiro + dependências entre módulos).
@@ -286,8 +286,8 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - possiveis_segredos_no_codigo: 0
 
 ## Grafo de código (graphify)
-- 9910 nós · 27599 arestas · 623 comunidades · grafo do commit `2978195e`
-- comunidades maiores: card.tsx (176), App.tsx (172), cn (145), framer-motion (128), select.tsx (113), react (112), badge.tsx (108), skeleton.tsx (105), lucide-react (93), button.tsx (92), mobile/index.ts (89), useToast (82)
+- 9910 nós · 27600 arestas · 622 comunidades · grafo do commit `a489fe2e`
+- comunidades maiores: App.tsx (198), framer-motion (184), card.tsx (180), Button (152), cn (141), CardContent (123), QuizAdmin.tsx (105), client.ts (101), lucide-react (96), useToast (87), mobile/index.ts (86), LuckyWheelAdmin.tsx (85)
 - símbolos mais chamados: cn() (src/lib/utils.ts), useAuth() (src/hooks/useAuth.tsx), useIsMobile() (src/hooks/use-mobile.tsx), q() (scripts/supabase_snapshot/snapshot.py), useDepartments() (src/hooks/useDepartments.ts), useToast() (src/hooks/use-toast.ts), useRBAC() (src/hooks/useRBAC.ts), useProfiles() (src/hooks/useProfiles.ts), useSEO() (src/hooks/useSEO.ts), useSoundEffects() (src/hooks/useSoundEffects.tsx), .collect() (scripts/supabase_snapshot/test_snapshot.py), excluded_sql() (scripts/supabase_snapshot/snapshot.py)
 - consulta local: `graphify query "<pergunta>"`, `graphify path "<A>" "<B>"`, `graphify explain "<X>"`
 
@@ -367,6 +367,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 
 
 ## Últimos commits
+- 2026-11-13 `a489fe2` docs: marca item 5 do prod-readiness como aprovado após PR #52 (#53)
 - 2026-11-13 `2978195` fix: remove mocks do admin de humor e dá ação real ao botão de configurações (#52)
 - 2026-11-13 `f9d5fbd` docs: relatório prod-readiness com evidências do estado real do main (#51)
 - 2026-11-13 `24cfd06` fix(automation): recusar recursão indireta de hooks pela cadeia de eventos (#50)
@@ -381,7 +382,6 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - 2026-11-11 `eb08848` fix(automacao): tolera CRLF no parse de workflows locais (#41)
 - 2026-11-11 `c4d87b6` fix(ci): separa browser Playwright das deps apt com retry no passo de instalação (#40)
 - 2026-11-11 `940efb8` chore(automacao): conecta testes, grafo e manutenção aos gatilhos (#38)
-- 2026-11-10 `ca1a6e4` fix(tipos): corrige contratos e ativa verificação real da aplicação
 
 ## Arquivos deste diretório
 - `docs/contexto/codigo/rotas.json`
