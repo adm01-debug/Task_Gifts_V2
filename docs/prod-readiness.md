@@ -1,8 +1,7 @@
 ﻿# Prod Readiness — TaskGifts (Task_Gifts_V2)
 
-> Status: auditoria de prontidão de produção conduzida em 2026-11-13 por agente de validação.
-> Método: verificação real de estado (branch `main` @ `24cfd06f`, commit `fix(automation): recusar recursão indireta de hooks pela cadeia de eventos (#50)`, 2026-11-13 09:01 -03). Nada abaixo é "deveria funcionar": cada item cita comando, saída, query ou request real desta sessão.
-> Legenda: **OK** = verificado e funcionando · **BLOQUEADO** = falhou ou sem acesso (erro exato citado) · **PENDENTE** = aguarda decisão do dono.
+> Status: auditoria de prontidão de produção, atualização 2026-11-13 21:30 -03 (autopilot goal).
+> Método: verificação real de estado (branch `main` @ `e1b0f368`, commit `chore(functions): poda 21 edge functions mortas + mitiga 4 vulnerabilidades (#54)`, merge 2026-11-13 21:04 -03). Cada item cita comando, saída, query ou request real. Legenda: **OK** = verificado · **BLOQUEADO** = falhou ou sem acesso (erro exato) · **PENDENTE** = aguarda decisão do dono.
 
 ---
 
@@ -22,9 +21,9 @@ Fonte primária: `INVENTARIO_FUNCIONALIDADES.md` (1064 linhas, 23 seções) + `d
 | Workflows GHA | 3 próprios + geridos | `ci.yml`, `automation-local.yml`, `contexto.yml` |
 | Testes | 1886 passed / 12 skipped | `bun run test:ci` (detalhe item 3) |
 | TODO/FIXME/WIP reais | 0 | varredura `src/` (318 ocorrências são "Todos"/"ListTodo" — falsos positivos) |
-| PRs abertas | 0 | `gh pr list --state open` → `[]` |
+| PRs abertas | 1 (#55, workflow deploy edge functions) | `gh pr list --state open` |
 
-**Lacuna no inventário**: 19 edge functions do código não são citadas em `INVENTARIO_FUNCIONALIDADES.md`: `ai-course-builder`, `burn-rate-monitor`, `cleanup-old-security-logs`, `cleanup-rate-limit-logs`, `detect-new-device`, `dispatch-critical-alert`, `error-budget-monitor`, `external-db-bridge`, `migrate-helper`, `push-device-revoked`, `push-outbox-dispatcher`, `push-public-key`, `reward-approval-review`, `security-weekly-digest`, `send-campaign-push`, `send-email-digest`, `send-rate-limit-alert`, `verify-geo`, `webhook-health-monitor`.
+**Lacuna no inventário**: das 17 edge functions restantes no main, 8 não são citadas em `INVENTARIO_FUNCIONALIDADES.md`: `ai-course-builder`, `detect-new-device`, `migrate-helper`, `push-device-revoked`, `push-outbox-dispatcher`, `push-public-key`, `reward-approval-review`, `send-campaign-push`. (As 19 listadas na auditoria original incluíam 11 podadas na PR #54 — `burn-rate-monitor`, `cleanup-*`, `dispatch-critical-alert`, `error-budget-monitor`, `external-db-bridge`, `security-weekly-digest`, `send-email-*`, `send-rate-limit-alert`, `verify-geo`, `webhook-health-monitor` — e 8 que continuam no código.)
 
 ---
 
@@ -49,13 +48,13 @@ Rodados nesta sessão no clone WSL (mesmo comando da CI):
 
 | Workflow | Estado | Evidência |
 |---|---|---|
-| CI (push/PR) | 🟢 verde | últimas 3 execuções `success`; última `#50` @ main `24cfd06f` (2026-11-13 12:01Z) |
-| Automação local | 🟢 verde | `gh run list --workflow automation-local.yml --branch main` success |
-| CodeQL | 🟢 verde | success (gerido pelo GitHub) |
+| CI (push/PR) | 🟢 verde | run `43507331092` (push main @ `e1b0f368`, 21:04Z) **success** 24m21s — conferido após último merge; anteriores #52/#53 success |
+| Automação local | 🟢 verde | run `43507331317` (main @ `e1b0f368`) **success** 21m27s |
+| CodeQL | 🟢 verde | gerido pelo GitHub, success (paridade CI) |
 | Dependabot | 🟢 verde | success |
-| Contexto (cron 10 min) | 🟡 10 success / 18 cancelled nos 30 mais recentes | `cancelled` = comportamento de fila do workflow (grupo `contexto-${{ github.event_name }}`, `cancel-in-progress: false` + cron `3-59/10`); sucessos recentes presentes; **não é falha de código** |
+| Contexto (cron 10 min) | 🟡 `cancelled` por overrun de fila | padrão documentado no `contexto.yml` (grupo `contexto-${{ github.event_name }}`, `cancel-in-progress: false`, cron `3-59/10`); sucessos ocorrem quando a fila libera — não é falha de código |
 
-**Conclusão item 4: OK** — todos os workflows ativos em main verdes após último merge; padrão `cancelled` do Contexto é overrun de fila, documentado no próprio `contexto.yml` e confirmado por runs success no mesmo período.
+**Conclusão item 4: OK** — CI e Automação local verdes no main pós-merge da #54 (evidência: runs acima). Contexto `cancelled` = fila de runners da org, comportamento pré-existente e documentado.
 
 ---
 
@@ -92,10 +91,12 @@ Varredura estática sobre **267 migrations** (script Python com regex validada):
 ## 7. Produção
 
 ### Aplicação
-- `https://task-gifts-v2.vercel.app` → **HTTP 200** (0.748 s), HTML pt-BR, CSP + HSTS presentes (via `vercel.json`, confirmado no HTML).
+- `https://task-gifts-v2.vercel.app` → **HTTP 200** (0.626 s, 2026-11-13 21:30 -03), HTML pt-BR, CSP + HSTS (via `vercel.json`).
+- Deploy de produção **success** `7776418870` (2026-11-13 21:04:52Z) após merge da #54.
 
-### Supabase no ar (probe HTTP real, 2026-11-13)
+### Supabase no ar (probe HTTP real, 2026-11-13 21:30 -03)
 - `https://eidsaqymojyuhprobfpn.supabase.co` responde; REST com credencial inválida → **HTTP 401** (correto).
+- Edge functions vivas: `push-public-key` **200**, `push-outbox-dispatcher` **403** (exige auth).
 
 ### Edge functions — poda executada (PR #54)
 
@@ -107,17 +108,18 @@ Varredura estática sobre **267 migrations** (script Python com regex validada):
 | 21 functions podadas (PR #54) | removidas — mortas, nunca deployadas, sem chamador |
 | `verify-ip`, `webhook-dispatcher`, `trail-recommendations`, `admin-alerts`, `detect-new-device`, `generate-quiz-questions`, `send-campaign-push` | no código; sem deploy (404) |
 
-**Decisão — poda + mitigação (PR #54)**: das 36 functions no código, 27 nunca foram deployadas no projeto `eidsaqymojyuhprobfpn` (probe HTTP por function com service-role → 404) e o front nunca as invoca (allowlist `VITE_DEPLOYED_EDGE_FUNCTIONS=` vazia → `invokeEdgeSafe` retorna 404 sintético sem rede). Foram podadas as 21 sem chamador em `src/` e com bugs fatais (bypass RLS em `external-db-bridge`, stubs de email, queries em tabela inexistente, coluna errada, anon key do projeto antigo). As 4 vivas/possíveis com falha de segurança foram mitigadas: `verify-ip` (fail-open→fail-closed), `churn-prediction` (role-check admin/manager), `trail-recommendations` (bloqueio de IDOR), `webhook-dispatcher` (assinatura forjável removida). **Nenhuma funcionalidade perde o ar** — o front está com edge functions desligadas por allowlist.
+**Decisão executada — poda + mitigação (PR #54, merge `e1b0f368` em 2026-11-13 21:04 -03, CI success, deploy Vercel success `7776418870`)**: das 36 functions no código, 27 nunca foram deployadas no projeto `eidsaqymojyuhprobfpn` (probe HTTP por function → 404) e o front nunca as invoca (allowlist `VITE_DEPLOYED_EDGE_FUNCTIONS=` vazia → `invokeEdgeSafe` retorna 404 sintético sem rede, `src/lib/edgeAvailability.ts:46-51`). Foram podadas as 21 sem chamador em `src/` e com bugs fatais (bypass RLS em `external-db-bridge`, stubs de email, queries em tabela inexistente, coluna errada, anon key do projeto antigo). As 4 com falha de segurança foram mitigadas no main: `verify-ip` (fail-open→fail-closed), `churn-prediction` (role-check admin/manager), `trail-recommendations` (bloqueio de IDOR), `webhook-dispatcher` (assinatura forjável removida). **Nenhuma funcionalidade perde o ar** — o front segue com edge functions desligadas por allowlist.
 
-**BLOQUEADO G7-1 — deploy de edge functions**: as demais no código (`verify-ip`, `webhook-dispatcher`, `trail-recommendations`, `admin-alerts`, `detect-new-device`, `generate-quiz-questions`, `send-campaign-push`) não estão no ar por falta de deploy, não por bug do front. Publicá-las exige `SUPABASE_ACCESS_TOKEN` (PAT) nos secrets do repo — ausente; service-role key retorna 401 na Management API (testado). Sem o PAT o workflow de deploy não existe; decisão do dono. Nenhuma função essencial de autenticação (auth) depende delas.
-**BLOQUEADO G7-2 — logs/banco em produção**: sem CLI supabase/vercel instalado e sem acesso a logs de edge functions/banco nesta sessão → impossível confirmar ausência de erro novo pós-deploy. Evidência mínima coletada: app 200 e REST/auth respondendo (acima).
+**BLOQUEADO G7-1 — deploy de edge functions**: as demais no código (`verify-ip`, `webhook-dispatcher`, `trail-recommendations`, `admin-alerts`, `detect-new-device`, `generate-quiz-questions`, `send-campaign-push`) continuam **404** no ar por falta de deploy (probe 2026-11-13 21:30 -03). O workflow `deploy-edge-functions.yml` está pronto na **PR #55** (aberta, sem merge — regra 8: workflow+segredo) mas exige `SUPABASE_ACCESS_TOKEN` (PAT) nos secrets — **ausente**; a service-role key fornecida retorna **401** na Management API (testado via curl). Decisão do dono. Nenhuma função essencial de autenticação depende delas.
+**BLOQUEADO G7-2 — logs/banco em produção**: sem supabase CLI e sem credencial com acesso a logs de edge functions/banco nesta sessão → impossível confirmar ausência de erro novo pós-deploy. Evidência mínima coletada: app 200 (0.626 s) e REST/auth respondendo.
 
 ---
 
 ## 8. Entrega
 
-- Correções desta rodada seguem o fluxo: branch própria `claude/<tipo>-<slug>-<AAMMDD-HHMM>` a partir de `main` atualizado, CI verde e merge documentado.
-- **PR #54 aberta** (poda edge functions + mitigações) — aguardando CI e decisão de merge (regra 8: deleção de código/arquitetura).
+- Correções seguem o fluxo: branch própria `claude/<tipo>-<slug>-<AAMMDD-HHMM>` a partir de `main`, CI verde, merge documentado.
+- **PR #54 mergeada** (`e1b0f368`, CI success, deploy success `7776418870`) — poda das 21 edge functions + mitigações nas 4 vivas.
+- **PR #55 aberta (não mergeada)** — workflow `deploy-edge-functions.yml` + `push-public-key` pública: regra 8 (workflow/segredo), requer `SUPABASE_ACCESS_TOKEN`, CI `quality`/`Contratos` ainda `QUEUED` na fila da org @ 2026-11-13 21:30 -03.
 
 ---
 
@@ -125,9 +127,10 @@ Varredura estática sobre **267 migrations** (script Python com regex validada):
 
 | Item | Estado | O que falta |
 |---|---|---|
-| Deploy das edge functions mantidas | **BLOQUEADO** | requer `SUPABASE_ACCESS_TOKEN` (PAT) nos secrets (ausente); service-role key 401 na Management API. Poda/mitigação na PR #54 aguardando merge |
-| Drift fase 2 vs banco real | **BLOQUEADO** | snapshot `docs/contexto/supabase/` nunca é publicado (secret `SUPABASE_DB_URL` ausente no repo → job `banco` do `contexto.yml` pula com warning). Migrations iguais ao banco **não confirmado**; fase 1 offline green |
-| Advisors de segurança / logs de produção | **BLOQUEADO** | sem supabase CLI/credencial nesta sessão |
+| Deploy das edge functions mantidas (7) | **BLOQUEADO** | PR #55 aberta; requer `SUPABASE_ACCESS_TOKEN` (PAT) nos secrets (ausente — service-role key 401 na Management API, testado). Decisão do dono (regra 8) |
+| Drift fase 2 vs banco real | **BLOQUEADO** | secret `SUPABASE_DB_URL` ausente → snapshot `docs/contexto/supabase/` nunca é publicado (job `banco` do `contexto.yml` pula com warning; confirmado na release de 21:14Z). Migrations iguais ao banco **não confirmado**; fase 1 offline green (exit 0, 0 casos novos) |
+| Advisors de segurança / logs de produção | **BLOQUEADO** | sem supabase CLI/credencial que acesse logs nesta sessão |
+| Fila de runners da org | info | runs `queued`/`cancelled` (ex.: `Contexto` 21:08Z, `21:14Z`) são overrun da fila, não falha de código — padrão documentado |
 
 ---
 
@@ -136,11 +139,11 @@ Varredura estática sobre **267 migrations** (script Python com regex validada):
 | # | Critério | Estado |
 |---|---|---|
 | 1 | Inventário completo do main | 🟢 feito (este doc + `INVENTARIO_FUNCIONALIDADES.md`) |
-| 2 | Cobertura OK(prova)/BLOQUEADO(erro), zero "não verificado" | 🟢 feito — exceto itens BLOQUEADO acima, todos com erro exato |
-| 3 | Qualidade exit 0, testes >= início | 🟢 verificado |
-| 4 | GHA verdes em main pós-merge | 🟢 verificado (Contexto cancelled = fila, documentado) |
-| 5 | Sem código pela metade | 🟢 **OK** — 2 mocks corrigidos na PR #52 (merge `2978195e`): humor do admin usa `teamStats` real, botão de configurações navega p/ `/security-dashboard`; CI verde + testes 1886 |
-| 6 | RLS/policies/migrations | 🟡 OK parcial — RLS 228/228; migrations vs banco real BLOQUEADO (sem snapshot) |
-| 7 | Produção sem erro novo, fluxos respondendo | 🔴 BLOQUEADO — 27 edge functions 404 + sem logs |
-| 8 | Entregas via PR verde | 🟢 0 PRs abertas; fluxo respeitado |
-| 9 | Relatório fechado | 🟡 este documento; fecha após G7/G6-2 |
+| 2 | Cobertura OK(prova)/BLOQUEADO(erro), zero "não verificado" | 🟢 feito — não há item sem evidência; os não confirmáveis estão BLOQUEADO com erro exato |
+| 3 | Qualidade exit 0, testes >= início | 🟢 revalidado em worktree limpo do main `e1b0f368`: typecheck 0 · testes **1886 pass / 12 skip** (143 files) · lint **0 erros** · build 0 (3.56s) |
+| 4 | GHA verdes em main pós-merge | 🟢 CI `43507331092` success + Automação local `43507331317` success no commit final; Contexto cancelled = fila (documentado) |
+| 5 | Sem código pela metade | 🟢 varredura `src/`+`supabase/functions/`: 0 marcadores TODO/FIXME/WIP reais; mocks fechados na #52 (merge `2978195e`) |
+| 6 | RLS/policies/migrations | 🟡 fase 1 exit 0 (267 migrations, 0 casos novos); fase 2 vs banco BLOQUEADO (sem `SUPABASE_DB_URL`) |
+| 7 | Produção sem erro novo, fluxos respondendo | 🟡 app 200 / REST 401 correto / 2 edge functions vivas; 7 não deployadas BLOQUEADO (falta PAT) · logs BLOQUEADO (sem CLI/credencial) |
+| 8 | Entregas via PR verde | 🟢 1 PR aberta (#55, regra 8); merges #52/#53/#54 com CI verde e deploy confirmado |
+| 9 | Relatório fechado | 🟢 este documento reflete o main `e1b0f368`; apenas itens BLOQUEADO/dono permanecem em aberto |
