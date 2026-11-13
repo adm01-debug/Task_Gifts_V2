@@ -17,7 +17,7 @@ Fonte primária: `INVENTARIO_FUNCIONALIDADES.md` (1064 linhas, 23 seções) + `d
 | Hooks | 129 | idem `hooks.json` |
 | Migrations | 267 | `supabase/migrations/` (saída do drift: `267 arquivo(s)`) |
 | Edge functions no código | 17 (+`_shared/`) | `ls supabase/functions` no main `e1b0f368` (21 podadas na #54) |
-| Edge functions no ar (respondem) | 2 vivas (push-public-key, push-outbox-dispatcher) | probe HTTP por function (abaixo) |
+| Edge functions no ar (respondem) | 1 viva (push-public-key 200) + push-outbox-dispatcher 403 (auth) | probe HTTP por function (abaixo) |
 | Workflows GHA | 3 próprios + geridos | `ci.yml`, `automation-local.yml`, `contexto.yml` |
 | Testes | 1886 passed / 12 skipped | `bun run test:ci` (detalhe item 3) |
 | TODO/FIXME/WIP reais | 0 | varredura `src/` (318 ocorrências são "Todos"/"ListTodo" — falsos positivos) |
@@ -102,7 +102,8 @@ Varredura estática sobre **267 migrations** (script Python com regex validada):
 
 | Função | Estado pós-decisão |
 |---|---|
-| `push-public-key`, `push-outbox-dispatcher` | OK no ar (200) |
+| `push-public-key` | OK no ar (200) |
+| `push-outbox-dispatcher` | no ar (403 — exige auth) |
 | `ai-coach`, `ai-course-builder` | 503 "AI não configurada" (aguarda config) |
 | `churn-prediction`, `competency-alerts`, `migrate-helper`, `push-device-revoked`, `reward-approval-review` | 401 sem JWT (esperado: exigem auth) |
 | 21 functions podadas (PR #54) | removidas — mortas, nunca deployadas, sem chamador |
