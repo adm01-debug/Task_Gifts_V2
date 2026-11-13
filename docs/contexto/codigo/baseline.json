@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "f9d5fbd2c80e43eaad1b37cb5808fd60ee03eb5b",
+  "commit": "2978195e107ee63f180d9ad47b5fc4b561dbad8d",
   "branch": "main",
-  "data_commit": "2026-11-13T13:45:00-03:00",
+  "data_commit": "2026-11-13T15:03:46-03:00",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "ultimos_commits": [
+   {
+    "sha": "2978195",
+    "data": "2026-11-13",
+    "assunto": "fix: remove mocks do admin de humor e dá ação real ao botão de configurações (#52)"
+   },
    {
     "sha": "f9d5fbd",
     "data": "2026-11-13",
@@ -126,14 +131,9 @@
     "sha": "f599b1c",
     "data": "2026-10-30",
     "assunto": "chore(deps): bump framer-motion, lucide-react, react-resizable-panels, storybook (#29)"
-   },
-   {
-    "sha": "50f1d15",
-    "data": "2026-10-30",
-    "assunto": "perf(test): pool vmThreads no vitest — testes 48% mais rápidos (#28)"
    }
   ],
-  "arquivos_mudados_7d": 139,
+  "arquivos_mudados_7d": 141,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "package.json",
@@ -156,6 +156,10 @@
     "mudancas": 5
    },
    {
+    "pasta": "src/components/admin",
+    "mudancas": 5
+   },
+   {
     "pasta": "RELATORIO_CI.md",
     "mudancas": 4
    },
@@ -165,10 +169,6 @@
    },
    {
     "pasta": "scripts/automation.mjs",
-    "mudancas": 4
-   },
-   {
-    "pasta": "src/components/admin",
     "mudancas": 4
    },
    {
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 27
+    "commits": 28
    },
    {
     "autor": "dependabot[bot]",
@@ -312,7 +312,7 @@
  "contagens": {
   "arquivos_total": 1504,
   "arquivos_codigo": 1148,
-  "linhas_codigo": 229320,
+  "linhas_codigo": 229323,
   "rotas": 83,
   "rotas_http_backend": 0,
   "vistas_por_id": 0,
@@ -400,7 +400,7 @@
   },
   "src/components": {
    "arquivos": 461,
-   "linhas": 77749
+   "linhas": 77751
   },
   "src/constants": {
    "arquivos": 1,
@@ -432,7 +432,7 @@
   },
   "src/pages": {
    "arquivos": 82,
-   "linhas": 22334
+   "linhas": 22335
   },
   "src/services": {
    "arquivos": 99,

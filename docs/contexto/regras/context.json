@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "f9d5fbd2c80e43eaad1b37cb5808fd60ee03eb5b",
+  "sha": "2978195e107ee63f180d9ad47b5fc4b561dbad8d",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
-  "generated_at": "2026-11-13 17:53 UTC",
+  "generated_at": "2026-11-13 18:54 UTC",
   "files_total": 1513,
   "code_files": 1421,
-  "code_lines": 260094
+  "code_lines": 260097
  },
  "version": "1.3.2",
- "facts_hash": "0ac037cb30537fae",
+ "facts_hash": "8524f1bc32fc4b8a",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -47944,7 +47944,7 @@
   {
    "module": "src/components",
    "files": 461,
-   "lines": 77749,
+   "lines": 77751,
    "tables": [
     "attendance_records",
     "audit_logs",
@@ -48539,7 +48539,7 @@
   {
    "module": "src/pages",
    "files": 82,
-   "lines": 22334,
+   "lines": 22335,
    "tables": [
     "audit_logs",
     "campaign_participants",
@@ -119399,7 +119399,7 @@
   },
   "src/components/admin/MoodAnalytics.tsx": {
    "path": "src/components/admin/MoodAnalytics.tsx",
-   "lines": 282,
+   "lines": 284,
    "exports": [
     "function MoodAnalytics"
    ],
@@ -134437,7 +134437,7 @@
   },
   "src/pages/Profile.tsx": {
    "path": "src/pages/Profile.tsx",
-   "lines": 244,
+   "lines": 245,
    "exports": [
     "default Profile"
    ],
@@ -134457,7 +134457,8 @@
     ]
    },
    "navigates": [
-    "/auth"
+    "/auth",
+    "/security-dashboard"
    ],
    "errors": [
     "Erro ao atualizar nome",
@@ -151413,10 +151414,20 @@
   }
  },
  "git": {
-  "sha": "f9d5fbd2c80e43eaad1b37cb5808fd60ee03eb5b",
+  "sha": "2978195e107ee63f180d9ad47b5fc4b561dbad8d",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "commits": [
+   {
+    "sha": "2978195",
+    "date": "2026-11-13",
+    "author": "adm01-debug",
+    "subject": "fix: remove mocks do admin de humor e dá ação real ao botão de configurações (#52)",
+    "files": [
+     "src/components/admin/MoodAnalytics.tsx",
+     "src/pages/Profile.tsx"
+    ]
+   },
    {
     "sha": "f9d5fbd",
     "date": "2026-11-13",
@@ -151852,23 +151863,12 @@
      "package-lock.json",
      "package.json"
     ]
-   },
-   {
-    "sha": "21eeea8",
-    "date": "2026-10-29",
-    "author": "dependabot[bot]",
-    "subject": "build(deps-dev): bump vite-plugin-pwa de 1.3.0 para 2.0.0 (#25)",
-    "files": [
-     "bun.lock",
-     "package-lock.json",
-     "package.json"
-    ]
    }
   ],
   "hot_files": [
    [
     "package.json",
-    11
+    10
    ],
    [
     ".github/workflows/ci.yml",
@@ -151883,15 +151883,15 @@
     5
    ],
    [
-    "bun.lock",
-    5
-   ],
-   [
     "scripts/automation.mjs",
     4
    ],
    [
     "docs/agentes/mapa-repo.md",
+    4
+   ],
+   [
+    "bun.lock",
     4
    ],
    [

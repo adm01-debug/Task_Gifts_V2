@@ -559,7 +559,7 @@
     "MoodAnalytics"
    ],
    "export_default": null,
-   "linhas": 282,
+   "linhas": 284,
    "dominio": "components/admin",
    "hooks_locais": [
     "useMoodTracker"
@@ -8357,7 +8357,7 @@
     "Profile"
    ],
    "export_default": "Profile",
-   "linhas": 244,
+   "linhas": 245,
    "dominio": "pages",
    "hooks_locais": [
     "useAuth",

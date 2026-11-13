@@ -508,7 +508,7 @@
    "modulo": "components/admin",
    "arquivos": 46,
    "testes": 0,
-   "linhas": 9508,
+   "linhas": 9510,
    "itens_menu": [],
    "telas": [],
    "rotas_http": [],
@@ -6475,7 +6475,7 @@
    "modulo": "pages",
    "arquivos": 82,
    "testes": 0,
-   "linhas": 22334,
+   "linhas": 22335,
    "itens_menu": [
     "Admin Loja",
     "Admin Quiz",
