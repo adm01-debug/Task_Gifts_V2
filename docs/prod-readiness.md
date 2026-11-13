@@ -16,14 +16,14 @@ Fonte primária: `INVENTARIO_FUNCIONALIDADES.md` (1064 linhas, 23 seções) + `d
 | Services | 96 | idem `services.json` |
 | Hooks | 129 | idem `hooks.json` |
 | Migrations | 267 | `supabase/migrations/` (saída do drift: `267 arquivo(s)`) |
-| Edge functions no código | 36 (+`_shared/`) | `ls supabase/functions` |
-| Edge functions no ar (respondem) | **9 de 36** | probe HTTP por function (abaixo) |
+| Edge functions no código | 17 (+`_shared/`) | `ls supabase/functions` no main `e1b0f368` (21 podadas na #54) |
+| Edge functions no ar (respondem) | 2 vivas (push-public-key, push-outbox-dispatcher) | probe HTTP por function (abaixo) |
 | Workflows GHA | 3 próprios + geridos | `ci.yml`, `automation-local.yml`, `contexto.yml` |
 | Testes | 1886 passed / 12 skipped | `bun run test:ci` (detalhe item 3) |
 | TODO/FIXME/WIP reais | 0 | varredura `src/` (318 ocorrências são "Todos"/"ListTodo" — falsos positivos) |
 | PRs abertas | 1 (#55, workflow deploy edge functions) | `gh pr list --state open` |
 
-**Lacuna no inventário**: 19 edge functions do código não são citadas em `INVENTARIO_FUNCIONALIDADES.md`: `ai-course-builder`, `burn-rate-monitor`, `cleanup-old-security-logs`, `cleanup-rate-limit-logs`, `detect-new-device`, `dispatch-critical-alert`, `error-budget-monitor`, `external-db-bridge`, `migrate-helper`, `push-device-revoked`, `push-outbox-dispatcher`, `push-public-key`, `reward-approval-review`, `security-weekly-digest`, `send-campaign-push`, `send-email-digest`, `send-rate-limit-alert`, `verify-geo`, `webhook-health-monitor`.
+**Lacuna no inventário**: das 17 edge functions restantes no main, 8 não são citadas em `INVENTARIO_FUNCIONALIDADES.md`: `ai-course-builder`, `detect-new-device`, `migrate-helper`, `push-device-revoked`, `push-outbox-dispatcher`, `push-public-key`, `reward-approval-review`, `send-campaign-push`. (As 19 listadas na auditoria original incluíam 11 podadas na PR #54 — `burn-rate-monitor`, `cleanup-*`, `dispatch-critical-alert`, `error-budget-monitor`, `external-db-bridge`, `security-weekly-digest`, `send-email-*`, `send-rate-limit-alert`, `verify-geo`, `webhook-health-monitor` — e 8 que continuam no código.)
 
 ---
 
@@ -33,10 +33,10 @@ Rodados nesta sessão no clone WSL (mesmo comando da CI):
 
 | Gate | Resultado | Evidência |
 |---|---|---|
-| typecheck | **exit 0** | `TYPECHECK_EXIT=0` |
-| testes unit+component | **1886 passed / 12 skipped** | vitest, 141 arquivos (143 total, 2 skipped) |
-| lint | **0 erros / 325 warnings** (pré-existentes) | `bun run lint` |
-| build | **exit 0** (3.96 s, PWA, 166 entries precache) | `bun run build` |
+| typecheck | **exit 0** | `bun run typecheck` → `TYPECHECK_EXIT=0` (worktree limpo do main `e1b0f368`) |
+| testes unit+component | **1886 passed / 12 skipped** | `bun run test:ci`: 141 files passed, 143 total — igual à baseline, nenhum removido |
+| lint | **0 erros / 328 warnings** (pré-existentes, exit 0) | `bun run lint` nesta sessão |
+| build | **exit 0** (3.56 s, PWA, 166 entries precache) | `bun run build` nesta sessão |
 
 **12 skip**: `rls.test.ts` (3) e `rpcAccess.test.ts` (9) usam `describeIf(hasEnv)` com fallback `describe.skip` quando `VITE_SUPABASE_URL`/`ANON_KEY` não existem — design pré-existente (CI sem secrets), não é teste afrouxado. Nenhum teste removido; total >= linha de base.
 
