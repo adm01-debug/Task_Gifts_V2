@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "27554abf56078646a707d4ca3d98cb9715345f1c",
+  "commit": "25dc07bb6c8d12812a8d83fcfdd887219b94cc5d",
   "branch": "main",
-  "data_commit": "2026-11-13T19:34:38-03:00",
+  "data_commit": "2026-11-13T20:31:43-03:00",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "ultimos_commits": [
+   {
+    "sha": "25dc07b",
+    "data": "2026-11-13",
+    "assunto": "infra: adiciona workflow de deploy de edge functions (#55)"
+   },
    {
     "sha": "27554ab",
     "data": "2026-11-13",
@@ -126,14 +131,9 @@
     "sha": "522ab99",
     "data": "2026-11-08",
     "assunto": "ci(guard): adiciona step GA02 de integridade das instruções de agente no CI"
-   },
-   {
-    "sha": "3860817",
-    "data": "2026-11-08",
-    "assunto": "docs(agentes): replica o padrao de AGENTS.md/CLAUDE.md do Zapp Web V2 (#31)"
    }
   ],
-  "arquivos_mudados_7d": 167,
+  "arquivos_mudados_7d": 168,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "package.json",
@@ -258,6 +258,10 @@
     "mudancas": 3
    },
    {
+    "arquivo": "supabase/config.toml",
+    "mudancas": 3
+   },
+   {
     "arquivo": "ESTADO_ATUAL.md",
     "mudancas": 2
    },
@@ -292,16 +296,12 @@
    {
     "arquivo": "scripts/supabase_snapshot/snapshot.py",
     "mudancas": 2
-   },
-   {
-    "arquivo": "src/components/AnalyticsWidget.tsx",
-    "mudancas": 2
    }
   ],
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 31
+    "commits": 32
    },
    {
     "autor": "dependabot[bot]",
@@ -310,7 +310,7 @@
   ]
  },
  "contagens": {
-  "arquivos_total": 1482,
+  "arquivos_total": 1483,
   "arquivos_codigo": 1126,
   "linhas_codigo": 223907,
   "rotas": 83,
@@ -325,7 +325,7 @@
   "migrations": 267,
   "cron_jobs": 22,
   "testes": 157,
-  "workflows": 3,
+  "workflows": 4,
   "scripts": 15,
   "docs_md": 46
  },

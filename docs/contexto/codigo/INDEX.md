@@ -1,7 +1,7 @@
 # Contexto do projeto para agentes de IA
 
 GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.
-Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `27554abf56078646a707d4ca3d98cb9715345f1c` (2026-11-13T19:34:38-03:00).
+Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `25dc07bb6c8d12812a8d83fcfdd887219b94cc5d` (2026-11-13T20:31:43-03:00).
 
 ## Como usar (leia antes de planejar ou executar qualquer tarefa)
 1. **Tela/rota/menu** → `rotas.json` (url/vista/menu → arquivo → hooks → tabelas → edges; `rotas_http_backend` para APIs) e `modulos.json` (módulo inteiro + dependências entre módulos).
@@ -14,7 +14,7 @@ Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR
 Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua tarefa; não carregue tudo.
 
 ## Stack
-- linguagens: TypeScript (1100), SQL (267), Markdown (46), JavaScript (22), JSON (15), YAML (6), Python (5), Shell (4)
+- linguagens: TypeScript (1100), SQL (267), Markdown (46), JavaScript (22), JSON (15), YAML (7), Python (5), Shell (4)
 - linguagem_principal: TypeScript
 - framework: React
 - backend_http: n/d
@@ -34,7 +34,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 ## Números
 | item | qtd |
 |---|---|
-| arquivos_total | 1482 |
+| arquivos_total | 1483 |
 | arquivos_codigo | 1126 |
 | linhas_codigo | 223907 |
 | rotas | 83 |
@@ -49,7 +49,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 | migrations | 267 |
 | cron_jobs | 22 |
 | testes | 157 |
-| workflows | 3 |
+| workflows | 4 |
 | scripts | 15 |
 | docs_md | 46 |
 
@@ -204,7 +204,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - `migrate-helper` (verify_jwt=false) — tabelas: -; chamada por 0 arquivo(s) do front
 - `push-device-revoked` — tabelas: push_notification_logs, push_subscriptions; chamada por 1 arquivo(s) do front
 - `push-outbox-dispatcher` — tabelas: push_notification_logs, push_outbox, push_subscriptions; chamada por 0 arquivo(s) do front, por SQL/cron
-- `push-public-key` — tabelas: -; chamada por 1 arquivo(s) do front
+- `push-public-key` (verify_jwt=false) — tabelas: -; chamada por 1 arquivo(s) do front
 - `reward-approval-review` — tabelas: audit_logs, profiles, purchase_approvals, shop_purchases, user_roles; chamada por 1 arquivo(s) do front
 - `send-campaign-push` — tabelas: push_notification_logs, push_subscriptions; chamada por 1 arquivo(s) do front
 - `trail-recommendations` — tabelas: learning_trails, module_progress, profiles, quest_assignments, team_members, trail_enrollments, user_roles; chamada por 2 arquivo(s) do front
@@ -238,7 +238,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 ## Integrações externas
 - SDKs: Sentry, Supabase, react-query, zod
 - hosts mais citados: ai.gateway.lovable.dev, fcm.googleapis.com, i.pravatar.cc, taskgifts.app, www.youtube.com, a.com, api.pwnedpasswords.com, api.resend.com, app.exemplo.com, example.test, exemplo.com, linkedin.com, maintenance.invalid, production.invalid, production.supabase.co
-- webhooks recebidos: migrate-helper
+- webhooks recebidos: migrate-helper, push-public-key
 - env de integração (só nomes): CRON_SECRET, INTERNAL_FUNCTION_SECRET, LOVABLE_API_KEY, RESEND_API_KEY, SENTRY_DSN, SENTRY_ENV, UPSTASH_REDIS_REST_TOKEN, UPSTASH_REDIS_REST_URL, VITE_BITRIX_WEBHOOK_URL, VITE_SENTRY_DSN
 
 ## Permissões / papéis
@@ -265,7 +265,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - possiveis_segredos_no_codigo: 0
 
 ## Grafo de código (graphify)
-- 9797 nós · 27378 arestas · 625 comunidades · grafo do commit `27554abf`
+- 9797 nós · 27378 arestas · 625 comunidades · grafo do commit `25dc07bb`
 - comunidades maiores: lucide-react (373), react (259), App.tsx (223), skeleton.tsx (147), cn (147), mobile/index.ts (113), client.ts (109), gerar.mjs (79), QuizAdmin.tsx (76), generate.py (75), CampaignNotificationPreferences.tsx (71), StatsGrid.tsx (71)
 - símbolos mais chamados: cn() (src/lib/utils.ts), useAuth() (src/hooks/useAuth.tsx), useIsMobile() (src/hooks/use-mobile.tsx), q() (scripts/supabase_snapshot/snapshot.py), useDepartments() (src/hooks/useDepartments.ts), useToast() (src/hooks/use-toast.ts), useRBAC() (src/hooks/useRBAC.ts), useProfiles() (src/hooks/useProfiles.ts), useSEO() (src/hooks/useSEO.ts), useSoundEffects() (src/hooks/useSoundEffects.tsx), .collect() (scripts/supabase_snapshot/test_snapshot.py), excluded_sql() (scripts/supabase_snapshot/snapshot.py)
 - consulta local: `graphify query "<pergunta>"`, `graphify path "<A>" "<B>"`, `graphify explain "<X>"`
@@ -291,6 +291,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - `automation-local.yml` — Automação local (pull_request, push, workflow_dispatch)
 - `ci.yml` — CI (pull_request, push)
 - `contexto.yml` — Contexto para agentes de IA (10 min) (push, schedule, workflow_dispatch; cron 3-59/10 * * * *)
+- `deploy-edge-functions.yml` — deploy-edge-functions.yml (push, workflow_dispatch)
 
 ## Scripts npm
 - `maintenance:doctor`: `sh scripts/maintenance/run.sh doctor --root .`
@@ -346,6 +347,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 
 
 ## Últimos commits
+- 2026-11-13 `25dc07b` infra: adiciona workflow de deploy de edge functions (#55)
 - 2026-11-13 `27554ab` docs: relatório prod-readiness alinhado ao main e1b0f368 (pós #54) (#56)
 - 2026-11-13 `e1b0f36` chore(functions): poda 21 edge functions mortas + mitiga 4 vulnerabilidades (#54)
 - 2026-11-13 `a489fe2` docs: marca item 5 do prod-readiness como aprovado após PR #52 (#53)
@@ -360,7 +362,6 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - 2026-11-11 `984b77c` style(manutencao): aplica correcoes locais verificadas (#42)
 - 2026-11-11 `e39fc6c` fix(automacao): destrava grafo local no Windows e exige venv ignorado (#44)
 - 2026-11-11 `82ffc0b` fix(automacao): tolera ausência de O_NOFOLLOW em win32 (#43)
-- 2026-11-11 `eb08848` fix(automacao): tolera CRLF no parse de workflows locais (#41)
 
 ## Arquivos deste diretório
 - `docs/contexto/codigo/rotas.json`

@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "27554abf56078646a707d4ca3d98cb9715345f1c",
+  "sha": "25dc07bb6c8d12812a8d83fcfdd887219b94cc5d",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
-  "generated_at": "2026-11-13 23:04 UTC",
-  "files_total": 1491,
+  "generated_at": "2026-11-13 23:39 UTC",
+  "files_total": 1492,
   "code_files": 1399,
   "code_lines": 254681
  },
  "version": "1.3.2",
- "facts_hash": "c894a1131ce24777",
+ "facts_hash": "4200f3d9cb62237a",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -163,6 +163,14 @@
      "schedule",
      "workflow_dispatch"
     ]
+   },
+   {
+    "file": ".github/workflows/deploy-edge-functions.yml",
+    "name": "Deploy Edge Functions",
+    "triggers": [
+     "push",
+     "workflow_dispatch"
+    ]
    }
   ],
   "package_manager": "bun",
@@ -178,7 +186,8 @@
   "monorepo_packages": [],
   "supabase_config": {
    "functions_no_jwt": [
-    "migrate-helper"
+    "migrate-helper",
+    "push-public-key"
    ],
    "auth": {}
   },
@@ -43707,7 +43716,7 @@
     "methods": [
      "OPTIONS"
     ],
-    "auth": "n/d",
+    "auth": "PÚBLICA (verify_jwt=false em config.toml)",
     "tables": [],
     "env": [
      "VAPID_PUBLIC_KEY"
@@ -103573,7 +103582,8 @@
    "war_hook_trail_enrollments"
   ],
   "public_functions": [
-   "migrate-helper"
+   "migrate-helper",
+   "push-public-key"
   ],
   "auth_config": {},
   "grants": [
@@ -148043,10 +148053,20 @@
   }
  },
  "git": {
-  "sha": "27554abf56078646a707d4ca3d98cb9715345f1c",
+  "sha": "25dc07bb6c8d12812a8d83fcfdd887219b94cc5d",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "commits": [
+   {
+    "sha": "25dc07b",
+    "date": "2026-11-13",
+    "author": "adm01-debug",
+    "subject": "infra: adiciona workflow de deploy de edge functions (#55)",
+    "files": [
+     ".github/workflows/deploy-edge-functions.yml",
+     "supabase/config.toml"
+    ]
+   },
    {
     "sha": "27554ab",
     "date": "2026-11-13",
@@ -148506,15 +148526,6 @@
     "files": [
      "vitest.config.ts"
     ]
-   },
-   {
-    "sha": "7598fe3",
-    "date": "2026-10-29",
-    "author": "adm01-debug",
-    "subject": "docs(ci): PENDENCIAS.md — todas as pendências resolvidas ou documentadas",
-    "files": [
-     "PENDENCIAS.md"
-    ]
    }
   ],
   "hot_files": [
@@ -148567,6 +148578,10 @@
     3
    ],
    [
+    "supabase/config.toml",
+    2
+   ],
+   [
     "scripts/automation.unit.mjs",
     2
    ],
@@ -148592,10 +148607,6 @@
    ],
    [
     "scripts/ai-context/gerar.mjs",
-    2
-   ],
-   [
-    "scripts/ci/ai-context-generator.unit.mjs",
     2
    ]
   ]

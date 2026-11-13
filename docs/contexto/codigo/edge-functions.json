@@ -4,7 +4,8 @@
  "pasta": "supabase/functions",
  "total": 16,
  "verify_jwt_false": [
-  "migrate-helper"
+  "migrate-helper",
+  "push-public-key"
  ],
  "shared": [
   "supabase/functions/_shared/cache.ts",
@@ -381,7 +382,7 @@
    "entrada": "supabase/functions/push-public-key/index.ts",
    "arquivos": 1,
    "linhas": 10,
-   "verify_jwt": true,
+   "verify_jwt": false,
    "metodos": [
     "OPTIONS"
    ],
