@@ -144,7 +144,8 @@ const Profile = () => {
              variant="ghost"
              size="icon"
              className="rounded-xl"
-             onClick={() => toast.info("Configurações em breve")}
+             onClick={() => navigate("/security-dashboard")}
+             aria-label="Configurações de segurança"
            >
              <Settings className="w-5 h-5" />
            </Button>

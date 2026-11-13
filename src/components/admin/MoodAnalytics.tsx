@@ -21,7 +21,7 @@ const moodLabels = ["Muito mal", "Mal", "Neutro", "Bem", "Muito bem"];
 const moodColors = ["#ef4444", "#f97316", "#eab308", "#84cc16", "#22c55e"];
 
 export function MoodAnalytics() {
-  const { todayMood, moodHistory: weeklyMoods, isLoading } = useMoodTracker();
+  const { moodHistory: weeklyMoods, isLoading, teamStats } = useMoodTracker();
   const [period, setPeriod] = useState("week");
 
   // Calculate average mood
@@ -49,13 +49,9 @@ export function MoodAnalytics() {
     : 0;
   const trend = recentAvg - olderAvg;
 
-  // Mock team data for demonstration
-  const teamMoodData = {
-    engineering: { avg: 3.8, participants: 12, total: 15 },
-    sales: { avg: 4.2, participants: 8, total: 10 },
-    marketing: { avg: 3.5, participants: 5, total: 6 },
-    hr: { avg: 4.0, participants: 3, total: 4 },
-  };
+  const avgEntriesPerDay = teamStats.length > 0
+    ? teamStats.reduce((sum, s) => sum + s.total_entries, 0) / teamStats.length
+    : 0;
 
   if (isLoading) {
     return <LoadingStateCard message="Carregando análise de humor..." />;
@@ -158,8 +154,8 @@ export function MoodAnalytics() {
             <CardContent className="p-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-xs text-muted-foreground mb-1">Participação</p>
-                  <p className="text-2xl font-bold">78%</p>
+                  <p className="text-xs text-muted-foreground mb-1">Registros/dia</p>
+                  <p className="text-2xl font-bold">{teamStats.length > 0 ? avgEntriesPerDay.toFixed(1) : "—"}</p>
                 </div>
                 <Users className="w-8 h-8 text-primary/20" />
               </div>
@@ -203,35 +199,41 @@ export function MoodAnalytics() {
         </CardContent>
       </Card>
 
-      {/* Team Breakdown */}
+      {/* Daily averages */}
       <Card>
         <CardHeader>
-          <CardTitle className="text-lg">Por Departamento</CardTitle>
-          <CardDescription>Comparação entre equipes</CardDescription>
+          <CardTitle className="text-lg">Média por Dia</CardTitle>
+          <CardDescription>Média de humor da equipe nos últimos registros</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="grid md:grid-cols-2 gap-4">
-            {Object.entries(teamMoodData).map(([dept, data], index) => (
-              <motion.div
-                key={dept}
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: index * 0.05 }}
-                className="flex items-center justify-between p-4 rounded-lg bg-muted/50"
-              >
-                <div>
-                  <p className="font-medium capitalize">{dept}</p>
-                  <p className="text-xs text-muted-foreground">
-                    {data.participants}/{data.total} participantes
-                  </p>
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className="text-xl">{moodEmojis[Math.round(data.avg) - 1]}</span>
-                  <span className="text-lg font-bold">{data.avg.toFixed(1)}</span>
-                </div>
-              </motion.div>
-            ))}
-          </div>
+          {teamStats.length === 0 ? (
+            <EmptyState icon={Users} title="Sem dados da equipe ainda" compact />
+          ) : (
+            <div className="grid md:grid-cols-2 gap-4">
+              {teamStats.slice(-6).reverse().map((day, index) => (
+                <motion.div
+                  key={day.date}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: index * 0.05 }}
+                  className="flex items-center justify-between p-4 rounded-lg bg-muted/50"
+                >
+                  <div>
+                    <p className="font-medium">
+                      {format(new Date(day.date), "dd/MM", { locale: ptBR })}
+                    </p>
+                    <p className="text-xs text-muted-foreground">
+                      {day.total_entries} registro{day.total_entries === 1 ? "" : "s"}
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-xl">{moodEmojis[Math.round(day.average_mood) - 1] || "😐"}</span>
+                    <span className="text-lg font-bold">{day.average_mood.toFixed(1)}</span>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          )}
         </CardContent>
       </Card>
 
