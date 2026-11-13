@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "348cdce33b014c053efee7854b87a51519de5931",
+  "commit": "24cfd06f4de604353edd7eb1f82054eb7b8c946a",
   "branch": "main",
-  "data_commit": "2026-11-12T08:43:09-03:00",
+  "data_commit": "2026-11-13T09:01:08-03:00",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "ultimos_commits": [
+   {
+    "sha": "24cfd06",
+    "data": "2026-11-13",
+    "assunto": "fix(automation): recusar recursão indireta de hooks pela cadeia de eventos (#50)"
+   },
    {
     "sha": "348cdce",
     "data": "2026-11-12",
@@ -126,11 +131,6 @@
     "sha": "7598fe3",
     "data": "2026-10-29",
     "assunto": "docs(ci): PENDENCIAS.md — todas as pendências resolvidas ou documentadas"
-   },
-   {
-    "sha": "afb0724",
-    "data": "2026-10-29",
-    "assunto": "docs(ci): RELATORIO_CI.md — estado final com todos os PRs mergeados"
    }
   ],
   "arquivos_mudados_7d": 138,
@@ -164,6 +164,10 @@
     "mudancas": 4
    },
    {
+    "pasta": "scripts/automation.mjs",
+    "mudancas": 4
+   },
+   {
     "pasta": "src/components/admin",
     "mudancas": 4
    },
@@ -185,10 +189,6 @@
    },
    {
     "pasta": "docs/agentes/github-ci.md",
-    "mudancas": 3
-   },
-   {
-    "pasta": "scripts/automation.mjs",
     "mudancas": 3
    },
    {
@@ -226,6 +226,10 @@
     "mudancas": 4
    },
    {
+    "arquivo": "scripts/automation.mjs",
+    "mudancas": 4
+   },
+   {
     "arquivo": ".github/workflows/automation-local.yml",
     "mudancas": 3
    },
@@ -246,10 +250,6 @@
     "mudancas": 3
    },
    {
-    "arquivo": "scripts/automation.mjs",
-    "mudancas": 3
-   },
-   {
     "arquivo": "scripts/graphify-local.mjs",
     "mudancas": 3
    },
@@ -267,6 +267,10 @@
    },
    {
     "arquivo": "docs/estado/README.md",
+    "mudancas": 2
+   },
+   {
+    "arquivo": "scripts/automation.unit.mjs",
     "mudancas": 2
    },
    {
@@ -292,16 +296,12 @@
    {
     "arquivo": "src/lib/campaignImport.ts",
     "mudancas": 2
-   },
-   {
-    "arquivo": "supabase/config.toml",
-    "mudancas": 2
    }
   ],
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 25
+    "commits": 26
    },
    {
     "autor": "dependabot[bot]",
@@ -312,7 +312,7 @@
  "contagens": {
   "arquivos_total": 1503,
   "arquivos_codigo": 1148,
-  "linhas_codigo": 229301,
+  "linhas_codigo": 229320,
   "rotas": 83,
   "rotas_http_backend": 0,
   "vistas_por_id": 0,
@@ -356,11 +356,11 @@
   },
   "scripts/automation.mjs": {
    "arquivos": 1,
-   "linhas": 1190
+   "linhas": 1188
   },
   "scripts/automation.unit.mjs": {
    "arquivos": 1,
-   "linhas": 689
+   "linhas": 710
   },
   "scripts/ci": {
    "arquivos": 7,
@@ -502,7 +502,7 @@
   },
   {
    "arquivo": "scripts/automation.mjs",
-   "linhas": 1190
+   "linhas": 1188
   },
   {
    "arquivo": "src/pages/Postmortems.tsx",

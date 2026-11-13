@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "348cdce33b014c053efee7854b87a51519de5931",
+  "sha": "24cfd06f4de604353edd7eb1f82054eb7b8c946a",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
-  "generated_at": "2026-11-12 12:17 UTC",
+  "generated_at": "2026-11-13 13:25 UTC",
   "files_total": 1512,
   "code_files": 1421,
-  "code_lines": 260075
+  "code_lines": 260094
  },
  "version": "1.3.2",
- "facts_hash": "9ec3ef5721c5e199",
+ "facts_hash": "0ac037cb30537fae",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -47804,7 +47804,7 @@
   {
    "module": "scripts",
    "files": 25,
-   "lines": 15555,
+   "lines": 15574,
    "tables": [
     "a",
     "contacts",
@@ -115648,7 +115648,7 @@
   },
   "scripts/automation.mjs": {
    "path": "scripts/automation.mjs",
-   "lines": 1190,
+   "lines": 1188,
    "exports": [
     "function parseArgs",
     "function validateConfig",
@@ -115679,7 +115679,7 @@
   },
   "scripts/automation.unit.mjs": {
    "path": "scripts/automation.unit.mjs",
-   "lines": 689,
+   "lines": 710,
    "env": [
     "FIXTURE_GRAPH_EXIT"
    ],
@@ -151413,10 +151413,20 @@
   }
  },
  "git": {
-  "sha": "348cdce33b014c053efee7854b87a51519de5931",
+  "sha": "24cfd06f4de604353edd7eb1f82054eb7b8c946a",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "commits": [
+   {
+    "sha": "24cfd06",
+    "date": "2026-11-13",
+    "author": "adm01-debug",
+    "subject": "fix(automation): recusar recursão indireta de hooks pela cadeia de eventos (#50)",
+    "files": [
+     "scripts/automation.mjs",
+     "scripts/automation.unit.mjs"
+    ]
+   },
    {
     "sha": "348cdce",
     "date": "2026-11-12",
@@ -151851,13 +151861,6 @@
     "author": "dependabot[bot]",
     "subject": "build(deps): bump oven-sh/setup-bun de v1 para v2 (#23)",
     "files": []
-   },
-   {
-    "sha": "6fc8009",
-    "date": "2026-10-29",
-    "author": "dependabot[bot]",
-    "subject": "build(deps): bump actions/cache de v4 para v6 (#22)",
-    "files": []
    }
   ],
   "hot_files": [
@@ -151882,6 +151885,10 @@
     5
    ],
    [
+    "scripts/automation.mjs",
+    4
+   ],
+   [
     "docs/agentes/mapa-repo.md",
     4
    ],
@@ -151898,16 +151905,16 @@
     3
    ],
    [
-    "scripts/automation.mjs",
-    3
-   ],
-   [
     "docs/agentes/github-ci.md",
     3
    ],
    [
     "docs/agentes/banco.md",
     3
+   ],
+   [
+    "scripts/automation.unit.mjs",
+    2
    ],
    [
     "src/components/AnalyticsWidget.tsx",
@@ -151935,10 +151942,6 @@
    ],
    [
     "scripts/ci/ai-context-generator.unit.mjs",
-    2
-   ],
-   [
-    "scripts/regras_negocio/generate.py",
     2
    ]
   ]
