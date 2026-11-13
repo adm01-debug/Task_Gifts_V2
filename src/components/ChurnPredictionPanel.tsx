@@ -228,7 +228,7 @@ export function ChurnPredictionPanel() {
 
   const highRiskPredictions = predictions.filter((p) => p.riskLevel === "high");
   const mediumRiskPredictions = predictions.filter(
-    (p) => p.riskLevel === "medium"
+    (p) => p.riskLevel === "medium",
   );
 
   return (
@@ -310,10 +310,7 @@ export function ChurnPredictionPanel() {
               {summary.overallHealthScore}%
             </span>
           </div>
-          <Progress
-            value={summary.overallHealthScore}
-            className="h-2"
-          />
+          <Progress value={summary.overallHealthScore} className="h-2" />
         </div>
       )}
 
@@ -326,7 +323,12 @@ export function ChurnPredictionPanel() {
           <p className="text-muted-foreground">
             Erro ao carregar predições. Tente novamente.
           </p>
-          <Button variant="outline" size="sm" onClick={handleRefresh} className="mt-4">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleRefresh}
+            className="mt-4"
+          >
             Tentar Novamente
           </Button>
         </div>

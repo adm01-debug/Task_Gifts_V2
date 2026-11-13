@@ -37,7 +37,7 @@ export const FocusTrap = memo(function FocusTrap({
   const getFocusableElements = useCallback(() => {
     if (!containerRef.current) return [];
     return Array.from(
-      containerRef.current.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR)
+      containerRef.current.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR),
     ).filter((el) => el.offsetParent !== null); // Only visible elements
   }, []);
 
@@ -52,7 +52,8 @@ export const FocusTrap = memo(function FocusTrap({
       if (!containerRef.current) return;
 
       if (initialFocus) {
-        const target = containerRef.current.querySelector<HTMLElement>(initialFocus);
+        const target =
+          containerRef.current.querySelector<HTMLElement>(initialFocus);
         if (target) {
           target.focus();
           return;

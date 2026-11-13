@@ -20,9 +20,19 @@ interface CelebrationEffectProps {
 }
 
 const EPIC_COLORS = ["#a855f7", "#ec4899", "#8b5cf6", "#d946ef", "#f472b6"];
-const LEGENDARY_COLORS = ["#f59e0b", "#f97316", "#eab308", "#fbbf24", "#facc15"];
+const LEGENDARY_COLORS = [
+  "#f59e0b",
+  "#f97316",
+  "#eab308",
+  "#fbbf24",
+  "#facc15",
+];
 
-export function CelebrationEffect({ isActive, type, onComplete }: CelebrationEffectProps) {
+export function CelebrationEffect({
+  isActive,
+  type,
+  onComplete,
+}: CelebrationEffectProps) {
   const [particles, setParticles] = useState<Particle[]>([]);
   const [showBurst, setShowBurst] = useState(false);
 
@@ -35,7 +45,7 @@ export function CelebrationEffect({ isActive, type, onComplete }: CelebrationEff
     for (let i = 0; i < count; i++) {
       const angle = (Math.PI * 2 * i) / count + Math.random() * 0.5;
       const velocity = 8 + Math.random() * 12;
-      
+
       newParticles.push({
         id: i,
         x: window.innerWidth / 2,
@@ -45,7 +55,9 @@ export function CelebrationEffect({ isActive, type, onComplete }: CelebrationEff
         rotation: Math.random() * 360,
         velocityX: Math.cos(angle) * velocity,
         velocityY: Math.sin(angle) * velocity - 5,
-        shape: ["circle", "square", "star"][Math.floor(Math.random() * 3)] as Particle["shape"],
+        shape: ["circle", "square", "star"][
+          Math.floor(Math.random() * 3)
+        ] as Particle["shape"],
       });
     }
 
@@ -133,8 +145,14 @@ export function CelebrationEffect({ isActive, type, onComplete }: CelebrationEff
           style={{
             width: particle.size,
             height: particle.size,
-            backgroundColor: particle.shape !== "star" ? particle.color : "transparent",
-            borderRadius: particle.shape === "circle" ? "50%" : particle.shape === "square" ? "2px" : "0",
+            backgroundColor:
+              particle.shape !== "star" ? particle.color : "transparent",
+            borderRadius:
+              particle.shape === "circle"
+                ? "50%"
+                : particle.shape === "square"
+                  ? "2px"
+                  : "0",
           }}
         >
           {particle.shape === "star" && (

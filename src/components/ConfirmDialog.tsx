@@ -31,7 +31,8 @@ const variantConfig = {
     icon: Trash2,
     iconBg: "bg-destructive/10",
     iconColor: "text-destructive",
-    confirmClass: "bg-destructive text-destructive-foreground hover:bg-destructive/90",
+    confirmClass:
+      "bg-destructive text-destructive-foreground hover:bg-destructive/90",
   },
   warning: {
     icon: AlertTriangle,
@@ -120,7 +121,9 @@ interface UseConfirmOptions {
 
 export function useConfirm(options: UseConfirmOptions) {
   const [isOpen, setIsOpen] = useState(false);
-  const [resolver, setResolver] = useState<((value: boolean) => void) | null>(null);
+  const [resolver, setResolver] = useState<((value: boolean) => void) | null>(
+    null,
+  );
 
   const confirm = useCallback(() => {
     setIsOpen(true);
