@@ -1,10 +1,10 @@
 {
  "meta": {
-  "sha": "24cfd06f4de604353edd7eb1f82054eb7b8c946a",
+  "sha": "f9d5fbd2c80e43eaad1b37cb5808fd60ee03eb5b",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
-  "generated_at": "2026-11-13 13:25 UTC",
-  "files_total": 1512,
+  "generated_at": "2026-11-13 17:53 UTC",
+  "files_total": 1513,
   "code_files": 1421,
   "code_lines": 260094
  },
@@ -151413,10 +151413,19 @@
   }
  },
  "git": {
-  "sha": "24cfd06f4de604353edd7eb1f82054eb7b8c946a",
+  "sha": "f9d5fbd2c80e43eaad1b37cb5808fd60ee03eb5b",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "commits": [
+   {
+    "sha": "f9d5fbd",
+    "date": "2026-11-13",
+    "author": "adm01-debug",
+    "subject": "docs: relatório prod-readiness com evidências do estado real do main (#51)",
+    "files": [
+     "docs/prod-readiness.md"
+    ]
+   },
    {
     "sha": "24cfd06",
     "date": "2026-11-13",
@@ -151854,13 +151863,6 @@
      "package-lock.json",
      "package.json"
     ]
-   },
-   {
-    "sha": "27fcb23",
-    "date": "2026-10-29",
-    "author": "dependabot[bot]",
-    "subject": "build(deps): bump oven-sh/setup-bun de v1 para v2 (#23)",
-    "files": []
    }
   ],
   "hot_files": [

@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "24cfd06f4de604353edd7eb1f82054eb7b8c946a",
+  "commit": "f9d5fbd2c80e43eaad1b37cb5808fd60ee03eb5b",
   "branch": "main",
-  "data_commit": "2026-11-13T09:01:08-03:00",
+  "data_commit": "2026-11-13T13:45:00-03:00",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "ultimos_commits": [
+   {
+    "sha": "f9d5fbd",
+    "data": "2026-11-13",
+    "assunto": "docs: relatório prod-readiness com evidências do estado real do main (#51)"
+   },
    {
     "sha": "24cfd06",
     "data": "2026-11-13",
@@ -126,14 +131,9 @@
     "sha": "50f1d15",
     "data": "2026-10-30",
     "assunto": "perf(test): pool vmThreads no vitest — testes 48% mais rápidos (#28)"
-   },
-   {
-    "sha": "7598fe3",
-    "data": "2026-10-29",
-    "assunto": "docs(ci): PENDENCIAS.md — todas as pendências resolvidas ou documentadas"
    }
   ],
-  "arquivos_mudados_7d": 138,
+  "arquivos_mudados_7d": 139,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "package.json",
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 26
+    "commits": 27
    },
    {
     "autor": "dependabot[bot]",
@@ -310,7 +310,7 @@
   ]
  },
  "contagens": {
-  "arquivos_total": 1503,
+  "arquivos_total": 1504,
   "arquivos_codigo": 1148,
   "linhas_codigo": 229320,
   "rotas": 83,
@@ -327,7 +327,7 @@
   "testes": 158,
   "workflows": 3,
   "scripts": 15,
-  "docs_md": 45
+  "docs_md": 46
  },
  "por_pasta": {
   "eslint.config.js": {

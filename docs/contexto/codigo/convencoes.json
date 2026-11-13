@@ -35,8 +35,8 @@
   ],
   "docs": [
    "(raiz) (15)",
-   ".github (1)",
-   "docs (1)"
+   "docs (2)",
+   ".github (1)"
   ]
  },
  "nomenclatura": {
@@ -59,11 +59,11 @@
  "commits": {
   "convencao": "conventional commits (observado)",
   "exemplos": [
+   "docs: relatório prod-readiness com evidências do estado real do main (#51)",
    "fix(automation): recusar recursão indireta de hooks pela cadeia de eventos (#50)",
    "build(deps): bump actions/checkout from 6.1.0 to 7.0.1 (#48)",
    "build(deps): bump actions/setup-node from 6.5.0 to 7.1.0 (#47)",
-   "build(deps): bump actions/download-artifact from 7.0.0 to 8.0.2 (#46)",
-   "style(manutencao): aplica correcoes locais verificadas (#49)"
+   "build(deps): bump actions/download-artifact from 7.0.0 to 8.0.2 (#46)"
   ]
  },
  "pr_template": ".github/PULL_REQUEST_TEMPLATE.md",

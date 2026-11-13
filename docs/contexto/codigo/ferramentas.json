@@ -5,7 +5,7 @@
   "linguagens": [
    "TypeScript (1122)",
    "SQL (267)",
-   "Markdown (45)",
+   "Markdown (46)",
    "JavaScript (22)",
    "JSON (15)",
    "YAML (6)",
@@ -329,6 +329,11 @@
    "arquivo": "docs/AUTOMACAO_LOCAL.md",
    "titulo": "Automação local — Task_Gifts_V2",
    "linhas": 82
+  },
+  {
+   "arquivo": "docs/prod-readiness.md",
+   "titulo": null,
+   "linhas": 146
   }
  ],
  "docs_em_subpastas": [
