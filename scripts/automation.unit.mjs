@@ -428,6 +428,27 @@ test("hook recursivo original é bloqueado sem bypass", (t) => {
   assert.match(r.stderr, /recursão de hook recusada/);
 });
 
+test("hook original que atualiza ref (lint-staged git stash store) não é confundido com recursão", (t) => {
+  const f = fixture(t, { originalHook: "git update-ref refs/teste/aninhado HEAD\n" });
+  f.install();
+  f.write("src/source.txt", "novo\n");
+  f.git("add", "src/source.txt");
+  const r = f.run("git", ["commit", "-m", "aninhado"]);
+  assert.equal(r.status, 0, r.stderr);
+  assert.doesNotMatch(r.stderr, /recursão de hook recusada/);
+});
+
+test("recursão indireta (pre-commit → post-checkout → pre-commit) é bloqueada", (t) => {
+  const f = fixture(t, { originalHook: "git hook run --ignore-missing post-checkout -- 0 0 0\n" });
+  f.install();
+  writeFileSync(join(f.root, ".original-hooks/post-checkout"), "#!/bin/sh\ngit hook run pre-commit\n", { mode: 0o755 });
+  f.write("src/source.txt", "novo\n");
+  f.git("add", "src/source.txt");
+  const r = f.run("git", ["commit", "-m", "indireta"]);
+  assert.notEqual(r.status, 0);
+  assert.match(r.stderr, /recursão de hook recusada/);
+});
+
 test("timeout encerra subprocesso e retorna 124 em prazo finito", async () => {
   const before = Date.now();
   const r = await execute(
