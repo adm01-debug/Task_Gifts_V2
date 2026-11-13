@@ -59,9 +59,14 @@ Rodados nesta sessão no clone WSL (mesmo comando da CI):
 
 ---
 
-## 5. Sem código pela metade
+## 5. Sem código pela metade — NÃO APROVADO (2 achados comprovados no código)
 
-Varredura em `src/`: **0 TODO/FIXME/WIP/mock/hardcode/fluxo incompleto reais** em código de produção. As 318 ocorrências de "TODO" eram identificadores (componentes `TodoList`/`Todos`) — excluídas. Auditoria de handlers/rotas/botões não encontrou vazio.
+Varredura em `src/`: **0 TODO/FIXME/WIP reais** (as 318 ocorrências de "TODO" eram identificadores `TodoList`/`Todos` — falsos positivos). Porém **2 mocks/hardcodes alcançáveis em produção** (evidência arquivo:linha):
+
+1. `src/components/admin/MoodAnalytics.tsx:52-58` — `// Mock team data for demonstration` com médias/participantes **fictícios por departamento**, renderizados em `:214-231` e expostos na aba de humor de `/admin` (`src/pages/AdminPanel.tsx:176`, `src/App.tsx:265`).
+2. `src/pages/Profile.tsx:147` — botão de configurações do perfil apenas mostra `toast.info("Configurações em breve")` (sem ação real).
+
+**Resolução pendente**: remover o mock de humor (ou marcá-lo como dados de exemplo) e implementar/remover o botão de configurações. Item 5 fica **VERMELHO** até lá.
 
 ---
 
@@ -78,7 +83,7 @@ Varredura estática sobre **267 migrations** (script Python com regex validada):
 - **A − B = 0** → toda tabela criada no repo tem RLS habilitada.
 - **B − C = 0** → toda tabela com RLS tem ao menos uma policy.
 - Tabelas com policy sem `CREATE TABLE` no repo: `geo_access_logs`, `geo_blocking_rules` (geridas fora do repo, via Dashboard; tipos confirmados em `src/integrations/supabase/types.ts`) e `storage` (Supabase gerido) — **não** são gap de RLS do projeto.
-- Advisors de segurança: sem item ERROR (varredura do snapshot — ver BLOQUEADO abaixo).
+- Advisors de segurança: **NÃO VERIFICADO** — consulta real ao banco não disponível nesta sessão e o snapshot nunca foi publicado; a garantia anterior de “sem item ERROR” foi **removida por falta de fonte real** (ver BLOQUEADO abaixo).
 
 **Drift migrations**: guard `check-migration-drift.mjs` fase 1 (idempotência vs baseline) **exit 0**, 0 casos novos (`migrations: 267`, `nao_idempotente: 1062`, `ddl_destrutivo: 39` — todos no baseline). Fase 2 (comparação com banco real) usa snapshot do banco publicado na branch `contexto` — **ver BLOQUEADO G6-2**.
 
@@ -101,7 +106,7 @@ Varredura estática sobre **267 migrations** (script Python com regex validada):
 | `push-outbox-dispatcher` | 403 |
 | `admin-alerts`, `birthday-celebrations`, `bitrix24-*`, `burn-rate-monitor`, `checkin-reminders`, `cleanup-*`, `detect-new-device`, `dispatch-critical-alert`, `error-budget-monitor`, `external-*`, `generate-quiz-questions`, `push-*` (demais), `security-weekly-digest`, `send-*`, `survey-reminders`, `trail-recommendations`, `verify-geo`, `verify-ip`, `webhook-*`, `weekly-league-processing` | **404** |
 
-> GET e POST testados (404 persiste) — não é questão de método. A função no ar que responde mesmo sem JWT (`push-public-key`) tem `verify_jwt = false` no `supabase/config.toml`.
+> GET e POST testados (404 persiste) — não é questão de método. `push-public-key` responde 200 no ar sem JWT, **mas o repo não explica isso**: `supabase/config.toml` só tem `verify_jwt = false` para `migrate-helper`, não para `push-public-key`. Divergência produção × repositório **NÃO VERIFICADA**.
 
 **BLOQUEADO G7-1 — edge functions 404**: 27 de 36 functions do código retornam 404 em produção (lista acima). Sem CLI `supabase` (não instalado no WSL nem no Windows) e sem `SUPABASE_SERVICE_ROLE_KEY`/credencial de deploy nesta sessão, **não é possível publicar** nem confirmar se o deploy parou de acontecer ou nunca foi configurado. Os repos não têm workflow de deploy de edge functions (só snapshot). **Requires decisão**: configurar deploy (CI com `supabase functions deploy` ou ação) ou revisar funções obsoletas; nenhuma função essencial de autenticação (auth) depende delas.
 
@@ -134,7 +139,7 @@ Varredura estática sobre **267 migrations** (script Python com regex validada):
 | 2 | Cobertura OK(prova)/BLOQUEADO(erro), zero "não verificado" | 🟢 feito — exceto itens BLOQUEADO acima, todos com erro exato |
 | 3 | Qualidade exit 0, testes >= início | 🟢 verificado |
 | 4 | GHA verdes em main pós-merge | 🟢 verificado (Contexto cancelled = fila, documentado) |
-| 5 | Sem código pela metade | 🟢 verificado |
+| 5 | Sem código pela metade | 🔴 **NÃO** — mock de humor `MoodAnalytics.tsx:52` (renderizado p/ admin) + botão sem ação `Profile.tsx:147` |
 | 6 | RLS/policies/migrations | 🟡 OK parcial — RLS 228/228; migrations vs banco real BLOQUEADO (sem snapshot) |
 | 7 | Produção sem erro novo, fluxos respondendo | 🔴 BLOQUEADO — 27 edge functions 404 + sem logs |
 | 8 | Entregas via PR verde | 🟢 0 PRs abertas; fluxo respeitado |
