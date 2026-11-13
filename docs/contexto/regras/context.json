@@ -1,9 +1,9 @@
 {
  "meta": {
-  "sha": "e1b0f368dd6361901fb60cb8bb6ca8326664cf8d",
+  "sha": "27554abf56078646a707d4ca3d98cb9715345f1c",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
-  "generated_at": "2026-11-13 21:47 UTC",
+  "generated_at": "2026-11-13 23:04 UTC",
   "files_total": 1491,
   "code_files": 1399,
   "code_lines": 254681
@@ -148043,10 +148043,19 @@
   }
  },
  "git": {
-  "sha": "e1b0f368dd6361901fb60cb8bb6ca8326664cf8d",
+  "sha": "27554abf56078646a707d4ca3d98cb9715345f1c",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "commits": [
+   {
+    "sha": "27554ab",
+    "date": "2026-11-13",
+    "author": "adm01-debug",
+    "subject": "docs: relatório prod-readiness alinhado ao main e1b0f368 (pós #54) (#56)",
+    "files": [
+     "docs/prod-readiness.md"
+    ]
+   },
    {
     "sha": "e1b0f36",
     "date": "2026-11-13",
@@ -148506,15 +148515,6 @@
     "files": [
      "PENDENCIAS.md"
     ]
-   },
-   {
-    "sha": "afb0724",
-    "date": "2026-10-29",
-    "author": "adm01-debug",
-    "subject": "docs(ci): RELATORIO_CI.md — estado final com todos os PRs mergeados",
-    "files": [
-     "RELATORIO_CI.md"
-    ]
    }
   ],
   "hot_files": [
@@ -148535,16 +148535,16 @@
     5
    ],
    [
+    "docs/prod-readiness.md",
+    4
+   ],
+   [
     "scripts/automation.mjs",
     4
    ],
    [
     "docs/agentes/mapa-repo.md",
     4
-   ],
-   [
-    "docs/prod-readiness.md",
-    3
    ],
    [
     ".github/workflows/automation-local.yml",

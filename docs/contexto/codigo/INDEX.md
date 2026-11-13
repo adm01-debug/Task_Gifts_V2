@@ -1,7 +1,7 @@
 # Contexto do projeto para agentes de IA
 
 GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.
-Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `e1b0f368dd6361901fb60cb8bb6ca8326664cf8d` (2026-11-13T18:04:14-03:00).
+Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `27554abf56078646a707d4ca3d98cb9715345f1c` (2026-11-13T19:34:38-03:00).
 
 ## Como usar (leia antes de planejar ou executar qualquer tarefa)
 1. **Tela/rota/menu** → `rotas.json` (url/vista/menu → arquivo → hooks → tabelas → edges; `rotas_http_backend` para APIs) e `modulos.json` (módulo inteiro + dependências entre módulos).
@@ -265,7 +265,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - possiveis_segredos_no_codigo: 0
 
 ## Grafo de código (graphify)
-- 9797 nós · 27378 arestas · 625 comunidades · grafo do commit `e1b0f368`
+- 9797 nós · 27378 arestas · 625 comunidades · grafo do commit `27554abf`
 - comunidades maiores: lucide-react (373), react (259), App.tsx (223), skeleton.tsx (147), cn (147), mobile/index.ts (113), client.ts (109), gerar.mjs (79), QuizAdmin.tsx (76), generate.py (75), CampaignNotificationPreferences.tsx (71), StatsGrid.tsx (71)
 - símbolos mais chamados: cn() (src/lib/utils.ts), useAuth() (src/hooks/useAuth.tsx), useIsMobile() (src/hooks/use-mobile.tsx), q() (scripts/supabase_snapshot/snapshot.py), useDepartments() (src/hooks/useDepartments.ts), useToast() (src/hooks/use-toast.ts), useRBAC() (src/hooks/useRBAC.ts), useProfiles() (src/hooks/useProfiles.ts), useSEO() (src/hooks/useSEO.ts), useSoundEffects() (src/hooks/useSoundEffects.tsx), .collect() (scripts/supabase_snapshot/test_snapshot.py), excluded_sql() (scripts/supabase_snapshot/snapshot.py)
 - consulta local: `graphify query "<pergunta>"`, `graphify path "<A>" "<B>"`, `graphify explain "<X>"`
@@ -277,6 +277,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - AGENTS.md (6)
 - RELATORIO_CI.md (4)
 - docs/agentes/mapa-repo.md (4)
+- docs/prod-readiness.md (4)
 - package-lock.json (4)
 - scripts/automation.mjs (4)
 - .github/workflows/automation-local.yml (3)
@@ -284,7 +285,6 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - PENDENCIAS.md (3)
 - docs/agentes/banco.md (3)
 - docs/agentes/github-ci.md (3)
-- docs/prod-readiness.md (3)
 - scripts/graphify-local.mjs (3)
 
 ## Workflows
@@ -341,11 +341,12 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - `SYSTEM_RELIABILITY_AUDIT.md` — 🛡️ Relatório de Auditoria de Confiabilidade e Robustez (Versão 10/10) (49 linhas)
 - `audit_report.md` — 📊 Relatório de Auditoria Enterprise & Inventário Minucioso do Sistema (81 linhas)
 - `docs/AUTOMACAO_LOCAL.md` — Automação local — Task_Gifts_V2 (82 linhas)
-- `docs/prod-readiness.md` (146 linhas)
+- `docs/prod-readiness.md` (153 linhas)
 - subpastas de docs/: docs/estado (11), docs/agentes (7), docs/contexto (2)
 
 
 ## Últimos commits
+- 2026-11-13 `27554ab` docs: relatório prod-readiness alinhado ao main e1b0f368 (pós #54) (#56)
 - 2026-11-13 `e1b0f36` chore(functions): poda 21 edge functions mortas + mitiga 4 vulnerabilidades (#54)
 - 2026-11-13 `a489fe2` docs: marca item 5 do prod-readiness como aprovado após PR #52 (#53)
 - 2026-11-13 `2978195` fix: remove mocks do admin de humor e dá ação real ao botão de configurações (#52)
@@ -360,7 +361,6 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - 2026-11-11 `e39fc6c` fix(automacao): destrava grafo local no Windows e exige venv ignorado (#44)
 - 2026-11-11 `82ffc0b` fix(automacao): tolera ausência de O_NOFOLLOW em win32 (#43)
 - 2026-11-11 `eb08848` fix(automacao): tolera CRLF no parse de workflows locais (#41)
-- 2026-11-11 `c4d87b6` fix(ci): separa browser Playwright das deps apt com retry no passo de instalação (#40)
 
 ## Arquivos deste diretório
 - `docs/contexto/codigo/rotas.json`

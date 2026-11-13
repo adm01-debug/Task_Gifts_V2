@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "e1b0f368dd6361901fb60cb8bb6ca8326664cf8d",
+  "commit": "27554abf56078646a707d4ca3d98cb9715345f1c",
   "branch": "main",
-  "data_commit": "2026-11-13T18:04:14-03:00",
+  "data_commit": "2026-11-13T19:34:38-03:00",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "ultimos_commits": [
+   {
+    "sha": "27554ab",
+    "data": "2026-11-13",
+    "assunto": "docs: relatório prod-readiness alinhado ao main e1b0f368 (pós #54) (#56)"
+   },
    {
     "sha": "e1b0f36",
     "data": "2026-11-13",
@@ -126,11 +131,6 @@
     "sha": "3860817",
     "data": "2026-11-08",
     "assunto": "docs(agentes): replica o padrao de AGENTS.md/CLAUDE.md do Zapp Web V2 (#31)"
-   },
-   {
-    "sha": "97ee4cd",
-    "data": "2026-10-30",
-    "assunto": "feat(onda2): CORS allowlist, CSP header, coverage, audit CI, FKs, README (#30)"
    }
   ],
   "arquivos_mudados_7d": 167,
@@ -168,6 +168,10 @@
     "mudancas": 4
    },
    {
+    "pasta": "docs/prod-readiness.md",
+    "mudancas": 4
+   },
+   {
     "pasta": "scripts/automation.mjs",
     "mudancas": 4
    },
@@ -189,10 +193,6 @@
    },
    {
     "pasta": "docs/agentes/github-ci.md",
-    "mudancas": 3
-   },
-   {
-    "pasta": "docs/prod-readiness.md",
     "mudancas": 3
    }
   ],
@@ -222,6 +222,10 @@
     "mudancas": 4
    },
    {
+    "arquivo": "docs/prod-readiness.md",
+    "mudancas": 4
+   },
+   {
     "arquivo": "package-lock.json",
     "mudancas": 4
    },
@@ -247,10 +251,6 @@
    },
    {
     "arquivo": "docs/agentes/github-ci.md",
-    "mudancas": 3
-   },
-   {
-    "arquivo": "docs/prod-readiness.md",
     "mudancas": 3
    },
    {
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 30
+    "commits": 31
    },
    {
     "autor": "dependabot[bot]",
