@@ -16,8 +16,8 @@ Fonte primária: `INVENTARIO_FUNCIONALIDADES.md` (1064 linhas, 23 seções) + `d
 | Services | 96 | idem `services.json` |
 | Hooks | 129 | idem `hooks.json` |
 | Migrations | 267 | `supabase/migrations/` (saída do drift: `267 arquivo(s)`) |
-| Edge functions no código | 36 (+`_shared/`) | `ls supabase/functions` |
-| Edge functions no ar (respondem) | **9 de 36** | probe HTTP por function (abaixo) |
+| Edge functions no código | 17 (+`_shared/`) | `ls supabase/functions` no main `e1b0f368` (21 podadas na #54) |
+| Edge functions no ar (respondem) | 2 vivas (push-public-key, push-outbox-dispatcher) | probe HTTP por function (abaixo) |
 | Workflows GHA | 3 próprios + geridos | `ci.yml`, `automation-local.yml`, `contexto.yml` |
 | Testes | 1886 passed / 12 skipped | `bun run test:ci` (detalhe item 3) |
 | TODO/FIXME/WIP reais | 0 | varredura `src/` (318 ocorrências são "Todos"/"ListTodo" — falsos positivos) |
