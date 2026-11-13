@@ -1,4 +1,7 @@
-project_id = "eidsaqymojyuhprobfpn"
+﻿project_id = "eidsaqymojyuhprobfpn"
 
 [functions.migrate-helper]
+verify_jwt = false
+
+[functions.push-public-key]
 verify_jwt = false
