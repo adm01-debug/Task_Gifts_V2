@@ -77,10 +77,11 @@ Varredura estática sobre **267 migrations** (script Python com regex validada):
 |---|---|---|
 | `CREATE TABLE` | A | 228 |
 | `ENABLE ROW LEVEL SECURITY` | B | 228 |
-| Policy `CREATE POLICY` | C | 231 |
+| Policy — tabelas com ≥1 `CREATE POLICY` | C | 228 |
+| `CREATE POLICY` (total de policies) | — | 231 |
 
 - **A − B = 0** → toda tabela criada no repo tem RLS habilitada.
-- **B − C = 0** → toda tabela com RLS tem ao menos uma policy.
+- **B − C = 0** → toda tabela com RLS tem ao menos uma policy (228 tabelas com policy; 231 policies no total, 3 delas em tabelas fora do repo).
 - Tabelas com policy sem `CREATE TABLE` no repo: `geo_access_logs`, `geo_blocking_rules` (geridas fora do repo, via Dashboard; tipos confirmados em `src/integrations/supabase/types.ts`) e `storage` (Supabase gerido) — **não** são gap de RLS do projeto.
 - Advisors de segurança: **NÃO VERIFICADO** — consulta real ao banco não disponível nesta sessão e o snapshot nunca foi publicado; a garantia anterior de “sem item ERROR” foi **removida por falta de fonte real** (ver BLOQUEADO abaixo).
 
