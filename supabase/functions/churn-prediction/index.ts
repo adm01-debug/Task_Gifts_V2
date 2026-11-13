@@ -43,8 +43,20 @@ serve(async (req) => {
   }
 
   try {
-    // Verify user JWT
-    await verifyUser(req);
+    // Verify user JWT e restringir a admin/manager (evita leitura de
+    // dados de todos os colaboradores por qualquer usuário autenticado).
+    const authUser = await verifyUser(req);
+    const supabaseUrl0 = Deno.env.get('SUPABASE_URL')!;
+    const supabaseKey0 = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
+    const adminCheck = await createClient(supabaseUrl0, supabaseKey0)
+      .from('user_roles')
+      .select('role')
+      .eq('user_id', authUser.id);
+    const roles = (adminCheck.data ?? []).map((r: { role: string }) => r.role);
+    if (!roles.includes('admin') && !roles.includes('manager')) {
+      return new Response(JSON.stringify({ error: 'Somente admins e gestores podem ver predição de churn' }), {
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 403 });
+    }
 
     const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');
     if (!LOVABLE_API_KEY) {

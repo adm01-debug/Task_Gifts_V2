@@ -264,22 +264,7 @@ serve(withSentry("webhook-dispatcher", async (req, { requestId }) => {
 }));
 
 function generateSignature(payload: string, secret: string): string {
-  try {
-    const hmac = createHmac('sha256', secret);
-    hmac.update(payload);
-    return 'sha256=' + hmac.digest('hex');
-  } catch {
-    // Fallback for Deno
-    const encoder = new TextEncoder();
-    const keyData = encoder.encode(secret);
-    const data = encoder.encode(payload);
-    
-    // Simple hash for fallback
-    let hash = 0;
-    for (let i = 0; i < data.length; i++) {
-      hash = ((hash << 5) - hash) + data[i];
-      hash = hash & hash;
-    }
-    return 'sha256=' + Math.abs(hash).toString(16).padStart(16, '0');
-  }
+  const hmac = createHmac('sha256', secret);
+  hmac.update(payload);
+  return 'sha256=' + hmac.digest('hex');
 }
