@@ -42,7 +42,7 @@ on:
       - '.env.example'
       - '.github/workflows/**'
   schedule:
-    - cron: '3-59/10 * * * *' # minuto 3: fora do minuto 0, onde a fila do GitHub se concentra
+    - cron: '3 * * * *' # minuto 3: fora do minuto 0, onde a fila do GitHub se concentra
   workflow_dispatch:
     inputs:
       graphify:
