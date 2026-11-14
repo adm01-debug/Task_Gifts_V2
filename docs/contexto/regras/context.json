@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "9759f35ac7363c63f9d151bc9862836b619b0793",
+  "sha": "ba823e461a90aa3c9d2fe4e0af84114ec0dac242",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
-  "generated_at": "2026-11-14 13:32 UTC",
-  "files_total": 1493,
-  "code_files": 1400,
-  "code_lines": 254764
+  "generated_at": "2026-11-14 13:49 UTC",
+  "files_total": 1494,
+  "code_files": 1401,
+  "code_lines": 254778
  },
  "version": "1.3.2",
- "facts_hash": "c2867d53f6b868e2",
+ "facts_hash": "f47dea54c3ca526a",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -177,7 +177,7 @@
   "languages": {
    ".tsx": 565,
    ".ts": 537,
-   ".sql": 268,
+   ".sql": 269,
    ".mjs": 19,
    ".js": 5,
    ".py": 5,
@@ -33295,6 +33295,7 @@
    "supabase/migrations/20260907120000_profiles_policy_cleanup.sql",
    "supabase/migrations/20261030120000_onda2_fk_explicit_delete.sql",
    "supabase/migrations/20261109120000_fix_cron_wrong_project.sql",
+   "supabase/migrations/20261114095829_revoke_vistas_diagnostico.sql",
    "supabase/migrations/20261114110500_fix_cron_campaigns_alert_check.sql",
    "src/integrations/supabase/types.ts"
   ],
@@ -48847,8 +48848,8 @@
   },
   {
    "module": "supabase/migrations",
-   "files": 268,
-   "lines": 29310,
+   "files": 269,
+   "lines": 29324,
    "tables": [],
    "exports": [],
    "docs": [],
@@ -148042,6 +148043,10 @@
     ",\n    headers := jsonb_build_object(\n      "
    ]
   },
+  "supabase/migrations/20261114095829_revoke_vistas_diagnostico.sql": {
+   "path": "supabase/migrations/20261114095829_revoke_vistas_diagnostico.sql",
+   "lines": 14
+  },
   "supabase/migrations/20261114110500_fix_cron_campaigns_alert_check.sql": {
    "path": "supabase/migrations/20261114110500_fix_cron_campaigns_alert_check.sql",
    "lines": 83,
@@ -148100,10 +148105,28 @@
   }
  },
  "git": {
-  "sha": "9759f35ac7363c63f9d151bc9862836b619b0793",
+  "sha": "ba823e461a90aa3c9d2fe4e0af84114ec0dac242",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "commits": [
+   {
+    "sha": "ba823e4",
+    "date": "2026-11-14",
+    "author": "adm01-debug",
+    "subject": "docs: prod-readiness refletido ao main c86726f2 (deploy edge functions, advisors 5 ERROR, 48 erros postgres, PRs #58/#59) (#60)",
+    "files": [
+     "docs/prod-readiness.md"
+    ]
+   },
+   {
+    "sha": "696dd2d",
+    "date": "2026-11-14",
+    "author": "adm01-debug",
+    "subject": "fix: revoga acesso anonimo/authenticated das views de diagnostico (#58)",
+    "files": [
+     "supabase/migrations/20261114095829_revoke_vistas_diagnostico.sql"
+    ]
+   },
    {
     "sha": "9759f35",
     "date": "2026-11-14",
@@ -148544,47 +148567,19 @@
      "scripts/graphify/README.md",
      "scripts/graphify/setup.sh"
     ]
-   },
-   {
-    "sha": "97ee4cd",
-    "date": "2026-10-30",
-    "author": "adm01-debug",
-    "subject": "feat(onda2): CORS allowlist, CSP header, coverage, audit CI, FKs, README (#30)",
-    "files": [
-     ".github/PULL_REQUEST_TEMPLATE.md",
-     ".github/workflows/ci.yml",
-     ".gitignore",
-     "README.md",
-     "bun.lock",
-     "index.html",
-     "package.json",
-     "supabase/functions/_shared/security.ts",
-     "supabase/migrations/20261030120000_onda2_fk_explicit_delete.sql",
-     "vercel.json",
-     "vitest.config.ts"
-    ]
-   },
-   {
-    "sha": "842cd96",
-    "date": "2026-10-30",
-    "author": "adm01-debug",
-    "subject": "docs(ci): RELATORIO_CI.md — adiciona PRs #28/#29 e análise de segurança",
-    "files": [
-     "RELATORIO_CI.md"
-    ]
    }
   ],
   "hot_files": [
    [
     "package.json",
-    7
-   ],
-   [
-    ".github/workflows/ci.yml",
     6
    ],
    [
-    ".gitignore",
+    "docs/prod-readiness.md",
+    5
+   ],
+   [
+    ".github/workflows/ci.yml",
     5
    ],
    [
@@ -148592,11 +148587,11 @@
     5
    ],
    [
-    "docs/prod-readiness.md",
+    "scripts/automation.mjs",
     4
    ],
    [
-    "scripts/automation.mjs",
+    ".gitignore",
     4
    ],
    [

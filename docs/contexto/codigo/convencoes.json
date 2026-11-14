@@ -59,11 +59,11 @@
  "commits": {
   "convencao": "conventional commits (observado)",
   "exemplos": [
+   "docs: prod-readiness refletido ao main c86726f2 (deploy edge functions, advisors 5 ERROR, 48 erros postgres, PRs #58/#59) (#60)",
+   "fix: revoga acesso anonimo/authenticated das views de diagnostico (#58)",
    "fix: corrige cron de campanhas e allowlist de alertas de segurança (#59)",
    "fix: adiciona flag --yes ao deploy de edge functions (#57)",
-   "infra: adiciona workflow de deploy de edge functions (#55)",
-   "docs: relatório prod-readiness alinhado ao main e1b0f368 (pós #54) (#56)",
-   "chore(functions): poda 21 edge functions mortas + mitiga 4 vulnerabilidades (#54)"
+   "infra: adiciona workflow de deploy de edge functions (#55)"
   ]
  },
  "pr_template": ".github/PULL_REQUEST_TEMPLATE.md",

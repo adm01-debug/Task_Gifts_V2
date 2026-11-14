@@ -2,11 +2,21 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "9759f35ac7363c63f9d151bc9862836b619b0793",
+  "commit": "ba823e461a90aa3c9d2fe4e0af84114ec0dac242",
   "branch": "main",
-  "data_commit": "2026-11-14T10:21:21-03:00",
+  "data_commit": "2026-11-14T10:22:58-03:00",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "ultimos_commits": [
+   {
+    "sha": "ba823e4",
+    "data": "2026-11-14",
+    "assunto": "docs: prod-readiness refletido ao main c86726f2 (deploy edge functions, advisors 5 ERROR, 48 erros postgres, PRs #58/#59"
+   },
+   {
+    "sha": "696dd2d",
+    "data": "2026-11-14",
+    "assunto": "fix: revoga acesso anonimo/authenticated das views de diagnostico (#58)"
+   },
    {
     "sha": "9759f35",
     "data": "2026-11-14",
@@ -121,19 +131,9 @@
     "sha": "59d2c2b",
     "data": "2026-11-08",
     "assunto": "feat(db-audit): guarda de migrations — idempotência ratchet + drift contra banco real"
-   },
-   {
-    "sha": "a270eb3",
-    "data": "2026-11-08",
-    "assunto": "fix(contexto): hardening do pacote — 2 vazamentos e inventário de edges"
-   },
-   {
-    "sha": "5ffe6db",
-    "data": "2026-11-08",
-    "assunto": "feat(contexto): sistema autonomo de contexto para agentes de IA (#34)"
    }
   ],
-  "arquivos_mudados_7d": 169,
+  "arquivos_mudados_7d": 170,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "package.json",
@@ -156,6 +156,10 @@
     "mudancas": 5
    },
    {
+    "pasta": "docs/prod-readiness.md",
+    "mudancas": 5
+   },
+   {
     "pasta": "src/components/admin",
     "mudancas": 5
    },
@@ -165,10 +169,6 @@
    },
    {
     "pasta": "docs/agentes/mapa-repo.md",
-    "mudancas": 4
-   },
-   {
-    "pasta": "docs/prod-readiness.md",
     "mudancas": 4
    },
    {
@@ -214,15 +214,15 @@
     "mudancas": 6
    },
    {
+    "arquivo": "docs/prod-readiness.md",
+    "mudancas": 5
+   },
+   {
     "arquivo": "RELATORIO_CI.md",
     "mudancas": 4
    },
    {
     "arquivo": "docs/agentes/mapa-repo.md",
-    "mudancas": 4
-   },
-   {
-    "arquivo": "docs/prod-readiness.md",
     "mudancas": 4
    },
    {
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 34
+    "commits": 36
    },
    {
     "autor": "dependabot[bot]",
@@ -310,7 +310,7 @@
   ]
  },
  "contagens": {
-  "arquivos_total": 1484,
+  "arquivos_total": 1485,
   "arquivos_codigo": 1126,
   "linhas_codigo": 223907,
   "rotas": 83,
@@ -322,7 +322,7 @@
   "hooks": 155,
   "edge_functions": 16,
   "tabelas": 236,
-  "migrations": 268,
+  "migrations": 269,
   "cron_jobs": 22,
   "testes": 157,
   "workflows": 4,

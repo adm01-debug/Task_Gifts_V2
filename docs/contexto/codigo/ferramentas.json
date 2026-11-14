@@ -4,7 +4,7 @@
  "stack": {
   "linguagens": [
    "TypeScript (1100)",
-   "SQL (268)",
+   "SQL (269)",
    "Markdown (46)",
    "JavaScript (22)",
    "JSON (15)",
@@ -359,8 +359,8 @@
   },
   {
    "arquivo": "docs/prod-readiness.md",
-   "titulo": null,
-   "linhas": 153
+   "titulo": "Prod Readiness — TaskGifts (Task_Gifts_V2)",
+   "linhas": 162
   }
  ],
  "docs_em_subpastas": [
