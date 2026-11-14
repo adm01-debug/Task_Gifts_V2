@@ -1,7 +1,7 @@
 # Contexto do projeto para agentes de IA
 
 GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.
-Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `ba823e461a90aa3c9d2fe4e0af84114ec0dac242` (2026-11-14T10:22:58-03:00).
+Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `696dd2d04fd563cdb4b0dc3485a0f249a0253675` (2026-11-14T10:22:31-03:00).
 
 ## Como usar (leia antes de planejar ou executar qualquer tarefa)
 1. **Tela/rota/menu** → `rotas.json` (url/vista/menu → arquivo → hooks → tabelas → edges; `rotas_http_backend` para APIs) e `modulos.json` (módulo inteiro + dependências entre módulos).
@@ -265,8 +265,8 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - possiveis_segredos_no_codigo: 0
 
 ## Grafo de código (graphify)
-- 9804 nós · 27384 arestas · 654 comunidades · grafo do commit `ba823e46`
-- comunidades maiores: lucide-react (269), react (256), App.tsx (207), badge.tsx (156), cn (126), date-fns (101), loggingService.ts (84), gerar.mjs (79), mobile/index.ts (76), useIsMobile (73), useToast (72), DashboardRightColumn.tsx (72)
+- 9803 nós · 27382 arestas · 619 comunidades · grafo do commit `696dd2d0`
+- comunidades maiores: card.tsx (236), react (231), lucide-react (169), client.ts (145), Badge (131), cn (129), AdminPanel.tsx (124), useToast (98), TrailModuleEditor.tsx (90), ManagerDashboard.tsx (86), loggingService.ts (81), useProfiles.ts (81)
 - símbolos mais chamados: cn() (src/lib/utils.ts), useAuth() (src/hooks/useAuth.tsx), useIsMobile() (src/hooks/use-mobile.tsx), q() (scripts/supabase_snapshot/snapshot.py), useDepartments() (src/hooks/useDepartments.ts), useToast() (src/hooks/use-toast.ts), useRBAC() (src/hooks/useRBAC.ts), useProfiles() (src/hooks/useProfiles.ts), useSEO() (src/hooks/useSEO.ts), useSoundEffects() (src/hooks/useSoundEffects.tsx), .collect() (scripts/supabase_snapshot/test_snapshot.py), excluded_sql() (scripts/supabase_snapshot/snapshot.py)
 - consulta local: `graphify query "<pergunta>"`, `graphify path "<A>" "<B>"`, `graphify explain "<X>"`
 
@@ -275,9 +275,9 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - .github/workflows/ci.yml (8)
 - bun.lock (8)
 - AGENTS.md (6)
-- docs/prod-readiness.md (5)
 - RELATORIO_CI.md (4)
 - docs/agentes/mapa-repo.md (4)
+- docs/prod-readiness.md (4)
 - package-lock.json (4)
 - scripts/automation.mjs (4)
 - .github/workflows/automation-local.yml (3)
@@ -342,12 +342,11 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - `SYSTEM_RELIABILITY_AUDIT.md` — 🛡️ Relatório de Auditoria de Confiabilidade e Robustez (Versão 10/10) (49 linhas)
 - `audit_report.md` — 📊 Relatório de Auditoria Enterprise & Inventário Minucioso do Sistema (81 linhas)
 - `docs/AUTOMACAO_LOCAL.md` — Automação local — Task_Gifts_V2 (82 linhas)
-- `docs/prod-readiness.md` — Prod Readiness — TaskGifts (Task_Gifts_V2) (162 linhas)
+- `docs/prod-readiness.md` (153 linhas)
 - subpastas de docs/: docs/estado (11), docs/agentes (7), docs/contexto (2)
 
 
 ## Últimos commits
-- 2026-11-14 `ba823e4` docs: prod-readiness refletido ao main c86726f2 (deploy edge functions, advisors 5 ERROR, 48 erros postgres, PRs #58/#59
 - 2026-11-14 `696dd2d` fix: revoga acesso anonimo/authenticated das views de diagnostico (#58)
 - 2026-11-14 `9759f35` fix: corrige cron de campanhas e allowlist de alertas de segurança (#59)
 - 2026-11-14 `c86726f` fix: adiciona flag --yes ao deploy de edge functions (#57)
@@ -362,6 +361,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - 2026-11-12 `4f95e63` build(deps): bump actions/setup-node from 6.5.0 to 7.1.0 (#47)
 - 2026-11-12 `933629b` build(deps): bump actions/download-artifact from 7.0.0 to 8.0.2 (#46)
 - 2026-11-12 `e661bb4` style(manutencao): aplica correcoes locais verificadas (#49)
+- 2026-11-11 `e80a380` fix(automacao): reconhece layout Windows (Scripts/) no venv do graphify (#45)
 
 ## Arquivos deste diretório
 - `docs/contexto/codigo/rotas.json`

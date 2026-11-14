@@ -359,8 +359,8 @@
   },
   {
    "arquivo": "docs/prod-readiness.md",
-   "titulo": "Prod Readiness — TaskGifts (Task_Gifts_V2)",
-   "linhas": 162
+   "titulo": null,
+   "linhas": 153
   }
  ],
  "docs_em_subpastas": [
