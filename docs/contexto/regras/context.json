@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "c86726f24fdc97cceed22cbb479a52c410233113",
+  "sha": "9759f35ac7363c63f9d151bc9862836b619b0793",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
-  "generated_at": "2026-11-14 13:05 UTC",
-  "files_total": 1492,
-  "code_files": 1399,
-  "code_lines": 254681
+  "generated_at": "2026-11-14 13:32 UTC",
+  "files_total": 1493,
+  "code_files": 1400,
+  "code_lines": 254764
  },
  "version": "1.3.2",
- "facts_hash": "4200f3d9cb62237a",
+ "facts_hash": "c2867d53f6b868e2",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -177,7 +177,7 @@
   "languages": {
    ".tsx": 565,
    ".ts": 537,
-   ".sql": 267,
+   ".sql": 268,
    ".mjs": 19,
    ".js": 5,
    ".py": 5,
@@ -27636,10 +27636,10 @@
     "args": "",
     "returns": "TABLE(campaign_id uuid, participants_notified integer)",
     "lang": "plpgsql",
-    "src": "supabase/migrations/20260728180424_040c01ed-24d7-4c7e-af93-4ad3cbf536dc.sql",
+    "src": "supabase/migrations/20261114110500_fix_cron_campaigns_alert_check.sql",
     "security_definer": true,
     "search_path": true,
-    "body": "DECLARE v_campaign RECORD; v_notified integer; BEGIN FOR v_campaign IN SELECT id, name, target_global, target_individual_default FROM public.sales_campaigns WHERE status = 'active' AND end_date < CURRENT_DATE FOR UPDATE SKIP LOCKED LOOP UPDATE public.sales_campaigns SET status = 'completed', updated_at = now() WHERE id = v_campaign.id; WITH inserted AS ( INSERT INTO public.notifications (user_id, type, title, message, data, is_read) SELECT cp.user_id, 'campaign_closed', CASE WHEN COALESCE(cp.progress, 0) >= COALESCE(cp.target_adjusted, v_campaign.target_individual_default, 0) THEN '🏆 Campanha encerrada — meta batida!' ELSE 'Campanha encerrada' END, CASE WHEN COALESCE(cp.progress, 0) >= COALE …",
+    "body": "DECLARE v_campaign RECORD; v_notified integer; BEGIN FOR v_campaign IN SELECT sc.id, sc.name FROM public.sales_campaigns sc WHERE sc.status = 'active' AND sc.end_date < now() FOR UPDATE SKIP LOCKED LOOP UPDATE public.sales_campaigns SET status = 'completed', updated_at = now() WHERE id = v_campaign.id; WITH inserted AS ( INSERT INTO public.notifications (user_id, type, title, message, data) SELECT cp.user_id, 'campaign_closed', CASE WHEN cp.completed_at IS NOT NULL THEN '🏆 Campanha encerrada — meta batida!' ELSE 'Campanha encerrada' END, CASE WHEN cp.completed_at IS NOT NULL THEN 'Parabéns! A campanha \"' || v_campaign.name || '\" foi encerrada e você bateu a meta.' ELSE 'A campanha \"' || v_ca …",
     "raises": [],
     "tables": [
      "SKIP",
@@ -32921,6 +32921,14 @@
     "unique": false,
     "where": "",
     "src": "supabase/migrations/20260728204549_157d9c62-d7e3-462a-b546-bd93b8a2e0a0.sql"
+   },
+   {
+    "name": "security_alerts_prediction_dedupe_idx",
+    "table": "security_alerts",
+    "columns": "alert_type, (metadata->>'dedupe_key'",
+    "unique": true,
+    "where": "",
+    "src": "supabase/migrations/20261114110500_fix_cron_campaigns_alert_check.sql"
    }
   ],
   "cron_jobs": [
@@ -33287,6 +33295,7 @@
    "supabase/migrations/20260907120000_profiles_policy_cleanup.sql",
    "supabase/migrations/20261030120000_onda2_fk_explicit_delete.sql",
    "supabase/migrations/20261109120000_fix_cron_wrong_project.sql",
+   "supabase/migrations/20261114110500_fix_cron_campaigns_alert_check.sql",
    "src/integrations/supabase/types.ts"
   ],
   "rls": {
@@ -40733,6 +40742,22 @@
     "objkind": "function",
     "roles": "PUBLIC",
     "src": "supabase/migrations/20261109120000_fix_cron_wrong_project.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "all",
+    "object": "close_expired_sales_campaigns",
+    "objkind": "function",
+    "roles": "PUBLIC, anon, authenticated",
+    "src": "supabase/migrations/20261114110500_fix_cron_campaigns_alert_check.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "close_expired_sales_campaigns",
+    "objkind": "function",
+    "roles": "service_role",
+    "src": "supabase/migrations/20261114110500_fix_cron_campaigns_alert_check.sql"
    }
   ],
   "raises": [
@@ -48822,8 +48847,8 @@
   },
   {
    "module": "supabase/migrations",
-   "files": 267,
-   "lines": 29227,
+   "files": 268,
+   "lines": 29310,
    "tables": [],
    "exports": [],
    "docs": [],
@@ -93688,10 +93713,10 @@
     "args": "",
     "returns": "TABLE(campaign_id uuid, participants_notified integer)",
     "lang": "plpgsql",
-    "src": "supabase/migrations/20260728180424_040c01ed-24d7-4c7e-af93-4ad3cbf536dc.sql",
+    "src": "supabase/migrations/20261114110500_fix_cron_campaigns_alert_check.sql",
     "security_definer": true,
     "search_path": true,
-    "body": "DECLARE v_campaign RECORD; v_notified integer; BEGIN FOR v_campaign IN SELECT id, name, target_global, target_individual_default FROM public.sales_campaigns WHERE status = 'active' AND end_date < CURRENT_DATE FOR UPDATE SKIP LOCKED LOOP UPDATE public.sales_campaigns SET status = 'completed', updated_at = now() WHERE id = v_campaign.id; WITH inserted AS ( INSERT INTO public.notifications (user_id, type, title, message, data, is_read) SELECT cp.user_id, 'campaign_closed', CASE WHEN COALESCE(cp.progress, 0) >= COALESCE(cp.target_adjusted, v_campaign.target_individual_default, 0) THEN '🏆 Campanha encerrada — meta batida!' ELSE 'Campanha encerrada' END, CASE WHEN COALESCE(cp.progress, 0) >= COALE …",
+    "body": "DECLARE v_campaign RECORD; v_notified integer; BEGIN FOR v_campaign IN SELECT sc.id, sc.name FROM public.sales_campaigns sc WHERE sc.status = 'active' AND sc.end_date < now() FOR UPDATE SKIP LOCKED LOOP UPDATE public.sales_campaigns SET status = 'completed', updated_at = now() WHERE id = v_campaign.id; WITH inserted AS ( INSERT INTO public.notifications (user_id, type, title, message, data) SELECT cp.user_id, 'campaign_closed', CASE WHEN cp.completed_at IS NOT NULL THEN '🏆 Campanha encerrada — meta batida!' ELSE 'Campanha encerrada' END, CASE WHEN cp.completed_at IS NOT NULL THEN 'Parabéns! A campanha \"' || v_campaign.name || '\" foi encerrada e você bateu a meta.' ELSE 'A campanha \"' || v_ca …",
     "raises": [],
     "tables": [
      "SKIP",
@@ -103349,7 +103374,8 @@
    "supabase/migrations/20260728185632_10515b61-e01f-4ca0-a3e6-a13b8158d7de.sql",
    "supabase/migrations/20260728204549_157d9c62-d7e3-462a-b546-bd93b8a2e0a0.sql",
    "supabase/migrations/20260728205541_a9eda956-7c86-4797-a55a-f6b543975fc2.sql",
-   "supabase/migrations/20260728205741_a19b425a-9dbf-41f9-8a3c-efb2d4b41560.sql"
+   "supabase/migrations/20260728205741_a19b425a-9dbf-41f9-8a3c-efb2d4b41560.sql",
+   "supabase/migrations/20261114110500_fix_cron_campaigns_alert_check.sql"
   ],
   "security_definer_fns": [
    "_grant_card_pack_internal",
@@ -110802,6 +110828,22 @@
     "objkind": "function",
     "roles": "PUBLIC",
     "src": "supabase/migrations/20261109120000_fix_cron_wrong_project.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "all",
+    "object": "close_expired_sales_campaigns",
+    "objkind": "function",
+    "roles": "PUBLIC, anon, authenticated",
+    "src": "supabase/migrations/20261114110500_fix_cron_campaigns_alert_check.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "close_expired_sales_campaigns",
+    "objkind": "function",
+    "roles": "service_role",
+    "src": "supabase/migrations/20261114110500_fix_cron_campaigns_alert_check.sql"
    }
   ],
   "guards": [
@@ -148000,6 +148042,11 @@
     ",\n    headers := jsonb_build_object(\n      "
    ]
   },
+  "supabase/migrations/20261114110500_fix_cron_campaigns_alert_check.sql": {
+   "path": "supabase/migrations/20261114110500_fix_cron_campaigns_alert_check.sql",
+   "lines": 83,
+   "uses_service_role": true
+  },
   "tests/auth-flow.spec.ts": {
    "path": "tests/auth-flow.spec.ts",
    "lines": 34,
@@ -148053,10 +148100,19 @@
   }
  },
  "git": {
-  "sha": "c86726f24fdc97cceed22cbb479a52c410233113",
+  "sha": "9759f35ac7363c63f9d151bc9862836b619b0793",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "commits": [
+   {
+    "sha": "9759f35",
+    "date": "2026-11-14",
+    "author": "adm01-debug",
+    "subject": "fix: corrige cron de campanhas e allowlist de alertas de segurança (#59)",
+    "files": [
+     "supabase/migrations/20261114110500_fix_cron_campaigns_alert_check.sql"
+    ]
+   },
    {
     "sha": "c86726f",
     "date": "2026-11-14",
@@ -148516,22 +148572,12 @@
     "files": [
      "RELATORIO_CI.md"
     ]
-   },
-   {
-    "sha": "f599b1c",
-    "date": "2026-10-30",
-    "author": "adm01-debug",
-    "subject": "chore(deps): bump framer-motion, lucide-react, react-resizable-panels, storybook (#29)",
-    "files": [
-     "bun.lock",
-     "package.json"
-    ]
    }
   ],
   "hot_files": [
    [
     "package.json",
-    8
+    7
    ],
    [
     ".github/workflows/ci.yml",

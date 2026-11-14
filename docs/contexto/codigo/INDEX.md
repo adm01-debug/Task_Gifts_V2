@@ -1,7 +1,7 @@
 # Contexto do projeto para agentes de IA
 
 GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.
-Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `c86726f24fdc97cceed22cbb479a52c410233113` (2026-11-14T09:53:02-03:00).
+Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `9759f35ac7363c63f9d151bc9862836b619b0793` (2026-11-14T10:21:21-03:00).
 
 ## Como usar (leia antes de planejar ou executar qualquer tarefa)
 1. **Tela/rota/menu** → `rotas.json` (url/vista/menu → arquivo → hooks → tabelas → edges; `rotas_http_backend` para APIs) e `modulos.json` (módulo inteiro + dependências entre módulos).
@@ -14,7 +14,7 @@ Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR
 Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua tarefa; não carregue tudo.
 
 ## Stack
-- linguagens: TypeScript (1100), SQL (267), Markdown (46), JavaScript (22), JSON (15), YAML (7), Python (5), Shell (4)
+- linguagens: TypeScript (1100), SQL (268), Markdown (46), JavaScript (22), JSON (15), YAML (7), Python (5), Shell (4)
 - linguagem_principal: TypeScript
 - framework: React
 - backend_http: n/d
@@ -34,7 +34,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 ## Números
 | item | qtd |
 |---|---|
-| arquivos_total | 1483 |
+| arquivos_total | 1484 |
 | arquivos_codigo | 1126 |
 | linhas_codigo | 223907 |
 | rotas | 83 |
@@ -46,7 +46,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 | hooks | 155 |
 | edge_functions | 16 |
 | tabelas | 236 |
-| migrations | 267 |
+| migrations | 268 |
 | cron_jobs | 22 |
 | testes | 157 |
 | workflows | 4 |
@@ -265,8 +265,8 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - possiveis_segredos_no_codigo: 0
 
 ## Grafo de código (graphify)
-- 9797 nós · 27378 arestas · 625 comunidades · grafo do commit `c86726f2`
-- comunidades maiores: lucide-react (373), react (259), App.tsx (223), skeleton.tsx (147), cn (147), mobile/index.ts (113), client.ts (109), gerar.mjs (79), QuizAdmin.tsx (76), generate.py (75), CampaignNotificationPreferences.tsx (71), StatsGrid.tsx (71)
+- 9802 nós · 27382 arestas · 618 comunidades · grafo do commit `9759f35a`
+- comunidades maiores: card.tsx (236), react (231), lucide-react (169), client.ts (145), Badge (131), cn (129), AdminPanel.tsx (124), useToast (98), TrailModuleEditor.tsx (90), ManagerDashboard.tsx (86), loggingService.ts (81), useProfiles.ts (81)
 - símbolos mais chamados: cn() (src/lib/utils.ts), useAuth() (src/hooks/useAuth.tsx), useIsMobile() (src/hooks/use-mobile.tsx), q() (scripts/supabase_snapshot/snapshot.py), useDepartments() (src/hooks/useDepartments.ts), useToast() (src/hooks/use-toast.ts), useRBAC() (src/hooks/useRBAC.ts), useProfiles() (src/hooks/useProfiles.ts), useSEO() (src/hooks/useSEO.ts), useSoundEffects() (src/hooks/useSoundEffects.tsx), .collect() (scripts/supabase_snapshot/test_snapshot.py), excluded_sql() (scripts/supabase_snapshot/snapshot.py)
 - consulta local: `graphify query "<pergunta>"`, `graphify path "<A>" "<B>"`, `graphify explain "<X>"`
 
@@ -347,6 +347,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 
 
 ## Últimos commits
+- 2026-11-14 `9759f35` fix: corrige cron de campanhas e allowlist de alertas de segurança (#59)
 - 2026-11-14 `c86726f` fix: adiciona flag --yes ao deploy de edge functions (#57)
 - 2026-11-13 `25dc07b` infra: adiciona workflow de deploy de edge functions (#55)
 - 2026-11-13 `27554ab` docs: relatório prod-readiness alinhado ao main e1b0f368 (pós #54) (#56)
@@ -361,7 +362,6 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - 2026-11-12 `e661bb4` style(manutencao): aplica correcoes locais verificadas (#49)
 - 2026-11-11 `e80a380` fix(automacao): reconhece layout Windows (Scripts/) no venv do graphify (#45)
 - 2026-11-11 `984b77c` style(manutencao): aplica correcoes locais verificadas (#42)
-- 2026-11-11 `e39fc6c` fix(automacao): destrava grafo local no Windows e exige venv ignorado (#44)
 
 ## Arquivos deste diretório
 - `docs/contexto/codigo/rotas.json`

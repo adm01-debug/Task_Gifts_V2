@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "c86726f24fdc97cceed22cbb479a52c410233113",
+  "commit": "9759f35ac7363c63f9d151bc9862836b619b0793",
   "branch": "main",
-  "data_commit": "2026-11-14T09:53:02-03:00",
+  "data_commit": "2026-11-14T10:21:21-03:00",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "ultimos_commits": [
+   {
+    "sha": "9759f35",
+    "data": "2026-11-14",
+    "assunto": "fix: corrige cron de campanhas e allowlist de alertas de segurança (#59)"
+   },
    {
     "sha": "c86726f",
     "data": "2026-11-14",
@@ -126,14 +131,9 @@
     "sha": "5ffe6db",
     "data": "2026-11-08",
     "assunto": "feat(contexto): sistema autonomo de contexto para agentes de IA (#34)"
-   },
-   {
-    "sha": "6d497c7",
-    "data": "2026-11-08",
-    "assunto": "fix(supabase): corrige project_id do config.toml para o projeto em uso"
    }
   ],
-  "arquivos_mudados_7d": 168,
+  "arquivos_mudados_7d": 169,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "package.json",
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 33
+    "commits": 34
    },
    {
     "autor": "dependabot[bot]",
@@ -310,7 +310,7 @@
   ]
  },
  "contagens": {
-  "arquivos_total": 1483,
+  "arquivos_total": 1484,
   "arquivos_codigo": 1126,
   "linhas_codigo": 223907,
   "rotas": 83,
@@ -322,7 +322,7 @@
   "hooks": 155,
   "edge_functions": 16,
   "tabelas": 236,
-  "migrations": 267,
+  "migrations": 268,
   "cron_jobs": 22,
   "testes": 157,
   "workflows": 4,
