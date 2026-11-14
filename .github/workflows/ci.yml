@@ -83,6 +83,15 @@ jobs:
         env:
           CI: true
 
+      - name: Guarda das envs Supabase no build
+        # Falha o build se VITE_SUPABASE_URL/VITE_SUPABASE_PUBLISHABLE_KEY vierem
+        # ausentes, vazias ou com placeholder (incidente 2026-11-11: redeploy serviu
+        # bundle com createClient("",...) e derrubou o app). Dependabot nao herda
+        # secrets -> roda a suite com --allow-placeholder.
+        run: bun run test:guard-env
+        env:
+          CI: true
+
       - name: Cache Playwright browsers
         uses: actions/cache@v6
         with:
