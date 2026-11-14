@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "25dc07bb6c8d12812a8d83fcfdd887219b94cc5d",
+  "commit": "c86726f24fdc97cceed22cbb479a52c410233113",
   "branch": "main",
-  "data_commit": "2026-11-13T20:31:43-03:00",
+  "data_commit": "2026-11-14T09:53:02-03:00",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "ultimos_commits": [
+   {
+    "sha": "c86726f",
+    "data": "2026-11-14",
+    "assunto": "fix: adiciona flag --yes ao deploy de edge functions (#57)"
+   },
    {
     "sha": "25dc07b",
     "data": "2026-11-13",
@@ -126,11 +131,6 @@
     "sha": "6d497c7",
     "data": "2026-11-08",
     "assunto": "fix(supabase): corrige project_id do config.toml para o projeto em uso"
-   },
-   {
-    "sha": "522ab99",
-    "data": "2026-11-08",
-    "assunto": "ci(guard): adiciona step GA02 de integridade das instruções de agente no CI"
    }
   ],
   "arquivos_mudados_7d": 168,
@@ -262,6 +262,10 @@
     "mudancas": 3
    },
    {
+    "arquivo": ".github/workflows/deploy-edge-functions.yml",
+    "mudancas": 2
+   },
+   {
     "arquivo": "ESTADO_ATUAL.md",
     "mudancas": 2
    },
@@ -292,16 +296,12 @@
    {
     "arquivo": "scripts/supabase_snapshot/README.md",
     "mudancas": 2
-   },
-   {
-    "arquivo": "scripts/supabase_snapshot/snapshot.py",
-    "mudancas": 2
    }
   ],
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 32
+    "commits": 33
    },
    {
     "autor": "dependabot[bot]",

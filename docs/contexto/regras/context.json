@@ -1,9 +1,9 @@
 {
  "meta": {
-  "sha": "25dc07bb6c8d12812a8d83fcfdd887219b94cc5d",
+  "sha": "c86726f24fdc97cceed22cbb479a52c410233113",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
-  "generated_at": "2026-11-13 23:39 UTC",
+  "generated_at": "2026-11-14 13:05 UTC",
   "files_total": 1492,
   "code_files": 1399,
   "code_lines": 254681
@@ -148053,10 +148053,19 @@
   }
  },
  "git": {
-  "sha": "25dc07bb6c8d12812a8d83fcfdd887219b94cc5d",
+  "sha": "c86726f24fdc97cceed22cbb479a52c410233113",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "commits": [
+   {
+    "sha": "c86726f",
+    "date": "2026-11-14",
+    "author": "adm01-debug",
+    "subject": "fix: adiciona flag --yes ao deploy de edge functions (#57)",
+    "files": [
+     ".github/workflows/deploy-edge-functions.yml"
+    ]
+   },
    {
     "sha": "25dc07b",
     "date": "2026-11-13",
@@ -148517,15 +148526,6 @@
      "bun.lock",
      "package.json"
     ]
-   },
-   {
-    "sha": "50f1d15",
-    "date": "2026-10-30",
-    "author": "adm01-debug",
-    "subject": "perf(test): pool vmThreads no vitest — testes 48% mais rápidos (#28)",
-    "files": [
-     "vitest.config.ts"
-    ]
    }
   ],
   "hot_files": [
@@ -148578,6 +148578,10 @@
     3
    ],
    [
+    ".github/workflows/deploy-edge-functions.yml",
+    2
+   ],
+   [
     "supabase/config.toml",
     2
    ],
@@ -148603,10 +148607,6 @@
    ],
    [
     "scripts/ai-context/README.md",
-    2
-   ],
-   [
-    "scripts/ai-context/gerar.mjs",
     2
    ]
   ]
