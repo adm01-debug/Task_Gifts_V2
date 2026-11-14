@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "696dd2d04fd563cdb4b0dc3485a0f249a0253675",
+  "commit": "ba823e461a90aa3c9d2fe4e0af84114ec0dac242",
   "branch": "main",
-  "data_commit": "2026-11-14T10:22:31-03:00",
+  "data_commit": "2026-11-14T10:22:58-03:00",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "ultimos_commits": [
+   {
+    "sha": "ba823e4",
+    "data": "2026-11-14",
+    "assunto": "docs: prod-readiness refletido ao main c86726f2 (deploy edge functions, advisors 5 ERROR, 48 erros postgres, PRs #58/#59"
+   },
    {
     "sha": "696dd2d",
     "data": "2026-11-14",
@@ -126,11 +131,6 @@
     "sha": "59d2c2b",
     "data": "2026-11-08",
     "assunto": "feat(db-audit): guarda de migrations — idempotência ratchet + drift contra banco real"
-   },
-   {
-    "sha": "a270eb3",
-    "data": "2026-11-08",
-    "assunto": "fix(contexto): hardening do pacote — 2 vazamentos e inventário de edges"
    }
   ],
   "arquivos_mudados_7d": 170,
@@ -156,6 +156,10 @@
     "mudancas": 5
    },
    {
+    "pasta": "docs/prod-readiness.md",
+    "mudancas": 5
+   },
+   {
     "pasta": "src/components/admin",
     "mudancas": 5
    },
@@ -165,10 +169,6 @@
    },
    {
     "pasta": "docs/agentes/mapa-repo.md",
-    "mudancas": 4
-   },
-   {
-    "pasta": "docs/prod-readiness.md",
     "mudancas": 4
    },
    {
@@ -214,15 +214,15 @@
     "mudancas": 6
    },
    {
+    "arquivo": "docs/prod-readiness.md",
+    "mudancas": 5
+   },
+   {
     "arquivo": "RELATORIO_CI.md",
     "mudancas": 4
    },
    {
     "arquivo": "docs/agentes/mapa-repo.md",
-    "mudancas": 4
-   },
-   {
-    "arquivo": "docs/prod-readiness.md",
     "mudancas": 4
    },
    {
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 35
+    "commits": 36
    },
    {
     "autor": "dependabot[bot]",

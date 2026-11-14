@@ -1,9 +1,9 @@
 {
  "meta": {
-  "sha": "696dd2d04fd563cdb4b0dc3485a0f249a0253675",
+  "sha": "ba823e461a90aa3c9d2fe4e0af84114ec0dac242",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
-  "generated_at": "2026-11-14 13:56 UTC",
+  "generated_at": "2026-11-14 14:05 UTC",
   "files_total": 1494,
   "code_files": 1401,
   "code_lines": 254778
@@ -148105,10 +148105,19 @@
   }
  },
  "git": {
-  "sha": "696dd2d04fd563cdb4b0dc3485a0f249a0253675",
+  "sha": "ba823e461a90aa3c9d2fe4e0af84114ec0dac242",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "commits": [
+   {
+    "sha": "ba823e4",
+    "date": "2026-11-14",
+    "author": "adm01-debug",
+    "subject": "docs: prod-readiness refletido ao main c86726f2 (deploy edge functions, advisors 5 ERROR, 48 erros postgres, PRs #58/#59) (#60)",
+    "files": [
+     "docs/prod-readiness.md"
+    ]
+   },
    {
     "sha": "696dd2d",
     "date": "2026-11-14",
@@ -148558,38 +148567,19 @@
      "scripts/graphify/README.md",
      "scripts/graphify/setup.sh"
     ]
-   },
-   {
-    "sha": "97ee4cd",
-    "date": "2026-10-30",
-    "author": "adm01-debug",
-    "subject": "feat(onda2): CORS allowlist, CSP header, coverage, audit CI, FKs, README (#30)",
-    "files": [
-     ".github/PULL_REQUEST_TEMPLATE.md",
-     ".github/workflows/ci.yml",
-     ".gitignore",
-     "README.md",
-     "bun.lock",
-     "index.html",
-     "package.json",
-     "supabase/functions/_shared/security.ts",
-     "supabase/migrations/20261030120000_onda2_fk_explicit_delete.sql",
-     "vercel.json",
-     "vitest.config.ts"
-    ]
    }
   ],
   "hot_files": [
    [
     "package.json",
-    7
-   ],
-   [
-    ".github/workflows/ci.yml",
     6
    ],
    [
-    ".gitignore",
+    "docs/prod-readiness.md",
+    5
+   ],
+   [
+    ".github/workflows/ci.yml",
     5
    ],
    [
@@ -148597,11 +148587,11 @@
     5
    ],
    [
-    "docs/prod-readiness.md",
+    "scripts/automation.mjs",
     4
    ],
    [
-    "scripts/automation.mjs",
+    ".gitignore",
     4
    ],
    [
