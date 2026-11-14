@@ -248,6 +248,22 @@
       "manual": ["python3", "scripts/supabase_snapshot/test_snapshot.py"],
       "triggers": ["manual"],
       "reason": "Legado mantido no fluxo existente; referências literais: .github/workflows/contexto.yml. O dispatcher não executa esta operação."
+    },
+    {
+      "id": "legacy-guard-env-build",
+      "kind": "legacy",
+      "files": ["scripts/ci/check-supabase-env.mjs"],
+      "manual": ["node", "scripts/ci/check-supabase-env.mjs"],
+      "triggers": ["manual"],
+      "reason": "Guarda de build: executado via package.json build/test:guard-env (Vercel e CI). O dispatcher nao executa esta operacao."
+    },
+    {
+      "id": "legacy-guard-env-build-unit",
+      "kind": "legacy",
+      "files": ["scripts/ci/check-supabase-env.unit.mjs"],
+      "manual": ["node", "--test", "scripts/ci/check-supabase-env.unit.mjs"],
+      "triggers": ["manual"],
+      "reason": "Suite unitaria da guarda de env do build; chamada por test:guard-env no ci.yml quality. O dispatcher nao executa esta operacao."
     }
   ],
   "ci": [
