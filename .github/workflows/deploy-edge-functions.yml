@@ -46,8 +46,8 @@ jobs:
             IFS=',' read -ra FUNCS <<< "${{ inputs.functions }}"
             for fn in "${FUNCS[@]}"; do
               echo "> deploy $fn"
-              supabase functions deploy "$fn" --project-ref "$SUPABASE_PROJECT_ID"
+              supabase functions deploy "$fn" --project-ref "$SUPABASE_PROJECT_ID" --yes
             done
           else
-            supabase functions deploy --project-ref "$SUPABASE_PROJECT_ID"
+            supabase functions deploy --project-ref "$SUPABASE_PROJECT_ID" --yes
           fi
