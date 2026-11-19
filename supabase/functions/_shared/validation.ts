@@ -1,4 +1,6 @@
-import { z } from "https://deno.land/x/zod/mod.ts";
+// Versão FIXADA: sem versão, cada execução baixava o zod mais novo (comportamento imprevisível e risco de
+// cadeia de suprimentos). v3.25 é a que já resolvia em 12/11/2026 — comportamento inalterado.
+import { z } from "https://deno.land/x/zod@v3.25/mod.ts";
 
 /**
  * Standard error response format for validation failures (422)

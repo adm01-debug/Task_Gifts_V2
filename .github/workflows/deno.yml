@@ -1,0 +1,53 @@
+name: Edge Functions (Deno)
+
+# Checa tipos de TODAS as Edge Functions (index.ts) e roda os testes Deno em PRs e na main.
+# Antes deste workflow nada checava as funções: 22 erros de tipo (um deles um TypeError em produção,
+# .catch() no builder do Supabase em send-campaign-push) passaram despercebidos.
+# Sem deno.lock no repositório: --node-modules-dir=auto faz o Deno resolver os imports sem prefixo
+# pelo package.json e baixar os npm: fixados (validado localmente em 12/11/2026 com Deno 2.9.7).
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'supabase/functions/**'
+      - 'package.json'
+      - '.github/workflows/deno.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'supabase/functions/**'
+      - 'package.json'
+      - '.github/workflows/deno.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deno-${{ github.event.pull_request.number || github.sha }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  deno:
+    name: Tipos e testes das Edge Functions
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: denoland/setup-deno@22d081ff2d3a40755e97629de92e3bcbfa7cf2ed # v2.0.5
+        with:
+          deno-version: v2.9.7
+      - name: Checar tipos de todas as funções
+        run: |
+          FILES=()
+          for d in supabase/functions/*/; do
+            [ -f "${d}index.ts" ] && FILES+=("${d}index.ts")
+          done
+          deno check --node-modules-dir=auto "${FILES[@]}"
+      - name: Testes Deno
+        run: |
+          mapfile -t TESTS < <(find supabase/functions -name '*test.ts' -not -path '*/node_modules/*' | sort)
+          deno test --node-modules-dir=auto --allow-env --allow-read "${TESTS[@]}"
