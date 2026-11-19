@@ -92,6 +92,15 @@ jobs:
         env:
           CI: true
 
+      - name: RPC Security Tests (producao, so com env real)
+        # rpcAccess.test.ts valida que o anon nao acessa RPCs administrativas/2FA.
+        # So roda quando VITE_SUPABASE_URL+ANON_KEY reais existem; em PR do
+        # Dependabot ou sem secret configurado, o teste e' pulado pelo describeIf.
+        run: bun vitest run src/test/rpcAccess.test.ts
+        env:
+          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL || '' }}
+          VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY || '' }}
+
       - name: Cache Playwright browsers
         uses: actions/cache@v6
         with:
