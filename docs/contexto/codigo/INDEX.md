@@ -1,7 +1,7 @@
 # Contexto do projeto para agentes de IA
 
 GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.
-Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `7f53418eaaf687d82d2aaa478765dde7792607c9` (2026-11-20T11:10:06-03:00).
+Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `de9e391b5d51610b347ce632e4b7d2f63f92212b` (2026-11-20T14:02:44-03:00).
 
 ## Como usar (leia antes de planejar ou executar qualquer tarefa)
 1. **Tela/rota/menu** → `rotas.json` (url/vista/menu → arquivo → hooks → tabelas → edges; `rotas_http_backend` para APIs) e `modulos.json` (módulo inteiro + dependências entre módulos).
@@ -36,7 +36,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 |---|---|
 | arquivos_total | 1498 |
 | arquivos_codigo | 1128 |
-| linhas_codigo | 224078 |
+| linhas_codigo | 224091 |
 | rotas | 83 |
 | rotas_http_backend | 0 |
 | vistas_por_id | 0 |
@@ -265,7 +265,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - possiveis_segredos_no_codigo: 0
 
 ## Grafo de código (graphify)
-- 9843 nós · 27416 arestas · 632 comunidades · grafo do commit `7f53418e`
+- 9843 nós · 27416 arestas · 632 comunidades · grafo do commit `de9e391b`
 - comunidades maiores: lucide-react (345), react (230), date-fns (171), AdminPanel.tsx (161), client.ts (123), cn (122), QuizAdmin.tsx (115), useAuth (95), useToast (90), AdminTelemetria.tsx (86), profilesService.ts (82), mobile/index.ts (82)
 - símbolos mais chamados: cn() (src/lib/utils.ts), useAuth() (src/hooks/useAuth.tsx), useIsMobile() (src/hooks/use-mobile.tsx), q() (scripts/supabase_snapshot/snapshot.py), useDepartments() (src/hooks/useDepartments.ts), useToast() (src/hooks/use-toast.ts), useRBAC() (src/hooks/useRBAC.ts), useProfiles() (src/hooks/useProfiles.ts), useSEO() (src/hooks/useSEO.ts), useSoundEffects() (src/hooks/useSoundEffects.tsx), .collect() (scripts/supabase_snapshot/test_snapshot.py), excluded_sql() (scripts/supabase_snapshot/snapshot.py)
 - consulta local: `graphify query "<pergunta>"`, `graphify path "<A>" "<B>"`, `graphify explain "<X>"`
@@ -350,6 +350,8 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 
 
 ## Últimos commits
+- 2026-11-20 `de9e391` fix: move GlobalErrorBoundary para dentro do BrowserRouter (#75)
+- 2026-11-20 `18c24c9` test(e2e): garante que a rota /previsoes e protegida e redireciona para /auth (#74)
 - 2026-11-20 `7f53418` docs: linha de base e pendencias do goal (seguranca, economia, nav, infra) (#73)
 - 2026-11-20 `6f39f2e` fix: permite api.pwnedpasswords.com no connect-src da CSP (#71)
 - 2026-11-20 `6d9a446` fix: expoe rotas de gamificacao na navegacao e remove rota-fantasma (#72)
@@ -363,8 +365,6 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - 2026-11-14 `ba823e4` docs: prod-readiness refletido ao main c86726f2 (deploy edge functions, advisors 5 ERROR, 48 erros postgres, PRs #58/#59
 - 2026-11-14 `696dd2d` fix: revoga acesso anonimo/authenticated das views de diagnostico (#58)
 - 2026-11-14 `9759f35` fix: corrige cron de campanhas e allowlist de alertas de segurança (#59)
-- 2026-11-14 `c86726f` fix: adiciona flag --yes ao deploy de edge functions (#57)
-- 2026-11-13 `25dc07b` infra: adiciona workflow de deploy de edge functions (#55)
 
 ## Arquivos deste diretório
 - `docs/contexto/codigo/rotas.json`

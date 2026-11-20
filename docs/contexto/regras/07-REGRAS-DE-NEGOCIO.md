@@ -1,6 +1,6 @@
 # 07 · REGRAS DE NEGÓCIO
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `7f53418eaa` · branch `main` · 2026-11-20 14:14 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `de9e391b5d` · branch `main` · 2026-11-20 17:03 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## A. Regras escritas por humanos (`manual/` — prioridade máxima, nunca sobrescrito)
@@ -3344,7 +3344,7 @@ _nenhum item encontrado_
 | `admin` | `supabase/migrations/20260807030000_fix_opinion_feed_rpc.sql` |
 | `manager` | `supabase/migrations/20260807030000_fix_opinion_feed_rpc.sql` |
 
-## K. Testes como especificação (1920 testes em 146 arquivos — nomes completos em `context.json`)
+## K. Testes como especificação (1921 testes em 146 arquivos — nomes completos em `context.json`)
 
 | Arquivo | Testes | Exemplos do que o sistema DEVE fazer |
 |---|---|---|
@@ -3425,13 +3425,13 @@ _nenhum item encontrado_
 | `src/test/pushOutboxHealth.simulation.test.ts` | 11 | pushOutboxHealth — invariantes · fila saudável recebe score 100 e severidade ok · fila vazia sem histórico não acusa despachante parado · backlog crítico rebaixa severidade e score … |
 | `src/test/tradingCards.simulation.test.ts` | 11 | Álbum de Cartas — simulação massiva · preserva invariantes de sorteio, garantia e contabilidade em 800 cenários · é determinístico e indiferente à ordem de chegada do pool · resiste a pool corrompido sem lançar exceção … |
 | `src/test/xpBalancing.test.ts` | 11 | xpBalancingService · computeGini retorna 0 para distribuição uniforme · computeGini retorna alto para distribuição desigual · median e mean funcionam … |
+| `tests/e2e/smoke.spec.ts` | 11 | Smoke — bootstrap da aplicação · carrega /auth sem erros de console críticos · rota protegida redireciona para /auth quando deslogado · rota /previsoes da gamificacao e protegida e navega de verdade … |
 | `src/test/boardChallenge.simulation.test.ts` | 10 | resolveChallenge · credita a recompensa integral no acerto de primeira · credita metade na segunda tentativa · mantém travado com tentativa restante … |
 | `src/test/campaignTeamSplitRevert.simulation.test.ts` | 10 | revertCampaignTeamSplit — casos de borda · recusa lote inexistente · é idempotente: segunda reversão não estorna de novo · não reverte lote sem linhas pagas … |
 | `src/test/goalBetSettlement.test.ts` | 10 | goalBetSettlement · S1: sem ninguém batendo a meta, vence a opção “ninguém” · S1b: sem opção “ninguém”, sugere reembolso · aponta o líder que bateu a meta … |
 | `src/test/lightningQuiz.simulation.test.ts` | 10 | Verdadeiro/Falso Relâmpago — motor de recompensa · cobre exaustivamente as 121 combinações de acertos x sequência · é monotônico: mais acertos nunca reduzem a recompensa · não paga nada em rodada zerada e respeita o teto na rodada perfeita … |
 | `src/test/luckyWheelComparisonAlerts.simulation.test.ts` | 10 | decideComparisonAlerts · não alerta em séries estáveis (200 sementes) · alerta regressão de custo quando o custo por giro dobra · alerta estouro de orçamento mesmo sem significância … |
 | `src/test/playerResume.simulation.test.ts` | 10 | retomada do player — simulação · isola a chave por usuário e módulo (400 combinações) · rejeita payloads hostis ou malformados · descarta sessões expiradas e relógios adiantados (300 cenários) … |
-| `tests/e2e/smoke.spec.ts` | 10 | Smoke — bootstrap da aplicação · carrega /auth sem erros de console críticos · rota protegida redireciona para /auth quando deslogado · 404 renderiza NotFound … |
 | `src/test/auctionDelivery.simulation.test.ts` | 9 | resolveAuctionDelivery — casos determinísticos · não entrega nada quando ninguém deu lance · leilão simbólico não mexe em estoque · estoque ilimitado sempre reserva … |
 | `src/test/goalBetExposure.test.ts` | 9 | computeGoalBetExposure · sem aportes não há exposição · ignora mercados já apurados ou anulados · classifica exposição segura … |
 | `src/test/goalBetHistory.test.ts` | 9 | computeGoalBetHistory · retorna vazio sem dados · ignora mercados ainda abertos ou travados · computa acerto, lucro e ROI … |

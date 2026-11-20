@@ -1507,9 +1507,9 @@
   {
    "arquivo": "tests/e2e/smoke.spec.ts",
    "tipo": "e2e",
-   "linhas": 92,
+   "linhas": 105,
    "testa": [],
-   "casos": 9
+   "casos": 10
   }
  ],
  "sql": [],

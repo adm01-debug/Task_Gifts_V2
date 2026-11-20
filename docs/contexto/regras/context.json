@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "7f53418eaaf687d82d2aaa478765dde7792607c9",
+  "sha": "de9e391b5d51610b347ce632e4b7d2f63f92212b",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
-  "generated_at": "2026-11-20 14:14 UTC",
+  "generated_at": "2026-11-20 17:03 UTC",
   "files_total": 1507,
   "code_files": 1404,
-  "code_lines": 255026
+  "code_lines": 255039
  },
  "version": "1.3.2",
- "facts_hash": "c91da04852ea3779",
+ "facts_hash": "7985c2a7d99d92ea",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -49010,7 +49010,7 @@
   {
    "module": "tests",
    "files": 3,
-   "lines": 183,
+   "lines": 196,
    "tables": [],
    "exports": [],
    "docs": [],
@@ -86133,6 +86133,10 @@
    {
     "file": "tests/e2e/smoke.spec.ts",
     "name": "rota protegida redireciona para /auth quando deslogado"
+   },
+   {
+    "file": "tests/e2e/smoke.spec.ts",
+    "name": "rota /previsoes da gamificacao e protegida e navega de verdade"
    },
    {
     "file": "tests/e2e/smoke.spec.ts",
@@ -148225,9 +148229,10 @@
   },
   "tests/e2e/smoke.spec.ts": {
    "path": "tests/e2e/smoke.spec.ts",
-   "lines": 92,
+   "lines": 105,
    "is_test": true,
    "rule_comments": [
+    "SPA: status nao deve ser 5xx; rota protegida redireciona para /auth deslogado",
     "manifest é opcional, mas se existir deve ser JSON válido.",
     "Deve ter algum label associado ou aria-label"
    ],
@@ -148238,6 +148243,7 @@
     "Smoke — bootstrap da aplicação",
     "carrega /auth sem erros de console críticos",
     "rota protegida redireciona para /auth quando deslogado",
+    "rota /previsoes da gamificacao e protegida e navega de verdade",
     "404 renderiza NotFound",
     "meta tags essenciais presentes em /auth",
     "/forgot-password acessível",
@@ -148249,10 +148255,28 @@
   }
  },
  "git": {
-  "sha": "7f53418eaaf687d82d2aaa478765dde7792607c9",
+  "sha": "de9e391b5d51610b347ce632e4b7d2f63f92212b",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "commits": [
+   {
+    "sha": "de9e391",
+    "date": "2026-11-20",
+    "author": "adm01-debug",
+    "subject": "fix: move GlobalErrorBoundary para dentro do BrowserRouter (#75)",
+    "files": [
+     "src/App.tsx"
+    ]
+   },
+   {
+    "sha": "18c24c9",
+    "date": "2026-11-20",
+    "author": "adm01-debug",
+    "subject": "test(e2e): garante que a rota /previsoes e protegida e redireciona para /auth (#74)",
+    "files": [
+     "tests/e2e/smoke.spec.ts"
+    ]
+   },
    {
     "sha": "7f53418",
     "date": "2026-11-20",
@@ -148559,24 +148583,6 @@
      ".gitignore",
      "scripts/graphify-local.mjs"
     ]
-   },
-   {
-    "sha": "82ffc0b",
-    "date": "2026-11-11",
-    "author": "adm01-debug",
-    "subject": "fix(automacao): tolera ausência de O_NOFOLLOW em win32 (#43)",
-    "files": [
-     "scripts/automation.mjs"
-    ]
-   },
-   {
-    "sha": "eb08848",
-    "date": "2026-11-11",
-    "author": "adm01-debug",
-    "subject": "fix(automacao): tolera CRLF no parse de workflows locais (#41)",
-    "files": [
-     "scripts/automation.mjs"
-    ]
    }
   ],
   "hot_files": [
@@ -148590,10 +148596,6 @@
    ],
    [
     ".github/workflows/deploy-edge-functions.yml",
-    3
-   ],
-   [
-    "scripts/automation.mjs",
     3
    ],
    [
@@ -148611,6 +148613,14 @@
    [
     "scripts/graphify-local.mjs",
     2
+   ],
+   [
+    "src/App.tsx",
+    1
+   ],
+   [
+    "tests/e2e/smoke.spec.ts",
+    1
    ],
    [
     "docs/pendencias/01-mcp-json-com-segredo.md",
@@ -148654,10 +148664,6 @@
    ],
    [
     "src/components/navigation/GlobalBreadcrumbs.tsx",
-    1
-   ],
-   [
-    ".github/workflows/deno.yml",
     1
    ]
   ]

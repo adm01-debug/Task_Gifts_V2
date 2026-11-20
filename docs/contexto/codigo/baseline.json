@@ -2,11 +2,21 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "7f53418eaaf687d82d2aaa478765dde7792607c9",
+  "commit": "de9e391b5d51610b347ce632e4b7d2f63f92212b",
   "branch": "main",
-  "data_commit": "2026-11-20T11:10:06-03:00",
+  "data_commit": "2026-11-20T14:02:44-03:00",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "ultimos_commits": [
+   {
+    "sha": "de9e391",
+    "data": "2026-11-20",
+    "assunto": "fix: move GlobalErrorBoundary para dentro do BrowserRouter (#75)"
+   },
+   {
+    "sha": "18c24c9",
+    "data": "2026-11-20",
+    "assunto": "test(e2e): garante que a rota /previsoes e protegida e redireciona para /auth (#74)"
+   },
    {
     "sha": "7f53418",
     "data": "2026-11-20",
@@ -121,19 +131,9 @@
     "sha": "4f95e63",
     "data": "2026-11-12",
     "assunto": "build(deps): bump actions/setup-node from 6.5.0 to 7.1.0 (#47)"
-   },
-   {
-    "sha": "933629b",
-    "data": "2026-11-12",
-    "assunto": "build(deps): bump actions/download-artifact from 7.0.0 to 8.0.2 (#46)"
-   },
-   {
-    "sha": "e661bb4",
-    "data": "2026-11-12",
-    "assunto": "style(manutencao): aplica correcoes locais verificadas (#49)"
    }
   ],
-  "arquivos_mudados_7d": 59,
+  "arquivos_mudados_7d": 61,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "package.json",
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 46
+    "commits": 48
    },
    {
     "autor": "dependabot[bot]",
@@ -312,7 +312,7 @@
  "contagens": {
   "arquivos_total": 1498,
   "arquivos_codigo": 1128,
-  "linhas_codigo": 224078,
+  "linhas_codigo": 224091,
   "rotas": 83,
   "rotas_http_backend": 0,
   "vistas_por_id": 0,
@@ -472,7 +472,7 @@
   },
   "tests/e2e": {
    "arquivos": 2,
-   "linhas": 149
+   "linhas": 162
   },
   "vite.config.ts": {
    "arquivos": 1,
