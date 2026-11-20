@@ -29,6 +29,7 @@ import {
   Bell,
   Swords,
   Brain,
+    HelpCircle,
   Building2,
   type LucideIcon,
 } from "lucide-react";
@@ -54,6 +55,9 @@ const routeConfig: Record<string, RouteConfig> = {
   "/conquistas": { label: "Conquistas", icon: Trophy, parent: "/", group: "gamificacao" },
   "/leagues": { label: "Ligas", icon: Award, parent: "/", group: "gamificacao" },
   "/duelos": { label: "Duelos", icon: Swords, parent: "/", group: "gamificacao" },
+  "/chefao": { label: "Chefão", icon: Swords, parent: "/", group: "gamificacao" },
+  "/pergunta-do-dia": { label: "Pergunta do Dia", icon: HelpCircle, parent: "/", group: "gamificacao" },
+  "/previsoes": { label: "Previsões", icon: TrendingUp, parent: "/", group: "gamificacao" },
    "/loja": { label: "Marketplace", icon: Gift, parent: "/", group: "gamificacao" },
    "/loja/admin": { label: "Administrar Loja", icon: Settings, parent: "/loja", group: "gamificacao" },
   
@@ -92,7 +96,7 @@ const routeConfig: Record<string, RouteConfig> = {
   "/quest-builder": { label: "Criar Quest", icon: Zap, parent: "/manager", group: "admin" },
   "/audit": { label: "Logs de Auditoria", icon: FileText, parent: "/admin", group: "admin" },
   "/security": { label: "Segurança", icon: Shield, parent: "/", group: "admin" },
-  "/bitrix24": { label: "Bitrix24 CRM", icon: Building2, parent: "/admin", group: "admin" },
+  
 };
 
 // Group labels for organization
