@@ -306,9 +306,9 @@ const AnimatedRoutes = () => {
 
 const App = () => (
   <Providers>
-    <GlobalErrorBoundary>
-      <BrowserRouter
-      >
+    <BrowserRouter
+    >
+      <GlobalErrorBoundary>
         <OnboardingTourProvider>
           <ScrollRestorationProvider>
             <Suspense fallback={<PageLoader />}>
@@ -324,8 +324,8 @@ const App = () => (
             </Suspense>
           </ScrollRestorationProvider>
         </OnboardingTourProvider>
-      </BrowserRouter>
-    </GlobalErrorBoundary>
+      </GlobalErrorBoundary>
+    </BrowserRouter>
   </Providers>
 );
 
