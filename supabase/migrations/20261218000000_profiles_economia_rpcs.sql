@@ -10,6 +10,8 @@
 --      do lucky_wheel: autoallocation de level por GREATEST/floor/1000);
 --   2) REVOKEA UPDATE das colunas econômicas para authenticated (mantendo
 --      UPDATE na policy atual para colunas editáveis via client).
+-- Cada RPC exige auth.uid() = p_user_id (usuário só manipula a própria
+-- economia), evitando autoconcessão via API direta.
 -- Idempotente: pode rodar múltiplas vezes sem erro.
 -- =============================================================================
 
@@ -34,7 +36,7 @@ BEGIN
   UPDATE public.profiles
      SET xp = xp + p_amount,
          level = GREATEST(level, floor((xp + p_amount) / 1000) + 1)
-   WHERE id = p_user_id
+   WHERE id = p_user_id AND auth.uid() = p_user_id
    RETURNING xp, level INTO v_xp, v_level;
 
   IF NOT FOUND THEN
@@ -67,7 +69,7 @@ BEGIN
 
   UPDATE public.profiles
      SET coins = coins + p_amount
-   WHERE id = p_user_id
+   WHERE id = p_user_id AND auth.uid() = p_user_id
    RETURNING coins INTO v_coins;
 
   IF NOT FOUND THEN
@@ -100,7 +102,7 @@ BEGIN
 
   UPDATE public.profiles
      SET coins = coins - p_amount
-   WHERE id = p_user_id AND coins >= p_amount
+   WHERE id = p_user_id AND coins >= p_amount AND auth.uid() = p_user_id
    RETURNING coins INTO v_coins;
 
   IF NOT FOUND THEN
@@ -130,7 +132,7 @@ DECLARE
   v_last timestamptz;
 BEGIN
   SELECT streak, best_streak, last_access_at INTO v_streak, v_best, v_last
-    FROM public.profiles WHERE id = p_user_id;
+    FROM public.profiles WHERE id = p_user_id AND auth.uid() = p_user_id;
 
   IF NOT FOUND THEN
     RAISE EXCEPTION 'perfil não encontrado';
@@ -149,7 +151,7 @@ BEGIN
      SET streak = v_streak,
          best_streak = v_best,
          last_access_at = now()
-   WHERE id = p_user_id;
+   WHERE id = p_user_id AND auth.uid() = p_user_id;
 
   RETURN QUERY SELECT p_user_id, v_streak, v_best;
 END;
@@ -173,7 +175,7 @@ DECLARE
 BEGIN
   UPDATE public.profiles
      SET quests_completed = quests_completed + 1
-   WHERE id = p_user_id
+   WHERE id = p_user_id AND auth.uid() = p_user_id
    RETURNING quests_completed INTO v_count;
 
   IF NOT FOUND THEN
