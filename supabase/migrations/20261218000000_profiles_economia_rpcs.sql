@@ -8,16 +8,22 @@
 -- próprio perfil. Esta migration:
 --   1) Cria RPCs SECURITY DEFINER para todas as escritas de economia (padrão
 --      do lucky_wheel: autoallocation de level por GREATEST/floor/1000);
---   2) REVOKEA UPDATE das colunas econômicas para authenticated (mantendo
---      UPDATE na policy atual para colunas editáveis via client).
--- Cada RPC exige auth.uid() = p_user_id (usuário só manipula a própria
--- economia), evitando autoconcessão via API direta.
+--   2) REVOKE UPDATE table-level + GRANT UPDATE column-level (allowlist
+--      display_name, avatar_url, birth_date, hire_date).
+-- Todas as RPCs são qualificadas (alias `pr`) para resolver o 42702 de
+-- `RETURNS TABLE` com nomes homônimos às colunas.
+-- Cada RPC exige auth.uid() (usuário só manipula a própria economia); o
+-- add_xp aceita também o remetente de um kudos real (fluxo cross-user).
 -- Idempotente: pode rodar múltiplas vezes sem erro.
 -- =============================================================================
 
 
 -- -----------------------------------------------------------------------------
 -- 1) add_xp          — soma XP + autoallocation de level (padrão lucky_wheel)
+--    Guard: auth.uid() == p_user_id (própria economia) OU o chamador é o
+--    remetente de um kudos real para p_user_id (fluxo cross-user legítimo).
+--    Autoconcessão via RPC própria (add_xp do próprio íd) permanece como
+--    contrapartida de 8 features client-side que somam XP — follow-up.
 -- -----------------------------------------------------------------------------
 CREATE OR REPLACE FUNCTION public.add_xp(p_user_id uuid, p_amount integer, p_source text DEFAULT NULL)
 RETURNS TABLE (id uuid, xp integer, level integer)
@@ -33,11 +39,14 @@ BEGIN
     RAISE EXCEPTION 'p_amount deve ser positivo';
   END IF;
 
-  UPDATE public.profiles
-     SET xp = xp + p_amount,
-         level = GREATEST(level, floor((xp + p_amount) / 1000) + 1)
-   WHERE id = p_user_id AND auth.uid() = p_user_id
-   RETURNING xp, level INTO v_xp, v_level;
+  UPDATE public.profiles AS pr
+     SET xp = pr.xp + p_amount,
+         level = GREATEST(pr.level, floor((pr.xp + p_amount) / 1000) + 1)
+   WHERE pr.id = p_user_id
+     AND (auth.uid() = p_user_id
+          OR EXISTS (SELECT 1 FROM public.kudos k
+                      WHERE k.to_user_id = p_user_id AND k.from_user_id = auth.uid()))
+   RETURNING pr.xp, pr.level INTO v_xp, v_level;
 
   IF NOT FOUND THEN
     RAISE EXCEPTION 'perfil não encontrado';
@@ -67,10 +76,10 @@ BEGIN
     RAISE EXCEPTION 'p_amount deve ser positivo';
   END IF;
 
-  UPDATE public.profiles
-     SET coins = coins + p_amount
-   WHERE id = p_user_id AND auth.uid() = p_user_id
-   RETURNING coins INTO v_coins;
+  UPDATE public.profiles AS pr
+     SET coins = pr.coins + p_amount
+   WHERE pr.id = p_user_id AND auth.uid() = p_user_id
+   RETURNING pr.coins INTO v_coins;
 
   IF NOT FOUND THEN
     RAISE EXCEPTION 'perfil não encontrado';
@@ -100,10 +109,10 @@ BEGIN
     RAISE EXCEPTION 'p_amount deve ser positivo';
   END IF;
 
-  UPDATE public.profiles
-     SET coins = coins - p_amount
-   WHERE id = p_user_id AND coins >= p_amount AND auth.uid() = p_user_id
-   RETURNING coins INTO v_coins;
+  UPDATE public.profiles AS pr
+     SET coins = pr.coins - p_amount
+   WHERE pr.id = p_user_id AND pr.coins >= p_amount AND auth.uid() = p_user_id
+   RETURNING pr.coins INTO v_coins;
 
   IF NOT FOUND THEN
     RAISE EXCEPTION 'coins insuficientes';
@@ -131,8 +140,8 @@ DECLARE
   v_best integer;
   v_last timestamptz;
 BEGIN
-  SELECT streak, best_streak, last_access_at INTO v_streak, v_best, v_last
-    FROM public.profiles WHERE id = p_user_id AND auth.uid() = p_user_id;
+  SELECT pr.streak, pr.best_streak, pr.last_access_at INTO v_streak, v_best, v_last
+    FROM public.profiles AS pr WHERE pr.id = p_user_id AND auth.uid() = p_user_id;
 
   IF NOT FOUND THEN
     RAISE EXCEPTION 'perfil não encontrado';
@@ -147,11 +156,11 @@ BEGIN
 
   v_best := GREATEST(v_best, v_streak);
 
-  UPDATE public.profiles
+  UPDATE public.profiles AS pr
      SET streak = v_streak,
          best_streak = v_best,
          last_access_at = now()
-   WHERE id = p_user_id AND auth.uid() = p_user_id;
+   WHERE pr.id = p_user_id AND auth.uid() = p_user_id;
 
   RETURN QUERY SELECT p_user_id, v_streak, v_best;
 END;
@@ -173,10 +182,10 @@ AS $$
 DECLARE
   v_count integer;
 BEGIN
-  UPDATE public.profiles
-     SET quests_completed = quests_completed + 1
-   WHERE id = p_user_id AND auth.uid() = p_user_id
-   RETURNING quests_completed INTO v_count;
+  UPDATE public.profiles AS pr
+     SET quests_completed = pr.quests_completed + 1
+   WHERE pr.id = p_user_id AND auth.uid() = p_user_id
+   RETURNING pr.quests_completed INTO v_count;
 
   IF NOT FOUND THEN
     RAISE EXCEPTION 'perfil não encontrado';
@@ -191,10 +200,15 @@ GRANT EXECUTE ON FUNCTION public.increment_quests_completed(uuid) TO authenticat
 
 
 -- -----------------------------------------------------------------------------
--- 6) REVOKE UPDATE column-level das colunas econômicas
---    (UPDATE nas colunas restantes continua via policy existente)
+-- 6) REVOKE UPDATE table-level + GRANT UPDATE column-level (allowlist)
+--    Privilégios table-level e column-level são CUMULATIVOS no Postgres:
+--    um REVOKE só de colunas não protege. O REVOKE table-level de UPDATE
+--    derruba a escrita de qualquer coluna econômica via client; o GRANT
+--    column-level reconcede apenas o que a UI edita diretamente.
+--    (display_name, avatar_url, birth_date, hire_date)
 -- -----------------------------------------------------------------------------
-REVOKE UPDATE (xp, coins, level, streak, best_streak, quests_completed, last_access_at) ON public.profiles FROM authenticated;
+REVOKE UPDATE ON public.profiles FROM authenticated;
+GRANT UPDATE (display_name, avatar_url, birth_date, hire_date) ON public.profiles TO authenticated;
 
 -- Garante SELECT amplo já concedido (LGPD) para os clientes que leem antes de RPC
 GRANT SELECT (id, display_name, avatar_url, level, xp, coins, streak, best_streak, quests_completed, created_at, updated_at, birth_date, hire_date, status, last_access_at, email) ON public.profiles TO authenticated;

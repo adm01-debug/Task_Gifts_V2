@@ -1,4 +1,4 @@
-﻿import { supabase } from "@/integrations/supabase/client";
+import { supabase } from "@/integrations/supabase/client";
 import { logger } from "./loggingService";
 import type { Tables, TablesInsert, TablesUpdate } from "@/integrations/supabase/types";
 import { notificationsService } from "./notificationsService";
@@ -131,13 +131,14 @@ export const profilesService = {
    * hook `useAddXp`: {@link { profile, leveledUp, newLevel }}.
    */
   async addXp(id: string, xpAmount: number, source?: string): Promise<{ profile: Profile; leveledUp: boolean; newLevel?: number }> {
+      // Lê o perfil ANTES da RPC para comparar o nível pré-incremento
+      const oldProfile = await this.getById(id);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const { data, error } = await (supabase as any).rpc("add_xp", { p_user_id: id, p_amount: xpAmount, p_source: source ?? null });
     if (error) throw error;
     const row = (data ?? [])[0] as { id: string; xp: number; level: number } | undefined;
     if (!row) throw new Error("Profile not found");
 
-    const oldProfile = await this.getById(id);
     const oldLevel = oldProfile?.level ?? row.level;
     const newLevel = row.level;
     const leveledUp = newLevel > oldLevel;

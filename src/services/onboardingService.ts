@@ -203,15 +203,15 @@ export const onboardingService = {
     }
 
     // Award XP and coins via RPC (SECURITY DEFINER)
-        const [, xpError] = await Promise.all([
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          (supabase as any).rpc("add_xp", { p_user_id: userId, p_amount: step.xpReward }),
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          (supabase as any).rpc("add_coins", { p_user_id: userId, p_amount: step.coinReward }),
-        ]);
+    const [{ error: xpError }, { error: coinsError }] = await Promise.all([
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (supabase as any).rpc("add_xp", { p_user_id: userId, p_amount: step.xpReward }),
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (supabase as any).rpc("add_coins", { p_user_id: userId, p_amount: step.coinReward }),
+    ]);
 
-        if (xpError) {
-          logger.apiError("claimReward", xpError, "onboardingService");
+    if (xpError || coinsError) {
+      logger.apiError("claimReward", xpError ?? coinsError, "onboardingService");
     }
 
     return true;

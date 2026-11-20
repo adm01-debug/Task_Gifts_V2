@@ -146,15 +146,15 @@ export const shopService = {
     const totalCost = typedReward.price_coins * quantity;
 
     // Deduct coins atomically via RPC (SECURITY DEFINER) — saldo validado no banco
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const { error: spendError } = await (supabase as any).rpc("spend_coins", {
-          p_user_id: userId,
-          p_amount: totalCost,
-        });
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { error: spendError } = await (supabase as any).rpc("spend_coins", {
+      p_user_id: userId,
+      p_amount: totalCost,
+    });
 
-        if (spendError) {
-          throw new Error(spendError.message === "coins insuficientes" ? "Moedas insuficientes" : spendError.message);
-        }
+    if (spendError) {
+      throw new Error(spendError.message === "coins insuficientes" ? "Moedas insuficientes" : spendError.message);
+    }
 
     // Update stock if limited
     if (typedReward.stock !== null) {

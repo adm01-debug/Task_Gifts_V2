@@ -139,15 +139,14 @@ export const avatarService = {
   },
 
   async purchaseItem(userId: string, itemId: string, price: number): Promise<void> {
-      // Deduct coins atomically via RPC (SECURITY DEFINER) — valida saldo no banco
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const { error: spendError } = await (supabase as any).rpc("spend_coins", {
-        p_user_id: userId,
-        p_amount: price,
-      });
+    // Deduct coins atomically via RPC (SECURITY DEFINER) — valida saldo no banco
+    const { error: spendError } = await (supabase as any).rpc("spend_coins", {
+      p_user_id: userId,
+      p_amount: price,
+    });
 
-      if (spendError) {
-        throw new Error(spendError.message === "coins insuficientes" ? "Coins insuficientes" : spendError.message);
+    if (spendError) {
+      throw new Error(spendError.message === "coins insuficientes" ? "Coins insuficientes" : spendError.message);
     }
 
     await this.unlockItem(userId, itemId);

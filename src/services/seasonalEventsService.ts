@@ -172,26 +172,29 @@ export const seasonalEventsService = {
 
     if (error) throw error;
 
-    // Update user profile with rewards
-    const { data: profile } = await supabase
-      .from("profiles")
-      .select("xp, coins")
-      .eq("id", userId)
-      .maybeSingle();
+    // Update user profile with rewards via RPCs (SECURITY DEFINER) — UPDATE
+    // direto em xp/coins é bloqueado pela REVOKE table-level (pendência 02).
+    // updated_at é mantido pelo trigger update_profiles_updated_at.
 
-    if (profile) {
-      await supabase
-        .from("profiles")
-        .update({
-          xp: profile.xp + challenge.xp_reward,
-          coins: profile.coins + challenge.coin_reward,
-          updated_at: new Date().toISOString(),
-        })
-        .eq("id", userId);
+    if (challenge.xp_reward > 0) {
+      const { error: xpError } = await (supabase as any).rpc("add_xp", {
+        p_user_id: userId,
+        p_amount: challenge.xp_reward,
+        p_source: `seasonal:${challengeId}`,
+      });
+      if (xpError) throw xpError;
+    }
+
+    if (challenge.coin_reward > 0) {
+      const { error: coinsError } = await (supabase as any).rpc("add_coins", {
+        p_user_id: userId,
+        p_amount: challenge.coin_reward,
+      });
+      if (coinsError) throw coinsError;
     }
 
     return { xp: challenge.xp_reward, coins: challenge.coin_reward };
-  },
+      },
 
   async incrementByMetricKey(userId: string, metricKey: string, amount: number = 1): Promise<void> {
     const now = new Date().toISOString();
