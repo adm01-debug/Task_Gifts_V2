@@ -16,6 +16,10 @@ jobs:
       # não faz chamadas reais ao Supabase.
       VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL || 'https://placeholder.supabase.co' }}
       VITE_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.VITE_SUPABASE_PUBLISHABLE_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.placeholder' }}
+      # Allowlist de edge functions: vazio em PR (sem rede no E2E), real em produção
+      # via secret. Manter vazio é seguro: o código block-all sem ela, e o smoke
+      # E2E não faz chamadas reais ao Supabase.
+      VITE_DEPLOYED_EDGE_FUNCTIONS: ${{ secrets.VITE_DEPLOYED_EDGE_FUNCTIONS || '' }}
     steps:
       - uses: actions/checkout@v7.0.1
 
