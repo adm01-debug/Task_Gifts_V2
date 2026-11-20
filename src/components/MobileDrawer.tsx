@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
- import { Flame, Zap, Trophy, Target, Users, BarChart3, Gift, Settings, Home, Medal, X, ClipboardList, PlusCircle, Shield, Activity, BookOpen, Clock, LineChart, ShoppingBag, MessageSquare, TrendingUp, Swords, Heart, Gamepad2, HelpCircle, Bot, Search, Link2, LogOut } from "lucide-react";
+ import { Flame, Zap, Trophy, Target, Users, BarChart3, Gift, Settings, Home, Medal, X, ClipboardList, PlusCircle, Shield, Activity, BookOpen, Clock, LineChart, ShoppingBag, MessageSquare, TrendingUp, Swords, Heart, Gamepad2, HelpCircle, Bot, Search, LogOut } from "lucide-react";
 import { useState, useCallback, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { cn } from "@/lib/utils";
@@ -50,7 +50,9 @@ const navItems: NavItem[] = [
   { icon: Activity, label: "Analytics", path: "/analytics" },
   { icon: Shield, label: "Auditoria", path: "/audit" },
   { icon: Settings, label: "Painel Admin", path: "/admin" },
-  { icon: Link2, label: "CRM Bitrix24", path: "/bitrix24" },
+  { icon: Swords, label: "Chefão", path: "/chefao" },
+  { icon: HelpCircle, label: "Pergunta do Dia", path: "/pergunta-do-dia" },
+  { icon: TrendingUp, label: "Previsões", path: "/previsoes" },
 ];
 
 interface MobileDrawerProps {

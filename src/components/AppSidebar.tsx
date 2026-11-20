@@ -30,6 +30,7 @@ import {
   Layers,
   Brain,
   ListOrdered,
+    HelpCircle,
 } from "lucide-react";
 import { memo } from "react";
 import {
@@ -94,6 +95,9 @@ const navCategories = [
       },
       { icon: Gavel, label: "Leilão de Recompensas", path: "/leilao" },
       { icon: Rocket, label: "Campanhas", path: "/campanhas" },
+            { icon: TrendingUp, label: "Previsões", path: "/previsoes" },
+            { icon: Swords, label: "Chefão", path: "/chefao" },
+            { icon: HelpCircle, label: "Pergunta do Dia", path: "/pergunta-do-dia" },
     ],
   },
   {
