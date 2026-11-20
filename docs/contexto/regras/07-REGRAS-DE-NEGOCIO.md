@@ -1,6 +1,6 @@
 # 07 · REGRAS DE NEGÓCIO
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `ba823e461a` · branch `main` · 2026-11-14 14:05 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `b30f52b880` · branch `main` · 2026-11-20 00:39 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## A. Regras escritas por humanos (`manual/` — prioridade máxima, nunca sobrescrito)
@@ -750,9 +750,6 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 |---|---|---|
 | `_require_admin` | insufficient_privilege | `supabase/migrations/20260711194726_d4508070-d4f0-4b68-9cc4-83171b3b1d84.sql` |
 | `_require_manager_or_admin` | insufficient_privilege | `supabase/migrations/20260712110233_c2c516f4-081f-48da-a073-abbbe32b95c6.sql` |
-| `get_2fa_status` | insufficient_privilege | `supabase/migrations/20260712112604_ad3b2cb2-b80b-48e3-b81e-db4bd77c51fe.sql` |
-| `user_has_passkeys` | insufficient_privilege | `supabase/migrations/20260712112604_ad3b2cb2-b80b-48e3-b81e-db4bd77c51fe.sql` |
-| `validate_reset_token` | insufficient_privilege | `supabase/migrations/20260712112604_ad3b2cb2-b80b-48e3-b81e-db4bd77c51fe.sql` |
 | `get_webhook_delivery_stats_24h` | access_denied: admin role required | `supabase/migrations/20260712191659_7162f535-958f-4c45-8b50-f0a1eaa0028c.sql` |
 | `rotate_webhook_secret` | insufficient_privilege | `supabase/migrations/20260712195808_a0bac812-0690-4dda-9776-845e547e1aac.sql` |
 | `rotate_webhook_secret` | secret deve ter no mínimo 32 caracteres | `supabase/migrations/20260712195808_a0bac812-0690-4dda-9776-845e547e1aac.sql` |
@@ -919,6 +916,9 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `save_board_trail` | A trilha deve ter exatamente uma casa de Partida | `supabase/migrations/20260807010000_board_trail_rpcs.sql` |
 | `save_board_trail` | A trilha deve ter exatamente uma casa de Chegada | `supabase/migrations/20260807010000_board_trail_rpcs.sql` |
 | `save_board_trail` | Trilha nao encontrada | `supabase/migrations/20260807010000_board_trail_rpcs.sql` |
+| `get_2fa_status` | insufficient_privilege | `supabase/migrations/20261114134238_9b119528-da6f-4f43-b6cb-dcdcd7aa7ab1.sql` |
+| `user_has_passkeys` | insufficient_privilege | `supabase/migrations/20261114134238_9b119528-da6f-4f43-b6cb-dcdcd7aa7ab1.sql` |
+| `validate_reset_token` | insufficient_privilege | `supabase/migrations/20261114134238_9b119528-da6f-4f43-b6cb-dcdcd7aa7ab1.sql` |
 
 ## E. Estados, máquinas de estado e transições
 

@@ -1,7 +1,7 @@
 # Contexto do projeto para agentes de IA
 
 GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.
-Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `ba823e461a90aa3c9d2fe4e0af84114ec0dac242` (2026-11-14T10:22:58-03:00).
+Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `b30f52b880f24e84115fa90cbfca29fd75166787` (2026-11-19T20:16:08-03:00).
 
 ## Como usar (leia antes de planejar ou executar qualquer tarefa)
 1. **Tela/rota/menu** → `rotas.json` (url/vista/menu → arquivo → hooks → tabelas → edges; `rotas_http_backend` para APIs) e `modulos.json` (módulo inteiro + dependências entre módulos).
@@ -14,7 +14,7 @@ Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR
 Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua tarefa; não carregue tudo.
 
 ## Stack
-- linguagens: TypeScript (1100), SQL (269), Markdown (46), JavaScript (22), JSON (15), YAML (7), Python (5), Shell (4)
+- linguagens: TypeScript (1100), SQL (270), Markdown (46), JavaScript (24), JSON (15), YAML (9), Python (5), Shell (4)
 - linguagem_principal: TypeScript
 - framework: React
 - backend_http: n/d
@@ -34,9 +34,9 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 ## Números
 | item | qtd |
 |---|---|
-| arquivos_total | 1485 |
-| arquivos_codigo | 1126 |
-| linhas_codigo | 223907 |
+| arquivos_total | 1490 |
+| arquivos_codigo | 1128 |
+| linhas_codigo | 224068 |
 | rotas | 83 |
 | rotas_http_backend | 0 |
 | vistas_por_id | 0 |
@@ -46,11 +46,11 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 | hooks | 155 |
 | edge_functions | 16 |
 | tabelas | 236 |
-| migrations | 269 |
+| migrations | 270 |
 | cron_jobs | 22 |
-| testes | 157 |
-| workflows | 4 |
-| scripts | 15 |
+| testes | 158 |
+| workflows | 6 |
+| scripts | 16 |
 | docs_md | 46 |
 
 ## Onde ficam as coisas
@@ -58,10 +58,10 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - componentes: src/components (432), src/pages (82), src/contexts (4)
 - hooks: src/hooks (129), src/components (22), src/contexts (4)
 - servicos_logica: src/lib (106), src/services (99), src/integrations (3)
-- testes: co-localizado (*.test) (142), outro (11), tests/ (3)
+- testes: co-localizado (*.test) (142), outro (12), tests/ (3)
 - edge_functions: supabase/functions
 - migrations: supabase/migrations
-- scripts: scripts/maintenance (4), scripts/regras_negocio (3), scripts/ci (2)
+- scripts: scripts/maintenance (4), scripts/ci (3), scripts/regras_negocio (3)
 - docs: (raiz) (15), docs (2), .github (1)
 - nomenclatura: {"componentes":"PascalCase (88%)","hooks":"use + PascalCase","servicos":"camelCase (100%)","edge_functions":"kebab-case (100%)","tabelas":"snake_case (91%)"}
 - instruções para agentes no repo: AGENTS.md, CLAUDE.md
@@ -237,7 +237,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 
 ## Integrações externas
 - SDKs: Sentry, Supabase, react-query, zod
-- hosts mais citados: ai.gateway.lovable.dev, fcm.googleapis.com, i.pravatar.cc, taskgifts.app, www.youtube.com, a.com, api.pwnedpasswords.com, api.resend.com, app.exemplo.com, example.test, exemplo.com, linkedin.com, maintenance.invalid, production.invalid, production.supabase.co
+- hosts mais citados: ai.gateway.lovable.dev, fcm.googleapis.com, i.pravatar.cc, taskgifts.app, www.youtube.com, a.com, api.pwnedpasswords.com, api.resend.com, app.exemplo.com, eidsaqymojyuhprobfpn.supabase.co, example.test, exemplo.com, linkedin.com, maintenance.invalid, placeholder.supabase.co
 - webhooks recebidos: migrate-helper, push-public-key
 - env de integração (só nomes): CRON_SECRET, INTERNAL_FUNCTION_SECRET, LOVABLE_API_KEY, RESEND_API_KEY, SENTRY_DSN, SENTRY_ENV, UPSTASH_REDIS_REST_TOKEN, UPSTASH_REDIS_REST_URL, VITE_BITRIX_WEBHOOK_URL, VITE_SENTRY_DSN
 
@@ -265,33 +265,35 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - possiveis_segredos_no_codigo: 0
 
 ## Grafo de código (graphify)
-- 9804 nós · 27384 arestas · 654 comunidades · grafo do commit `ba823e46`
-- comunidades maiores: lucide-react (269), react (256), App.tsx (207), badge.tsx (156), cn (126), date-fns (101), loggingService.ts (84), gerar.mjs (79), mobile/index.ts (76), useIsMobile (73), useToast (72), DashboardRightColumn.tsx (72)
+- 9815 nós · 27396 arestas · 627 comunidades · grafo do commit `b30f52b8`
+- comunidades maiores: card.tsx (178), App.tsx (170), react (144), badge.tsx (139), cn (122), useProfiles.ts (109), utils.ts (106), sonner (103), QuizAdmin.tsx (94), @tanstack/react-query (90), lucide-react (86), pages/SocialFeed.tsx (82)
 - símbolos mais chamados: cn() (src/lib/utils.ts), useAuth() (src/hooks/useAuth.tsx), useIsMobile() (src/hooks/use-mobile.tsx), q() (scripts/supabase_snapshot/snapshot.py), useDepartments() (src/hooks/useDepartments.ts), useToast() (src/hooks/use-toast.ts), useRBAC() (src/hooks/useRBAC.ts), useProfiles() (src/hooks/useProfiles.ts), useSEO() (src/hooks/useSEO.ts), useSoundEffects() (src/hooks/useSoundEffects.tsx), .collect() (scripts/supabase_snapshot/test_snapshot.py), excluded_sql() (scripts/supabase_snapshot/snapshot.py)
 - consulta local: `graphify query "<pergunta>"`, `graphify path "<A>" "<B>"`, `graphify explain "<X>"`
 
 ## Hotspots (arquivos mais alterados, 90 dias)
-- package.json (14)
-- .github/workflows/ci.yml (8)
+- package.json (15)
+- .github/workflows/ci.yml (10)
 - bun.lock (8)
-- AGENTS.md (6)
+- AGENTS.md (5)
 - docs/prod-readiness.md (5)
+- .github/workflows/contexto.yml (4)
 - RELATORIO_CI.md (4)
 - docs/agentes/mapa-repo.md (4)
 - package-lock.json (4)
 - scripts/automation.mjs (4)
 - .github/workflows/automation-local.yml (3)
-- .github/workflows/contexto.yml (3)
+- .github/workflows/deploy-edge-functions.yml (3)
 - PENDENCIAS.md (3)
 - docs/agentes/banco.md (3)
 - docs/agentes/github-ci.md (3)
-- scripts/graphify-local.mjs (3)
 
 ## Workflows
 - `automation-local.yml` — Automação local (pull_request, push, workflow_dispatch)
 - `ci.yml` — CI (pull_request, push)
-- `contexto.yml` — Contexto para agentes de IA (10 min) (push, schedule, workflow_dispatch; cron 3-59/10 * * * *)
-- `deploy-edge-functions.yml` — deploy-edge-functions.yml (push, workflow_dispatch)
+- `contexto.yml` — Contexto para agentes de IA (10 min) (push, schedule, workflow_dispatch; cron 3 * * * *)
+- `deno.yml` — Edge Functions (Deno) (pull_request, push, workflow_dispatch)
+- `dependency-review.yml` — Dependency Review (pull_request)
+- `deploy-edge-functions.yml` — Deploy Edge Functions (push, workflow_dispatch)
 
 ## Scripts npm
 - `maintenance:doctor`: `sh scripts/maintenance/run.sh doctor --root .`
@@ -299,10 +301,11 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - `maintenance:heal`: `sh scripts/maintenance/run.sh heal --root . --ref origin/main`
 - `test:maintenance`: `node --test scripts/maintenance/maintenance.unit.mjs`
 - `dev`: `vite`
-- `build`: `vite build`
+- `build`: `node scripts/ci/check-supabase-env.mjs && vite build`
 - `build:dev`: `vite build --mode development`
 - `lint`: `eslint .`
 - `typecheck`: `tsc --noEmit -p tsconfig.app.json && tsc --noEmit -p tsconfig.node.json`
+- `test:guard-env`: `node --test scripts/ci/check-supabase-env.unit.mjs`
 - `test`: `vitest run`
 - `test:ci`: `vitest run --coverage --reporter=verbose`
 - `preview`: `vite preview`
@@ -347,6 +350,13 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 
 
 ## Últimos commits
+- 2026-11-19 `b30f52b` chore: CI roda testes de seguranca RPC com env real (#69)
+- 2026-11-19 `96fa87c` infra(workflow): sobe actions de checkout e setup-cli no deploy de edge functions (#68)
+- 2026-11-19 `d7ab23c` fix(functions): corrige bugs de runtime + checagem Deno e dependency review das edge functions (#67)
+- 2026-11-14 `94dc2c7` infra: guarda envs Supabase no build para evitar redeploy com URL vazia (#61)
+- 2026-11-14 `15656ee` fix: setup.ts preserva env real do Supabase nos testes de seguranca (#62)
+- 2026-11-14 `2e58f57` fix: guarda robusta nas RPCs 2FA/validacao (drift GUC NULL em producao) (#63)
+- 2026-11-14 `c4d21f5` chore: contexto agendado de 10 min para 1x/hora (#64)
 - 2026-11-14 `ba823e4` docs: prod-readiness refletido ao main c86726f2 (deploy edge functions, advisors 5 ERROR, 48 erros postgres, PRs #58/#59
 - 2026-11-14 `696dd2d` fix: revoga acesso anonimo/authenticated das views de diagnostico (#58)
 - 2026-11-14 `9759f35` fix: corrige cron de campanhas e allowlist de alertas de segurança (#59)
@@ -355,13 +365,6 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - 2026-11-13 `27554ab` docs: relatório prod-readiness alinhado ao main e1b0f368 (pós #54) (#56)
 - 2026-11-13 `e1b0f36` chore(functions): poda 21 edge functions mortas + mitiga 4 vulnerabilidades (#54)
 - 2026-11-13 `a489fe2` docs: marca item 5 do prod-readiness como aprovado após PR #52 (#53)
-- 2026-11-13 `2978195` fix: remove mocks do admin de humor e dá ação real ao botão de configurações (#52)
-- 2026-11-13 `f9d5fbd` docs: relatório prod-readiness com evidências do estado real do main (#51)
-- 2026-11-13 `24cfd06` fix(automation): recusar recursão indireta de hooks pela cadeia de eventos (#50)
-- 2026-11-12 `348cdce` build(deps): bump actions/checkout from 6.1.0 to 7.0.1 (#48)
-- 2026-11-12 `4f95e63` build(deps): bump actions/setup-node from 6.5.0 to 7.1.0 (#47)
-- 2026-11-12 `933629b` build(deps): bump actions/download-artifact from 7.0.0 to 8.0.2 (#46)
-- 2026-11-12 `e661bb4` style(manutencao): aplica correcoes locais verificadas (#49)
 
 ## Arquivos deste diretório
 - `docs/contexto/codigo/rotas.json`

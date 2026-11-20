@@ -23,15 +23,15 @@
   ],
   "testes": [
    "co-localizado (*.test) (142)",
-   "outro (11)",
+   "outro (12)",
    "tests/ (3)"
   ],
   "edge_functions": "supabase/functions",
   "migrations": "supabase/migrations",
   "scripts": [
    "scripts/maintenance (4)",
-   "scripts/regras_negocio (3)",
-   "scripts/ci (2)"
+   "scripts/ci (3)",
+   "scripts/regras_negocio (3)"
   ],
   "docs": [
    "(raiz) (15)",
@@ -59,11 +59,11 @@
  "commits": {
   "convencao": "conventional commits (observado)",
   "exemplos": [
-   "docs: prod-readiness refletido ao main c86726f2 (deploy edge functions, advisors 5 ERROR, 48 erros postgres, PRs #58/#59) (#60)",
-   "fix: revoga acesso anonimo/authenticated das views de diagnostico (#58)",
-   "fix: corrige cron de campanhas e allowlist de alertas de segurança (#59)",
-   "fix: adiciona flag --yes ao deploy de edge functions (#57)",
-   "infra: adiciona workflow de deploy de edge functions (#55)"
+   "chore: CI roda testes de seguranca RPC com env real (#69)",
+   "infra(workflow): sobe actions de checkout e setup-cli no deploy de edge functions (#68)",
+   "fix(functions): corrige bugs de runtime + checagem Deno e dependency review das edge functions (#67)",
+   "infra: guarda envs Supabase no build para evitar redeploy com URL vazia (#61)",
+   "fix: setup.ts preserva env real do Supabase nos testes de seguranca (#62)"
   ]
  },
  "pr_template": ".github/PULL_REQUEST_TEMPLATE.md",

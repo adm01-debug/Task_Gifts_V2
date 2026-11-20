@@ -345,7 +345,7 @@
    "nome": "push-outbox-dispatcher",
    "entrada": "supabase/functions/push-outbox-dispatcher/index.ts",
    "arquivos": 1,
-   "linhas": 197,
+   "linhas": 199,
    "verify_jwt": true,
    "metodos": [
     "OPTIONS"
@@ -444,7 +444,7 @@
    "nome": "send-campaign-push",
    "entrada": "supabase/functions/send-campaign-push/index.ts",
    "arquivos": 1,
-   "linhas": 227,
+   "linhas": 237,
    "verify_jwt": true,
    "metodos": [
     "OPTIONS",

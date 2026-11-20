@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "ba823e461a90aa3c9d2fe4e0af84114ec0dac242",
+  "sha": "b30f52b880f24e84115fa90cbfca29fd75166787",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
-  "generated_at": "2026-11-14 14:05 UTC",
-  "files_total": 1494,
-  "code_files": 1401,
-  "code_lines": 254778
+  "generated_at": "2026-11-20 00:39 UTC",
+  "files_total": 1499,
+  "code_files": 1404,
+  "code_lines": 255016
  },
  "version": "1.3.2",
- "facts_hash": "f47dea54c3ca526a",
+ "facts_hash": "901c764d022cd960",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -98,10 +98,11 @@
    "maintenance:heal": "sh scripts/maintenance/run.sh heal --root . --ref origin/main",
    "test:maintenance": "node --test scripts/maintenance/maintenance.unit.mjs",
    "dev": "vite",
-   "build": "vite build",
+   "build": "node scripts/ci/check-supabase-env.mjs && vite build",
    "build:dev": "vite build --mode development",
    "lint": "eslint .",
    "typecheck": "tsc --noEmit -p tsconfig.app.json && tsc --noEmit -p tsconfig.node.json",
+   "test:guard-env": "node --test scripts/ci/check-supabase-env.unit.mjs",
    "test": "vitest run",
    "test:ci": "vitest run --coverage --reporter=verbose",
    "preview": "vite preview",
@@ -165,6 +166,22 @@
     ]
    },
    {
+    "file": ".github/workflows/deno.yml",
+    "name": "Edge Functions (Deno)",
+    "triggers": [
+     "pull_request",
+     "push",
+     "workflow_dispatch"
+    ]
+   },
+   {
+    "file": ".github/workflows/dependency-review.yml",
+    "name": "Dependency Review",
+    "triggers": [
+     "pull_request"
+    ]
+   },
+   {
     "file": ".github/workflows/deploy-edge-functions.yml",
     "name": "Deploy Edge Functions",
     "triggers": [
@@ -177,8 +194,8 @@
   "languages": {
    ".tsx": 565,
    ".ts": 537,
-   ".sql": 269,
-   ".mjs": 19,
+   ".sql": 270,
+   ".mjs": 21,
    ".js": 5,
    ".py": 5,
    ".cjs": 1
@@ -26948,10 +26965,10 @@
     "args": "p_user_id uuid",
     "returns": "boolean",
     "lang": "plpgsql",
-    "src": "supabase/migrations/20260712112604_ad3b2cb2-b80b-48e3-b81e-db4bd77c51fe.sql",
+    "src": "supabase/migrations/20261114134238_9b119528-da6f-4f43-b6cb-dcdcd7aa7ab1.sql",
     "security_definer": true,
     "search_path": true,
-    "body": "BEGIN IF current_setting('request.jwt.claim.role', true) <> 'service_role' AND (auth.uid() IS NULL OR auth.uid() <> p_user_id) THEN RAISE EXCEPTION 'insufficient_privilege' USING ERRCODE = '42501'; END IF; RETURN EXISTS ( SELECT 1 FROM public.webauthn_credentials WHERE user_id = p_user_id AND is_active = true ); END;",
+    "body": "BEGIN IF current_setting('request.jwt.claim.role', true) IS DISTINCT FROM 'service_role' AND (auth.uid() IS NULL OR auth.uid() <> p_user_id) THEN RAISE EXCEPTION 'insufficient_privilege' USING ERRCODE = '42501'; END IF; RETURN EXISTS ( SELECT 1 FROM public.webauthn_credentials WHERE user_id = p_user_id AND is_active = true ); END;",
     "raises": [
      "insufficient_privilege"
     ],
@@ -27025,10 +27042,10 @@
     "args": "p_token uuid",
     "returns": "boolean",
     "lang": "plpgsql",
-    "src": "supabase/migrations/20260712112604_ad3b2cb2-b80b-48e3-b81e-db4bd77c51fe.sql",
+    "src": "supabase/migrations/20261114134238_9b119528-da6f-4f43-b6cb-dcdcd7aa7ab1.sql",
     "security_definer": true,
     "search_path": true,
-    "body": "BEGIN IF current_setting('request.jwt.claim.role', true) <> 'service_role' THEN RAISE EXCEPTION 'insufficient_privilege' USING ERRCODE = '42501'; END IF; RETURN EXISTS ( SELECT 1 FROM public.password_reset_requests WHERE reset_token = p_token AND status = 'pending' AND expires_at > now() ); END;",
+    "body": "BEGIN IF current_setting('request.jwt.claim.role', true) IS DISTINCT FROM 'service_role' THEN RAISE EXCEPTION 'insufficient_privilege' USING ERRCODE = '42501'; END IF; RETURN EXISTS ( SELECT 1 FROM public.password_reset_requests WHERE reset_token = p_token AND status = 'pending' AND expires_at > now() ); END;",
     "raises": [
      "insufficient_privilege"
     ],
@@ -27040,10 +27057,10 @@
     "args": "p_user_id uuid",
     "returns": "TABLE(is_enabled boolean, verified_at timestamp with time zone)",
     "lang": "plpgsql",
-    "src": "supabase/migrations/20260712112604_ad3b2cb2-b80b-48e3-b81e-db4bd77c51fe.sql",
+    "src": "supabase/migrations/20261114134238_9b119528-da6f-4f43-b6cb-dcdcd7aa7ab1.sql",
     "security_definer": true,
     "search_path": true,
-    "body": "BEGIN IF current_setting('request.jwt.claim.role', true) <> 'service_role' AND (auth.uid() IS NULL OR auth.uid() <> p_user_id) THEN RAISE EXCEPTION 'insufficient_privilege' USING ERRCODE = '42501'; END IF; RETURN QUERY SELECT u.is_enabled, u.verified_at FROM public.user_two_factor u WHERE u.user_id = p_user_id; END;",
+    "body": "BEGIN IF current_setting('request.jwt.claim.role', true) IS DISTINCT FROM 'service_role' AND (auth.uid() IS NULL OR auth.uid() <> p_user_id) THEN RAISE EXCEPTION 'insufficient_privilege' USING ERRCODE = '42501'; END IF; RETURN QUERY SELECT u.is_enabled, u.verified_at FROM public.user_two_factor u WHERE u.user_id = p_user_id; END;",
     "raises": [
      "insufficient_privilege"
     ],
@@ -33297,6 +33314,7 @@
    "supabase/migrations/20261109120000_fix_cron_wrong_project.sql",
    "supabase/migrations/20261114095829_revoke_vistas_diagnostico.sql",
    "supabase/migrations/20261114110500_fix_cron_campaigns_alert_check.sql",
+   "supabase/migrations/20261114134238_9b119528-da6f-4f43-b6cb-dcdcd7aa7ab1.sql",
    "src/integrations/supabase/types.ts"
   ],
   "rls": {
@@ -40759,6 +40777,54 @@
     "objkind": "function",
     "roles": "service_role",
     "src": "supabase/migrations/20261114110500_fix_cron_campaigns_alert_check.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "execute",
+    "object": "validate_reset_token",
+    "objkind": "function",
+    "roles": "PUBLIC, anon, authenticated",
+    "src": "supabase/migrations/20261114134238_9b119528-da6f-4f43-b6cb-dcdcd7aa7ab1.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "validate_reset_token",
+    "objkind": "function",
+    "roles": "service_role",
+    "src": "supabase/migrations/20261114134238_9b119528-da6f-4f43-b6cb-dcdcd7aa7ab1.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "execute",
+    "object": "get_2fa_status",
+    "objkind": "function",
+    "roles": "PUBLIC",
+    "src": "supabase/migrations/20261114134238_9b119528-da6f-4f43-b6cb-dcdcd7aa7ab1.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "get_2fa_status",
+    "objkind": "function",
+    "roles": "anon, authenticated, service_role",
+    "src": "supabase/migrations/20261114134238_9b119528-da6f-4f43-b6cb-dcdcd7aa7ab1.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "execute",
+    "object": "user_has_passkeys",
+    "objkind": "function",
+    "roles": "PUBLIC",
+    "src": "supabase/migrations/20261114134238_9b119528-da6f-4f43-b6cb-dcdcd7aa7ab1.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "user_has_passkeys",
+    "objkind": "function",
+    "roles": "anon, authenticated, service_role",
+    "src": "supabase/migrations/20261114134238_9b119528-da6f-4f43-b6cb-dcdcd7aa7ab1.sql"
    }
   ],
   "raises": [
@@ -40771,21 +40837,6 @@
     "function": "_require_manager_or_admin",
     "msg": "insufficient_privilege",
     "src": "supabase/migrations/20260712110233_c2c516f4-081f-48da-a073-abbbe32b95c6.sql"
-   },
-   {
-    "function": "get_2fa_status",
-    "msg": "insufficient_privilege",
-    "src": "supabase/migrations/20260712112604_ad3b2cb2-b80b-48e3-b81e-db4bd77c51fe.sql"
-   },
-   {
-    "function": "user_has_passkeys",
-    "msg": "insufficient_privilege",
-    "src": "supabase/migrations/20260712112604_ad3b2cb2-b80b-48e3-b81e-db4bd77c51fe.sql"
-   },
-   {
-    "function": "validate_reset_token",
-    "msg": "insufficient_privilege",
-    "src": "supabase/migrations/20260712112604_ad3b2cb2-b80b-48e3-b81e-db4bd77c51fe.sql"
    },
    {
     "function": "get_webhook_delivery_stats_24h",
@@ -41616,6 +41667,21 @@
     "function": "save_board_trail",
     "msg": "Trilha nao encontrada",
     "src": "supabase/migrations/20260807010000_board_trail_rpcs.sql"
+   },
+   {
+    "function": "get_2fa_status",
+    "msg": "insufficient_privilege",
+    "src": "supabase/migrations/20261114134238_9b119528-da6f-4f43-b6cb-dcdcd7aa7ab1.sql"
+   },
+   {
+    "function": "user_has_passkeys",
+    "msg": "insufficient_privilege",
+    "src": "supabase/migrations/20261114134238_9b119528-da6f-4f43-b6cb-dcdcd7aa7ab1.sql"
+   },
+   {
+    "function": "validate_reset_token",
+    "msg": "insufficient_privilege",
+    "src": "supabase/migrations/20261114134238_9b119528-da6f-4f43-b6cb-dcdcd7aa7ab1.sql"
    }
   ],
   "seed": [],
@@ -44797,7 +44863,7 @@
    },
    {
     "kind": "GitHub Actions cron",
-    "detail": "3-59/10 * * * *",
+    "detail": "3 * * * *",
     "file": ".github/workflows/contexto.yml"
    }
   ],
@@ -47261,8 +47327,8 @@
   },
   {
    "module": "scripts",
-   "files": 25,
-   "lines": 15574,
+   "files": 27,
+   "lines": 15692,
    "tables": [
     "a",
     "contacts",
@@ -47283,6 +47349,7 @@
     "automation.mjs: parseArgs, validateConfig, execute, appendExclude, removeExclude, main",
     "graphify-local.mjs: GraphError, run, acquire, validateConfig, fingerprint, validateGraph",
     "gerar.unit.mjs: AppRoutes, useContacts",
+    "check-supabase-env.mjs: checar",
     "commit-msg-lint.mjs: TIPOS, SUBJECT_MIN_LENGTH, cabecalhoDaMensagem, validarMensagem, main",
     "check-migration-drift.mjs: TIPOS, limparCorpo, tokenizar, faixaDe, nomeObjeto, analisarArquivo",
     "lib.mjs: MaintenanceError, fail, digest, exists, safeEnv, stopChildren",
@@ -47349,6 +47416,8 @@
     "scripts/ai-context/gerar.unit.mjs",
     "scripts/ci/check-claude-md-integrity.mjs",
     "scripts/ci/check-migration-drift.unit.mjs",
+    "scripts/ci/check-supabase-env.mjs",
+    "scripts/ci/check-supabase-env.unit.mjs",
     "scripts/ci/commit-msg-lint.mjs",
     "scripts/ci/contexto-indice.unit.mjs",
     "scripts/ci/contexto-publicacao.unit.mjs",
@@ -48557,7 +48626,7 @@
   {
    "module": "src/test",
    "files": 127,
-   "lines": 22211,
+   "lines": 22235,
    "tables": [
     "kudos",
     "profiles"
@@ -48757,7 +48826,7 @@
   {
    "module": "supabase/functions",
    "files": 27,
-   "lines": 4711,
+   "lines": 4730,
    "tables": [
     "ai_course_jobs",
     "attendance_records",
@@ -48806,8 +48875,8 @@
     "rate-limit.ts: Shared Rate Limiting Utility using Upstash Redis Recommended for high-traffic or sensitive Edge Functions.",
     "rate-limiter.ts: Hybrid Rate Limiter for Supabase Edge Functions Uses Upstash Redis for global consistency, falls back to in-memory for performance/offline. ATENÇÃO: `checkRateLimit` é assíncrona. Chamar sem `await` faz `result.allowed` ser `undefined`, o que bloqueia 100% do tráfego com 429.",
     "sentry.ts: Dynamic import keeps Sentry optional and avoids type-check pulling the module. deno-lint-ignore no-explicit-any",
-    "webhookSecurity.ts: Segurança de webhooks de entrada: assinatura HMAC obrigatória, proteção contra replay e idempotência persistente. Por que obrigatória ------------------- O padrão anterior era `if (signature && secret) { validar }`, que só valida quando o chamador COOPERA. Um atacante simplesmente omite o header e o …",
-    "index.ts: Edge function temporária para migração de banco. Cole em: Cloud > Edge Functions > migrate-helper > View code Após a migração, remova esta função."
+    "validation.ts: Versão FIXADA: sem versão, cada execução baixava o zod mais novo (comportamento imprevisível e risco de cadeia de suprimentos). v3.25 é a que já resolvia em 12/11/2026 — comportamento inalterado.",
+    "webhookSecurity.ts: Segurança de webhooks de entrada: assinatura HMAC obrigatória, proteção contra replay e idempotência persistente. Por que obrigatória ------------------- O padrão anterior era `if (signature && secret) { validar }`, que só valida quando o chamador COOPERA. Um atacante simplesmente omite o header e o …"
    ],
    "deps": [
     "https:",
@@ -48848,8 +48917,8 @@
   },
   {
    "module": "supabase/migrations",
-   "files": 269,
-   "lines": 29324,
+   "files": 270,
+   "lines": 29401,
    "tables": [],
    "exports": [],
    "docs": [],
@@ -52139,7 +52208,8 @@
    ],
    "VITE_SUPABASE_ANON_KEY": [
     "src/test/rls.test.ts",
-    "src/test/rpcAccess.test.ts"
+    "src/test/rpcAccess.test.ts",
+    "src/test/setup.ts"
    ],
    "VITE_SUPABASE_PROJECT_ID": [
     "scripts/maintenance/maintenance.unit.mjs"
@@ -93026,10 +93096,10 @@
     "args": "p_user_id uuid",
     "returns": "boolean",
     "lang": "plpgsql",
-    "src": "supabase/migrations/20260712112604_ad3b2cb2-b80b-48e3-b81e-db4bd77c51fe.sql",
+    "src": "supabase/migrations/20261114134238_9b119528-da6f-4f43-b6cb-dcdcd7aa7ab1.sql",
     "security_definer": true,
     "search_path": true,
-    "body": "BEGIN IF current_setting('request.jwt.claim.role', true) <> 'service_role' AND (auth.uid() IS NULL OR auth.uid() <> p_user_id) THEN RAISE EXCEPTION 'insufficient_privilege' USING ERRCODE = '42501'; END IF; RETURN EXISTS ( SELECT 1 FROM public.webauthn_credentials WHERE user_id = p_user_id AND is_active = true ); END;",
+    "body": "BEGIN IF current_setting('request.jwt.claim.role', true) IS DISTINCT FROM 'service_role' AND (auth.uid() IS NULL OR auth.uid() <> p_user_id) THEN RAISE EXCEPTION 'insufficient_privilege' USING ERRCODE = '42501'; END IF; RETURN EXISTS ( SELECT 1 FROM public.webauthn_credentials WHERE user_id = p_user_id AND is_active = true ); END;",
     "raises": [
      "insufficient_privilege"
     ],
@@ -93103,10 +93173,10 @@
     "args": "p_token uuid",
     "returns": "boolean",
     "lang": "plpgsql",
-    "src": "supabase/migrations/20260712112604_ad3b2cb2-b80b-48e3-b81e-db4bd77c51fe.sql",
+    "src": "supabase/migrations/20261114134238_9b119528-da6f-4f43-b6cb-dcdcd7aa7ab1.sql",
     "security_definer": true,
     "search_path": true,
-    "body": "BEGIN IF current_setting('request.jwt.claim.role', true) <> 'service_role' THEN RAISE EXCEPTION 'insufficient_privilege' USING ERRCODE = '42501'; END IF; RETURN EXISTS ( SELECT 1 FROM public.password_reset_requests WHERE reset_token = p_token AND status = 'pending' AND expires_at > now() ); END;",
+    "body": "BEGIN IF current_setting('request.jwt.claim.role', true) IS DISTINCT FROM 'service_role' THEN RAISE EXCEPTION 'insufficient_privilege' USING ERRCODE = '42501'; END IF; RETURN EXISTS ( SELECT 1 FROM public.password_reset_requests WHERE reset_token = p_token AND status = 'pending' AND expires_at > now() ); END;",
     "raises": [
      "insufficient_privilege"
     ],
@@ -93118,10 +93188,10 @@
     "args": "p_user_id uuid",
     "returns": "TABLE(is_enabled boolean, verified_at timestamp with time zone)",
     "lang": "plpgsql",
-    "src": "supabase/migrations/20260712112604_ad3b2cb2-b80b-48e3-b81e-db4bd77c51fe.sql",
+    "src": "supabase/migrations/20261114134238_9b119528-da6f-4f43-b6cb-dcdcd7aa7ab1.sql",
     "security_definer": true,
     "search_path": true,
-    "body": "BEGIN IF current_setting('request.jwt.claim.role', true) <> 'service_role' AND (auth.uid() IS NULL OR auth.uid() <> p_user_id) THEN RAISE EXCEPTION 'insufficient_privilege' USING ERRCODE = '42501'; END IF; RETURN QUERY SELECT u.is_enabled, u.verified_at FROM public.user_two_factor u WHERE u.user_id = p_user_id; END;",
+    "body": "BEGIN IF current_setting('request.jwt.claim.role', true) IS DISTINCT FROM 'service_role' AND (auth.uid() IS NULL OR auth.uid() <> p_user_id) THEN RAISE EXCEPTION 'insufficient_privilege' USING ERRCODE = '42501'; END IF; RETURN QUERY SELECT u.is_enabled, u.verified_at FROM public.user_two_factor u WHERE u.user_id = p_user_id; END;",
     "raises": [
      "insufficient_privilege"
     ],
@@ -96899,21 +96969,6 @@
     "src": "supabase/migrations/20260712110233_c2c516f4-081f-48da-a073-abbbe32b95c6.sql"
    },
    {
-    "function": "get_2fa_status",
-    "msg": "insufficient_privilege",
-    "src": "supabase/migrations/20260712112604_ad3b2cb2-b80b-48e3-b81e-db4bd77c51fe.sql"
-   },
-   {
-    "function": "user_has_passkeys",
-    "msg": "insufficient_privilege",
-    "src": "supabase/migrations/20260712112604_ad3b2cb2-b80b-48e3-b81e-db4bd77c51fe.sql"
-   },
-   {
-    "function": "validate_reset_token",
-    "msg": "insufficient_privilege",
-    "src": "supabase/migrations/20260712112604_ad3b2cb2-b80b-48e3-b81e-db4bd77c51fe.sql"
-   },
-   {
     "function": "get_webhook_delivery_stats_24h",
     "msg": "access_denied: admin role required",
     "src": "supabase/migrations/20260712191659_7162f535-958f-4c45-8b50-f0a1eaa0028c.sql"
@@ -97742,6 +97797,21 @@
     "function": "save_board_trail",
     "msg": "Trilha nao encontrada",
     "src": "supabase/migrations/20260807010000_board_trail_rpcs.sql"
+   },
+   {
+    "function": "get_2fa_status",
+    "msg": "insufficient_privilege",
+    "src": "supabase/migrations/20261114134238_9b119528-da6f-4f43-b6cb-dcdcd7aa7ab1.sql"
+   },
+   {
+    "function": "user_has_passkeys",
+    "msg": "insufficient_privilege",
+    "src": "supabase/migrations/20261114134238_9b119528-da6f-4f43-b6cb-dcdcd7aa7ab1.sql"
+   },
+   {
+    "function": "validate_reset_token",
+    "msg": "insufficient_privilege",
+    "src": "supabase/migrations/20261114134238_9b119528-da6f-4f43-b6cb-dcdcd7aa7ab1.sql"
    }
   ],
   "db_generated": [
@@ -103376,7 +103446,8 @@
    "supabase/migrations/20260728204549_157d9c62-d7e3-462a-b546-bd93b8a2e0a0.sql",
    "supabase/migrations/20260728205541_a9eda956-7c86-4797-a55a-f6b543975fc2.sql",
    "supabase/migrations/20260728205741_a19b425a-9dbf-41f9-8a3c-efb2d4b41560.sql",
-   "supabase/migrations/20261114110500_fix_cron_campaigns_alert_check.sql"
+   "supabase/migrations/20261114110500_fix_cron_campaigns_alert_check.sql",
+   "supabase/migrations/20261114134238_9b119528-da6f-4f43-b6cb-dcdcd7aa7ab1.sql"
   ],
   "security_definer_fns": [
    "_grant_card_pack_internal",
@@ -110845,6 +110916,54 @@
     "objkind": "function",
     "roles": "service_role",
     "src": "supabase/migrations/20261114110500_fix_cron_campaigns_alert_check.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "execute",
+    "object": "validate_reset_token",
+    "objkind": "function",
+    "roles": "PUBLIC, anon, authenticated",
+    "src": "supabase/migrations/20261114134238_9b119528-da6f-4f43-b6cb-dcdcd7aa7ab1.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "validate_reset_token",
+    "objkind": "function",
+    "roles": "service_role",
+    "src": "supabase/migrations/20261114134238_9b119528-da6f-4f43-b6cb-dcdcd7aa7ab1.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "execute",
+    "object": "get_2fa_status",
+    "objkind": "function",
+    "roles": "PUBLIC",
+    "src": "supabase/migrations/20261114134238_9b119528-da6f-4f43-b6cb-dcdcd7aa7ab1.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "get_2fa_status",
+    "objkind": "function",
+    "roles": "anon, authenticated, service_role",
+    "src": "supabase/migrations/20261114134238_9b119528-da6f-4f43-b6cb-dcdcd7aa7ab1.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "execute",
+    "object": "user_has_passkeys",
+    "objkind": "function",
+    "roles": "PUBLIC",
+    "src": "supabase/migrations/20261114134238_9b119528-da6f-4f43-b6cb-dcdcd7aa7ab1.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "user_has_passkeys",
+    "objkind": "function",
+    "roles": "anon, authenticated, service_role",
+    "src": "supabase/migrations/20261114134238_9b119528-da6f-4f43-b6cb-dcdcd7aa7ab1.sql"
    }
   ],
   "guards": [
@@ -114443,6 +114562,24 @@
     "Consertar METADE do problema nao pode reprovar (era o bug: a chave tinha (Nx))."
    ],
    "doc": "Guarda das migrations: fixtures sinteticas, nenhum acesso a banco ou rede. Os casos marcados REGRESSAO vem da auditoria adversarial de 2026-11-08, que quebrou a primeira versao deste guarda (dispensa por arquivo, lexer de dollar-quoting, drop de outro objeto, ratchet cego a repeticao, fase 2 sem led …"
+  },
+  "scripts/ci/check-supabase-env.mjs": {
+   "path": "scripts/ci/check-supabase-env.mjs",
+   "lines": 50,
+   "exports": [
+    "function checar"
+   ],
+   "rule_comments": [
+    "O incidente de 2026-11-11 (\"supabaseUrl is required\") aconteceu porque o build",
+    "em runtime. Este script roda ANTES do `vite build` (não apenas no CI, que usa",
+    "- `--allow-placeholder` permite valores placeholder (usado pelo CI apenas para"
+   ],
+   "doc": "Guarda de build: impede redeploy com env do Supabase ausente/vazia/placeholder. O incidente de 2026-11-11 (\"supabaseUrl is required\") aconteceu porque o build da Vercel foi feito com VITE_SUPABASE_URL vazia e VITE_SUPABASE_PUBLISHABLE_KEY inexistente no projeto; o bundle nasceu com createClient(\"\", …"
+  },
+  "scripts/ci/check-supabase-env.unit.mjs": {
+   "path": "scripts/ci/check-supabase-env.unit.mjs",
+   "lines": 68,
+   "doc": "Guarda de env do build: fixtures sinteticas, zero rede/banco. Cobrem o incidente real de 2026-11-11 (bundle com createClient(\"\", ...)) e o fallback placeholder usado só em PRs do Dependabot (CI não expõe secrets)."
   },
   "scripts/ci/commit-msg-lint.mjs": {
    "path": "scripts/ci/commit-msg-lint.mjs",
@@ -143928,9 +144065,10 @@
   },
   "src/test/setup.ts": {
    "path": "src/test/setup.ts",
-   "lines": 30,
+   "lines": 54,
    "is_test": true,
    "env": [
+    "VITE_SUPABASE_ANON_KEY",
     "VITE_SUPABASE_PUBLISHABLE_KEY",
     "VITE_SUPABASE_URL"
    ]
@@ -144883,7 +145021,7 @@
   },
   "supabase/functions/_shared/validation.ts": {
    "path": "supabase/functions/_shared/validation.ts",
-   "lines": 109,
+   "lines": 111,
    "exports": [
     "const ValidationErrorSchema",
     "type ValidationError",
@@ -144951,6 +145089,7 @@
     "* Standard error response format for validation failures (422)",
     "* Generic validation helper"
    ],
+   "doc": "Versão FIXADA: sem versão, cada execução baixava o zod mais novo (comportamento imprevisível e risco de cadeia de suprimentos). v3.25 é a que já resolvia em 12/11/2026 — comportamento inalterado.",
    "calc_fns": [
     {
      "name": "createValidationErrorResponse",
@@ -144961,7 +145100,7 @@
   },
   "supabase/functions/_shared/validation_test.ts": {
    "path": "supabase/functions/_shared/validation_test.ts",
-   "lines": 80,
+   "lines": 85,
    "rule_comments": [
     "If we want it required, we should update the schema."
    ]
@@ -146064,7 +146203,7 @@
   },
   "supabase/functions/push-outbox-dispatcher/index.ts": {
    "path": "supabase/functions/push-outbox-dispatcher/index.ts",
-   "lines": 197,
+   "lines": 199,
    "tables": [
     {
      "table": "push_subscriptions",
@@ -146379,7 +146518,7 @@
   },
   "supabase/functions/send-campaign-push/index.ts": {
    "path": "supabase/functions/send-campaign-push/index.ts",
-   "lines": 227,
+   "lines": 237,
    "tables": [
     {
      "table": "push_subscriptions",
@@ -148052,6 +148191,11 @@
    "lines": 83,
    "uses_service_role": true
   },
+  "supabase/migrations/20261114134238_9b119528-da6f-4f43-b6cb-dcdcd7aa7ab1.sql": {
+   "path": "supabase/migrations/20261114134238_9b119528-da6f-4f43-b6cb-dcdcd7aa7ab1.sql",
+   "lines": 77,
+   "uses_service_role": true
+  },
   "tests/auth-flow.spec.ts": {
    "path": "tests/auth-flow.spec.ts",
    "lines": 34,
@@ -148105,10 +148249,82 @@
   }
  },
  "git": {
-  "sha": "ba823e461a90aa3c9d2fe4e0af84114ec0dac242",
+  "sha": "b30f52b880f24e84115fa90cbfca29fd75166787",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "commits": [
+   {
+    "sha": "b30f52b",
+    "date": "2026-11-19",
+    "author": "adm01-debug",
+    "subject": "chore: CI roda testes de seguranca RPC com env real (#69)",
+    "files": [
+     ".github/workflows/ci.yml"
+    ]
+   },
+   {
+    "sha": "96fa87c",
+    "date": "2026-11-19",
+    "author": "adm01-debug",
+    "subject": "infra(workflow): sobe actions de checkout e setup-cli no deploy de edge functions (#68)",
+    "files": [
+     ".github/workflows/deploy-edge-functions.yml"
+    ]
+   },
+   {
+    "sha": "d7ab23c",
+    "date": "2026-11-19",
+    "author": "adm01-debug",
+    "subject": "fix(functions): corrige bugs de runtime + checagem Deno e dependency review das edge functions (#67)",
+    "files": [
+     ".github/workflows/deno.yml",
+     ".github/workflows/dependency-review.yml",
+     "supabase/functions/_shared/validation.ts",
+     "supabase/functions/_shared/validation_test.ts",
+     "supabase/functions/push-outbox-dispatcher/index.ts",
+     "supabase/functions/send-campaign-push/index.ts"
+    ]
+   },
+   {
+    "sha": "94dc2c7",
+    "date": "2026-11-14",
+    "author": "adm01-debug",
+    "subject": "infra: guarda envs Supabase no build para evitar redeploy com URL vazia (#61)",
+    "files": [
+     ".github/workflows/ci.yml",
+     "package.json",
+     "scripts/automation.config.json",
+     "scripts/ci/check-supabase-env.mjs",
+     "scripts/ci/check-supabase-env.unit.mjs"
+    ]
+   },
+   {
+    "sha": "15656ee",
+    "date": "2026-11-14",
+    "author": "adm01-debug",
+    "subject": "fix: setup.ts preserva env real do Supabase nos testes de seguranca (#62)",
+    "files": [
+     "src/test/setup.ts"
+    ]
+   },
+   {
+    "sha": "2e58f57",
+    "date": "2026-11-14",
+    "author": "adm01-debug",
+    "subject": "fix: guarda robusta nas RPCs 2FA/validacao (drift GUC NULL em producao) (#63)",
+    "files": [
+     "supabase/migrations/20261114134238_9b119528-da6f-4f43-b6cb-dcdcd7aa7ab1.sql"
+    ]
+   },
+   {
+    "sha": "c4d21f5",
+    "date": "2026-11-14",
+    "author": "adm01-debug",
+    "subject": "chore: contexto agendado de 10 min para 1x/hora (#64)",
+    "files": [
+     ".github/workflows/contexto.yml"
+    ]
+   },
    {
     "sha": "ba823e4",
     "date": "2026-11-14",
@@ -148422,188 +148638,31 @@
      "src/tests/unit/access.test.tsx",
      "src/types/charts.ts"
     ]
-   },
-   {
-    "sha": "ffcff81",
-    "date": "2026-11-09",
-    "author": "adm01-debug",
-    "subject": "fix: corrige URL do projeto nas migrations de cron, guard GA02 e docs (#37)",
-    "files": [
-     ".husky/pre-commit",
-     "AGENTS.md",
-     "docs/agentes/banco.md",
-     "scripts/ci/check-claude-md-integrity.mjs",
-     "supabase/migrations/20260712194718_bff07c8c-5744-4682-bba1-33f9ca2a1ecb.sql",
-     "supabase/migrations/20260712203400_c0990109-c9a3-4d2f-90e9-0a48ff66a5ed.sql",
-     "supabase/migrations/20260712212544_f5c57b6a-8da7-4609-9178-803cbf5741f6.sql",
-     "supabase/migrations/20260728112123_ea25bb13-aa3c-4f75-9892-c58e2785e70b.sql",
-     "supabase/migrations/20261109120000_fix_cron_wrong_project.sql"
-    ]
-   },
-   {
-    "sha": "59d2c2b",
-    "date": "2026-11-08",
-    "author": "adm01-debug",
-    "subject": "feat(db-audit): guarda de migrations — idempotência ratchet + drift contra banco real",
-    "files": [
-     ".github/workflows/ci.yml",
-     "AGENTS.md",
-     "docs/agentes/banco.md",
-     "docs/agentes/contexto-autonomo.md",
-     "docs/agentes/github-ci.md",
-     "docs/agentes/mapa-repo.md",
-     "package.json",
-     "scripts/ci/check-migration-drift.unit.mjs",
-     "scripts/db-audit/README.md",
-     "scripts/db-audit/check-migration-drift.mjs",
-     "scripts/db-audit/migration-baseline.json"
-    ]
-   },
-   {
-    "sha": "a270eb3",
-    "date": "2026-11-08",
-    "author": "adm01-debug",
-    "subject": "fix(contexto): hardening do pacote — 2 vazamentos e inventário de edges",
-    "files": [
-     ".github/workflows/contexto.yml",
-     "ai-context.config.json",
-     "package.json",
-     "scripts/ai-context/README.md",
-     "scripts/ai-context/gerar.mjs",
-     "scripts/ci/README.md",
-     "scripts/ci/ai-context-generator.unit.mjs",
-     "scripts/regras_negocio/generate.py",
-     "scripts/supabase_snapshot/README.md",
-     "scripts/supabase_snapshot/snapshot.py"
-    ]
-   },
-   {
-    "sha": "5ffe6db",
-    "date": "2026-11-08",
-    "author": "adm01-debug",
-    "subject": "feat(contexto): sistema autonomo de contexto para agentes de IA (#34)",
-    "files": [
-     ".github/workflows/ci.yml",
-     ".github/workflows/contexto.yml",
-     ".gitignore",
-     "AGENTS.md",
-     "ai-context.config.json",
-     "docs/agentes/contexto-autonomo.md",
-     "docs/agentes/mapa-repo.md",
-     "docs/contexto/regras/manual/README.md",
-     "docs/contexto/regras/manual/TEMPLATE-regras-de-negocio.md",
-     "package.json",
-     "scripts/ai-context/README.md",
-     "scripts/ai-context/cenarios.mjs",
-     "scripts/ai-context/gerar.mjs",
-     "scripts/ai-context/gerar.unit.mjs",
-     "scripts/ci/ai-context-generator.unit.mjs",
-     "scripts/ci/contexto-indice.unit.mjs",
-     "scripts/ci/contexto-publicacao.unit.mjs",
-     "scripts/ci/regras-negocio.unit.mjs",
-     "scripts/ci/supabase-snapshot.unit.mjs",
-     "scripts/regras_negocio/README.md",
-     "scripts/regras_negocio/generate.py",
-     "scripts/regras_negocio/indice.py",
-     "scripts/regras_negocio/publish.sh",
-     "scripts/regras_negocio/test_generate.py",
-     "scripts/supabase_snapshot/README.md",
-     "scripts/supabase_snapshot/requirements.txt",
-     "scripts/supabase_snapshot/snapshot.py",
-     "scripts/supabase_snapshot/test_snapshot.py"
-    ]
-   },
-   {
-    "sha": "6d497c7",
-    "date": "2026-11-08",
-    "author": "adm01-debug",
-    "subject": "fix(supabase): corrige project_id do config.toml para o projeto em uso",
-    "files": [
-     "supabase/config.toml"
-    ]
-   },
-   {
-    "sha": "522ab99",
-    "date": "2026-11-08",
-    "author": "adm01-debug",
-    "subject": "ci(guard): adiciona step GA02 de integridade das instruções de agente no CI",
-    "files": [
-     ".github/workflows/ci.yml"
-    ]
-   },
-   {
-    "sha": "3860817",
-    "date": "2026-11-08",
-    "author": "adm01-debug",
-    "subject": "docs(agentes): replica o padrao de AGENTS.md/CLAUDE.md do Zapp Web V2 (#31)",
-    "files": [
-     ".agents/skills/task-gifts-v2/SKILL.md",
-     ".agents/skills/task-gifts-v2/agents/openai.yaml",
-     ".claude/homunculus/instincts/inherited/task-gifts-v2-instincts.yaml",
-     ".claude/hooks/session-start.sh",
-     ".claude/identity.json",
-     ".claude/settings.json",
-     ".claude/skills/task-gifts-v2/SKILL.md",
-     ".codex/AGENTS.md",
-     ".codex/agents/docs-researcher.toml",
-     ".codex/agents/explorer.toml",
-     ".codex/agents/reviewer.toml",
-     ".codex/config.toml",
-     ".gitignore",
-     ".graphifyignore",
-     ".hermes.md",
-     ".husky/commit-msg",
-     "AGENTS.md",
-     "CLAUDE.md",
-     "docs/agentes/banco.md",
-     "docs/agentes/edge-functions.md",
-     "docs/agentes/github-ci.md",
-     "docs/agentes/mapa-repo.md",
-     "docs/agentes/regras-dominio.md",
-     "docs/agentes/vercel-deploy.md",
-     "package.json",
-     "scripts/ci/check-claude-md-integrity.mjs",
-     "scripts/ci/commit-msg-lint.mjs",
-     "scripts/graphify/README.md",
-     "scripts/graphify/setup.sh"
-    ]
    }
   ],
   "hot_files": [
-   [
-    "package.json",
-    6
-   ],
    [
     "docs/prod-readiness.md",
     5
    ],
    [
     ".github/workflows/ci.yml",
-    5
-   ],
-   [
-    "AGENTS.md",
-    5
+    4
    ],
    [
     "scripts/automation.mjs",
     4
    ],
    [
-    ".gitignore",
-    4
-   ],
-   [
-    "docs/agentes/mapa-repo.md",
-    4
-   ],
-   [
-    ".github/workflows/automation-local.yml",
+    ".github/workflows/deploy-edge-functions.yml",
     3
    ],
    [
-    ".github/workflows/contexto.yml",
+    "package.json",
+    3
+   ],
+   [
+    ".github/workflows/automation-local.yml",
     3
    ],
    [
@@ -148611,19 +148670,11 @@
     3
    ],
    [
-    "docs/agentes/github-ci.md",
-    3
-   ],
-   [
-    "docs/agentes/banco.md",
-    3
-   ],
-   [
-    ".github/workflows/deploy-edge-functions.yml",
+    "scripts/automation.config.json",
     2
    ],
    [
-    "supabase/config.toml",
+    ".github/workflows/contexto.yml",
     2
    ],
    [
@@ -148635,20 +148686,40 @@
     2
    ],
    [
-    "scripts/ci/check-claude-md-integrity.mjs",
+    ".gitignore",
     2
    ],
    [
-    "docs/agentes/contexto-autonomo.md",
-    2
+    ".github/workflows/deno.yml",
+    1
    ],
    [
-    "ai-context.config.json",
-    2
+    ".github/workflows/dependency-review.yml",
+    1
    ],
    [
-    "scripts/ai-context/README.md",
-    2
+    "supabase/functions/_shared/validation.ts",
+    1
+   ],
+   [
+    "supabase/functions/_shared/validation_test.ts",
+    1
+   ],
+   [
+    "supabase/functions/push-outbox-dispatcher/index.ts",
+    1
+   ],
+   [
+    "supabase/functions/send-campaign-push/index.ts",
+    1
+   ],
+   [
+    "scripts/ci/check-supabase-env.mjs",
+    1
+   ],
+   [
+    "scripts/ci/check-supabase-env.unit.mjs",
+    1
    ]
   ]
  }

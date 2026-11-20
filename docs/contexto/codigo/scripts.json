@@ -1,7 +1,7 @@
 {
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
- "total": 15,
+ "total": 16,
  "scripts": [
   {
    "arquivo": "scripts/automation.mjs",
@@ -37,6 +37,17 @@
    "workflows": [
     "ci.yml"
    ],
+   "orfao": false
+  },
+  {
+   "arquivo": "scripts/ci/check-supabase-env.mjs",
+   "descricao": "Guarda de build: impede redeploy com env do Supabase ausente/vazia/placeholder. O incidente de 2026-11-11 (\"supabaseUrl is required\") aconteceu porque o build",
+   "linhas": 50,
+   "env": [],
+   "npm_scripts": [
+    "build"
+   ],
+   "workflows": [],
    "orfao": false
   },
   {

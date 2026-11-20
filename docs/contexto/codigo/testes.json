@@ -5,11 +5,11 @@
   "vitest",
   "playwright"
  ],
- "total": 157,
+ "total": 158,
  "por_tipo": {
   "e2e": 2,
   "pytest": 2,
-  "unit": 153
+  "unit": 154
  },
  "onde_ficam": [
   {
@@ -18,7 +18,7 @@
   },
   {
    "padrao": "outro",
-   "arquivos": 11
+   "arquivos": 12
   },
   {
    "padrao": "tests/",
@@ -47,6 +47,15 @@
     "scripts/db-audit/check-migration-drift.mjs"
    ],
    "casos": 41
+  },
+  {
+   "arquivo": "scripts/ci/check-supabase-env.unit.mjs",
+   "tipo": "unit",
+   "linhas": 68,
+   "testa": [
+    "scripts/ci/check-supabase-env.mjs"
+   ],
+   "casos": 8
   },
   {
    "arquivo": "scripts/ci/contexto-indice.unit.mjs",
@@ -1123,7 +1132,7 @@
   {
    "arquivo": "src/test/setup.ts",
    "tipo": "unit",
-   "linhas": 30,
+   "linhas": 54,
    "testa": [],
    "casos": 0
   },
@@ -1506,6 +1515,7 @@
  "sql": [],
  "cobertura_por_arquivo": {
   "scripts/automation.mjs": 1,
+  "scripts/ci/check-supabase-env.mjs": 1,
   "scripts/db-audit/check-migration-drift.mjs": 1,
   "scripts/graphify-local.mjs": 1,
   "scripts/maintenance/lib.mjs": 1,

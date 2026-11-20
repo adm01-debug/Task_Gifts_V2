@@ -2,11 +2,46 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "ba823e461a90aa3c9d2fe4e0af84114ec0dac242",
+  "commit": "b30f52b880f24e84115fa90cbfca29fd75166787",
   "branch": "main",
-  "data_commit": "2026-11-14T10:22:58-03:00",
+  "data_commit": "2026-11-19T20:16:08-03:00",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "ultimos_commits": [
+   {
+    "sha": "b30f52b",
+    "data": "2026-11-19",
+    "assunto": "chore: CI roda testes de seguranca RPC com env real (#69)"
+   },
+   {
+    "sha": "96fa87c",
+    "data": "2026-11-19",
+    "assunto": "infra(workflow): sobe actions de checkout e setup-cli no deploy de edge functions (#68)"
+   },
+   {
+    "sha": "d7ab23c",
+    "data": "2026-11-19",
+    "assunto": "fix(functions): corrige bugs de runtime + checagem Deno e dependency review das edge functions (#67)"
+   },
+   {
+    "sha": "94dc2c7",
+    "data": "2026-11-14",
+    "assunto": "infra: guarda envs Supabase no build para evitar redeploy com URL vazia (#61)"
+   },
+   {
+    "sha": "15656ee",
+    "data": "2026-11-14",
+    "assunto": "fix: setup.ts preserva env real do Supabase nos testes de seguranca (#62)"
+   },
+   {
+    "sha": "2e58f57",
+    "data": "2026-11-14",
+    "assunto": "fix: guarda robusta nas RPCs 2FA/validacao (drift GUC NULL em producao) (#63)"
+   },
+   {
+    "sha": "c4d21f5",
+    "data": "2026-11-14",
+    "assunto": "chore: contexto agendado de 10 min para 1x/hora (#64)"
+   },
    {
     "sha": "ba823e4",
     "data": "2026-11-14",
@@ -96,52 +131,17 @@
     "sha": "e39fc6c",
     "data": "2026-11-11",
     "assunto": "fix(automacao): destrava grafo local no Windows e exige venv ignorado (#44)"
-   },
-   {
-    "sha": "82ffc0b",
-    "data": "2026-11-11",
-    "assunto": "fix(automacao): tolera ausência de O_NOFOLLOW em win32 (#43)"
-   },
-   {
-    "sha": "eb08848",
-    "data": "2026-11-11",
-    "assunto": "fix(automacao): tolera CRLF no parse de workflows locais (#41)"
-   },
-   {
-    "sha": "c4d87b6",
-    "data": "2026-11-11",
-    "assunto": "fix(ci): separa browser Playwright das deps apt com retry no passo de instalação (#40)"
-   },
-   {
-    "sha": "940efb8",
-    "data": "2026-11-11",
-    "assunto": "chore(automacao): conecta testes, grafo e manutenção aos gatilhos (#38)"
-   },
-   {
-    "sha": "ca1a6e4",
-    "data": "2026-11-10",
-    "assunto": "fix(tipos): corrige contratos e ativa verificação real da aplicação"
-   },
-   {
-    "sha": "ffcff81",
-    "data": "2026-11-09",
-    "assunto": "fix: corrige URL do projeto nas migrations de cron, guard GA02 e docs (#37)"
-   },
-   {
-    "sha": "59d2c2b",
-    "data": "2026-11-08",
-    "assunto": "feat(db-audit): guarda de migrations — idempotência ratchet + drift contra banco real"
    }
   ],
-  "arquivos_mudados_7d": 170,
+  "arquivos_mudados_7d": 49,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "package.json",
-    "mudancas": 12
+    "mudancas": 13
    },
    {
     "pasta": ".github/workflows/ci.yml",
-    "mudancas": 7
+    "mudancas": 9
    },
    {
     "pasta": "bun.lock",
@@ -164,6 +164,10 @@
     "mudancas": 5
    },
    {
+    "pasta": ".github/workflows/contexto.yml",
+    "mudancas": 4
+   },
+   {
     "pasta": "RELATORIO_CI.md",
     "mudancas": 4
    },
@@ -180,7 +184,7 @@
     "mudancas": 3
    },
    {
-    "pasta": ".github/workflows/contexto.yml",
+    "pasta": ".github/workflows/deploy-edge-functions.yml",
     "mudancas": 3
    },
    {
@@ -190,20 +194,16 @@
    {
     "pasta": "docs/agentes/banco.md",
     "mudancas": 3
-   },
-   {
-    "pasta": "docs/agentes/github-ci.md",
-    "mudancas": 3
    }
   ],
   "arquivos_mais_mudados_90d": [
    {
     "arquivo": "package.json",
-    "mudancas": 14
+    "mudancas": 15
    },
    {
     "arquivo": ".github/workflows/ci.yml",
-    "mudancas": 8
+    "mudancas": 10
    },
    {
     "arquivo": "bun.lock",
@@ -211,11 +211,15 @@
    },
    {
     "arquivo": "AGENTS.md",
-    "mudancas": 6
+    "mudancas": 5
    },
    {
     "arquivo": "docs/prod-readiness.md",
     "mudancas": 5
+   },
+   {
+    "arquivo": ".github/workflows/contexto.yml",
+    "mudancas": 4
    },
    {
     "arquivo": "RELATORIO_CI.md",
@@ -238,7 +242,7 @@
     "mudancas": 3
    },
    {
-    "arquivo": ".github/workflows/contexto.yml",
+    "arquivo": ".github/workflows/deploy-edge-functions.yml",
     "mudancas": 3
    },
    {
@@ -262,14 +266,6 @@
     "mudancas": 3
    },
    {
-    "arquivo": ".github/workflows/deploy-edge-functions.yml",
-    "mudancas": 2
-   },
-   {
-    "arquivo": "ESTADO_ATUAL.md",
-    "mudancas": 2
-   },
-   {
     "arquivo": "ai-context.config.json",
     "mudancas": 2
    },
@@ -278,7 +274,7 @@
     "mudancas": 2
    },
    {
-    "arquivo": "docs/estado/README.md",
+    "arquivo": "scripts/automation.config.json",
     "mudancas": 2
    },
    {
@@ -296,12 +292,16 @@
    {
     "arquivo": "scripts/supabase_snapshot/README.md",
     "mudancas": 2
+   },
+   {
+    "arquivo": "scripts/supabase_snapshot/snapshot.py",
+    "mudancas": 2
    }
   ],
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 36
+    "commits": 43
    },
    {
     "autor": "dependabot[bot]",
@@ -310,9 +310,9 @@
   ]
  },
  "contagens": {
-  "arquivos_total": 1485,
-  "arquivos_codigo": 1126,
-  "linhas_codigo": 223907,
+  "arquivos_total": 1490,
+  "arquivos_codigo": 1128,
+  "linhas_codigo": 224068,
   "rotas": 83,
   "rotas_http_backend": 0,
   "vistas_por_id": 0,
@@ -322,11 +322,11 @@
   "hooks": 155,
   "edge_functions": 16,
   "tabelas": 236,
-  "migrations": 269,
+  "migrations": 270,
   "cron_jobs": 22,
-  "testes": 157,
-  "workflows": 4,
-  "scripts": 15,
+  "testes": 158,
+  "workflows": 6,
+  "scripts": 16,
   "docs_md": 46
  },
  "por_pasta": {
@@ -363,8 +363,8 @@
    "linhas": 710
   },
   "scripts/ci": {
-   "arquivos": 7,
-   "linhas": 1434
+   "arquivos": 9,
+   "linhas": 1552
   },
   "scripts/db-audit": {
    "arquivos": 1,
@@ -444,7 +444,7 @@
   },
   "src/test": {
    "arquivos": 127,
-   "linhas": 22211
+   "linhas": 22235
   },
   "src/tests": {
    "arquivos": 16,
@@ -460,7 +460,7 @@
   },
   "supabase/functions": {
    "arquivos": 27,
-   "linhas": 4711
+   "linhas": 4730
   },
   "tailwind.config.ts": {
    "arquivos": 1,
@@ -587,7 +587,7 @@
  ],
  "qualidade": {
   "any": 69,
-  "console_log": 75,
+  "console_log": 76,
   "ts_ignore": 0,
   "eslint_disable": 0,
   "todos": 1,

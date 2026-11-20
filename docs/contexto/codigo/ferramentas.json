@@ -4,11 +4,11 @@
  "stack": {
   "linguagens": [
    "TypeScript (1100)",
-   "SQL (269)",
+   "SQL (270)",
    "Markdown (46)",
-   "JavaScript (22)",
+   "JavaScript (24)",
    "JSON (15)",
-   "YAML (7)",
+   "YAML (9)",
    "Python (5)",
    "Shell (4)"
   ],
@@ -54,7 +54,7 @@
    "automation:status": "node scripts/automation.mjs graph status",
    "automation:test": "node scripts/automation.mjs test",
    "automation:uninstall-hooks": "node scripts/automation.mjs uninstall-hooks",
-   "build": "vite build",
+   "build": "node scripts/ci/check-supabase-env.mjs && vite build",
    "build:dev": "vite build --mode development",
    "contexto:codigo": "node scripts/ai-context/gerar.mjs --out docs/contexto/codigo",
    "contexto:regras": "python3 scripts/regras_negocio/generate.py --repo . --out docs/contexto/regras --profile regras --index-path docs/contexto/00-INDEX.md --no-pointer",
@@ -72,6 +72,7 @@
    "preview": "vite preview",
    "test": "vitest run",
    "test:ci": "vitest run --coverage --reporter=verbose",
+   "test:guard-env": "node --test scripts/ci/check-supabase-env.unit.mjs",
    "test:maintenance": "node --test scripts/maintenance/maintenance.unit.mjs",
    "typecheck": "tsc --noEmit -p tsconfig.app.json && tsc --noEmit -p tsconfig.node.json"
   },
@@ -174,9 +175,11 @@
    "npm_scripts": [
     "lint",
     "test:ci",
+    "test:guard-env",
     "typecheck"
    ],
    "secrets": [
+    "VITE_SUPABASE_ANON_KEY",
     "VITE_SUPABASE_PUBLISHABLE_KEY",
     "VITE_SUPABASE_URL"
    ],
@@ -196,7 +199,7 @@
     "workflow_dispatch"
    ],
    "crons": [
-    "3-59/10 * * * *"
+    "3 * * * *"
    ],
    "branches": [
     "main"
@@ -230,8 +233,58 @@
    ]
   },
   {
+   "arquivo": ".github/workflows/deno.yml",
+   "nome": "Edge Functions (Deno)",
+   "gatilhos": [
+    "pull_request",
+    "push",
+    "workflow_dispatch"
+   ],
+   "crons": [],
+   "branches": [
+    "main"
+   ],
+   "jobs": [
+    "deno"
+   ],
+   "permissoes": [
+    "contents: read"
+   ],
+   "scripts_usados": [],
+   "npm_scripts": [],
+   "secrets": [],
+   "actions": [
+    "actions/checkout",
+    "denoland/setup-deno"
+   ]
+  },
+  {
+   "arquivo": ".github/workflows/dependency-review.yml",
+   "nome": "Dependency Review",
+   "gatilhos": [
+    "pull_request"
+   ],
+   "crons": [],
+   "branches": [
+    "main"
+   ],
+   "jobs": [
+    "dependency-review"
+   ],
+   "permissoes": [
+    "contents: read"
+   ],
+   "scripts_usados": [],
+   "npm_scripts": [],
+   "secrets": [],
+   "actions": [
+    "actions/checkout",
+    "actions/dependency-review-action"
+   ]
+  },
+  {
    "arquivo": ".github/workflows/deploy-edge-functions.yml",
-   "nome": "deploy-edge-functions.yml",
+   "nome": "Deploy Edge Functions",
    "gatilhos": [
     "push",
     "workflow_dispatch"
@@ -448,6 +501,7 @@
   "secrets_em_workflows": [
    "SUPABASE_ACCESS_TOKEN",
    "SUPABASE_DB_URL",
+   "VITE_SUPABASE_ANON_KEY",
    "VITE_SUPABASE_PUBLISHABLE_KEY",
    "VITE_SUPABASE_URL"
   ]
@@ -529,6 +583,10 @@
     "arquivos": 1
    },
    {
+    "host": "eidsaqymojyuhprobfpn.supabase.co",
+    "arquivos": 1
+   },
+   {
     "host": "example.test",
     "arquivos": 1
    },
@@ -542,6 +600,10 @@
    },
    {
     "host": "maintenance.invalid",
+    "arquivos": 1
+   },
+   {
+    "host": "placeholder.supabase.co",
     "arquivos": 1
    },
    {
