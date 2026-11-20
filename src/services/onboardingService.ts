@@ -202,21 +202,16 @@ export const onboardingService = {
       return false;
     }
 
-    // Award XP and coins to user
-    const { data: profile } = await supabase
-      .from("profiles")
-      .select("xp, coins")
-      .eq("id", userId)
-      .maybeSingle();
+    // Award XP and coins via RPC (SECURITY DEFINER)
+        const [, xpError] = await Promise.all([
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          (supabase as any).rpc("add_xp", { p_user_id: userId, p_amount: step.xpReward }),
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          (supabase as any).rpc("add_coins", { p_user_id: userId, p_amount: step.coinReward }),
+        ]);
 
-    if (profile) {
-      await supabase
-        .from("profiles")
-        .update({
-          xp: profile.xp + step.xpReward,
-          coins: profile.coins + step.coinReward,
-        })
-        .eq("id", userId);
+        if (xpError) {
+          logger.apiError("claimReward", xpError, "onboardingService");
     }
 
     return true;

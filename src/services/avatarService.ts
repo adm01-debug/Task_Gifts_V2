@@ -139,24 +139,16 @@ export const avatarService = {
   },
 
   async purchaseItem(userId: string, itemId: string, price: number): Promise<void> {
-    // Get current coins
-    const { data: profile } = await supabase
-      .from("profiles")
-      .select("coins")
-      .eq("id", userId)
-      .maybeSingle();
+      // Deduct coins atomically via RPC (SECURITY DEFINER) — valida saldo no banco
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const { error: spendError } = await (supabase as any).rpc("spend_coins", {
+        p_user_id: userId,
+        p_amount: price,
+      });
 
-    if (!profile || profile.coins < price) {
-      throw new Error("Coins insuficientes");
+      if (spendError) {
+        throw new Error(spendError.message === "coins insuficientes" ? "Coins insuficientes" : spendError.message);
     }
-
-    // Deduct coins and add item
-    const { error: updateError } = await supabase
-      .from("profiles")
-      .update({ coins: profile.coins - price })
-      .eq("id", userId);
-
-    if (updateError) throw updateError;
 
     await this.unlockItem(userId, itemId);
   },

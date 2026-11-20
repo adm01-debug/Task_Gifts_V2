@@ -9,6 +9,7 @@ const mockLimit = vi.fn().mockReturnThis();
 const mockUpdate = vi.fn().mockReturnThis();
 const mockMaybeSingle = vi.fn();
 const mockSingle = vi.fn();
+const mockRpc = vi.hoisted(() => vi.fn());
 
 vi.mock('../../integrations/supabase/client', () => ({
   supabase: {
@@ -21,6 +22,7 @@ vi.mock('../../integrations/supabase/client', () => ({
       maybeSingle: mockMaybeSingle,
       single: mockSingle,
     })),
+    rpc: mockRpc,
   },
 }));
 
@@ -55,25 +57,61 @@ describe('profilesService', () => {
   });
 
   describe('addXp', () => {
-    it('should correctly calculate level and level up', async () => {
-      const mockProfile = { id: '123', xp: 800, level: 1 };
-      mockMaybeSingle.mockResolvedValue({ data: mockProfile, error: null });
-      mockSingle.mockResolvedValue({ data: { ...mockProfile, xp: 1100, level: 2 }, error: null });
+    it('should call add_xp RPC and report level up', async () => {
+      const oldProfile = { id: '123', xp: 800, level: 1 };
+      mockMaybeSingle.mockResolvedValue({ data: oldProfile, error: null });
+      mockRpc.mockResolvedValue({ data: [{ id: '123', xp: 1100, level: 2 }], error: null });
 
-      const result = await profilesService.addXp('123', 300);
-      
+      const result = await profilesService.addXp('123', 300, 'teste');
+
+      expect(mockRpc).toHaveBeenCalledWith('add_xp', {
+        p_user_id: '123',
+        p_amount: 300,
+        p_source: 'teste',
+      });
       expect(result.leveledUp).toBe(true);
       expect(result.newLevel).toBe(2);
+      expect(result.profile.id).toBe('123');
+      expect(result.profile.xp).toBe(1100);
+      expect(result.profile.level).toBe(2);
     });
 
     it('should not level up if threshold not reached', async () => {
-      const mockProfile = { id: '123', xp: 100, level: 1 };
-      mockMaybeSingle.mockResolvedValue({ data: mockProfile, error: null });
-      mockSingle.mockResolvedValue({ data: { ...mockProfile, xp: 200, level: 1 }, error: null });
+      const oldProfile = { id: '123', xp: 100, level: 1 };
+      mockMaybeSingle.mockResolvedValue({ data: oldProfile, error: null });
+      mockRpc.mockResolvedValue({ data: [{ id: '123', xp: 200, level: 1 }], error: null });
 
       const result = await profilesService.addXp('123', 100);
-      
+
       expect(result.leveledUp).toBe(false);
+      expect(result.newLevel).toBeUndefined();
+    });
+  });
+
+  describe('addCoins', () => {
+    it('should call add_coins RPC', async () => {
+      mockRpc.mockResolvedValue({ data: [{ id: '123', coins: 15 }], error: null });
+
+      const result = await profilesService.addCoins('123', 5);
+
+      expect(mockRpc).toHaveBeenCalledWith('add_coins', {
+        p_user_id: '123',
+        p_amount: 5,
+      });
+      expect(result.id).toBe('123');
+      expect(result.coins).toBe(15);
+    });
+  });
+
+  describe('incrementStreak', () => {
+    it('should call increment_streak RPC', async () => {
+      mockRpc.mockResolvedValue({ data: [{ id: '123', streak: 3, best_streak: 5 }], error: null });
+
+      const result = await profilesService.incrementStreak('123');
+
+      expect(mockRpc).toHaveBeenCalledWith('increment_streak', { p_user_id: '123' });
+      expect(result.id).toBe('123');
+      expect(result.streak).toBe(3);
     });
   });
 });

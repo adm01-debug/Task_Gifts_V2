@@ -78,3 +78,22 @@ describeIf('RPC Access Control — Sensitive per-user functions', () => {
     expect(['42501', '42883', 'PGRST202', 'PGRST301']).toContain(error?.code ?? '');
   });
 });
+
+  describeIf('RPC Access Control — Economy functions (pendência 02)', () => {
+    const economyRpcs = [
+      ['add_xp', { p_user_id: '00000000-0000-0000-0000-000000000000', p_amount: 10, p_reason: 'test' }],
+      ['add_coins', { p_user_id: '00000000-0000-0000-0000-000000000000', p_amount: 10 }],
+      ['spend_coins', { p_user_id: '00000000-0000-0000-0000-000000000000', p_amount: 10 }],
+      ['increment_streak', { p_user_id: '00000000-0000-0000-0000-000000000000' }],
+      ['increment_quests_completed', { p_user_id: '00000000-0000-0000-0000-000000000000' }],
+    ] as const;
+
+    for (const [fn, params] of economyRpcs) {
+      it(`anon deve receber erro 42501/42883 ao chamar ${fn}`, async () => {
+        const anon = getAnonClient();
+        const { error } = await anon.rpc(fn as never, params as object);
+        expect(error).toBeDefined();
+        expect(['42501', '42883', 'PGRST202', 'PGRST301']).toContain(error?.code ?? '');
+      });
+    }
+  });
