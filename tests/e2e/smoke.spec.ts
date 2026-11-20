@@ -32,6 +32,19 @@ test.describe('Smoke — bootstrap da aplicação', () => {
     expect(page.url()).toContain('/auth');
   });
 
+      test('rota /previsoes da gamificacao e protegida e navega de verdade', async ({ page }) => {
+        await page.goto('/auth');
+        await page.evaluate(() => {
+          localStorage.clear();
+          sessionStorage.clear();
+        });
+        const resp = await page.goto('/previsoes', { waitUntil: 'domcontentloaded' });
+        // SPA: status nao deve ser 5xx; rota protegida redireciona para /auth deslogado
+        expect(resp ? resp.status() : 200).toBeLessThan(500);
+        await page.waitForURL(/\/auth/, { timeout: 8000 });
+        expect(page.url()).toContain('/auth');
+      });
+
   test('404 renderiza NotFound', async ({ page }) => {
     const resp = await page.goto('/rota-que-nao-existe-xyz');
     // SPA: status 200 mas UI de NotFound
