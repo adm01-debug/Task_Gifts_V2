@@ -2,11 +2,21 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "6d9a44687faf4a47c0b494b7076d83ad61ff6e06",
+  "commit": "7f53418eaaf687d82d2aaa478765dde7792607c9",
   "branch": "main",
-  "data_commit": "2026-11-20T10:51:48-03:00",
+  "data_commit": "2026-11-20T11:10:06-03:00",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "ultimos_commits": [
+   {
+    "sha": "7f53418",
+    "data": "2026-11-20",
+    "assunto": "docs: linha de base e pendencias do goal (seguranca, economia, nav, infra) (#73)"
+   },
+   {
+    "sha": "6f39f2e",
+    "data": "2026-11-20",
+    "assunto": "fix: permite api.pwnedpasswords.com no connect-src da CSP (#71)"
+   },
    {
     "sha": "6d9a446",
     "data": "2026-11-20",
@@ -121,19 +131,9 @@
     "sha": "e661bb4",
     "data": "2026-11-12",
     "assunto": "style(manutencao): aplica correcoes locais verificadas (#49)"
-   },
-   {
-    "sha": "e80a380",
-    "data": "2026-11-11",
-    "assunto": "fix(automacao): reconhece layout Windows (Scripts/) no venv do graphify (#45)"
-   },
-   {
-    "sha": "984b77c",
-    "data": "2026-11-11",
-    "assunto": "style(manutencao): aplica correcoes locais verificadas (#42)"
    }
   ],
-  "arquivos_mudados_7d": 50,
+  "arquivos_mudados_7d": 59,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "package.json",
@@ -266,6 +266,10 @@
     "mudancas": 3
    },
    {
+    "arquivo": "vercel.json",
+    "mudancas": 3
+   },
+   {
     "arquivo": "ai-context.config.json",
     "mudancas": 2
    },
@@ -292,16 +296,12 @@
    {
     "arquivo": "scripts/supabase_snapshot/README.md",
     "mudancas": 2
-   },
-   {
-    "arquivo": "scripts/supabase_snapshot/snapshot.py",
-    "mudancas": 2
    }
   ],
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 44
+    "commits": 46
    },
    {
     "autor": "dependabot[bot]",
@@ -310,7 +310,7 @@
   ]
  },
  "contagens": {
-  "arquivos_total": 1490,
+  "arquivos_total": 1498,
   "arquivos_codigo": 1128,
   "linhas_codigo": 224078,
   "rotas": 83,
@@ -327,7 +327,7 @@
   "testes": 158,
   "workflows": 6,
   "scripts": 16,
-  "docs_md": 46
+  "docs_md": 54
  },
  "por_pasta": {
   "eslint.config.js": {

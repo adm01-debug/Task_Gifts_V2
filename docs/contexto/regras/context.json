@@ -1,10 +1,10 @@
 {
  "meta": {
-  "sha": "6d9a44687faf4a47c0b494b7076d83ad61ff6e06",
+  "sha": "7f53418eaaf687d82d2aaa478765dde7792607c9",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
-  "generated_at": "2026-11-20 13:52 UTC",
-  "files_total": 1499,
+  "generated_at": "2026-11-20 14:14 UTC",
+  "files_total": 1507,
   "code_files": 1404,
   "code_lines": 255026
  },
@@ -148249,10 +148249,35 @@
   }
  },
  "git": {
-  "sha": "6d9a44687faf4a47c0b494b7076d83ad61ff6e06",
+  "sha": "7f53418eaaf687d82d2aaa478765dde7792607c9",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "commits": [
+   {
+    "sha": "7f53418",
+    "date": "2026-11-20",
+    "author": "adm01-debug",
+    "subject": "docs: linha de base e pendencias do goal (seguranca, economia, nav, infra) (#73)",
+    "files": [
+     "docs/pendencias/01-mcp-json-com-segredo.md",
+     "docs/pendencias/02-profiles-update-sem-restricao-de-coluna.md",
+     "docs/pendencias/03-csp-hibp-pwnedpasswords.md",
+     "docs/pendencias/04-navegacao-rotas-sem-entrada-rota-fantasma.md",
+     "docs/pendencias/05-lockfiles-triplos-package-manager.md",
+     "docs/pendencias/_linha-de-base.md",
+     "docs/pendencias/_ordem.md",
+     "docs/pendencias/_regras-de-negocio.md"
+    ]
+   },
+   {
+    "sha": "6f39f2e",
+    "date": "2026-11-20",
+    "author": "adm01-debug",
+    "subject": "fix: permite api.pwnedpasswords.com no connect-src da CSP (#71)",
+    "files": [
+     "vercel.json"
+    ]
+   },
    {
     "sha": "6d9a446",
     "date": "2026-11-20",
@@ -148552,41 +148577,6 @@
     "files": [
      "scripts/automation.mjs"
     ]
-   },
-   {
-    "sha": "c4d87b6",
-    "date": "2026-11-11",
-    "author": "adm01-debug",
-    "subject": "fix(ci): separa browser Playwright das deps apt com retry no passo de instalação (#40)",
-    "files": [
-     ".github/workflows/ci.yml"
-    ]
-   },
-   {
-    "sha": "940efb8",
-    "date": "2026-11-11",
-    "author": "adm01-debug",
-    "subject": "chore(automacao): conecta testes, grafo e manutenção aos gatilhos (#38)",
-    "files": [
-     ".github/workflows/automation-local.yml",
-     ".gitignore",
-     "docs/AUTOMACAO_LOCAL.md",
-     "graphify.local.json",
-     "package.json",
-     "scripts/automation.config.json",
-     "scripts/automation.mjs",
-     "scripts/automation.unit.mjs",
-     "scripts/graphify-local.mjs",
-     "scripts/graphify-local.unit.mjs",
-     "scripts/maintenance/README.md",
-     "scripts/maintenance/config.example.json",
-     "scripts/maintenance/config.json",
-     "scripts/maintenance/lib.mjs",
-     "scripts/maintenance/maintenance.unit.mjs",
-     "scripts/maintenance/run.mjs",
-     "scripts/maintenance/run.sh",
-     "scripts/maintenance/typecheck.mjs"
-    ]
    }
   ],
   "hot_files": [
@@ -148596,22 +148586,14 @@
    ],
    [
     ".github/workflows/ci.yml",
-    4
-   ],
-   [
-    "scripts/automation.mjs",
-    4
+    3
    ],
    [
     ".github/workflows/deploy-edge-functions.yml",
     3
    ],
    [
-    ".github/workflows/automation-local.yml",
-    3
-   ],
-   [
-    "scripts/graphify-local.mjs",
+    "scripts/automation.mjs",
     3
    ],
    [
@@ -148619,24 +148601,52 @@
     2
    ],
    [
-    "package.json",
-    2
-   ],
-   [
-    "scripts/automation.config.json",
-    2
-   ],
-   [
     ".github/workflows/contexto.yml",
     2
    ],
    [
-    "scripts/automation.unit.mjs",
+    ".github/workflows/automation-local.yml",
     2
    ],
    [
-    ".gitignore",
+    "scripts/graphify-local.mjs",
     2
+   ],
+   [
+    "docs/pendencias/01-mcp-json-com-segredo.md",
+    1
+   ],
+   [
+    "docs/pendencias/02-profiles-update-sem-restricao-de-coluna.md",
+    1
+   ],
+   [
+    "docs/pendencias/03-csp-hibp-pwnedpasswords.md",
+    1
+   ],
+   [
+    "docs/pendencias/04-navegacao-rotas-sem-entrada-rota-fantasma.md",
+    1
+   ],
+   [
+    "docs/pendencias/05-lockfiles-triplos-package-manager.md",
+    1
+   ],
+   [
+    "docs/pendencias/_linha-de-base.md",
+    1
+   ],
+   [
+    "docs/pendencias/_ordem.md",
+    1
+   ],
+   [
+    "docs/pendencias/_regras-de-negocio.md",
+    1
+   ],
+   [
+    "vercel.json",
+    1
    ],
    [
     "src/components/MobileDrawer.tsx",
@@ -148648,26 +148658,6 @@
    ],
    [
     ".github/workflows/deno.yml",
-    1
-   ],
-   [
-    ".github/workflows/dependency-review.yml",
-    1
-   ],
-   [
-    "supabase/functions/_shared/validation.ts",
-    1
-   ],
-   [
-    "supabase/functions/_shared/validation_test.ts",
-    1
-   ],
-   [
-    "supabase/functions/push-outbox-dispatcher/index.ts",
-    1
-   ],
-   [
-    "supabase/functions/send-campaign-push/index.ts",
     1
    ]
   ]
