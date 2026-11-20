@@ -59,11 +59,11 @@
  "commits": {
   "convencao": "conventional commits (observado)",
   "exemplos": [
+   "fix(ci): expoe VITE_DEPLOYED_EDGE_FUNCTIONS para o build e corrige doc da allowlist (#77)",
+   "fix: excludes assets/ do rewrite SPA para expor 404 real de chunks obsoletos (#76)",
    "fix: move GlobalErrorBoundary para dentro do BrowserRouter (#75)",
    "test(e2e): garante que a rota /previsoes e protegida e redireciona para /auth (#74)",
-   "docs: linha de base e pendencias do goal (seguranca, economia, nav, infra) (#73)",
-   "fix: permite api.pwnedpasswords.com no connect-src da CSP (#71)",
-   "fix: expoe rotas de gamificacao na navegacao e remove rota-fantasma (#72)"
+   "docs: linha de base e pendencias do goal (seguranca, economia, nav, infra) (#73)"
   ]
  },
  "pr_template": ".github/PULL_REQUEST_TEMPLATE.md",

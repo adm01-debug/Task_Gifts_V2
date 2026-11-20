@@ -1,7 +1,7 @@
 # Contexto do projeto para agentes de IA
 
 GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.
-Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `de9e391b5d51610b347ce632e4b7d2f63f92212b` (2026-11-20T14:02:44-03:00).
+Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `e58c5c0cf4e8e22b447f665b67dc8a9c0867b1f5` (2026-11-20T14:27:41-03:00).
 
 ## Como usar (leia antes de planejar ou executar qualquer tarefa)
 1. **Tela/rota/menu** → `rotas.json` (url/vista/menu → arquivo → hooks → tabelas → edges; `rotas_http_backend` para APIs) e `modulos.json` (módulo inteiro + dependências entre módulos).
@@ -260,19 +260,19 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - componentes_orfaos: 24 — ex.: src/components/admin/metrics/AdminMetricsCharts.tsx, src/components/admin/permissions/PermissionModuleAccordion.tsx, src/components/admin/telemetry/TelemetryTable.tsx
 - componentes_com_nome_duplicado: 8 — ex.: CopilotAlert, LevelUpCelebration, PageTransition
 - scripts_orfaos: 0
-- env_usadas_nao_declaradas: 7 — ex.: DEV, MODE, NODE_ENV
+- env_usadas_nao_declaradas: 6 — ex.: DEV, MODE, NODE_ENV
 - ciclos_de_import: 2
 - possiveis_segredos_no_codigo: 0
 
 ## Grafo de código (graphify)
-- 9843 nós · 27416 arestas · 632 comunidades · grafo do commit `de9e391b`
+- 9843 nós · 27416 arestas · 632 comunidades · grafo do commit `e58c5c0c`
 - comunidades maiores: lucide-react (345), react (230), date-fns (171), AdminPanel.tsx (161), client.ts (123), cn (122), QuizAdmin.tsx (115), useAuth (95), useToast (90), AdminTelemetria.tsx (86), profilesService.ts (82), mobile/index.ts (82)
 - símbolos mais chamados: cn() (src/lib/utils.ts), useAuth() (src/hooks/useAuth.tsx), useIsMobile() (src/hooks/use-mobile.tsx), q() (scripts/supabase_snapshot/snapshot.py), useDepartments() (src/hooks/useDepartments.ts), useToast() (src/hooks/use-toast.ts), useRBAC() (src/hooks/useRBAC.ts), useProfiles() (src/hooks/useProfiles.ts), useSEO() (src/hooks/useSEO.ts), useSoundEffects() (src/hooks/useSoundEffects.tsx), .collect() (scripts/supabase_snapshot/test_snapshot.py), excluded_sql() (scripts/supabase_snapshot/snapshot.py)
 - consulta local: `graphify query "<pergunta>"`, `graphify path "<A>" "<B>"`, `graphify explain "<X>"`
 
 ## Hotspots (arquivos mais alterados, 90 dias)
 - package.json (15)
-- .github/workflows/ci.yml (10)
+- .github/workflows/ci.yml (11)
 - bun.lock (8)
 - AGENTS.md (5)
 - docs/prod-readiness.md (5)
@@ -281,11 +281,11 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - docs/agentes/mapa-repo.md (4)
 - package-lock.json (4)
 - scripts/automation.mjs (4)
+- vercel.json (4)
 - .github/workflows/automation-local.yml (3)
 - .github/workflows/deploy-edge-functions.yml (3)
 - PENDENCIAS.md (3)
 - docs/agentes/banco.md (3)
-- docs/agentes/github-ci.md (3)
 
 ## Workflows
 - `automation-local.yml` — Automação local (pull_request, push, workflow_dispatch)
@@ -350,6 +350,8 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 
 
 ## Últimos commits
+- 2026-11-20 `e58c5c0` fix(ci): expoe VITE_DEPLOYED_EDGE_FUNCTIONS para o build e corrige doc da allowlist (#77)
+- 2026-11-20 `d3d388e` fix: excludes assets/ do rewrite SPA para expor 404 real de chunks obsoletos (#76)
 - 2026-11-20 `de9e391` fix: move GlobalErrorBoundary para dentro do BrowserRouter (#75)
 - 2026-11-20 `18c24c9` test(e2e): garante que a rota /previsoes e protegida e redireciona para /auth (#74)
 - 2026-11-20 `7f53418` docs: linha de base e pendencias do goal (seguranca, economia, nav, infra) (#73)
@@ -363,8 +365,6 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - 2026-11-14 `2e58f57` fix: guarda robusta nas RPCs 2FA/validacao (drift GUC NULL em producao) (#63)
 - 2026-11-14 `c4d21f5` chore: contexto agendado de 10 min para 1x/hora (#64)
 - 2026-11-14 `ba823e4` docs: prod-readiness refletido ao main c86726f2 (deploy edge functions, advisors 5 ERROR, 48 erros postgres, PRs #58/#59
-- 2026-11-14 `696dd2d` fix: revoga acesso anonimo/authenticated das views de diagnostico (#58)
-- 2026-11-14 `9759f35` fix: corrige cron de campanhas e allowlist de alertas de segurança (#59)
 
 ## Arquivos deste diretório
 - `docs/contexto/codigo/rotas.json`

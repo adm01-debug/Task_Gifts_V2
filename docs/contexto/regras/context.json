@@ -1,9 +1,9 @@
 {
  "meta": {
-  "sha": "de9e391b5d51610b347ce632e4b7d2f63f92212b",
+  "sha": "e58c5c0cf4e8e22b447f665b67dc8a9c0867b1f5",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
-  "generated_at": "2026-11-20 17:03 UTC",
+  "generated_at": "2026-11-20 17:28 UTC",
   "files_total": 1507,
   "code_files": 1404,
   "code_lines": 255039
@@ -148255,10 +148255,29 @@
   }
  },
  "git": {
-  "sha": "de9e391b5d51610b347ce632e4b7d2f63f92212b",
+  "sha": "e58c5c0cf4e8e22b447f665b67dc8a9c0867b1f5",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "commits": [
+   {
+    "sha": "e58c5c0",
+    "date": "2026-11-20",
+    "author": "adm01-debug",
+    "subject": "fix(ci): expoe VITE_DEPLOYED_EDGE_FUNCTIONS para o build e corrige doc da allowlist (#77)",
+    "files": [
+     ".env.example",
+     ".github/workflows/ci.yml"
+    ]
+   },
+   {
+    "sha": "d3d388e",
+    "date": "2026-11-20",
+    "author": "adm01-debug",
+    "subject": "fix: excludes assets/ do rewrite SPA para expor 404 real de chunks obsoletos (#76)",
+    "files": [
+     "vercel.json"
+    ]
+   },
    {
     "sha": "de9e391",
     "date": "2026-11-20",
@@ -148561,28 +148580,6 @@
     "files": [
      "scripts/graphify-local.mjs"
     ]
-   },
-   {
-    "sha": "984b77c",
-    "date": "2026-11-11",
-    "author": "adm01-debug",
-    "subject": "style(manutencao): aplica correcoes locais verificadas (#42)",
-    "files": [
-     "src/components/AICoachDialog.tsx",
-     "src/components/ActivityComments.tsx",
-     "src/components/ActivityReactions.tsx",
-     "src/components/admin/users/index.ts"
-    ]
-   },
-   {
-    "sha": "e39fc6c",
-    "date": "2026-11-11",
-    "author": "adm01-debug",
-    "subject": "fix(automacao): destrava grafo local no Windows e exige venv ignorado (#44)",
-    "files": [
-     ".gitignore",
-     "scripts/graphify-local.mjs"
-    ]
    }
   ],
   "hot_files": [
@@ -148592,11 +148589,15 @@
    ],
    [
     ".github/workflows/ci.yml",
-    3
+    4
    ],
    [
     ".github/workflows/deploy-edge-functions.yml",
     3
+   ],
+   [
+    "vercel.json",
+    2
    ],
    [
     "src/components/AppSidebar.tsx",
@@ -148611,8 +148612,8 @@
     2
    ],
    [
-    "scripts/graphify-local.mjs",
-    2
+    ".env.example",
+    1
    ],
    [
     "src/App.tsx",
@@ -148652,10 +148653,6 @@
    ],
    [
     "docs/pendencias/_regras-de-negocio.md",
-    1
-   ],
-   [
-    "vercel.json",
     1
    ],
    [

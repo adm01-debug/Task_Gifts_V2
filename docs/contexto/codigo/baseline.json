@@ -2,11 +2,21 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "de9e391b5d51610b347ce632e4b7d2f63f92212b",
+  "commit": "e58c5c0cf4e8e22b447f665b67dc8a9c0867b1f5",
   "branch": "main",
-  "data_commit": "2026-11-20T14:02:44-03:00",
+  "data_commit": "2026-11-20T14:27:41-03:00",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "ultimos_commits": [
+   {
+    "sha": "e58c5c0",
+    "data": "2026-11-20",
+    "assunto": "fix(ci): expoe VITE_DEPLOYED_EDGE_FUNCTIONS para o build e corrige doc da allowlist (#77)"
+   },
+   {
+    "sha": "d3d388e",
+    "data": "2026-11-20",
+    "assunto": "fix: excludes assets/ do rewrite SPA para expor 404 real de chunks obsoletos (#76)"
+   },
    {
     "sha": "de9e391",
     "data": "2026-11-20",
@@ -121,19 +131,9 @@
     "sha": "24cfd06",
     "data": "2026-11-13",
     "assunto": "fix(automation): recusar recursão indireta de hooks pela cadeia de eventos (#50)"
-   },
-   {
-    "sha": "348cdce",
-    "data": "2026-11-12",
-    "assunto": "build(deps): bump actions/checkout from 6.1.0 to 7.0.1 (#48)"
-   },
-   {
-    "sha": "4f95e63",
-    "data": "2026-11-12",
-    "assunto": "build(deps): bump actions/setup-node from 6.5.0 to 7.1.0 (#47)"
    }
   ],
-  "arquivos_mudados_7d": 61,
+  "arquivos_mudados_7d": 62,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "package.json",
@@ -141,7 +141,7 @@
    },
    {
     "pasta": ".github/workflows/ci.yml",
-    "mudancas": 9
+    "mudancas": 10
    },
    {
     "pasta": "bun.lock",
@@ -203,7 +203,7 @@
    },
    {
     "arquivo": ".github/workflows/ci.yml",
-    "mudancas": 10
+    "mudancas": 11
    },
    {
     "arquivo": "bun.lock",
@@ -238,6 +238,10 @@
     "mudancas": 4
    },
    {
+    "arquivo": "vercel.json",
+    "mudancas": 4
+   },
+   {
     "arquivo": ".github/workflows/automation-local.yml",
     "mudancas": 3
    },
@@ -263,10 +267,6 @@
    },
    {
     "arquivo": "supabase/config.toml",
-    "mudancas": 3
-   },
-   {
-    "arquivo": "vercel.json",
     "mudancas": 3
    },
    {
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 48
+    "commits": 50
    },
    {
     "autor": "dependabot[bot]",
@@ -688,7 +688,6 @@
    "MODE",
    "NODE_ENV",
    "VITE_APP_VERSION",
-   "VITE_DEPLOYED_EDGE_FUNCTIONS",
    "VITE_SENTRY_DSN",
    "VITE_SUPABASE_PUBLISHABLE_KEY"
   ],
