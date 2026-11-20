@@ -1,6 +1,6 @@
 ﻿# Pendencias — policy profiles UPDATE sem restricao de coluna (economia)
 
-Estado: **IMPLEMENTADO — PR aberta** (DDL em banco de producao = regra 8; precisa aplicar migration + merge apos OK)
+Estado: **IMPLEMENTADO + VALIDADO — PR #78 CI verde, aguardando OK para merge/apply** (DDL em banco de producao = regra 8; precisa aplicar migration + merge apos OK)
 
 ## Causa
 A policy `Users can update own profile` (`supabase/migrations/20260906120000_posvalidacao_fixes.sql`) e `FOR UPDATE TO authenticated USING/WITH CHECK (auth.uid()=id)` sem lista de colunas. Qualquer autenticado pode alterar xp/coins/level do proprio perfil, burlando a economia (autoconcessao de pontuacao/recompensa).
