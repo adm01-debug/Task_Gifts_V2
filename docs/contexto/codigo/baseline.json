@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "b30f52b880f24e84115fa90cbfca29fd75166787",
+  "commit": "6d9a44687faf4a47c0b494b7076d83ad61ff6e06",
   "branch": "main",
-  "data_commit": "2026-11-19T20:16:08-03:00",
+  "data_commit": "2026-11-20T10:51:48-03:00",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "ultimos_commits": [
+   {
+    "sha": "6d9a446",
+    "data": "2026-11-20",
+    "assunto": "fix: expoe rotas de gamificacao na navegacao e remove rota-fantasma (#72)"
+   },
    {
     "sha": "b30f52b",
     "data": "2026-11-19",
@@ -126,14 +131,9 @@
     "sha": "984b77c",
     "data": "2026-11-11",
     "assunto": "style(manutencao): aplica correcoes locais verificadas (#42)"
-   },
-   {
-    "sha": "e39fc6c",
-    "data": "2026-11-11",
-    "assunto": "fix(automacao): destrava grafo local no Windows e exige venv ignorado (#44)"
    }
   ],
-  "arquivos_mudados_7d": 49,
+  "arquivos_mudados_7d": 50,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "package.json",
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 43
+    "commits": 44
    },
    {
     "autor": "dependabot[bot]",
@@ -312,11 +312,11 @@
  "contagens": {
   "arquivos_total": 1490,
   "arquivos_codigo": 1128,
-  "linhas_codigo": 224068,
+  "linhas_codigo": 224078,
   "rotas": 83,
   "rotas_http_backend": 0,
   "vistas_por_id": 0,
-  "itens_menu": 62,
+  "itens_menu": 64,
   "modulos": 71,
   "componentes": 521,
   "hooks": 155,
@@ -400,7 +400,7 @@
   },
   "src/components": {
    "arquivos": 461,
-   "linhas": 77751
+   "linhas": 77761
   },
   "src/constants": {
    "arquivos": 1,
@@ -609,7 +609,6 @@
    "Acompanhe o Progresso -> goal-progress",
    "Bem-vindo ao Dashboard! 🎉 -> welcome",
    "Criar Nova Meta -> create-goal",
-   "CRM Bitrix24 -> /bitrix24",
    "Desafios Diários 🎯 -> daily-challenges",
    "Lucky Drops 🎁 -> lucky-drops",
    "Mentoria -> /mentoria",

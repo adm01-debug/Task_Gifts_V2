@@ -59,11 +59,11 @@
  "commits": {
   "convencao": "conventional commits (observado)",
   "exemplos": [
+   "fix: expoe rotas de gamificacao na navegacao e remove rota-fantasma (#72)",
    "chore: CI roda testes de seguranca RPC com env real (#69)",
    "infra(workflow): sobe actions de checkout e setup-cli no deploy de edge functions (#68)",
    "fix(functions): corrige bugs de runtime + checagem Deno e dependency review das edge functions (#67)",
-   "infra: guarda envs Supabase no build para evitar redeploy com URL vazia (#61)",
-   "fix: setup.ts preserva env real do Supabase nos testes de seguranca (#62)"
+   "infra: guarda envs Supabase no build para evitar redeploy com URL vazia (#61)"
   ]
  },
  "pr_template": ".github/PULL_REQUEST_TEMPLATE.md",

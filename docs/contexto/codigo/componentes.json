@@ -1095,7 +1095,7 @@
     "AppSidebar"
    ],
    "export_default": null,
-   "linhas": 171,
+   "linhas": 175,
    "dominio": "components",
    "hooks_locais": [],
    "tabelas": [],
@@ -3755,7 +3755,7 @@
     "MobileDrawer"
    ],
    "export_default": null,
-   "linhas": 300,
+   "linhas": 302,
    "dominio": "components",
    "hooks_locais": [
     "useAuth",
@@ -3872,7 +3872,7 @@
     "GlobalBreadcrumbs"
    ],
    "export_default": null,
-   "linhas": 278,
+   "linhas": 282,
    "dominio": "components/navigation",
    "hooks_locais": [
     "useCurrentRoute"

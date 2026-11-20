@@ -235,7 +235,7 @@
    "hooks_exportados": [
     "useCurrentRoute"
    ],
-   "linhas": 278,
+   "linhas": 282,
    "dominio": "components/navigation",
    "tabelas": [],
    "rpcs": [],

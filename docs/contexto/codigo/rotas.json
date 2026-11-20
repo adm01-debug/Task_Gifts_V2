@@ -5,7 +5,7 @@
   "urls": 83,
   "rotas_http_backend": 0,
   "vistas_por_id": 0,
-  "itens_menu": 62,
+  "itens_menu": 64,
   "lazy": 80
  },
  "urls": [
@@ -16935,6 +16935,15 @@
    "resolve_para": "src/pages/Checkins.tsx"
   },
   {
+   "rotulo": "Chefão",
+   "destino": "/chefao",
+   "grupo": null,
+   "papeis": [],
+   "papeis_nao_resolvidos": null,
+   "definido_em": "src/components/MobileDrawer.tsx",
+   "resolve_para": "src/pages/BossBattlePage.tsx"
+  },
+  {
    "rotulo": "Conquistas",
    "destino": "/conquistas",
    "grupo": null,
@@ -16960,15 +16969,6 @@
    "papeis_nao_resolvidos": null,
    "definido_em": "src/components/MobileDrawer.tsx",
    "resolve_para": "src/pages/QuestBuilder.tsx"
-  },
-  {
-   "rotulo": "CRM Bitrix24",
-   "destino": "/bitrix24",
-   "grupo": null,
-   "papeis": [],
-   "papeis_nao_resolvidos": null,
-   "definido_em": "src/components/MobileDrawer.tsx",
-   "resolve_para": null
   },
   {
    "rotulo": "Dashboard",
@@ -17187,6 +17187,15 @@
    "resolve_para": "src/pages/Profile.tsx"
   },
   {
+   "rotulo": "Pergunta do Dia",
+   "destino": "/pergunta-do-dia",
+   "grupo": null,
+   "papeis": [],
+   "papeis_nao_resolvidos": null,
+   "definido_em": "src/components/MobileDrawer.tsx",
+   "resolve_para": "src/pages/DailyWagerPage.tsx"
+  },
+  {
    "rotulo": "Pesquisas",
    "destino": "/surveys",
    "grupo": null,
@@ -17203,6 +17212,15 @@
    "papeis_nao_resolvidos": null,
    "definido_em": "src/components/MobileDrawer.tsx",
    "resolve_para": "src/pages/Attendance.tsx"
+  },
+  {
+   "rotulo": "Previsões",
+   "destino": "/previsoes",
+   "grupo": null,
+   "papeis": [],
+   "papeis_nao_resolvidos": null,
+   "definido_em": "src/components/MobileDrawer.tsx",
+   "resolve_para": "src/pages/PredictionMarketsPage.tsx"
   },
   {
    "rotulo": "Progresso nas Trilhas",
