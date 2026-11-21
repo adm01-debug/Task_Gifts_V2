@@ -1,7 +1,7 @@
 # Contexto do projeto para agentes de IA
 
 GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.
-Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `f34642c914e5adac3ccf13a2676d4e150eaf737e` (2026-11-21T10:04:00-03:00).
+Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `0132b7c1ad2b887930dbc9676bde105ab2ca8a3d` (2026-11-21T10:06:06-03:00).
 
 ## Como usar (leia antes de planejar ou executar qualquer tarefa)
 1. **Tela/rota/menu** → `rotas.json` (url/vista/menu → arquivo → hooks → tabelas → edges; `rotas_http_backend` para APIs) e `modulos.json` (módulo inteiro + dependências entre módulos).
@@ -265,15 +265,15 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - possiveis_segredos_no_codigo: 0
 
 ## Grafo de código (graphify)
-- 9852 nós · 27420 arestas · 620 comunidades · grafo do commit `f34642c9`
+- 9852 nós · 27420 arestas · 620 comunidades · grafo do commit `0132b7c1`
 - comunidades maiores: lucide-react (329), react (230), DevelopmentPlanManager.tsx (132), AdminPanel.tsx (111), client.ts (109), cn (107), profilesService.ts (105), date-fns (103), QuizAdmin.tsx (99), navigation/index.ts (90), Shop.tsx (86), react-router-dom (84)
 - símbolos mais chamados: cn() (src/lib/utils.ts), useAuth() (src/hooks/useAuth.tsx), useIsMobile() (src/hooks/use-mobile.tsx), q() (scripts/supabase_snapshot/snapshot.py), useDepartments() (src/hooks/useDepartments.ts), useToast() (src/hooks/use-toast.ts), useRBAC() (src/hooks/useRBAC.ts), useProfiles() (src/hooks/useProfiles.ts), useSEO() (src/hooks/useSEO.ts), useSoundEffects() (src/hooks/useSoundEffects.tsx), .collect() (scripts/supabase_snapshot/test_snapshot.py), excluded_sql() (scripts/supabase_snapshot/snapshot.py)
 - consulta local: `graphify query "<pergunta>"`, `graphify path "<A>" "<B>"`, `graphify explain "<X>"`
 
 ## Hotspots (arquivos mais alterados, 90 dias)
-- package.json (16)
+- package.json (17)
 - .github/workflows/ci.yml (11)
-- bun.lock (8)
+- bun.lock (9)
 - AGENTS.md (5)
 - docs/prod-readiness.md (5)
 - .github/workflows/contexto.yml (4)
@@ -350,6 +350,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 
 
 ## Últimos commits
+- 2026-11-21 `0132b7c` build(deps): bump the dependencies group with 30 updates (#82)
 - 2026-11-21 `f34642c` chore(deps): remove package-lock.json andaco e declara packageManager bun (#81)
 - 2026-11-21 `34453e2` chore(deps): aponta Dependabot para lockfile bun eliminando CVEs falsos do npm (#79)
 - 2026-11-21 `3d1ee90` fix: protege economia de perfis via RPCs SECURITY DEFINER (pendencia 02) (#78)
@@ -364,7 +365,6 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - 2026-11-19 `96fa87c` infra(workflow): sobe actions de checkout e setup-cli no deploy de edge functions (#68)
 - 2026-11-19 `d7ab23c` fix(functions): corrige bugs de runtime + checagem Deno e dependency review das edge functions (#67)
 - 2026-11-14 `94dc2c7` infra: guarda envs Supabase no build para evitar redeploy com URL vazia (#61)
-- 2026-11-14 `15656ee` fix: setup.ts preserva env real do Supabase nos testes de seguranca (#62)
 
 ## Arquivos deste diretório
 - `docs/contexto/codigo/rotas.json`

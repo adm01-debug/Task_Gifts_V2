@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "f34642c914e5adac3ccf13a2676d4e150eaf737e",
+  "sha": "0132b7c1ad2b887930dbc9676bde105ab2ca8a3d",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
-  "generated_at": "2026-11-21 13:04 UTC",
+  "generated_at": "2026-11-21 13:06 UTC",
   "files_total": 1508,
   "code_files": 1405,
   "code_lines": 255313
  },
  "version": "1.3.2",
- "facts_hash": "95992fe663858faa",
+ "facts_hash": "e271795cbf2bc62c",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -17,17 +17,17 @@
   ],
   "deps": {
    "@radix-ui/react-dialog": {
-    "version": "^1.1.14",
+    "version": "^1.3.1",
     "role": "Radix UI / shadcn",
     "in": "package.json"
    },
    "@supabase/supabase-js": {
-    "version": "^2.118.0",
+    "version": "^2.119.0",
     "role": "Supabase (DB/Auth/Storage/Functions)",
     "in": "package.json"
    },
    "@tanstack/react-query": {
-    "version": "^5.105.0",
+    "version": "^5.108.0",
     "role": "Cache/fetch de dados (TanStack Query)",
     "in": "package.json"
    },
@@ -42,7 +42,7 @@
     "in": "package.json"
    },
    "lucide-react": {
-    "version": "^1.65.0",
+    "version": "^1.75.0",
     "role": "Ícones Lucide",
     "in": "package.json"
    },
@@ -52,7 +52,7 @@
     "in": "package.json"
    },
    "react-hook-form": {
-    "version": "^7.91.0",
+    "version": "^7.92.0",
     "role": "Forms (react-hook-form)",
     "in": "package.json"
    },
@@ -62,7 +62,7 @@
     "in": "package.json"
    },
    "recharts": {
-    "version": "^3.10.1",
+    "version": "^3.11.0",
     "role": "Gráficos Recharts",
     "in": "package.json"
    },
@@ -72,7 +72,7 @@
     "in": "package.json"
    },
    "@playwright/test": {
-    "version": "^1.64.1",
+    "version": "^1.65.1",
     "role": "E2E Playwright",
     "in": "package.json"
    },
@@ -82,12 +82,12 @@
     "in": "package.json"
    },
    "vite": {
-    "version": "^8.3.5",
+    "version": "^8.3.8",
     "role": "Bundler Vite",
     "in": "package.json"
    },
    "vitest": {
-    "version": "^5.0.5",
+    "version": "^5.1.1",
     "role": "Testes Vitest",
     "in": "package.json"
    }
@@ -148765,10 +148765,20 @@
   }
  },
  "git": {
-  "sha": "f34642c914e5adac3ccf13a2676d4e150eaf737e",
+  "sha": "0132b7c1ad2b887930dbc9676bde105ab2ca8a3d",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "commits": [
+   {
+    "sha": "0132b7c",
+    "date": "2026-11-21",
+    "author": "dependabot[bot]",
+    "subject": "build(deps): bump the dependencies group with 30 updates (#82)",
+    "files": [
+     "bun.lock",
+     "package.json"
+    ]
+   },
    {
     "sha": "f34642c",
     "date": "2026-11-21",
@@ -149090,15 +149100,6 @@
      ".github/workflows/automation-local.yml",
      ".github/workflows/ci.yml"
     ]
-   },
-   {
-    "sha": "4f95e63",
-    "date": "2026-11-12",
-    "author": "dependabot[bot]",
-    "subject": "build(deps): bump actions/setup-node from 6.5.0 to 7.1.0 (#47)",
-    "files": [
-     ".github/workflows/automation-local.yml"
-    ]
    }
   ],
   "hot_files": [
@@ -149111,12 +149112,12 @@
     4
    ],
    [
-    ".github/workflows/deploy-edge-functions.yml",
+    "package.json",
     3
    ],
    [
-    "package.json",
-    2
+    ".github/workflows/deploy-edge-functions.yml",
+    3
    ],
    [
     "docs/pendencias/02-profiles-update-sem-restricao-de-coluna.md",
@@ -149127,8 +149128,8 @@
     2
    ],
    [
-    ".github/workflows/automation-local.yml",
-    2
+    "bun.lock",
+    1
    ],
    [
     "package-lock.json",

@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "f34642c914e5adac3ccf13a2676d4e150eaf737e",
+  "commit": "0132b7c1ad2b887930dbc9676bde105ab2ca8a3d",
   "branch": "main",
-  "data_commit": "2026-11-21T10:04:00-03:00",
+  "data_commit": "2026-11-21T10:06:06-03:00",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "ultimos_commits": [
+   {
+    "sha": "0132b7c",
+    "data": "2026-11-21",
+    "assunto": "build(deps): bump the dependencies group with 30 updates (#82)"
+   },
    {
     "sha": "f34642c",
     "data": "2026-11-21",
@@ -126,18 +131,13 @@
     "sha": "e1b0f36",
     "data": "2026-11-13",
     "assunto": "chore(functions): poda 21 edge functions mortas + mitiga 4 vulnerabilidades (#54)"
-   },
-   {
-    "sha": "a489fe2",
-    "data": "2026-11-13",
-    "assunto": "docs: marca item 5 do prod-readiness como aprovado após PR #52 (#53)"
    }
   ],
-  "arquivos_mudados_7d": 46,
+  "arquivos_mudados_7d": 47,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "package.json",
-    "mudancas": 14
+    "mudancas": 15
    },
    {
     "pasta": ".github/workflows/ci.yml",
@@ -145,7 +145,7 @@
    },
    {
     "pasta": "bun.lock",
-    "mudancas": 6
+    "mudancas": 7
    },
    {
     "pasta": ".gitignore",
@@ -199,7 +199,7 @@
   "arquivos_mais_mudados_90d": [
    {
     "arquivo": "package.json",
-    "mudancas": 16
+    "mudancas": 17
    },
    {
     "arquivo": ".github/workflows/ci.yml",
@@ -207,7 +207,7 @@
    },
    {
     "arquivo": "bun.lock",
-    "mudancas": 8
+    "mudancas": 9
    },
    {
     "arquivo": "AGENTS.md",
@@ -305,7 +305,7 @@
    },
    {
     "autor": "dependabot[bot]",
-    "commits": 10
+    "commits": 11
    }
   ]
  },
