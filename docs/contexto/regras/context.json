@@ -1,9 +1,9 @@
 {
  "meta": {
-  "sha": "0132b7c1ad2b887930dbc9676bde105ab2ca8a3d",
+  "sha": "cb42df7405344f7b91a7685670975588997379e2",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
-  "generated_at": "2026-11-21 13:06 UTC",
+  "generated_at": "2026-11-21 13:15 UTC",
   "files_total": 1508,
   "code_files": 1405,
   "code_lines": 255313
@@ -148765,10 +148765,20 @@
   }
  },
  "git": {
-  "sha": "0132b7c1ad2b887930dbc9676bde105ab2ca8a3d",
+  "sha": "cb42df7405344f7b91a7685670975588997379e2",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "commits": [
+   {
+    "sha": "cb42df7",
+    "date": "2026-11-21",
+    "author": "dependabot[bot]",
+    "subject": "build(deps-dev): bump jsdom from 30.1.3 to 31.0.1 (#83)",
+    "files": [
+     "bun.lock",
+     "package.json"
+    ]
+   },
    {
     "sha": "0132b7c",
     "date": "2026-11-21",
@@ -149090,16 +149100,6 @@
      "scripts/automation.mjs",
      "scripts/automation.unit.mjs"
     ]
-   },
-   {
-    "sha": "348cdce",
-    "date": "2026-11-12",
-    "author": "dependabot[bot]",
-    "subject": "build(deps): bump actions/checkout from 6.1.0 to 7.0.1 (#48)",
-    "files": [
-     ".github/workflows/automation-local.yml",
-     ".github/workflows/ci.yml"
-    ]
    }
   ],
   "hot_files": [
@@ -149108,16 +149108,20 @@
     5
    ],
    [
-    ".github/workflows/ci.yml",
+    "package.json",
     4
    ],
    [
-    "package.json",
+    ".github/workflows/ci.yml",
     3
    ],
    [
     ".github/workflows/deploy-edge-functions.yml",
     3
+   ],
+   [
+    "bun.lock",
+    2
    ],
    [
     "docs/pendencias/02-profiles-update-sem-restricao-de-coluna.md",
@@ -149126,10 +149130,6 @@
    [
     "vercel.json",
     2
-   ],
-   [
-    "bun.lock",
-    1
    ],
    [
     "package-lock.json",

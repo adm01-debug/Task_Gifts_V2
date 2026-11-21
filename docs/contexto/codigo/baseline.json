@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "0132b7c1ad2b887930dbc9676bde105ab2ca8a3d",
+  "commit": "cb42df7405344f7b91a7685670975588997379e2",
   "branch": "main",
-  "data_commit": "2026-11-21T10:06:06-03:00",
+  "data_commit": "2026-11-21T10:14:27-03:00",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "ultimos_commits": [
+   {
+    "sha": "cb42df7",
+    "data": "2026-11-21",
+    "assunto": "build(deps-dev): bump jsdom from 30.1.3 to 31.0.1 (#83)"
+   },
    {
     "sha": "0132b7c",
     "data": "2026-11-21",
@@ -126,18 +131,13 @@
     "sha": "27554ab",
     "data": "2026-11-13",
     "assunto": "docs: relatório prod-readiness alinhado ao main e1b0f368 (pós #54) (#56)"
-   },
-   {
-    "sha": "e1b0f36",
-    "data": "2026-11-13",
-    "assunto": "chore(functions): poda 21 edge functions mortas + mitiga 4 vulnerabilidades (#54)"
    }
   ],
   "arquivos_mudados_7d": 47,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "package.json",
-    "mudancas": 15
+    "mudancas": 16
    },
    {
     "pasta": ".github/workflows/ci.yml",
@@ -145,7 +145,7 @@
    },
    {
     "pasta": "bun.lock",
-    "mudancas": 7
+    "mudancas": 8
    },
    {
     "pasta": ".gitignore",
@@ -199,7 +199,7 @@
   "arquivos_mais_mudados_90d": [
    {
     "arquivo": "package.json",
-    "mudancas": 17
+    "mudancas": 18
    },
    {
     "arquivo": ".github/workflows/ci.yml",
@@ -207,7 +207,7 @@
    },
    {
     "arquivo": "bun.lock",
-    "mudancas": 9
+    "mudancas": 10
    },
    {
     "arquivo": "AGENTS.md",
@@ -305,7 +305,7 @@
    },
    {
     "autor": "dependabot[bot]",
-    "commits": 11
+    "commits": 12
    }
   ]
  },
