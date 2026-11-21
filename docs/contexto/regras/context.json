@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "07aa1cee7190e3b440a4eaac85af1b90d8f5280f",
+  "sha": "fb528b1bbe4f2d4c8098c297d3e4e49160462c44",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
-  "generated_at": "2026-11-21 13:27 UTC",
+  "generated_at": "2026-11-21 13:54 UTC",
   "files_total": 1508,
   "code_files": 1405,
-  "code_lines": 255313
+  "code_lines": 255324
  },
  "version": "1.3.2",
- "facts_hash": "e271795cbf2bc62c",
+ "facts_hash": "7f9e2263a418cf50",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -49122,7 +49122,7 @@
   {
    "module": "supabase/functions",
    "files": 27,
-   "lines": 4730,
+   "lines": 4741,
    "tables": [
     "ai_course_jobs",
     "attendance_records",
@@ -147264,11 +147264,15 @@
   },
   "supabase/functions/verify-ip/index.ts": {
    "path": "supabase/functions/verify-ip/index.ts",
-   "lines": 149,
+   "lines": 160,
    "tables": [
     {
      "table": "ip_whitelist",
      "op": "select"
+    },
+    {
+     "table": "ip_access_logs",
+     "op": "insert"
     },
     {
      "table": "ip_access_logs",
@@ -148765,10 +148769,28 @@
   }
  },
  "git": {
-  "sha": "07aa1cee7190e3b440a4eaac85af1b90d8f5280f",
+  "sha": "fb528b1bbe4f2d4c8098c297d3e4e49160462c44",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "commits": [
+   {
+    "sha": "fb528b1",
+    "date": "2026-11-21",
+    "author": "adm01-debug",
+    "subject": "fix: verify-ip fail-closed quando a whitelist nao pode ser checada (#86)",
+    "files": [
+     "supabase/functions/verify-ip/index.ts"
+    ]
+   },
+   {
+    "sha": "dadc093",
+    "date": "2026-11-21",
+    "author": "adm01-debug",
+    "subject": "fix: remove 29 vulnerabilidades do bun.lock (audit fix) (#85)",
+    "files": [
+     "bun.lock"
+    ]
+   },
    {
     "sha": "07aa1ce",
     "date": "2026-11-21",
@@ -149081,25 +149103,6 @@
      "supabase/functions/webhook-health-monitor/index.ts",
      "supabase/functions/weekly-league-processing/index.ts"
     ]
-   },
-   {
-    "sha": "a489fe2",
-    "date": "2026-11-13",
-    "author": "adm01-debug",
-    "subject": "docs: marca item 5 do prod-readiness como aprovado após PR #52 (#53)",
-    "files": [
-     "docs/prod-readiness.md"
-    ]
-   },
-   {
-    "sha": "2978195",
-    "date": "2026-11-13",
-    "author": "adm01-debug",
-    "subject": "fix: remove mocks do admin de humor e dá ação real ao botão de configurações (#52)",
-    "files": [
-     "src/components/admin/MoodAnalytics.tsx",
-     "src/pages/Profile.tsx"
-    ]
    }
   ],
   "hot_files": [
@@ -149108,8 +149111,8 @@
     4
    ],
    [
-    "docs/prod-readiness.md",
-    4
+    "bun.lock",
+    3
    ],
    [
     ".github/workflows/ci.yml",
@@ -149118,6 +149121,14 @@
    [
     ".github/workflows/deploy-edge-functions.yml",
     3
+   ],
+   [
+    "docs/prod-readiness.md",
+    3
+   ],
+   [
+    "supabase/functions/verify-ip/index.ts",
+    2
    ],
    [
     ".github/workflows/dependency-review.yml",
@@ -149129,10 +149140,6 @@
    ],
    [
     "docs/pendencias/05-lockfiles-triplos-package-manager.md",
-    2
-   ],
-   [
-    "bun.lock",
     2
    ],
    [
@@ -149177,10 +149184,6 @@
    ],
    [
     "src/test/rpcAccess.test.ts",
-    1
-   ],
-   [
-    "src/tests/unit/achievements.test.ts",
     1
    ]
   ]

@@ -1,7 +1,7 @@
 # Contexto do projeto para agentes de IA
 
 GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.
-Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `07aa1cee7190e3b440a4eaac85af1b90d8f5280f` (2026-11-21T10:26:36-03:00).
+Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `fb528b1bbe4f2d4c8098c297d3e4e49160462c44` (2026-11-21T10:53:37-03:00).
 
 ## Como usar (leia antes de planejar ou executar qualquer tarefa)
 1. **Tela/rota/menu** → `rotas.json` (url/vista/menu → arquivo → hooks → tabelas → edges; `rotas_http_backend` para APIs) e `modulos.json` (módulo inteiro + dependências entre módulos).
@@ -36,7 +36,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 |---|---|
 | arquivos_total | 1498 |
 | arquivos_codigo | 1128 |
-| linhas_codigo | 224150 |
+| linhas_codigo | 224161 |
 | rotas | 83 |
 | rotas_http_backend | 0 |
 | vistas_por_id | 0 |
@@ -265,7 +265,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - possiveis_segredos_no_codigo: 0
 
 ## Grafo de código (graphify)
-- 9852 nós · 27420 arestas · 620 comunidades · grafo do commit `07aa1cee`
+- 9852 nós · 27420 arestas · 620 comunidades · grafo do commit `fb528b1b`
 - comunidades maiores: lucide-react (329), react (230), DevelopmentPlanManager.tsx (132), AdminPanel.tsx (111), client.ts (109), cn (107), profilesService.ts (105), date-fns (103), QuizAdmin.tsx (99), navigation/index.ts (90), Shop.tsx (86), react-router-dom (84)
 - símbolos mais chamados: cn() (src/lib/utils.ts), useAuth() (src/hooks/useAuth.tsx), useIsMobile() (src/hooks/use-mobile.tsx), q() (scripts/supabase_snapshot/snapshot.py), useDepartments() (src/hooks/useDepartments.ts), useToast() (src/hooks/use-toast.ts), useRBAC() (src/hooks/useRBAC.ts), useProfiles() (src/hooks/useProfiles.ts), useSEO() (src/hooks/useSEO.ts), useSoundEffects() (src/hooks/useSoundEffects.tsx), .collect() (scripts/supabase_snapshot/test_snapshot.py), excluded_sql() (scripts/supabase_snapshot/snapshot.py)
 - consulta local: `graphify query "<pergunta>"`, `graphify path "<A>" "<B>"`, `graphify explain "<X>"`
@@ -273,7 +273,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 ## Hotspots (arquivos mais alterados, 90 dias)
 - package.json (18)
 - .github/workflows/ci.yml (11)
-- bun.lock (10)
+- bun.lock (11)
 - AGENTS.md (5)
 - docs/prod-readiness.md (5)
 - .github/workflows/contexto.yml (4)
@@ -350,6 +350,8 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 
 
 ## Últimos commits
+- 2026-11-21 `fb528b1` fix: verify-ip fail-closed quando a whitelist nao pode ser checada (#86)
+- 2026-11-21 `dadc093` fix: remove 29 vulnerabilidades do bun.lock (audit fix) (#85)
 - 2026-11-21 `07aa1ce` build(deps): bump actions/dependency-review-action from 5.0.0 to 5.0.1 (#80)
 - 2026-11-21 `85b4094` docs: fecha pendencias 05 (lockfiles) e atualiza 03 (HIBP) com evidencia de deploy (#84)
 - 2026-11-21 `cb42df7` build(deps-dev): bump jsdom from 30.1.3 to 31.0.1 (#83)
@@ -363,8 +365,6 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - 2026-11-20 `18c24c9` test(e2e): garante que a rota /previsoes e protegida e redireciona para /auth (#74)
 - 2026-11-20 `7f53418` docs: linha de base e pendencias do goal (seguranca, economia, nav, infra) (#73)
 - 2026-11-20 `6f39f2e` fix: permite api.pwnedpasswords.com no connect-src da CSP (#71)
-- 2026-11-20 `6d9a446` fix: expoe rotas de gamificacao na navegacao e remove rota-fantasma (#72)
-- 2026-11-19 `b30f52b` chore: CI roda testes de seguranca RPC com env real (#69)
 
 ## Arquivos deste diretório
 - `docs/contexto/codigo/rotas.json`

@@ -2,11 +2,21 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "07aa1cee7190e3b440a4eaac85af1b90d8f5280f",
+  "commit": "fb528b1bbe4f2d4c8098c297d3e4e49160462c44",
   "branch": "main",
-  "data_commit": "2026-11-21T10:26:36-03:00",
+  "data_commit": "2026-11-21T10:53:37-03:00",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "ultimos_commits": [
+   {
+    "sha": "fb528b1",
+    "data": "2026-11-21",
+    "assunto": "fix: verify-ip fail-closed quando a whitelist nao pode ser checada (#86)"
+   },
+   {
+    "sha": "dadc093",
+    "data": "2026-11-21",
+    "assunto": "fix: remove 29 vulnerabilidades do bun.lock (audit fix) (#85)"
+   },
    {
     "sha": "07aa1ce",
     "data": "2026-11-21",
@@ -121,19 +131,9 @@
     "sha": "696dd2d",
     "data": "2026-11-14",
     "assunto": "fix: revoga acesso anonimo/authenticated das views de diagnostico (#58)"
-   },
-   {
-    "sha": "9759f35",
-    "data": "2026-11-14",
-    "assunto": "fix: corrige cron de campanhas e allowlist de alertas de segurança (#59)"
-   },
-   {
-    "sha": "c86726f",
-    "data": "2026-11-14",
-    "assunto": "fix: adiciona flag --yes ao deploy de edge functions (#57)"
    }
   ],
-  "arquivos_mudados_7d": 44,
+  "arquivos_mudados_7d": 45,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "package.json",
@@ -145,7 +145,7 @@
    },
    {
     "pasta": "bun.lock",
-    "mudancas": 8
+    "mudancas": 9
    },
    {
     "pasta": ".gitignore",
@@ -207,7 +207,7 @@
    },
    {
     "arquivo": "bun.lock",
-    "mudancas": 10
+    "mudancas": 11
    },
    {
     "arquivo": "AGENTS.md",
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 54
+    "commits": 56
    },
    {
     "autor": "dependabot[bot]",
@@ -312,7 +312,7 @@
  "contagens": {
   "arquivos_total": 1498,
   "arquivos_codigo": 1128,
-  "linhas_codigo": 224150,
+  "linhas_codigo": 224161,
   "rotas": 83,
   "rotas_http_backend": 0,
   "vistas_por_id": 0,
@@ -460,7 +460,7 @@
   },
   "supabase/functions": {
    "arquivos": 27,
-   "linhas": 4730
+   "linhas": 4741
   },
   "tailwind.config.ts": {
    "arquivos": 1,
