@@ -147,7 +147,7 @@ ${sourceText}
   if (!res.ok) {
     const body = await res.text();
     if (res.status === 429) throw new Error("Limite de uso da IA atingido, tente em instantes.");
-    if (res.status === 402) throw new Error("Créditos da OpenRouter esgotados. Adicione créditos na conta/secret da OpenRouter.");
+    if (res.status === 402) throw new Error("Créditos da OpenRouter esgotados. Adicione créditos na sua conta OpenRouter.");
     throw new Error(`Falha da IA [${res.status}]: ${body}`);
   }
   const data = await res.json();
