@@ -9,4 +9,4 @@ CSP em `vercel.json` (header) nao listava `api.pwnedpasswords.com` no `connect-s
 Adicionado `https://api.pwnedpasswords.com` ao `connect-src` (add-only, sem remocao de dominio). Valido: JSON ok + preview Vercel ok.
 
 ## Evidence
-PR https://github.com/adm01-debug/Task_Gifts_V2/pull/71 (CI quality SUCCESS). Aguardando merge (infra/vercel.json = regra 8).
+PR https://github.com/adm01-debug/Task_Gifts_V2/pull/71 (CI quality SUCCESS). Mergeada na main. Deploy de producao confirmado Ready (HTTP 200). CSP em producao inclui `https://api.pwnedpasswords.com` no `connect-src` (`vercel.json`). Revalidado em 2026-11-21: endpoint HIBP responde HTTP 200 sem bloqueio de CSP.

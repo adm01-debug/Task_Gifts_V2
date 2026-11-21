@@ -1,12 +1,17 @@
 ﻿# Pendencias — lockfiles multiplos + ausencia de packageManager
 
-Estado: **DESCARTADO (parcial)** para acao imediata
+Estado: **CONCLUIDO** 
 
 ## Observacao
-Repo tem `bun.lock` (356916 B) e `package-lock.json` (666861 B) e nenhum `packageManager` em `package.json`. A auditoria citava tambem `bun.lockb`.
+O repo tinha `bun.lock` e `package-lock.json` (npm, orfao e defasado desde a PR #26) e nenhum `packageManager` em `package.json`. O `package-lock.json` gerava 57 alertas falsos no Dependabot (1 critico em storybook 10.6.0 < 10.6.2) porque o Dependabot era configurado para o ecossistema `npm` enquanto o CI/Verce usa bun.
 
-## Avaliacao
-O CI usa `bun` (bun.lock e o lockfile efetivo; CI green). O `package-lock.json` parece ser residuo de um packagema ge Bom scope. Como nao ha regressao (CI usa bun, green), nao e urgente. Manter ambos e toleravel nos que alem remove-lo por risco de quebra em ferramenta que ainda use npm.
+## Correcao (merges na main)
+- **PR #79** (`34453e22`): trocou `package-ecosystem` de `npm` para `bun` no `.github/dependabot.yml`, eliminando os CVEs falsos do lock npm orfao.
+- **PR #81** (`f34642c9`): removeu `package-lock.json` (18101 linhas) e declarou `"packageManager": "bun@1.4.4"` no `package.json`, para o Vercel/detector de framework usar bun.
 
-## Proxima acao (se desejada)
-Documentar `packageManager: bun@<ver>` e avaliar remocao do `package-lock.json` num change controlado (PR dedicada, CI green). Nao bloqueia producao.
+## Evidencia
+- `bun install --frozen-lockfile` exit 0 (lockfile consistente apos remocao do lock npm).
+- CI quality SUCCESS e Dependency Review PASS nas PRs #79/#81.
+- Deploy de producao Ready (HTTP 200) apos cada merge.
+- Dependabot: **zero alertas abertos** apos a troca para ecossistema bun.
+- `packageManager` preservado nos rebases subsequentes do Dependabot (#82/#83).
