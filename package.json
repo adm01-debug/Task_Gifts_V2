@@ -3,6 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "packageManager": "bun@1.4.4",
   "scripts": {
     "maintenance:doctor": "sh scripts/maintenance/run.sh doctor --root .",
     "maintenance:check": "sh scripts/maintenance/run.sh check --root . --ref origin/main",
