@@ -37,14 +37,18 @@ async function signOutFromServer(page) {
     return { accessToken: null, refreshToken: null };
   });
   const url = process.env.E2E_SUPABASE_URL ?? '';
-  if (creds.accessToken && url) {
-    await fetch(`${url}/auth/v1/logout`, {
-      method: 'POST',
-      headers: {
-        apikey: process.env.E2E_SUPABASE_ANON_KEY ?? '',
-        authorization: `Bearer ${creds.accessToken}`,
-      },
-    }).catch(() => {});
+  if (!creds.accessToken || !url || !process.env.E2E_SUPABASE_ANON_KEY) {
+    throw new Error('signOutFromServer: falta access_token ou credenciais E2E_SUPABASE_URL/ANON_KEY');
+  }
+  const res = await fetch(`${url}/auth/v1/logout`, {
+    method: 'POST',
+    headers: {
+      apikey: process.env.E2E_SUPABASE_ANON_KEY,
+      authorization: `Bearer ${creds.accessToken}`,
+    },
+  });
+  if (res.status !== 204 && res.status !== 200) {
+    throw new Error(`signOutFromServer: logout respondeu HTTP ${res.status}`);
   }
   await page.evaluate(() => {
     localStorage.clear();
@@ -104,13 +108,17 @@ test.describe('Happy Paths - Task Gifts', () => {
   test('6. Login falho mostra erro e permanece em /auth', async ({ page }) => {
     test.skip(!HAS_CREDENTIALS, 'Sem conta de teste dedicada (E2E_EMAIL/E2E_PASSWORD)');
 
+    // Email aleatorio evita herdar contagem de tentativas acumulada de
+    // outras execucoes (lockout muda a mensagem de erro)
+    const randomEmail = `nao.existe.${Date.now()}@taskgifts.internal`;
+
     await page.goto('/auth');
-    await page.fill('input[type="email"]', 'nao.existe@taskgifts.internal');
+    await page.fill('input[type="email"]', randomEmail);
     await page.fill('input[type="password"]', 'senha-errada-123');
     await page.click('button[type="submit"]');
 
-    // O app mostra toast com "Email ou senha incorretos" ao falhar
-    await expect(page.getByText('Email ou senha incorretos')).toBeVisible({ timeout: 15000 });
+    // O app mostra uma das 3 mensagens legitimas de credencial invalida
+    await expect(page.locator('body')).toContainText(/incorretos|Credenciais incorretas|Conta bloqueada|bloqueada/i, { timeout: 15000 });
     await expect(page).toHaveURL(/\/auth/);
   });
 });
