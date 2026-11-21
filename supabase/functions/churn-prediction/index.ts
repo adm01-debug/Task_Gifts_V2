@@ -263,7 +263,7 @@ Retorne apenas colaboradores com risco médio ou alto no formato JSON.`;
         });
       }
       if (aiResponse.status === 402) {
-        return new Response(JSON.stringify({ error: "Payment required, please add funds to your Lovable AI workspace." }), {
+        return new Response(JSON.stringify({ error: "Payment required, please add funds to your OpenRouter account." }), {
           status: 402,
           headers: { ...corsHeaders, "Content-Type": "application/json" },
         });

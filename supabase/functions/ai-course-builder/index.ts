@@ -147,7 +147,7 @@ ${sourceText}
   if (!res.ok) {
     const body = await res.text();
     if (res.status === 429) throw new Error("Limite de uso da IA atingido, tente em instantes.");
-    if (res.status === 402) throw new Error("Créditos da Lovable AI esgotados. Adicione créditos no workspace.");
+    if (res.status === 402) throw new Error("Créditos da OpenRouter esgotados. Adicione créditos na conta/secret da OpenRouter.");
     throw new Error(`Falha da IA [${res.status}]: ${body}`);
   }
   const data = await res.json();
