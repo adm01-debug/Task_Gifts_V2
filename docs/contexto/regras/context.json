@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "166c7d2af24f46201680035cf49d071298f6164d",
+  "sha": "f76c9b7093d147e8e15dcd4658b42eb0f8e49056",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
-  "generated_at": "2026-11-21 14:12 UTC",
+  "generated_at": "2026-11-21 14:27 UTC",
   "files_total": 1508,
   "code_files": 1405,
-  "code_lines": 255324
+  "code_lines": 255326
  },
  "version": "1.3.2",
- "facts_hash": "7f9e2263a418cf50",
+ "facts_hash": "b31d665369bf9125",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -49122,7 +49122,7 @@
   {
    "module": "supabase/functions",
    "files": 27,
-   "lines": 4741,
+   "lines": 4743,
    "tables": [
     "ai_course_jobs",
     "attendance_records",
@@ -147264,7 +147264,7 @@
   },
   "supabase/functions/verify-ip/index.ts": {
    "path": "supabase/functions/verify-ip/index.ts",
-   "lines": 160,
+   "lines": 162,
    "tables": [
     {
      "table": "ip_whitelist",
@@ -148769,10 +148769,19 @@
   }
  },
  "git": {
-  "sha": "166c7d2af24f46201680035cf49d071298f6164d",
+  "sha": "f76c9b7093d147e8e15dcd4658b42eb0f8e49056",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "commits": [
+   {
+    "sha": "f76c9b7",
+    "date": "2026-11-21",
+    "author": "adm01-debug",
+    "subject": "fix: corrige typo de tipo no catch do log de ip_access_logs (#89)",
+    "files": [
+     "supabase/functions/verify-ip/index.ts"
+    ]
+   },
    {
     "sha": "166c7d2",
     "date": "2026-11-21",
@@ -149068,15 +149077,6 @@
      ".github/workflows/deploy-edge-functions.yml",
      "supabase/config.toml"
     ]
-   },
-   {
-    "sha": "27554ab",
-    "date": "2026-11-13",
-    "author": "adm01-debug",
-    "subject": "docs: relatório prod-readiness alinhado ao main e1b0f368 (pós #54) (#56)",
-    "files": [
-     "docs/prod-readiness.md"
-    ]
    }
   ],
   "hot_files": [
@@ -149101,6 +149101,10 @@
     3
    ],
    [
+    "supabase/functions/verify-ip/index.ts",
+    2
+   ],
+   [
     ".github/workflows/dependency-review.yml",
     2
    ],
@@ -149115,14 +149119,6 @@
    [
     "docs/pendencias/02-profiles-update-sem-restricao-de-coluna.md",
     2
-   ],
-   [
-    "docs/prod-readiness.md",
-    2
-   ],
-   [
-    "supabase/functions/verify-ip/index.ts",
-    1
    ],
    [
     "package-lock.json",
@@ -149158,6 +149154,10 @@
    ],
    [
     "src/test/rpcAccess.test.ts",
+    1
+   ],
+   [
+    "src/tests/unit/achievements.test.ts",
     1
    ]
   ]

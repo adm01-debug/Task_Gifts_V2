@@ -524,7 +524,7 @@
    "nome": "verify-ip",
    "entrada": "supabase/functions/verify-ip/index.ts",
    "arquivos": 1,
-   "linhas": 160,
+   "linhas": 162,
    "verify_jwt": true,
    "metodos": [
     "OPTIONS"

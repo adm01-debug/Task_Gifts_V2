@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "166c7d2af24f46201680035cf49d071298f6164d",
+  "commit": "f76c9b7093d147e8e15dcd4658b42eb0f8e49056",
   "branch": "main",
-  "data_commit": "2026-11-21T11:04:20-03:00",
+  "data_commit": "2026-11-21T11:27:00-03:00",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "ultimos_commits": [
+   {
+    "sha": "f76c9b7",
+    "data": "2026-11-21",
+    "assunto": "fix: corrige typo de tipo no catch do log de ip_access_logs (#89)"
+   },
    {
     "sha": "166c7d2",
     "data": "2026-11-21",
@@ -126,11 +131,6 @@
     "sha": "c4d21f5",
     "data": "2026-11-14",
     "assunto": "chore: contexto agendado de 10 min para 1x/hora (#64)"
-   },
-   {
-    "sha": "ba823e4",
-    "data": "2026-11-14",
-    "assunto": "docs: prod-readiness refletido ao main c86726f2 (deploy edge functions, advisors 5 ERROR, 48 erros postgres, PRs #58/#59"
    }
   ],
   "arquivos_mudados_7d": 45,
@@ -266,6 +266,10 @@
     "mudancas": 3
    },
    {
+    "arquivo": "supabase/functions/verify-ip/index.ts",
+    "mudancas": 3
+   },
+   {
     "arquivo": ".github/dependabot.yml",
     "mudancas": 2
    },
@@ -292,16 +296,12 @@
    {
     "arquivo": "docs/pendencias/05-lockfiles-triplos-package-manager.md",
     "mudancas": 2
-   },
-   {
-    "arquivo": "scripts/automation.config.json",
-    "mudancas": 2
    }
   ],
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 57
+    "commits": 58
    },
    {
     "autor": "dependabot[bot]",
@@ -312,7 +312,7 @@
  "contagens": {
   "arquivos_total": 1498,
   "arquivos_codigo": 1128,
-  "linhas_codigo": 224161,
+  "linhas_codigo": 224163,
   "rotas": 83,
   "rotas_http_backend": 0,
   "vistas_por_id": 0,
@@ -460,7 +460,7 @@
   },
   "supabase/functions": {
    "arquivos": 27,
-   "linhas": 4741
+   "linhas": 4743
   },
   "tailwind.config.ts": {
    "arquivos": 1,
