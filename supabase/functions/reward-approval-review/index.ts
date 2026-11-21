@@ -5,7 +5,7 @@ import { assessPurchaseRisk, applyAiAdjustment, type PurchaseRiskSignals } from 
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SERVICE_ROLE = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
-const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY")!;
+const OPENROUTER_API_KEY = Deno.env.get("OPENROUTER_API_KEY")!;
 
 const BodySchema = z.object({
   purchase_id: z.string().uuid(),
@@ -62,10 +62,10 @@ async function callAI(
   heuristic: ReturnType<typeof assessPurchaseRisk>,
 ): Promise<{ score_adjustment: number; summary: string; recommendation: string } | null> {
   try {
-    const res = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+    const res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${LOVABLE_API_KEY}`,
+            Authorization: `Bearer ${OPENROUTER_API_KEY}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({

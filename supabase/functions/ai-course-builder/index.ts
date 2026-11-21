@@ -4,7 +4,7 @@ import { z } from "https://esm.sh/zod@3.23.8";
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SERVICE_ROLE = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
-const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY")!;
+const OPENROUTER_API_KEY = Deno.env.get("OPENROUTER_API_KEY")!;
 
 const BodySchema = z.object({
   job_id: z.string().uuid(),
@@ -127,10 +127,10 @@ CONTEÚDO:
 ${sourceText}
 """`;
 
-  const res = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+  const res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
     method: "POST",
     headers: {
-      Authorization: `Bearer ${LOVABLE_API_KEY}`,
+        Authorization: `Bearer ${OPENROUTER_API_KEY}`,
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
@@ -147,7 +147,7 @@ ${sourceText}
   if (!res.ok) {
     const body = await res.text();
     if (res.status === 429) throw new Error("Limite de uso da IA atingido, tente em instantes.");
-    if (res.status === 402) throw new Error("Créditos da Lovable AI esgotados. Adicione créditos no workspace.");
+    if (res.status === 402) throw new Error("Créditos da OpenRouter esgotados. Adicione créditos na sua conta OpenRouter.");
     throw new Error(`Falha da IA [${res.status}]: ${body}`);
   }
   const data = await res.json();
