@@ -1,5 +1,4 @@
 import { supabase } from "@/integrations/supabase/client";
-import { profilesService } from "./profilesService";
 import { notificationsService } from "./notificationsService";
 import { auditService } from "./auditService";
 import { logger } from "./loggingService";
@@ -144,20 +143,18 @@ export const shopService = {
       throw new Error("Estoque insuficiente");
     }
 
-    // Get user's coins
-    const profile = await profilesService.getById(userId);
-    if (!profile) throw new Error("Perfil não encontrado");
-
     const totalCost = typedReward.price_coins * quantity;
-    if (profile.coins < totalCost) {
-      throw new Error("Moedas insuficientes");
-    }
 
-    // Deduct coins
-    await supabase
-      .from("profiles")
-      .update({ coins: profile.coins - totalCost })
-      .eq("id", userId);
+    // Deduct coins atomically via RPC (SECURITY DEFINER) — saldo validado no banco
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { error: spendError } = await (supabase as any).rpc("spend_coins", {
+      p_user_id: userId,
+      p_amount: totalCost,
+    });
+
+    if (spendError) {
+      throw new Error(spendError.message === "coins insuficientes" ? "Moedas insuficientes" : spendError.message);
+    }
 
     // Update stock if limited
     if (typedReward.stock !== null) {

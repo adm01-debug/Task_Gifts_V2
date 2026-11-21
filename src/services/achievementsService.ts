@@ -91,21 +91,32 @@ export const achievementsService = {
       return { success: false };
     }
 
-    // Award XP and coins - get current values first
-    const { data: profile } = await supabase
-      .from("profiles")
-      .select("xp, coins")
-      .eq("id", userId)
-      .maybeSingle();
+    // Award XP and coins via RPCs (SECURITY DEFINER) - UPDATE direto em
+    // colunas economicas e bloqueado pela REVOKE table-level da pendencia 02.
+    const xp = achievement.xp_reward ?? 0;
+    const coins = achievement.coin_reward ?? 0;
 
-    if (profile) {
-      await supabase
-        .from("profiles")
-        .update({
-          xp: profile.xp + achievement.xp_reward,
-          coins: profile.coins + achievement.coin_reward,
-        })
-        .eq("id", userId);
+    if (xp > 0) {
+      const { error: xpError } = await (supabase as any).rpc("add_xp", {
+        p_user_id: userId,
+        p_amount: xp,
+        p_source: `achievement:${achievementKey}`,
+      });
+      if (xpError) {
+        logger.apiError("Error awarding achievement XP", xpError, "achievementsService");
+        return { success: false };
+      }
+    }
+
+    if (coins > 0) {
+      const { error: coinsError } = await (supabase as any).rpc("add_coins", {
+        p_user_id: userId,
+        p_amount: coins,
+      });
+      if (coinsError) {
+        logger.apiError("Error awarding achievement coins", coinsError, "achievementsService");
+        return { success: false };
+      }
     }
 
     // Create notification

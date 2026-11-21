@@ -126,20 +126,22 @@ export const profilesService = {
     }
   },
 
+  /**
+   * Soma XP via RPC `add_xp` (SECURITY DEFINER). Preserva o contrato do
+   * hook `useAddXp`: {@link { profile, leveledUp, newLevel }}.
+   */
   async addXp(id: string, xpAmount: number, source?: string): Promise<{ profile: Profile; leveledUp: boolean; newLevel?: number }> {
-    const profile = await this.getById(id);
-    if (!profile) throw new Error("Profile not found");
+      // Lê o perfil ANTES da RPC para comparar o nível pré-incremento
+      const oldProfile = await this.getById(id);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { data, error } = await (supabase as any).rpc("add_xp", { p_user_id: id, p_amount: xpAmount, p_source: source ?? null });
+    if (error) throw error;
+    const row = (data ?? [])[0] as { id: string; xp: number; level: number } | undefined;
+    if (!row) throw new Error("Profile not found");
 
-    const newXp = profile.xp + xpAmount;
-    const oldLevel = profile.level;
-    const newLevel = Math.floor(newXp / 1000) + 1;
+    const oldLevel = oldProfile?.level ?? row.level;
+    const newLevel = row.level;
     const leveledUp = newLevel > oldLevel;
-
-    // Check for XP decay (Issue 15.2 Sugestão 1)
-    // If user hasn't logged in for 3+ days, we might apply a small penalty 
-    // but typically decay is a scheduled task. Here we just log gain.
-
-    const updatedProfile = await this.update(id, { xp: newXp, level: newLevel });
 
     auditService.logXpGain(id, xpAmount, source || "atividade").catch(() => {});
     notificationsService.notifyXpGain(id, xpAmount, source || "atividade").catch(() => {});
@@ -147,45 +149,37 @@ export const profilesService = {
     if (leveledUp) {
       auditService.logLevelUp(id, oldLevel, newLevel).catch(() => {});
       notificationsService.notifyLevelUp(id, newLevel).catch(() => {});
-      
       // Integration with sound effects or celebrations can be triggered in UI
     }
 
-    return { profile: updatedProfile, leveledUp, newLevel: leveledUp ? newLevel : undefined };
+    return { profile: { id: row.id, xp: row.xp, level: row.level } as unknown as Profile, leveledUp, newLevel: leveledUp ? newLevel : undefined };
   },
-
   async addCoins(id: string, coinsAmount: number): Promise<Profile> {
-    const profile = await this.getById(id);
-    if (!profile) throw new Error("Profile not found");
-    return this.update(id, { coins: profile.coins + coinsAmount });
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { data, error } = await (supabase as any).rpc("add_coins", { p_user_id: id, p_amount: coinsAmount });
+    if (error) throw error;
+    const row = (data ?? [])[0] as { id: string; coins: number } | undefined;
+    if (!row) throw new Error("Profile not found");
+    return { id: row.id, coins: row.coins } as unknown as Profile;
   },
 
   async incrementStreak(id: string): Promise<Profile> {
-    const profile = await this.getById(id);
-    if (!profile) throw new Error("Profile not found");
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { data, error } = await (supabase as any).rpc("increment_streak", { p_user_id: id });
+    if (error) throw error;
+    const row = (data ?? [])[0] as { id: string; streak: number; best_streak: number } | undefined;
+    if (!row) throw new Error("Profile not found");
 
-    const now = new Date();
-    const lastAccess = profile.last_access_at ? new Date(profile.last_access_at) : null;
-    
-    let newStreak = profile.streak + 1;
-    
-    // Logic to reset streak if 24h+ gap (simple version)
-    if (lastAccess) {
-      const diffHours = (now.getTime() - lastAccess.getTime()) / (1000 * 60 * 60);
-      if (diffHours > 48) newStreak = 1; // More than 2 days gap
-      else if (diffHours < 12) newStreak = profile.streak; // Same day access
-    }
-
-    const bestStreak = Math.max(profile.best_streak, newStreak);
-    const updatedProfile = await this.update(id, { streak: newStreak, best_streak: bestStreak, last_access_at: now.toISOString() });
-
-    auditService.logStreakUpdate(id, profile.streak, newStreak).catch(() => {});
-    return updatedProfile;
+    auditService.logStreakUpdate(id, Math.max(row.streak - 1, 0), row.streak).catch(() => {});
+    return { id: row.id, streak: row.streak, best_streak: row.best_streak } as unknown as Profile;
   },
 
   async incrementQuestsCompleted(id: string): Promise<Profile> {
-    const profile = await this.getById(id);
-    if (!profile) throw new Error("Profile not found");
-    return this.update(id, { quests_completed: profile.quests_completed + 1 });
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { data, error } = await (supabase as any).rpc("increment_quests_completed", { p_user_id: id });
+    if (error) throw error;
+    const row = (data ?? [])[0] as { id: string; quests_completed: number } | undefined;
+    if (!row) throw new Error("Profile not found");
+    return { id: row.id, quests_completed: row.quests_completed } as unknown as Profile;
   },
 };

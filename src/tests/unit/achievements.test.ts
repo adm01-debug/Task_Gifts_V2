@@ -2,11 +2,13 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { achievementsService } from '../../services/achievementsService';
 import { supabase } from '../../integrations/supabase/client';
 
-const mockSelect = vi.fn().mockReturnThis();
-const mockEq = vi.fn().mockReturnThis();
-const mockMaybeSingle = vi.fn();
-const mockInsert = vi.fn().mockReturnThis();
-const mockUpdate = vi.fn().mockReturnThis();
+const { mockRpc, mockSelect, mockEq, mockMaybeSingle, mockInsert } = vi.hoisted(() => ({
+  mockRpc: vi.fn().mockResolvedValue({ error: null }),
+  mockSelect: vi.fn().mockReturnThis(),
+  mockEq: vi.fn().mockReturnThis(),
+  mockMaybeSingle: vi.fn(),
+  mockInsert: vi.fn().mockReturnThis(),
+}));
 
 vi.mock('../../integrations/supabase/client', () => ({
   supabase: {
@@ -15,8 +17,9 @@ vi.mock('../../integrations/supabase/client', () => ({
       eq: mockEq,
       maybeSingle: mockMaybeSingle,
       insert: mockInsert,
-      update: mockUpdate,
+      update: vi.fn(),
     })),
+    rpc: mockRpc,
   },
 }));
 
@@ -45,7 +48,15 @@ describe('achievementsService', () => {
       
       expect(result.success).toBe(true);
       expect(mockInsert).toHaveBeenCalledTimes(2); // 1 for user_achievement, 1 for notification
-      expect(mockUpdate).toHaveBeenCalledWith({ xp: 100, coins: 50 });
+            expect(mockRpc).toHaveBeenCalledWith("add_xp", {
+              p_user_id: userId,
+              p_amount: 100,
+              p_source: `achievement:${achievementKey}`,
+            });
+            expect(mockRpc).toHaveBeenCalledWith("add_coins", {
+              p_user_id: userId,
+              p_amount: 50,
+            });
     });
 
     it('should return alreadyUnlocked if already has it', async () => {
