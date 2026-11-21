@@ -1,9 +1,9 @@
 {
  "meta": {
-  "sha": "3d1ee9005853cd2ea235f392501d3323be295df7",
+  "sha": "f34642c914e5adac3ccf13a2676d4e150eaf737e",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
-  "generated_at": "2026-11-21 11:45 UTC",
+  "generated_at": "2026-11-21 13:04 UTC",
   "files_total": 1508,
   "code_files": 1405,
   "code_lines": 255313
@@ -148765,10 +148765,29 @@
   }
  },
  "git": {
-  "sha": "3d1ee9005853cd2ea235f392501d3323be295df7",
+  "sha": "f34642c914e5adac3ccf13a2676d4e150eaf737e",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "commits": [
+   {
+    "sha": "f34642c",
+    "date": "2026-11-21",
+    "author": "adm01-debug",
+    "subject": "chore(deps): remove package-lock.json andaco e declara packageManager bun (#81)",
+    "files": [
+     "package-lock.json",
+     "package.json"
+    ]
+   },
+   {
+    "sha": "34453e2",
+    "date": "2026-11-21",
+    "author": "adm01-debug",
+    "subject": "chore(deps): aponta Dependabot para lockfile bun eliminando CVEs falsos do npm (#79)",
+    "files": [
+     ".github/dependabot.yml"
+    ]
+   },
    {
     "sha": "3d1ee90",
     "date": "2026-11-21",
@@ -149080,27 +149099,6 @@
     "files": [
      ".github/workflows/automation-local.yml"
     ]
-   },
-   {
-    "sha": "933629b",
-    "date": "2026-11-12",
-    "author": "dependabot[bot]",
-    "subject": "build(deps): bump actions/download-artifact from 7.0.0 to 8.0.2 (#46)",
-    "files": [
-     ".github/workflows/contexto.yml"
-    ]
-   },
-   {
-    "sha": "e661bb4",
-    "date": "2026-11-12",
-    "author": "adm01-debug",
-    "subject": "style(manutencao): aplica correcoes locais verificadas (#49)",
-    "files": [
-     "src/components/ActivityHeatmap.tsx",
-     "src/components/AnalyticsWidget.tsx",
-     "src/components/AppSidebar.tsx",
-     "src/components/CelebrationsBanner.tsx"
-    ]
    }
   ],
   "hot_files": [
@@ -149117,6 +149115,10 @@
     3
    ],
    [
+    "package.json",
+    2
+   ],
+   [
     "docs/pendencias/02-profiles-update-sem-restricao-de-coluna.md",
     2
    ],
@@ -149125,16 +149127,16 @@
     2
    ],
    [
-    "src/components/AppSidebar.tsx",
-    2
-   ],
-   [
-    ".github/workflows/contexto.yml",
-    2
-   ],
-   [
     ".github/workflows/automation-local.yml",
     2
+   ],
+   [
+    "package-lock.json",
+    1
+   ],
+   [
+    ".github/dependabot.yml",
+    1
    ],
    [
     "src/services/achievementsService.ts",
@@ -149178,10 +149180,6 @@
    ],
    [
     "supabase/migrations/20261218000000_profiles_economia_rpcs.sql",
-    1
-   ],
-   [
-    ".env.example",
     1
    ]
   ]

@@ -2,11 +2,21 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "3d1ee9005853cd2ea235f392501d3323be295df7",
+  "commit": "f34642c914e5adac3ccf13a2676d4e150eaf737e",
   "branch": "main",
-  "data_commit": "2026-11-21T08:44:33-03:00",
+  "data_commit": "2026-11-21T10:04:00-03:00",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "ultimos_commits": [
+   {
+    "sha": "f34642c",
+    "data": "2026-11-21",
+    "assunto": "chore(deps): remove package-lock.json andaco e declara packageManager bun (#81)"
+   },
+   {
+    "sha": "34453e2",
+    "data": "2026-11-21",
+    "assunto": "chore(deps): aponta Dependabot para lockfile bun eliminando CVEs falsos do npm (#79)"
+   },
    {
     "sha": "3d1ee90",
     "data": "2026-11-21",
@@ -121,23 +131,13 @@
     "sha": "a489fe2",
     "data": "2026-11-13",
     "assunto": "docs: marca item 5 do prod-readiness como aprovado após PR #52 (#53)"
-   },
-   {
-    "sha": "2978195",
-    "data": "2026-11-13",
-    "assunto": "fix: remove mocks do admin de humor e dá ação real ao botão de configurações (#52)"
-   },
-   {
-    "sha": "f9d5fbd",
-    "data": "2026-11-13",
-    "assunto": "docs: relatório prod-readiness com evidências do estado real do main (#51)"
    }
   ],
-  "arquivos_mudados_7d": 44,
+  "arquivos_mudados_7d": 46,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "package.json",
-    "mudancas": 13
+    "mudancas": 14
    },
    {
     "pasta": ".github/workflows/ci.yml",
@@ -199,7 +199,7 @@
   "arquivos_mais_mudados_90d": [
    {
     "arquivo": "package.json",
-    "mudancas": 15
+    "mudancas": 16
    },
    {
     "arquivo": ".github/workflows/ci.yml",
@@ -227,10 +227,6 @@
    },
    {
     "arquivo": "docs/agentes/mapa-repo.md",
-    "mudancas": 4
-   },
-   {
-    "arquivo": "package-lock.json",
     "mudancas": 4
    },
    {
@@ -270,6 +266,10 @@
     "mudancas": 3
    },
    {
+    "arquivo": ".github/dependabot.yml",
+    "mudancas": 2
+   },
+   {
     "arquivo": "ai-context.config.json",
     "mudancas": 2
    },
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 51
+    "commits": 53
    },
    {
     "autor": "dependabot[bot]",
@@ -310,7 +310,7 @@
   ]
  },
  "contagens": {
-  "arquivos_total": 1499,
+  "arquivos_total": 1498,
   "arquivos_codigo": 1128,
   "linhas_codigo": 224150,
   "rotas": 83,

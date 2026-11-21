@@ -7,7 +7,7 @@
    "SQL (271)",
    "Markdown (54)",
    "JavaScript (24)",
-   "JSON (15)",
+   "JSON (14)",
    "YAML (9)",
    "Python (5)",
    "Shell (4)"
@@ -96,7 +96,7 @@
    "zod": "^4.6.7"
   },
   "engines": null,
-  "packageManager": null
+  "packageManager": "bun@1.4.4"
  },
  "python": {
   "dependencias": [

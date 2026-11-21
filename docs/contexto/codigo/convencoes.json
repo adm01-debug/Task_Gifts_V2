@@ -59,11 +59,11 @@
  "commits": {
   "convencao": "conventional commits (observado)",
   "exemplos": [
+   "chore(deps): remove package-lock.json andaco e declara packageManager bun (#81)",
+   "chore(deps): aponta Dependabot para lockfile bun eliminando CVEs falsos do npm (#79)",
    "fix: protege economia de perfis via RPCs SECURITY DEFINER (pendencia 02) (#78)",
    "fix(ci): expoe VITE_DEPLOYED_EDGE_FUNCTIONS para o build e corrige doc da allowlist (#77)",
-   "fix: excludes assets/ do rewrite SPA para expor 404 real de chunks obsoletos (#76)",
-   "fix: move GlobalErrorBoundary para dentro do BrowserRouter (#75)",
-   "test(e2e): garante que a rota /previsoes e protegida e redireciona para /auth (#74)"
+   "fix: excludes assets/ do rewrite SPA para expor 404 real de chunks obsoletos (#76)"
   ]
  },
  "pr_template": ".github/PULL_REQUEST_TEMPLATE.md",
