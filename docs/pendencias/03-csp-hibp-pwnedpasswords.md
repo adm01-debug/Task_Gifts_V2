@@ -9,4 +9,10 @@ CSP em `vercel.json` (header) nao listava `api.pwnedpasswords.com` no `connect-s
 Adicionado `https://api.pwnedpasswords.com` ao `connect-src` (add-only, sem remocao de dominio). Valido: JSON ok + preview Vercel ok.
 
 ## Evidence
-PR https://github.com/adm01-debug/Task_Gifts_V2/pull/71 (CI quality SUCCESS). Mergeada na main. Deploy de producao confirmado Ready (HTTP 200). CSP em producao inclui `https://api.pwnedpasswords.com` no `connect-src` (`vercel.json`). Revalidado em 2026-11-21: endpoint HIBP responde HTTP 200 sem bloqueio de CSP.
+PR https://github.com/adm01-debug/Task_Gifts_V2/pull/71 (CI quality SUCCESS). Mergeada na main. Deploy de producao confirmado Ready (HTTP 200). CSP em producao inclui `https://api.pwnedpasswords.com` no `connect-src` (`vercel.json`).
+
+Revalidado em 2026-11-21 (validacao real do range API, nao so codigo):
+- `GET https://api.pwnedpasswords.com/range/<prefixo5>` responde HTTP 200 com 1925 linhas de hashes no formato `<sufixo>:<ocorrencias>` (k-anonymity correta).
+- Com header `Add-Padding: true` responde 2070 linhas (contra jogos de cache/time-attack) — implementado em `src/lib/authValidations.ts:78` (`checkPasswordLeaked`).
+- Consumidores em producao: cadastro `AuthFormContent.tsx:183` via `PasswordStrengthIndicator.tsx:51` e reset de senha `ResetPassword.tsx:277`.
+- API externa no ar, servico de checks internos em producao (resultado nao persistido, so feedback de forca da senha).
