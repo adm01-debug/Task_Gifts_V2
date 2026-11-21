@@ -4,6 +4,7 @@
 > Evidência em `arquivo:linha`. Correções da Fase D estão em `ESTADO_ATUAL.md` e em `04-dados-e-runtime.md`.
 > Runtime de build/teste = `NAO_VERIFICADO` (node_modules ausente no ambiente da auditoria).
 > **Data de revisão desta atualização**: 2026-11-11 — secções de segurança (webhook, verify-ip, trail-recommendations) e poda de stubs refletem a `main` (PRs #85-#87, commits `dadc0938`/`fb528b1b`/`166c7d2a`).
+> **Revisão de 2026-11-21**: swap Lovable→OpenRouter validado ponta a ponta (chave responde no gateway openrouter.ai/api/v1/chat/completions, modelo google/gemini-2.5-flash); deploy das 16 edge functions re-rodado verde (run 44934984530); as 3 functions dos deploys falhos (#88/#89/#86) confirmadas ACTIVE e a secret OPENROUTER_API_KEY presente no projeto.
 
 ---
 
@@ -193,4 +194,11 @@ Confirmado contra `src/integrations/supabase/types.ts`:
 - **Fail-open de `verify-ip`** — `catch` final devolve `allowed:false` (fail-closed). `allowed:true` ocorre apenas nos casos legítimos: whitelist vazia (`verify-ip/index.ts:60-65`) ou IP autenticamente cadastrado na allowlist (`verify-ip/index.ts:93-116`). Fix mergeado via PR #86 (commit `fb528b1b`). `verify-geo` foi removida da main (não existe `supabase/functions/verify-geo`).
 - **IDOR de `trail-recommendations`** — o controle de acesso agora bloqueia com 403 quem não é `admin`/`manager` (`trail-recommendations/index.ts:52-56`); o antigo comentário "In a more complex system..." e o prosseguimento sem check foram substituídos.
 
+
+**Validação de 2026-11-21 — swap OpenRouter + deploys íntegros (evidência real):**
+
+- **Gateway OpenRouter operacional** — chamada real a `openrouter.ai/api/v1/chat/completions` com `OPENROUTER_API_KEY` respondeu "Ok" (modelo `google/gemini-2.5-flash`), provando que a credencial que mantinha zeradas `ai_course_jobs`/`ai_coach_messages` está funcional.
+- **Deploy das 16 edge functions verde** — workflow `deploy-edge-functions.yml` (run `44934984530`, branch `main`) concluído com sucesso após corrigir a `SUPABASE_ACCESS_TOKEN` do CI para um PAT válido.
+- **Functions dos deploys falhos ativas** — `competency-alerts` v6, `verify-ip` v5, `admin-alerts` v4, `webhook-dispatcher` v4, `ai-coach` v5, `ai-course-builder` v7, `churn-prediction` v6, `generate-quiz-questions` v5, `reward-approval-review` v7, `trail-recommendations` v5 (Management API, status `ACTIVE`, `verify_jwt=true`).
+- **Secret `OPENROUTER_API_KEY`** confirmada no projeto (8 secrets no total; `LOVABLE_API_KEY` nunca existiu em produção).
 **Podadas da main (não existem mais em `supabase/functions`, eram stubs/tables inexistentes):** `send-email-notifications`, `send-email-digest`, `verify-geo`, `security-weekly-digest`, `weekly-league-processing` e `external-webhook`. As funções de email eram stubs que logavam e descartavam o HTML; sem elas não há mais retorno falso de `delivered/success:true`. (**`competency-alerts` NÃO foi podada** — foi corrigida nesta sessão; ver item "Resolvidos na main" acima/abaixo.)
