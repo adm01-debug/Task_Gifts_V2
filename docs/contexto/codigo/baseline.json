@@ -2,11 +2,21 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "cb42df7405344f7b91a7685670975588997379e2",
+  "commit": "07aa1cee7190e3b440a4eaac85af1b90d8f5280f",
   "branch": "main",
-  "data_commit": "2026-11-21T10:14:27-03:00",
+  "data_commit": "2026-11-21T10:26:36-03:00",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "ultimos_commits": [
+   {
+    "sha": "07aa1ce",
+    "data": "2026-11-21",
+    "assunto": "build(deps): bump actions/dependency-review-action from 5.0.0 to 5.0.1 (#80)"
+   },
+   {
+    "sha": "85b4094",
+    "data": "2026-11-21",
+    "assunto": "docs: fecha pendencias 05 (lockfiles) e atualiza 03 (HIBP) com evidencia de deploy (#84)"
+   },
    {
     "sha": "cb42df7",
     "data": "2026-11-21",
@@ -121,19 +131,9 @@
     "sha": "c86726f",
     "data": "2026-11-14",
     "assunto": "fix: adiciona flag --yes ao deploy de edge functions (#57)"
-   },
-   {
-    "sha": "25dc07b",
-    "data": "2026-11-13",
-    "assunto": "infra: adiciona workflow de deploy de edge functions (#55)"
-   },
-   {
-    "sha": "27554ab",
-    "data": "2026-11-13",
-    "assunto": "docs: relatório prod-readiness alinhado ao main e1b0f368 (pós #54) (#56)"
    }
   ],
-  "arquivos_mudados_7d": 47,
+  "arquivos_mudados_7d": 44,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "package.json",
@@ -270,6 +270,10 @@
     "mudancas": 2
    },
    {
+    "arquivo": ".github/workflows/dependency-review.yml",
+    "mudancas": 2
+   },
+   {
     "arquivo": "ai-context.config.json",
     "mudancas": 2
    },
@@ -282,30 +286,26 @@
     "mudancas": 2
    },
    {
+    "arquivo": "docs/pendencias/03-csp-hibp-pwnedpasswords.md",
+    "mudancas": 2
+   },
+   {
+    "arquivo": "docs/pendencias/05-lockfiles-triplos-package-manager.md",
+    "mudancas": 2
+   },
+   {
     "arquivo": "scripts/automation.config.json",
-    "mudancas": 2
-   },
-   {
-    "arquivo": "scripts/automation.unit.mjs",
-    "mudancas": 2
-   },
-   {
-    "arquivo": "scripts/ci/check-claude-md-integrity.mjs",
-    "mudancas": 2
-   },
-   {
-    "arquivo": "scripts/regras_negocio/generate.py",
     "mudancas": 2
    }
   ],
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 53
+    "commits": 54
    },
    {
     "autor": "dependabot[bot]",
-    "commits": 12
+    "commits": 13
    }
   ]
  },

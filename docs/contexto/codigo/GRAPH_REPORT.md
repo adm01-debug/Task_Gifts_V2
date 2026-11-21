@@ -1,7 +1,7 @@
 # Graph Report - Task_Gifts_V2  (2026-11-21)
 
 ## Corpus Check
-- 1471 files · ~975,425 words
+- 1471 files · ~975,500 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 12 file(s) not represented in the graph (top: .toml 5, (none) 2, .css 2)
 
@@ -11,7 +11,7 @@
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `cb42df74`
+- Built from commit: `07aa1cee`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -2221,7 +2221,7 @@ Nodes (3): Causa, Correcao, Evidence
 
 ### Community 423 - "05-lockfiles-triplos-package-manager.md"
 Cohesion: 0.50
-Nodes (3): Avaliacao, Observacao, Proxima acao (se desejada)
+Nodes (3): Correcao (merges na main), Evidencia, Observacao
 
 ### Community 424 - "_linha-de-base.md"
 Cohesion: 0.50

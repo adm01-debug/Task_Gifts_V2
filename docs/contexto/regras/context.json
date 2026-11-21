@@ -1,9 +1,9 @@
 {
  "meta": {
-  "sha": "cb42df7405344f7b91a7685670975588997379e2",
+  "sha": "07aa1cee7190e3b440a4eaac85af1b90d8f5280f",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
-  "generated_at": "2026-11-21 13:15 UTC",
+  "generated_at": "2026-11-21 13:27 UTC",
   "files_total": 1508,
   "code_files": 1405,
   "code_lines": 255313
@@ -148765,10 +148765,29 @@
   }
  },
  "git": {
-  "sha": "cb42df7405344f7b91a7685670975588997379e2",
+  "sha": "07aa1cee7190e3b440a4eaac85af1b90d8f5280f",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "commits": [
+   {
+    "sha": "07aa1ce",
+    "date": "2026-11-21",
+    "author": "dependabot[bot]",
+    "subject": "build(deps): bump actions/dependency-review-action from 5.0.0 to 5.0.1 (#80)",
+    "files": [
+     ".github/workflows/dependency-review.yml"
+    ]
+   },
+   {
+    "sha": "85b4094",
+    "date": "2026-11-21",
+    "author": "adm01-debug",
+    "subject": "docs: fecha pendencias 05 (lockfiles) e atualiza 03 (HIBP) com evidencia de deploy (#84)",
+    "files": [
+     "docs/pendencias/03-csp-hibp-pwnedpasswords.md",
+     "docs/pendencias/05-lockfiles-triplos-package-manager.md"
+    ]
+   },
    {
     "sha": "cb42df7",
     "date": "2026-11-21",
@@ -149081,34 +149100,15 @@
      "src/components/admin/MoodAnalytics.tsx",
      "src/pages/Profile.tsx"
     ]
-   },
-   {
-    "sha": "f9d5fbd",
-    "date": "2026-11-13",
-    "author": "adm01-debug",
-    "subject": "docs: relatório prod-readiness com evidências do estado real do main (#51)",
-    "files": [
-     "docs/prod-readiness.md"
-    ]
-   },
-   {
-    "sha": "24cfd06",
-    "date": "2026-11-13",
-    "author": "adm01-debug",
-    "subject": "fix(automation): recusar recursão indireta de hooks pela cadeia de eventos (#50)",
-    "files": [
-     "scripts/automation.mjs",
-     "scripts/automation.unit.mjs"
-    ]
    }
   ],
   "hot_files": [
    [
-    "docs/prod-readiness.md",
-    5
+    "package.json",
+    4
    ],
    [
-    "package.json",
+    "docs/prod-readiness.md",
     4
    ],
    [
@@ -149118,6 +149118,18 @@
    [
     ".github/workflows/deploy-edge-functions.yml",
     3
+   ],
+   [
+    ".github/workflows/dependency-review.yml",
+    2
+   ],
+   [
+    "docs/pendencias/03-csp-hibp-pwnedpasswords.md",
+    2
+   ],
+   [
+    "docs/pendencias/05-lockfiles-triplos-package-manager.md",
+    2
    ],
    [
     "bun.lock",
@@ -149169,18 +149181,6 @@
    ],
    [
     "src/tests/unit/achievements.test.ts",
-    1
-   ],
-   [
-    "src/tests/unit/profiles.test.ts",
-    1
-   ],
-   [
-    "src/tests/unit/shop.test.ts",
-    1
-   ],
-   [
-    "supabase/migrations/20261218000000_profiles_economia_rpcs.sql",
     1
    ]
   ]
