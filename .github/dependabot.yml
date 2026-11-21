@@ -1,16 +1,16 @@
-version: 2
+﻿version: 2
 updates:
-  - package-ecosystem: "npm"
+  - package-ecosystem: "bun"
     directory: "/"
     schedule:
       interval: "weekly"
       day: "monday"
       time: "09:00"
     open-pull-requests-limit: 10
-    # Ignora majors de dependências cujo upgrade exige migração manual:
-    # - typescript: typescript-eslint@8.x só aceita TS < 6.1; TS 7+ quebra o lint
+    # Ignora majors de dependÃªncias cujo upgrade exige migraÃ§Ã£o manual:
+    # - typescript: typescript-eslint@8.x sÃ³ aceita TS < 6.1; TS 7+ quebra o lint
     # - tailwindcss: v4 remove o plugin PostCSS nativo; exige @tailwindcss/postcss
-    # - @hookform/resolvers: v6 é major com breaking changes de API
+    # - @hookform/resolvers: v6 Ã© major com breaking changes de API
     ignore:
       - dependency-name: "typescript"
         update-types: ["version-update:semver-major"]
