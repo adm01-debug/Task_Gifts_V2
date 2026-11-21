@@ -1,7 +1,7 @@
 # Contexto do projeto para agentes de IA
 
 GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.
-Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `fb528b1bbe4f2d4c8098c297d3e4e49160462c44` (2026-11-21T10:53:37-03:00).
+Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `166c7d2af24f46201680035cf49d071298f6164d` (2026-11-21T11:04:20-03:00).
 
 ## Como usar (leia antes de planejar ou executar qualquer tarefa)
 1. **Tela/rota/menu** → `rotas.json` (url/vista/menu → arquivo → hooks → tabelas → edges; `rotas_http_backend` para APIs) e `modulos.json` (módulo inteiro + dependências entre módulos).
@@ -265,7 +265,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - possiveis_segredos_no_codigo: 0
 
 ## Grafo de código (graphify)
-- 9852 nós · 27420 arestas · 620 comunidades · grafo do commit `fb528b1b`
+- 9852 nós · 27420 arestas · 620 comunidades · grafo do commit `166c7d2a`
 - comunidades maiores: lucide-react (329), react (230), DevelopmentPlanManager.tsx (132), AdminPanel.tsx (111), client.ts (109), cn (107), profilesService.ts (105), date-fns (103), QuizAdmin.tsx (99), navigation/index.ts (90), Shop.tsx (86), react-router-dom (84)
 - símbolos mais chamados: cn() (src/lib/utils.ts), useAuth() (src/hooks/useAuth.tsx), useIsMobile() (src/hooks/use-mobile.tsx), q() (scripts/supabase_snapshot/snapshot.py), useDepartments() (src/hooks/useDepartments.ts), useToast() (src/hooks/use-toast.ts), useRBAC() (src/hooks/useRBAC.ts), useProfiles() (src/hooks/useProfiles.ts), useSEO() (src/hooks/useSEO.ts), useSoundEffects() (src/hooks/useSoundEffects.tsx), .collect() (scripts/supabase_snapshot/test_snapshot.py), excluded_sql() (scripts/supabase_snapshot/snapshot.py)
 - consulta local: `graphify query "<pergunta>"`, `graphify path "<A>" "<B>"`, `graphify explain "<X>"`
@@ -276,11 +276,11 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - bun.lock (11)
 - AGENTS.md (5)
 - docs/prod-readiness.md (5)
+- vercel.json (5)
 - .github/workflows/contexto.yml (4)
 - RELATORIO_CI.md (4)
 - docs/agentes/mapa-repo.md (4)
 - scripts/automation.mjs (4)
-- vercel.json (4)
 - .github/workflows/automation-local.yml (3)
 - .github/workflows/deploy-edge-functions.yml (3)
 - PENDENCIAS.md (3)
@@ -350,6 +350,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 
 
 ## Últimos commits
+- 2026-11-21 `166c7d2` fix: desbloqueia video do LMS (media-src/frame-src na CSP) (#87)
 - 2026-11-21 `fb528b1` fix: verify-ip fail-closed quando a whitelist nao pode ser checada (#86)
 - 2026-11-21 `dadc093` fix: remove 29 vulnerabilidades do bun.lock (audit fix) (#85)
 - 2026-11-21 `07aa1ce` build(deps): bump actions/dependency-review-action from 5.0.0 to 5.0.1 (#80)
@@ -364,7 +365,6 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - 2026-11-20 `de9e391` fix: move GlobalErrorBoundary para dentro do BrowserRouter (#75)
 - 2026-11-20 `18c24c9` test(e2e): garante que a rota /previsoes e protegida e redireciona para /auth (#74)
 - 2026-11-20 `7f53418` docs: linha de base e pendencias do goal (seguranca, economia, nav, infra) (#73)
-- 2026-11-20 `6f39f2e` fix: permite api.pwnedpasswords.com no connect-src da CSP (#71)
 
 ## Arquivos deste diretório
 - `docs/contexto/codigo/rotas.json`

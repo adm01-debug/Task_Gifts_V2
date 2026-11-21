@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "fb528b1bbe4f2d4c8098c297d3e4e49160462c44",
+  "commit": "166c7d2af24f46201680035cf49d071298f6164d",
   "branch": "main",
-  "data_commit": "2026-11-21T10:53:37-03:00",
+  "data_commit": "2026-11-21T11:04:20-03:00",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "ultimos_commits": [
+   {
+    "sha": "166c7d2",
+    "data": "2026-11-21",
+    "assunto": "fix: desbloqueia video do LMS (media-src/frame-src na CSP) (#87)"
+   },
    {
     "sha": "fb528b1",
     "data": "2026-11-21",
@@ -126,11 +131,6 @@
     "sha": "ba823e4",
     "data": "2026-11-14",
     "assunto": "docs: prod-readiness refletido ao main c86726f2 (deploy edge functions, advisors 5 ERROR, 48 erros postgres, PRs #58/#59"
-   },
-   {
-    "sha": "696dd2d",
-    "data": "2026-11-14",
-    "assunto": "fix: revoga acesso anonimo/authenticated das views de diagnostico (#58)"
    }
   ],
   "arquivos_mudados_7d": 45,
@@ -184,15 +184,15 @@
     "mudancas": 4
    },
    {
+    "pasta": "vercel.json",
+    "mudancas": 4
+   },
+   {
     "pasta": ".github/workflows/automation-local.yml",
     "mudancas": 3
    },
    {
     "pasta": ".github/workflows/deploy-edge-functions.yml",
-    "mudancas": 3
-   },
-   {
-    "pasta": "PENDENCIAS.md",
     "mudancas": 3
    }
   ],
@@ -218,6 +218,10 @@
     "mudancas": 5
    },
    {
+    "arquivo": "vercel.json",
+    "mudancas": 5
+   },
+   {
     "arquivo": ".github/workflows/contexto.yml",
     "mudancas": 4
    },
@@ -231,10 +235,6 @@
    },
    {
     "arquivo": "scripts/automation.mjs",
-    "mudancas": 4
-   },
-   {
-    "arquivo": "vercel.json",
     "mudancas": 4
    },
    {
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 56
+    "commits": 57
    },
    {
     "autor": "dependabot[bot]",

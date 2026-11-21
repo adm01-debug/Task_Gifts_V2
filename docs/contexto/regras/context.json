@@ -1,9 +1,9 @@
 {
  "meta": {
-  "sha": "fb528b1bbe4f2d4c8098c297d3e4e49160462c44",
+  "sha": "166c7d2af24f46201680035cf49d071298f6164d",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
-  "generated_at": "2026-11-21 13:54 UTC",
+  "generated_at": "2026-11-21 14:12 UTC",
   "files_total": 1508,
   "code_files": 1405,
   "code_lines": 255324
@@ -148769,10 +148769,19 @@
   }
  },
  "git": {
-  "sha": "fb528b1bbe4f2d4c8098c297d3e4e49160462c44",
+  "sha": "166c7d2af24f46201680035cf49d071298f6164d",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "commits": [
+   {
+    "sha": "166c7d2",
+    "date": "2026-11-21",
+    "author": "adm01-debug",
+    "subject": "fix: desbloqueia video do LMS (media-src/frame-src na CSP) (#87)",
+    "files": [
+     "vercel.json"
+    ]
+   },
    {
     "sha": "fb528b1",
     "date": "2026-11-21",
@@ -149068,47 +149077,16 @@
     "files": [
      "docs/prod-readiness.md"
     ]
-   },
-   {
-    "sha": "e1b0f36",
-    "date": "2026-11-13",
-    "author": "adm01-debug",
-    "subject": "chore(functions): poda 21 edge functions mortas + mitiga 4 vulnerabilidades (#54)",
-    "files": [
-     "docs/prod-readiness.md",
-     "supabase/functions/birthday-celebrations/index.ts",
-     "supabase/functions/bitrix24-api/index.ts",
-     "supabase/functions/bitrix24-oauth/index.ts",
-     "supabase/functions/bitrix24-webhook/index.ts",
-     "supabase/functions/burn-rate-monitor/index.ts",
-     "supabase/functions/checkin-reminders/index.ts",
-     "supabase/functions/churn-prediction/index.ts",
-     "supabase/functions/cleanup-old-security-logs/index.ts",
-     "supabase/functions/cleanup-rate-limit-logs/index.ts",
-     "supabase/functions/dispatch-critical-alert/index.ts",
-     "supabase/functions/error-budget-monitor/index.ts",
-     "supabase/functions/external-api/index.ts",
-     "supabase/functions/external-db-bridge/index.ts",
-     "supabase/functions/external-webhook/index.ts",
-     "supabase/functions/external-webhook/validation.test.ts",
-     "supabase/functions/security-weekly-digest/index.ts",
-     "supabase/functions/send-email-digest/index.ts",
-     "supabase/functions/send-email-notifications/index.ts",
-     "supabase/functions/send-rate-limit-alert/index.ts",
-     "supabase/functions/survey-reminders/index.ts",
-     "supabase/functions/trail-recommendations/index.ts",
-     "supabase/functions/verify-geo/index.ts",
-     "supabase/functions/verify-ip/index.ts",
-     "supabase/functions/webhook-dispatcher/index.ts",
-     "supabase/functions/webhook-health-monitor/index.ts",
-     "supabase/functions/weekly-league-processing/index.ts"
-    ]
    }
   ],
   "hot_files": [
    [
     "package.json",
     4
+   ],
+   [
+    "vercel.json",
+    3
    ],
    [
     "bun.lock",
@@ -149121,14 +149099,6 @@
    [
     ".github/workflows/deploy-edge-functions.yml",
     3
-   ],
-   [
-    "docs/prod-readiness.md",
-    3
-   ],
-   [
-    "supabase/functions/verify-ip/index.ts",
-    2
    ],
    [
     ".github/workflows/dependency-review.yml",
@@ -149147,8 +149117,12 @@
     2
    ],
    [
-    "vercel.json",
+    "docs/prod-readiness.md",
     2
+   ],
+   [
+    "supabase/functions/verify-ip/index.ts",
+    1
    ],
    [
     "package-lock.json",
