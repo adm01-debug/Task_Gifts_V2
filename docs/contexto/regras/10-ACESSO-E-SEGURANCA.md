@@ -1,6 +1,6 @@
 # 10 · ACESSO E SEGURANÇA — quem pode o quê
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `e58c5c0cf4` · branch `main` · 2026-11-20 17:28 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `3d1ee90058` · branch `main` · 2026-11-21 11:45 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## Perfis / roles identificados
@@ -394,6 +394,8 @@
 - `_require_admin`
 - `_require_manager_or_admin`
 - `acknowledge_security_alert`
+- `add_coins`
+- `add_xp`
 - `admin_profile_directory`
 - `advance_board_trail`
 - `answer_lightning_question`
@@ -522,6 +524,8 @@
 - `has_role`
 - `increment_announcement_views`
 - `increment_push_failures`
+- `increment_quests_completed`
+- `increment_streak`
 - `ingest_war_event`
 - `is_country_allowed`
 - `is_department_manager`
@@ -587,6 +591,7 @@
 - `settle_tournament_rewards`
 - `snapshot_lucky_wheel_payout`
 - `snapshot_push_outbox_health`
+- `spend_coins`
 - `spin_lucky_wheel`
 - `start_lightning_round`
 - `start_memory_session`
@@ -717,7 +722,7 @@ Middleware matcher (Next.js): nenhum
 | grant | anon, authenticated | execute | `get_passkeys_by_email`, `user_has_passkeys`, `verify_certificate`, `get_passkeys_by_email` |
 | grant | anon, authenticated | select | `weekly_challenges`, `organizations` |
 | grant | anon, authenticated, service_role | execute | `get_2fa_status`, `user_has_passkeys` |
-| grant | authenticated | execute | `get_executive_metrics`, `get_monthly_trends`, `get_department_metrics`, `generate_engagement_snapshot`, `get_department_metrics`, `get_executive_metrics`, `get_monthly_trends`, `get_nine_box_distribution`, `get_security_stats`, `generate_engagement_snapshot`, `get_quiz_category_stats`, `get_webhook_delivery_hourly_24h`, `get_alert_mttr_by_type_7d`, `get_alert_heatmap_30d`, `get_security_digest_history` … +94 |
+| grant | authenticated | execute | `get_executive_metrics`, `get_monthly_trends`, `get_department_metrics`, `generate_engagement_snapshot`, `get_department_metrics`, `get_executive_metrics`, `get_monthly_trends`, `get_nine_box_distribution`, `get_security_stats`, `generate_engagement_snapshot`, `get_quiz_category_stats`, `get_webhook_delivery_hourly_24h`, `get_alert_mttr_by_type_7d`, `get_alert_heatmap_30d`, `get_security_digest_history` … +99 |
 | grant | authenticated | insert | `user_challenges` |
 | grant | authenticated | insert, update, delete | `boss_battles`, `boss_win_rate_goals`, `memory_decks`, `memory_pairs` |
 | grant | authenticated | select | `push_notification_logs`, `engagement_action_playbooks`, `nr1_risk_categories`, `nr1_factor_mappings`, `purchase_approvals`, `campaign_team_split_batches`, `campaign_team_split_entries`, `lucky_wheel_prize_audit`, `lucky_wheel_payout_snapshots`, `lucky_wheel_settings_audit`, `scratch_card_prizes`, `scratch_cards`, `lightning_quiz_sessions`, `lightning_quiz_answers`, `lightning_quiz_sessions` … +39 |
@@ -735,7 +740,7 @@ Middleware matcher (Next.js): nenhum
 | grant | service_role, authenticated | execute | `get_security_stats`, `log_login_attempt`, `get_nine_box_distribution`, `get_department_metrics`, `get_monthly_trends`, `get_executive_metrics` |
 | revoke | PUBLIC | all | `get_security_digest_history`, `get_reliability_slo`, `get_reliability_timeline`, `acknowledge_security_alert`, `log_runbook_step`, `get_incident_metrics`, `get_incident_metrics`, `recalc_campaign_progress`, `close_expired_sales_campaigns`, `user_wants_in_app_notification`, `close_expired_sales_campaigns`, `user_wants_push_notification`, `user_wants_email_notification`, `enqueue_push`, `claim_push_outbox` … +16 |
 | revoke | PUBLIC | execute | `cleanup_old_security_logs`, `public`, `approve_password_reset`, `reject_password_reset`, `auto_block_ip`, `cleanup_old_security_logs`, `cleanup_old_security_logs`, `cleanup_expired_idempotency_keys`, `cleanup_expired_challenges`, `get_security_stats`, `update_certification_statuses`, `log_ip_access`, `log_geo_access`, `validate_api_key`, `process_external_task` … +26 |
-| revoke | PUBLIC, anon | all | `generate_executive_monthly_report`, `generate_action_plan_from_factor`, `generate_action_plan_from_nr1_category`, `get_engagement_nps_history`, `get_engagement_pillar_benchmark`, `get_engagement_pillar_benchmark`, `trim_push_sync_events`, `revoke_push_device`, `can_handle_opinion`, `get_opinion_feed`, `toggle_opinion_support`, `respond_to_opinion`, `set_opinion_status`, `generate_action_plan_from_opinion`, `revoke_push_device` … +83 |
+| revoke | PUBLIC, anon | all | `generate_executive_monthly_report`, `generate_action_plan_from_factor`, `generate_action_plan_from_nr1_category`, `get_engagement_nps_history`, `get_engagement_pillar_benchmark`, `get_engagement_pillar_benchmark`, `trim_push_sync_events`, `revoke_push_device`, `can_handle_opinion`, `get_opinion_feed`, `toggle_opinion_support`, `respond_to_opinion`, `set_opinion_status`, `generate_action_plan_from_opinion`, `revoke_push_device` … +88 |
 | revoke | PUBLIC, anon | execute | `get_webhook_delivery_stats_24h`, `get_webhook_delivery_hourly_24h`, `get_webhook_delivery_stats_1h`, `get_webhook_delivery_logs`, `get_error_budget_30d`, `get_burn_rate`, `get_burn_rate`, `is_org_admin`, `is_org_member`, `get_active_engagement_cycle`, `assign_engagement_questions`, `submit_engagement_answer`, `get_engagement_cycle_progress`, `engagement_min_respondents`, `get_engagement_pillar_scores` … +13 |
 | revoke | PUBLIC, anon, authenticated | all | `webhook_delivery_stats_24h`, `check_sla_breaches_and_alert`, `auto_create_postmortem_on_resolve`, `check_overdue_postmortem_actions`, `notify_admins_of_monthly_report`, `close_expired_sales_campaigns`, `increment_push_failures`, `reset_push_failures`, `log_lucky_wheel_prize_change`, `chi_square_critical`, `erf_inverse`, `snapshot_lucky_wheel_payout`, `raise_lucky_wheel_window_alerts`, `raise_lucky_wheel_window_alerts`, `log_lucky_wheel_budget_change` … +20 |
 | revoke | PUBLIC, anon, authenticated | execute | `validate_reset_token`, `generate_certificate_code`, `ingest_war_event`, `war_hook_task_scores`, `war_hook_attendance`, `war_hook_trail_enrollments`, `war_hook_module_progress`, `war_hook_quiz_scores`, `war_hook_kudos`, `validate_reset_token` |
@@ -747,7 +752,7 @@ Middleware matcher (Next.js): nenhum
 | revoke | authenticated | execute | `approve_password_reset`, `reject_password_reset`, `get_department_metrics`, `get_executive_metrics`, `get_monthly_trends`, `get_nine_box_distribution`, `get_security_stats`, `generate_engagement_snapshot`, `apply_task_penalty`, `get_quiz_category_stats` |
 | revoke | authenticated | insert | `api_request_logs`, `auction_admin_events`, `auction_bids`, `bingo_cards`, `bingo_marks`, `board_moves`, `board_player_states`, `boss_battle_damage`, `boss_battle_rewards`, `campaign_team_split_batches`, `campaign_team_split_entries`, `card_packs`, `card_set_claims`, `card_trades`, `department_war_contributions` … +33 |
 | revoke | authenticated | select, delete, truncate | `profiles` |
-| revoke | authenticated | update | `action_plan_updates`, `activity_reactions`, `ai_coach_messages`, `announcement_reads`, `api_request_logs`, `attendance_records`, `auction_admin_events`, `auction_bids`, `audit_logs`, `bingo_cards`, `bingo_marks`, `bitrix24_webhook_logs`, `board_moves`, `board_player_states`, `boss_battle_damage` … +58 |
+| revoke | authenticated | update | `action_plan_updates`, `activity_reactions`, `ai_coach_messages`, `announcement_reads`, `api_request_logs`, `attendance_records`, `auction_admin_events`, `auction_bids`, `audit_logs`, `bingo_cards`, `bingo_marks`, `bitrix24_webhook_logs`, `board_moves`, `board_player_states`, `boss_battle_damage` … +59 |
 | revoke | authenticated, anon | all | `webhook_delivery_stats_24h` |
 | revoke | public, anon | all | `unblock_board_players`, `list_stuck_board_players`, `unblock_board_players`, `unblock_board_players`, `unblock_board_players` |
 
@@ -762,7 +767,7 @@ Middleware matcher (Next.js): nenhum
 | `notification_preferences` | acessada do front (3 arquivo(s)) sem RLS (não encontrado) | `src/components/InAppNotificationToggle.tsx`<br>`src/hooks/useTypePreferences.ts`<br>`src/services/salesCampaignsService.ts` |
 | `pdi_mentors` | front faz DELETE mas nenhuma política RLS permite DELETE → vai falhar/retornar vazio para usuários | `src/services/pdiService.ts` |
 | `pdi_templates` | front faz INSERT mas nenhuma política RLS permite INSERT → vai falhar/retornar vazio para usuários | `src/services/pdiService.ts` |
-| `profiles` | front faz SELECT mas nenhuma política RLS permite SELECT → vai falhar/retornar vazio para usuários | `src/hooks/usePDIAlerts.ts`<br>`src/hooks/useUserRank.ts`<br>`src/hooks/useWeeklyChallenge.ts`<br>`src/pages/Auth.tsx`<br>… +21 |
+| `profiles` | front faz SELECT mas nenhuma política RLS permite SELECT → vai falhar/retornar vazio para usuários | `src/hooks/usePDIAlerts.ts`<br>`src/hooks/useUserRank.ts`<br>`src/hooks/useWeeklyChallenge.ts`<br>`src/pages/Auth.tsx`<br>… +18 |
 | `profiles_public` | acessada do front (5 arquivo(s)) sem RLS (não encontrado) | `src/services/campaignTeamsService.ts`<br>`src/services/luckyWheelService.ts`<br>`src/services/profilesService.ts`<br>`src/services/salesCampaignsService.ts`<br>… +1 |
 | `roles` | front faz INSERT mas nenhuma política RLS permite INSERT → vai falhar/retornar vazio para usuários | `src/services/rbacService.ts` |
 | `roles` | front faz UPDATE mas nenhuma política RLS permite UPDATE → vai falhar/retornar vazio para usuários | `src/services/rbacService.ts` |

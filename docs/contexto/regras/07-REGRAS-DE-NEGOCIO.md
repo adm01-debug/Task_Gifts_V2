@@ -1,6 +1,6 @@
 # 07 · REGRAS DE NEGÓCIO
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `e58c5c0cf4` · branch `main` · 2026-11-20 17:28 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `3d1ee90058` · branch `main` · 2026-11-21 11:45 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## A. Regras escritas por humanos (`manual/` — prioridade máxima, nunca sobrescrito)
@@ -919,6 +919,14 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `get_2fa_status` | insufficient_privilege | `supabase/migrations/20261114134238_9b119528-da6f-4f43-b6cb-dcdcd7aa7ab1.sql` |
 | `user_has_passkeys` | insufficient_privilege | `supabase/migrations/20261114134238_9b119528-da6f-4f43-b6cb-dcdcd7aa7ab1.sql` |
 | `validate_reset_token` | insufficient_privilege | `supabase/migrations/20261114134238_9b119528-da6f-4f43-b6cb-dcdcd7aa7ab1.sql` |
+| `add_xp` | p_amount deve ser positivo | `supabase/migrations/20261218000000_profiles_economia_rpcs.sql` |
+| `add_xp` | perfil não encontrado | `supabase/migrations/20261218000000_profiles_economia_rpcs.sql` |
+| `add_coins` | p_amount deve ser positivo | `supabase/migrations/20261218000000_profiles_economia_rpcs.sql` |
+| `add_coins` | perfil não encontrado | `supabase/migrations/20261218000000_profiles_economia_rpcs.sql` |
+| `spend_coins` | p_amount deve ser positivo | `supabase/migrations/20261218000000_profiles_economia_rpcs.sql` |
+| `spend_coins` | coins insuficientes | `supabase/migrations/20261218000000_profiles_economia_rpcs.sql` |
+| `increment_streak` | perfil não encontrado | `supabase/migrations/20261218000000_profiles_economia_rpcs.sql` |
+| `increment_quests_completed` | perfil não encontrado | `supabase/migrations/20261218000000_profiles_economia_rpcs.sql` |
 
 ## E. Estados, máquinas de estado e transições
 
@@ -2889,7 +2897,6 @@ _nenhum item encontrado_
 | `const totalDays = (quarterEnd.getTime() - quarterStart.getTime()) / (1000 * 60 * 60 * 24);` | `src/services/oneOnOnePreparationService.ts` |
 | `due_date: new Date(Date.now() + (30 + index * 15) * 24 * 60 * 60 * 1000).toISOString(), // Staggered deadlines` | `src/services/pdiGeneratorService.ts` |
 | `target_date: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000).toISOString(), // 90 days` | `src/services/pdiGeneratorService.ts` |
-| `const diffHours = (now.getTime() - lastAccess.getTime()) / (1000 * 60 * 60);` | `src/services/profilesService.ts` |
 | `tenure = Math.floor((new Date().getTime() - createdAt.getTime()) / (1000 * 60 * 60 * 24 * 365));` | `src/services/successionService.ts` |
 | `timeout: 60000,` | `src/services/webauthnService.ts` |
 | `await new Promise((resolve) => setTimeout(resolve, 2000));` | `src/stories/mobile/MobileComponents.stories.tsx` |
@@ -2937,6 +2944,8 @@ _nenhum item encontrado_
 | `AND COALESCE(eak.secret_last_rotated_at, eak.created_at) < now() - interval '90 days'` | `supabase/migrations/20260728210216_01d79f58-57ea-48d9-a859-ef3ddf891190.sql` |
 | `AND sa.created_at > now() - interval '7 days'` | `supabase/migrations/20260728210216_01d79f58-57ea-48d9-a859-ef3ddf891190.sql` |
 | `VALUES (v_user, v_key, v_ids, now() + interval '60 seconds')` | `supabase/migrations/20260806230000_lightning_relampago_rpcs_only.sql` |
+| `ELSIF (now() - v_last) >= interval '12 hours' THEN` | `supabase/migrations/20261218000000_profiles_economia_rpcs.sql` |
+| `IF v_last IS NULL OR (now() - v_last) > interval '48 hours' THEN` | `supabase/migrations/20261218000000_profiles_economia_rpcs.sql` |
 
 ### H.3 Limites de paginação
 
@@ -3289,7 +3298,7 @@ _nenhum item encontrado_
 | Corrija os erros de configuração antes de salvar. | `src/pages/LuckyWheelAdmin.tsx` |
 | Não foi possível criar o prêmio. | `src/pages/LuckyWheelAdmin.tsx` |
 | Não foi possível remover o prêmio. | `src/pages/LuckyWheelAdmin.tsx` |
-| … +157 linhas — lista completa em `context.json` | |
+| … +154 linhas — lista completa em `context.json` | |
 
 ## J. Controle de acesso no código (checagens de perfil/permissão)
 
@@ -3344,7 +3353,7 @@ _nenhum item encontrado_
 | `admin` | `supabase/migrations/20260807030000_fix_opinion_feed_rpc.sql` |
 | `manager` | `supabase/migrations/20260807030000_fix_opinion_feed_rpc.sql` |
 
-## K. Testes como especificação (1921 testes em 146 arquivos — nomes completos em `context.json`)
+## K. Testes como especificação (1926 testes em 146 arquivos — nomes completos em `context.json`)
 
 | Arquivo | Testes | Exemplos do que o sistema DEVE fazer |
 |---|---|---|
@@ -3432,6 +3441,7 @@ _nenhum item encontrado_
 | `src/test/lightningQuiz.simulation.test.ts` | 10 | Verdadeiro/Falso Relâmpago — motor de recompensa · cobre exaustivamente as 121 combinações de acertos x sequência · é monotônico: mais acertos nunca reduzem a recompensa · não paga nada em rodada zerada e respeita o teto na rodada perfeita … |
 | `src/test/luckyWheelComparisonAlerts.simulation.test.ts` | 10 | decideComparisonAlerts · não alerta em séries estáveis (200 sementes) · alerta regressão de custo quando o custo por giro dobra · alerta estouro de orçamento mesmo sem significância … |
 | `src/test/playerResume.simulation.test.ts` | 10 | retomada do player — simulação · isola a chave por usuário e módulo (400 combinações) · rejeita payloads hostis ou malformados · descarta sessões expiradas e relógios adiantados (300 cenários) … |
+| `src/tests/unit/profiles.test.ts` | 10 | profilesService · getById · should return profile data on success · addXp … |
 | `src/test/auctionDelivery.simulation.test.ts` | 9 | resolveAuctionDelivery — casos determinísticos · não entrega nada quando ninguém deu lance · leilão simbólico não mexe em estoque · estoque ilimitado sempre reserva … |
 | `src/test/goalBetExposure.test.ts` | 9 | computeGoalBetExposure · sem aportes não há exposição · ignora mercados já apurados ou anulados · classifica exposição segura … |
 | `src/test/goalBetHistory.test.ts` | 9 | computeGoalBetHistory · retorna vazio sem dados · ignora mercados ainda abertos ou travados · computa acerto, lucro e ROI … |
@@ -3456,7 +3466,7 @@ _nenhum item encontrado_
 | `src/test/invokeEdgeSafe.simulation.test.ts` | 6 | backoffDelayMs · cresce exponencialmente e respeita o teto (500 amostras) · normaliza tentativas inválidas para a primeira · política de retry … |
 | `src/test/notificationPrefsCrossModule.simulation.test.ts` | 6 | preferencias compartilhadas entre modulos · nao perde tipos de outros modulos em 400 sequencias aleatorias · preserva a prioridade do modulo executivo apos escritas de outros modulos · silenciar push em lote nos jogos nao altera campanhas nem executivo … |
 | `src/test/predictionOddsHistory.simulation.test.ts` | 6 | histórico de cotações — simulação massiva · preserva conservação do pote, normalização e coerência dos multiplicadores · é determinístico e imune à ordem de chegada das linhas · descarta linhas órfãs sem corromper a série … |
-| `src/tests/unit/profiles.test.ts` | 6 | profilesService · getById · should return profile data on success · addXp … |
+| `src/test/rpcAccess.test.ts` | 6 | anon deve receber 42501 ao chamar ${fn} · anon deve receber erro ao chamar get_leaderboard_api · anon deve receber erro ao chamar get_user_stats_api · anon deve receber erro ao chamar get_2fa_status de outro usuário … |
 | `tests/e2e/happy-paths.spec.ts` | 6 | Happy Paths - Dashboard Elite · 1. Login Flow · 2. Quest System · 3. Kudos/Rewards Flow … |
 | `src/test/auctionNotifications.simulation.test.ts` | 5 | notificações de apuração de leilão · não notifica ninguém quando não há lances · avisa o vencedor de item esgotado em vez de vitória · respeita a preferência desligada sem suprimir o estorno … |
 | `src/test/boardStatsPdf.simulation.test.ts` | 5 | boardStatsPdf — invariantes · gera nome .pdf coerente com o CSV e cabeçalho estável · tolera payload nulo/corrompido sem lançar nem vazar NaN · boardStatsPdf — simulação em massa … |
@@ -3470,11 +3480,10 @@ _nenhum item encontrado_
 | `src/test/luckyWheelWhatIfSignature.simulation.test.ts` | 5 | what-if — assinatura de auditoria · é determinística para a mesma entrada · muda quando janela, teto ou grade mudam · tolera comparação nula sem lançar … |
 | `src/test/nr1ActionPlan.simulation.test.ts` | 5 | NR-1 → plano de tratativa (simulação combinatória) · gera prazo legal coerente para todos os graus possíveis · prazo é monotonicamente menor conforme o risco cresce · meta de score nunca ultrapassa 10 nem regride … |
 | `src/test/predictionRunbooks.test.ts` | 5 | cobertura de runbooks para os alertas de previsão · gera exatamente um alerta de cada tipo no cenário base · todo alerta emitido resolve para um runbook existente · os runbooks de previsão têm as quatro fases preenchidas … |
-| `src/test/rpcAccess.test.ts` | 5 | anon deve receber 42501 ao chamar ${fn} · anon deve receber erro ao chamar get_leaderboard_api · anon deve receber erro ao chamar get_user_stats_api · anon deve receber erro ao chamar get_2fa_status de outro usuário … |
 | `src/test/uiLibraryContracts.test.tsx` | 5 | contratos das bibliotecas de UI instaladas · calendário seleciona uma data e navega para o próximo mês · painéis preservam orientação e tamanhos percentuais da API anterior · tooltip entrega o payload inteiro como quinto argumento do formatter … |
 | `src/tests/unit/notifications.test.ts` | 5 | notificationsService · create · should insert a notification and return it · markAsRead … |
 | `src/tests/unit/onboarding.test.ts` | 5 | onboardingService · completeStep · should return true on success · isOnboardingComplete … |
-| `src/tests/unit/shop.test.ts` | 5 | shopService · purchaseReward · should throw error if user has insufficient coins · should throw error if item is out of stock … |
+| `src/tests/unit/shop.test.ts` | 5 | shopService · purchaseReward · should throw error if item is out of stock · should throw error if spend_coins fails (insufficient coins) … |
 | `src/components/shop/__tests__/ProductGridLoading.test.tsx` | 4 | Shop Skeleton and Loading State · should display skeletons while rewards are loading · should transition from skeletons to content smoothly · should maintain layout stability during search/filtering loading |
 | `src/test/nr1Export.simulation.test.ts` | 4 | Exportação NR-1 (simulação combinatória) · nunca emite célula vazia ou  · marca plano obrigatório exatamente para riscos alto e crítico · gera nome de arquivo seguro para recortes com acentos e símbolos |
 | `src/test/validationLibraryContracts.test.ts` | 4 | migração de validação preserva mensagens e resultados · mantém mensagem obrigatória em entrada ausente · validateData retorna mensagens Zod 4 sem lançar exceção · XLSX preserva fórmulas/rich text e rejeita erros/booleanos como crédito |

@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "e58c5c0cf4e8e22b447f665b67dc8a9c0867b1f5",
+  "sha": "3d1ee9005853cd2ea235f392501d3323be295df7",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
-  "generated_at": "2026-11-20 17:28 UTC",
-  "files_total": 1507,
-  "code_files": 1404,
-  "code_lines": 255039
+  "generated_at": "2026-11-21 11:45 UTC",
+  "files_total": 1508,
+  "code_files": 1405,
+  "code_lines": 255313
  },
  "version": "1.3.2",
- "facts_hash": "7985c2a7d99d92ea",
+ "facts_hash": "95992fe663858faa",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -194,7 +194,7 @@
   "languages": {
    ".tsx": 565,
    ".ts": 537,
-   ".sql": 270,
+   ".sql": 271,
    ".mjs": 21,
    ".js": 5,
    ".py": 5,
@@ -30477,6 +30477,90 @@
      "profiles"
     ]
    },
+   "add_xp": {
+    "args": "p_user_id uuid, p_amount integer, p_source text DEFAULT NULL",
+    "returns": "TABLE (id uuid, xp integer, level integer)",
+    "lang": "plpgsql",
+    "src": "supabase/migrations/20261218000000_profiles_economia_rpcs.sql",
+    "security_definer": true,
+    "search_path": true,
+    "body": "DECLARE v_xp integer; v_level integer; BEGIN IF p_amount IS NULL OR p_amount <= 0 THEN RAISE EXCEPTION 'p_amount deve ser positivo'; END IF; UPDATE public.profiles AS pr SET xp = pr.xp + p_amount, level = GREATEST(pr.level, floor((pr.xp + p_amount) / 1000) + 1) WHERE pr.id = p_user_id AND (auth.uid() = p_user_id OR EXISTS (SELECT 1 FROM public.kudos k WHERE k.to_user_id = p_user_id AND k.from_user_id = auth.uid())) RETURNING pr.xp, pr.level INTO v_xp, v_level; IF NOT FOUND THEN RAISE EXCEPTION 'perfil não encontrado'; END IF; RETURN QUERY SELECT p_user_id, v_xp, v_level; END;",
+    "raises": [
+     "p_amount deve ser positivo",
+     "perfil não encontrado"
+    ],
+    "tables": [
+     "kudos",
+     "profiles",
+     "v_xp"
+    ]
+   },
+   "add_coins": {
+    "args": "p_user_id uuid, p_amount integer",
+    "returns": "TABLE (id uuid, coins integer)",
+    "lang": "plpgsql",
+    "src": "supabase/migrations/20261218000000_profiles_economia_rpcs.sql",
+    "security_definer": true,
+    "search_path": true,
+    "body": "DECLARE v_coins integer; BEGIN IF p_amount IS NULL OR p_amount <= 0 THEN RAISE EXCEPTION 'p_amount deve ser positivo'; END IF; UPDATE public.profiles AS pr SET coins = pr.coins + p_amount WHERE pr.id = p_user_id AND auth.uid() = p_user_id RETURNING pr.coins INTO v_coins; IF NOT FOUND THEN RAISE EXCEPTION 'perfil não encontrado'; END IF; RETURN QUERY SELECT p_user_id, v_coins; END;",
+    "raises": [
+     "p_amount deve ser positivo",
+     "perfil não encontrado"
+    ],
+    "tables": [
+     "profiles",
+     "v_coins"
+    ]
+   },
+   "spend_coins": {
+    "args": "p_user_id uuid, p_amount integer",
+    "returns": "TABLE (id uuid, coins integer)",
+    "lang": "plpgsql",
+    "src": "supabase/migrations/20261218000000_profiles_economia_rpcs.sql",
+    "security_definer": true,
+    "search_path": true,
+    "body": "DECLARE v_coins integer; BEGIN IF p_amount IS NULL OR p_amount <= 0 THEN RAISE EXCEPTION 'p_amount deve ser positivo'; END IF; UPDATE public.profiles AS pr SET coins = pr.coins - p_amount WHERE pr.id = p_user_id AND pr.coins >= p_amount AND auth.uid() = p_user_id RETURNING pr.coins INTO v_coins; IF NOT FOUND THEN RAISE EXCEPTION 'coins insuficientes'; END IF; RETURN QUERY SELECT p_user_id, v_coins; END;",
+    "raises": [
+     "p_amount deve ser positivo",
+     "coins insuficientes"
+    ],
+    "tables": [
+     "profiles",
+     "v_coins"
+    ]
+   },
+   "increment_streak": {
+    "args": "p_user_id uuid",
+    "returns": "TABLE (id uuid, streak integer, best_streak integer)",
+    "lang": "plpgsql",
+    "src": "supabase/migrations/20261218000000_profiles_economia_rpcs.sql",
+    "security_definer": true,
+    "search_path": true,
+    "body": "DECLARE v_streak integer; v_best integer; v_last timestamptz; BEGIN SELECT pr.streak, pr.best_streak, pr.last_access_at INTO v_streak, v_best, v_last FROM public.profiles AS pr WHERE pr.id = p_user_id AND auth.uid() = p_user_id; IF NOT FOUND THEN RAISE EXCEPTION 'perfil não encontrado'; END IF; IF v_last IS NULL OR (now() - v_last) > interval '48 hours' THEN v_streak := 1; ELSIF (now() - v_last) >= interval '12 hours' THEN v_streak := v_streak + 1; END IF; v_best := GREATEST(v_best, v_streak); UPDATE public.profiles AS pr SET streak = v_streak, best_streak = v_best, last_access_at = now() WHERE pr.id = p_user_id AND auth.uid() = p_user_id; RETURN QUERY SELECT p_user_id, v_streak, v_best; END …",
+    "raises": [
+     "perfil não encontrado"
+    ],
+    "tables": [
+     "profiles",
+     "v_streak"
+    ]
+   },
+   "increment_quests_completed": {
+    "args": "p_user_id uuid",
+    "returns": "TABLE (id uuid, quests_completed integer)",
+    "lang": "plpgsql",
+    "src": "supabase/migrations/20261218000000_profiles_economia_rpcs.sql",
+    "security_definer": true,
+    "search_path": true,
+    "body": "DECLARE v_count integer; BEGIN UPDATE public.profiles AS pr SET quests_completed = pr.quests_completed + 1 WHERE pr.id = p_user_id AND auth.uid() = p_user_id RETURNING pr.quests_completed INTO v_count; IF NOT FOUND THEN RAISE EXCEPTION 'perfil não encontrado'; END IF; RETURN QUERY SELECT p_user_id, v_count; END;",
+    "raises": [
+     "perfil não encontrado"
+    ],
+    "tables": [
+     "profiles",
+     "v_count"
+    ]
+   },
    "Args": {
     "args": "",
     "returns": "?",
@@ -33315,6 +33399,7 @@
    "supabase/migrations/20261114095829_revoke_vistas_diagnostico.sql",
    "supabase/migrations/20261114110500_fix_cron_campaigns_alert_check.sql",
    "supabase/migrations/20261114134238_9b119528-da6f-4f43-b6cb-dcdcd7aa7ab1.sql",
+   "supabase/migrations/20261218000000_profiles_economia_rpcs.sql",
    "src/integrations/supabase/types.ts"
   ],
   "rls": {
@@ -40825,6 +40910,94 @@
     "objkind": "function",
     "roles": "anon, authenticated, service_role",
     "src": "supabase/migrations/20261114134238_9b119528-da6f-4f43-b6cb-dcdcd7aa7ab1.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "all",
+    "object": "add_xp",
+    "objkind": "function",
+    "roles": "PUBLIC, anon",
+    "src": "supabase/migrations/20261218000000_profiles_economia_rpcs.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "add_xp",
+    "objkind": "function",
+    "roles": "authenticated",
+    "src": "supabase/migrations/20261218000000_profiles_economia_rpcs.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "all",
+    "object": "add_coins",
+    "objkind": "function",
+    "roles": "PUBLIC, anon",
+    "src": "supabase/migrations/20261218000000_profiles_economia_rpcs.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "add_coins",
+    "objkind": "function",
+    "roles": "authenticated",
+    "src": "supabase/migrations/20261218000000_profiles_economia_rpcs.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "all",
+    "object": "spend_coins",
+    "objkind": "function",
+    "roles": "PUBLIC, anon",
+    "src": "supabase/migrations/20261218000000_profiles_economia_rpcs.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "spend_coins",
+    "objkind": "function",
+    "roles": "authenticated",
+    "src": "supabase/migrations/20261218000000_profiles_economia_rpcs.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "all",
+    "object": "increment_streak",
+    "objkind": "function",
+    "roles": "PUBLIC, anon",
+    "src": "supabase/migrations/20261218000000_profiles_economia_rpcs.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "increment_streak",
+    "objkind": "function",
+    "roles": "authenticated",
+    "src": "supabase/migrations/20261218000000_profiles_economia_rpcs.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "all",
+    "object": "increment_quests_completed",
+    "objkind": "function",
+    "roles": "PUBLIC, anon",
+    "src": "supabase/migrations/20261218000000_profiles_economia_rpcs.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "increment_quests_completed",
+    "objkind": "function",
+    "roles": "authenticated",
+    "src": "supabase/migrations/20261218000000_profiles_economia_rpcs.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "update",
+    "object": "profiles",
+    "objkind": "table",
+    "roles": "authenticated",
+    "src": "supabase/migrations/20261218000000_profiles_economia_rpcs.sql"
    }
   ],
   "raises": [
@@ -41682,6 +41855,46 @@
     "function": "validate_reset_token",
     "msg": "insufficient_privilege",
     "src": "supabase/migrations/20261114134238_9b119528-da6f-4f43-b6cb-dcdcd7aa7ab1.sql"
+   },
+   {
+    "function": "add_xp",
+    "msg": "p_amount deve ser positivo",
+    "src": "supabase/migrations/20261218000000_profiles_economia_rpcs.sql"
+   },
+   {
+    "function": "add_xp",
+    "msg": "perfil não encontrado",
+    "src": "supabase/migrations/20261218000000_profiles_economia_rpcs.sql"
+   },
+   {
+    "function": "add_coins",
+    "msg": "p_amount deve ser positivo",
+    "src": "supabase/migrations/20261218000000_profiles_economia_rpcs.sql"
+   },
+   {
+    "function": "add_coins",
+    "msg": "perfil não encontrado",
+    "src": "supabase/migrations/20261218000000_profiles_economia_rpcs.sql"
+   },
+   {
+    "function": "spend_coins",
+    "msg": "p_amount deve ser positivo",
+    "src": "supabase/migrations/20261218000000_profiles_economia_rpcs.sql"
+   },
+   {
+    "function": "spend_coins",
+    "msg": "coins insuficientes",
+    "src": "supabase/migrations/20261218000000_profiles_economia_rpcs.sql"
+   },
+   {
+    "function": "increment_streak",
+    "msg": "perfil não encontrado",
+    "src": "supabase/migrations/20261218000000_profiles_economia_rpcs.sql"
+   },
+   {
+    "function": "increment_quests_completed",
+    "msg": "perfil não encontrado",
+    "src": "supabase/migrations/20261218000000_profiles_economia_rpcs.sql"
    }
   ],
   "seed": [],
@@ -41722,7 +41935,10 @@
      "user_devices"
     ],
     "invokes_transitive": [],
-    "rpc_transitive": [],
+    "rpc_transitive": [
+     "add_coins",
+     "add_xp"
+    ],
     "deps_count": 51
    },
    {
@@ -41820,6 +42036,8 @@
     ],
     "invokes_transitive": [],
     "rpc_transitive": [
+     "add_coins",
+     "add_xp",
      "apply_task_penalty",
      "approve_password_reset",
      "calculate_enps_score",
@@ -41831,11 +42049,14 @@
      "get_quiz_play_set",
      "grade_quiz_answer",
      "increment_announcement_views",
+     "increment_quests_completed",
+     "increment_streak",
      "is_ip_whitelisted",
      "log_ip_access",
      "quiz_fifty_fifty",
      "reject_password_reset",
      "request_password_reset",
+     "spend_coins",
      "verify_certificate"
     ],
     "deps_count": 165
@@ -41910,7 +42131,11 @@
     ],
     "invokes_transitive": [],
     "rpc_transitive": [
-     "get_my_profile_private"
+     "add_coins",
+     "add_xp",
+     "get_my_profile_private",
+     "increment_quests_completed",
+     "increment_streak"
     ],
     "deps_count": 67
    },
@@ -41923,7 +42148,6 @@
      "auction_bids",
      "auctions",
      "new_device_alerts",
-     "profiles",
      "shop_promotions",
      "shop_purchases",
      "shop_rewards",
@@ -41936,7 +42160,8 @@
      "create_auction_draft",
      "get_auction_summary",
      "place_auction_bid",
-     "publish_auction"
+     "publish_auction",
+     "spend_coins"
     ],
     "deps_count": 50
    },
@@ -41949,7 +42174,6 @@
      "auction_bids",
      "auctions",
      "new_device_alerts",
-     "profiles",
      "shop_promotions",
      "shop_purchases",
      "shop_rewards",
@@ -41962,7 +42186,8 @@
      "create_auction_draft",
      "get_auction_summary",
      "place_auction_bid",
-     "publish_auction"
+     "publish_auction",
+     "spend_coins"
     ],
     "deps_count": 52
    },
@@ -41980,7 +42205,11 @@
     ],
     "invokes_transitive": [],
     "rpc_transitive": [
-     "get_my_profile_private"
+     "add_coins",
+     "add_xp",
+     "get_my_profile_private",
+     "increment_quests_completed",
+     "increment_streak"
     ],
     "deps_count": 47
    },
@@ -42169,10 +42398,14 @@
     ],
     "invokes_transitive": [],
     "rpc_transitive": [
+     "add_coins",
+     "add_xp",
      "admin_profile_directory",
      "apply_campaign_import",
      "award_campaign_team_split",
      "get_my_profile_private",
+     "increment_quests_completed",
+     "increment_streak",
      "recalc_campaign_progress",
      "recalc_campaign_teams",
      "revert_campaign_import",
@@ -42202,8 +42435,12 @@
     ],
     "invokes_transitive": [],
     "rpc_transitive": [
+     "add_coins",
+     "add_xp",
      "award_campaign_team_split",
      "get_my_profile_private",
+     "increment_quests_completed",
+     "increment_streak",
      "recalc_campaign_progress",
      "recalc_campaign_teams",
      "revert_campaign_team_split",
@@ -42271,7 +42508,11 @@
     ],
     "invokes_transitive": [],
     "rpc_transitive": [
-     "get_my_profile_private"
+     "add_coins",
+     "add_xp",
+     "get_my_profile_private",
+     "increment_quests_completed",
+     "increment_streak"
     ],
     "deps_count": 74
    },
@@ -42548,8 +42789,12 @@
     ],
     "invokes_transitive": [],
     "rpc_transitive": [
+     "add_coins",
+     "add_xp",
      "get_my_profile_private",
-     "increment_announcement_views"
+     "increment_announcement_views",
+     "increment_quests_completed",
+     "increment_streak"
     ],
     "deps_count": 208
    },
@@ -42598,7 +42843,11 @@
     ],
     "invokes_transitive": [],
     "rpc_transitive": [
+     "add_coins",
+     "add_xp",
      "get_my_profile_private",
+     "increment_quests_completed",
+     "increment_streak",
      "verify_certificate"
     ],
     "deps_count": 63
@@ -42715,8 +42964,12 @@
     ],
     "invokes_transitive": [],
     "rpc_transitive": [
+     "add_coins",
+     "add_xp",
      "get_my_profile_private",
      "get_nine_box_distribution",
+     "increment_quests_completed",
+     "increment_streak",
      "verify_certificate"
     ],
     "deps_count": 94
@@ -42846,7 +43099,11 @@
     ],
     "invokes_transitive": [],
     "rpc_transitive": [
-     "get_my_profile_private"
+     "add_coins",
+     "add_xp",
+     "get_my_profile_private",
+     "increment_quests_completed",
+     "increment_streak"
     ],
     "deps_count": 81
    },
@@ -42880,10 +43137,14 @@
     ],
     "invokes_transitive": [],
     "rpc_transitive": [
+     "add_coins",
+     "add_xp",
      "create_prediction_market",
      "get_my_profile_private",
      "get_prediction_odds_history",
      "get_prediction_oracle_aggregates",
+     "increment_quests_completed",
+     "increment_streak",
      "place_prediction_stake",
      "recalc_campaign_progress",
      "settle_prediction_market",
@@ -42914,10 +43175,14 @@
     ],
     "invokes_transitive": [],
     "rpc_transitive": [
+     "add_coins",
+     "add_xp",
      "create_prediction_market",
      "get_my_profile_private",
      "get_prediction_odds_history",
      "get_prediction_oracle_aggregates",
+     "increment_quests_completed",
+     "increment_streak",
      "place_prediction_stake",
      "recalc_campaign_progress",
      "settle_prediction_market",
@@ -42973,11 +43238,16 @@
     ],
     "invokes_transitive": [],
     "rpc_transitive": [
+     "add_coins",
+     "add_xp",
      "get_account_devices",
      "get_my_profile_private",
      "get_nine_box_distribution",
+     "increment_quests_completed",
+     "increment_streak",
      "revoke_device_by_fingerprint",
      "revoke_push_device",
+     "spend_coins",
      "verify_certificate"
     ],
     "deps_count": 121
@@ -43030,11 +43300,15 @@
     ],
     "invokes_transitive": [],
     "rpc_transitive": [
+     "add_coins",
+     "add_xp",
      "get_my_profile_private",
      "get_quiz_category_stats",
      "get_quiz_lifeline",
      "get_quiz_play_set",
      "grade_quiz_answer",
+     "increment_quests_completed",
+     "increment_streak",
      "quiz_fifty_fifty",
      "verify_certificate"
     ],
@@ -43074,7 +43348,11 @@
     ],
     "invokes_transitive": [],
     "rpc_transitive": [
-     "get_my_profile_private"
+     "add_coins",
+     "add_xp",
+     "get_my_profile_private",
+     "increment_quests_completed",
+     "increment_streak"
     ],
     "deps_count": 50
    },
@@ -43139,6 +43417,8 @@
     ],
     "invokes_transitive": [],
     "rpc_transitive": [
+     "add_coins",
+     "add_xp",
      "admin_profile_directory",
      "apply_campaign_import",
      "award_campaign_team_split",
@@ -43146,6 +43426,8 @@
      "get_my_profile_private",
      "get_prediction_odds_history",
      "get_prediction_oracle_aggregates",
+     "increment_quests_completed",
+     "increment_streak",
      "place_prediction_stake",
      "recalc_campaign_progress",
      "recalc_campaign_teams",
@@ -43180,7 +43462,11 @@
     ],
     "invokes_transitive": [],
     "rpc_transitive": [
+     "add_coins",
+     "add_xp",
      "get_my_profile_private",
+     "increment_quests_completed",
+     "increment_streak",
      "recalc_campaign_progress",
      "user_wants_in_app_notification"
     ],
@@ -43208,14 +43494,16 @@
     "component": "SeasonalEventDetail",
     "tables_transitive": [
      "new_device_alerts",
-     "profiles",
      "seasonal_challenges",
      "seasonal_events",
      "user_devices",
      "user_seasonal_progress"
     ],
     "invokes_transitive": [],
-    "rpc_transitive": [],
+    "rpc_transitive": [
+     "add_coins",
+     "add_xp"
+    ],
     "deps_count": 34
    },
    {
@@ -43331,7 +43619,12 @@
     ],
     "invokes_transitive": [],
     "rpc_transitive": [
-     "get_my_profile_private"
+     "add_coins",
+     "add_xp",
+     "get_my_profile_private",
+     "increment_quests_completed",
+     "increment_streak",
+     "spend_coins"
     ],
     "deps_count": 52
    },
@@ -43344,7 +43637,6 @@
      "new_device_alerts",
      "notifications",
      "profiles",
-     "profiles_public",
      "purchase_approvals",
      "shop_promotions",
      "shop_purchases",
@@ -43353,10 +43645,10 @@
     ],
     "invokes_transitive": [],
     "rpc_transitive": [
-     "get_my_profile_private",
-     "review_purchase"
+     "review_purchase",
+     "spend_coins"
     ],
-    "deps_count": 52
+    "deps_count": 51
    },
    {
     "path": "",
@@ -43437,7 +43729,11 @@
     ],
     "invokes_transitive": [],
     "rpc_transitive": [
+     "add_coins",
+     "add_xp",
      "get_my_profile_private",
+     "increment_quests_completed",
+     "increment_streak",
      "verify_certificate"
     ],
     "deps_count": 58
@@ -48243,7 +48539,7 @@
   {
    "module": "src/services",
    "files": 99,
-   "lines": 21601,
+   "lines": 21592,
    "tables": [
     "achievements",
     "action_plan_items",
@@ -48626,7 +48922,7 @@
   {
    "module": "src/test",
    "files": 127,
-   "lines": 22235,
+   "lines": 22254,
    "tables": [
     "kudos",
     "profiles"
@@ -48743,7 +49039,7 @@
   {
    "module": "src/tests",
    "files": 16,
-   "lines": 1013,
+   "lines": 1062,
    "tables": [],
    "exports": [],
    "docs": [],
@@ -48917,8 +49213,8 @@
   },
   {
    "module": "supabase/migrations",
-   "files": 270,
-   "lines": 29401,
+   "files": 271,
+   "lines": 29616,
    "tables": [],
    "exports": [],
    "docs": [],
@@ -50182,20 +50478,17 @@
      "src/services/achievementsService.ts",
      "src/services/activityCommentsService.ts",
      "src/services/adminService.ts",
-     "src/services/avatarService.ts",
      "src/services/celebrationsService.ts",
      "src/services/duelsService.ts",
      "src/services/engagementReportsService.ts",
      "src/services/highPotentialService.ts",
      "src/services/kudosService.ts",
-     "src/services/onboardingService.ts",
      "src/services/oneOnOnePreparationService.ts",
      "src/services/passwordResetService.ts",
      "src/services/profilesService.ts",
      "src/services/purchaseGovernanceService.ts",
      "src/services/quizService.ts",
      "src/services/rbacService.ts",
-     "src/services/seasonalEventsService.ts",
      "src/services/socialFeedService.ts",
      "src/services/successionService.ts",
      "src/services/weeklyChallengesService.ts",
@@ -50209,13 +50502,8 @@
     ],
     "update": [
      "src/pages/Profile.tsx",
-     "src/services/achievementsService.ts",
-     "src/services/avatarService.ts",
      "src/services/celebrationsService.ts",
-     "src/services/onboardingService.ts",
-     "src/services/profilesService.ts",
-     "src/services/seasonalEventsService.ts",
-     "src/services/shopService.ts"
+     "src/services/profilesService.ts"
     ],
     "ref": [
      "src/services/highPotentialService.ts"
@@ -52239,6 +52527,18 @@
    "acknowledge_security_alert": [
     "src/pages/BurnRate.tsx"
    ],
+   "add_coins": [
+    "src/services/achievementsService.ts",
+    "src/services/onboardingService.ts",
+    "src/services/profilesService.ts",
+    "src/services/seasonalEventsService.ts"
+   ],
+   "add_xp": [
+    "src/services/achievementsService.ts",
+    "src/services/onboardingService.ts",
+    "src/services/profilesService.ts",
+    "src/services/seasonalEventsService.ts"
+   ],
    "admin_profile_directory": [
     "src/services/campaignImportService.ts"
    ],
@@ -52532,6 +52832,12 @@
    "increment_push_failures": [
     "supabase/functions/send-campaign-push/index.ts"
    ],
+   "increment_quests_completed": [
+    "src/services/profilesService.ts"
+   ],
+   "increment_streak": [
+    "src/services/profilesService.ts"
+   ],
    "is_admin": [
     "scripts/ai-context/gerar.unit.mjs"
    ],
@@ -52678,6 +52984,10 @@
    ],
    "settle_prediction_market": [
     "src/services/predictionMarketService.ts"
+   ],
+   "spend_coins": [
+    "src/services/avatarService.ts",
+    "src/services/shopService.ts"
    ],
    "spin_lucky_wheel": [
     "src/services/luckyWheelService.ts"
@@ -56286,10 +56596,6 @@
    },
    {
     "file": "src/services/avatarService.ts",
-    "msg": "Coins insuficientes"
-   },
-   {
-    "file": "src/services/avatarService.ts",
     "msg": "Failed to create avatar config"
    },
    {
@@ -56547,14 +56853,6 @@
    {
     "file": "src/services/shopService.ts",
     "msg": "Failed to create reward"
-   },
-   {
-    "file": "src/services/shopService.ts",
-    "msg": "Moedas insuficientes"
-   },
-   {
-    "file": "src/services/shopService.ts",
-    "msg": "Perfil não encontrado"
    },
    {
     "file": "src/services/shopService.ts",
@@ -77387,10 +77685,6 @@
     "line": "target_date: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000).toISOString(), // 90 days"
    },
    {
-    "file": "src/services/profilesService.ts",
-    "line": "const diffHours = (now.getTime() - lastAccess.getTime()) / (1000 * 60 * 60);"
-   },
-   {
     "file": "src/services/successionService.ts",
     "line": "tenure = Math.floor((new Date().getTime() - createdAt.getTime()) / (1000 * 60 * 60 * 24 * 365));"
    },
@@ -77577,6 +77871,14 @@
    {
     "file": "supabase/migrations/20260806230000_lightning_relampago_rpcs_only.sql",
     "line": "VALUES (v_user, v_key, v_ids, now() + interval '60 seconds')"
+   },
+   {
+    "file": "supabase/migrations/20261218000000_profiles_economia_rpcs.sql",
+    "line": "ELSIF (now() - v_last) >= interval '12 hours' THEN"
+   },
+   {
+    "file": "supabase/migrations/20261218000000_profiles_economia_rpcs.sql",
+    "line": "IF v_last IS NULL OR (now() - v_last) > interval '48 hours' THEN"
    }
   ],
   "percents": [
@@ -83959,6 +84261,10 @@
     "name": "anon deve receber erro ao chamar validate_reset_token"
    },
    {
+    "file": "src/test/rpcAccess.test.ts",
+    "name": "anon deve receber erro 42501/42883 ao chamar ${fn}"
+   },
+   {
     "file": "src/test/scratchCardOdds.simulation.test.ts",
     "name": "Raspadinha — grade semeada"
    },
@@ -86044,11 +86350,27 @@
    },
    {
     "file": "src/tests/unit/profiles.test.ts",
-    "name": "should correctly calculate level and level up"
+    "name": "should call add_xp RPC and report level up"
    },
    {
     "file": "src/tests/unit/profiles.test.ts",
     "name": "should not level up if threshold not reached"
+   },
+   {
+    "file": "src/tests/unit/profiles.test.ts",
+    "name": "addCoins"
+   },
+   {
+    "file": "src/tests/unit/profiles.test.ts",
+    "name": "should call add_coins RPC"
+   },
+   {
+    "file": "src/tests/unit/profiles.test.ts",
+    "name": "incrementStreak"
+   },
+   {
+    "file": "src/tests/unit/profiles.test.ts",
+    "name": "should call increment_streak RPC"
    },
    {
     "file": "src/tests/unit/shop.test.ts",
@@ -86060,11 +86382,11 @@
    },
    {
     "file": "src/tests/unit/shop.test.ts",
-    "name": "should throw error if user has insufficient coins"
+    "name": "should throw error if item is out of stock"
    },
    {
     "file": "src/tests/unit/shop.test.ts",
-    "name": "should throw error if item is out of stock"
+    "name": "should throw error if spend_coins fails (insufficient coins)"
    },
    {
     "file": "src/tests/unit/shop.test.ts",
@@ -96612,6 +96934,90 @@
      "profiles"
     ]
    },
+   "add_xp": {
+    "args": "p_user_id uuid, p_amount integer, p_source text DEFAULT NULL",
+    "returns": "TABLE (id uuid, xp integer, level integer)",
+    "lang": "plpgsql",
+    "src": "supabase/migrations/20261218000000_profiles_economia_rpcs.sql",
+    "security_definer": true,
+    "search_path": true,
+    "body": "DECLARE v_xp integer; v_level integer; BEGIN IF p_amount IS NULL OR p_amount <= 0 THEN RAISE EXCEPTION 'p_amount deve ser positivo'; END IF; UPDATE public.profiles AS pr SET xp = pr.xp + p_amount, level = GREATEST(pr.level, floor((pr.xp + p_amount) / 1000) + 1) WHERE pr.id = p_user_id AND (auth.uid() = p_user_id OR EXISTS (SELECT 1 FROM public.kudos k WHERE k.to_user_id = p_user_id AND k.from_user_id = auth.uid())) RETURNING pr.xp, pr.level INTO v_xp, v_level; IF NOT FOUND THEN RAISE EXCEPTION 'perfil não encontrado'; END IF; RETURN QUERY SELECT p_user_id, v_xp, v_level; END;",
+    "raises": [
+     "p_amount deve ser positivo",
+     "perfil não encontrado"
+    ],
+    "tables": [
+     "kudos",
+     "profiles",
+     "v_xp"
+    ]
+   },
+   "add_coins": {
+    "args": "p_user_id uuid, p_amount integer",
+    "returns": "TABLE (id uuid, coins integer)",
+    "lang": "plpgsql",
+    "src": "supabase/migrations/20261218000000_profiles_economia_rpcs.sql",
+    "security_definer": true,
+    "search_path": true,
+    "body": "DECLARE v_coins integer; BEGIN IF p_amount IS NULL OR p_amount <= 0 THEN RAISE EXCEPTION 'p_amount deve ser positivo'; END IF; UPDATE public.profiles AS pr SET coins = pr.coins + p_amount WHERE pr.id = p_user_id AND auth.uid() = p_user_id RETURNING pr.coins INTO v_coins; IF NOT FOUND THEN RAISE EXCEPTION 'perfil não encontrado'; END IF; RETURN QUERY SELECT p_user_id, v_coins; END;",
+    "raises": [
+     "p_amount deve ser positivo",
+     "perfil não encontrado"
+    ],
+    "tables": [
+     "profiles",
+     "v_coins"
+    ]
+   },
+   "spend_coins": {
+    "args": "p_user_id uuid, p_amount integer",
+    "returns": "TABLE (id uuid, coins integer)",
+    "lang": "plpgsql",
+    "src": "supabase/migrations/20261218000000_profiles_economia_rpcs.sql",
+    "security_definer": true,
+    "search_path": true,
+    "body": "DECLARE v_coins integer; BEGIN IF p_amount IS NULL OR p_amount <= 0 THEN RAISE EXCEPTION 'p_amount deve ser positivo'; END IF; UPDATE public.profiles AS pr SET coins = pr.coins - p_amount WHERE pr.id = p_user_id AND pr.coins >= p_amount AND auth.uid() = p_user_id RETURNING pr.coins INTO v_coins; IF NOT FOUND THEN RAISE EXCEPTION 'coins insuficientes'; END IF; RETURN QUERY SELECT p_user_id, v_coins; END;",
+    "raises": [
+     "p_amount deve ser positivo",
+     "coins insuficientes"
+    ],
+    "tables": [
+     "profiles",
+     "v_coins"
+    ]
+   },
+   "increment_streak": {
+    "args": "p_user_id uuid",
+    "returns": "TABLE (id uuid, streak integer, best_streak integer)",
+    "lang": "plpgsql",
+    "src": "supabase/migrations/20261218000000_profiles_economia_rpcs.sql",
+    "security_definer": true,
+    "search_path": true,
+    "body": "DECLARE v_streak integer; v_best integer; v_last timestamptz; BEGIN SELECT pr.streak, pr.best_streak, pr.last_access_at INTO v_streak, v_best, v_last FROM public.profiles AS pr WHERE pr.id = p_user_id AND auth.uid() = p_user_id; IF NOT FOUND THEN RAISE EXCEPTION 'perfil não encontrado'; END IF; IF v_last IS NULL OR (now() - v_last) > interval '48 hours' THEN v_streak := 1; ELSIF (now() - v_last) >= interval '12 hours' THEN v_streak := v_streak + 1; END IF; v_best := GREATEST(v_best, v_streak); UPDATE public.profiles AS pr SET streak = v_streak, best_streak = v_best, last_access_at = now() WHERE pr.id = p_user_id AND auth.uid() = p_user_id; RETURN QUERY SELECT p_user_id, v_streak, v_best; END …",
+    "raises": [
+     "perfil não encontrado"
+    ],
+    "tables": [
+     "profiles",
+     "v_streak"
+    ]
+   },
+   "increment_quests_completed": {
+    "args": "p_user_id uuid",
+    "returns": "TABLE (id uuid, quests_completed integer)",
+    "lang": "plpgsql",
+    "src": "supabase/migrations/20261218000000_profiles_economia_rpcs.sql",
+    "security_definer": true,
+    "search_path": true,
+    "body": "DECLARE v_count integer; BEGIN UPDATE public.profiles AS pr SET quests_completed = pr.quests_completed + 1 WHERE pr.id = p_user_id AND auth.uid() = p_user_id RETURNING pr.quests_completed INTO v_count; IF NOT FOUND THEN RAISE EXCEPTION 'perfil não encontrado'; END IF; RETURN QUERY SELECT p_user_id, v_count; END;",
+    "raises": [
+     "perfil não encontrado"
+    ],
+    "tables": [
+     "profiles",
+     "v_count"
+    ]
+   },
    "Args": {
     "args": "",
     "returns": "?",
@@ -97816,6 +98222,46 @@
     "function": "validate_reset_token",
     "msg": "insufficient_privilege",
     "src": "supabase/migrations/20261114134238_9b119528-da6f-4f43-b6cb-dcdcd7aa7ab1.sql"
+   },
+   {
+    "function": "add_xp",
+    "msg": "p_amount deve ser positivo",
+    "src": "supabase/migrations/20261218000000_profiles_economia_rpcs.sql"
+   },
+   {
+    "function": "add_xp",
+    "msg": "perfil não encontrado",
+    "src": "supabase/migrations/20261218000000_profiles_economia_rpcs.sql"
+   },
+   {
+    "function": "add_coins",
+    "msg": "p_amount deve ser positivo",
+    "src": "supabase/migrations/20261218000000_profiles_economia_rpcs.sql"
+   },
+   {
+    "function": "add_coins",
+    "msg": "perfil não encontrado",
+    "src": "supabase/migrations/20261218000000_profiles_economia_rpcs.sql"
+   },
+   {
+    "function": "spend_coins",
+    "msg": "p_amount deve ser positivo",
+    "src": "supabase/migrations/20261218000000_profiles_economia_rpcs.sql"
+   },
+   {
+    "function": "spend_coins",
+    "msg": "coins insuficientes",
+    "src": "supabase/migrations/20261218000000_profiles_economia_rpcs.sql"
+   },
+   {
+    "function": "increment_streak",
+    "msg": "perfil não encontrado",
+    "src": "supabase/migrations/20261218000000_profiles_economia_rpcs.sql"
+   },
+   {
+    "function": "increment_quests_completed",
+    "msg": "perfil não encontrado",
+    "src": "supabase/migrations/20261218000000_profiles_economia_rpcs.sql"
    }
   ],
   "db_generated": [
@@ -103264,20 +103710,17 @@
      "src/services/achievementsService.ts",
      "src/services/activityCommentsService.ts",
      "src/services/adminService.ts",
-     "src/services/avatarService.ts",
      "src/services/celebrationsService.ts",
      "src/services/duelsService.ts",
      "src/services/engagementReportsService.ts",
      "src/services/highPotentialService.ts",
      "src/services/kudosService.ts",
-     "src/services/onboardingService.ts",
      "src/services/oneOnOnePreparationService.ts",
      "src/services/passwordResetService.ts",
      "src/services/profilesService.ts",
      "src/services/purchaseGovernanceService.ts",
      "src/services/quizService.ts",
      "src/services/rbacService.ts",
-     "src/services/seasonalEventsService.ts",
      "src/services/socialFeedService.ts",
      "src/services/successionService.ts",
      "src/services/weeklyChallengesService.ts"
@@ -103459,6 +103902,8 @@
    "_require_admin",
    "_require_manager_or_admin",
    "acknowledge_security_alert",
+   "add_coins",
+   "add_xp",
    "admin_profile_directory",
    "advance_board_trail",
    "answer_lightning_question",
@@ -103587,6 +104032,8 @@
    "has_role",
    "increment_announcement_views",
    "increment_push_failures",
+   "increment_quests_completed",
+   "increment_streak",
    "ingest_war_event",
    "is_country_allowed",
    "is_department_manager",
@@ -103652,6 +104099,7 @@
    "settle_tournament_rewards",
    "snapshot_lucky_wheel_payout",
    "snapshot_push_outbox_health",
+   "spend_coins",
    "spin_lucky_wheel",
    "start_lightning_round",
    "start_memory_session",
@@ -110968,6 +111416,94 @@
     "objkind": "function",
     "roles": "anon, authenticated, service_role",
     "src": "supabase/migrations/20261114134238_9b119528-da6f-4f43-b6cb-dcdcd7aa7ab1.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "all",
+    "object": "add_xp",
+    "objkind": "function",
+    "roles": "PUBLIC, anon",
+    "src": "supabase/migrations/20261218000000_profiles_economia_rpcs.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "add_xp",
+    "objkind": "function",
+    "roles": "authenticated",
+    "src": "supabase/migrations/20261218000000_profiles_economia_rpcs.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "all",
+    "object": "add_coins",
+    "objkind": "function",
+    "roles": "PUBLIC, anon",
+    "src": "supabase/migrations/20261218000000_profiles_economia_rpcs.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "add_coins",
+    "objkind": "function",
+    "roles": "authenticated",
+    "src": "supabase/migrations/20261218000000_profiles_economia_rpcs.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "all",
+    "object": "spend_coins",
+    "objkind": "function",
+    "roles": "PUBLIC, anon",
+    "src": "supabase/migrations/20261218000000_profiles_economia_rpcs.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "spend_coins",
+    "objkind": "function",
+    "roles": "authenticated",
+    "src": "supabase/migrations/20261218000000_profiles_economia_rpcs.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "all",
+    "object": "increment_streak",
+    "objkind": "function",
+    "roles": "PUBLIC, anon",
+    "src": "supabase/migrations/20261218000000_profiles_economia_rpcs.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "increment_streak",
+    "objkind": "function",
+    "roles": "authenticated",
+    "src": "supabase/migrations/20261218000000_profiles_economia_rpcs.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "all",
+    "object": "increment_quests_completed",
+    "objkind": "function",
+    "roles": "PUBLIC, anon",
+    "src": "supabase/migrations/20261218000000_profiles_economia_rpcs.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "increment_quests_completed",
+    "objkind": "function",
+    "roles": "authenticated",
+    "src": "supabase/migrations/20261218000000_profiles_economia_rpcs.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "update",
+    "object": "profiles",
+    "objkind": "table",
+    "roles": "authenticated",
+    "src": "supabase/migrations/20261218000000_profiles_economia_rpcs.sql"
    }
   ],
   "guards": [
@@ -133539,7 +134075,7 @@
   },
   "src/services/achievementsService.ts": {
    "path": "src/services/achievementsService.ts",
-   "lines": 283,
+   "lines": 294,
    "exports": [
     "interface Achievement",
     "interface UserAchievement",
@@ -133565,14 +134101,6 @@
     {
      "table": "user_achievements",
      "op": "insert"
-    },
-    {
-     "table": "profiles",
-     "op": "select"
-    },
-    {
-     "table": "profiles",
-     "op": "update"
     },
     {
      "table": "notifications",
@@ -133603,12 +134131,6 @@
     "achievements": [
      "key"
     ],
-    "profiles": [
-     "coins",
-     "id",
-     "quests_completed",
-     "xp"
-    ],
     "trail_enrollments": [
      "completed_at",
      "user_id"
@@ -133616,8 +134138,16 @@
     "kudos": [
      "from_user_id",
      "to_user_id"
+    ],
+    "profiles": [
+     "id",
+     "quests_completed"
     ]
    },
+   "rpc": [
+    "add_coins",
+    "add_xp"
+   ],
    "status_values": [
     {
      "field": "type",
@@ -134411,7 +134941,7 @@
   },
   "src/services/avatarService.ts": {
    "path": "src/services/avatarService.ts",
-   "lines": 236,
+   "lines": 227,
    "exports": [
     "type AvatarCategory",
     "type AvatarRarity",
@@ -134438,14 +134968,6 @@
     {
      "table": "user_avatar_items",
      "op": "insert"
-    },
-    {
-     "table": "profiles",
-     "op": "select"
-    },
-    {
-     "table": "profiles",
-     "op": "update"
     },
     {
      "table": "user_avatar_config",
@@ -134480,14 +135002,12 @@
     ],
     "user_avatar_config": [
      "user_id"
-    ],
-    "profiles": [
-     "coins",
-     "id"
     ]
    },
+   "rpc": [
+    "spend_coins"
+   ],
    "errors": [
-    "Coins insuficientes",
     "Failed to create avatar config",
     "Failed to update avatar config"
    ],
@@ -137736,7 +138256,7 @@
   },
   "src/services/onboardingService.ts": {
    "path": "src/services/onboardingService.ts",
-   "lines": 250,
+   "lines": 245,
    "exports": [
     "interface OnboardingStep",
     "const ONBOARDING_STEPS",
@@ -137761,14 +138281,6 @@
      "op": "update"
     },
     {
-     "table": "profiles",
-     "op": "select"
-    },
-    {
-     "table": "profiles",
-     "op": "update"
-    },
-    {
      "table": "onboarding_progress",
      "op": "update"
     }
@@ -137776,13 +138288,12 @@
    "table_cols": {
     "onboarding_progress": [
      "user_id"
-    ],
-    "profiles": [
-     "coins",
-     "id",
-     "xp"
     ]
-   }
+   },
+   "rpc": [
+    "add_coins",
+    "add_xp"
+   ]
   },
   "src/services/oneOnOnePreparationService.ts": {
    "path": "src/services/oneOnOnePreparationService.ts",
@@ -138585,7 +139096,7 @@
   },
   "src/services/profilesService.ts": {
    "path": "src/services/profilesService.ts",
-   "lines": 192,
+   "lines": 186,
    "exports": [
     "type Profile",
     "type ProfileInsert",
@@ -138636,7 +139147,11 @@
     ]
    },
    "rpc": [
-    "get_my_profile_private"
+    "add_coins",
+    "add_xp",
+    "get_my_profile_private",
+    "increment_quests_completed",
+    "increment_streak"
    ],
    "errors": [
     "Profile not found"
@@ -138644,9 +139159,6 @@
    "rule_comments": [
     "* Recorte mínimo exibível em rankings — apenas identidade visual. */",
     "agora falha com `permission denied`. Use `getMyPrivate()` para os próprios"
-   ],
-   "temporal": [
-    "const diffHours = (now.getTime() - lastAccess.getTime()) / (1000 * 60 * 60);"
    ],
    "side_effects": [
     "notifyLevelUp",
@@ -139599,7 +140111,7 @@
   },
   "src/services/seasonalEventsService.ts": {
    "path": "src/services/seasonalEventsService.ts",
-   "lines": 225,
+   "lines": 228,
    "exports": [
     "interface SeasonalEvent",
     "interface SeasonalChallenge",
@@ -139652,14 +140164,6 @@
      "op": "update"
     },
     {
-     "table": "profiles",
-     "op": "select"
-    },
-    {
-     "table": "profiles",
-     "op": "update"
-    },
-    {
      "table": "seasonal_events",
      "op": "select"
     },
@@ -139689,13 +140193,12 @@
      "challenge_id",
      "id",
      "user_id"
-    ],
-    "profiles": [
-     "coins",
-     "id",
-     "xp"
     ]
    },
+   "rpc": [
+    "add_coins",
+    "add_xp"
+   ],
    "errors": [
     "Challenge not found"
    ]
@@ -139820,7 +140323,7 @@
   },
   "src/services/shopService.ts": {
    "path": "src/services/shopService.ts",
-   "lines": 479,
+   "lines": 476,
    "exports": [
     "type RewardCategory",
     "type RewardRarity",
@@ -139850,10 +140353,6 @@
     {
      "table": "shop_rewards",
      "op": "select"
-    },
-    {
-     "table": "profiles",
-     "op": "update"
     },
     {
      "table": "shop_rewards",
@@ -139922,9 +140421,6 @@
      "id",
      "user_id"
     ],
-    "profiles": [
-     "id"
-    ],
     "shop_promotions": [
      "ends_at",
      "id",
@@ -139932,13 +140428,14 @@
      "starts_at"
     ]
    },
+   "rpc": [
+    "spend_coins"
+   ],
    "errors": [
     "Estoque insuficiente",
     "Failed to create promotion",
     "Failed to create purchase record",
     "Failed to create reward",
-    "Moedas insuficientes",
-    "Perfil não encontrado",
     "Promotion not found",
     "Recompensa não encontrada",
     "Reward not found"
@@ -143941,7 +144438,7 @@
   },
   "src/test/rpcAccess.test.ts": {
    "path": "src/test/rpcAccess.test.ts",
-   "lines": 80,
+   "lines": 99,
    "is_test": true,
    "rpc": [
     "get_2fa_status",
@@ -143964,7 +144461,8 @@
     "anon deve receber erro ao chamar get_leaderboard_api",
     "anon deve receber erro ao chamar get_user_stats_api",
     "anon deve receber erro ao chamar get_2fa_status de outro usuário",
-    "anon deve receber erro ao chamar validate_reset_token"
+    "anon deve receber erro ao chamar validate_reset_token",
+    "anon deve receber erro 42501/42883 ao chamar ${fn}"
    ]
   },
   "src/test/scratchCardOdds.simulation.test.ts": {
@@ -144649,7 +145147,7 @@
   },
   "src/tests/unit/achievements.test.ts": {
    "path": "src/tests/unit/achievements.test.ts",
-   "lines": 59,
+   "lines": 70,
    "is_test": true,
    "tests": [
     "achievementsService",
@@ -144791,15 +145289,19 @@
   },
   "src/tests/unit/profiles.test.ts": {
    "path": "src/tests/unit/profiles.test.ts",
-   "lines": 80,
+   "lines": 118,
    "is_test": true,
    "tests": [
     "profilesService",
     "getById",
     "should return profile data on success",
     "addXp",
-    "should correctly calculate level and level up",
-    "should not level up if threshold not reached"
+    "should call add_xp RPC and report level up",
+    "should not level up if threshold not reached",
+    "addCoins",
+    "should call add_coins RPC",
+    "incrementStreak",
+    "should call increment_streak RPC"
    ],
    "side_effects": [
     "notifyLevelUp",
@@ -144813,8 +145315,8 @@
    "tests": [
     "shopService",
     "purchaseReward",
-    "should throw error if user has insufficient coins",
     "should throw error if item is out of stock",
+    "should throw error if spend_coins fails (insufficient coins)",
     "should complete purchase successfully if coins and stock are available"
    ]
   },
@@ -148200,6 +148702,14 @@
    "lines": 77,
    "uses_service_role": true
   },
+  "supabase/migrations/20261218000000_profiles_economia_rpcs.sql": {
+   "path": "supabase/migrations/20261218000000_profiles_economia_rpcs.sql",
+   "lines": 215,
+   "temporal": [
+    "ELSIF (now() - v_last) >= interval '12 hours' THEN",
+    "IF v_last IS NULL OR (now() - v_last) > interval '48 hours' THEN"
+   ]
+  },
   "tests/auth-flow.spec.ts": {
    "path": "tests/auth-flow.spec.ts",
    "lines": 34,
@@ -148255,10 +148765,30 @@
   }
  },
  "git": {
-  "sha": "e58c5c0cf4e8e22b447f665b67dc8a9c0867b1f5",
+  "sha": "3d1ee9005853cd2ea235f392501d3323be295df7",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "commits": [
+   {
+    "sha": "3d1ee90",
+    "date": "2026-11-21",
+    "author": "adm01-debug",
+    "subject": "fix: protege economia de perfis via RPCs SECURITY DEFINER (pendencia 02) (#78)",
+    "files": [
+     "docs/pendencias/02-profiles-update-sem-restricao-de-coluna.md",
+     "src/services/achievementsService.ts",
+     "src/services/avatarService.ts",
+     "src/services/onboardingService.ts",
+     "src/services/profilesService.ts",
+     "src/services/seasonalEventsService.ts",
+     "src/services/shopService.ts",
+     "src/test/rpcAccess.test.ts",
+     "src/tests/unit/achievements.test.ts",
+     "src/tests/unit/profiles.test.ts",
+     "src/tests/unit/shop.test.ts",
+     "supabase/migrations/20261218000000_profiles_economia_rpcs.sql"
+    ]
+   },
    {
     "sha": "e58c5c0",
     "date": "2026-11-20",
@@ -148571,15 +149101,6 @@
      "src/components/AppSidebar.tsx",
      "src/components/CelebrationsBanner.tsx"
     ]
-   },
-   {
-    "sha": "e80a380",
-    "date": "2026-11-11",
-    "author": "adm01-debug",
-    "subject": "fix(automacao): reconhece layout Windows (Scripts/) no venv do graphify (#45)",
-    "files": [
-     "scripts/graphify-local.mjs"
-    ]
    }
   ],
   "hot_files": [
@@ -148594,6 +149115,10 @@
    [
     ".github/workflows/deploy-edge-functions.yml",
     3
+   ],
+   [
+    "docs/pendencias/02-profiles-update-sem-restricao-de-coluna.md",
+    2
    ],
    [
     "vercel.json",
@@ -148612,55 +149137,51 @@
     2
    ],
    [
+    "src/services/achievementsService.ts",
+    1
+   ],
+   [
+    "src/services/avatarService.ts",
+    1
+   ],
+   [
+    "src/services/onboardingService.ts",
+    1
+   ],
+   [
+    "src/services/profilesService.ts",
+    1
+   ],
+   [
+    "src/services/seasonalEventsService.ts",
+    1
+   ],
+   [
+    "src/services/shopService.ts",
+    1
+   ],
+   [
+    "src/test/rpcAccess.test.ts",
+    1
+   ],
+   [
+    "src/tests/unit/achievements.test.ts",
+    1
+   ],
+   [
+    "src/tests/unit/profiles.test.ts",
+    1
+   ],
+   [
+    "src/tests/unit/shop.test.ts",
+    1
+   ],
+   [
+    "supabase/migrations/20261218000000_profiles_economia_rpcs.sql",
+    1
+   ],
+   [
     ".env.example",
-    1
-   ],
-   [
-    "src/App.tsx",
-    1
-   ],
-   [
-    "tests/e2e/smoke.spec.ts",
-    1
-   ],
-   [
-    "docs/pendencias/01-mcp-json-com-segredo.md",
-    1
-   ],
-   [
-    "docs/pendencias/02-profiles-update-sem-restricao-de-coluna.md",
-    1
-   ],
-   [
-    "docs/pendencias/03-csp-hibp-pwnedpasswords.md",
-    1
-   ],
-   [
-    "docs/pendencias/04-navegacao-rotas-sem-entrada-rota-fantasma.md",
-    1
-   ],
-   [
-    "docs/pendencias/05-lockfiles-triplos-package-manager.md",
-    1
-   ],
-   [
-    "docs/pendencias/_linha-de-base.md",
-    1
-   ],
-   [
-    "docs/pendencias/_ordem.md",
-    1
-   ],
-   [
-    "docs/pendencias/_regras-de-negocio.md",
-    1
-   ],
-   [
-    "src/components/MobileDrawer.tsx",
-    1
-   ],
-   [
-    "src/components/navigation/GlobalBreadcrumbs.tsx",
     1
    ]
   ]

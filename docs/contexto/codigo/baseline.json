@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "e58c5c0cf4e8e22b447f665b67dc8a9c0867b1f5",
+  "commit": "3d1ee9005853cd2ea235f392501d3323be295df7",
   "branch": "main",
-  "data_commit": "2026-11-20T14:27:41-03:00",
+  "data_commit": "2026-11-21T08:44:33-03:00",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "ultimos_commits": [
+   {
+    "sha": "3d1ee90",
+    "data": "2026-11-21",
+    "assunto": "fix: protege economia de perfis via RPCs SECURITY DEFINER (pendencia 02) (#78)"
+   },
    {
     "sha": "e58c5c0",
     "data": "2026-11-20",
@@ -126,14 +131,9 @@
     "sha": "f9d5fbd",
     "data": "2026-11-13",
     "assunto": "docs: relatório prod-readiness com evidências do estado real do main (#51)"
-   },
-   {
-    "sha": "24cfd06",
-    "data": "2026-11-13",
-    "assunto": "fix(automation): recusar recursão indireta de hooks pela cadeia de eventos (#50)"
    }
   ],
-  "arquivos_mudados_7d": 62,
+  "arquivos_mudados_7d": 44,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "package.json",
@@ -180,6 +180,10 @@
     "mudancas": 4
    },
    {
+    "pasta": "src/tests/unit",
+    "mudancas": 4
+   },
+   {
     "pasta": ".github/workflows/automation-local.yml",
     "mudancas": 3
    },
@@ -189,10 +193,6 @@
    },
    {
     "pasta": "PENDENCIAS.md",
-    "mudancas": 3
-   },
-   {
-    "pasta": "docs/agentes/banco.md",
     "mudancas": 3
    }
   ],
@@ -278,6 +278,10 @@
     "mudancas": 2
    },
    {
+    "arquivo": "docs/pendencias/02-profiles-update-sem-restricao-de-coluna.md",
+    "mudancas": 2
+   },
+   {
     "arquivo": "scripts/automation.config.json",
     "mudancas": 2
    },
@@ -292,16 +296,12 @@
    {
     "arquivo": "scripts/regras_negocio/generate.py",
     "mudancas": 2
-   },
-   {
-    "arquivo": "scripts/supabase_snapshot/README.md",
-    "mudancas": 2
    }
   ],
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 50
+    "commits": 51
    },
    {
     "autor": "dependabot[bot]",
@@ -310,9 +310,9 @@
   ]
  },
  "contagens": {
-  "arquivos_total": 1498,
+  "arquivos_total": 1499,
   "arquivos_codigo": 1128,
-  "linhas_codigo": 224091,
+  "linhas_codigo": 224150,
   "rotas": 83,
   "rotas_http_backend": 0,
   "vistas_por_id": 0,
@@ -322,7 +322,7 @@
   "hooks": 155,
   "edge_functions": 16,
   "tabelas": 236,
-  "migrations": 270,
+  "migrations": 271,
   "cron_jobs": 22,
   "testes": 158,
   "workflows": 6,
@@ -436,7 +436,7 @@
   },
   "src/services": {
    "arquivos": 99,
-   "linhas": 21601
+   "linhas": 21592
   },
   "src/stories": {
    "arquivos": 29,
@@ -444,11 +444,11 @@
   },
   "src/test": {
    "arquivos": 127,
-   "linhas": 22235
+   "linhas": 22254
   },
   "src/tests": {
    "arquivos": 16,
-   "linhas": 1013
+   "linhas": 1062
   },
   "src/types": {
    "arquivos": 2,
@@ -586,7 +586,7 @@
   }
  ],
  "qualidade": {
-  "any": 69,
+  "any": 79,
   "console_log": 76,
   "ts_ignore": 0,
   "eslint_disable": 0,

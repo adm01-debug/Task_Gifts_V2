@@ -6,7 +6,7 @@
   "src/integrations/supabase/types.ts",
   "supabase/migrations"
  ],
- "migrations": 270,
+ "migrations": 271,
  "seeds": [],
  "avisos": [
   "11 bloco(s) com DDL dinâmico (EXECUTE format/...) não modelado — policies/colunas criadas dinamicamente podem faltar; confira no banco vivo"
@@ -177,6 +177,8 @@
   "_require_admin",
   "_require_manager_or_admin",
   "acknowledge_security_alert",
+  "add_coins",
+  "add_xp",
   "admin_profile_directory",
   "advance_board_trail",
   "answer_lightning_question",
@@ -310,6 +312,8 @@
   "has_role",
   "increment_announcement_views",
   "increment_push_failures",
+  "increment_quests_completed",
+  "increment_streak",
   "ingest_war_event",
   "is_country_allowed",
   "is_department_manager",
@@ -377,6 +381,7 @@
   "settle_tournament_rewards",
   "snapshot_lucky_wheel_payout",
   "snapshot_push_outbox_health",
+  "spend_coins",
   "spin_lucky_wheel",
   "start_lightning_round",
   "start_memory_session",
@@ -21889,7 +21894,7 @@
      "status"
     ]
    },
-   "usada_no_front": 27,
+   "usada_no_front": 23,
    "usada_em_edges": [
     "admin-alerts",
     "churn-prediction",
@@ -31116,6 +31121,16 @@
    "usada_em": 1
   },
   {
+   "nome": "add_coins",
+   "definida": true,
+   "usada_em": 4
+  },
+  {
+   "nome": "add_xp",
+   "definida": true,
+   "usada_em": 4
+  },
+  {
    "nome": "admin_profile_directory",
    "definida": true,
    "usada_em": 1
@@ -31561,6 +31576,16 @@
    "usada_em": 1
   },
   {
+   "nome": "increment_quests_completed",
+   "definida": true,
+   "usada_em": 1
+  },
+  {
+   "nome": "increment_streak",
+   "definida": true,
+   "usada_em": 1
+  },
+  {
    "nome": "is_ip_whitelisted",
    "definida": true,
    "usada_em": 1
@@ -31784,6 +31809,11 @@
    "nome": "settle_prediction_market",
    "definida": true,
    "usada_em": 1
+  },
+  {
+   "nome": "spend_coins",
+   "definida": true,
+   "usada_em": 2
   },
   {
    "nome": "spin_lucky_wheel",

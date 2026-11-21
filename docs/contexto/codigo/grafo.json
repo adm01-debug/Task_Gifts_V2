@@ -2,7 +2,7 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "nos": 970,
- "arestas": 4230,
+ "arestas": 4229,
  "hubs": [
   {
    "arquivo": "src/components/ui/card.tsx",
@@ -129,10 +129,6 @@
    "importado_por": 19
   },
   {
-   "arquivo": "src/services/profilesService.ts",
-   "importado_por": 19
-  },
-  {
    "arquivo": "src/components/ui/tooltip.tsx",
    "importado_por": 18
   },
@@ -150,6 +146,10 @@
   },
   {
    "arquivo": "src/lib/requestId.ts",
+   "importado_por": 17
+  },
+  {
+   "arquivo": "src/services/profilesService.ts",
    "importado_por": 17
   },
   {

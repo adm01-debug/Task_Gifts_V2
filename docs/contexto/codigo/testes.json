@@ -1070,9 +1070,9 @@
   {
    "arquivo": "src/test/rpcAccess.test.ts",
    "tipo": "unit",
-   "linhas": 80,
+   "linhas": 99,
    "testa": [],
-   "casos": 5
+   "casos": 6
   },
   {
    "arquivo": "src/test/scratchCardOdds.simulation.test.ts",
@@ -1340,7 +1340,7 @@
   {
    "arquivo": "src/tests/unit/achievements.test.ts",
    "tipo": "unit",
-   "linhas": 59,
+   "linhas": 70,
    "testa": [
     "src/integrations/supabase/client.ts",
     "src/services/achievementsService.ts"
@@ -1460,12 +1460,12 @@
   {
    "arquivo": "src/tests/unit/profiles.test.ts",
    "tipo": "unit",
-   "linhas": 80,
+   "linhas": 118,
    "testa": [
     "src/integrations/supabase/client.ts",
     "src/services/profilesService.ts"
    ],
-   "casos": 3
+   "casos": 5
   },
   {
    "arquivo": "src/tests/unit/shop.test.ts",
@@ -1473,7 +1473,6 @@
    "linhas": 83,
    "testa": [
     "src/integrations/supabase/client.ts",
-    "src/services/profilesService.ts",
     "src/services/shopService.ts"
    ],
    "casos": 3
@@ -1659,7 +1658,7 @@
   "src/services/positionsService.ts": 1,
   "src/services/predictionMarketService.ts": 8,
   "src/services/predictiveFeedbackService.ts": 1,
-  "src/services/profilesService.ts": 4,
+  "src/services/profilesService.ts": 3,
   "src/services/quizQuestionsService.ts": 1,
   "src/services/shopService.ts": 1,
   "src/services/trailsService.ts": 1,

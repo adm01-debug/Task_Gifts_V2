@@ -326,14 +326,19 @@
     "weekly_challenges"
    ],
    "rpcs": [
+    "add_coins",
+    "add_xp",
     "calculate_enps_score",
     "generate_engagement_snapshot",
     "get_account_devices",
     "get_my_profile_private",
     "get_nine_box_distribution",
     "increment_announcement_views",
+    "increment_quests_completed",
+    "increment_streak",
     "revoke_device_by_fingerprint",
     "revoke_push_device",
+    "spend_coins",
     "verify_certificate"
    ],
    "buckets": [
@@ -740,6 +745,8 @@
     "user_roles"
    ],
    "rpcs": [
+    "add_coins",
+    "add_xp",
     "apply_task_penalty",
     "approve_password_reset",
     "calculate_enps_score",
@@ -750,6 +757,8 @@
     "get_my_profile_private",
     "get_nine_box_distribution",
     "increment_announcement_views",
+    "increment_quests_completed",
+    "increment_streak",
     "is_ip_whitelisted",
     "list_external_api_keys",
     "log_ip_access",
@@ -937,8 +946,6 @@
     "audit_logs",
     "new_device_alerts",
     "notifications",
-    "profiles",
-    "profiles_public",
     "shop_promotions",
     "shop_purchases",
     "shop_rewards",
@@ -949,9 +956,9 @@
     "close_auction",
     "create_auction_draft",
     "get_auction_summary",
-    "get_my_profile_private",
     "place_auction_bid",
-    "publish_auction"
+    "publish_auction",
+    "spend_coins"
    ],
    "buckets": [],
    "canais_realtime": [],
@@ -1397,6 +1404,8 @@
     "user_devices"
    ],
    "rpcs": [
+    "add_coins",
+    "add_xp",
     "admin_profile_directory",
     "apply_campaign_import",
     "award_campaign_team_split",
@@ -1404,6 +1413,8 @@
     "get_my_profile_private",
     "get_prediction_odds_history",
     "get_prediction_oracle_aggregates",
+    "increment_quests_completed",
+    "increment_streak",
     "place_prediction_stake",
     "recalc_campaign_progress",
     "recalc_campaign_teams",
@@ -1578,7 +1589,11 @@
     "user_devices"
    ],
    "rpcs": [
+    "add_coins",
+    "add_xp",
     "get_my_profile_private",
+    "increment_quests_completed",
+    "increment_streak",
     "verify_certificate"
    ],
    "buckets": [
@@ -1645,7 +1660,11 @@
     "profiles_public"
    ],
    "rpcs": [
-    "get_my_profile_private"
+    "add_coins",
+    "add_xp",
+    "get_my_profile_private",
+    "increment_quests_completed",
+    "increment_streak"
    ],
    "buckets": [],
    "canais_realtime": [],
@@ -1945,10 +1964,15 @@
     "weekly_challenges"
    ],
    "rpcs": [
+    "add_coins",
+    "add_xp",
     "calculate_enps_score",
     "generate_engagement_snapshot",
     "get_my_profile_private",
     "increment_announcement_views",
+    "increment_quests_completed",
+    "increment_streak",
+    "spend_coins",
     "verify_certificate"
    ],
    "buckets": [],
@@ -2310,7 +2334,11 @@
     "user_mission_progress"
    ],
    "rpcs": [
+    "add_coins",
+    "add_xp",
     "get_my_profile_private",
+    "increment_quests_completed",
+    "increment_streak",
     "verify_certificate"
    ],
    "buckets": [],
@@ -2541,8 +2569,12 @@
     "user_positions"
    ],
    "rpcs": [
+    "add_coins",
+    "add_xp",
     "get_my_profile_private",
-    "get_nine_box_distribution"
+    "get_nine_box_distribution",
+    "increment_quests_completed",
+    "increment_streak"
    ],
    "buckets": [],
    "canais_realtime": [],
@@ -2830,7 +2862,11 @@
     "user_mission_progress"
    ],
    "rpcs": [
+    "add_coins",
+    "add_xp",
     "get_my_profile_private",
+    "increment_quests_completed",
+    "increment_streak",
     "verify_certificate"
    ],
    "buckets": [],
@@ -2937,10 +2973,12 @@
    "tabelas": [
     "new_device_alerts",
     "onboarding_progress",
-    "profiles",
     "user_devices"
    ],
-   "rpcs": [],
+   "rpcs": [
+    "add_coins",
+    "add_xp"
+   ],
    "buckets": [],
    "canais_realtime": [],
    "env": [
@@ -3073,10 +3111,14 @@
     "user_devices"
    ],
    "rpcs": [
+    "add_coins",
+    "add_xp",
     "create_prediction_market",
     "get_my_profile_private",
     "get_prediction_odds_history",
     "get_prediction_oracle_aggregates",
+    "increment_quests_completed",
+    "increment_streak",
     "place_prediction_stake",
     "recalc_campaign_progress",
     "settle_prediction_market",
@@ -3160,7 +3202,10 @@
     "user_achievements",
     "user_devices"
    ],
-   "rpcs": [],
+   "rpcs": [
+    "add_coins",
+    "add_xp"
+   ],
    "buckets": [],
    "canais_realtime": [],
    "env": [
@@ -3371,11 +3416,15 @@
     "user_mission_progress"
    ],
    "rpcs": [
+    "add_coins",
+    "add_xp",
     "get_my_profile_private",
     "get_quiz_category_stats",
     "get_quiz_lifeline",
     "get_quiz_play_set",
     "grade_quiz_answer",
+    "increment_quests_completed",
+    "increment_streak",
     "quiz_fifty_fifty",
     "verify_certificate"
    ],
@@ -3785,15 +3834,13 @@
     "audit_logs",
     "new_device_alerts",
     "notifications",
-    "profiles",
-    "profiles_public",
     "shop_promotions",
     "shop_purchases",
     "shop_rewards",
     "user_devices"
    ],
    "rpcs": [
-    "get_my_profile_private"
+    "spend_coins"
    ],
    "buckets": [],
    "canais_realtime": [],
@@ -3870,7 +3917,6 @@
     "new_device_alerts",
     "notifications",
     "profiles",
-    "profiles_public",
     "purchase_approvals",
     "shop_promotions",
     "shop_purchases",
@@ -3878,8 +3924,8 @@
     "user_devices"
    ],
    "rpcs": [
-    "get_my_profile_private",
-    "review_purchase"
+    "review_purchase",
+    "spend_coins"
    ],
    "buckets": [],
    "canais_realtime": [],
@@ -3959,7 +4005,11 @@
     "user_devices"
    ],
    "rpcs": [
-    "get_my_profile_private"
+    "add_coins",
+    "add_xp",
+    "get_my_profile_private",
+    "increment_quests_completed",
+    "increment_streak"
    ],
    "buckets": [
     "org-assets"
@@ -4103,7 +4153,11 @@
     "user_positions"
    ],
    "rpcs": [
-    "get_my_profile_private"
+    "add_coins",
+    "add_xp",
+    "get_my_profile_private",
+    "increment_quests_completed",
+    "increment_streak"
    ],
    "buckets": [],
    "canais_realtime": [],
@@ -4302,7 +4356,11 @@
     "user_mission_progress"
    ],
    "rpcs": [
+    "add_coins",
+    "add_xp",
     "get_my_profile_private",
+    "increment_quests_completed",
+    "increment_streak",
     "verify_certificate"
    ],
    "buckets": [],
@@ -5984,6 +6042,8 @@
     "weekly_challenges"
    ],
    "rpcs": [
+    "add_coins",
+    "add_xp",
     "admin_profile_directory",
     "advance_board_trail",
     "answer_lightning_question",
@@ -6051,6 +6111,8 @@
     "grade_quiz_answer",
     "grant_scratch_card",
     "increment_announcement_views",
+    "increment_quests_completed",
+    "increment_streak",
     "is_ip_whitelisted",
     "join_tournament",
     "list_stuck_board_players",
@@ -6085,6 +6147,7 @@
     "settle_boss_battle",
     "settle_department_war",
     "settle_prediction_market",
+    "spend_coins",
     "spin_lucky_wheel",
     "start_lightning_round",
     "start_memory_session",
@@ -7275,6 +7338,8 @@
    ],
    "rpcs": [
     "acknowledge_security_alert",
+    "add_coins",
+    "add_xp",
     "admin_profile_directory",
     "advance_board_trail",
     "answer_lightning_question",
@@ -7361,6 +7426,8 @@
     "grade_quiz_answer",
     "grant_scratch_card",
     "increment_announcement_views",
+    "increment_quests_completed",
+    "increment_streak",
     "is_ip_whitelisted",
     "join_tournament",
     "list_external_api_keys",
@@ -7404,6 +7471,7 @@
     "settle_boss_battle",
     "settle_department_war",
     "settle_prediction_market",
+    "spend_coins",
     "spin_lucky_wheel",
     "start_lightning_round",
     "start_memory_session",
@@ -7601,7 +7669,7 @@
    "modulo": "services",
    "arquivos": 96,
    "testes": 0,
-   "linhas": 21022,
+   "linhas": 21013,
    "itens_menu": [],
    "telas": [],
    "rotas_http": [],
@@ -7791,6 +7859,8 @@
     "weekly_challenges"
    ],
    "rpcs": [
+    "add_coins",
+    "add_xp",
     "admin_profile_directory",
     "advance_board_trail",
     "answer_lightning_question",
@@ -7859,6 +7929,8 @@
     "grade_quiz_answer",
     "grant_scratch_card",
     "increment_announcement_views",
+    "increment_quests_completed",
+    "increment_streak",
     "is_ip_whitelisted",
     "join_tournament",
     "list_external_api_keys",
@@ -7896,6 +7968,7 @@
     "settle_boss_battle",
     "settle_department_war",
     "settle_prediction_market",
+    "spend_coins",
     "spin_lucky_wheel",
     "start_lightning_round",
     "start_memory_session",
@@ -8099,6 +8172,8 @@
      "weekly_challenges"
     ],
     "rpcs": [
+     "add_coins",
+     "add_xp",
      "admin_profile_directory",
      "advance_board_trail",
      "answer_lightning_question",
@@ -8167,6 +8242,8 @@
      "grade_quiz_answer",
      "grant_scratch_card",
      "increment_announcement_views",
+     "increment_quests_completed",
+     "increment_streak",
      "is_ip_whitelisted",
      "join_tournament",
      "list_external_api_keys",
@@ -8204,6 +8281,7 @@
      "settle_boss_battle",
      "settle_department_war",
      "settle_prediction_market",
+     "spend_coins",
      "spin_lucky_wheel",
      "start_lightning_round",
      "start_memory_session",
@@ -8296,7 +8374,10 @@
     "trail_enrollments",
     "user_achievements"
    ],
-   "rpcs": [],
+   "rpcs": [
+    "add_coins",
+    "add_xp"
+   ],
    "buckets": [],
    "canais_realtime": [],
    "env": [

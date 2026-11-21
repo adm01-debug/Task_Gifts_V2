@@ -5627,8 +5627,7 @@
    "src/integrations/supabase/client.ts",
    "src/services/auditService.ts",
    "src/services/loggingService.ts",
-   "src/services/notificationsService.ts",
-   "src/services/profilesService.ts"
+   "src/services/notificationsService.ts"
   ],
   "src/services/socialFeedService.ts": [
    "src/integrations/supabase/client.ts",

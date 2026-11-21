@@ -3961,7 +3961,7 @@
     "achievementsService"
    ],
    "export_default": null,
-   "linhas": 283,
+   "linhas": 294,
    "tabelas": [
     "achievements",
     "kudos",
@@ -3970,7 +3970,10 @@
     "trail_enrollments",
     "user_achievements"
    ],
-   "rpcs": [],
+   "rpcs": [
+    "add_coins",
+    "add_xp"
+   ],
    "edges": [],
    "env": [],
    "externos": [],
@@ -4420,14 +4423,15 @@
     "avatarService"
    ],
    "export_default": null,
-   "linhas": 236,
+   "linhas": 227,
    "tabelas": [
     "avatar_items",
-    "profiles",
     "user_avatar_config",
     "user_avatar_items"
    ],
-   "rpcs": [],
+   "rpcs": [
+    "spend_coins"
+   ],
    "edges": [],
    "env": [],
    "externos": [],
@@ -5947,12 +5951,14 @@
     "onboardingService"
    ],
    "export_default": null,
-   "linhas": 250,
+   "linhas": 245,
    "tabelas": [
-    "onboarding_progress",
-    "profiles"
+    "onboarding_progress"
    ],
-   "rpcs": [],
+   "rpcs": [
+    "add_coins",
+    "add_xp"
+   ],
    "edges": [],
    "env": [],
    "externos": [],
@@ -6320,13 +6326,17 @@
     "profilesService"
    ],
    "export_default": null,
-   "linhas": 192,
+   "linhas": 186,
    "tabelas": [
     "profiles",
     "profiles_public"
    ],
    "rpcs": [
-    "get_my_profile_private"
+    "add_coins",
+    "add_xp",
+    "get_my_profile_private",
+    "increment_quests_completed",
+    "increment_streak"
    ],
    "edges": [],
    "env": [],
@@ -6334,14 +6344,14 @@
    "zod_schemas": 0,
    "flags": [],
    "papeis": [],
-   "usado_por": 15,
+   "usado_por": 14,
    "usado_por_modulos": [
     "components/manager",
     "hooks",
     "pages",
     "services"
    ],
-   "coberto_por_testes": 4,
+   "coberto_por_testes": 3,
    "orfao": false
   },
   {
@@ -6735,14 +6745,16 @@
     "seasonalEventsService"
    ],
    "export_default": null,
-   "linhas": 225,
+   "linhas": 228,
    "tabelas": [
-    "profiles",
     "seasonal_challenges",
     "seasonal_events",
     "user_seasonal_progress"
    ],
-   "rpcs": [],
+   "rpcs": [
+    "add_coins",
+    "add_xp"
+   ],
    "edges": [],
    "env": [],
    "externos": [],
@@ -6839,14 +6851,15 @@
     "shopService"
    ],
    "export_default": null,
-   "linhas": 479,
+   "linhas": 476,
    "tabelas": [
-    "profiles",
     "shop_promotions",
     "shop_purchases",
     "shop_rewards"
    ],
-   "rpcs": [],
+   "rpcs": [
+    "spend_coins"
+   ],
    "edges": [],
    "env": [],
    "externos": [],

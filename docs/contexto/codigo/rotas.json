@@ -475,10 +475,15 @@
     "weekly_challenges"
    ],
    "rpcs": [
+    "add_coins",
+    "add_xp",
     "calculate_enps_score",
     "generate_engagement_snapshot",
     "get_my_profile_private",
     "increment_announcement_views",
+    "increment_quests_completed",
+    "increment_streak",
+    "spend_coins",
     "verify_certificate"
    ],
    "edges": [
@@ -1005,6 +1010,8 @@
     "user_roles"
    ],
    "rpcs": [
+    "add_coins",
+    "add_xp",
     "apply_task_penalty",
     "approve_password_reset",
     "calculate_enps_score",
@@ -1016,11 +1023,14 @@
     "get_quiz_play_set",
     "grade_quiz_answer",
     "increment_announcement_views",
+    "increment_quests_completed",
+    "increment_streak",
     "is_ip_whitelisted",
     "log_ip_access",
     "quiz_fifty_fifty",
     "reject_password_reset",
     "request_password_reset",
+    "spend_coins",
     "verify_certificate"
    ],
    "edges": [
@@ -1249,9 +1259,13 @@
     "user_mission_progress"
    ],
    "rpcs": [
+    "add_coins",
+    "add_xp",
     "create_external_api_key",
     "delete_external_api_key",
     "get_my_profile_private",
+    "increment_quests_completed",
+    "increment_streak",
     "list_external_api_keys",
     "rotate_external_api_secret",
     "set_external_api_key_active",
@@ -1656,7 +1670,11 @@
     "user_roles"
    ],
    "rpcs": [
+    "add_coins",
+    "add_xp",
     "get_my_profile_private",
+    "increment_quests_completed",
+    "increment_streak",
     "verify_certificate"
    ],
    "edges": [
@@ -2117,7 +2135,11 @@
     "user_roles"
    ],
    "rpcs": [
+    "add_coins",
+    "add_xp",
     "get_my_profile_private",
+    "increment_quests_completed",
+    "increment_streak",
     "verify_certificate"
    ],
    "edges": [
@@ -2528,9 +2550,13 @@
     "user_mission_progress"
    ],
    "rpcs": [
+    "add_coins",
+    "add_xp",
     "claim_card_set_reward",
     "get_card_set_rewards",
     "get_my_profile_private",
+    "increment_quests_completed",
+    "increment_streak",
     "open_card_pack",
     "propose_card_trade",
     "respond_card_trade",
@@ -2772,7 +2798,11 @@
     "user_mission_progress"
    ],
    "rpcs": [
+    "add_coins",
+    "add_xp",
     "get_my_profile_private",
+    "increment_quests_completed",
+    "increment_streak",
     "verify_certificate"
    ],
    "edges": [
@@ -3031,8 +3061,12 @@
     "user_mission_progress"
    ],
    "rpcs": [
+    "add_coins",
+    "add_xp",
     "get_my_profile_private",
     "increment_announcement_views",
+    "increment_quests_completed",
+    "increment_streak",
     "verify_certificate"
    ],
    "edges": [
@@ -3263,7 +3297,11 @@
     "user_mission_progress"
    ],
    "rpcs": [
+    "add_coins",
+    "add_xp",
     "get_my_profile_private",
+    "increment_quests_completed",
+    "increment_streak",
     "verify_certificate"
    ],
    "edges": [
@@ -3540,10 +3578,14 @@
     "user_mission_progress"
    ],
    "rpcs": [
+    "add_coins",
+    "add_xp",
     "get_department_metrics",
     "get_executive_metrics",
     "get_monthly_trends",
     "get_my_profile_private",
+    "increment_quests_completed",
+    "increment_streak",
     "verify_certificate"
    ],
    "edges": [
@@ -3773,8 +3815,12 @@
     "user_mission_progress"
    ],
    "rpcs": [
+    "add_coins",
+    "add_xp",
     "get_my_profile_private",
     "get_or_create_bingo_card",
+    "increment_quests_completed",
+    "increment_streak",
     "sync_bingo_card",
     "verify_certificate"
    ],
@@ -3888,7 +3934,11 @@
     "user_roles"
    ],
    "rpcs": [
+    "add_coins",
+    "add_xp",
     "get_my_profile_private",
+    "increment_quests_completed",
+    "increment_streak",
     "recalc_campaign_progress",
     "user_wants_in_app_notification"
    ],
@@ -4030,6 +4080,8 @@
     "user_roles"
    ],
    "rpcs": [
+    "add_coins",
+    "add_xp",
     "admin_profile_directory",
     "apply_campaign_import",
     "award_campaign_team_split",
@@ -4037,6 +4089,8 @@
     "get_my_profile_private",
     "get_prediction_odds_history",
     "get_prediction_oracle_aggregates",
+    "increment_quests_completed",
+    "increment_streak",
     "place_prediction_stake",
     "recalc_campaign_progress",
     "recalc_campaign_teams",
@@ -4120,10 +4174,14 @@
     "team_members"
    ],
    "rpcs": [
+    "add_coins",
+    "add_xp",
     "admin_profile_directory",
     "apply_campaign_import",
     "award_campaign_team_split",
     "get_my_profile_private",
+    "increment_quests_completed",
+    "increment_streak",
     "recalc_campaign_progress",
     "recalc_campaign_teams",
     "revert_campaign_import",
@@ -4185,8 +4243,12 @@
     "team_members"
    ],
    "rpcs": [
+    "add_coins",
+    "add_xp",
     "award_campaign_team_split",
     "get_my_profile_private",
+    "increment_quests_completed",
+    "increment_streak",
     "recalc_campaign_progress",
     "recalc_campaign_teams",
     "revert_campaign_team_split",
@@ -4486,7 +4548,11 @@
     "user_mission_progress"
    ],
    "rpcs": [
+    "add_coins",
+    "add_xp",
     "get_my_profile_private",
+    "increment_quests_completed",
+    "increment_streak",
     "verify_certificate"
    ],
    "edges": [
@@ -4743,9 +4809,13 @@
     "user_roles"
    ],
    "rpcs": [
+    "add_coins",
+    "add_xp",
     "deal_boss_damage",
     "get_boss_battle_leaderboard",
     "get_my_profile_private",
+    "increment_quests_completed",
+    "increment_streak",
     "run_boss_win_rate_alerts",
     "settle_boss_battle",
     "verify_certificate"
@@ -4997,7 +5067,11 @@
     "user_mission_progress"
    ],
    "rpcs": [
+    "add_coins",
+    "add_xp",
     "get_my_profile_private",
+    "increment_quests_completed",
+    "increment_streak",
     "verify_certificate"
    ],
    "edges": [
@@ -5247,7 +5321,11 @@
     "user_mission_progress"
    ],
    "rpcs": [
+    "add_coins",
+    "add_xp",
     "get_my_profile_private",
+    "increment_quests_completed",
+    "increment_streak",
     "verify_certificate"
    ],
    "edges": [
@@ -5511,10 +5589,14 @@
     "user_roles"
    ],
    "rpcs": [
+    "add_coins",
+    "add_xp",
     "assign_engagement_questions",
     "get_active_engagement_cycle",
     "get_engagement_cycle_progress",
     "get_my_profile_private",
+    "increment_quests_completed",
+    "increment_streak",
     "submit_engagement_answer",
     "verify_certificate"
    ],
@@ -5787,6 +5869,8 @@
     "user_roles"
    ],
    "rpcs": [
+    "add_coins",
+    "add_xp",
     "generate_action_plan_from_factor",
     "get_engagement_factor_scores",
     "get_engagement_nps",
@@ -5796,6 +5880,8 @@
     "get_engagement_pillar_correlations",
     "get_engagement_pillar_scores",
     "get_my_profile_private",
+    "increment_quests_completed",
+    "increment_streak",
     "verify_certificate"
    ],
    "edges": [
@@ -6046,6 +6132,8 @@
     "user_mission_progress"
    ],
    "rpcs": [
+    "add_coins",
+    "add_xp",
     "generate_action_plan_from_nr1_category",
     "get_engagement_factor_scores",
     "get_engagement_nps",
@@ -6057,6 +6145,8 @@
     "get_my_profile_private",
     "get_nr1_risk_matrix",
     "get_nr1_summary",
+    "increment_quests_completed",
+    "increment_streak",
     "verify_certificate"
    ],
    "edges": [
@@ -6321,9 +6411,13 @@
     "user_roles"
    ],
    "rpcs": [
+    "add_coins",
+    "add_xp",
     "generate_action_plan_from_opinion",
     "get_my_profile_private",
     "get_opinion_feed",
+    "increment_quests_completed",
+    "increment_streak",
     "respond_to_opinion",
     "set_opinion_status",
     "toggle_opinion_support",
@@ -6602,7 +6696,11 @@
     "user_mission_progress"
    ],
    "rpcs": [
+    "add_coins",
+    "add_xp",
     "get_my_profile_private",
+    "increment_quests_completed",
+    "increment_streak",
     "verify_certificate"
    ],
    "edges": [
@@ -6837,7 +6935,11 @@
     "user_seasonal_progress"
    ],
    "rpcs": [
+    "add_coins",
+    "add_xp",
     "get_my_profile_private",
+    "increment_quests_completed",
+    "increment_streak",
     "verify_certificate"
    ],
    "edges": [
@@ -7077,10 +7179,14 @@
     "user_mission_progress"
    ],
    "rpcs": [
+    "add_coins",
+    "add_xp",
     "get_department_metrics",
     "get_executive_metrics",
     "get_monthly_trends",
     "get_my_profile_private",
+    "increment_quests_completed",
+    "increment_streak",
     "verify_certificate"
    ],
    "edges": [
@@ -7324,7 +7430,11 @@
     "user_mission_progress"
    ],
    "rpcs": [
+    "add_coins",
+    "add_xp",
     "get_my_profile_private",
+    "increment_quests_completed",
+    "increment_streak",
     "verify_certificate"
    ],
    "edges": [
@@ -7562,7 +7672,11 @@
     "user_mission_progress"
    ],
    "rpcs": [
+    "add_coins",
+    "add_xp",
     "get_my_profile_private",
+    "increment_quests_completed",
+    "increment_streak",
     "verify_certificate"
    ],
    "edges": [
@@ -7853,7 +7967,11 @@
     "user_mission_progress"
    ],
    "rpcs": [
+    "add_coins",
+    "add_xp",
     "get_my_profile_private",
+    "increment_quests_completed",
+    "increment_streak",
     "verify_certificate"
    ],
    "edges": [
@@ -8116,10 +8234,14 @@
     "user_roles"
    ],
    "rpcs": [
+    "add_coins",
+    "add_xp",
     "get_department_war_feed",
     "get_department_war_standings",
     "get_my_profile_private",
     "get_user_department_id",
+    "increment_quests_completed",
+    "increment_streak",
     "settle_department_war",
     "sync_department_war_headcount",
     "verify_certificate"
@@ -8372,7 +8494,11 @@
     "user_mission_progress"
    ],
    "rpcs": [
+    "add_coins",
+    "add_xp",
     "get_my_profile_private",
+    "increment_quests_completed",
+    "increment_streak",
     "verify_certificate"
    ],
    "edges": [
@@ -8653,13 +8779,18 @@
     "user_mission_progress"
    ],
    "rpcs": [
+    "add_coins",
+    "add_xp",
     "cancel_auction",
     "close_auction",
     "create_auction_draft",
     "get_auction_summary",
     "get_my_profile_private",
+    "increment_quests_completed",
+    "increment_streak",
     "place_auction_bid",
     "publish_auction",
+    "spend_coins",
     "verify_certificate"
    ],
    "edges": [
@@ -8938,13 +9069,18 @@
     "user_mission_progress"
    ],
    "rpcs": [
+    "add_coins",
+    "add_xp",
     "cancel_auction",
     "close_auction",
     "create_auction_draft",
     "get_auction_summary",
     "get_my_profile_private",
+    "increment_quests_completed",
+    "increment_streak",
     "place_auction_bid",
     "publish_auction",
+    "spend_coins",
     "verify_certificate"
    ],
    "edges": [
@@ -9208,7 +9344,12 @@
     "user_mission_progress"
    ],
    "rpcs": [
+    "add_coins",
+    "add_xp",
     "get_my_profile_private",
+    "increment_quests_completed",
+    "increment_streak",
+    "spend_coins",
     "verify_certificate"
    ],
    "edges": [
@@ -9471,8 +9612,13 @@
     "user_mission_progress"
    ],
    "rpcs": [
+    "add_coins",
+    "add_xp",
     "get_my_profile_private",
+    "increment_quests_completed",
+    "increment_streak",
     "review_purchase",
+    "spend_coins",
     "verify_certificate"
    ],
    "edges": [
@@ -9791,8 +9937,12 @@
     "user_positions"
    ],
    "rpcs": [
+    "add_coins",
+    "add_xp",
     "get_my_profile_private",
     "get_nine_box_distribution",
+    "increment_quests_completed",
+    "increment_streak",
     "verify_certificate"
    ],
    "edges": [
@@ -10048,9 +10198,13 @@
     "user_roles"
    ],
    "rpcs": [
+    "add_coins",
+    "add_xp",
     "finish_memory_session",
     "get_memory_leaderboard",
     "get_my_profile_private",
+    "increment_quests_completed",
+    "increment_streak",
     "start_memory_session",
     "verify_certificate"
    ],
@@ -10298,9 +10452,13 @@
     "user_mission_progress"
    ],
    "rpcs": [
+    "add_coins",
+    "add_xp",
     "finish_memory_session",
     "get_memory_leaderboard",
     "get_my_profile_private",
+    "increment_quests_completed",
+    "increment_streak",
     "start_memory_session",
     "verify_certificate"
    ],
@@ -10533,9 +10691,13 @@
     "wager_entries"
    ],
    "rpcs": [
+    "add_coins",
+    "add_xp",
     "get_daily_wager",
     "get_my_profile_private",
     "get_wager_leaderboard",
+    "increment_quests_completed",
+    "increment_streak",
     "submit_daily_wager",
     "verify_certificate"
    ],
@@ -10790,9 +10952,13 @@
     "wager_questions"
    ],
    "rpcs": [
+    "add_coins",
+    "add_xp",
     "get_daily_wager",
     "get_my_profile_private",
     "get_wager_leaderboard",
+    "increment_quests_completed",
+    "increment_streak",
     "list_wager_questions",
     "save_wager_question",
     "submit_daily_wager",
@@ -11062,7 +11228,11 @@
     "user_roles"
    ],
    "rpcs": [
+    "add_coins",
+    "add_xp",
     "get_my_profile_private",
+    "increment_quests_completed",
+    "increment_streak",
     "verify_certificate"
    ],
    "edges": [
@@ -11329,7 +11499,11 @@
     "user_mission_progress"
    ],
    "rpcs": [
+    "add_coins",
+    "add_xp",
     "get_my_profile_private",
+    "increment_quests_completed",
+    "increment_streak",
     "verify_certificate"
    ],
    "edges": [
@@ -11590,10 +11764,14 @@
     "user_mission_progress"
    ],
    "rpcs": [
+    "add_coins",
+    "add_xp",
     "create_prediction_market",
     "get_my_profile_private",
     "get_prediction_odds_history",
     "get_prediction_oracle_aggregates",
+    "increment_quests_completed",
+    "increment_streak",
     "place_prediction_stake",
     "recalc_campaign_progress",
     "settle_prediction_market",
@@ -11856,10 +12034,14 @@
     "user_mission_progress"
    ],
    "rpcs": [
+    "add_coins",
+    "add_xp",
     "create_prediction_market",
     "get_my_profile_private",
     "get_prediction_odds_history",
     "get_prediction_oracle_aggregates",
+    "increment_quests_completed",
+    "increment_streak",
     "place_prediction_stake",
     "recalc_campaign_progress",
     "settle_prediction_market",
@@ -12244,11 +12426,16 @@
     "user_two_factor"
    ],
    "rpcs": [
+    "add_coins",
+    "add_xp",
     "get_account_devices",
     "get_my_profile_private",
     "get_nine_box_distribution",
+    "increment_quests_completed",
+    "increment_streak",
     "revoke_device_by_fingerprint",
     "revoke_push_device",
+    "spend_coins",
     "verify_certificate"
    ],
    "edges": [
@@ -12478,7 +12665,11 @@
     "user_mission_progress"
    ],
    "rpcs": [
+    "add_coins",
+    "add_xp",
     "get_my_profile_private",
+    "increment_quests_completed",
+    "increment_streak",
     "verify_certificate"
    ],
    "edges": [
@@ -12758,11 +12949,15 @@
     "user_mission_progress"
    ],
    "rpcs": [
+    "add_coins",
+    "add_xp",
     "get_my_profile_private",
     "get_quiz_category_stats",
     "get_quiz_lifeline",
     "get_quiz_play_set",
     "grade_quiz_answer",
+    "increment_quests_completed",
+    "increment_streak",
     "quiz_fifty_fifty",
     "verify_certificate"
    ],
@@ -13024,11 +13219,15 @@
     "user_roles"
    ],
    "rpcs": [
+    "add_coins",
+    "add_xp",
     "get_my_profile_private",
     "get_quiz_category_stats",
     "get_quiz_lifeline",
     "get_quiz_play_set",
     "grade_quiz_answer",
+    "increment_quests_completed",
+    "increment_streak",
     "quiz_fifty_fifty",
     "verify_certificate"
    ],
@@ -13261,8 +13460,12 @@
     "user_mission_progress"
    ],
    "rpcs": [
+    "add_coins",
+    "add_xp",
     "get_my_profile_private",
     "grant_scratch_card",
+    "increment_quests_completed",
+    "increment_streak",
     "reveal_scratch_card",
     "verify_certificate"
    ],
@@ -13496,9 +13699,13 @@
     "user_mission_progress"
    ],
    "rpcs": [
+    "add_coins",
+    "add_xp",
     "answer_lightning_question",
     "finish_lightning_round",
     "get_my_profile_private",
+    "increment_quests_completed",
+    "increment_streak",
     "start_lightning_round",
     "verify_certificate"
    ],
@@ -13738,7 +13945,11 @@
     "user_mission_progress"
    ],
    "rpcs": [
+    "add_coins",
+    "add_xp",
     "get_my_profile_private",
+    "increment_quests_completed",
+    "increment_streak",
     "verify_certificate"
    ],
    "edges": [
@@ -14054,9 +14265,13 @@
     "user_roles"
    ],
    "rpcs": [
+    "add_coins",
+    "add_xp",
     "get_lucky_wheel_prizes_display",
     "get_lucky_wheel_status",
     "get_my_profile_private",
+    "increment_quests_completed",
+    "increment_streak",
     "spin_lucky_wheel",
     "verify_certificate"
    ],
@@ -14313,9 +14528,13 @@
     "user_mission_progress"
    ],
    "rpcs": [
+    "add_coins",
+    "add_xp",
     "get_lucky_wheel_prizes_display",
     "get_lucky_wheel_status",
     "get_my_profile_private",
+    "increment_quests_completed",
+    "increment_streak",
     "spin_lucky_wheel",
     "verify_certificate"
    ],
@@ -14554,9 +14773,13 @@
     "user_roles"
    ],
    "rpcs": [
+    "add_coins",
+    "add_xp",
     "cleanup_old_security_logs",
     "get_my_profile_private",
     "get_security_stats",
+    "increment_quests_completed",
+    "increment_streak",
     "verify_certificate"
    ],
    "edges": [
@@ -14900,9 +15123,13 @@
     "user_mission_progress"
    ],
    "rpcs": [
+    "add_coins",
+    "add_xp",
     "get_my_profile_private",
     "get_sequence_play_set",
     "get_sequence_procedure_stats",
+    "increment_quests_completed",
+    "increment_streak",
     "save_sequence_procedure",
     "submit_sequence_attempt",
     "verify_certificate"
@@ -15147,9 +15374,13 @@
     "user_mission_progress"
    ],
    "rpcs": [
+    "add_coins",
+    "add_xp",
     "get_my_profile_private",
     "get_sequence_play_set",
     "get_sequence_procedure_stats",
+    "increment_quests_completed",
+    "increment_streak",
     "save_sequence_procedure",
     "submit_sequence_attempt",
     "verify_certificate"
@@ -15405,7 +15636,11 @@
     "user_mission_progress"
    ],
    "rpcs": [
+    "add_coins",
+    "add_xp",
     "get_my_profile_private",
+    "increment_quests_completed",
+    "increment_streak",
     "verify_certificate"
    ],
    "edges": [
@@ -15666,11 +15901,15 @@
     "user_roles"
    ],
    "rpcs": [
+    "add_coins",
+    "add_xp",
     "advance_board_trail",
     "delete_board_trail",
     "get_board_challenge_stats",
     "get_board_trail_leaderboard",
     "get_my_profile_private",
+    "increment_quests_completed",
+    "increment_streak",
     "list_stuck_board_players",
     "resolve_board_challenge",
     "save_board_trail",
@@ -15949,6 +16188,8 @@
     "user_mission_progress"
    ],
    "rpcs": [
+    "add_coins",
+    "add_xp",
     "advance_board_trail",
     "delete_board_trail",
     "get_board_challenge_stats",
@@ -15957,6 +16198,8 @@
     "get_quiz_lifeline",
     "get_quiz_play_set",
     "grade_quiz_answer",
+    "increment_quests_completed",
+    "increment_streak",
     "list_stuck_board_players",
     "quiz_fifty_fifty",
     "resolve_board_challenge",
@@ -16204,8 +16447,12 @@
     "user_roles"
    ],
    "rpcs": [
+    "add_coins",
+    "add_xp",
     "get_my_profile_private",
     "get_tournament_bracket",
+    "increment_quests_completed",
+    "increment_streak",
     "join_tournament",
     "list_tournaments",
     "report_tournament_match",
@@ -16457,7 +16704,11 @@
     "user_mission_progress"
    ],
    "rpcs": [
+    "add_coins",
+    "add_xp",
     "get_my_profile_private",
+    "increment_quests_completed",
+    "increment_streak",
     "verify_certificate"
    ],
    "edges": [
@@ -16694,7 +16945,11 @@
     "user_roles"
    ],
    "rpcs": [
+    "add_coins",
+    "add_xp",
     "get_my_profile_private",
+    "increment_quests_completed",
+    "increment_streak",
     "verify_certificate"
    ],
    "edges": [
