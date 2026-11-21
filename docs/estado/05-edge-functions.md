@@ -4,7 +4,7 @@
 > Evidência em `arquivo:linha`. Correções da Fase D estão em `ESTADO_ATUAL.md` e em `04-dados-e-runtime.md`.
 > Runtime de build/teste = `NAO_VERIFICADO` (node_modules ausente no ambiente da auditoria).
 > **Data de revisão desta atualização**: 2026-11-11 — secções de segurança (webhook, verify-ip, trail-recommendations) e poda de stubs refletem a `main` (PRs #85-#87, commits `dadc0938`/`fb528b1b`/`166c7d2a`).
-> **Revisão de 2026-11-21**: swap Lovable→OpenRouter validado ponta a ponta (chave responde no gateway openrouter.ai/api/v1/chat/completions, modelo google/gemini-2.5-flash); deploy das 16 edge functions re-rodado verde (run 44934984530); as 3 functions dos deploys falhos (#88/#89/#86) confirmadas ACTIVE e a secret OPENROUTER_API_KEY presente no projeto.
+> **Revisão de 2026-11-21**: swap Lovable→OpenRouter validado até o gateway (chave responde em openrouter.ai/api/v1/chat/completions, modelo google/gemini-2.5-flash); deploy das 16 edge functions re-rodado verde (run 44934984530); as 3 functions dos deploys falhos (#88/#89/#86) confirmadas ACTIVE e a secret OPENROUTER_API_KEY presente no projeto. O fluxo completo com usuário autenticado em produção segue pendente de validação (exige JWT de admin).
 
 ---
 
@@ -197,7 +197,7 @@ Confirmado contra `src/integrations/supabase/types.ts`:
 
 **Validação de 2026-11-21 — swap OpenRouter + deploys íntegros (evidência real):**
 
-- **Gateway OpenRouter operacional** — chamada real a `openrouter.ai/api/v1/chat/completions` com `OPENROUTER_API_KEY` respondeu "Ok" (modelo `google/gemini-2.5-flash`), provando que a credencial que mantinha zeradas `ai_course_jobs`/`ai_coach_messages` está funcional.
+- **Gateway OpenRouter operacional** — chamada real a `openrouter.ai/api/v1/chat/completions` com `OPENROUTER_API_KEY` respondeu "Ok" (modelo `google/gemini-2.5-flash`), provando que a credencial que mantinha zeradas `ai_course_jobs`/`ai_coach_messages` está funcional. **Escopo da evidência**: valida o gateway e a credencial; o fluxo completo (gerar curso/quiz com usuário autenticado em produção) segue pendente — exige perfil admin autenticado para emitir JWT real.
 - **Deploy das 16 edge functions verde** — workflow `deploy-edge-functions.yml` (run `44934984530`, branch `main`) concluído com sucesso após corrigir a `SUPABASE_ACCESS_TOKEN` do CI para um PAT válido.
 - **Functions dos deploys falhos ativas** — `competency-alerts` v6, `verify-ip` v5, `admin-alerts` v4, `webhook-dispatcher` v4, `ai-coach` v5, `ai-course-builder` v7, `churn-prediction` v6, `generate-quiz-questions` v5, `reward-approval-review` v7, `trail-recommendations` v5 (Management API, status `ACTIVE`, `verify_jwt=true`).
 - **Secret `OPENROUTER_API_KEY`** confirmada no projeto (8 secrets no total; `LOVABLE_API_KEY` nunca existiu em produção).
