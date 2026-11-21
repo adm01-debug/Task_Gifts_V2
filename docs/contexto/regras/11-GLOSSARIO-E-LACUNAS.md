@@ -1,6 +1,6 @@
 # 11 · GLOSSÁRIO, DADOS DE REFERÊNCIA E LACUNAS
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `f76c9b7093` · branch `main` · 2026-11-21 14:27 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `f095e46a89` · branch `main` · 2026-11-21 14:42 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## Glossário do domínio (entidades do sistema)
@@ -351,7 +351,6 @@ _nenhum item encontrado_
 | status | valor `reveal` para `phase` usado no código não existe em nenhum enum do banco/TS | `compara:src/components/ui/lucky-drop.tsx` |
 | status | valor `playing` para `phase` usado no código não existe em nenhum enum do banco/TS | `compara:src/pages/LightningQuizPage.tsx` |
 | status | valor `result` para `phase` usado no código não existe em nenhum enum do banco/TS | `compara:src/pages/LightningQuizPage.tsx` |
-| coluna | coluna `role` usada no código não existe no schema de `profiles` |  |
 | coluna | coluna `username` usada no código não existe no schema de `profiles` |  |
 | tabela | tabela `a` usada no código não existe nas migrations/types do repo | `scripts/ai-context/cenarios.mjs` |
 | tabela | tabela `contacts` usada no código não existe nas migrations/types do repo | `scripts/ai-context/gerar.unit.mjs` |

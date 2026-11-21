@@ -171,7 +171,7 @@
    "nome": "competency-alerts",
    "entrada": "supabase/functions/competency-alerts/index.ts",
    "arquivos": 1,
-   "linhas": 358,
+   "linhas": 355,
    "verify_jwt": true,
    "metodos": [
     "OPTIONS"
@@ -185,7 +185,9 @@
     "quest_assignments",
     "user_achievements"
    ],
-   "rpcs": [],
+   "rpcs": [
+    "has_role"
+   ],
    "env": [
     "SUPABASE_SERVICE_ROLE_KEY",
     "SUPABASE_URL"

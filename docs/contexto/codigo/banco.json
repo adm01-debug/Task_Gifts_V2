@@ -31563,7 +31563,7 @@
   {
    "nome": "has_role",
    "definida": true,
-   "usada_em": 1
+   "usada_em": 2
   },
   {
    "nome": "increment_announcement_views",

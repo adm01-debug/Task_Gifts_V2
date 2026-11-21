@@ -1,7 +1,7 @@
 # Contexto do projeto para agentes de IA
 
 GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.
-Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `f76c9b7093d147e8e15dcd4658b42eb0f8e49056` (2026-11-21T11:27:00-03:00).
+Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `f095e46a89016d1c3e25f9b54fac16379dcd14b5` (2026-11-21T11:42:08-03:00).
 
 ## Como usar (leia antes de planejar ou executar qualquer tarefa)
 1. **Tela/rota/menu** → `rotas.json` (url/vista/menu → arquivo → hooks → tabelas → edges; `rotas_http_backend` para APIs) e `modulos.json` (módulo inteiro + dependências entre módulos).
@@ -36,7 +36,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 |---|---|
 | arquivos_total | 1498 |
 | arquivos_codigo | 1128 |
-| linhas_codigo | 224163 |
+| linhas_codigo | 224160 |
 | rotas | 83 |
 | rotas_http_backend | 0 |
 | vistas_por_id | 0 |
@@ -242,7 +242,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - env de integração (só nomes): CRON_SECRET, INTERNAL_FUNCTION_SECRET, LOVABLE_API_KEY, RESEND_API_KEY, SENTRY_DSN, SENTRY_ENV, UPSTASH_REDIS_REST_TOKEN, UPSTASH_REDIS_REST_URL, VITE_BITRIX_WEBHOOK_URL, VITE_SENTRY_DSN
 
 ## Permissões / papéis
-- papéis no código: admin (14), alert (9), manager (8), user (8), system (6), button (5), status (5), group (3), assistant (2), grid (2), navigation (2), radio (2), radiogroup (2), Cargos (1), banner (1), contentinfo (1), dialog (1), gridcell (1), img (1), link (1), list (1), listitem (1), long (1), menu (1), menuitem (1), presentation (1), region (1), role_assigned (1), separator (1), short (1), tab (1)
+- papéis no código: admin (13), alert (9), manager (8), user (8), system (6), button (5), status (5), group (3), assistant (2), grid (2), navigation (2), radio (2), radiogroup (2), Cargos (1), banner (1), contentinfo (1), dialog (1), gridcell (1), img (1), link (1), list (1), listitem (1), long (1), menu (1), menuitem (1), presentation (1), region (1), role_assigned (1), separator (1), short (1), tab (1)
 - enums de papel: app_role: admin|manager|employee
 - guards: src/components/IpAccessGuard.tsx, src/components/engagement/diagnostics/AnonymityGuardNotice.tsx, src/components/rbac/AccessControl.tsx, src/components/rbac/ProtectedRoute.tsx · rotas protegidas: 78 · públicas: /*, /forgot-password, /reset-password, /verificar, /verificar/:code
 - feature flags: nenhuma
@@ -265,7 +265,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - possiveis_segredos_no_codigo: 0
 
 ## Grafo de código (graphify)
-- 9852 nós · 27420 arestas · 620 comunidades · grafo do commit `f76c9b70`
+- 9852 nós · 27420 arestas · 620 comunidades · grafo do commit `f095e46a`
 - comunidades maiores: lucide-react (329), react (230), DevelopmentPlanManager.tsx (132), AdminPanel.tsx (111), client.ts (109), cn (107), profilesService.ts (105), date-fns (103), QuizAdmin.tsx (99), navigation/index.ts (90), Shop.tsx (86), react-router-dom (84)
 - símbolos mais chamados: cn() (src/lib/utils.ts), useAuth() (src/hooks/useAuth.tsx), useIsMobile() (src/hooks/use-mobile.tsx), q() (scripts/supabase_snapshot/snapshot.py), useDepartments() (src/hooks/useDepartments.ts), useToast() (src/hooks/use-toast.ts), useRBAC() (src/hooks/useRBAC.ts), useProfiles() (src/hooks/useProfiles.ts), useSEO() (src/hooks/useSEO.ts), useSoundEffects() (src/hooks/useSoundEffects.tsx), .collect() (scripts/supabase_snapshot/test_snapshot.py), excluded_sql() (scripts/supabase_snapshot/snapshot.py)
 - consulta local: `graphify query "<pergunta>"`, `graphify path "<A>" "<B>"`, `graphify explain "<X>"`
@@ -350,6 +350,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 
 
 ## Últimos commits
+- 2026-11-21 `f095e46` fix: checa admin via rpc has_role em competency-alerts (e atualiza doc 05) (#88)
 - 2026-11-21 `f76c9b7` fix: corrige typo de tipo no catch do log de ip_access_logs (#89)
 - 2026-11-21 `166c7d2` fix: desbloqueia video do LMS (media-src/frame-src na CSP) (#87)
 - 2026-11-21 `fb528b1` fix: verify-ip fail-closed quando a whitelist nao pode ser checada (#86)
@@ -364,7 +365,6 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - 2026-11-20 `e58c5c0` fix(ci): expoe VITE_DEPLOYED_EDGE_FUNCTIONS para o build e corrige doc da allowlist (#77)
 - 2026-11-20 `d3d388e` fix: excludes assets/ do rewrite SPA para expor 404 real de chunks obsoletos (#76)
 - 2026-11-20 `de9e391` fix: move GlobalErrorBoundary para dentro do BrowserRouter (#75)
-- 2026-11-20 `18c24c9` test(e2e): garante que a rota /previsoes e protegida e redireciona para /auth (#74)
 
 ## Arquivos deste diretório
 - `docs/contexto/codigo/rotas.json`

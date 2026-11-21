@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "f76c9b7093d147e8e15dcd4658b42eb0f8e49056",
+  "commit": "f095e46a89016d1c3e25f9b54fac16379dcd14b5",
   "branch": "main",
-  "data_commit": "2026-11-21T11:27:00-03:00",
+  "data_commit": "2026-11-21T11:42:08-03:00",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "ultimos_commits": [
+   {
+    "sha": "f095e46",
+    "data": "2026-11-21",
+    "assunto": "fix: checa admin via rpc has_role em competency-alerts (e atualiza doc 05) (#88)"
+   },
    {
     "sha": "f76c9b7",
     "data": "2026-11-21",
@@ -126,14 +131,9 @@
     "sha": "2e58f57",
     "data": "2026-11-14",
     "assunto": "fix: guarda robusta nas RPCs 2FA/validacao (drift GUC NULL em producao) (#63)"
-   },
-   {
-    "sha": "c4d21f5",
-    "data": "2026-11-14",
-    "assunto": "chore: contexto agendado de 10 min para 1x/hora (#64)"
    }
   ],
-  "arquivos_mudados_7d": 45,
+  "arquivos_mudados_7d": 47,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "package.json",
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 58
+    "commits": 59
    },
    {
     "autor": "dependabot[bot]",
@@ -312,7 +312,7 @@
  "contagens": {
   "arquivos_total": 1498,
   "arquivos_codigo": 1128,
-  "linhas_codigo": 224163,
+  "linhas_codigo": 224160,
   "rotas": 83,
   "rotas_http_backend": 0,
   "vistas_por_id": 0,
@@ -460,7 +460,7 @@
   },
   "supabase/functions": {
    "arquivos": 27,
-   "linhas": 4743
+   "linhas": 4740
   },
   "tailwind.config.ts": {
    "arquivos": 1,

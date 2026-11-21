@@ -1,6 +1,6 @@
 # 07 · REGRAS DE NEGÓCIO
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `f76c9b7093` · branch `main` · 2026-11-21 14:27 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `f095e46a89` · branch `main` · 2026-11-21 14:42 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## A. Regras escritas por humanos (`manual/` — prioridade máxima, nunca sobrescrito)
@@ -1154,7 +1154,7 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `type` | `xp` | compara, escreve | `src/components/ui/lucky-drop.tsx`<br>`src/components/ui/micro-interactions.tsx`<br>`src/lib/luckyWheelPayout.ts`<br>`src/services/notificationsService.ts` |
 | `type` | `xp_gained` | compara, escreve | `src/pages/SocialFeed.tsx`<br>`src/services/socialFeedService.ts` |
 | `type` | `zero_engagement` | escreve | `supabase/functions/admin-alerts/index.ts` |
-| `role` | `admin` | compara | `src/components/rbac/UserRolesTab.tsx`<br>`supabase/functions/competency-alerts/index.ts`<br>`supabase/functions/reward-approval-review/index.ts` |
+| `role` | `admin` | compara | `src/components/rbac/UserRolesTab.tsx`<br>`supabase/functions/reward-approval-review/index.ts` |
 | `role` | `assistant` | compara, escreve | `src/components/AICoachDialog.tsx`<br>`src/hooks/useAICoach.ts` |
 | `role` | `long` | compara, escreve | `src/pages/BurnRate.tsx` |
 | `role` | `manager` | compara | `supabase/functions/reward-approval-review/index.ts` |
@@ -3327,7 +3327,6 @@ _nenhum item encontrado_
 | `permissionKey` | `src/services/rbacService.ts` |
 | `admin` | `supabase/functions/churn-prediction/index.ts` |
 | `manager` | `supabase/functions/churn-prediction/index.ts` |
-| `admin` | `supabase/functions/competency-alerts/index.ts` |
 | `admin` | `supabase/functions/reward-approval-review/index.ts` |
 | `manager` | `supabase/functions/reward-approval-review/index.ts` |
 | `admin` | `supabase/functions/trail-recommendations/index.ts` |

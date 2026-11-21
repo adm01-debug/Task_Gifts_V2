@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "f76c9b7093d147e8e15dcd4658b42eb0f8e49056",
+  "sha": "f095e46a89016d1c3e25f9b54fac16379dcd14b5",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
-  "generated_at": "2026-11-21 14:27 UTC",
+  "generated_at": "2026-11-21 14:42 UTC",
   "files_total": 1508,
   "code_files": 1405,
-  "code_lines": 255326
+  "code_lines": 255323
  },
  "version": "1.3.2",
- "facts_hash": "b31d665369bf9125",
+ "facts_hash": "6ac04cae4b916f55",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -49122,7 +49122,7 @@
   {
    "module": "supabase/functions",
    "files": 27,
-   "lines": 4743,
+   "lines": 4740,
    "tables": [
     "ai_course_jobs",
     "attendance_records",
@@ -51867,7 +51867,6 @@
     "id",
     "level",
     "quests_completed",
-    "role",
     "streak",
     "updated_at",
     "username",
@@ -52824,7 +52823,8 @@
     "src/services/scratchCardService.ts"
    ],
    "has_role": [
-    "supabase/functions/admin-alerts/index.ts"
+    "supabase/functions/admin-alerts/index.ts",
+    "supabase/functions/competency-alerts/index.ts"
    ],
    "increment_announcement_views": [
     "src/services/announcementsService.ts"
@@ -53579,10 +53579,6 @@
    "webhook_delivery_stats_24h"
   ],
   "columns_unknown": [
-   {
-    "table": "profiles",
-    "column": "role"
-   },
    {
     "table": "profiles",
     "column": "username"
@@ -57071,10 +57067,6 @@
    {
     "file": "supabase/functions/churn-prediction/index.ts",
     "value": "manager"
-   },
-   {
-    "file": "supabase/functions/competency-alerts/index.ts",
-    "value": "admin"
    },
    {
     "file": "supabase/functions/reward-approval-review/index.ts",
@@ -76045,18 +76037,6 @@
     "field": "type",
     "value": "competency_celebration",
     "kind": "escreve"
-   },
-   {
-    "file": "supabase/functions/competency-alerts/index.ts",
-    "field": "role",
-    "value": "admin",
-    "kind": "compara"
-   },
-   {
-    "file": "supabase/functions/competency-alerts/index.ts",
-    "field": "role",
-    "value": "admin",
-    "kind": "compara"
    },
    {
     "file": "supabase/functions/competency-alerts/index.ts",
@@ -99779,7 +99759,6 @@
      ],
      "admin": [
       "compara:src/components/rbac/UserRolesTab.tsx",
-      "compara:supabase/functions/competency-alerts/index.ts",
       "compara:supabase/functions/reward-approval-review/index.ts"
      ],
      "long": [
@@ -113941,11 +113920,6 @@
     "where": [
      "compara:src/pages/LightningQuizPage.tsx"
     ]
-   },
-   {
-    "kind": "coluna",
-    "msg": "coluna `role` usada no código não existe no schema de `profiles`",
-    "where": []
    },
    {
     "kind": "coluna",
@@ -146377,7 +146351,7 @@
   },
   "supabase/functions/competency-alerts/index.ts": {
    "path": "supabase/functions/competency-alerts/index.ts",
-   "lines": 358,
+   "lines": 355,
    "tables": [
     {
      "table": "module_progress",
@@ -146397,14 +146371,6 @@
     },
     {
      "table": "attendance_streaks",
-     "op": "select"
-    },
-    {
-     "table": "profiles",
-     "op": "select"
-    },
-    {
-     "table": "profiles",
      "op": "select"
     },
     {
@@ -146463,8 +146429,7 @@
      "user_id"
     ],
     "profiles": [
-     "id",
-     "role"
+     "id"
     ],
     "notifications": [
      "created_at",
@@ -146473,6 +146438,9 @@
      "user_id"
     ]
    },
+   "rpc": [
+    "has_role"
+   ],
    "env": [
     "SUPABASE_SERVICE_ROLE_KEY",
     "SUPABASE_URL"
@@ -146494,16 +146462,6 @@
      "kind": "escreve"
     },
     {
-     "field": "role",
-     "value": "admin",
-     "kind": "compara"
-    },
-    {
-     "field": "role",
-     "value": "admin",
-     "kind": "compara"
-    },
-    {
      "field": "type",
      "value": "competency_gap",
      "kind": "filtra"
@@ -146513,9 +146471,6 @@
      "value": "competency_celebration",
      "kind": "filtra"
     }
-   ],
-   "role_checks": [
-    "admin"
    ],
    "calc_fns": [
     {
@@ -148769,10 +148724,20 @@
   }
  },
  "git": {
-  "sha": "f76c9b7093d147e8e15dcd4658b42eb0f8e49056",
+  "sha": "f095e46a89016d1c3e25f9b54fac16379dcd14b5",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "commits": [
+   {
+    "sha": "f095e46",
+    "date": "2026-11-21",
+    "author": "adm01-debug",
+    "subject": "fix: checa admin via rpc has_role em competency-alerts (e atualiza doc 05) (#88)",
+    "files": [
+     "docs/estado/05-edge-functions.md",
+     "supabase/functions/competency-alerts/index.ts"
+    ]
+   },
    {
     "sha": "f76c9b7",
     "date": "2026-11-21",
@@ -149067,16 +149032,6 @@
     "files": [
      ".github/workflows/deploy-edge-functions.yml"
     ]
-   },
-   {
-    "sha": "25dc07b",
-    "date": "2026-11-13",
-    "author": "adm01-debug",
-    "subject": "infra: adiciona workflow de deploy de edge functions (#55)",
-    "files": [
-     ".github/workflows/deploy-edge-functions.yml",
-     "supabase/config.toml"
-    ]
    }
   ],
   "hot_files": [
@@ -149094,10 +149049,6 @@
    ],
    [
     ".github/workflows/ci.yml",
-    3
-   ],
-   [
-    ".github/workflows/deploy-edge-functions.yml",
     3
    ],
    [
@@ -149119,6 +149070,18 @@
    [
     "docs/pendencias/02-profiles-update-sem-restricao-de-coluna.md",
     2
+   ],
+   [
+    ".github/workflows/deploy-edge-functions.yml",
+    2
+   ],
+   [
+    "docs/estado/05-edge-functions.md",
+    1
+   ],
+   [
+    "supabase/functions/competency-alerts/index.ts",
+    1
    ],
    [
     "package-lock.json",
@@ -149150,14 +149113,6 @@
    ],
    [
     "src/services/shopService.ts",
-    1
-   ],
-   [
-    "src/test/rpcAccess.test.ts",
-    1
-   ],
-   [
-    "src/tests/unit/achievements.test.ts",
     1
    ]
   ]
