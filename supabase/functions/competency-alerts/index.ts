@@ -206,14 +206,13 @@ serve(async (req) => {
     let usersToAnalyze: string[] = [];
 
     if (checkAllUsers) {
-      // Admin only check
-      const { data: profile } = await supabase
-        .from('profiles')
-        .select('role')
-        .eq('id', authenticatedUser.id)
-        .single();
-        
-      if (profile?.role !== 'admin') {
+          // Admin only check (profiles has no role column; roles live in
+          // user_roles and are exposed via the has_role security definer)
+          const { data: isAdmin } = await supabase.rpc("has_role", {
+            _user_id: authenticatedUser.id,
+            _role: "admin",
+          });
+          if (!isAdmin) {
         return new Response(JSON.stringify({ error: "Unauthorized: Admin access required for batch analysis" }), {
           status: 403,
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
@@ -229,13 +228,11 @@ serve(async (req) => {
       
       if (bodyUserId && bodyUserId !== authenticatedUser.id) {
         // Check if admin
-        const { data: profile } = await supabase
-          .from('profiles')
-          .select('role')
-          .eq('id', authenticatedUser.id)
-          .single();
-          
-        if (profile?.role !== 'admin') {
+            const { data: isAdmin } = await supabase.rpc("has_role", {
+              _user_id: authenticatedUser.id,
+              _role: "admin",
+            });
+            if (!isAdmin) {
           return new Response(JSON.stringify({ error: "Unauthorized" }), {
             status: 403,
             headers: { ...corsHeaders, 'Content-Type': 'application/json' },
