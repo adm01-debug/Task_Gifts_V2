@@ -90,10 +90,12 @@ Fatos que já custaram retrabalho:
   `VITE_SUPABASE_URL`/`VITE_SUPABASE_PUBLISHABLE_KEY` com fallback de placeholder justamente por isso —
   não remova o fallback, senão todo PR do Dependabot volta a falhar no build.
 - **`happy-paths.spec.ts` é `continue-on-error` de propósito**: os casos exigem conta de teste dedicada
-  e hoje navegam para rota protegida sem autenticar. Não promova esse passo a bloqueante sem antes criar
-  a conta e corrigir os seletores.
-- **O gate só cobre rotas públicas e guardas de auth.** Nenhum fluxo logado é verificado em CI; não trate
-  CI verde como prova de que uma tela logada funciona.
+  (`E2E_EMAIL`/`E2E_PASSWORD` como secrets). Com credenciais o passo valida login real (e encerra a
+  sessão no servidor ao final via `/auth/v1/logout`, isolando produção); sem credenciais cobre apenas os
+  guards de auth. Não promova esse passo a bloqueante sem ter a conta criada e os secrets no repo.
+- **O gate só cobre rotas públicas e guardas de auth + login via `happy-paths`.** No PR do Dependabot os
+  secrets não existem, então o fluxo logado continua coberto apenas quando `E2E_EMAIL`/`E2E_PASSWORD`
+  estão configurados; não trate CI verde do Dependabot como prova de que uma tela logada funciona.
 - **`bun run typecheck` verifica app e node explicitamente**. `tsc --noEmit` sozinho na raiz não verifica
   nada (`tsconfig.json` com `"files": []` + `references`); preserve os dois `-p` no script.
 - **Dependabot** (`.github/dependabot.yml`): npm semanal segunda 09:00, limite 10 PRs, grupo único

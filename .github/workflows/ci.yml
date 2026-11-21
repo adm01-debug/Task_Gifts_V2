@@ -138,6 +138,8 @@ jobs:
         env:
           E2E_EMAIL: ${{ secrets.E2E_EMAIL }}
           E2E_PASSWORD: ${{ secrets.E2E_PASSWORD }}
+          E2E_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+          E2E_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
 
       - name: Generate Audit PDF
         run: |

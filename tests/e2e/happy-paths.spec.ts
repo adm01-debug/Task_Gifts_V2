@@ -13,6 +13,45 @@ const E2E_EMAIL = process.env.E2E_EMAIL;
 const E2E_PASSWORD = process.env.E2E_PASSWORD;
 const HAS_CREDENTIALS = Boolean(E2E_EMAIL && E2E_PASSWORD);
 
+// Com credenciais reais, evita gravar a senha no trace do Playwright
+// (artefato público do CI). Sem credenciais o trace continua para debug.
+test.use({ trace: HAS_CREDENTIALS ? 'off' : 'on-first-retry' });
+
+/**
+ * Encerra a sessão no servidor (revoga refresh token) além de limpar o
+ * storage local — evita deixar sessões órfãs de teste em produção
+ * (docs/agentes/banco.md: isolamento).
+ */
+async function signOutFromServer(page) {
+  const creds = await page.evaluate(() => {
+    for (const key of Object.keys(localStorage)) {
+      if (key.includes('-auth-token')) {
+        try {
+          const parsed = JSON.parse(localStorage.getItem(key)!);
+          return { accessToken: parsed.access_token ?? null, refreshToken: parsed.currentSession?.refresh_token ?? parsed.refresh_token ?? null };
+        } catch {
+          /* ignore */
+        }
+      }
+    }
+    return { accessToken: null, refreshToken: null };
+  });
+  const url = process.env.E2E_SUPABASE_URL ?? '';
+  if (creds.accessToken && url) {
+    await fetch(`${url}/auth/v1/logout`, {
+      method: 'POST',
+      headers: {
+        apikey: process.env.E2E_SUPABASE_ANON_KEY ?? '',
+        authorization: `Bearer ${creds.accessToken}`,
+      },
+    }).catch(() => {});
+  }
+  await page.evaluate(() => {
+    localStorage.clear();
+    sessionStorage.clear();
+  });
+}
+
 /** Rota protegida: autenticado vê a página; anônimo é redirecionado para /auth. */
 async function assertProtectedRoute(page, path: string) {
   await page.goto('/auth');
@@ -41,6 +80,9 @@ test.describe('Happy Paths - Task Gifts', () => {
 
     await page.waitForURL(/\/$/, { timeout: 20000 });
     await expect(page).toHaveURL(/\/$/);
+
+    // Encerra a sessao no servidor (sem fila orfa em producao)
+    await signOutFromServer(page);
   });
 
   test('2. Rota protegida /profile redireciona para /auth sem sessao', async ({ page }) => {
@@ -67,6 +109,8 @@ test.describe('Happy Paths - Task Gifts', () => {
     await page.fill('input[type="password"]', 'senha-errada-123');
     await page.click('button[type="submit"]');
 
-    await expect(page).toHaveURL(/\/auth/, { timeout: 15000 });
+    // O app mostra toast com "Email ou senha incorretos" ao falhar
+    await expect(page.getByText('Email ou senha incorretos')).toBeVisible({ timeout: 15000 });
+    await expect(page).toHaveURL(/\/auth/);
   });
 });
