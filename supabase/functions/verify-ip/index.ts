@@ -33,15 +33,26 @@ Deno.serve(async (req) => {
 
     if (countError) {
       console.error('[verify-ip] Error counting whitelist:', countError);
-      // If error checking, allow access (fail open for availability)
+      // Fail closed: se nao da para saber se a whitelist esta ativa, bloqueia.
+      await supabase
+        .from('ip_access_logs')
+        .insert({
+          ip_address: clientIp,
+          endpoint: '/verify-ip',
+          was_allowed: false,
+          reason: 'whitelist_check_error',
+          user_agent: req.headers.get('user-agent') || null,
+        })
+        .then(() => {})
+        .catch(() => {});
       return new Response(
-        JSON.stringify({ 
-          allowed: true, 
+        JSON.stringify({
+          allowed: false,
           ip: clientIp,
           reason: 'whitelist_check_error',
-          message: 'Erro ao verificar whitelist, acesso permitido temporariamente'
+          message: 'Nao foi possivel verificar a whitelist de IPs, acesso bloqueado',
         }),
-        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 503 }
       );
     }
 
