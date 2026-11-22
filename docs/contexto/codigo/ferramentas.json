@@ -1,0 +1,880 @@
+{
+ "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
+ "format_version": 2,
+ "stack": {
+  "linguagens": [
+   "TypeScript (1125)",
+   "SQL (271)",
+   "Markdown (55)",
+   "JavaScript (24)",
+   "JSON (14)",
+   "YAML (9)",
+   "Python (5)",
+   "Shell (4)"
+  ],
+  "linguagem_principal": "TypeScript",
+  "framework": "React",
+  "backend_http": [],
+  "bundler": "Vite",
+  "roteador": "react-router",
+  "banco": "Supabase",
+  "testes": [
+   "vitest",
+   "playwright"
+  ],
+  "ui": [
+   "tailwind",
+   "radix/shadcn"
+  ],
+  "estado": [
+   "react-query"
+  ],
+  "gerenciador_pacotes": "bun",
+  "node": null,
+  "python": null,
+  "deploy": [
+   "vercel"
+  ],
+  "monorepo": null,
+  "pastas_fonte": [
+   "src"
+  ]
+ },
+ "workspaces": [],
+ "package": {
+  "nome": "vite_react_shadcn_ts",
+  "versao": "0.0.0",
+  "scripts": {
+   "automation:check": "node scripts/automation.mjs check --ref HEAD",
+   "automation:doctor": "node scripts/automation.mjs doctor",
+   "automation:graph": "node scripts/automation.mjs graph",
+   "automation:heal": "node scripts/automation.mjs heal --ref origin/main",
+   "automation:install-hooks": "node scripts/automation.mjs install-hooks",
+   "automation:nightly": "node scripts/automation.mjs nightly --ref origin/main",
+   "automation:status": "node scripts/automation.mjs graph status",
+   "automation:test": "node scripts/automation.mjs test",
+   "automation:uninstall-hooks": "node scripts/automation.mjs uninstall-hooks",
+   "build": "node scripts/ci/check-supabase-env.mjs && vite build",
+   "build:dev": "vite build --mode development",
+   "contexto:codigo": "node scripts/ai-context/gerar.mjs --out docs/contexto/codigo",
+   "contexto:regras": "python3 scripts/regras_negocio/generate.py --repo . --out docs/contexto/regras --profile regras --index-path docs/contexto/00-INDEX.md --no-pointer",
+   "contexto:test": "node --test scripts/ai-context/gerar.unit.mjs scripts/ci/contexto-indice.unit.mjs scripts/ci/contexto-publicacao.unit.mjs scripts/ci/regras-negocio.unit.mjs scripts/ci/supabase-snapshot.unit.mjs",
+   "db:guard": "node scripts/db-audit/check-migration-drift.mjs --snapshot docs/contexto/supabase",
+   "db:guard:test": "node --test scripts/ci/check-migration-drift.unit.mjs",
+   "dev": "vite",
+   "graph:setup": "bash scripts/graphify/setup.sh",
+   "lint": "eslint .",
+   "maintenance:check": "sh scripts/maintenance/run.sh check --root . --ref origin/main",
+   "maintenance:doctor": "sh scripts/maintenance/run.sh doctor --root .",
+   "maintenance:heal": "sh scripts/maintenance/run.sh heal --root . --ref origin/main",
+   "postinstall": "node ./scripts/patch-recharts.cjs",
+   "prepare": "husky",
+   "preview": "vite preview",
+   "test": "vitest run",
+   "test:ci": "vitest run --coverage --reporter=verbose",
+   "test:contracts": "vitest run supabase/functions",
+   "test:edge": "bunx --bun deno@2 test --allow-env --allow-read --allow-net=deno.land,esm.sh,registry.npmjs.org supabase/functions/_shared",
+   "test:guard-env": "node --test scripts/ci/check-supabase-env.unit.mjs",
+   "test:maintenance": "node --test scripts/maintenance/maintenance.unit.mjs",
+   "typecheck": "tsc --noEmit -p tsconfig.app.json && tsc --noEmit -p tsconfig.node.json"
+  },
+  "dependencias": 63,
+  "dev_dependencias": 38,
+  "principais": {
+   "@supabase/supabase-js": "^2.119.0",
+   "@tanstack/react-query": "^5.108.0",
+   "date-fns": "^4.4.0",
+   "framer-motion": "^14.14.0",
+   "next-themes": "^0.4.6",
+   "react": "^19.3.1",
+   "react-day-picker": "^10.0.2",
+   "react-dom": "^19.3.1",
+   "react-error-boundary": "^6.1.6",
+   "react-hook-form": "^7.92.0",
+   "react-resizable-panels": "^4.24.0",
+   "react-router-dom": "^7.18.4",
+   "recharts": "^3.11.0",
+   "tailwindcss-animate": "^1.0.7",
+   "zod": "^4.6.7"
+  },
+  "engines": null,
+  "packageManager": "bun@1.4.4"
+ },
+ "python": {
+  "dependencias": [
+   "psycopg"
+  ]
+ },
+ "configs": [
+  ".github/PULL_REQUEST_TEMPLATE.md",
+  ".github/dependabot.yml",
+  ".husky/commit-msg",
+  ".husky/pre-commit",
+  "ai-context.config.json",
+  "components.json",
+  "eslint.config.js",
+  "package.json",
+  "playwright.config.ts",
+  "postcss.config.js",
+  "supabase/config.toml",
+  "tailwind.config.ts",
+  "tsconfig.app.json",
+  "tsconfig.json",
+  "tsconfig.node.json",
+  "vercel.json",
+  "vite.config.ts",
+  "vitest.config.ts"
+ ],
+ "workflows": [
+  {
+   "arquivo": ".github/workflows/automation-local.yml",
+   "nome": "Automação local",
+   "gatilhos": [
+    "pull_request",
+    "push",
+    "workflow_dispatch"
+   ],
+   "crons": [],
+   "branches": [
+    "main"
+   ],
+   "jobs": [
+    "contracts"
+   ],
+   "permissoes": [
+    "contents: read"
+   ],
+   "scripts_usados": [
+    "scripts/automation.mjs"
+   ],
+   "npm_scripts": [],
+   "secrets": [],
+   "actions": [
+    "actions/checkout",
+    "actions/setup-node"
+   ]
+  },
+  {
+   "arquivo": ".github/workflows/ci.yml",
+   "nome": "CI",
+   "gatilhos": [
+    "pull_request",
+    "push"
+   ],
+   "crons": [],
+   "branches": [
+    "main",
+    "master"
+   ],
+   "jobs": [
+    "quality"
+   ],
+   "permissoes": [],
+   "scripts_usados": [
+    "scripts/ci/check-claude-md-integrity.mjs",
+    "scripts/db-audit/check-migration-drift.mjs"
+   ],
+   "npm_scripts": [
+    "lint",
+    "test:ci",
+    "test:guard-env",
+    "typecheck"
+   ],
+   "secrets": [
+    "E2E_EMAIL",
+    "E2E_PASSWORD",
+    "VITE_DEPLOYED_EDGE_FUNCTIONS",
+    "VITE_SUPABASE_ANON_KEY",
+    "VITE_SUPABASE_PUBLISHABLE_KEY",
+    "VITE_SUPABASE_URL"
+   ],
+   "actions": [
+    "actions/cache",
+    "actions/checkout",
+    "actions/upload-artifact",
+    "oven-sh/setup-bun"
+   ]
+  },
+  {
+   "arquivo": ".github/workflows/contexto.yml",
+   "nome": "Contexto para agentes de IA (10 min)",
+   "gatilhos": [
+    "push",
+    "schedule",
+    "workflow_dispatch"
+   ],
+   "crons": [
+    "3 * * * *"
+   ],
+   "branches": [
+    "main"
+   ],
+   "jobs": [
+    "gate",
+    "codigo",
+    "banco",
+    "regras",
+    "publicar"
+   ],
+   "permissoes": [
+    "contents: read"
+   ],
+   "scripts_usados": [
+    "scripts/ai-context/gerar.mjs",
+    "scripts/regras_negocio/generate.py",
+    "scripts/regras_negocio/indice.py",
+    "scripts/supabase_snapshot/snapshot.py"
+   ],
+   "npm_scripts": [],
+   "secrets": [
+    "SUPABASE_DB_URL"
+   ],
+   "actions": [
+    "actions/cache",
+    "actions/checkout",
+    "actions/download-artifact",
+    "actions/setup-node",
+    "actions/upload-artifact"
+   ]
+  },
+  {
+   "arquivo": ".github/workflows/deno.yml",
+   "nome": "Edge Functions (Deno)",
+   "gatilhos": [
+    "pull_request",
+    "push",
+    "workflow_dispatch"
+   ],
+   "crons": [],
+   "branches": [
+    "main"
+   ],
+   "jobs": [
+    "deno"
+   ],
+   "permissoes": [
+    "contents: read"
+   ],
+   "scripts_usados": [],
+   "npm_scripts": [],
+   "secrets": [],
+   "actions": [
+    "actions/checkout",
+    "denoland/setup-deno"
+   ]
+  },
+  {
+   "arquivo": ".github/workflows/dependency-review.yml",
+   "nome": "Dependency Review",
+   "gatilhos": [
+    "pull_request"
+   ],
+   "crons": [],
+   "branches": [
+    "main"
+   ],
+   "jobs": [
+    "dependency-review"
+   ],
+   "permissoes": [
+    "contents: read"
+   ],
+   "scripts_usados": [],
+   "npm_scripts": [],
+   "secrets": [],
+   "actions": [
+    "actions/checkout",
+    "actions/dependency-review-action"
+   ]
+  },
+  {
+   "arquivo": ".github/workflows/deploy-edge-functions.yml",
+   "nome": "Deploy Edge Functions",
+   "gatilhos": [
+    "push",
+    "workflow_dispatch"
+   ],
+   "crons": [],
+   "branches": [
+    "main"
+   ],
+   "jobs": [
+    "deploy"
+   ],
+   "permissoes": [
+    "contents: read"
+   ],
+   "scripts_usados": [],
+   "npm_scripts": [],
+   "secrets": [
+    "SUPABASE_ACCESS_TOKEN"
+   ],
+   "actions": [
+    "actions/checkout",
+    "supabase/setup-cli"
+   ]
+  }
+ ],
+ "hooks_git": [
+  {
+   "arquivo": ".husky/commit-msg",
+   "comandos": [
+    "node scripts/ci/commit-msg-lint.mjs \"$1\""
+   ]
+  },
+  {
+   "arquivo": ".husky/pre-commit",
+   "comandos": [
+    "npx lint-staged"
+   ]
+  }
+ ],
+ "docs_raiz": [
+  {
+   "arquivo": ".github/PULL_REQUEST_TEMPLATE.md",
+   "titulo": null,
+   "linhas": 33
+  },
+  {
+   "arquivo": "AGENTS.md",
+   "titulo": "AGENTS.md — Task Gifts V2",
+   "linhas": 145
+  },
+  {
+   "arquivo": "AUDIT_INVENTORY_CHECKLIST.md",
+   "titulo": "✅ Checklist de Inventário Auditável",
+   "linhas": 24
+  },
+  {
+   "arquivo": "CLAUDE.md",
+   "titulo": null,
+   "linhas": 2
+  },
+  {
+   "arquivo": "DESIGN_SYSTEM_REPORT.md",
+   "titulo": "📊 Task Gifts - Relatório Completo do Design System",
+   "linhas": 360
+  },
+  {
+   "arquivo": "ENTERPRISE_AUDIT_REPORT.md",
+   "titulo": "🏆 Relatório de Auditoria de Software Enterprise",
+   "linhas": 111
+  },
+  {
+   "arquivo": "ESTADO_ATUAL.md",
+   "titulo": "Estado Atual do Sistema — TaskGifts v2",
+   "linhas": 494
+  },
+  {
+   "arquivo": "GAMIFICATION_AUDIT_REPORT.md",
+   "titulo": "🎮 Auditoria de Gamificação - Status de Implementação",
+   "linhas": 44
+  },
+  {
+   "arquivo": "INVENTARIO_FUNCIONALIDADES.md",
+   "titulo": "📋 INVENTÁRIO COMPLETO DE FUNCIONALIDADES E FERRAMENTAS",
+   "linhas": 1065
+  },
+  {
+   "arquivo": "PADROES_LAYOUT_UX.md",
+   "titulo": "📐 PADRÕES DE LAYOUT/UX - TASK GIFTS",
+   "linhas": 1584
+  },
+  {
+   "arquivo": "PENDENCIAS.md",
+   "titulo": "PENDÊNCIAS",
+   "linhas": 37
+  },
+  {
+   "arquivo": "README.md",
+   "titulo": "Task Gifts V2 — Plataforma de Gamificação Corporativa",
+   "linhas": 85
+  },
+  {
+   "arquivo": "RELATORIO_CI.md",
+   "titulo": "RELATÓRIO CI — Task_Gifts_V2",
+   "linhas": 79
+  },
+  {
+   "arquivo": "SYSTEM_INVENTORY_AUDIT.md",
+   "titulo": "📊 Relatório de Auditoria Enterprise & Inventário Minucioso do Sistema",
+   "linhas": 81
+  },
+  {
+   "arquivo": "SYSTEM_RELIABILITY_AUDIT.md",
+   "titulo": "🛡️ Relatório de Auditoria de Confiabilidade e Robustez (Versão 10/10)",
+   "linhas": 49
+  },
+  {
+   "arquivo": "audit_report.md",
+   "titulo": "📊 Relatório de Auditoria Enterprise & Inventário Minucioso do Sistema",
+   "linhas": 81
+  },
+  {
+   "arquivo": "docs/AUTOMACAO_LOCAL.md",
+   "titulo": "Automação local — Task_Gifts_V2",
+   "linhas": 82
+  },
+  {
+   "arquivo": "docs/prod-readiness.md",
+   "titulo": "Prod Readiness — TaskGifts (Task_Gifts_V2)",
+   "linhas": 162
+  }
+ ],
+ "docs_em_subpastas": [
+  {
+   "pasta": "docs/estado",
+   "arquivos_md": 11
+  },
+  {
+   "pasta": "docs/pendencias",
+   "arquivos_md": 8
+  },
+  {
+   "pasta": "docs/agentes",
+   "arquivos_md": 7
+  },
+  {
+   "pasta": "docs/contexto",
+   "arquivos_md": 2
+  }
+ ],
+ "changelog_topo": null,
+ "env": {
+  "declaradas_no_env_example": [
+   "VITE_APP_ENV",
+   "VITE_APP_NAME",
+   "VITE_BITRIX_WEBHOOK_URL",
+   "VITE_DEPLOYED_EDGE_FUNCTIONS",
+   "VITE_ENABLE_ANALYTICS",
+   "VITE_ENABLE_DEBUG",
+   "VITE_SUPABASE_ANON_KEY",
+   "VITE_SUPABASE_URL"
+  ],
+  "usadas_no_front": [
+   "DEV",
+   "MODE",
+   "NODE_ENV",
+   "VITE_APP_VERSION",
+   "VITE_DEPLOYED_EDGE_FUNCTIONS",
+   "VITE_SENTRY_DSN",
+   "VITE_SUPABASE_ANON_KEY",
+   "VITE_SUPABASE_PUBLISHABLE_KEY",
+   "VITE_SUPABASE_URL"
+  ],
+  "usadas_nas_edges": [
+   "ALLOWED_ORIGINS",
+   "CRON_SECRET",
+   "INTERNAL_FUNCTION_SECRET",
+   "OPENROUTER_API_KEY",
+   "RESEND_API_KEY",
+   "SENTRY_DSN",
+   "SENTRY_ENV",
+   "SUPABASE_ANON_KEY",
+   "SUPABASE_DB_URL",
+   "SUPABASE_SERVICE_ROLE_KEY",
+   "SUPABASE_URL",
+   "UPSTASH_REDIS_REST_TOKEN",
+   "UPSTASH_REDIS_REST_URL",
+   "VAPID_PRIVATE_KEY",
+   "VAPID_PUBLIC_KEY",
+   "VAPID_SUBJECT"
+  ],
+  "usadas_no_python": [
+   "AI_CONTEXT_INDEX",
+   "AI_CONTEXT_MODEL",
+   "AI_CONTEXT_PROFILE",
+   "AI_CONTEXT_SCHEMA_SNAPSHOT",
+   "ANTHROPIC_API_KEY",
+   "CODE_SCAN_DIRS",
+   "GEN_TYPES",
+   "PGDUMP",
+   "PGDUMP_SCHEMAS",
+   "REPO_ROOT",
+   "SNAPSHOT_DIR",
+   "SNAPSHOT_EXCLUDE_SCHEMAS",
+   "SNAPSHOT_INCLUDE_SCHEMAS",
+   "SUPABASE_ACCESS_TOKEN",
+   "SUPABASE_DB_URL",
+   "SUPABASE_PROJECT_REF",
+   "SUPABASE_SNAPSHOT_PUBLICACAO"
+  ],
+  "usadas_mas_nao_declaradas": [
+   "DEV",
+   "MODE",
+   "NODE_ENV",
+   "VITE_APP_VERSION",
+   "VITE_SENTRY_DSN",
+   "VITE_SUPABASE_PUBLISHABLE_KEY"
+  ],
+  "secrets_em_workflows": [
+   "E2E_EMAIL",
+   "E2E_PASSWORD",
+   "SUPABASE_ACCESS_TOKEN",
+   "SUPABASE_DB_URL",
+   "VITE_DEPLOYED_EDGE_FUNCTIONS",
+   "VITE_SUPABASE_ANON_KEY",
+   "VITE_SUPABASE_PUBLISHABLE_KEY",
+   "VITE_SUPABASE_URL"
+  ]
+ },
+ "deploy": {
+  "alvos": [
+   "vercel"
+  ],
+  "dockerfiles": [],
+  "compose": [],
+  "vercel": {
+   "framework": null,
+   "build": null,
+   "rewrites": 1,
+   "redirects": 0,
+   "headers": 1,
+   "ignore_command": null,
+   "crons": []
+  }
+ },
+ "integracoes": {
+  "sdks": [
+   {
+    "pacote": "@tanstack/react-query",
+    "servico": "react-query",
+    "versao": "^5.108.0"
+   },
+   {
+    "pacote": "@sentry/react",
+    "servico": "Sentry",
+    "versao": "^11.14.0"
+   },
+   {
+    "pacote": "@supabase/supabase-js",
+    "servico": "Supabase",
+    "versao": "^2.119.0"
+   },
+   {
+    "pacote": "zod",
+    "servico": "zod",
+    "versao": "^4.6.7"
+   }
+  ],
+  "hosts_externos": [
+   {
+    "host": "openrouter.ai",
+    "arquivos": 6
+   },
+   {
+    "host": "edge.local",
+    "arquivos": 3
+   },
+   {
+    "host": "fcm.googleapis.com",
+    "arquivos": 2
+   },
+   {
+    "host": "i.pravatar.cc",
+    "arquivos": 2
+   },
+   {
+    "host": "taskgifts.app",
+    "arquivos": 2
+   },
+   {
+    "host": "www.youtube.com",
+    "arquivos": 2
+   },
+   {
+    "host": "a.com",
+    "arquivos": 1
+   },
+   {
+    "host": "api.pwnedpasswords.com",
+    "arquivos": 1
+   },
+   {
+    "host": "api.resend.com",
+    "arquivos": 1
+   },
+   {
+    "host": "app.exemplo.com",
+    "arquivos": 1
+   },
+   {
+    "host": "eidsaqymojyuhprobfpn.supabase.co",
+    "arquivos": 1
+   },
+   {
+    "host": "example.test",
+    "arquivos": 1
+   },
+   {
+    "host": "exemplo.com",
+    "arquivos": 1
+   },
+   {
+    "host": "linkedin.com",
+    "arquivos": 1
+   },
+   {
+    "host": "maintenance.invalid",
+    "arquivos": 1
+   },
+   {
+    "host": "placeholder.supabase.co",
+    "arquivos": 1
+   },
+   {
+    "host": "production.invalid",
+    "arquivos": 1
+   },
+   {
+    "host": "production.supabase.co",
+    "arquivos": 1
+   },
+   {
+    "host": "push.example",
+    "arquivos": 1
+   },
+   {
+    "host": "task-gifts-v2.vercel.app",
+    "arquivos": 1
+   },
+   {
+    "host": "test.supabase.co",
+    "arquivos": 1
+   },
+   {
+    "host": "twitter.com",
+    "arquivos": 1
+   }
+  ],
+  "env_de_integracao": [
+   "CRON_SECRET",
+   "INTERNAL_FUNCTION_SECRET",
+   "OPENROUTER_API_KEY",
+   "RESEND_API_KEY",
+   "SENTRY_DSN",
+   "SENTRY_ENV",
+   "UPSTASH_REDIS_REST_TOKEN",
+   "UPSTASH_REDIS_REST_URL",
+   "VITE_BITRIX_WEBHOOK_URL",
+   "VITE_SENTRY_DSN"
+  ],
+  "webhooks_recebidos": [
+   "migrate-helper",
+   "push-public-key"
+  ],
+  "realtime": [
+   "activity-comments-${activityId}",
+   "activity-reactions-realtime",
+   "audit-realtime",
+   "blocked-ips-push",
+   "device-alerts-push",
+   "duels-changes",
+   "kudos-realtime",
+   "league-realtime",
+   "login-attempts-push",
+   "notifications-realtime",
+   "org-${query.data.id}",
+   "password-reset-notifications",
+   "quiz-scores-realtime",
+   "seasonal-events-realtime",
+   "seasonal-progress-${eventId}",
+   "security-alerts-push",
+   "security-alerts-realtime",
+   "social-feed-realtime",
+   "war-feed-${warId}",
+   "weekly-challenges-updates"
+  ]
+ },
+ "permissoes": {
+  "papeis_no_codigo": [
+   {
+    "papel": "admin",
+    "ocorrencias": 13
+   },
+   {
+    "papel": "alert",
+    "ocorrencias": 9
+   },
+   {
+    "papel": "user",
+    "ocorrencias": 9
+   },
+   {
+    "papel": "manager",
+    "ocorrencias": 8
+   },
+   {
+    "papel": "system",
+    "ocorrencias": 6
+   },
+   {
+    "papel": "button",
+    "ocorrencias": 5
+   },
+   {
+    "papel": "status",
+    "ocorrencias": 5
+   },
+   {
+    "papel": "assistant",
+    "ocorrencias": 3
+   },
+   {
+    "papel": "group",
+    "ocorrencias": 3
+   },
+   {
+    "papel": "grid",
+    "ocorrencias": 2
+   },
+   {
+    "papel": "navigation",
+    "ocorrencias": 2
+   },
+   {
+    "papel": "radio",
+    "ocorrencias": 2
+   },
+   {
+    "papel": "radiogroup",
+    "ocorrencias": 2
+   },
+   {
+    "papel": "Cargos",
+    "ocorrencias": 1
+   },
+   {
+    "papel": "banner",
+    "ocorrencias": 1
+   },
+   {
+    "papel": "contentinfo",
+    "ocorrencias": 1
+   },
+   {
+    "papel": "dialog",
+    "ocorrencias": 1
+   },
+   {
+    "papel": "gridcell",
+    "ocorrencias": 1
+   },
+   {
+    "papel": "img",
+    "ocorrencias": 1
+   },
+   {
+    "papel": "link",
+    "ocorrencias": 1
+   },
+   {
+    "papel": "list",
+    "ocorrencias": 1
+   },
+   {
+    "papel": "listitem",
+    "ocorrencias": 1
+   },
+   {
+    "papel": "long",
+    "ocorrencias": 1
+   },
+   {
+    "papel": "menu",
+    "ocorrencias": 1
+   },
+   {
+    "papel": "menuitem",
+    "ocorrencias": 1
+   },
+   {
+    "papel": "presentation",
+    "ocorrencias": 1
+   },
+   {
+    "papel": "region",
+    "ocorrencias": 1
+   },
+   {
+    "papel": "robot",
+    "ocorrencias": 1
+   },
+   {
+    "papel": "role_assigned",
+    "ocorrencias": 1
+   },
+   {
+    "papel": "separator",
+    "ocorrencias": 1
+   },
+   {
+    "papel": "short",
+    "ocorrencias": 1
+   },
+   {
+    "papel": "tab",
+    "ocorrencias": 1
+   }
+  ],
+  "enums_de_papel": [
+   {
+    "enum": "app_role",
+    "valores": [
+     "admin",
+     "manager",
+     "employee"
+    ]
+   }
+  ],
+  "rpcs_de_autorizacao": [
+   "admin_profile_directory",
+   "has_role",
+   "is_ip_whitelisted",
+   "user_has_passkeys"
+  ],
+  "guards": [
+   "src/components/IpAccessGuard.tsx",
+   "src/components/engagement/diagnostics/AnonymityGuardNotice.tsx",
+   "src/components/rbac/AccessControl.tsx",
+   "src/components/rbac/ProtectedRoute.tsx"
+  ],
+  "rotas_protegidas": 78,
+  "rotas_publicas": [
+   "/*",
+   "/forgot-password",
+   "/reset-password",
+   "/verificar",
+   "/verificar/:code"
+  ],
+  "menu_com_papeis": [],
+  "tabelas_sem_rls": [
+   "lucky_wheel_prizes"
+  ]
+ },
+ "feature_flags": {
+  "total": 0,
+  "flags": [],
+  "tabelas_de_flag": [
+   "attendance_settings",
+   "geo_settings",
+   "lucky_wheel_settings",
+   "lucky_wheel_settings_audit",
+   "wager_budget_settings"
+  ]
+ },
+ "providers": {
+  "entrada": "src/main.tsx",
+  "providers": [
+   "BrowserRouter",
+   "GlobalErrorBoundary",
+   "OnboardingTourProvider",
+   "ScrollRestorationProvider"
+  ]
+ },
+ "i18n": {
+  "arquivos": 1,
+  "idiomas": [],
+  "lib": []
+ }
+}

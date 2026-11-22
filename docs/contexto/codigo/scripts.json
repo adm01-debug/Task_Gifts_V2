@@ -1,0 +1,198 @@
+{
+ "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
+ "format_version": 2,
+ "total": 16,
+ "scripts": [
+  {
+   "arquivo": "scripts/automation.mjs",
+   "descricao": null,
+   "linhas": 1188,
+   "env": [
+    "REPO_AUTOMATION_CHAINING"
+   ],
+   "npm_scripts": [
+    "automation:doctor",
+    "automation:test",
+    "automation:check",
+    "automation:heal",
+    "automation:nightly",
+    "automation:graph",
+    "automation:status",
+    "automation:install-hooks",
+    "automation:uninstall-hooks"
+   ],
+   "workflows": [
+    "automation-local.yml"
+   ],
+   "orfao": false
+  },
+  {
+   "arquivo": "scripts/ci/check-claude-md-integrity.mjs",
+   "descricao": "* GA02: garante que as instrucoes para agentes nao foram apagadas ou esvaziadas por outra sessao.",
+   "linhas": 137,
+   "env": [
+    "CLAUDE_MD_BASE"
+   ],
+   "npm_scripts": [],
+   "workflows": [
+    "ci.yml"
+   ],
+   "orfao": false
+  },
+  {
+   "arquivo": "scripts/ci/check-supabase-env.mjs",
+   "descricao": "Guarda de build: impede redeploy com env do Supabase ausente/vazia/placeholder. O incidente de 2026-11-11 (\"supabaseUrl is required\") aconteceu porque o build",
+   "linhas": 50,
+   "env": [],
+   "npm_scripts": [
+    "build"
+   ],
+   "workflows": [],
+   "orfao": false
+  },
+  {
+   "arquivo": "scripts/ci/commit-msg-lint.mjs",
+   "descricao": "Gate de mensagem de commit: a funcao do commitlint sem dependencia nova (nao instalamos @commitlint/* so para isso). O hook .husky/commit-msg chama este arquivo com o caminho do",
+   "linhas": 108,
+   "env": [],
+   "npm_scripts": [],
+   "workflows": [],
+   "orfao": false
+  },
+  {
+   "arquivo": "scripts/db-audit/check-migration-drift.mjs",
+   "descricao": "* Guarda das migrations de supabase/migrations/.",
+   "linhas": 604,
+   "env": [
+    "MIGRATIONS_DIR",
+    "MIGRATION_BASELINE"
+   ],
+   "npm_scripts": [
+    "db:guard"
+   ],
+   "workflows": [
+    "ci.yml"
+   ],
+   "orfao": false
+  },
+  {
+   "arquivo": "scripts/graphify-local.mjs",
+   "descricao": null,
+   "linhas": 1280,
+   "env": [
+    "PATH"
+   ],
+   "npm_scripts": [],
+   "workflows": [],
+   "orfao": false
+  },
+  {
+   "arquivo": "scripts/graphify/setup.sh",
+   "descricao": "Instala o graphify e gera o grafo de código em graphify-out/ (uso local; na nuvem quem faz isso é .claude/hooks/session-start.sh). Veja scripts/graphify/README.md.",
+   "linhas": 25,
+   "env": [],
+   "npm_scripts": [
+    "graph:setup"
+   ],
+   "workflows": [],
+   "orfao": false
+  },
+  {
+   "arquivo": "scripts/maintenance/lib.mjs",
+   "descricao": null,
+   "linhas": 937,
+   "env": [],
+   "npm_scripts": [],
+   "workflows": [],
+   "orfao": false
+  },
+  {
+   "arquivo": "scripts/maintenance/run.mjs",
+   "descricao": null,
+   "linhas": 899,
+   "env": [
+    "XDG_STATE_HOME"
+   ],
+   "npm_scripts": [],
+   "workflows": [],
+   "orfao": false
+  },
+  {
+   "arquivo": "scripts/maintenance/run.sh",
+   "descricao": null,
+   "linhas": 16,
+   "env": [],
+   "npm_scripts": [
+    "maintenance:doctor",
+    "maintenance:check",
+    "maintenance:heal"
+   ],
+   "workflows": [],
+   "orfao": false
+  },
+  {
+   "arquivo": "scripts/maintenance/typecheck.mjs",
+   "descricao": null,
+   "linhas": 110,
+   "env": [],
+   "npm_scripts": [],
+   "workflows": [],
+   "orfao": false
+  },
+  {
+   "arquivo": "scripts/patch-recharts.cjs",
+   "descricao": "* Idempotent patch: silences recharts ResponsiveContainer \"fixed numbers\" warning.",
+   "linhas": 58,
+   "env": [],
+   "npm_scripts": [
+    "postinstall"
+   ],
+   "workflows": [],
+   "orfao": false
+  },
+  {
+   "arquivo": "scripts/regras_negocio/generate.py",
+   "descricao": null,
+   "linhas": 2138,
+   "env": [],
+   "npm_scripts": [
+    "contexto:regras"
+   ],
+   "workflows": [
+    "contexto.yml"
+   ],
+   "orfao": false
+  },
+  {
+   "arquivo": "scripts/regras_negocio/indice.py",
+   "descricao": null,
+   "linhas": 237,
+   "env": [],
+   "npm_scripts": [],
+   "workflows": [
+    "contexto.yml"
+   ],
+   "orfao": false
+  },
+  {
+   "arquivo": "scripts/regras_negocio/publish.sh",
+   "descricao": "Publica docs/ai-context gerados: commit + push na branch padrão, ou PR quando a branch é protegida. Variáveis:",
+   "linhas": 195,
+   "env": [],
+   "npm_scripts": [],
+   "workflows": [],
+   "orfao": false
+  },
+  {
+   "arquivo": "scripts/supabase_snapshot/snapshot.py",
+   "descricao": "Somente leitura no banco (sessão read-only, statement_timeout, lock_timeout). Nunca grava linhas de tabelas, valores de segredos, chaves, senhas ou DSN.",
+   "linhas": 1798,
+   "env": [],
+   "npm_scripts": [],
+   "workflows": [
+    "contexto.yml"
+   ],
+   "orfao": false
+  }
+ ]
+}

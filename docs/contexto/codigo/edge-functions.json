@@ -1,0 +1,647 @@
+{
+ "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
+ "format_version": 2,
+ "pasta": "supabase/functions",
+ "total": 16,
+ "verify_jwt_false": [
+  "migrate-helper",
+  "push-public-key"
+ ],
+ "shared": [
+  "supabase/functions/_shared/cache.ts",
+  "supabase/functions/_shared/clientIp.ts",
+  "supabase/functions/_shared/contracts/README.md",
+  "supabase/functions/_shared/contracts/_fixtures/index.ts",
+  "supabase/functions/_shared/contracts/_fixtures/types.ts",
+  "supabase/functions/_shared/contracts/_testkit.ts",
+  "supabase/functions/_shared/contracts/admin-alerts.ts",
+  "supabase/functions/_shared/contracts/ai-coach.ts",
+  "supabase/functions/_shared/contracts/ai-course-builder.ts",
+  "supabase/functions/_shared/contracts/churn-prediction.ts",
+  "supabase/functions/_shared/contracts/common.ts",
+  "supabase/functions/_shared/contracts/competency-alerts.ts",
+  "supabase/functions/_shared/contracts/contracts_test.ts",
+  "supabase/functions/_shared/contracts/detect-new-device.ts",
+  "supabase/functions/_shared/contracts/generate-quiz-questions.ts",
+  "supabase/functions/_shared/contracts/index.ts",
+  "supabase/functions/_shared/contracts/migrate-helper.ts",
+  "supabase/functions/_shared/contracts/push-device-revoked.ts",
+  "supabase/functions/_shared/contracts/push-outbox-dispatcher.ts",
+  "supabase/functions/_shared/contracts/push-public-key.ts",
+  "supabase/functions/_shared/contracts/registry.contract.spec.ts",
+  "supabase/functions/_shared/contracts/reward-approval-review.ts",
+  "supabase/functions/_shared/contracts/send-campaign-push.ts",
+  "supabase/functions/_shared/contracts/trail-recommendations.ts",
+  "supabase/functions/_shared/contracts/validation.contract.spec.ts",
+  "supabase/functions/_shared/contracts/verify-ip.ts",
+  "supabase/functions/_shared/contracts/webhook-dispatcher.ts",
+  "supabase/functions/_shared/contracts/webhook-versioning.contract.spec.ts",
+  "supabase/functions/_shared/rate-limit.ts",
+  "supabase/functions/_shared/rate-limiter.ts",
+  "supabase/functions/_shared/security.ts",
+  "supabase/functions/_shared/sentry.ts",
+  "supabase/functions/_shared/sentry_test.ts",
+  "supabase/functions/_shared/validation.ts",
+  "supabase/functions/_shared/validation_test.ts",
+  "supabase/functions/_shared/webhookSecurity.ts"
+ ],
+ "edges": [
+  {
+   "nome": "admin-alerts",
+   "entrada": "supabase/functions/admin-alerts/index.ts",
+   "arquivos": 1,
+   "linhas": 217,
+   "verify_jwt": true,
+   "metodos": [
+    "OPTIONS"
+   ],
+   "tabelas": [
+    "attendance_records",
+    "audit_logs",
+    "profiles",
+    "shop_purchases",
+    "user_certifications"
+   ],
+   "rpcs": [
+    "has_role"
+   ],
+   "env": [
+    "SUPABASE_SERVICE_ROLE_KEY",
+    "SUPABASE_URL"
+   ],
+   "buckets": [],
+   "chama_edges": [],
+   "hosts_externos": [],
+   "usa_shared": [
+    "security.ts"
+   ],
+   "chamada_pelo_front": [
+    "src/hooks/useAdminAlerts.ts"
+   ],
+   "chamada_por_edges": [],
+   "chamada_por_sql_ou_cron": false,
+   "orfa": false,
+   "testes": 0
+  },
+  {
+   "nome": "ai-coach",
+   "entrada": "supabase/functions/ai-coach/index.ts",
+   "arquivos": 1,
+   "linhas": 205,
+   "verify_jwt": true,
+   "metodos": [
+    "OPTIONS"
+   ],
+   "tabelas": [],
+   "rpcs": [],
+   "env": [
+    "OPENROUTER_API_KEY"
+   ],
+   "buckets": [],
+   "chama_edges": [],
+   "hosts_externos": [
+    "openrouter.ai"
+   ],
+   "usa_shared": [
+    "ai-coach.ts",
+    "rate-limiter.ts",
+    "security.ts",
+    "sentry.ts",
+    "validation.ts"
+   ],
+   "chamada_pelo_front": [
+    "src/hooks/useAICoach.ts"
+   ],
+   "chamada_por_edges": [],
+   "chamada_por_sql_ou_cron": false,
+   "orfa": false,
+   "testes": 0
+  },
+  {
+   "nome": "ai-course-builder",
+   "entrada": "supabase/functions/ai-course-builder/index.ts",
+   "arquivos": 1,
+   "linhas": 302,
+   "verify_jwt": true,
+   "metodos": [
+    "OPTIONS"
+   ],
+   "tabelas": [
+    "ai_course_jobs",
+    "learning_trails",
+    "quiz_options",
+    "quiz_questions",
+    "trail_modules"
+   ],
+   "rpcs": [],
+   "env": [
+    "OPENROUTER_API_KEY",
+    "SUPABASE_ANON_KEY",
+    "SUPABASE_SERVICE_ROLE_KEY",
+    "SUPABASE_URL"
+   ],
+   "buckets": [],
+   "chama_edges": [],
+   "hosts_externos": [
+    "openrouter.ai"
+   ],
+   "usa_shared": [
+    "ai-course-builder.ts",
+    "validation.ts"
+   ],
+   "chamada_pelo_front": [
+    "src/services/aiCourseBuilderService.ts"
+   ],
+   "chamada_por_edges": [],
+   "chamada_por_sql_ou_cron": false,
+   "orfa": false,
+   "testes": 0
+  },
+  {
+   "nome": "churn-prediction",
+   "entrada": "supabase/functions/churn-prediction/index.ts",
+   "arquivos": 1,
+   "linhas": 295,
+   "verify_jwt": true,
+   "metodos": [
+    "OPTIONS"
+   ],
+   "tabelas": [
+    "attendance_records",
+    "audit_logs",
+    "kudos",
+    "profiles",
+    "trail_enrollments",
+    "user_combos",
+    "user_roles"
+   ],
+   "rpcs": [],
+   "env": [
+    "OPENROUTER_API_KEY",
+    "SUPABASE_SERVICE_ROLE_KEY",
+    "SUPABASE_URL"
+   ],
+   "buckets": [],
+   "chama_edges": [],
+   "hosts_externos": [
+    "openrouter.ai"
+   ],
+   "usa_shared": [
+    "rate-limiter.ts",
+    "security.ts"
+   ],
+   "chamada_pelo_front": [
+    "src/services/churnPredictionService.ts"
+   ],
+   "chamada_por_edges": [],
+   "chamada_por_sql_ou_cron": false,
+   "orfa": false,
+   "testes": 0
+  },
+  {
+   "nome": "competency-alerts",
+   "entrada": "supabase/functions/competency-alerts/index.ts",
+   "arquivos": 1,
+   "linhas": 359,
+   "verify_jwt": true,
+   "metodos": [
+    "OPTIONS"
+   ],
+   "tabelas": [
+    "attendance_streaks",
+    "kudos",
+    "module_progress",
+    "notifications",
+    "profiles",
+    "quest_assignments",
+    "user_achievements"
+   ],
+   "rpcs": [
+    "has_role"
+   ],
+   "env": [
+    "SUPABASE_SERVICE_ROLE_KEY",
+    "SUPABASE_URL"
+   ],
+   "buckets": [],
+   "chama_edges": [],
+   "hosts_externos": [],
+   "usa_shared": [
+    "competency-alerts.ts",
+    "rate-limiter.ts",
+    "security.ts",
+    "validation.ts"
+   ],
+   "chamada_pelo_front": [
+    "src/hooks/useCompetencyAlerts.ts",
+    "src/services/notificationsService.ts"
+   ],
+   "chamada_por_edges": [],
+   "chamada_por_sql_ou_cron": false,
+   "orfa": false,
+   "testes": 0
+  },
+  {
+   "nome": "detect-new-device",
+   "entrada": "supabase/functions/detect-new-device/index.ts",
+   "arquivos": 1,
+   "linhas": 192,
+   "verify_jwt": true,
+   "metodos": [
+    "OPTIONS"
+   ],
+   "tabelas": [
+    "profiles",
+    "security_alerts"
+   ],
+   "rpcs": [
+    "register_device"
+   ],
+   "env": [
+    "RESEND_API_KEY",
+    "SUPABASE_SERVICE_ROLE_KEY",
+    "SUPABASE_URL"
+   ],
+   "buckets": [],
+   "chama_edges": [],
+   "hosts_externos": [
+    "api.resend.com"
+   ],
+   "usa_shared": [
+    "clientIp.ts",
+    "detect-new-device.ts",
+    "security.ts",
+    "sentry.ts",
+    "validation.ts"
+   ],
+   "chamada_pelo_front": [
+    "src/hooks/useDeviceDetection.ts"
+   ],
+   "chamada_por_edges": [],
+   "chamada_por_sql_ou_cron": false,
+   "orfa": false,
+   "testes": 0
+  },
+  {
+   "nome": "generate-quiz-questions",
+   "entrada": "supabase/functions/generate-quiz-questions/index.ts",
+   "arquivos": 1,
+   "linhas": 224,
+   "verify_jwt": true,
+   "metodos": [
+    "OPTIONS"
+   ],
+   "tabelas": [
+    "learning_trails",
+    "trail_modules"
+   ],
+   "rpcs": [],
+   "env": [
+    "OPENROUTER_API_KEY",
+    "SUPABASE_SERVICE_ROLE_KEY",
+    "SUPABASE_URL"
+   ],
+   "buckets": [],
+   "chama_edges": [],
+   "hosts_externos": [
+    "openrouter.ai"
+   ],
+   "usa_shared": [
+    "generate-quiz-questions.ts",
+    "rate-limiter.ts",
+    "security.ts",
+    "validation.ts"
+   ],
+   "chamada_pelo_front": [
+    "src/components/quiz/AIQuestionGenerator.tsx"
+   ],
+   "chamada_por_edges": [],
+   "chamada_por_sql_ou_cron": false,
+   "orfa": false,
+   "testes": 0
+  },
+  {
+   "nome": "migrate-helper",
+   "entrada": "supabase/functions/migrate-helper/index.ts",
+   "arquivos": 1,
+   "linhas": 38,
+   "verify_jwt": false,
+   "metodos": [
+    "OPTIONS"
+   ],
+   "tabelas": [],
+   "rpcs": [],
+   "env": [
+    "SUPABASE_DB_URL",
+    "SUPABASE_SERVICE_ROLE_KEY",
+    "SUPABASE_URL"
+   ],
+   "buckets": [],
+   "chama_edges": [],
+   "hosts_externos": [],
+   "usa_shared": [
+    "migrate-helper.ts",
+    "validation.ts"
+   ],
+   "chamada_pelo_front": [],
+   "chamada_por_edges": [],
+   "chamada_por_sql_ou_cron": false,
+   "orfa": false,
+   "testes": 0
+  },
+  {
+   "nome": "push-device-revoked",
+   "entrada": "supabase/functions/push-device-revoked/index.ts",
+   "arquivos": 1,
+   "linhas": 105,
+   "verify_jwt": true,
+   "metodos": [
+    "OPTIONS",
+    "POST"
+   ],
+   "tabelas": [
+    "push_notification_logs",
+    "push_subscriptions"
+   ],
+   "rpcs": [],
+   "env": [
+    "SUPABASE_SERVICE_ROLE_KEY",
+    "SUPABASE_URL",
+    "VAPID_PRIVATE_KEY",
+    "VAPID_PUBLIC_KEY",
+    "VAPID_SUBJECT"
+   ],
+   "buckets": [],
+   "chama_edges": [],
+   "hosts_externos": [],
+   "usa_shared": [
+    "push-device-revoked.ts",
+    "validation.ts"
+   ],
+   "chamada_pelo_front": [
+    "src/services/pushSubscriptionService.ts"
+   ],
+   "chamada_por_edges": [],
+   "chamada_por_sql_ou_cron": false,
+   "orfa": false,
+   "testes": 0
+  },
+  {
+   "nome": "push-outbox-dispatcher",
+   "entrada": "supabase/functions/push-outbox-dispatcher/index.ts",
+   "arquivos": 1,
+   "linhas": 199,
+   "verify_jwt": true,
+   "metodos": [
+    "OPTIONS"
+   ],
+   "tabelas": [
+    "push_notification_logs",
+    "push_outbox",
+    "push_subscriptions"
+   ],
+   "rpcs": [
+    "claim_push_outbox"
+   ],
+   "env": [
+    "SUPABASE_SERVICE_ROLE_KEY",
+    "SUPABASE_URL",
+    "VAPID_PRIVATE_KEY",
+    "VAPID_PUBLIC_KEY",
+    "VAPID_SUBJECT"
+   ],
+   "buckets": [],
+   "chama_edges": [],
+   "hosts_externos": [],
+   "usa_shared": [
+    "security.ts"
+   ],
+   "chamada_pelo_front": [],
+   "chamada_por_edges": [],
+   "chamada_por_sql_ou_cron": true,
+   "orfa": false,
+   "testes": 0
+  },
+  {
+   "nome": "push-public-key",
+   "entrada": "supabase/functions/push-public-key/index.ts",
+   "arquivos": 1,
+   "linhas": 10,
+   "verify_jwt": false,
+   "metodos": [
+    "OPTIONS"
+   ],
+   "tabelas": [],
+   "rpcs": [],
+   "env": [
+    "VAPID_PUBLIC_KEY"
+   ],
+   "buckets": [],
+   "chama_edges": [],
+   "hosts_externos": [],
+   "usa_shared": [],
+   "chamada_pelo_front": [
+    "src/services/pushSubscriptionService.ts"
+   ],
+   "chamada_por_edges": [],
+   "chamada_por_sql_ou_cron": false,
+   "orfa": false,
+   "testes": 0
+  },
+  {
+   "nome": "reward-approval-review",
+   "entrada": "supabase/functions/reward-approval-review/index.ts",
+   "arquivos": 2,
+   "linhas": 529,
+   "verify_jwt": true,
+   "metodos": [
+    "OPTIONS"
+   ],
+   "tabelas": [
+    "audit_logs",
+    "profiles",
+    "purchase_approvals",
+    "shop_purchases",
+    "user_roles"
+   ],
+   "rpcs": [],
+   "env": [
+    "OPENROUTER_API_KEY",
+    "SUPABASE_ANON_KEY",
+    "SUPABASE_SERVICE_ROLE_KEY",
+    "SUPABASE_URL"
+   ],
+   "buckets": [],
+   "chama_edges": [],
+   "hosts_externos": [
+    "openrouter.ai"
+   ],
+   "usa_shared": [
+    "reward-approval-review.ts",
+    "validation.ts"
+   ],
+   "chamada_pelo_front": [
+    "src/services/purchaseGovernanceService.ts"
+   ],
+   "chamada_por_edges": [],
+   "chamada_por_sql_ou_cron": false,
+   "orfa": false,
+   "testes": 0
+  },
+  {
+   "nome": "send-campaign-push",
+   "entrada": "supabase/functions/send-campaign-push/index.ts",
+   "arquivos": 1,
+   "linhas": 223,
+   "verify_jwt": true,
+   "metodos": [
+    "OPTIONS",
+    "POST"
+   ],
+   "tabelas": [
+    "push_notification_logs",
+    "push_subscriptions"
+   ],
+   "rpcs": [
+    "increment_push_failures",
+    "reset_push_failures",
+    "user_wants_push_notification"
+   ],
+   "env": [
+    "SUPABASE_SERVICE_ROLE_KEY",
+    "SUPABASE_URL",
+    "VAPID_PRIVATE_KEY",
+    "VAPID_PUBLIC_KEY",
+    "VAPID_SUBJECT"
+   ],
+   "buckets": [],
+   "chama_edges": [],
+   "hosts_externos": [],
+   "usa_shared": [
+    "send-campaign-push.ts",
+    "validation.ts"
+   ],
+   "chamada_pelo_front": [
+    "src/services/salesCampaignsService.ts"
+   ],
+   "chamada_por_edges": [],
+   "chamada_por_sql_ou_cron": false,
+   "orfa": false,
+   "testes": 0
+  },
+  {
+   "nome": "trail-recommendations",
+   "entrada": "supabase/functions/trail-recommendations/index.ts",
+   "arquivos": 1,
+   "linhas": 303,
+   "verify_jwt": true,
+   "metodos": [
+    "OPTIONS"
+   ],
+   "tabelas": [
+    "learning_trails",
+    "module_progress",
+    "profiles",
+    "quest_assignments",
+    "team_members",
+    "trail_enrollments",
+    "user_roles"
+   ],
+   "rpcs": [],
+   "env": [
+    "OPENROUTER_API_KEY",
+    "SUPABASE_SERVICE_ROLE_KEY",
+    "SUPABASE_URL"
+   ],
+   "buckets": [],
+   "chama_edges": [],
+   "hosts_externos": [
+    "openrouter.ai"
+   ],
+   "usa_shared": [
+    "rate-limiter.ts",
+    "security.ts",
+    "trail-recommendations.ts",
+    "validation.ts"
+   ],
+   "chamada_pelo_front": [
+    "src/components/TrailRecommendations.tsx",
+    "src/components/manager/TeamCompetencyDashboard.tsx"
+   ],
+   "chamada_por_edges": [],
+   "chamada_por_sql_ou_cron": false,
+   "orfa": false,
+   "testes": 0
+  },
+  {
+   "nome": "verify-ip",
+   "entrada": "supabase/functions/verify-ip/index.ts",
+   "arquivos": 1,
+   "linhas": 162,
+   "verify_jwt": true,
+   "metodos": [
+    "OPTIONS"
+   ],
+   "tabelas": [
+    "ip_access_logs",
+    "ip_whitelist"
+   ],
+   "rpcs": [],
+   "env": [
+    "SUPABASE_SERVICE_ROLE_KEY",
+    "SUPABASE_URL"
+   ],
+   "buckets": [],
+   "chama_edges": [],
+   "hosts_externos": [],
+   "usa_shared": [
+    "clientIp.ts"
+   ],
+   "chamada_pelo_front": [
+    "src/components/IpAccessGuard.tsx",
+    "src/pages/Auth.tsx"
+   ],
+   "chamada_por_edges": [],
+   "chamada_por_sql_ou_cron": false,
+   "orfa": false,
+   "testes": 0
+  },
+  {
+   "nome": "webhook-dispatcher",
+   "entrada": "supabase/functions/webhook-dispatcher/index.ts",
+   "arquivos": 1,
+   "linhas": 273,
+   "verify_jwt": true,
+   "metodos": [
+    "OPTIONS"
+   ],
+   "tabelas": [
+    "webhook_delivery_logs",
+    "webhook_subscriptions"
+   ],
+   "rpcs": [],
+   "env": [
+    "SUPABASE_SERVICE_ROLE_KEY",
+    "SUPABASE_URL"
+   ],
+   "buckets": [],
+   "chama_edges": [],
+   "hosts_externos": [],
+   "usa_shared": [
+    "security.ts",
+    "sentry.ts",
+    "validation.ts",
+    "webhook-dispatcher.ts"
+   ],
+   "chamada_pelo_front": [
+    "src/pages/WebhookSubscriptionDetail.tsx",
+    "src/pages/WebhooksAdmin.tsx"
+   ],
+   "chamada_por_edges": [],
+   "chamada_por_sql_ou_cron": false,
+   "orfa": false,
+   "testes": 0
+  }
+ ],
+ "chamadas_sem_pasta": []
+}

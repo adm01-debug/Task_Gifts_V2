@@ -1,0 +1,698 @@
+{
+ "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
+ "format_version": 2,
+ "git": {
+  "commit": "d04ac2d4db5d5ef77bd465357f9fe1c8d2992338",
+  "branch": "main",
+  "data_commit": "2026-11-22T11:34:03-03:00",
+  "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
+  "ultimos_commits": [
+   {
+    "sha": "d04ac2d",
+    "data": "2026-11-22",
+    "assunto": "feat(edge): contratos zod, 422 unico e versionamento v1/v2 dos webhooks (#99)"
+   },
+   {
+    "sha": "b042057",
+    "data": "2026-11-22",
+    "assunto": "fix: usa JWT de sessao no AI coach em vez do publishable key (#98)"
+   },
+   {
+    "sha": "0134cf0",
+    "data": "2026-11-22",
+    "assunto": "fix(deps): corrige CVE alto zod transitivo via override chromium-bidi (#97)"
+   },
+   {
+    "sha": "6fd6436",
+    "data": "2026-11-22",
+    "assunto": "docs(edge-functions): encerra pendencia 03 com validacao em producao (#96)"
+   },
+   {
+    "sha": "6925771",
+    "data": "2026-11-22",
+    "assunto": "fix(auth): bloqueia senha vazada (HIBP) no cadastro (#95)"
+   },
+   {
+    "sha": "16748b9",
+    "data": "2026-11-22",
+    "assunto": "fix(e2e): happy-paths com rotas/UI reais e credenciais de teste por env (#94)"
+   },
+   {
+    "sha": "d50f0a1",
+    "data": "2026-11-21",
+    "assunto": "chore(docs): evidencia validacao HIBP range API (pendencia 03) (#93)"
+   },
+   {
+    "sha": "2eace82",
+    "data": "2026-11-21",
+    "assunto": "fix(deps): fecha CVEs moderados uuid/glob/postcss-selector-parser via overrides (#92)"
+   },
+   {
+    "sha": "4ce5f92",
+    "data": "2026-11-21",
+    "assunto": "chore(docs): documenta validacao do swap OpenRouter e deploys integros (#91)"
+   },
+   {
+    "sha": "08928cc",
+    "data": "2026-11-21",
+    "assunto": "feat(edge): move API de IA de Lovable para OpenRouter nas 6 edge functions"
+   },
+   {
+    "sha": "f095e46",
+    "data": "2026-11-21",
+    "assunto": "fix: checa admin via rpc has_role em competency-alerts (e atualiza doc 05) (#88)"
+   },
+   {
+    "sha": "f76c9b7",
+    "data": "2026-11-21",
+    "assunto": "fix: corrige typo de tipo no catch do log de ip_access_logs (#89)"
+   },
+   {
+    "sha": "166c7d2",
+    "data": "2026-11-21",
+    "assunto": "fix: desbloqueia video do LMS (media-src/frame-src na CSP) (#87)"
+   },
+   {
+    "sha": "fb528b1",
+    "data": "2026-11-21",
+    "assunto": "fix: verify-ip fail-closed quando a whitelist nao pode ser checada (#86)"
+   },
+   {
+    "sha": "dadc093",
+    "data": "2026-11-21",
+    "assunto": "fix: remove 29 vulnerabilidades do bun.lock (audit fix) (#85)"
+   },
+   {
+    "sha": "07aa1ce",
+    "data": "2026-11-21",
+    "assunto": "build(deps): bump actions/dependency-review-action from 5.0.0 to 5.0.1 (#80)"
+   },
+   {
+    "sha": "85b4094",
+    "data": "2026-11-21",
+    "assunto": "docs: fecha pendencias 05 (lockfiles) e atualiza 03 (HIBP) com evidencia de deploy (#84)"
+   },
+   {
+    "sha": "cb42df7",
+    "data": "2026-11-21",
+    "assunto": "build(deps-dev): bump jsdom from 30.1.3 to 31.0.1 (#83)"
+   },
+   {
+    "sha": "0132b7c",
+    "data": "2026-11-21",
+    "assunto": "build(deps): bump the dependencies group with 30 updates (#82)"
+   },
+   {
+    "sha": "f34642c",
+    "data": "2026-11-21",
+    "assunto": "chore(deps): remove package-lock.json andaco e declara packageManager bun (#81)"
+   },
+   {
+    "sha": "34453e2",
+    "data": "2026-11-21",
+    "assunto": "chore(deps): aponta Dependabot para lockfile bun eliminando CVEs falsos do npm (#79)"
+   },
+   {
+    "sha": "3d1ee90",
+    "data": "2026-11-21",
+    "assunto": "fix: protege economia de perfis via RPCs SECURITY DEFINER (pendencia 02) (#78)"
+   },
+   {
+    "sha": "e58c5c0",
+    "data": "2026-11-20",
+    "assunto": "fix(ci): expoe VITE_DEPLOYED_EDGE_FUNCTIONS para o build e corrige doc da allowlist (#77)"
+   },
+   {
+    "sha": "d3d388e",
+    "data": "2026-11-20",
+    "assunto": "fix: excludes assets/ do rewrite SPA para expor 404 real de chunks obsoletos (#76)"
+   },
+   {
+    "sha": "de9e391",
+    "data": "2026-11-20",
+    "assunto": "fix: move GlobalErrorBoundary para dentro do BrowserRouter (#75)"
+   }
+  ],
+  "arquivos_mudados_7d": 88,
+  "pastas_mais_mudadas_30d": [
+   {
+    "pasta": "supabase/functions/_shared",
+    "mudancas": 31
+   },
+   {
+    "pasta": "package.json",
+    "mudancas": 19
+   },
+   {
+    "pasta": ".github/workflows/ci.yml",
+    "mudancas": 11
+   },
+   {
+    "pasta": "bun.lock",
+    "mudancas": 11
+   },
+   {
+    "pasta": ".gitignore",
+    "mudancas": 6
+   },
+   {
+    "pasta": "AGENTS.md",
+    "mudancas": 5
+   },
+   {
+    "pasta": "docs/estado/05-edge-functions.md",
+    "mudancas": 5
+   },
+   {
+    "pasta": "docs/prod-readiness.md",
+    "mudancas": 5
+   },
+   {
+    "pasta": "src/components/admin",
+    "mudancas": 5
+   },
+   {
+    "pasta": ".github/workflows/contexto.yml",
+    "mudancas": 4
+   },
+   {
+    "pasta": "RELATORIO_CI.md",
+    "mudancas": 4
+   },
+   {
+    "pasta": "docs/agentes/github-ci.md",
+    "mudancas": 4
+   },
+   {
+    "pasta": "docs/agentes/mapa-repo.md",
+    "mudancas": 4
+   },
+   {
+    "pasta": "scripts/automation.mjs",
+    "mudancas": 4
+   },
+   {
+    "pasta": "src/tests/unit",
+    "mudancas": 4
+   }
+  ],
+  "arquivos_mais_mudados_90d": [
+   {
+    "arquivo": "package.json",
+    "mudancas": 21
+   },
+   {
+    "arquivo": "bun.lock",
+    "mudancas": 13
+   },
+   {
+    "arquivo": ".github/workflows/ci.yml",
+    "mudancas": 12
+   },
+   {
+    "arquivo": "AGENTS.md",
+    "mudancas": 5
+   },
+   {
+    "arquivo": "docs/estado/05-edge-functions.md",
+    "mudancas": 5
+   },
+   {
+    "arquivo": "docs/prod-readiness.md",
+    "mudancas": 5
+   },
+   {
+    "arquivo": "vercel.json",
+    "mudancas": 5
+   },
+   {
+    "arquivo": ".github/workflows/contexto.yml",
+    "mudancas": 4
+   },
+   {
+    "arquivo": "RELATORIO_CI.md",
+    "mudancas": 4
+   },
+   {
+    "arquivo": "docs/agentes/github-ci.md",
+    "mudancas": 4
+   },
+   {
+    "arquivo": "docs/agentes/mapa-repo.md",
+    "mudancas": 4
+   },
+   {
+    "arquivo": "scripts/automation.mjs",
+    "mudancas": 4
+   },
+   {
+    "arquivo": ".github/workflows/automation-local.yml",
+    "mudancas": 3
+   },
+   {
+    "arquivo": ".github/workflows/deploy-edge-functions.yml",
+    "mudancas": 3
+   },
+   {
+    "arquivo": "PENDENCIAS.md",
+    "mudancas": 3
+   },
+   {
+    "arquivo": "docs/agentes/banco.md",
+    "mudancas": 3
+   },
+   {
+    "arquivo": "docs/pendencias/03-csp-hibp-pwnedpasswords.md",
+    "mudancas": 3
+   },
+   {
+    "arquivo": "scripts/graphify-local.mjs",
+    "mudancas": 3
+   },
+   {
+    "arquivo": "supabase/config.toml",
+    "mudancas": 3
+   },
+   {
+    "arquivo": "supabase/functions/migrate-helper/index.ts",
+    "mudancas": 3
+   },
+   {
+    "arquivo": "supabase/functions/trail-recommendations/index.ts",
+    "mudancas": 3
+   },
+   {
+    "arquivo": "supabase/functions/verify-ip/index.ts",
+    "mudancas": 3
+   },
+   {
+    "arquivo": "vitest.config.ts",
+    "mudancas": 3
+   },
+   {
+    "arquivo": ".env.example",
+    "mudancas": 2
+   },
+   {
+    "arquivo": ".github/dependabot.yml",
+    "mudancas": 2
+   }
+  ],
+  "autores_30d": [
+   {
+    "autor": "adm01-debug",
+    "commits": 69
+   },
+   {
+    "autor": "dependabot[bot]",
+    "commits": 13
+   }
+  ]
+ },
+ "contagens": {
+  "arquivos_total": 1524,
+  "arquivos_codigo": 1153,
+  "linhas_codigo": 225927,
+  "rotas": 83,
+  "rotas_http_backend": 0,
+  "vistas_por_id": 0,
+  "itens_menu": 64,
+  "modulos": 71,
+  "componentes": 521,
+  "hooks": 155,
+  "edge_functions": 16,
+  "tabelas": 236,
+  "migrations": 271,
+  "cron_jobs": 22,
+  "testes": 161,
+  "workflows": 6,
+  "scripts": 16,
+  "docs_md": 55
+ },
+ "por_pasta": {
+  "eslint.config.js": {
+   "arquivos": 1,
+   "linhas": 58
+  },
+  "playwright.config.ts": {
+   "arquivos": 1,
+   "linhas": 26
+  },
+  "postcss.config.js": {
+   "arquivos": 1,
+   "linhas": 7
+  },
+  "public/push-sw.js": {
+   "arquivos": 1,
+   "linhas": 33
+  },
+  "public/sw-push.js": {
+   "arquivos": 1,
+   "linhas": 97
+  },
+  "public/sw.js": {
+   "arquivos": 1,
+   "linhas": 316
+  },
+  "scripts/automation.mjs": {
+   "arquivos": 1,
+   "linhas": 1188
+  },
+  "scripts/automation.unit.mjs": {
+   "arquivos": 1,
+   "linhas": 710
+  },
+  "scripts/ci": {
+   "arquivos": 9,
+   "linhas": 1552
+  },
+  "scripts/db-audit": {
+   "arquivos": 1,
+   "linhas": 604
+  },
+  "scripts/graphify-local.mjs": {
+   "arquivos": 1,
+   "linhas": 1280
+  },
+  "scripts/graphify-local.unit.mjs": {
+   "arquivos": 1,
+   "linhas": 577
+  },
+  "scripts/maintenance": {
+   "arquivos": 4,
+   "linhas": 3045
+  },
+  "scripts/patch-recharts.cjs": {
+   "arquivos": 1,
+   "linhas": 58
+  },
+  "scripts/regras_negocio": {
+   "arquivos": 3,
+   "linhas": 2539
+  },
+  "scripts/supabase_snapshot": {
+   "arquivos": 2,
+   "linhas": 2676
+  },
+  "src/App.tsx": {
+   "arquivos": 1,
+   "linhas": 333
+  },
+  "src/components": {
+   "arquivos": 461,
+   "linhas": 77762
+  },
+  "src/constants": {
+   "arquivos": 1,
+   "linhas": 61
+  },
+  "src/contexts": {
+   "arquivos": 4,
+   "linhas": 520
+  },
+  "src/hooks": {
+   "arquivos": 129,
+   "linhas": 14487
+  },
+  "src/i18n": {
+   "arquivos": 1,
+   "linhas": 945
+  },
+  "src/integrations": {
+   "arquivos": 3,
+   "linhas": 13029
+  },
+  "src/lib": {
+   "arquivos": 106,
+   "linhas": 22068
+  },
+  "src/main.tsx": {
+   "arquivos": 1,
+   "linhas": 80
+  },
+  "src/pages": {
+   "arquivos": 82,
+   "linhas": 22347
+  },
+  "src/services": {
+   "arquivos": 99,
+   "linhas": 21592
+  },
+  "src/stories": {
+   "arquivos": 29,
+   "linhas": 7136
+  },
+  "src/test": {
+   "arquivos": 127,
+   "linhas": 22254
+  },
+  "src/tests": {
+   "arquivos": 16,
+   "linhas": 1062
+  },
+  "src/types": {
+   "arquivos": 2,
+   "linhas": 222
+  },
+  "src/utils": {
+   "arquivos": 3,
+   "linhas": 152
+  },
+  "supabase/functions": {
+   "arquivos": 52,
+   "linhas": 6346
+  },
+  "tailwind.config.ts": {
+   "arquivos": 1,
+   "linhas": 259
+  },
+  "tests/auth-flow.spec.ts": {
+   "arquivos": 1,
+   "linhas": 34
+  },
+  "tests/e2e": {
+   "arquivos": 2,
+   "linhas": 229
+  },
+  "vite.config.ts": {
+   "arquivos": 1,
+   "linhas": 180
+  },
+  "vitest.config.ts": {
+   "arquivos": 1,
+   "linhas": 63
+  }
+ },
+ "maiores_arquivos": [
+  {
+   "arquivo": "src/integrations/supabase/types.ts",
+   "linhas": 12973
+  },
+  {
+   "arquivo": "scripts/regras_negocio/generate.py",
+   "linhas": 2138
+  },
+  {
+   "arquivo": "scripts/supabase_snapshot/snapshot.py",
+   "linhas": 1798
+  },
+  {
+   "arquivo": "scripts/graphify-local.mjs",
+   "linhas": 1280
+  },
+  {
+   "arquivo": "scripts/automation.mjs",
+   "linhas": 1188
+  },
+  {
+   "arquivo": "src/pages/Postmortems.tsx",
+   "linhas": 1063
+  },
+  {
+   "arquivo": "src/i18n/translations.ts",
+   "linhas": 945
+  },
+  {
+   "arquivo": "scripts/maintenance/lib.mjs",
+   "linhas": 937
+  },
+  {
+   "arquivo": "scripts/maintenance/run.mjs",
+   "linhas": 899
+  },
+  {
+   "arquivo": "src/components/lms/ModuleViewer.tsx",
+   "linhas": 855
+  },
+  {
+   "arquivo": "src/lib/campaignImport.ts",
+   "linhas": 771
+  },
+  {
+   "arquivo": "src/pages/ExecutiveMonthlyReport.tsx",
+   "linhas": 751
+  },
+  {
+   "arquivo": "src/hooks/useSoundEffects.tsx",
+   "linhas": 705
+  },
+  {
+   "arquivo": "src/components/ui/skeleton.tsx",
+   "linhas": 701
+  },
+  {
+   "arquivo": "src/components/ui/sidebar.tsx",
+   "linhas": 644
+  },
+  {
+   "arquivo": "scripts/db-audit/check-migration-drift.mjs",
+   "linhas": 604
+  },
+  {
+   "arquivo": "src/pages/WagerQuestionAdminPage.tsx",
+   "linhas": 578
+  },
+  {
+   "arquivo": "src/pages/SecurityRunbook.tsx",
+   "linhas": 569
+  },
+  {
+   "arquivo": "src/pages/TrailDetail.tsx",
+   "linhas": 546
+  },
+  {
+   "arquivo": "src/components/admin/RolePermissionsManager.tsx",
+   "linhas": 544
+  },
+  {
+   "arquivo": "src/lib/luckyWheelPayout.ts",
+   "linhas": 540
+  },
+  {
+   "arquivo": "src/lib/exportReports.ts",
+   "linhas": 538
+  },
+  {
+   "arquivo": "src/services/trailsService.ts",
+   "linhas": 535
+  },
+  {
+   "arquivo": "src/pages/WebhookSubscriptionDetail.tsx",
+   "linhas": 520
+  },
+  {
+   "arquivo": "src/services/salesCampaignsService.ts",
+   "linhas": 512
+  }
+ ],
+ "qualidade": {
+  "any": 79,
+  "console_log": 76,
+  "ts_ignore": 0,
+  "eslint_disable": 0,
+  "todos": 1,
+  "arquivos_acima_500_linhas": 25
+ },
+ "todos": [
+  {
+   "arquivo": "scripts/regras_negocio/generate.py",
+   "linha": 570,
+   "tipo": "TODO",
+   "texto": "\", \"http\", \"import\")) and \"://\" not in c:"
+  }
+ ],
+ "alertas": {
+  "rotas_sem_arquivo": [],
+  "componentes_ambiguos": [],
+  "menu_sem_destino": [
+   "Ações Rápidas -> quick-actions",
+   "Acompanhe o Progresso -> goal-progress",
+   "Bem-vindo ao Dashboard! 🎉 -> welcome",
+   "Criar Nova Meta -> create-goal",
+   "Desafios Diários 🎯 -> daily-challenges",
+   "Lucky Drops 🎁 -> lucky-drops",
+   "Mentoria -> /mentoria",
+   "Menu de Navegação -> sidebar",
+   "Micro Quests ⚡ -> micro-quests",
+   "Missões do Dia -> missions",
+   "Progresso nas Trilhas -> trail-progress",
+   "Quests Ativas -> quests",
+   "Ranking & Ligas -> leaderboard",
+   "Sistema de Metas -> goals-intro",
+   "Streak de Fogo 🔥 -> streak-tracker",
+   "Suas Estatísticas -> stats",
+   "Trilhas de Aprendizado -> trails-intro",
+   "Tudo Pronto! 🚀 -> complete"
+  ],
+  "edges_orfas": [],
+  "edges_chamadas_sem_pasta": [],
+  "tabelas_sem_rls": [
+   "lucky_wheel_prizes"
+  ],
+  "tabelas_usadas_sem_definicao": [],
+  "tabelas_com_drift_migration_vs_types": [
+   "achievements",
+   "engagement_factors",
+   "lucky_wheel_prizes",
+   "lucky_wheel_spins",
+   "notification_preferences",
+   "notification_templates",
+   "nr1_risk_categories",
+   "permissions",
+   "profiles",
+   "roles",
+   "trail_modules"
+  ],
+  "rpcs_sem_definicao": [
+   "get_lucky_wheel_status"
+  ],
+  "componentes_orfaos": [
+   "src/components/admin/metrics/AdminMetricsCharts.tsx",
+   "src/components/admin/permissions/PermissionModuleAccordion.tsx",
+   "src/components/admin/telemetry/TelemetryTable.tsx",
+   "src/components/analytics/AnalyticsBottomSection.tsx",
+   "src/components/auth/PasskeyLogin.tsx",
+   "src/components/checkins/CheckinDetailDialog.tsx",
+   "src/components/copilot/CopilotAlertCard.tsx",
+   "src/components/dashboard/DashboardTabs.tsx",
+   "src/components/MobilePullToRefresh.tsx",
+   "src/components/PageTransition.tsx",
+   "src/components/social/ActivityItem.tsx",
+   "src/components/social/FeedFilters.tsx",
+   "src/components/social/FeedStatsBar.tsx",
+   "src/components/ui/carousel.tsx",
+   "src/components/ui/context-menu.tsx",
+   "src/components/ui/hover-card.tsx",
+   "src/components/ui/menubar.tsx",
+   "src/components/ui/micro-interactions.tsx",
+   "src/components/ui/navigation-menu.tsx",
+   "src/components/ui/pagination.tsx",
+   "src/components/ui/responsive-dialog.tsx",
+   "src/components/ui/sidebar.tsx",
+   "src/components/ui/spinner.tsx",
+   "src/components/weekly/WeeklyMetricCards.tsx"
+  ],
+  "componentes_com_nome_duplicado": [
+   "CopilotAlert",
+   "LevelUpCelebration",
+   "PageTransition",
+   "SidebarFooter",
+   "SkeletonList",
+   "StatCard",
+   "TeamChallenges",
+   "Toaster"
+  ],
+  "scripts_orfaos": [],
+  "env_usadas_nao_declaradas": [
+   "DEV",
+   "MODE",
+   "NODE_ENV",
+   "VITE_APP_VERSION",
+   "VITE_SENTRY_DSN",
+   "VITE_SUPABASE_PUBLISHABLE_KEY"
+  ],
+  "ciclos_de_import": 2,
+  "possiveis_segredos_no_codigo": []
+ },
+ "erros_do_gerador": []
+}
