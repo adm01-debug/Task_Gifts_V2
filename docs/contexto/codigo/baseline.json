@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "11d2c1e38bfdb1b41766c9459a6d7eafc9ffc58e",
+  "commit": "119cff5eafc0957a68bfeedd2e430ae276086b68",
   "branch": "main",
-  "data_commit": "2026-11-22T16:45:26-03:00",
+  "data_commit": "2026-11-22T19:38:47-03:00",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "ultimos_commits": [
+   {
+    "sha": "119cff5",
+    "data": "2026-11-22",
+    "assunto": "feat(db): RPC acknowledge_security_digest para marcar digest semanal como revisado (#103)"
+   },
    {
     "sha": "11d2c1e",
     "data": "2026-11-22",
@@ -126,14 +131,9 @@
     "sha": "0132b7c",
     "data": "2026-11-21",
     "assunto": "build(deps): bump the dependencies group with 30 updates (#82)"
-   },
-   {
-    "sha": "f34642c",
-    "data": "2026-11-21",
-    "assunto": "chore(deps): remove package-lock.json andaco e declara packageManager bun (#81)"
    }
   ],
-  "arquivos_mudados_7d": 105,
+  "arquivos_mudados_7d": 106,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "supabase/functions/_shared",
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 74
+    "commits": 75
    },
    {
     "autor": "dependabot[bot]",
@@ -310,7 +310,7 @@
   ]
  },
  "contagens": {
-  "arquivos_total": 1537,
+  "arquivos_total": 1538,
   "arquivos_codigo": 1166,
   "linhas_codigo": 227410,
   "rotas": 83,
@@ -322,7 +322,7 @@
   "hooks": 155,
   "edge_functions": 22,
   "tabelas": 236,
-  "migrations": 271,
+  "migrations": 272,
   "cron_jobs": 22,
   "testes": 161,
   "workflows": 6,

@@ -1,6 +1,6 @@
 # 07 · REGRAS DE NEGÓCIO
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `11d2c1e38b` · branch `main` · 2026-11-22 19:48 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `119cff5eaf` · branch `main` · 2026-11-22 22:39 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## A. Regras escritas por humanos (`manual/` — prioridade máxima, nunca sobrescrito)
@@ -919,6 +919,8 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `get_2fa_status` | insufficient_privilege | `supabase/migrations/20261114134238_9b119528-da6f-4f43-b6cb-dcdcd7aa7ab1.sql` |
 | `user_has_passkeys` | insufficient_privilege | `supabase/migrations/20261114134238_9b119528-da6f-4f43-b6cb-dcdcd7aa7ab1.sql` |
 | `validate_reset_token` | insufficient_privilege | `supabase/migrations/20261114134238_9b119528-da6f-4f43-b6cb-dcdcd7aa7ab1.sql` |
+| `acknowledge_security_digest` | not_authenticated | `supabase/migrations/20261122140000_acknowledge_security_digest.sql` |
+| `acknowledge_security_digest` | forbidden | `supabase/migrations/20261122140000_acknowledge_security_digest.sql` |
 | `add_xp` | p_amount deve ser positivo | `supabase/migrations/20261218000000_profiles_economia_rpcs.sql` |
 | `add_xp` | perfil não encontrado | `supabase/migrations/20261218000000_profiles_economia_rpcs.sql` |
 | `add_coins` | p_amount deve ser positivo | `supabase/migrations/20261218000000_profiles_economia_rpcs.sql` |
@@ -3543,6 +3545,8 @@ _nenhum item encontrado_
 | `manager` | `supabase/migrations/20260728183016_7700507e-bccb-4244-9fa4-6c9e79440974.sql` |
 | `admin` | `supabase/migrations/20260807030000_fix_opinion_feed_rpc.sql` |
 | `manager` | `supabase/migrations/20260807030000_fix_opinion_feed_rpc.sql` |
+| `admin` | `supabase/migrations/20261122140000_acknowledge_security_digest.sql` |
+| `manager` | `supabase/migrations/20261122140000_acknowledge_security_digest.sql` |
 
 ## K. Testes como especificação (1970 testes em 149 arquivos — nomes completos em `context.json`)
 

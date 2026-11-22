@@ -6,7 +6,7 @@
   "src/integrations/supabase/types.ts",
   "supabase/migrations"
  ],
- "migrations": 271,
+ "migrations": 272,
  "seeds": [],
  "avisos": [
   "11 bloco(s) com DDL dinâmico (EXECUTE format/...) não modelado — policies/colunas criadas dinamicamente podem faltar; confira no banco vivo"
@@ -177,6 +177,7 @@
   "_require_admin",
   "_require_manager_or_admin",
   "acknowledge_security_alert",
+  "acknowledge_security_digest",
   "add_coins",
   "add_xp",
   "admin_profile_directory",

@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "11d2c1e38bfdb1b41766c9459a6d7eafc9ffc58e",
+  "sha": "119cff5eafc0957a68bfeedd2e430ae276086b68",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
-  "generated_at": "2026-11-22 19:48 UTC",
-  "files_total": 1547,
-  "code_files": 1443,
-  "code_lines": 258573
+  "generated_at": "2026-11-22 22:39 UTC",
+  "files_total": 1548,
+  "code_files": 1444,
+  "code_lines": 258615
  },
  "version": "1.3.2",
- "facts_hash": "d2282e46c64aae93",
+ "facts_hash": "fabaf6df5f41c1af",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -196,7 +196,7 @@
   "languages": {
    ".ts": 575,
    ".tsx": 565,
-   ".sql": 271,
+   ".sql": 272,
    ".mjs": 21,
    ".js": 5,
    ".py": 5,
@@ -30485,6 +30485,22 @@
      "profiles"
     ]
    },
+   "acknowledge_security_digest": {
+    "args": "p_week_key text",
+    "returns": "void",
+    "lang": "plpgsql",
+    "src": "supabase/migrations/20261122140000_acknowledge_security_digest.sql",
+    "security_definer": true,
+    "search_path": true,
+    "body": "DECLARE _uid uuid := auth.uid(); BEGIN IF _uid IS NULL THEN RAISE EXCEPTION 'not_authenticated' USING ERRCODE = '28000'; END IF; IF NOT public.has_role(_uid, 'admin'::app_role) AND NOT public.has_role(_uid, 'manager'::app_role) THEN RAISE EXCEPTION 'forbidden'; END IF; UPDATE public.notifications SET data = jsonb_set( data, '{acknowledgments}', COALESCE(data->'acknowledgments', '[]'::jsonb) || jsonb_build_object('user_id', _uid, 'at', now()) ) WHERE type = 'security_weekly_digest' AND data->>'week_key' = p_week_key AND NOT ( COALESCE(data->'acknowledgments', '[]'::jsonb) @> jsonb_build_array(jsonb_build_object('user_id', _uid)) ); END;",
+    "raises": [
+     "not_authenticated",
+     "forbidden"
+    ],
+    "tables": [
+     "notifications"
+    ]
+   },
    "add_xp": {
     "args": "p_user_id uuid, p_amount integer, p_source text DEFAULT NULL",
     "returns": "TABLE (id uuid, xp integer, level integer)",
@@ -33407,6 +33423,7 @@
    "supabase/migrations/20261114095829_revoke_vistas_diagnostico.sql",
    "supabase/migrations/20261114110500_fix_cron_campaigns_alert_check.sql",
    "supabase/migrations/20261114134238_9b119528-da6f-4f43-b6cb-dcdcd7aa7ab1.sql",
+   "supabase/migrations/20261122140000_acknowledge_security_digest.sql",
    "supabase/migrations/20261218000000_profiles_economia_rpcs.sql",
    "src/integrations/supabase/types.ts"
   ],
@@ -40922,6 +40939,22 @@
    {
     "kind": "revoke",
     "privs": "all",
+    "object": "acknowledge_security_digest",
+    "objkind": "function",
+    "roles": "PUBLIC",
+    "src": "supabase/migrations/20261122140000_acknowledge_security_digest.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "acknowledge_security_digest",
+    "objkind": "function",
+    "roles": "authenticated",
+    "src": "supabase/migrations/20261122140000_acknowledge_security_digest.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "all",
     "object": "add_xp",
     "objkind": "function",
     "roles": "PUBLIC, anon",
@@ -41863,6 +41896,16 @@
     "function": "validate_reset_token",
     "msg": "insufficient_privilege",
     "src": "supabase/migrations/20261114134238_9b119528-da6f-4f43-b6cb-dcdcd7aa7ab1.sql"
+   },
+   {
+    "function": "acknowledge_security_digest",
+    "msg": "not_authenticated",
+    "src": "supabase/migrations/20261122140000_acknowledge_security_digest.sql"
+   },
+   {
+    "function": "acknowledge_security_digest",
+    "msg": "forbidden",
+    "src": "supabase/migrations/20261122140000_acknowledge_security_digest.sql"
    },
    {
     "function": "add_xp",
@@ -49438,8 +49481,8 @@
   },
   {
    "module": "supabase/migrations",
-   "files": 271,
-   "lines": 29616,
+   "files": 272,
+   "lines": 29658,
    "tables": [],
    "exports": [],
    "docs": [],
@@ -57805,6 +57848,14 @@
    },
    {
     "file": "supabase/migrations/20260807030000_fix_opinion_feed_rpc.sql",
+    "value": "manager"
+   },
+   {
+    "file": "supabase/migrations/20261122140000_acknowledge_security_digest.sql",
+    "value": "admin"
+   },
+   {
+    "file": "supabase/migrations/20261122140000_acknowledge_security_digest.sql",
     "value": "manager"
    }
   ],
@@ -98026,6 +98077,22 @@
      "profiles"
     ]
    },
+   "acknowledge_security_digest": {
+    "args": "p_week_key text",
+    "returns": "void",
+    "lang": "plpgsql",
+    "src": "supabase/migrations/20261122140000_acknowledge_security_digest.sql",
+    "security_definer": true,
+    "search_path": true,
+    "body": "DECLARE _uid uuid := auth.uid(); BEGIN IF _uid IS NULL THEN RAISE EXCEPTION 'not_authenticated' USING ERRCODE = '28000'; END IF; IF NOT public.has_role(_uid, 'admin'::app_role) AND NOT public.has_role(_uid, 'manager'::app_role) THEN RAISE EXCEPTION 'forbidden'; END IF; UPDATE public.notifications SET data = jsonb_set( data, '{acknowledgments}', COALESCE(data->'acknowledgments', '[]'::jsonb) || jsonb_build_object('user_id', _uid, 'at', now()) ) WHERE type = 'security_weekly_digest' AND data->>'week_key' = p_week_key AND NOT ( COALESCE(data->'acknowledgments', '[]'::jsonb) @> jsonb_build_array(jsonb_build_object('user_id', _uid)) ); END;",
+    "raises": [
+     "not_authenticated",
+     "forbidden"
+    ],
+    "tables": [
+     "notifications"
+    ]
+   },
    "add_xp": {
     "args": "p_user_id uuid, p_amount integer, p_source text DEFAULT NULL",
     "returns": "TABLE (id uuid, xp integer, level integer)",
@@ -99314,6 +99381,16 @@
     "function": "validate_reset_token",
     "msg": "insufficient_privilege",
     "src": "supabase/migrations/20261114134238_9b119528-da6f-4f43-b6cb-dcdcd7aa7ab1.sql"
+   },
+   {
+    "function": "acknowledge_security_digest",
+    "msg": "not_authenticated",
+    "src": "supabase/migrations/20261122140000_acknowledge_security_digest.sql"
+   },
+   {
+    "function": "acknowledge_security_digest",
+    "msg": "forbidden",
+    "src": "supabase/migrations/20261122140000_acknowledge_security_digest.sql"
    },
    {
     "function": "add_xp",
@@ -105039,6 +105116,7 @@
    "_require_admin",
    "_require_manager_or_admin",
    "acknowledge_security_alert",
+   "acknowledge_security_digest",
    "add_coins",
    "add_xp",
    "admin_profile_directory",
@@ -112559,6 +112637,22 @@
     "objkind": "function",
     "roles": "anon, authenticated, service_role",
     "src": "supabase/migrations/20261114134238_9b119528-da6f-4f43-b6cb-dcdcd7aa7ab1.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "all",
+    "object": "acknowledge_security_digest",
+    "objkind": "function",
+    "roles": "PUBLIC",
+    "src": "supabase/migrations/20261122140000_acknowledge_security_digest.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "acknowledge_security_digest",
+    "objkind": "function",
+    "roles": "authenticated",
+    "src": "supabase/migrations/20261122140000_acknowledge_security_digest.sql"
    },
    {
     "kind": "revoke",
@@ -150999,6 +151093,14 @@
    "lines": 77,
    "uses_service_role": true
   },
+  "supabase/migrations/20261122140000_acknowledge_security_digest.sql": {
+   "path": "supabase/migrations/20261122140000_acknowledge_security_digest.sql",
+   "lines": 42,
+   "role_checks": [
+    "admin",
+    "manager"
+   ]
+  },
   "supabase/migrations/20261218000000_profiles_economia_rpcs.sql": {
    "path": "supabase/migrations/20261218000000_profiles_economia_rpcs.sql",
    "lines": 215,
@@ -151081,10 +151183,19 @@
   }
  },
  "git": {
-  "sha": "11d2c1e38bfdb1b41766c9459a6d7eafc9ffc58e",
+  "sha": "119cff5eafc0957a68bfeedd2e430ae276086b68",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "commits": [
+   {
+    "sha": "119cff5",
+    "date": "2026-11-22",
+    "author": "adm01-debug",
+    "subject": "feat(db): RPC acknowledge_security_digest para marcar digest semanal como revisado (#103)",
+    "files": [
+     "supabase/migrations/20261122140000_acknowledge_security_digest.sql"
+    ]
+   },
    {
     "sha": "11d2c1e",
     "date": "2026-11-22",
@@ -151458,15 +151569,6 @@
     "subject": "fix: excludes assets/ do rewrite SPA para expor 404 real de chunks obsoletos (#76)",
     "files": [
      "vercel.json"
-    ]
-   },
-   {
-    "sha": "de9e391",
-    "date": "2026-11-20",
-    "author": "adm01-debug",
-    "subject": "fix: move GlobalErrorBoundary para dentro do BrowserRouter (#75)",
-    "files": [
-     "src/App.tsx"
     ]
    }
   ],
