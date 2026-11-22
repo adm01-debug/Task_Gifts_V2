@@ -154,6 +154,15 @@ const RESPONSES: Record<string, ResponseFixtures> = {
     ],
     invalid: [{ nome: "attempts como string", payload: { success: true, attempts: "1", duration_ms: 10, status: 200, error: null } }],
   },
+
+  // webhook-ping delega ao webhook-dispatcher: mesmo corpo de resposta
+  "webhook-ping": {
+    valid: [
+      { nome: "entrega no primeiro envio", payload: { success: true, attempts: 1, duration_ms: 412, status: 200, error: null } },
+      { nome: "falha apos as tentativas (mesmo corpo, devolvido com status 502)", payload: { success: false, attempts: 3, duration_ms: 31000, status: null, error: "Request timeout" } },
+    ],
+    invalid: [{ nome: "attempts como string", payload: { success: true, attempts: "1", duration_ms: 10, status: 200, error: null } }],
+  },
 };
 
 export function responsesFor(name: string): ResponseFixtures | undefined {

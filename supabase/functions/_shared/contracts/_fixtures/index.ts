@@ -24,6 +24,42 @@ export function emptyBodyFixtures(): ContractFixtures {
   };
 }
 
+const webhookDispatchFixtures: ContractFixtures = {
+  valid: [
+    {
+      nome: "v1 ping do admin (WebhooksAdmin.tsx)",
+      payload: { subscription_id: UUID_A, event_type: "test.ping", payload: { source: "webhooks-admin", message: "Payload de teste" } },
+    },
+    {
+      nome: "v2 envelope completo",
+      payload: { version: "v2", subscription_id: UUID_A, event: { type: "order.created", id: "evt_1", occurred_at: "2026-11-22T12:00:00Z" }, payload: { order_id: 10 }, metadata: { source: "erp" } },
+    },
+    { nome: "v2 mínimo", payload: { version: "v2", subscription_id: UUID_A, event: { type: "test.ping" }, payload: {} } },
+    {
+      nome: "v1 com version declarada explicitamente",
+      payload: { version: "v1", subscription_id: UUID_A, event_type: "order.created", payload: { order_id: 10 } },
+    },
+  ],
+  missing: [
+    { nome: "v1 sem event_type", payload: { subscription_id: UUID_A, payload: {} }, field: "event_type", code: "invalid_type" },
+    { nome: "v1 sem payload", payload: { subscription_id: UUID_A, event_type: "test.ping" }, field: "payload", code: "invalid_type" },
+    { nome: "v2 sem event.type", payload: { version: "v2", subscription_id: UUID_A, event: {}, payload: {} }, field: "event.type", code: "invalid_type" },
+    { nome: "v2 sem subscription_id", payload: { version: "v2", event: { type: "a.b" }, payload: {} }, field: "subscription_id", code: "invalid_type" },
+  ],
+  wrongType: [
+    { nome: "v1 subscription_id não-uuid", payload: { subscription_id: "sub-1", event_type: "test.ping", payload: {} }, field: "subscription_id", code: "invalid_string" },
+    { nome: "v1 payload como array", payload: { subscription_id: UUID_A, event_type: "test.ping", payload: [1] }, field: "payload", code: "invalid_type" },
+    { nome: "v1 event_type fora do padrão", payload: { subscription_id: UUID_A, event_type: "ping test!", payload: {} }, field: "event_type", code: "invalid_string" },
+    { nome: "v2 occurred_at inválido", payload: { version: "v2", subscription_id: UUID_A, event: { type: "a.b", occurred_at: "ontem" }, payload: {} }, field: "event.occurred_at", code: "invalid_string" },
+    { nome: "v2 campo desconhecido no envelope", payload: { version: "v2", subscription_id: UUID_A, event: { type: "a.b" }, payload: {}, extra: 1 }, field: "(body)", code: "unrecognized_keys" },
+  ],
+  empty: [
+    { nome: "v1 event_type vazio", payload: { subscription_id: UUID_A, event_type: "", payload: {} }, field: "event_type", code: "too_small" },
+    { nome: "v2 event.type vazio", payload: { version: "v2", subscription_id: UUID_A, event: { type: "" }, payload: {} }, field: "event.type", code: "too_small" },
+  ],
+  notObject: [{ nome: "string", payload: "ping", field: "(body)", code: "invalid_type" }],
+};
+
 const FIXTURES: Record<string, ContractFixtures> = {
   "admin-alerts": emptyBodyFixtures(),
   "churn-prediction": emptyBodyFixtures(),
@@ -220,41 +256,8 @@ const FIXTURES: Record<string, ContractFixtures> = {
     notObject: [{ nome: "array", payload: [], field: "(body)", code: "invalid_type" }],
   },
 
-  "webhook-dispatcher": {
-    valid: [
-      {
-        nome: "v1 ping do admin (WebhooksAdmin.tsx)",
-        payload: { subscription_id: UUID_A, event_type: "test.ping", payload: { source: "webhooks-admin", message: "Payload de teste" } },
-      },
-      {
-        nome: "v2 envelope completo",
-        payload: { version: "v2", subscription_id: UUID_A, event: { type: "order.created", id: "evt_1", occurred_at: "2026-11-22T12:00:00Z" }, payload: { order_id: 10 }, metadata: { source: "erp" } },
-      },
-      { nome: "v2 mínimo", payload: { version: "v2", subscription_id: UUID_A, event: { type: "test.ping" }, payload: {} } },
-      {
-        nome: "v1 com version declarada explicitamente",
-        payload: { version: "v1", subscription_id: UUID_A, event_type: "order.created", payload: { order_id: 10 } },
-      },
-    ],
-    missing: [
-      { nome: "v1 sem event_type", payload: { subscription_id: UUID_A, payload: {} }, field: "event_type", code: "invalid_type" },
-      { nome: "v1 sem payload", payload: { subscription_id: UUID_A, event_type: "test.ping" }, field: "payload", code: "invalid_type" },
-      { nome: "v2 sem event.type", payload: { version: "v2", subscription_id: UUID_A, event: {}, payload: {} }, field: "event.type", code: "invalid_type" },
-      { nome: "v2 sem subscription_id", payload: { version: "v2", event: { type: "a.b" }, payload: {} }, field: "subscription_id", code: "invalid_type" },
-    ],
-    wrongType: [
-      { nome: "v1 subscription_id não-uuid", payload: { subscription_id: "sub-1", event_type: "test.ping", payload: {} }, field: "subscription_id", code: "invalid_string" },
-      { nome: "v1 payload como array", payload: { subscription_id: UUID_A, event_type: "test.ping", payload: [1] }, field: "payload", code: "invalid_type" },
-      { nome: "v1 event_type fora do padrão", payload: { subscription_id: UUID_A, event_type: "ping test!", payload: {} }, field: "event_type", code: "invalid_string" },
-      { nome: "v2 occurred_at inválido", payload: { version: "v2", subscription_id: UUID_A, event: { type: "a.b", occurred_at: "ontem" }, payload: {} }, field: "event.occurred_at", code: "invalid_string" },
-      { nome: "v2 campo desconhecido no envelope", payload: { version: "v2", subscription_id: UUID_A, event: { type: "a.b" }, payload: {}, extra: 1 }, field: "(body)", code: "unrecognized_keys" },
-    ],
-    empty: [
-      { nome: "v1 event_type vazio", payload: { subscription_id: UUID_A, event_type: "", payload: {} }, field: "event_type", code: "too_small" },
-      { nome: "v2 event.type vazio", payload: { version: "v2", subscription_id: UUID_A, event: { type: "" }, payload: {} }, field: "event.type", code: "too_small" },
-    ],
-    notObject: [{ nome: "string", payload: "ping", field: "(body)", code: "invalid_type" }],
-  },
+  "webhook-dispatcher": webhookDispatchFixtures,
+  "webhook-ping": webhookDispatchFixtures,
 };
 
 export function fixturesFor(name: string): ContractFixtures | undefined {

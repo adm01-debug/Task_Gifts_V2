@@ -150,7 +150,8 @@ export default function WebhooksAdmin() {
     setPingingId(id);
     const t = toast.loading(`Enviando ping para ${name || id.slice(0, 8)}…`);
     try {
-      const { error } = await invokeEdgeSafe("webhook-dispatcher", {
+      const { error } = await invokeEdgeSafe("webhook-ping", {
+        maxAttempts: 1, // o dispatcher ja controla o limite de tentativas da assinatura
         body: {
           subscription_id: id,
           event_type: "test.ping",
