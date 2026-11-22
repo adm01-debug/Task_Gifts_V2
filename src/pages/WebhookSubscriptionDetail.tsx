@@ -150,6 +150,7 @@ export default function WebhookSubscriptionDetail() {
     const t = toast.loading("Reenviando webhook…");
     try {
       const { error } = await invokeEdgeSafe("webhook-ping", {
+        maxAttempts: 1, // o dispatcher ja controla o limite de tentativas da assinatura
         body: { subscription_id: id, event_type: eventType, payload: data },
       });
       if (error) throw new Error(error.message);
@@ -205,6 +206,7 @@ export default function WebhookSubscriptionDetail() {
       }
       try {
         const { error } = await invokeEdgeSafe("webhook-ping", {
+          maxAttempts: 1, // o dispatcher ja controla o limite de tentativas da assinatura
           body: { subscription_id: id, event_type: eventType, payload: data },
         });
         if (error) throw new Error(error.message);

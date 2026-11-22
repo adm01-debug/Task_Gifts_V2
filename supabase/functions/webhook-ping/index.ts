@@ -52,8 +52,10 @@ serve(withSentry("webhook-ping", async (req, { requestId }) => {
       .eq("is_active", true)
       .single();
     if (subError || !subscription) {
+      // 409 (e nao 404): distingue "assinatura inativa" de "funcao nao publicada",
+      // que o front trata como indisponivel e bloqueia pings seguintes na aba.
       return new Response(JSON.stringify({ error: "Assinatura nao encontrada ou inativa", requestId }), {
-        status: 404,
+        status: 409,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
