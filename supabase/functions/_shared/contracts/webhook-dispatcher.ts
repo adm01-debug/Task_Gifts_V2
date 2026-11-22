@@ -26,6 +26,13 @@ export const WEBHOOK_CURRENT_VERSION: WebhookContractVersion = "v2";
 /** Data a partir da qual v1 deixa de ser aceita (UTC). */
 export const WEBHOOK_V1_SUNSET = new Date("2027-05-31T00:00:00.000Z");
 
+/**
+ * Data em que v1 passou a ser depreciada (é o que o header `Deprecation` informa na RFC 9745 —
+ * usar a data do sunset ali duplicaria o header `Sunset` e diria ao integrador que v1 só fica
+ * depreciada em 2027).
+ */
+export const WEBHOOK_V1_DEPRECATED_SINCE = new Date("2026-11-22T00:00:00.000Z");
+
 /** URL pública da documentação de depreciação (apontada no header Link). */
 export const WEBHOOK_DEPRECATION_DOC_URL =
   "https://github.com/adm01-debug/Task_Gifts_V2/blob/main/docs/agentes/edge-functions.md#versionamento-do-webhook-dispatcher";
@@ -35,8 +42,9 @@ export const WebhookEventTypeSchema = texto(128).regex(
   "event_type deve ser 'dominio.acao' (ex.: order.created, test.ping)",
 );
 
-/** v1 — formato histórico (sem campo version). */
+/** v1 — formato histórico (`version` ausente ou `"v1"`). */
 export const WebhookDispatchV1Schema = z.object({
+  version: z.literal("v1").optional(),
   subscription_id: uuid,
   event_type: WebhookEventTypeSchema,
   payload: jsonRecord,
@@ -77,7 +85,9 @@ export type WebhookDispatchResolution =
 export function detectWebhookVersion(raw: unknown): WebhookContractVersion | "unknown" {
   if (raw === null || typeof raw !== "object" || Array.isArray(raw)) return "unknown";
   const v = (raw as Record<string, unknown>).version;
-  if (v === undefined) return "v1";
+  // Omitir `version` é v1 por retrocompatibilidade, mas declarar "v1" explicitamente também vale:
+  // recusar quem é explícito sobre a versão que ainda suportamos não faz sentido.
+  if (v === undefined || v === "v1") return "v1";
   if (v === "v2") return "v2";
   return "unknown";
 }
@@ -92,7 +102,7 @@ export function webhookDeprecationHeaders(version: WebhookContractVersion): Reco
   if (version !== "v1") return base;
   return {
     ...base,
-    Deprecation: `@${Math.floor(WEBHOOK_V1_SUNSET.getTime() / 1000)}`,
+    Deprecation: `@${Math.floor(WEBHOOK_V1_DEPRECATED_SINCE.getTime() / 1000)}`,
     Sunset: WEBHOOK_V1_SUNSET.toUTCString(),
     Link: `<${WEBHOOK_DEPRECATION_DOC_URL}>; rel="deprecation"`,
   };

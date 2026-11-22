@@ -7,6 +7,7 @@ import {
   WEBHOOK_CONTRACT_VERSIONS,
   WEBHOOK_CURRENT_VERSION,
   WEBHOOK_DEPRECATION_DOC_URL,
+  WEBHOOK_V1_DEPRECATED_SINCE,
   WEBHOOK_V1_SUNSET,
   webhookDeprecationHeaders,
   WebhookDeliveryEnvelopeSchema,
@@ -32,14 +33,26 @@ describe("webhook-dispatcher — versionamento v1/v2", () => {
     expect(isWebhookV1Sunset(DEPOIS)).toBe(true);
   });
 
-  it("detecta a versão pelo campo version (ausente = v1)", () => {
+  it("detecta a versão pelo campo version (ausente ou \"v1\" = v1)", () => {
     expect(detectWebhookVersion(v1)).toBe("v1");
+    expect(detectWebhookVersion({ ...v1, version: "v1" })).toBe("v1");
     expect(detectWebhookVersion(v2)).toBe("v2");
     expect(detectWebhookVersion({ ...v1, version: "v3" })).toBe("unknown");
     expect(detectWebhookVersion({ ...v1, version: 2 })).toBe("unknown");
     expect(detectWebhookVersion("texto")).toBe("unknown");
     expect(detectWebhookVersion(null)).toBe("unknown");
     expect(detectWebhookVersion([v1])).toBe("unknown");
+  });
+
+  it("v1 com version declarada explicitamente é aceita e tratada como v1 (não 422)", () => {
+    const r = resolveWebhookDispatch({ ...v1, version: "v1" }, { now: ANTES });
+    expect(r.ok).toBe(true);
+    if (!r.ok) return;
+    expect(r.data.version).toBe("v1");
+    expect(r.deprecated).toBe(true);
+    expect(r.data.event_type).toBe("order.created");
+    // e continua produzindo o envelope histórico, sem vazar o campo version para o assinante
+    expect(Object.keys(buildDeliveryEnvelope(r.data, "2026-11-22T12:00:00.000Z")).sort()).toEqual(["data", "event", "timestamp"]);
   });
 
   it("compatibilidade retroativa: v1 e v2 equivalentes normalizam para o mesmo dispatch", () => {
@@ -60,7 +73,9 @@ describe("webhook-dispatcher — versionamento v1/v2", () => {
     const r = resolveWebhookDispatch(v1, { now: ANTES });
     expect(r.ok).toBe(true);
     expect(r.headers["X-Contract-Version"]).toBe("v1");
-    expect(r.headers.Deprecation).toBe(`@${Math.floor(WEBHOOK_V1_SUNSET.getTime() / 1000)}`);
+    // RFC 9745: Deprecation = quando ficou depreciada (passado); Sunset = quando deixa de valer.
+    expect(r.headers.Deprecation).toBe(`@${Math.floor(WEBHOOK_V1_DEPRECATED_SINCE.getTime() / 1000)}`);
+    expect(WEBHOOK_V1_DEPRECATED_SINCE.getTime()).toBeLessThan(WEBHOOK_V1_SUNSET.getTime());
     expect(r.headers.Sunset).toBe(WEBHOOK_V1_SUNSET.toUTCString());
     expect(r.headers.Link).toBe(`<${WEBHOOK_DEPRECATION_DOC_URL}>; rel="deprecation"`);
   });

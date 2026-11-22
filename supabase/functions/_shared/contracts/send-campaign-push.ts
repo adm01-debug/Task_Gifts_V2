@@ -1,4 +1,4 @@
-import { defineContract, jsonRecord, texto, uuid, z } from "./common.ts";
+import { defineContract, destinoUrl, jsonRecord, texto, uuid, z } from "./common.ts";
 
 /** Chamador: src/services/salesCampaignsService.ts. */
 export const SendCampaignPushRequestSchema = z.object({
@@ -6,7 +6,9 @@ export const SendCampaignPushRequestSchema = z.object({
   type: texto(64),
   title: texto(120),
   message: texto(400),
-  url: z.string().url().optional(),
+  // Caminho relativo é o caso real (salesCampaignsService.ts envia "/campanhas/<id>"):
+  // com z.string().url() a função devolvia 422 e o push de campanha era descartado em silêncio.
+  url: destinoUrl().optional(),
   data: jsonRecord.optional(),
 });
 

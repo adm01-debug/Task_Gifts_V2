@@ -3,6 +3,7 @@ import { readdirSync, statSync } from "node:fs";
 import { join } from "node:path";
 import { CONTRACTS, EDGE_FUNCTION_NAMES, getContract, type EdgeContract } from "./index.ts";
 import { fixturesFor, FIXTURE_NAMES } from "./_fixtures/index.ts";
+import { responsesFor } from "./_fixtures/responses.ts";
 import type { InvalidCase } from "./_fixtures/types.ts";
 import { expectUnifiedValidationError, expectValidationResponse, toResponse, validateWithContract } from "./_testkit.ts";
 import { ValidationErrorSchema } from "../validation.ts";
@@ -43,6 +44,11 @@ describe("registro de contratos cobre TODAS as edge functions", () => {
       const fx = fixturesFor(name)!;
       expect(fx.valid.length, `${name}: precisa de ≥1 payload válido`).toBeGreaterThan(0);
       expect(fx.notObject.length, `${name}: precisa rejeitar corpo não-objeto`).toBeGreaterThan(0);
+      if (c.response) {
+        const resp = responsesFor(name);
+        expect(resp?.valid.length, `${name}: declara response mas não tem amostra 2xx em _fixtures/responses.ts`).toBeGreaterThan(0);
+        expect(resp?.invalid.length, `${name}: response sem caso inválido (o teste não provaria nada)`).toBeGreaterThan(0);
+      }
       if (c.bodyRequired) {
         expect(fx.missing.length, `${name}: campos ausentes`).toBeGreaterThan(0);
         expect(fx.wrongType.length, `${name}: tipos incorretos`).toBeGreaterThan(0);
@@ -99,10 +105,19 @@ for (const name of EDGE_FUNCTION_NAMES) {
       }
     });
 
-    if (contract.response) {
-      it("schema de resposta rejeita objeto vazio e aceita a forma documentada quando houver fixture", () => {
-        expect(contract.response!.safeParse("texto").success).toBe(false);
-      });
+    const resp = responsesFor(name);
+    if (contract.response && resp) {
+      for (const v of resp.valid) {
+        it(`resposta 2xx documentada passa no schema: ${v.nome}`, () => {
+          const r = contract.response!.safeParse(v.payload);
+          expect(r.success, r.success ? "" : JSON.stringify(r.error.issues)).toBe(true);
+        });
+      }
+      for (const i of resp.invalid) {
+        it(`resposta fora do contrato é rejeitada: ${i.nome}`, () => {
+          expect(contract.response!.safeParse(i.payload).success).toBe(false);
+        });
+      }
     }
   });
 }

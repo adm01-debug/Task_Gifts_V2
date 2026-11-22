@@ -48,3 +48,25 @@ Deno.test("webhook v1 aceito com depreciação; v2 aceito sem; v3 recusado; v1 a
   assert(!r4.ok);
   if (!r4.ok) assertEquals(r4.error.fields[0].code, "sunset");
 });
+
+Deno.test("send-campaign-push aceita caminho do app em url e recusa javascript:", () => {
+  const base = { user_ids: [UUID], type: "campaign_completed", title: "Meta batida!", message: "100%" };
+  const ok = validateBody(CONTRACTS["send-campaign-push"].request, { ...base, url: `/campanhas/${UUID}` });
+  assert(ok.ok, "caminho relativo do app deveria ser aceito (salesCampaignsService envia assim)");
+  for (const url of ["javascript:alert(1)", "data:text/html,x", "nao-e-url"]) {
+    const r = validateBody(CONTRACTS["send-campaign-push"].request, { ...base, url });
+    assert(!r.ok, `deveria recusar ${url}`);
+    if (!r.ok) assertEquals(r.error.fields[0].field, "url");
+  }
+});
+
+Deno.test("webhook aceita version v1 explícita e mantém o envelope histórico", () => {
+  const r = resolveWebhookDispatch(
+    { version: "v1", subscription_id: UUID, event_type: "order.created", payload: { id: 1 } },
+    { now: new Date("2026-11-22T12:00:00Z") },
+  );
+  assert(r.ok);
+  if (!r.ok) return;
+  assertEquals(r.data.version, "v1");
+  assertEquals(r.deprecated, true);
+});

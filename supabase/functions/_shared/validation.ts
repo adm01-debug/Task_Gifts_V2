@@ -43,7 +43,7 @@ export function formatFieldPath(path: ReadonlyArray<string | number>): string {
   return path.length === 0 ? "(body)" : path.map(String).join(".");
 }
 
-/** Transforma um ZodError na lista de campos do formato único (sem duplicatas de field+code). */
+/** Transforma um ZodError na lista de campos do formato único (sem repetir field+code+message). */
 export function zodIssuesToFields(error: z.ZodError): ValidationErrorField[] {
   const out: ValidationErrorField[] = [];
   const seen = new Set<string>();
