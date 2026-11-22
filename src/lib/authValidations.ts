@@ -75,6 +75,21 @@ export function getPasswordStrength(password: string): {
 }
 
 const leakedCache = new Map<string, { isLeaked: boolean; occurrences: number }>();
+// Cap the cache to bound memory and clear stale entries as the tab lives longer.
+// Only successful lookups are cached, so a cleared password field or navigation
+// away does not leave a failed/guessed password stored indefinitely.
+const LEAKED_CACHE_MAX = 64;
+function cacheResult(password: string, result: { isLeaked: boolean; occurrences: number }) {
+  if (leakedCache.has(password)) {
+    leakedCache.delete(password);
+  }
+  leakedCache.set(password, result);
+  while (leakedCache.size > LEAKED_CACHE_MAX) {
+    const oldest = leakedCache.keys().next().value;
+    if (oldest === undefined) break;
+    leakedCache.delete(oldest);
+  }
+}
 
 // Check if password has been leaked using Have I Been Pwned API (k-anonymity)
 export async function checkPasswordLeaked(password: string): Promise<{
@@ -107,8 +122,7 @@ export async function checkPasswordLeaked(password: string): Promise<{
     clearTimeout(timeoutId);
     
     if (!response.ok) {
-      // HIBP API error - silently fail
-      leakedCache.set(password, { isLeaked: false, occurrences: 0 });
+      // HIBP API error - silently fail (do not cache; may be a transient outage)
       return { isLeaked: false, occurrences: 0 };
     }
     
@@ -125,11 +139,10 @@ export async function checkPasswordLeaked(password: string): Promise<{
     }
     
     const notLeaked = { isLeaked: false, occurrences: 0 };
-    leakedCache.set(password, notLeaked);
+    cacheResult(password, notLeaked);
     return notLeaked;
   } catch (err: unknown) {
-    // Silently fail - leaked password check should not block auth
-    leakedCache.set(password, { isLeaked: false, occurrences: 0 });
+    // Silently fail - leaked password check should not block auth (do not cache)
     return { isLeaked: false, occurrences: 0 };
   }
 }
