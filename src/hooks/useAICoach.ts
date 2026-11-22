@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import { useAuth } from "./useAuth";
 import { useCurrentProfile } from "./useProfiles";
 import { useCompetencies } from "./useCompetencies";
@@ -6,6 +6,13 @@ import { usePublishedTrails, useUserEnrollments } from "./useTrails";
 import { aiCoachService } from "@/services/aiCoachService";
 import { logger } from "@/services/loggingService";
 import { newRequestId } from "@/lib/requestId";
+import {
+  isFunctionDeployed,
+  isEdgeSkillsDisabled,
+  isEdgeAvailable,
+  markEdgeAvailable,
+  markEdgeUnavailable,
+} from "@/lib/edgeAvailability";
 
 interface Message {
   role: "user" | "assistant";
@@ -14,13 +21,27 @@ interface Message {
 
 const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/ai-coach`;
 
+// Gate consistente com o resto do app (ver invokeEdgeSafe): se o ai-coach nao
+// estiver deployado/desabilitado/indisponivel, nao dispara chamada de rede.
+function isCoachUsable(): boolean {
+  return (
+    isFunctionDeployed("ai-coach") &&
+    !isEdgeSkillsDisabled() &&
+    isEdgeAvailable("ai-coach") !== false
+  );
+}
+
 export function useAICoach() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingHistory, setIsLoadingHistory] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const { user } = useAuth();
+  const { user, session } = useAuth();
+
+  // Contador de geracao: bump a cada envio e ao limpar historico. Persistencia
+  // so grava se a geracao atual nao foi cancelada por um clear concorrente.
+  const generationRef = useRef(0);
   const { data: profile } = useCurrentProfile();
   const { data: competencies } = useCompetencies(user?.id);
   const { data: trails } = usePublishedTrails();
@@ -47,15 +68,15 @@ export function useAICoach() {
 
   // Generate follow-up suggestions after assistant response
   const generateSuggestions = useCallback(async (conversationMessages: Message[]) => {
-    if (conversationMessages.length < 2) return;
-    
+    if (conversationMessages.length < 2 || !isCoachUsable()) return;
+
     try {
       const requestId = newRequestId();
       const resp = await fetch(CHAT_URL, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+          Authorization: `Bearer ${session?.access_token}`,
           "x-request-id": requestId,
         },
         body: JSON.stringify({ 
@@ -65,25 +86,27 @@ export function useAICoach() {
       });
 
       if (resp.ok) {
+        markEdgeAvailable("ai-coach");
         const data = await resp.json();
         setSuggestions(data.suggestions || []);
+      } else if (resp.status === 404) {
+        markEdgeUnavailable("ai-coach");
       }
     } catch (e) {
       logger.warn("Failed to generate suggestions", e instanceof Error ? e.message : String(e));
     }
-  }, []);
+  }, [session]);
 
-  const sendMessage = useCallback(async (input: string) => {
-    if (!input.trim() || isLoading || !user?.id) return;
+  const sendMessage = useCallback(async (input: string): Promise<boolean> => {
+    if (!input.trim() || isLoading || !user?.id || !isCoachUsable()) return false;
+
+    const generation = ++generationRef.current;
 
     const userMsg: Message = { role: "user", content: input };
     setMessages(prev => [...prev, userMsg]);
     setIsLoading(true);
     setError(null);
     setSuggestions([]); // Clear suggestions when sending new message
-
-    // Save user message to database
-    aiCoachService.saveMessage(user.id, "user", input);
 
     let assistantSoFar = "";
 
@@ -134,7 +157,7 @@ export function useAICoach() {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+          Authorization: `Bearer ${session?.access_token}`,
           "x-request-id": requestId,
         },
         body: JSON.stringify({ 
@@ -144,9 +167,11 @@ export function useAICoach() {
       });
 
       if (!resp.ok) {
+        if (resp.status === 404) markEdgeUnavailable("ai-coach");
         const errData = await resp.json().catch(() => ({}));
         throw new Error(errData.error || `Erro ${resp.status} (req ${requestId})`);
       }
+      markEdgeAvailable("ai-coach");
 
       if (!resp.body) throw new Error("Sem resposta do servidor");
 
@@ -203,14 +228,25 @@ export function useAICoach() {
         }
       }
 
-      // Save assistant response to database after streaming completes
-      if (assistantSoFar && user?.id) {
-        aiCoachService.saveMessage(user.id, "assistant", assistantSoFar);
-        
-        // Generate follow-up suggestions
-        const finalMessages: Message[] = [...messages, userMsg, { role: "assistant", content: assistantSoFar }];
-        generateSuggestions(finalMessages);
+      // Save user and assistant responses to database after streaming completes.
+      // So persiste no caminho de sucesso, aguardando a pergunta antes da
+      // resposta (preserva a ordem no historico) e descartando se o historico
+      // foi limpo durante o stream (geracao alterada) ou se nao houve resposta.
+      if (user?.id && generation === generationRef.current) {
+        if (assistantSoFar) {
+          const savedUser = await aiCoachService.saveMessage(user.id, "user", input);
+          if (savedUser) {
+            await aiCoachService.saveMessage(user.id, "assistant", assistantSoFar);
+          }
+
+          // Generate follow-up suggestions
+          const finalMessages: Message[] = [...messages, userMsg, { role: "assistant", content: assistantSoFar }];
+          generateSuggestions(finalMessages);
+        } else {
+          throw new Error("Coach nao retornou resposta");
+        }
       }
+      return true;
     } catch (e) {
       logger.apiError("sendMessage", e, "AI Coach");
       setError(e instanceof Error ? e.message : "Erro ao enviar mensagem");
@@ -219,9 +255,13 @@ export function useAICoach() {
     } finally {
       setIsLoading(false);
     }
-  }, [messages, isLoading, profile, competencies, trails, enrollments, user?.id, generateSuggestions]);
+    return false;
+  }, [messages, isLoading, profile, competencies, trails, enrollments, user?.id, session, generateSuggestions]);
 
   const clearMessages = useCallback(async () => {
+    // Cancela qualquer persistencia em andamento (o guard de geracao de
+    // sendMessage descarta a gravacao da geracao antiga).
+    generationRef.current += 1;
     if (user?.id) {
       await aiCoachService.clearHistory(user.id);
     }
