@@ -1,0 +1,33 @@
+import { defineContract, jsonRecord, texto, uuid, z } from "./common.ts";
+
+/** Chamador: src/services/salesCampaignsService.ts. */
+export const SendCampaignPushRequestSchema = z.object({
+  user_ids: z.array(uuid).min(1).max(500),
+  type: texto(64),
+  title: texto(120),
+  message: texto(400),
+  url: z.string().url().optional(),
+  data: jsonRecord.optional(),
+});
+
+export const SendCampaignPushResponseSchema = z.union([
+  z.object({
+    sent: z.number().int().nonnegative(),
+    invalidated: z.number().int().nonnegative(),
+    failed: z.number().int().nonnegative(),
+  }),
+  z.object({
+    sent: z.literal(0),
+    skipped: z.number().int().nonnegative(),
+    reason: z.literal("prefs"),
+  }),
+]);
+
+export const sendCampaignPushContract = defineContract({
+  name: "send-campaign-push",
+  methods: ["POST"],
+  auth: "user",
+  request: SendCampaignPushRequestSchema,
+  response: SendCampaignPushResponseSchema,
+  bodyRequired: true,
+});

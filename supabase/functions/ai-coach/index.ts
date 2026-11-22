@@ -8,6 +8,8 @@ import {
 } from "../_shared/rate-limiter.ts";
 import { corsHeaders, verifyUser, errorResponse } from "../_shared/security.ts";
 import { withSentry, addBreadcrumb, captureException } from "../_shared/sentry.ts";
+import { parseJsonBody } from "../_shared/validation.ts";
+import { AiCoachRequestSchema } from "../_shared/contracts/ai-coach.ts";
 
 const SYSTEM_PROMPT = `Você é o AI Coach do Task Gifts, uma plataforma de gamificação corporativa da Promo Brindes.
 
@@ -65,7 +67,9 @@ serve(withSentry("ai-coach", async (req, { requestId }) => {
     const authenticatedUser = await verifyUser(req);
     addBreadcrumb("ai-coach:auth", { userId: authenticatedUser?.id, requestId });
 
-    const { messages, userContext, generateSuggestions } = await req.json();
+    const parsed = await parseJsonBody(req, AiCoachRequestSchema, { headers: corsHeaders, requestId });
+    if (!parsed.ok) return parsed.response;
+    const { messages, userContext, generateSuggestions } = parsed.data;
         const OPENROUTER_API_KEY = Deno.env.get("OPENROUTER_API_KEY");
     
         if (!OPENROUTER_API_KEY) {

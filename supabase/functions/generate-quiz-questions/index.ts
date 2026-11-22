@@ -7,6 +7,8 @@ import {
   RATE_LIMITS 
 } from "../_shared/rate-limiter.ts";
 import { corsHeaders, verifyUser, errorResponse } from "../_shared/security.ts";
+import { parseJsonBody } from "../_shared/validation.ts";
+import { GenerateQuizQuestionsRequestSchema } from "../_shared/contracts/generate-quiz-questions.ts";
 
 
 serve(async (req) => {
@@ -27,14 +29,9 @@ serve(async (req) => {
     // Verify user JWT
     await verifyUser(req);
     
-    const { trailId, quizType = 'magic_cards', questionCount = 5 } = await req.json();
-
-    if (!trailId) {
-      return new Response(
-        JSON.stringify({ error: 'Trail ID is required' }),
-        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
-    }
+    const parsed = await parseJsonBody(req, GenerateQuizQuestionsRequestSchema, { headers: corsHeaders });
+    if (!parsed.ok) return parsed.response;
+    const { trailId, quizType, questionCount } = parsed.data;
 
     const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
     const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;

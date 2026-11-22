@@ -1,14 +1,11 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
 import { corsHeaders } from "npm:@supabase/supabase-js@2/cors";
-import { z } from "https://esm.sh/zod@3.23.8";
+import { parseJsonBody } from "../_shared/validation.ts";
+import { AiCourseBuilderRequestSchema } from "../_shared/contracts/ai-course-builder.ts";
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SERVICE_ROLE = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 const OPENROUTER_API_KEY = Deno.env.get("OPENROUTER_API_KEY")!;
-
-const BodySchema = z.object({
-  job_id: z.string().uuid(),
-});
 
 interface AICourseSchema {
   trail_title: string;
@@ -183,13 +180,8 @@ Deno.serve(async (req) => {
     }
     const userId = userRes.user.id;
 
-    const parsed = BodySchema.safeParse(await req.json());
-    if (!parsed.success) {
-      return new Response(JSON.stringify({ error: parsed.error.flatten() }), {
-        status: 400,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
-    }
+    const parsed = await parseJsonBody(req, AiCourseBuilderRequestSchema, { headers: corsHeaders });
+    if (!parsed.ok) return parsed.response;
     jobId = parsed.data.job_id;
 
     // Load job (must belong to user)

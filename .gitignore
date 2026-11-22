@@ -45,3 +45,6 @@ __pycache__/
 # Estado local privado dos novos adaptadores de automação
 /.tools/repo-automation/
 /.tools/graphify/
+
+# Gerado por `deno` (bunx deno test/check); o repo nao versiona lockfile Deno de proposito (ver .github/workflows/deno.yml)
+deno.lock

@@ -7,6 +7,8 @@ import {
   RATE_LIMITS 
 } from "../_shared/rate-limiter.ts";
 import { corsHeaders, verifyUser, errorResponse } from "../_shared/security.ts";
+import { parseJsonBody } from "../_shared/validation.ts";
+import { CompetencyAlertsRequestSchema } from "../_shared/contracts/competency-alerts.ts";
 
 
 interface CompetencyData {
@@ -201,7 +203,9 @@ serve(async (req) => {
     // Verify user JWT
     const authenticatedUser = await verifyUser(req);
     
-    const { userId: bodyUserId, checkAllUsers } = await req.json();
+    const parsed = await parseJsonBody(req, CompetencyAlertsRequestSchema, { headers: corsHeaders });
+    if (!parsed.ok) return parsed.response;
+    const { userId: bodyUserId, checkAllUsers } = parsed.data;
 
     let usersToAnalyze: string[] = [];
 

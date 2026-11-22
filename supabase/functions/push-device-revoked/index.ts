@@ -5,15 +5,8 @@
 import { createClient } from "npm:@supabase/supabase-js@2";
 import { corsHeaders } from "npm:@supabase/supabase-js@2/cors";
 import webpush from "npm:web-push@3.6.7";
-import { z } from "npm:zod@3.23.8";
-
-const BodySchema = z.object({
-  exclude_subscription_id: z.string().uuid(),
-  title: z.string().min(1).max(120),
-  message: z.string().min(1).max(400),
-  url: z.string().max(300).optional(),
-  data: z.record(z.unknown()).optional(),
-});
+import { parseJsonBody } from "../_shared/validation.ts";
+import { PushDeviceRevokedRequestSchema } from "../_shared/contracts/push-device-revoked.ts";
 
 const TYPE = "security_device_revoked";
 
@@ -38,14 +31,8 @@ Deno.serve(async (req) => {
   if (userErr || !userData?.user) return json({ error: "Unauthorized" }, 401);
   const userId = userData.user.id;
 
-  let raw: unknown;
-  try {
-    raw = await req.json();
-  } catch {
-    return json({ error: "Invalid JSON" }, 400);
-  }
-  const parsed = BodySchema.safeParse(raw);
-  if (!parsed.success) return json({ error: parsed.error.flatten().fieldErrors }, 400);
+  const parsed = await parseJsonBody(req, PushDeviceRevokedRequestSchema, { headers: corsHeaders });
+  if (!parsed.ok) return parsed.response;
   const { exclude_subscription_id, title, message, url, data } = parsed.data;
 
   // Alerta de segurança é sempre entregue: não passa pelo filtro de preferência

@@ -3,15 +3,8 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { corsHeaders, verifyUser, errorResponse } from "../_shared/security.ts";
 import { resolveClientIp } from "../_shared/clientIp.ts";
 import { withSentry, addBreadcrumb, captureException } from "../_shared/sentry.ts";
-
-interface DeviceRequest {
-  userId: string;
-  fingerprint: string;
-  userAgent: string;
-  browser?: string;
-  os?: string;
-  deviceType?: string;
-}
+import { parseJsonBody } from "../_shared/validation.ts";
+import { DetectNewDeviceRequestSchema } from "../_shared/contracts/detect-new-device.ts";
 
 serve(withSentry("detect-new-device", async (req, { requestId }) => {
   // Handle CORS preflight
@@ -30,19 +23,13 @@ serve(withSentry("detect-new-device", async (req, { requestId }) => {
     const authenticatedUser = await verifyUser(req);
     addBreadcrumb("device:auth", { userId: authenticatedUser?.id, requestId });
     
-    const body: DeviceRequest = await req.json();
-    const { userId: bodyUserId, fingerprint, userAgent, browser, os, deviceType } = body;
+    // Contrato: 422 no formato único quando o corpo é inválido (fingerprint/userAgent obrigatórios).
+    const parsed = await parseJsonBody(req, DetectNewDeviceRequestSchema, { headers: corsHeaders, requestId });
+    if (!parsed.ok) return parsed.response;
+    const { fingerprint, userAgent, browser, os, deviceType } = parsed.data;
     
-    // Ensure the user is only registering devices for themselves
+    // Ensure the user is only registering devices for themselves (userId do corpo é ignorado)
     const userId = authenticatedUser.id;
-
-    
-    if (!userId || !fingerprint) {
-      return new Response(
-        JSON.stringify({ error: "userId and fingerprint are required" }),
-        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
-    }
     
     // IP inforjável: alertas de novo dispositivo dependem disso para não serem
     // burlados com um header falso. Ver _shared/clientIp.ts.

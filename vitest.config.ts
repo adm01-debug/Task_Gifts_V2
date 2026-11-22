@@ -8,7 +8,13 @@ export default defineConfig({
     environment: "jsdom",
     globals: true,
     setupFiles: ["./src/test/setup.ts"],
-    include: ["src/**/*.{test,spec}.{ts,tsx}"],
+    include: [
+      "src/**/*.{test,spec}.{ts,tsx}",
+      // Testes de contrato das edge functions (schemas zod puros, sem Deno) — ver
+      // supabase/functions/_shared/contracts/README.md. Sufixo .spec.ts de propósito: o
+      // workflow deno.yml roda `deno test` em todo *test.ts de supabase/functions.
+      "supabase/functions/**/*.contract.spec.ts",
+    ],
     testTimeout: 60000,
     hookTimeout: 30000,
     // vmThreads: reutiliza o worker por arquivo de teste (mantém isolamento
@@ -33,6 +39,8 @@ export default defineConfig({
         "src/**/*.d.ts",
         "src/test/**",
         "src/tests/**",
+        "supabase/functions/**/*_test.ts",
+        "supabase/functions/**/_fixtures/**",
       ],
       // Thresholds progressivos — aumentar em cada Sprint
       thresholds: {
@@ -44,6 +52,11 @@ export default defineConfig({
     },
   },
   resolve: {
-    alias: { "@": path.resolve(__dirname, "./src") },
+    alias: [
+      { find: "@", replacement: path.resolve(__dirname, "./src") },
+      // As edge functions importam o zod v3 fixado em deno.land; no Node o mesmo
+      // especificador resolve para o subpath `zod/v3` do pacote zod@4 já instalado.
+      { find: "https://deno.land/x/zod@v3.25/mod.ts", replacement: "zod/v3" },
+    ],
   },
 });

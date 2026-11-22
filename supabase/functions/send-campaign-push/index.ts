@@ -4,16 +4,8 @@
 import { createClient } from "npm:@supabase/supabase-js@2";
 import { corsHeaders } from "npm:@supabase/supabase-js@2/cors";
 import webpush from "npm:web-push@3.6.7";
-import { z } from "npm:zod@3.23.8";
-
-const BodySchema = z.object({
-  user_ids: z.array(z.string().uuid()).min(1).max(500),
-  type: z.string().min(1).max(64),
-  title: z.string().min(1).max(120),
-  message: z.string().min(1).max(400),
-  url: z.string().url().optional(),
-  data: z.record(z.unknown()).optional(),
-});
+import { parseJsonBody } from "../_shared/validation.ts";
+import { SendCampaignPushRequestSchema } from "../_shared/contracts/send-campaign-push.ts";
 
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
@@ -40,14 +32,8 @@ Deno.serve(async (req) => {
   const { data: userData, error: userErr } = await supabase.auth.getUser(jwt);
   if (userErr || !userData?.user) return json({ error: "Unauthorized" }, 401);
 
-  let body: unknown;
-  try {
-    body = await req.json();
-  } catch {
-    return json({ error: "Invalid JSON" }, 400);
-  }
-  const parsed = BodySchema.safeParse(body);
-  if (!parsed.success) return json({ error: parsed.error.flatten().fieldErrors }, 400);
+  const parsed = await parseJsonBody(req, SendCampaignPushRequestSchema, { headers: corsHeaders });
+  if (!parsed.ok) return parsed.response;
   const { user_ids, type, title, message, url, data } = parsed.data;
 
   // Filtra usuários pela preferência push.
