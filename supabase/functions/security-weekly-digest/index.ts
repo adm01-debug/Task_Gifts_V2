@@ -154,10 +154,30 @@ Deno.serve(async (req) => {
 
     const adminIds = (admins ?? []).map((a: { user_id: string }) => a.user_id);
 
-    // Idempotência semanal: o índice único é de expressão UNIQUE(user_id,type,((data)::text));
-    // se as métricas divergirem entre reexecuções o JSON diverge e o on-conflict não deduplica,
-    // por isso a checagem explícita por week_key (limitada aos adminIds reais) antes de gravar.
-    let existing: ExistingDigest | null = null;
+    // Idempotência semanal em DUAS camadas, para não regredir no blocker de
+    // notificação forjada nem trocar a semântica do Slack por mudança de admins:
+    //
+    // 1) `existingAny` (sem filtro de admin) é a base do Slack: uma entrega já
+    //    confirmada na semana continua valendo mesmo que todos os destinatários
+    //    percam o papel de admin entre execuções — não reenvia por isso.
+    // 2) `existingAdmin` (filtrado pelos adminIds ATUAIS) decide se publica
+    //    notificação nova: notificação forjada por usuário comum (insert de
+    //    usuário autenticado é permitido pela policy) não conta como prova.
+    //
+    // O índice único é de expressão UNIQUE(user_id,type,((data)::text)); se as
+    // métricas divergirem entre reexecuções o JSON diverge e o on-conflict não
+    // deduplica, por isso a checagem explícita por week_key antes de gravar.
+    const { data: existingAny, error: existsAnyError } = await admin
+      .from("notifications")
+      .select("data")
+      .eq("type", "security_weekly_digest")
+      .eq("data->>week_key", weekKey)
+      .limit(1)
+      .maybeSingle();
+    if (existsAnyError)
+      return json({ ok: false, error: "already_published_check_failed", details: existsAnyError.message }, 500);
+
+    let existingAdmin: ExistingDigest | null = null;
     if (adminIds.length > 0) {
       const { data: existingRow, error: existsError } = await admin
         .from("notifications")
@@ -169,9 +189,9 @@ Deno.serve(async (req) => {
         .maybeSingle();
       if (existsError)
         return json({ ok: false, error: "already_published_check_failed", details: existsError.message }, 500);
-      existing = (existingRow ?? null) as ExistingDigest | null;
+      existingAdmin = (existingRow ?? null) as ExistingDigest | null;
     }
-    const alreadyPublished = existing !== null;
+    const alreadyPublished = existingAdmin !== null;
 
     const notifRows = adminIds.map((userId) => ({
       user_id: userId,
@@ -204,15 +224,16 @@ Deno.serve(async (req) => {
 
     // Slack opt-in: entregue por último e com o status persistido no metadata do digest.
     // Reprocessar na MESMA semana retenta o Slack quando a entrega anterior falhou, sem
-    // republicar as notificações internas (a publicação in-app já aconteceu e não pode
-    // depender de integração externa).
+    // republicar as notificações internas. A base da decisão é `existingAny` (qualquer
+    // destinatário, mesmo sem papel atual): se a entrega Slack já foi confirmada alguma
+    // vez, não reenvia mesmo que a lista de admins tenha mudado.
     const slackUrl = Deno.env.get("SLACK_ALERT_WEBHOOK_URL");
-    const priorSlackOk =
-      existing?.data?.slack_status != null &&
-      existing.data.slack_status >= 200 &&
-      existing.data.slack_status < 300;
-    const shouldSendSlack = !!slackUrl && !priorSlackOk;
-    let slackStatus: number | null = existing?.data?.slack_status ?? null;
+    const priorSlackAny =
+      existingAny?.data?.slack_status != null &&
+      existingAny.data.slack_status >= 200 &&
+      existingAny.data.slack_status < 300;
+    const shouldSendSlack = !!slackUrl && !priorSlackAny;
+    let slackStatus: number | null = existingAny?.data?.slack_status ?? null;
     if (shouldSendSlack) {
       try {
         const r = await fetch(slackUrl, {
@@ -227,12 +248,15 @@ Deno.serve(async (req) => {
       }
     }
 
-    // Persiste o resultado do Slack no metadata do digest (best-effort): a publicação
-    // interna já aconteceu; falha aqui apenas afeta retentativas futuras na mesma semana.
+    // Persiste o resultado do Slack no metadata do digest (best-effort) e atualiza
+    // título/mensagem com as métricas recalculadas, para o texto da notificação nunca
+    // divergir do metadata do histórico na mesma semana.
     if (adminIds.length > 0 && shouldSendSlack) {
       const { error: metaError } = await admin
         .from("notifications")
         .update({
+          title: `Digest de segurança — ${weekKey}`,
+          message: `SLA ${slaPct}% • MTTR ${avgMttr ?? "—"}min • ${pending} pendentes de ${total}`,
           data: {
             week_key: weekKey,
             sla_pct: slaPct,
