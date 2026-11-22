@@ -102,9 +102,6 @@ export function useAICoach() {
     setError(null);
     setSuggestions([]); // Clear suggestions when sending new message
 
-    // Save user message to database
-    aiCoachService.saveMessage(user.id, "user", input);
-
     let assistantSoFar = "";
 
     const upsertAssistant = (nextChunk: string) => {
@@ -225,8 +222,11 @@ export function useAICoach() {
         }
       }
 
-      // Save assistant response to database after streaming completes
+      // Save user and assistant responses to database after streaming completes
       if (assistantSoFar && user?.id) {
+        // persiste a pergunta ao lado da resposta so no caminho de sucesso,
+        // evitando linha orfa no banco quando o fetch falha (ex.: 429)
+        aiCoachService.saveMessage(user.id, "user", input);
         aiCoachService.saveMessage(user.id, "assistant", assistantSoFar);
         
         // Generate follow-up suggestions
