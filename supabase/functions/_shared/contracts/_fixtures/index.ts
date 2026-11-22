@@ -65,6 +65,7 @@ const FIXTURES: Record<string, ContractFixtures> = {
   "churn-prediction": emptyBodyFixtures(),
   "push-outbox-dispatcher": emptyBodyFixtures(),
   "push-public-key": emptyBodyFixtures(),
+  "security-weekly-digest": emptyBodyFixtures(),
   "verify-ip": emptyBodyFixtures(),
   "migrate-helper": emptyBodyFixtures(),
 

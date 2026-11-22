@@ -124,6 +124,19 @@ const RESPONSES: Record<string, ResponseFixtures> = {
     invalid: [{ nome: "formato misturado", payload: { sent: 4, reason: "prefs" } }],
   },
 
+  // security-weekly-digest/index.ts → { ok, week, total, resolved, pending, critical, high, sla_pct, avg_mttr_min, top, slack_status, notified_admins }
+  "security-weekly-digest": {
+    valid: [
+      { nome: "digest sem alertas", payload: { ok: true, week: "2026-W47", total: 0, resolved: 0, pending: 0, critical: 0, high: 0, sla_pct: 100, avg_mttr_min: null, top: [], slack_status: null, notified_admins: 1 } },
+      { nome: "digest com alertas resolvidos", payload: { ok: true, week: "2026-W47", total: 7, resolved: 5, pending: 2, critical: 1, high: 2, sla_pct: 71.4, avg_mttr_min: 340, top: [{ type: "login_anomaly", count: 3 }, { type: "rate_limit_breach", count: 2 }], slack_status: 200, notified_admins: 1 } },
+    ],
+    invalid: [
+      { nome: "ok false (handler de erro, não 2xx)", payload: { ok: false, error: "digest_failed", details: "x" } },
+      { nome: "top como array de strings", payload: { ok: true, week: "2026-W47", total: 0, resolved: 0, pending: 0, critical: 0, high: 0, sla_pct: 100, avg_mttr_min: null, top: ["a"], slack_status: null, notified_admins: 0 } },
+      { nome: "sla_pct negativo", payload: { ok: true, week: "2026-W47", total: 0, resolved: 0, pending: 0, critical: 0, high: 0, sla_pct: -5, avg_mttr_min: null, top: [], slack_status: null, notified_admins: 0 } },
+    ],
+  },
+
   // trail-recommendations/index.ts:300 → JSON da IA (recommendations + analysis)
   "trail-recommendations": {
     valid: [{ nome: "recomendações com análise", payload: {
