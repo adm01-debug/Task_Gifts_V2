@@ -7,6 +7,8 @@ import {
   RATE_LIMITS 
 } from "../_shared/rate-limiter.ts";
 import { corsHeaders, verifyUser, errorResponse } from "../_shared/security.ts";
+import { parseJsonBody } from "../_shared/validation.ts";
+import { TrailRecommendationsRequestSchema } from "../_shared/contracts/trail-recommendations.ts";
 
 
 
@@ -64,7 +66,9 @@ serve(async (req) => {
   try {
     // Verify user JWT
     const authenticatedUser = await verifyUser(req);
-    const { userId: bodyUserId } = await req.json();
+    const parsed = await parseJsonBody(req, TrailRecommendationsRequestSchema, { headers: corsHeaders });
+    if (!parsed.ok) return parsed.response;
+    const { userId: bodyUserId } = parsed.data;
     const userId = bodyUserId || authenticatedUser.id;
     
     // Security: usuário só consulta a si mesmo, exceto admin/gestor.
@@ -84,13 +88,6 @@ serve(async (req) => {
       }
     }
 
-    
-    if (!userId) {
-      return new Response(JSON.stringify({ error: "userId is required" }), {
-        status: 400,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
-    }
 
     const OPENROUTER_API_KEY = Deno.env.get("OPENROUTER_API_KEY");
         if (!OPENROUTER_API_KEY) {

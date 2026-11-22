@@ -1,6 +1,8 @@
 // Edge function temporária para migração de banco.
 // Cole em: Cloud > Edge Functions > migrate-helper > View code
 // Após a migração, remova esta função.
+import { validateQuery } from "../_shared/validation.ts";
+import { MigrateHelperQuerySchema } from "../_shared/contracts/migrate-helper.ts";
 
 const ACCESS_KEY = "590672c4f3b42aaed8ab51681b59023cd9a266c9c96db25d";
 const cors = {
@@ -14,8 +16,9 @@ Deno.serve(async (req) => {
   const key = req.headers.get("x-access-key");
   if (key !== ACCESS_KEY) return new Response(JSON.stringify({ error: "unauthorized" }), { status: 401, headers: { ...cors, "Content-Type": "application/json" } });
 
-  const url = new URL(req.url);
-  const action = url.searchParams.get("action") || "ping";
+  const query = validateQuery(new URL(req.url), MigrateHelperQuerySchema, { headers: cors });
+  if (!query.ok) return query.response;
+  const { action } = query.data;
 
   try {
     if (action === "ping") {
@@ -28,7 +31,7 @@ Deno.serve(async (req) => {
         db_url: Deno.env.get("SUPABASE_DB_URL"),
       }), { headers: { ...cors, "Content-Type": "application/json" } });
     }
-    return new Response(JSON.stringify({ error: "unknown_action" }), { status: 400, headers: { ...cors, "Content-Type": "application/json" } });
+    return new Response(JSON.stringify({ error: "unknown_action" }), { status: 422, headers: { ...cors, "Content-Type": "application/json" } });
   } catch (e) {
     return new Response(JSON.stringify({ error: String(e) }), { status: 500, headers: { ...cors, "Content-Type": "application/json" } });
   }

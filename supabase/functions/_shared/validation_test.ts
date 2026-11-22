@@ -1,84 +1,69 @@
-import { 
-  assertEquals,
-  assertExists 
-} from "https://deno.land/std@0.168.0/testing/asserts.ts";
-import { Bitrix24WebhookSchema, ExternalWebhookSchema, WebhookDispatcherSchema } from "../_shared/validation.ts";
+// Testes Deno dos helpers de validação (formato único 422). Rodam no CI pelo workflow deno.yml
+// (job "Tipos e testes das Edge Functions"); local: `bun run test:edge` (bunx deno@2 test).
+import { assertEquals, assertExists } from "https://deno.land/std@0.168.0/testing/asserts.ts";
+import {
+  buildValidationError,
+  parseJsonBody,
+  validateQuery,
+  VALIDATION_ERROR_STATUS,
+  ValidationErrorSchema,
+  z,
+} from "./validation.ts";
 
-Deno.test("Bitrix24 Webhook Contract - Valid Lead Event", () => {
-  const payload = {
-    event: "ONCRMLEADADD",
-    data: {
-      FIELDS: { ID: "12345" }
-    },
-    ts: "123456789"
-  };
-  
-  const result = Bitrix24WebhookSchema.safeParse(payload);
-  assertEquals(result.success, true);
+const Schema = z.object({ id: z.string().uuid(), qty: z.number().int().positive() });
+
+function req(body: string | undefined, url = "https://edge.local/fn"): Request {
+  return new Request(url, { method: "POST", headers: { "Content-Type": "application/json" }, body });
+}
+
+Deno.test("422 — corpo com campo ausente devolve code/message/fields no formato único", async () => {
+  const r = await parseJsonBody(req(JSON.stringify({ qty: 2 })), Schema, { headers: { "X-Cors": "1" }, requestId: "r1" });
+  assertEquals(r.ok, false);
+  if (r.ok) return;
+  assertEquals(r.response.status, VALIDATION_ERROR_STATUS);
+  assertEquals(r.response.headers.get("x-cors"), "1");
+  assertEquals(r.response.headers.get("content-type"), "application/json");
+  const body = await r.response.json();
+  assertEquals(ValidationErrorSchema.safeParse(body).success, true);
+  assertEquals(body.code, "VALIDATION_ERROR");
+  assertEquals(body.error, body.message);
+  assertEquals(body.requestId, "r1");
+  assertEquals(body.fields, [{ field: "id", message: "Required", code: "invalid_type" }]);
 });
 
-Deno.test("Bitrix24 Webhook Contract - Invalid (Missing ID)", () => {
-  const payload = {
-    event: "ONCRMLEADADD",
-    data: {
-      FIELDS: { }
-    }
-  };
-  
-  // Note: Current schema has ID as optional inside FIELDS or passthrough, 
-  // let's refine the test to what we expect or what the schema currently does.
-  // If we want it required, we should update the schema.
+Deno.test("422 — JSON inválido devolve INVALID_JSON com fields vazio", async () => {
+  const r = await parseJsonBody(req("{oops"), Schema);
+  assertEquals(r.ok, false);
+  if (r.ok) return;
+  const body = await r.response.json();
+  assertEquals(body.code, "INVALID_JSON");
+  assertEquals(body.fields, []);
 });
 
-Deno.test("External Webhook Contract - Valid Task Event", () => {
-  const payload = {
-    event: "task.created",
-    data: {
-      external_id: "EXT-001",
-      user_email: "test@example.com",
-      title: "Test Task"
-    }
-  };
-  
-  const result = ExternalWebhookSchema.safeParse(payload);
-  assertEquals(result.success, true);
+Deno.test("corpo vazio vira {} e passa em schema de corpo opcional", async () => {
+  const r = await parseJsonBody(req(undefined), z.object({ userId: z.string().uuid().optional() }));
+  assertEquals(r, { ok: true, data: {} });
 });
 
-Deno.test("External Webhook Contract - Invalid (Missing Event)", () => {
-  const payload = {
-    data: { id: 1 }
-  };
-  
-  const result = ExternalWebhookSchema.safeParse(payload);
-  assertEquals(result.success, false);
-  if (!result.success) {
-    // ExternalWebhookSchema é z.union([V1, V2]): o zod reporta UM erro invalid_union com path [] e guarda os
-    // erros de cada alternativa em unionErrors — o campo faltante aparece lá dentro.
-    const caminhos = result.error.errors.flatMap((e) =>
-      e.code === "invalid_union" ? e.unionErrors.flatMap((u) => u.errors.map((i) => i.path[0])) : [e.path[0]]
-    );
-    assertEquals(caminhos.includes("event"), true);
-  }
+Deno.test("tipo incorreto e valor vazio geram códigos zod estáveis", async () => {
+  const r = await parseJsonBody(req(JSON.stringify({ id: "", qty: "2" })), Schema);
+  assertEquals(r.ok, false);
+  if (r.ok) return;
+  const codes = r.error.fields.map((f) => `${f.field}:${f.code}`).sort();
+  assertEquals(codes, ["id:invalid_string", "qty:invalid_type"]);
 });
 
-Deno.test("Webhook Dispatcher Contract - Valid Payload", () => {
-  const payload = {
-    subscription_id: "550e8400-e29b-41d4-a716-446655440000",
-    event_type: "user.signup",
-    payload: { id: "user_1" }
-  };
-  
-  const result = WebhookDispatcherSchema.safeParse(payload);
-  assertEquals(result.success, true);
+Deno.test("validateQuery aplica default e rejeita enum desconhecido", () => {
+  const Q = z.object({ action: z.enum(["ping", "credentials"]).default("ping") });
+  assertEquals(validateQuery("https://edge.local/fn", Q), { ok: true, data: { action: "ping" } });
+  const bad = validateQuery("https://edge.local/fn?action=drop", Q);
+  assertEquals(bad.ok, false);
+  if (!bad.ok) assertEquals(bad.error.fields[0].code, "invalid_enum_value");
 });
 
-Deno.test("Webhook Dispatcher Contract - Invalid UUID", () => {
-  const payload = {
-    subscription_id: "invalid-uuid",
-    event_type: "event",
-    payload: {}
-  };
-  
-  const result = WebhookDispatcherSchema.safeParse(payload);
-  assertEquals(result.success, false);
+Deno.test("buildValidationError sem requestId omite a chave (schema strict)", () => {
+  const err = buildValidationError({});
+  assertExists(err.message);
+  assertEquals("requestId" in err, false);
+  assertEquals(ValidationErrorSchema.safeParse(err).success, true);
 });

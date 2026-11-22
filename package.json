@@ -17,6 +17,8 @@
     "test:guard-env": "node --test scripts/ci/check-supabase-env.unit.mjs",
     "test": "vitest run",
     "test:ci": "vitest run --coverage --reporter=verbose",
+    "test:contracts": "vitest run supabase/functions",
+    "test:edge": "bunx --bun deno@2 test --allow-env --allow-read --allow-net=deno.land,esm.sh,registry.npmjs.org supabase/functions/_shared",
     "preview": "vite preview",
     "prepare": "husky",
     "graph:setup": "bash scripts/graphify/setup.sh",

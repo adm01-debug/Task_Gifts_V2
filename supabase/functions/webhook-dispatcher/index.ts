@@ -2,7 +2,12 @@ import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { createHmac } from "https://deno.land/std@0.168.0/node/crypto.ts";
 import { corsHeaders, verifyServiceRole } from "../_shared/security.ts";
-import { WebhookDispatcherSchema, validatePayload, createValidationErrorResponse } from "../_shared/validation.ts";
+import { parseJsonBody, validationErrorResponse, z } from "../_shared/validation.ts";
+import {
+  buildDeliveryEnvelope,
+  resolveWebhookDispatch,
+  WEBHOOK_V1_SUNSET,
+} from "../_shared/contracts/webhook-dispatcher.ts";
 import { withSentry, addBreadcrumb, captureException, recordMetric, timeStep } from "../_shared/sentry.ts";
 
 serve(withSentry("webhook-dispatcher", async (req, { requestId }) => {
@@ -18,21 +23,22 @@ serve(withSentry("webhook-dispatcher", async (req, { requestId }) => {
     // Verify service role or internal secret
     verifyServiceRole(req);
 
-    const rawPayload = await req.json();
-    const validation = validatePayload(WebhookDispatcherSchema, rawPayload);
-    
-    if (!validation.success) {
-      return createValidationErrorResponse(validation.error, corsHeaders);
-    }
+    // Contrato versionado (v1 depreciado / v2 atual): JSON inválido e campos inválidos voltam 422
+    // no formato único; corpo v1 recebe headers Deprecation/Sunset até WEBHOOK_V1_SUNSET.
+    const rawBody = await parseJsonBody(req, z.unknown(), { headers: corsHeaders, requestId, emptyAsObject: false });
+    if (!rawBody.ok) return rawBody.response;
+    const resolved = resolveWebhookDispatch(rawBody.data, { requestId });
+    const contractHeaders = { ...corsHeaders, ...resolved.headers };
+    if (!resolved.ok) return validationErrorResponse(resolved.error, contractHeaders);
 
-    const { subscription_id, event_type, payload } = validation.data;
-    addBreadcrumb("dispatcher:start", { subscription_id, event_type, requestId });
-
-    if (!subscription_id || !event_type || !payload) {
-      return new Response(JSON.stringify({ error: 'Missing required fields' }), {
-        status: 400,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
-      });
+    const { subscription_id, event_type, payload } = resolved.data;
+    addBreadcrumb("dispatcher:start", { subscription_id, event_type, version: resolved.data.version, requestId });
+    if (resolved.deprecated) {
+      addBreadcrumb("dispatcher:deprecated_contract", {
+        version: resolved.data.version,
+        sunset: WEBHOOK_V1_SUNSET.toISOString(),
+        requestId,
+      }, "warning");
     }
 
     console.log(`[Dispatcher] Processing webhook for subscription ${subscription_id}, event: ${event_type}`);
@@ -56,16 +62,12 @@ serve(withSentry("webhook-dispatcher", async (req, { requestId }) => {
       addBreadcrumb("dispatcher:subscription_missing", { subscription_id, requestId }, "warning");
       return new Response(JSON.stringify({ error: 'Subscription not found' }), {
         status: 404,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+        headers: { ...contractHeaders, 'Content-Type': 'application/json' }
       });
     }
 
-    // Prepare webhook payload
-    const webhookPayload = {
-      event: event_type,
-      timestamp: new Date().toISOString(),
-      data: payload
-    };
+    // Prepare webhook payload (v1 mantém exatamente {event,timestamp,data}; v2 acrescenta id/metadata)
+    const webhookPayload = buildDeliveryEnvelope(resolved.data, new Date().toISOString());
 
     const payloadString = JSON.stringify(webhookPayload);
 
@@ -247,7 +249,7 @@ serve(withSentry("webhook-dispatcher", async (req, { requestId }) => {
       error: success ? null : errorMessage
     }), {
       status: success ? 200 : 502,
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+      headers: { ...contractHeaders, 'Content-Type': 'application/json' }
     });
 
   } catch (error: unknown) {
