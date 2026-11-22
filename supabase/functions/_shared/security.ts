@@ -125,11 +125,12 @@ function timingSafeEqual(a: string, b: string): boolean {
 
 export function verifyServiceRole(req: Request): true {
   const authHeader = req.headers.get("Authorization");
-  if (!authHeader?.startsWith("Bearer ")) {
-    throw new HttpError(401, "Unauthorized");
-  }
-
-  const token = authHeader.slice("Bearer ".length).trim();
+  // Aceita o segredo no padrão Bearer (`Authorization`) OU no header `x-internal-secret`
+  // usado pelos crons 30–34 (que não enviram JWT nem apikey).
+  const raw = authHeader?.startsWith("Bearer ")
+    ? authHeader.slice("Bearer ".length)
+    : (req.headers.get("x-internal-secret") ?? "");
+  const token = raw.trim();
   if (!token) {
     throw new HttpError(401, "Unauthorized");
   }

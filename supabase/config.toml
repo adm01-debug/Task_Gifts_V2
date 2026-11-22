@@ -8,3 +8,15 @@ verify_jwt = false
 
 [functions.security-weekly-digest]
 verify_jwt = false
+
+[functions.burn-rate-monitor]
+verify_jwt = false
+
+[functions.error-budget-monitor]
+verify_jwt = false
+
+[functions.webhook-health-monitor]
+verify_jwt = false
+
+[functions.dispatch-critical-alert]
+verify_jwt = false
