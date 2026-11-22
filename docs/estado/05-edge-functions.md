@@ -76,28 +76,25 @@ Método: leitura integral de todos os `index.ts` e de `_shared/*`; `grep` de cad
 
 ## Functions sem chamador
 
-19 de 36 (53%) não têm nenhum chamador — nem em `src/`, nem em pg_cron ativo, nem em trigger/migration, nem em outra edge function:
-
-1. `ai-coach` — front `src/hooks/useAICoach.ts` (chat + sugestões, JWT de sessão)
-2. `birthday-celebrations`
-3. `bitrix24-api`
-4. `bitrix24-oauth`
-5. `bitrix24-webhook`
-6. `burn-rate-monitor`
-7. `checkin-reminders`
-8. `cleanup-old-security-logs` — o job pg_cron homônimo chama a função SQL, não a edge
-9. `cleanup-rate-limit-logs`
-10. `error-budget-monitor`
-11. `external-api`
-12. `external-db-bridge`
-13. `external-webhook`
-14. `send-email-digest`
-15. `send-email-notifications`
-16. `send-rate-limit-alert`
-17. `survey-reminders`
-18. `verify-geo`
-19. `weekly-league-processing`
-
+18 de 36 (50%) não têm nenhum chamador — nem em `src/`, nem em pg_cron ativo, nem em trigger/migration, nem em outra edge function:
+1. `birthday-celebrations`
+2. `bitrix24-api`
+3. `bitrix24-oauth`
+4. `bitrix24-webhook`
+5. `burn-rate-monitor`
+6. `checkin-reminders`
+7. `cleanup-old-security-logs` — o job pg_cron homônimo chama a função SQL, não a edge
+8. `cleanup-rate-limit-logs`
+9. `error-budget-monitor`
+10. `external-api`
+11. `external-db-bridge`
+12. `external-webhook`
+13. `send-email-digest`
+14. `send-email-notifications`
+15. `send-rate-limit-alert`
+16. `survey-reminders`
+17. `verify-geo`
+18. `weekly-league-processing`
 Casos limítrofes (chamador **declarado** em migration, mas o job **não está** na lista de pg_cron ativos medida em produção — logo, sem chamador efetivo): `security-weekly-digest`, `push-outbox-dispatcher`, `webhook-health-monitor`, `dispatch-critical-alert` (trigger DB).
 
 ---
