@@ -12,7 +12,7 @@ import { logger } from "@/services/loggingService";
 import { passwordResetService } from "@/services/passwordResetService";
 import { twoFactorService } from "@/services/twoFactorService";
 import { lovable } from "@/integrations/lovable/index";
-import { emailSchema, loginSchema, signupSchema } from "@/lib/authValidations";
+import { emailSchema, loginSchema, signupSchema, checkPasswordLeaked } from "@/lib/authValidations";
 import { IpCheckingScreen, IpBlockedScreen, AuthLoadingScreen } from "@/components/auth/AuthScreens";
 import { AuthBranding, AuthBackground } from "@/components/auth/AuthBranding";
 import { AuthFormContent } from "@/components/auth/AuthFormContent";
@@ -191,6 +191,18 @@ const Auth = () => {
           }
         }
       } else {
+        if (view === "signup") {
+          const leaked = await checkPasswordLeaked(password);
+          if (leaked.isLeaked) {
+            toast.error(
+              leaked.occurrences > 100
+                ? "Senha comprometida e muito utilizada. Escolha outra."
+                : "Esta senha apareceu em vazamentos de dados. Escolha outra."
+            );
+            setLoading(false);
+            return;
+          }
+        }
         const { error } = await signUp(email, password, displayName || undefined);
         if (error) {
           toast.error(error.message.includes("User already registered") ? "Este email já está cadastrado" : error.message);
