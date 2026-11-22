@@ -17,6 +17,7 @@ import { sendCampaignPushContract } from "./send-campaign-push.ts";
 import { trailRecommendationsContract } from "./trail-recommendations.ts";
 import { verifyIpContract } from "./verify-ip.ts";
 import { webhookDispatcherContract } from "./webhook-dispatcher.ts";
+import { webhookPingContract } from "./webhook-ping.ts";
 
 export * from "./common.ts";
 export * from "./admin-alerts.ts";
@@ -35,6 +36,7 @@ export * from "./send-campaign-push.ts";
 export * from "./trail-recommendations.ts";
 export * from "./verify-ip.ts";
 export * from "./webhook-dispatcher.ts";
+export * from "./webhook-ping.ts";
 
 export const CONTRACTS = {
   "admin-alerts": adminAlertsContract,
@@ -53,6 +55,7 @@ export const CONTRACTS = {
   "trail-recommendations": trailRecommendationsContract,
   "verify-ip": verifyIpContract,
   "webhook-dispatcher": webhookDispatcherContract,
+  "webhook-ping": webhookPingContract,
 } as const satisfies Record<string, EdgeContract>;
 
 export type EdgeFunctionName = keyof typeof CONTRACTS;
