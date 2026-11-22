@@ -74,12 +74,17 @@ export function getPasswordStrength(password: string): {
   return { score, label: "Forte", color: "bg-green-500", checks };
 }
 
+const leakedCache = new Map<string, { isLeaked: boolean; occurrences: number }>();
+
 // Check if password has been leaked using Have I Been Pwned API (k-anonymity)
 export async function checkPasswordLeaked(password: string): Promise<{
   isLeaked: boolean;
   occurrences: number;
 }> {
   try {
+    const cached = leakedCache.get(password);
+    if (cached) return cached;
+
     // Create SHA-1 hash of the password
     const encoder = new TextEncoder();
     const data = encoder.encode(password);
@@ -91,14 +96,19 @@ export async function checkPasswordLeaked(password: string): Promise<{
     const prefix = hashHex.substring(0, 5);
     const suffix = hashHex.substring(5);
     
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 4000);
     const response = await fetch(`https://api.pwnedpasswords.com/range/${prefix}`, {
       headers: {
         'Add-Padding': 'true', // Extra security
       },
+      signal: controller.signal,
     });
+    clearTimeout(timeoutId);
     
     if (!response.ok) {
       // HIBP API error - silently fail
+      leakedCache.set(password, { isLeaked: false, occurrences: 0 });
       return { isLeaked: false, occurrences: 0 };
     }
     
@@ -108,13 +118,18 @@ export async function checkPasswordLeaked(password: string): Promise<{
     for (const line of lines) {
       const [hashSuffix, count] = line.split(':');
       if (hashSuffix.trim() === suffix) {
-        return { isLeaked: true, occurrences: parseInt(count.trim(), 10) };
+        const result = { isLeaked: true, occurrences: parseInt(count.trim(), 10) };
+        leakedCache.set(password, result);
+        return result;
       }
     }
     
-    return { isLeaked: false, occurrences: 0 };
+    const notLeaked = { isLeaked: false, occurrences: 0 };
+    leakedCache.set(password, notLeaked);
+    return notLeaked;
   } catch (err: unknown) {
     // Silently fail - leaked password check should not block auth
+    leakedCache.set(password, { isLeaked: false, occurrences: 0 });
     return { isLeaked: false, occurrences: 0 };
   }
 }
