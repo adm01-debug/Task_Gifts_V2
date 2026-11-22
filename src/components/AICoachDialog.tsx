@@ -152,20 +152,21 @@ export function AICoachDialog({ trigger }: AICoachDialogProps = {}) {
     }
   }, [open]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (input.trim() && !isLoading) {
       vibrate("light");
       playClickSound();
-      sendMessage(input);
-      setInput("");
+      if (await sendMessage(input)) {
+        setInput("");
+      }
     }
   };
 
-  const handleQuickPrompt = (prompt: string) => {
+  const handleQuickPrompt = async (prompt: string) => {
     vibrate("light");
     playClickSound();
-    sendMessage(prompt);
+    await sendMessage(prompt);
   };
 
   const handleNavigateToTrail = (trailId: string) => {
