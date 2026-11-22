@@ -1961,6 +1961,7 @@
    "push-outbox-dispatcher",
    "push-public-key",
    "reward-approval-review",
+   "security-weekly-digest",
    "send-campaign-push",
    "trail-recommendations",
    "verify-ip",

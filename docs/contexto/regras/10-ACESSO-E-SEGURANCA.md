@@ -1,6 +1,6 @@
 # 10 · ACESSO E SEGURANÇA — quem pode o quê
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `2d24251fb1` · branch `main` · 2026-11-22 16:39 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `8247352013` · branch `main` · 2026-11-22 18:51 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## Perfis / roles identificados
@@ -256,7 +256,7 @@
 
 > `—` com RLS ligado = ninguém além de service_role. `sem RLS` = qualquer chave anon lê/escreve tudo.
 
-## Onde o RLS é IGNORADO (service_role) — 130 arquivo(s)
+## Onde o RLS é IGNORADO (service_role) — 131 arquivo(s)
 
 - `scripts/ai-context/cenarios.mjs`
 - `scripts/ai-context/gerar.unit.mjs`
@@ -274,6 +274,7 @@
 - `supabase/functions/push-device-revoked/index.ts`
 - `supabase/functions/push-outbox-dispatcher/index.ts`
 - `supabase/functions/reward-approval-review/index.ts`
+- `supabase/functions/security-weekly-digest/index.ts`
 - `supabase/functions/send-campaign-push/index.ts`
 - `supabase/functions/trail-recommendations/index.ts`
 - `supabase/functions/verify-ip/index.ts`
@@ -629,6 +630,7 @@
 
 - `migrate-helper`
 - `push-public-key`
+- `security-weekly-digest`
 
 ## Rotas protegidas no front
 

@@ -3,7 +3,7 @@
  "format_version": 2,
  "stack": {
   "linguagens": [
-   "TypeScript (1128)",
+   "TypeScript (1130)",
    "SQL (271)",
    "Markdown (55)",
    "JavaScript (24)",
@@ -470,6 +470,7 @@
    "RESEND_API_KEY",
    "SENTRY_DSN",
    "SENTRY_ENV",
+   "SLACK_ALERT_WEBHOOK_URL",
    "SUPABASE_ANON_KEY",
    "SUPABASE_DB_URL",
    "SUPABASE_SERVICE_ROLE_KEY",
@@ -654,6 +655,7 @@
    "RESEND_API_KEY",
    "SENTRY_DSN",
    "SENTRY_ENV",
+   "SLACK_ALERT_WEBHOOK_URL",
    "UPSTASH_REDIS_REST_TOKEN",
    "UPSTASH_REDIS_REST_URL",
    "VITE_BITRIX_WEBHOOK_URL",
@@ -661,7 +663,8 @@
   ],
   "webhooks_recebidos": [
    "migrate-helper",
-   "push-public-key"
+   "push-public-key",
+   "security-weekly-digest"
   ],
   "realtime": [
    "activity-comments-${activityId}",

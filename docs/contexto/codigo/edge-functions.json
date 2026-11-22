@@ -2,10 +2,11 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "pasta": "supabase/functions",
- "total": 17,
+ "total": 18,
  "verify_jwt_false": [
   "migrate-helper",
-  "push-public-key"
+  "push-public-key",
+  "security-weekly-digest"
  ],
  "shared": [
   "supabase/functions/_shared/cache.ts",
@@ -31,6 +32,7 @@
   "supabase/functions/_shared/contracts/push-public-key.ts",
   "supabase/functions/_shared/contracts/registry.contract.spec.ts",
   "supabase/functions/_shared/contracts/reward-approval-review.ts",
+  "supabase/functions/_shared/contracts/security-weekly-digest.ts",
   "supabase/functions/_shared/contracts/send-campaign-push.ts",
   "supabase/functions/_shared/contracts/trail-recommendations.ts",
   "supabase/functions/_shared/contracts/validation.contract.spec.ts",
@@ -487,6 +489,39 @@
    ],
    "chamada_por_edges": [],
    "chamada_por_sql_ou_cron": false,
+   "orfa": false,
+   "testes": 0
+  },
+  {
+   "nome": "security-weekly-digest",
+   "entrada": "supabase/functions/security-weekly-digest/index.ts",
+   "arquivos": 1,
+   "linhas": 304,
+   "verify_jwt": false,
+   "metodos": [
+    "OPTIONS",
+    "POST"
+   ],
+   "tabelas": [
+    "notifications",
+    "security_alerts",
+    "user_roles"
+   ],
+   "rpcs": [],
+   "env": [
+    "CRON_SECRET",
+    "INTERNAL_FUNCTION_SECRET",
+    "SLACK_ALERT_WEBHOOK_URL",
+    "SUPABASE_SERVICE_ROLE_KEY",
+    "SUPABASE_URL"
+   ],
+   "buckets": [],
+   "chama_edges": [],
+   "hosts_externos": [],
+   "usa_shared": [],
+   "chamada_pelo_front": [],
+   "chamada_por_edges": [],
+   "chamada_por_sql_ou_cron": true,
    "orfa": false,
    "testes": 0
   },

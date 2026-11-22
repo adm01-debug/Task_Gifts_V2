@@ -5895,6 +5895,7 @@
    "supabase/functions/_shared/contracts/push-outbox-dispatcher.ts",
    "supabase/functions/_shared/contracts/push-public-key.ts",
    "supabase/functions/_shared/contracts/reward-approval-review.ts",
+   "supabase/functions/_shared/contracts/security-weekly-digest.ts",
    "supabase/functions/_shared/contracts/send-campaign-push.ts",
    "supabase/functions/_shared/contracts/trail-recommendations.ts",
    "supabase/functions/_shared/contracts/verify-ip.ts",
@@ -5914,6 +5915,9 @@
    "supabase/functions/_shared/contracts/common.ts"
   ],
   "supabase/functions/_shared/contracts/reward-approval-review.ts": [
+   "supabase/functions/_shared/contracts/common.ts"
+  ],
+  "supabase/functions/_shared/contracts/security-weekly-digest.ts": [
    "supabase/functions/_shared/contracts/common.ts"
   ],
   "supabase/functions/_shared/contracts/send-campaign-push.ts": [

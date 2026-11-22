@@ -59,11 +59,11 @@
  "commits": {
   "convencao": "conventional commits (observado)",
   "exemplos": [
+   "chore(automacao): reconstroi security-weekly-digest e conecta ao cron 33 (#104)",
    "feat(edge): ponte admin para webhook-dispatcher (webhook-ping) (#102)",
    "fix(edge): aceita url de app no push e ajusta contrato de versao do webhook (#101)",
    "fix(webhook-dispatcher): devolve 401 em vez de 500 ao rejeitar token sem permissao (#100)",
-   "feat(edge): contratos zod, 422 unico e versionamento v1/v2 dos webhooks (#99)",
-   "fix: usa JWT de sessao no AI coach em vez do publishable key (#98)"
+   "feat(edge): contratos zod, 422 unico e versionamento v1/v2 dos webhooks (#99)"
   ]
  },
  "pr_template": ".github/PULL_REQUEST_TEMPLATE.md",

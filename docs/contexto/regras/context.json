@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "2d24251fb198f6c5e9c2cd9b65acc58a668cf298",
+  "sha": "8247352013b948dce00b64c586d9f7f0b2a40f7d",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
-  "generated_at": "2026-11-22 16:39 UTC",
-  "files_total": 1537,
-  "code_files": 1433,
-  "code_lines": 257540
+  "generated_at": "2026-11-22 18:51 UTC",
+  "files_total": 1539,
+  "code_files": 1435,
+  "code_lines": 257887
  },
  "version": "1.3.2",
- "facts_hash": "6a510854b64cc3fc",
+ "facts_hash": "6750b0154ff18572",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -194,7 +194,7 @@
   ],
   "package_manager": "bun",
   "languages": {
-   ".ts": 565,
+   ".ts": 567,
    ".tsx": 565,
    ".sql": 271,
    ".mjs": 21,
@@ -206,7 +206,8 @@
   "supabase_config": {
    "functions_no_jwt": [
     "migrate-helper",
-    "push-public-key"
+    "push-public-key",
+    "security-weekly-digest"
    ],
    "auth": {}
   },
@@ -44150,6 +44151,33 @@
     "idempotency": false
    },
    {
+    "name": "security-weekly-digest",
+    "file": "supabase/functions/security-weekly-digest/index.ts",
+    "methods": [
+     "OPTIONS"
+    ],
+    "auth": "PÚBLICA (verify_jwt=false em config.toml)",
+    "tables": [
+     "notifications",
+     "security_alerts",
+     "user_roles"
+    ],
+    "env": [
+     "CRON_SECRET",
+     "INTERNAL_FUNCTION_SECRET",
+     "SLACK_ALERT_WEBHOOK_URL",
+     "SUPABASE_SERVICE_ROLE_KEY",
+     "SUPABASE_URL"
+    ],
+    "external": [],
+    "invokes": [],
+    "doc": "Edge Function: security-weekly-digest Digest semanal de segurança (pg_cron 0 13 * * 1): consolida alertas dos últimos 7 dias, calcula SLA/MTTR agregados e publica no Slack (opt-in via SLACK_ALERT_WEBHOOK_URL) e como notificação in-app para todos os admins. Idempotente por semana ISO (upsert ignorand …",
+    "errors": [],
+    "side_effects": [],
+    "webhook_events": [],
+    "idempotency": true
+   },
+   {
     "name": "send-campaign-push",
     "file": "supabase/functions/send-campaign-push/index.ts",
     "methods": [
@@ -49145,8 +49173,8 @@
   },
   {
    "module": "supabase/functions",
-   "files": 55,
-   "lines": 6793,
+   "files": 57,
+   "lines": 7140,
    "tables": [
     "ai_course_jobs",
     "attendance_records",
@@ -49203,6 +49231,7 @@
     "push-outbox-dispatcher.ts: PushOutboxDispatcherResponseSchema, pushOutboxDispatcherContract",
     "push-public-key.ts: PushPublicKeyResponseSchema, pushPublicKeyContract",
     "reward-approval-review.ts: RewardApprovalReviewRequestSchema, RewardApprovalReviewResponseSchema, rewardApprovalReviewContract",
+    "security-weekly-digest.ts: SecurityWeeklyDigestResponseSchema, securityWeeklyDigestContract",
     "send-campaign-push.ts: SendCampaignPushRequestSchema, SendCampaignPushResponseSchema, sendCampaignPushContract",
     "trail-recommendations.ts: TrailRecommendationsRequestSchema, TrailRecommendationSchema, TrailRecommendationsResponseSchema, trailRecommendationsContract",
     "verify-ip.ts: VerifyIpResponseSchema, verifyIpContract",
@@ -49258,6 +49287,7 @@
     "supabase/functions/_shared/contracts/push-public-key.ts",
     "supabase/functions/_shared/contracts/registry.contract.spec.ts",
     "supabase/functions/_shared/contracts/reward-approval-review.ts",
+    "supabase/functions/_shared/contracts/security-weekly-digest.ts",
     "supabase/functions/_shared/contracts/send-campaign-push.ts",
     "supabase/functions/_shared/contracts/trail-recommendations.ts",
     "supabase/functions/_shared/contracts/validation.contract.spec.ts",
@@ -49281,6 +49311,7 @@
     "supabase/functions/push-public-key/index.ts",
     "supabase/functions/reward-approval-review/index.ts",
     "supabase/functions/reward-approval-review/risk.ts",
+    "supabase/functions/security-weekly-digest/index.ts",
     "supabase/functions/send-campaign-push/index.ts",
     "supabase/functions/trail-recommendations/index.ts",
     "supabase/functions/verify-ip/index.ts",
@@ -50358,7 +50389,8 @@
     ],
     "select": [
      "src/services/notificationsService.ts",
-     "supabase/functions/competency-alerts/index.ts"
+     "supabase/functions/competency-alerts/index.ts",
+     "supabase/functions/security-weekly-digest/index.ts"
     ],
     "update": [
      "src/services/notificationsService.ts"
@@ -50367,7 +50399,11 @@
      "src/services/notificationsService.ts"
     ],
     "ref": [
-     "supabase/functions/competency-alerts/index.ts"
+     "supabase/functions/competency-alerts/index.ts",
+     "supabase/functions/security-weekly-digest/index.ts"
+    ],
+    "upsert": [
+     "supabase/functions/security-weekly-digest/index.ts"
     ]
    },
    "onboarding_progress": {
@@ -50837,7 +50873,8 @@
     "select": [
      "src/components/security/SecurityAlertsPanel.tsx",
      "src/pages/BurnRate.tsx",
-     "src/pages/WebhookSubscriptionDetail.tsx"
+     "src/pages/WebhookSubscriptionDetail.tsx",
+     "supabase/functions/security-weekly-digest/index.ts"
     ],
     "update": [
      "src/components/security/SecurityAlertsPanel.tsx"
@@ -51169,6 +51206,7 @@
      "src/services/rbacService.ts",
      "supabase/functions/churn-prediction/index.ts",
      "supabase/functions/reward-approval-review/index.ts",
+     "supabase/functions/security-weekly-digest/index.ts",
      "supabase/functions/trail-recommendations/index.ts"
     ],
     "insert": [
@@ -51846,6 +51884,7 @@
    ],
    "notifications": [
     "created_at",
+    "data",
     "id",
     "read",
     "type",
@@ -52089,7 +52128,9 @@
     "created_at",
     "description",
     "id",
+    "is_resolved",
     "metadata",
+    "resolved_at",
     "runbook_slug",
     "severity",
     "title"
@@ -52366,7 +52407,8 @@
     "scripts/supabase_snapshot/snapshot.py"
    ],
    "CRON_SECRET": [
-    "supabase/functions/_shared/security.ts"
+    "supabase/functions/_shared/security.ts",
+    "supabase/functions/security-weekly-digest/index.ts"
    ],
    "DB_URL": [
     "scripts/ai-context/gerar.unit.mjs"
@@ -52401,7 +52443,8 @@
     "scripts/graphify-local.unit.mjs"
    ],
    "INTERNAL_FUNCTION_SECRET": [
-    "supabase/functions/_shared/security.ts"
+    "supabase/functions/_shared/security.ts",
+    "supabase/functions/security-weekly-digest/index.ts"
    ],
    "MAINTENANCE_TEST_": [
     "scripts/maintenance/maintenance.unit.mjs"
@@ -52471,6 +52514,9 @@
    "SENTRY_ENV": [
     "supabase/functions/_shared/sentry.ts"
    ],
+   "SLACK_ALERT_WEBHOOK_URL": [
+    "supabase/functions/security-weekly-digest/index.ts"
+   ],
    "SNAPSHOT_DIR": [
     "scripts/supabase_snapshot/snapshot.py"
    ],
@@ -52510,6 +52556,7 @@
     "supabase/functions/push-device-revoked/index.ts",
     "supabase/functions/push-outbox-dispatcher/index.ts",
     "supabase/functions/reward-approval-review/index.ts",
+    "supabase/functions/security-weekly-digest/index.ts",
     "supabase/functions/send-campaign-push/index.ts",
     "supabase/functions/trail-recommendations/index.ts",
     "supabase/functions/verify-ip/index.ts",
@@ -52532,6 +52579,7 @@
     "supabase/functions/push-device-revoked/index.ts",
     "supabase/functions/push-outbox-dispatcher/index.ts",
     "supabase/functions/reward-approval-review/index.ts",
+    "supabase/functions/security-weekly-digest/index.ts",
     "supabase/functions/send-campaign-push/index.ts",
     "supabase/functions/trail-recommendations/index.ts",
     "supabase/functions/verify-ip/index.ts",
@@ -54226,6 +54274,14 @@
     "name": "RewardApprovalReviewResponseSchema",
     "kind": "object",
     "body": "{ score: z.number().min(0).max(100), level: z.string(), factors: z.array(z.unknown()), summary: z.string(), recommendation: z.enum([\"approve\", \"review\", \"reject\"]), requires_dual_approval: z.boolean(), ai_available: z.boolean(), }",
+    "refines": [],
+    "chain": []
+   },
+   {
+    "file": "supabase/functions/_shared/contracts/security-weekly-digest.ts",
+    "name": "SecurityWeeklyDigestResponseSchema",
+    "kind": "object",
+    "body": "{ ok: z.literal(true), week: z.string(), total: z.number().int().nonnegative(), resolved: z.number().int().nonnegative(), pending: z.number().int().nonnegative(), critical: z.number().int().nonnegative(), high: z.number().int().nonnegative(), sla_pct: z.number().nonnegative(), avg_mttr_min: z.number().nullable(), top: z.array(z.object({ type: z.string(), count: z.number().int().nonnegative() })), slack_status: z.number().int().nullable(), notified_admins: z.number().int().nonnegative(), }",
     "refines": [],
     "chain": []
    },
@@ -58631,6 +58687,22 @@
    {
     "file": "supabase/functions/reward-approval-review/risk.ts",
     "text": "* A IA nunca decide sozinha: ela apenas ajusta a pontuação heurística dentro"
+   },
+   {
+    "file": "supabase/functions/security-weekly-digest/index.ts",
+    "text": "A função publica com efeito colateral (notificações) e é chamada apenas por cron (POST),"
+   },
+   {
+    "file": "supabase/functions/security-weekly-digest/index.ts",
+    "text": "SLA é a fração resolvidos/total (métrica de resolução, não de prazo): o repo não"
+   },
+   {
+    "file": "supabase/functions/security-weekly-digest/index.ts",
+    "text": "persiste se um alerta estourou o prazo, então % de resolvidos é o indicador"
+   },
+   {
+    "file": "supabase/functions/security-weekly-digest/index.ts",
+    "text": "forjado com type=security_weekly_digest não pode ser usado como prova (nem bloquear"
    },
    {
     "file": "supabase/functions/send-campaign-push/index.ts",
@@ -76152,6 +76224,18 @@
     "kind": "escreve"
    },
    {
+    "file": "supabase/functions/_shared/contracts/_fixtures/responses.ts",
+    "field": "type",
+    "value": "login_anomaly",
+    "kind": "escreve"
+   },
+   {
+    "file": "supabase/functions/_shared/contracts/_fixtures/responses.ts",
+    "field": "type",
+    "value": "rate_limit_breach",
+    "kind": "escreve"
+   },
+   {
     "file": "supabase/functions/admin-alerts/index.ts",
     "field": "type",
     "value": "inactive_users",
@@ -76714,6 +76798,36 @@
     "field": "status",
     "value": "cancelled",
     "kind": "compara"
+   },
+   {
+    "file": "supabase/functions/security-weekly-digest/index.ts",
+    "field": "type",
+    "value": "security_weekly_digest",
+    "kind": "escreve"
+   },
+   {
+    "file": "supabase/functions/security-weekly-digest/index.ts",
+    "field": "role",
+    "value": "admin",
+    "kind": "filtra"
+   },
+   {
+    "file": "supabase/functions/security-weekly-digest/index.ts",
+    "field": "type",
+    "value": "security_weekly_digest",
+    "kind": "filtra"
+   },
+   {
+    "file": "supabase/functions/security-weekly-digest/index.ts",
+    "field": "type",
+    "value": "security_weekly_digest",
+    "kind": "filtra"
+   },
+   {
+    "file": "supabase/functions/security-weekly-digest/index.ts",
+    "field": "type",
+    "value": "security_weekly_digest",
+    "kind": "filtra"
    },
    {
     "file": "supabase/functions/send-campaign-push/index.ts",
@@ -78240,6 +78354,10 @@
    {
     "file": "supabase/functions/competency-alerts/index.ts",
     "line": ".gte('created_at', new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString())"
+   },
+   {
+    "file": "supabase/functions/security-weekly-digest/index.ts",
+    "line": "const since = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();"
    },
    {
     "file": "supabase/migrations/20260520162624_05dce903-e1a2-49e8-93a1-64ec4f6421b4.sql",
@@ -99154,6 +99272,10 @@
    {
     "file": "supabase/functions/reward-approval-review/index.ts",
     "limit": "500"
+   },
+   {
+    "file": "supabase/functions/security-weekly-digest/index.ts",
+    "limit": "1"
    }
   ],
   "state_machines": {
@@ -100424,6 +100546,12 @@
       "escreve:supabase/functions/_shared/contracts/_fixtures/responses.ts",
       "escreve:supabase/functions/admin-alerts/index.ts"
      ],
+     "login_anomaly": [
+      "escreve:supabase/functions/_shared/contracts/_fixtures/responses.ts"
+     ],
+     "rate_limit_breach": [
+      "escreve:supabase/functions/_shared/contracts/_fixtures/responses.ts"
+     ],
      "zero_engagement": [
       "escreve:supabase/functions/admin-alerts/index.ts"
      ],
@@ -100467,6 +100595,10 @@
      "competency_celebration": [
       "escreve:supabase/functions/competency-alerts/index.ts",
       "filtra:supabase/functions/competency-alerts/index.ts"
+     ],
+     "security_weekly_digest": [
+      "escreve:supabase/functions/security-weekly-digest/index.ts",
+      "filtra:supabase/functions/security-weekly-digest/index.ts"
      ]
     },
     "role": {
@@ -100490,7 +100622,8 @@
      ],
      "admin": [
       "compara:src/components/rbac/UserRolesTab.tsx",
-      "compara:supabase/functions/reward-approval-review/index.ts"
+      "compara:supabase/functions/reward-approval-review/index.ts",
+      "filtra:supabase/functions/security-weekly-digest/index.ts"
      ],
      "long": [
       "compara:src/pages/BurnRate.tsx",
@@ -104496,6 +104629,7 @@
    "supabase/functions/push-device-revoked/index.ts",
    "supabase/functions/push-outbox-dispatcher/index.ts",
    "supabase/functions/reward-approval-review/index.ts",
+   "supabase/functions/security-weekly-digest/index.ts",
    "supabase/functions/send-campaign-push/index.ts",
    "supabase/functions/trail-recommendations/index.ts",
    "supabase/functions/verify-ip/index.ts",
@@ -104848,7 +104982,8 @@
   ],
   "public_functions": [
    "migrate-helper",
-   "push-public-key"
+   "push-public-key",
+   "security-weekly-digest"
   ],
   "auth_config": {},
   "grants": [
@@ -146802,7 +146937,7 @@
   },
   "supabase/functions/_shared/contracts/index.ts": {
    "path": "supabase/functions/_shared/contracts/index.ts",
-   "lines": 68,
+   "lines": 71,
    "exports": [
     "const CONTRACTS",
     "type EdgeFunctionName",
@@ -146924,6 +147059,23 @@
      "name": "RewardApprovalReviewResponseSchema",
      "kind": "object",
      "body": "{ score: z.number().min(0).max(100), level: z.string(), factors: z.array(z.unknown()), summary: z.string(), recommendation: z.enum([\"approve\", \"review\", \"reject\"]), requires_dual_approval: z.boolean(), ai_available: z.boolean(), }",
+     "refines": [],
+     "chain": []
+    }
+   ]
+  },
+  "supabase/functions/_shared/contracts/security-weekly-digest.ts": {
+   "path": "supabase/functions/_shared/contracts/security-weekly-digest.ts",
+   "lines": 26,
+   "exports": [
+    "const SecurityWeeklyDigestResponseSchema",
+    "const securityWeeklyDigestContract"
+   ],
+   "zod": [
+    {
+     "name": "SecurityWeeklyDigestResponseSchema",
+     "kind": "object",
+     "body": "{ ok: z.literal(true), week: z.string(), total: z.number().int().nonnegative(), resolved: z.number().int().nonnegative(), pending: z.number().int().nonnegative(), critical: z.number().int().nonnegative(), high: z.number().int().nonnegative(), sla_pct: z.number().nonnegative(), avg_mttr_min: z.number().nullable(), top: z.array(z.object({ type: z.string(), count: z.number().int().nonnegative() })), slack_status: z.number().int().nullable(), notified_admins: z.number().int().nonnegative(), }",
      "refines": [],
      "chain": []
     }
@@ -147172,7 +147324,7 @@
   },
   "supabase/functions/_shared/contracts/_fixtures/index.ts": {
    "path": "supabase/functions/_shared/contracts/_fixtures/index.ts",
-   "lines": 268,
+   "lines": 269,
    "exports": [
     "function emptyBodyFixtures",
     "function fixturesFor",
@@ -147233,7 +147385,7 @@
   },
   "supabase/functions/_shared/contracts/_fixtures/responses.ts": {
    "path": "supabase/functions/_shared/contracts/_fixtures/responses.ts",
-   "lines": 171,
+   "lines": 184,
    "exports": [
     "interface ResponseFixtures",
     "function responsesFor"
@@ -147247,6 +147399,16 @@
     {
      "field": "type",
      "value": "low_attendance",
+     "kind": "escreve"
+    },
+    {
+     "field": "type",
+     "value": "login_anomaly",
+     "kind": "escreve"
+    },
+    {
+     "field": "type",
+     "value": "rate_limit_breach",
      "kind": "escreve"
     }
    ],
@@ -148497,6 +148659,103 @@
      "body": "aiSummary: string | null"
     }
    ]
+  },
+  "supabase/functions/security-weekly-digest/index.ts": {
+   "path": "supabase/functions/security-weekly-digest/index.ts",
+   "lines": 304,
+   "tables": [
+    {
+     "table": "security_alerts",
+     "op": "select"
+    },
+    {
+     "table": "user_roles",
+     "op": "select"
+    },
+    {
+     "table": "notifications",
+     "op": "select"
+    },
+    {
+     "table": "notifications",
+     "op": "select"
+    },
+    {
+     "table": "notifications",
+     "op": "upsert"
+    },
+    {
+     "table": "notifications",
+     "op": "ref"
+    }
+   ],
+   "table_cols": {
+    "security_alerts": [
+     "alert_type",
+     "created_at",
+     "id",
+     "is_resolved",
+     "resolved_at",
+     "severity"
+    ],
+    "user_roles": [
+     "role",
+     "user_id"
+    ],
+    "notifications": [
+     "data",
+     "type",
+     "user_id"
+    ]
+   },
+   "env": [
+    "CRON_SECRET",
+    "INTERNAL_FUNCTION_SECRET",
+    "SLACK_ALERT_WEBHOOK_URL",
+    "SUPABASE_SERVICE_ROLE_KEY",
+    "SUPABASE_URL"
+   ],
+   "status_values": [
+    {
+     "field": "type",
+     "value": "security_weekly_digest",
+     "kind": "escreve"
+    },
+    {
+     "field": "role",
+     "value": "admin",
+     "kind": "filtra"
+    },
+    {
+     "field": "type",
+     "value": "security_weekly_digest",
+     "kind": "filtra"
+    },
+    {
+     "field": "type",
+     "value": "security_weekly_digest",
+     "kind": "filtra"
+    },
+    {
+     "field": "type",
+     "value": "security_weekly_digest",
+     "kind": "filtra"
+    }
+   ],
+   "rule_comments": [
+    "A função publica com efeito colateral (notificações) e é chamada apenas por cron (POST),",
+    "SLA é a fração resolvidos/total (métrica de resolução, não de prazo): o repo não",
+    "persiste se um alerta estourou o prazo, então % de resolvidos é o indicador",
+    "forjado com type=security_weekly_digest não pode ser usado como prova (nem bloquear"
+   ],
+   "doc": "Edge Function: security-weekly-digest Digest semanal de segurança (pg_cron 0 13 * * 1): consolida alertas dos últimos 7 dias, calcula SLA/MTTR agregados e publica no Slack (opt-in via SLACK_ALERT_WEBHOOK_URL) e como notificação in-app para todos os admins. Idempotente por semana ISO (upsert ignorand …",
+   "temporal": [
+    "const since = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();"
+   ],
+   "pagination": [
+    "1"
+   ],
+   "uses_service_role": true
   },
   "supabase/functions/send-campaign-push/index.ts": {
    "path": "supabase/functions/send-campaign-push/index.ts",
@@ -150279,10 +150538,24 @@
   }
  },
  "git": {
-  "sha": "2d24251fb198f6c5e9c2cd9b65acc58a668cf298",
+  "sha": "8247352013b948dce00b64c586d9f7f0b2a40f7d",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "commits": [
+   {
+    "sha": "8247352",
+    "date": "2026-11-22",
+    "author": "adm01-debug",
+    "subject": "chore(automacao): reconstroi security-weekly-digest e conecta ao cron 33 (#104)",
+    "files": [
+     "supabase/config.toml",
+     "supabase/functions/_shared/contracts/_fixtures/index.ts",
+     "supabase/functions/_shared/contracts/_fixtures/responses.ts",
+     "supabase/functions/_shared/contracts/index.ts",
+     "supabase/functions/_shared/contracts/security-weekly-digest.ts",
+     "supabase/functions/security-weekly-digest/index.ts"
+    ]
+   },
    {
     "sha": "2d24251",
     "date": "2026-11-22",
@@ -150640,22 +150913,6 @@
     "files": [
      "tests/e2e/smoke.spec.ts"
     ]
-   },
-   {
-    "sha": "7f53418",
-    "date": "2026-11-20",
-    "author": "adm01-debug",
-    "subject": "docs: linha de base e pendencias do goal (seguranca, economia, nav, infra) (#73)",
-    "files": [
-     "docs/pendencias/01-mcp-json-com-segredo.md",
-     "docs/pendencias/02-profiles-update-sem-restricao-de-coluna.md",
-     "docs/pendencias/03-csp-hibp-pwnedpasswords.md",
-     "docs/pendencias/04-navegacao-rotas-sem-entrada-rota-fantasma.md",
-     "docs/pendencias/05-lockfiles-triplos-package-manager.md",
-     "docs/pendencias/_linha-de-base.md",
-     "docs/pendencias/_ordem.md",
-     "docs/pendencias/_regras-de-negocio.md"
-    ]
    }
   ],
   "hot_files": [
@@ -150672,28 +150929,24 @@
     5
    ],
    [
-    ".env.example",
+    "supabase/functions/_shared/contracts/_fixtures/index.ts",
+    4
+   ],
+   [
+    "supabase/functions/_shared/contracts/_fixtures/responses.ts",
     3
    ],
    [
-    "supabase/functions/_shared/contracts/_fixtures/index.ts",
+    "supabase/functions/_shared/contracts/index.ts",
+    3
+   ],
+   [
+    ".env.example",
     3
    ],
    [
     "supabase/functions/webhook-dispatcher/index.ts",
     3
-   ],
-   [
-    "docs/pendencias/03-csp-hibp-pwnedpasswords.md",
-    3
-   ],
-   [
-    "supabase/functions/_shared/contracts/_fixtures/responses.ts",
-    2
-   ],
-   [
-    "supabase/functions/_shared/contracts/index.ts",
-    2
    ],
    [
     "docs/agentes/edge-functions.md",
@@ -150737,6 +150990,10 @@
    ],
    [
     "supabase/functions/_shared/contracts/webhook-dispatcher.ts",
+    2
+   ],
+   [
+    "supabase/functions/_shared/contracts/webhook-versioning.contract.spec.ts",
     2
    ]
   ]

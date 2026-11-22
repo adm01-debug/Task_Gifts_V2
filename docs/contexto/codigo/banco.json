@@ -18792,7 +18792,8 @@
    },
    "usada_no_front": 4,
    "usada_em_edges": [
-    "competency-alerts"
+    "competency-alerts",
+    "security-weekly-digest"
    ],
    "triggers": [],
    "sem_rls": false,
@@ -25461,7 +25462,8 @@
    },
    "usada_no_front": 3,
    "usada_em_edges": [
-    "detect-new-device"
+    "detect-new-device",
+    "security-weekly-digest"
    ],
    "triggers": [
     "trg_auto_create_postmortem",
@@ -29397,6 +29399,7 @@
    "usada_em_edges": [
     "churn-prediction",
     "reward-approval-review",
+    "security-weekly-digest",
     "trail-recommendations"
    ],
    "triggers": [],

@@ -1,6 +1,6 @@
 # 07 · REGRAS DE NEGÓCIO
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `2d24251fb1` · branch `main` · 2026-11-22 16:39 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `8247352013` · branch `main` · 2026-11-22 18:51 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## A. Regras escritas por humanos (`manual/` — prioridade máxima, nunca sobrescrito)
@@ -1093,6 +1093,7 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `type` | `legendary` | compara, escreve | `src/components/CelebrationEffect.tsx`<br>`src/pages/Shop.tsx` |
 | `type` | `level` | compara, escreve | `src/components/effects/MiniConfetti.tsx`<br>`src/hooks/useFirstTimeIndicator.ts` |
 | `type` | `level_up` | compara, escreve | `src/pages/SocialFeed.tsx`<br>`src/services/notificationsService.ts` |
+| `type` | `login_anomaly` | escreve | `supabase/functions/_shared/contracts/_fixtures/responses.ts` |
 | `type` | `low_attendance` | escreve | `supabase/functions/_shared/contracts/_fixtures/responses.ts`<br>`supabase/functions/admin-alerts/index.ts` |
 | `type` | `low_performance` | escreve | `src/hooks/usePDIAlerts.ts` |
 | `type` | `mobile` | compara | `src/components/security/DevicesPanel.tsx` |
@@ -1119,12 +1120,14 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `type` | `quiz` | escreve | `public/sw.js` |
 | `type` | `quiz_score` | compara, escreve | `src/lib/warAutoHooks.ts` |
 | `type` | `range` | escreve | `src/stories/components/Progress.stories.tsx` |
+| `type` | `rate_limit_breach` | escreve | `supabase/functions/_shared/contracts/_fixtures/responses.ts` |
 | `type` | `rate_limit_exceeded` | compara | `src/components/security/SecurityAlertsPanel.tsx` |
 | `type` | `rating` | compara, escreve | `src/components/PulseSurveyWidget.tsx`<br>`src/components/admin/SurveyCreator.tsx`<br>`src/services/feedbackService.ts`<br>`src/services/pulseSurveysService.ts` |
 | `type` | `recovery` | compara | `src/pages/ResetPassword.tsx` |
 | `type` | `registration` | escreve | `src/services/webauthnService.ts` |
 | `type` | `security_alert` | compara, escreve | `public/sw.js`<br>`src/components/security/SecurityNotificationsToggle.tsx`<br>`src/hooks/useSecurityPushNotifications.ts` |
 | `type` | `security_device_revoked` | escreve | `src/lib/pushDevices.ts` |
+| `type` | `security_weekly_digest` | escreve, filtra | `supabase/functions/security-weekly-digest/index.ts` |
 | `type` | `select` | compara, escreve | `src/components/PulseSurveyWidget.tsx`<br>`src/components/accessibility/AccessibilitySettings.tsx`<br>`src/services/pulseSurveysService.ts` |
 | `type` | `selection` | compara, escreve | `src/components/mobile/GestureHandler.tsx`<br>`src/components/mobile/HapticWrapper.tsx` |
 | `type` | `spring` | escreve | `src/components/AchievementSystem.tsx`<br>`src/components/ActivityHeatmap.tsx`<br>`src/components/ENPSSurveyWidget.tsx`<br>`src/components/ErrorBoundary.tsx`<br>`src/components/LeagueCard.tsx`<br>… +32 |
@@ -1154,7 +1157,7 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `type` | `xp` | compara, escreve | `src/components/ui/lucky-drop.tsx`<br>`src/components/ui/micro-interactions.tsx`<br>`src/lib/luckyWheelPayout.ts`<br>`src/services/notificationsService.ts` |
 | `type` | `xp_gained` | compara, escreve | `src/pages/SocialFeed.tsx`<br>`src/services/socialFeedService.ts` |
 | `type` | `zero_engagement` | escreve | `supabase/functions/admin-alerts/index.ts` |
-| `role` | `admin` | compara | `src/components/rbac/UserRolesTab.tsx`<br>`supabase/functions/reward-approval-review/index.ts` |
+| `role` | `admin` | compara, filtra | `src/components/rbac/UserRolesTab.tsx`<br>`supabase/functions/reward-approval-review/index.ts`<br>`supabase/functions/security-weekly-digest/index.ts` |
 | `role` | `assistant` | compara, escreve | `src/components/AICoachDialog.tsx`<br>`src/hooks/useAICoach.ts`<br>`supabase/functions/_shared/contracts/_fixtures/index.ts` |
 | `role` | `long` | compara, escreve | `src/pages/BurnRate.tsx` |
 | `role` | `manager` | compara | `supabase/functions/reward-approval-review/index.ts` |
@@ -1706,6 +1709,10 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 - **RewardApprovalReviewResponseSchema** (`supabase/functions/_shared/contracts/reward-approval-review.ts`, z.object):
   ```ts
   { score: z.number().min(0).max(100), level: z.string(), factors: z.array(z.unknown()), summary: z.string(), recommendation: z.enum(["approve", "review", "reject"]), requires_dual_approval: z.boolean(), ai_available: z.boolean(), }
+  ```
+- **SecurityWeeklyDigestResponseSchema** (`supabase/functions/_shared/contracts/security-weekly-digest.ts`, z.object):
+  ```ts
+  { ok: z.literal(true), week: z.string(), total: z.number().int().nonnegative(), resolved: z.number().int().nonnegative(), pending: z.number().int().nonnegative(), critical: z.number().int().nonnegative(), high: z.number().int().nonnegative(), sla_pct: z.number().nonnegative(), avg_mttr_min: z.number().nullable(), top: z.array(z.object({ type: z.string(), count: z.number().int().nonnegative() })), slack_status: z.number().int().nullable(), notified_admins: z.number().int().nonnegative(), }
   ```
 - **SendCampaignPushRequestSchema** (`supabase/functions/_shared/contracts/send-campaign-push.ts`, z.object):
   ```ts
@@ -3058,6 +3065,7 @@ _nenhum item encontrado_
 | `const sevenDaysAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);` | `supabase/functions/churn-prediction/index.ts` |
 | `const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);` | `supabase/functions/churn-prediction/index.ts` |
 | `.gte('created_at', new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString())` | `supabase/functions/competency-alerts/index.ts` |
+| `const since = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();` | `supabase/functions/security-weekly-digest/index.ts` |
 | `WHERE created_at < now() - interval '90 days';` | `supabase/migrations/20260520162624_05dce903-e1a2-49e8-93a1-64ec4f6421b4.sql` |
 | `WHERE processed = true AND created_at < now() - interval '30 days';` | `supabase/migrations/20260520162624_05dce903-e1a2-49e8-93a1-64ec4f6421b4.sql` |
 | `expires_at TIMESTAMP WITH TIME ZONE DEFAULT (now() + interval '7 days')` | `supabase/migrations/20260520163657_25dfdf55-387e-4b6a-87a8-b1fb2491ce04.sql` |
@@ -3147,6 +3155,7 @@ _nenhum item encontrado_
 | 50 | `src/services/tradingCardsService.ts` |
 | 1 | `supabase/functions/competency-alerts/index.ts` |
 | 500 | `supabase/functions/reward-approval-review/index.ts` |
+| 1 | `supabase/functions/security-weekly-digest/index.ts` |
 
 ## I. Regras implícitas em mensagens de erro/validação
 
@@ -3991,6 +4000,10 @@ _nenhum item encontrado_
 | A IA é um complemento: falha nela não pode travar a governança. | `supabase/functions/reward-approval-review/index.ts` |
 | Apenas gestores/administradores podem disparar a análise. | `supabase/functions/reward-approval-review/index.ts` |
 | * A IA nunca decide sozinha: ela apenas ajusta a pontuação heurística dentro | `supabase/functions/reward-approval-review/risk.ts` |
+| A função publica com efeito colateral (notificações) e é chamada apenas por cron (POST), | `supabase/functions/security-weekly-digest/index.ts` |
+| SLA é a fração resolvidos/total (métrica de resolução, não de prazo): o repo não | `supabase/functions/security-weekly-digest/index.ts` |
+| persiste se um alerta estourou o prazo, então % de resolvidos é o indicador | `supabase/functions/security-weekly-digest/index.ts` |
+| forjado com type=security_weekly_digest não pode ser usado como prova (nem bloquear | `supabase/functions/security-weekly-digest/index.ts` |
 | Máximo de 3 tentativas totais. Backoff base: 500ms, cap 8s. | `supabase/functions/send-campaign-push/index.ts` |
 | Limit response body size | `supabase/functions/webhook-dispatcher/index.ts` |
 | INTO v_settings FROM geo_settings LIMIT 1; | `supabase/migrations/20251231131217_c2ec197f-c709-4fd4-8202-2738c37dddf7.sql` |

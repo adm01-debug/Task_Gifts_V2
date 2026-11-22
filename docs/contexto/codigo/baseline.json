@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "2d24251fb198f6c5e9c2cd9b65acc58a668cf298",
+  "commit": "8247352013b948dce00b64c586d9f7f0b2a40f7d",
   "branch": "main",
-  "data_commit": "2026-11-22T13:37:58-03:00",
+  "data_commit": "2026-11-22T15:50:20-03:00",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "ultimos_commits": [
+   {
+    "sha": "8247352",
+    "data": "2026-11-22",
+    "assunto": "chore(automacao): reconstroi security-weekly-digest e conecta ao cron 33 (#104)"
+   },
    {
     "sha": "2d24251",
     "data": "2026-11-22",
@@ -126,18 +131,13 @@
     "sha": "34453e2",
     "data": "2026-11-21",
     "assunto": "chore(deps): aponta Dependabot para lockfile bun eliminando CVEs falsos do npm (#79)"
-   },
-   {
-    "sha": "3d1ee90",
-    "data": "2026-11-21",
-    "assunto": "fix: protege economia de perfis via RPCs SECURITY DEFINER (pendencia 02) (#78)"
    }
   ],
-  "arquivos_mudados_7d": 93,
+  "arquivos_mudados_7d": 96,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "supabase/functions/_shared",
-    "mudancas": 49
+    "mudancas": 53
    },
    {
     "pasta": "package.json",
@@ -246,6 +246,14 @@
     "mudancas": 4
    },
    {
+    "arquivo": "supabase/config.toml",
+    "mudancas": 4
+   },
+   {
+    "arquivo": "supabase/functions/_shared/contracts/_fixtures/index.ts",
+    "mudancas": 4
+   },
+   {
     "arquivo": "supabase/functions/webhook-dispatcher/index.ts",
     "mudancas": 4
    },
@@ -282,26 +290,18 @@
     "mudancas": 3
    },
    {
-    "arquivo": "supabase/config.toml",
+    "arquivo": "supabase/functions/_shared/contracts/_fixtures/responses.ts",
     "mudancas": 3
    },
    {
-    "arquivo": "supabase/functions/_shared/contracts/_fixtures/index.ts",
-    "mudancas": 3
-   },
-   {
-    "arquivo": "supabase/functions/_shared/validation.ts",
-    "mudancas": 3
-   },
-   {
-    "arquivo": "supabase/functions/migrate-helper/index.ts",
+    "arquivo": "supabase/functions/_shared/contracts/index.ts",
     "mudancas": 3
    }
   ],
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 72
+    "commits": 73
    },
    {
     "autor": "dependabot[bot]",
@@ -310,9 +310,9 @@
   ]
  },
  "contagens": {
-  "arquivos_total": 1527,
-  "arquivos_codigo": 1156,
-  "linhas_codigo": 226377,
+  "arquivos_total": 1529,
+  "arquivos_codigo": 1158,
+  "linhas_codigo": 226724,
   "rotas": 83,
   "rotas_http_backend": 0,
   "vistas_por_id": 0,
@@ -320,7 +320,7 @@
   "modulos": 71,
   "componentes": 521,
   "hooks": 155,
-  "edge_functions": 17,
+  "edge_functions": 18,
   "tabelas": 236,
   "migrations": 271,
   "cron_jobs": 22,
@@ -459,8 +459,8 @@
    "linhas": 152
   },
   "supabase/functions": {
-   "arquivos": 55,
-   "linhas": 6793
+   "arquivos": 57,
+   "linhas": 7140
   },
   "tailwind.config.ts": {
    "arquivos": 1,
