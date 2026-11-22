@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import { useAuth } from "./useAuth";
 import { useCurrentProfile } from "./useProfiles";
 import { useCompetencies } from "./useCompetencies";
@@ -38,6 +38,10 @@ export function useAICoach() {
   const [isLoadingHistory, setIsLoadingHistory] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const { user, session } = useAuth();
+
+  // Contador de geracao: bump a cada envio e ao limpar historico. Persistencia
+  // so grava se a geracao atual nao foi cancelada por um clear concorrente.
+  const generationRef = useRef(0);
   const { data: profile } = useCurrentProfile();
   const { data: competencies } = useCompetencies(user?.id);
   const { data: trails } = usePublishedTrails();
@@ -95,6 +99,8 @@ export function useAICoach() {
 
   const sendMessage = useCallback(async (input: string): Promise<boolean> => {
     if (!input.trim() || isLoading || !user?.id || !isCoachUsable()) return false;
+
+    const generation = ++generationRef.current;
 
     const userMsg: Message = { role: "user", content: input };
     setMessages(prev => [...prev, userMsg]);
@@ -222,16 +228,23 @@ export function useAICoach() {
         }
       }
 
-      // Save user and assistant responses to database after streaming completes
-      if (assistantSoFar && user?.id) {
-        // persiste a pergunta ao lado da resposta so no caminho de sucesso,
-        // evitando linha orfa no banco quando o fetch falha (ex.: 429)
-        aiCoachService.saveMessage(user.id, "user", input);
-        aiCoachService.saveMessage(user.id, "assistant", assistantSoFar);
-        
-        // Generate follow-up suggestions
-        const finalMessages: Message[] = [...messages, userMsg, { role: "assistant", content: assistantSoFar }];
-        generateSuggestions(finalMessages);
+      // Save user and assistant responses to database after streaming completes.
+      // So persiste no caminho de sucesso, aguardando a pergunta antes da
+      // resposta (preserva a ordem no historico) e descartando se o historico
+      // foi limpo durante o stream (geracao alterada) ou se nao houve resposta.
+      if (user?.id && generation === generationRef.current) {
+        if (assistantSoFar) {
+          const savedUser = await aiCoachService.saveMessage(user.id, "user", input);
+          if (savedUser) {
+            await aiCoachService.saveMessage(user.id, "assistant", assistantSoFar);
+          }
+
+          // Generate follow-up suggestions
+          const finalMessages: Message[] = [...messages, userMsg, { role: "assistant", content: assistantSoFar }];
+          generateSuggestions(finalMessages);
+        } else {
+          throw new Error("Coach nao retornou resposta");
+        }
       }
       return true;
     } catch (e) {
@@ -246,6 +259,9 @@ export function useAICoach() {
   }, [messages, isLoading, profile, competencies, trails, enrollments, user?.id, session, generateSuggestions]);
 
   const clearMessages = useCallback(async () => {
+    // Cancela qualquer persistencia em andamento (o guard de geracao de
+    // sendMessage descarta a gravacao da geracao antiga).
+    generationRef.current += 1;
     if (user?.id) {
       await aiCoachService.clearHistory(user.id);
     }
