@@ -1493,36 +1493,39 @@
   {
    "arquivo": "supabase/functions/_shared/contracts/registry.contract.spec.ts",
    "tipo": "contrato",
-   "linhas": 109,
+   "linhas": 124,
    "testa": [
     "supabase/functions/_shared/contracts/_fixtures/index.ts",
+    "supabase/functions/_shared/contracts/_fixtures/responses.ts",
     "supabase/functions/_shared/contracts/_fixtures/types.ts",
     "supabase/functions/_shared/contracts/_testkit.ts",
     "supabase/functions/_shared/contracts/index.ts",
     "supabase/functions/_shared/validation.ts"
    ],
-   "casos": 7
+   "casos": 8
   },
   {
    "arquivo": "supabase/functions/_shared/contracts/validation.contract.spec.ts",
    "tipo": "contrato",
-   "linhas": 153,
+   "linhas": 196,
    "testa": [
     "supabase/functions/_shared/contracts/_testkit.ts",
+    "supabase/functions/_shared/contracts/migrate-helper.ts",
+    "supabase/functions/_shared/contracts/send-campaign-push.ts",
     "supabase/functions/_shared/validation.ts"
    ],
-   "casos": 14
+   "casos": 17
   },
   {
    "arquivo": "supabase/functions/_shared/contracts/webhook-versioning.contract.spec.ts",
    "tipo": "contrato",
-   "linhas": 143,
+   "linhas": 158,
    "testa": [
     "supabase/functions/_shared/contracts/_fixtures/types.ts",
     "supabase/functions/_shared/contracts/_testkit.ts",
     "supabase/functions/_shared/contracts/webhook-dispatcher.ts"
    ],
-   "casos": 12
+   "casos": 13
   },
   {
    "arquivo": "tests/auth-flow.spec.ts",
@@ -1703,9 +1706,12 @@
   "src/services/weeklyChallengesService.ts": 1,
   "src/services/xpBalancingService.ts": 1,
   "supabase/functions/_shared/contracts/_fixtures/index.ts": 1,
+  "supabase/functions/_shared/contracts/_fixtures/responses.ts": 1,
   "supabase/functions/_shared/contracts/_fixtures/types.ts": 2,
   "supabase/functions/_shared/contracts/_testkit.ts": 3,
   "supabase/functions/_shared/contracts/index.ts": 1,
+  "supabase/functions/_shared/contracts/migrate-helper.ts": 1,
+  "supabase/functions/_shared/contracts/send-campaign-push.ts": 1,
   "supabase/functions/_shared/contracts/webhook-dispatcher.ts": 1,
   "supabase/functions/_shared/validation.ts": 2
  },

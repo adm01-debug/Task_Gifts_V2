@@ -1,6 +1,6 @@
 # 07 · REGRAS DE NEGÓCIO
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `03d0d59f9a` · branch `main` · 2026-11-22 15:28 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `e5fb53092f` · branch `main` · 2026-11-22 15:47 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## A. Regras escritas por humanos (`manual/` — prioridade máxima, nunca sobrescrito)
@@ -1051,10 +1051,9 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `type` | `broken_streaks` | escreve | `supabase/functions/admin-alerts/index.ts` |
 | `type` | `brute_force` | compara | `src/components/security/SecurityAlertsPanel.tsx` |
 | `type` | `button` | escreve | `src/components/mobile/HapticWrapper.tsx` |
-| `type` | `campaign_completed` | compara, escreve | `src/components/CampaignNotificationPreferences.tsx`<br>`src/services/salesCampaignsService.ts` |
+| `type` | `campaign_completed` | compara, escreve | `src/components/CampaignNotificationPreferences.tsx`<br>`src/services/salesCampaignsService.ts`<br>`supabase/functions/_shared/contracts/_fixtures/index.ts`<br>`supabase/functions/_shared/contracts/contracts_test.ts` |
 | `type` | `campaign_enrolled` | escreve | `src/services/salesCampaignsService.ts` |
 | `type` | `campaign_milestone` | escreve | `src/services/salesCampaignsService.ts` |
-| `type` | `campaign_update` | escreve | `supabase/functions/_shared/contracts/_fixtures/index.ts` |
 | `type` | `cancel` | compara, escreve | `src/components/duels/DuelCard.tsx`<br>`src/pages/Duels.tsx` |
 | `type` | `certification_expiring` | escreve | `src/hooks/usePDIAlerts.ts` |
 | `type` | `challenge` | compara, escreve | `src/hooks/useWeeklyChallenge.ts`<br>`src/lib/boardTrail.ts`<br>`src/lib/boardTrailAuthoring.ts` |
@@ -1081,7 +1080,7 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `type` | `generic` | escreve | `src/components/security/SecurityAlertsPanel.tsx` |
 | `type` | `goal` | escreve | `src/services/autoChallengesService.ts` |
 | `type` | `http` | escreve | `src/lib/requestId.ts` |
-| `type` | `inactive_users` | escreve | `supabase/functions/admin-alerts/index.ts` |
+| `type` | `inactive_users` | escreve | `supabase/functions/_shared/contracts/_fixtures/responses.ts`<br>`supabase/functions/admin-alerts/index.ts` |
 | `type` | `info` | compara, escreve | `src/components/GlobalMessageProvider.tsx`<br>`src/services/certificationsService.ts`<br>`src/services/shopService.ts` |
 | `type` | `integer` | escreve | `supabase/functions/ai-course-builder/index.ts`<br>`supabase/functions/reward-approval-review/index.ts` |
 | `type` | `ip_blocked` | compara, escreve | `public/sw.js`<br>`src/components/security/SecurityAlertsPanel.tsx`<br>`src/hooks/useSecurityPushNotifications.ts` |
@@ -1094,7 +1093,7 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `type` | `legendary` | compara, escreve | `src/components/CelebrationEffect.tsx`<br>`src/pages/Shop.tsx` |
 | `type` | `level` | compara, escreve | `src/components/effects/MiniConfetti.tsx`<br>`src/hooks/useFirstTimeIndicator.ts` |
 | `type` | `level_up` | compara, escreve | `src/pages/SocialFeed.tsx`<br>`src/services/notificationsService.ts` |
-| `type` | `low_attendance` | escreve | `supabase/functions/admin-alerts/index.ts` |
+| `type` | `low_attendance` | escreve | `supabase/functions/_shared/contracts/_fixtures/responses.ts`<br>`supabase/functions/admin-alerts/index.ts` |
 | `type` | `low_performance` | escreve | `src/hooks/usePDIAlerts.ts` |
 | `type` | `mobile` | compara | `src/components/security/DevicesPanel.tsx` |
 | `type` | `module_progress` | compara, escreve | `src/lib/warAutoHooks.ts` |
@@ -1606,7 +1605,7 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
   ```
 - **ChatMessageSchema** (`supabase/functions/_shared/contracts/ai-coach.ts`, z.object):
   ```ts
-  { role: z.enum(["user", "assistant", "system"]), content: z.string().max(8000), }
+  { role: z.enum(["user", "assistant", "system"]), // O histórico vem de `ai_coach_messages.content` (TEXT, sem limite): uma resposta longa do // modelo passaria do limite e derrubaria o chat inteiro com 422 na mensagem seguinte. content: z.string().max(32000), }
   ```
 - **CompetencySchema** (`supabase/functions/_shared/contracts/ai-coach.ts`, z.object):
   ```ts
@@ -1682,11 +1681,11 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
   ```
 - **MigrateHelperQuerySchema** (`supabase/functions/_shared/contracts/migrate-helper.ts`, z.object):
   ```ts
-  { action: z.enum(["ping", "credentials"]).default("ping"), }
+  { // `?action=` (vazio) vinha caindo em "ping" no código antigo (`|| "ping"`); sem o preprocess // viraria 422 e a URL usada no runbook de migração deixaria de funcionar. action: z.preprocess( (v) => (v === "" || v === undefined || v === null ? "ping" : v), z.enum(["ping", "credentials"]), ), }
   ```
 - **PushDeviceRevokedRequestSchema** (`supabase/functions/_shared/contracts/push-device-revoked.ts`, z.object):
   ```ts
-  { exclude_subscription_id: uuid, title: texto(120), message: texto(400), url: z.string().max(300).optional(), data: jsonRecord.optional(), }
+  { exclude_subscription_id: uuid, title: texto(120), message: texto(400), url: destinoUrl().optional(), data: jsonRecord.optional(), }
   ```
 - **PushDeviceRevokedResponseSchema** (`supabase/functions/_shared/contracts/push-device-revoked.ts`, z.object):
   ```ts
@@ -1710,7 +1709,7 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
   ```
 - **SendCampaignPushRequestSchema** (`supabase/functions/_shared/contracts/send-campaign-push.ts`, z.object):
   ```ts
-  { user_ids: z.array(uuid).min(1).max(500), type: texto(64), title: texto(120), message: texto(400), url: z.string().url().optional(), data: jsonRecord.optional(), }
+  { user_ids: z.array(uuid).min(1).max(500), type: texto(64), title: texto(120), message: texto(400), // Caminho relativo é o caso real (salesCampaignsService.ts envia "/campanhas/<id>"): // com z.string().url() a função devolvia 422 e o push de campanha era descartado em silêncio. url: destinoUrl().optional(), data: jsonRecord.optional(), }
   ```
 - **SendCampaignPushResponseSchema** (`supabase/functions/_shared/contracts/send-campaign-push.ts`, z.union):
   ```ts
@@ -1734,7 +1733,7 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
   ```
 - **WebhookDispatchV1Schema** (`supabase/functions/_shared/contracts/webhook-dispatcher.ts`, z.object):
   ```ts
-  { subscription_id: uuid, event_type: WebhookEventTypeSchema, payload: jsonRecord, }
+  { version: z.literal("v1").optional(), subscription_id: uuid, event_type: WebhookEventTypeSchema, payload: jsonRecord, }
   ```
 - **WebhookDispatchV2Schema** (`supabase/functions/_shared/contracts/webhook-dispatcher.ts`, z.object):
   ```ts
@@ -3507,7 +3506,7 @@ _nenhum item encontrado_
 | `admin` | `supabase/migrations/20260807030000_fix_opinion_feed_rpc.sql` |
 | `manager` | `supabase/migrations/20260807030000_fix_opinion_feed_rpc.sql` |
 
-## K. Testes como especificação (1964 testes em 149 arquivos — nomes completos em `context.json`)
+## K. Testes como especificação (1970 testes em 149 arquivos — nomes completos em `context.json`)
 
 | Arquivo | Testes | Exemplos do que o sistema DEVE fazer |
 |---|---|---|
@@ -3539,6 +3538,7 @@ _nenhum item encontrado_
 | `src/test/opinionChannel.simulation.test.ts` | 20 | sanitizeOpinionText — texto livre hostil · remove controle, bidi e colapsa espaços em todas as combinações · nunca lança com entradas não textuais · trunca conteúdo gigante mantendo o limite … |
 | `src/test/wagerLeaderboard.test.ts` | 20 | parseWagerLeaderboard · retorna vazio para payloads inválidos · descarta linhas sem identificador · mapeia uma linha completa … |
 | `src/test/purchaseRisk.simulation.test.ts` | 19 | purchaseRisk — invariantes fundamentais · mantém a pontuação sempre entre 0 e 100 em 500 cenários aleatórios · é determinístico: mesma entrada produz sempre a mesma saída · é monotônico no valor do resgate (mantendo os demais sinais) … |
+| `supabase/functions/_shared/contracts/validation.contract.spec.ts` | 19 | destino de notificação (destinoUrl) · aceita caminho relativo do app — é o que salesCampaignsService envia · recusa esquema perigoso e texto que não é rota nem URL · migrate-helper: ?action= vazio cai em ping (compatível com o comportamento antigo) … |
 | `src/test/climateBenchmark.simulation.test.ts` | 18 | normalizeThresholds — monotonicidade garantida · corrige limiares invertidos em centenas de combinações · tolera nulos e lixo · benchmarkPosition — simulação exaustiva score × limiares … |
 | `src/test/departmentWar.simulation.test.ts` | 18 | Guerra de Departamentos - simulacao massiva · mantem invariantes em 400 cenarios aleatorios · e deterministico independentemente da ordem das contribuicoes · nunca distribui mais do que o pool configurado (300 cenarios) … |
 | `src/test/deviceLabel.simulation.test.ts` | 18 | normalizeDeviceLabel · descarta entradas não textuais ou vazias · colapsa espaços e remove caracteres de controle · trunca respeitando o limite e sem deixar espaço final … |
@@ -3565,19 +3565,18 @@ _nenhum item encontrado_
 | `src/test/climateBenchmarkSegments.simulation.test.ts` | 15 | normalização de segmento · aceita todos os valores do catálogo · é tolerante a caixa e espaços · cai no padrão para lixo de entrada … |
 | `src/test/luckyWheelPayoutComparison.simulation.test.ts` | 15 | funções estatísticas · erf é ímpar e limitada · normalCdf bate com valores tabelados · tTestPValue é monotônica e sempre em [0,1] … |
 | `src/test/sequenceProcedureAuthoring.test.ts` | 15 | validateProcedureDraft · aceita um rascunho mínimo válido · exige título · exige o mínimo de etapas … |
-| `supabase/functions/_shared/contracts/validation.contract.spec.ts` | 15 | formato único de erro 422 (validation.ts) · status é 422 e os códigos são estáveis · buildValidationError: código, mensagem e lista de campos; error == message (compat front) · buildValidationError sem requestId não inclui a chave (schema strict) … |
 | `src/test/luckyWheelPayoutCsv.simulation.test.ts` | 14 | buildPayoutCsv — estrutura · emite as quatro seções na ordem esperada · é determinístico para o mesmo relatório e metadados · suporta relatório totalmente vazio sem quebrar as seções … |
 | `src/test/predictionAdmin.simulation.test.ts` | 14 | predictionAdmin — validação de rascunho · aceita um rascunho saudável · rejeita pergunta curta, longa e descrição excessiva · rejeita opções insuficientes, duplicadas, excessivas ou longas … |
 | `src/test/pushFlow.simulation.test.ts` | 14 | push simulation :: 1. environment detection · cobre ${matrix.length} combinações (>=64) sem falso positivo · push simulation :: 2. subscribe orchestration · percorre ${matrix.length} cenários (>=240) sem estados inconsistentes … |
 | `src/test/wagerAuthoring.test.ts` | 14 | wagerAuthoring · aceita um rascunho íntegro · rejeita enunciado curto · rejeita enunciado acima de 500 caracteres … |
 | `src/test/wagerBudgetSettings.test.ts` | 14 | clampBudget · mantém valores válidos · trunca decimais · bloqueia negativos … |
 | `src/tests/unit/combo.test.ts` | 14 | comboService · getComboTier — tier logic (pure) · returns Normal tier when actionsCount = 0 · returns correct tier at each threshold boundary … |
+| `supabase/functions/_shared/contracts/webhook-versioning.contract.spec.ts` | 14 | webhook-dispatcher — versionamento v1/v2 · versões declaradas no contrato: v1 e v2; atual = v2; sunset no futuro em relação à data de criação · detecta a versão pelo campo version (ausente ou \ · v1 com version declarada explicitamente é aceita e tratada como v1 (não 422) … |
 | `src/test/bingo.simulation.test.ts` | 13 | Bingo — geometria da cartela · possui exatamente 12 linhas de 5 casas, sem índices fora do intervalo · cada casa participa de pelo menos duas linhas (linha + coluna) · Bingo — detecção de linhas (cenários exaustivos por linha) … |
 | `src/test/boardTrail.simulation.test.ts` | 13 | boardTrail — normalização · ordena, deduplica posições e sanea valores · rejeita tabuleiros curtos ou sem chegada · boardTrail — dado determinístico … |
 | `src/test/clientUpdatePayloads.test.ts` | 13 | payloads de atualização respeitam colunas reais · avatar %s atualiza somente %s · avatar novo mantém user_id e permite limpar a seleção · datas do perfil não alteram outros campos … |
 | `src/test/goalBetStakePreview.test.ts` | 13 | computeGoalBetStakePreview · bloqueia sem mercado · bloqueia opção inexistente · bloqueia mercado fora de  … |
 | `src/test/memoryGame.simulation.test.ts` | 13 | buildMemoryBoard · gera duas cartas por par e limita o tamanho do tabuleiro · é determinístico para o mesmo seed e varia entre seeds · descarta pares com texto vazio e tolera baralhos menores que o limite … |
-| `supabase/functions/_shared/contracts/webhook-versioning.contract.spec.ts` | 13 | webhook-dispatcher — versionamento v1/v2 · versões declaradas no contrato: v1 e v2; atual = v2; sunset no futuro em relação à data de criação · detecta a versão pelo campo version (ausente = v1) · compatibilidade retroativa: v1 e v2 equivalentes normalizam para o mesmo dispatch … |
 | `src/test/auction.simulation.test.ts` | 12 | auctionEngine — regras de lance · exige o lance inicial no primeiro lance · exige incremento mínimo ao aumentar o próprio lance · retém apenas a diferença ao aumentar (caução incremental) … |
 | `src/test/bossHistory.simulation.test.ts` | 12 | bossHistory — regras determinísticas · ignora rascunhos e batalhas em andamento · limita HP destruído entre 0 e o total mesmo com dados inconsistentes · descarta duração de abate negativa ou ausente … |
 | `src/test/campaignTeamMetrics.test.ts` | 12 | resolvePeriod · retorna janela aberta para todo o histórico · calcula janelas relativas sem deslocamento de fuso · campaignInPeriod … |
@@ -3598,6 +3597,7 @@ _nenhum item encontrado_
 | `src/test/luckyWheelComparisonAlerts.simulation.test.ts` | 10 | decideComparisonAlerts · não alerta em séries estáveis (200 sementes) · alerta regressão de custo quando o custo por giro dobra · alerta estouro de orçamento mesmo sem significância … |
 | `src/test/playerResume.simulation.test.ts` | 10 | retomada do player — simulação · isola a chave por usuário e módulo (400 combinações) · rejeita payloads hostis ou malformados · descarta sessões expiradas e relógios adiantados (300 cenários) … |
 | `src/tests/unit/profiles.test.ts` | 10 | profilesService · getById · should return profile data on success · addXp … |
+| `supabase/functions/_shared/contracts/registry.contract.spec.ts` | 10 | registro de contratos cobre TODAS as edge functions · cada pasta de supabase/functions tem contrato e fixtures (nenhum endpoint sem validação) · cada contrato é coerente (nome = chave, métodos, auth, schema) · funções com corpo obrigatório têm casos de campo ausente, tipo errado e valor vazio … |
 | `src/test/auctionDelivery.simulation.test.ts` | 9 | resolveAuctionDelivery — casos determinísticos · não entrega nada quando ninguém deu lance · leilão simbólico não mexe em estoque · estoque ilimitado sempre reserva … |
 | `src/test/goalBetExposure.test.ts` | 9 | computeGoalBetExposure · sem aportes não há exposição · ignora mercados já apurados ou anulados · classifica exposição segura … |
 | `src/test/goalBetHistory.test.ts` | 9 | computeGoalBetHistory · retorna vazio sem dados · ignora mercados ainda abertos ou travados · computa acerto, lucro e ROI … |
@@ -3605,7 +3605,6 @@ _nenhum item encontrado_
 | `src/test/sequenceProcedureStats.test.ts` | 9 | parseSequenceProcedureStats · devolve estrutura vazia para payloads inválidos · sanea números negativos, NaN e acertos maiores que a amostra · ordena a série diária e descarta linhas sem chave … |
 | `src/test/sequenceProcedureStatsExport.test.ts` | 9 | buildSequenceStatsCsv · emite todas as seções na ordem esperada · usa CRLF e aspas em todas as células (RFC 4180) · neutraliza fórmulas e escapa aspas/vírgulas … |
 | `src/test/useTypePreferences.test.tsx` | 9 | useTypePreferences · aplica defaults quando o banco esta vazio · hidrata valores existentes do banco · escreve de forma aditiva, preservando tipos de outros modulos … |
-| `supabase/functions/_shared/contracts/registry.contract.spec.ts` | 9 | registro de contratos cobre TODAS as edge functions · cada pasta de supabase/functions tem contrato e fixtures (nenhum endpoint sem validação) · cada contrato é coerente (nome = chave, métodos, auth, schema) · funções com corpo obrigatório têm casos de campo ausente, tipo errado e valor vazio … |
 | `src/test/luckyWheelPayoutTrendCsv.simulation.test.ts` | 8 | buildPayoutTrendCsv — simulação massiva · mantém uma linha por dia da janela em 200 cenários aleatórios · nunca emite quebras de linha extras dentro das células · neutraliza tentativas de CSV injection no rótulo do período … |
 | `src/test/pushOutbox.simulation.test.ts` | 8 | fila de push — máquina de estados · entrega no primeiro sucesso · erro permanente não consome retries extras · erro transitório volta para a fila até esgotar tentativas … |
 | `src/test/boardStatsExport.simulation.test.ts` | 7 | boardStatsExport — invariantes · mantém cabeçalho estável e uma linha por desafio · neutraliza CSV injection e escapa aspas/vírgulas/quebras · não quebra com payload vazio, nulo ou corrompido … |
@@ -3975,6 +3974,8 @@ _nenhum item encontrado_
 | Testes Deno dos helpers de validação (formato único 422). Rodam no CI pelo workflow deno.yml | `supabase/functions/_shared/validation_test.ts` |
 | webhook é aceito sem nenhuma autenticação. Validação de autenticidade nunca | `supabase/functions/_shared/webhookSecurity.ts` |
 | Indisponibilidade do controle não deve derrubar o webhook: seguimos | `supabase/functions/_shared/webhookSecurity.ts` |
+| O histórico vem de `ai_coach_messages.content` (TEXT, sem limite): uma resposta longa do | `supabase/functions/_shared/contracts/ai-coach.ts` |
+| modelo passaria do limite e derrubaria o chat inteiro com 422 na mensagem seguinte. | `supabase/functions/_shared/contracts/ai-coach.ts` |
 | Zod v3 fixado em deno.land (ver ../validation.ts); no vitest a URL vira `zod/v3` por alias. | `supabase/functions/_shared/contracts/common.ts` |
 | * Resultado de validação sem Response (para contratos com lógica própria, ex.: versionamento). */ | `supabase/functions/_shared/contracts/common.ts` |
 | * Texto obrigatório, sem espaços nas pontas e com limite explícito. */ | `supabase/functions/_shared/contracts/common.ts` |

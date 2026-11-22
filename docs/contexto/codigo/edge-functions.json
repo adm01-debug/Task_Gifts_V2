@@ -12,6 +12,7 @@
   "supabase/functions/_shared/clientIp.ts",
   "supabase/functions/_shared/contracts/README.md",
   "supabase/functions/_shared/contracts/_fixtures/index.ts",
+  "supabase/functions/_shared/contracts/_fixtures/responses.ts",
   "supabase/functions/_shared/contracts/_fixtures/types.ts",
   "supabase/functions/_shared/contracts/_testkit.ts",
   "supabase/functions/_shared/contracts/admin-alerts.ts",
@@ -610,7 +611,7 @@
    "nome": "webhook-dispatcher",
    "entrada": "supabase/functions/webhook-dispatcher/index.ts",
    "arquivos": 1,
-   "linhas": 266,
+   "linhas": 279,
    "verify_jwt": true,
    "metodos": [
     "OPTIONS"

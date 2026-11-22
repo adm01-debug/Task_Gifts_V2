@@ -5845,6 +5845,9 @@
   "supabase/functions/_shared/contracts/_fixtures/index.ts": [
    "supabase/functions/_shared/contracts/_fixtures/types.ts"
   ],
+  "supabase/functions/_shared/contracts/_fixtures/responses.ts": [
+   "supabase/functions/_shared/contracts/_fixtures/types.ts"
+  ],
   "supabase/functions/_shared/contracts/_testkit.ts": [
    "supabase/functions/_shared/contracts/common.ts",
    "supabase/functions/_shared/validation.ts"

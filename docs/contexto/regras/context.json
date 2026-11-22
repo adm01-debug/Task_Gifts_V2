@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "03d0d59f9af9a89ce6277275041e3510be8cd0ad",
+  "sha": "e5fb53092fb9e4bf70b61ba2ad1addd76f83408b",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
-  "generated_at": "2026-11-22 15:28 UTC",
-  "files_total": 1534,
-  "code_files": 1430,
-  "code_lines": 257083
+  "generated_at": "2026-11-22 15:47 UTC",
+  "files_total": 1535,
+  "code_files": 1431,
+  "code_lines": 257411
  },
  "version": "1.3.2",
- "facts_hash": "e2d13534e3fb9433",
+ "facts_hash": "2113b9310d9f0331",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -195,7 +195,7 @@
   "package_manager": "bun",
   "languages": {
    ".tsx": 565,
-   ".ts": 562,
+   ".ts": 563,
    ".sql": 271,
    ".mjs": 21,
    ".js": 5,
@@ -49123,8 +49123,8 @@
   },
   {
    "module": "supabase/functions",
-   "files": 52,
-   "lines": 6339,
+   "files": 53,
+   "lines": 6667,
    "tables": [
     "ai_course_jobs",
     "attendance_records",
@@ -49171,7 +49171,7 @@
     "ai-coach.ts: ChatMessageSchema, CompetencySchema, AvailableTrailSchema, UserContextSchema, AiCoachRequestSchema, AiCoachSuggestionsResponseSchema",
     "ai-course-builder.ts: AiCourseBuilderRequestSchema, AiCourseBuilderResponseSchema, aiCourseBuilderContract",
     "churn-prediction.ts: ChurnPredictionSchema, ChurnPredictionResponseSchema, churnPredictionContract",
-    "common.ts: ContractValidation, uuid, texto, jsonRecord, EmptyBodySchema, EmptyBody",
+    "common.ts: ContractValidation, uuid, texto, jsonRecord, destinoUrl, EmptyBodySchema",
     "competency-alerts.ts: CompetencyAlertsRequestSchema, CompetencyAlertsResponseSchema, competencyAlertsContract",
     "detect-new-device.ts: DetectNewDeviceRequestSchema, DetectNewDeviceResponseSchema, detectNewDeviceContract",
     "generate-quiz-questions.ts: GenerateQuizQuestionsRequestSchema, GeneratedQuestionSchema, GenerateQuizQuestionsResponseSchema, generateQuizQuestionsContract",
@@ -49184,8 +49184,9 @@
     "send-campaign-push.ts: SendCampaignPushRequestSchema, SendCampaignPushResponseSchema, sendCampaignPushContract",
     "trail-recommendations.ts: TrailRecommendationsRequestSchema, TrailRecommendationSchema, TrailRecommendationsResponseSchema, trailRecommendationsContract",
     "verify-ip.ts: VerifyIpResponseSchema, verifyIpContract",
-    "webhook-dispatcher.ts: WEBHOOK_CONTRACT_VERSIONS, WebhookContractVersion, WEBHOOK_CURRENT_VERSION, WEBHOOK_V1_SUNSET, WEBHOOK_DEPRECATION_DOC_URL, WebhookEventTypeSchema",
+    "webhook-dispatcher.ts: WEBHOOK_CONTRACT_VERSIONS, WebhookContractVersion, WEBHOOK_CURRENT_VERSION, WEBHOOK_V1_SUNSET, WEBHOOK_V1_DEPRECATED_SINCE, WEBHOOK_DEPRECATION_DOC_URL",
     "index.ts: emptyBodyFixtures, fixturesFor, FIXTURE_NAMES",
+    "responses.ts: ResponseFixtures, responsesFor",
     "types.ts: InvalidCase, ValidCase, ContractFixtures, UUID_A, UUID_B",
     "risk.ts: RiskLevel, PurchaseRiskSignals, RiskFactor, PurchaseRiskAssessment, DUAL_APPROVAL_THRESHOLD, clampScore"
    ],
@@ -49241,6 +49242,7 @@
     "supabase/functions/_shared/contracts/webhook-dispatcher.ts",
     "supabase/functions/_shared/contracts/webhook-versioning.contract.spec.ts",
     "supabase/functions/_shared/contracts/_fixtures/index.ts",
+    "supabase/functions/_shared/contracts/_fixtures/responses.ts",
     "supabase/functions/_shared/contracts/_fixtures/types.ts",
     "supabase/functions/admin-alerts/index.ts",
     "supabase/functions/ai-coach/index.ts",
@@ -53991,7 +53993,7 @@
     "file": "supabase/functions/_shared/contracts/ai-coach.ts",
     "name": "ChatMessageSchema",
     "kind": "object",
-    "body": "{ role: z.enum([\"user\", \"assistant\", \"system\"]), content: z.string().max(8000), }",
+    "body": "{ role: z.enum([\"user\", \"assistant\", \"system\"]), // O histórico vem de `ai_coach_messages.content` (TEXT, sem limite): uma resposta longa do // modelo passaria do limite e derrubaria o chat inteiro com 422 na mensagem seguinte. content: z.string().max(32000), }",
     "refines": [],
     "chain": []
    },
@@ -54146,7 +54148,7 @@
     "file": "supabase/functions/_shared/contracts/migrate-helper.ts",
     "name": "MigrateHelperQuerySchema",
     "kind": "object",
-    "body": "{ action: z.enum([\"ping\", \"credentials\"]).default(\"ping\"), }",
+    "body": "{ // `?action=` (vazio) vinha caindo em \"ping\" no código antigo (`|| \"ping\"`); sem o preprocess // viraria 422 e a URL usada no runbook de migração deixaria de funcionar. action: z.preprocess( (v) => (v === \"\" || v === undefined || v === null ? \"ping\" : v), z.enum([\"ping\", \"credentials\"]), ), }",
     "refines": [],
     "chain": []
    },
@@ -54154,7 +54156,7 @@
     "file": "supabase/functions/_shared/contracts/push-device-revoked.ts",
     "name": "PushDeviceRevokedRequestSchema",
     "kind": "object",
-    "body": "{ exclude_subscription_id: uuid, title: texto(120), message: texto(400), url: z.string().max(300).optional(), data: jsonRecord.optional(), }",
+    "body": "{ exclude_subscription_id: uuid, title: texto(120), message: texto(400), url: destinoUrl().optional(), data: jsonRecord.optional(), }",
     "refines": [],
     "chain": []
    },
@@ -54202,7 +54204,7 @@
     "file": "supabase/functions/_shared/contracts/send-campaign-push.ts",
     "name": "SendCampaignPushRequestSchema",
     "kind": "object",
-    "body": "{ user_ids: z.array(uuid).min(1).max(500), type: texto(64), title: texto(120), message: texto(400), url: z.string().url().optional(), data: jsonRecord.optional(), }",
+    "body": "{ user_ids: z.array(uuid).min(1).max(500), type: texto(64), title: texto(120), message: texto(400), // Caminho relativo é o caso real (salesCampaignsService.ts envia \"/campanhas/<id>\"): // com z.string().url() a função devolvia 422 e o push de campanha era descartado em silêncio. url: destinoUrl().optional(), data: jsonRecord.optional(), }",
     "refines": [],
     "chain": []
    },
@@ -54250,7 +54252,7 @@
     "file": "supabase/functions/_shared/contracts/webhook-dispatcher.ts",
     "name": "WebhookDispatchV1Schema",
     "kind": "object",
-    "body": "{ subscription_id: uuid, event_type: WebhookEventTypeSchema, payload: jsonRecord, }",
+    "body": "{ version: z.literal(\"v1\").optional(), subscription_id: uuid, event_type: WebhookEventTypeSchema, payload: jsonRecord, }",
     "refines": [],
     "chain": []
    },
@@ -58532,6 +58534,14 @@
    {
     "file": "supabase/functions/_shared/webhookSecurity.ts",
     "text": "Indisponibilidade do controle não deve derrubar o webhook: seguimos"
+   },
+   {
+    "file": "supabase/functions/_shared/contracts/ai-coach.ts",
+    "text": "O histórico vem de `ai_coach_messages.content` (TEXT, sem limite): uma resposta longa do"
+   },
+   {
+    "file": "supabase/functions/_shared/contracts/ai-coach.ts",
+    "text": "modelo passaria do limite e derrubaria o chat inteiro com 422 na mensagem seguinte."
    },
    {
     "file": "supabase/functions/_shared/contracts/common.ts",
@@ -76023,6 +76033,12 @@
     "kind": "filtra"
    },
    {
+    "file": "supabase/functions/_shared/contracts/contracts_test.ts",
+    "field": "type",
+    "value": "campaign_completed",
+    "kind": "escreve"
+   },
+   {
     "file": "supabase/functions/_shared/contracts/_fixtures/index.ts",
     "field": "role",
     "value": "user",
@@ -76079,7 +76095,19 @@
    {
     "file": "supabase/functions/_shared/contracts/_fixtures/index.ts",
     "field": "type",
-    "value": "campaign_update",
+    "value": "campaign_completed",
+    "kind": "escreve"
+   },
+   {
+    "file": "supabase/functions/_shared/contracts/_fixtures/responses.ts",
+    "field": "type",
+    "value": "inactive_users",
+    "kind": "escreve"
+   },
+   {
+    "file": "supabase/functions/_shared/contracts/_fixtures/responses.ts",
+    "field": "type",
+    "value": "low_attendance",
     "kind": "escreve"
    },
    {
@@ -86898,7 +86926,27 @@
    },
    {
     "file": "supabase/functions/_shared/contracts/registry.contract.spec.ts",
-    "name": "schema de resposta rejeita objeto vazio e aceita a forma documentada quando houver fixture"
+    "name": "resposta 2xx documentada passa no schema: ${v.nome}"
+   },
+   {
+    "file": "supabase/functions/_shared/contracts/registry.contract.spec.ts",
+    "name": "resposta fora do contrato é rejeitada: ${i.nome}"
+   },
+   {
+    "file": "supabase/functions/_shared/contracts/validation.contract.spec.ts",
+    "name": "destino de notificação (destinoUrl)"
+   },
+   {
+    "file": "supabase/functions/_shared/contracts/validation.contract.spec.ts",
+    "name": "aceita caminho relativo do app — é o que salesCampaignsService envia"
+   },
+   {
+    "file": "supabase/functions/_shared/contracts/validation.contract.spec.ts",
+    "name": "recusa esquema perigoso e texto que não é rota nem URL"
+   },
+   {
+    "file": "supabase/functions/_shared/contracts/validation.contract.spec.ts",
+    "name": "migrate-helper: ?action= vazio cai em ping (compatível com o comportamento antigo)"
    },
    {
     "file": "supabase/functions/_shared/contracts/validation.contract.spec.ts",
@@ -86970,7 +87018,11 @@
    },
    {
     "file": "supabase/functions/_shared/contracts/webhook-versioning.contract.spec.ts",
-    "name": "detecta a versão pelo campo version (ausente = v1)"
+    "name": "detecta a versão pelo campo version (ausente ou \\"
+   },
+   {
+    "file": "supabase/functions/_shared/contracts/webhook-versioning.contract.spec.ts",
+    "name": "v1 com version declarada explicitamente é aceita e tratada como v1 (não 422)"
    },
    {
     "file": "supabase/functions/_shared/contracts/webhook-versioning.contract.spec.ts",
@@ -99959,7 +100011,9 @@
      ],
      "campaign_completed": [
       "compara:src/components/CampaignNotificationPreferences.tsx",
-      "escreve:src/services/salesCampaignsService.ts"
+      "escreve:src/services/salesCampaignsService.ts",
+      "escreve:supabase/functions/_shared/contracts/_fixtures/index.ts",
+      "escreve:supabase/functions/_shared/contracts/contracts_test.ts"
      ],
      "epic": [
       "escreve:src/components/CelebrationEffect.tsx",
@@ -100321,19 +100375,18 @@
      "range": [
       "escreve:src/stories/components/Progress.stories.tsx"
      ],
-     "campaign_update": [
-      "escreve:supabase/functions/_shared/contracts/_fixtures/index.ts"
-     ],
      "inactive_users": [
+      "escreve:supabase/functions/_shared/contracts/_fixtures/responses.ts",
+      "escreve:supabase/functions/admin-alerts/index.ts"
+     ],
+     "low_attendance": [
+      "escreve:supabase/functions/_shared/contracts/_fixtures/responses.ts",
       "escreve:supabase/functions/admin-alerts/index.ts"
      ],
      "zero_engagement": [
       "escreve:supabase/functions/admin-alerts/index.ts"
      ],
      "broken_streaks": [
-      "escreve:supabase/functions/admin-alerts/index.ts"
-     ],
-     "low_attendance": [
       "escreve:supabase/functions/admin-alerts/index.ts"
      ],
      "pending_purchases": [
@@ -146441,7 +146494,7 @@
   },
   "supabase/functions/_shared/contracts/ai-coach.ts": {
    "path": "supabase/functions/_shared/contracts/ai-coach.ts",
-   "lines": 61,
+   "lines": 63,
    "exports": [
     "const ChatMessageSchema",
     "const CompetencySchema",
@@ -146455,7 +146508,7 @@
     {
      "name": "ChatMessageSchema",
      "kind": "object",
-     "body": "{ role: z.enum([\"user\", \"assistant\", \"system\"]), content: z.string().max(8000), }",
+     "body": "{ role: z.enum([\"user\", \"assistant\", \"system\"]), // O histórico vem de `ai_coach_messages.content` (TEXT, sem limite): uma resposta longa do // modelo passaria do limite e derrubaria o chat inteiro com 422 na mensagem seguinte. content: z.string().max(32000), }",
      "refines": [],
      "chain": []
     },
@@ -146494,6 +146547,10 @@
      "refines": [],
      "chain": []
     }
+   ],
+   "rule_comments": [
+    "O histórico vem de `ai_coach_messages.content` (TEXT, sem limite): uma resposta longa do",
+    "modelo passaria do limite e derrubaria o chat inteiro com 422 na mensagem seguinte."
    ]
   },
   "supabase/functions/_shared/contracts/ai-course-builder.ts": {
@@ -146548,12 +146605,13 @@
   },
   "supabase/functions/_shared/contracts/common.ts": {
    "path": "supabase/functions/_shared/contracts/common.ts",
-   "lines": 75,
+   "lines": 101,
    "exports": [
     "type ContractValidation",
     "const uuid",
     "const texto",
     "const jsonRecord",
+    "const destinoUrl",
     "const EmptyBodySchema",
     "type EmptyBody",
     "const HTTP_METHODS",
@@ -146625,7 +146683,14 @@
   },
   "supabase/functions/_shared/contracts/contracts_test.ts": {
    "path": "supabase/functions/_shared/contracts/contracts_test.ts",
-   "lines": 51,
+   "lines": 73,
+   "status_values": [
+    {
+     "field": "type",
+     "value": "campaign_completed",
+     "kind": "escreve"
+    }
+   ],
    "doc": "Testes Deno (runtime real das edge functions) do registro de contratos e do versionamento do webhook. Espelham os casos essenciais dos *.contract.spec.ts (vitest). Rodam no CI (deno.yml); local: `bun run test:edge`."
   },
   "supabase/functions/_shared/contracts/detect-new-device.ts": {
@@ -146699,7 +146764,7 @@
   },
   "supabase/functions/_shared/contracts/migrate-helper.ts": {
    "path": "supabase/functions/_shared/contracts/migrate-helper.ts",
-   "lines": 16,
+   "lines": 21,
    "exports": [
     "const MigrateHelperQuerySchema",
     "const migrateHelperContract"
@@ -146708,7 +146773,7 @@
     {
      "name": "MigrateHelperQuerySchema",
      "kind": "object",
-     "body": "{ action: z.enum([\"ping\", \"credentials\"]).default(\"ping\"), }",
+     "body": "{ // `?action=` (vazio) vinha caindo em \"ping\" no código antigo (`|| \"ping\"`); sem o preprocess // viraria 422 e a URL usada no runbook de migração deixaria de funcionar. action: z.preprocess( (v) => (v === \"\" || v === undefined || v === null ? \"ping\" : v), z.enum([\"ping\", \"credentials\"]), ), }",
      "refines": [],
      "chain": []
     }
@@ -146726,7 +146791,7 @@
     {
      "name": "PushDeviceRevokedRequestSchema",
      "kind": "object",
-     "body": "{ exclude_subscription_id: uuid, title: texto(120), message: texto(400), url: z.string().max(300).optional(), data: jsonRecord.optional(), }",
+     "body": "{ exclude_subscription_id: uuid, title: texto(120), message: texto(400), url: destinoUrl().optional(), data: jsonRecord.optional(), }",
      "refines": [],
      "chain": []
     },
@@ -146775,7 +146840,7 @@
   },
   "supabase/functions/_shared/contracts/registry.contract.spec.ts": {
    "path": "supabase/functions/_shared/contracts/registry.contract.spec.ts",
-   "lines": 109,
+   "lines": 124,
    "is_test": true,
    "tests": [
     "registro de contratos cobre TODAS as edge functions",
@@ -146786,7 +146851,8 @@
     "aceita: ${v.nome}",
     "rejeita (${categoria}): ${c.nome} → 422 com field ",
     "payloads inválidos de categorias diferentes produzem o MESMO formato (consistência)",
-    "schema de resposta rejeita objeto vazio e aceita a forma documentada quando houver fixture"
+    "resposta 2xx documentada passa no schema: ${v.nome}",
+    "resposta fora do contrato é rejeitada: ${i.nome}"
    ]
   },
   "supabase/functions/_shared/contracts/reward-approval-review.ts": {
@@ -146816,7 +146882,7 @@
   },
   "supabase/functions/_shared/contracts/send-campaign-push.ts": {
    "path": "supabase/functions/_shared/contracts/send-campaign-push.ts",
-   "lines": 34,
+   "lines": 36,
    "exports": [
     "const SendCampaignPushRequestSchema",
     "const SendCampaignPushResponseSchema",
@@ -146826,7 +146892,7 @@
     {
      "name": "SendCampaignPushRequestSchema",
      "kind": "object",
-     "body": "{ user_ids: z.array(uuid).min(1).max(500), type: texto(64), title: texto(120), message: texto(400), url: z.string().url().optional(), data: jsonRecord.optional(), }",
+     "body": "{ user_ids: z.array(uuid).min(1).max(500), type: texto(64), title: texto(120), message: texto(400), // Caminho relativo é o caso real (salesCampaignsService.ts envia \"/campanhas/<id>\"): // com z.string().url() a função devolvia 422 e o push de campanha era descartado em silêncio. url: destinoUrl().optional(), data: jsonRecord.optional(), }",
      "refines": [],
      "chain": []
     },
@@ -146874,7 +146940,7 @@
   },
   "supabase/functions/_shared/contracts/validation.contract.spec.ts": {
    "path": "supabase/functions/_shared/contracts/validation.contract.spec.ts",
-   "lines": 153,
+   "lines": 196,
    "is_test": true,
    "zod": [
     {
@@ -146907,6 +146973,10 @@
     }
    ],
    "tests": [
+    "destino de notificação (destinoUrl)",
+    "aceita caminho relativo do app — é o que salesCampaignsService envia",
+    "recusa esquema perigoso e texto que não é rota nem URL",
+    "migrate-helper: ?action= vazio cai em ping (compatível com o comportamento antigo)",
     "formato único de erro 422 (validation.ts)",
     "status é 422 e os códigos são estáveis",
     "buildValidationError: código, mensagem e lista de campos; error == message (compat front)",
@@ -146943,12 +147013,13 @@
   },
   "supabase/functions/_shared/contracts/webhook-dispatcher.ts": {
    "path": "supabase/functions/_shared/contracts/webhook-dispatcher.ts",
-   "lines": 220,
+   "lines": 230,
    "exports": [
     "const WEBHOOK_CONTRACT_VERSIONS",
     "type WebhookContractVersion",
     "const WEBHOOK_CURRENT_VERSION",
     "const WEBHOOK_V1_SUNSET",
+    "const WEBHOOK_V1_DEPRECATED_SINCE",
     "const WEBHOOK_DEPRECATION_DOC_URL",
     "const WebhookEventTypeSchema",
     "const WebhookDispatchV1Schema",
@@ -146970,7 +147041,7 @@
     {
      "name": "WebhookDispatchV1Schema",
      "kind": "object",
-     "body": "{ subscription_id: uuid, event_type: WebhookEventTypeSchema, payload: jsonRecord, }",
+     "body": "{ version: z.literal(\"v1\").optional(), subscription_id: uuid, event_type: WebhookEventTypeSchema, payload: jsonRecord, }",
      "refines": [],
      "chain": []
     },
@@ -147019,7 +147090,7 @@
   },
   "supabase/functions/_shared/contracts/webhook-versioning.contract.spec.ts": {
    "path": "supabase/functions/_shared/contracts/webhook-versioning.contract.spec.ts",
-   "lines": 143,
+   "lines": 158,
    "is_test": true,
    "errors": [
     "v1 deveria ser válido",
@@ -147029,7 +147100,8 @@
    "tests": [
     "webhook-dispatcher — versionamento v1/v2",
     "versões declaradas no contrato: v1 e v2; atual = v2; sunset no futuro em relação à data de criação",
-    "detecta a versão pelo campo version (ausente = v1)",
+    "detecta a versão pelo campo version (ausente ou \\",
+    "v1 com version declarada explicitamente é aceita e tratada como v1 (não 422)",
     "compatibilidade retroativa: v1 e v2 equivalentes normalizam para o mesmo dispatch",
     "v1 continua aceita antes do sunset, com headers Deprecation/Sunset/Link",
     "v2 não recebe headers de depreciação",
@@ -147044,7 +147116,7 @@
   },
   "supabase/functions/_shared/contracts/_fixtures/index.ts": {
    "path": "supabase/functions/_shared/contracts/_fixtures/index.ts",
-   "lines": 252,
+   "lines": 265,
    "exports": [
     "function emptyBodyFixtures",
     "function fixturesFor",
@@ -147098,10 +147170,31 @@
     },
     {
      "field": "type",
-     "value": "campaign_update",
+     "value": "campaign_completed",
      "kind": "escreve"
     }
    ]
+  },
+  "supabase/functions/_shared/contracts/_fixtures/responses.ts": {
+   "path": "supabase/functions/_shared/contracts/_fixtures/responses.ts",
+   "lines": 162,
+   "exports": [
+    "interface ResponseFixtures",
+    "function responsesFor"
+   ],
+   "status_values": [
+    {
+     "field": "type",
+     "value": "inactive_users",
+     "kind": "escreve"
+    },
+    {
+     "field": "type",
+     "value": "low_attendance",
+     "kind": "escreve"
+    }
+   ],
+   "doc": "Amostras do CORPO de resposta de cada função, copiadas do `return` real do handler. Servem para o `registry.contract.spec.ts` provar que o `response` do contrato descreve o que a função devolve (o teste anterior só checava que uma string não passa no schema — não provava nada). O schema de resposta …"
   },
   "supabase/functions/_shared/contracts/_fixtures/types.ts": {
    "path": "supabase/functions/_shared/contracts/_fixtures/types.ts",
@@ -148622,7 +148715,7 @@
   },
   "supabase/functions/webhook-dispatcher/index.ts": {
    "path": "supabase/functions/webhook-dispatcher/index.ts",
-   "lines": 266,
+   "lines": 279,
    "tables": [
     {
      "table": "webhook_subscriptions",
@@ -150106,10 +150199,34 @@
   }
  },
  "git": {
-  "sha": "03d0d59f9af9a89ce6277275041e3510be8cd0ad",
+  "sha": "e5fb53092fb9e4bf70b61ba2ad1addd76f83408b",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "commits": [
+   {
+    "sha": "e5fb530",
+    "date": "2026-11-22",
+    "author": "adm01-debug",
+    "subject": "fix(edge): aceita url de app no push e ajusta contrato de versao do webhook (#101)",
+    "files": [
+     "docs/agentes/edge-functions.md",
+     "supabase/functions/_shared/contracts/README.md",
+     "supabase/functions/_shared/contracts/_fixtures/index.ts",
+     "supabase/functions/_shared/contracts/_fixtures/responses.ts",
+     "supabase/functions/_shared/contracts/ai-coach.ts",
+     "supabase/functions/_shared/contracts/common.ts",
+     "supabase/functions/_shared/contracts/contracts_test.ts",
+     "supabase/functions/_shared/contracts/migrate-helper.ts",
+     "supabase/functions/_shared/contracts/push-device-revoked.ts",
+     "supabase/functions/_shared/contracts/registry.contract.spec.ts",
+     "supabase/functions/_shared/contracts/send-campaign-push.ts",
+     "supabase/functions/_shared/contracts/validation.contract.spec.ts",
+     "supabase/functions/_shared/contracts/webhook-dispatcher.ts",
+     "supabase/functions/_shared/contracts/webhook-versioning.contract.spec.ts",
+     "supabase/functions/_shared/validation.ts",
+     "supabase/functions/webhook-dispatcher/index.ts"
+    ]
+   },
    {
     "sha": "03d0d59",
     "date": "2026-11-22",
@@ -150452,17 +150569,6 @@
     "files": [
      "vercel.json"
     ]
-   },
-   {
-    "sha": "6d9a446",
-    "date": "2026-11-20",
-    "author": "adm01-debug",
-    "subject": "fix: expoe rotas de gamificacao na navegacao e remove rota-fantasma (#72)",
-    "files": [
-     "src/components/AppSidebar.tsx",
-     "src/components/MobileDrawer.tsx",
-     "src/components/navigation/GlobalBreadcrumbs.tsx"
-    ]
    }
   ],
   "hot_files": [
@@ -150479,6 +150585,10 @@
     5
    ],
    [
+    "supabase/functions/webhook-dispatcher/index.ts",
+    3
+   ],
+   [
     "docs/pendencias/03-csp-hibp-pwnedpasswords.md",
     3
    ],
@@ -150487,64 +150597,60 @@
     3
    ],
    [
-    "supabase/functions/webhook-dispatcher/index.ts",
-    2
-   ],
-   [
-    "supabase/functions/ai-coach/index.ts",
-    2
-   ],
-   [
-    "supabase/functions/ai-course-builder/index.ts",
-    2
-   ],
-   [
-    "supabase/functions/competency-alerts/index.ts",
-    2
-   ],
-   [
-    "supabase/functions/generate-quiz-questions/index.ts",
-    2
-   ],
-   [
-    "supabase/functions/reward-approval-review/index.ts",
-    2
-   ],
-   [
-    "supabase/functions/trail-recommendations/index.ts",
-    2
-   ],
-   [
-    ".env.example",
-    2
-   ],
-   [
-    ".github/workflows/ci.yml",
-    2
-   ],
-   [
-    "supabase/functions/verify-ip/index.ts",
-    2
-   ],
-   [
-    "docs/pendencias/05-lockfiles-triplos-package-manager.md",
-    2
-   ],
-   [
-    "docs/pendencias/02-profiles-update-sem-restricao-de-coluna.md",
-    2
-   ],
-   [
-    ".gitignore",
-    1
-   ],
-   [
     "docs/agentes/edge-functions.md",
-    1
+    2
    ],
    [
     "supabase/functions/_shared/contracts/README.md",
-    1
+    2
+   ],
+   [
+    "supabase/functions/_shared/contracts/_fixtures/index.ts",
+    2
+   ],
+   [
+    "supabase/functions/_shared/contracts/ai-coach.ts",
+    2
+   ],
+   [
+    "supabase/functions/_shared/contracts/common.ts",
+    2
+   ],
+   [
+    "supabase/functions/_shared/contracts/contracts_test.ts",
+    2
+   ],
+   [
+    "supabase/functions/_shared/contracts/migrate-helper.ts",
+    2
+   ],
+   [
+    "supabase/functions/_shared/contracts/push-device-revoked.ts",
+    2
+   ],
+   [
+    "supabase/functions/_shared/contracts/registry.contract.spec.ts",
+    2
+   ],
+   [
+    "supabase/functions/_shared/contracts/send-campaign-push.ts",
+    2
+   ],
+   [
+    "supabase/functions/_shared/contracts/validation.contract.spec.ts",
+    2
+   ],
+   [
+    "supabase/functions/_shared/contracts/webhook-dispatcher.ts",
+    2
+   ],
+   [
+    "supabase/functions/_shared/contracts/webhook-versioning.contract.spec.ts",
+    2
+   ],
+   [
+    "supabase/functions/_shared/validation.ts",
+    2
    ]
   ]
  }

@@ -1,7 +1,7 @@
 # Contexto do projeto para agentes de IA
 
 GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.
-Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `03d0d59f9af9a89ce6277275041e3510be8cd0ad` (2026-11-22T12:27:38-03:00).
+Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `e5fb53092fb9e4bf70b61ba2ad1addd76f83408b` (2026-11-22T12:46:49-03:00).
 
 ## Como usar (leia antes de planejar ou executar qualquer tarefa)
 1. **Tela/rota/menu** → `rotas.json` (url/vista/menu → arquivo → hooks → tabelas → edges; `rotas_http_backend` para APIs) e `modulos.json` (módulo inteiro + dependências entre módulos).
@@ -14,7 +14,7 @@ Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR
 Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua tarefa; não carregue tudo.
 
 ## Stack
-- linguagens: TypeScript (1125), SQL (271), Markdown (55), JavaScript (24), JSON (14), YAML (9), Python (5), Shell (4)
+- linguagens: TypeScript (1126), SQL (271), Markdown (55), JavaScript (24), JSON (14), YAML (9), Python (5), Shell (4)
 - linguagem_principal: TypeScript
 - framework: React
 - backend_http: n/d
@@ -34,9 +34,9 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 ## Números
 | item | qtd |
 |---|---|
-| arquivos_total | 1524 |
-| arquivos_codigo | 1153 |
-| linhas_codigo | 225920 |
+| arquivos_total | 1525 |
+| arquivos_codigo | 1154 |
+| linhas_codigo | 226248 |
 | rotas | 83 |
 | rotas_http_backend | 0 |
 | vistas_por_id | 0 |
@@ -265,8 +265,8 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - possiveis_segredos_no_codigo: 0
 
 ## Grafo de código (graphify)
-- 10014 nós · 27856 arestas · 653 comunidades · grafo do commit `03d0d59f`
-- comunidades maiores: card.tsx (213), App.tsx (174), react (156), badge.tsx (129), cn (123), pushDevices.ts (107), BIDashboard.tsx (101), input.tsx (101), loggingService.ts (99), useToast (92), framer-motion (91), client.ts (89)
+- 10021 nós · 27878 arestas · 637 comunidades · grafo do commit `e5fb5309`
+- comunidades maiores: react (250), card.tsx (234), App.tsx (232), lucide-react (184), CardHeader (172), cn (136), useToast (110), client.ts (95), loggingService.ts (90), AdminTelemetria.tsx (89), mobile/index.ts (85), useAuth (83)
 - símbolos mais chamados: cn() (src/lib/utils.ts), useAuth() (src/hooks/useAuth.tsx), useIsMobile() (src/hooks/use-mobile.tsx), q() (scripts/supabase_snapshot/snapshot.py), useDepartments() (src/hooks/useDepartments.ts), useToast() (src/hooks/use-toast.ts), useRBAC() (src/hooks/useRBAC.ts), useProfiles() (src/hooks/useProfiles.ts), useSEO() (src/hooks/useSEO.ts), useSoundEffects() (src/hooks/useSoundEffects.tsx), .collect() (scripts/supabase_snapshot/test_snapshot.py), excluded_sql() (scripts/supabase_snapshot/snapshot.py)
 - consulta local: `graphify query "<pergunta>"`, `graphify path "<A>" "<B>"`, `graphify explain "<X>"`
 
@@ -283,9 +283,9 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - docs/agentes/github-ci.md (4)
 - docs/agentes/mapa-repo.md (4)
 - scripts/automation.mjs (4)
+- supabase/functions/webhook-dispatcher/index.ts (4)
 - .github/workflows/automation-local.yml (3)
 - .github/workflows/deploy-edge-functions.yml (3)
-- PENDENCIAS.md (3)
 
 ## Workflows
 - `automation-local.yml` — Automação local (pull_request, push, workflow_dispatch)
@@ -352,6 +352,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 
 
 ## Últimos commits
+- 2026-11-22 `e5fb530` fix(edge): aceita url de app no push e ajusta contrato de versao do webhook (#101)
 - 2026-11-22 `03d0d59` fix(webhook-dispatcher): devolve 401 em vez de 500 ao rejeitar token sem permissao (#100)
 - 2026-11-22 `d04ac2d` feat(edge): contratos zod, 422 unico e versionamento v1/v2 dos webhooks (#99)
 - 2026-11-22 `b042057` fix: usa JWT de sessao no AI coach em vez do publishable key (#98)
@@ -366,7 +367,6 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - 2026-11-21 `f095e46` fix: checa admin via rpc has_role em competency-alerts (e atualiza doc 05) (#88)
 - 2026-11-21 `f76c9b7` fix: corrige typo de tipo no catch do log de ip_access_logs (#89)
 - 2026-11-21 `166c7d2` fix: desbloqueia video do LMS (media-src/frame-src na CSP) (#87)
-- 2026-11-21 `fb528b1` fix: verify-ip fail-closed quando a whitelist nao pode ser checada (#86)
 
 ## Arquivos deste diretório
 - `docs/contexto/codigo/rotas.json`
