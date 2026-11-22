@@ -14,11 +14,54 @@ import {
   z,
 } from "../validation.ts";
 import { expectUnifiedValidationError, expectValidationResponse, jsonRequest } from "./_testkit.ts";
+import { SendCampaignPushRequestSchema } from "./send-campaign-push.ts";
+import { MigrateHelperQuerySchema } from "./migrate-helper.ts";
 
 const Schema = z.object({
   id: z.string().uuid(),
   qty: z.number().int().positive(),
   tags: z.array(z.string().min(1)).optional(),
+});
+
+describe("destino de notificação (destinoUrl)", () => {
+  it("aceita caminho relativo do app — é o que salesCampaignsService envia", () => {
+    const r = validateBody(SendCampaignPushRequestSchema, {
+      user_ids: ["8d6f2b1e-3c4a-4e5f-9a7b-1c2d3e4f5a6b"],
+      type: "campaign_completed",
+      title: "Meta batida!",
+      message: "Sua equipe atingiu 100%.",
+      url: "/campanhas/8d6f2b1e-3c4a-4e5f-9a7b-1c2d3e4f5a6b",
+    });
+    expect(r.ok, r.ok ? "" : JSON.stringify(r.error)).toBe(true);
+  });
+
+  it("recusa esquema perigoso e texto que não é rota nem URL", () => {
+    for (const url of [
+      "javascript:alert(1)",
+      "data:text/html,x",
+      "nao-e-url",
+      "campanhas/1",
+      "https://",            // esquema sem host
+      "http://",
+      "//evil.example.com",  // protocol-relative: sairia do app
+      "https:portal.example", // sem "//": o service worker leria como caminho do app
+      "ftp://host/x",
+    ]) {
+      const r = validateBody(SendCampaignPushRequestSchema, {
+        user_ids: ["8d6f2b1e-3c4a-4e5f-9a7b-1c2d3e4f5a6b"], type: "t", title: "ti", message: "me", url,
+      });
+      expect(r.ok, `deveria recusar ${url}`).toBe(false);
+      if (!r.ok) expect(r.error.fields[0].field).toBe("url");
+    }
+  });
+
+  it("migrate-helper: ?action= vazio cai em ping (compatível com o comportamento antigo)", () => {
+    expect(validateQuery("https://edge.local/fn?action=", MigrateHelperQuerySchema)).toEqual({ ok: true, data: { action: "ping" } });
+    expect(validateQuery("https://edge.local/fn", MigrateHelperQuerySchema)).toEqual({ ok: true, data: { action: "ping" } });
+    expect(validateQuery("https://edge.local/fn?action=credentials", MigrateHelperQuerySchema)).toEqual({ ok: true, data: { action: "credentials" } });
+    const bad = validateQuery("https://edge.local/fn?action=drop", MigrateHelperQuerySchema);
+    expect(bad.ok).toBe(false);
+  });
 });
 
 describe("formato único de erro 422 (validation.ts)", () => {

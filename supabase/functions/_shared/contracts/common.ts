@@ -20,6 +20,32 @@ export const texto = (max: number, min = 1) => z.string().trim().min(min).max(ma
 export const jsonRecord = z.record(z.unknown());
 
 /**
+ * Destino de clique de notificação: caminho relativo do app ("/campanhas/<id>", o que o front
+ * realmente envia) ou URL absoluta http(s). `z.string().url()` sozinho rejeita caminho relativo e
+ * fazia o push ser descartado com 422; aceitar qualquer string abriria espaço para `javascript:`.
+ */
+export const destinoUrl = (max = 300) =>
+  z.string().trim().min(1).max(max).refine(
+    (v) => {
+      if (v.startsWith("//")) return false; // protocol-relative: host fora do app
+      if (v.startsWith("/")) return true; // caminho do app
+      // Exigir "//" explícito: "https:portal.example" é URL válida aqui (host portal.example),
+      // mas o service worker resolve o texto cru contra a origem e navega para /portal.example.
+      // Validador e clique precisam ler o destino do mesmo jeito.
+      if (!/^https?:\/\//i.test(v)) return false;
+      let u: URL;
+      try {
+        u = new URL(v);
+      } catch {
+        return false;
+      }
+      // `new URL` aceita "https://" vazio em alguns runtimes; exigir host fecha isso.
+      return (u.protocol === "https:" || u.protocol === "http:") && u.hostname.length > 0;
+    },
+    { message: "url deve ser um caminho do app (/rota) ou uma URL http(s) com host" },
+  );
+
+/**
  * Contrato de função SEM corpo (GET, cron, chamadas `invoke` sem `body`).
  * Aceita ausência, `null`, `{}` ou objeto qualquer (ignorado); rejeita string, número, array.
  */

@@ -6,13 +6,19 @@ import { parseJsonBody, validationErrorResponse, z } from "../_shared/validation
 import {
   buildDeliveryEnvelope,
   resolveWebhookDispatch,
+  WEBHOOK_CURRENT_VERSION,
   WEBHOOK_V1_SUNSET,
 } from "../_shared/contracts/webhook-dispatcher.ts";
 import { withSentry, addBreadcrumb, captureException, recordMetric, timeStep } from "../_shared/sentry.ts";
 
 serve(withSentry("webhook-dispatcher", async (req, { requestId }) => {
+  // Toda resposta declara a versão de contrato, o preflight incluído; corpos v1 ganham
+  // Deprecation/Sunset depois de resolvidos e `contractHeaders` passa a valer também no catch.
+  const versionHeaders = { ...corsHeaders, 'X-Contract-Version': WEBHOOK_CURRENT_VERSION };
+  let contractHeaders: Record<string, string> = versionHeaders;
+
   if (req.method === 'OPTIONS') {
-    return new Response(null, { headers: corsHeaders });
+    return new Response(null, { headers: versionHeaders });
   }
 
   const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
@@ -25,10 +31,10 @@ serve(withSentry("webhook-dispatcher", async (req, { requestId }) => {
 
     // Contrato versionado (v1 depreciado / v2 atual): JSON inválido e campos inválidos voltam 422
     // no formato único; corpo v1 recebe headers Deprecation/Sunset até WEBHOOK_V1_SUNSET.
-    const rawBody = await parseJsonBody(req, z.unknown(), { headers: corsHeaders, requestId, emptyAsObject: false });
+    const rawBody = await parseJsonBody(req, z.unknown(), { headers: versionHeaders, requestId, emptyAsObject: false });
     if (!rawBody.ok) return rawBody.response;
     const resolved = resolveWebhookDispatch(rawBody.data, { requestId });
-    const contractHeaders = { ...corsHeaders, ...resolved.headers };
+    contractHeaders = { ...versionHeaders, ...resolved.headers };
     if (!resolved.ok) return validationErrorResponse(resolved.error, contractHeaders);
 
     const { subscription_id, event_type, payload } = resolved.data;
@@ -254,7 +260,14 @@ serve(withSentry("webhook-dispatcher", async (req, { requestId }) => {
 
   } catch (error: unknown) {
     captureException(error, { fn: "webhook-dispatcher", requestId });
-    return errorResponse(error, requestId);
+    // errorResponse preserva o status de HttpError (401 do verifyServiceRole) e nao vaza a
+    // mensagem interna (PR #100); aqui so acrescentamos a versao de contrato ao que ele monta.
+    // Usa os headers do contrato já resolvido (v1 mantém Deprecation/Sunset no erro).
+    const res = errorResponse(error, requestId);
+    for (const [k, v] of Object.entries(contractHeaders)) {
+      if (k.toLowerCase() !== 'access-control-allow-origin') res.headers.set(k, v);
+    }
+    return res;
   }
 }));
 

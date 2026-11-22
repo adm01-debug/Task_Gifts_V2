@@ -2,7 +2,9 @@ import { defineContract, texto, z } from "./common.ts";
 
 export const ChatMessageSchema = z.object({
   role: z.enum(["user", "assistant", "system"]),
-  content: z.string().max(8000),
+  // O histórico vem de `ai_coach_messages.content` (TEXT, sem limite): uma resposta longa do
+  // modelo passaria do limite e derrubaria o chat inteiro com 422 na mensagem seguinte.
+  content: z.string().max(32000),
 });
 
 export const CompetencySchema = z.object({

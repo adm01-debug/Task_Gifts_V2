@@ -153,10 +153,12 @@ const FIXTURES: Record<string, ContractFixtures> = {
       { nome: "data como array", payload: { exclude_subscription_id: UUID_A, title: "t", message: "m", data: [1] }, field: "data", code: "invalid_type" },
       { nome: "exclude_subscription_id não-uuid", payload: { exclude_subscription_id: "1", title: "t", message: "m" }, field: "exclude_subscription_id", code: "invalid_string" },
       { nome: "title acima de 120", payload: { exclude_subscription_id: UUID_A, title: "x".repeat(121), message: "m" }, field: "title", code: "too_big" },
+      { nome: "url com esquema javascript", payload: { exclude_subscription_id: UUID_A, title: "t", message: "m", url: "javascript:alert(1)" }, field: "url", code: "custom" },
     ],
     empty: [
       { nome: "title vazio", payload: { exclude_subscription_id: UUID_A, title: "", message: "m" }, field: "title", code: "too_small" },
       { nome: "message só espaços", payload: { exclude_subscription_id: UUID_A, title: "t", message: "  " }, field: "message", code: "too_small" },
+      { nome: "url de destino só com espaços", payload: { exclude_subscription_id: UUID_A, title: "t", message: "m", url: "   " }, field: "url", code: "too_small" },
     ],
     notObject: [{ nome: "null", payload: null, field: "(body)", code: "invalid_type" }],
   },
@@ -175,8 +177,12 @@ const FIXTURES: Record<string, ContractFixtures> = {
   "send-campaign-push": {
     valid: [
       {
-        nome: "campanha completa (salesCampaignsService)",
-        payload: { user_ids: [UUID_A, UUID_B], type: "campaign_update", title: "Meta batida!", message: "Sua equipe atingiu 100%.", url: "https://task-gifts-v2.vercel.app/campaigns", data: { campaign_id: UUID_A } },
+        nome: "campanha completa (salesCampaignsService.ts:449 — url relativa, caso real)",
+        payload: { user_ids: [UUID_A, UUID_B], type: "campaign_completed", title: "Meta batida!", message: "Sua equipe atingiu 100%.", url: `/campanhas/${UUID_A}`, data: { campaign_id: UUID_A } },
+      },
+      {
+        nome: "url absoluta https",
+        payload: { user_ids: [UUID_A], type: "t", title: "ti", message: "me", url: "https://task-gifts-v2.vercel.app/campanhas" },
       },
       { nome: "mínimo", payload: { user_ids: [UUID_A], type: "t", title: "ti", message: "me" }, esperado: { user_ids: [UUID_A], type: "t", title: "ti", message: "me" } },
     ],
@@ -187,7 +193,10 @@ const FIXTURES: Record<string, ContractFixtures> = {
     wrongType: [
       { nome: "user_ids string", payload: { user_ids: UUID_A, type: "t", title: "ti", message: "me" }, field: "user_ids", code: "invalid_type" },
       { nome: "user_ids com não-uuid", payload: { user_ids: [UUID_A, "x"], type: "t", title: "ti", message: "me" }, field: "user_ids.1", code: "invalid_string" },
-      { nome: "url inválida", payload: { user_ids: [UUID_A], type: "t", title: "ti", message: "me", url: "nao-e-url" }, field: "url", code: "invalid_string" },
+      { nome: "url que não é caminho nem http(s)", payload: { user_ids: [UUID_A], type: "t", title: "ti", message: "me", url: "nao-e-url" }, field: "url", code: "custom" },
+      { nome: "url com esquema javascript (XSS no clique do push)", payload: { user_ids: [UUID_A], type: "t", title: "ti", message: "me", url: "javascript:alert(1)" }, field: "url", code: "custom" },
+      { nome: "url só com esquema, sem host", payload: { user_ids: [UUID_A], type: "t", title: "ti", message: "me", url: "https://" }, field: "url", code: "custom" },
+      { nome: "url protocol-relative (sai do app)", payload: { user_ids: [UUID_A], type: "t", title: "ti", message: "me", url: "//evil.example.com/x" }, field: "url", code: "custom" },
       { nome: "mais de 500 destinatários", payload: { user_ids: Array.from({ length: 501 }, () => UUID_A), type: "t", title: "ti", message: "me" }, field: "user_ids", code: "too_big" },
     ],
     empty: [
@@ -222,6 +231,10 @@ const FIXTURES: Record<string, ContractFixtures> = {
         payload: { version: "v2", subscription_id: UUID_A, event: { type: "order.created", id: "evt_1", occurred_at: "2026-11-22T12:00:00Z" }, payload: { order_id: 10 }, metadata: { source: "erp" } },
       },
       { nome: "v2 mínimo", payload: { version: "v2", subscription_id: UUID_A, event: { type: "test.ping" }, payload: {} } },
+      {
+        nome: "v1 com version declarada explicitamente",
+        payload: { version: "v1", subscription_id: UUID_A, event_type: "order.created", payload: { order_id: 10 } },
+      },
     ],
     missing: [
       { nome: "v1 sem event_type", payload: { subscription_id: UUID_A, payload: {} }, field: "event_type", code: "invalid_type" },

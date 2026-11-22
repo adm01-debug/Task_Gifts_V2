@@ -14,7 +14,7 @@ pasta ficar sem contrato ou sem fixtures). Cada contrato (`<nome>.ts`) declara:
 
 ## Formato único de erro de validação — HTTP 422
 
-Toda falha de validação de **qualquer** função devolve (ver `../validation.ts`):
+Toda falha de validação devolve (ver `../validation.ts`):
 
 ```json
 {
@@ -33,6 +33,17 @@ Toda falha de validação de **qualquer** função devolve (ver `../validation.t
 
 No handler: `const parsed = await parseJsonBody(req, Schema, { headers: corsHeaders, requestId }); if (!parsed.ok) return parsed.response;`
 
+**Quem devolve 422 de fato:** as 11 funções que leem corpo ou query (`bodyRequired: true` e as de corpo
+opcional) chamam `parseJsonBody`/`validateQuery`. As 5 sem corpo — `admin-alerts`, `churn-prediction`,
+`push-outbox-dispatcher`, `push-public-key`, `verify-ip` — **ignoram o corpo da requisição**: o contrato
+`EmptyBodySchema` documenta isso e é verificado em teste, mas elas não respondem 422 (um corpo estranho
+simplesmente não é lido). Mudar isso mexeria no contrato de quem as chama (inclusive o `pg_cron`).
+
+**Destino de notificação:** `url` em `send-campaign-push` e `push-device-revoked` usa `destinoUrl()`
+(`common.ts`), que aceita caminho do app (`/campanhas/<id>`, o que o front envia) ou URL `http(s)` e
+recusa `javascript:`/`data:`. Um `z.string().url()` ali fazia a função devolver 422 e o push ser
+descartado em silêncio.
+
 ## Testes
 
 - **vitest (roda no CI, job `quality`)** — `bun run test:contracts` ou `bun run test`:
@@ -41,6 +52,8 @@ No handler: `const parsed = await parseJsonBody(req, Schema, { headers: corsHead
   `webhook-versioning.contract.spec.ts` (v1/v2, depreciação, sunset). Sufixo `.spec.ts` de propósito: o
   workflow `.github/workflows/deno.yml` roda `deno test` em todo `*test.ts` de `supabase/functions`. Fixtures em `_fixtures/index.ts`.
   O import `https://deno.land/x/zod@v3.25/mod.ts` resolve para `zod/v3` por alias em `vitest.config.ts`.
+  `_fixtures/responses.ts` guarda uma amostra 2xx real por função (copiada do `return` do handler): o
+  teste do registro exige amostra válida **e** inválida para toda função que declara `response`.
 - **Deno (runtime real) — roda no CI** pelo workflow `.github/workflows/deno.yml` (job "Tipos e testes das Edge
   Functions": `deno check` de todo `index.ts` + `deno test` de todo `*test.ts`): `validation_test.ts`,
   `sentry_test.ts` e `contracts/contracts_test.ts`. Local: `bun run test:edge` (usa `bunx deno@2`).

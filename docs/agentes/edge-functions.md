@@ -65,17 +65,25 @@ camadas, nesta ordem:
   (`_shared/validation.ts`: `parseJsonBody`, `validateQuery`). Códigos: `VALIDATION_ERROR`,
   `INVALID_JSON`, `UNSUPPORTED_VERSION`. O front já trata 4xx genérico via `payload.error`
   (`src/lib/edgeErrors.ts`), por isso `error` repete `message`.
-- Função nova sem contrato quebra `registry.contract.test.ts` no CI — é intencional.
+- Função nova sem contrato quebra `registry.contract.spec.ts` no CI — é intencional.
+- **Só as 11 funções que leem corpo/query respondem 422.** As 5 sem corpo (`admin-alerts`,
+  `churn-prediction`, `push-outbox-dispatcher`, `push-public-key`, `verify-ip`) ignoram o corpo; o
+  contrato delas (`EmptyBodySchema`) documenta e testa isso, mas não há 422 em runtime.
+- `url` de push (`send-campaign-push`, `push-device-revoked`) aceita **caminho do app** (`/campanhas/<id>`)
+  ou URL `http(s)`, e recusa `javascript:`/`data:` — `z.string().url()` rejeitava o caminho relativo que o
+  front envia e o push de campanha era descartado com 422 em silêncio (corrigido no PR #101).
 
 ## Versionamento do webhook-dispatcher
 
-- **v1** (sem `version`): `{ subscription_id, event_type, payload }`. **Depreciado**: aceito até
-  `WEBHOOK_V1_SUNSET` (2027-05-31T00:00Z, em `contracts/webhook-dispatcher.ts`); toda resposta a um corpo
-  v1 traz `Deprecation`, `Sunset` e `Link; rel="deprecation"`. Depois da data → 422 `UNSUPPORTED_VERSION`.
+- **v1** (`version` ausente **ou** `"v1"`): `{ subscription_id, event_type, payload }`. **Depreciado
+  desde** `WEBHOOK_V1_DEPRECATED_SINCE` (2026-11-22) e aceito até `WEBHOOK_V1_SUNSET`
+  (2027-05-31T00:00Z, ambos em `contracts/webhook-dispatcher.ts`); toda resposta a um corpo v1 traz
+  `Deprecation` (data da depreciação, RFC 9745), `Sunset` (data do corte) e `Link; rel="deprecation"`.
+  Depois do corte → 422 `UNSUPPORTED_VERSION`.
 - **v2** (`version: "v2"`): `{ version, subscription_id, event: { type, id?, occurred_at? }, payload, metadata? }`.
   Normaliza para o mesmo caminho interno; o envelope entregue ao assinante continua `{ event, timestamp, data }`
   e ganha `id`/`occurred_at`/`metadata` **só quando v2 os informa** (aditivo, não quebra assinantes).
-- Toda resposta carrega `X-Contract-Version`. Front (`WebhooksAdmin.tsx`, `WebhookSubscriptionDetail.tsx`)
+- Toda resposta carrega `X-Contract-Version` (inclusive 422 de JSON inválido e 500). Front (`WebhooksAdmin.tsx`, `WebhookSubscriptionDetail.tsx`)
   ainda envia v1 — migrar para v2 antes do sunset.
 
 ## Ao editar uma função
