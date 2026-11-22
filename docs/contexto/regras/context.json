@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "8247352013b948dce00b64c586d9f7f0b2a40f7d",
+  "sha": "11d2c1e38bfdb1b41766c9459a6d7eafc9ffc58e",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
-  "generated_at": "2026-11-22 18:51 UTC",
-  "files_total": 1539,
-  "code_files": 1435,
-  "code_lines": 257887
+  "generated_at": "2026-11-22 19:48 UTC",
+  "files_total": 1547,
+  "code_files": 1443,
+  "code_lines": 258573
  },
  "version": "1.3.2",
- "facts_hash": "6750b0154ff18572",
+ "facts_hash": "d2282e46c64aae93",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -194,7 +194,7 @@
   ],
   "package_manager": "bun",
   "languages": {
-   ".ts": 567,
+   ".ts": 575,
    ".tsx": 565,
    ".sql": 271,
    ".mjs": 21,
@@ -207,7 +207,12 @@
    "functions_no_jwt": [
     "migrate-helper",
     "push-public-key",
-    "security-weekly-digest"
+    "push-outbox-dispatcher",
+    "security-weekly-digest",
+    "burn-rate-monitor",
+    "error-budget-monitor",
+    "webhook-health-monitor",
+    "dispatch-critical-alert"
    ],
    "auth": {}
   },
@@ -43906,6 +43911,36 @@
     "idempotency": false
    },
    {
+    "name": "burn-rate-monitor",
+    "file": "supabase/functions/burn-rate-monitor/index.ts",
+    "methods": [
+     "OPTIONS"
+    ],
+    "auth": "PÚBLICA (verify_jwt=false em config.toml)",
+    "tables": [
+     "security_alerts"
+    ],
+    "env": [
+     "SLO_TARGET",
+     "SUPABASE_SERVICE_ROLE_KEY",
+     "SUPABASE_URL"
+    ],
+    "external": [],
+    "invokes": [
+     "dispatch-critical-alert"
+    ],
+    "doc": "Edge Function: burn-rate-monitor Alertas de burn rate (Google SRE style), executado via pg_cron (a cada 5 min). Janelas avaliadas: - Rápida: 1h E 5min burn >= 14.4x -> critical (2% do budget em 1h) - Lenta: 6h E 30min burn >= 6x -> high (5% do budget em 6h) Dispara apenas quando AMBAS as janelas (cu …",
+    "errors": [
+     ", insErr); continue; }\n\n          triggered.push({ alertType, severity: pair.severity, id: alert?.id });\n\n          try {\n            await sb.functions.invoke(",
+     "get_burn_rate(${minutes}): ${error.message}"
+    ],
+    "side_effects": [
+     "invoke("
+    ],
+    "webhook_events": [],
+    "idempotency": true
+   },
+   {
     "name": "churn-prediction",
     "file": "supabase/functions/churn-prediction/index.ts",
     "methods": [
@@ -43995,6 +44030,54 @@
     "idempotency": false
    },
    {
+    "name": "dispatch-critical-alert",
+    "file": "supabase/functions/dispatch-critical-alert/index.ts",
+    "methods": [
+     "OPTIONS"
+    ],
+    "auth": "PÚBLICA (verify_jwt=false em config.toml)",
+    "tables": [
+     "notifications",
+     "user_roles"
+    ],
+    "env": [
+     "SLACK_ALERT_WEBHOOK_URL",
+     "SUPABASE_SERVICE_ROLE_KEY",
+     "SUPABASE_URL"
+    ],
+    "external": [],
+    "invokes": [],
+    "doc": "Alerta crítico: recebe um alerta (high/critical) e o encaminha para Slack (opt-in via SLACK_ALERT_WEBHOOK_URL) e como notificação in-app para todos os admins. Chamado pelos monitores (burn-rate, error-budget) e pelo trigger do banco (trg_security_alerts_dispatch_critical) via net.http_post.",
+    "errors": [],
+    "side_effects": [],
+    "webhook_events": [],
+    "idempotency": false
+   },
+   {
+    "name": "error-budget-monitor",
+    "file": "supabase/functions/error-budget-monitor/index.ts",
+    "methods": [
+     "OPTIONS"
+    ],
+    "auth": "PÚBLICA (verify_jwt=false em config.toml)",
+    "tables": [
+     "security_alerts"
+    ],
+    "env": [
+     "SUPABASE_SERVICE_ROLE_KEY",
+     "SUPABASE_URL"
+    ],
+    "external": [],
+    "invokes": [],
+    "doc": "Error Budget Monitor — avalia burn% do orçamento de erros (30d) para webhooks e API externa. Ao cruzar 75% ou 90%, cria um security_alert e dispara o dispatch-critical-alert (Slack + notificação in-app), com deduplicação por dia+tipo+bucket para não spammar.",
+    "errors": [
+     ";\n    const serviceRole = Deno.env.get("
+    ],
+    "side_effects": [],
+    "webhook_events": [],
+    "idempotency": true
+   },
+   {
     "name": "generate-quiz-questions",
     "file": "supabase/functions/generate-quiz-questions/index.ts",
     "methods": [
@@ -44078,7 +44161,7 @@
     "methods": [
      "OPTIONS"
     ],
-    "auth": "service_role (ignora RLS) — NÃO valida usuário no código",
+    "auth": "PÚBLICA (verify_jwt=false em config.toml)",
     "tables": [
      "push_notification_logs",
      "push_outbox",
@@ -44281,6 +44364,28 @@
     "external": [],
     "invokes": [],
     "doc": "",
+    "errors": [],
+    "side_effects": [],
+    "webhook_events": [],
+    "idempotency": false
+   },
+   {
+    "name": "webhook-health-monitor",
+    "file": "supabase/functions/webhook-health-monitor/index.ts",
+    "methods": [
+     "OPTIONS"
+    ],
+    "auth": "PÚBLICA (verify_jwt=false em config.toml)",
+    "tables": [],
+    "env": [
+     "SUPABASE_SERVICE_ROLE_KEY",
+     "SUPABASE_URL",
+     "WEBHOOK_HEALTH_MIN_SAMPLE",
+     "WEBHOOK_HEALTH_THRESHOLD"
+    ],
+    "external": [],
+    "invokes": [],
+    "doc": "Monitor de saúde de webhooks — dispara alertas quando a taxa de sucesso por assinatura cai abaixo do limiar (default 90%) na última hora. Executado via pg_cron (a cada 15 min) ou invocação manual admin.",
     "errors": [],
     "side_effects": [],
     "webhook_events": [],
@@ -49173,8 +49278,8 @@
   },
   {
    "module": "supabase/functions",
-   "files": 57,
-   "lines": 7140,
+   "files": 65,
+   "lines": 7826,
    "tables": [
     "ai_course_jobs",
     "attendance_records",
@@ -49220,10 +49325,13 @@
     "admin-alerts.ts: AdminAlertSchema, AdminAlertsResponseSchema, adminAlertsContract",
     "ai-coach.ts: ChatMessageSchema, CompetencySchema, AvailableTrailSchema, UserContextSchema, AiCoachRequestSchema, AiCoachSuggestionsResponseSchema",
     "ai-course-builder.ts: AiCourseBuilderRequestSchema, AiCourseBuilderResponseSchema, aiCourseBuilderContract",
+    "burn-rate-monitor.ts: BurnRateMonitorResponseSchema, burnRateMonitorContract",
     "churn-prediction.ts: ChurnPredictionSchema, ChurnPredictionResponseSchema, churnPredictionContract",
     "common.ts: ContractValidation, uuid, texto, jsonRecord, destinoUrl, EmptyBodySchema",
     "competency-alerts.ts: CompetencyAlertsRequestSchema, CompetencyAlertsResponseSchema, competencyAlertsContract",
     "detect-new-device.ts: DetectNewDeviceRequestSchema, DetectNewDeviceResponseSchema, detectNewDeviceContract",
+    "dispatch-critical-alert.ts: AlertPayloadSchema, DispatchCriticalAlertResponseSchema, dispatchCriticalAlertContract",
+    "error-budget-monitor.ts: ErrorBudgetMonitorResponseSchema, errorBudgetMonitorContract",
     "generate-quiz-questions.ts: GenerateQuizQuestionsRequestSchema, GeneratedQuestionSchema, GenerateQuizQuestionsResponseSchema, generateQuizQuestionsContract",
     "index.ts: CONTRACTS, EdgeFunctionName, EDGE_FUNCTION_NAMES, getContract",
     "migrate-helper.ts: MigrateHelperQuerySchema, migrateHelperContract",
@@ -49236,6 +49344,7 @@
     "trail-recommendations.ts: TrailRecommendationsRequestSchema, TrailRecommendationSchema, TrailRecommendationsResponseSchema, trailRecommendationsContract",
     "verify-ip.ts: VerifyIpResponseSchema, verifyIpContract",
     "webhook-dispatcher.ts: WEBHOOK_CONTRACT_VERSIONS, WebhookContractVersion, WEBHOOK_CURRENT_VERSION, WEBHOOK_V1_SUNSET, WEBHOOK_V1_DEPRECATED_SINCE, WEBHOOK_DEPRECATION_DOC_URL",
+    "webhook-health-monitor.ts: WebhookHealthMonitorResponseSchema, webhookHealthMonitorContract",
     "webhook-ping.ts: webhookPingContract",
     "index.ts: emptyBodyFixtures, fixturesFor, FIXTURE_NAMES",
     "responses.ts: ResponseFixtures, responsesFor",
@@ -49274,11 +49383,14 @@
     "supabase/functions/_shared/contracts/admin-alerts.ts",
     "supabase/functions/_shared/contracts/ai-coach.ts",
     "supabase/functions/_shared/contracts/ai-course-builder.ts",
+    "supabase/functions/_shared/contracts/burn-rate-monitor.ts",
     "supabase/functions/_shared/contracts/churn-prediction.ts",
     "supabase/functions/_shared/contracts/common.ts",
     "supabase/functions/_shared/contracts/competency-alerts.ts",
     "supabase/functions/_shared/contracts/contracts_test.ts",
     "supabase/functions/_shared/contracts/detect-new-device.ts",
+    "supabase/functions/_shared/contracts/dispatch-critical-alert.ts",
+    "supabase/functions/_shared/contracts/error-budget-monitor.ts",
     "supabase/functions/_shared/contracts/generate-quiz-questions.ts",
     "supabase/functions/_shared/contracts/index.ts",
     "supabase/functions/_shared/contracts/migrate-helper.ts",
@@ -49293,6 +49405,7 @@
     "supabase/functions/_shared/contracts/validation.contract.spec.ts",
     "supabase/functions/_shared/contracts/verify-ip.ts",
     "supabase/functions/_shared/contracts/webhook-dispatcher.ts",
+    "supabase/functions/_shared/contracts/webhook-health-monitor.ts",
     "supabase/functions/_shared/contracts/webhook-ping.ts",
     "supabase/functions/_shared/contracts/webhook-versioning.contract.spec.ts",
     "supabase/functions/_shared/contracts/_fixtures/index.ts",
@@ -49301,9 +49414,12 @@
     "supabase/functions/admin-alerts/index.ts",
     "supabase/functions/ai-coach/index.ts",
     "supabase/functions/ai-course-builder/index.ts",
+    "supabase/functions/burn-rate-monitor/index.ts",
     "supabase/functions/churn-prediction/index.ts",
     "supabase/functions/competency-alerts/index.ts",
     "supabase/functions/detect-new-device/index.ts",
+    "supabase/functions/dispatch-critical-alert/index.ts",
+    "supabase/functions/error-budget-monitor/index.ts",
     "supabase/functions/generate-quiz-questions/index.ts",
     "supabase/functions/migrate-helper/index.ts",
     "supabase/functions/push-device-revoked/index.ts",
@@ -49316,6 +49432,7 @@
     "supabase/functions/trail-recommendations/index.ts",
     "supabase/functions/verify-ip/index.ts",
     "supabase/functions/webhook-dispatcher/index.ts",
+    "supabase/functions/webhook-health-monitor/index.ts",
     "supabase/functions/webhook-ping/index.ts"
    ]
   },
@@ -50385,7 +50502,8 @@
      "src/services/notificationsService.ts",
      "src/services/pushSubscriptionService.ts",
      "src/services/salesCampaignsService.ts",
-     "supabase/functions/competency-alerts/index.ts"
+     "supabase/functions/competency-alerts/index.ts",
+     "supabase/functions/dispatch-critical-alert/index.ts"
     ],
     "select": [
      "src/services/notificationsService.ts",
@@ -50874,13 +50992,17 @@
      "src/components/security/SecurityAlertsPanel.tsx",
      "src/pages/BurnRate.tsx",
      "src/pages/WebhookSubscriptionDetail.tsx",
+     "supabase/functions/burn-rate-monitor/index.ts",
+     "supabase/functions/error-budget-monitor/index.ts",
      "supabase/functions/security-weekly-digest/index.ts"
     ],
     "update": [
      "src/components/security/SecurityAlertsPanel.tsx"
     ],
     "insert": [
-     "supabase/functions/detect-new-device/index.ts"
+     "supabase/functions/burn-rate-monitor/index.ts",
+     "supabase/functions/detect-new-device/index.ts",
+     "supabase/functions/error-budget-monitor/index.ts"
     ]
    },
    "sequence_attempts": {
@@ -51205,6 +51327,7 @@
      "src/services/permissionsService.ts",
      "src/services/rbacService.ts",
      "supabase/functions/churn-prediction/index.ts",
+     "supabase/functions/dispatch-critical-alert/index.ts",
      "supabase/functions/reward-approval-review/index.ts",
      "supabase/functions/security-weekly-digest/index.ts",
      "supabase/functions/trail-recommendations/index.ts"
@@ -52515,7 +52638,11 @@
     "supabase/functions/_shared/sentry.ts"
    ],
    "SLACK_ALERT_WEBHOOK_URL": [
+    "supabase/functions/dispatch-critical-alert/index.ts",
     "supabase/functions/security-weekly-digest/index.ts"
+   ],
+   "SLO_TARGET": [
+    "supabase/functions/burn-rate-monitor/index.ts"
    ],
    "SNAPSHOT_DIR": [
     "scripts/supabase_snapshot/snapshot.py"
@@ -52548,9 +52675,12 @@
     "supabase/functions/_shared/security.ts",
     "supabase/functions/admin-alerts/index.ts",
     "supabase/functions/ai-course-builder/index.ts",
+    "supabase/functions/burn-rate-monitor/index.ts",
     "supabase/functions/churn-prediction/index.ts",
     "supabase/functions/competency-alerts/index.ts",
     "supabase/functions/detect-new-device/index.ts",
+    "supabase/functions/dispatch-critical-alert/index.ts",
+    "supabase/functions/error-budget-monitor/index.ts",
     "supabase/functions/generate-quiz-questions/index.ts",
     "supabase/functions/migrate-helper/index.ts",
     "supabase/functions/push-device-revoked/index.ts",
@@ -52561,6 +52691,7 @@
     "supabase/functions/trail-recommendations/index.ts",
     "supabase/functions/verify-ip/index.ts",
     "supabase/functions/webhook-dispatcher/index.ts",
+    "supabase/functions/webhook-health-monitor/index.ts",
     "supabase/functions/webhook-ping/index.ts"
    ],
    "SUPABASE_SNAPSHOT_PUBLICACAO": [
@@ -52571,9 +52702,12 @@
     "supabase/functions/_shared/security.ts",
     "supabase/functions/admin-alerts/index.ts",
     "supabase/functions/ai-course-builder/index.ts",
+    "supabase/functions/burn-rate-monitor/index.ts",
     "supabase/functions/churn-prediction/index.ts",
     "supabase/functions/competency-alerts/index.ts",
     "supabase/functions/detect-new-device/index.ts",
+    "supabase/functions/dispatch-critical-alert/index.ts",
+    "supabase/functions/error-budget-monitor/index.ts",
     "supabase/functions/generate-quiz-questions/index.ts",
     "supabase/functions/migrate-helper/index.ts",
     "supabase/functions/push-device-revoked/index.ts",
@@ -52584,6 +52718,7 @@
     "supabase/functions/trail-recommendations/index.ts",
     "supabase/functions/verify-ip/index.ts",
     "supabase/functions/webhook-dispatcher/index.ts",
+    "supabase/functions/webhook-health-monitor/index.ts",
     "supabase/functions/webhook-ping/index.ts"
    ],
    "UPSTASH_REDIS_REST_TOKEN": [
@@ -52656,6 +52791,12 @@
     "src/test/rls.test.ts",
     "src/test/rpcAccess.test.ts",
     "src/test/setup.ts"
+   ],
+   "WEBHOOK_HEALTH_MIN_SAMPLE": [
+    "supabase/functions/webhook-health-monitor/index.ts"
+   ],
+   "WEBHOOK_HEALTH_THRESHOLD": [
+    "supabase/functions/webhook-health-monitor/index.ts"
    ],
    "XDG_STATE_HOME": [
     "scripts/maintenance/run.mjs"
@@ -52811,7 +52952,8 @@
     "src/services/bossBattleService.ts"
    ],
    "get_burn_rate": [
-    "src/pages/BurnRate.tsx"
+    "src/pages/BurnRate.tsx",
+    "supabase/functions/burn-rate-monitor/index.ts"
    ],
    "get_card_set_rewards": [
     "src/services/tradingCardsService.ts"
@@ -52851,6 +52993,9 @@
    ],
    "get_engagement_pillar_scores": [
     "src/services/engagementDiagnosticsService.ts"
+   ],
+   "get_error_budget_30d": [
+    "supabase/functions/error-budget-monitor/index.ts"
    ],
    "get_executive_metrics": [
     "src/services/executiveService.ts"
@@ -52944,7 +53089,8 @@
     "src/pages/WebhooksAdmin.tsx"
    ],
    "get_webhook_delivery_stats_1h": [
-    "src/pages/WebhooksAdmin.tsx"
+    "src/pages/WebhooksAdmin.tsx",
+    "supabase/functions/webhook-health-monitor/index.ts"
    ],
    "get_webhook_delivery_stats_24h": [
     "src/pages/WebhooksAdmin.tsx"
@@ -53188,6 +53334,9 @@
   "invokes": {
    "dashboard-edge": [
     "scripts/ai-context/gerar.unit.mjs"
+   ],
+   "dispatch-critical-alert": [
+    "supabase/functions/burn-rate-monitor/index.ts"
    ],
    "fixture-edge": [
     "scripts/ai-context/gerar.unit.mjs"
@@ -54131,6 +54280,14 @@
     "chain": []
    },
    {
+    "file": "supabase/functions/_shared/contracts/burn-rate-monitor.ts",
+    "name": "BurnRateMonitorResponseSchema",
+    "kind": "object",
+    "body": "{ ok: z.literal(true), triggered: z.array( z.object({ alertType: z.string(), severity: z.enum([\"high\", \"critical\"]), id: z.string().nullable(), }) ), evaluated_at: z.string(), slo: z.number(), }",
+    "refines": [],
+    "chain": []
+   },
+   {
     "file": "supabase/functions/_shared/contracts/churn-prediction.ts",
     "name": "ChurnPredictionSchema",
     "kind": "object",
@@ -54194,6 +54351,30 @@
     "name": "DetectNewDeviceResponseSchema",
     "kind": "object",
     "body": "{ is_new_device: z.boolean(), device_id: z.string().nullable().optional(), is_trusted: z.boolean(), }",
+    "refines": [],
+    "chain": []
+   },
+   {
+    "file": "supabase/functions/_shared/contracts/dispatch-critical-alert.ts",
+    "name": "AlertPayloadSchema",
+    "kind": "object",
+    "body": "{ alert_id: z.string().optional(), alert_type: z.string().trim().min(1).max(120), severity: z.string().trim().min(1).max(20), title: z.string().trim().min(1).max(300).optional(), description: z.string().nullable().optional(), /** burn-rate-monitor envia `message` em vez de `title` (dispatch usa como fallback). */ message: z.string().nullable().optional(), metadata: jsonRecord.nullable().optional(), }",
+    "refines": [],
+    "chain": []
+   },
+   {
+    "file": "supabase/functions/_shared/contracts/dispatch-critical-alert.ts",
+    "name": "DispatchCriticalAlertResponseSchema",
+    "kind": "discriminatedUnion",
+    "body": "\"skipped\", [ z.object({ success: z.literal(true), skipped: z.literal(false), severity: z.string(), results: z.record(z.unknown()), }), z.object({ success: z.literal(true), skipped: z.literal(true), reason: z.string(), }), ]",
+    "refines": [],
+    "chain": []
+   },
+   {
+    "file": "supabase/functions/_shared/contracts/error-budget-monitor.ts",
+    "name": "ErrorBudgetMonitorResponseSchema",
+    "kind": "object",
+    "body": "{ ok: z.literal(true), evaluated: z.array( z.object({ target: z.string(), burn_pct: z.number(), bucket: z.enum([\"critical\", \"high\"]).nullable(), }) ), created: z.number().int().nonnegative(), dispatched: z.number().int().nonnegative(), skipped: z.number().int().nonnegative(), generated_at: z.string(), }",
     "refines": [],
     "chain": []
    },
@@ -54370,6 +54551,14 @@
     "name": "WebhookDispatcherResponseSchema",
     "kind": "object",
     "body": "{ success: z.boolean(), attempts: z.number().int().nonnegative(), duration_ms: z.number().nonnegative(), status: z.number().int().nullable(), error: z.string().nullable(), }",
+    "refines": [],
+    "chain": []
+   },
+   {
+    "file": "supabase/functions/_shared/contracts/webhook-health-monitor.ts",
+    "name": "WebhookHealthMonitorResponseSchema",
+    "kind": "object",
+    "body": "{ checked: z.number().int().nonnegative(), degraded: z.number().int().nonnegative(), threshold_pct: z.number(), min_sample: z.number(), degraded_subscriptions: z.array( z.object({ id: z.string(), name: z.string(), success_rate_pct: z.number().nullable(), total: z.number().int().nonnegative(), failed: z.number().int().nonnegative(), }) ), requestId: z.string(), }",
     "refines": [],
     "chain": []
    }
@@ -57309,6 +57498,22 @@
     "msg": ">\n            <AlertCircle className="
    },
    {
+    "file": "supabase/functions/_shared/contracts/dispatch-critical-alert.ts",
+    "msg": ",\n  methods: ["
+   },
+   {
+    "file": "supabase/functions/_shared/contracts/index.ts",
+    "msg": ": dispatchCriticalAlertContract,\n  "
+   },
+   {
+    "file": "supabase/functions/_shared/contracts/_fixtures/index.ts",
+    "msg": ": {\n      valid: [\n        { nome: "
+   },
+   {
+    "file": "supabase/functions/_shared/contracts/_fixtures/responses.ts",
+    "msg": ": {\n      valid: [\n        { nome: "
+   },
+   {
     "file": "supabase/functions/ai-coach/index.ts",
     "msg": "OPENROUTER_API_KEY is not configured"
    },
@@ -57357,6 +57562,14 @@
     "msg": "Não foi possível extrair texto suficiente do PDF (pode ser um PDF escaneado)."
    },
    {
+    "file": "supabase/functions/burn-rate-monitor/index.ts",
+    "msg": ", insErr); continue; }\n\n          triggered.push({ alertType, severity: pair.severity, id: alert?.id });\n\n          try {\n            await sb.functions.invoke("
+   },
+   {
+    "file": "supabase/functions/burn-rate-monitor/index.ts",
+    "msg": "get_burn_rate(${minutes}): ${error.message}"
+   },
+   {
     "file": "supabase/functions/churn-prediction/index.ts",
     "msg": "AI gateway error: ${aiResponse.status}"
    },
@@ -57367,6 +57580,10 @@
    {
     "file": "supabase/functions/churn-prediction/index.ts",
     "msg": "OPENROUTER_API_KEY is not configured"
+   },
+   {
+    "file": "supabase/functions/error-budget-monitor/index.ts",
+    "msg": ";\n    const serviceRole = Deno.env.get("
    },
    {
     "file": "supabase/functions/migrate-helper/index.ts",
@@ -58675,6 +58892,14 @@
    {
     "file": "supabase/functions/ai-course-builder/index.ts",
     "text": "Load job (must belong to user)"
+   },
+   {
+    "file": "supabase/functions/burn-rate-monitor/index.ts",
+    "text": "Dispara apenas quando AMBAS as janelas (curta e longa) cruzam o limite (menos ruído)."
+   },
+   {
+    "file": "supabase/functions/burn-rate-monitor/index.ts",
+    "text": "volume mínimo para evitar falso positivo"
    },
    {
     "file": "supabase/functions/reward-approval-review/index.ts",
@@ -70320,6 +70545,16 @@
     "value": "\"0f1e2d3c-4b5a-4968-8777-66554433aabb\""
    },
    {
+    "file": "supabase/functions/error-budget-monitor/index.ts",
+    "name": "BURN_HIGH",
+    "value": "75"
+   },
+   {
+    "file": "supabase/functions/error-budget-monitor/index.ts",
+    "name": "BURN_CRITICAL",
+    "value": "90"
+   },
+   {
     "file": "supabase/functions/push-device-revoked/index.ts",
     "name": "TYPE",
     "value": "\"security_device_revoked\""
@@ -76656,6 +76891,24 @@
     "kind": "filtra"
    },
    {
+    "file": "supabase/functions/dispatch-critical-alert/index.ts",
+    "field": "type",
+    "value": "security",
+    "kind": "escreve"
+   },
+   {
+    "file": "supabase/functions/dispatch-critical-alert/index.ts",
+    "field": "role",
+    "value": "admin",
+    "kind": "filtra"
+   },
+   {
+    "file": "supabase/functions/error-budget-monitor/index.ts",
+    "field": "status",
+    "value": "healthy",
+    "kind": "escreve"
+   },
+   {
     "file": "supabase/functions/generate-quiz-questions/index.ts",
     "field": "role",
     "value": "system",
@@ -79422,12 +79675,24 @@
     "line": "* `result.allowed` ser `undefined`, o que bloqueia 100% do tráfego com 429."
    },
    {
+    "file": "supabase/functions/burn-rate-monitor/index.ts",
+    "line": "// - Lenta: 6h E 30min burn >= 6x -> high (5% do budget em 6h)"
+   },
+   {
+    "file": "supabase/functions/burn-rate-monitor/index.ts",
+    "line": "// - Rápida: 1h E 5min burn >= 14.4x -> critical (2% do budget em 1h)"
+   },
+   {
     "file": "supabase/functions/competency-alerts/index.ts",
     "line": "// Celebrate strengths if all competencies are above 70%"
    },
    {
     "file": "supabase/functions/competency-alerts/index.ts",
     "line": "const technicalValue = Math.min(100, (moduleProgress?.length || 0) * 10 + avgScore * 0.5);"
+   },
+   {
+    "file": "supabase/functions/error-budget-monitor/index.ts",
+    "line": "// e API externa. Ao cruzar 75% ou 90%, cria um security_alert e dispara o"
    }
   ],
   "tests": [
@@ -87466,6 +87731,10 @@
    {
     "file": "src/services/shopService.ts",
     "call": "notify"
+   },
+   {
+    "file": "supabase/functions/burn-rate-monitor/index.ts",
+    "call": "invoke("
    },
    {
     "file": "supabase/functions/push-device-revoked/index.ts",
@@ -99266,7 +99535,15 @@
     "limit": "50"
    },
    {
+    "file": "supabase/functions/burn-rate-monitor/index.ts",
+    "limit": "1"
+   },
+   {
     "file": "supabase/functions/competency-alerts/index.ts",
+    "limit": "1"
+   },
+   {
+    "file": "supabase/functions/error-budget-monitor/index.ts",
     "limit": "1"
    },
    {
@@ -100596,6 +100873,9 @@
       "escreve:supabase/functions/competency-alerts/index.ts",
       "filtra:supabase/functions/competency-alerts/index.ts"
      ],
+     "security": [
+      "escreve:supabase/functions/dispatch-critical-alert/index.ts"
+     ],
      "security_weekly_digest": [
       "escreve:supabase/functions/security-weekly-digest/index.ts",
       "filtra:supabase/functions/security-weekly-digest/index.ts"
@@ -100623,6 +100903,7 @@
      "admin": [
       "compara:src/components/rbac/UserRolesTab.tsx",
       "compara:supabase/functions/reward-approval-review/index.ts",
+      "filtra:supabase/functions/dispatch-critical-alert/index.ts",
       "filtra:supabase/functions/security-weekly-digest/index.ts"
      ],
      "long": [
@@ -101130,6 +101411,9 @@
      ],
      "error": [
       "escreve:supabase/functions/_shared/sentry.ts"
+     ],
+     "healthy": [
+      "escreve:supabase/functions/error-budget-monitor/index.ts"
      ],
      "invalidated": [
       "compara:supabase/functions/push-outbox-dispatcher/index.ts",
@@ -104621,9 +104905,12 @@
    "supabase/functions/_shared/security.ts",
    "supabase/functions/admin-alerts/index.ts",
    "supabase/functions/ai-course-builder/index.ts",
+   "supabase/functions/burn-rate-monitor/index.ts",
    "supabase/functions/churn-prediction/index.ts",
    "supabase/functions/competency-alerts/index.ts",
    "supabase/functions/detect-new-device/index.ts",
+   "supabase/functions/dispatch-critical-alert/index.ts",
+   "supabase/functions/error-budget-monitor/index.ts",
    "supabase/functions/generate-quiz-questions/index.ts",
    "supabase/functions/migrate-helper/index.ts",
    "supabase/functions/push-device-revoked/index.ts",
@@ -104634,6 +104921,7 @@
    "supabase/functions/trail-recommendations/index.ts",
    "supabase/functions/verify-ip/index.ts",
    "supabase/functions/webhook-dispatcher/index.ts",
+   "supabase/functions/webhook-health-monitor/index.ts",
    "supabase/functions/webhook-ping/index.ts",
    "supabase/migrations/20260306000318_cc14b254-e622-48a0-a219-de592646bf75.sql",
    "supabase/migrations/20260520162642_60bbdd93-a248-4b2d-8f18-548974872356.sql",
@@ -104983,7 +105271,12 @@
   "public_functions": [
    "migrate-helper",
    "push-public-key",
-   "security-weekly-digest"
+   "push-outbox-dispatcher",
+   "security-weekly-digest",
+   "burn-rate-monitor",
+   "error-budget-monitor",
+   "webhook-health-monitor",
+   "dispatch-critical-alert"
   ],
   "auth_config": {},
   "grants": [
@@ -146328,7 +146621,7 @@
   },
   "supabase/functions/_shared/security.ts": {
    "path": "supabase/functions/_shared/security.ts",
-   "lines": 174,
+   "lines": 175,
    "exports": [
     "const corsHeaders",
     "function getCorsHeaders",
@@ -146762,6 +147055,23 @@
     }
    ]
   },
+  "supabase/functions/_shared/contracts/burn-rate-monitor.ts": {
+   "path": "supabase/functions/_shared/contracts/burn-rate-monitor.ts",
+   "lines": 24,
+   "exports": [
+    "const BurnRateMonitorResponseSchema",
+    "const burnRateMonitorContract"
+   ],
+   "zod": [
+    {
+     "name": "BurnRateMonitorResponseSchema",
+     "kind": "object",
+     "body": "{ ok: z.literal(true), triggered: z.array( z.object({ alertType: z.string(), severity: z.enum([\"high\", \"critical\"]), id: z.string().nullable(), }) ), evaluated_at: z.string(), slo: z.number(), }",
+     "refines": [],
+     "chain": []
+    }
+   ]
+  },
   "supabase/functions/_shared/contracts/churn-prediction.ts": {
    "path": "supabase/functions/_shared/contracts/churn-prediction.ts",
    "lines": 36,
@@ -146902,6 +147212,51 @@
     }
    ]
   },
+  "supabase/functions/_shared/contracts/dispatch-critical-alert.ts": {
+   "path": "supabase/functions/_shared/contracts/dispatch-critical-alert.ts",
+   "lines": 37,
+   "exports": [
+    "const AlertPayloadSchema",
+    "const DispatchCriticalAlertResponseSchema",
+    "const dispatchCriticalAlertContract"
+   ],
+   "errors": [
+    ",\n  methods: ["
+   ],
+   "zod": [
+    {
+     "name": "AlertPayloadSchema",
+     "kind": "object",
+     "body": "{ alert_id: z.string().optional(), alert_type: z.string().trim().min(1).max(120), severity: z.string().trim().min(1).max(20), title: z.string().trim().min(1).max(300).optional(), description: z.string().nullable().optional(), /** burn-rate-monitor envia `message` em vez de `title` (dispatch usa como fallback). */ message: z.string().nullable().optional(), metadata: jsonRecord.nullable().optional(), }",
+     "refines": [],
+     "chain": []
+    },
+    {
+     "name": "DispatchCriticalAlertResponseSchema",
+     "kind": "discriminatedUnion",
+     "body": "\"skipped\", [ z.object({ success: z.literal(true), skipped: z.literal(false), severity: z.string(), results: z.record(z.unknown()), }), z.object({ success: z.literal(true), skipped: z.literal(true), reason: z.string(), }), ]",
+     "refines": [],
+     "chain": []
+    }
+   ]
+  },
+  "supabase/functions/_shared/contracts/error-budget-monitor.ts": {
+   "path": "supabase/functions/_shared/contracts/error-budget-monitor.ts",
+   "lines": 26,
+   "exports": [
+    "const ErrorBudgetMonitorResponseSchema",
+    "const errorBudgetMonitorContract"
+   ],
+   "zod": [
+    {
+     "name": "ErrorBudgetMonitorResponseSchema",
+     "kind": "object",
+     "body": "{ ok: z.literal(true), evaluated: z.array( z.object({ target: z.string(), burn_pct: z.number(), bucket: z.enum([\"critical\", \"high\"]).nullable(), }) ), created: z.number().int().nonnegative(), dispatched: z.number().int().nonnegative(), skipped: z.number().int().nonnegative(), generated_at: z.string(), }",
+     "refines": [],
+     "chain": []
+    }
+   ]
+  },
   "supabase/functions/_shared/contracts/generate-quiz-questions.ts": {
    "path": "supabase/functions/_shared/contracts/generate-quiz-questions.ts",
    "lines": 32,
@@ -146937,12 +147292,15 @@
   },
   "supabase/functions/_shared/contracts/index.ts": {
    "path": "supabase/functions/_shared/contracts/index.ts",
-   "lines": 71,
+   "lines": 83,
    "exports": [
     "const CONTRACTS",
     "type EdgeFunctionName",
     "const EDGE_FUNCTION_NAMES",
     "function getContract"
+   ],
+   "errors": [
+    ": dispatchCriticalAlertContract,\n  "
    ],
    "doc": "Registro ÚNICO dos contratos das edge functions. Um contrato por pasta em supabase/functions/ (o teste registry.contract.spec.ts falha se alguma função ficar sem contrato)."
   },
@@ -147289,6 +147647,23 @@
    ],
    "doc": "Contrato VERSIONADO do webhook-dispatcher (v1 → v2) com depreciação controlada. Política: - v1 (sem `version`): formato histórico `{ subscription_id, event_type, payload }`. DEPRECIADO: continua aceito até WEBHOOK_V1_SUNSET e toda resposta a um corpo v1 carrega os headers `Deprecation`, `Sunset` e ` …"
   },
+  "supabase/functions/_shared/contracts/webhook-health-monitor.ts": {
+   "path": "supabase/functions/_shared/contracts/webhook-health-monitor.ts",
+   "lines": 28,
+   "exports": [
+    "const WebhookHealthMonitorResponseSchema",
+    "const webhookHealthMonitorContract"
+   ],
+   "zod": [
+    {
+     "name": "WebhookHealthMonitorResponseSchema",
+     "kind": "object",
+     "body": "{ checked: z.number().int().nonnegative(), degraded: z.number().int().nonnegative(), threshold_pct: z.number(), min_sample: z.number(), degraded_subscriptions: z.array( z.object({ id: z.string(), name: z.string(), success_rate_pct: z.number().nullable(), total: z.number().int().nonnegative(), failed: z.number().int().nonnegative(), }) ), requestId: z.string(), }",
+     "refines": [],
+     "chain": []
+    }
+   ]
+  },
   "supabase/functions/_shared/contracts/webhook-ping.ts": {
    "path": "supabase/functions/_shared/contracts/webhook-ping.ts",
    "lines": 28,
@@ -147324,11 +147699,14 @@
   },
   "supabase/functions/_shared/contracts/_fixtures/index.ts": {
    "path": "supabase/functions/_shared/contracts/_fixtures/index.ts",
-   "lines": 269,
+   "lines": 295,
    "exports": [
     "function emptyBodyFixtures",
     "function fixturesFor",
     "const FIXTURE_NAMES"
+   ],
+   "errors": [
+    ": {\n      valid: [\n        { nome: "
    ],
    "status_values": [
     {
@@ -147385,10 +147763,13 @@
   },
   "supabase/functions/_shared/contracts/_fixtures/responses.ts": {
    "path": "supabase/functions/_shared/contracts/_fixtures/responses.ts",
-   "lines": 184,
+   "lines": 235,
    "exports": [
     "interface ResponseFixtures",
     "function responsesFor"
+   ],
+   "errors": [
+    ": {\n      valid: [\n        { nome: "
    ],
    "status_values": [
     {
@@ -147821,6 +148202,58 @@
    ],
    "uses_service_role": true
   },
+  "supabase/functions/burn-rate-monitor/index.ts": {
+   "path": "supabase/functions/burn-rate-monitor/index.ts",
+   "lines": 101,
+   "tables": [
+    {
+     "table": "security_alerts",
+     "op": "select"
+    },
+    {
+     "table": "security_alerts",
+     "op": "insert,select"
+    }
+   ],
+   "table_cols": {
+    "security_alerts": [
+     "alert_type",
+     "created_at",
+     "id"
+    ]
+   },
+   "rpc": [
+    "get_burn_rate"
+   ],
+   "invokes": [
+    "dispatch-critical-alert"
+   ],
+   "env": [
+    "SLO_TARGET",
+    "SUPABASE_SERVICE_ROLE_KEY",
+    "SUPABASE_URL"
+   ],
+   "errors": [
+    ", insErr); continue; }\n\n          triggered.push({ alertType, severity: pair.severity, id: alert?.id });\n\n          try {\n            await sb.functions.invoke(",
+    "get_burn_rate(${minutes}): ${error.message}"
+   ],
+   "rule_comments": [
+    "Dispara apenas quando AMBAS as janelas (curta e longa) cruzam o limite (menos ruído).",
+    "volume mínimo para evitar falso positivo"
+   ],
+   "doc": "Edge Function: burn-rate-monitor Alertas de burn rate (Google SRE style), executado via pg_cron (a cada 5 min). Janelas avaliadas: - Rápida: 1h E 5min burn >= 14.4x -> critical (2% do budget em 1h) - Lenta: 6h E 30min burn >= 6x -> high (5% do budget em 6h) Dispara apenas quando AMBAS as janelas (cu …",
+   "percents": [
+    "// - Lenta: 6h E 30min burn >= 6x -> high (5% do budget em 6h)",
+    "// - Rápida: 1h E 5min burn >= 14.4x -> critical (2% do budget em 1h)"
+   ],
+   "side_effects": [
+    "invoke("
+   ],
+   "pagination": [
+    "1"
+   ],
+   "uses_service_role": true
+  },
   "supabase/functions/churn-prediction/index.ts": {
    "path": "supabase/functions/churn-prediction/index.ts",
    "lines": 295,
@@ -148222,6 +148655,101 @@
     "RESEND_API_KEY",
     "SUPABASE_SERVICE_ROLE_KEY",
     "SUPABASE_URL"
+   ],
+   "uses_service_role": true
+  },
+  "supabase/functions/dispatch-critical-alert/index.ts": {
+   "path": "supabase/functions/dispatch-critical-alert/index.ts",
+   "lines": 125,
+   "tables": [
+    {
+     "table": "user_roles",
+     "op": "select"
+    },
+    {
+     "table": "notifications",
+     "op": "insert"
+    }
+   ],
+   "table_cols": {
+    "user_roles": [
+     "role",
+     "user_id"
+    ]
+   },
+   "env": [
+    "SLACK_ALERT_WEBHOOK_URL",
+    "SUPABASE_SERVICE_ROLE_KEY",
+    "SUPABASE_URL"
+   ],
+   "status_values": [
+    {
+     "field": "type",
+     "value": "security",
+     "kind": "escreve"
+    },
+    {
+     "field": "role",
+     "value": "admin",
+     "kind": "filtra"
+    }
+   ],
+   "doc": "Alerta crítico: recebe um alerta (high/critical) e o encaminha para Slack (opt-in via SLACK_ALERT_WEBHOOK_URL) e como notificação in-app para todos os admins. Chamado pelos monitores (burn-rate, error-budget) e pelo trigger do banco (trg_security_alerts_dispatch_critical) via net.http_post.",
+   "uses_service_role": true
+  },
+  "supabase/functions/error-budget-monitor/index.ts": {
+   "path": "supabase/functions/error-budget-monitor/index.ts",
+   "lines": 170,
+   "tables": [
+    {
+     "table": "security_alerts",
+     "op": "select"
+    },
+    {
+     "table": "security_alerts",
+     "op": "insert,select"
+    }
+   ],
+   "table_cols": {
+    "security_alerts": [
+     "alert_type",
+     "created_at",
+     "id"
+    ]
+   },
+   "rpc": [
+    "get_error_budget_30d"
+   ],
+   "env": [
+    "SUPABASE_SERVICE_ROLE_KEY",
+    "SUPABASE_URL"
+   ],
+   "errors": [
+    ";\n    const serviceRole = Deno.env.get("
+   ],
+   "params": [
+    {
+     "name": "BURN_HIGH",
+     "value": "75"
+    },
+    {
+     "name": "BURN_CRITICAL",
+     "value": "90"
+    }
+   ],
+   "status_values": [
+    {
+     "field": "status",
+     "value": "healthy",
+     "kind": "escreve"
+    }
+   ],
+   "doc": "Error Budget Monitor — avalia burn% do orçamento de erros (30d) para webhooks e API externa. Ao cruzar 75% ou 90%, cria um security_alert e dispara o dispatch-critical-alert (Slack + notificação in-app), com deduplicação por dia+tipo+bucket para não spammar.",
+   "percents": [
+    "// e API externa. Ao cruzar 75% ou 90%, cria um security_alert e dispara o"
+   ],
+   "pagination": [
+    "1"
    ],
    "uses_service_role": true
   },
@@ -149072,6 +149600,21 @@
      "body": "const hmac = createHmac('sha256', secret); hmac.update(payload); return 'sha256=' + hmac.digest('hex');"
     }
    ],
+   "uses_service_role": true
+  },
+  "supabase/functions/webhook-health-monitor/index.ts": {
+   "path": "supabase/functions/webhook-health-monitor/index.ts",
+   "lines": 85,
+   "rpc": [
+    "get_webhook_delivery_stats_1h"
+   ],
+   "env": [
+    "SUPABASE_SERVICE_ROLE_KEY",
+    "SUPABASE_URL",
+    "WEBHOOK_HEALTH_MIN_SAMPLE",
+    "WEBHOOK_HEALTH_THRESHOLD"
+   ],
+   "doc": "Monitor de saúde de webhooks — dispara alertas quando a taxa de sucesso por assinatura cai abaixo do limiar (default 90%) na última hora. Executado via pg_cron (a cada 15 min) ou invocação manual admin.",
    "uses_service_role": true
   },
   "supabase/functions/webhook-ping/index.ts": {
@@ -150538,10 +151081,31 @@
   }
  },
  "git": {
-  "sha": "8247352013b948dce00b64c586d9f7f0b2a40f7d",
+  "sha": "11d2c1e38bfdb1b41766c9459a6d7eafc9ffc58e",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "commits": [
+   {
+    "sha": "11d2c1e",
+    "date": "2026-11-22",
+    "author": "adm01-debug",
+    "subject": "fix(sre): reconstroi os 3 monitores + dispatch-critical-alert e destrava auth dos crons (#105)",
+    "files": [
+     "supabase/config.toml",
+     "supabase/functions/_shared/contracts/_fixtures/index.ts",
+     "supabase/functions/_shared/contracts/_fixtures/responses.ts",
+     "supabase/functions/_shared/contracts/burn-rate-monitor.ts",
+     "supabase/functions/_shared/contracts/dispatch-critical-alert.ts",
+     "supabase/functions/_shared/contracts/error-budget-monitor.ts",
+     "supabase/functions/_shared/contracts/index.ts",
+     "supabase/functions/_shared/contracts/webhook-health-monitor.ts",
+     "supabase/functions/_shared/security.ts",
+     "supabase/functions/burn-rate-monitor/index.ts",
+     "supabase/functions/dispatch-critical-alert/index.ts",
+     "supabase/functions/error-budget-monitor/index.ts",
+     "supabase/functions/webhook-health-monitor/index.ts"
+    ]
+   },
    {
     "sha": "8247352",
     "date": "2026-11-22",
@@ -150904,21 +151468,16 @@
     "files": [
      "src/App.tsx"
     ]
-   },
-   {
-    "sha": "18c24c9",
-    "date": "2026-11-20",
-    "author": "adm01-debug",
-    "subject": "test(e2e): garante que a rota /previsoes e protegida e redireciona para /auth (#74)",
-    "files": [
-     "tests/e2e/smoke.spec.ts"
-    ]
    }
   ],
   "hot_files": [
    [
     "package.json",
     6
+   ],
+   [
+    "supabase/functions/_shared/contracts/_fixtures/index.ts",
+    5
    ],
    [
     "docs/estado/05-edge-functions.md",
@@ -150929,16 +151488,12 @@
     5
    ],
    [
-    "supabase/functions/_shared/contracts/_fixtures/index.ts",
+    "supabase/functions/_shared/contracts/_fixtures/responses.ts",
     4
    ],
    [
-    "supabase/functions/_shared/contracts/_fixtures/responses.ts",
-    3
-   ],
-   [
     "supabase/functions/_shared/contracts/index.ts",
-    3
+    4
    ],
    [
     ".env.example",
@@ -150947,6 +151502,10 @@
    [
     "supabase/functions/webhook-dispatcher/index.ts",
     3
+   ],
+   [
+    "supabase/config.toml",
+    2
    ],
    [
     "docs/agentes/edge-functions.md",
@@ -150990,10 +151549,6 @@
    ],
    [
     "supabase/functions/_shared/contracts/webhook-dispatcher.ts",
-    2
-   ],
-   [
-    "supabase/functions/_shared/contracts/webhook-versioning.contract.spec.ts",
     2
    ]
   ]

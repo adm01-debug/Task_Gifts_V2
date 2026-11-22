@@ -1952,9 +1952,12 @@
    "admin-alerts",
    "ai-coach",
    "ai-course-builder",
+   "burn-rate-monitor",
    "churn-prediction",
    "competency-alerts",
    "detect-new-device",
+   "dispatch-critical-alert",
+   "error-budget-monitor",
    "generate-quiz-questions",
    "migrate-helper",
    "push-device-revoked",
@@ -1966,6 +1969,7 @@
    "trail-recommendations",
    "verify-ip",
    "webhook-dispatcher",
+   "webhook-health-monitor",
    "webhook-ping"
   ],
   "servicos": [

@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "pasta": "supabase/functions",
- "total": 18,
+ "total": 22,
  "verify_jwt_false": [
+  "burn-rate-monitor",
+  "dispatch-critical-alert",
+  "error-budget-monitor",
   "migrate-helper",
+  "push-outbox-dispatcher",
   "push-public-key",
-  "security-weekly-digest"
+  "security-weekly-digest",
+  "webhook-health-monitor"
  ],
  "shared": [
   "supabase/functions/_shared/cache.ts",
@@ -19,11 +24,14 @@
   "supabase/functions/_shared/contracts/admin-alerts.ts",
   "supabase/functions/_shared/contracts/ai-coach.ts",
   "supabase/functions/_shared/contracts/ai-course-builder.ts",
+  "supabase/functions/_shared/contracts/burn-rate-monitor.ts",
   "supabase/functions/_shared/contracts/churn-prediction.ts",
   "supabase/functions/_shared/contracts/common.ts",
   "supabase/functions/_shared/contracts/competency-alerts.ts",
   "supabase/functions/_shared/contracts/contracts_test.ts",
   "supabase/functions/_shared/contracts/detect-new-device.ts",
+  "supabase/functions/_shared/contracts/dispatch-critical-alert.ts",
+  "supabase/functions/_shared/contracts/error-budget-monitor.ts",
   "supabase/functions/_shared/contracts/generate-quiz-questions.ts",
   "supabase/functions/_shared/contracts/index.ts",
   "supabase/functions/_shared/contracts/migrate-helper.ts",
@@ -38,6 +46,7 @@
   "supabase/functions/_shared/contracts/validation.contract.spec.ts",
   "supabase/functions/_shared/contracts/verify-ip.ts",
   "supabase/functions/_shared/contracts/webhook-dispatcher.ts",
+  "supabase/functions/_shared/contracts/webhook-health-monitor.ts",
   "supabase/functions/_shared/contracts/webhook-ping.ts",
   "supabase/functions/_shared/contracts/webhook-versioning.contract.spec.ts",
   "supabase/functions/_shared/rate-limit.ts",
@@ -156,6 +165,40 @@
    "chamada_pelo_front": [
     "src/services/aiCourseBuilderService.ts"
    ],
+   "chamada_por_edges": [],
+   "chamada_por_sql_ou_cron": false,
+   "orfa": false,
+   "testes": 0
+  },
+  {
+   "nome": "burn-rate-monitor",
+   "entrada": "supabase/functions/burn-rate-monitor/index.ts",
+   "arquivos": 1,
+   "linhas": 101,
+   "verify_jwt": false,
+   "metodos": [
+    "OPTIONS"
+   ],
+   "tabelas": [
+    "security_alerts"
+   ],
+   "rpcs": [
+    "get_burn_rate"
+   ],
+   "env": [
+    "SLO_TARGET",
+    "SUPABASE_SERVICE_ROLE_KEY",
+    "SUPABASE_URL"
+   ],
+   "buckets": [],
+   "chama_edges": [
+    "dispatch-critical-alert"
+   ],
+   "hosts_externos": [],
+   "usa_shared": [
+    "security.ts"
+   ],
+   "chamada_pelo_front": [],
    "chamada_por_edges": [],
    "chamada_por_sql_ou_cron": false,
    "orfa": false,
@@ -287,6 +330,75 @@
    "testes": 0
   },
   {
+   "nome": "dispatch-critical-alert",
+   "entrada": "supabase/functions/dispatch-critical-alert/index.ts",
+   "arquivos": 1,
+   "linhas": 125,
+   "verify_jwt": false,
+   "metodos": [
+    "OPTIONS"
+   ],
+   "tabelas": [
+    "notifications",
+    "user_roles"
+   ],
+   "rpcs": [],
+   "env": [
+    "SLACK_ALERT_WEBHOOK_URL",
+    "SUPABASE_SERVICE_ROLE_KEY",
+    "SUPABASE_URL"
+   ],
+   "buckets": [],
+   "chama_edges": [],
+   "hosts_externos": [],
+   "usa_shared": [
+    "dispatch-critical-alert.ts",
+    "security.ts",
+    "validation.ts"
+   ],
+   "chamada_pelo_front": [],
+   "chamada_por_edges": [
+    "burn-rate-monitor",
+    "error-budget-monitor"
+   ],
+   "chamada_por_sql_ou_cron": true,
+   "orfa": false,
+   "testes": 0
+  },
+  {
+   "nome": "error-budget-monitor",
+   "entrada": "supabase/functions/error-budget-monitor/index.ts",
+   "arquivos": 1,
+   "linhas": 170,
+   "verify_jwt": false,
+   "metodos": [
+    "OPTIONS"
+   ],
+   "tabelas": [
+    "security_alerts"
+   ],
+   "rpcs": [
+    "get_error_budget_30d"
+   ],
+   "env": [
+    "SUPABASE_SERVICE_ROLE_KEY",
+    "SUPABASE_URL"
+   ],
+   "buckets": [],
+   "chama_edges": [
+    "dispatch-critical-alert"
+   ],
+   "hosts_externos": [],
+   "usa_shared": [
+    "security.ts"
+   ],
+   "chamada_pelo_front": [],
+   "chamada_por_edges": [],
+   "chamada_por_sql_ou_cron": false,
+   "orfa": false,
+   "testes": 0
+  },
+  {
    "nome": "generate-quiz-questions",
    "entrada": "supabase/functions/generate-quiz-questions/index.ts",
    "arquivos": 1,
@@ -395,7 +507,7 @@
    "entrada": "supabase/functions/push-outbox-dispatcher/index.ts",
    "arquivos": 1,
    "linhas": 199,
-   "verify_jwt": true,
+   "verify_jwt": false,
    "metodos": [
     "OPTIONS"
    ],
@@ -675,6 +787,38 @@
     "webhook-ping"
    ],
    "chamada_por_sql_ou_cron": false,
+   "orfa": false,
+   "testes": 0
+  },
+  {
+   "nome": "webhook-health-monitor",
+   "entrada": "supabase/functions/webhook-health-monitor/index.ts",
+   "arquivos": 1,
+   "linhas": 85,
+   "verify_jwt": false,
+   "metodos": [
+    "OPTIONS"
+   ],
+   "tabelas": [],
+   "rpcs": [
+    "get_webhook_delivery_stats_1h"
+   ],
+   "env": [
+    "SUPABASE_SERVICE_ROLE_KEY",
+    "SUPABASE_URL",
+    "WEBHOOK_HEALTH_MIN_SAMPLE",
+    "WEBHOOK_HEALTH_THRESHOLD"
+   ],
+   "buckets": [],
+   "chama_edges": [],
+   "hosts_externos": [],
+   "usa_shared": [
+    "security.ts",
+    "sentry.ts"
+   ],
+   "chamada_pelo_front": [],
+   "chamada_por_edges": [],
+   "chamada_por_sql_ou_cron": true,
    "orfa": false,
    "testes": 0
   },

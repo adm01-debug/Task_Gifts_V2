@@ -18793,6 +18793,7 @@
    "usada_no_front": 4,
    "usada_em_edges": [
     "competency-alerts",
+    "dispatch-critical-alert",
     "security-weekly-digest"
    ],
    "triggers": [],
@@ -25462,7 +25463,9 @@
    },
    "usada_no_front": 3,
    "usada_em_edges": [
+    "burn-rate-monitor",
     "detect-new-device",
+    "error-budget-monitor",
     "security-weekly-digest"
    ],
    "triggers": [
@@ -29398,6 +29401,7 @@
    "usada_no_front": 5,
    "usada_em_edges": [
     "churn-prediction",
+    "dispatch-critical-alert",
     "reward-approval-review",
     "security-weekly-digest",
     "trail-recommendations"
@@ -31332,7 +31336,7 @@
   {
    "nome": "get_burn_rate",
    "definida": true,
-   "usada_em": 1
+   "usada_em": 2
   },
   {
    "nome": "get_card_set_rewards",
@@ -31396,6 +31400,11 @@
   },
   {
    "nome": "get_engagement_pillar_scores",
+   "definida": true,
+   "usada_em": 1
+  },
+  {
+   "nome": "get_error_budget_30d",
    "definida": true,
    "usada_em": 1
   },
@@ -31542,7 +31551,7 @@
   {
    "nome": "get_webhook_delivery_stats_1h",
    "definida": true,
-   "usada_em": 1
+   "usada_em": 2
   },
   {
    "nome": "get_webhook_delivery_stats_24h",

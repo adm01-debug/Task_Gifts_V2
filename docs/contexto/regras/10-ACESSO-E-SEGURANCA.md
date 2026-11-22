@@ -1,6 +1,6 @@
 # 10 · ACESSO E SEGURANÇA — quem pode o quê
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `8247352013` · branch `main` · 2026-11-22 18:51 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `11d2c1e38b` · branch `main` · 2026-11-22 19:48 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## Perfis / roles identificados
@@ -256,7 +256,7 @@
 
 > `—` com RLS ligado = ninguém além de service_role. `sem RLS` = qualquer chave anon lê/escreve tudo.
 
-## Onde o RLS é IGNORADO (service_role) — 131 arquivo(s)
+## Onde o RLS é IGNORADO (service_role) — 135 arquivo(s)
 
 - `scripts/ai-context/cenarios.mjs`
 - `scripts/ai-context/gerar.unit.mjs`
@@ -266,9 +266,12 @@
 - `supabase/functions/_shared/security.ts`
 - `supabase/functions/admin-alerts/index.ts`
 - `supabase/functions/ai-course-builder/index.ts`
+- `supabase/functions/burn-rate-monitor/index.ts`
 - `supabase/functions/churn-prediction/index.ts`
 - `supabase/functions/competency-alerts/index.ts`
 - `supabase/functions/detect-new-device/index.ts`
+- `supabase/functions/dispatch-critical-alert/index.ts`
+- `supabase/functions/error-budget-monitor/index.ts`
 - `supabase/functions/generate-quiz-questions/index.ts`
 - `supabase/functions/migrate-helper/index.ts`
 - `supabase/functions/push-device-revoked/index.ts`
@@ -279,6 +282,7 @@
 - `supabase/functions/trail-recommendations/index.ts`
 - `supabase/functions/verify-ip/index.ts`
 - `supabase/functions/webhook-dispatcher/index.ts`
+- `supabase/functions/webhook-health-monitor/index.ts`
 - `supabase/functions/webhook-ping/index.ts`
 - `supabase/migrations/20260306000318_cc14b254-e622-48a0-a219-de592646bf75.sql`
 - `supabase/migrations/20260520162642_60bbdd93-a248-4b2d-8f18-548974872356.sql`
@@ -630,7 +634,12 @@
 
 - `migrate-helper`
 - `push-public-key`
+- `push-outbox-dispatcher`
 - `security-weekly-digest`
+- `burn-rate-monitor`
+- `error-budget-monitor`
+- `webhook-health-monitor`
+- `dispatch-critical-alert`
 
 ## Rotas protegidas no front
 

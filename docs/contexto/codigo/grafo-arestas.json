@@ -5861,6 +5861,9 @@
   "supabase/functions/_shared/contracts/ai-course-builder.ts": [
    "supabase/functions/_shared/contracts/common.ts"
   ],
+  "supabase/functions/_shared/contracts/burn-rate-monitor.ts": [
+   "supabase/functions/_shared/contracts/common.ts"
+  ],
   "supabase/functions/_shared/contracts/churn-prediction.ts": [
    "supabase/functions/_shared/contracts/common.ts"
   ],
@@ -5878,6 +5881,12 @@
   "supabase/functions/_shared/contracts/detect-new-device.ts": [
    "supabase/functions/_shared/contracts/common.ts"
   ],
+  "supabase/functions/_shared/contracts/dispatch-critical-alert.ts": [
+   "supabase/functions/_shared/contracts/common.ts"
+  ],
+  "supabase/functions/_shared/contracts/error-budget-monitor.ts": [
+   "supabase/functions/_shared/contracts/common.ts"
+  ],
   "supabase/functions/_shared/contracts/generate-quiz-questions.ts": [
    "supabase/functions/_shared/contracts/common.ts"
   ],
@@ -5885,10 +5894,13 @@
    "supabase/functions/_shared/contracts/admin-alerts.ts",
    "supabase/functions/_shared/contracts/ai-coach.ts",
    "supabase/functions/_shared/contracts/ai-course-builder.ts",
+   "supabase/functions/_shared/contracts/burn-rate-monitor.ts",
    "supabase/functions/_shared/contracts/churn-prediction.ts",
    "supabase/functions/_shared/contracts/common.ts",
    "supabase/functions/_shared/contracts/competency-alerts.ts",
    "supabase/functions/_shared/contracts/detect-new-device.ts",
+   "supabase/functions/_shared/contracts/dispatch-critical-alert.ts",
+   "supabase/functions/_shared/contracts/error-budget-monitor.ts",
    "supabase/functions/_shared/contracts/generate-quiz-questions.ts",
    "supabase/functions/_shared/contracts/migrate-helper.ts",
    "supabase/functions/_shared/contracts/push-device-revoked.ts",
@@ -5900,6 +5912,7 @@
    "supabase/functions/_shared/contracts/trail-recommendations.ts",
    "supabase/functions/_shared/contracts/verify-ip.ts",
    "supabase/functions/_shared/contracts/webhook-dispatcher.ts",
+   "supabase/functions/_shared/contracts/webhook-health-monitor.ts",
    "supabase/functions/_shared/contracts/webhook-ping.ts"
   ],
   "supabase/functions/_shared/contracts/migrate-helper.ts": [
@@ -5933,6 +5946,9 @@
    "supabase/functions/_shared/contracts/common.ts",
    "supabase/functions/_shared/validation.ts"
   ],
+  "supabase/functions/_shared/contracts/webhook-health-monitor.ts": [
+   "supabase/functions/_shared/contracts/common.ts"
+  ],
   "supabase/functions/_shared/contracts/webhook-ping.ts": [
    "supabase/functions/_shared/contracts/common.ts",
    "supabase/functions/_shared/contracts/webhook-dispatcher.ts"
@@ -5960,6 +5976,9 @@
    "supabase/functions/_shared/contracts/ai-course-builder.ts",
    "supabase/functions/_shared/validation.ts"
   ],
+  "supabase/functions/burn-rate-monitor/index.ts": [
+   "supabase/functions/_shared/security.ts"
+  ],
   "supabase/functions/churn-prediction/index.ts": [
    "supabase/functions/_shared/rate-limiter.ts",
    "supabase/functions/_shared/security.ts"
@@ -5976,6 +5995,14 @@
    "supabase/functions/_shared/security.ts",
    "supabase/functions/_shared/sentry.ts",
    "supabase/functions/_shared/validation.ts"
+  ],
+  "supabase/functions/dispatch-critical-alert/index.ts": [
+   "supabase/functions/_shared/contracts/dispatch-critical-alert.ts",
+   "supabase/functions/_shared/security.ts",
+   "supabase/functions/_shared/validation.ts"
+  ],
+  "supabase/functions/error-budget-monitor/index.ts": [
+   "supabase/functions/_shared/security.ts"
   ],
   "supabase/functions/generate-quiz-questions/index.ts": [
    "supabase/functions/_shared/contracts/generate-quiz-questions.ts",
@@ -6017,6 +6044,10 @@
    "supabase/functions/_shared/security.ts",
    "supabase/functions/_shared/sentry.ts",
    "supabase/functions/_shared/validation.ts"
+  ],
+  "supabase/functions/webhook-health-monitor/index.ts": [
+   "supabase/functions/_shared/security.ts",
+   "supabase/functions/_shared/sentry.ts"
   ],
   "supabase/functions/webhook-ping/index.ts": [
    "supabase/functions/_shared/contracts/webhook-dispatcher.ts",

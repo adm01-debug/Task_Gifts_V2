@@ -1,6 +1,6 @@
 # 07 · REGRAS DE NEGÓCIO
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `8247352013` · branch `main` · 2026-11-22 18:51 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `11d2c1e38b` · branch `main` · 2026-11-22 19:48 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## A. Regras escritas por humanos (`manual/` — prioridade máxima, nunca sobrescrito)
@@ -1125,6 +1125,7 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `type` | `rating` | compara, escreve | `src/components/PulseSurveyWidget.tsx`<br>`src/components/admin/SurveyCreator.tsx`<br>`src/services/feedbackService.ts`<br>`src/services/pulseSurveysService.ts` |
 | `type` | `recovery` | compara | `src/pages/ResetPassword.tsx` |
 | `type` | `registration` | escreve | `src/services/webauthnService.ts` |
+| `type` | `security` | escreve | `supabase/functions/dispatch-critical-alert/index.ts` |
 | `type` | `security_alert` | compara, escreve | `public/sw.js`<br>`src/components/security/SecurityNotificationsToggle.tsx`<br>`src/hooks/useSecurityPushNotifications.ts` |
 | `type` | `security_device_revoked` | escreve | `src/lib/pushDevices.ts` |
 | `type` | `security_weekly_digest` | escreve, filtra | `supabase/functions/security-weekly-digest/index.ts` |
@@ -1157,7 +1158,7 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `type` | `xp` | compara, escreve | `src/components/ui/lucky-drop.tsx`<br>`src/components/ui/micro-interactions.tsx`<br>`src/lib/luckyWheelPayout.ts`<br>`src/services/notificationsService.ts` |
 | `type` | `xp_gained` | compara, escreve | `src/pages/SocialFeed.tsx`<br>`src/services/socialFeedService.ts` |
 | `type` | `zero_engagement` | escreve | `supabase/functions/admin-alerts/index.ts` |
-| `role` | `admin` | compara, filtra | `src/components/rbac/UserRolesTab.tsx`<br>`supabase/functions/reward-approval-review/index.ts`<br>`supabase/functions/security-weekly-digest/index.ts` |
+| `role` | `admin` | compara, filtra | `src/components/rbac/UserRolesTab.tsx`<br>`supabase/functions/dispatch-critical-alert/index.ts`<br>`supabase/functions/reward-approval-review/index.ts`<br>`supabase/functions/security-weekly-digest/index.ts` |
 | `role` | `assistant` | compara, escreve | `src/components/AICoachDialog.tsx`<br>`src/hooks/useAICoach.ts`<br>`supabase/functions/_shared/contracts/_fixtures/index.ts` |
 | `role` | `long` | compara, escreve | `src/pages/BurnRate.tsx` |
 | `role` | `manager` | compara | `supabase/functions/reward-approval-review/index.ts` |
@@ -1198,6 +1199,7 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `status` | `fulfilled` | compara | `src/hooks/useAdminUsers.ts` |
 | `status` | `future` | compara, escreve | `src/components/AttendanceCalendar.tsx` |
 | `status` | `gap` | escreve | `src/lib/luckyWheelPayoutHistory.ts` |
+| `status` | `healthy` | escreve | `supabase/functions/error-budget-monitor/index.ts` |
 | `status` | `high` | compara | `src/pages/ErrorBudget.tsx` |
 | `status` | `idle` | compara | `src/components/ui/micro-quest-card.tsx` |
 | `status` | `in_progress` | compara | `src/components/MyDevelopmentPlanWidget.tsx`<br>`src/components/checkins/CheckinCard.tsx`<br>`src/components/engagement/plans/ActionPlanItemList.tsx`<br>`src/pages/Postmortems.tsx`<br>`src/services/actionPlansService.ts` |
@@ -1638,6 +1640,10 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
   ```ts
   { success: z.literal(true), trail_id: z.string(), modules: z.number().int().nonnegative(), questions: z.number().int().nonnegative(), }
   ```
+- **BurnRateMonitorResponseSchema** (`supabase/functions/_shared/contracts/burn-rate-monitor.ts`, z.object):
+  ```ts
+  { ok: z.literal(true), triggered: z.array( z.object({ alertType: z.string(), severity: z.enum(["high", "critical"]), id: z.string().nullable(), }) ), evaluated_at: z.string(), slo: z.number(), }
+  ```
 - **ChurnPredictionSchema** (`supabase/functions/_shared/contracts/churn-prediction.ts`, z.object):
   ```ts
   { userId: z.string(), displayName: z.string(), riskLevel: z.enum(["high", "medium"]), riskScore: z.number().min(0).max(100), riskIndicators: z.array(z.string()), interventionSuggestions: z.array(z.string()), metrics: z.object({ daysInactive: z.number().optional(), streak: z.number().optional(), punctualityRate: z.number().optional(), recentXpGain: z.number().optional(), }).partial().optional(), }
@@ -1669,6 +1675,18 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 - **DetectNewDeviceResponseSchema** (`supabase/functions/_shared/contracts/detect-new-device.ts`, z.object):
   ```ts
   { is_new_device: z.boolean(), device_id: z.string().nullable().optional(), is_trusted: z.boolean(), }
+  ```
+- **AlertPayloadSchema** (`supabase/functions/_shared/contracts/dispatch-critical-alert.ts`, z.object):
+  ```ts
+  { alert_id: z.string().optional(), alert_type: z.string().trim().min(1).max(120), severity: z.string().trim().min(1).max(20), title: z.string().trim().min(1).max(300).optional(), description: z.string().nullable().optional(), /** burn-rate-monitor envia `message` em vez de `title` (dispatch usa como fallback). */ message: z.string().nullable().optional(), metadata: jsonRecord.nullable().optional(), }
+  ```
+- **DispatchCriticalAlertResponseSchema** (`supabase/functions/_shared/contracts/dispatch-critical-alert.ts`, z.discriminatedUnion):
+  ```ts
+  "skipped", [ z.object({ success: z.literal(true), skipped: z.literal(false), severity: z.string(), results: z.record(z.unknown()), }), z.object({ success: z.literal(true), skipped: z.literal(true), reason: z.string(), }), ]
+  ```
+- **ErrorBudgetMonitorResponseSchema** (`supabase/functions/_shared/contracts/error-budget-monitor.ts`, z.object):
+  ```ts
+  { ok: z.literal(true), evaluated: z.array( z.object({ target: z.string(), burn_pct: z.number(), bucket: z.enum(["critical", "high"]).nullable(), }) ), created: z.number().int().nonnegative(), dispatched: z.number().int().nonnegative(), skipped: z.number().int().nonnegative(), generated_at: z.string(), }
   ```
 - **GenerateQuizQuestionsRequestSchema** (`supabase/functions/_shared/contracts/generate-quiz-questions.ts`, z.object):
   ```ts
@@ -1757,6 +1775,10 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 - **WebhookDispatcherResponseSchema** (`supabase/functions/_shared/contracts/webhook-dispatcher.ts`, z.object):
   ```ts
   { success: z.boolean(), attempts: z.number().int().nonnegative(), duration_ms: z.number().nonnegative(), status: z.number().int().nullable(), error: z.string().nullable(), }
+  ```
+- **WebhookHealthMonitorResponseSchema** (`supabase/functions/_shared/contracts/webhook-health-monitor.ts`, z.object):
+  ```ts
+  { checked: z.number().int().nonnegative(), degraded: z.number().int().nonnegative(), threshold_pct: z.number(), min_sample: z.number(), degraded_subscriptions: z.array( z.object({ id: z.string(), name: z.string(), success_rate_pct: z.number().nullable(), total: z.number().int().nonnegative(), failed: z.number().int().nonnegative(), }) ), requestId: z.string(), }
   ```
 
 ### F.2 react-hook-form (register/rules)
@@ -2683,8 +2705,11 @@ _nenhum item encontrado_
 | `<span>67% concluído</span>` | `src/stories/components/Progress.stories.tsx` |
 | `<span>45%</span>` | `src/stories/feedback/LoadingStates.stories.tsx` |
 | `* `result.allowed` ser `undefined`, o que bloqueia 100% do tráfego com 429.` | `supabase/functions/_shared/rate-limiter.ts` |
+| `// - Lenta: 6h E 30min burn >= 6x -> high (5% do budget em 6h)` | `supabase/functions/burn-rate-monitor/index.ts` |
+| `// - Rápida: 1h E 5min burn >= 14.4x -> critical (2% do budget em 1h)` | `supabase/functions/burn-rate-monitor/index.ts` |
 | `// Celebrate strengths if all competencies are above 70%` | `supabase/functions/competency-alerts/index.ts` |
 | `const technicalValue = Math.min(100, (moduleProgress?.length \|\| 0) * 10 + avgScore * 0.5);` | `supabase/functions/competency-alerts/index.ts` |
+| `// e API externa. Ao cruzar 75% ou 90%, cria um security_alert e dispara o` | `supabase/functions/error-budget-monitor/index.ts` |
 
 ## H. Parâmetros de negócio (constantes, prazos, limites)
 
@@ -2910,6 +2935,8 @@ _nenhum item encontrado_
 | `WEBHOOK_CURRENT_VERSION` | `"v2"` | `supabase/functions/_shared/contracts/webhook-dispatcher.ts` |
 | `UUID_A` | `"8d6f2b1e-3c4a-4e5f-9a7b-1c2d3e4f5a6b"` | `supabase/functions/_shared/contracts/_fixtures/types.ts` |
 | `UUID_B` | `"0f1e2d3c-4b5a-4968-8777-66554433aabb"` | `supabase/functions/_shared/contracts/_fixtures/types.ts` |
+| `BURN_HIGH` | `75` | `supabase/functions/error-budget-monitor/index.ts` |
+| `BURN_CRITICAL` | `90` | `supabase/functions/error-budget-monitor/index.ts` |
 | `TYPE` | `"security_device_revoked"` | `supabase/functions/push-device-revoked/index.ts` |
 | `BATCH_SIZE` | `100` | `supabase/functions/push-outbox-dispatcher/index.ts` |
 | `MAX_ATTEMPTS` | `3` | `supabase/functions/push-outbox-dispatcher/index.ts` |
@@ -3153,7 +3180,9 @@ _nenhum item encontrado_
 | 50 | `src/services/predictionMarketService.ts` |
 | 50 | `src/services/scratchCardService.ts` |
 | 50 | `src/services/tradingCardsService.ts` |
+| 1 | `supabase/functions/burn-rate-monitor/index.ts` |
 | 1 | `supabase/functions/competency-alerts/index.ts` |
+| 1 | `supabase/functions/error-budget-monitor/index.ts` |
 | 500 | `supabase/functions/reward-approval-review/index.ts` |
 | 1 | `supabase/functions/security-weekly-digest/index.ts` |
 
@@ -3461,7 +3490,7 @@ _nenhum item encontrado_
 | ; import { Badge } from  | `src/pages/LuckyWheelAdmin.tsx` |
 | Corrija os erros de configuração antes de salvar. | `src/pages/LuckyWheelAdmin.tsx` |
 | Não foi possível criar o prêmio. | `src/pages/LuckyWheelAdmin.tsx` |
-| … +155 linhas — lista completa em `context.json` | |
+| … +162 linhas — lista completa em `context.json` | |
 
 ## J. Controle de acesso no código (checagens de perfil/permissão)
 
@@ -3716,6 +3745,7 @@ _nenhum item encontrado_
 | `notifyRevocation` | `src/services/pushSubscriptionService.ts` |
 | `notifyQuestAssigned` | `src/services/questsService.ts` |
 | `notify` | `src/services/shopService.ts` |
+| `invoke(` | `supabase/functions/burn-rate-monitor/index.ts` |
 | `sendNotification` | `supabase/functions/push-device-revoked/index.ts` |
 | `sendNotification` | `supabase/functions/push-outbox-dispatcher/index.ts` |
 | `sendNotification` | `supabase/functions/send-campaign-push/index.ts` |
@@ -3997,6 +4027,8 @@ _nenhum item encontrado_
 | * Caso inválido: payload + campo que deve aparecer em `fields` (com código opcional). */ | `supabase/functions/_shared/contracts/_fixtures/types.ts` |
 | JWT validation | `supabase/functions/ai-course-builder/index.ts` |
 | Load job (must belong to user) | `supabase/functions/ai-course-builder/index.ts` |
+| Dispara apenas quando AMBAS as janelas (curta e longa) cruzam o limite (menos ruído). | `supabase/functions/burn-rate-monitor/index.ts` |
+| volume mínimo para evitar falso positivo | `supabase/functions/burn-rate-monitor/index.ts` |
 | A IA é um complemento: falha nela não pode travar a governança. | `supabase/functions/reward-approval-review/index.ts` |
 | Apenas gestores/administradores podem disparar a análise. | `supabase/functions/reward-approval-review/index.ts` |
 | * A IA nunca decide sozinha: ela apenas ajusta a pontuação heurística dentro | `supabase/functions/reward-approval-review/risk.ts` |

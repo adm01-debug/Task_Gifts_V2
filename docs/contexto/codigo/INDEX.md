@@ -1,7 +1,7 @@
 # Contexto do projeto para agentes de IA
 
 GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.
-Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `8247352013b948dce00b64c586d9f7f0b2a40f7d` (2026-11-22T15:50:20-03:00).
+Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `11d2c1e38bfdb1b41766c9459a6d7eafc9ffc58e` (2026-11-22T16:45:26-03:00).
 
 ## Como usar (leia antes de planejar ou executar qualquer tarefa)
 1. **Tela/rota/menu** → `rotas.json` (url/vista/menu → arquivo → hooks → tabelas → edges; `rotas_http_backend` para APIs) e `modulos.json` (módulo inteiro + dependências entre módulos).
@@ -14,7 +14,7 @@ Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR
 Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua tarefa; não carregue tudo.
 
 ## Stack
-- linguagens: TypeScript (1130), SQL (271), Markdown (55), JavaScript (24), JSON (14), YAML (9), Python (5), Shell (4)
+- linguagens: TypeScript (1138), SQL (271), Markdown (55), JavaScript (24), JSON (14), YAML (9), Python (5), Shell (4)
 - linguagem_principal: TypeScript
 - framework: React
 - backend_http: n/d
@@ -34,9 +34,9 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 ## Números
 | item | qtd |
 |---|---|
-| arquivos_total | 1529 |
-| arquivos_codigo | 1158 |
-| linhas_codigo | 226724 |
+| arquivos_total | 1537 |
+| arquivos_codigo | 1166 |
+| linhas_codigo | 227410 |
 | rotas | 83 |
 | rotas_http_backend | 0 |
 | vistas_por_id | 0 |
@@ -44,7 +44,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 | modulos | 71 |
 | componentes | 521 |
 | hooks | 155 |
-| edge_functions | 18 |
+| edge_functions | 22 |
 | tabelas | 236 |
 | migrations | 271 |
 | cron_jobs | 22 |
@@ -197,13 +197,16 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - `admin-alerts` — tabelas: attendance_records, audit_logs, profiles, shop_purchases, user_certifications; chamada por 1 arquivo(s) do front
 - `ai-coach` — tabelas: -; chamada por 1 arquivo(s) do front
 - `ai-course-builder` — tabelas: ai_course_jobs, learning_trails, quiz_options, quiz_questions, trail_modules; chamada por 1 arquivo(s) do front
+- `burn-rate-monitor` (verify_jwt=false) — tabelas: security_alerts; chamada por 0 arquivo(s) do front
 - `churn-prediction` — tabelas: attendance_records, audit_logs, kudos, profiles, trail_enrollments, user_combos, user_roles; chamada por 1 arquivo(s) do front
 - `competency-alerts` — tabelas: attendance_streaks, kudos, module_progress, notifications, profiles, quest_assignments, user_achievements; chamada por 2 arquivo(s) do front
 - `detect-new-device` — tabelas: profiles, security_alerts; chamada por 1 arquivo(s) do front
+- `dispatch-critical-alert` (verify_jwt=false) — tabelas: notifications, user_roles; chamada por 0 arquivo(s) do front, por SQL/cron
+- `error-budget-monitor` (verify_jwt=false) — tabelas: security_alerts; chamada por 0 arquivo(s) do front
 - `generate-quiz-questions` — tabelas: learning_trails, trail_modules; chamada por 1 arquivo(s) do front
 - `migrate-helper` (verify_jwt=false) — tabelas: -; chamada por 0 arquivo(s) do front
 - `push-device-revoked` — tabelas: push_notification_logs, push_subscriptions; chamada por 1 arquivo(s) do front
-- `push-outbox-dispatcher` — tabelas: push_notification_logs, push_outbox, push_subscriptions; chamada por 0 arquivo(s) do front, por SQL/cron
+- `push-outbox-dispatcher` (verify_jwt=false) — tabelas: push_notification_logs, push_outbox, push_subscriptions; chamada por 0 arquivo(s) do front, por SQL/cron
 - `push-public-key` (verify_jwt=false) — tabelas: -; chamada por 1 arquivo(s) do front
 - `reward-approval-review` — tabelas: audit_logs, profiles, purchase_approvals, shop_purchases, user_roles; chamada por 1 arquivo(s) do front
 - `security-weekly-digest` (verify_jwt=false) — tabelas: notifications, security_alerts, user_roles; chamada por 0 arquivo(s) do front, por SQL/cron
@@ -211,6 +214,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - `trail-recommendations` — tabelas: learning_trails, module_progress, profiles, quest_assignments, team_members, trail_enrollments, user_roles; chamada por 2 arquivo(s) do front
 - `verify-ip` — tabelas: ip_access_logs, ip_whitelist; chamada por 2 arquivo(s) do front
 - `webhook-dispatcher` — tabelas: webhook_delivery_logs, webhook_subscriptions; chamada por 0 arquivo(s) do front
+- `webhook-health-monitor` (verify_jwt=false) — tabelas: -; chamada por 0 arquivo(s) do front, por SQL/cron
 - `webhook-ping` — tabelas: webhook_subscriptions; chamada por 2 arquivo(s) do front
 
 ## Cron jobs (pg_cron / vercel)
@@ -240,8 +244,8 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 ## Integrações externas
 - SDKs: Sentry, Supabase, react-query, zod
 - hosts mais citados: openrouter.ai, edge.local, fcm.googleapis.com, i.pravatar.cc, taskgifts.app, www.youtube.com, a.com, api.pwnedpasswords.com, api.resend.com, app.exemplo.com, eidsaqymojyuhprobfpn.supabase.co, example.test, exemplo.com, linkedin.com, maintenance.invalid
-- webhooks recebidos: migrate-helper, push-public-key, security-weekly-digest
-- env de integração (só nomes): CRON_SECRET, INTERNAL_FUNCTION_SECRET, OPENROUTER_API_KEY, RESEND_API_KEY, SENTRY_DSN, SENTRY_ENV, SLACK_ALERT_WEBHOOK_URL, UPSTASH_REDIS_REST_TOKEN, UPSTASH_REDIS_REST_URL, VITE_BITRIX_WEBHOOK_URL, VITE_SENTRY_DSN
+- webhooks recebidos: burn-rate-monitor, dispatch-critical-alert, error-budget-monitor, migrate-helper, push-outbox-dispatcher, push-public-key, security-weekly-digest, webhook-health-monitor
+- env de integração (só nomes): CRON_SECRET, INTERNAL_FUNCTION_SECRET, OPENROUTER_API_KEY, RESEND_API_KEY, SENTRY_DSN, SENTRY_ENV, SLACK_ALERT_WEBHOOK_URL, UPSTASH_REDIS_REST_TOKEN, UPSTASH_REDIS_REST_URL, VITE_BITRIX_WEBHOOK_URL, VITE_SENTRY_DSN, WEBHOOK_HEALTH_MIN_SAMPLE, WEBHOOK_HEALTH_THRESHOLD
 
 ## Permissões / papéis
 - papéis no código: admin (13), alert (9), user (9), manager (8), system (6), button (5), status (5), assistant (3), group (3), grid (2), navigation (2), radio (2), radiogroup (2), Cargos (1), banner (1), contentinfo (1), dialog (1), gridcell (1), img (1), link (1), list (1), listitem (1), long (1), menu (1), menuitem (1), presentation (1), region (1), robot (1), role_assigned (1), separator (1), short (1), tab (1)
@@ -267,8 +271,8 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - possiveis_segredos_no_codigo: 0
 
 ## Grafo de código (graphify)
-- 10035 nós · 27922 arestas · 620 comunidades · grafo do commit `82473520`
-- comunidades maiores: react (244), lucide-react (211), badge.tsx (202), client.ts (169), cn (139), CardHeader (131), useAuth (120), skeleton.tsx (109), App.tsx (102), useToast (99), react-router-dom (95), mobile/index.ts (94)
+- 10066 nós · 27998 arestas · 637 comunidades · grafo do commit `11d2c1e3`
+- comunidades maiores: lucide-react (287), react (215), skeleton.tsx (173), utils.ts (127), cn (103), ManagerDashboard.tsx (100), contracts/index.ts (89), useToast (86), profilesService.ts (84), mobile/index.ts (83), useProfiles.ts (82), navigation/index.ts (80)
 - símbolos mais chamados: cn() (src/lib/utils.ts), useAuth() (src/hooks/useAuth.tsx), useIsMobile() (src/hooks/use-mobile.tsx), q() (scripts/supabase_snapshot/snapshot.py), useDepartments() (src/hooks/useDepartments.ts), useToast() (src/hooks/use-toast.ts), useRBAC() (src/hooks/useRBAC.ts), useProfiles() (src/hooks/useProfiles.ts), useSEO() (src/hooks/useSEO.ts), useSoundEffects() (src/hooks/useSoundEffects.tsx), .collect() (scripts/supabase_snapshot/test_snapshot.py), excluded_sql() (scripts/supabase_snapshot/snapshot.py)
 - consulta local: `graphify query "<pergunta>"`, `graphify path "<A>" "<B>"`, `graphify explain "<X>"`
 
@@ -279,15 +283,15 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - AGENTS.md (5)
 - docs/estado/05-edge-functions.md (5)
 - docs/prod-readiness.md (5)
+- supabase/config.toml (5)
+- supabase/functions/_shared/contracts/_fixtures/index.ts (5)
 - vercel.json (5)
 - .github/workflows/contexto.yml (4)
 - RELATORIO_CI.md (4)
 - docs/agentes/github-ci.md (4)
 - docs/agentes/mapa-repo.md (4)
 - scripts/automation.mjs (4)
-- supabase/config.toml (4)
-- supabase/functions/_shared/contracts/_fixtures/index.ts (4)
-- supabase/functions/webhook-dispatcher/index.ts (4)
+- supabase/functions/_shared/contracts/_fixtures/responses.ts (4)
 
 ## Workflows
 - `automation-local.yml` — Automação local (pull_request, push, workflow_dispatch)
@@ -354,6 +358,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 
 
 ## Últimos commits
+- 2026-11-22 `11d2c1e` fix(sre): reconstroi os 3 monitores + dispatch-critical-alert e destrava auth dos crons (#105)
 - 2026-11-22 `8247352` chore(automacao): reconstroi security-weekly-digest e conecta ao cron 33 (#104)
 - 2026-11-22 `2d24251` feat(edge): ponte admin para webhook-dispatcher (webhook-ping) (#102)
 - 2026-11-22 `e5fb530` fix(edge): aceita url de app no push e ajusta contrato de versao do webhook (#101)
@@ -368,7 +373,6 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - 2026-11-21 `2eace82` fix(deps): fecha CVEs moderados uuid/glob/postcss-selector-parser via overrides (#92)
 - 2026-11-21 `4ce5f92` chore(docs): documenta validacao do swap OpenRouter e deploys integros (#91)
 - 2026-11-21 `08928cc` feat(edge): move API de IA de Lovable para OpenRouter nas 6 edge functions
-- 2026-11-21 `f095e46` fix: checa admin via rpc has_role em competency-alerts (e atualiza doc 05) (#88)
 
 ## Arquivos deste diretório
 - `docs/contexto/codigo/rotas.json`
