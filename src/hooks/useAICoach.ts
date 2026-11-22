@@ -20,7 +20,7 @@ export function useAICoach() {
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingHistory, setIsLoadingHistory] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const { user } = useAuth();
+  const { user, session } = useAuth();
   const { data: profile } = useCurrentProfile();
   const { data: competencies } = useCompetencies(user?.id);
   const { data: trails } = usePublishedTrails();
@@ -55,7 +55,7 @@ export function useAICoach() {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+          Authorization: `Bearer ${session?.access_token}`,
           "x-request-id": requestId,
         },
         body: JSON.stringify({ 
@@ -71,7 +71,7 @@ export function useAICoach() {
     } catch (e) {
       logger.warn("Failed to generate suggestions", e instanceof Error ? e.message : String(e));
     }
-  }, []);
+  }, [session]);
 
   const sendMessage = useCallback(async (input: string) => {
     if (!input.trim() || isLoading || !user?.id) return;
@@ -134,7 +134,7 @@ export function useAICoach() {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+          Authorization: `Bearer ${session?.access_token}`,
           "x-request-id": requestId,
         },
         body: JSON.stringify({ 
@@ -219,7 +219,7 @@ export function useAICoach() {
     } finally {
       setIsLoading(false);
     }
-  }, [messages, isLoading, profile, competencies, trails, enrollments, user?.id, generateSuggestions]);
+  }, [messages, isLoading, profile, competencies, trails, enrollments, user?.id, session, generateSuggestions]);
 
   const clearMessages = useCallback(async () => {
     if (user?.id) {
