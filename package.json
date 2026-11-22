@@ -160,6 +160,9 @@
     },
     "workbox-build": {
       "glob": "14.0.2"
+    },
+    "chromium-bidi": {
+      "zod": "^4.6.7"
     }
   }
 }
