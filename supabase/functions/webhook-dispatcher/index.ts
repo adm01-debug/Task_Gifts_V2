@@ -1,7 +1,7 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { createHmac } from "https://deno.land/std@0.168.0/node/crypto.ts";
-import { corsHeaders, verifyServiceRole } from "../_shared/security.ts";
+import { corsHeaders, verifyServiceRole, errorResponse } from "../_shared/security.ts";
 import { parseJsonBody, validationErrorResponse, z } from "../_shared/validation.ts";
 import {
   buildDeliveryEnvelope,
@@ -253,15 +253,8 @@ serve(withSentry("webhook-dispatcher", async (req, { requestId }) => {
     });
 
   } catch (error: unknown) {
-    const message = error instanceof Error ? error.message : 'Unknown error';
     captureException(error, { fn: "webhook-dispatcher", requestId });
-    return new Response(JSON.stringify({ 
-      error: 'Internal server error', 
-      message 
-    }), {
-      status: 500,
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' }
-    });
+    return errorResponse(error, requestId);
   }
 }));
 
