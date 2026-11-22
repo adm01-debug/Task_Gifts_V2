@@ -62,11 +62,14 @@ const webhookDispatchFixtures: ContractFixtures = {
 
 const FIXTURES: Record<string, ContractFixtures> = {
   "admin-alerts": emptyBodyFixtures(),
+  "burn-rate-monitor": emptyBodyFixtures(),
   "churn-prediction": emptyBodyFixtures(),
+  "error-budget-monitor": emptyBodyFixtures(),
   "push-outbox-dispatcher": emptyBodyFixtures(),
   "push-public-key": emptyBodyFixtures(),
   "security-weekly-digest": emptyBodyFixtures(),
   "verify-ip": emptyBodyFixtures(),
+  "webhook-health-monitor": emptyBodyFixtures(),
   "migrate-helper": emptyBodyFixtures(),
 
   "ai-coach": {
@@ -157,6 +160,29 @@ const FIXTURES: Record<string, ContractFixtures> = {
     ],
     notObject: [{ nome: "string", payload: "fp", field: "(body)", code: "invalid_type" }],
   },
+
+    "dispatch-critical-alert": {
+      valid: [
+        { nome: "burn-rate-monitor (envia message, sem title)", payload: { alert_id: UUID_A, severity: "critical", alert_type: "burn_rate_fast", message: "Qualquer descrição" } },
+        { nome: "error-budget-monitor (envia title + description)", payload: { alert_id: UUID_A, severity: "high", alert_type: "error_budget_high_webhooks", title: "Error Budget ALTO", description: "detalhe", metadata: { burn_pct: 85 } } },
+        { nome: "trigger do banco (envia title)", payload: { alert_id: UUID_A, severity: "critical", alert_type: "webhook_health_degraded", title: "Assinatura degradada", description: "x" } },
+      ],
+      missing: [
+        { nome: "sem alert_type", payload: { severity: "high" }, field: "alert_type", code: "invalid_type" },
+        { nome: "sem severity", payload: { alert_type: "burn_rate_fast" }, field: "severity", code: "invalid_type" },
+      ],
+      wrongType: [
+        { nome: "severity número", payload: { alert_type: "a", severity: 3 }, field: "severity", code: "invalid_type" },
+        { nome: "alert_type vazio de espaços", payload: { alert_type: "   ", severity: "high" }, field: "alert_type", code: "too_small" },
+        { nome: "title acima de 300", payload: { alert_type: "a", severity: "high", title: "x".repeat(301) }, field: "title", code: "too_big" },
+        { nome: "metadata como array", payload: { alert_type: "a", severity: "high", metadata: [1] }, field: "metadata", code: "invalid_type" },
+      ],
+      empty: [
+        { nome: "alert_type vazio", payload: { alert_type: "", severity: "high" }, field: "alert_type", code: "too_small" },
+        { nome: "severity vazio", payload: { alert_type: "a", severity: "   " }, field: "severity", code: "too_small" },
+      ],
+      notObject: [{ nome: "string", payload: "alerta", field: "(body)", code: "invalid_type" }],
+    },
 
   "generate-quiz-questions": {
     valid: [

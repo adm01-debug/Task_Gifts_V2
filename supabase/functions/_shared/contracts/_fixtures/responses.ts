@@ -176,6 +176,57 @@ const RESPONSES: Record<string, ResponseFixtures> = {
     ],
     invalid: [{ nome: "attempts como string", payload: { success: true, attempts: "1", duration_ms: 10, status: 200, error: null } }],
   },
+
+    // burn-rate-monitor/index.ts → { ok: true, triggered, evaluated_at, slo }
+    "burn-rate-monitor": {
+      valid: [
+        { nome: "sem burn rate excedido", payload: { ok: true, triggered: [], evaluated_at: "2026-11-22T12:00:00.000Z", slo: 99.9 } },
+        { nome: "alertas no limite critical e high", payload: { ok: true, triggered: [{ alertType: "burn_rate_fast", severity: "critical", id: UUID_A }, { alertType: "burn_rate_slow", severity: "high", id: null }], evaluated_at: "2026-11-22T12:00:00.000Z", slo: 99.9 } },
+      ],
+      invalid: [
+        { nome: "ok false (handler de erro, nao 2xx)", payload: { ok: false, error: "rpc failed", triggered: [], slo: 99.9 } },
+        { nome: "triggered como objeto", payload: { ok: true, triggered: {}, evaluated_at: "2026-11-22T12:00:00.000Z", slo: 99.9 } },
+        { nome: "alertType ausente num item", payload: { ok: true, triggered: [{ severity: "high", id: null }], evaluated_at: "2026-11-22T12:00:00.000Z", slo: 99.9 } },
+      ],
+    },
+
+    // error-budget-monitor/index.ts → { ok: true, ...results, generated_at }
+    "error-budget-monitor": {
+      valid: [
+        { nome: "nenhum bucket excedido", payload: { ok: true, evaluated: [{ target: "webhooks", burn_pct: 12.0, bucket: null }, { target: "external_api", burn_pct: 8.0, bucket: null }], created: 0, dispatched: 0, skipped: 0, generated_at: "2026-11-22T12:00:00.000Z" } },
+        { nome: "burn alto/critico com dedupe", payload: { ok: true, evaluated: [{ target: "webhooks", burn_pct: 82.0, bucket: "high" }, { target: "external_api", burn_pct: 5.0, bucket: null }], created: 1, dispatched: 1, skipped: 0, generated_at: "2026-11-22T12:00:00.000Z" } },
+      ],
+      invalid: [
+        { nome: "bucket inventado", payload: { ok: true, evaluated: [{ target: "webhooks", burn_pct: 82.0, bucket: "severe" }], created: 0, dispatched: 0, skipped: 0, generated_at: "2026-11-22T12:00:00.000Z" } },
+        { nome: "created negativo", payload: { ok: true, evaluated: [], created: -1, dispatched: 0, skipped: 0, generated_at: "2026-11-22T12:00:00.000Z" } },
+      ],
+    },
+
+    // webhook-health-monitor/index.ts → { checked, degraded, threshold_pct, min_sample, degraded_subscriptions, requestId }
+    "webhook-health-monitor": {
+      valid: [
+        { nome: "todas as assinaturas saudaveis", payload: { checked: 3, degraded: 0, threshold_pct: 90, min_sample: 5, degraded_subscriptions: [], requestId: "req_abc" } },
+        { nome: "assinatura degradada com amostra insuficiente ignorada", payload: { checked: 2, degraded: 1, threshold_pct: 90, min_sample: 5, degraded_subscriptions: [{ id: UUID_A, name: "Zapp ERP", success_rate_pct: 71.4, total: 7, failed: 2 }], requestId: "req_abc" } },
+      ],
+      invalid: [
+        { nome: "checked negativo", payload: { checked: -1, degraded: 0, threshold_pct: 90, min_sample: 5, degraded_subscriptions: [], requestId: "req_abc" } },
+        { nome: "item sem total", payload: { checked: 1, degraded: 1, threshold_pct: 90, min_sample: 5, degraded_subscriptions: [{ id: UUID_A, name: "x", success_rate_pct: 50, failed: 2 }], requestId: "req_abc" } },
+      ],
+    },
+
+    // dispatch-critical-alert/index.ts → 2xx: escalonado OU ignorado (discriminador `skipped`)
+    "dispatch-critical-alert": {
+      valid: [
+        { nome: "escalonado (Slack + notificacoes in-app)", payload: { success: true, skipped: false, severity: "critical", results: { slack: "sent", in_app_notifications: 2 } } },
+        { nome: "Slack nao configurado", payload: { success: true, skipped: false, severity: "high", results: { slack: "skipped", in_app_notifications: 1 } } },
+        { nome: "severity abaixo do limiar", payload: { success: true, skipped: true, reason: "severity_below_threshold" } },
+      ],
+      invalid: [
+        { nome: "erro (nao 2xx)", payload: { success: false, error: "unauthorized" } },
+        { nome: "escalonado sem results", payload: { success: true, skipped: false, severity: "high" } },
+        { nome: "skipped sem reason", payload: { success: true, skipped: true } },
+      ],
+    },
 };
 
 export function responsesFor(name: string): ResponseFixtures | undefined {
