@@ -133,7 +133,7 @@ export async function checkPasswordLeaked(password: string): Promise<{
       const [hashSuffix, count] = line.split(':');
       if (hashSuffix.trim() === suffix) {
         const result = { isLeaked: true, occurrences: parseInt(count.trim(), 10) };
-        leakedCache.set(password, result);
+        cacheResult(password, result);
         return result;
       }
     }
