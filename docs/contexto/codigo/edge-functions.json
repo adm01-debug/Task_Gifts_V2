@@ -610,7 +610,7 @@
    "nome": "webhook-dispatcher",
    "entrada": "supabase/functions/webhook-dispatcher/index.ts",
    "arquivos": 1,
-   "linhas": 273,
+   "linhas": 266,
    "verify_jwt": true,
    "metodos": [
     "OPTIONS"

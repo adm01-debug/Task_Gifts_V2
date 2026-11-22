@@ -59,11 +59,11 @@
  "commits": {
   "convencao": "conventional commits (observado)",
   "exemplos": [
+   "fix(webhook-dispatcher): devolve 401 em vez de 500 ao rejeitar token sem permissao (#100)",
    "feat(edge): contratos zod, 422 unico e versionamento v1/v2 dos webhooks (#99)",
    "fix: usa JWT de sessao no AI coach em vez do publishable key (#98)",
    "fix(deps): corrige CVE alto zod transitivo via override chromium-bidi (#97)",
-   "docs(edge-functions): encerra pendencia 03 com validacao em producao (#96)",
-   "fix(auth): bloqueia senha vazada (HIBP) no cadastro (#95)"
+   "docs(edge-functions): encerra pendencia 03 com validacao em producao (#96)"
   ]
  },
  "pr_template": ".github/PULL_REQUEST_TEMPLATE.md",

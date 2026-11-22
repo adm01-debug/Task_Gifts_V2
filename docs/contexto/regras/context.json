@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "d04ac2d4db5d5ef77bd465357f9fe1c8d2992338",
+  "sha": "03d0d59f9af9a89ce6277275041e3510be8cd0ad",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
-  "generated_at": "2026-11-22 15:12 UTC",
+  "generated_at": "2026-11-22 15:28 UTC",
   "files_total": 1534,
   "code_files": 1430,
-  "code_lines": 257090
+  "code_lines": 257083
  },
  "version": "1.3.2",
- "facts_hash": "f074abfd0af3d96e",
+ "facts_hash": "e2d13534e3fb9433",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -49124,7 +49124,7 @@
   {
    "module": "supabase/functions",
    "files": 52,
-   "lines": 6346,
+   "lines": 6339,
    "tables": [
     "ai_course_jobs",
     "attendance_records",
@@ -148622,7 +148622,7 @@
   },
   "supabase/functions/webhook-dispatcher/index.ts": {
    "path": "supabase/functions/webhook-dispatcher/index.ts",
-   "lines": 273,
+   "lines": 266,
    "tables": [
     {
      "table": "webhook_subscriptions",
@@ -150106,10 +150106,19 @@
   }
  },
  "git": {
-  "sha": "d04ac2d4db5d5ef77bd465357f9fe1c8d2992338",
+  "sha": "03d0d59f9af9a89ce6277275041e3510be8cd0ad",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "commits": [
+   {
+    "sha": "03d0d59",
+    "date": "2026-11-22",
+    "author": "adm01-debug",
+    "subject": "fix(webhook-dispatcher): devolve 401 em vez de 500 ao rejeitar token sem permissao (#100)",
+    "files": [
+     "supabase/functions/webhook-dispatcher/index.ts"
+    ]
+   },
    {
     "sha": "d04ac2d",
     "date": "2026-11-22",
@@ -150454,15 +150463,6 @@
      "src/components/MobileDrawer.tsx",
      "src/components/navigation/GlobalBreadcrumbs.tsx"
     ]
-   },
-   {
-    "sha": "b30f52b",
-    "date": "2026-11-19",
-    "author": "adm01-debug",
-    "subject": "chore: CI roda testes de seguranca RPC com env real (#69)",
-    "files": [
-     ".github/workflows/ci.yml"
-    ]
    }
   ],
   "hot_files": [
@@ -150479,16 +150479,16 @@
     5
    ],
    [
-    ".github/workflows/ci.yml",
-    3
-   ],
-   [
     "docs/pendencias/03-csp-hibp-pwnedpasswords.md",
     3
    ],
    [
     "vercel.json",
     3
+   ],
+   [
+    "supabase/functions/webhook-dispatcher/index.ts",
+    2
    ],
    [
     "supabase/functions/ai-coach/index.ts",
@@ -150519,6 +150519,10 @@
     2
    ],
    [
+    ".github/workflows/ci.yml",
+    2
+   ],
+   [
     "supabase/functions/verify-ip/index.ts",
     2
    ],
@@ -150540,10 +150544,6 @@
    ],
    [
     "supabase/functions/_shared/contracts/README.md",
-    1
-   ],
-   [
-    "supabase/functions/_shared/contracts/_fixtures/index.ts",
     1
    ]
   ]

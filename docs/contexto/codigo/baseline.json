@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "d04ac2d4db5d5ef77bd465357f9fe1c8d2992338",
+  "commit": "03d0d59f9af9a89ce6277275041e3510be8cd0ad",
   "branch": "main",
-  "data_commit": "2026-11-22T11:34:03-03:00",
+  "data_commit": "2026-11-22T12:27:38-03:00",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "ultimos_commits": [
+   {
+    "sha": "03d0d59",
+    "data": "2026-11-22",
+    "assunto": "fix(webhook-dispatcher): devolve 401 em vez de 500 ao rejeitar token sem permissao (#100)"
+   },
    {
     "sha": "d04ac2d",
     "data": "2026-11-22",
@@ -126,11 +131,6 @@
     "sha": "d3d388e",
     "data": "2026-11-20",
     "assunto": "fix: excludes assets/ do rewrite SPA para expor 404 real de chunks obsoletos (#76)"
-   },
-   {
-    "sha": "de9e391",
-    "data": "2026-11-20",
-    "assunto": "fix: move GlobalErrorBoundary para dentro do BrowserRouter (#75)"
    }
   ],
   "arquivos_mudados_7d": 88,
@@ -286,22 +286,22 @@
     "mudancas": 3
    },
    {
+    "arquivo": "supabase/functions/webhook-dispatcher/index.ts",
+    "mudancas": 3
+   },
+   {
     "arquivo": "vitest.config.ts",
     "mudancas": 3
    },
    {
     "arquivo": ".env.example",
     "mudancas": 2
-   },
-   {
-    "arquivo": ".github/dependabot.yml",
-    "mudancas": 2
    }
   ],
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 69
+    "commits": 70
    },
    {
     "autor": "dependabot[bot]",
@@ -312,7 +312,7 @@
  "contagens": {
   "arquivos_total": 1524,
   "arquivos_codigo": 1153,
-  "linhas_codigo": 225927,
+  "linhas_codigo": 225920,
   "rotas": 83,
   "rotas_http_backend": 0,
   "vistas_por_id": 0,
@@ -460,7 +460,7 @@
   },
   "supabase/functions": {
    "arquivos": 52,
-   "linhas": 6346
+   "linhas": 6339
   },
   "tailwind.config.ts": {
    "arquivos": 1,

@@ -1,7 +1,7 @@
 # Contexto do projeto para agentes de IA
 
 GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.
-Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `d04ac2d4db5d5ef77bd465357f9fe1c8d2992338` (2026-11-22T11:34:03-03:00).
+Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `03d0d59f9af9a89ce6277275041e3510be8cd0ad` (2026-11-22T12:27:38-03:00).
 
 ## Como usar (leia antes de planejar ou executar qualquer tarefa)
 1. **Tela/rota/menu** → `rotas.json` (url/vista/menu → arquivo → hooks → tabelas → edges; `rotas_http_backend` para APIs) e `modulos.json` (módulo inteiro + dependências entre módulos).
@@ -36,7 +36,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 |---|---|
 | arquivos_total | 1524 |
 | arquivos_codigo | 1153 |
-| linhas_codigo | 225927 |
+| linhas_codigo | 225920 |
 | rotas | 83 |
 | rotas_http_backend | 0 |
 | vistas_por_id | 0 |
@@ -265,7 +265,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - possiveis_segredos_no_codigo: 0
 
 ## Grafo de código (graphify)
-- 10014 nós · 27855 arestas · 653 comunidades · grafo do commit `d04ac2d4`
+- 10014 nós · 27856 arestas · 653 comunidades · grafo do commit `03d0d59f`
 - comunidades maiores: card.tsx (213), App.tsx (174), react (156), badge.tsx (129), cn (123), pushDevices.ts (107), BIDashboard.tsx (101), input.tsx (101), loggingService.ts (99), useToast (92), framer-motion (91), client.ts (89)
 - símbolos mais chamados: cn() (src/lib/utils.ts), useAuth() (src/hooks/useAuth.tsx), useIsMobile() (src/hooks/use-mobile.tsx), q() (scripts/supabase_snapshot/snapshot.py), useDepartments() (src/hooks/useDepartments.ts), useToast() (src/hooks/use-toast.ts), useRBAC() (src/hooks/useRBAC.ts), useProfiles() (src/hooks/useProfiles.ts), useSEO() (src/hooks/useSEO.ts), useSoundEffects() (src/hooks/useSoundEffects.tsx), .collect() (scripts/supabase_snapshot/test_snapshot.py), excluded_sql() (scripts/supabase_snapshot/snapshot.py)
 - consulta local: `graphify query "<pergunta>"`, `graphify path "<A>" "<B>"`, `graphify explain "<X>"`
@@ -352,6 +352,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 
 
 ## Últimos commits
+- 2026-11-22 `03d0d59` fix(webhook-dispatcher): devolve 401 em vez de 500 ao rejeitar token sem permissao (#100)
 - 2026-11-22 `d04ac2d` feat(edge): contratos zod, 422 unico e versionamento v1/v2 dos webhooks (#99)
 - 2026-11-22 `b042057` fix: usa JWT de sessao no AI coach em vez do publishable key (#98)
 - 2026-11-22 `0134cf0` fix(deps): corrige CVE alto zod transitivo via override chromium-bidi (#97)
@@ -366,7 +367,6 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - 2026-11-21 `f76c9b7` fix: corrige typo de tipo no catch do log de ip_access_logs (#89)
 - 2026-11-21 `166c7d2` fix: desbloqueia video do LMS (media-src/frame-src na CSP) (#87)
 - 2026-11-21 `fb528b1` fix: verify-ip fail-closed quando a whitelist nao pode ser checada (#86)
-- 2026-11-21 `dadc093` fix: remove 29 vulnerabilidades do bun.lock (audit fix) (#85)
 
 ## Arquivos deste diretório
 - `docs/contexto/codigo/rotas.json`
