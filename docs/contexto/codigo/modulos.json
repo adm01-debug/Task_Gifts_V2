@@ -6538,7 +6538,7 @@
    "modulo": "pages",
    "arquivos": 82,
    "testes": 0,
-   "linhas": 22347,
+   "linhas": 22350,
    "itens_menu": [
     "Admin Loja",
     "Admin Quiz",
@@ -7163,7 +7163,7 @@
     "send-campaign-push",
     "trail-recommendations",
     "verify-ip",
-    "webhook-dispatcher"
+    "webhook-ping"
    ],
    "tabelas": [
     "achievements",
@@ -7554,7 +7554,7 @@
    "diretos": {
     "edges": [
      "verify-ip",
-     "webhook-dispatcher"
+     "webhook-ping"
     ],
     "tabelas": [
      "audit_logs",

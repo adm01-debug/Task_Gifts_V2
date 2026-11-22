@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "e5fb53092fb9e4bf70b61ba2ad1addd76f83408b",
+  "sha": "2d24251fb198f6c5e9c2cd9b65acc58a668cf298",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
-  "generated_at": "2026-11-22 15:47 UTC",
-  "files_total": 1535,
-  "code_files": 1431,
-  "code_lines": 257411
+  "generated_at": "2026-11-22 16:39 UTC",
+  "files_total": 1537,
+  "code_files": 1433,
+  "code_lines": 257540
  },
  "version": "1.3.2",
- "facts_hash": "2113b9310d9f0331",
+ "facts_hash": "6a510854b64cc3fc",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -194,8 +194,8 @@
   ],
   "package_manager": "bun",
   "languages": {
+   ".ts": 565,
    ".tsx": 565,
-   ".ts": 563,
    ".sql": 271,
    ".mjs": 21,
    ".js": 5,
@@ -44257,6 +44257,28 @@
     "side_effects": [],
     "webhook_events": [],
     "idempotency": false
+   },
+   {
+    "name": "webhook-ping",
+    "file": "supabase/functions/webhook-ping/index.ts",
+    "methods": [
+     "OPTIONS"
+    ],
+    "auth": "service_role (ignora RLS) + valida JWT do usuário",
+    "tables": [
+     "webhook_subscriptions"
+    ],
+    "env": [
+     "SUPABASE_SERVICE_ROLE_KEY",
+     "SUPABASE_URL"
+    ],
+    "external": [],
+    "invokes": [],
+    "doc": "",
+    "errors": [],
+    "side_effects": [],
+    "webhook_events": [],
+    "idempotency": false
    }
   ],
   "api_routes": [
@@ -48364,7 +48386,7 @@
   {
    "module": "src/pages",
    "files": 82,
-   "lines": 22347,
+   "lines": 22350,
    "tables": [
     "audit_logs",
     "campaign_participants",
@@ -49123,8 +49145,8 @@
   },
   {
    "module": "supabase/functions",
-   "files": 53,
-   "lines": 6667,
+   "files": 55,
+   "lines": 6793,
    "tables": [
     "ai_course_jobs",
     "attendance_records",
@@ -49185,6 +49207,7 @@
     "trail-recommendations.ts: TrailRecommendationsRequestSchema, TrailRecommendationSchema, TrailRecommendationsResponseSchema, trailRecommendationsContract",
     "verify-ip.ts: VerifyIpResponseSchema, verifyIpContract",
     "webhook-dispatcher.ts: WEBHOOK_CONTRACT_VERSIONS, WebhookContractVersion, WEBHOOK_CURRENT_VERSION, WEBHOOK_V1_SUNSET, WEBHOOK_V1_DEPRECATED_SINCE, WEBHOOK_DEPRECATION_DOC_URL",
+    "webhook-ping.ts: webhookPingContract",
     "index.ts: emptyBodyFixtures, fixturesFor, FIXTURE_NAMES",
     "responses.ts: ResponseFixtures, responsesFor",
     "types.ts: InvalidCase, ValidCase, ContractFixtures, UUID_A, UUID_B",
@@ -49240,6 +49263,7 @@
     "supabase/functions/_shared/contracts/validation.contract.spec.ts",
     "supabase/functions/_shared/contracts/verify-ip.ts",
     "supabase/functions/_shared/contracts/webhook-dispatcher.ts",
+    "supabase/functions/_shared/contracts/webhook-ping.ts",
     "supabase/functions/_shared/contracts/webhook-versioning.contract.spec.ts",
     "supabase/functions/_shared/contracts/_fixtures/index.ts",
     "supabase/functions/_shared/contracts/_fixtures/responses.ts",
@@ -49260,7 +49284,8 @@
     "supabase/functions/send-campaign-push/index.ts",
     "supabase/functions/trail-recommendations/index.ts",
     "supabase/functions/verify-ip/index.ts",
-    "supabase/functions/webhook-dispatcher/index.ts"
+    "supabase/functions/webhook-dispatcher/index.ts",
+    "supabase/functions/webhook-ping/index.ts"
    ]
   },
   {
@@ -51256,7 +51281,8 @@
      "src/components/webhooks/EditWebhookDialog.tsx",
      "src/pages/WebhookSubscriptionDetail.tsx",
      "src/pages/WebhooksAdmin.tsx",
-     "supabase/functions/webhook-dispatcher/index.ts"
+     "supabase/functions/webhook-dispatcher/index.ts",
+     "supabase/functions/webhook-ping/index.ts"
     ],
     "update": [
      "src/components/webhooks/EditWebhookDialog.tsx",
@@ -52487,7 +52513,8 @@
     "supabase/functions/send-campaign-push/index.ts",
     "supabase/functions/trail-recommendations/index.ts",
     "supabase/functions/verify-ip/index.ts",
-    "supabase/functions/webhook-dispatcher/index.ts"
+    "supabase/functions/webhook-dispatcher/index.ts",
+    "supabase/functions/webhook-ping/index.ts"
    ],
    "SUPABASE_SNAPSHOT_PUBLICACAO": [
     "scripts/supabase_snapshot/snapshot.py"
@@ -52508,7 +52535,8 @@
     "supabase/functions/send-campaign-push/index.ts",
     "supabase/functions/trail-recommendations/index.ts",
     "supabase/functions/verify-ip/index.ts",
-    "supabase/functions/webhook-dispatcher/index.ts"
+    "supabase/functions/webhook-dispatcher/index.ts",
+    "supabase/functions/webhook-ping/index.ts"
    ],
    "UPSTASH_REDIS_REST_TOKEN": [
     "supabase/functions/_shared/cache.ts",
@@ -52887,7 +52915,8 @@
    ],
    "has_role": [
     "supabase/functions/admin-alerts/index.ts",
-    "supabase/functions/competency-alerts/index.ts"
+    "supabase/functions/competency-alerts/index.ts",
+    "supabase/functions/webhook-ping/index.ts"
    ],
    "increment_announcement_views": [
     "src/services/announcementsService.ts"
@@ -58298,6 +58327,18 @@
    {
     "file": "src/pages/SecurityRunbook.tsx",
     "text": "apenas fallback caso o tipo ainda não esteja cadastrado em sla_targets."
+   },
+   {
+    "file": "src/pages/WebhookSubscriptionDetail.tsx",
+    "text": "o dispatcher ja controla o limite de tentativas da assinatura"
+   },
+   {
+    "file": "src/pages/WebhookSubscriptionDetail.tsx",
+    "text": "o dispatcher ja controla o limite de tentativas da assinatura"
+   },
+   {
+    "file": "src/pages/WebhooksAdmin.tsx",
+    "text": "o dispatcher ja controla o limite de tentativas da assinatura"
    },
    {
     "file": "src/services/actionPlanGeneratorService.ts",
@@ -104459,6 +104500,7 @@
    "supabase/functions/trail-recommendations/index.ts",
    "supabase/functions/verify-ip/index.ts",
    "supabase/functions/webhook-dispatcher/index.ts",
+   "supabase/functions/webhook-ping/index.ts",
    "supabase/migrations/20260306000318_cc14b254-e622-48a0-a219-de592646bf75.sql",
    "supabase/migrations/20260520162642_60bbdd93-a248-4b2d-8f18-548974872356.sql",
    "supabase/migrations/20260520163657_25dfdf55-387e-4b6a-87a8-b1fb2491ce04.sql",
@@ -134616,7 +134658,7 @@
   },
   "src/pages/WebhookSubscriptionDetail.tsx": {
    "path": "src/pages/WebhookSubscriptionDetail.tsx",
-   "lines": 520,
+   "lines": 522,
    "exports": [
     "function WebhookSubscriptionDetail"
    ],
@@ -134652,6 +134694,10 @@
     "Evento desconhecido — não é possível reenviar",
     "Falha ao reenviar: ${(e as Error).message}",
     "Nada para exportar com os filtros atuais"
+   ],
+   "rule_comments": [
+    "o dispatcher ja controla o limite de tentativas da assinatura",
+    "o dispatcher ja controla o limite de tentativas da assinatura"
    ],
    "temporal": [
     "const cutoff = Date.now() - 24 * 60 * 60 * 1000;",
@@ -134703,7 +134749,7 @@
   },
   "src/pages/WebhooksAdmin.tsx": {
    "path": "src/pages/WebhooksAdmin.tsx",
-   "lines": 429,
+   "lines": 430,
    "exports": [
     "function WebhooksAdmin"
    ],
@@ -134738,6 +134784,9 @@
      "name": "HEALTH_MIN_SAMPLE",
      "value": "5"
     }
+   ],
+   "rule_comments": [
+    "o dispatcher ja controla o limite de tentativas da assinatura"
    ]
   },
   "src/pages/WebhooksExecutive.tsx": {
@@ -146753,7 +146802,7 @@
   },
   "supabase/functions/_shared/contracts/index.ts": {
    "path": "supabase/functions/_shared/contracts/index.ts",
-   "lines": 65,
+   "lines": 68,
    "exports": [
     "const CONTRACTS",
     "type EdgeFunctionName",
@@ -147088,6 +147137,13 @@
    ],
    "doc": "Contrato VERSIONADO do webhook-dispatcher (v1 → v2) com depreciação controlada. Política: - v1 (sem `version`): formato histórico `{ subscription_id, event_type, payload }`. DEPRECIADO: continua aceito até WEBHOOK_V1_SUNSET e toda resposta a um corpo v1 carrega os headers `Deprecation`, `Sunset` e ` …"
   },
+  "supabase/functions/_shared/contracts/webhook-ping.ts": {
+   "path": "supabase/functions/_shared/contracts/webhook-ping.ts",
+   "lines": 28,
+   "exports": [
+    "const webhookPingContract"
+   ]
+  },
   "supabase/functions/_shared/contracts/webhook-versioning.contract.spec.ts": {
    "path": "supabase/functions/_shared/contracts/webhook-versioning.contract.spec.ts",
    "lines": 158,
@@ -147116,7 +147172,7 @@
   },
   "supabase/functions/_shared/contracts/_fixtures/index.ts": {
    "path": "supabase/functions/_shared/contracts/_fixtures/index.ts",
-   "lines": 265,
+   "lines": 268,
    "exports": [
     "function emptyBodyFixtures",
     "function fixturesFor",
@@ -147177,7 +147233,7 @@
   },
   "supabase/functions/_shared/contracts/_fixtures/responses.ts": {
    "path": "supabase/functions/_shared/contracts/_fixtures/responses.ts",
-   "lines": 162,
+   "lines": 171,
    "exports": [
     "interface ResponseFixtures",
     "function responsesFor"
@@ -148759,6 +148815,30 @@
    ],
    "uses_service_role": true
   },
+  "supabase/functions/webhook-ping/index.ts": {
+   "path": "supabase/functions/webhook-ping/index.ts",
+   "lines": 83,
+   "tables": [
+    {
+     "table": "webhook_subscriptions",
+     "op": "select"
+    }
+   ],
+   "table_cols": {
+    "webhook_subscriptions": [
+     "id",
+     "is_active"
+    ]
+   },
+   "rpc": [
+    "has_role"
+   ],
+   "env": [
+    "SUPABASE_SERVICE_ROLE_KEY",
+    "SUPABASE_URL"
+   ],
+   "uses_service_role": true
+  },
   "supabase/migrations/20241231000000_saved_filters.sql": {
    "path": "supabase/migrations/20241231000000_saved_filters.sql",
    "lines": 108
@@ -150199,10 +150279,26 @@
   }
  },
  "git": {
-  "sha": "e5fb53092fb9e4bf70b61ba2ad1addd76f83408b",
+  "sha": "2d24251fb198f6c5e9c2cd9b65acc58a668cf298",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "commits": [
+   {
+    "sha": "2d24251",
+    "date": "2026-11-22",
+    "author": "adm01-debug",
+    "subject": "feat(edge): ponte admin para webhook-dispatcher (webhook-ping) (#102)",
+    "files": [
+     ".env.example",
+     "src/pages/WebhookSubscriptionDetail.tsx",
+     "src/pages/WebhooksAdmin.tsx",
+     "supabase/functions/_shared/contracts/_fixtures/index.ts",
+     "supabase/functions/_shared/contracts/_fixtures/responses.ts",
+     "supabase/functions/_shared/contracts/index.ts",
+     "supabase/functions/_shared/contracts/webhook-ping.ts",
+     "supabase/functions/webhook-ping/index.ts"
+    ]
+   },
    {
     "sha": "e5fb530",
     "date": "2026-11-22",
@@ -150560,15 +150656,6 @@
      "docs/pendencias/_ordem.md",
      "docs/pendencias/_regras-de-negocio.md"
     ]
-   },
-   {
-    "sha": "6f39f2e",
-    "date": "2026-11-20",
-    "author": "adm01-debug",
-    "subject": "fix: permite api.pwnedpasswords.com no connect-src da CSP (#71)",
-    "files": [
-     "vercel.json"
-    ]
    }
   ],
   "hot_files": [
@@ -150585,6 +150672,14 @@
     5
    ],
    [
+    ".env.example",
+    3
+   ],
+   [
+    "supabase/functions/_shared/contracts/_fixtures/index.ts",
+    3
+   ],
+   [
     "supabase/functions/webhook-dispatcher/index.ts",
     3
    ],
@@ -150593,8 +150688,12 @@
     3
    ],
    [
-    "vercel.json",
-    3
+    "supabase/functions/_shared/contracts/_fixtures/responses.ts",
+    2
+   ],
+   [
+    "supabase/functions/_shared/contracts/index.ts",
+    2
    ],
    [
     "docs/agentes/edge-functions.md",
@@ -150602,10 +150701,6 @@
    ],
    [
     "supabase/functions/_shared/contracts/README.md",
-    2
-   ],
-   [
-    "supabase/functions/_shared/contracts/_fixtures/index.ts",
     2
    ],
    [
@@ -150642,14 +150737,6 @@
    ],
    [
     "supabase/functions/_shared/contracts/webhook-dispatcher.ts",
-    2
-   ],
-   [
-    "supabase/functions/_shared/contracts/webhook-versioning.contract.spec.ts",
-    2
-   ],
-   [
-    "supabase/functions/_shared/validation.ts",
     2
    ]
   ]

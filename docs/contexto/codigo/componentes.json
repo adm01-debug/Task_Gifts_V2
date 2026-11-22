@@ -8801,14 +8801,14 @@
     "WebhooksAdmin"
    ],
    "export_default": "WebhooksAdmin",
-   "linhas": 429,
+   "linhas": 430,
    "dominio": "pages",
    "hooks_locais": [],
    "tabelas": [
     "webhook_subscriptions"
    ],
    "edges": [
-    "webhook-dispatcher"
+    "webhook-ping"
    ],
    "usado_por": 1,
    "orfao": false
@@ -8833,7 +8833,7 @@
     "WebhookSubscriptionDetail"
    ],
    "export_default": "WebhookSubscriptionDetail",
-   "linhas": 520,
+   "linhas": 522,
    "dominio": "pages",
    "hooks_locais": [],
    "tabelas": [
@@ -8841,7 +8841,7 @@
     "webhook_subscriptions"
    ],
    "edges": [
-    "webhook-dispatcher"
+    "webhook-ping"
    ],
    "usado_por": 1,
    "orfao": false

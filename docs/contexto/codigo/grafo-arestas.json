@@ -5898,7 +5898,8 @@
    "supabase/functions/_shared/contracts/send-campaign-push.ts",
    "supabase/functions/_shared/contracts/trail-recommendations.ts",
    "supabase/functions/_shared/contracts/verify-ip.ts",
-   "supabase/functions/_shared/contracts/webhook-dispatcher.ts"
+   "supabase/functions/_shared/contracts/webhook-dispatcher.ts",
+   "supabase/functions/_shared/contracts/webhook-ping.ts"
   ],
   "supabase/functions/_shared/contracts/migrate-helper.ts": [
    "supabase/functions/_shared/contracts/common.ts"
@@ -5927,6 +5928,10 @@
   "supabase/functions/_shared/contracts/webhook-dispatcher.ts": [
    "supabase/functions/_shared/contracts/common.ts",
    "supabase/functions/_shared/validation.ts"
+  ],
+  "supabase/functions/_shared/contracts/webhook-ping.ts": [
+   "supabase/functions/_shared/contracts/common.ts",
+   "supabase/functions/_shared/contracts/webhook-dispatcher.ts"
   ],
   "supabase/functions/_shared/rate-limiter.ts": [
    "supabase/functions/_shared/clientIp.ts"
@@ -6004,6 +6009,12 @@
    "supabase/functions/_shared/clientIp.ts"
   ],
   "supabase/functions/webhook-dispatcher/index.ts": [
+   "supabase/functions/_shared/contracts/webhook-dispatcher.ts",
+   "supabase/functions/_shared/security.ts",
+   "supabase/functions/_shared/sentry.ts",
+   "supabase/functions/_shared/validation.ts"
+  ],
+  "supabase/functions/webhook-ping/index.ts": [
    "supabase/functions/_shared/contracts/webhook-dispatcher.ts",
    "supabase/functions/_shared/security.ts",
    "supabase/functions/_shared/sentry.ts",

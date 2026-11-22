@@ -1,6 +1,6 @@
 # 07 · REGRAS DE NEGÓCIO
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `e5fb53092f` · branch `main` · 2026-11-22 15:47 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `2d24251fb1` · branch `main` · 2026-11-22 16:39 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## A. Regras escritas por humanos (`manual/` — prioridade máxima, nunca sobrescrito)
@@ -3915,6 +3915,9 @@ _nenhum item encontrado_
 | Isolado do bloco de mercados: uma falha no ranking não pode | `src/pages/PredictionMarketsPage.tsx` |
 | ").eq("user_id", user?.id as string).order("created_at", { ascending: false }).limit(5); | `src/pages/SecurityDashboard.tsx` |
 | apenas fallback caso o tipo ainda não esteja cadastrado em sla_targets. | `src/pages/SecurityRunbook.tsx` |
+| o dispatcher ja controla o limite de tentativas da assinatura | `src/pages/WebhookSubscriptionDetail.tsx` |
+| o dispatcher ja controla o limite de tentativas da assinatura | `src/pages/WebhookSubscriptionDetail.tsx` |
+| o dispatcher ja controla o limite de tentativas da assinatura | `src/pages/WebhooksAdmin.tsx` |
 | * A autorização é feita no banco: apenas admin/manager conseguem executar a RPC. | `src/services/actionPlanGeneratorService.ts` |
 | * Chaves que passaram do prazo de rotação recomendado. */ | `src/services/apiKeysService.ts` |
 | * Leilão de lance às cegas. O débito/estorno de moedas ocorre exclusivamente | `src/services/auctionService.ts` |

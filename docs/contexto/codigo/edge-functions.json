@@ -2,7 +2,7 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "pasta": "supabase/functions",
- "total": 16,
+ "total": 17,
  "verify_jwt_false": [
   "migrate-helper",
   "push-public-key"
@@ -36,6 +36,7 @@
   "supabase/functions/_shared/contracts/validation.contract.spec.ts",
   "supabase/functions/_shared/contracts/verify-ip.ts",
   "supabase/functions/_shared/contracts/webhook-dispatcher.ts",
+  "supabase/functions/_shared/contracts/webhook-ping.ts",
   "supabase/functions/_shared/contracts/webhook-versioning.contract.spec.ts",
   "supabase/functions/_shared/rate-limit.ts",
   "supabase/functions/_shared/rate-limiter.ts",
@@ -627,6 +628,44 @@
    ],
    "buckets": [],
    "chama_edges": [],
+   "hosts_externos": [],
+   "usa_shared": [
+    "security.ts",
+    "sentry.ts",
+    "validation.ts",
+    "webhook-dispatcher.ts"
+   ],
+   "chamada_pelo_front": [],
+   "chamada_por_edges": [
+    "webhook-ping"
+   ],
+   "chamada_por_sql_ou_cron": false,
+   "orfa": false,
+   "testes": 0
+  },
+  {
+   "nome": "webhook-ping",
+   "entrada": "supabase/functions/webhook-ping/index.ts",
+   "arquivos": 1,
+   "linhas": 83,
+   "verify_jwt": true,
+   "metodos": [
+    "OPTIONS"
+   ],
+   "tabelas": [
+    "webhook_subscriptions"
+   ],
+   "rpcs": [
+    "has_role"
+   ],
+   "env": [
+    "SUPABASE_SERVICE_ROLE_KEY",
+    "SUPABASE_URL"
+   ],
+   "buckets": [],
+   "chama_edges": [
+    "webhook-dispatcher"
+   ],
    "hosts_externos": [],
    "usa_shared": [
     "security.ts",

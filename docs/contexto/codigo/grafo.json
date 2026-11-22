@@ -1,8 +1,8 @@
 {
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
- "nos": 993,
- "arestas": 4293,
+ "nos": 995,
+ "arestas": 4300,
  "hubs": [
   {
    "arquivo": "src/components/ui/card.tsx",
@@ -129,19 +129,19 @@
    "importado_por": 19
   },
   {
+   "arquivo": "supabase/functions/_shared/contracts/common.ts",
+   "importado_por": 19
+  },
+  {
+   "arquivo": "supabase/functions/_shared/validation.ts",
+   "importado_por": 19
+  },
+  {
    "arquivo": "src/components/ui/tooltip.tsx",
    "importado_por": 18
   },
   {
    "arquivo": "src/integrations/supabase/types.ts",
-   "importado_por": 18
-  },
-  {
-   "arquivo": "supabase/functions/_shared/contracts/common.ts",
-   "importado_por": 18
-  },
-  {
-   "arquivo": "supabase/functions/_shared/validation.ts",
    "importado_por": 18
   },
   {

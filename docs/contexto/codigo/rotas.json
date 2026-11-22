@@ -2200,7 +2200,7 @@
     "rotate_webhook_secret"
    ],
    "edges": [
-    "webhook-dispatcher"
+    "webhook-ping"
    ],
    "canais_realtime": [],
    "flags": [],
@@ -2243,7 +2243,7 @@
    ],
    "rpcs": [],
    "edges": [
-    "webhook-dispatcher"
+    "webhook-ping"
    ],
    "canais_realtime": [],
    "flags": [],

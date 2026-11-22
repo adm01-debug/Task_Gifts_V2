@@ -30937,7 +30937,8 @@
    },
    "usada_no_front": 4,
    "usada_em_edges": [
-    "webhook-dispatcher"
+    "webhook-dispatcher",
+    "webhook-ping"
    ],
    "triggers": [
     "update_webhook_subscriptions_updated_at"
@@ -31563,7 +31564,7 @@
   {
    "nome": "has_role",
    "definida": true,
-   "usada_em": 2
+   "usada_em": 3
   },
   {
    "nome": "increment_announcement_views",

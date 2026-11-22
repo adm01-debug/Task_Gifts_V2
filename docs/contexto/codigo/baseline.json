@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "e5fb53092fb9e4bf70b61ba2ad1addd76f83408b",
+  "commit": "2d24251fb198f6c5e9c2cd9b65acc58a668cf298",
   "branch": "main",
-  "data_commit": "2026-11-22T12:46:49-03:00",
+  "data_commit": "2026-11-22T13:37:58-03:00",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "ultimos_commits": [
+   {
+    "sha": "2d24251",
+    "data": "2026-11-22",
+    "assunto": "feat(edge): ponte admin para webhook-dispatcher (webhook-ping) (#102)"
+   },
    {
     "sha": "e5fb530",
     "data": "2026-11-22",
@@ -126,18 +131,13 @@
     "sha": "3d1ee90",
     "data": "2026-11-21",
     "assunto": "fix: protege economia de perfis via RPCs SECURITY DEFINER (pendencia 02) (#78)"
-   },
-   {
-    "sha": "e58c5c0",
-    "data": "2026-11-20",
-    "assunto": "fix(ci): expoe VITE_DEPLOYED_EDGE_FUNCTIONS para o build e corrige doc da allowlist (#77)"
    }
   ],
-  "arquivos_mudados_7d": 89,
+  "arquivos_mudados_7d": 93,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "supabase/functions/_shared",
-    "mudancas": 45
+    "mudancas": 49
    },
    {
     "pasta": "package.json",
@@ -250,6 +250,10 @@
     "mudancas": 4
    },
    {
+    "arquivo": ".env.example",
+    "mudancas": 3
+   },
+   {
     "arquivo": ".github/workflows/automation-local.yml",
     "mudancas": 3
    },
@@ -282,26 +286,22 @@
     "mudancas": 3
    },
    {
+    "arquivo": "supabase/functions/_shared/contracts/_fixtures/index.ts",
+    "mudancas": 3
+   },
+   {
     "arquivo": "supabase/functions/_shared/validation.ts",
     "mudancas": 3
    },
    {
     "arquivo": "supabase/functions/migrate-helper/index.ts",
     "mudancas": 3
-   },
-   {
-    "arquivo": "supabase/functions/trail-recommendations/index.ts",
-    "mudancas": 3
-   },
-   {
-    "arquivo": "supabase/functions/verify-ip/index.ts",
-    "mudancas": 3
    }
   ],
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 71
+    "commits": 72
    },
    {
     "autor": "dependabot[bot]",
@@ -310,9 +310,9 @@
   ]
  },
  "contagens": {
-  "arquivos_total": 1525,
-  "arquivos_codigo": 1154,
-  "linhas_codigo": 226248,
+  "arquivos_total": 1527,
+  "arquivos_codigo": 1156,
+  "linhas_codigo": 226377,
   "rotas": 83,
   "rotas_http_backend": 0,
   "vistas_por_id": 0,
@@ -320,7 +320,7 @@
   "modulos": 71,
   "componentes": 521,
   "hooks": 155,
-  "edge_functions": 16,
+  "edge_functions": 17,
   "tabelas": 236,
   "migrations": 271,
   "cron_jobs": 22,
@@ -432,7 +432,7 @@
   },
   "src/pages": {
    "arquivos": 82,
-   "linhas": 22347
+   "linhas": 22350
   },
   "src/services": {
    "arquivos": 99,
@@ -459,8 +459,8 @@
    "linhas": 152
   },
   "supabase/functions": {
-   "arquivos": 53,
-   "linhas": 6667
+   "arquivos": 55,
+   "linhas": 6793
   },
   "tailwind.config.ts": {
    "arquivos": 1,
@@ -578,7 +578,7 @@
   },
   {
    "arquivo": "src/pages/WebhookSubscriptionDetail.tsx",
-   "linhas": 520
+   "linhas": 522
   },
   {
    "arquivo": "src/services/salesCampaignsService.ts",

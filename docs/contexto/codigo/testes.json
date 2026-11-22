@@ -1964,7 +1964,8 @@
    "send-campaign-push",
    "trail-recommendations",
    "verify-ip",
-   "webhook-dispatcher"
+   "webhook-dispatcher",
+   "webhook-ping"
   ],
   "servicos": [
    "src/services/actionPlanGeneratorService.ts",
