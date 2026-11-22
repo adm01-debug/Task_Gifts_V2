@@ -1,16 +1,16 @@
 // Edge Function: security-weekly-digest
-// Digest semanal de segurança (pg_cron 0 13 * * 1): consolida alertas dos
-// últimos 7 dias, calcula SLA/MTTR agregados e publica no Slack (opt-in via
-// SLACK_ALERT_WEBHOOK_URL) e como notificação in-app para todos os admins.
+// Digest semanal de seguranca (pg_cron 0 13 * * 1): consolida alertas dos
+// ultimos 7 dias, calcula SLA/MTTR agregados e publica no Slack (opt-in via
+// SLACK_ALERT_WEBHOOK_URL) e como notificacao in-app para todos os admins.
 // Idempotente por semana ISO (upsert ignorando duplicatas por (user_id,type,data)).
 import { createClient } from "npm:@supabase/supabase-js@2";
 import { corsHeaders } from "npm:@supabase/supabase-js@2/cors";
 
 /**
  * Guarda para chamadores internos (pg_cron): aceita o segredo em
- * `x-internal-secret` (header que os crons 30-34 enviam) OU o padrão
- * `Authorization: Bearer <segredo>` usado pelo restante das funções.
- * Comparação timing-safe contra SERVICE_ROLE/CRON_SECRET/INTERNAL_FUNCTION_SECRET.
+ * `x-internal-secret` (header que os crons 30-34 enviam) OU o padrao
+ * `Authorization: Bearer <segredo>` usado pelo restante das funcoes.
+ * Comparacao timing-safe contra SERVICE_ROLE/CRON_SECRET/INTERNAL_FUNCTION_SECRET.
  */
 function timingSafeEqual(a: string, b: string): boolean {
   const enc = new TextEncoder();
@@ -77,6 +77,10 @@ function json(body: unknown, status = 200) {
 
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
+  // A funcao publica com efeito colateral (notificacoes) e chamada apenas por cron (POST),
+  // igual ao restante das funcoes de cron do repo. GET tambem e rejeitado para manter
+  // idempotencia de leitura (nenhum cliente le via essa rota).
+  if (req.method !== "POST") return json({ ok: false, error: "method_not_allowed" }, 405);
   const denied = guardInternalRequest(req);
   if (denied) return denied;
 
@@ -88,12 +92,13 @@ Deno.serve(async (req) => {
     const since = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();
     const weekKey = isoWeekKey(new Date());
 
-    const { data: alerts, error } = await admin
+    const { data: alerts, error: alertsError } = await admin
       .from("security_alerts")
       .select("id, alert_type, severity, is_resolved, created_at, resolved_at")
       .gte("created_at", since)
       .returns<AlertRow[]>();
-    if (error) throw error;
+    if (alertsError)
+      return json({ ok: false, error: "alerts_query_failed", details: alertsError.message }, 500);
 
     const total = alerts?.length ?? 0;
     const resolved = alerts?.filter((a) => a.is_resolved).length ?? 0;
@@ -111,43 +116,50 @@ Deno.serve(async (req) => {
     const top = [...byType.entries()].sort((a, b) => b[1] - a[1]).slice(0, 5);
 
     const slaTarget = 95;
+    // SLA e a fracao resolvidos/total (metricas de resolucao, nao de prazo): o repo nao
+    // persiste se um alerta estourou o prazo, entao % de resolvidos e o indicador
+    // disponivel e consistente com a UI (SecurityDigests.tsx mostra sla_pct).
     const slaPct = total > 0 ? Math.round((resolved / total) * 1000) / 10 : 100;
     const slaEmoji = slaPct >= slaTarget ? "\u{1F7E2}" : slaPct >= 85 ? "\u{1F7E1}" : "\u{1F534}";
 
     const lines: string[] = [
-      `*\u{1F6E1}\u{FE0F} Digest Semanal de Segurança — ${weekKey}*`,
-      `${slaEmoji} SLA: *${slaPct}%* (alvo ${slaTarget}%)  •  MTTR médio: *${avgMttr ?? "—"} min*`,
-      `Total: *${total}*  •  Resolvidos: *${resolved}*  •  Pendentes: *${pending}*  •  Críticos: *${critical}*  •  Altos: *${high}*`,
+      `*\u{1F6E1}\u{FE0F} Digest Semanal de Seguranca \u2014 ${weekKey}*`,
+      `${slaEmoji} SLA: *${slaPct}%* (alvo ${slaTarget}%)  \u2022  MTTR medio: *${avgMttr ?? "\u2014"} min*`,
+      `Total: *${total}*  \u2022  Resolvidos: *${resolved}*  \u2022  Pendentes: *${pending}*  \u2022  Criticos: *${critical}*  \u2022  Altos: *${high}*`,
     ];
     if (top.length > 0) {
       lines.push("*Top tipos de alerta:*");
-      top.forEach(([t, c]) => lines.push(`  • \`${t}\` — ${c}`));
+      top.forEach(([t, c]) => lines.push(`  \u2022 \`${t}\` \u2014 ${c}`));
     }
     const message = lines.join("\n");
 
-    // Slack opt-in
-    const slackUrl = Deno.env.get("SLACK_ALERT_WEBHOOK_URL");
-    let slackStatus: number | null = null;
-    if (slackUrl) {
-      const r = await fetch(slackUrl, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ text: message }),
-      });
-      slackStatus = r.status;
-    }
+    // Idempotencia semanal: se a semana ja foi publicada (para qualquer admin),
+    // nao republica nem reenvia ao Slack. O indice unico e de expressao
+    // UNIQUE(user_id,type,((data)::text)); se as metricas mudarem entre
+    // reexecucoes o JSON diverge e o on-conflict nao deduplica (por isso a
+    // checagem explicita por week_key antes de gravar qualquer coisa).
+    const { count: weekExists, error: existsError } = await admin
+      .from("notifications")
+      .select("id", { count: "exact", head: true })
+      .eq("type", "security_weekly_digest")
+      .eq("data->>week_key", weekKey);
+    if (existsError)
+      return json({ ok: false, error: "already_published_check_failed", details: existsError.message }, 500);
 
-    // Notificação in-app para admins (idempotente via week_key no metadata)
-    const { data: admins } = await admin
+    // Notificacao in-app para admins ANTES do Slack (canal opcional): o digest interno
+    // nao pode depender de uma integracao externa. Publica primeiro, Slack depois.
+    const { data: admins, error: adminsError } = await admin
       .from("user_roles")
       .select("user_id")
       .eq("role", "admin");
+    if (adminsError)
+      return json({ ok: false, error: "admins_query_failed", details: adminsError.message }, 500);
 
     const notifRows = (admins ?? []).map((a: { user_id: string }) => ({
       user_id: a.user_id,
       type: "security_weekly_digest",
-      title: `Digest de segurança — ${weekKey}`,
-      message: `SLA ${slaPct}% • MTTR ${avgMttr ?? "—"}min • ${pending} pendentes de ${total}`,
+      title: `Digest de seguranca \u2014 ${weekKey}`,
+      message: `SLA ${slaPct}% \u2022 MTTR ${avgMttr ?? "\u2014"}min \u2022 ${pending} pendentes de ${total}`,
       data: {
         week_key: weekKey,
         sla_pct: slaPct,
@@ -161,11 +173,32 @@ Deno.serve(async (req) => {
       },
     }));
 
-    if (notifRows.length > 0) {
-      // ON CONFLICT DO NOTHING sem arbiter: o índice único de prod é de expressão
-      // (user_id, type, (data)::text) e o PostgREST não aceita coluna `data` como
-      // onConflict. Dedup por (user_id,type,data) sai do índice de expressão.
-      await admin.from("notifications").upsert(notifRows, { ignoreDuplicates: true });
+    let notifiedAdmins = 0;
+    if ((weekExists ?? 0) === 0 && notifRows.length > 0) {
+      // ON CONFLICT DO NOTHING sem arbiter: o indice unico de prod e de expressao
+      // (user_id, type, (data)::text) e o PostgREST nao aceita coluna `data` como
+      // onConflict. Dedup por (user_id,type,data) sai do indice de expressao.
+      const { error: upsertError } = await admin.from("notifications").upsert(notifRows, { ignoreDuplicates: true });
+      if (upsertError)
+        return json({ ok: false, error: "notifications_upsert_failed", details: upsertError.message }, 500);
+      notifiedAdmins = notifRows.length;
+    }
+
+    // Slack opt-in: entregue por ultimo e registrado no mesmo metadata do digest.
+    // Falha aqui nao apaga o que ja foi publicado internamente.
+    const slackUrl = Deno.env.get("SLACK_ALERT_WEBHOOK_URL");
+    let slackStatus: number | null = null;
+    if ((weekExists ?? 0) === 0 && slackUrl) {
+      try {
+        const r = await fetch(slackUrl, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ text: message }),
+        });
+        slackStatus = r.status;
+      } catch (err) {
+        console.error("security-weekly-digest: slack send failed", err instanceof Error ? err.message : String(err));
+      }
     }
 
     return json({
@@ -180,7 +213,7 @@ Deno.serve(async (req) => {
       avg_mttr_min: avgMttr,
       top: top.map(([t, c]) => ({ type: t, count: c })),
       slack_status: slackStatus,
-      notified_admins: notifRows.length,
+      notified_admins: notifiedAdmins,
     });
   } catch (err) {
     const details = err instanceof Error ? err.message : String(err);
