@@ -93,8 +93,8 @@ export function useAICoach() {
     }
   }, [session]);
 
-  const sendMessage = useCallback(async (input: string) => {
-    if (!input.trim() || isLoading || !user?.id || !isCoachUsable()) return;
+  const sendMessage = useCallback(async (input: string): Promise<boolean> => {
+    if (!input.trim() || isLoading || !user?.id || !isCoachUsable()) return false;
 
     const userMsg: Message = { role: "user", content: input };
     setMessages(prev => [...prev, userMsg]);
@@ -233,6 +233,7 @@ export function useAICoach() {
         const finalMessages: Message[] = [...messages, userMsg, { role: "assistant", content: assistantSoFar }];
         generateSuggestions(finalMessages);
       }
+      return true;
     } catch (e) {
       logger.apiError("sendMessage", e, "AI Coach");
       setError(e instanceof Error ? e.message : "Erro ao enviar mensagem");
@@ -241,6 +242,7 @@ export function useAICoach() {
     } finally {
       setIsLoading(false);
     }
+    return false;
   }, [messages, isLoading, profile, competencies, trails, enrollments, user?.id, session, generateSuggestions]);
 
   const clearMessages = useCallback(async () => {
