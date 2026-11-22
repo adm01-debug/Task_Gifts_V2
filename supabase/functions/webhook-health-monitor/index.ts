@@ -52,7 +52,6 @@ serve(withSentry("webhook-health-monitor", async (req, { requestId }) => {
         {
           subscription_id: r.subscription_id,
           subscription_name: r.subscription_name,
-          subscription_url: r.subscription_url,
           total_deliveries: r.total_deliveries,
           failed_deliveries: r.failed_deliveries,
           success_rate_pct: r.success_rate_pct,

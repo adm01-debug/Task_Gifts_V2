@@ -6,6 +6,9 @@ verify_jwt = false
 [functions.push-public-key]
 verify_jwt = false
 
+[functions.push-outbox-dispatcher]
+verify_jwt = false
+
 [functions.security-weekly-digest]
 verify_jwt = false
 

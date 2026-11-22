@@ -5,17 +5,8 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { corsHeaders, verifyServiceRole } from "../_shared/security.ts";
-
-interface AlertPayload {
-  alert_id?: string;
-  alert_type: string;
-  severity: string;
-  /** Monitores/trigger enviam `title`; o burn-rate-monitor envia `message`. */
-  title?: string;
-  description?: string | null;
-  message?: string | null;
-  metadata?: Record<string, unknown> | null;
-}
+import { parseJsonBody } from "../_shared/validation.ts";
+import { AlertPayloadSchema } from "../_shared/contracts/dispatch-critical-alert.ts";
 
 const SEVERITY_EMOJI: Record<string, string> = {
   critical: "🚨",
@@ -39,7 +30,9 @@ serve(async (req) => {
   try {
     verifyServiceRole(req);
 
-    const payload: AlertPayload = await req.json();
+    const parsed = await parseJsonBody(req, AlertPayloadSchema, { headers: corsHeaders });
+    if (!parsed.ok) return parsed.response;
+    const payload = parsed.data;
     const severity = (payload.severity || "medium").toLowerCase();
     const title = payload.title?.trim() || payload.message?.trim() || payload.alert_type || "Alerta de segurança";
 
@@ -118,7 +111,7 @@ serve(async (req) => {
     }
 
     return new Response(
-      JSON.stringify({ success: true, severity, results }),
+      JSON.stringify({ success: true, skipped: false, severity, results }),
       { headers: { ...corsHeaders, "Content-Type": "application/json" } },
     );
   } catch (error: unknown) {
