@@ -169,8 +169,8 @@ export function exportToExcel(report: ReportData, options: ExportOptions = { for
   const content = BOM + lines.join("\n");
   downloadFile(
     content, 
-    getFilename(report.title, "xlsx", options), 
-    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    getFilename(report.title, "csv", options), 
+    "text/csv;charset=utf-8;"
   );
 }
 
@@ -190,12 +190,11 @@ export function exportToPDF(report: ReportData, options: ExportOptions = { forma
   printWindow.document.write(html);
   printWindow.document.close();
   
-  // Wait for styles to load then print
-  printWindow.onload = () => {
-    setTimeout(() => {
-      printWindow.print();
-    }, 250);
-  };
+  // Aguarda o navegador renderizar o HTML antes de abrir o diálogo de impressão
+  setTimeout(() => {
+    printWindow.focus();
+    printWindow.print();
+  }, 250);
 }
 
 function generatePDFHTML(report: ReportData): string {

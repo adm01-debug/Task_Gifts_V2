@@ -18,7 +18,7 @@ import { useProfiles } from "@/hooks/useProfiles";
 import { useDepartments } from "@/hooks/useDepartments";
 import { useAllTeamMembers } from "@/hooks/useAdminUsers";
 import { useQuests } from "@/hooks/useQuests";
-import { toCSV, downloadCSV } from "@/lib/csvExport";
+import { exportReport } from "@/lib/exportReports";
 import { QuestsList } from "@/components/manager/QuestsList";
 import { ChurnPredictionPanel } from "@/components/ChurnPredictionPanel";
 import { TeamCompetencyDashboard } from "@/components/manager/TeamCompetencyDashboard";
@@ -77,6 +77,7 @@ export default function ManagerDashboard() {
   const avgStreak = teamMembers.length > 0 ? Math.round(teamMembers.reduce((acc, m) => acc + m.streak, 0) / totalMembers) : 0;
   const atRiskCount = teamMembers.filter(m => m.riskLevel === "high").length;
   const seo = useSEO();
+  const [exportFormat, setExportFormat] = useState<"csv" | "excel" | "pdf">("csv");
 
   const handleExport = () => {
     if (teamMembers.length === 0) {
@@ -88,7 +89,47 @@ export default function ManagerDashboard() {
       XP: m.xp, Quest_Concluidas: m.questsCompleted, Quest_Total: m.questsTotal,
       Streak: m.streak, Ultima_Atividade: m.lastActive, Risco: m.riskLevel,
     }));
-    downloadCSV(`equipe-gestor-${new Date().toISOString().slice(0, 10)}.csv`, toCSV(rows));
+    exportReport(
+      {
+        title: "Relatório da Equipe",
+        subtitle: `${teamMembers.length} membros · ${atRiskCount} em risco alto · conclusão média ${avgCompletion}%`,
+        generatedAt: new Date(),
+        generatedBy: user?.email ?? "Gestor",
+        sections: [
+          {
+            title: "Resumo da Equipe",
+            type: "summary",
+            data: [
+              { metrica: "Membros", valor: teamMembers.length },
+              { metrica: "Conclusão média de quests", valor: `${avgCompletion}%` },
+              { metrica: "Streak médio", valor: `${avgStreak} dias` },
+              { metrica: "Membros em risco alto", valor: atRiskCount },
+            ],
+            columns: [
+              { key: "metrica", label: "Métrica" },
+              { key: "valor", label: "Valor" },
+            ],
+          },
+          {
+            title: "Membros da Equipe",
+            type: "table",
+            data: rows,
+            columns: [
+              { key: "Nome", label: "Nome" },
+              { key: "Departamento", label: "Departamento" },
+              { key: "Nivel", label: "Nível" },
+              { key: "XP", label: "XP", format: "number" },
+              { key: "Quest_Concluidas", label: "Quests Concluídas" },
+              { key: "Quest_Total", label: "Quests Total" },
+              { key: "Streak", label: "Streak (dias)" },
+              { key: "Ultima_Atividade", label: "Última Atividade" },
+              { key: "Risco", label: "Risco" },
+            ],
+          },
+        ],
+      },
+      { format: exportFormat, filename: `equipe-gestor-${new Date().toISOString().slice(0, 10)}` },
+    );
     toast.success("Relatório da equipe exportado!");
   };
 
@@ -198,7 +239,19 @@ export default function ManagerDashboard() {
                           </div>
                         </DialogContent>
                       </Dialog>
-                      <Button variant="outline" className="w-full justify-start gap-2" size="sm" onClick={handleExport}><BarChart3 className="w-4 h-4" />Exportar Relatório</Button>
+                      <div className="space-y-2">
+                        <Select value={exportFormat} onValueChange={(v) => setExportFormat(v as "csv" | "excel" | "pdf")}>
+                          <SelectTrigger className="w-full" aria-label="Formato do relatório">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="csv">CSV (planilha simples)</SelectItem>
+                            <SelectItem value="excel">Excel</SelectItem>
+                            <SelectItem value="pdf">PDF</SelectItem>
+                          </SelectContent>
+                        </Select>
+                        <Button variant="outline" className="w-full justify-start gap-2" size="sm" onClick={handleExport}><BarChart3 className="w-4 h-4" />Exportar Relatório</Button>
+                      </div>
                     </div>
                   </Card>
                 </div>

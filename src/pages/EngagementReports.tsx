@@ -19,11 +19,14 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
  import { PageShell } from "@/components/navigation";
 import { toast } from "sonner";
 import { StatCard, ChartCard, EngagementCustomTooltip, StrugglingAreasSection } from "@/components/engagement/EngagementCharts";
-import { toCSV, downloadCSV } from "@/lib/csvExport";
+import { useAuth } from "@/hooks/useAuth";
+import { exportReport, type ReportSection } from "@/lib/exportReports";
 
 export default function EngagementReports() {
   const navigate = useNavigate();
+  const { user } = useAuth();
   const [period, setPeriod] = useState("6m");
+  const [exportFormat, setExportFormat] = useState<"csv" | "excel" | "pdf">("csv");
 
   const periodMonths = period === "1m" ? 1 : period === "3m" ? 3 : period === "6m" ? 6 : 12;
   const { data: completionTrend, isLoading: loadingTrend } = useCompletionTrend(periodMonths);
@@ -35,35 +38,90 @@ export default function EngagementReports() {
   const { data: metrics, isLoading: loadingMetrics } = useEngagementMetrics();
 
   const handleExport = () => {
-    const sections: string[] = [];
+    const sections: ReportSection[] = [];
     if (metrics) {
-      sections.push("MÉTRICAS GERAIS");
-      sections.push(toCSV([
-        { Horas_de_Treinamento: metrics.totalTrainingHours, Taxa_de_Conclusao: `${metrics.avgCompletionRate}%`, Certificacoes_Emitidas: metrics.totalCertifications, Score_de_Engajamento: metrics.engagementScore },
-      ]));
+      sections.push({
+        title: "Métricas Gerais",
+        type: "summary",
+        data: [
+          { metrica: "Horas de Treinamento", valor: metrics.totalTrainingHours },
+          { metrica: "Taxa de Conclusão", valor: `${metrics.avgCompletionRate}%` },
+          { metrica: "Certificações Emitidas", valor: metrics.totalCertifications },
+          { metrica: "Score de Engajamento", valor: metrics.engagementScore },
+        ],
+        columns: [
+          { key: "metrica", label: "Métrica" },
+          { key: "valor", label: "Valor" },
+        ],
+      });
     }
     if ((departmentPerformance ?? []).length > 0) {
-      sections.push("DESEMPENHO POR DEPARTAMENTO");
-      sections.push(toCSV((departmentPerformance ?? []) as unknown as Record<string, unknown>[], ["name", "completion", "avgTime", "engagement"]));
+      sections.push({
+        title: "Desempenho por Departamento",
+        type: "table",
+        data: (departmentPerformance ?? []) as unknown as Record<string, unknown>[],
+        columns: [
+          { key: "name", label: "Departamento" },
+          { key: "completion", label: "Conclusão (%)" },
+          { key: "avgTime", label: "Tempo Médio (min)" },
+          { key: "engagement", label: "Engajamento" },
+        ],
+      });
     }
     if ((topQuests ?? []).length > 0) {
-      sections.push("TOP QUESTS");
-      sections.push(toCSV((topQuests ?? []) as unknown as Record<string, unknown>[], ["name", "completions", "avgTime"]));
+      sections.push({
+        title: "Top Quests",
+        type: "table",
+        data: (topQuests ?? []) as unknown as Record<string, unknown>[],
+        columns: [
+          { key: "name", label: "Quest" },
+          { key: "completions", label: "Conclusões" },
+          { key: "avgTime", label: "Tempo Médio (min)" },
+        ],
+      });
     }
     if ((strugglingAreas ?? []).length > 0) {
-      sections.push("ÁREAS CRÍTICAS");
-      sections.push(toCSV((strugglingAreas ?? []) as unknown as Record<string, unknown>[], ["name", "dropRate", "avgAttempts", "difficulty"]));
+      sections.push({
+        title: "Áreas Críticas",
+        type: "table",
+        data: (strugglingAreas ?? []) as unknown as Record<string, unknown>[],
+        columns: [
+          { key: "name", label: "Área" },
+          { key: "dropRate", label: "Taxa de Abandono (%)" },
+          { key: "avgAttempts", label: "Tentativas Médias" },
+          { key: "difficulty", label: "Dificuldade" },
+        ],
+      });
     }
     if ((completionTrend ?? []).length > 0) {
-      sections.push("TENDÊNCIA DE CONCLUSÃO");
-      sections.push(toCSV((completionTrend ?? []) as unknown as Record<string, unknown>[], ["month", "completed", "started", "abandoned"]));
+      sections.push({
+        title: "Tendência de Conclusão",
+        type: "table",
+        data: (completionTrend ?? []) as unknown as Record<string, unknown>[],
+        columns: [
+          { key: "month", label: "Mês" },
+          { key: "completed", label: "Concluídas" },
+          { key: "started", label: "Iniciadas" },
+          { key: "abandoned", label: "Abandonadas" },
+        ],
+      });
     }
     if (sections.length === 0) {
       toast.error("Nenhum dado disponível para exportar.");
       return;
     }
-    const csv = sections.join("\n\n");
-    downloadCSV(`relatorio-engajamento-${period}`, csv);
+    const periodLabel =
+      period === "1m" ? "último mês" : period === "3m" ? "últimos 3 meses" : period === "6m" ? "últimos 6 meses" : "último ano";
+    exportReport(
+      {
+        title: "Relatório de Engajamento",
+        subtitle: `Período: ${periodLabel}`,
+        generatedAt: new Date(),
+        generatedBy: user?.email ?? "Sistema",
+        sections,
+      },
+      { format: exportFormat, filename: `relatorio-engajamento-${period}` },
+    );
     toast.success("Relatório exportado com sucesso!");
   };
 
@@ -86,7 +144,15 @@ export default function EngagementReports() {
                    <SelectItem value="1y">Último ano</SelectItem>
                  </SelectContent>
                </Select>
-               <Button variant="outline" className="gap-2" onClick={handleExport}><Download className="w-4 h-4" />Exportar</Button>
+               <Select value={exportFormat} onValueChange={(v) => setExportFormat(v as "csv" | "excel" | "pdf")}>
+                <SelectTrigger className="w-32" aria-label="Formato do relatório"><SelectValue /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="csv">CSV</SelectItem>
+                  <SelectItem value="excel">Excel</SelectItem>
+                  <SelectItem value="pdf">PDF</SelectItem>
+                </SelectContent>
+              </Select>
+              <Button variant="outline" className="gap-2" onClick={handleExport}><Download className="w-4 h-4" />Exportar</Button>
              </div>
            </div>
          </div>
