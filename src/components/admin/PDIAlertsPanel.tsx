@@ -6,13 +6,11 @@ import {
   Target,
   Award,
   TrendingDown,
-  ChevronRight,
   Bell,
   Filter,
   Calendar,
 } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -97,10 +95,6 @@ function AlertCard({ alert, index }: { alert: PDIAlert; index: number }) {
                 )}
               </div>
             </div>
-
-            <Button variant="ghost" size="icon" className="shrink-0">
-              <ChevronRight className="w-4 h-4" />
-            </Button>
           </div>
         </CardContent>
       </Card>

@@ -70,7 +70,7 @@ const RUNBOOK: RunbookEntry[] = [
       "Cheque se o mesmo IP tem tentativas contra múltiplos e-mails.",
     ],
     steps: [
-      { action: "Confirmar bloqueio no painel de segurança", href: "/admin/seguranca", hrefLabel: "Central de Segurança" },
+      { action: "Confirmar bloqueio no painel de segurança", href: "/security-dashboard", hrefLabel: "Central de Segurança" },
       { action: "Elevar bloqueio para permanente se padrão persistir" },
       { action: "Forçar reset de senha e MFA se a conta alvo tiver acesso admin" },
       { action: "Registrar IP em geo_blocking_rules se vier de país fora da whitelist" },
@@ -91,7 +91,7 @@ const RUNBOOK: RunbookEntry[] = [
       "Confirme se o limite atual está alinhado ao SLA do consumidor.",
     ],
     steps: [
-      { action: "Analisar logs em Rate Limit Rules", href: "/admin/seguranca", hrefLabel: "Painel" },
+      { action: "Analisar logs em Rate Limit Rules", href: "/security", hrefLabel: "Painel" },
       { action: "Ajustar regra para endpoint específico se legítimo" },
       { action: "Aplicar bloqueio manual estendido se abuso confirmado" },
     ],
@@ -234,7 +234,7 @@ const RUNBOOK: RunbookEntry[] = [
       "Escale para equipe apropriada se severidade real for alta.",
     ],
     steps: [
-      { action: "Registrar análise no campo de resolução", href: "/admin/seguranca", hrefLabel: "Alertas" },
+      { action: "Registrar análise no campo de resolução", href: "/security-dashboard", hrefLabel: "Alertas" },
       { action: "Criar runbook dedicado se este tipo se repetir" },
     ],
     owner: "Segurança",
@@ -386,7 +386,7 @@ export default function SecurityRunbook() {
               <Download className="w-4 h-4 mr-2" /> Exportar MTTR
             </Button>
             <Button asChild variant="outline">
-              <Link to="/admin/seguranca">
+              <Link to="/security-dashboard">
                 <Bug className="w-4 h-4 mr-2" /> Central de Segurança
               </Link>
             </Button>

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Users, Building2, HelpCircle, ShoppingBag, BookOpen, Settings, Shield, LayoutDashboard, Key, Award, ChevronRight, Search, Activity, BarChart3, Lock, KeyRound } from "lucide-react";
+import { Users, Building2, HelpCircle, ShoppingBag, BookOpen, Settings, Shield, LayoutDashboard, Key, Award, ChevronRight, Search, Activity, BarChart3, Lock, KeyRound, Gavel, ListOrdered, CalendarDays, FileWarning } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -99,6 +99,10 @@ function AdminPanelContent() {
     { icon: BarChart3, title: "Telemetria", description: "Queries lentas e métricas de performance", href: "/admin/telemetria", color: "#14b8a6" },
     { icon: Lock, title: "Permissões & Papéis", description: "Gerenciar roles e permissões", href: "/admin/permissions", color: "#a855f7" },
     { icon: KeyRound, title: "Chaves de API", description: "Emitir, rotacionar e revogar credenciais externas", href: "/admin/api-keys", color: "#f59e0b" },
+    { icon: Gavel, title: "Leilão de Recompensas", description: "Lotes, lances e arremates do leilão", href: "/leilao/admin", color: "#f97316" },
+    { icon: ListOrdered, title: "Sequência de Procedimentos", description: "Gerar e revisar sequências de procedimentos", href: "/sequencia/admin", color: "#22c55e" },
+    { icon: CalendarDays, title: "Pergunta do Dia", description: "Banco de perguntas e apostas diárias", href: "/pergunta-do-dia/admin", color: "#eab308" },
+    { icon: FileWarning, title: "Postmortems de Incidentes", description: "Análise pós-incidente e ações corretivas", href: "/admin/postmortems", color: "#ef4444" },
   ];
 
   const searchResults = useFuseSearch(quickLinks, ['title', 'description'], searchQuery, { ...SEARCH_PRESETS.commands, limit: 20 });
