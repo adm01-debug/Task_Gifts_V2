@@ -1,6 +1,6 @@
 # 07 · REGRAS DE NEGÓCIO
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `ba994f941d` · branch `main` · 2026-11-23 13:48 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `7ca11a04bb` · branch `main` · 2026-11-23 14:10 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## A. Regras escritas por humanos (`manual/` — prioridade máxima, nunca sobrescrito)
@@ -2293,7 +2293,7 @@ _nenhum item encontrado_
   ```
 - **Feedback()** — `src/pages/Feedback.tsx`
   ```
-  const navigate = useNavigate(); const { cycles, pendingRequests, isLoading } = useFeedback360(); const seoData = useSEO(); if (isLoading) { return ( <PageShell title="Feedback 360°"> <div className="min-h-screen bg-background flex items-center justify-center"> <LoadingState message="Carregando feedbacks..." /> </div> </PageShell> ); } return ( <PageShell title="Feedback 360°"> <div className="min-h-screen bg-background"> <SEOHead {...seoData} /> <div className="flex h-16 shrink-0 items-center ga …
+  const { cycles, pendingRequests, isLoading, submitFeedback, isSubmitting } = useFeedback360(); const seoData = useSEO(); const [activeRequest, setActiveRequest] = useState<FeedbackRequest | null>(null); const [strengths, setStrengths] = useState(""); const [improvements, setImprovements] = useState(""); const [overallRating, setOverallRating] = useState<"1" | "2" | "3" | "4" | "5">("5"); const [isAnonymous, setIsAnonymous] = useState(false); const openRespond = (req: FeedbackRequest) => { setAct …
   ```
 - **severityRank(sev: string | null)** — `src/pages/Postmortems.tsx`
   ```

@@ -1,7 +1,7 @@
 # Contexto do projeto para agentes de IA
 
 GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.
-Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `ba994f941d6a577c286cdce89dd0474d8c50c7d8` (2026-11-23T10:46:27-03:00).
+Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `7ca11a04bbb4ebc54da65f9f50b6eac89488400b` (2026-11-23T11:05:12-03:00).
 
 ## Como usar (leia antes de planejar ou executar qualquer tarefa)
 1. **Tela/rota/menu** → `rotas.json` (url/vista/menu → arquivo → hooks → tabelas → edges; `rotas_http_backend` para APIs) e `modulos.json` (módulo inteiro + dependências entre módulos).
@@ -36,7 +36,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 |---|---|
 | arquivos_total | 1539 |
 | arquivos_codigo | 1166 |
-| linhas_codigo | 227436 |
+| linhas_codigo | 227539 |
 | rotas | 83 |
 | rotas_http_backend | 0 |
 | vistas_por_id | 0 |
@@ -271,8 +271,8 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - possiveis_segredos_no_codigo: 0
 
 ## Grafo de código (graphify)
-- 10078 nós · 28017 arestas · 607 comunidades · grafo do commit `ba994f94`
-- comunidades maiores: lucide-react (280), react (196), skeleton.tsx (176), button.tsx (154), QuizAdmin.tsx (137), cn (132), profilesService.ts (102), useToast (98), mobile/index.ts (91), Checkins.tsx (88), contracts/index.ts (86), DashboardRightColumn.tsx (83)
+- 10078 nós · 28031 arestas · 630 comunidades · grafo do commit `7ca11a04`
+- comunidades maiores: lucide-react (355), button.tsx (181), CardHeader (147), react (138), QuizAdmin.tsx (125), useToast (101), react-router-dom (101), supabase (101), contracts/index.ts (89), cn (88), ManagerDashboard.tsx (86), ref_https (83)
 - símbolos mais chamados: cn() (src/lib/utils.ts), useAuth() (src/hooks/useAuth.tsx), useIsMobile() (src/hooks/use-mobile.tsx), q() (scripts/supabase_snapshot/snapshot.py), useDepartments() (src/hooks/useDepartments.ts), useToast() (src/hooks/use-toast.ts), useRBAC() (src/hooks/useRBAC.ts), useProfiles() (src/hooks/useProfiles.ts), useSEO() (src/hooks/useSEO.ts), useSoundEffects() (src/hooks/useSoundEffects.tsx), .collect() (scripts/supabase_snapshot/test_snapshot.py), excluded_sql() (scripts/supabase_snapshot/snapshot.py)
 - consulta local: `graphify query "<pergunta>"`, `graphify path "<A>" "<B>"`, `graphify explain "<X>"`
 
@@ -358,6 +358,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 
 
 ## Últimos commits
+- 2026-11-23 `7ca11a0` fix(feedback): adiciona fluxo de resposta com pontuacao, pontos fortes e melhorias (#115)
 - 2026-11-23 `ba994f9` fix(quiz): persiste 'Concluido hoje' em quiz_scores (resiste ao reload) (#114)
 - 2026-11-23 `3d91e00` fix(succession): calcula successorCount/readyNowCount com dados reais de highPotential (#113)
 - 2026-11-23 `9616112` fix(dashboard/audit): heatmap dados reais de audit_logs + auditService dev logs
@@ -372,7 +373,6 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - 2026-11-22 `8247352` chore(automacao): reconstroi security-weekly-digest e conecta ao cron 33 (#104)
 - 2026-11-22 `2d24251` feat(edge): ponte admin para webhook-dispatcher (webhook-ping) (#102)
 - 2026-11-22 `e5fb530` fix(edge): aceita url de app no push e ajusta contrato de versao do webhook (#101)
-- 2026-11-22 `03d0d59` fix(webhook-dispatcher): devolve 401 em vez de 500 ao rejeitar token sem permissao (#100)
 
 ## Arquivos deste diretório
 - `docs/contexto/codigo/rotas.json`
