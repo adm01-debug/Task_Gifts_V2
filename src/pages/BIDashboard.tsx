@@ -1,4 +1,4 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { 
   BarChart3, Users, Target, Award, Clock, Zap,
@@ -125,7 +125,7 @@ export default function BIDashboard() {
               <Target className="h-5 w-5 text-primary" />Indicadores Principais
             </h2>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <SectionErrorBoundary sectionName="KPI Total Usuários"><KPICard title="Total de Usuários" value={metrics?.totalUsers || 0} subtitle="Colaboradores cadastrados" icon={<Users className="h-5 w-5 text-primary" />} trend={12} /></SectionErrorBoundary>
+              <SectionErrorBoundary sectionName="KPI Total Usuários"><KPICard title="Total de Usuários" value={metrics?.totalUsers || 0} subtitle="Colaboradores cadastrados" icon={<Users className="h-5 w-5 text-primary" />} /></SectionErrorBoundary>
               <SectionErrorBoundary sectionName="KPI DAU"><KPICard title="Taxa DAU" value={`${metrics?.dau || 0}%`} subtitle="Usuários ativos hoje" icon={<Activity className="h-5 w-5 text-chart-2" />} target={70} current={metrics?.dau || 0} /></SectionErrorBoundary>
               <SectionErrorBoundary sectionName="KPI Pontualidade"><KPICard title="Pontualidade" value={`${metrics?.punctualityRate || 0}%`} subtitle="Check-ins no horário" icon={<Clock className="h-5 w-5 text-chart-3" />} target={95} current={metrics?.punctualityRate || 0} /></SectionErrorBoundary>
               <SectionErrorBoundary sectionName="KPI Treinamento"><KPICard title="Treinamentos" value={`${metrics?.trainingCompletionRate || 0}%`} subtitle="Trilhas concluídas" icon={<GraduationCap className="h-5 w-5 text-chart-4" />} target={95} current={metrics?.trainingCompletionRate || 0} /></SectionErrorBoundary>
@@ -133,9 +133,9 @@ export default function BIDashboard() {
           </section>
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <SectionErrorBoundary sectionName="KPI XP Total"><KPICard title="XP Total Distribuído" value={(metrics?.totalXpEarned || 0).toLocaleString('pt-BR')} subtitle="Pontos de experiência" icon={<Zap className="h-5 w-5 text-yellow-500" />} trend={18} /></SectionErrorBoundary>
-            <SectionErrorBoundary sectionName="KPI Quests"><KPICard title="Quests Concluídas" value={metrics?.totalQuestsCompleted || 0} subtitle="Missões completadas" icon={<Trophy className="h-5 w-5 text-amber-500" />} trend={25} /></SectionErrorBoundary>
-            <SectionErrorBoundary sectionName="KPI Kudos"><KPICard title="Kudos Enviados" value={metrics?.totalKudos || 0} subtitle="Reconhecimentos" icon={<Award className="h-5 w-5 text-pink-500" />} trend={8} /></SectionErrorBoundary>
+            <SectionErrorBoundary sectionName="KPI XP Total"><KPICard title="XP Total Distribuído" value={(metrics?.totalXpEarned || 0).toLocaleString('pt-BR')} subtitle="Pontos de experiência" icon={<Zap className="h-5 w-5 text-yellow-500" />} /></SectionErrorBoundary>
+            <SectionErrorBoundary sectionName="KPI Quests"><KPICard title="Quests Concluídas" value={metrics?.totalQuestsCompleted || 0} subtitle="Missões completadas" icon={<Trophy className="h-5 w-5 text-amber-500" />} /></SectionErrorBoundary>
+            <SectionErrorBoundary sectionName="KPI Kudos"><KPICard title="Kudos Enviados" value={metrics?.totalKudos || 0} subtitle="Reconhecimentos" icon={<Award className="h-5 w-5 text-pink-500" />} /></SectionErrorBoundary>
             <SectionErrorBoundary sectionName="KPI Nivel 5+"><KPICard title="Nível 5+" value={`${metrics?.level5Plus || 0}`} subtitle={`${metrics?.level5PlusRate || 0}% do total`} icon={<Flame className="h-5 w-5 text-orange-500" />} target={50} current={metrics?.level5PlusRate || 0} /></SectionErrorBoundary>
           </div>
 
