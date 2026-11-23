@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+﻿import { motion } from "framer-motion";
 import {
   TrendingUp, Users, DollarSign, Target, Award, Clock, BookOpen,
   BarChart3, Activity, Smile, RefreshCw, Loader2
@@ -137,7 +137,7 @@ const ExecutiveDashboard = () => {
             <TabsContent value="people" className="space-y-6">
               <Card className="border-border/50 bg-gradient-to-br from-primary/5 to-accent/5"><CardContent className="pt-6"><div className="grid grid-cols-1 lg:grid-cols-2 gap-6"><div className="space-y-4"><div className="flex items-center gap-3"><div className="p-3 rounded-xl bg-primary/10"><Smile className="w-8 h-8 text-primary" /></div><div><p className="text-sm text-muted-foreground">Employee Net Promoter Score</p>{peopleMetrics.enps.value !== null ? <p className="text-5xl font-bold text-primary">+{peopleMetrics.enps.value}</p> : <p className="text-xl text-muted-foreground">Requer integração eNPS Survey</p>}</div></div><Badge className="bg-muted text-muted-foreground border-muted">Meta: {peopleMetrics.enps.target}</Badge></div><div className="h-[200px] flex items-center justify-center"><div className="text-center text-muted-foreground"><p className="text-sm">Dados eNPS não disponíveis</p><p className="text-xs mt-1">Integrar sistema de pesquisa de satisfação</p></div></div></div></CardContent></Card>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                <MetricCard title="Taxa de Turnover" value={peopleMetrics.turnover.value} target={peopleMetrics.turnover.target} unit="%" icon={Users} description={`Ano anterior: ${peopleMetrics.turnover.previousYear}%`} inverse />
+                <MetricCard title="Taxa de Turnover" value={peopleMetrics.turnover.value} target={peopleMetrics.turnover.target} unit="%" icon={Users} description={peopleMetrics.turnover.previousYear !== null ? `Ano anterior: ${peopleMetrics.turnover.previousYear}%` : "Sem dados históricos"} inverse />
                 <MetricCard title="Adesão Semanal (WAU)" value={peopleMetrics.wau.value} target={peopleMetrics.wau.target} unit="%" icon={Target} loading={metricsLoading} />
                 <MetricCard title="Ativos Hoje (DAU)" value={peopleMetrics.dau.value} target={peopleMetrics.dau.target} unit="%" icon={Activity} loading={metricsLoading} />
                 <MetricCard title="Nível 5+ (Especialistas)" value={peopleMetrics.level5Plus.value} target={peopleMetrics.level5Plus.target} unit="%" icon={Award} loading={metricsLoading} />
