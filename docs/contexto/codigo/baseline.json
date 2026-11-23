@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "046ebeb7dfe97562aec8a3e86c4792f868f28330",
+  "commit": "b6c89afbe12c20c30d5a611c814531bd7fd2bdfa",
   "branch": "main",
-  "data_commit": "2026-11-23T16:20:39-03:00",
+  "data_commit": "2026-11-23T16:41:28-03:00",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "ultimos_commits": [
+   {
+    "sha": "b6c89af",
+    "data": "2026-11-23",
+    "assunto": "chore(docs): registra estado verificado das pendencias em producao (#121)"
+   },
    {
     "sha": "046ebeb",
     "data": "2026-11-23",
@@ -126,11 +131,6 @@
     "sha": "b042057",
     "data": "2026-11-22",
     "assunto": "fix: usa JWT de sessao no AI coach em vez do publishable key (#98)"
-   },
-   {
-    "sha": "0134cf0",
-    "data": "2026-11-22",
-    "assunto": "fix(deps): corrige CVE alto zod transitivo via override chromium-bidi (#97)"
    }
   ],
   "arquivos_mudados_7d": 133,
@@ -294,14 +294,14 @@
     "mudancas": 3
    },
    {
-    "arquivo": "docs/pendencias/03-csp-hibp-pwnedpasswords.md",
+    "arquivo": "docs/pendencias/02-profiles-update-sem-restricao-de-coluna.md",
     "mudancas": 3
    }
   ],
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 89
+    "commits": 90
    },
    {
     "autor": "dependabot[bot]",

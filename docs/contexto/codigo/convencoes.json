@@ -59,11 +59,11 @@
  "commits": {
   "convencao": "conventional commits (observado)",
   "exemplos": [
+   "chore(docs): registra estado verificado das pendencias em producao (#121)",
    "fix: liga acoes Editar/Excluir sem handler no painel admin (#120)",
    "feat(admin/app): OfflineIndicator global + GoalsManager persistente (Supabase) (#110)",
    "﻿fix: usa JWT de sessao no trail-recommendations (#119)",
-   "﻿fix(manager): dados reais de departamento, quests e exportacao no dashboard (#118)",
-   "fix(reports): exporta relatório de engajamento em CSV real (#117)"
+   "﻿fix(manager): dados reais de departamento, quests e exportacao no dashboard (#118)"
   ]
  },
  "pr_template": ".github/PULL_REQUEST_TEMPLATE.md",

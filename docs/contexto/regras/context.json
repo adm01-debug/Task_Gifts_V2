@@ -1,9 +1,9 @@
 {
  "meta": {
-  "sha": "046ebeb7dfe97562aec8a3e86c4792f868f28330",
+  "sha": "b6c89afbe12c20c30d5a611c814531bd7fd2bdfa",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
-  "generated_at": "2026-11-23 19:21 UTC",
+  "generated_at": "2026-11-23 20:13 UTC",
   "files_total": 1551,
   "code_files": 1447,
   "code_lines": 259654
@@ -151770,10 +151770,21 @@
   }
  },
  "git": {
-  "sha": "046ebeb7dfe97562aec8a3e86c4792f868f28330",
+  "sha": "b6c89afbe12c20c30d5a611c814531bd7fd2bdfa",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "commits": [
+   {
+    "sha": "b6c89af",
+    "date": "2026-11-23",
+    "author": "adm01-debug",
+    "subject": "chore(docs): registra estado verificado das pendencias em producao (#121)",
+    "files": [
+     "docs/pendencias/02-profiles-update-sem-restricao-de-coluna.md",
+     "docs/pendencias/_linha-de-base.md",
+     "docs/pendencias/_ordem.md"
+    ]
+   },
    {
     "sha": "046ebeb",
     "date": "2026-11-23",
@@ -152142,29 +152153,15 @@
     "files": [
      "docs/pendencias/03-csp-hibp-pwnedpasswords.md"
     ]
-   },
-   {
-    "sha": "2eace82",
-    "date": "2026-11-21",
-    "author": "adm01-debug",
-    "subject": "fix(deps): fecha CVEs moderados uuid/glob/postcss-selector-parser via overrides (#92)",
-    "files": [
-     "bun.lock",
-     "package.json"
-    ]
    }
   ],
   "hot_files": [
-   [
-    "package.json",
-    5
-   ],
    [
     "supabase/functions/_shared/contracts/_fixtures/index.ts",
     5
    ],
    [
-    "bun.lock",
+    "package.json",
     4
    ],
    [
@@ -152174,6 +152171,10 @@
    [
     "supabase/functions/_shared/contracts/index.ts",
     4
+   ],
+   [
+    "bun.lock",
+    3
    ],
    [
     "docs/estado/05-edge-functions.md",
