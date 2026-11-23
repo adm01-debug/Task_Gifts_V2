@@ -1,4 +1,4 @@
-import { supabase } from "@/integrations/supabase/client";
+﻿import { supabase } from "@/integrations/supabase/client";
 import type { Database } from "@/integrations/supabase/types";
 
 export type AuditAction = 
@@ -67,10 +67,14 @@ export const auditService = {
         .from("audit_logs")
         .insert(insertData as Database["public"]["Tables"]["audit_logs"]["Insert"]);
       
-      // Fire and forget - no console.error in production
-    } catch {
-      // Silently fail - audit logging should not block main operations
-    }
+      if (error && import.meta.env.DEV) {
+        console.error("[auditService] insert failed:", error.message);
+      }
+    } catch (err) {
+      if (import.meta.env.DEV) {
+        console.error("[auditService] unexpected error:", err);
+      }
+      // Silently fail in production    }
   },
 
   async getByUserId(userId: string, limit = 50): Promise<AuditLog[]> {
