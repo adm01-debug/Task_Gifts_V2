@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "87508dec5097201976664c7a68fb102a552977b2",
+  "commit": "e2dff9237b5860e202c1d1d50099261f2d976c64",
   "branch": "main",
-  "data_commit": "2026-11-23T08:07:16-03:00",
+  "data_commit": "2026-11-23T08:22:56-03:00",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "ultimos_commits": [
+   {
+    "sha": "e2dff92",
+    "data": "2026-11-23",
+    "assunto": "fix(shop/rbac): desconto flash sale cobrado + toast false success em permissões (#109)"
+   },
    {
     "sha": "87508de",
     "data": "2026-11-23",
@@ -126,14 +131,9 @@
     "sha": "fb528b1",
     "data": "2026-11-21",
     "assunto": "fix: verify-ip fail-closed quando a whitelist nao pode ser checada (#86)"
-   },
-   {
-    "sha": "dadc093",
-    "data": "2026-11-21",
-    "assunto": "fix: remove 29 vulnerabilidades do bun.lock (audit fix) (#85)"
    }
   ],
-  "arquivos_mudados_7d": 107,
+  "arquivos_mudados_7d": 111,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "supabase/functions/_shared",
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 77
+    "commits": 78
    },
    {
     "autor": "dependabot[bot]",
@@ -312,7 +312,7 @@
  "contagens": {
   "arquivos_total": 1539,
   "arquivos_codigo": 1166,
-  "linhas_codigo": 227410,
+  "linhas_codigo": 227412,
   "rotas": 83,
   "rotas_http_backend": 0,
   "vistas_por_id": 0,
@@ -432,11 +432,11 @@
   },
   "src/pages": {
    "arquivos": 82,
-   "linhas": 22350
+   "linhas": 22351
   },
   "src/services": {
    "arquivos": 99,
-   "linhas": 21592
+   "linhas": 21593
   },
   "src/stories": {
    "arquivos": 29,

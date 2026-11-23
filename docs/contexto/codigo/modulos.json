@@ -6538,7 +6538,7 @@
    "modulo": "pages",
    "arquivos": 82,
    "testes": 0,
-   "linhas": 22350,
+   "linhas": 22351,
    "itens_menu": [
     "Admin Loja",
     "Admin Quiz",
@@ -7669,7 +7669,7 @@
    "modulo": "services",
    "arquivos": 96,
    "testes": 0,
-   "linhas": 21013,
+   "linhas": 21014,
    "itens_menu": [],
    "telas": [],
    "rotas_http": [],

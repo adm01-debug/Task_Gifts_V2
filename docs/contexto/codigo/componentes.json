@@ -8665,7 +8665,7 @@
     "Shop"
    ],
    "export_default": "Shop",
-   "linhas": 270,
+   "linhas": 271,
    "dominio": "pages",
    "hooks_locais": [
     "useAuth",

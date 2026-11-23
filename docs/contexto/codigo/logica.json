@@ -6852,7 +6852,7 @@
     "shopService"
    ],
    "export_default": null,
-   "linhas": 476,
+   "linhas": 477,
    "tabelas": [
     "shop_promotions",
     "shop_purchases",

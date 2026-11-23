@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "87508dec5097201976664c7a68fb102a552977b2",
+  "sha": "e2dff9237b5860e202c1d1d50099261f2d976c64",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
-  "generated_at": "2026-11-23 11:14 UTC",
+  "generated_at": "2026-11-23 11:28 UTC",
   "files_total": 1549,
   "code_files": 1445,
-  "code_lines": 258877
+  "code_lines": 258879
  },
  "version": "1.3.2",
- "facts_hash": "f8fdedffa243093c",
+ "facts_hash": "1d38d15a45934f1a",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -48606,7 +48606,7 @@
   {
    "module": "src/pages",
    "files": 82,
-   "lines": 22350,
+   "lines": 22351,
    "tables": [
     "audit_logs",
     "campaign_participants",
@@ -48783,7 +48783,7 @@
   {
    "module": "src/services",
    "files": 99,
-   "lines": 21592,
+   "lines": 21593,
    "tables": [
     "achievements",
     "action_plan_items",
@@ -135106,7 +135106,7 @@
   },
   "src/pages/Shop.tsx": {
    "path": "src/pages/Shop.tsx",
-   "lines": 270,
+   "lines": 271,
    "exports": [
     "function Shop"
    ],
@@ -141683,7 +141683,7 @@
   },
   "src/services/shopService.ts": {
    "path": "src/services/shopService.ts",
-   "lines": 476,
+   "lines": 477,
    "exports": [
     "type RewardCategory",
     "type RewardRarity",
@@ -151310,10 +151310,23 @@
   }
  },
  "git": {
-  "sha": "87508dec5097201976664c7a68fb102a552977b2",
+  "sha": "e2dff9237b5860e202c1d1d50099261f2d976c64",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "commits": [
+   {
+    "sha": "e2dff92",
+    "date": "2026-11-23",
+    "author": "adm01-debug",
+    "subject": "fix(shop/rbac): desconto flash sale cobrado + toast false success em permissões (#109)",
+    "files": [
+     "src/components/FlashSalesBanner.tsx",
+     "src/hooks/usePermissions.ts",
+     "src/hooks/useShop.ts",
+     "src/pages/Shop.tsx",
+     "src/services/shopService.ts"
+    ]
+   },
    {
     "sha": "87508de",
     "date": "2026-11-23",
@@ -151677,25 +151690,15 @@
      "bun.lock",
      "package.json"
     ]
-   },
-   {
-    "sha": "f34642c",
-    "date": "2026-11-21",
-    "author": "adm01-debug",
-    "subject": "chore(deps): remove package-lock.json andaco e declara packageManager bun (#81)",
-    "files": [
-     "package-lock.json",
-     "package.json"
-    ]
    }
   ],
   "hot_files": [
    [
-    "package.json",
-    8
+    "bun.lock",
+    7
    ],
    [
-    "bun.lock",
+    "package.json",
     7
    ],
    [

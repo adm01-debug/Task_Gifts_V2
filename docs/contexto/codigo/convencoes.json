@@ -59,11 +59,11 @@
  "commits": {
   "convencao": "conventional commits (observado)",
   "exemplos": [
+   "fix(shop/rbac): desconto flash sale cobrado + toast false success em permissões (#109)",
    "build(deps-dev): bump @testing-library/jest-dom from 7.0.1 to 8.0.0 (#108)",
    "build(deps): bump the dependencies group with 13 updates (#107)",
    "docs: atualiza 05-edge-functions com fixes SRE (PR #106) e VAPID keys",
-   "fix(sre): corrige RPCs de error-budget/webhook-stats e trigger de dispatch apontando para projeto errado (#106)",
-   "feat(db): RPC acknowledge_security_digest para marcar digest semanal como revisado (#103)"
+   "fix(sre): corrige RPCs de error-budget/webhook-stats e trigger de dispatch apontando para projeto errado (#106)"
   ]
  },
  "pr_template": ".github/PULL_REQUEST_TEMPLATE.md",
