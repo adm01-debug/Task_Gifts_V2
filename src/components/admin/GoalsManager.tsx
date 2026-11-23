@@ -1,6 +1,6 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import { motion } from "framer-motion";
-import { Target, Plus, Edit2, Trash2, Save, X, Copy } from "lucide-react";
+import { Target, Plus, Edit2, Trash2, Save, X, Copy, Loader2 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -22,6 +22,9 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { toast } from "sonner";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/hooks/useAuth";
 
 interface GoalTemplate {
   id: string;
@@ -33,60 +36,102 @@ interface GoalTemplate {
   coin_reward: number;
 }
 
-const defaultTemplates: GoalTemplate[] = [
-  {
-    id: "1",
-    title: "Aumentar Produtividade",
-    description: "Meta para aumentar a produtividade individual em 20%",
-    goal_type: "personal",
-    priority: "high",
-    xp_reward: 200,
-    coin_reward: 100,
-  },
-  {
-    id: "2",
-    title: "Concluir Treinamento",
-    description: "Finalizar todas as trilhas de aprendizado obrigatórias",
-    goal_type: "personal",
-    priority: "medium",
-    xp_reward: 150,
-    coin_reward: 75,
-  },
-  {
-    id: "3",
-    title: "Meta de Vendas da Equipe",
-    description: "Atingir R$ 100.000 em vendas no trimestre",
-    goal_type: "team",
-    priority: "high",
-    xp_reward: 500,
-    coin_reward: 250,
-  },
-];
-
 export function GoalsManager() {
-  const [templates, setTemplates] = useState<GoalTemplate[]>(defaultTemplates);
+  const { user } = useAuth();
+  const qc = useQueryClient();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [formData, setFormData] = useState<Partial<GoalTemplate>>({});
   const [editingId, setEditingId] = useState<string | null>(null);
 
+  const { data: templates = [], isLoading } = useQuery<GoalTemplate[]>({
+    queryKey: ["goal_templates"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("goal_templates" as never)
+        .select("id, title, description, goal_type, priority, xp_reward, coin_reward")
+        .order("created_at", { ascending: true });
+      if (error) throw error;
+      return (data as GoalTemplate[]) || [];
+    },
+  });
+
+  const upsertMutation = useMutation({
+    mutationFn: async (tmpl: Partial<GoalTemplate> & { id?: string }) => {
+      if (tmpl.id) {
+        const { error } = await supabase
+          .from("goal_templates" as never)
+          .update({
+            title: tmpl.title,
+            description: tmpl.description,
+            goal_type: tmpl.goal_type,
+            priority: tmpl.priority,
+            xp_reward: tmpl.xp_reward,
+            coin_reward: tmpl.coin_reward,
+          } as never)
+          .eq("id", tmpl.id);
+        if (error) throw error;
+      } else {
+        const { error } = await supabase
+          .from("goal_templates" as never)
+          .insert({
+            title: tmpl.title,
+            description: tmpl.description,
+            goal_type: tmpl.goal_type || "personal",
+            priority: tmpl.priority || "medium",
+            xp_reward: tmpl.xp_reward ?? 100,
+            coin_reward: tmpl.coin_reward ?? 50,
+            created_by: user?.id,
+          } as never);
+        if (error) throw error;
+      }
+    },
+    onSuccess: (_, variables) => {
+      toast.success(variables.id ? "Template atualizado!" : "Template criado!");
+      qc.invalidateQueries({ queryKey: ["goal_templates"] });
+    },
+    onError: (e) => toast.error(`Erro: ${(e as Error).message}`),
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: async (id: string) => {
+      const { error } = await supabase
+        .from("goal_templates" as never)
+        .delete()
+        .eq("id", id);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      toast.success("Template removido!");
+      qc.invalidateQueries({ queryKey: ["goal_templates"] });
+    },
+    onError: (e) => toast.error(`Erro ao remover: ${(e as Error).message}`),
+  });
+
+  const duplicateMutation = useMutation({
+    mutationFn: async (tmpl: GoalTemplate) => {
+      const { error } = await supabase
+        .from("goal_templates" as never)
+        .insert({
+          title: `${tmpl.title} (Cópia)`,
+          description: tmpl.description,
+          goal_type: tmpl.goal_type,
+          priority: tmpl.priority,
+          xp_reward: tmpl.xp_reward,
+          coin_reward: tmpl.coin_reward,
+          created_by: user?.id,
+        } as never);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      toast.success("Template duplicado!");
+      qc.invalidateQueries({ queryKey: ["goal_templates"] });
+    },
+    onError: (e) => toast.error(`Erro ao duplicar: ${(e as Error).message}`),
+  });
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (editingId) {
-      setTemplates(templates.map((t) => (t.id === editingId ? { ...t, ...formData } as GoalTemplate : t)));
-      toast.success("Template atualizado!");
-    } else {
-      const newTemplate: GoalTemplate = {
-        id: Date.now().toString(),
-        title: formData.title || "",
-        description: formData.description || "",
-        goal_type: formData.goal_type || "personal",
-        priority: formData.priority || "medium",
-        xp_reward: formData.xp_reward || 100,
-        coin_reward: formData.coin_reward || 50,
-      };
-      setTemplates([...templates, newTemplate]);
-      toast.success("Template criado!");
-    }
+    upsertMutation.mutate(editingId ? { ...formData, id: editingId } : formData);
     setIsDialogOpen(false);
     setFormData({});
     setEditingId(null);
@@ -99,18 +144,11 @@ export function GoalsManager() {
   };
 
   const handleDelete = (id: string) => {
-    setTemplates(templates.filter((t) => t.id !== id));
-    toast.success("Template removido!");
+    deleteMutation.mutate(id);
   };
 
   const handleDuplicate = (template: GoalTemplate) => {
-    const newTemplate = {
-      ...template,
-      id: Date.now().toString(),
-      title: `${template.title} (Cópia)`,
-    };
-    setTemplates([...templates, newTemplate]);
-    toast.success("Template duplicado!");
+    duplicateMutation.mutate(template);
   };
 
   const priorityColors = {
@@ -129,10 +167,16 @@ export function GoalsManager() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold">Templates de Metas/OKRs</h2>
-          <p className="text-muted-foreground">Crie templates reutilizáveis para metas</p>
+          <h2 className="text-2xl font-bold flex items-center gap-2">
+            <Target className="w-6 h-6 text-primary" />
+            Gestão de Templates de Metas
+          </h2>
+          <p className="text-muted-foreground mt-1">
+            Configure templates reutilizáveis para metas de performance
+          </p>
         </div>
-        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+
+        <Dialog open={isDialogOpen} onOpenChange={(o) => { setIsDialogOpen(o); if (!o) { setFormData({}); setEditingId(null); } }}>
           <DialogTrigger asChild>
             <Button className="gap-2">
               <Plus className="w-4 h-4" />
@@ -141,10 +185,12 @@ export function GoalsManager() {
           </DialogTrigger>
           <DialogContent className="max-w-md">
             <DialogHeader>
-              <DialogTitle>{editingId ? "Editar Template" : "Novo Template"}</DialogTitle>
+              <DialogTitle>
+                {editingId ? "Editar Template" : "Novo Template de Meta"}
+              </DialogTitle>
             </DialogHeader>
             <form onSubmit={handleSubmit} className="space-y-4">
-              <div>
+              <div className="space-y-2">
                 <Label htmlFor="title">Título</Label>
                 <Input
                   id="title"
@@ -154,21 +200,24 @@ export function GoalsManager() {
                   required
                 />
               </div>
-              <div>
+
+              <div className="space-y-2">
                 <Label htmlFor="description">Descrição</Label>
                 <Textarea
                   id="description"
                   value={formData.description || ""}
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                  placeholder="Descreva a meta..."
+                  placeholder="Descreva o objetivo desta meta..."
+                  rows={3}
                 />
               </div>
+
               <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <Label htmlFor="goal_type">Tipo</Label>
+                <div className="space-y-2">
+                  <Label>Tipo</Label>
                   <Select
                     value={formData.goal_type || "personal"}
-                    onValueChange={(value) => setFormData({ ...formData, goal_type: value as GoalTemplate['goal_type'] })}
+                    onValueChange={(v) => setFormData({ ...formData, goal_type: v as GoalTemplate["goal_type"] })}
                   >
                     <SelectTrigger>
                       <SelectValue />
@@ -180,11 +229,12 @@ export function GoalsManager() {
                     </SelectContent>
                   </Select>
                 </div>
-                <div>
-                  <Label htmlFor="priority">Prioridade</Label>
+
+                <div className="space-y-2">
+                  <Label>Prioridade</Label>
                   <Select
                     value={formData.priority || "medium"}
-                    onValueChange={(value) => setFormData({ ...formData, priority: value as GoalTemplate['priority'] })}
+                    onValueChange={(v) => setFormData({ ...formData, priority: v as GoalTemplate["priority"] })}
                   >
                     <SelectTrigger>
                       <SelectValue />
@@ -196,35 +246,39 @@ export function GoalsManager() {
                     </SelectContent>
                   </Select>
                 </div>
-                <div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
                   <Label htmlFor="xp_reward">Recompensa XP</Label>
                   <Input
                     id="xp_reward"
                     type="number"
-                    min={0}
+                    min="0"
                     value={formData.xp_reward || 100}
                     onChange={(e) => setFormData({ ...formData, xp_reward: parseInt(e.target.value) })}
                   />
                 </div>
-                <div>
-                  <Label htmlFor="coin_reward">Recompensa Coins</Label>
+                <div className="space-y-2">
+                  <Label htmlFor="coin_reward">Recompensa Moedas</Label>
                   <Input
                     id="coin_reward"
                     type="number"
-                    min={0}
+                    min="0"
                     value={formData.coin_reward || 50}
                     onChange={(e) => setFormData({ ...formData, coin_reward: parseInt(e.target.value) })}
                   />
                 </div>
               </div>
-              <div className="flex gap-2 justify-end">
-                <Button type="button" variant="outline" onClick={() => setIsDialogOpen(false)}>
-                  <X className="w-4 h-4 mr-2" />
+
+              <div className="flex justify-end gap-2">
+                <Button type="button" variant="outline" onClick={() => { setIsDialogOpen(false); setFormData({}); setEditingId(null); }}>
+                  <X className="w-4 h-4 mr-1" />
                   Cancelar
                 </Button>
-                <Button type="submit">
-                  <Save className="w-4 h-4 mr-2" />
-                  Salvar
+                <Button type="submit" disabled={upsertMutation.isPending}>
+                  {upsertMutation.isPending ? <Loader2 className="w-4 h-4 mr-1 animate-spin" /> : <Save className="w-4 h-4 mr-1" />}
+                  {editingId ? "Salvar" : "Criar"}
                 </Button>
               </div>
             </form>
@@ -232,63 +286,67 @@ export function GoalsManager() {
         </Dialog>
       </div>
 
-      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {templates.map((template, index) => (
-          <motion.div
-            key={template.id}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: index * 0.05 }}
-          >
-            <Card className="hover:border-primary/40 transition-colors">
-              <CardHeader className="pb-2">
-                <div className="flex items-start justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
-                      <Target className="w-5 h-5 text-primary" />
+      {isLoading ? (
+        <div className="flex items-center justify-center p-12 text-muted-foreground gap-2">
+          <Loader2 className="w-5 h-5 animate-spin" />
+          Carregando templates...
+        </div>
+      ) : templates.length === 0 ? (
+        <Card>
+          <CardContent className="flex flex-col items-center justify-center p-12 text-center">
+            <Target className="w-12 h-12 text-muted-foreground mb-4" />
+            <p className="text-muted-foreground">Nenhum template cadastrado.</p>
+            <p className="text-sm text-muted-foreground">Clique em "Novo Template" para começar.</p>
+          </CardContent>
+        </Card>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {templates.map((template, index) => (
+            <motion.div
+              key={template.id}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: index * 0.1 }}
+            >
+              <Card className="h-full hover:shadow-md transition-shadow">
+                <CardHeader className="pb-3">
+                  <div className="flex items-start justify-between gap-2">
+                    <CardTitle className="text-base leading-tight">{template.title}</CardTitle>
+                    <div className="flex gap-1 shrink-0">
+                      <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => handleEdit(template)}>
+                        <Edit2 className="w-3.5 h-3.5" />
+                      </Button>
+                      <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => handleDuplicate(template)} disabled={duplicateMutation.isPending}>
+                        <Copy className="w-3.5 h-3.5" />
+                      </Button>
+                      <Button variant="ghost" size="icon" className="h-7 w-7 text-destructive hover:text-destructive" onClick={() => handleDelete(template.id)} disabled={deleteMutation.isPending}>
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </Button>
                     </div>
-                    <div>
-                      <CardTitle className="text-base">{template.title}</CardTitle>
-                      <div className="flex gap-1 mt-1">
-                        <Badge className={typeColors[template.goal_type]} variant="secondary">
-                          {template.goal_type === "personal" ? "Pessoal" : template.goal_type === "team" ? "Equipe" : "Empresa"}
-                        </Badge>
-                        <Badge className={priorityColors[template.priority]} variant="secondary">
-                          {template.priority === "low" ? "Baixa" : template.priority === "medium" ? "Média" : "Alta"}
-                        </Badge>
-                      </div>
-                    </div>
                   </div>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <CardDescription className="mb-3">{template.description}</CardDescription>
-                <div className="flex items-center justify-between text-sm">
-                  <div className="flex gap-3">
-                    <span className="text-muted-foreground">
-                      <span className="font-semibold text-primary">{template.xp_reward}</span> XP
-                    </span>
-                    <span className="text-muted-foreground">
-                      <span className="font-semibold text-yellow-500">{template.coin_reward}</span> Coins
-                    </span>
+                  <div className="flex gap-1.5 flex-wrap">
+                    <Badge className={`text-xs ${priorityColors[template.priority]}`}>
+                      {template.priority === "low" ? "Baixa" : template.priority === "medium" ? "Média" : "Alta"}
+                    </Badge>
+                    <Badge className={`text-xs ${typeColors[template.goal_type]}`}>
+                      {template.goal_type === "personal" ? "Pessoal" : template.goal_type === "team" ? "Equipe" : "Empresa"}
+                    </Badge>
                   </div>
-                  <div className="flex gap-1">
-                    <Button variant="ghost" size="icon" onClick={() => handleDuplicate(template)}>
-                      <Copy className="w-4 h-4" />
-                    </Button>
-                    <Button variant="ghost" size="icon" onClick={() => handleEdit(template)}>
-                      <Edit2 className="w-4 h-4" />
-                    </Button>
-                    <Button variant="ghost" size="icon" onClick={() => handleDelete(template.id)}>
-                      <Trash2 className="w-4 h-4 text-destructive" />
-                    </Button>
+                </CardHeader>
+                <CardContent className="pt-0">
+                  {template.description && (
+                    <CardDescription className="text-xs mb-3 line-clamp-2">{template.description}</CardDescription>
+                  )}
+                  <div className="flex justify-between text-xs text-muted-foreground">
+                    <span>⚡ {template.xp_reward} XP</span>
+                    <span>🪙 {template.coin_reward} moedas</span>
                   </div>
-                </div>
-              </CardContent>
-            </Card>
-          </motion.div>
-        ))}
-      </div>
+                </CardContent>
+              </Card>
+            </motion.div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
