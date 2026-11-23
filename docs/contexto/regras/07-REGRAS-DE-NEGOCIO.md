@@ -1,6 +1,6 @@
 # 07 · REGRAS DE NEGÓCIO
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `9616112786` · branch `main` · 2026-11-23 12:04 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `3d91e0014b` · branch `main` · 2026-11-23 12:16 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## A. Regras escritas por humanos (`manual/` — prioridade máxima, nunca sobrescrito)
@@ -2694,7 +2694,6 @@ _nenhum item encontrado_
 | `abandoned: Math.round(abandoned * 0.3), // Estimate 30% of incomplete as truly abandoned` | `src/services/engagementReportsService.ts` |
 | `const hours = Math.round(totalActivities * 0.25 * 10) / 10;` | `src/services/engagementReportsService.ts` |
 | `const totalTrainingHours = Math.round((moduleCompletions \|\| 0) * 0.25);` | `src/services/engagementReportsService.ts` |
-| `rating: stats.completions > 0 ? Math.min(5, 3.5 + (stats.completions / 10) * 0.5) : 0,` | `src/services/engagementReportsService.ts` |
 | `(goalsRate * 0.5) +` | `src/services/highPotentialService.ts` |
 | `(metrics.attendanceRate * 0.5) +` | `src/services/highPotentialService.ts` |
 | `(metrics.pdiProgress * 0.3) +` | `src/services/highPotentialService.ts` |
@@ -2702,6 +2701,7 @@ _nenhum item encontrado_
 | `(trailsRate * 0.4) +` | `src/services/highPotentialService.ts` |
 | `return clamp(0.4 + evidence * 0.15, 0.4, 1);` | `src/services/predictiveFeedbackService.ts` |
 | `const readinessScore = Math.round((hipo.overallScore * 0.6 + matchScore * 0.4));` | `src/services/successionService.ts` |
+| `const readinessScore = Math.round(hipo.overallScore * 0.6 + matchScore * 0.4);` | `src/services/successionService.ts` |
 | `score += hipo.overallScore * 0.5;` | `src/services/successionService.ts` |
 | `↑ 12% este mês` | `src/stories/components/Card.stories.tsx` |
 | `<span>67% concluído</span>` | `src/stories/components/Progress.stories.tsx` |

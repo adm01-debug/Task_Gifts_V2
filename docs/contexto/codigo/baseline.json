@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "961611278623e24355589f8d9490327cb303993c",
+  "commit": "3d91e0014bdd07c1f19d98d5441852578ac2ea8e",
   "branch": "main",
-  "data_commit": "2026-11-23T08:55:45-03:00",
+  "data_commit": "2026-11-23T09:12:30-03:00",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "ultimos_commits": [
+   {
+    "sha": "3d91e00",
+    "data": "2026-11-23",
+    "assunto": "fix(succession): calcula successorCount/readyNowCount com dados reais de highPotential (#113)"
+   },
    {
     "sha": "9616112",
     "data": "2026-11-23",
@@ -126,14 +131,9 @@
     "sha": "f095e46",
     "data": "2026-11-21",
     "assunto": "fix: checa admin via rpc has_role em competency-alerts (e atualiza doc 05) (#88)"
-   },
-   {
-    "sha": "f76c9b7",
-    "data": "2026-11-21",
-    "assunto": "fix: corrige typo de tipo no catch do log de ip_access_logs (#89)"
    }
   ],
-  "arquivos_mudados_7d": 115,
+  "arquivos_mudados_7d": 118,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "supabase/functions/_shared",
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 80
+    "commits": 81
    },
    {
     "autor": "dependabot[bot]",
@@ -312,7 +312,7 @@
  "contagens": {
   "arquivos_total": 1539,
   "arquivos_codigo": 1166,
-  "linhas_codigo": 227421,
+  "linhas_codigo": 227435,
   "rotas": 83,
   "rotas_http_backend": 0,
   "vistas_por_id": 0,
@@ -436,7 +436,7 @@
   },
   "src/services": {
    "arquivos": 99,
-   "linhas": 21598
+   "linhas": 21612
   },
   "src/stories": {
    "arquivos": 29,
