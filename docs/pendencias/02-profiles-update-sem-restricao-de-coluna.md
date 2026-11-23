@@ -1,6 +1,6 @@
 ﻿# Pendencias — policy profiles UPDATE sem restricao de coluna (economia)
 
-Estado: **IMPLEMENTADO + VALIDADO — PR #78 CI verde, aguardando OK para merge/apply** (DDL em banco de producao = regra 8; precisa aplicar migration + merge apos OK)
+Estado: **CONCLUIDO — migration aplicada em producao e verificada no banco real** (PR #78 mergeada). Resta 1 risco residual documentado abaixo (exige decisao de arquitetura, regra 8).
 
 ## Causa
 A policy `Users can update own profile` (`supabase/migrations/20260906120000_posvalidacao_fixes.sql`) e `FOR UPDATE TO authenticated USING/WITH CHECK (auth.uid()=id)` sem lista de colunas. Qualquer autenticado pode alterar xp/coins/level do proprio perfil, burlando a economia (autoconcessao de pontuacao/recompensa).
@@ -25,3 +25,26 @@ E DDL em producao que altera politica de seguranca de objeto existente e exige c
 - Suite completa vitest: **141 passed | 2 skipped (1888 tests pass)**.
 - `achievements.test.ts` atualizado: trocou mock de `update` por `rpc` (`add_xp`/`add_coins`), usando `vi.hoisted`.
 - Migration NAO aplicada em banco real ainda — requer OK (regra 8) antes do merge/apply.
+
+## Verificacao em producao (2026-11-23, main `046ebeb`, projeto `eidsaqymojyuhprobfpn`)
+
+Consulta direta ao banco (MCP Supabase) — evidencia real, nao inferida:
+
+| Checagem | Resultado |
+|---|---|
+| RPCs `add_xp`, `add_coins`, `spend_coins`, `increment_streak`, `increment_quests_completed` | **existem** (5/5 em `pg_proc`) |
+| Grants de UPDATE em `authenticated` | apenas `avatar_url`, `birth_date`, `display_name`, `hire_date` (4 colunas) — `xp/coins/level/streak/best_streak/quests_completed/last_access_at` **revogados** |
+| `anon` | ainda tem UPDATE em todas as colunas, **porem sem policy de UPDATE** → RLS (`relrowsecurity=true`) bloqueia; nao exploravel |
+| Policies em `profiles` | INSERT/SELECT/UPDATE apenas para `authenticated`; UPDATE com `USING/WITH CHECK (auth.uid()=id)` |
+| Assinaturas das RPCs vs chamadas do front | identicas (`p_user_id`, `p_amount`, `p_source`); 10 call sites conferidos |
+| Escrita de economia direto no client | **zero** ocorrencias de `.from('profiles').update({xp|coins|level|streak|...})` |
+| Gates das RPCs (corpo das funcoes) | `add_coins`/`spend_coins`/`add_xp` exigem `auth.uid() = p_user_id`; `add_xp` tambem aceita autor de `kudos` (destinatario) — comportamento intencional |
+
+Conclusao: a via de autoconcessao por `UPDATE` direto esta fechada em producao e nenhuma feature ficou sem conseguir escrever economia.
+
+## Risco residual (nao e regressao introduzida; e o proximo passo de arquitetura)
+
+As RPCs sao `SECURITY DEFINER` e aceitam `p_amount` arbitrario. Como `auth.uid() = p_user_id` e valido para o proprio usuario, um usuario com o console aberto ainda pode chamar `rpc('add_xp', {p_user_id: <ele mesmo>, p_amount: 999999})` e inflar a propria pontuacao — a origem do ganho nao e verificada no servidor.
+
+Fechar isso exige o premio ser calculado no servidor (edge function com `service_role`, ou trigger sobre o evento que gera o ganho) e as RPCs de escrita passarem a `service_role`-only. E mudanca de arquitetura da economia + toca todas as features que hoje premiam no client → **regra 8** (decisao do dono).
+
