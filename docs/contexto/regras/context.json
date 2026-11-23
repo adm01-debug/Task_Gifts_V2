@@ -1,9 +1,9 @@
 {
  "meta": {
-  "sha": "e2dff9237b5860e202c1d1d50099261f2d976c64",
+  "sha": "130795fd0b2a79704757fef9969a351c096bc8c0",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
-  "generated_at": "2026-11-23 11:28 UTC",
+  "generated_at": "2026-11-23 11:50 UTC",
   "files_total": 1549,
   "code_files": 1445,
   "code_lines": 258879
@@ -151310,10 +151310,20 @@
   }
  },
  "git": {
-  "sha": "e2dff9237b5860e202c1d1d50099261f2d976c64",
+  "sha": "130795fd0b2a79704757fef9969a351c096bc8c0",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "commits": [
+   {
+    "sha": "130795f",
+    "date": "2026-11-23",
+    "author": "adm01-debug",
+    "subject": "fix: remove tendências hardcoded em BIDashboard e corrige 'null%' em ExecutiveDashboard",
+    "files": [
+     "src/pages/BIDashboard.tsx",
+     "src/pages/ExecutiveDashboard.tsx"
+    ]
+   },
    {
     "sha": "e2dff92",
     "date": "2026-11-23",
@@ -151680,26 +151690,16 @@
      "bun.lock",
      "package.json"
     ]
-   },
-   {
-    "sha": "0132b7c",
-    "date": "2026-11-21",
-    "author": "dependabot[bot]",
-    "subject": "build(deps): bump the dependencies group with 30 updates (#82)",
-    "files": [
-     "bun.lock",
-     "package.json"
-    ]
    }
   ],
   "hot_files": [
    [
     "bun.lock",
-    7
+    6
    ],
    [
     "package.json",
-    7
+    6
    ],
    [
     "docs/estado/05-edge-functions.md",
