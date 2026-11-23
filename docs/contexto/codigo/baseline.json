@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "b6c89afbe12c20c30d5a611c814531bd7fd2bdfa",
+  "commit": "027cedff3004b7a46d919df324246be046c9e4e0",
   "branch": "main",
-  "data_commit": "2026-11-23T16:41:28-03:00",
+  "data_commit": "2026-11-23T18:08:18-03:00",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "ultimos_commits": [
+   {
+    "sha": "027cedf",
+    "data": "2026-11-23",
+    "assunto": "feat: cria fluxo completo de mentoria (pagina, servico, hooks e missoes) (#122)"
+   },
    {
     "sha": "b6c89af",
     "data": "2026-11-23",
@@ -126,14 +131,9 @@
     "sha": "d04ac2d",
     "data": "2026-11-22",
     "assunto": "feat(edge): contratos zod, 422 unico e versionamento v1/v2 dos webhooks (#99)"
-   },
-   {
-    "sha": "b042057",
-    "data": "2026-11-22",
-    "assunto": "fix: usa JWT de sessao no AI coach em vez do publishable key (#98)"
    }
   ],
-  "arquivos_mudados_7d": 133,
+  "arquivos_mudados_7d": 138,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "supabase/functions/_shared",
@@ -172,6 +172,10 @@
     "mudancas": 5
    },
    {
+    "pasta": "src/App.tsx",
+    "mudancas": 5
+   },
+   {
     "pasta": ".github/workflows/contexto.yml",
     "mudancas": 4
    },
@@ -189,10 +193,6 @@
    },
    {
     "pasta": "scripts/automation.mjs",
-    "mudancas": 4
-   },
-   {
-    "pasta": "src/App.tsx",
     "mudancas": 4
    }
   ],
@@ -219,6 +219,10 @@
    },
    {
     "arquivo": "docs/prod-readiness.md",
+    "mudancas": 5
+   },
+   {
+    "arquivo": "src/App.tsx",
     "mudancas": 5
    },
    {
@@ -251,10 +255,6 @@
    },
    {
     "arquivo": "scripts/automation.mjs",
-    "mudancas": 4
-   },
-   {
-    "arquivo": "src/App.tsx",
     "mudancas": 4
    },
    {
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 90
+    "commits": 91
    },
    {
     "autor": "dependabot[bot]",
@@ -310,21 +310,21 @@
   ]
  },
  "contagens": {
-  "arquivos_total": 1541,
-  "arquivos_codigo": 1166,
-  "linhas_codigo": 228075,
-  "rotas": 83,
+  "arquivos_total": 1545,
+  "arquivos_codigo": 1170,
+  "linhas_codigo": 230218,
+  "rotas": 84,
   "rotas_http_backend": 0,
   "vistas_por_id": 0,
   "itens_menu": 64,
   "modulos": 71,
-  "componentes": 521,
-  "hooks": 155,
+  "componentes": 522,
+  "hooks": 156,
   "edge_functions": 22,
   "tabelas": 237,
   "migrations": 275,
   "cron_jobs": 22,
-  "testes": 161,
+  "testes": 162,
   "workflows": 6,
   "scripts": 16,
   "docs_md": 55
@@ -396,7 +396,7 @@
   },
   "src/App.tsx": {
    "arquivos": 1,
-   "linhas": 334
+   "linhas": 336
   },
   "src/components": {
    "arquivos": 461,
@@ -411,8 +411,8 @@
    "linhas": 520
   },
   "src/hooks": {
-   "arquivos": 129,
-   "linhas": 14556
+   "arquivos": 130,
+   "linhas": 14787
   },
   "src/i18n": {
    "arquivos": 1,
@@ -431,20 +431,20 @@
    "linhas": 80
   },
   "src/pages": {
-   "arquivos": 82,
-   "linhas": 22570
+   "arquivos": 83,
+   "linhas": 23522
   },
   "src/services": {
-   "arquivos": 99,
-   "linhas": 21682
+   "arquivos": 100,
+   "linhas": 22346
   },
   "src/stories": {
    "arquivos": 29,
    "linhas": 7136
   },
   "src/test": {
-   "arquivos": 127,
-   "linhas": 22254
+   "arquivos": 128,
+   "linhas": 22548
   },
   "src/tests": {
    "arquivos": 16,
@@ -509,6 +509,10 @@
    "linhas": 1063
   },
   {
+   "arquivo": "src/pages/Mentoria.tsx",
+   "linhas": 952
+  },
+  {
    "arquivo": "src/i18n/translations.ts",
    "linhas": 945
   },
@@ -539,6 +543,10 @@
   {
    "arquivo": "src/components/ui/skeleton.tsx",
    "linhas": 701
+  },
+  {
+   "arquivo": "src/services/mentorshipService.ts",
+   "linhas": 664
   },
   {
    "arquivo": "src/components/ui/sidebar.tsx",
@@ -575,14 +583,6 @@
   {
    "arquivo": "src/services/trailsService.ts",
    "linhas": 535
-  },
-  {
-   "arquivo": "src/pages/WebhookSubscriptionDetail.tsx",
-   "linhas": 522
-  },
-  {
-   "arquivo": "src/services/salesCampaignsService.ts",
-   "linhas": 512
   }
  ],
  "qualidade": {
@@ -591,7 +591,7 @@
   "ts_ignore": 0,
   "eslint_disable": 0,
   "todos": 1,
-  "arquivos_acima_500_linhas": 25
+  "arquivos_acima_500_linhas": 27
  },
  "todos": [
   {
@@ -611,7 +611,6 @@
    "Criar Nova Meta -> create-goal",
    "Desafios Diários 🎯 -> daily-challenges",
    "Lucky Drops 🎁 -> lucky-drops",
-   "Mentoria -> /mentoria",
    "Menu de Navegação -> sidebar",
    "Micro Quests ⚡ -> micro-quests",
    "Missões do Dia -> missions",

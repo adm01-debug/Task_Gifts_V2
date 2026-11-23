@@ -1,6 +1,6 @@
 # 11 · GLOSSÁRIO, DADOS DE REFERÊNCIA E LACUNAS
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `b6c89afbe1` · branch `main` · 2026-11-23 20:13 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `027cedff30` · branch `main` · 2026-11-23 21:08 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## Glossário do domínio (entidades do sistema)
@@ -307,7 +307,7 @@
 | `TaskCompletionStatus` (TS) | pending \| on_time \| late \| rejected \| rework |  | `src/lib/cardPackTriggers.ts` |
 | `SetClaimRejection` (TS) | unknown_set \| empty_set \| not_reached \| already_claimed |  | `src/lib/cardSetRewards.ts` |
 | `SET_MILESTONES` (TS) | 25, 50, 75, 100 |  | `src/lib/cardSetRewards.ts` |
-| … +99 linhas — lista completa em `context.json` | | | |
+| … +105 linhas — lista completa em `context.json` | | | |
 
 ## Dados de referência (seed — planos, categorias, perfis fixos)
 

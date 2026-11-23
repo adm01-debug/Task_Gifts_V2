@@ -1,7 +1,7 @@
 {
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
- "total": 521,
+ "total": 522,
  "orfaos": 24,
  "nomes_duplicados": {
   "CopilotAlert": [
@@ -44,7 +44,7 @@
     "App"
    ],
    "export_default": "App",
-   "linhas": 334,
+   "linhas": 336,
    "dominio": null,
    "hooks_locais": [
     "useAuth",
@@ -4103,7 +4103,7 @@
    ],
    "tabelas": [],
    "edges": [],
-   "usado_por": 13,
+   "usado_por": 14,
    "orfao": false
   },
   {
@@ -5890,7 +5890,7 @@
    "hooks_locais": [],
    "tabelas": [],
    "edges": [],
-   "usado_por": 12,
+   "usado_por": 13,
    "orfao": false
   },
   {
@@ -5936,7 +5936,7 @@
    "hooks_locais": [],
    "tabelas": [],
    "edges": [],
-   "usado_por": 44,
+   "usado_por": 45,
    "orfao": false
   },
   {
@@ -5951,7 +5951,7 @@
    "hooks_locais": [],
    "tabelas": [],
    "edges": [],
-   "usado_por": 243,
+   "usado_por": 244,
    "orfao": false
   },
   {
@@ -5988,7 +5988,7 @@
    ],
    "tabelas": [],
    "edges": [],
-   "usado_por": 287,
+   "usado_por": 288,
    "orfao": false
   },
   {
@@ -6023,7 +6023,7 @@
    "hooks_locais": [],
    "tabelas": [],
    "edges": [],
-   "usado_por": 291,
+   "usado_por": 292,
    "orfao": false
   },
   {
@@ -6259,7 +6259,7 @@
    "hooks_locais": [],
    "tabelas": [],
    "edges": [],
-   "usado_por": 15,
+   "usado_por": 16,
    "orfao": false
   },
   {
@@ -6328,7 +6328,7 @@
    "hooks_locais": [],
    "tabelas": [],
    "edges": [],
-   "usado_por": 91,
+   "usado_por": 92,
    "orfao": false
   },
   {
@@ -6342,7 +6342,7 @@
    "hooks_locais": [],
    "tabelas": [],
    "edges": [],
-   "usado_por": 79,
+   "usado_por": 80,
    "orfao": false
   },
   {
@@ -6567,7 +6567,7 @@
    "hooks_locais": [],
    "tabelas": [],
    "edges": [],
-   "usado_por": 86,
+   "usado_por": 87,
    "orfao": false
   },
   {
@@ -6659,7 +6659,7 @@
    "hooks_locais": [],
    "tabelas": [],
    "edges": [],
-   "usado_por": 90,
+   "usado_por": 91,
    "orfao": false
   },
   {
@@ -6782,7 +6782,7 @@
    "hooks_locais": [],
    "tabelas": [],
    "edges": [],
-   "usado_por": 154,
+   "usado_por": 155,
    "orfao": false
   },
   {
@@ -6856,7 +6856,7 @@
    "hooks_locais": [],
    "tabelas": [],
    "edges": [],
-   "usado_por": 40,
+   "usado_por": 41,
    "orfao": false
   },
   {
@@ -6894,7 +6894,7 @@
    "hooks_locais": [],
    "tabelas": [],
    "edges": [],
-   "usado_por": 37,
+   "usado_por": 38,
    "orfao": false
   },
   {
@@ -6924,7 +6924,7 @@
    "hooks_locais": [],
    "tabelas": [],
    "edges": [],
-   "usado_por": 55,
+   "usado_por": 56,
    "orfao": false
   },
   {
@@ -7309,7 +7309,7 @@
    ],
    "tabelas": [],
    "edges": [],
-   "usado_por": 98,
+   "usado_por": 100,
    "orfao": false
   },
   {
@@ -8209,6 +8209,37 @@
     "useMemoryPairs",
     "useRBAC",
     "useStartMemorySession"
+   ],
+   "tabelas": [],
+   "edges": [],
+   "usado_por": 1,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/pages/Mentoria.tsx",
+   "exports": [
+    "Mentoria"
+   ],
+   "export_default": "Mentoria",
+   "linhas": 952,
+   "dominio": "pages",
+   "hooks_locais": [
+    "useAllMentorshipMissions",
+    "useAuth",
+    "useCloseMentorshipPair",
+    "useCreateMentorshipMission",
+    "useCreateMentorshipRequest",
+    "useIncomingMentorshipRequests",
+    "useMarkMentorshipPart",
+    "useMentorshipCandidates",
+    "useMentorshipMissions",
+    "useMyMentorshipPairs",
+    "usePairProgress",
+    "useRBAC",
+    "useRespondMentorshipRequest",
+    "useSeedMentorshipMissions",
+    "useSentMentorshipRequests",
+    "useSetMentorshipMissionActive"
    ],
    "tabelas": [],
    "edges": [],

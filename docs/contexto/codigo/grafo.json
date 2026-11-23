@@ -1,20 +1,20 @@
 {
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
- "nos": 1005,
- "arestas": 4336,
+ "nos": 1008,
+ "arestas": 4363,
  "hubs": [
   {
    "arquivo": "src/components/ui/card.tsx",
-   "importado_por": 291
+   "importado_por": 292
   },
   {
    "arquivo": "src/components/ui/button.tsx",
-   "importado_por": 287
+   "importado_por": 288
   },
   {
    "arquivo": "src/components/ui/badge.tsx",
-   "importado_por": 243
+   "importado_por": 244
   },
   {
    "arquivo": "src/lib/utils.ts",
@@ -22,35 +22,35 @@
   },
   {
    "arquivo": "src/integrations/supabase/client.ts",
-   "importado_por": 178
+   "importado_por": 179
   },
   {
    "arquivo": "src/components/ui/skeleton.tsx",
-   "importado_por": 154
+   "importado_por": 155
   },
   {
    "arquivo": "src/services/loggingService.ts",
-   "importado_por": 102
+   "importado_por": 103
   },
   {
    "arquivo": "src/hooks/useAuth.tsx",
-   "importado_por": 100
+   "importado_por": 102
   },
   {
    "arquivo": "src/components/ui/input.tsx",
-   "importado_por": 91
+   "importado_por": 92
   },
   {
    "arquivo": "src/components/ui/select.tsx",
-   "importado_por": 90
+   "importado_por": 91
   },
   {
    "arquivo": "src/components/ui/progress.tsx",
-   "importado_por": 86
+   "importado_por": 87
   },
   {
    "arquivo": "src/components/ui/label.tsx",
-   "importado_por": 79
+   "importado_por": 80
   },
   {
    "arquivo": "src/components/ui/dialog.tsx",
@@ -58,27 +58,27 @@
   },
   {
    "arquivo": "src/components/navigation/index.ts",
-   "importado_por": 58
+   "importado_por": 59
   },
   {
    "arquivo": "src/components/ui/textarea.tsx",
-   "importado_por": 55
+   "importado_por": 56
   },
   {
    "arquivo": "src/components/ui/avatar.tsx",
-   "importado_por": 44
+   "importado_por": 45
   },
   {
    "arquivo": "src/components/SEOHead.tsx",
-   "importado_por": 41
+   "importado_por": 42
   },
   {
    "arquivo": "src/components/ui/switch.tsx",
-   "importado_por": 40
+   "importado_por": 41
   },
   {
    "arquivo": "src/components/ui/tabs.tsx",
-   "importado_por": 37
+   "importado_por": 38
   },
   {
    "arquivo": "src/hooks/useProfiles.ts",
@@ -102,7 +102,7 @@
   },
   {
    "arquivo": "src/hooks/useRBAC.ts",
-   "importado_por": 28
+   "importado_por": 29
   },
   {
    "arquivo": "src/hooks/useDepartments.ts",
@@ -145,6 +145,10 @@
    "importado_por": 18
   },
   {
+   "arquivo": "src/services/profilesService.ts",
+   "importado_por": 18
+  },
+  {
    "arquivo": "src/components/ui/alert.tsx",
    "importado_por": 17
   },
@@ -157,12 +161,8 @@
    "importado_por": 17
   },
   {
-   "arquivo": "src/services/profilesService.ts",
-   "importado_por": 17
-  },
-  {
    "arquivo": "src/components/ui/empty-state.tsx",
-   "importado_por": 15
+   "importado_por": 16
   }
  ],
  "ciclos": {

@@ -5,17 +5,17 @@
   "vitest",
   "playwright"
  ],
- "total": 161,
+ "total": 162,
  "por_tipo": {
   "contrato": 3,
   "e2e": 2,
   "pytest": 2,
-  "unit": 154
+  "unit": 155
  },
  "onde_ficam": [
   {
    "padrao": "co-localizado (*.test)",
-   "arquivos": 145
+   "arquivos": 146
   },
   {
    "padrao": "outro",
@@ -863,6 +863,15 @@
    "casos": 11
   },
   {
+   "arquivo": "src/test/mentorshipService.test.ts",
+   "tipo": "unit",
+   "linhas": 294,
+   "testa": [
+    "src/services/mentorshipService.ts"
+   ],
+   "casos": 13
+  },
+  {
    "arquivo": "src/test/notificationPrefsCrossModule.simulation.test.ts",
    "tipo": "unit",
    "linhas": 193,
@@ -1689,6 +1698,7 @@
   "src/services/kudosService.ts": 1,
   "src/services/leaguesService.ts": 1,
   "src/services/loggingService.ts": 1,
+  "src/services/mentorshipService.ts": 1,
   "src/services/nineBoxService.ts": 1,
   "src/services/notificationsService.ts": 1,
   "src/services/nr1RiskService.ts": 3,
@@ -1763,6 +1773,7 @@
    "src/pages/ManagerDashboard.tsx",
    "src/pages/MemoryDeckAdminPage.tsx",
    "src/pages/MemoryGamePage.tsx",
+   "src/pages/Mentoria.tsx",
    "src/pages/NotFound.tsx",
    "src/pages/Nr1Risks.tsx",
    "src/pages/OpinionChannel.tsx",
@@ -1889,6 +1900,7 @@
    "src/hooks/useLoginLockout.ts",
    "src/hooks/useLuckyWheel.ts",
    "src/hooks/useMemoryGame.ts",
+   "src/hooks/useMentorship.ts",
    "src/hooks/useMissions.ts",
    "src/hooks/useMoodTracker.ts",
    "src/hooks/useNavigationHelpers.ts",

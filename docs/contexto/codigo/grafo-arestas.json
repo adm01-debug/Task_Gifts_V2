@@ -73,6 +73,7 @@
    "src/pages/ManagerDashboard.tsx",
    "src/pages/MemoryDeckAdminPage.tsx",
    "src/pages/MemoryGamePage.tsx",
+   "src/pages/Mentoria.tsx",
    "src/pages/NotFound.tsx",
    "src/pages/Nr1Risks.tsx",
    "src/pages/OpinionChannel.tsx",
@@ -3628,6 +3629,10 @@
    "src/lib/memoryDeckAuthoring.ts",
    "src/services/memoryGameService.ts"
   ],
+  "src/hooks/useMentorship.ts": [
+   "src/hooks/useAuth.tsx",
+   "src/services/mentorshipService.ts"
+  ],
   "src/hooks/useMissions.ts": [
    "src/hooks/useAuth.tsx",
    "src/services/missionsService.ts"
@@ -4754,6 +4759,29 @@
    "src/hooks/useRBAC.ts",
    "src/lib/memoryGame.ts"
   ],
+  "src/pages/Mentoria.tsx": [
+   "src/components/PageWrapper.tsx",
+   "src/components/SEOHead.tsx",
+   "src/components/navigation/index.ts",
+   "src/components/ui/alert-dialog.tsx",
+   "src/components/ui/avatar.tsx",
+   "src/components/ui/badge.tsx",
+   "src/components/ui/button.tsx",
+   "src/components/ui/card.tsx",
+   "src/components/ui/empty-state.tsx",
+   "src/components/ui/input.tsx",
+   "src/components/ui/label.tsx",
+   "src/components/ui/progress.tsx",
+   "src/components/ui/select.tsx",
+   "src/components/ui/skeleton.tsx",
+   "src/components/ui/switch.tsx",
+   "src/components/ui/tabs.tsx",
+   "src/components/ui/textarea.tsx",
+   "src/hooks/useAuth.tsx",
+   "src/hooks/useMentorship.ts",
+   "src/hooks/useRBAC.ts",
+   "src/services/mentorshipService.ts"
+  ],
   "src/pages/NotFound.tsx": [
    "src/components/ui/button.tsx"
   ],
@@ -5500,6 +5528,11 @@
    "src/lib/memoryDeckAuthoring.ts",
    "src/lib/memoryGame.ts",
    "src/services/loggingService.ts"
+  ],
+  "src/services/mentorshipService.ts": [
+   "src/integrations/supabase/client.ts",
+   "src/services/loggingService.ts",
+   "src/services/profilesService.ts"
   ],
   "src/services/missionsService.ts": [
    "src/integrations/supabase/client.ts",

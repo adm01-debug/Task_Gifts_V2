@@ -1,7 +1,7 @@
 {
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
- "total": 155,
+ "total": 156,
  "hooks": [
   {
    "arquivo": "src/components/accessibility/AccessibilityProvider.tsx",
@@ -268,7 +268,7 @@
    "edges": [],
    "hooks_internos": [],
    "canais_realtime": [],
-   "usado_por": 58,
+   "usado_por": 59,
    "usado_por_arquivos": [
     "src/pages/Achievements.tsx",
     "src/pages/ActionPlans.tsx",
@@ -1058,7 +1058,7 @@
     "useState"
    ],
    "canais_realtime": [],
-   "usado_por": 98,
+   "usado_por": 100,
    "usado_por_arquivos": [
     "src/App.tsx",
     "src/components/ActivityComments.tsx",
@@ -2535,6 +2535,42 @@
    "coberto_por_testes": 0
   },
   {
+   "arquivo": "src/hooks/useMentorship.ts",
+   "hooks_exportados": [
+    "useAllMentorshipMissions",
+    "useCloseMentorshipPair",
+    "useCreateMentorshipMission",
+    "useCreateMentorshipRequest",
+    "useIncomingMentorshipRequests",
+    "useMarkMentorshipPart",
+    "useMentorshipCandidates",
+    "useMentorshipMissions",
+    "useMyMentorshipPairs",
+    "usePairProgress",
+    "useRespondMentorshipRequest",
+    "useSeedMentorshipMissions",
+    "useSentMentorshipRequests",
+    "useSetMentorshipMissionActive"
+   ],
+   "linhas": 231,
+   "dominio": "hooks",
+   "tabelas": [],
+   "rpcs": [],
+   "edges": [],
+   "hooks_internos": [
+    "useAuth",
+    "useMutation",
+    "useQuery",
+    "useQueryClient"
+   ],
+   "canais_realtime": [],
+   "usado_por": 1,
+   "usado_por_arquivos": [
+    "src/pages/Mentoria.tsx"
+   ],
+   "coberto_por_testes": 0
+  },
+  {
    "arquivo": "src/hooks/useMissions.ts",
    "hooks_exportados": [
     "useAllMissions",
@@ -3458,7 +3494,7 @@
     "useQuery"
    ],
    "canais_realtime": [],
-   "usado_por": 27,
+   "usado_por": 28,
    "usado_por_arquivos": [
     "src/components/ExecutiveReportPreferenceToggle.tsx",
     "src/components/admin/UsersManager.tsx",
@@ -3480,6 +3516,7 @@
     "src/pages/DepartmentWarPage.tsx",
     "src/pages/LuckyWheelPage.tsx",
     "src/pages/MemoryGamePage.tsx",
+    "src/pages/Mentoria.tsx",
     "src/pages/OpinionChannel.tsx",
     "src/pages/SalesCampaignDetail.tsx",
     "src/pages/SalesCampaigns.tsx",

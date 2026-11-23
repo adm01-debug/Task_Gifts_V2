@@ -17706,13 +17706,13 @@
     "so_na_migration": [],
     "so_no_types": []
    },
-   "usada_no_front": 0,
+   "usada_no_front": 1,
    "usada_em_edges": [],
    "triggers": [
     "update_mentorship_mission_progress_updated_at"
    ],
    "sem_rls": false,
-   "nao_usada": true
+   "nao_usada": false
   },
   "mentorship_missions": {
    "colunas": {
@@ -17829,11 +17829,11 @@
     "so_na_migration": [],
     "so_no_types": []
    },
-   "usada_no_front": 0,
+   "usada_no_front": 1,
    "usada_em_edges": [],
    "triggers": [],
    "sem_rls": false,
-   "nao_usada": true
+   "nao_usada": false
   },
   "mentorship_pairs": {
    "colunas": {
@@ -17948,7 +17948,7 @@
     "so_na_migration": [],
     "so_no_types": []
    },
-   "usada_no_front": 2,
+   "usada_no_front": 3,
    "usada_em_edges": [],
    "triggers": [
     "update_mentorship_pairs_updated_at"
@@ -18053,11 +18053,11 @@
     "so_na_migration": [],
     "so_no_types": []
    },
-   "usada_no_front": 0,
+   "usada_no_front": 1,
    "usada_em_edges": [],
    "triggers": [],
    "sem_rls": false,
-   "nao_usada": true
+   "nao_usada": false
   },
   "module_progress": {
    "colunas": {
@@ -22018,7 +22018,7 @@
      "status"
     ]
    },
-   "usada_no_front": 23,
+   "usada_no_front": 24,
    "usada_em_edges": [
     "admin-alerts",
     "churn-prediction",

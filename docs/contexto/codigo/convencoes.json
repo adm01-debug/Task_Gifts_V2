@@ -3,26 +3,26 @@
  "format_version": 2,
  "onde_ficam": {
   "telas": [
-   "src/pages (81)",
+   "src/pages (82)",
    "src/components (1)"
   ],
   "componentes": [
    "src/components (432)",
-   "src/pages (82)",
+   "src/pages (83)",
    "src/contexts (4)"
   ],
   "hooks": [
-   "src/hooks (129)",
+   "src/hooks (130)",
    "src/components (22)",
    "src/contexts (4)"
   ],
   "servicos_logica": [
    "src/lib (106)",
-   "src/services (99)",
+   "src/services (100)",
    "src/integrations (3)"
   ],
   "testes": [
-   "co-localizado (*.test) (145)",
+   "co-localizado (*.test) (146)",
    "outro (12)",
    "tests/ (3)"
   ],
@@ -48,7 +48,7 @@
  },
  "barrels_index": 16,
  "extensao_componentes": [
-  ".tsx (521)"
+  ".tsx (522)"
  ],
  "alias_imports": {
   "(raiz)": {
@@ -59,11 +59,11 @@
  "commits": {
   "convencao": "conventional commits (observado)",
   "exemplos": [
+   "feat: cria fluxo completo de mentoria (pagina, servico, hooks e missoes) (#122)",
    "chore(docs): registra estado verificado das pendencias em producao (#121)",
    "fix: liga acoes Editar/Excluir sem handler no painel admin (#120)",
    "feat(admin/app): OfflineIndicator global + GoalsManager persistente (Supabase) (#110)",
-   "﻿fix: usa JWT de sessao no trail-recommendations (#119)",
-   "﻿fix(manager): dados reais de departamento, quests e exportacao no dashboard (#118)"
+   "﻿fix: usa JWT de sessao no trail-recommendations (#119)"
   ]
  },
  "pr_template": ".github/PULL_REQUEST_TEMPLATE.md",

@@ -1,12 +1,12 @@
 {
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
- "total": 214,
+ "total": 215,
  "por_camada": {
   "integrations": 3,
   "lib": 106,
   "python": 3,
-  "services": 99,
+  "services": 100,
   "utils": 3
  },
  "arquivos": [
@@ -283,7 +283,7 @@
    "zod_schemas": 0,
    "flags": [],
    "papeis": [],
-   "usado_por": 166,
+   "usado_por": 167,
    "usado_por_modulos": [
     "components",
     "components/admin",
@@ -5673,7 +5673,7 @@
    "zod_schemas": 0,
    "flags": [],
    "papeis": [],
-   "usado_por": 101,
+   "usado_por": 102,
    "usado_por_modulos": [
     "components",
     "components/auth",
@@ -5771,6 +5771,57 @@
     "hooks"
    ],
    "coberto_por_testes": 0,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/services/mentorshipService.ts",
+   "camada": "services",
+   "exports": [
+    "CreateMissionInput",
+    "CreateRequestInput",
+    "DEFAULT_MENTORSHIP_MISSIONS",
+    "MarkMissionPartResult",
+    "MentorshipCandidate",
+    "MentorshipDifficulty",
+    "MentorshipMission",
+    "MentorshipMissionProgress",
+    "MentorshipMissionType",
+    "MentorshipPair",
+    "MentorshipPairStatus",
+    "MentorshipPairWithPeople",
+    "MentorshipPerson",
+    "MentorshipRequest",
+    "MentorshipRequestStatus",
+    "MentorshipRequestType",
+    "MentorshipRequestWithRequester",
+    "MentorshipRole",
+    "MentorshipSentRequest",
+    "mentorshipService"
+   ],
+   "export_default": null,
+   "linhas": 664,
+   "tabelas": [
+    "mentorship_mission_progress",
+    "mentorship_missions",
+    "mentorship_pairs",
+    "mentorship_requests",
+    "profiles"
+   ],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [
+    "mentor"
+   ],
+   "usado_por": 2,
+   "usado_por_modulos": [
+    "hooks",
+    "pages"
+   ],
+   "coberto_por_testes": 1,
    "orfao": false
   },
   {
@@ -6349,7 +6400,7 @@
    "zod_schemas": 0,
    "flags": [],
    "papeis": [],
-   "usado_por": 14,
+   "usado_por": 15,
    "usado_por_modulos": [
     "components/manager",
     "hooks",

@@ -1,7 +1,7 @@
 # Contexto do projeto para agentes de IA
 
 GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.
-Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `b6c89afbe12c20c30d5a611c814531bd7fd2bdfa` (2026-11-23T16:41:28-03:00).
+Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `027cedff3004b7a46d919df324246be046c9e4e0` (2026-11-23T18:08:18-03:00).
 
 ## Como usar (leia antes de planejar ou executar qualquer tarefa)
 1. **Tela/rota/menu** → `rotas.json` (url/vista/menu → arquivo → hooks → tabelas → edges; `rotas_http_backend` para APIs) e `modulos.json` (módulo inteiro + dependências entre módulos).
@@ -14,7 +14,7 @@ Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR
 Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua tarefa; não carregue tudo.
 
 ## Stack
-- linguagens: TypeScript (1138), SQL (275), Markdown (55), JavaScript (24), JSON (14), YAML (9), Python (5), Shell (4)
+- linguagens: TypeScript (1142), SQL (275), Markdown (55), JavaScript (24), JSON (14), YAML (9), Python (5), Shell (4)
 - linguagem_principal: TypeScript
 - framework: React
 - backend_http: n/d
@@ -34,31 +34,31 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 ## Números
 | item | qtd |
 |---|---|
-| arquivos_total | 1541 |
-| arquivos_codigo | 1166 |
-| linhas_codigo | 228075 |
-| rotas | 83 |
+| arquivos_total | 1545 |
+| arquivos_codigo | 1170 |
+| linhas_codigo | 230218 |
+| rotas | 84 |
 | rotas_http_backend | 0 |
 | vistas_por_id | 0 |
 | itens_menu | 64 |
 | modulos | 71 |
-| componentes | 521 |
-| hooks | 155 |
+| componentes | 522 |
+| hooks | 156 |
 | edge_functions | 22 |
 | tabelas | 237 |
 | migrations | 275 |
 | cron_jobs | 22 |
-| testes | 161 |
+| testes | 162 |
 | workflows | 6 |
 | scripts | 16 |
 | docs_md | 55 |
 
 ## Onde ficam as coisas
-- telas: src/pages (81), src/components (1)
-- componentes: src/components (432), src/pages (82), src/contexts (4)
-- hooks: src/hooks (129), src/components (22), src/contexts (4)
-- servicos_logica: src/lib (106), src/services (99), src/integrations (3)
-- testes: co-localizado (*.test) (145), outro (12), tests/ (3)
+- telas: src/pages (82), src/components (1)
+- componentes: src/components (432), src/pages (83), src/contexts (4)
+- hooks: src/hooks (130), src/components (22), src/contexts (4)
+- servicos_logica: src/lib (106), src/services (100), src/integrations (3)
+- testes: co-localizado (*.test) (146), outro (12), tests/ (3)
 - edge_functions: supabase/functions
 - migrations: supabase/migrations
 - scripts: scripts/maintenance (4), scripts/ci (3), scripts/regras_negocio (3)
@@ -96,10 +96,10 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 | components/sidebar | 0 | 0 | 5 | 20 | 2 | 9 |
 | components/trails | 0 | 0 | 5 | 25 | 3 | 22 |
 | components/ui | 0 | 0 | 67 | 12 | 0 | 0 |
-| hooks | 0 | 0 | 129 | 477 | 9 | 155 |
+| hooks | 0 | 0 | 130 | 491 | 9 | 158 |
 | lib | 0 | 0 | 106 | 0 | 0 | 16 |
-| pages | 46 | 82 | 82 | 473 | 14 | 170 |
-| services | 0 | 0 | 96 | 7 | 8 | 162 |
+| pages | 47 | 83 | 83 | 487 | 14 | 173 |
+| services | 0 | 0 | 97 | 7 | 8 | 165 |
 | stories | 0 | 0 | 29 | 5 | 0 | 0 |
 
 ## Rotas (url → arquivo)
@@ -158,6 +158,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - `/manager` [tela] → src/pages/ManagerDashboard.tsx (protegida)
 - `/memoria` [tela] → src/pages/MemoryGamePage.tsx (protegida)
 - `/memoria/admin` [tela] → src/pages/MemoryDeckAdminPage.tsx (protegida)
+- `/mentoria` [tela] → src/pages/Mentoria.tsx (protegida)
 - `/pergunta-do-dia` [tela] → src/pages/DailyWagerPage.tsx (protegida)
 - `/pergunta-do-dia/admin` [tela] → src/pages/WagerQuestionAdminPage.tsx (protegida)
 - `/planos-acao` [tela] → src/pages/ActionPlans.tsx (protegida)
@@ -248,15 +249,15 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - env de integração (só nomes): CRON_SECRET, INTERNAL_FUNCTION_SECRET, OPENROUTER_API_KEY, RESEND_API_KEY, SENTRY_DSN, SENTRY_ENV, SLACK_ALERT_WEBHOOK_URL, UPSTASH_REDIS_REST_TOKEN, UPSTASH_REDIS_REST_URL, VITE_BITRIX_WEBHOOK_URL, VITE_SENTRY_DSN, WEBHOOK_HEALTH_MIN_SAMPLE, WEBHOOK_HEALTH_THRESHOLD
 
 ## Permissões / papéis
-- papéis no código: admin (13), alert (9), user (9), manager (8), system (6), button (5), status (5), assistant (3), group (3), grid (2), navigation (2), radio (2), radiogroup (2), Cargos (1), banner (1), contentinfo (1), dialog (1), gridcell (1), img (1), link (1), list (1), listitem (1), long (1), menu (1), menuitem (1), presentation (1), region (1), robot (1), role_assigned (1), separator (1), short (1), tab (1)
+- papéis no código: admin (13), alert (9), user (9), manager (8), system (6), button (5), status (5), assistant (3), group (3), grid (2), mentor (2), navigation (2), radio (2), radiogroup (2), Cargos (1), banner (1), contentinfo (1), dialog (1), gridcell (1), img (1), link (1), list (1), listitem (1), long (1), menu (1), menuitem (1), presentation (1), region (1), robot (1), role_assigned (1), separator (1), short (1), tab (1)
 - enums de papel: app_role: admin|manager|employee
-- guards: src/components/IpAccessGuard.tsx, src/components/engagement/diagnostics/AnonymityGuardNotice.tsx, src/components/rbac/AccessControl.tsx, src/components/rbac/ProtectedRoute.tsx · rotas protegidas: 78 · públicas: /*, /forgot-password, /reset-password, /verificar, /verificar/:code
+- guards: src/components/IpAccessGuard.tsx, src/components/engagement/diagnostics/AnonymityGuardNotice.tsx, src/components/rbac/AccessControl.tsx, src/components/rbac/ProtectedRoute.tsx · rotas protegidas: 79 · públicas: /*, /forgot-password, /reset-password, /verificar, /verificar/:code
 - feature flags: nenhuma
 
 ## Alertas (baseline.json → alertas)
 - rotas_sem_arquivo: 0
 - componentes_ambiguos: 0
-- menu_sem_destino: 18 — ex.: Ações Rápidas -> quick-actions, Acompanhe o Progresso -> goal-progress, Bem-vindo ao Dashboard! 🎉 -> welcome
+- menu_sem_destino: 17 — ex.: Ações Rápidas -> quick-actions, Acompanhe o Progresso -> goal-progress, Bem-vindo ao Dashboard! 🎉 -> welcome
 - edges_orfas: 0
 - edges_chamadas_sem_pasta: 0
 - tabelas_sem_rls: 1 — ex.: lucky_wheel_prizes
@@ -271,9 +272,9 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - possiveis_segredos_no_codigo: 0
 
 ## Grafo de código (graphify)
-- 10091 nós · 28087 arestas · 632 comunidades · grafo do commit `b6c89afb`
-- comunidades maiores: card.tsx (220), App.tsx (179), cn (129), react (125), button.tsx (117), useProfiles.ts (117), sonner (113), QuizAdmin.tsx (112), @tanstack/react-query (102), useDepartments.ts (95), SecurityDashboard.tsx (90), contracts/index.ts (86)
-- símbolos mais chamados: cn() (src/lib/utils.ts), useAuth() (src/hooks/useAuth.tsx), useIsMobile() (src/hooks/use-mobile.tsx), q() (scripts/supabase_snapshot/snapshot.py), useDepartments() (src/hooks/useDepartments.ts), useToast() (src/hooks/use-toast.ts), useRBAC() (src/hooks/useRBAC.ts), useProfiles() (src/hooks/useProfiles.ts), useSEO() (src/hooks/useSEO.ts), useSoundEffects() (src/hooks/useSoundEffects.tsx), .collect() (scripts/supabase_snapshot/test_snapshot.py), downloadCSV() (src/lib/csvExport.ts)
+- 10151 nós · 28279 arestas · 652 comunidades · grafo do commit `027cedff`
+- comunidades maiores: card.tsx (298), react (262), lucide-react (238), framer-motion (210), cn (131), mobile/index.ts (91), App.tsx (90), contracts/index.ts (86), useAuth (83), gerar.mjs (79), ref_https (77), ManagerDashboard.tsx (77)
+- símbolos mais chamados: cn() (src/lib/utils.ts), useAuth() (src/hooks/useAuth.tsx), useIsMobile() (src/hooks/use-mobile.tsx), q() (scripts/supabase_snapshot/snapshot.py), useDepartments() (src/hooks/useDepartments.ts), useRBAC() (src/hooks/useRBAC.ts), useToast() (src/hooks/use-toast.ts), useProfiles() (src/hooks/useProfiles.ts), useSEO() (src/hooks/useSEO.ts), useSoundEffects() (src/hooks/useSoundEffects.tsx), .collect() (scripts/supabase_snapshot/test_snapshot.py), downloadCSV() (src/lib/csvExport.ts)
 - consulta local: `graphify query "<pergunta>"`, `graphify path "<A>" "<B>"`, `graphify explain "<X>"`
 
 ## Hotspots (arquivos mais alterados, 90 dias)
@@ -283,6 +284,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - docs/estado/05-edge-functions.md (6)
 - AGENTS.md (5)
 - docs/prod-readiness.md (5)
+- src/App.tsx (5)
 - supabase/config.toml (5)
 - supabase/functions/_shared/contracts/_fixtures/index.ts (5)
 - vercel.json (5)
@@ -291,7 +293,6 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - docs/agentes/github-ci.md (4)
 - docs/agentes/mapa-repo.md (4)
 - scripts/automation.mjs (4)
-- src/App.tsx (4)
 
 ## Workflows
 - `automation-local.yml` — Automação local (pull_request, push, workflow_dispatch)
@@ -358,6 +359,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 
 
 ## Últimos commits
+- 2026-11-23 `027cedf` feat: cria fluxo completo de mentoria (pagina, servico, hooks e missoes) (#122)
 - 2026-11-23 `b6c89af` chore(docs): registra estado verificado das pendencias em producao (#121)
 - 2026-11-23 `046ebeb` fix: liga acoes Editar/Excluir sem handler no painel admin (#120)
 - 2026-11-23 `455eeb6` feat(admin/app): OfflineIndicator global + GoalsManager persistente (Supabase) (#110)
@@ -372,7 +374,6 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - 2026-11-23 `130795f` fix: remove tendências hardcoded em BIDashboard e corrige 'null%' em ExecutiveDashboard
 - 2026-11-23 `e2dff92` fix(shop/rbac): desconto flash sale cobrado + toast false success em permissões (#109)
 - 2026-11-23 `87508de` build(deps-dev): bump @testing-library/jest-dom from 7.0.1 to 8.0.0 (#108)
-- 2026-11-23 `095c05b` build(deps): bump the dependencies group with 13 updates (#107)
 
 ## Arquivos deste diretório
 - `docs/contexto/codigo/rotas.json`

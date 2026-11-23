@@ -1,11 +1,11 @@
 # 10 · ACESSO E SEGURANÇA — quem pode o quê
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `b6c89afbe1` · branch `main` · 2026-11-23 20:13 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `027cedff30` · branch `main` · 2026-11-23 21:08 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## Perfis / roles identificados
 
-`admin`, `assistant`, `default`, `denied`, `employee`, `granted`, `key`, `long`, `manager`, `permission`, `user`
+`admin`, `assistant`, `default`, `denied`, `employee`, `granted`, `key`, `long`, `manager`, `mentor`, `permission`, `user`
 
 - Tabelas de perfil/permissão: `user_roles`, `team_members`, `permissions`, `roles`, `role_permissions`, `org_members`, `campaign_team_members`, `permission_groups`, `user_permission_groups`
 - Colunas de perfil: `user_roles.role` (app_role NOT NULL DEFAULT 'employee'), `ai_coach_messages.role` (text NOT NULL CHECK (role IN ('user', 'assistant'))), `pdi_mentors.role` (TEXT DEFAULT 'mentor'), `org_members.role` (TEXT NOT NULL DEFAULT 'member' CHECK (role IN ('admin','member')))
@@ -701,6 +701,7 @@
 | /manager | ProtectedRoute | manager | `src/App.tsx` |
 | /memoria | ProtectedRoute |  | `src/App.tsx` |
 | /memoria/admin | ProtectedRoute | admin | `src/App.tsx` |
+| /mentoria | ProtectedRoute |  | `src/App.tsx` |
 | /pergunta-do-dia | ProtectedRoute |  | `src/App.tsx` |
 | /pergunta-do-dia/admin | ProtectedRoute | admin | `src/App.tsx` |
 | /planos-acao | ProtectedRoute | manager | `src/App.tsx` |
@@ -783,7 +784,7 @@ Middleware matcher (Next.js): nenhum
 | `notification_preferences` | acessada do front (3 arquivo(s)) sem RLS (não encontrado) | `src/components/InAppNotificationToggle.tsx`<br>`src/hooks/useTypePreferences.ts`<br>`src/services/salesCampaignsService.ts` |
 | `pdi_mentors` | front faz DELETE mas nenhuma política RLS permite DELETE → vai falhar/retornar vazio para usuários | `src/services/pdiService.ts` |
 | `pdi_templates` | front faz INSERT mas nenhuma política RLS permite INSERT → vai falhar/retornar vazio para usuários | `src/services/pdiService.ts` |
-| `profiles` | front faz SELECT mas nenhuma política RLS permite SELECT → vai falhar/retornar vazio para usuários | `src/hooks/usePDIAlerts.ts`<br>`src/hooks/useUserRank.ts`<br>`src/hooks/useWeeklyChallenge.ts`<br>`src/pages/Auth.tsx`<br>… +18 |
+| `profiles` | front faz SELECT mas nenhuma política RLS permite SELECT → vai falhar/retornar vazio para usuários | `src/hooks/usePDIAlerts.ts`<br>`src/hooks/useUserRank.ts`<br>`src/hooks/useWeeklyChallenge.ts`<br>`src/pages/Auth.tsx`<br>… +19 |
 | `profiles_public` | acessada do front (5 arquivo(s)) sem RLS (não encontrado) | `src/services/campaignTeamsService.ts`<br>`src/services/luckyWheelService.ts`<br>`src/services/profilesService.ts`<br>`src/services/salesCampaignsService.ts`<br>… +1 |
 | `roles` | front faz INSERT mas nenhuma política RLS permite INSERT → vai falhar/retornar vazio para usuários | `src/services/rbacService.ts` |
 | `roles` | front faz UPDATE mas nenhuma política RLS permite UPDATE → vai falhar/retornar vazio para usuários | `src/services/rbacService.ts` |

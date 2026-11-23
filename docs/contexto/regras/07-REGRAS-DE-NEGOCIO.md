@@ -1,6 +1,6 @@
 # 07 · REGRAS DE NEGÓCIO
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `b6c89afbe1` · branch `main` · 2026-11-23 20:13 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `027cedff30` · branch `main` · 2026-11-23 21:08 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## A. Regras escritas por humanos (`manual/` — prioridade máxima, nunca sobrescrito)
@@ -1165,6 +1165,7 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `role` | `assistant` | compara, escreve | `src/components/AICoachDialog.tsx`<br>`src/hooks/useAICoach.ts`<br>`supabase/functions/_shared/contracts/_fixtures/index.ts` |
 | `role` | `long` | compara, escreve | `src/pages/BurnRate.tsx` |
 | `role` | `manager` | compara | `supabase/functions/reward-approval-review/index.ts` |
+| `role` | `mentor` | compara | `src/pages/Mentoria.tsx`<br>`src/services/mentorshipService.ts` |
 | `role` | `robot` | escreve | `supabase/functions/_shared/contracts/_fixtures/index.ts` |
 | `role` | `short` | escreve | `src/pages/BurnRate.tsx` |
 | `role` | `system` | escreve | `supabase/functions/ai-coach/index.ts`<br>`supabase/functions/ai-course-builder/index.ts`<br>`supabase/functions/churn-prediction/index.ts`<br>`supabase/functions/generate-quiz-questions/index.ts`<br>`supabase/functions/reward-approval-review/index.ts`<br>… +1 |
@@ -1175,8 +1176,8 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `status` | `Online` | escreve | `src/stories/user/AvatarAndProfile.stories.tsx` |
 | `status` | `SUBSCRIBED` | compara | `src/hooks/useNotifications.ts` |
 | `status` | `absent` | compara, escreve | `src/components/AttendanceCalendar.tsx` |
-| `status` | `accepted` | compara | `src/components/duels/DuelCard.tsx` |
-| `status` | `active` | compara, escreve, filtra | `src/components/CertificationsPanel.tsx`<br>`src/components/GoalsWidget.tsx`<br>`src/components/MyDevelopmentPlanWidget.tsx`<br>`src/components/TeamChallenges.tsx`<br>`src/components/admin/DevelopmentPlanManager.tsx`<br>… +37 |
+| `status` | `accepted` | compara, escreve | `src/components/duels/DuelCard.tsx`<br>`src/hooks/useMentorship.ts`<br>`src/pages/Mentoria.tsx`<br>`src/services/mentorshipService.ts` |
+| `status` | `active` | compara, escreve, filtra | `src/components/CertificationsPanel.tsx`<br>`src/components/GoalsWidget.tsx`<br>`src/components/MyDevelopmentPlanWidget.tsx`<br>`src/components/TeamChallenges.tsx`<br>`src/components/admin/DevelopmentPlanManager.tsx`<br>… +39 |
 | `status` | `all` | compara | `src/components/PushNotificationHistory.tsx`<br>`src/components/manager/QuestsList.tsx`<br>`src/services/actionPlansService.ts` |
 | `status` | `anomaly` | compara | `src/lib/luckyWheelPayout.ts` |
 | `status` | `applied` | compara, filtra | `src/components/campaigns/CampaignImportHistory.tsx`<br>`src/services/campaignImportService.ts` |
@@ -1188,7 +1189,7 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `status` | `bye` | compara | `src/components/tournament/TournamentBracketView.tsx`<br>`src/pages/TournamentsPage.tsx` |
 | `status` | `cancelled` | compara, escreve | `src/components/checkins/CheckinCard.tsx`<br>`src/components/duels/DuelCard.tsx`<br>`src/components/shop-admin/PurchaseGovernanceDialog.tsx`<br>`src/lib/auctionAdmin.ts`<br>`src/services/duelsService.ts`<br>… +1 |
 | `status` | `closed` | compara, escreve | `src/components/admin/SurveyCreator.tsx`<br>`src/components/auction/AuctionCard.tsx`<br>`src/lib/auctionAdmin.ts`<br>`src/services/pulseSurveysService.ts` |
-| `status` | `completed` | compara, escreve, filtra | `src/components/GoalsWidget.tsx`<br>`src/components/MyDevelopmentPlanWidget.tsx`<br>`src/components/admin/DevelopmentPlanManager.tsx`<br>`src/components/admin/pdi/PlanDetailView.tsx`<br>`src/components/campaigns/CampaignTeamSplitTrail.tsx`<br>… +21 |
+| `status` | `completed` | compara, escreve, filtra | `src/components/GoalsWidget.tsx`<br>`src/components/MyDevelopmentPlanWidget.tsx`<br>`src/components/admin/DevelopmentPlanManager.tsx`<br>`src/components/admin/pdi/PlanDetailView.tsx`<br>`src/components/campaigns/CampaignTeamSplitTrail.tsx`<br>… +22 |
 | `status` | `critical` | compara | `src/lib/luckyWheelPayoutHistory.ts`<br>`src/pages/ErrorBudget.tsx` |
 | `status` | `decided` | compara | `src/components/tournament/TournamentBracketView.tsx`<br>`src/pages/TournamentsPage.tsx` |
 | `status` | `declined` | compara, escreve | `src/components/duels/DuelCard.tsx`<br>`src/services/duelsService.ts` |
@@ -1222,14 +1223,14 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `status` | `online` | escreve | `src/stories/data-display/StatsAndTables.stories.tsx` |
 | `status` | `open` | compara, escreve | `src/components/prediction/PredictionAdminRow.tsx`<br>`src/components/prediction/PredictionMarketCard.tsx`<br>`src/lib/goalBetCountdown.ts`<br>`src/lib/goalBetFilter.ts`<br>`src/lib/goalBetStakePreview.ts`<br>… +4 |
 | `status` | `opened` | compara | `src/components/cards/PackList.tsx` |
-| `status` | `pending` | compara, escreve, filtra | `src/components/admin/PasswordResetApprovalPanel.tsx`<br>`src/components/cards/TradeInbox.tsx`<br>`src/components/duels/DuelCard.tsx`<br>`src/components/engagement/plans/ActionPlanItemList.tsx`<br>`src/components/shop-admin/PurchaseGovernanceDialog.tsx`<br>… +22 |
+| `status` | `pending` | compara, escreve, filtra | `src/components/admin/PasswordResetApprovalPanel.tsx`<br>`src/components/cards/TradeInbox.tsx`<br>`src/components/duels/DuelCard.tsx`<br>`src/components/engagement/plans/ActionPlanItemList.tsx`<br>`src/components/shop-admin/PurchaseGovernanceDialog.tsx`<br>… +24 |
 | `status` | `processing` | compara, escreve, filtra | `src/components/trails/AICourseBuilderDialog.tsx`<br>`src/lib/pushOutbox.ts`<br>`supabase/functions/_shared/webhookSecurity.ts`<br>`supabase/functions/ai-course-builder/index.ts` |
 | `status` | `published` | compara, filtra | `src/pages/Postmortems.tsx`<br>`src/services/trailsService.ts`<br>`supabase/functions/trail-recommendations/index.ts` |
 | `status` | `punctual` | compara | `src/components/AttendanceCalendar.tsx` |
 | `status` | `ready` | compara | `src/components/tournament/TournamentBracketView.tsx` |
 | `status` | `refunded` | compara | `src/components/auction/AuctionCard.tsx` |
 | `status` | `registration` | compara | `src/pages/TournamentsPage.tsx` |
-| `status` | `rejected` | compara | `src/hooks/useAdminUsers.ts` |
+| `status` | `rejected` | compara, escreve | `src/hooks/useAdminUsers.ts`<br>`src/services/mentorshipService.ts` |
 | `status` | `revealed` | compara | `src/pages/ScratchCardPage.tsx` |
 | `status` | `reverted` | compara | `src/lib/campaignTeamSplitRevert.ts` |
 | `status` | `revoked` | compara | `src/components/push/PushDeviceList.tsx`<br>`src/lib/pushDevices.ts`<br>`supabase/migrations/20251213164818_77e12a61-a727-4556-b33b-03828d080ab1.sql` |
@@ -1426,6 +1427,12 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | LightningDifficulty | easy \| medium \| hard | `src/services/lightningQuizService.ts` |
 | LuckyWheelPrizeType | coins \| xp \| achievement \| nothing | `src/services/luckyWheelService.ts` |
 | LuckyWheelRarity | common \| rare \| epic \| legendary | `src/services/luckyWheelService.ts` |
+| MentorshipRequestType | find_mentor \| find_apprentice \| specific | `src/services/mentorshipService.ts` |
+| MentorshipRequestStatus | pending \| accepted \| rejected \| expired | `src/services/mentorshipService.ts` |
+| MentorshipPairStatus | pending \| active \| completed \| cancelled | `src/services/mentorshipService.ts` |
+| MentorshipMissionType | mentor_only \| apprentice_only \| collaborative | `src/services/mentorshipService.ts` |
+| MentorshipDifficulty | easy \| medium \| hard | `src/services/mentorshipService.ts` |
+| MentorshipRole | mentor \| apprentice | `src/services/mentorshipService.ts` |
 | Nr1RiskLevel | critical \| high \| moderate \| low | `src/services/nr1RiskService.ts` |
 | OpinionScope | mine \| queue | `src/services/opinionsService.ts` |
 | PredictionMarketStatus | draft \| open \| locked \| settled \| voided | `src/services/predictionMarketService.ts` |
@@ -1874,6 +1881,8 @@ _nenhum item encontrado_
 | `pp-abs` | type=number, min=1, max=100, step=1 | `src/pages/ExecutiveMonthlyReport.tsx` |
 | `active-users` | type=number, min=0 | `src/pages/LuckyWheelAdmin.tsx` |
 | `participation` | type=number, min=0, max=100 | `src/pages/LuckyWheelAdmin.tsx` |
+| `mission-xp` | type=number, min=0 | `src/pages/Mentoria.tsx` |
+| `mission-coins` | type=number, min=0 | `src/pages/Mentoria.tsx` |
 | `wager-question` | disabled=isLocked | `src/pages/WagerQuestionAdminPage.tsx` |
 | `wager-date` | type=date, disabled=isLocked | `src/pages/WagerQuestionAdminPage.tsx` |
 | `wager-multiplier` | type=number, step=0.1, min=1.1, max=5, disabled=isLocked | `src/pages/WagerQuestionAdminPage.tsx` |
@@ -2930,6 +2939,7 @@ _nenhum item encontrado_
 | `RESULT_PAGE_SIZE` | `1000` | `src/services/campaignImportService.ts` |
 | `MIN_RESPONDENTS` | `5` | `src/services/engagementDiagnosticsService.ts` |
 | `DECK_COLUMNS` | `"id, title, description, department_id, is_active"` | `src/services/memoryGameService.ts` |
+| `CANDIDATE_COLUMNS` | `"id, display_name, avatar_url, level, xp"` | `src/services/mentorshipService.ts` |
 | `MAX_BUDGET` | `10` | `src/services/wagerBudgetService.ts` |
 | `MAX_PLAYERS` | `100` | `src/services/wagerBudgetService.ts` |
 | `VALIDATION_ERROR_STATUS` | `422` | `supabase/functions/_shared/validation.ts` |
@@ -3180,6 +3190,7 @@ _nenhum item encontrado_
 | 1 | `src/services/leaguesService.ts` |
 | 10 | `src/services/lightningQuizService.ts` |
 | 400 | `src/services/luckyWheelService.ts` |
+| 30 | `src/services/mentorshipService.ts` |
 | 1 | `src/services/nineBoxService.ts` |
 | 1 | `src/services/oneOnOnePreparationService.ts` |
 | 10 | `src/services/oneOnOnePreparationService.ts` |
@@ -3500,7 +3511,7 @@ _nenhum item encontrado_
 | Muitas tentativas. Aguarde alguns minutos. | `src/pages/ForgotPassword.tsx` |
 | Título obrigatório | `src/pages/Goals.tsx` |
 | Informe o alert_type | `src/pages/IncidentMetrics.tsx` |
-| … +174 linhas — lista completa em `context.json` | |
+| … +184 linhas — lista completa em `context.json` | |
 
 ## J. Controle de acesso no código (checagens de perfil/permissão)
 
@@ -3522,9 +3533,11 @@ _nenhum item encontrado_
 | `long` | `src/pages/BurnRate.tsx` |
 | `admin` | `src/pages/LuckyWheelPage.tsx` |
 | `admin` | `src/pages/MemoryGamePage.tsx` |
+| `mentor` | `src/pages/Mentoria.tsx` |
 | `manager` | `src/pages/SalesCampaignDetail.tsx` |
 | `admin` | `src/pages/SalesCampaigns.tsx` |
 | `manager` | `src/pages/SalesCampaigns.tsx` |
+| `mentor` | `src/services/mentorshipService.ts` |
 | `admin` | `src/services/rbacService.ts` |
 | `permissionKey` | `src/services/rbacService.ts` |
 | `admin` | `supabase/functions/churn-prediction/index.ts` |
@@ -3556,7 +3569,7 @@ _nenhum item encontrado_
 | `admin` | `supabase/migrations/20261122140000_acknowledge_security_digest.sql` |
 | `manager` | `supabase/migrations/20261122140000_acknowledge_security_digest.sql` |
 
-## K. Testes como especificação (1970 testes em 149 arquivos — nomes completos em `context.json`)
+## K. Testes como especificação (1987 testes em 150 arquivos — nomes completos em `context.json`)
 
 | Arquivo | Testes | Exemplos do que o sistema DEVE fazer |
 |---|---|---|
@@ -3599,6 +3612,7 @@ _nenhum item encontrado_
 | `src/test/warLeadership.simulation.test.ts` | 18 | buildLeadSnapshot — saneamento · descarta lixo e valores hostis · reindexa posicoes por score, com desempate estavel · nao quebra com entrada nao-array … |
 | `src/test/bossBattlePlanner.simulation.test.ts` | 17 | windowDays · retorna 0 para janelas invertidas ou inválidas · arredonda janelas parciais para cima · projectCapacity … |
 | `src/test/memoryDeckAuthoring.simulation.test.ts` | 17 | normalização · colapsa espaços e remove pontas · compara ignorando caixa e acento · validateDeckDraft … |
+| `src/test/mentorshipService.test.ts` | 17 | markMyPart · não concede recompensa duas vezes para a mesma parte · usa o valor da missão do banco e não fecha a missão colaborativa com um lado só · liquida a missão e soma os totais da dupla quando todos os lados exigidos concluem … |
 | `src/test/notificationTypePrefs.simulation.test.ts` | 17 | normalizeTypePrefs · trata entradas invalidas como objeto vazio · descarta canais nao booleanos e prioridade vazia · preserva prioridade valida … |
 | `src/test/sequenceGame.simulation.test.ts` | 17 | shuffleSteps · preserva o conjunto de etapas e é determinístico · nunca entrega a ordem correta de saída · tolera listas triviais e posições fora de ordem na origem … |
 | `src/test/unifiedDevices.simulation.test.ts` | 17 | fingerprint — estabilidade e unicidade · é determinística para os mesmos sinais · muda quando qualquer sinal muda · nunca estoura com unicode nem com sinais ausentes … |

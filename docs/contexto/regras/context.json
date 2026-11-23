@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "b6c89afbe12c20c30d5a611c814531bd7fd2bdfa",
+  "sha": "027cedff3004b7a46d919df324246be046c9e4e0",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
-  "generated_at": "2026-11-23 20:13 UTC",
-  "files_total": 1551,
-  "code_files": 1447,
-  "code_lines": 259654
+  "generated_at": "2026-11-23 21:08 UTC",
+  "files_total": 1555,
+  "code_files": 1451,
+  "code_lines": 261797
  },
  "version": "1.3.2",
- "facts_hash": "63be8a2756a9a802",
+ "facts_hash": "d34a125d5447e4fd",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -194,8 +194,8 @@
   ],
   "package_manager": "bun",
   "languages": {
-   ".ts": 575,
-   ".tsx": 565,
+   ".ts": 578,
+   ".tsx": 566,
    ".sql": 275,
    ".mjs": 21,
    ".js": 5,
@@ -43266,6 +43266,35 @@
    },
    {
     "path": "",
+    "file": "src/pages/Mentoria.tsx",
+    "component": "Mentoria",
+    "tables_transitive": [
+     "audit_logs",
+     "mentorship_mission_progress",
+     "mentorship_missions",
+     "mentorship_pairs",
+     "mentorship_requests",
+     "new_device_alerts",
+     "notifications",
+     "profiles",
+     "profiles_public",
+     "role_permissions",
+     "roles",
+     "user_devices",
+     "user_roles"
+    ],
+    "invokes_transitive": [],
+    "rpc_transitive": [
+     "add_coins",
+     "add_xp",
+     "get_my_profile_private",
+     "increment_quests_completed",
+     "increment_streak"
+    ],
+    "deps_count": 52
+   },
+   {
+    "path": "",
     "file": "src/pages/Nr1Risks.tsx",
     "component": "Nr1Risks",
     "tables_transitive": [
@@ -45273,6 +45302,13 @@
     "file": "src/App.tsx"
    },
    {
+    "path": "/mentoria",
+    "component": "PageTransition",
+    "guard": "ProtectedRoute",
+    "roles": [],
+    "file": "src/App.tsx"
+   },
+   {
     "path": "/old",
     "component": "Navigate",
     "guard": "",
@@ -46664,6 +46700,62 @@
     "file": "src/hooks/useMemoryGame.ts"
    },
    {
+    "name": "useMentorshipMissions",
+    "file": "src/hooks/useMentorship.ts"
+   },
+   {
+    "name": "useAllMentorshipMissions",
+    "file": "src/hooks/useMentorship.ts"
+   },
+   {
+    "name": "useMyMentorshipPairs",
+    "file": "src/hooks/useMentorship.ts"
+   },
+   {
+    "name": "usePairProgress",
+    "file": "src/hooks/useMentorship.ts"
+   },
+   {
+    "name": "useIncomingMentorshipRequests",
+    "file": "src/hooks/useMentorship.ts"
+   },
+   {
+    "name": "useSentMentorshipRequests",
+    "file": "src/hooks/useMentorship.ts"
+   },
+   {
+    "name": "useMentorshipCandidates",
+    "file": "src/hooks/useMentorship.ts"
+   },
+   {
+    "name": "useMarkMentorshipPart",
+    "file": "src/hooks/useMentorship.ts"
+   },
+   {
+    "name": "useCreateMentorshipRequest",
+    "file": "src/hooks/useMentorship.ts"
+   },
+   {
+    "name": "useRespondMentorshipRequest",
+    "file": "src/hooks/useMentorship.ts"
+   },
+   {
+    "name": "useCloseMentorshipPair",
+    "file": "src/hooks/useMentorship.ts"
+   },
+   {
+    "name": "useCreateMentorshipMission",
+    "file": "src/hooks/useMentorship.ts"
+   },
+   {
+    "name": "useSetMentorshipMissionActive",
+    "file": "src/hooks/useMentorship.ts"
+   },
+   {
+    "name": "useSeedMentorshipMissions",
+    "file": "src/hooks/useMentorship.ts"
+   },
+   {
     "name": "useDepartmentMissions",
     "file": "src/hooks/useMissions.ts"
    },
@@ -47904,6 +47996,10 @@
    },
    {
     "guard": "ProtectedRoute",
+    "file": "src/App.tsx"
+   },
+   {
+    "guard": "ProtectedRoute",
     "file": "src/components/rbac/ProtectedRoute.tsx"
    },
    {
@@ -48136,7 +48232,7 @@
   {
    "module": "src",
    "files": 3,
-   "lines": 416,
+   "lines": 418,
    "tables": [],
    "exports": [
     "App.tsx: App"
@@ -48400,8 +48496,8 @@
   },
   {
    "module": "src/hooks",
-   "files": 129,
-   "lines": 14556,
+   "files": 130,
+   "lines": 14787,
    "tables": [
     "certifications",
     "development_plan_actions",
@@ -48549,6 +48645,7 @@
     "src/hooks/useLoginLockout.ts",
     "src/hooks/useLuckyWheel.ts",
     "src/hooks/useMemoryGame.ts",
+    "src/hooks/useMentorship.ts",
     "src/hooks/useMissions.ts",
     "src/hooks/useMoodTracker.ts",
     "src/hooks/useNavigationHelpers.ts",
@@ -48560,8 +48657,7 @@
     "src/hooks/useOneOnOnePreparation.ts",
     "src/hooks/useOnlineStatus.ts",
     "src/hooks/useOpinions.ts",
-    "src/hooks/useOrganization.ts",
-    "src/hooks/usePDI.ts"
+    "src/hooks/useOrganization.ts"
    ]
   },
   {
@@ -48763,8 +48859,8 @@
   },
   {
    "module": "src/pages",
-   "files": 82,
-   "lines": 22570,
+   "files": 83,
+   "lines": 23522,
    "tables": [
     "audit_logs",
     "campaign_participants",
@@ -48902,6 +48998,7 @@
     "src/pages/ManagerDashboard.tsx",
     "src/pages/MemoryDeckAdminPage.tsx",
     "src/pages/MemoryGamePage.tsx",
+    "src/pages/Mentoria.tsx",
     "src/pages/NotFound.tsx",
     "src/pages/Nr1Risks.tsx",
     "src/pages/OpinionChannel.tsx",
@@ -48934,14 +49031,13 @@
     "src/pages/TournamentsPage.tsx",
     "src/pages/TrailDetail.tsx",
     "src/pages/WagerQuestionAdminPage.tsx",
-    "src/pages/WebhookSubscriptionDetail.tsx",
-    "src/pages/WebhookSubscriptionNew.tsx"
+    "src/pages/WebhookSubscriptionDetail.tsx"
    ]
   },
   {
    "module": "src/services",
-   "files": 99,
-   "lines": 21682,
+   "files": 100,
+   "lines": 22346,
    "tables": [
     "achievements",
     "action_plan_items",
@@ -49027,7 +49123,10 @@
     "memory_decks",
     "memory_pairs",
     "memory_sessions",
+    "mentorship_mission_progress",
+    "mentorship_missions",
     "mentorship_pairs",
+    "mentorship_requests",
     "module_progress",
     "mood_entries",
     "nine_box_evaluations",
@@ -49211,6 +49310,7 @@
     "src/services/loggingService.ts",
     "src/services/luckyWheelService.ts",
     "src/services/memoryGameService.ts",
+    "src/services/mentorshipService.ts",
     "src/services/missionsService.ts",
     "src/services/moodTrackerService.ts",
     "src/services/nineBoxService.ts",
@@ -49238,8 +49338,7 @@
     "src/services/quizStatsService.ts",
     "src/services/rbacService.ts",
     "src/services/salesCampaignsService.ts",
-    "src/services/scratchCardService.ts",
-    "src/services/seasonalEventsService.ts"
+    "src/services/scratchCardService.ts"
    ]
   },
   {
@@ -49323,8 +49422,8 @@
   },
   {
    "module": "src/test",
-   "files": 127,
-   "lines": 22254,
+   "files": 128,
+   "lines": 22548,
    "tables": [
     "kudos",
     "profiles"
@@ -49432,10 +49531,10 @@
     "src/test/luckyWheelWhatIfSignature.simulation.test.ts",
     "src/test/memoryDeckAuthoring.simulation.test.ts",
     "src/test/memoryGame.simulation.test.ts",
+    "src/test/mentorshipService.test.ts",
     "src/test/notificationPrefsCrossModule.simulation.test.ts",
     "src/test/notificationTypePrefs.simulation.test.ts",
-    "src/test/npsHistory.simulation.test.ts",
-    "src/test/nr1ActionPlan.simulation.test.ts"
+    "src/test/npsHistory.simulation.test.ts"
    ]
   },
   {
@@ -50679,10 +50778,50 @@
      "src/services/memoryGameService.ts"
     ]
    },
+   "mentorship_mission_progress": {
+    "select": [
+     "src/services/mentorshipService.ts"
+    ],
+    "insert": [
+     "src/services/mentorshipService.ts"
+    ],
+    "update": [
+     "src/services/mentorshipService.ts"
+    ]
+   },
+   "mentorship_missions": {
+    "select": [
+     "src/services/mentorshipService.ts"
+    ],
+    "insert": [
+     "src/services/mentorshipService.ts"
+    ],
+    "update": [
+     "src/services/mentorshipService.ts"
+    ]
+   },
    "mentorship_pairs": {
     "select": [
      "src/services/behavioralBadges/index.ts",
-     "src/services/highPotentialService.ts"
+     "src/services/highPotentialService.ts",
+     "src/services/mentorshipService.ts"
+    ],
+    "insert": [
+     "src/services/mentorshipService.ts"
+    ],
+    "update": [
+     "src/services/mentorshipService.ts"
+    ]
+   },
+   "mentorship_requests": {
+    "select": [
+     "src/services/mentorshipService.ts"
+    ],
+    "insert": [
+     "src/services/mentorshipService.ts"
+    ],
+    "update": [
+     "src/services/mentorshipService.ts"
     ]
    },
    "module_progress": {
@@ -50963,6 +51102,7 @@
      "src/services/engagementReportsService.ts",
      "src/services/highPotentialService.ts",
      "src/services/kudosService.ts",
+     "src/services/mentorshipService.ts",
      "src/services/oneOnOnePreparationService.ts",
      "src/services/passwordResetService.ts",
      "src/services/profilesService.ts",
@@ -52221,9 +52361,31 @@
     "status",
     "xp_awarded"
    ],
+   "mentorship_mission_progress": [
+    "completed_by_apprentice",
+    "completed_by_mentor",
+    "id",
+    "mission_id",
+    "pair_id",
+    "rewards_claimed"
+   ],
+   "mentorship_missions": [
+    "id",
+    "is_active"
+   ],
    "mentorship_pairs": [
+    "apprentice_id",
+    "id",
     "mentor_id",
-    "status"
+    "status",
+    "total_missions_completed",
+    "total_xp_earned"
+   ],
+   "mentorship_requests": [
+    "id",
+    "requester_id",
+    "status",
+    "target_id"
    ],
    "module_progress": [
     "completed_at",
@@ -54094,9 +54256,6 @@
    "level_configs",
    "lightning_quiz_answers",
    "lightning_quiz_questions",
-   "mentorship_mission_progress",
-   "mentorship_missions",
-   "mentorship_requests",
    "notification_templates",
    "nr1_factor_mappings",
    "nr1_risk_categories",
@@ -55229,6 +55388,16 @@
     "rules": "type=number, min=0, max=100"
    },
    {
+    "file": "src/pages/Mentoria.tsx",
+    "field": "mission-xp",
+    "rules": "type=number, min=0"
+   },
+   {
+    "file": "src/pages/Mentoria.tsx",
+    "field": "mission-coins",
+    "rules": "type=number, min=0"
+   },
+   {
     "file": "src/pages/WagerQuestionAdminPage.tsx",
     "field": "wager-question",
     "rules": "disabled=isLocked"
@@ -55914,6 +56083,36 @@
     "file": "src/services/luckyWheelService.ts",
     "name": "LuckyWheelRarity",
     "values": "common | rare | epic | legendary"
+   },
+   {
+    "file": "src/services/mentorshipService.ts",
+    "name": "MentorshipRequestType",
+    "values": "find_mentor | find_apprentice | specific"
+   },
+   {
+    "file": "src/services/mentorshipService.ts",
+    "name": "MentorshipRequestStatus",
+    "values": "pending | accepted | rejected | expired"
+   },
+   {
+    "file": "src/services/mentorshipService.ts",
+    "name": "MentorshipPairStatus",
+    "values": "pending | active | completed | cancelled"
+   },
+   {
+    "file": "src/services/mentorshipService.ts",
+    "name": "MentorshipMissionType",
+    "values": "mentor_only | apprentice_only | collaborative"
+   },
+   {
+    "file": "src/services/mentorshipService.ts",
+    "name": "MentorshipDifficulty",
+    "values": "easy | medium | hard"
+   },
+   {
+    "file": "src/services/mentorshipService.ts",
+    "name": "MentorshipRole",
+    "values": "mentor | apprentice"
    },
    {
     "file": "src/services/nr1RiskService.ts",
@@ -57631,6 +57830,46 @@
     "msg": "Bronze league not found"
    },
    {
+    "file": "src/services/mentorshipService.ts",
+    "msg": "Escolha a pessoa para quem enviar a solicitação."
+   },
+   {
+    "file": "src/services/mentorshipService.ts",
+    "msg": "Esta solicitação não está mais pendente."
+   },
+   {
+    "file": "src/services/mentorshipService.ts",
+    "msg": "Esta solicitação não foi direcionada a você."
+   },
+   {
+    "file": "src/services/mentorshipService.ts",
+    "msg": "Mentor e mentorado precisam ser pessoas diferentes."
+   },
+   {
+    "file": "src/services/mentorshipService.ts",
+    "msg": "Missão não encontrada."
+   },
+   {
+    "file": "src/services/mentorshipService.ts",
+    "msg": "Não foi possível criar a dupla de mentoria."
+   },
+   {
+    "file": "src/services/mentorshipService.ts",
+    "msg": "Não foi possível criar a missão."
+   },
+   {
+    "file": "src/services/mentorshipService.ts",
+    "msg": "Não foi possível enviar a solicitação."
+   },
+   {
+    "file": "src/services/mentorshipService.ts",
+    "msg": "Não foi possível registrar a conclusão da missão."
+   },
+   {
+    "file": "src/services/mentorshipService.ts",
+    "msg": "Você não pode enviar uma solicitação para si mesmo."
+   },
+   {
     "file": "src/services/missionsService.ts",
     "msg": "Already claimed"
    },
@@ -57985,6 +58224,10 @@
     "value": "admin"
    },
    {
+    "file": "src/pages/Mentoria.tsx",
+    "value": "mentor"
+   },
+   {
     "file": "src/pages/SalesCampaignDetail.tsx",
     "value": "manager"
    },
@@ -57995,6 +58238,10 @@
    {
     "file": "src/pages/SalesCampaigns.tsx",
     "value": "manager"
+   },
+   {
+    "file": "src/services/mentorshipService.ts",
+    "value": "mentor"
    },
    {
     "file": "src/services/rbacService.ts",
@@ -70859,6 +71106,11 @@
     "value": "\"id, title, description, department_id, is_active\""
    },
    {
+    "file": "src/services/mentorshipService.ts",
+    "name": "CANDIDATE_COLUMNS",
+    "value": "\"id, display_name, avatar_url, level, xp\""
+   },
+   {
     "file": "src/services/wagerBudgetService.ts",
     "name": "MAX_BUDGET",
     "value": "10"
@@ -73777,6 +74029,12 @@
     "kind": "compara"
    },
    {
+    "file": "src/hooks/useMentorship.ts",
+    "field": "status",
+    "value": "accepted",
+    "kind": "compara"
+   },
+   {
     "file": "src/hooks/useNotifications.ts",
     "field": "status",
     "value": "SUBSCRIBED",
@@ -75223,6 +75481,90 @@
     "kind": "compara"
    },
    {
+    "file": "src/pages/Mentoria.tsx",
+    "field": "role",
+    "value": "mentor",
+    "kind": "compara"
+   },
+   {
+    "file": "src/pages/Mentoria.tsx",
+    "field": "status",
+    "value": "active",
+    "kind": "compara"
+   },
+   {
+    "file": "src/pages/Mentoria.tsx",
+    "field": "status",
+    "value": "completed",
+    "kind": "compara"
+   },
+   {
+    "file": "src/pages/Mentoria.tsx",
+    "field": "status",
+    "value": "pending",
+    "kind": "compara"
+   },
+   {
+    "file": "src/pages/Mentoria.tsx",
+    "field": "role",
+    "value": "mentor",
+    "kind": "compara"
+   },
+   {
+    "file": "src/pages/Mentoria.tsx",
+    "field": "status",
+    "value": "active",
+    "kind": "compara"
+   },
+   {
+    "file": "src/pages/Mentoria.tsx",
+    "field": "role",
+    "value": "mentor",
+    "kind": "compara"
+   },
+   {
+    "file": "src/pages/Mentoria.tsx",
+    "field": "status",
+    "value": "active",
+    "kind": "compara"
+   },
+   {
+    "file": "src/pages/Mentoria.tsx",
+    "field": "status",
+    "value": "active",
+    "kind": "compara"
+   },
+   {
+    "file": "src/pages/Mentoria.tsx",
+    "field": "role",
+    "value": "mentor",
+    "kind": "compara"
+   },
+   {
+    "file": "src/pages/Mentoria.tsx",
+    "field": "role",
+    "value": "mentor",
+    "kind": "compara"
+   },
+   {
+    "file": "src/pages/Mentoria.tsx",
+    "field": "role",
+    "value": "mentor",
+    "kind": "compara"
+   },
+   {
+    "file": "src/pages/Mentoria.tsx",
+    "field": "role",
+    "value": "mentor",
+    "kind": "compara"
+   },
+   {
+    "file": "src/pages/Mentoria.tsx",
+    "field": "status",
+    "value": "accepted",
+    "kind": "compara"
+   },
+   {
     "file": "src/pages/NotFound.tsx",
     "field": "type",
     "value": "spring",
@@ -76024,6 +76366,66 @@
     "file": "src/services/memoryGameService.ts",
     "field": "status",
     "value": "finished",
+    "kind": "filtra"
+   },
+   {
+    "file": "src/services/mentorshipService.ts",
+    "field": "status",
+    "value": "active",
+    "kind": "escreve"
+   },
+   {
+    "file": "src/services/mentorshipService.ts",
+    "field": "status",
+    "value": "rejected",
+    "kind": "escreve"
+   },
+   {
+    "file": "src/services/mentorshipService.ts",
+    "field": "status",
+    "value": "accepted",
+    "kind": "escreve"
+   },
+   {
+    "file": "src/services/mentorshipService.ts",
+    "field": "role",
+    "value": "mentor",
+    "kind": "compara"
+   },
+   {
+    "file": "src/services/mentorshipService.ts",
+    "field": "role",
+    "value": "mentor",
+    "kind": "compara"
+   },
+   {
+    "file": "src/services/mentorshipService.ts",
+    "field": "role",
+    "value": "mentor",
+    "kind": "compara"
+   },
+   {
+    "file": "src/services/mentorshipService.ts",
+    "field": "role",
+    "value": "mentor",
+    "kind": "compara"
+   },
+   {
+    "file": "src/services/mentorshipService.ts",
+    "field": "status",
+    "value": "pending",
+    "kind": "filtra"
+   },
+   {
+    "file": "src/services/mentorshipService.ts",
+    "field": "status",
+    "value": "pending",
+    "kind": "filtra"
+   },
+   {
+    "file": "src/services/mentorshipService.ts",
+    "field": "status",
+    "value": "pending",
     "kind": "filtra"
    },
    {
@@ -84455,6 +84857,74 @@
    {
     "file": "src/test/memoryGame.simulation.test.ts",
     "name": "sanea entradas inválidas sem lançar"
+   },
+   {
+    "file": "src/test/mentorshipService.test.ts",
+    "name": "markMyPart"
+   },
+   {
+    "file": "src/test/mentorshipService.test.ts",
+    "name": "não concede recompensa duas vezes para a mesma parte"
+   },
+   {
+    "file": "src/test/mentorshipService.test.ts",
+    "name": "usa o valor da missão do banco e não fecha a missão colaborativa com um lado só"
+   },
+   {
+    "file": "src/test/mentorshipService.test.ts",
+    "name": "liquida a missão e soma os totais da dupla quando todos os lados exigidos concluem"
+   },
+   {
+    "file": "src/test/mentorshipService.test.ts",
+    "name": "exige a missão real do banco antes de premiar"
+   },
+   {
+    "file": "src/test/mentorshipService.test.ts",
+    "name": "respondRequest"
+   },
+   {
+    "file": "src/test/mentorshipService.test.ts",
+    "name": "quem pediu um mentor vira mentorado ao ter o pedido aceito"
+   },
+   {
+    "file": "src/test/mentorshipService.test.ts",
+    "name": "quem se ofereceu para mentorar vira mentor ao ter o pedido aceito"
+   },
+   {
+    "file": "src/test/mentorshipService.test.ts",
+    "name": "recusa resposta de quem não é o destinatário sem tocar no banco"
+   },
+   {
+    "file": "src/test/mentorshipService.test.ts",
+    "name": "recusa criar dupla quando a solicitação não está mais pendente"
+   },
+   {
+    "file": "src/test/mentorshipService.test.ts",
+    "name": "createRequest"
+   },
+   {
+    "file": "src/test/mentorshipService.test.ts",
+    "name": "bloqueia solicitação para si mesmo"
+   },
+   {
+    "file": "src/test/mentorshipService.test.ts",
+    "name": "bloqueia solicitação sem destinatário (RLS só entrega o pedido ao alvo)"
+   },
+   {
+    "file": "src/test/mentorshipService.test.ts",
+    "name": "reaproveita um pedido pendente existente em vez de duplicar"
+   },
+   {
+    "file": "src/test/mentorshipService.test.ts",
+    "name": "grava o destinatário explícito em um pedido novo"
+   },
+   {
+    "file": "src/test/mentorshipService.test.ts",
+    "name": "getIncomingRequests"
+   },
+   {
+    "file": "src/test/mentorshipService.test.ts",
+    "name": "busca somente pedidos direcionados ao usuário e descarta os próprios"
    },
    {
     "file": "src/test/notificationPrefsCrossModule.simulation.test.ts",
@@ -99985,6 +100455,10 @@
     "limit": "400"
    },
    {
+    "file": "src/services/mentorshipService.ts",
+    "limit": "30"
+   },
+   {
     "file": "src/services/nineBoxService.ts",
     "limit": "1"
    },
@@ -101403,6 +101877,10 @@
      "short": [
       "escreve:src/pages/BurnRate.tsx"
      ],
+     "mentor": [
+      "compara:src/pages/Mentoria.tsx",
+      "compara:src/services/mentorshipService.ts"
+     ],
      "robot": [
       "escreve:supabase/functions/_shared/contracts/_fixtures/index.ts"
      ],
@@ -101464,6 +101942,7 @@
       "compara:src/lib/auctionAdmin.ts",
       "compara:src/lib/auctionEngine.ts",
       "compara:src/pages/Goals.tsx",
+      "compara:src/pages/Mentoria.tsx",
       "compara:src/pages/QuestBuilder.tsx",
       "compara:src/services/certificationsService.ts",
       "escreve:src/components/admin/enps/ENPSSubComponents.tsx",
@@ -101476,6 +101955,7 @@
       "escreve:src/services/feedbackService.ts",
       "escreve:src/services/lightningQuizService.ts",
       "escreve:src/services/memoryGameService.ts",
+      "escreve:src/services/mentorshipService.ts",
       "escreve:src/services/pdiGeneratorService.ts",
       "escreve:src/services/pulseSurveysService.ts",
       "escreve:src/services/questsService.ts",
@@ -101511,6 +101991,7 @@
       "compara:src/components/ui/micro-quest-card.tsx",
       "compara:src/pages/Checkins.tsx",
       "compara:src/pages/Goals.tsx",
+      "compara:src/pages/Mentoria.tsx",
       "compara:src/services/actionPlansService.ts",
       "compara:src/services/behavioralBadges/index.ts",
       "compara:src/services/developmentPlanService.ts",
@@ -101586,6 +102067,7 @@
       "compara:src/components/trails/AICourseBuilderDialog.tsx",
       "compara:src/lib/pushOutbox.ts",
       "compara:src/pages/CardAlbumPage.tsx",
+      "compara:src/pages/Mentoria.tsx",
       "compara:src/pages/ScratchCardPage.tsx",
       "compara:src/services/positionsService.ts",
       "compara:supabase/functions/ai-course-builder/index.ts",
@@ -101607,6 +102089,7 @@
       "filtra:src/hooks/usePDIAlerts.ts",
       "filtra:src/services/duelsService.ts",
       "filtra:src/services/feedbackService.ts",
+      "filtra:src/services/mentorshipService.ts",
       "filtra:src/services/passwordResetService.ts",
       "filtra:supabase/functions/admin-alerts/index.ts"
      ],
@@ -101664,7 +102147,10 @@
       "escreve:src/services/duelsService.ts"
      ],
      "accepted": [
-      "compara:src/components/duels/DuelCard.tsx"
+      "compara:src/components/duels/DuelCard.tsx",
+      "compara:src/hooks/useMentorship.ts",
+      "compara:src/pages/Mentoria.tsx",
+      "escreve:src/services/mentorshipService.ts"
      ],
      "declined": [
       "compara:src/components/duels/DuelCard.tsx",
@@ -101766,7 +102252,8 @@
       "compara:src/hooks/useAdminUsers.ts"
      ],
      "rejected": [
-      "compara:src/hooks/useAdminUsers.ts"
+      "compara:src/hooks/useAdminUsers.ts",
+      "escreve:src/services/mentorshipService.ts"
      ],
      "running": [
       "compara:src/hooks/useBossBattles.ts",
@@ -102044,6 +102531,7 @@
    "key",
    "long",
    "manager",
+   "mentor",
    "permission",
    "user"
   ],
@@ -105352,6 +105840,7 @@
      "src/services/engagementReportsService.ts",
      "src/services/highPotentialService.ts",
      "src/services/kudosService.ts",
+     "src/services/mentorshipService.ts",
      "src/services/oneOnOnePreparationService.ts",
      "src/services/passwordResetService.ts",
      "src/services/profilesService.ts",
@@ -113541,6 +114030,10 @@
    },
    {
     "guard": "ProtectedRoute",
+    "file": "src/App.tsx"
+   },
+   {
+    "guard": "ProtectedRoute",
     "file": "src/components/rbac/ProtectedRoute.tsx"
    },
    {
@@ -114006,6 +114499,13 @@
     "roles": [
      "admin"
     ],
+    "file": "src/App.tsx"
+   },
+   {
+    "path": "/mentoria",
+    "component": "PageTransition",
+    "guard": "ProtectedRoute",
+    "roles": [],
     "file": "src/App.tsx"
    },
    {
@@ -117361,7 +117861,7 @@
   },
   "src/App.tsx": {
    "path": "src/App.tsx",
-   "lines": 334,
+   "lines": 336,
    "exports": [
     "default App"
    ],
@@ -117745,6 +118245,12 @@
      "roles": []
     },
     {
+     "path": "/mentoria",
+     "component": "PageTransition",
+     "guard": "ProtectedRoute",
+     "roles": []
+    },
+    {
      "path": "/surveys",
      "component": "PageTransition",
      "guard": "ProtectedRoute",
@@ -117944,6 +118450,7 @@
     }
    ],
    "guards": [
+    "ProtectedRoute",
     "ProtectedRoute",
     "ProtectedRoute",
     "ProtectedRoute",
@@ -127224,6 +127731,50 @@
     "staleTime: 5 * 60 * 1000,"
    ]
   },
+  "src/hooks/useMentorship.ts": {
+   "path": "src/hooks/useMentorship.ts",
+   "lines": 231,
+   "exports": [
+    "const mentorshipKeys",
+    "function useMentorshipMissions",
+    "function useAllMentorshipMissions",
+    "function useMyMentorshipPairs",
+    "function usePairProgress",
+    "function useIncomingMentorshipRequests",
+    "function useSentMentorshipRequests",
+    "function useMentorshipCandidates",
+    "function useMarkMentorshipPart",
+    "function useCreateMentorshipRequest",
+    "function useRespondMentorshipRequest",
+    "function useCloseMentorshipPair",
+    "function useCreateMentorshipMission",
+    "function useSetMentorshipMissionActive",
+    "function useSeedMentorshipMissions"
+   ],
+   "status_values": [
+    {
+     "field": "status",
+     "value": "accepted",
+     "kind": "compara"
+    }
+   ],
+   "hooks": [
+    "useMentorshipMissions",
+    "useAllMentorshipMissions",
+    "useMyMentorshipPairs",
+    "usePairProgress",
+    "useIncomingMentorshipRequests",
+    "useSentMentorshipRequests",
+    "useMentorshipCandidates",
+    "useMarkMentorshipPart",
+    "useCreateMentorshipRequest",
+    "useRespondMentorshipRequest",
+    "useCloseMentorshipPair",
+    "useCreateMentorshipMission",
+    "useSetMentorshipMissionActive",
+    "useSeedMentorshipMissions"
+   ]
+  },
   "src/hooks/useMissions.ts": {
    "path": "src/hooks/useMissions.ts",
    "lines": 109,
@@ -134874,6 +135425,98 @@
     "Cronômetro apenas informativo: a duração oficial é medida no servidor."
    ]
   },
+  "src/pages/Mentoria.tsx": {
+   "path": "src/pages/Mentoria.tsx",
+   "lines": 952,
+   "exports": [
+    "function Mentoria"
+   ],
+   "html_constraints": [
+    {
+     "field": "mission-xp",
+     "rules": "type=number, min=0"
+    },
+    {
+     "field": "mission-coins",
+     "rules": "type=number, min=0"
+    }
+   ],
+   "status_values": [
+    {
+     "field": "role",
+     "value": "mentor",
+     "kind": "compara"
+    },
+    {
+     "field": "status",
+     "value": "active",
+     "kind": "compara"
+    },
+    {
+     "field": "status",
+     "value": "completed",
+     "kind": "compara"
+    },
+    {
+     "field": "status",
+     "value": "pending",
+     "kind": "compara"
+    },
+    {
+     "field": "role",
+     "value": "mentor",
+     "kind": "compara"
+    },
+    {
+     "field": "status",
+     "value": "active",
+     "kind": "compara"
+    },
+    {
+     "field": "role",
+     "value": "mentor",
+     "kind": "compara"
+    },
+    {
+     "field": "status",
+     "value": "active",
+     "kind": "compara"
+    },
+    {
+     "field": "status",
+     "value": "active",
+     "kind": "compara"
+    },
+    {
+     "field": "role",
+     "value": "mentor",
+     "kind": "compara"
+    },
+    {
+     "field": "role",
+     "value": "mentor",
+     "kind": "compara"
+    },
+    {
+     "field": "role",
+     "value": "mentor",
+     "kind": "compara"
+    },
+    {
+     "field": "role",
+     "value": "mentor",
+     "kind": "compara"
+    },
+    {
+     "field": "status",
+     "value": "accepted",
+     "kind": "compara"
+    }
+   ],
+   "role_checks": [
+    "mentor"
+   ]
+  },
   "src/pages/NotFound.tsx": {
    "path": "src/pages/NotFound.tsx",
    "lines": 83,
@@ -139733,6 +140376,262 @@
      "params": "deckId: string, diff: PairDiff",
      "body": "if (diff.toDeleteIds.length > 0) { const { error } = await supabase .from(\"memory_pairs\") .delete() .eq(\"deck_id\", deckId) .in(\"id\", diff.toDeleteIds); if (error) { logger.error(\"Falha ao remover pares\", \"memoryDeckAdminService.applyPairDiff\", error); throw error; } } for (const pair of diff.toUpdate) { const { error } = await supabase .from(\"memory_pairs\") .update({ term: pair.term, match: pair.match }) .eq(\"id\", pair.id) .eq(\"deck_id\", deckId); if (error) { logger.error(\"Falha ao atualizar par …"
     }
+   ]
+  },
+  "src/services/mentorshipService.ts": {
+   "path": "src/services/mentorshipService.ts",
+   "lines": 664,
+   "exports": [
+    "type MentorshipRequestType",
+    "type MentorshipRequestStatus",
+    "type MentorshipPairStatus",
+    "type MentorshipMissionType",
+    "type MentorshipDifficulty",
+    "type MentorshipRole",
+    "interface MentorshipMission",
+    "interface MentorshipPair",
+    "interface MentorshipPerson",
+    "interface MentorshipPairWithPeople",
+    "interface MentorshipMissionProgress",
+    "interface MentorshipRequest",
+    "interface MentorshipRequestWithRequester",
+    "interface MentorshipSentRequest",
+    "interface MentorshipCandidate",
+    "interface MarkMissionPartResult",
+    "interface CreateMissionInput",
+    "interface CreateRequestInput",
+    "const DEFAULT_MENTORSHIP_MISSIONS",
+    "const mentorshipService"
+   ],
+   "tables": [
+    {
+     "table": "mentorship_missions",
+     "op": "select"
+    },
+    {
+     "table": "mentorship_missions",
+     "op": "select"
+    },
+    {
+     "table": "mentorship_missions",
+     "op": "select"
+    },
+    {
+     "table": "mentorship_missions",
+     "op": "insert,select"
+    },
+    {
+     "table": "mentorship_missions",
+     "op": "update"
+    },
+    {
+     "table": "mentorship_pairs",
+     "op": "select"
+    },
+    {
+     "table": "mentorship_pairs",
+     "op": "insert,select"
+    },
+    {
+     "table": "mentorship_pairs",
+     "op": "select"
+    },
+    {
+     "table": "mentorship_pairs",
+     "op": "update"
+    },
+    {
+     "table": "mentorship_mission_progress",
+     "op": "select"
+    },
+    {
+     "table": "mentorship_mission_progress",
+     "op": "insert,select"
+    },
+    {
+     "table": "mentorship_mission_progress",
+     "op": "select,update"
+    },
+    {
+     "table": "mentorship_mission_progress",
+     "op": "select,update"
+    },
+    {
+     "table": "mentorship_mission_progress",
+     "op": "select,update"
+    },
+    {
+     "table": "mentorship_mission_progress",
+     "op": "select"
+    },
+    {
+     "table": "mentorship_pairs",
+     "op": "select"
+    },
+    {
+     "table": "mentorship_pairs",
+     "op": "update"
+    },
+    {
+     "table": "mentorship_requests",
+     "op": "select"
+    },
+    {
+     "table": "mentorship_requests",
+     "op": "insert,select"
+    },
+    {
+     "table": "mentorship_requests",
+     "op": "select"
+    },
+    {
+     "table": "mentorship_requests",
+     "op": "select"
+    },
+    {
+     "table": "mentorship_requests",
+     "op": "select,update"
+    },
+    {
+     "table": "profiles",
+     "op": "select"
+    },
+    {
+     "table": "profiles",
+     "op": "select"
+    }
+   ],
+   "table_cols": {
+    "mentorship_missions": [
+     "id",
+     "is_active"
+    ],
+    "mentorship_pairs": [
+     "apprentice_id",
+     "id",
+     "mentor_id",
+     "total_missions_completed",
+     "total_xp_earned"
+    ],
+    "mentorship_mission_progress": [
+     "completed_by_apprentice",
+     "completed_by_mentor",
+     "id",
+     "mission_id",
+     "pair_id",
+     "rewards_claimed"
+    ],
+    "mentorship_requests": [
+     "id",
+     "requester_id",
+     "status",
+     "target_id"
+    ],
+    "profiles": [
+     "id"
+    ]
+   },
+   "errors": [
+    "Escolha a pessoa para quem enviar a solicitação.",
+    "Esta solicitação não está mais pendente.",
+    "Esta solicitação não foi direcionada a você.",
+    "Mentor e mentorado precisam ser pessoas diferentes.",
+    "Missão não encontrada.",
+    "Não foi possível criar a dupla de mentoria.",
+    "Não foi possível criar a missão.",
+    "Não foi possível enviar a solicitação.",
+    "Não foi possível registrar a conclusão da missão.",
+    "Você não pode enviar uma solicitação para si mesmo."
+   ],
+   "enums": [
+    {
+     "name": "MentorshipRequestType",
+     "values": "find_mentor | find_apprentice | specific"
+    },
+    {
+     "name": "MentorshipRequestStatus",
+     "values": "pending | accepted | rejected | expired"
+    },
+    {
+     "name": "MentorshipPairStatus",
+     "values": "pending | active | completed | cancelled"
+    },
+    {
+     "name": "MentorshipMissionType",
+     "values": "mentor_only | apprentice_only | collaborative"
+    },
+    {
+     "name": "MentorshipDifficulty",
+     "values": "easy | medium | hard"
+    },
+    {
+     "name": "MentorshipRole",
+     "values": "mentor | apprentice"
+    }
+   ],
+   "params": [
+    {
+     "name": "CANDIDATE_COLUMNS",
+     "value": "\"id, display_name, avatar_url, level, xp\""
+    }
+   ],
+   "status_values": [
+    {
+     "field": "status",
+     "value": "active",
+     "kind": "escreve"
+    },
+    {
+     "field": "status",
+     "value": "rejected",
+     "kind": "escreve"
+    },
+    {
+     "field": "status",
+     "value": "accepted",
+     "kind": "escreve"
+    },
+    {
+     "field": "role",
+     "value": "mentor",
+     "kind": "compara"
+    },
+    {
+     "field": "role",
+     "value": "mentor",
+     "kind": "compara"
+    },
+    {
+     "field": "role",
+     "value": "mentor",
+     "kind": "compara"
+    },
+    {
+     "field": "role",
+     "value": "mentor",
+     "kind": "compara"
+    },
+    {
+     "field": "status",
+     "value": "pending",
+     "kind": "filtra"
+    },
+    {
+     "field": "status",
+     "value": "pending",
+     "kind": "filtra"
+    },
+    {
+     "field": "status",
+     "value": "pending",
+     "kind": "filtra"
+    }
+   ],
+   "role_checks": [
+    "mentor"
+   ],
+   "pagination": [
+    "30"
    ]
   },
   "src/services/missionsService.ts": {
@@ -145702,6 +146601,33 @@
     "perde o bônus de velocidade um milissegundo além do limite",
     "zera a recompensa após o limite diário",
     "sanea entradas inválidas sem lançar"
+   ]
+  },
+  "src/test/mentorshipService.test.ts": {
+   "path": "src/test/mentorshipService.test.ts",
+   "lines": 294,
+   "is_test": true,
+   "tests": [
+    "markMyPart",
+    "não concede recompensa duas vezes para a mesma parte",
+    "usa o valor da missão do banco e não fecha a missão colaborativa com um lado só",
+    "liquida a missão e soma os totais da dupla quando todos os lados exigidos concluem",
+    "exige a missão real do banco antes de premiar",
+    "respondRequest",
+    "quem pediu um mentor vira mentorado ao ter o pedido aceito",
+    "quem se ofereceu para mentorar vira mentor ao ter o pedido aceito",
+    "recusa resposta de quem não é o destinatário sem tocar no banco",
+    "recusa criar dupla quando a solicitação não está mais pendente",
+    "createRequest",
+    "bloqueia solicitação para si mesmo",
+    "bloqueia solicitação sem destinatário (RLS só entrega o pedido ao alvo)",
+    "reaproveita um pedido pendente existente em vez de duplicar",
+    "grava o destinatário explícito em um pedido novo",
+    "getIncomingRequests",
+    "busca somente pedidos direcionados ao usuário e descarta os próprios"
+   ],
+   "side_effects": [
+    "enqueue("
    ]
   },
   "src/test/notificationPrefsCrossModule.simulation.test.ts": {
@@ -151770,10 +152696,24 @@
   }
  },
  "git": {
-  "sha": "b6c89afbe12c20c30d5a611c814531bd7fd2bdfa",
+  "sha": "027cedff3004b7a46d919df324246be046c9e4e0",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "commits": [
+   {
+    "sha": "027cedf",
+    "date": "2026-11-23",
+    "author": "adm01-debug",
+    "subject": "feat: cria fluxo completo de mentoria (pagina, servico, hooks e missoes) (#122)",
+    "files": [
+     "src/App.tsx",
+     "src/hooks/useMentorship.ts",
+     "src/pages/Mentoria.tsx",
+     "src/services/highPotentialService.ts",
+     "src/services/mentorshipService.ts",
+     "src/test/mentorshipService.test.ts"
+    ]
+   },
    {
     "sha": "b6c89af",
     "date": "2026-11-23",
@@ -152144,15 +153084,6 @@
      "docs/agentes/github-ci.md",
      "tests/e2e/happy-paths.spec.ts"
     ]
-   },
-   {
-    "sha": "d50f0a1",
-    "date": "2026-11-21",
-    "author": "adm01-debug",
-    "subject": "chore(docs): evidencia validacao HIBP range API (pendencia 03) (#93)",
-    "files": [
-     "docs/pendencias/03-csp-hibp-pwnedpasswords.md"
-    ]
    }
   ],
   "hot_files": [
@@ -152173,6 +153104,10 @@
     4
    ],
    [
+    "src/App.tsx",
+    3
+   ],
+   [
     "bun.lock",
     3
    ],
@@ -152183,10 +153118,6 @@
    [
     "supabase/functions/webhook-dispatcher/index.ts",
     3
-   ],
-   [
-    "src/App.tsx",
-    2
    ],
    [
     "src/pages/EngagementReports.tsx",
