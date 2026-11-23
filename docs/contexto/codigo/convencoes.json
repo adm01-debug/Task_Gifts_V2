@@ -59,11 +59,11 @@
  "commits": {
   "convencao": "conventional commits (observado)",
   "exemplos": [
+   "build(deps-dev): bump @testing-library/jest-dom from 7.0.1 to 8.0.0 (#108)",
+   "build(deps): bump the dependencies group with 13 updates (#107)",
+   "docs: atualiza 05-edge-functions com fixes SRE (PR #106) e VAPID keys",
    "fix(sre): corrige RPCs de error-budget/webhook-stats e trigger de dispatch apontando para projeto errado (#106)",
-   "feat(db): RPC acknowledge_security_digest para marcar digest semanal como revisado (#103)",
-   "fix(sre): reconstroi os 3 monitores + dispatch-critical-alert e destrava auth dos crons (#105)",
-   "chore(automacao): reconstroi security-weekly-digest e conecta ao cron 33 (#104)",
-   "feat(edge): ponte admin para webhook-dispatcher (webhook-ping) (#102)"
+   "feat(db): RPC acknowledge_security_digest para marcar digest semanal como revisado (#103)"
   ]
  },
  "pr_template": ".github/PULL_REQUEST_TEMPLATE.md",
