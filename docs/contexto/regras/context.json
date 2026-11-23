@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "3d91e0014bdd07c1f19d98d5441852578ac2ea8e",
+  "sha": "ba994f941d6a577c286cdce89dd0474d8c50c7d8",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
-  "generated_at": "2026-11-23 12:16 UTC",
+  "generated_at": "2026-11-23 13:48 UTC",
   "files_total": 1549,
   "code_files": 1445,
-  "code_lines": 258902
+  "code_lines": 258903
  },
  "version": "1.3.2",
- "facts_hash": "e92a22a357341ac4",
+ "facts_hash": "b3a9f3103828ca0a",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -48606,7 +48606,7 @@
   {
    "module": "src/pages",
    "files": 82,
-   "lines": 22351,
+   "lines": 22352,
    "tables": [
     "audit_logs",
     "campaign_participants",
@@ -133851,7 +133851,7 @@
   },
   "src/pages/DailyQuiz.tsx": {
    "path": "src/pages/DailyQuiz.tsx",
-   "lines": 342,
+   "lines": 343,
    "exports": [
     "function DailyQuiz"
    ]
@@ -151337,10 +151337,19 @@
   }
  },
  "git": {
-  "sha": "3d91e0014bdd07c1f19d98d5441852578ac2ea8e",
+  "sha": "ba994f941d6a577c286cdce89dd0474d8c50c7d8",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "commits": [
+   {
+    "sha": "ba994f9",
+    "date": "2026-11-23",
+    "author": "adm01-debug",
+    "subject": "fix(quiz): persiste 'Concluido hoje' em quiz_scores (resiste ao reload) (#114)",
+    "files": [
+     "src/pages/DailyQuiz.tsx"
+    ]
+   },
    {
     "sha": "3d91e00",
     "date": "2026-11-23",
@@ -151708,15 +151717,6 @@
     "subject": "fix: remove 29 vulnerabilidades do bun.lock (audit fix) (#85)",
     "files": [
      "bun.lock"
-    ]
-   },
-   {
-    "sha": "07aa1ce",
-    "date": "2026-11-21",
-    "author": "dependabot[bot]",
-    "subject": "build(deps): bump actions/dependency-review-action from 5.0.0 to 5.0.1 (#80)",
-    "files": [
-     ".github/workflows/dependency-review.yml"
     ]
    }
   ],

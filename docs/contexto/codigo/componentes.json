@@ -7805,13 +7805,14 @@
     "DailyQuiz"
    ],
    "export_default": "DailyQuiz",
-   "linhas": 342,
+   "linhas": 343,
    "dominio": "pages",
    "hooks_locais": [
     "useIsMobile",
     "useQuizPlaySet",
     "useSEO",
-    "useSaveQuizScore"
+    "useSaveQuizScore",
+    "useUserTodayScores"
    ],
    "tabelas": [],
    "edges": [],

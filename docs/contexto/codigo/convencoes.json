@@ -59,11 +59,11 @@
  "commits": {
   "convencao": "conventional commits (observado)",
   "exemplos": [
+   "fix(quiz): persiste 'Concluido hoje' em quiz_scores (resiste ao reload) (#114)",
    "fix(succession): calcula successorCount/readyNowCount com dados reais de highPotential (#113)",
    "fix(dashboard/audit): heatmap dados reais de audit_logs + auditService dev logs",
    "fix: remove tendências hardcoded em BIDashboard e corrige 'null%' em ExecutiveDashboard",
-   "fix(shop/rbac): desconto flash sale cobrado + toast false success em permissões (#109)",
-   "build(deps-dev): bump @testing-library/jest-dom from 7.0.1 to 8.0.0 (#108)"
+   "fix(shop/rbac): desconto flash sale cobrado + toast false success em permissões (#109)"
   ]
  },
  "pr_template": ".github/PULL_REQUEST_TEMPLATE.md",

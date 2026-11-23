@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "3d91e0014bdd07c1f19d98d5441852578ac2ea8e",
+  "commit": "ba994f941d6a577c286cdce89dd0474d8c50c7d8",
   "branch": "main",
-  "data_commit": "2026-11-23T09:12:30-03:00",
+  "data_commit": "2026-11-23T10:46:27-03:00",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "ultimos_commits": [
+   {
+    "sha": "ba994f9",
+    "data": "2026-11-23",
+    "assunto": "fix(quiz): persiste 'Concluido hoje' em quiz_scores (resiste ao reload) (#114)"
+   },
    {
     "sha": "3d91e00",
     "data": "2026-11-23",
@@ -126,14 +131,9 @@
     "sha": "08928cc",
     "data": "2026-11-21",
     "assunto": "feat(edge): move API de IA de Lovable para OpenRouter nas 6 edge functions"
-   },
-   {
-    "sha": "f095e46",
-    "data": "2026-11-21",
-    "assunto": "fix: checa admin via rpc has_role em competency-alerts (e atualiza doc 05) (#88)"
    }
   ],
-  "arquivos_mudados_7d": 118,
+  "arquivos_mudados_7d": 119,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "supabase/functions/_shared",
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 81
+    "commits": 82
    },
    {
     "autor": "dependabot[bot]",
@@ -312,7 +312,7 @@
  "contagens": {
   "arquivos_total": 1539,
   "arquivos_codigo": 1166,
-  "linhas_codigo": 227435,
+  "linhas_codigo": 227436,
   "rotas": 83,
   "rotas_http_backend": 0,
   "vistas_por_id": 0,
@@ -432,7 +432,7 @@
   },
   "src/pages": {
    "arquivos": 82,
-   "linhas": 22351
+   "linhas": 22352
   },
   "src/services": {
    "arquivos": 99,
