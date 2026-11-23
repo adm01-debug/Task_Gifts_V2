@@ -228,7 +228,7 @@ const AnimatedRoutes = () => {
         <Route path="/quest-builder" element={<ProtectedRoute requiredRole="manager"><PageTransition><QuestBuilder /></PageTransition></ProtectedRoute>} />
         <Route path="/reports" element={<ProtectedRoute requiredRole="manager"><PageTransition><EngagementReports /></PageTransition></ProtectedRoute>} />
         <Route path="/audit" element={<ProtectedRoute requiredRole="admin"><PageTransition><AuditLogs /></PageTransition></ProtectedRoute>} />
-        <Route path="/analytics" element={<ProtectedRoute><PageTransition><RealTimeAnalytics /></PageTransition></ProtectedRoute>} />
+        <Route path="/analytics" element={<ProtectedRoute requiredRole="admin"><PageTransition><RealTimeAnalytics /></PageTransition></ProtectedRoute>} />
         <Route path="/trails" element={<ProtectedRoute><PageTransition><LearningTrails /></PageTransition></ProtectedRoute>} />
         <Route path="/trails/:id" element={<ProtectedRoute><PageTransition><TrailDetail /></PageTransition></ProtectedRoute>} />
         <Route path="/ponto" element={<ProtectedRoute><PageTransition><Attendance /></PageTransition></ProtectedRoute>} />
@@ -275,7 +275,7 @@ const AnimatedRoutes = () => {
         <Route path="/surveys" element={<ProtectedRoute><PageTransition><Surveys /></PageTransition></ProtectedRoute>} />
         <Route path="/feedback" element={<ProtectedRoute><PageTransition><Feedback /></PageTransition></ProtectedRoute>} />
         <Route path="/announcements" element={<ProtectedRoute><PageTransition><Announcements /></PageTransition></ProtectedRoute>} />
-        <Route path="/security-dashboard" element={<ProtectedRoute><PageTransition><SecurityDashboard /></PageTransition></ProtectedRoute>} />
+        <Route path="/security-dashboard" element={<ProtectedRoute requiredRole="admin"><PageTransition><SecurityDashboard /></PageTransition></ProtectedRoute>} />
         <Route path="/admin/permissions" element={<ProtectedRoute requiredRole="admin"><PageTransition><PermissionsAdmin /></PageTransition></ProtectedRoute>} />
         <Route path="/admin/api-keys" element={<ProtectedRoute requiredRole="admin"><PageTransition><ApiKeysAdmin /></PageTransition></ProtectedRoute>} />
         <Route path="/admin/telemetria" element={<ProtectedRoute requiredRole="admin"><PageTransition><AdminTelemetria /></PageTransition></ProtectedRoute>} />
