@@ -513,7 +513,7 @@
    "modulo": "components/admin",
    "arquivos": 46,
    "testes": 0,
-   "linhas": 9510,
+   "linhas": 9567,
    "itens_menu": [],
    "telas": [],
    "rotas_http": [],
@@ -700,6 +700,7 @@
     "feedback_cycles",
     "feedback_requests",
     "feedback_responses",
+    "goal_templates",
     "ip_access_logs",
     "ip_whitelist",
     "kudos",
@@ -795,7 +796,8 @@
    "diretos": {
     "edges": [],
     "tabelas": [
-     "audit_logs"
+     "audit_logs",
+     "goal_templates"
     ],
     "rpcs": []
    },
@@ -7231,6 +7233,7 @@
     "feedback_cycles",
     "feedback_requests",
     "feedback_responses",
+    "goal_templates",
     "goal_updates",
     "goals",
     "ip_access_logs",

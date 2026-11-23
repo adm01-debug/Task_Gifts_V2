@@ -961,6 +961,7 @@
     "feedback_cycles",
     "feedback_requests",
     "feedback_responses",
+    "goal_templates",
     "ip_access_logs",
     "ip_whitelist",
     "kudos",

@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "0a7aeb7b705315718a8b758f836af8044fca83f5",
+  "commit": "455eeb67aa5a264911d5ef110fefbf2b30ecac55",
   "branch": "main",
-  "data_commit": "2026-11-23T12:13:41-03:00",
+  "data_commit": "2026-11-23T12:31:55-03:00",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "ultimos_commits": [
+   {
+    "sha": "455eeb6",
+    "data": "2026-11-23",
+    "assunto": "feat(admin/app): OfflineIndicator global + GoalsManager persistente (Supabase) (#110)"
+   },
    {
     "sha": "0a7aeb7",
     "data": "2026-11-23",
@@ -126,14 +131,9 @@
     "sha": "6fd6436",
     "data": "2026-11-22",
     "assunto": "docs(edge-functions): encerra pendencia 03 com validacao em producao (#96)"
-   },
-   {
-    "sha": "6925771",
-    "data": "2026-11-22",
-    "assunto": "fix(auth): bloqueia senha vazada (HIBP) no cadastro (#95)"
    }
   ],
-  "arquivos_mudados_7d": 122,
+  "arquivos_mudados_7d": 125,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "supabase/functions/_shared",
@@ -160,15 +160,15 @@
     "mudancas": 6
    },
    {
+    "pasta": "src/components/admin",
+    "mudancas": 6
+   },
+   {
     "pasta": "AGENTS.md",
     "mudancas": 5
    },
    {
     "pasta": "docs/prod-readiness.md",
-    "mudancas": 5
-   },
-   {
-    "pasta": "src/components/admin",
     "mudancas": 5
    },
    {
@@ -192,7 +192,7 @@
     "mudancas": 4
    },
    {
-    "pasta": "src/tests/unit",
+    "pasta": "src/App.tsx",
     "mudancas": 4
    }
   ],
@@ -254,6 +254,10 @@
     "mudancas": 4
    },
    {
+    "arquivo": "src/App.tsx",
+    "mudancas": 4
+   },
+   {
     "arquivo": "supabase/functions/_shared/contracts/_fixtures/responses.ts",
     "mudancas": 4
    },
@@ -292,16 +296,12 @@
    {
     "arquivo": "docs/pendencias/03-csp-hibp-pwnedpasswords.md",
     "mudancas": 3
-   },
-   {
-    "arquivo": "scripts/graphify-local.mjs",
-    "mudancas": 3
    }
   ],
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 87
+    "commits": 88
    },
    {
     "autor": "dependabot[bot]",
@@ -310,9 +310,9 @@
   ]
  },
  "contagens": {
-  "arquivos_total": 1539,
+  "arquivos_total": 1541,
   "arquivos_codigo": 1166,
-  "linhas_codigo": 227656,
+  "linhas_codigo": 227714,
   "rotas": 83,
   "rotas_http_backend": 0,
   "vistas_por_id": 0,
@@ -321,8 +321,8 @@
   "componentes": 521,
   "hooks": 155,
   "edge_functions": 22,
-  "tabelas": 236,
-  "migrations": 273,
+  "tabelas": 237,
+  "migrations": 275,
   "cron_jobs": 22,
   "testes": 161,
   "workflows": 6,
@@ -396,11 +396,11 @@
   },
   "src/App.tsx": {
    "arquivos": 1,
-   "linhas": 333
+   "linhas": 334
   },
   "src/components": {
    "arquivos": 461,
-   "linhas": 77768
+   "linhas": 77825
   },
   "src/constants": {
    "arquivos": 1,

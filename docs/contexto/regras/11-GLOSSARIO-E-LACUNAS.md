@@ -1,6 +1,6 @@
 # 11 · GLOSSÁRIO, DADOS DE REFERÊNCIA E LACUNAS
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `0a7aeb7b70` · branch `main` · 2026-11-23 15:20 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `455eeb67aa` · branch `main` · 2026-11-23 15:36 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## Glossário do domínio (entidades do sistema)
@@ -106,6 +106,7 @@
 | `geo_allowed_countries` | _(sem COMMENT ON TABLE — significado não documentado)_ | 7 colunas | migration |
 | `geo_blocking_rules` | _(sem COMMENT ON TABLE — significado não documentado)_ | 7 colunas | types.ts |
 | `geo_settings` | _(sem COMMENT ON TABLE — significado não documentado)_ | 6 colunas | migration |
+| `goal_templates` | _(sem COMMENT ON TABLE — significado não documentado)_ | 10 colunas | migration |
 | `goal_updates` | _(sem COMMENT ON TABLE — significado não documentado)_ | 8 colunas | migration |
 | `goals` | _(sem COMMENT ON TABLE — significado não documentado)_ | 16 colunas | migration |
 | `ip_access_logs` | _(sem COMMENT ON TABLE — significado não documentado)_ | 8 colunas | migration |
@@ -306,8 +307,7 @@
 | `TaskCompletionStatus` (TS) | pending \| on_time \| late \| rejected \| rework |  | `src/lib/cardPackTriggers.ts` |
 | `SetClaimRejection` (TS) | unknown_set \| empty_set \| not_reached \| already_claimed |  | `src/lib/cardSetRewards.ts` |
 | `SET_MILESTONES` (TS) | 25, 50, 75, 100 |  | `src/lib/cardSetRewards.ts` |
-| `BenchmarkPosition` (TS) | top_10 \| top_quartile \| above_average \| below_average \| unknown |  | `src/lib/climateBenchmark.ts` |
-| … +98 linhas — lista completa em `context.json` | | | |
+| … +99 linhas — lista completa em `context.json` | | | |
 
 ## Dados de referência (seed — planos, categorias, perfis fixos)
 
@@ -424,7 +424,7 @@ _nenhum item encontrado_
 - `wager_integrity_review_events.previous_status` é uma coluna de status sem enum/CHECK — os valores válidos e as transições permitidas não estão no banco.
 - `wager_integrity_review_events.new_status` é uma coluna de status sem enum/CHECK — os valores válidos e as transições permitidas não estão no banco.
 - `profiles_public.status` é uma coluna de status sem enum/CHECK — os valores válidos e as transições permitidas não estão no banco.
-- 235/237 tabelas sem `COMMENT ON TABLE` — o significado de negócio não está no schema: `entity_versions`, `profiles`, `user_roles`, `departments`, `team_members`, `custom_quests`, `quest_steps`, `quest_assignments`, `notifications`, `kudos_badges`, `kudos`, `audit_logs` …
+- 236/238 tabelas sem `COMMENT ON TABLE` — o significado de negócio não está no schema: `entity_versions`, `profiles`, `user_roles`, `departments`, `team_members`, `custom_quests`, `quest_steps`, `quest_assignments`, `notifications`, `kudos_badges`, `kudos`, `audit_logs` …
 - Há tabelas usadas no código sem migration no repo — o schema real pode ter sido alterado pelo painel.
 
 ## Regras manuais presentes

@@ -1058,7 +1058,7 @@
     "useState"
    ],
    "canais_realtime": [],
-   "usado_por": 97,
+   "usado_por": 98,
    "usado_por_arquivos": [
     "src/App.tsx",
     "src/components/ActivityComments.tsx",
@@ -1076,6 +1076,7 @@
     "src/components/TrailRecommendations.tsx",
     "src/components/WeeklyChallengeCard.tsx",
     "src/components/WeeklyPerformanceComparison.tsx",
+    "src/components/admin/GoalsManager.tsx",
     "src/components/admin/OrganizationSettings.tsx",
     "src/components/admin/PositionsManager.tsx",
     "src/components/admin/ninebox/BoxDetailView.tsx",
@@ -1088,8 +1089,7 @@
     "src/components/quiz/QuizDailyRanking.tsx",
     "src/components/rbac/ProtectedRoute.tsx",
     "src/components/security/ReauthProvider.tsx",
-    "src/components/security/SessionsPanel.tsx",
-    "src/hooks/useAICoach.ts"
+    "src/components/security/SessionsPanel.tsx"
    ],
    "coberto_por_testes": 2
   },

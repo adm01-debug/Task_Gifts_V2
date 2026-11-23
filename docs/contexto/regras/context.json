@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "0a7aeb7b705315718a8b758f836af8044fca83f5",
+  "sha": "455eeb67aa5a264911d5ef110fefbf2b30ecac55",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
-  "generated_at": "2026-11-23 15:20 UTC",
-  "files_total": 1549,
-  "code_files": 1445,
-  "code_lines": 259123
+  "generated_at": "2026-11-23 15:36 UTC",
+  "files_total": 1551,
+  "code_files": 1447,
+  "code_lines": 259293
  },
  "version": "1.3.2",
- "facts_hash": "0d4496c9c88c7624",
+ "facts_hash": "1de07a855e51a04c",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -196,7 +196,7 @@
   "languages": {
    ".ts": 575,
    ".tsx": 565,
-   ".sql": 273,
+   ".sql": 275,
    ".mjs": 21,
    ".js": 5,
    ".py": 5,
@@ -19513,6 +19513,84 @@
     "comment": "",
     "origin": "migration"
    },
+   "goal_templates": {
+    "columns": [
+     {
+      "name": "id",
+      "type": "UUID PRIMARY KEY DEFAULT gen_random_uuid()",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20261123000000_create_goal_templates.sql"
+     },
+     {
+      "name": "title",
+      "type": "TEXT NOT NULL",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20261123000000_create_goal_templates.sql"
+     },
+     {
+      "name": "description",
+      "type": "TEXT",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20261123000000_create_goal_templates.sql"
+     },
+     {
+      "name": "goal_type",
+      "type": "TEXT NOT NULL DEFAULT 'personal' CHECK (goal_type IN ('personal', 'team', 'company'))",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20261123000000_create_goal_templates.sql"
+     },
+     {
+      "name": "priority",
+      "type": "TEXT NOT NULL DEFAULT 'medium' CHECK (priority IN ('low', 'medium', 'high'))",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20261123000000_create_goal_templates.sql"
+     },
+     {
+      "name": "xp_reward",
+      "type": "INTEGER NOT NULL DEFAULT 100 CHECK (xp_reward >= 0)",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20261123000000_create_goal_templates.sql"
+     },
+     {
+      "name": "coin_reward",
+      "type": "INTEGER NOT NULL DEFAULT 50 CHECK (coin_reward >= 0)",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20261123000000_create_goal_templates.sql"
+     },
+     {
+      "name": "created_by",
+      "type": "UUID REFERENCES auth.users(id) ON DELETE SET NULL",
+      "fk": "users.id ON DELETE SET NULL",
+      "generated": "",
+      "src": "supabase/migrations/20261123000000_create_goal_templates.sql"
+     },
+     {
+      "name": "created_at",
+      "type": "TIMESTAMPTZ NOT NULL DEFAULT now()",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20261123000000_create_goal_templates.sql"
+     },
+     {
+      "name": "updated_at",
+      "type": "TIMESTAMPTZ NOT NULL DEFAULT now()",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20261123000000_create_goal_templates.sql"
+     }
+    ],
+    "constraints": [],
+    "src": "supabase/migrations/20261123000000_create_goal_templates.sql",
+    "comment": "",
+    "origin": "migration"
+   },
    "demographic_attributes": {
     "columns": [
      {
@@ -25386,6 +25464,46 @@
     "using": "changed_by = auth.uid() OR has_role(auth.uid(), 'admin'::app_role)",
     "check": "",
     "src": "supabase/migrations/20260906120000_posvalidacao_fixes.sql"
+   },
+   {
+    "name": "goal_templates_select",
+    "table": "goal_templates",
+    "cmd": "SELECT",
+    "roles": "authenticated",
+    "mode": "permissive",
+    "using": "true",
+    "check": "",
+    "src": "supabase/migrations/20261123000000_create_goal_templates.sql"
+   },
+   {
+    "name": "goal_templates_insert",
+    "table": "goal_templates",
+    "cmd": "INSERT",
+    "roles": "authenticated",
+    "mode": "permissive",
+    "using": "",
+    "check": "EXISTS ( SELECT 1 FROM public.user_roles ur WHERE ur.user_id = auth.uid() AND ur.role = 'admin' )",
+    "src": "supabase/migrations/20261123000000_create_goal_templates.sql"
+   },
+   {
+    "name": "goal_templates_update",
+    "table": "goal_templates",
+    "cmd": "UPDATE",
+    "roles": "authenticated",
+    "mode": "permissive",
+    "using": "EXISTS ( SELECT 1 FROM public.user_roles ur WHERE ur.user_id = auth.uid() AND ur.role = 'admin' )",
+    "check": "EXISTS ( SELECT 1 FROM public.user_roles ur WHERE ur.user_id = auth.uid() AND ur.role = 'admin' )",
+    "src": "supabase/migrations/20261123000000_create_goal_templates.sql"
+   },
+   {
+    "name": "goal_templates_delete",
+    "table": "goal_templates",
+    "cmd": "DELETE",
+    "roles": "authenticated",
+    "mode": "permissive",
+    "using": "EXISTS ( SELECT 1 FROM public.user_roles ur WHERE ur.user_id = auth.uid() AND ur.role = 'admin' )",
+    "check": "",
+    "src": "supabase/migrations/20261123000000_create_goal_templates.sql"
    }
   ],
   "triggers": [
@@ -26468,6 +26586,15 @@
     "condition": "",
     "each": "row",
     "src": "supabase/migrations/20260806191000_recreate_handle_new_user_trigger.sql"
+   },
+   {
+    "name": "trg_goal_templates_updated_at",
+    "when": "BEFORE UPDATE",
+    "table": "goal_templates",
+    "function": "set_goal_templates_updated_at",
+    "condition": "",
+    "each": "row",
+    "src": "supabase/migrations/20261123000000_create_goal_templates.sql"
    }
   ],
   "functions": {
@@ -30492,17 +30619,29 @@
     "args": "p_week_key text",
     "returns": "void",
     "lang": "plpgsql",
-    "src": "supabase/migrations/20261122140000_acknowledge_security_digest.sql",
+    "src": "supabase/migrations/20261123000001_create_acknowledge_security_digest.sql",
     "security_definer": true,
     "search_path": true,
-    "body": "DECLARE _uid uuid := auth.uid(); BEGIN IF _uid IS NULL THEN RAISE EXCEPTION 'not_authenticated' USING ERRCODE = '28000'; END IF; IF NOT public.has_role(_uid, 'admin'::app_role) AND NOT public.has_role(_uid, 'manager'::app_role) THEN RAISE EXCEPTION 'forbidden'; END IF; UPDATE public.notifications SET data = jsonb_set( data, '{acknowledgments}', COALESCE(data->'acknowledgments', '[]'::jsonb) || jsonb_build_object('user_id', _uid, 'at', now()) ) WHERE type = 'security_weekly_digest' AND data->>'week_key' = p_week_key AND NOT ( COALESCE(data->'acknowledgments', '[]'::jsonb) @> jsonb_build_array(jsonb_build_object('user_id', _uid)) ); END;",
+    "body": "DECLARE v_notif_id uuid; v_user_id uuid := auth.uid(); v_acks jsonb; v_new_ack jsonb; BEGIN IF v_user_id IS NULL THEN RAISE EXCEPTION 'not authenticated'; END IF; SELECT id, COALESCE(data->'acknowledgments', '[]'::jsonb) INTO v_notif_id, v_acks FROM public.notifications WHERE type = 'security_weekly_digest' AND data->>'week_key' = p_week_key ORDER BY created_at DESC LIMIT 1; IF v_notif_id IS NULL THEN RAISE EXCEPTION 'digest not found: %', p_week_key; END IF; IF NOT (v_acks @> jsonb_build_array(jsonb_build_object('user_id', v_user_id))) THEN v_new_ack := jsonb_build_object('user_id', v_user_id, 'acknowledged_at', now()); UPDATE public.notifications SET data = jsonb_set(data, '{acknowledgment …",
     "raises": [
-     "not_authenticated",
-     "forbidden"
+     "not authenticated",
+     "digest not found: %"
     ],
     "tables": [
-     "notifications"
+     "notifications",
+     "v_notif_id"
     ]
+   },
+   "set_goal_templates_updated_at": {
+    "args": "",
+    "returns": "TRIGGER",
+    "lang": "plpgsql",
+    "src": "supabase/migrations/20261123000000_create_goal_templates.sql",
+    "security_definer": false,
+    "search_path": false,
+    "body": "BEGIN NEW.updated_at = now(); RETURN NEW; END;",
+    "raises": [],
+    "tables": []
    },
    "add_xp": {
     "args": "p_user_id uuid, p_amount integer, p_source text DEFAULT NULL",
@@ -33427,6 +33566,8 @@
    "supabase/migrations/20261114110500_fix_cron_campaigns_alert_check.sql",
    "supabase/migrations/20261114134238_9b119528-da6f-4f43-b6cb-dcdcd7aa7ab1.sql",
    "supabase/migrations/20261122140000_acknowledge_security_digest.sql",
+   "supabase/migrations/20261123000000_create_goal_templates.sql",
+   "supabase/migrations/20261123000001_create_acknowledge_security_digest.sql",
    "supabase/migrations/20261218000000_profiles_economia_rpcs.sql",
    "supabase/migrations/20261220000000_fix_sre_rpcs_and_dispatch_trigger.sql",
    "src/integrations/supabase/types.ts"
@@ -33657,7 +33798,8 @@
    "board_trails": "enabled",
    "board_tiles": "enabled",
    "board_player_states": "enabled",
-   "board_moves": "enabled"
+   "board_moves": "enabled",
+   "goal_templates": "enabled"
   },
   "grants": [
    {
@@ -40957,6 +41099,14 @@
     "src": "supabase/migrations/20261122140000_acknowledge_security_digest.sql"
    },
    {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "acknowledge_security_digest",
+    "objkind": "function",
+    "roles": "authenticated",
+    "src": "supabase/migrations/20261123000001_create_acknowledge_security_digest.sql"
+   },
+   {
     "kind": "revoke",
     "privs": "all",
     "object": "add_xp",
@@ -41938,13 +42088,13 @@
    },
    {
     "function": "acknowledge_security_digest",
-    "msg": "not_authenticated",
-    "src": "supabase/migrations/20261122140000_acknowledge_security_digest.sql"
+    "msg": "not authenticated",
+    "src": "supabase/migrations/20261123000001_create_acknowledge_security_digest.sql"
    },
    {
     "function": "acknowledge_security_digest",
-    "msg": "forbidden",
-    "src": "supabase/migrations/20261122140000_acknowledge_security_digest.sql"
+    "msg": "digest not found: %",
+    "src": "supabase/migrations/20261123000001_create_acknowledge_security_digest.sql"
    },
    {
     "function": "add_xp",
@@ -47986,7 +48136,7 @@
   {
    "module": "src",
    "files": 3,
-   "lines": 415,
+   "lines": 416,
    "tables": [],
    "exports": [
     "App.tsx: App"
@@ -48019,7 +48169,7 @@
   {
    "module": "src/components",
    "files": 461,
-   "lines": 77768,
+   "lines": 77825,
    "tables": [
     "attendance_records",
     "audit_logs",
@@ -49533,8 +49683,8 @@
   },
   {
    "module": "supabase/migrations",
-   "files": 273,
-   "lines": 29920,
+   "files": 275,
+   "lines": 30032,
    "tables": [],
    "exports": [],
    "docs": [],
@@ -53934,6 +54084,7 @@
    "geo_allowed_countries",
    "geo_blocking_rules",
    "geo_settings",
+   "goal_templates",
    "level_configs",
    "lightning_quiz_answers",
    "lightning_quiz_questions",
@@ -56008,6 +56159,18 @@
    {
     "file": "src/components/admin/DepartmentsManager.tsx",
     "msg": "Nome é obrigatório"
+   },
+   {
+    "file": "src/components/admin/GoalsManager.tsx",
+    "msg": "Erro ao duplicar: ${(e as Error).message}"
+   },
+   {
+    "file": "src/components/admin/GoalsManager.tsx",
+    "msg": "Erro ao remover: ${(e as Error).message}"
+   },
+   {
+    "file": "src/components/admin/GoalsManager.tsx",
+    "msg": "Erro: ${(e as Error).message}"
    },
    {
     "file": "src/components/admin/IssuedCredentialDialog.tsx",
@@ -69334,6 +69497,51 @@
     "rule": "constraint board_moves_roll_check CHECK (roll >= 0 AND roll <= 20)"
    },
    {
+    "table": "goal_templates",
+    "column": "id",
+    "rule": "PK; default gen_random_uuid()"
+   },
+   {
+    "table": "goal_templates",
+    "column": "title",
+    "rule": "obrigatório"
+   },
+   {
+    "table": "goal_templates",
+    "column": "goal_type",
+    "rule": "default 'personal'; CHECK goal_type IN ('personal', 'team', 'company')"
+   },
+   {
+    "table": "goal_templates",
+    "column": "priority",
+    "rule": "default 'medium'; CHECK priority IN ('low', 'medium', 'high')"
+   },
+   {
+    "table": "goal_templates",
+    "column": "xp_reward",
+    "rule": "default 100; CHECK xp_reward >= 0"
+   },
+   {
+    "table": "goal_templates",
+    "column": "coin_reward",
+    "rule": "default 50; CHECK coin_reward >= 0"
+   },
+   {
+    "table": "goal_templates",
+    "column": "created_by",
+    "rule": "FK → users.id ON DELETE SET NULL"
+   },
+   {
+    "table": "goal_templates",
+    "column": "created_at",
+    "rule": "default now()"
+   },
+   {
+    "table": "goal_templates",
+    "column": "updated_at",
+    "rule": "default now()"
+   },
+   {
     "table": "demographic_attributes",
     "column": "allow_prefer_not_answer",
     "rule": "obrigatório"
@@ -79180,7 +79388,7 @@
    },
    {
     "file": "src/components/admin/GoalsManager.tsx",
-    "line": "transition={{ delay: index * 0.05 }}"
+    "line": "transition={{ delay: index * 0.1 }}"
    },
    {
     "file": "src/components/admin/LeaguesManager.tsx",
@@ -93071,6 +93279,46 @@
     "using": "changed_by = auth.uid() OR has_role(auth.uid(), 'admin'::app_role)",
     "check": "",
     "src": "supabase/migrations/20260906120000_posvalidacao_fixes.sql"
+   },
+   {
+    "name": "goal_templates_select",
+    "table": "goal_templates",
+    "cmd": "SELECT",
+    "roles": "authenticated",
+    "mode": "permissive",
+    "using": "true",
+    "check": "",
+    "src": "supabase/migrations/20261123000000_create_goal_templates.sql"
+   },
+   {
+    "name": "goal_templates_insert",
+    "table": "goal_templates",
+    "cmd": "INSERT",
+    "roles": "authenticated",
+    "mode": "permissive",
+    "using": "",
+    "check": "EXISTS ( SELECT 1 FROM public.user_roles ur WHERE ur.user_id = auth.uid() AND ur.role = 'admin' )",
+    "src": "supabase/migrations/20261123000000_create_goal_templates.sql"
+   },
+   {
+    "name": "goal_templates_update",
+    "table": "goal_templates",
+    "cmd": "UPDATE",
+    "roles": "authenticated",
+    "mode": "permissive",
+    "using": "EXISTS ( SELECT 1 FROM public.user_roles ur WHERE ur.user_id = auth.uid() AND ur.role = 'admin' )",
+    "check": "EXISTS ( SELECT 1 FROM public.user_roles ur WHERE ur.user_id = auth.uid() AND ur.role = 'admin' )",
+    "src": "supabase/migrations/20261123000000_create_goal_templates.sql"
+   },
+   {
+    "name": "goal_templates_delete",
+    "table": "goal_templates",
+    "cmd": "DELETE",
+    "roles": "authenticated",
+    "mode": "permissive",
+    "using": "EXISTS ( SELECT 1 FROM public.user_roles ur WHERE ur.user_id = auth.uid() AND ur.role = 'admin' )",
+    "check": "",
+    "src": "supabase/migrations/20261123000000_create_goal_templates.sql"
    }
   ],
   "db_triggers": [
@@ -94153,6 +94401,15 @@
     "condition": "",
     "each": "row",
     "src": "supabase/migrations/20260806191000_recreate_handle_new_user_trigger.sql"
+   },
+   {
+    "name": "trg_goal_templates_updated_at",
+    "when": "BEFORE UPDATE",
+    "table": "goal_templates",
+    "function": "set_goal_templates_updated_at",
+    "condition": "",
+    "each": "row",
+    "src": "supabase/migrations/20261123000000_create_goal_templates.sql"
    }
   ],
   "db_functions": {
@@ -98177,17 +98434,29 @@
     "args": "p_week_key text",
     "returns": "void",
     "lang": "plpgsql",
-    "src": "supabase/migrations/20261122140000_acknowledge_security_digest.sql",
+    "src": "supabase/migrations/20261123000001_create_acknowledge_security_digest.sql",
     "security_definer": true,
     "search_path": true,
-    "body": "DECLARE _uid uuid := auth.uid(); BEGIN IF _uid IS NULL THEN RAISE EXCEPTION 'not_authenticated' USING ERRCODE = '28000'; END IF; IF NOT public.has_role(_uid, 'admin'::app_role) AND NOT public.has_role(_uid, 'manager'::app_role) THEN RAISE EXCEPTION 'forbidden'; END IF; UPDATE public.notifications SET data = jsonb_set( data, '{acknowledgments}', COALESCE(data->'acknowledgments', '[]'::jsonb) || jsonb_build_object('user_id', _uid, 'at', now()) ) WHERE type = 'security_weekly_digest' AND data->>'week_key' = p_week_key AND NOT ( COALESCE(data->'acknowledgments', '[]'::jsonb) @> jsonb_build_array(jsonb_build_object('user_id', _uid)) ); END;",
+    "body": "DECLARE v_notif_id uuid; v_user_id uuid := auth.uid(); v_acks jsonb; v_new_ack jsonb; BEGIN IF v_user_id IS NULL THEN RAISE EXCEPTION 'not authenticated'; END IF; SELECT id, COALESCE(data->'acknowledgments', '[]'::jsonb) INTO v_notif_id, v_acks FROM public.notifications WHERE type = 'security_weekly_digest' AND data->>'week_key' = p_week_key ORDER BY created_at DESC LIMIT 1; IF v_notif_id IS NULL THEN RAISE EXCEPTION 'digest not found: %', p_week_key; END IF; IF NOT (v_acks @> jsonb_build_array(jsonb_build_object('user_id', v_user_id))) THEN v_new_ack := jsonb_build_object('user_id', v_user_id, 'acknowledged_at', now()); UPDATE public.notifications SET data = jsonb_set(data, '{acknowledgment …",
     "raises": [
-     "not_authenticated",
-     "forbidden"
+     "not authenticated",
+     "digest not found: %"
     ],
     "tables": [
-     "notifications"
+     "notifications",
+     "v_notif_id"
     ]
+   },
+   "set_goal_templates_updated_at": {
+    "args": "",
+    "returns": "TRIGGER",
+    "lang": "plpgsql",
+    "src": "supabase/migrations/20261123000000_create_goal_templates.sql",
+    "security_definer": false,
+    "search_path": false,
+    "body": "BEGIN NEW.updated_at = now(); RETURN NEW; END;",
+    "raises": [],
+    "tables": []
    },
    "add_xp": {
     "args": "p_user_id uuid, p_amount integer, p_source text DEFAULT NULL",
@@ -99475,13 +99744,13 @@
    },
    {
     "function": "acknowledge_security_digest",
-    "msg": "not_authenticated",
-    "src": "supabase/migrations/20261122140000_acknowledge_security_digest.sql"
+    "msg": "not authenticated",
+    "src": "supabase/migrations/20261123000001_create_acknowledge_security_digest.sql"
    },
    {
     "function": "acknowledge_security_digest",
-    "msg": "forbidden",
-    "src": "supabase/migrations/20261122140000_acknowledge_security_digest.sql"
+    "msg": "digest not found: %",
+    "src": "supabase/migrations/20261123000001_create_acknowledge_security_digest.sql"
    },
    {
     "function": "add_xp",
@@ -103131,6 +103400,21 @@
     ],
     "DELETE": [
      "public: EXISTS ( SELECT 1 FROM public.user_roles ur WHERE ur.user_id = auth.uid() AND ur.role = 'admin'::app_role )"
+    ]
+   },
+   "goal_templates": {
+    "rls": "enabled",
+    "SELECT": [
+     "authenticated: true"
+    ],
+    "INSERT": [
+     "authenticated: EXISTS ( SELECT 1 FROM public.user_roles ur WHERE ur.user_id = auth.uid() AND ur.role = 'admin' )"
+    ],
+    "UPDATE": [
+     "authenticated: EXISTS ( SELECT 1 FROM public.user_roles ur WHERE ur.user_id = auth.uid() AND ur.role = 'admin' )"
+    ],
+    "DELETE": [
+     "authenticated: EXISTS ( SELECT 1 FROM public.user_roles ur WHERE ur.user_id = auth.uid() AND ur.role = 'admin' )"
     ]
    },
    "goal_updates": {
@@ -112752,6 +113036,14 @@
     "src": "supabase/migrations/20261122140000_acknowledge_security_digest.sql"
    },
    {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "acknowledge_security_digest",
+    "objkind": "function",
+    "roles": "authenticated",
+    "src": "supabase/migrations/20261123000001_create_acknowledge_security_digest.sql"
+   },
+   {
     "kind": "revoke",
     "privs": "all",
     "object": "add_xp",
@@ -114842,6 +115134,11 @@
    "board_moves": [
     "created_at"
    ],
+   "goal_templates": [
+    "created_at",
+    "created_by",
+    "updated_at"
+   ],
    "demographic_attributes": [
     "created_at",
     "updated_at"
@@ -115704,7 +116001,7 @@
    "`wager_integrity_review_events.previous_status` é uma coluna de status sem enum/CHECK — os valores válidos e as transições permitidas não estão no banco.",
    "`wager_integrity_review_events.new_status` é uma coluna de status sem enum/CHECK — os valores válidos e as transições permitidas não estão no banco.",
    "`profiles_public.status` é uma coluna de status sem enum/CHECK — os valores válidos e as transições permitidas não estão no banco.",
-   "235/237 tabelas sem `COMMENT ON TABLE` — o significado de negócio não está no schema: `entity_versions`, `profiles`, `user_roles`, `departments`, `team_members`, `custom_quests`, `quest_steps`, `quest_assignments`, `notifications`, `kudos_badges`, `kudos`, `audit_logs` …",
+   "236/238 tabelas sem `COMMENT ON TABLE` — o significado de negócio não está no schema: `entity_versions`, `profiles`, `user_roles`, `departments`, `team_members`, `custom_quests`, `quest_steps`, `quest_assignments`, `notifications`, `kudos_badges`, `kudos`, `audit_logs` …",
    "Há tabelas usadas no código sem migration no repo — o schema real pode ter sido alterado pelo painel."
   ]
  },
@@ -117014,7 +117311,7 @@
   },
   "src/App.tsx": {
    "path": "src/App.tsx",
-   "lines": 333,
+   "lines": 334,
    "exports": [
     "default App"
    ],
@@ -119623,9 +119920,14 @@
   },
   "src/components/admin/GoalsManager.tsx": {
    "path": "src/components/admin/GoalsManager.tsx",
-   "lines": 295,
+   "lines": 352,
    "exports": [
     "function GoalsManager"
+   ],
+   "errors": [
+    "Erro ao duplicar: ${(e as Error).message}",
+    "Erro ao remover: ${(e as Error).message}",
+    "Erro: ${(e as Error).message}"
    ],
    "html_constraints": [
     {
@@ -119638,7 +119940,7 @@
     }
    ],
    "percents": [
-    "transition={{ delay: index * 0.05 }}"
+    "transition={{ delay: index * 0.1 }}"
    ]
   },
   "src/components/admin/IpWhitelistManager.tsx": {
@@ -151268,6 +151570,14 @@
     "manager"
    ]
   },
+  "supabase/migrations/20261123000000_create_goal_templates.sql": {
+   "path": "supabase/migrations/20261123000000_create_goal_templates.sql",
+   "lines": 85
+  },
+  "supabase/migrations/20261123000001_create_acknowledge_security_digest.sql": {
+   "path": "supabase/migrations/20261123000001_create_acknowledge_security_digest.sql",
+   "lines": 27
+  },
   "supabase/migrations/20261218000000_profiles_economia_rpcs.sql": {
    "path": "supabase/migrations/20261218000000_profiles_economia_rpcs.sql",
    "lines": 215,
@@ -151365,10 +151675,22 @@
   }
  },
  "git": {
-  "sha": "0a7aeb7b705315718a8b758f836af8044fca83f5",
+  "sha": "455eeb67aa5a264911d5ef110fefbf2b30ecac55",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "commits": [
+   {
+    "sha": "455eeb6",
+    "date": "2026-11-23",
+    "author": "adm01-debug",
+    "subject": "feat(admin/app): OfflineIndicator global + GoalsManager persistente (Supabase) (#110)",
+    "files": [
+     "src/App.tsx",
+     "src/components/admin/GoalsManager.tsx",
+     "supabase/migrations/20261123000000_create_goal_templates.sql",
+     "supabase/migrations/20261123000001_create_acknowledge_security_digest.sql"
+    ]
+   },
    {
     "sha": "0a7aeb7",
     "date": "2026-11-23",
@@ -151728,23 +152050,6 @@
     "files": [
      "docs/estado/05-edge-functions.md"
     ]
-   },
-   {
-    "sha": "08928cc",
-    "date": "2026-11-21",
-    "author": "adm01-debug",
-    "subject": "feat(edge): move API de IA de Lovable para OpenRouter nas 6 edge functions",
-    "files": [
-     "docs/estado/03-hooks-services-lib.md",
-     "docs/estado/05-edge-functions.md",
-     "docs/estado/06-integracoes.md",
-     "supabase/functions/ai-coach/index.ts",
-     "supabase/functions/ai-course-builder/index.ts",
-     "supabase/functions/churn-prediction/index.ts",
-     "supabase/functions/generate-quiz-questions/index.ts",
-     "supabase/functions/reward-approval-review/index.ts",
-     "supabase/functions/trail-recommendations/index.ts"
-    ]
    }
   ],
   "hot_files": [
@@ -151753,15 +152058,15 @@
     5
    ],
    [
-    "docs/estado/05-edge-functions.md",
-    5
-   ],
-   [
     "supabase/functions/_shared/contracts/_fixtures/index.ts",
     5
    ],
    [
     "bun.lock",
+    4
+   ],
+   [
+    "docs/estado/05-edge-functions.md",
     4
    ],
    [
@@ -151775,6 +152080,10 @@
    [
     "supabase/functions/webhook-dispatcher/index.ts",
     3
+   ],
+   [
+    "src/App.tsx",
+    2
    ],
    [
     "src/pages/EngagementReports.tsx",
@@ -151822,10 +152131,6 @@
    ],
    [
     "supabase/functions/_shared/contracts/send-campaign-push.ts",
-    2
-   ],
-   [
-    "supabase/functions/_shared/contracts/validation.contract.spec.ts",
     2
    ]
   ]

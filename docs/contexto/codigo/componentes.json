@@ -44,7 +44,7 @@
     "App"
    ],
    "export_default": "App",
-   "linhas": 333,
+   "linhas": 334,
    "dominio": null,
    "hooks_locais": [
     "useAuth",
@@ -473,10 +473,14 @@
     "GoalsManager"
    ],
    "export_default": null,
-   "linhas": 295,
+   "linhas": 352,
    "dominio": "components/admin",
-   "hooks_locais": [],
-   "tabelas": [],
+   "hooks_locais": [
+    "useAuth"
+   ],
+   "tabelas": [
+    "goal_templates"
+   ],
    "edges": [],
    "usado_por": 1,
    "orfao": false
@@ -7305,7 +7309,7 @@
    ],
    "tabelas": [],
    "edges": [],
-   "usado_por": 97,
+   "usado_por": 98,
    "orfao": false
   },
   {

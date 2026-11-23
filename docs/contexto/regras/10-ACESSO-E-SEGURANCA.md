@@ -1,6 +1,6 @@
 # 10 · ACESSO E SEGURANÇA — quem pode o quê
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `0a7aeb7b70` · branch `main` · 2026-11-23 15:20 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `455eeb67aa` · branch `main` · 2026-11-23 15:36 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## Perfis / roles identificados
@@ -115,6 +115,7 @@
 | `geo_allowed_countries` | enabled | public: EXISTS ( SELECT 1 FROM public.user_roles ur WHERE ur.user_id = auth.uid() AND ur.role = 'admin'::app_role )<br>authenticated: public.has_role(auth.uid(), 'admin'::app_role) | public: EXISTS ( SELECT 1 FROM public.user_roles ur WHERE ur.user_id = auth.uid() AND ur.role = 'admin'::app_role ) | public: EXISTS ( SELECT 1 FROM public.user_roles ur WHERE ur.user_id = auth.uid() AND ur.role = 'admin'::app_role ) | public: EXISTS ( SELECT 1 FROM public.user_roles ur WHERE ur.user_id = auth.uid() AND ur.role = 'admin'::app_role ) |
 | `geo_blocking_rules` | não encontrado | authenticated: public.has_role(auth.uid(), 'admin'::app_role) | sem RLS | sem RLS | sem RLS |
 | `geo_settings` | enabled | public: EXISTS ( SELECT 1 FROM public.user_roles ur WHERE ur.user_id = auth.uid() AND ur.role = 'admin'::app_role )<br>authenticated: public.has_role(auth.uid(), 'admin'::app_role) | public: EXISTS ( SELECT 1 FROM public.user_roles ur WHERE ur.user_id = auth.uid() AND ur.role = 'admin'::app_role ) | public: EXISTS ( SELECT 1 FROM public.user_roles ur WHERE ur.user_id = auth.uid() AND ur.role = 'admin'::app_role ) | public: EXISTS ( SELECT 1 FROM public.user_roles ur WHERE ur.user_id = auth.uid() AND ur.role = 'admin'::app_role ) |
+| `goal_templates` | enabled | authenticated: true | authenticated: EXISTS ( SELECT 1 FROM public.user_roles ur WHERE ur.user_id = auth.uid() AND ur.role = 'admin' ) | authenticated: EXISTS ( SELECT 1 FROM public.user_roles ur WHERE ur.user_id = auth.uid() AND ur.role = 'admin' ) | authenticated: EXISTS ( SELECT 1 FROM public.user_roles ur WHERE ur.user_id = auth.uid() AND ur.role = 'admin' ) |
 | `goal_updates` | enabled | authenticated: EXISTS ( SELECT 1 FROM public.goals g WHERE g.id = goal_updates.goal_id AND (g.user_id = auth.uid() OR public.has_role(auth.u | public: EXISTS ( SELECT 1 FROM public.goals g WHERE g.id = goal_id AND (g.user_id = auth.uid() OR has_role(auth.uid(), 'admin')) ) | — | — |
 | `goals` | enabled | public: user_id = auth.uid()<br>public: goal_type = 'team' AND department_id IN ( SELECT department_id FROM public.team_members WHERE user_id = auth.uid() )<br>public: goal_type = 'company'<br>public: has_role(auth.uid(), 'admin') OR has_role(auth.uid(), 'manager') | public: user_id = auth.uid()<br>public: has_role(auth.uid(), 'admin') OR has_role(auth.uid(), 'manager') | public: user_id = auth.uid()<br>public: has_role(auth.uid(), 'admin') OR has_role(auth.uid(), 'manager') | public: user_id = auth.uid() AND status = 'draft'<br>public: has_role(auth.uid(), 'admin') OR has_role(auth.uid(), 'manager') |
 | `ip_access_logs` | enabled | authenticated: public.has_role(auth.uid(), 'admin') | — | — | — |
@@ -737,7 +738,7 @@ Middleware matcher (Next.js): nenhum
 | grant | anon, authenticated | execute | `get_passkeys_by_email`, `user_has_passkeys`, `verify_certificate`, `get_passkeys_by_email` |
 | grant | anon, authenticated | select | `weekly_challenges`, `organizations` |
 | grant | anon, authenticated, service_role | execute | `get_2fa_status`, `user_has_passkeys` |
-| grant | authenticated | execute | `get_executive_metrics`, `get_monthly_trends`, `get_department_metrics`, `generate_engagement_snapshot`, `get_department_metrics`, `get_executive_metrics`, `get_monthly_trends`, `get_nine_box_distribution`, `get_security_stats`, `generate_engagement_snapshot`, `get_quiz_category_stats`, `get_webhook_delivery_hourly_24h`, `get_alert_mttr_by_type_7d`, `get_alert_heatmap_30d`, `get_security_digest_history` … +100 |
+| grant | authenticated | execute | `get_executive_metrics`, `get_monthly_trends`, `get_department_metrics`, `generate_engagement_snapshot`, `get_department_metrics`, `get_executive_metrics`, `get_monthly_trends`, `get_nine_box_distribution`, `get_security_stats`, `generate_engagement_snapshot`, `get_quiz_category_stats`, `get_webhook_delivery_hourly_24h`, `get_alert_mttr_by_type_7d`, `get_alert_heatmap_30d`, `get_security_digest_history` … +101 |
 | grant | authenticated | insert | `user_challenges` |
 | grant | authenticated | insert, update, delete | `boss_battles`, `boss_win_rate_goals`, `memory_decks`, `memory_pairs` |
 | grant | authenticated | select | `push_notification_logs`, `engagement_action_playbooks`, `nr1_risk_categories`, `nr1_factor_mappings`, `purchase_approvals`, `campaign_team_split_batches`, `campaign_team_split_entries`, `lucky_wheel_prize_audit`, `lucky_wheel_payout_snapshots`, `lucky_wheel_settings_audit`, `scratch_card_prizes`, `scratch_cards`, `lightning_quiz_sessions`, `lightning_quiz_answers`, `lightning_quiz_sessions` … +39 |
@@ -1055,6 +1056,7 @@ Middleware matcher (Next.js): nenhum
 | `board_tiles` | `created_at`, `updated_at` |
 | `board_player_states` | `created_at`, `updated_at` |
 | `board_moves` | `created_at` |
+| `goal_templates` | `created_at`, `created_by`, `updated_at` |
 | `demographic_attributes` | `created_at`, `updated_at` |
 | `geo_access_logs` | `created_at` |
 | `geo_blocking_rules` | `created_at`, `created_by`, `updated_at` |

@@ -6,7 +6,7 @@
   "src/integrations/supabase/types.ts",
   "supabase/migrations"
  ],
- "migrations": 273,
+ "migrations": 275,
  "seeds": [],
  "avisos": [
   "11 bloco(s) com DDL dinâmico (EXECUTE format/...) não modelado — policies/colunas criadas dinamicamente podem faltar; confira no banco vivo"
@@ -373,6 +373,7 @@
   "save_wager_question",
   "set_certificate_identity",
   "set_external_api_key_active",
+  "set_goal_templates_updated_at",
   "set_opinion_status",
   "set_postmortem_action_completed_at",
   "settle_auction",
@@ -742,6 +743,13 @@
    "evento": "update",
    "tabela": "feedback_requests",
    "funcao": "update_updated_at_column"
+  },
+  {
+   "nome": "trg_goal_templates_updated_at",
+   "quando": "before",
+   "evento": "update",
+   "tabela": "goal_templates",
+   "funcao": "set_goal_templates_updated_at"
   },
   {
    "nome": "update_goals_updated_at",
@@ -14512,6 +14520,119 @@
    "triggers": [],
    "sem_rls": false,
    "nao_usada": true
+  },
+  "goal_templates": {
+   "colunas": {
+    "coin_reward": {
+     "tipo": "integer",
+     "nn": true,
+     "pk": false,
+     "default": "50",
+     "ref": null
+    },
+    "created_at": {
+     "tipo": "timestamptz",
+     "nn": true,
+     "pk": false,
+     "default": "now()",
+     "ref": null
+    },
+    "created_by": {
+     "tipo": "uuid",
+     "nn": false,
+     "pk": false,
+     "default": null,
+     "ref": "auth"
+    },
+    "description": {
+     "tipo": "text",
+     "nn": false,
+     "pk": false,
+     "default": null,
+     "ref": null
+    },
+    "goal_type": {
+     "tipo": "text",
+     "nn": true,
+     "pk": false,
+     "default": "'personal'",
+     "ref": null
+    },
+    "id": {
+     "tipo": "uuid",
+     "nn": false,
+     "pk": true,
+     "default": "gen_random_uuid()",
+     "ref": null
+    },
+    "priority": {
+     "tipo": "text",
+     "nn": true,
+     "pk": false,
+     "default": "'medium'",
+     "ref": null
+    },
+    "title": {
+     "tipo": "text",
+     "nn": true,
+     "pk": false,
+     "default": null,
+     "ref": null
+    },
+    "updated_at": {
+     "tipo": "timestamptz",
+     "nn": true,
+     "pk": false,
+     "default": "now()",
+     "ref": null
+    },
+    "xp_reward": {
+     "tipo": "integer",
+     "nn": true,
+     "pk": false,
+     "default": "100",
+     "ref": null
+    }
+   },
+   "rls": true,
+   "policies": [
+    {
+     "nome": "goal_templates_delete",
+     "comando": "delete",
+     "para": "authenticated",
+     "tipo": "permissive"
+    },
+    {
+     "nome": "goal_templates_insert",
+     "comando": "insert",
+     "para": "authenticated",
+     "tipo": "permissive"
+    },
+    {
+     "nome": "goal_templates_select",
+     "comando": "select",
+     "para": "authenticated",
+     "tipo": "permissive"
+    },
+    {
+     "nome": "goal_templates_update",
+     "comando": "update",
+     "para": "authenticated",
+     "tipo": "permissive"
+    }
+   ],
+   "indices": [],
+   "fks": [
+    "created_by->auth"
+   ],
+   "criada_em": "20261123000000_create_goal_templates.sql",
+   "usada_no_front": 1,
+   "usada_em_edges": [],
+   "triggers": [
+    "trg_goal_templates_updated_at"
+   ],
+   "sem_rls": false,
+   "nao_usada": false
   },
   "goal_updates": {
    "colunas": {

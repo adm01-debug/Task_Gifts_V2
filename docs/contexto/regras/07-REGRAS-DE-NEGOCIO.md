@@ -1,6 +1,6 @@
 # 07 · REGRAS DE NEGÓCIO
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `0a7aeb7b70` · branch `main` · 2026-11-23 15:20 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `455eeb67aa` · branch `main` · 2026-11-23 15:36 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## A. Regras escritas por humanos (`manual/` — prioridade máxima, nunca sobrescrito)
@@ -311,7 +311,7 @@ _Nenhum arquivo em `manual/`. Copie `manual/TEMPLATE-regras-de-negocio.md` para 
 | `new_device_alerts` | Users can view their own alerts | SELECT | public | permissive | `auth.uid() = user_id` |  |
 | `new_device_alerts` | Users can update their own alerts | UPDATE | public | permissive | `auth.uid() = user_id` |  |
 | `webauthn_credentials` | Users can view their own credentials | SELECT | public | permissive | `auth.uid() = user_id` |  |
-| … +217 linhas — lista completa em `context.json` | | | | | | |
+| … +221 linhas — lista completa em `context.json` | | | | | | |
 
 ## C. Restrições de dados (obrigatório / único / default / CHECK / FK / calculada)
 
@@ -617,7 +617,7 @@ _Nenhum arquivo em `manual/`. Copie `manual/TEMPLATE-regras-de-negocio.md` para 
 | `user_seasonal_progress` | `claimed` | default false |
 | `user_seasonal_progress` | `created_at` | default now() |
 | `user_seasonal_progress` | `updated_at` | default now() |
-| … +1801 linhas — lista completa em `context.json` | | |
+| … +1810 linhas — lista completa em `context.json` | | |
 
 ## D. Automações no banco (triggers e funções — regras que rodam sozinhas)
 
@@ -743,6 +743,7 @@ _Nenhum arquivo em `manual/`. Copie `manual/TEMPLATE-regras-de-negocio.md` para 
 | update_board_player_states_updated_at | BEFORE UPDATE | `board_player_states` | `update_updated_at_column` |  |
 | trg_sync_board_blocked_at | BEFORE INSERT OR UPDATE OF BLOCKED_CHALLENGE_ID | `board_player_states` | `sync_board_blocked_at` |  |
 | on_auth_user_created | AFTER INSERT | `auth.users` | `handle_new_user` |  |
+| trg_goal_templates_updated_at | BEFORE UPDATE | `goal_templates` | `set_goal_templates_updated_at` |  |
 
 Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banco):
 
@@ -918,8 +919,8 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `get_2fa_status` | insufficient_privilege | `supabase/migrations/20261114134238_9b119528-da6f-4f43-b6cb-dcdcd7aa7ab1.sql` |
 | `user_has_passkeys` | insufficient_privilege | `supabase/migrations/20261114134238_9b119528-da6f-4f43-b6cb-dcdcd7aa7ab1.sql` |
 | `validate_reset_token` | insufficient_privilege | `supabase/migrations/20261114134238_9b119528-da6f-4f43-b6cb-dcdcd7aa7ab1.sql` |
-| `acknowledge_security_digest` | not_authenticated | `supabase/migrations/20261122140000_acknowledge_security_digest.sql` |
-| `acknowledge_security_digest` | forbidden | `supabase/migrations/20261122140000_acknowledge_security_digest.sql` |
+| `acknowledge_security_digest` | not authenticated | `supabase/migrations/20261123000001_create_acknowledge_security_digest.sql` |
+| `acknowledge_security_digest` | digest not found: % | `supabase/migrations/20261123000001_create_acknowledge_security_digest.sql` |
 | `add_xp` | p_amount deve ser positivo | `supabase/migrations/20261218000000_profiles_economia_rpcs.sql` |
 | `add_xp` | perfil não encontrado | `supabase/migrations/20261218000000_profiles_economia_rpcs.sql` |
 | `add_coins` | p_amount deve ser positivo | `supabase/migrations/20261218000000_profiles_economia_rpcs.sql` |
@@ -2547,7 +2548,7 @@ _nenhum item encontrado_
 | `transition={{ delay: index * 0.05 }}` | `src/components/admin/AnnouncementPublisher.tsx` |
 | `transition={{ delay: index * 0.05 }}` | `src/components/admin/CelebrationManager.tsx` |
 | `transition={{ delay: index * 0.05 }}` | `src/components/admin/FeedbackCycleManager.tsx` |
-| `transition={{ delay: index * 0.05 }}` | `src/components/admin/GoalsManager.tsx` |
+| `transition={{ delay: index * 0.1 }}` | `src/components/admin/GoalsManager.tsx` |
 | `transition={{ delay: index * 0.05 }}` | `src/components/admin/LeaguesManager.tsx` |
 | `transition={{ delay: index * 0.03 }}` | `src/components/admin/MoodAnalytics.tsx` |
 | `transition={{ delay: index * 0.05 }}` | `src/components/admin/MoodAnalytics.tsx` |
@@ -3235,6 +3236,9 @@ _nenhum item encontrado_
 | Erro ao remover membro | `src/components/admin/DepartmentsManager.tsx` |
 | Erro ao salvar departamento | `src/components/admin/DepartmentsManager.tsx` |
 | Nome é obrigatório | `src/components/admin/DepartmentsManager.tsx` |
+| Erro ao duplicar: ${(e as Error).message} | `src/components/admin/GoalsManager.tsx` |
+| Erro ao remover: ${(e as Error).message} | `src/components/admin/GoalsManager.tsx` |
+| Erro: ${(e as Error).message} | `src/components/admin/GoalsManager.tsx` |
 | ; import {   Dialog,   DialogContent,   DialogDescription,   DialogFooter,   DialogHeader,   DialogTitle, } from  | `src/components/admin/IssuedCredentialDialog.tsx` |
 | Não foi possível copiar. Selecione e copie manualmente. | `src/components/admin/IssuedCredentialDialog.tsx` |
 | Arquivo maior que 2MB | `src/components/admin/OrganizationSettings.tsx` |
@@ -3496,10 +3500,7 @@ _nenhum item encontrado_
 | Falha ao enviar a resposta. | `src/pages/LightningQuizPage.tsx` |
 | Falha ao iniciar a rodada. Tente novamente. | `src/pages/LightningQuizPage.tsx` |
 | Não foi possível encerrar a rodada. | `src/pages/LightningQuizPage.tsx` |
-| Não foi possível registrar a resposta. | `src/pages/LightningQuizPage.tsx` |
-| ; import { Badge } from  | `src/pages/LuckyWheelAdmin.tsx` |
-| Corrija os erros de configuração antes de salvar. | `src/pages/LuckyWheelAdmin.tsx` |
-| … +165 linhas — lista completa em `context.json` | |
+| … +168 linhas — lista completa em `context.json` | |
 
 ## J. Controle de acesso no código (checagens de perfil/permissão)
 
