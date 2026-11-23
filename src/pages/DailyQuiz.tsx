@@ -8,7 +8,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { MagicCardQuiz, QuizQuestion } from "@/components/quiz/MagicCardQuiz";
 import { MillionaireQuiz, MillionaireQuestion } from "@/components/quiz/MillionaireQuiz";
 import { QuizDailyRanking } from "@/components/quiz/QuizDailyRanking";
-import { useSaveQuizScore } from "@/hooks/useQuizScores";
+import { useSaveQuizScore, useUserTodayScores } from "@/hooks/useQuizScores";
 import { useQuizPlaySet } from "@/hooks/useQuizQuestions";
 import { QuizPlayQuestion } from "@/services/quizQuestionsService";
 import { toast } from "sonner";
@@ -68,11 +68,14 @@ export default function DailyQuiz() {
   const navigate = useNavigate();
   const isMobile = useIsMobile();
   const [activeQuiz, setActiveQuiz] = useState<"magic" | "millionaire" | null>(null);
-  const [completedToday, setCompletedToday] = useState({
-    magic: false,
-    millionaire: false,
-  });
   const saveScore = useSaveQuizScore();
+  const { data: todayScores } = useUserTodayScores();
+
+  // "✓ Concluído hoje" persistido em `quiz_scores` (resiste ao reload).
+  const completedToday = {
+    magic: (todayScores ?? []).some(s => s.quiz_type === 'magic_cards'),
+    millionaire: (todayScores ?? []).some(s => s.quiz_type === 'millionaire'),
+  };
 
   // Fetch questions from database
   const { data: magicDbQuestions, isLoading: loadingMagic } = useQuizPlaySet('magic_cards', 10);
@@ -99,7 +102,6 @@ export default function DailyQuiz() {
     }, {
       onSuccess: () => {
         toast.success("Pontuação salva no ranking!");
-        setCompletedToday(prev => ({ ...prev, magic: true }));
       },
     });
   };
@@ -113,7 +115,6 @@ export default function DailyQuiz() {
     }, {
       onSuccess: () => {
         toast.success("Pontuação salva no ranking!");
-        setCompletedToday(prev => ({ ...prev, millionaire: true }));
       },
     });
   };
