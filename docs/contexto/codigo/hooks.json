@@ -1058,7 +1058,7 @@
     "useState"
    ],
    "canais_realtime": [],
-   "usado_por": 100,
+   "usado_por": 101,
    "usado_por_arquivos": [
     "src/App.tsx",
     "src/components/ActivityComments.tsx",

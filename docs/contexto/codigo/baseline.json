@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "f5e9ae6ebf6d036a08c9479849c7ca1cffb1f36b",
+  "commit": "24cdeddbd9faf0995fe9706db70ad2127f503ae4",
   "branch": "main",
-  "data_commit": "2026-11-23T18:40:05-03:00",
+  "data_commit": "2026-11-23T19:23:56-03:00",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "ultimos_commits": [
+   {
+    "sha": "24cdedd",
+    "data": "2026-11-23",
+    "assunto": "feat: liga biblioteca de relatórios (CSV/Excel/PDF) nos dashboards (#124)"
+   },
    {
     "sha": "f5e9ae6",
     "data": "2026-11-23",
@@ -126,14 +131,9 @@
     "sha": "e5fb530",
     "data": "2026-11-22",
     "assunto": "fix(edge): aceita url de app no push e ajusta contrato de versao do webhook (#101)"
-   },
-   {
-    "sha": "03d0d59",
-    "data": "2026-11-22",
-    "assunto": "fix(webhook-dispatcher): devolve 401 em vez de 500 ao rejeitar token sem permissao (#100)"
    }
   ],
-  "arquivos_mudados_7d": 142,
+  "arquivos_mudados_7d": 144,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "supabase/functions/_shared",
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 92
+    "commits": 93
    },
    {
     "autor": "dependabot[bot]",
@@ -310,9 +310,9 @@
   ]
  },
  "contagens": {
-  "arquivos_total": 1545,
-  "arquivos_codigo": 1170,
-  "linhas_codigo": 230222,
+  "arquivos_total": 1546,
+  "arquivos_codigo": 1171,
+  "linhas_codigo": 230511,
   "rotas": 84,
   "rotas_http_backend": 0,
   "vistas_por_id": 0,
@@ -324,7 +324,7 @@
   "tabelas": 237,
   "migrations": 275,
   "cron_jobs": 22,
-  "testes": 162,
+  "testes": 163,
   "workflows": 6,
   "scripts": 16,
   "docs_md": 55
@@ -424,7 +424,7 @@
   },
   "src/lib": {
    "arquivos": 106,
-   "linhas": 22068
+   "linhas": 22067
   },
   "src/main.tsx": {
    "arquivos": 1,
@@ -432,7 +432,7 @@
   },
   "src/pages": {
    "arquivos": 83,
-   "linhas": 23532
+   "linhas": 23651
   },
   "src/services": {
    "arquivos": 100,
@@ -443,8 +443,8 @@
    "linhas": 7136
   },
   "src/test": {
-   "arquivos": 128,
-   "linhas": 22548
+   "arquivos": 129,
+   "linhas": 22719
   },
   "src/tests": {
    "arquivos": 16,
@@ -578,7 +578,7 @@
   },
   {
    "arquivo": "src/lib/exportReports.ts",
-   "linhas": 538
+   "linhas": 537
   },
   {
    "arquivo": "src/services/trailsService.ts",

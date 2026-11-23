@@ -6442,7 +6442,7 @@
    "modulo": "lib",
    "arquivos": 106,
    "testes": 0,
-   "linhas": 22068,
+   "linhas": 22067,
    "itens_menu": [],
    "telas": [],
    "rotas_http": [],
@@ -6573,7 +6573,7 @@
    "modulo": "pages",
    "arquivos": 83,
    "testes": 0,
-   "linhas": 23532,
+   "linhas": 23651,
    "itens_menu": [
     "Admin Loja",
     "Admin Quiz",
@@ -8529,7 +8529,7 @@
   {
    "modulo": "test",
    "arquivos": 0,
-   "testes": 128,
+   "testes": 129,
    "linhas": 0,
    "itens_menu": [],
    "telas": [],

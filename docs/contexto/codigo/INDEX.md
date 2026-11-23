@@ -1,7 +1,7 @@
 # Contexto do projeto para agentes de IA
 
 GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.
-Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `f5e9ae6ebf6d036a08c9479849c7ca1cffb1f36b` (2026-11-23T18:40:05-03:00).
+Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `24cdeddbd9faf0995fe9706db70ad2127f503ae4` (2026-11-23T19:23:56-03:00).
 
 ## Como usar (leia antes de planejar ou executar qualquer tarefa)
 1. **Tela/rota/menu** → `rotas.json` (url/vista/menu → arquivo → hooks → tabelas → edges; `rotas_http_backend` para APIs) e `modulos.json` (módulo inteiro + dependências entre módulos).
@@ -14,7 +14,7 @@ Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR
 Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua tarefa; não carregue tudo.
 
 ## Stack
-- linguagens: TypeScript (1142), SQL (275), Markdown (55), JavaScript (24), JSON (14), YAML (9), Python (5), Shell (4)
+- linguagens: TypeScript (1143), SQL (275), Markdown (55), JavaScript (24), JSON (14), YAML (9), Python (5), Shell (4)
 - linguagem_principal: TypeScript
 - framework: React
 - backend_http: n/d
@@ -34,9 +34,9 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 ## Números
 | item | qtd |
 |---|---|
-| arquivos_total | 1545 |
-| arquivos_codigo | 1170 |
-| linhas_codigo | 230222 |
+| arquivos_total | 1546 |
+| arquivos_codigo | 1171 |
+| linhas_codigo | 230511 |
 | rotas | 84 |
 | rotas_http_backend | 0 |
 | vistas_por_id | 0 |
@@ -48,7 +48,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 | tabelas | 237 |
 | migrations | 275 |
 | cron_jobs | 22 |
-| testes | 162 |
+| testes | 163 |
 | workflows | 6 |
 | scripts | 16 |
 | docs_md | 55 |
@@ -58,7 +58,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - componentes: src/components (432), src/pages (83), src/contexts (4)
 - hooks: src/hooks (130), src/components (22), src/contexts (4)
 - servicos_logica: src/lib (106), src/services (100), src/integrations (3)
-- testes: co-localizado (*.test) (146), outro (12), tests/ (3)
+- testes: co-localizado (*.test) (147), outro (12), tests/ (3)
 - edge_functions: supabase/functions
 - migrations: supabase/migrations
 - scripts: scripts/maintenance (4), scripts/ci (3), scripts/regras_negocio (3)
@@ -272,9 +272,9 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - possiveis_segredos_no_codigo: 0
 
 ## Grafo de código (graphify)
-- 10151 nós · 28277 arestas · 652 comunidades · grafo do commit `f5e9ae6e`
-- comunidades maiores: card.tsx (298), react (262), lucide-react (238), framer-motion (210), cn (131), mobile/index.ts (91), App.tsx (90), contracts/index.ts (86), useAuth (83), gerar.mjs (79), ref_https (77), ManagerDashboard.tsx (77)
-- símbolos mais chamados: cn() (src/lib/utils.ts), useAuth() (src/hooks/useAuth.tsx), useIsMobile() (src/hooks/use-mobile.tsx), q() (scripts/supabase_snapshot/snapshot.py), useDepartments() (src/hooks/useDepartments.ts), useRBAC() (src/hooks/useRBAC.ts), useToast() (src/hooks/use-toast.ts), useProfiles() (src/hooks/useProfiles.ts), useSEO() (src/hooks/useSEO.ts), useSoundEffects() (src/hooks/useSoundEffects.tsx), .collect() (scripts/supabase_snapshot/test_snapshot.py), downloadCSV() (src/lib/csvExport.ts)
+- 10153 nós · 28284 arestas · 620 comunidades · grafo do commit `24cdeddb`
+- comunidades maiores: lucide-react (330), react (257), App.tsx (181), cn (140), DevelopmentPlanManager.tsx (128), loggingService.ts (118), date-fns (116), client.ts (107), useToast (106), useProfiles.ts (104), AdminPanel.tsx (103), Mentoria.tsx (96)
+- símbolos mais chamados: cn() (src/lib/utils.ts), useAuth() (src/hooks/useAuth.tsx), useIsMobile() (src/hooks/use-mobile.tsx), q() (scripts/supabase_snapshot/snapshot.py), useDepartments() (src/hooks/useDepartments.ts), useRBAC() (src/hooks/useRBAC.ts), useToast() (src/hooks/use-toast.ts), useProfiles() (src/hooks/useProfiles.ts), useSEO() (src/hooks/useSEO.ts), useSoundEffects() (src/hooks/useSoundEffects.tsx), .collect() (scripts/supabase_snapshot/test_snapshot.py), excluded_sql() (scripts/supabase_snapshot/snapshot.py)
 - consulta local: `graphify query "<pergunta>"`, `graphify path "<A>" "<B>"`, `graphify explain "<X>"`
 
 ## Hotspots (arquivos mais alterados, 90 dias)
@@ -359,6 +359,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 
 
 ## Últimos commits
+- 2026-11-23 `24cdedd` feat: liga biblioteca de relatórios (CSV/Excel/PDF) nos dashboards (#124)
 - 2026-11-23 `f5e9ae6` fix: liga telas orfas na navegacao e remove links sem destino (#123)
 - 2026-11-23 `027cedf` feat: cria fluxo completo de mentoria (pagina, servico, hooks e missoes) (#122)
 - 2026-11-23 `b6c89af` chore(docs): registra estado verificado das pendencias em producao (#121)
@@ -373,7 +374,6 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - 2026-11-23 `3d91e00` fix(succession): calcula successorCount/readyNowCount com dados reais de highPotential (#113)
 - 2026-11-23 `9616112` fix(dashboard/audit): heatmap dados reais de audit_logs + auditService dev logs
 - 2026-11-23 `130795f` fix: remove tendências hardcoded em BIDashboard e corrige 'null%' em ExecutiveDashboard
-- 2026-11-23 `e2dff92` fix(shop/rbac): desconto flash sale cobrado + toast false success em permissões (#109)
 
 ## Arquivos deste diretório
 - `docs/contexto/codigo/rotas.json`

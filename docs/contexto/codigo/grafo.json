@@ -2,7 +2,7 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "nos": 1008,
- "arestas": 4362,
+ "arestas": 4363,
  "hubs": [
   {
    "arquivo": "src/components/ui/card.tsx",
@@ -29,12 +29,12 @@
    "importado_por": 155
   },
   {
-   "arquivo": "src/services/loggingService.ts",
+   "arquivo": "src/hooks/useAuth.tsx",
    "importado_por": 103
   },
   {
-   "arquivo": "src/hooks/useAuth.tsx",
-   "importado_por": 102
+   "arquivo": "src/services/loggingService.ts",
+   "importado_por": 103
   },
   {
    "arquivo": "src/components/ui/input.tsx",
@@ -227,7 +227,6 @@
   "src/lib/bossAutoHooks.ts",
   "src/lib/campaignTeamSplitRevert.ts",
   "src/lib/cardPackNotifications.ts",
-  "src/lib/exportReports.ts",
   "src/lib/pushOutbox.ts",
   "src/lib/warAutoHooks.ts",
   "src/services/feedback360Service.ts",

@@ -1,6 +1,6 @@
 # 07 · REGRAS DE NEGÓCIO
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `f5e9ae6ebf` · branch `main` · 2026-11-23 21:40 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `24cdeddbd9` · branch `main` · 2026-11-23 22:24 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## A. Regras escritas por humanos (`manual/` — prioridade máxima, nunca sobrescrito)
@@ -1140,9 +1140,9 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `type` | `string` | compara, escreve | `src/components/security/SecurityAlertsPanel.tsx`<br>`supabase/functions/ai-course-builder/index.ts`<br>`supabase/functions/churn-prediction/index.ts`<br>`supabase/functions/reward-approval-review/index.ts` |
 | `type` | `success` | compara, escreve | `src/components/GlobalMessageProvider.tsx`<br>`src/components/mobile/HapticWrapper.tsx`<br>`src/hooks/useFeedback.ts`<br>`src/stories/feedback/Notifications.stories.tsx` |
 | `type` | `suggestion` | compara | `src/components/copilot/CopilotAlertCard.tsx`<br>`src/components/copilot/CopilotAlertSection.tsx` |
-| `type` | `summary` | escreve | `src/lib/exportReports.ts` |
+| `type` | `summary` | escreve | `src/lib/exportReports.ts`<br>`src/pages/EngagementReports.tsx`<br>`src/pages/ManagerDashboard.tsx` |
 | `type` | `suspicious_login` | compara | `src/components/security/SecurityAlertsPanel.tsx` |
-| `type` | `table` | escreve | `src/lib/exportReports.ts` |
+| `type` | `table` | escreve | `src/lib/exportReports.ts`<br>`src/pages/EngagementReports.tsx`<br>`src/pages/ManagerDashboard.tsx` |
 | `type` | `tablet` | compara | `src/components/security/DevicesPanel.tsx` |
 | `type` | `task_score` | compara, escreve | `src/lib/warAutoHooks.ts` |
 | `type` | `team_split` | escreve | `src/components/campaigns/CreateCampaignDialog.tsx` |
@@ -3569,7 +3569,7 @@ _nenhum item encontrado_
 | `admin` | `supabase/migrations/20261122140000_acknowledge_security_digest.sql` |
 | `manager` | `supabase/migrations/20261122140000_acknowledge_security_digest.sql` |
 
-## K. Testes como especificação (1987 testes em 150 arquivos — nomes completos em `context.json`)
+## K. Testes como especificação (1994 testes em 151 arquivos — nomes completos em `context.json`)
 
 | Arquivo | Testes | Exemplos do que o sistema DEVE fazer |
 |---|---|---|
@@ -3674,6 +3674,7 @@ _nenhum item encontrado_
 | `src/test/boardStatsExport.simulation.test.ts` | 7 | boardStatsExport — invariantes · mantém cabeçalho estável e uma linha por desafio · neutraliza CSV injection e escapa aspas/vírgulas/quebras · não quebra com payload vazio, nulo ou corrompido … |
 | `src/test/bossDepartmentComparison.simulation.test.ts` | 7 | compareDepartments — simulação massiva · mantém invariantes em 800 cenários · normaliza janela invertida · agrupa batalhas sem departamento em bucket explícito … |
 | `src/test/cardPackNotifications.simulation.test.ts` | 7 | notificação de pacote de cartas · gera payload válido para toda origem e tamanho 1..20 (120 cenários) · chave de dedupe é única por pacote (1000 cenários) · mesmo pacote sempre produz a mesma chave (determinismo) … |
+| `src/test/exportReports.test.ts` | 7 | exportReports · gera CSV com cabeçalho, título das seções e colunas declaradas · formata percentual e marca valores ausentes com - · infere colunas da primeira linha quando não declaradas … |
 | `src/test/goalBetCountdown.test.ts` | 7 | computeGoalBetCountdown · ignora mercados que não estão abertos · marca como fechado quando o prazo já passou · classifica urgência por faixas … |
 | `src/test/goalBetHistoryCsv.test.ts` | 7 | buildGoalBetHistoryCsv · gera cabeçalho, linhas e totais · neutraliza injeção de fórmula e escapa separador · data inválida vira campo vazio e anulado é rotulado … |
 | `src/test/goalBetOrdering.test.ts` | 7 | sortMarketsByUrgency · coloca abertos antes de travados, apurados, anulados e rascunhos · dentro dos abertos, quem fecha antes vem primeiro · encerrados saem do mais recente para o mais antigo … |

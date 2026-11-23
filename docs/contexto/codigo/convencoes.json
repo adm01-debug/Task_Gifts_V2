@@ -22,7 +22,7 @@
    "src/integrations (3)"
   ],
   "testes": [
-   "co-localizado (*.test) (146)",
+   "co-localizado (*.test) (147)",
    "outro (12)",
    "tests/ (3)"
   ],
@@ -59,11 +59,11 @@
  "commits": {
   "convencao": "conventional commits (observado)",
   "exemplos": [
+   "feat: liga biblioteca de relatórios (CSV/Excel/PDF) nos dashboards (#124)",
    "fix: liga telas orfas na navegacao e remove links sem destino (#123)",
    "feat: cria fluxo completo de mentoria (pagina, servico, hooks e missoes) (#122)",
    "chore(docs): registra estado verificado das pendencias em producao (#121)",
-   "fix: liga acoes Editar/Excluir sem handler no painel admin (#120)",
-   "feat(admin/app): OfflineIndicator global + GoalsManager persistente (Supabase) (#110)"
+   "fix: liga acoes Editar/Excluir sem handler no painel admin (#120)"
   ]
  },
  "pr_template": ".github/PULL_REQUEST_TEMPLATE.md",

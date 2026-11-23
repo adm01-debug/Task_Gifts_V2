@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "f5e9ae6ebf6d036a08c9479849c7ca1cffb1f36b",
+  "sha": "24cdeddbd9faf0995fe9706db70ad2127f503ae4",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
-  "generated_at": "2026-11-23 21:40 UTC",
-  "files_total": 1555,
-  "code_files": 1451,
-  "code_lines": 261801
+  "generated_at": "2026-11-23 22:24 UTC",
+  "files_total": 1556,
+  "code_files": 1452,
+  "code_lines": 262090
  },
  "version": "1.3.2",
- "facts_hash": "471b5ea83a9f0109",
+ "facts_hash": "0c36a1fcbf2c412b",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -194,7 +194,7 @@
   ],
   "package_manager": "bun",
   "languages": {
-   ".ts": 578,
+   ".ts": 579,
    ".tsx": 566,
    ".sql": 275,
    ".mjs": 21,
@@ -42905,15 +42905,17 @@
      "custom_quests",
      "departments",
      "module_progress",
+     "new_device_alerts",
      "profiles",
      "quest_assignments",
      "team_members",
      "trail_enrollments",
-     "user_certifications"
+     "user_certifications",
+     "user_devices"
     ],
     "invokes_transitive": [],
     "rpc_transitive": [],
-    "deps_count": 30
+    "deps_count": 38
    },
    {
     "path": "",
@@ -48705,7 +48707,7 @@
   {
    "module": "src/lib",
    "files": 106,
-   "lines": 22068,
+   "lines": 22067,
    "tables": [
     "lucky_wheel_settings",
     "lucky_wheel_settings_audit",
@@ -48860,7 +48862,7 @@
   {
    "module": "src/pages",
    "files": 83,
-   "lines": 23532,
+   "lines": 23651,
    "tables": [
     "audit_logs",
     "campaign_participants",
@@ -49422,8 +49424,8 @@
   },
   {
    "module": "src/test",
-   "files": 128,
-   "lines": 22548,
+   "files": 129,
+   "lines": 22719,
    "tables": [
     "kudos",
     "profiles"
@@ -49500,6 +49502,7 @@
     "src/test/edgeErrors.simulation.test.ts",
     "src/test/engagementDiagnostics.simulation.test.ts",
     "src/test/engagementInsights.simulation.test.ts",
+    "src/test/exportReports.test.ts",
     "src/test/external-db-bridge.test.ts",
     "src/test/goalBetCountdown.test.ts",
     "src/test/goalBetExposure.test.ts",
@@ -49533,8 +49536,7 @@
     "src/test/memoryGame.simulation.test.ts",
     "src/test/mentorshipService.test.ts",
     "src/test/notificationPrefsCrossModule.simulation.test.ts",
-    "src/test/notificationTypePrefs.simulation.test.ts",
-    "src/test/npsHistory.simulation.test.ts"
+    "src/test/notificationTypePrefs.simulation.test.ts"
    ]
   },
   {
@@ -75367,6 +75369,36 @@
     "kind": "compara"
    },
    {
+    "file": "src/pages/EngagementReports.tsx",
+    "field": "type",
+    "value": "summary",
+    "kind": "escreve"
+   },
+   {
+    "file": "src/pages/EngagementReports.tsx",
+    "field": "type",
+    "value": "table",
+    "kind": "escreve"
+   },
+   {
+    "file": "src/pages/EngagementReports.tsx",
+    "field": "type",
+    "value": "table",
+    "kind": "escreve"
+   },
+   {
+    "file": "src/pages/EngagementReports.tsx",
+    "field": "type",
+    "value": "table",
+    "kind": "escreve"
+   },
+   {
+    "file": "src/pages/EngagementReports.tsx",
+    "field": "type",
+    "value": "table",
+    "kind": "escreve"
+   },
+   {
     "file": "src/pages/ErrorBudget.tsx",
     "field": "status",
     "value": "critical",
@@ -75479,6 +75511,18 @@
     "field": "phase",
     "value": "result",
     "kind": "compara"
+   },
+   {
+    "file": "src/pages/ManagerDashboard.tsx",
+    "field": "type",
+    "value": "summary",
+    "kind": "escreve"
+   },
+   {
+    "file": "src/pages/ManagerDashboard.tsx",
+    "field": "type",
+    "value": "table",
+    "kind": "escreve"
    },
    {
     "file": "src/pages/Mentoria.tsx",
@@ -83133,6 +83177,34 @@
    {
     "file": "src/test/engagementInsights.simulation.test.ts",
     "name": "summarizeInsights tolera entrada inválida"
+   },
+   {
+    "file": "src/test/exportReports.test.ts",
+    "name": "exportReports"
+   },
+   {
+    "file": "src/test/exportReports.test.ts",
+    "name": "gera CSV com cabeçalho, título das seções e colunas declaradas"
+   },
+   {
+    "file": "src/test/exportReports.test.ts",
+    "name": "formata percentual e marca valores ausentes com -"
+   },
+   {
+    "file": "src/test/exportReports.test.ts",
+    "name": "infere colunas da primeira linha quando não declaradas"
+   },
+   {
+    "file": "src/test/exportReports.test.ts",
+    "name": "não quebra quando o relatório não tem seções"
+   },
+   {
+    "file": "src/test/exportReports.test.ts",
+    "name": "createTeamPerformanceReport monta resumo e performance individual"
+   },
+   {
+    "file": "src/test/exportReports.test.ts",
+    "name": "createEngagementReport monta as três seções esperadas"
    },
    {
     "file": "src/test/external-db-bridge.test.ts",
@@ -101677,10 +101749,14 @@
       "escreve:src/pages/BoardTrailAdminPage.tsx"
      ],
      "table": [
-      "escreve:src/lib/exportReports.ts"
+      "escreve:src/lib/exportReports.ts",
+      "escreve:src/pages/EngagementReports.tsx",
+      "escreve:src/pages/ManagerDashboard.tsx"
      ],
      "summary": [
-      "escreve:src/lib/exportReports.ts"
+      "escreve:src/lib/exportReports.ts",
+      "escreve:src/pages/EngagementReports.tsx",
+      "escreve:src/pages/ManagerDashboard.tsx"
      ],
      "prediction_lock_overdue": [
       "escreve:src/lib/predictionWatchdog.ts"
@@ -131260,7 +131336,7 @@
   },
   "src/lib/exportReports.ts": {
    "path": "src/lib/exportReports.ts",
-   "lines": 538,
+   "lines": 537,
    "exports": [
     "interface ReportData",
     "interface ReportSection",
@@ -134977,12 +135053,39 @@
   },
   "src/pages/EngagementReports.tsx": {
    "path": "src/pages/EngagementReports.tsx",
-   "lines": 220,
+   "lines": 286,
    "exports": [
     "function EngagementReports"
    ],
    "errors": [
     "Nenhum dado disponível para exportar."
+   ],
+   "status_values": [
+    {
+     "field": "type",
+     "value": "summary",
+     "kind": "escreve"
+    },
+    {
+     "field": "type",
+     "value": "table",
+     "kind": "escreve"
+    },
+    {
+     "field": "type",
+     "value": "table",
+     "kind": "escreve"
+    },
+    {
+     "field": "type",
+     "value": "table",
+     "kind": "escreve"
+    },
+    {
+     "field": "type",
+     "value": "table",
+     "kind": "escreve"
+    }
    ]
   },
   "src/pages/ErrorBudget.tsx": {
@@ -135378,7 +135481,7 @@
   },
   "src/pages/ManagerDashboard.tsx": {
    "path": "src/pages/ManagerDashboard.tsx",
-   "lines": 219,
+   "lines": 272,
    "exports": [
     "function ManagerDashboard"
    ],
@@ -135387,6 +135490,18 @@
    ],
    "errors": [
     "Nenhum membro disponível para exportar."
+   ],
+   "status_values": [
+    {
+     "field": "type",
+     "value": "summary",
+     "kind": "escreve"
+    },
+    {
+     "field": "type",
+     "value": "table",
+     "kind": "escreve"
+    }
    ]
   },
   "src/pages/MemoryDeckAdminPage.tsx": {
@@ -145905,6 +146020,20 @@
     "summarizeInsights tolera entrada inválida"
    ]
   },
+  "src/test/exportReports.test.ts": {
+   "path": "src/test/exportReports.test.ts",
+   "lines": 171,
+   "is_test": true,
+   "tests": [
+    "exportReports",
+    "gera CSV com cabeçalho, título das seções e colunas declaradas",
+    "formata percentual e marca valores ausentes com -",
+    "infere colunas da primeira linha quando não declaradas",
+    "não quebra quando o relatório não tem seções",
+    "createTeamPerformanceReport monta resumo e performance individual",
+    "createEngagementReport monta as três seções esperadas"
+   ]
+  },
   "src/test/external-db-bridge.test.ts": {
    "path": "src/test/external-db-bridge.test.ts",
    "lines": 1100,
@@ -152696,10 +152825,22 @@
   }
  },
  "git": {
-  "sha": "f5e9ae6ebf6d036a08c9479849c7ca1cffb1f36b",
+  "sha": "24cdeddbd9faf0995fe9706db70ad2127f503ae4",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "commits": [
+   {
+    "sha": "24cdedd",
+    "date": "2026-11-23",
+    "author": "adm01-debug",
+    "subject": "feat: liga biblioteca de relatórios (CSV/Excel/PDF) nos dashboards (#124)",
+    "files": [
+     "src/lib/exportReports.ts",
+     "src/pages/EngagementReports.tsx",
+     "src/pages/ManagerDashboard.tsx",
+     "src/test/exportReports.test.ts"
+    ]
+   },
    {
     "sha": "f5e9ae6",
     "date": "2026-11-23",
@@ -153075,16 +153216,6 @@
     "files": [
      "docs/estado/05-edge-functions.md"
     ]
-   },
-   {
-    "sha": "6925771",
-    "date": "2026-11-22",
-    "author": "adm01-debug",
-    "subject": "fix(auth): bloqueia senha vazada (HIBP) no cadastro (#95)",
-    "files": [
-     "src/lib/authValidations.ts",
-     "src/pages/Auth.tsx"
-    ]
    }
   ],
   "hot_files": [
@@ -153105,6 +153236,10 @@
     4
    ],
    [
+    "src/pages/EngagementReports.tsx",
+    3
+   ],
+   [
     "src/App.tsx",
     3
    ],
@@ -153121,7 +153256,7 @@
     3
    ],
    [
-    "src/pages/EngagementReports.tsx",
+    "src/pages/ManagerDashboard.tsx",
     2
    ],
    [
@@ -153162,10 +153297,6 @@
    ],
    [
     "supabase/functions/_shared/contracts/registry.contract.spec.ts",
-    2
-   ],
-   [
-    "supabase/functions/_shared/contracts/send-campaign-push.ts",
     2
    ]
   ]

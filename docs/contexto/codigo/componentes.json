@@ -7309,7 +7309,7 @@
    ],
    "tabelas": [],
    "edges": [],
-   "usado_por": 100,
+   "usado_por": 101,
    "orfao": false
   },
   {
@@ -7896,9 +7896,10 @@
     "EngagementReports"
    ],
    "export_default": "EngagementReports",
-   "linhas": 220,
+   "linhas": 286,
    "dominio": "pages",
    "hooks_locais": [
+    "useAuth",
     "useCompletionTrend",
     "useDepartmentPerformance",
     "useEngagementMetrics",
@@ -8156,7 +8157,7 @@
     "ManagerDashboard"
    ],
    "export_default": "ManagerDashboard",
-   "linhas": 219,
+   "linhas": 272,
    "dominio": "pages",
    "hooks_locais": [
     "useAllTeamMembers",

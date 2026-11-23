@@ -5,17 +5,17 @@
   "vitest",
   "playwright"
  ],
- "total": 162,
+ "total": 163,
  "por_tipo": {
   "contrato": 3,
   "e2e": 2,
   "pytest": 2,
-  "unit": 155
+  "unit": 156
  },
  "onde_ficam": [
   {
    "padrao": "co-localizado (*.test)",
-   "arquivos": 146
+   "arquivos": 147
   },
   {
    "padrao": "outro",
@@ -560,6 +560,15 @@
     "src/lib/engagementInsights.ts"
    ],
    "casos": 13
+  },
+  {
+   "arquivo": "src/test/exportReports.test.ts",
+   "tipo": "unit",
+   "linhas": 171,
+   "testa": [
+    "src/lib/exportReports.ts"
+   ],
+   "casos": 6
   },
   {
    "arquivo": "src/test/external-db-bridge.test.ts",
@@ -1619,6 +1628,7 @@
   "src/lib/deviceLabel.ts": 1,
   "src/lib/edgeErrors.ts": 2,
   "src/lib/engagementInsights.ts": 1,
+  "src/lib/exportReports.ts": 1,
   "src/lib/goalBetCountdown.ts": 1,
   "src/lib/goalBetExposure.ts": 1,
   "src/lib/goalBetFilter.ts": 1,
