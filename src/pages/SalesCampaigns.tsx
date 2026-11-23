@@ -4,7 +4,7 @@ import { CampaignCard } from "@/components/campaigns/CampaignCard";
 import { CreateCampaignDialog } from "@/components/campaigns/CreateCampaignDialog";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Skeleton } from "@/components/ui/skeleton";
-import { BarChart3, Megaphone, Sparkles } from "lucide-react";
+import { BarChart3, Megaphone, Sparkles, History } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useRBAC } from "@/hooks/useRBAC";
@@ -56,6 +56,12 @@ export default function SalesCampaigns() {
               <Link to="/campanhas/equipes">
                 <BarChart3 className="mr-2 h-4 w-4" />
                 Dashboard de equipes
+              </Link>
+            </Button>
+            <Button asChild variant="outline">
+              <Link to="/campanhas/historico">
+                <History className="mr-2 h-4 w-4" />
+                Histórico
               </Link>
             </Button>
             {canCreate && <CreateCampaignDialog />}
