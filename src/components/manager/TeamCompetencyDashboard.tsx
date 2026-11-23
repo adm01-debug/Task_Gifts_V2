@@ -18,6 +18,7 @@ import { useQuery, useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { competencyService, CompetencyData } from "@/services/competencyService";
 import { profilesService } from "@/services/profilesService";
+import { useAuth } from "@/hooks/useAuth";
 import { CompetencyRecommendationsDialog, type RecommendationsResponse } from "./CompetencyRecommendationsDialog";
 
 interface TeamMemberCompetency {
@@ -33,6 +34,7 @@ const COMPETENCY_COLORS: Record<string, string> = {
 const getCompetencyColor = (area: string) => COMPETENCY_COLORS[area] || "hsl(var(--muted-foreground))";
 
 export function TeamCompetencyDashboard() {
+  const { session } = useAuth();
   const [expandedMembers, setExpandedMembers] = useState<Set<string>>(new Set());
   const [showRecommendations, setShowRecommendations] = useState(false);
   const [selectedMemberForRecs, setSelectedMemberForRecs] = useState<TeamMemberCompetency | null>(null);
@@ -66,7 +68,7 @@ export function TeamCompetencyDashboard() {
   const recommendationsMutation = useMutation({
     mutationFn: async (userId: string) => {
       const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/trail-recommendations`, {
-        method: "POST", headers: { "Content-Type": "application/json", Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}` },
+        method: "POST", headers: { "Content-Type": "application/json", Authorization: `Bearer ${session?.access_token}` },
         body: JSON.stringify({ userId }),
       });
       if (!response.ok) { if (response.status === 429) throw new Error("Limite de requisições excedido."); if (response.status === 402) throw new Error("Créditos insuficientes."); throw new Error("Erro ao buscar recomendações"); }
