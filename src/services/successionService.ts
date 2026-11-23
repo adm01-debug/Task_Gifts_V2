@@ -77,6 +77,8 @@ export const successionService = {
 
     const deptMap = new Map(departments?.map(d => [d.id, d.name]) || []);
 
+    const allHiPos = await highPotentialService.identifyHighPotentials();
+
     const criticalPositions: CriticalPosition[] = [];
 
     for (const position of positions) {
@@ -100,9 +102,21 @@ export const successionService = {
         importance = 'high';
       }
 
-      const successorCount = 0;
-      const readyNowCount = 0;
-      const readySoonCount = 0;
+      const deptName = deptMap.get(position.department_id || '');
+      const deptHiPos = deptName
+        ? allHiPos.filter(h => !h.department || h.department === deptName)
+        : allHiPos;
+      let successorCount = 0;
+      let readyNowCount = 0;
+      let readySoonCount = 0;
+      for (const hipo of deptHiPos) {
+        const matchScore = this.calculateMatchScore(hipo);
+        if (matchScore < 50) continue;
+        successorCount++;
+        const readinessScore = Math.round(hipo.overallScore * 0.6 + matchScore * 0.4);
+        if (readinessScore >= 85) readyNowCount++;
+        else if (readinessScore >= 70) readySoonCount++;
+      }
 
       let riskLevel: 'covered' | 'at_risk' | 'critical' = 'critical';
       if (readyNowCount >= 1) {

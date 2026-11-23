@@ -113,7 +113,7 @@ export default function EngagementReports() {
                     <div className="flex items-center justify-center w-8 h-8 rounded-full bg-primary/10 text-primary font-bold text-sm">{index + 1}</div>
                     <div className="flex-1 min-w-0"><p className="font-medium text-foreground truncate">{quest.name}</p><p className="text-sm text-muted-foreground">Tempo médio: {quest.avgTime}</p></div>
                     <div className="text-right"><p className="font-semibold text-foreground">{quest.completions}</p><p className="text-xs text-muted-foreground">conclusões</p></div>
-                    <Badge variant="outline" className="bg-yellow-500/10 text-yellow-500 border-yellow-500/30">★ {quest.rating.toFixed(1)}</Badge>
+                    {quest.rating != null && (<Badge variant="outline" className="bg-yellow-500/10 text-yellow-500 border-yellow-500/30">★ {quest.rating.toFixed(1)}</Badge>)}
                   </motion.div>
                 ))}
               </div>
