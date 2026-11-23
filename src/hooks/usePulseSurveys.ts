@@ -47,6 +47,28 @@ export function usePulseSurveys() {
     },
   });
 
+  const deleteSurveyMutation = useMutation({
+    mutationFn: (surveyId: string) => pulseSurveysService.deleteSurvey(surveyId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["pulse-surveys"] });
+      toast({ title: "Pesquisa excluída" });
+    },
+    onError: () => {
+      toast({ title: "Erro ao excluir pesquisa", variant: "destructive" });
+    },
+  });
+
+  const reopenSurveyMutation = useMutation({
+    mutationFn: (surveyId: string) => pulseSurveysService.updateSurvey(surveyId, { status: 'active' }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["pulse-surveys"] });
+      toast({ title: "Pesquisa reaberta" });
+    },
+    onError: () => {
+      toast({ title: "Erro ao reabrir pesquisa", variant: "destructive" });
+    },
+  });
+
   return {
     activeSurveys: activeSurveysQuery.data ?? [],
     mySurveys: mySurveysQuery.data ?? [],
@@ -54,6 +76,9 @@ export function usePulseSurveys() {
     createSurvey: createSurveyMutation.mutate,
     submitResponse: submitResponseMutation.mutate,
     closeSurvey: closeSurveyMutation.mutate,
+    reopenSurvey: reopenSurveyMutation.mutate,
+    deleteSurvey: deleteSurveyMutation.mutate,
+    getSurveyAnalytics: pulseSurveysService.getSurveyAnalytics,
     isSubmitting: submitResponseMutation.isPending,
   };
 }

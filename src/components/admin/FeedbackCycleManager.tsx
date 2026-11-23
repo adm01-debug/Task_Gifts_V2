@@ -22,39 +22,69 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { useFeedback360 } from "@/hooks/useFeedback360";
+import type { FeedbackCycle } from "@/services/feedbackService";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { toast } from "sonner";
 
+const emptyCycleForm = {
+  name: "",
+  description: "",
+  cycle_type: "360" as "360" | "manager" | "peer" | "self",
+  starts_at: "",
+  ends_at: "",
+};
+
 export function FeedbackCycleManager() {
-  const { cycles, isLoading, createCycle } = useFeedback360();
+  const { allCycles: cycles, isLoading, createCycle, updateCycle, deleteCycle, startCycle } = useFeedback360();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [formData, setFormData] = useState({
-    name: "",
-    description: "",
-    cycle_type: "360" as "360" | "manager" | "peer" | "self",
-    starts_at: "",
-    ends_at: "",
-  });
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [formData, setFormData] = useState(emptyCycleForm);
+
+  const closeDialog = () => {
+    setIsDialogOpen(false);
+    setEditingId(null);
+    setFormData(emptyCycleForm);
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    createCycle({
+    const payload = {
       name: formData.name,
       description: formData.description,
       cycle_type: formData.cycle_type,
       starts_at: formData.starts_at,
       ends_at: formData.ends_at,
-      questions: [],
-    });
-    setIsDialogOpen(false);
+    };
+
+    if (editingId) {
+      updateCycle({ cycleId: editingId, cycle: payload });
+    } else {
+      createCycle({ ...payload, questions: [] });
+    }
+    closeDialog();
+  };
+
+  const handleEdit = (cycle: FeedbackCycle) => {
+    setEditingId(cycle.id);
     setFormData({
-      name: "",
-      description: "",
-      cycle_type: "360",
-      starts_at: "",
-      ends_at: "",
+      name: cycle.name,
+      description: cycle.description ?? "",
+      cycle_type: cycle.cycle_type,
+      starts_at: cycle.starts_at.slice(0, 10),
+      ends_at: cycle.ends_at.slice(0, 10),
     });
+    setIsDialogOpen(true);
+  };
+
+  const handleDelete = (cycle: FeedbackCycle) => {
+    if (!window.confirm(`Excluir o ciclo "${cycle.name}"? As solicitações de feedback vinculadas também serão removidas.`)) return;
+    deleteCycle(cycle.id);
+  };
+
+  const handleStart = (cycle: FeedbackCycle) => {
+    if (cycle.status !== "draft") return;
+    startCycle(cycle.id);
   };
 
   const statusColors: Record<string, string> = {
@@ -88,16 +118,22 @@ export function FeedbackCycleManager() {
           <h2 className="text-2xl font-bold">Ciclos de Feedback 360°</h2>
           <p className="text-muted-foreground">Gerencie avaliações 360° e feedbacks</p>
         </div>
-        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+        <Dialog
+          open={isDialogOpen}
+          onOpenChange={(open) => {
+            if (!open) closeDialog();
+            else setIsDialogOpen(true);
+          }}
+        >
           <DialogTrigger asChild>
-            <Button className="gap-2">
+            <Button className="gap-2" onClick={() => setEditingId(null)}>
               <Plus className="w-4 h-4" />
               Novo Ciclo
             </Button>
           </DialogTrigger>
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>Novo Ciclo de Feedback</DialogTitle>
+              <DialogTitle>{editingId ? "Editar Ciclo de Feedback" : "Novo Ciclo de Feedback"}</DialogTitle>
             </DialogHeader>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
@@ -159,13 +195,13 @@ export function FeedbackCycleManager() {
                 </div>
               </div>
               <div className="flex gap-2 justify-end">
-                <Button type="button" variant="outline" onClick={() => setIsDialogOpen(false)}>
+                <Button type="button" variant="outline" onClick={closeDialog}>
                   <X className="w-4 h-4 mr-2" />
                   Cancelar
                 </Button>
                 <Button type="submit">
                   <Save className="w-4 h-4 mr-2" />
-                  Criar Ciclo
+                  {editingId ? "Salvar" : "Criar Ciclo"}
                 </Button>
               </div>
             </form>
@@ -223,10 +259,30 @@ export function FeedbackCycleManager() {
                     </div>
                   </div>
                   <div className="flex items-center justify-end gap-1">
-                    <Button variant="ghost" size="icon">
+                    {cycle.status === "draft" && (
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => handleStart(cycle)}
+                        title="Iniciar ciclo"
+                      >
+                        Iniciar
+                      </Button>
+                    )}
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      aria-label={`Editar ciclo ${cycle.name}`}
+                      onClick={() => handleEdit(cycle)}
+                    >
                       <Edit2 className="w-4 h-4" />
                     </Button>
-                    <Button variant="ghost" size="icon">
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      aria-label={`Excluir ciclo ${cycle.name}`}
+                      onClick={() => handleDelete(cycle)}
+                    >
                       <Trash2 className="w-4 h-4 text-destructive" />
                     </Button>
                   </div>

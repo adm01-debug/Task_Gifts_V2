@@ -69,6 +69,18 @@ export function useAnnouncements() {
     },
   });
 
+  const updateAnnouncementMutation = useMutation({
+    mutationFn: ({ id, updates }: { id: string; updates: Partial<AnnouncementInsert> }) =>
+      announcementsService.updateAnnouncement(id, updates),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["announcements"] });
+      toast({ title: "Anúncio atualizado!" });
+    },
+    onError: () => {
+      toast({ title: "Erro ao atualizar anúncio", variant: "destructive" });
+    },
+  });
+
   return {
     announcements: announcementsQuery.data ?? [],
     pinnedAnnouncements: pinnedQuery.data ?? [],
@@ -80,6 +92,7 @@ export function useAnnouncements() {
     removeReaction: removeReactionMutation.mutate,
     togglePin: togglePinMutation.mutate,
     deleteAnnouncement: deleteAnnouncementMutation.mutate,
+    updateAnnouncement: updateAnnouncementMutation.mutate,
     isCreating: createAnnouncementMutation.isPending,
   };
 }
