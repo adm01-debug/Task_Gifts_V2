@@ -192,7 +192,7 @@ export const highPotentialService = {
     const { data: mentorship } = await supabase
       .from("mentorship_pairs")
       .select("*")
-      .or(`mentor_id.eq.${userId},mentee_id.eq.${userId}`)
+      .or(`mentor_id.eq.${userId},apprentice_id.eq.${userId}`)
       .eq("status", "active");
 
     // Calculate metrics
