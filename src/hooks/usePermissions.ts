@@ -1,4 +1,4 @@
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+﻿import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { permissionsService, type Permission, type Role } from "@/services/permissionsService";
 import { useAuth } from "@/hooks/useAuth";
 import { toast } from "sonner";
@@ -76,8 +76,8 @@ export const usePermissions = () => {
     userRoles: userRolesQuery.data || [],
     userPermissions,
     isLoading: permissionsQuery.isLoading,
-    assignPermission: assignPermissionMutation.mutate,
-    removePermission: removePermissionMutation.mutate,
+    assignPermission: assignPermissionMutation.mutateAsync,
+    removePermission: removePermissionMutation.mutateAsync,
     assignRole: assignRoleMutation.mutate,
     hasPermission,
     hasAnyPermission,

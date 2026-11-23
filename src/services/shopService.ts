@@ -125,7 +125,8 @@ export const shopService = {
   async purchaseReward(
     userId: string,
     rewardId: string,
-    quantity: number = 1
+    quantity: number = 1,
+    discountedPrice?: number
   ): Promise<ShopPurchase> {
     // Get reward details
     const { data: reward, error: rewardError } = await supabase
@@ -143,7 +144,7 @@ export const shopService = {
       throw new Error("Estoque insuficiente");
     }
 
-    const totalCost = typedReward.price_coins * quantity;
+    const totalCost = (discountedPrice !== undefined ? discountedPrice : typedReward.price_coins) * quantity;
 
     // Deduct coins atomically via RPC (SECURITY DEFINER) — saldo validado no banco
     // eslint-disable-next-line @typescript-eslint/no-explicit-any

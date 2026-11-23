@@ -197,7 +197,7 @@ const PromotionCard = forwardRef<HTMLDivElement, PromotionCardProps>(
 });
 
 interface FlashSalesBannerProps {
-  onPurchase: (rewardId: string) => void;
+  onPurchase: (rewardId: string, discountedPrice: number) => void;
 }
 
 export function FlashSalesBanner({ onPurchase }: FlashSalesBannerProps) {
