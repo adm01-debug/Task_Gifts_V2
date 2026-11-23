@@ -1,4 +1,4 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import { motion } from "framer-motion";
 import { Target, Plus, Edit2, Trash2, Save, X, Copy, Loader2 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
@@ -36,7 +36,7 @@ interface GoalTemplate {
   coin_reward: number;
 }
 
-export default function GoalsManager() {
+export function GoalsManager() {
   const { user } = useAuth();
   const qc = useQueryClient();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
