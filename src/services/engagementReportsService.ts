@@ -33,7 +33,7 @@ export interface TopQuestData {
   name: string;
   completions: number;
   avgTime: string;
-  rating: number;
+  rating: number | null;
 }
 
 export interface StrugglingAreaData {
@@ -303,7 +303,7 @@ export const engagementReportsService = {
         name: quest?.title || "Quest Desconhecida",
         completions: stats.completions,
         avgTime: avgTimeHours > 0 ? `${avgTimeHours.toFixed(1)}h` : "N/A",
-         rating: stats.completions > 0 ? Math.min(5, 3.5 + (stats.completions / 10) * 0.5) : 0,
+        rating: null,
       };
     });
   },
