@@ -1,4 +1,7 @@
 import { useMemo } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/hooks/useAuth";
 import { motion } from "framer-motion";
 import { Flame, Calendar } from "lucide-react";
 import {
@@ -315,27 +318,28 @@ export function ActivityHeatmap({
   );
 }
 
-// Hook to generate mock data for demo purposes
-export function useActivityHeatmapData() {
-  return useMemo(() => {
-    const data: ActivityData[] = [];
-    const today = new Date();
-
-    for (let i = 0; i < 365; i++) {
-      const date = subDays(today, i);
-      // Random activity with higher probability for recent days
-      const recentBonus = i < 30 ? 0.3 : i < 90 ? 0.15 : 0;
-      const hasActivity = Math.random() < 0.4 + recentBonus;
-
-      if (hasActivity) {
-        const count = Math.floor(Math.random() * 12) + 1;
-        data.push({
-          date: format(date, "yyyy-MM-dd"),
-          count,
-        });
+// Hook that fetches real activity data from audit_logs
+export function useActivityHeatmapData(): ActivityData[] {
+  const { user } = useAuth();
+  const { data = [] } = useQuery({
+    queryKey: ["activity-heatmap", user?.id],
+    enabled: !!user?.id,
+    staleTime: 5 * 60 * 1000,
+    queryFn: async () => {
+      const since = subDays(new Date(), 364).toISOString();
+      const { data, error } = await supabase
+        .from("audit_logs")
+        .select("created_at")
+        .eq("user_id", user!.id)
+        .gte("created_at", since);
+      if (error) throw error;
+      const counts: Record<string, number> = {};
+      for (const row of data ?? []) {
+        const day = format(new Date(row.created_at), "yyyy-MM-dd");
+        counts[day] = (counts[day] ?? 0) + 1;
       }
-    }
-
-    return data;
-  }, []);
+      return Object.entries(counts).map(([date, count]) => ({ date, count }));
+    },
+  });
+  return data as ActivityData[];
 }
