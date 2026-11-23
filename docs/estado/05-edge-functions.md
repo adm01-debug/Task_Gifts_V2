@@ -201,3 +201,21 @@ Confirmado contra `src/integrations/supabase/types.ts`:
 - **Secret `OPENROUTER_API_KEY`** confirmada no projeto (8 secrets no total; `LOVABLE_API_KEY` nunca existiu em produção).
 - **Edge `ai-coach` validada em produção (2026-11-22)** — chamada direta com JWT de usuário autenticado real (grant por senha): HTTP 200 streaming SSE via OpenRouter (gemini-2.5-flash, provedor Google AI Studio); `ai_coach_messages` INSERT 201 + SELECT 200 para a própria conta, consistente com a policy `owns` + apenas-admin. Correção no front (PR #98): `src/hooks/useAICoach.ts` passou a enviar o JWT de sessão do usuário (`session?.access_token`) em vez do `VITE_SUPABASE_PUBLISHABLE_KEY` e a respeitar o gate de availability (`isFunctionDeployed`/`isEdgeSkillsDisabled`/`isEdgeAvailable`), consistente com `invokeEdgeSafe`. Validação no navegador com usuário real em produção ainda pendente.
 **Podadas da main (não existem mais em `supabase/functions`, eram stubs/tables inexistentes):** `send-email-notifications`, `send-email-digest`, `verify-geo`, `security-weekly-digest`, `weekly-league-processing` e `external-webhook`. As funções de email eram stubs que logavam e descartavam o HTML; sem elas não há mais retorno falso de `delivered/success:true`. (**`competency-alerts` NÃO foi podada** — foi corrigida nesta sessão; ver item "Resolvidos na main" acima/abaixo.)
+
+
+---
+
+**Atualização 2026-11-23 — PR #106 mergeada + VAPID keys configuradas (evidência real):**
+
+**BUG_0001 resolvido** — get_error_budget_30d levantava P0001: access_denied: admin only para service_role (pois has_role(auth.uid(), 'admin') retornava NULL com uth.uid() = NULL e o guard antigo levantava exceção). Corrigido: guard canônico (NULL → passa, não-admin → 42501) + renomear coluna status_code → esponse_status na query interna. Verificado: error-budget-monitor retorna HTTP 200 {"ok":true,...} em produção.
+
+**BUG_0002 resolvido** — get_webhook_delivery_stats_1h retornava 0 linhas porque current_setting('request.jwt.claim.role')='service_role' é sempre NULL fora do PostgREST. Corrigido: guard canônico sem GUC. Verificado: webhook-health-monitor retorna HTTP 200 em produção.
+
+**BUG_0003 resolvido** — 	rigger_dispatch_critical_alert() apontava para https://awzhgfmqwddzgbqzqusc.supabase.co (projeto errado) com JWT anon daquele projeto; erifyServiceRole só aceita service-role/INTERNAL_FUNCTION_SECRET/CRON_SECRET. Reescrita: URL correta (eidsaqymojyuhprobfpn.supabase.co), autenticação via x-internal-secret lido de _internal.dispatch_config (schema criado com REVOKE ALL para públicos). Vault (ault.decrypted_secrets) descartado — pgsodium sem root key acessível via Management API.
+
+**VAPID keys configuradas** — push-outbox-dispatcher retornava HTTP 503 "VAPID keys not configured" em cada cron run; 15 linhas em push_outbox com status='skipped'. Gerado par VAPID P-256 e configurados VAPID_PUBLIC_KEY, VAPID_PRIVATE_KEY, VAPID_SUBJECT (mailto:admin@taskgifts.com.br) nas edge function secrets. Verificado: push-outbox-dispatcher retorna HTTP 200 {"processed":0} (antes: 503). As 15 linhas skipped foram resetadas para pending e processadas; sent=0, skipped=15 — esperado, pois push_subscriptions tem 0 registros (nenhum usuário aceitou push no browser ainda).
+
+**Todos os 3 monitores SRE verificados ao vivo:**
+- error-budget-monitor → HTTP 200 {"ok":true,"evaluated":[...],"created":0} ✓
+- webhook-health-monitor → HTTP 200 {"checked":0,"degraded":0,...} ✓
+- urn-rate-monitor → HTTP 200 {"ok":true,"triggered":[],...} ✓
