@@ -881,11 +881,12 @@
     "useQueryClient"
    ],
    "canais_realtime": [],
-   "usado_por": 3,
+   "usado_por": 4,
    "usado_por_arquivos": [
     "src/components/admin/AdminMetricsDashboard.tsx",
     "src/components/admin/DepartmentsManager.tsx",
-    "src/components/admin/UsersManager.tsx"
+    "src/components/admin/UsersManager.tsx",
+    "src/pages/ManagerDashboard.tsx"
    ],
    "coberto_por_testes": 0
   },
@@ -2325,11 +2326,12 @@
    "canais_realtime": [
     "kudos-realtime"
    ],
-   "usado_por": 3,
+   "usado_por": 4,
    "usado_por_arquivos": [
     "src/components/KudosRanking.tsx",
     "src/components/PeerRecognition.tsx",
-    "src/components/ProfileKudosSection.tsx"
+    "src/components/ProfileKudosSection.tsx",
+    "src/pages/ManagerDashboard.tsx"
    ],
    "coberto_por_testes": 0
   },
@@ -3338,9 +3340,10 @@
     "useQueryClient"
    ],
    "canais_realtime": [],
-   "usado_por": 1,
+   "usado_por": 2,
    "usado_por_arquivos": [
-    "src/components/GlobalSearch.tsx"
+    "src/components/GlobalSearch.tsx",
+    "src/pages/ManagerDashboard.tsx"
    ],
    "coberto_por_testes": 0
   },

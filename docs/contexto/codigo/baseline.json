@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "57527b08620ec51d137e103bdef1eac4bea24bee",
+  "commit": "ceef1b84c2a9ebd21866923e69533687050717af",
   "branch": "main",
-  "data_commit": "2026-11-23T11:28:43-03:00",
+  "data_commit": "2026-11-23T11:44:47-03:00",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "ultimos_commits": [
+   {
+    "sha": "ceef1b8",
+    "data": "2026-11-23",
+    "assunto": "﻿fix(manager): dados reais de departamento, quests e exportacao no dashboard (#118)"
+   },
    {
     "sha": "57527b0",
     "data": "2026-11-23",
@@ -126,14 +131,9 @@
     "sha": "16748b9",
     "data": "2026-11-22",
     "assunto": "fix(e2e): happy-paths com rotas/UI reais e credenciais de teste por env (#94)"
-   },
-   {
-    "sha": "d50f0a1",
-    "data": "2026-11-21",
-    "assunto": "chore(docs): evidencia validacao HIBP range API (pendencia 03) (#93)"
    }
   ],
-  "arquivos_mudados_7d": 120,
+  "arquivos_mudados_7d": 121,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "supabase/functions/_shared",
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 85
+    "commits": 86
    },
    {
     "autor": "dependabot[bot]",
@@ -312,7 +312,7 @@
  "contagens": {
   "arquivos_total": 1539,
   "arquivos_codigo": 1166,
-  "linhas_codigo": 227573,
+  "linhas_codigo": 227654,
   "rotas": 83,
   "rotas_http_backend": 0,
   "vistas_por_id": 0,
@@ -432,7 +432,7 @@
   },
   "src/pages": {
    "arquivos": 82,
-   "linhas": 22489
+   "linhas": 22570
   },
   "src/services": {
    "arquivos": 99,

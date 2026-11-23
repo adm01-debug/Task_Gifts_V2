@@ -6187,7 +6187,7 @@
    "hooks_locais": [],
    "tabelas": [],
    "edges": [],
-   "usado_por": 76,
+   "usado_por": 77,
    "orfao": false
   },
   {
@@ -6918,7 +6918,7 @@
    "hooks_locais": [],
    "tabelas": [],
    "edges": [],
-   "usado_por": 54,
+   "usado_por": 55,
    "orfao": false
   },
   {
@@ -8150,12 +8150,16 @@
     "ManagerDashboard"
    ],
    "export_default": "ManagerDashboard",
-   "linhas": 138,
+   "linhas": 219,
    "dominio": "pages",
    "hooks_locais": [
+    "useAllTeamMembers",
     "useAuth",
     "useDepartments",
+    "useGiveKudos",
+    "useKudosBadges",
     "useProfiles",
+    "useQuests",
     "useSEO",
     "useScrollHeader"
    ],
