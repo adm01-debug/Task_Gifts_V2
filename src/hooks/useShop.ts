@@ -54,8 +54,8 @@ export function usePurchaseReward() {
   const { user } = useAuth();
 
   return useMutation({
-    mutationFn: ({ rewardId, quantity = 1 }: { rewardId: string; quantity?: number }) =>
-      shopService.purchaseReward(user!.id, rewardId, quantity),
+    mutationFn: ({ rewardId, quantity = 1, discountedPrice }: { rewardId: string; quantity?: number; discountedPrice?: number }) =>
+      shopService.purchaseReward(user!.id, rewardId, quantity, discountedPrice),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: shopKeys.all });
       queryClient.invalidateQueries({ queryKey: ["profiles"] });
