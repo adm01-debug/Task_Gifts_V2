@@ -1,6 +1,6 @@
 # 10 · ACESSO E SEGURANÇA — quem pode o quê
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `7ca11a04bb` · branch `main` · 2026-11-23 14:10 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `8f235c25cc` · branch `main` · 2026-11-23 14:25 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## Perfis / roles identificados
@@ -666,7 +666,7 @@
 | /admin/webhooks/executive | ProtectedRoute | admin | `src/App.tsx` |
 | /admin/webhooks/new | ProtectedRoute | admin | `src/App.tsx` |
 | /album | ProtectedRoute |  | `src/App.tsx` |
-| /analytics | ProtectedRoute |  | `src/App.tsx` |
+| /analytics | ProtectedRoute | admin | `src/App.tsx` |
 | /announcements | ProtectedRoute |  | `src/App.tsx` |
 | /app | ProtectedRoute |  | `scripts/ai-context/gerar.unit.mjs` |
 | /audit | ProtectedRoute | admin | `src/App.tsx` |
@@ -716,7 +716,7 @@
 | /roleta | ProtectedRoute |  | `src/App.tsx` |
 | /roleta/admin | ProtectedRoute | admin | `src/App.tsx` |
 | /security | ProtectedRoute | admin | `src/App.tsx` |
-| /security-dashboard | ProtectedRoute |  | `src/App.tsx` |
+| /security-dashboard | ProtectedRoute | admin | `src/App.tsx` |
 | /sequencia | ProtectedRoute |  | `src/App.tsx` |
 | /sequencia/admin | ProtectedRoute | admin | `src/App.tsx` |
 | /surveys | ProtectedRoute |  | `src/App.tsx` |

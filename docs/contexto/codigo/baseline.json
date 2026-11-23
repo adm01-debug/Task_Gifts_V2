@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "7ca11a04bbb4ebc54da65f9f50b6eac89488400b",
+  "commit": "8f235c25cce9ee9549c594e9021db5f4969af68e",
   "branch": "main",
-  "data_commit": "2026-11-23T11:05:12-03:00",
+  "data_commit": "2026-11-23T11:20:07-03:00",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "ultimos_commits": [
+   {
+    "sha": "8f235c2",
+    "data": "2026-11-23",
+    "assunto": "fix(rbac): adiciona guard admin nas rotas /analytics e /security-dashboard (#116)"
+   },
    {
     "sha": "7ca11a0",
     "data": "2026-11-23",
@@ -126,11 +131,6 @@
     "sha": "2eace82",
     "data": "2026-11-21",
     "assunto": "fix(deps): fecha CVEs moderados uuid/glob/postcss-selector-parser via overrides (#92)"
-   },
-   {
-    "sha": "4ce5f92",
-    "data": "2026-11-21",
-    "assunto": "chore(docs): documenta validacao do swap OpenRouter e deploys integros (#91)"
    }
   ],
   "arquivos_mudados_7d": 120,
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 83
+    "commits": 84
    },
    {
     "autor": "dependabot[bot]",

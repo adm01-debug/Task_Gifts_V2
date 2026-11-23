@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "7ca11a04bbb4ebc54da65f9f50b6eac89488400b",
+  "sha": "8f235c25cce9ee9549c594e9021db5f4969af68e",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
-  "generated_at": "2026-11-23 14:10 UTC",
+  "generated_at": "2026-11-23 14:25 UTC",
   "files_total": 1549,
   "code_files": 1445,
   "code_lines": 259006
  },
  "version": "1.3.2",
- "facts_hash": "135599c8fb2d60b9",
+ "facts_hash": "3c71d945378abd9f",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -44806,7 +44806,9 @@
     "path": "/analytics",
     "component": "PageTransition",
     "guard": "ProtectedRoute",
-    "roles": [],
+    "roles": [
+     "admin"
+    ],
     "file": "src/App.tsx"
    },
    {
@@ -45269,7 +45271,9 @@
     "path": "/security-dashboard",
     "component": "PageTransition",
     "guard": "ProtectedRoute",
-    "roles": [],
+    "roles": [
+     "admin"
+    ],
     "file": "src/App.tsx"
    },
    {
@@ -113395,7 +113399,9 @@
     "path": "/analytics",
     "component": "PageTransition",
     "guard": "ProtectedRoute",
-    "roles": [],
+    "roles": [
+     "admin"
+    ],
     "file": "src/App.tsx"
    },
    {
@@ -113781,7 +113787,9 @@
     "path": "/security-dashboard",
     "component": "PageTransition",
     "guard": "ProtectedRoute",
-    "roles": [],
+    "roles": [
+     "admin"
+    ],
     "file": "src/App.tsx"
    },
    {
@@ -117086,7 +117094,9 @@
      "path": "/analytics",
      "component": "PageTransition",
      "guard": "ProtectedRoute",
-     "roles": []
+     "roles": [
+      "admin"
+     ]
     },
     {
      "path": "/trails",
@@ -117398,7 +117408,9 @@
      "path": "/security-dashboard",
      "component": "PageTransition",
      "guard": "ProtectedRoute",
-     "roles": []
+     "roles": [
+      "admin"
+     ]
     },
     {
      "path": "/admin/permissions",
@@ -151337,10 +151349,19 @@
   }
  },
  "git": {
-  "sha": "7ca11a04bbb4ebc54da65f9f50b6eac89488400b",
+  "sha": "8f235c25cce9ee9549c594e9021db5f4969af68e",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "commits": [
+   {
+    "sha": "8f235c2",
+    "date": "2026-11-23",
+    "author": "adm01-debug",
+    "subject": "fix(rbac): adiciona guard admin nas rotas /analytics e /security-dashboard (#116)",
+    "files": [
+     "src/App.tsx"
+    ]
+   },
    {
     "sha": "7ca11a0",
     "date": "2026-11-23",
@@ -151708,15 +151729,6 @@
     "subject": "fix: desbloqueia video do LMS (media-src/frame-src na CSP) (#87)",
     "files": [
      "vercel.json"
-    ]
-   },
-   {
-    "sha": "fb528b1",
-    "date": "2026-11-21",
-    "author": "adm01-debug",
-    "subject": "fix: verify-ip fail-closed quando a whitelist nao pode ser checada (#86)",
-    "files": [
-     "supabase/functions/verify-ip/index.ts"
     ]
    }
   ],
