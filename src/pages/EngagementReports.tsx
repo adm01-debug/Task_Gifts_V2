@@ -19,6 +19,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
  import { PageShell } from "@/components/navigation";
 import { toast } from "sonner";
 import { StatCard, ChartCard, EngagementCustomTooltip, StrugglingAreasSection } from "@/components/engagement/EngagementCharts";
+import { toCSV, downloadCSV } from "@/lib/csvExport";
 
 export default function EngagementReports() {
   const navigate = useNavigate();
@@ -32,6 +33,39 @@ export default function EngagementReports() {
   const { data: topQuests, isLoading: loadingTop } = useTopQuests(5);
   const { data: strugglingAreas, isLoading: loadingStruggle } = useStrugglingAreas();
   const { data: metrics, isLoading: loadingMetrics } = useEngagementMetrics();
+
+  const handleExport = () => {
+    const sections: string[] = [];
+    if (metrics) {
+      sections.push("MÉTRICAS GERAIS");
+      sections.push(toCSV([
+        { Horas_de_Treinamento: metrics.totalTrainingHours, Taxa_de_Conclusao: `${metrics.avgCompletionRate}%`, Certificacoes_Emitidas: metrics.totalCertifications, Score_de_Engajamento: metrics.engagementScore },
+      ]));
+    }
+    if ((departmentPerformance ?? []).length > 0) {
+      sections.push("DESEMPENHO POR DEPARTAMENTO");
+      sections.push(toCSV((departmentPerformance ?? []) as unknown as Record<string, unknown>[], ["name", "completion", "avgTime", "engagement"]));
+    }
+    if ((topQuests ?? []).length > 0) {
+      sections.push("TOP QUESTS");
+      sections.push(toCSV((topQuests ?? []) as unknown as Record<string, unknown>[], ["name", "completions", "avgTime"]));
+    }
+    if ((strugglingAreas ?? []).length > 0) {
+      sections.push("ÁREAS CRÍTICAS");
+      sections.push(toCSV((strugglingAreas ?? []) as unknown as Record<string, unknown>[], ["name", "dropRate", "avgAttempts", "difficulty"]));
+    }
+    if ((completionTrend ?? []).length > 0) {
+      sections.push("TENDÊNCIA DE CONCLUSÃO");
+      sections.push(toCSV((completionTrend ?? []) as unknown as Record<string, unknown>[], ["month", "completed", "started", "abandoned"]));
+    }
+    if (sections.length === 0) {
+      toast.error("Nenhum dado disponível para exportar.");
+      return;
+    }
+    const csv = sections.join("\n\n");
+    downloadCSV(`relatorio-engajamento-${period}`, csv);
+    toast.success("Relatório exportado com sucesso!");
+  };
 
    return (
      <PageShell title="Relatórios de Engajamento">
@@ -52,17 +86,17 @@ export default function EngagementReports() {
                    <SelectItem value="1y">Último ano</SelectItem>
                  </SelectContent>
                </Select>
-               <Button variant="outline" className="gap-2" onClick={() => toast.success("Relatório exportado com sucesso!")}><Download className="w-4 h-4" />Exportar</Button>
+               <Button variant="outline" className="gap-2" onClick={handleExport}><Download className="w-4 h-4" />Exportar</Button>
              </div>
            </div>
          </div>
  
          <main className="max-w-7xl mx-auto px-4 py-6 space-y-6">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <StatCard icon={Clock} label="Horas de Treinamento" value={metrics?.totalTrainingHours.toLocaleString() || "0"} subValue="horas investidas" change={metrics?.totalTrainingHours ? "+18%" : undefined} changeType="positive" color="#6366f1" delay={0} loading={loadingMetrics} />
-          <StatCard icon={Target} label="Taxa de Conclusão" value={`${metrics?.avgCompletionRate || 0}%`} subValue="média geral" change={metrics?.avgCompletionRate ? "+12%" : undefined} changeType="positive" color="#10b981" delay={0.1} loading={loadingMetrics} />
-          <StatCard icon={Award} label="Certificações Emitidas" value={metrics?.totalCertifications.toString() || "0"} subValue="no período" change={metrics?.totalCertifications ? "+24%" : undefined} changeType="positive" color="#f59e0b" delay={0.2} loading={loadingMetrics} />
-          <StatCard icon={Activity} label="Score de Engajamento" value={`${metrics?.engagementScore || 0}/100`} subValue={metrics?.engagementScore && metrics.engagementScore >= 70 ? "excelente" : "em desenvolvimento"} change={metrics?.engagementScore ? "+5pts" : undefined} changeType="positive" color="#8b5cf6" delay={0.3} loading={loadingMetrics} />
+          <StatCard icon={Clock} label="Horas de Treinamento" value={metrics?.totalTrainingHours.toLocaleString() || "0"} subValue="horas investidas" color="#6366f1" delay={0} loading={loadingMetrics} />
+          <StatCard icon={Target} label="Taxa de Conclusão" value={`${metrics?.avgCompletionRate || 0}%`} subValue="média geral" color="#10b981" delay={0.1} loading={loadingMetrics} />
+          <StatCard icon={Award} label="Certificações Emitidas" value={metrics?.totalCertifications.toString() || "0"} subValue="no período" color="#f59e0b" delay={0.2} loading={loadingMetrics} />
+          <StatCard icon={Activity} label="Score de Engajamento" value={`${metrics?.engagementScore || 0}/100`} subValue={metrics?.engagementScore && metrics.engagementScore >= 70 ? "excelente" : "em desenvolvimento"} color="#8b5cf6" delay={0.3} loading={loadingMetrics} />
         </div>
 
         <Tabs defaultValue="overview" className="space-y-6">
