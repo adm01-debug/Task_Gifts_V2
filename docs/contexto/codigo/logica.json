@@ -283,7 +283,7 @@
    "zod_schemas": 0,
    "flags": [],
    "papeis": [],
-   "usado_por": 164,
+   "usado_por": 165,
    "usado_por_modulos": [
     "components",
     "components/admin",
@@ -4365,13 +4365,15 @@
     "auditService"
    ],
    "export_default": null,
-   "linhas": 221,
+   "linhas": 226,
    "tabelas": [
     "audit_logs"
    ],
    "rpcs": [],
    "edges": [],
-   "env": [],
+   "env": [
+    "DEV"
+   ],
    "externos": [],
    "zod_schemas": 0,
    "flags": [],

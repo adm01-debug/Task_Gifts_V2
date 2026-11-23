@@ -175,12 +175,15 @@
     "ActivityHeatmap"
    ],
    "export_default": null,
-   "linhas": 342,
+   "linhas": 346,
    "dominio": "components",
    "hooks_locais": [
-    "useActivityHeatmapData"
+    "useActivityHeatmapData",
+    "useAuth"
    ],
-   "tabelas": [],
+   "tabelas": [
+    "audit_logs"
+   ],
    "edges": [],
    "usado_por": 1,
    "orfao": false
@@ -7300,7 +7303,7 @@
    ],
    "tabelas": [],
    "edges": [],
-   "usado_por": 95,
+   "usado_por": 96,
    "orfao": false
   },
   {

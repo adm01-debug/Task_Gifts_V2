@@ -3811,7 +3811,7 @@
     "so_na_migration": [],
     "so_no_types": []
    },
-   "usada_no_front": 5,
+   "usada_no_front": 6,
    "usada_em_edges": [
     "admin-alerts",
     "churn-prediction",

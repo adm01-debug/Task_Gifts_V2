@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "130795fd0b2a79704757fef9969a351c096bc8c0",
+  "sha": "961611278623e24355589f8d9490327cb303993c",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
-  "generated_at": "2026-11-23 11:50 UTC",
+  "generated_at": "2026-11-23 12:04 UTC",
   "files_total": 1549,
   "code_files": 1445,
-  "code_lines": 258879
+  "code_lines": 258888
  },
  "version": "1.3.2",
- "facts_hash": "1d38d15a45934f1a",
+ "facts_hash": "bc933d6453802b4f",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -48011,7 +48011,7 @@
   {
    "module": "src/components",
    "files": 461,
-   "lines": 77762,
+   "lines": 77766,
    "tables": [
     "attendance_records",
     "audit_logs",
@@ -48783,7 +48783,7 @@
   {
    "module": "src/services",
    "files": 99,
-   "lines": 21593,
+   "lines": 21598,
    "tables": [
     "achievements",
     "action_plan_items",
@@ -49800,6 +49800,7 @@
    },
    "audit_logs": {
     "select": [
+     "src/components/ActivityHeatmap.tsx",
      "src/components/WeeklyPerformanceComparison.tsx",
      "src/components/admin/AdminChangeHistory.tsx",
      "src/pages/PersonalStats.tsx",
@@ -52626,6 +52627,7 @@
    "DEV": [
     "src/hooks/usePerformanceTrack.ts",
     "src/pages/NotFound.tsx",
+    "src/services/auditService.ts",
     "src/services/loggingService.ts"
    ],
    "E2E_EMAIL": [
@@ -78166,6 +78168,14 @@
    {
     "file": "src/components/ActivityHeatmap.tsx",
     "line": "checkDate = subDays(checkDate, 1);"
+   },
+   {
+    "file": "src/components/ActivityHeatmap.tsx",
+    "line": "const since = subDays(new Date(), 364).toISOString();"
+   },
+   {
+    "file": "src/components/ActivityHeatmap.tsx",
+    "line": "staleTime: 5 * 60 * 1000,"
    },
    {
     "file": "src/components/AttendanceCalendar.tsx",
@@ -117789,11 +117799,23 @@
   },
   "src/components/ActivityHeatmap.tsx": {
    "path": "src/components/ActivityHeatmap.tsx",
-   "lines": 342,
+   "lines": 346,
    "exports": [
     "function ActivityHeatmap",
     "function useActivityHeatmapData"
    ],
+   "tables": [
+    {
+     "table": "audit_logs",
+     "op": "select"
+    }
+   ],
+   "table_cols": {
+    "audit_logs": [
+     "created_at",
+     "user_id"
+    ]
+   },
    "params": [
     {
      "name": "DAYS_TO_SHOW",
@@ -117811,7 +117833,9 @@
     "useActivityHeatmapData"
    ],
    "temporal": [
-    "checkDate = subDays(checkDate, 1);"
+    "checkDate = subDays(checkDate, 1);",
+    "const since = subDays(new Date(), 364).toISOString();",
+    "staleTime: 5 * 60 * 1000,"
    ],
    "percents": [
     "delay: (weekIndex * 7 + dayIndex) * 0.001,"
@@ -136143,7 +136167,7 @@
   },
   "src/services/auditService.ts": {
    "path": "src/services/auditService.ts",
-   "lines": 221,
+   "lines": 226,
    "exports": [
     "type AuditAction",
     "interface AuditLog",
@@ -136185,6 +136209,9 @@
      "user_id"
     ]
    },
+   "env": [
+    "DEV"
+   ],
    "enums": [
     {
      "name": "AuditAction",
@@ -151310,10 +151337,20 @@
   }
  },
  "git": {
-  "sha": "130795fd0b2a79704757fef9969a351c096bc8c0",
+  "sha": "961611278623e24355589f8d9490327cb303993c",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "commits": [
+   {
+    "sha": "9616112",
+    "date": "2026-11-23",
+    "author": "adm01-debug",
+    "subject": "fix(dashboard/audit): heatmap dados reais de audit_logs + auditService dev logs",
+    "files": [
+     "src/components/ActivityHeatmap.tsx",
+     "src/services/auditService.ts"
+    ]
+   },
    {
     "sha": "130795f",
     "date": "2026-11-23",
@@ -151680,30 +151717,20 @@
      "docs/pendencias/03-csp-hibp-pwnedpasswords.md",
      "docs/pendencias/05-lockfiles-triplos-package-manager.md"
     ]
-   },
-   {
-    "sha": "cb42df7",
-    "date": "2026-11-21",
-    "author": "dependabot[bot]",
-    "subject": "build(deps-dev): bump jsdom from 30.1.3 to 31.0.1 (#83)",
-    "files": [
-     "bun.lock",
-     "package.json"
-    ]
    }
   ],
   "hot_files": [
    [
-    "bun.lock",
+    "docs/estado/05-edge-functions.md",
     6
+   ],
+   [
+    "bun.lock",
+    5
    ],
    [
     "package.json",
-    6
-   ],
-   [
-    "docs/estado/05-edge-functions.md",
-    6
+    5
    ],
    [
     "supabase/functions/_shared/contracts/_fixtures/index.ts",

@@ -1,6 +1,6 @@
 # 07 · REGRAS DE NEGÓCIO
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `130795fd0b` · branch `main` · 2026-11-23 11:50 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `9616112786` · branch `main` · 2026-11-23 12:04 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## A. Regras escritas por humanos (`manual/` — prioridade máxima, nunca sobrescrito)
@@ -2959,6 +2959,8 @@ _nenhum item encontrado_
 | `const timer = setTimeout(onClose, 5000);` | `src/components/AchievementSystem.tsx` |
 | `const timer = setTimeout(onClose, 6000);` | `src/components/AchievementSystem.tsx` |
 | `checkDate = subDays(checkDate, 1);` | `src/components/ActivityHeatmap.tsx` |
+| `const since = subDays(new Date(), 364).toISOString();` | `src/components/ActivityHeatmap.tsx` |
+| `staleTime: 5 * 60 * 1000,` | `src/components/ActivityHeatmap.tsx` |
 | `const handleNextMonth = () => setCurrentMonth(prev => addMonths(prev, 1));` | `src/components/AttendanceCalendar.tsx` |
 | `const handlePrevMonth = () => setCurrentMonth(prev => subMonths(prev, 1));` | `src/components/AttendanceCalendar.tsx` |
 | `date: new Date(monthStart.getTime() - (startDayOfWeek - i) * 24 * 60 * 60 * 1000),` | `src/components/AttendanceCalendar.tsx` |

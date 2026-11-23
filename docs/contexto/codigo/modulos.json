@@ -7,7 +7,7 @@
    "modulo": "components",
    "arquivos": 81,
    "testes": 0,
-   "linhas": 18114,
+   "linhas": 18118,
    "itens_menu": [],
    "telas": [],
    "rotas_http": [],
@@ -1018,6 +1018,7 @@
    "buckets": [],
    "canais_realtime": [],
    "env": [
+    "DEV",
     "VITE_SUPABASE_PUBLISHABLE_KEY",
     "VITE_SUPABASE_URL"
    ],
@@ -7669,7 +7670,7 @@
    "modulo": "services",
    "arquivos": 96,
    "testes": 0,
-   "linhas": 21014,
+   "linhas": 21019,
    "itens_menu": [],
    "telas": [],
    "rotas_http": [],

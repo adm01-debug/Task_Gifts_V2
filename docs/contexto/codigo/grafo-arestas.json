@@ -141,6 +141,8 @@
   ],
   "src/components/ActivityHeatmap.tsx": [
    "src/components/ui/tooltip.tsx",
+   "src/hooks/useAuth.tsx",
+   "src/integrations/supabase/client.ts",
    "src/lib/utils.ts"
   ],
   "src/components/ActivityReactions.tsx": [

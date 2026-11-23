@@ -76,13 +76,17 @@
    "hooks_exportados": [
     "useActivityHeatmapData"
    ],
-   "linhas": 342,
+   "linhas": 346,
    "dominio": "components",
-   "tabelas": [],
+   "tabelas": [
+    "audit_logs"
+   ],
    "rpcs": [],
    "edges": [],
    "hooks_internos": [
-    "useMemo"
+    "useAuth",
+    "useMemo",
+    "useQuery"
    ],
    "canais_realtime": [],
    "usado_por": 1,
@@ -1053,10 +1057,11 @@
     "useState"
    ],
    "canais_realtime": [],
-   "usado_por": 95,
+   "usado_por": 96,
    "usado_por_arquivos": [
     "src/App.tsx",
     "src/components/ActivityComments.tsx",
+    "src/components/ActivityHeatmap.tsx",
     "src/components/ActivityReactions.tsx",
     "src/components/CommandPalette.tsx",
     "src/components/CompetencyRadar.tsx",
@@ -1083,8 +1088,7 @@
     "src/components/security/ReauthProvider.tsx",
     "src/components/security/SessionsPanel.tsx",
     "src/hooks/useAICoach.ts",
-    "src/hooks/useAchievements.ts",
-    "src/hooks/useActivityReactions.ts"
+    "src/hooks/useAchievements.ts"
    ],
    "coberto_por_testes": 2
   },
