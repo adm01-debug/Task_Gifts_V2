@@ -277,7 +277,7 @@
     "AnnouncementPublisher"
    ],
    "export_default": null,
-   "linhas": 254,
+   "linhas": 296,
    "dominio": "components/admin",
    "hooks_locais": [
     "useAnnouncements"
@@ -457,7 +457,7 @@
     "FeedbackCycleManager"
    ],
    "export_default": null,
-   "linhas": 242,
+   "linhas": 298,
    "dominio": "components/admin",
    "hooks_locais": [
     "useFeedback360"
@@ -830,7 +830,7 @@
     "SurveyCreator"
    ],
    "export_default": null,
-   "linhas": 277,
+   "linhas": 401,
    "dominio": "components/admin",
    "hooks_locais": [
     "usePulseSurveys"

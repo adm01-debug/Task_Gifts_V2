@@ -59,11 +59,11 @@
  "commits": {
   "convencao": "conventional commits (observado)",
   "exemplos": [
+   "fix: liga acoes Editar/Excluir sem handler no painel admin (#120)",
    "feat(admin/app): OfflineIndicator global + GoalsManager persistente (Supabase) (#110)",
    "﻿fix: usa JWT de sessao no trail-recommendations (#119)",
    "﻿fix(manager): dados reais de departamento, quests e exportacao no dashboard (#118)",
-   "fix(reports): exporta relatório de engajamento em CSV real (#117)",
-   "fix(rbac): adiciona guard admin nas rotas /analytics e /security-dashboard (#116)"
+   "fix(reports): exporta relatório de engajamento em CSV real (#117)"
   ]
  },
  "pr_template": ".github/PULL_REQUEST_TEMPLATE.md",

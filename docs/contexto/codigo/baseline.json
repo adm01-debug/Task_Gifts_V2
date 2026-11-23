@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "455eeb67aa5a264911d5ef110fefbf2b30ecac55",
+  "commit": "046ebeb7dfe97562aec8a3e86c4792f868f28330",
   "branch": "main",
-  "data_commit": "2026-11-23T12:31:55-03:00",
+  "data_commit": "2026-11-23T16:20:39-03:00",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "ultimos_commits": [
+   {
+    "sha": "046ebeb",
+    "data": "2026-11-23",
+    "assunto": "fix: liga acoes Editar/Excluir sem handler no painel admin (#120)"
+   },
    {
     "sha": "455eeb6",
     "data": "2026-11-23",
@@ -126,14 +131,9 @@
     "sha": "0134cf0",
     "data": "2026-11-22",
     "assunto": "fix(deps): corrige CVE alto zod transitivo via override chromium-bidi (#97)"
-   },
-   {
-    "sha": "6fd6436",
-    "data": "2026-11-22",
-    "assunto": "docs(edge-functions): encerra pendencia 03 com validacao em producao (#96)"
    }
   ],
-  "arquivos_mudados_7d": 125,
+  "arquivos_mudados_7d": 133,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "supabase/functions/_shared",
@@ -152,15 +152,15 @@
     "mudancas": 11
    },
    {
+    "pasta": "src/components/admin",
+    "mudancas": 9
+   },
+   {
     "pasta": ".gitignore",
     "mudancas": 6
    },
    {
     "pasta": "docs/estado/05-edge-functions.md",
-    "mudancas": 6
-   },
-   {
-    "pasta": "src/components/admin",
     "mudancas": 6
    },
    {
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 88
+    "commits": 89
    },
    {
     "autor": "dependabot[bot]",
@@ -312,7 +312,7 @@
  "contagens": {
   "arquivos_total": 1541,
   "arquivos_codigo": 1166,
-  "linhas_codigo": 227714,
+  "linhas_codigo": 228075,
   "rotas": 83,
   "rotas_http_backend": 0,
   "vistas_por_id": 0,
@@ -400,7 +400,7 @@
   },
   "src/components": {
    "arquivos": 461,
-   "linhas": 77825
+   "linhas": 78047
   },
   "src/constants": {
    "arquivos": 1,
@@ -412,7 +412,7 @@
   },
   "src/hooks": {
    "arquivos": 129,
-   "linhas": 14487
+   "linhas": 14556
   },
   "src/i18n": {
    "arquivos": 1,
@@ -436,7 +436,7 @@
   },
   "src/services": {
    "arquivos": 99,
-   "linhas": 21612
+   "linhas": 21682
   },
   "src/stories": {
    "arquivos": 29,

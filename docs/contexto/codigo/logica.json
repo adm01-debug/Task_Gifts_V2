@@ -4228,9 +4228,10 @@
    "zod_schemas": 0,
    "flags": [],
    "papeis": [],
-   "usado_por": 2,
+   "usado_por": 3,
    "usado_por_modulos": [
     "components",
+    "components/admin",
     "hooks"
    ],
    "coberto_por_testes": 0,
@@ -5426,7 +5427,7 @@
     "feedbackService"
    ],
    "export_default": null,
-   "linhas": 287,
+   "linhas": 339,
    "tabelas": [
     "feedback_cycles",
     "feedback_requests",
@@ -5439,8 +5440,9 @@
    "zod_schemas": 0,
    "flags": [],
    "papeis": [],
-   "usado_por": 2,
+   "usado_por": 3,
    "usado_por_modulos": [
+    "components/admin",
     "hooks",
     "pages"
    ],
@@ -6370,7 +6372,7 @@
     "pulseSurveysService"
    ],
    "export_default": null,
-   "linhas": 252,
+   "linhas": 270,
    "tabelas": [
     "pulse_responses",
     "pulse_surveys"

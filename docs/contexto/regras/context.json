@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "455eeb67aa5a264911d5ef110fefbf2b30ecac55",
+  "sha": "046ebeb7dfe97562aec8a3e86c4792f868f28330",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
-  "generated_at": "2026-11-23 15:36 UTC",
+  "generated_at": "2026-11-23 19:21 UTC",
   "files_total": 1551,
   "code_files": 1447,
-  "code_lines": 259293
+  "code_lines": 259654
  },
  "version": "1.3.2",
- "facts_hash": "1de07a855e51a04c",
+ "facts_hash": "63be8a2756a9a802",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -48169,7 +48169,7 @@
   {
    "module": "src/components",
    "files": 461,
-   "lines": 77825,
+   "lines": 78047,
    "tables": [
     "attendance_records",
     "audit_logs",
@@ -48401,7 +48401,7 @@
   {
    "module": "src/hooks",
    "files": 129,
-   "lines": 14487,
+   "lines": 14556,
    "tables": [
     "certifications",
     "development_plan_actions",
@@ -48941,7 +48941,7 @@
   {
    "module": "src/services",
    "files": 99,
-   "lines": 21612,
+   "lines": 21682,
    "tables": [
     "achievements",
     "action_plan_items",
@@ -50407,6 +50407,9 @@
     "update": [
      "src/services/feedback360Service.ts",
      "src/services/feedbackService.ts"
+    ],
+    "delete": [
+     "src/services/feedbackService.ts"
     ]
    },
    "feedback_evaluations": {
@@ -51017,6 +51020,9 @@
      "src/services/pulseSurveysService.ts"
     ],
     "update": [
+     "src/services/pulseSurveysService.ts"
+    ],
+    "delete": [
      "src/services/pulseSurveysService.ts"
     ]
    },
@@ -56218,6 +56224,10 @@
    },
    {
     "file": "src/components/admin/SurveyCreator.tsx",
+    "msg": "Erro ao carregar resultados"
+   },
+   {
+    "file": "src/components/admin/SurveyCreator.tsx",
     "msg": "Erro ao criar pesquisa"
    },
    {
@@ -56650,6 +56660,10 @@
    },
    {
     "file": "src/hooks/useAnnouncements.ts",
+    "msg": "Erro ao atualizar anúncio"
+   },
+   {
+    "file": "src/hooks/useAnnouncements.ts",
     "msg": "Erro ao publicar anúncio"
    },
    {
@@ -56822,11 +56836,19 @@
    },
    {
     "file": "src/hooks/useFeedback360.ts",
+    "msg": "Erro ao atualizar ciclo"
+   },
+   {
+    "file": "src/hooks/useFeedback360.ts",
     "msg": "Erro ao criar ciclo"
    },
    {
     "file": "src/hooks/useFeedback360.ts",
     "msg": "Erro ao enviar feedback"
+   },
+   {
+    "file": "src/hooks/useFeedback360.ts",
+    "msg": "Erro ao excluir ciclo"
    },
    {
     "file": "src/hooks/useGoals.ts",
@@ -56955,6 +56977,14 @@
    {
     "file": "src/hooks/usePulseSurveys.ts",
     "msg": "Erro ao enviar resposta"
+   },
+   {
+    "file": "src/hooks/usePulseSurveys.ts",
+    "msg": "Erro ao excluir pesquisa"
+   },
+   {
+    "file": "src/hooks/usePulseSurveys.ts",
+    "msg": "Erro ao reabrir pesquisa"
    },
    {
     "file": "src/hooks/usePushNotifications.ts",
@@ -71803,6 +71833,18 @@
     "kind": "compara"
    },
    {
+    "file": "src/components/admin/FeedbackCycleManager.tsx",
+    "field": "status",
+    "value": "draft",
+    "kind": "compara"
+   },
+   {
+    "file": "src/components/admin/FeedbackCycleManager.tsx",
+    "field": "status",
+    "value": "draft",
+    "kind": "compara"
+   },
+   {
     "file": "src/components/admin/PasswordResetApprovalPanel.tsx",
     "field": "status",
     "value": "pending",
@@ -73798,6 +73840,12 @@
     "file": "src/hooks/usePositions.ts",
     "field": "status",
     "value": "on_time",
+    "kind": "escreve"
+   },
+   {
+    "file": "src/hooks/usePulseSurveys.ts",
+    "field": "status",
+    "value": "active",
     "kind": "escreve"
    },
    {
@@ -77568,7 +77616,7 @@
     "file": "src/components/admin/FeedbackCycleManager.tsx",
     "name": "FeedbackCycleManager",
     "params": "",
-    "body": "const { cycles, isLoading, createCycle } = useFeedback360(); const [isDialogOpen, setIsDialogOpen] = useState(false); const [formData, setFormData] = useState({ name: \"\", description: \"\", cycle_type: \"360\" as \"360\" | \"manager\" | \"peer\" | \"self\", starts_at: \"\", ends_at: \"\", }); const handleSubmit = (e: React.FormEvent) => { e.preventDefault(); createCycle({ name: formData.name, description: formData.description, cycle_type: formData.cycle_type, starts_at: formData.starts_at, ends_at: formData.end …"
+    "body": "const { allCycles: cycles, isLoading, createCycle, updateCycle, deleteCycle, startCycle } = useFeedback360(); const [isDialogOpen, setIsDialogOpen] = useState(false); const [editingId, setEditingId] = useState<string | null>(null); const [formData, setFormData] = useState(emptyCycleForm); const closeDialog = () => { setIsDialogOpen(false); setEditingId(null); setFormData(emptyCycleForm); }; const handleSubmit = (e: React.FormEvent) => { e.preventDefault(); const payload = { name: formData.name, …"
    },
    {
     "file": "src/components/campaigns/CampaignReconciliationPanel.tsx",
@@ -101421,6 +101469,7 @@
       "escreve:src/components/admin/enps/ENPSSubComponents.tsx",
       "escreve:src/components/admin/pdi/CreatePlanForm.tsx",
       "escreve:src/components/manager/QuestsList.tsx",
+      "escreve:src/hooks/usePulseSurveys.ts",
       "escreve:src/lib/auctionEngine.ts",
       "escreve:src/services/certificationsService.ts",
       "escreve:src/services/duelsService.ts",
@@ -101492,6 +101541,41 @@
       "compara:src/components/manager/QuestsList.tsx",
       "compara:src/services/actionPlansService.ts"
      ],
+     "draft": [
+      "compara:src/components/admin/FeedbackCycleManager.tsx",
+      "compara:src/components/admin/SurveyCreator.tsx",
+      "compara:src/components/campaigns/CampaignGoalBetPanel.tsx",
+      "compara:src/components/manager/QuestCard.tsx",
+      "compara:src/components/manager/QuestsList.tsx",
+      "compara:src/components/prediction/PredictionMarketCard.tsx",
+      "compara:src/lib/auctionAdmin.ts",
+      "compara:src/lib/predictionAdmin.ts",
+      "compara:src/lib/predictionWatchdog.ts",
+      "compara:src/pages/BossBattlePage.tsx",
+      "compara:src/pages/DepartmentWarPage.tsx",
+      "escreve:src/components/auction/AuctionAdminForm.tsx",
+      "escreve:src/components/boss/BossBattleAdminDialog.tsx",
+      "escreve:src/components/campaigns/CreateCampaignDialog.tsx",
+      "escreve:src/lib/boardTrailAuthoring.ts",
+      "escreve:src/pages/BoardTrailAdminPage.tsx",
+      "escreve:src/pages/ExecutiveMonthlyReport.tsx",
+      "escreve:src/pages/Postmortems.tsx",
+      "escreve:src/pages/QuestBuilder.tsx",
+      "escreve:src/services/boardTrailService.ts",
+      "escreve:src/services/departmentWarAdminService.ts",
+      "escreve:src/services/developmentPlanService.ts",
+      "escreve:src/services/enpsService.ts",
+      "escreve:src/services/feedback360Service.ts",
+      "escreve:src/services/feedbackService.ts",
+      "escreve:src/services/goalsService.ts",
+      "escreve:src/services/pulseSurveysService.ts",
+      "escreve:src/services/salesCampaignsService.ts",
+      "escreve:src/services/trailsService.ts",
+      "escreve:src/types/goals.ts",
+      "escreve:supabase/functions/ai-course-builder/index.ts",
+      "filtra:src/services/auctionService.ts",
+      "filtra:src/services/bossBattleService.ts"
+     ],
      "pending": [
       "compara:src/components/admin/PasswordResetApprovalPanel.tsx",
       "compara:src/components/cards/TradeInbox.tsx",
@@ -101525,40 +101609,6 @@
       "filtra:src/services/feedbackService.ts",
       "filtra:src/services/passwordResetService.ts",
       "filtra:supabase/functions/admin-alerts/index.ts"
-     ],
-     "draft": [
-      "compara:src/components/admin/SurveyCreator.tsx",
-      "compara:src/components/campaigns/CampaignGoalBetPanel.tsx",
-      "compara:src/components/manager/QuestCard.tsx",
-      "compara:src/components/manager/QuestsList.tsx",
-      "compara:src/components/prediction/PredictionMarketCard.tsx",
-      "compara:src/lib/auctionAdmin.ts",
-      "compara:src/lib/predictionAdmin.ts",
-      "compara:src/lib/predictionWatchdog.ts",
-      "compara:src/pages/BossBattlePage.tsx",
-      "compara:src/pages/DepartmentWarPage.tsx",
-      "escreve:src/components/auction/AuctionAdminForm.tsx",
-      "escreve:src/components/boss/BossBattleAdminDialog.tsx",
-      "escreve:src/components/campaigns/CreateCampaignDialog.tsx",
-      "escreve:src/lib/boardTrailAuthoring.ts",
-      "escreve:src/pages/BoardTrailAdminPage.tsx",
-      "escreve:src/pages/ExecutiveMonthlyReport.tsx",
-      "escreve:src/pages/Postmortems.tsx",
-      "escreve:src/pages/QuestBuilder.tsx",
-      "escreve:src/services/boardTrailService.ts",
-      "escreve:src/services/departmentWarAdminService.ts",
-      "escreve:src/services/developmentPlanService.ts",
-      "escreve:src/services/enpsService.ts",
-      "escreve:src/services/feedback360Service.ts",
-      "escreve:src/services/feedbackService.ts",
-      "escreve:src/services/goalsService.ts",
-      "escreve:src/services/pulseSurveysService.ts",
-      "escreve:src/services/salesCampaignsService.ts",
-      "escreve:src/services/trailsService.ts",
-      "escreve:src/types/goals.ts",
-      "escreve:supabase/functions/ai-course-builder/index.ts",
-      "filtra:src/services/auctionService.ts",
-      "filtra:src/services/bossBattleService.ts"
      ],
      "closed": [
       "compara:src/components/admin/SurveyCreator.tsx",
@@ -119766,7 +119816,7 @@
   },
   "src/components/admin/AnnouncementPublisher.tsx": {
    "path": "src/components/admin/AnnouncementPublisher.tsx",
-   "lines": 254,
+   "lines": 296,
    "exports": [
     "function AnnouncementPublisher"
    ],
@@ -119893,7 +119943,7 @@
   },
   "src/components/admin/FeedbackCycleManager.tsx": {
    "path": "src/components/admin/FeedbackCycleManager.tsx",
-   "lines": 242,
+   "lines": 298,
    "exports": [
     "function FeedbackCycleManager"
    ],
@@ -119907,11 +119957,23 @@
      "rules": "type=date"
     }
    ],
+   "status_values": [
+    {
+     "field": "status",
+     "value": "draft",
+     "kind": "compara"
+    },
+    {
+     "field": "status",
+     "value": "draft",
+     "kind": "compara"
+    }
+   ],
    "calc_fns": [
     {
      "name": "FeedbackCycleManager",
      "params": "",
-     "body": "const { cycles, isLoading, createCycle } = useFeedback360(); const [isDialogOpen, setIsDialogOpen] = useState(false); const [formData, setFormData] = useState({ name: \"\", description: \"\", cycle_type: \"360\" as \"360\" | \"manager\" | \"peer\" | \"self\", starts_at: \"\", ends_at: \"\", }); const handleSubmit = (e: React.FormEvent) => { e.preventDefault(); createCycle({ name: formData.name, description: formData.description, cycle_type: formData.cycle_type, starts_at: formData.starts_at, ends_at: formData.end …"
+     "body": "const { allCycles: cycles, isLoading, createCycle, updateCycle, deleteCycle, startCycle } = useFeedback360(); const [isDialogOpen, setIsDialogOpen] = useState(false); const [editingId, setEditingId] = useState<string | null>(null); const [formData, setFormData] = useState(emptyCycleForm); const closeDialog = () => { setIsDialogOpen(false); setEditingId(null); setFormData(emptyCycleForm); }; const handleSubmit = (e: React.FormEvent) => { e.preventDefault(); const payload = { name: formData.name, …"
     }
    ],
    "percents": [
@@ -120109,12 +120171,13 @@
   },
   "src/components/admin/SurveyCreator.tsx": {
    "path": "src/components/admin/SurveyCreator.tsx",
-   "lines": 277,
+   "lines": 401,
    "exports": [
     "function SurveyCreator"
    ],
    "errors": [
     "Data de término é obrigatória",
+    "Erro ao carregar resultados",
     "Erro ao criar pesquisa",
     "Título é obrigatório"
    ],
@@ -125889,11 +125952,12 @@
   },
   "src/hooks/useAnnouncements.ts": {
    "path": "src/hooks/useAnnouncements.ts",
-   "lines": 86,
+   "lines": 99,
    "exports": [
     "function useAnnouncements"
    ],
    "errors": [
+    "Erro ao atualizar anúncio",
     "Erro ao publicar anúncio"
    ],
    "hooks": [
@@ -126767,13 +126831,15 @@
   },
   "src/hooks/useFeedback360.ts": {
    "path": "src/hooks/useFeedback360.ts",
-   "lines": 88,
+   "lines": 119,
    "exports": [
     "function useFeedback360"
    ],
    "errors": [
+    "Erro ao atualizar ciclo",
     "Erro ao criar ciclo",
-    "Erro ao enviar feedback"
+    "Erro ao enviar feedback",
+    "Erro ao excluir ciclo"
    ],
    "hooks": [
     "useFeedback360"
@@ -127718,13 +127784,22 @@
   },
   "src/hooks/usePulseSurveys.ts": {
    "path": "src/hooks/usePulseSurveys.ts",
-   "lines": 60,
+   "lines": 85,
    "exports": [
     "function usePulseSurveys"
    ],
    "errors": [
     "Erro ao criar pesquisa",
-    "Erro ao enviar resposta"
+    "Erro ao enviar resposta",
+    "Erro ao excluir pesquisa",
+    "Erro ao reabrir pesquisa"
+   ],
+   "status_values": [
+    {
+     "field": "status",
+     "value": "active",
+     "kind": "escreve"
+    }
    ],
    "hooks": [
     "usePulseSurveys"
@@ -138697,7 +138772,7 @@
   },
   "src/services/feedbackService.ts": {
    "path": "src/services/feedbackService.ts",
-   "lines": 287,
+   "lines": 339,
    "exports": [
     "interface FeedbackCycle",
     "interface FeedbackQuestion",
@@ -138707,6 +138782,10 @@
     "const feedbackService"
    ],
    "tables": [
+    {
+     "table": "feedback_cycles",
+     "op": "select"
+    },
     {
      "table": "feedback_cycles",
      "op": "select"
@@ -138726,6 +138805,14 @@
     {
      "table": "feedback_cycles",
      "op": "update"
+    },
+    {
+     "table": "feedback_cycles",
+     "op": "select,update"
+    },
+    {
+     "table": "feedback_cycles",
+     "op": "delete"
     },
     {
      "table": "feedback_requests",
@@ -140883,7 +140970,7 @@
   },
   "src/services/pulseSurveysService.ts": {
    "path": "src/services/pulseSurveysService.ts",
-   "lines": 252,
+   "lines": 270,
    "exports": [
     "interface PulseSurvey",
     "interface SurveyQuestion",
@@ -140925,6 +141012,14 @@
     {
      "table": "pulse_responses",
      "op": "select"
+    },
+    {
+     "table": "pulse_surveys",
+     "op": "update"
+    },
+    {
+     "table": "pulse_surveys",
+     "op": "delete"
     },
     {
      "table": "pulse_surveys",
@@ -151675,10 +151770,26 @@
   }
  },
  "git": {
-  "sha": "455eeb67aa5a264911d5ef110fefbf2b30ecac55",
+  "sha": "046ebeb7dfe97562aec8a3e86c4792f868f28330",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "commits": [
+   {
+    "sha": "046ebeb",
+    "date": "2026-11-23",
+    "author": "adm01-debug",
+    "subject": "fix: liga acoes Editar/Excluir sem handler no painel admin (#120)",
+    "files": [
+     "src/components/admin/AnnouncementPublisher.tsx",
+     "src/components/admin/FeedbackCycleManager.tsx",
+     "src/components/admin/SurveyCreator.tsx",
+     "src/hooks/useAnnouncements.ts",
+     "src/hooks/useFeedback360.ts",
+     "src/hooks/usePulseSurveys.ts",
+     "src/services/feedbackService.ts",
+     "src/services/pulseSurveysService.ts"
+    ]
+   },
    {
     "sha": "455eeb6",
     "date": "2026-11-23",
@@ -152041,15 +152152,6 @@
      "bun.lock",
      "package.json"
     ]
-   },
-   {
-    "sha": "4ce5f92",
-    "date": "2026-11-21",
-    "author": "adm01-debug",
-    "subject": "chore(docs): documenta validacao do swap OpenRouter e deploys integros (#91)",
-    "files": [
-     "docs/estado/05-edge-functions.md"
-    ]
    }
   ],
   "hot_files": [
@@ -152066,16 +152168,16 @@
     4
    ],
    [
-    "docs/estado/05-edge-functions.md",
-    4
-   ],
-   [
     "supabase/functions/_shared/contracts/_fixtures/responses.ts",
     4
    ],
    [
     "supabase/functions/_shared/contracts/index.ts",
     4
+   ],
+   [
+    "docs/estado/05-edge-functions.md",
+    3
    ],
    [
     "supabase/functions/webhook-dispatcher/index.ts",

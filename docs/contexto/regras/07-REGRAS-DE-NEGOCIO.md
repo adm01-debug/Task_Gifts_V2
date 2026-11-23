@@ -1,6 +1,6 @@
 # 07 · REGRAS DE NEGÓCIO
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `455eeb67aa` · branch `main` · 2026-11-23 15:36 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `046ebeb7df` · branch `main` · 2026-11-23 19:21 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## A. Regras escritas por humanos (`manual/` — prioridade máxima, nunca sobrescrito)
@@ -1176,7 +1176,7 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `status` | `SUBSCRIBED` | compara | `src/hooks/useNotifications.ts` |
 | `status` | `absent` | compara, escreve | `src/components/AttendanceCalendar.tsx` |
 | `status` | `accepted` | compara | `src/components/duels/DuelCard.tsx` |
-| `status` | `active` | compara, escreve, filtra | `src/components/CertificationsPanel.tsx`<br>`src/components/GoalsWidget.tsx`<br>`src/components/MyDevelopmentPlanWidget.tsx`<br>`src/components/TeamChallenges.tsx`<br>`src/components/admin/DevelopmentPlanManager.tsx`<br>… +36 |
+| `status` | `active` | compara, escreve, filtra | `src/components/CertificationsPanel.tsx`<br>`src/components/GoalsWidget.tsx`<br>`src/components/MyDevelopmentPlanWidget.tsx`<br>`src/components/TeamChallenges.tsx`<br>`src/components/admin/DevelopmentPlanManager.tsx`<br>… +37 |
 | `status` | `all` | compara | `src/components/PushNotificationHistory.tsx`<br>`src/components/manager/QuestsList.tsx`<br>`src/services/actionPlansService.ts` |
 | `status` | `anomaly` | compara | `src/lib/luckyWheelPayout.ts` |
 | `status` | `applied` | compara, filtra | `src/components/campaigns/CampaignImportHistory.tsx`<br>`src/services/campaignImportService.ts` |
@@ -1193,7 +1193,7 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `status` | `decided` | compara | `src/components/tournament/TournamentBracketView.tsx`<br>`src/pages/TournamentsPage.tsx` |
 | `status` | `declined` | compara, escreve | `src/components/duels/DuelCard.tsx`<br>`src/services/duelsService.ts` |
 | `status` | `delivered` | compara | `src/components/shop-admin/PurchaseGovernanceDialog.tsx` |
-| `status` | `draft` | compara, escreve, filtra | `src/components/admin/SurveyCreator.tsx`<br>`src/components/auction/AuctionAdminForm.tsx`<br>`src/components/boss/BossBattleAdminDialog.tsx`<br>`src/components/campaigns/CampaignGoalBetPanel.tsx`<br>`src/components/campaigns/CreateCampaignDialog.tsx`<br>… +27 |
+| `status` | `draft` | compara, escreve, filtra | `src/components/admin/FeedbackCycleManager.tsx`<br>`src/components/admin/SurveyCreator.tsx`<br>`src/components/auction/AuctionAdminForm.tsx`<br>`src/components/boss/BossBattleAdminDialog.tsx`<br>`src/components/campaigns/CampaignGoalBetPanel.tsx`<br>… +28 |
 | `status` | `error` | escreve | `supabase/functions/_shared/sentry.ts` |
 | `status` | `expired` | compara, escreve, filtra | `src/lib/bossHistory.ts`<br>`src/services/bossBattleService.ts`<br>`src/services/certificationsService.ts`<br>`supabase/migrations/20251213164818_77e12a61-a727-4556-b33b-03828d080ab1.sql` |
 | `status` | `expiring_soon` | compara | `src/services/certificationsService.ts` |
@@ -1942,7 +1942,7 @@ _nenhum item encontrado_
   ```
 - **FeedbackCycleManager()** — `src/components/admin/FeedbackCycleManager.tsx`
   ```
-  const { cycles, isLoading, createCycle } = useFeedback360(); const [isDialogOpen, setIsDialogOpen] = useState(false); const [formData, setFormData] = useState({ name: "", description: "", cycle_type: "360" as "360" | "manager" | "peer" | "self", starts_at: "", ends_at: "", }); const handleSubmit = (e: React.FormEvent) => { e.preventDefault(); createCycle({ name: formData.name, description: formData.description, cycle_type: formData.cycle_type, starts_at: formData.starts_at, ends_at: formData.end …
+  const { allCycles: cycles, isLoading, createCycle, updateCycle, deleteCycle, startCycle } = useFeedback360(); const [isDialogOpen, setIsDialogOpen] = useState(false); const [editingId, setEditingId] = useState<string | null>(null); const [formData, setFormData] = useState(emptyCycleForm); const closeDialog = () => { setIsDialogOpen(false); setEditingId(null); setFormData(emptyCycleForm); }; const handleSubmit = (e: React.FormEvent) => { e.preventDefault(); const payload = { name: formData.name, …
   ```
 - **applyAutoSuggestions()** — `src/components/campaigns/CampaignReconciliationPanel.tsx`
   ```
@@ -3250,6 +3250,7 @@ _nenhum item encontrado_
 | Erro ao carregar permissões | `src/components/admin/RolePermissionsManager.tsx` |
 | Erro ao salvar permissões | `src/components/admin/RolePermissionsManager.tsx` |
 | Data de término é obrigatória | `src/components/admin/SurveyCreator.tsx` |
+| Erro ao carregar resultados | `src/components/admin/SurveyCreator.tsx` |
 | Erro ao criar pesquisa | `src/components/admin/SurveyCreator.tsx` |
 | Título é obrigatório | `src/components/admin/SurveyCreator.tsx` |
 | Erro ao adicionar ao departamento | `src/components/admin/UsersManager.tsx` |
@@ -3358,6 +3359,7 @@ _nenhum item encontrado_
 | Team member not found | `src/hooks/useAdminUsers.ts` |
 | Usuário já possui este role | `src/hooks/useAdminUsers.ts` |
 | Usuário já é membro deste departamento | `src/hooks/useAdminUsers.ts` |
+| Erro ao atualizar anúncio | `src/hooks/useAnnouncements.ts` |
 | Erro ao publicar anúncio | `src/hooks/useAnnouncements.ts` |
 | Erro ao registrar check-in | `src/hooks/useAttendance.ts` |
 | Erro ao registrar check-out | `src/hooks/useAttendance.ts` |
@@ -3401,8 +3403,10 @@ _nenhum item encontrado_
 | Erro ao enviar: ${error.message} | `src/hooks/useENPS.ts` |
 | Erro ao gerar snapshot: ${error.message} | `src/hooks/useENPS.ts` |
 | Erro ao remover: ${error.message} | `src/hooks/useENPS.ts` |
+| Erro ao atualizar ciclo | `src/hooks/useFeedback360.ts` |
 | Erro ao criar ciclo | `src/hooks/useFeedback360.ts` |
 | Erro ao enviar feedback | `src/hooks/useFeedback360.ts` |
+| Erro ao excluir ciclo | `src/hooks/useFeedback360.ts` |
 | Erro ao atualizar meta | `src/hooks/useGoals.ts` |
 | Erro ao criar meta | `src/hooks/useGoals.ts` |
 | useI18nContext must be used within an I18nProvider | `src/hooks/useI18n.ts` |
@@ -3435,6 +3439,8 @@ _nenhum item encontrado_
 | Tarefa processada com penalidade de -${result.xp_penalty} XP | `src/hooks/usePositions.ts` |
 | Erro ao criar pesquisa | `src/hooks/usePulseSurveys.ts` |
 | Erro ao enviar resposta | `src/hooks/usePulseSurveys.ts` |
+| Erro ao excluir pesquisa | `src/hooks/usePulseSurveys.ts` |
+| Erro ao reabrir pesquisa | `src/hooks/usePulseSurveys.ts` |
 | Erro ao solicitar permissão de notificações | `src/hooks/usePushNotifications.ts` |
 | Notificações foram bloqueadas. Habilite nas configurações do navegador. | `src/hooks/usePushNotifications.ts` |
 | Seu navegador não suporta notificações | `src/hooks/usePushNotifications.ts` |
@@ -3494,13 +3500,7 @@ _nenhum item encontrado_
 | Muitas tentativas. Aguarde alguns minutos. | `src/pages/ForgotPassword.tsx` |
 | Título obrigatório | `src/pages/Goals.tsx` |
 | Informe o alert_type | `src/pages/IncidentMetrics.tsx` |
-| MTTA inválido (segundos) | `src/pages/IncidentMetrics.tsx` |
-| MTTR inválido (segundos) | `src/pages/IncidentMetrics.tsx` |
-| Falha ao encerrar a rodada. Tente novamente. | `src/pages/LightningQuizPage.tsx` |
-| Falha ao enviar a resposta. | `src/pages/LightningQuizPage.tsx` |
-| Falha ao iniciar a rodada. Tente novamente. | `src/pages/LightningQuizPage.tsx` |
-| Não foi possível encerrar a rodada. | `src/pages/LightningQuizPage.tsx` |
-| … +168 linhas — lista completa em `context.json` | |
+| … +174 linhas — lista completa em `context.json` | |
 
 ## J. Controle de acesso no código (checagens de perfil/permissão)
 

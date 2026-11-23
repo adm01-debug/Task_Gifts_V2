@@ -925,7 +925,7 @@
    "hooks_exportados": [
     "useAnnouncements"
    ],
-   "linhas": 86,
+   "linhas": 99,
    "dominio": "hooks",
    "tabelas": [],
    "rpcs": [],
@@ -1995,7 +1995,7 @@
    "hooks_exportados": [
     "useFeedback360"
    ],
-   "linhas": 88,
+   "linhas": 119,
    "dominio": "hooks",
    "tabelas": [],
    "rpcs": [],
@@ -3152,7 +3152,7 @@
    "hooks_exportados": [
     "usePulseSurveys"
    ],
-   "linhas": 60,
+   "linhas": 85,
    "dominio": "hooks",
    "tabelas": [],
    "rpcs": [],
