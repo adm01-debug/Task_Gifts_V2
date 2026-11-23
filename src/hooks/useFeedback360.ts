@@ -11,6 +11,11 @@ export function useFeedback360() {
     queryFn: () => feedbackService.getActiveCycles(),
   });
 
+  const allCyclesQuery = useQuery({
+    queryKey: ["feedback", "cycles", "all"],
+    queryFn: () => feedbackService.getAllCycles(),
+  });
+
   const pendingRequestsQuery = useQuery({
     queryKey: ["feedback", "pending"],
     queryFn: () => feedbackService.getMyPendingRequests(),
@@ -72,8 +77,32 @@ export function useFeedback360() {
     },
   });
 
+  const updateCycleMutation = useMutation({
+    mutationFn: ({ cycleId, cycle }: { cycleId: string; cycle: Partial<CycleInsert> }) =>
+      feedbackService.updateCycle(cycleId, cycle),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["feedback"] });
+      toast({ title: "Ciclo atualizado!" });
+    },
+    onError: () => {
+      toast({ title: "Erro ao atualizar ciclo", variant: "destructive" });
+    },
+  });
+
+  const deleteCycleMutation = useMutation({
+    mutationFn: (cycleId: string) => feedbackService.deleteCycle(cycleId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["feedback"] });
+      toast({ title: "Ciclo excluído" });
+    },
+    onError: () => {
+      toast({ title: "Erro ao excluir ciclo", variant: "destructive" });
+    },
+  });
+
   return {
     cycles: cyclesQuery.data ?? [],
+    allCycles: allCyclesQuery.data ?? [],
     pendingRequests: pendingRequestsQuery.data ?? [],
     receivedFeedback: receivedFeedbackQuery.data ?? [],
     isLoading: cyclesQuery.isLoading,
@@ -81,6 +110,8 @@ export function useFeedback360() {
     createRequest: createRequestMutation.mutate,
     submitFeedback: submitFeedbackMutation.mutate,
     startCycle: startCycleMutation.mutate,
+    updateCycle: updateCycleMutation.mutate,
+    deleteCycle: deleteCycleMutation.mutate,
     isSubmitting: submitFeedbackMutation.isPending,
     getFeedbackSummary: feedbackService.getFeedbackSummary,
   };

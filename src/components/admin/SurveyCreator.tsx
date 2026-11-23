@@ -19,12 +19,23 @@ import { usePulseSurveys } from "@/hooks/usePulseSurveys";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { toast } from "sonner";
-import { SurveyQuestion } from "@/services/pulseSurveysService";
+import { SurveyQuestion, PulseSurvey, SurveyAnalytics } from "@/services/pulseSurveysService";
 
 export function SurveyCreator() {
-  const { activeSurveys: surveys, isLoading, createSurvey, closeSurvey } = usePulseSurveys();
+  const {
+    activeSurveys: surveys,
+    isLoading,
+    createSurvey,
+    closeSurvey,
+    reopenSurvey,
+    deleteSurvey,
+    getSurveyAnalytics,
+  } = usePulseSurveys();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [analyticsSurvey, setAnalyticsSurvey] = useState<PulseSurvey | null>(null);
+  const [analytics, setAnalytics] = useState<SurveyAnalytics | null>(null);
+  const [isLoadingAnalytics, setIsLoadingAnalytics] = useState(false);
   const [formData, setFormData] = useState({
     title: "",
     description: "",
@@ -84,8 +95,28 @@ export function SurveyCreator() {
     if (currentStatus === "active") {
       closeSurvey(surveyId);
     } else {
-      toast.info("Pesquisa já está encerrada");
+      reopenSurvey(surveyId);
     }
+  };
+
+  const handleViewAnalytics = async (survey: PulseSurvey) => {
+    setAnalyticsSurvey(survey);
+    setAnalytics(null);
+    setIsLoadingAnalytics(true);
+    try {
+      const data = await getSurveyAnalytics(survey.id);
+      setAnalytics(data);
+    } catch {
+      toast.error("Erro ao carregar resultados");
+      setAnalyticsSurvey(null);
+    } finally {
+      setIsLoadingAnalytics(false);
+    }
+  };
+
+  const handleDelete = (survey: PulseSurvey) => {
+    if (!window.confirm(`Excluir a pesquisa "${survey.title}"? As respostas coletadas também serão removidas.`)) return;
+    deleteSurvey(survey.id);
   };
 
   const statusColors: Record<string, string> = {
@@ -240,7 +271,12 @@ export function SurveyCreator() {
                       {survey.is_anonymous ? "Anônimo" : "Identificado"}
                     </Badge>
                     <div className="flex gap-1">
-                      <Button variant="ghost" size="icon">
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        aria-label={`Ver resultados de ${survey.title}`}
+                        onClick={() => handleViewAnalytics(survey)}
+                      >
                         <Eye className="w-4 h-4" />
                       </Button>
                       {survey.status === "active" ? (
@@ -260,7 +296,12 @@ export function SurveyCreator() {
                           <Play className="w-4 h-4" />
                         </Button>
                       )}
-                      <Button variant="ghost" size="icon">
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        aria-label={`Excluir pesquisa ${survey.title}`}
+                        onClick={() => handleDelete(survey)}
+                      >
                         <Trash2 className="w-4 h-4 text-destructive" />
                       </Button>
                     </div>
@@ -271,6 +312,89 @@ export function SurveyCreator() {
           ))}
         </div>
       )}
+
+      <Dialog
+        open={analyticsSurvey !== null}
+        onOpenChange={(open) => {
+          if (!open) {
+            setAnalyticsSurvey(null);
+            setAnalytics(null);
+          }
+        }}
+      >
+        <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Resultados · {analyticsSurvey?.title}</DialogTitle>
+          </DialogHeader>
+          {isLoadingAnalytics ? (
+            <div className="space-y-3">
+              <div className="h-16 bg-muted rounded-lg animate-pulse" />
+              <div className="h-16 bg-muted rounded-lg animate-pulse" />
+            </div>
+          ) : !analytics ? (
+            <p className="text-sm text-muted-foreground">Não foi possível carregar os resultados.</p>
+          ) : (
+            <div className="space-y-4">
+              <div className="grid grid-cols-2 gap-3">
+                <Card>
+                  <CardContent className="p-4">
+                    <p className="text-xs text-muted-foreground">Respostas</p>
+                    <p className="text-2xl font-bold">{analytics.total_responses}</p>
+                  </CardContent>
+                </Card>
+                <Card>
+                  <CardContent className="p-4">
+                    <p className="text-xs text-muted-foreground">NPS</p>
+                    <p className="text-2xl font-bold">
+                      {analytics.nps_score !== undefined ? analytics.nps_score : "—"}
+                    </p>
+                  </CardContent>
+                </Card>
+              </div>
+
+              {analytics.total_responses === 0 ? (
+                <p className="text-sm text-muted-foreground text-center py-4">
+                  Nenhuma resposta coletada ainda.
+                </p>
+              ) : (
+                Object.values(analytics.question_stats).map((stat) => (
+                  <Card key={stat.question_id}>
+                    <CardContent className="p-4 space-y-1">
+                      <p className="text-sm font-medium">{stat.question_text}</p>
+                      <p className="text-xs text-muted-foreground">
+                        {stat.responses} resposta{stat.responses === 1 ? "" : "s"}
+                        {stat.average !== undefined && ` · média ${stat.average.toFixed(1)}`}
+                      </p>
+                      {stat.distribution && (
+                        <div className="flex flex-wrap gap-2 pt-1">
+                          {Object.entries(stat.distribution).map(([option, count]) => (
+                            <Badge key={option} variant="outline">
+                              {option}: {count}
+                            </Badge>
+                          ))}
+                        </div>
+                      )}
+                    </CardContent>
+                  </Card>
+                ))
+              )}
+
+              <div className="flex justify-end">
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    setAnalyticsSurvey(null);
+                    setAnalytics(null);
+                  }}
+                >
+                  <X className="w-4 h-4 mr-2" />
+                  Fechar
+                </Button>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

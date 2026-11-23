@@ -23,51 +23,77 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { useAnnouncements } from "@/hooks/useAnnouncements";
+import type { Announcement } from "@/services/announcementsService";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 
 
+const emptyForm = {
+  title: "",
+  content: "",
+  category: "general",
+  is_pinned: false,
+  expires_at: "",
+};
+
 export function AnnouncementPublisher() {
-  const { announcements, isLoading, createAnnouncement, isCreating } = useAnnouncements();
+  const {
+    announcements,
+    isLoading,
+    createAnnouncement,
+    updateAnnouncement,
+    deleteAnnouncement,
+    isCreating,
+  } = useAnnouncements();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [formData, setFormData] = useState({
-    title: "",
-    content: "",
-    category: "general",
-    is_pinned: false,
-    expires_at: "",
-  });
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [formData, setFormData] = useState(emptyForm);
+
+  const closeDialog = () => {
+    setIsDialogOpen(false);
+    setEditingId(null);
+    setFormData(emptyForm);
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    createAnnouncement(
-      {
-        title: formData.title,
-        content: formData.content,
-        category: formData.category as "general" | "urgent" | "event" | "policy" | "achievement",
-        is_pinned: formData.is_pinned,
-        expires_at: formData.expires_at || undefined,
-      },
-      {
-        onSuccess: () => {
-          setIsDialogOpen(false);
-          setFormData({
-            title: "",
-            content: "",
-            category: "general",
-            is_pinned: false,
-            expires_at: "",
-          });
-        },
-      }
-    );
+    const payload = {
+      title: formData.title,
+      content: formData.content,
+      category: formData.category as "general" | "urgent" | "event" | "policy" | "achievement",
+      is_pinned: formData.is_pinned,
+      expires_at: formData.expires_at || undefined,
+    };
+
+    if (editingId) {
+      updateAnnouncement({ id: editingId, updates: payload }, { onSuccess: closeDialog });
+    } else {
+      createAnnouncement(payload, { onSuccess: closeDialog });
+    }
+  };
+
+  const handleEdit = (announcement: Announcement) => {
+    setEditingId(announcement.id);
+    setFormData({
+      title: announcement.title,
+      content: announcement.content,
+      category: announcement.category,
+      is_pinned: announcement.is_pinned,
+      expires_at: announcement.expires_at ? announcement.expires_at.slice(0, 10) : "",
+    });
+    setIsDialogOpen(true);
+  };
+
+  const handleDelete = (announcement: Announcement) => {
+    if (!window.confirm(`Excluir o anúncio "${announcement.title}"? Esta ação não pode ser desfeita.`)) return;
+    deleteAnnouncement(announcement.id);
   };
 
   const categoryColors: Record<string, string> = {
     general: "bg-blue-500/10 text-blue-500",
     urgent: "bg-red-500/10 text-red-500",
     event: "bg-purple-500/10 text-purple-500",
-    update: "bg-green-500/10 text-green-500",
+    achievement: "bg-green-500/10 text-green-500",
     policy: "bg-orange-500/10 text-orange-500",
   };
 
@@ -75,7 +101,7 @@ export function AnnouncementPublisher() {
     general: "Geral",
     urgent: "Urgente",
     event: "Evento",
-    update: "Atualização",
+    achievement: "Conquista",
     policy: "Política",
   };
 
@@ -96,16 +122,22 @@ export function AnnouncementPublisher() {
           <h2 className="text-2xl font-bold">Anúncios</h2>
           <p className="text-muted-foreground">Publique comunicados para toda a empresa</p>
         </div>
-        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+        <Dialog
+          open={isDialogOpen}
+          onOpenChange={(open) => {
+            if (!open) closeDialog();
+            else setIsDialogOpen(true);
+          }}
+        >
           <DialogTrigger asChild>
-            <Button className="gap-2">
+            <Button className="gap-2" onClick={() => setEditingId(null)}>
               <Plus className="w-4 h-4" />
               Novo Anúncio
             </Button>
           </DialogTrigger>
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>Novo Anúncio</DialogTitle>
+              <DialogTitle>{editingId ? "Editar Anúncio" : "Novo Anúncio"}</DialogTitle>
             </DialogHeader>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
@@ -143,7 +175,7 @@ export function AnnouncementPublisher() {
                       <SelectItem value="general">Geral</SelectItem>
                       <SelectItem value="urgent">Urgente</SelectItem>
                       <SelectItem value="event">Evento</SelectItem>
-                      <SelectItem value="update">Atualização</SelectItem>
+                            <SelectItem value="achievement">Conquista</SelectItem>
                       <SelectItem value="policy">Política</SelectItem>
                     </SelectContent>
                   </Select>
@@ -167,13 +199,13 @@ export function AnnouncementPublisher() {
                 />
               </div>
               <div className="flex gap-2 justify-end">
-                <Button type="button" variant="outline" onClick={() => setIsDialogOpen(false)}>
+                <Button type="button" variant="outline" onClick={closeDialog}>
                   <X className="w-4 h-4 mr-2" />
                   Cancelar
                 </Button>
                 <Button type="submit" disabled={isCreating}>
                   <Save className="w-4 h-4 mr-2" />
-                  {isCreating ? "Publicando..." : "Publicar"}
+                  {editingId ? "Salvar" : isCreating ? "Publicando..." : "Publicar"}
                 </Button>
               </div>
             </form>
@@ -187,7 +219,7 @@ export function AnnouncementPublisher() {
             <Megaphone className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
             <h3 className="text-lg font-semibold mb-2">Nenhum anúncio</h3>
             <p className="text-muted-foreground mb-4">Publique seu primeiro comunicado</p>
-            <Button onClick={() => setIsDialogOpen(true)}>
+            <Button onClick={() => { setEditingId(null); setFormData(emptyForm); setIsDialogOpen(true); }}>
               <Plus className="w-4 h-4 mr-2" />
               Criar Anúncio
             </Button>
@@ -225,10 +257,20 @@ export function AnnouncementPublisher() {
                       </div>
                     </div>
                     <div className="flex gap-1">
-                      <Button variant="ghost" size="icon">
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        aria-label={`Editar anúncio ${announcement.title}`}
+                        onClick={() => handleEdit(announcement)}
+                      >
                         <Edit2 className="w-4 h-4" />
                       </Button>
-                      <Button variant="ghost" size="icon">
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        aria-label={`Excluir anúncio ${announcement.title}`}
+                        onClick={() => handleDelete(announcement)}
+                      >
                         <Trash2 className="w-4 h-4 text-destructive" />
                       </Button>
                     </div>

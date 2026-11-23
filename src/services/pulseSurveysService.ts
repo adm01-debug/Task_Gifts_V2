@@ -248,4 +248,22 @@ export const pulseSurveysService = {
 
     if (error) throw error;
   },
+
+  async deleteSurvey(surveyId: string): Promise<void> {
+    const { error } = await supabase
+      .from("pulse_surveys")
+      .delete()
+      .eq("id", surveyId);
+
+    if (error) throw error;
+  },
+
+  async updateSurvey(surveyId: string, updates: { status?: PulseSurvey['status']; title?: string; description?: string; ends_at?: string }): Promise<void> {
+    const { error } = await supabase
+      .from("pulse_surveys")
+      .update(updates)
+      .eq("id", surveyId);
+
+    if (error) throw error;
+  },
 };

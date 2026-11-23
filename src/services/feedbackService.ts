@@ -73,6 +73,19 @@ export const feedbackService = {
     })) as FeedbackCycle[];
   },
 
+  async getAllCycles(): Promise<FeedbackCycle[]> {
+    const { data, error } = await supabase
+      .from("feedback_cycles")
+      .select("*")
+      .order("created_at", { ascending: false });
+
+    if (error) throw error;
+    return (data ?? []).map(c => ({
+      ...c,
+      questions: c.questions as unknown as FeedbackQuestion[],
+    })) as FeedbackCycle[];
+  },
+
   async getMyPendingRequests(): Promise<FeedbackRequest[]> {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) throw new Error("Not authenticated");
@@ -153,6 +166,45 @@ export const feedbackService = {
     const { error } = await supabase
       .from("feedback_cycles")
       .update({ status: 'active' })
+      .eq("id", cycleId);
+
+    if (error) throw error;
+  },
+
+  async updateCycle(cycleId: string, cycle: Partial<CycleInsert>): Promise<FeedbackCycle> {
+    const payload: {
+      name?: string;
+      description?: string;
+      cycle_type?: FeedbackCycle['cycle_type'];
+      starts_at?: string;
+      ends_at?: string;
+      questions?: never;
+    } = {};
+    if (cycle.name !== undefined) payload.name = cycle.name;
+    if (cycle.description !== undefined) payload.description = cycle.description;
+    if (cycle.cycle_type !== undefined) payload.cycle_type = cycle.cycle_type;
+    if (cycle.starts_at !== undefined) payload.starts_at = cycle.starts_at;
+    if (cycle.ends_at !== undefined) payload.ends_at = cycle.ends_at;
+    if (cycle.questions !== undefined) payload.questions = cycle.questions as unknown as never;
+
+    const { data, error } = await supabase
+      .from("feedback_cycles")
+      .update(payload)
+      .eq("id", cycleId)
+      .select()
+      .single();
+
+    if (error) throw error;
+    return {
+      ...data,
+      questions: data.questions as unknown as FeedbackQuestion[],
+    } as FeedbackCycle;
+  },
+
+  async deleteCycle(cycleId: string): Promise<void> {
+    const { error } = await supabase
+      .from("feedback_cycles")
+      .delete()
       .eq("id", cycleId);
 
     if (error) throw error;
