@@ -74,7 +74,8 @@ export const auditService = {
       if (import.meta.env.DEV) {
         console.error("[auditService] unexpected error:", err);
       }
-      // Silently fail in production    }
+      // Silently fail in production
+    }
   },
 
   async getByUserId(userId: string, limit = 50): Promise<AuditLog[]> {
