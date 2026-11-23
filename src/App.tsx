@@ -313,6 +313,7 @@ const App = () => (
           <ScrollRestorationProvider>
             <Suspense fallback={<PageLoader />}>
               <TopLoadingBar />
+              <OfflineIndicator />
               <SkipLinks />
               <KeyboardShortcutsHelp />
               <CommandPalette />
