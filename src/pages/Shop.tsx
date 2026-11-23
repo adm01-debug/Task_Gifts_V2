@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+﻿import { useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
  import { Coins, Package, Star, Target, ShoppingBag, History, Sparkles, ShoppingCart, LayoutGrid, List, Search, Filter } from "lucide-react";
 import { useNavigate } from "react-router-dom";
@@ -31,6 +31,7 @@ export default function Shop() {
   const purchaseMutation = usePurchaseReward();
   const { playEpicCelebrationSound, playLegendaryCelebrationSound } = useSoundEffects();
   const [selectedReward, setSelectedReward] = useState<ShopReward | null>(null);
+  const [flashSalePrice, setFlashSalePrice] = useState<number | undefined>(undefined);
   const [activeCategory, setActiveCategory] = useState<"all" | RewardCategory>("all");
   const [celebration, setCelebration] = useState<{ active: boolean; type: "epic" | "legendary" } | null>(null);
   const [purchasingRewardId, setPurchasingRewardId] = useState<string | null>(null);
@@ -44,15 +45,15 @@ export default function Shop() {
   const userCoins = profile?.coins ?? 0;
   const filteredRewards = activeCategory === "all" ? rewards : rewards?.filter((r) => r.category === activeCategory);
 
-  const handlePurchase = (reward: ShopReward) => setSelectedReward(reward);
+  const handlePurchase = (reward: ShopReward, discountedPrice?: number) => { setSelectedReward(reward); setFlashSalePrice(discountedPrice); };
 
   const confirmPurchase = () => {
     if (!selectedReward) return;
     const rewardRarity = selectedReward.rarity;
     const rewardId = selectedReward.id;
     setPurchasingRewardId(rewardId);
-    purchaseMutation.mutate({ rewardId }, {
-      onSuccess: () => { setSelectedReward(null); triggerCelebration(rewardRarity); },
+    purchaseMutation.mutate({ rewardId, discountedPrice: flashSalePrice }, {
+      onSuccess: () => { setSelectedReward(null); setFlashSalePrice(undefined); triggerCelebration(rewardRarity); },
       onSettled: () => setPurchasingRewardId(null),
     });
   };
@@ -116,7 +117,7 @@ export default function Shop() {
             </div>
           </motion.div>
          <div className="space-y-12">
-           <FlashSalesBanner onPurchase={(rewardId) => { const reward = rewards?.find(r => r.id === rewardId); if (reward) handlePurchase(reward); }} />
+           <FlashSalesBanner onPurchase={(rewardId, discountedPrice) => { const reward = rewards?.find(r => r.id === rewardId); if (reward) handlePurchase(reward, discountedPrice); }} />
            
            <Tabs defaultValue="shop" className="space-y-8">
              <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
@@ -191,7 +192,7 @@ export default function Shop() {
          </div>
        </div>
  
-        <Dialog open={!!selectedReward} onOpenChange={() => setSelectedReward(null)}>
+        <Dialog open={!!selectedReward} onOpenChange={() => { setSelectedReward(null); setFlashSalePrice(undefined); }}>
           <DialogContent className="max-w-md bg-[#0d0e14] border-white/10 p-0 overflow-hidden rounded-[2rem] shadow-[0_0_50px_rgba(0,0,0,0.8)]">
             <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-transparent pointer-events-none" />
             
@@ -230,7 +231,7 @@ export default function Shop() {
                       <span className="text-[10px] font-black text-zinc-500 uppercase tracking-widest">Custo Operacional</span>
                       <div className="flex items-center gap-2">
                         <Coins className="w-4 h-4 text-amber-500" />
-                        <span className="text-xl font-black italic tracking-tighter text-white">{selectedReward.price_coins.toLocaleString()}</span>
+                        <span className="text-xl font-black italic tracking-tighter text-white">{(flashSalePrice !== undefined ? flashSalePrice : selectedReward.price_coins).toLocaleString()}</span>
                       </div>
                     </div>
 
@@ -238,7 +239,7 @@ export default function Shop() {
                       <span className="text-[10px] font-black text-zinc-500 uppercase tracking-widest">Saldo Remanescente</span>
                       <div className="flex items-center gap-2">
                         <Coins className="w-4 h-4 text-zinc-600" />
-                        <span className="text-xl font-black italic tracking-tighter text-zinc-400">{(userCoins - selectedReward.price_coins).toLocaleString()}</span>
+                        <span className="text-xl font-black italic tracking-tighter text-zinc-400">{(userCoins - (flashSalePrice !== undefined ? flashSalePrice : selectedReward.price_coins)).toLocaleString()}</span>
                       </div>
                     </div>
                   </div>
