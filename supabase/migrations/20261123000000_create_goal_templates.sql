@@ -31,10 +31,12 @@ CREATE TRIGGER trg_goal_templates_updated_at
 ALTER TABLE public.goal_templates ENABLE ROW LEVEL SECURITY;
 
 -- Todos os autenticados podem ler
+DROP POLICY IF EXISTS "goal_templates_select" ON public.goal_templates;
 CREATE POLICY "goal_templates_select" ON public.goal_templates
   FOR SELECT TO authenticated USING (true);
 
 -- Apenas admin pode inserir
+DROP POLICY IF EXISTS "goal_templates_insert" ON public.goal_templates;
 CREATE POLICY "goal_templates_insert" ON public.goal_templates
   FOR INSERT TO authenticated
   WITH CHECK (
@@ -45,6 +47,7 @@ CREATE POLICY "goal_templates_insert" ON public.goal_templates
   );
 
 -- Apenas admin pode atualizar
+DROP POLICY IF EXISTS "goal_templates_update" ON public.goal_templates;
 CREATE POLICY "goal_templates_update" ON public.goal_templates
   FOR UPDATE TO authenticated
   USING (
@@ -61,6 +64,7 @@ CREATE POLICY "goal_templates_update" ON public.goal_templates
   );
 
 -- Apenas admin pode deletar
+DROP POLICY IF EXISTS "goal_templates_delete" ON public.goal_templates;
 CREATE POLICY "goal_templates_delete" ON public.goal_templates
   FOR DELETE TO authenticated
   USING (
