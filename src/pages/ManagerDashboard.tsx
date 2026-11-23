@@ -16,6 +16,9 @@ import { useAuth } from "@/hooks/useAuth";
 import { useScrollHeader } from "@/hooks/useScrollHeader";
 import { useProfiles } from "@/hooks/useProfiles";
 import { useDepartments } from "@/hooks/useDepartments";
+import { useAllTeamMembers } from "@/hooks/useAdminUsers";
+import { useQuests } from "@/hooks/useQuests";
+import { toCSV, downloadCSV } from "@/lib/csvExport";
 import { QuestsList } from "@/components/manager/QuestsList";
 import { ChurnPredictionPanel } from "@/components/ChurnPredictionPanel";
 import { TeamCompetencyDashboard } from "@/components/manager/TeamCompetencyDashboard";
@@ -26,31 +29,48 @@ import { HighPotentialsPanel } from "@/components/manager/HighPotentialsPanel";
 import { SuccessionPanel } from "@/components/manager/SuccessionPanel";
 import { TeamCertificationsPanel } from "@/components/TeamCertificationsPanel";
 import { cn } from "@/lib/utils";
-import { DesktopBackButton } from "@/components/navigation";
 import { formatDistanceToNow } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { StatCard, TeamMemberRow, DepartmentCard, AtRiskAlert, type TeamMember, calculateXpToNext, calculateRiskLevel, calculateTrend } from "@/components/manager/ManagerComponents";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Textarea } from "@/components/ui/textarea";
+import { useGiveKudos, useKudosBadges } from "@/hooks/useKudos";
+import { toast } from "sonner";
 
 export default function ManagerDashboard() {
   const navigate = useNavigate();
   const { user } = useAuth();
   const [selectedDepartment, setSelectedDepartment] = useState<string>("all");
+  const [kudosOpen, setKudosOpen] = useState(false);
   const { data: profiles = [] } = useProfiles();
   const { data: departments = [] } = useDepartments();
+  const { data: allTeamMembers = [] } = useAllTeamMembers();
+  const { data: activeQuests = [] } = useQuests("active");
   const isScrolled = useScrollHeader(10);
-  
+
+  const departmentNameByUserId = useMemo(() => {
+    const deptNameById = new Map(departments.map(d => [d.id, d.name]));
+    return new Map(
+      allTeamMembers
+        .filter(tm => deptNameById.has(tm.department_id))
+        .map(tm => [tm.user_id, deptNameById.get(tm.department_id) as string]),
+    );
+  }, [allTeamMembers, departments]);
+
+  const questsTotal = activeQuests.length || 1;
+
   const teamMembers: TeamMember[] = useMemo(() => {
     return profiles.map(profile => ({
       id: profile.id, name: profile.display_name || profile.email?.split("@")[0] || "Usuário",
       avatar: (profile.display_name || profile.email || "U").substring(0, 2).toUpperCase(),
       level: profile.level, xp: profile.xp, xpToNext: calculateXpToNext(profile.level),
-      questsCompleted: profile.quests_completed, questsTotal: 50, streak: profile.streak,
+      questsCompleted: profile.quests_completed, questsTotal, streak: profile.streak,
       lastActive: formatDistanceToNow(new Date(profile.updated_at), { addSuffix: true, locale: ptBR }),
       trend: calculateTrend(profile.streak, profile.quests_completed),
-      riskLevel: calculateRiskLevel(profile.streak, profile.updated_at), department: "Geral",
+      riskLevel: calculateRiskLevel(profile.streak, profile.updated_at), department: departmentNameByUserId.get(profile.id) ?? "Sem departamento",
     }));
-  }, [profiles]);
-  
+  }, [profiles, departmentNameByUserId, questsTotal]);
+
   const filteredMembers = selectedDepartment === "all" ? teamMembers : teamMembers.filter(m => m.department === selectedDepartment);
   const totalMembers = teamMembers.length || 1;
   const avgCompletion = teamMembers.length > 0 ? Math.round(teamMembers.reduce((acc, m) => acc + (m.questsCompleted / Math.max(m.questsTotal, 1)) * 100, 0) / totalMembers) : 0;
@@ -58,7 +78,38 @@ export default function ManagerDashboard() {
   const atRiskCount = teamMembers.filter(m => m.riskLevel === "high").length;
   const seo = useSEO();
 
-   return (
+  const handleExport = () => {
+    if (teamMembers.length === 0) {
+      toast.error("Nenhum membro disponível para exportar.");
+      return;
+    }
+    const rows = teamMembers.map(m => ({
+      Nome: m.name, Departamento: m.department, Nivel: m.level,
+      XP: m.xp, Quest_Concluidas: m.questsCompleted, Quest_Total: m.questsTotal,
+      Streak: m.streak, Ultima_Atividade: m.lastActive, Risco: m.riskLevel,
+    }));
+    downloadCSV(`equipe-gestor-${new Date().toISOString().slice(0, 10)}.csv`, toCSV(rows));
+    toast.success("Relatório da equipe exportado!");
+  };
+
+  const { mutate: giveKudos } = useGiveKudos();
+  const { data: kudosBadges = [] } = useKudosBadges();
+  const [kudosTarget, setKudosTarget] = useState<string>("");
+  const [kudosBadge, setKudosBadge] = useState<string>("");
+  const [kudosMessage, setKudosMessage] = useState("");
+
+  const handleSendKudos = () => {
+    if (!user?.id || !kudosTarget || !kudosMessage.trim()) return;
+    giveKudos({
+      from_user_id: user.id,
+      to_user_id: kudosTarget,
+      badge_id: kudosBadge || null,
+      message: kudosMessage.trim(),
+      is_public: true,
+    }, { onSuccess: () => { setKudosOpen(false); setKudosTarget(""); setKudosBadge(""); setKudosMessage(""); } });
+  };
+
+  return (
      <PageShell title="Dashboard do Gestor">
        <SEOHead {...seo} />
        <div className="min-h-screen bg-background">
@@ -85,8 +136,8 @@ export default function ManagerDashboard() {
           <AtRiskAlert members={teamMembers} />
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <StatCard icon={Users} label="Membros da Equipe" value={totalMembers.toString()} color="#6366f1" delay={0} />
-            <StatCard icon={Target} label="Taxa de Conclusão" value={`${avgCompletion}%`} change="+5%" changeType="positive" color="#10b981" delay={0.1} />
-            <StatCard icon={Flame} label="Streak Médio" value={`${avgStreak} dias`} change="+2" changeType="positive" color="#f59e0b" delay={0.2} />
+            <StatCard icon={Target} label="Taxa de Conclusão" value={`${avgCompletion}%`} color="#10b981" delay={0.1} />
+            <StatCard icon={Flame} label="Streak Médio" value={`${avgStreak} dias`} color="#f59e0b" delay={0.2} />
             <StatCard icon={AlertTriangle} label="Precisam Atenção" value={atRiskCount.toString()} change={atRiskCount > 0 ? "Agir" : "OK"} changeType={atRiskCount > 0 ? "negative" : "neutral"} color="#ef4444" delay={0.3} />
           </div>
           <Tabs defaultValue="copilot" className="space-y-6">
@@ -116,8 +167,38 @@ export default function ManagerDashboard() {
                     <h3 className="font-semibold text-foreground mb-3">Ações Rápidas</h3>
                     <div className="space-y-2">
                       <Button variant="outline" className="w-full justify-start gap-2" size="sm" onClick={() => navigate("/quest-builder")}><BookOpen className="w-4 h-4" />Criar Nova Trilha</Button>
-                      <Button variant="outline" className="w-full justify-start gap-2" size="sm"><Award className="w-4 h-4" />Enviar Reconhecimento</Button>
-                      <Button variant="outline" className="w-full justify-start gap-2" size="sm"><BarChart3 className="w-4 h-4" />Exportar Relatório</Button>
+                      <Dialog open={kudosOpen} onOpenChange={setKudosOpen}>
+                        <DialogTrigger asChild>
+                          <Button variant="outline" className="w-full justify-start gap-2" size="sm"><Award className="w-4 h-4" />Enviar Reconhecimento</Button>
+                        </DialogTrigger>
+                        <DialogContent>
+                          <DialogHeader>
+                            <DialogTitle>Enviar Reconhecimento</DialogTitle>
+                          </DialogHeader>
+                          <div className="space-y-4">
+                            <div className="grid grid-cols-4 gap-2">
+                              {kudosBadges.slice(0, 4).map(badge => (
+                                <button key={badge.id} type="button" onClick={() => setKudosBadge(badge.id)} className={cn("p-2 rounded border text-center", kudosBadge === badge.id ? "bg-primary/10 border-primary" : "border-border")}>
+                                  <span className="text-xl">{badge.icon}</span>
+                                </button>
+                              ))}
+                            </div>
+                            <Select value={kudosTarget} onValueChange={setKudosTarget}>
+                              <SelectTrigger className="w-full">
+                                <SelectValue placeholder="Para quem?" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {profiles.filter(p => p.id !== user?.id).map(p => (
+                                  <SelectItem key={p.id} value={p.id}>{p.display_name || p.email?.split("@")[0] || "Usuário"}</SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                            <Textarea placeholder="Mensagem de reconhecimento..." value={kudosMessage} onChange={e => setKudosMessage(e.target.value)} className="text-sm" />
+                            <Button onClick={handleSendKudos} disabled={!kudosTarget || !kudosMessage.trim()} className="w-full">Enviar</Button>
+                          </div>
+                        </DialogContent>
+                      </Dialog>
+                      <Button variant="outline" className="w-full justify-start gap-2" size="sm" onClick={handleExport}><BarChart3 className="w-4 h-4" />Exportar Relatório</Button>
                     </div>
                   </Card>
                 </div>
