@@ -4,10 +4,10 @@
  "presente": true,
  "como_gerar": "uvx --from \"graphifyy[sql]\" graphify update .  (ou: bun run graph:update); saída em graphify-out/ — graph.json e graph.html NÃO são versionados (dezenas de MB); use `graphify query/path/explain` localmente",
  "relatorio": null,
- "commit_do_grafo": "027cedff3004b7a46d919df324246be046c9e4e0",
+ "commit_do_grafo": "f5e9ae6ebf6d036a08c9479849c7ca1cffb1f36b",
  "grafo_atual": true,
  "nos": 10151,
- "arestas": 28279,
+ "arestas": 28277,
  "comunidades_total": 652,
  "relacoes": {
   "calls": 3509,
@@ -15,8 +15,8 @@
   "contains": 7780,
   "defines": 8,
   "dynamic_import": 112,
-  "imports": 8481,
-  "imports_from": 6629,
+  "imports": 8480,
+  "imports_from": 6628,
   "indexes": 246,
   "indirect_call": 120,
   "inherits": 33,
@@ -28,7 +28,7 @@
   "triggers": 102
  },
  "origem": {
-  "EXTRACTED": 28128,
+  "EXTRACTED": 28126,
   "INFERRED": 151
  },
  "comunidades": [
@@ -1275,7 +1275,7 @@
    "id": "src_components_ui_button",
    "rotulo": "button.tsx",
    "arquivo": "src/components/ui/button.tsx",
-   "grau": 302,
+   "grau": 301,
    "comunidade": "react"
   },
   {
@@ -1289,7 +1289,7 @@
    "id": "src_components_ui_button_button",
    "rotulo": "Button",
    "arquivo": "src/components/ui/button.tsx",
-   "grau": 290,
+   "grau": 289,
    "comunidade": "react"
   },
   {

@@ -706,7 +706,7 @@
     "PDIAlertsPanel"
    ],
    "export_default": null,
-   "linhas": 238,
+   "linhas": 232,
    "dominio": "components/admin",
    "hooks_locais": [
     "usePDIAlerts"
@@ -5988,7 +5988,7 @@
    ],
    "tabelas": [],
    "edges": [],
-   "usado_por": 288,
+   "usado_por": 287,
    "orfao": false
   },
   {
@@ -7373,7 +7373,7 @@
     "AdminPanel"
    ],
    "export_default": "AdminPanel",
-   "linhas": 196,
+   "linhas": 200,
    "dominio": "pages",
    "hooks_locais": [
     "useAdminRewards",
@@ -8562,7 +8562,7 @@
     "SalesCampaigns"
    ],
    "export_default": "SalesCampaigns",
-   "linhas": 115,
+   "linhas": 121,
    "dominio": "pages",
    "hooks_locais": [
     "useDepartments",

@@ -1,17 +1,17 @@
 # Graph Report - Task_Gifts_V2  (2026-11-23)
 
 ## Corpus Check
-- 1518 files · ~1,004,352 words
+- 1518 files · ~1,004,429 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 12 file(s) not represented in the graph (top: .toml 5, (none) 2, .css 2)
 
 ## Summary
-- 10151 nodes · 28279 edges · 652 communities (480 shown, 172 thin omitted)
+- 10151 nodes · 28277 edges · 652 communities (480 shown, 172 thin omitted)
 - Extraction: 99% EXTRACTED · 1% INFERRED · 0% AMBIGUOUS · INFERRED: 151 edges (avg confidence: 0.87)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `027cedff`
+- Built from commit: `f5e9ae6e`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -569,7 +569,7 @@
 2. `lucide-react` - 468 edges
 3. `react` - 454 edges
 4. `Card` - 295 edges
-5. `Button` - 290 edges
+5. `Button` - 289 edges
 6. `useAuth()` - 280 edges
 7. `CardContent` - 271 edges
 8. `Badge` - 247 edges

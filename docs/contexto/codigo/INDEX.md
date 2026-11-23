@@ -1,7 +1,7 @@
 # Contexto do projeto para agentes de IA
 
 GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.
-Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `027cedff3004b7a46d919df324246be046c9e4e0` (2026-11-23T18:08:18-03:00).
+Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `f5e9ae6ebf6d036a08c9479849c7ca1cffb1f36b` (2026-11-23T18:40:05-03:00).
 
 ## Como usar (leia antes de planejar ou executar qualquer tarefa)
 1. **Tela/rota/menu** → `rotas.json` (url/vista/menu → arquivo → hooks → tabelas → edges; `rotas_http_backend` para APIs) e `modulos.json` (módulo inteiro + dependências entre módulos).
@@ -36,7 +36,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 |---|---|
 | arquivos_total | 1545 |
 | arquivos_codigo | 1170 |
-| linhas_codigo | 230218 |
+| linhas_codigo | 230222 |
 | rotas | 84 |
 | rotas_http_backend | 0 |
 | vistas_por_id | 0 |
@@ -272,7 +272,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - possiveis_segredos_no_codigo: 0
 
 ## Grafo de código (graphify)
-- 10151 nós · 28279 arestas · 652 comunidades · grafo do commit `027cedff`
+- 10151 nós · 28277 arestas · 652 comunidades · grafo do commit `f5e9ae6e`
 - comunidades maiores: card.tsx (298), react (262), lucide-react (238), framer-motion (210), cn (131), mobile/index.ts (91), App.tsx (90), contracts/index.ts (86), useAuth (83), gerar.mjs (79), ref_https (77), ManagerDashboard.tsx (77)
 - símbolos mais chamados: cn() (src/lib/utils.ts), useAuth() (src/hooks/useAuth.tsx), useIsMobile() (src/hooks/use-mobile.tsx), q() (scripts/supabase_snapshot/snapshot.py), useDepartments() (src/hooks/useDepartments.ts), useRBAC() (src/hooks/useRBAC.ts), useToast() (src/hooks/use-toast.ts), useProfiles() (src/hooks/useProfiles.ts), useSEO() (src/hooks/useSEO.ts), useSoundEffects() (src/hooks/useSoundEffects.tsx), .collect() (scripts/supabase_snapshot/test_snapshot.py), downloadCSV() (src/lib/csvExport.ts)
 - consulta local: `graphify query "<pergunta>"`, `graphify path "<A>" "<B>"`, `graphify explain "<X>"`
@@ -359,6 +359,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 
 
 ## Últimos commits
+- 2026-11-23 `f5e9ae6` fix: liga telas orfas na navegacao e remove links sem destino (#123)
 - 2026-11-23 `027cedf` feat: cria fluxo completo de mentoria (pagina, servico, hooks e missoes) (#122)
 - 2026-11-23 `b6c89af` chore(docs): registra estado verificado das pendencias em producao (#121)
 - 2026-11-23 `046ebeb` fix: liga acoes Editar/Excluir sem handler no painel admin (#120)
@@ -373,7 +374,6 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - 2026-11-23 `9616112` fix(dashboard/audit): heatmap dados reais de audit_logs + auditService dev logs
 - 2026-11-23 `130795f` fix: remove tendências hardcoded em BIDashboard e corrige 'null%' em ExecutiveDashboard
 - 2026-11-23 `e2dff92` fix(shop/rbac): desconto flash sale cobrado + toast false success em permissões (#109)
-- 2026-11-23 `87508de` build(deps-dev): bump @testing-library/jest-dom from 7.0.1 to 8.0.0 (#108)
 
 ## Arquivos deste diretório
 - `docs/contexto/codigo/rotas.json`

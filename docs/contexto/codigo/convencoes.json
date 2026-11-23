@@ -59,11 +59,11 @@
  "commits": {
   "convencao": "conventional commits (observado)",
   "exemplos": [
+   "fix: liga telas orfas na navegacao e remove links sem destino (#123)",
    "feat: cria fluxo completo de mentoria (pagina, servico, hooks e missoes) (#122)",
    "chore(docs): registra estado verificado das pendencias em producao (#121)",
    "fix: liga acoes Editar/Excluir sem handler no painel admin (#120)",
-   "feat(admin/app): OfflineIndicator global + GoalsManager persistente (Supabase) (#110)",
-   "﻿fix: usa JWT de sessao no trail-recommendations (#119)"
+   "feat(admin/app): OfflineIndicator global + GoalsManager persistente (Supabase) (#110)"
   ]
  },
  "pr_template": ".github/PULL_REQUEST_TEMPLATE.md",

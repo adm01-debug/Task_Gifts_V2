@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "027cedff3004b7a46d919df324246be046c9e4e0",
+  "commit": "f5e9ae6ebf6d036a08c9479849c7ca1cffb1f36b",
   "branch": "main",
-  "data_commit": "2026-11-23T18:08:18-03:00",
+  "data_commit": "2026-11-23T18:40:05-03:00",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "ultimos_commits": [
+   {
+    "sha": "f5e9ae6",
+    "data": "2026-11-23",
+    "assunto": "fix: liga telas orfas na navegacao e remove links sem destino (#123)"
+   },
    {
     "sha": "027cedf",
     "data": "2026-11-23",
@@ -126,14 +131,9 @@
     "sha": "03d0d59",
     "data": "2026-11-22",
     "assunto": "fix(webhook-dispatcher): devolve 401 em vez de 500 ao rejeitar token sem permissao (#100)"
-   },
-   {
-    "sha": "d04ac2d",
-    "data": "2026-11-22",
-    "assunto": "feat(edge): contratos zod, 422 unico e versionamento v1/v2 dos webhooks (#99)"
    }
   ],
-  "arquivos_mudados_7d": 138,
+  "arquivos_mudados_7d": 142,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "supabase/functions/_shared",
@@ -153,7 +153,7 @@
    },
    {
     "pasta": "src/components/admin",
-    "mudancas": 9
+    "mudancas": 10
    },
    {
     "pasta": ".gitignore",
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 91
+    "commits": 92
    },
    {
     "autor": "dependabot[bot]",
@@ -312,7 +312,7 @@
  "contagens": {
   "arquivos_total": 1545,
   "arquivos_codigo": 1170,
-  "linhas_codigo": 230218,
+  "linhas_codigo": 230222,
   "rotas": 84,
   "rotas_http_backend": 0,
   "vistas_por_id": 0,
@@ -400,7 +400,7 @@
   },
   "src/components": {
    "arquivos": 461,
-   "linhas": 78047
+   "linhas": 78041
   },
   "src/constants": {
    "arquivos": 1,
@@ -432,7 +432,7 @@
   },
   "src/pages": {
    "arquivos": 83,
-   "linhas": 23522
+   "linhas": 23532
   },
   "src/services": {
    "arquivos": 100,

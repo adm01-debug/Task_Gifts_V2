@@ -969,7 +969,6 @@
   "src/components/admin/PDIAlertsPanel.tsx": [
    "src/components/ui/avatar.tsx",
    "src/components/ui/badge.tsx",
-   "src/components/ui/button.tsx",
    "src/components/ui/card.tsx",
    "src/components/ui/scroll-area.tsx",
    "src/components/ui/select.tsx",
