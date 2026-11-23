@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "8f235c25cce9ee9549c594e9021db5f4969af68e",
+  "commit": "57527b08620ec51d137e103bdef1eac4bea24bee",
   "branch": "main",
-  "data_commit": "2026-11-23T11:20:07-03:00",
+  "data_commit": "2026-11-23T11:28:43-03:00",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "ultimos_commits": [
+   {
+    "sha": "57527b0",
+    "data": "2026-11-23",
+    "assunto": "fix(reports): exporta relatório de engajamento em CSV real (#117)"
+   },
    {
     "sha": "8f235c2",
     "data": "2026-11-23",
@@ -126,11 +131,6 @@
     "sha": "d50f0a1",
     "data": "2026-11-21",
     "assunto": "chore(docs): evidencia validacao HIBP range API (pendencia 03) (#93)"
-   },
-   {
-    "sha": "2eace82",
-    "data": "2026-11-21",
-    "assunto": "fix(deps): fecha CVEs moderados uuid/glob/postcss-selector-parser via overrides (#92)"
    }
   ],
   "arquivos_mudados_7d": 120,
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 84
+    "commits": 85
    },
    {
     "autor": "dependabot[bot]",
@@ -312,7 +312,7 @@
  "contagens": {
   "arquivos_total": 1539,
   "arquivos_codigo": 1166,
-  "linhas_codigo": 227539,
+  "linhas_codigo": 227573,
   "rotas": 83,
   "rotas_http_backend": 0,
   "vistas_por_id": 0,
@@ -432,7 +432,7 @@
   },
   "src/pages": {
    "arquivos": 82,
-   "linhas": 22455
+   "linhas": 22489
   },
   "src/services": {
    "arquivos": 99,

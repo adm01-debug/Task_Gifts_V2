@@ -7890,7 +7890,7 @@
     "EngagementReports"
    ],
    "export_default": "EngagementReports",
-   "linhas": 186,
+   "linhas": 220,
    "dominio": "pages",
    "hooks_locais": [
     "useCompletionTrend",

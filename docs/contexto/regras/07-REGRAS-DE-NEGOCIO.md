@@ -1,6 +1,6 @@
 # 07 · REGRAS DE NEGÓCIO
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `8f235c25cc` · branch `main` · 2026-11-23 14:25 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `57527b0862` · branch `main` · 2026-11-23 14:36 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## A. Regras escritas por humanos (`manual/` — prioridade máxima, nunca sobrescrito)
@@ -3482,6 +3482,7 @@ _nenhum item encontrado_
 | Falha ao alterar a situação da guerra. | `src/pages/DepartmentWarPage.tsx` |
 | Falha ao encerrar a guerra. | `src/pages/DepartmentWarPage.tsx` |
 | Falha ao sincronizar o efetivo. | `src/pages/DepartmentWarPage.tsx` |
+| Nenhum dado disponível para exportar. | `src/pages/EngagementReports.tsx` |
 |  aria-live= | `src/pages/ExecutiveMonthlyReport.tsx` |
 | Nada para investigar neste período. | `src/pages/ExecutiveMonthlyReport.tsx` |
 | ; import { ArrowLeft, Mail, CheckCircle2, Loader2, Shield } from  | `src/pages/ForgotPassword.tsx` |
@@ -3498,8 +3499,7 @@ _nenhum item encontrado_
 | Não foi possível registrar a resposta. | `src/pages/LightningQuizPage.tsx` |
 | ; import { Badge } from  | `src/pages/LuckyWheelAdmin.tsx` |
 | Corrija os erros de configuração antes de salvar. | `src/pages/LuckyWheelAdmin.tsx` |
-| Não foi possível criar o prêmio. | `src/pages/LuckyWheelAdmin.tsx` |
-| … +163 linhas — lista completa em `context.json` | |
+| … +164 linhas — lista completa em `context.json` | |
 
 ## J. Controle de acesso no código (checagens de perfil/permissão)
 

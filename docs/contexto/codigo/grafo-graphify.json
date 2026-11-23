@@ -4,19 +4,19 @@
  "presente": true,
  "como_gerar": "uvx --from \"graphifyy[sql]\" graphify update .  (ou: bun run graph:update); saída em graphify-out/ — graph.json e graph.html NÃO são versionados (dezenas de MB); use `graphify query/path/explain` localmente",
  "relatorio": null,
- "commit_do_grafo": "8f235c25cce9ee9549c594e9021db5f4969af68e",
+ "commit_do_grafo": "57527b08620ec51d137e103bdef1eac4bea24bee",
  "grafo_atual": true,
  "nos": 10078,
- "arestas": 28031,
- "comunidades_total": 630,
+ "arestas": 28036,
+ "comunidades_total": 634,
  "relacoes": {
-  "calls": 3472,
+  "calls": 3474,
   "cites": 12,
   "contains": 7713,
   "defines": 8,
   "dynamic_import": 110,
-  "imports": 8389,
-  "imports_from": 6583,
+  "imports": 8391,
+  "imports_from": 6584,
   "indexes": 246,
   "indirect_call": 120,
   "inherits": 29,
@@ -28,7 +28,7 @@
   "triggers": 101
  },
  "origem": {
-  "EXTRACTED": 27877,
+  "EXTRACTED": 27882,
   "INFERRED": 154
  },
  "comunidades": [
@@ -1146,40 +1146,6 @@
   },
   {
    "id": 74,
-   "nome": "SequenceGamePage.tsx",
-   "nos": 32,
-   "callables": 22,
-   "arquivos": 8,
-   "exemplos_arquivos": [
-    "src/App.tsx",
-    "src/components/sequence/SequenceStepList.tsx",
-    "src/components/sequence/index.ts",
-    "src/hooks/useSequenceGame.ts",
-    "src/lib/sequenceGame.ts",
-    "src/pages/SequenceGamePage.tsx",
-    "src/pages/SequenceProcedureAdminPage.tsx",
-    "src/services/sequenceGameService.ts"
-   ]
-  },
-  {
-   "id": 75,
-   "nome": "downloadCSV",
-   "nos": 31,
-   "callables": 25,
-   "arquivos": 12,
-   "exemplos_arquivos": [
-    "jspdf-autotable",
-    "package.json",
-    "src/App.tsx",
-    "src/components/security/AlertHeatmap.tsx",
-    "src/lib/boardStatsPdf.ts",
-    "src/lib/csvExport.ts",
-    "src/lib/nr1Export.ts",
-    "src/pages/BurnRate.tsx"
-   ]
-  },
-  {
-   "id": 76,
    "nome": "CampaignProgressChart.tsx",
    "nos": 31,
    "callables": 5,
@@ -1195,7 +1161,7 @@
    ]
   },
   {
-   "id": 77,
+   "id": 75,
    "nome": "useSoundEffects",
    "nos": 31,
    "callables": 24,
@@ -1212,7 +1178,7 @@
    ]
   },
   {
-   "id": 78,
+   "id": 76,
    "nome": "bossReport.ts",
    "nos": 31,
    "callables": 23,
@@ -1229,7 +1195,7 @@
    ]
   },
   {
-   "id": 79,
+   "id": 77,
    "nome": "useRBAC",
    "nos": 31,
    "callables": 24,
@@ -1242,6 +1208,30 @@
     "src/components/rbac/index.ts",
     "src/hooks/useRBAC.ts",
     "src/tests/unit/access.test.tsx"
+   ]
+  },
+  {
+   "id": 78,
+   "nome": "questsService.ts",
+   "nos": 31,
+   "callables": 27,
+   "arquivos": 5,
+   "exemplos_arquivos": [
+    "src/components/manager/QuestCard.tsx",
+    "src/components/manager/QuestStatsModal.tsx",
+    "src/hooks/useQuests.ts",
+    "src/integrations/supabase/types.ts",
+    "src/services/questsService.ts"
+   ]
+  },
+  {
+   "id": 79,
+   "nome": "public.bingo_metric_value",
+   "nos": 31,
+   "callables": 0,
+   "arquivos": 1,
+   "exemplos_arquivos": [
+    "supabase/migrations/20260727222655_16b4a067-5707-4794-9cba-be5694907056.sql"
    ]
   }
  ],
@@ -1717,16 +1707,16 @@
    "chamadas": 17
   },
   {
+   "simbolo": "downloadCSV() (src/lib/csvExport.ts)",
+   "chamadas": 16
+  },
+  {
    "simbolo": "fail() (scripts/automation.mjs)",
    "chamadas": 16
   },
   {
    "simbolo": "useHaptics() (src/hooks/useHaptics.ts)",
    "chamadas": 16
-  },
-  {
-   "simbolo": "downloadCSV() (src/lib/csvExport.ts)",
-   "chamadas": 15
   },
   {
    "simbolo": "useHapticFeedback (src/hooks/useHaptics.ts)",
@@ -1805,6 +1795,10 @@
    "chamadas": 9
   },
   {
+   "simbolo": "toCSV() (src/lib/csvExport.ts)",
+   "chamadas": 9
+  },
+  {
    "simbolo": "useCurrentProfile() (src/hooks/useProfiles.ts)",
    "chamadas": 9
   },
@@ -1830,10 +1824,6 @@
   },
   {
    "simbolo": "safeNumber() (src/lib/climateBenchmark.ts)",
-   "chamadas": 8
-  },
-  {
-   "simbolo": "toCSV() (src/lib/csvExport.ts)",
    "chamadas": 8
   },
   {
@@ -2120,8 +2110,8 @@
   "eslint.config.js": "package.json",
   "exceljs": "campaignImport.ts",
   "https://deno.land/x/sentry/index.ts": "ref_https",
-  "jspdf": "certificatePdf.ts",
-  "jspdf-autotable": "downloadCSV",
+  "jspdf": "nr1Export.ts",
+  "jspdf-autotable": "nr1Export.ts",
   "node:fs/promises": "lib.mjs",
   "package.json": "lucide-react",
   "papaparse": "campaignImport.ts",
@@ -2530,8 +2520,8 @@
   "src/components/security/SlaTargetEditor.tsx": "button.tsx",
   "src/components/security/index.ts": "CardHeader",
   "src/components/sequence/SequenceProcedureStatsCard.tsx": "react",
-  "src/components/sequence/SequenceStepList.tsx": "SequenceGamePage.tsx",
-  "src/components/sequence/index.ts": "SequenceGamePage.tsx",
+  "src/components/sequence/SequenceStepList.tsx": "SequenceStepList.tsx",
+  "src/components/sequence/index.ts": "SequenceStepList.tsx",
   "src/components/shop-admin/PromotionFormDialog.tsx": "QuizAdmin.tsx",
   "src/components/shop-admin/PromotionsManager.tsx": "QuizAdmin.tsx",
   "src/components/shop-admin/PurchaseGovernanceDialog.tsx": "QuizAdmin.tsx",
@@ -2686,8 +2676,8 @@
   "src/hooks/useDuels.ts": "@tanstack/react-query",
   "src/hooks/useENPS.ts": "useAuth",
   "src/hooks/useEngagementDiagnostics.ts": "ClimateDiagnostics.tsx",
-  "src/hooks/useEngagementReports.ts": "engagementReportsService.ts",
-  "src/hooks/useExecutiveMetrics.ts": "engagementReportsService.ts",
+  "src/hooks/useEngagementReports.ts": "useEngagementReports.ts",
+  "src/hooks/useExecutiveMetrics.ts": "useEngagementReports.ts",
   "src/hooks/useFeedback.ts": "button.tsx",
   "src/hooks/useFeedback360.ts": "button.tsx",
   "src/hooks/useFirstTimeIndicator.ts": "StatsGrid.tsx",
@@ -2750,7 +2740,7 @@
   "src/hooks/useScrollHeader.ts": "DashboardHeader.tsx",
   "src/hooks/useSeasonalEvents.ts": "useAuth",
   "src/hooks/useSecurityPushNotifications.ts": "useSecurityPushNotifications.ts",
-  "src/hooks/useSequenceGame.ts": "sequenceProcedureStats.ts",
+  "src/hooks/useSequenceGame.ts": "useSequenceGame.ts",
   "src/hooks/useShop.ts": "useProfiles.ts",
   "src/hooks/useSocialFeed.ts": "client.ts",
   "src/hooks/useSoundEffects.tsx": "useSoundEffects",
@@ -2818,7 +2808,7 @@
   "src/lib/edgeAvailability.ts": "requestId.ts",
   "src/lib/edgeErrors.ts": "edgeErrors.ts",
   "src/lib/engagementInsights.ts": "engagementInsights.ts",
-  "src/lib/errorMessages.ts": "TrailModuleEditor.tsx",
+  "src/lib/errorMessages.ts": "BoardTrailPage.tsx",
   "src/lib/exportReports.ts": "exportReports.ts",
   "src/lib/goalBetCountdown.ts": "PredictionMarketRow",
   "src/lib/goalBetExposure.ts": "prediction/index.ts",
@@ -2847,7 +2837,7 @@
   "src/lib/memoryGame.ts": "memoryGame.ts",
   "src/lib/notificationTypePrefs.ts": "CampaignNotificationPreferences.tsx",
   "src/lib/npsHistory.ts": "NpsHistoryChart.tsx",
-  "src/lib/nr1Export.ts": "downloadCSV",
+  "src/lib/nr1Export.ts": "nr1Export.ts",
   "src/lib/opinionChannel.ts": "opinionChannel.ts",
   "src/lib/playerResume.ts": "ModuleViewer.tsx",
   "src/lib/predictionAdmin.ts": "predictionAdmin.ts",
@@ -2895,7 +2885,7 @@
   "src/pages/AuditLogs.tsx": "ManagerDashboard.tsx",
   "src/pages/Auth.tsx": "Auth.tsx",
   "src/pages/B": "cenarios.mjs",
-  "src/pages/BIDashboard.tsx": "engagementReportsService.ts",
+  "src/pages/BIDashboard.tsx": "useEngagementReports.ts",
   "src/pages/BingoPage.tsx": "BingoPage.tsx",
   "src/pages/BoardTrailAdminPage.tsx": "BoardTrailPage.tsx",
   "src/pages/BoardTrailPage.tsx": "BoardTrailPage.tsx",
@@ -2913,7 +2903,7 @@
   "src/pages/DailyWagerPage.tsx": "DailyWagerPage.tsx",
   "src/pages/DepartmentWarPage.tsx": "DepartmentWarPage.tsx",
   "src/pages/Duels.tsx": "@tanstack/react-query",
-  "src/pages/EngagementReports.tsx": "engagementReportsService.ts",
+  "src/pages/EngagementReports.tsx": "useEngagementReports.ts",
   "src/pages/ErrorBudget.tsx": "ErrorBudget.tsx",
   "src/pages/ExecutiveDashboard.tsx": "lucide-react",
   "src/pages/ExecutiveMonthlyReport.tsx": "AdminTelemetria.tsx",
@@ -2954,7 +2944,7 @@
   "src/pages/SecurityDigests.tsx": "lucide-react",
   "src/pages/SecurityRunbook.tsx": "lucide-react",
   "src/pages/SequenceGamePage.tsx": "SequenceGamePage.tsx",
-  "src/pages/SequenceProcedureAdminPage.tsx": "SequenceGamePage.tsx",
+  "src/pages/SequenceProcedureAdminPage.tsx": "useSequenceGame.ts",
   "src/pages/Shop.tsx": "useProfiles.ts",
   "src/pages/ShopAdmin.tsx": "CampaignImportDialog",
   "src/pages/SocialFeed.tsx": "lucide-react",
@@ -3051,7 +3041,7 @@
   "src/services/scratchCardService.ts": "ScratchCardPage.tsx",
   "src/services/seasonalEventsService.ts": "useAuth",
   "src/services/securityService.ts": "client.ts",
-  "src/services/sequenceGameService.ts": "SequenceGamePage.tsx",
+  "src/services/sequenceGameService.ts": "useSequenceGame.ts",
   "src/services/shopService.ts": "QuizAdmin.tsx",
   "src/services/socialFeedService.ts": "client.ts",
   "src/services/successionService.ts": "oneOnOnePreparationService.ts",

@@ -59,11 +59,11 @@
  "commits": {
   "convencao": "conventional commits (observado)",
   "exemplos": [
+   "fix(reports): exporta relatório de engajamento em CSV real (#117)",
    "fix(rbac): adiciona guard admin nas rotas /analytics e /security-dashboard (#116)",
    "fix(feedback): adiciona fluxo de resposta com pontuacao, pontos fortes e melhorias (#115)",
    "fix(quiz): persiste 'Concluido hoje' em quiz_scores (resiste ao reload) (#114)",
-   "fix(succession): calcula successorCount/readyNowCount com dados reais de highPotential (#113)",
-   "fix(dashboard/audit): heatmap dados reais de audit_logs + auditService dev logs"
+   "fix(succession): calcula successorCount/readyNowCount com dados reais de highPotential (#113)"
   ]
  },
  "pr_template": ".github/PULL_REQUEST_TEMPLATE.md",
