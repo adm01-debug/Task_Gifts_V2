@@ -1,7 +1,7 @@
 # Contexto do projeto para agentes de IA
 
 GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.
-Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `119cff5eafc0957a68bfeedd2e430ae276086b68` (2026-11-22T19:38:47-03:00).
+Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `c0ab58e8a96e0bf9560616f1f1798dbe14db55ed` (2026-11-23T08:04:44-03:00).
 
 ## Como usar (leia antes de planejar ou executar qualquer tarefa)
 1. **Tela/rota/menu** → `rotas.json` (url/vista/menu → arquivo → hooks → tabelas → edges; `rotas_http_backend` para APIs) e `modulos.json` (módulo inteiro + dependências entre módulos).
@@ -14,7 +14,7 @@ Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR
 Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua tarefa; não carregue tudo.
 
 ## Stack
-- linguagens: TypeScript (1138), SQL (272), Markdown (55), JavaScript (24), JSON (14), YAML (9), Python (5), Shell (4)
+- linguagens: TypeScript (1138), SQL (273), Markdown (55), JavaScript (24), JSON (14), YAML (9), Python (5), Shell (4)
 - linguagem_principal: TypeScript
 - framework: React
 - backend_http: n/d
@@ -34,7 +34,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 ## Números
 | item | qtd |
 |---|---|
-| arquivos_total | 1538 |
+| arquivos_total | 1539 |
 | arquivos_codigo | 1166 |
 | linhas_codigo | 227410 |
 | rotas | 83 |
@@ -46,7 +46,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 | hooks | 155 |
 | edge_functions | 22 |
 | tabelas | 236 |
-| migrations | 272 |
+| migrations | 273 |
 | cron_jobs | 22 |
 | testes | 161 |
 | workflows | 6 |
@@ -271,8 +271,8 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - possiveis_segredos_no_codigo: 0
 
 ## Grafo de código (graphify)
-- 10068 nós · 27999 arestas · 652 comunidades · grafo do commit `119cff5e`
-- comunidades maiores: card.tsx (289), badge.tsx (207), react (189), utils.ts (184), cn (132), date-fns (115), AdminPanel.tsx (109), useToast (98), useAuth (94), client.ts (92), tradingCards.ts (88), contracts/index.ts (88)
+- 10078 nós · 28009 arestas · 604 comunidades · grafo do commit `c0ab58e8`
+- comunidades maiores: card.tsx (217), react (207), select.tsx (199), QuizAdmin.tsx (146), framer-motion (144), cn (132), badge.tsx (121), predictionMarketService.ts (104), useToast (94), DashboardRightColumn.tsx (90), contracts/index.ts (89), mobile/index.ts (84)
 - símbolos mais chamados: cn() (src/lib/utils.ts), useAuth() (src/hooks/useAuth.tsx), useIsMobile() (src/hooks/use-mobile.tsx), q() (scripts/supabase_snapshot/snapshot.py), useDepartments() (src/hooks/useDepartments.ts), useToast() (src/hooks/use-toast.ts), useRBAC() (src/hooks/useRBAC.ts), useProfiles() (src/hooks/useProfiles.ts), useSEO() (src/hooks/useSEO.ts), useSoundEffects() (src/hooks/useSoundEffects.tsx), .collect() (scripts/supabase_snapshot/test_snapshot.py), excluded_sql() (scripts/supabase_snapshot/snapshot.py)
 - consulta local: `graphify query "<pergunta>"`, `graphify path "<A>" "<B>"`, `graphify explain "<X>"`
 
@@ -358,6 +358,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 
 
 ## Últimos commits
+- 2026-11-23 `c0ab58e` fix(sre): corrige RPCs de error-budget/webhook-stats e trigger de dispatch apontando para projeto errado (#106)
 - 2026-11-22 `119cff5` feat(db): RPC acknowledge_security_digest para marcar digest semanal como revisado (#103)
 - 2026-11-22 `11d2c1e` fix(sre): reconstroi os 3 monitores + dispatch-critical-alert e destrava auth dos crons (#105)
 - 2026-11-22 `8247352` chore(automacao): reconstroi security-weekly-digest e conecta ao cron 33 (#104)
@@ -372,7 +373,6 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - 2026-11-22 `16748b9` fix(e2e): happy-paths com rotas/UI reais e credenciais de teste por env (#94)
 - 2026-11-21 `d50f0a1` chore(docs): evidencia validacao HIBP range API (pendencia 03) (#93)
 - 2026-11-21 `2eace82` fix(deps): fecha CVEs moderados uuid/glob/postcss-selector-parser via overrides (#92)
-- 2026-11-21 `4ce5f92` chore(docs): documenta validacao do swap OpenRouter e deploys integros (#91)
 
 ## Arquivos deste diretório
 - `docs/contexto/codigo/rotas.json`

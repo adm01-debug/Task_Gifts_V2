@@ -1,6 +1,6 @@
 # 07 · REGRAS DE NEGÓCIO
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `119cff5eaf` · branch `main` · 2026-11-22 22:39 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `c0ab58e8a9` · branch `main` · 2026-11-23 11:07 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## A. Regras escritas por humanos (`manual/` — prioridade máxima, nunca sobrescrito)
@@ -765,7 +765,6 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `get_alert_mttr_by_type_7d` | access denied | `supabase/migrations/20260712212133_a815b65a-0490-4e0c-9248-1f8af4e2cb59.sql` |
 | `get_alert_heatmap_30d` | access denied | `supabase/migrations/20260712212246_06f7d299-1d75-4657-bf85-550154c984b5.sql` |
 | `get_reliability_slo` | forbidden: admin_only | `supabase/migrations/20260712214816_6fc5c315-ea1a-4b7e-90af-4cd2960bd17a.sql` |
-| `get_error_budget_30d` | access_denied: admin only | `supabase/migrations/20260712215914_4eec2b74-d615-4e45-8655-fc7c8b022d10.sql` |
 | `acknowledge_security_alert` | forbidden | `supabase/migrations/20260712220916_7df9a342-9572-4145-996a-0f4460cdba43.sql` |
 | `log_runbook_step` | not authorized | `supabase/migrations/20260712221325_fc3b81b7-c5dd-4214-bead-4cdb3abf112d.sql` |
 | `get_incident_metrics` | not authorized | `supabase/migrations/20260712221704_bedd64f9-3dae-4e14-b609-5482a05f82d4.sql` |
@@ -929,6 +928,7 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `spend_coins` | coins insuficientes | `supabase/migrations/20261218000000_profiles_economia_rpcs.sql` |
 | `increment_streak` | perfil não encontrado | `supabase/migrations/20261218000000_profiles_economia_rpcs.sql` |
 | `increment_quests_completed` | perfil não encontrado | `supabase/migrations/20261218000000_profiles_economia_rpcs.sql` |
+| `get_error_budget_30d` | insufficient_privilege | `supabase/migrations/20261220000000_fix_sre_rpcs_and_dispatch_trigger.sql` |
 
 ## E. Estados, máquinas de estado e transições
 
@@ -3137,6 +3137,11 @@ _nenhum item encontrado_
 | `VALUES (v_user, v_key, v_ids, now() + interval '60 seconds')` | `supabase/migrations/20260806230000_lightning_relampago_rpcs_only.sql` |
 | `ELSIF (now() - v_last) >= interval '12 hours' THEN` | `supabase/migrations/20261218000000_profiles_economia_rpcs.sql` |
 | `IF v_last IS NULL OR (now() - v_last) > interval '48 hours' THEN` | `supabase/migrations/20261218000000_profiles_economia_rpcs.sql` |
+| `AND l.created_at >= now() - interval '1 hour'` | `supabase/migrations/20261220000000_fix_sre_rpcs_and_dispatch_trigger.sql` |
+| `WHERE created_at >= now() - interval '30 days'` | `supabase/migrations/20261220000000_fix_sre_rpcs_and_dispatch_trigger.sql` |
+| `WHERE created_at >= now() - interval '30 days';` | `supabase/migrations/20261220000000_fix_sre_rpcs_and_dispatch_trigger.sql` |
+| `date_trunc('day', now() - interval '29 days'),` | `supabase/migrations/20261220000000_fix_sre_rpcs_and_dispatch_trigger.sql` |
+| `interval '1 day'` | `supabase/migrations/20261220000000_fix_sre_rpcs_and_dispatch_trigger.sql` |
 
 ### H.3 Limites de paginação
 
@@ -3492,7 +3497,7 @@ _nenhum item encontrado_
 | ; import { Badge } from  | `src/pages/LuckyWheelAdmin.tsx` |
 | Corrija os erros de configuração antes de salvar. | `src/pages/LuckyWheelAdmin.tsx` |
 | Não foi possível criar o prêmio. | `src/pages/LuckyWheelAdmin.tsx` |
-| … +162 linhas — lista completa em `context.json` | |
+| … +163 linhas — lista completa em `context.json` | |
 
 ## J. Controle de acesso no código (checagens de perfil/permissão)
 

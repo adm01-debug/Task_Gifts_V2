@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "119cff5eafc0957a68bfeedd2e430ae276086b68",
+  "sha": "c0ab58e8a96e0bf9560616f1f1798dbe14db55ed",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
-  "generated_at": "2026-11-22 22:39 UTC",
-  "files_total": 1548,
-  "code_files": 1444,
-  "code_lines": 258615
+  "generated_at": "2026-11-23 11:07 UTC",
+  "files_total": 1549,
+  "code_files": 1445,
+  "code_lines": 258877
  },
  "version": "1.3.2",
- "facts_hash": "fabaf6df5f41c1af",
+ "facts_hash": "6fb006c910de2368",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -196,7 +196,7 @@
   "languages": {
    ".ts": 575,
    ".tsx": 565,
-   ".sql": 272,
+   ".sql": 273,
    ".mjs": 21,
    ".js": 5,
    ".py": 5,
@@ -27172,10 +27172,10 @@
     "args": "",
     "returns": "TABLE (\n  subscription_id UUID,\n  subscription_name TEXT,\n  subscription_url TEXT,\n  total_deliveries BIGINT,\n  successful_deliveries BIGINT,\n  failed_deliveries BIGINT,\n  success_rate_pct NUMERIC\n)",
     "lang": "sql",
-    "src": "supabase/migrations/20260712194608_bed9b5c6-221d-45ce-a0e5-cedd4aa2cf57.sql",
+    "src": "supabase/migrations/20261220000000_fix_sre_rpcs_and_dispatch_trigger.sql",
     "security_definer": true,
     "search_path": true,
-    "body": "SELECT s.id AS subscription_id, s.name AS subscription_name, s.url AS subscription_url, COUNT(l.id)::BIGINT AS total_deliveries, COUNT(l.id) FILTER (WHERE l.success)::BIGINT AS successful_deliveries, COUNT(l.id) FILTER (WHERE NOT l.success)::BIGINT AS failed_deliveries, CASE WHEN COUNT(l.id) > 0 THEN ROUND((COUNT(l.id) FILTER (WHERE l.success)::NUMERIC / COUNT(l.id)) * 100, 2) ELSE NULL END AS success_rate_pct FROM public.webhook_subscriptions s LEFT JOIN public.webhook_delivery_logs l ON l.subscription_id = s.id AND l.created_at >= now() - interval '1 hour' WHERE current_setting('request.jwt.claim.role', true) = 'service_role' OR public.has_role(auth.uid(), 'admin'::app_role) GROUP BY s.id, …",
+    "body": "SELECT s.id AS subscription_id, s.name AS subscription_name, s.url AS subscription_url, COUNT(l.id)::BIGINT AS total_deliveries, COUNT(l.id) FILTER (WHERE l.success)::BIGINT AS successful_deliveries, COUNT(l.id) FILTER (WHERE NOT l.success)::BIGINT AS failed_deliveries, CASE WHEN COUNT(l.id) > 0 THEN ROUND((COUNT(l.id) FILTER (WHERE l.success)::NUMERIC / COUNT(l.id)) * 100, 2) ELSE NULL END AS success_rate_pct FROM public.webhook_subscriptions s LEFT JOIN public.webhook_delivery_logs l ON l.subscription_id = s.id AND l.created_at >= now() - interval '1 hour' WHERE auth.uid() IS NULL OR public.has_role(auth.uid(), 'admin'::app_role) GROUP BY s.id, s.name, s.url;",
     "raises": [],
     "tables": [
      "webhook_delivery_logs",
@@ -27326,12 +27326,15 @@
     "args": "",
     "returns": "TRIGGER",
     "lang": "plpgsql",
-    "src": "supabase/migrations/20261109120000_fix_cron_wrong_project.sql",
+    "src": "supabase/migrations/20261220000000_fix_sre_rpcs_and_dispatch_trigger.sql",
     "security_definer": true,
     "search_path": true,
-    "body": "DECLARE v_project_url TEXT := 'https://eidsaqymojyuhprobfpn.supabase.co'; v_anon_key TEXT := '[REDACTED]'; BEGIN IF LOWER(COALESCE(NEW.severity, '')) NOT IN ('high', 'critical') THEN RETURN NEW; END IF; PERFORM net.http_post( url := v_project_url || '/functions/v1/dispatch-critical-alert', headers := jsonb_build_object( 'Content-Type', 'application/json', 'apikey', v_anon_key, 'Authorization', 'Bearer ' || v_anon_key ), body := jsonb_build_object( 'alert_id', NEW.id, 'alert_type', NEW.alert_type, 'severity', NEW.severity, 'title', NEW.title, 'description', NEW.description, 'metadata', NEW.metadata ) ); RETURN NEW; EXCEPTION WHEN OTHERS THEN RAISE WARNING 'dispatch-critical-alert failed: %', …",
+    "body": "DECLARE v_project_url TEXT := 'https://eidsaqymojyuhprobfpn.supabase.co'; v_secret TEXT; BEGIN IF LOWER(COALESCE(NEW.severity, '')) NOT IN ('high', 'critical') THEN RETURN NEW; END IF; BEGIN SELECT decrypted_secret INTO v_secret FROM vault.decrypted_secrets WHERE name = 'internal_dispatch_secret' LIMIT 1; EXCEPTION WHEN OTHERS THEN v_secret := NULL; END; IF v_secret IS NULL OR v_secret = '' THEN RAISE WARNING 'dispatch-critical-alert skipped: vault secret internal_dispatch_secret not found'; RETURN NEW; END IF; PERFORM net.http_post( url := v_project_url || '/functions/v1/dispatch-critical-alert', headers := jsonb_build_object( 'Content-Type', 'application/json', 'x-internal-secret', v_secre …",
     "raises": [],
-    "tables": []
+    "tables": [
+     "v_secret",
+     "vault"
+    ]
    },
    "get_alert_mttr_by_type_7d": {
     "args": "",
@@ -27418,12 +27421,12 @@
     "args": "p_webhook_slo NUMERIC DEFAULT 99.0, p_api_slo NUMERIC DEFAULT 99.0",
     "returns": "JSONB",
     "lang": "plpgsql",
-    "src": "supabase/migrations/20260712215914_4eec2b74-d615-4e45-8655-fc7c8b022d10.sql",
+    "src": "supabase/migrations/20261220000000_fix_sre_rpcs_and_dispatch_trigger.sql",
     "security_definer": true,
     "search_path": true,
-    "body": "DECLARE v_is_admin BOOLEAN; v_result JSONB; v_wh_total BIGINT; v_wh_success BIGINT; v_wh_fail BIGINT; v_wh_rate NUMERIC; v_wh_budget_total NUMERIC; v_wh_budget_consumed NUMERIC; v_wh_burn_pct NUMERIC; v_api_total BIGINT; v_api_success BIGINT; v_api_fail BIGINT; v_api_rate NUMERIC; v_api_budget_total NUMERIC; v_api_budget_consumed NUMERIC; v_api_burn_pct NUMERIC; v_timeline JSONB; BEGIN SELECT public.has_role(auth.uid(), 'admin'::app_role) INTO v_is_admin; IF NOT COALESCE(v_is_admin, false) THEN RAISE EXCEPTION 'access_denied: admin only'; END IF; SELECT COUNT(*)::BIGINT, COUNT(*) FILTER (WHERE success = true)::BIGINT, COUNT(*) FILTER (WHERE success = false)::BIGINT INTO v_wh_total, v_wh_succ …",
+    "body": "DECLARE v_is_admin BOOLEAN; v_result JSONB; v_wh_total BIGINT; v_wh_success BIGINT; v_wh_fail BIGINT; v_wh_rate NUMERIC; v_wh_budget_total NUMERIC; v_wh_budget_consumed NUMERIC; v_wh_burn_pct NUMERIC; v_api_total BIGINT; v_api_success BIGINT; v_api_fail BIGINT; v_api_rate NUMERIC; v_api_budget_total NUMERIC; v_api_budget_consumed NUMERIC; v_api_burn_pct NUMERIC; v_timeline JSONB; BEGIN SELECT public.has_role(auth.uid(), 'admin'::app_role) INTO v_is_admin; IF auth.uid() IS NOT NULL AND NOT COALESCE(v_is_admin, false) THEN RAISE EXCEPTION 'insufficient_privilege' USING ERRCODE = '42501'; END IF; SELECT COUNT(*)::BIGINT, COUNT(*) FILTER (WHERE success = true)::BIGINT, COUNT(*) FILTER (WHERE suc …",
     "raises": [
-     "access_denied: admin only"
+     "insufficient_privilege"
     ],
     "tables": [
      "api",
@@ -33425,6 +33428,7 @@
    "supabase/migrations/20261114134238_9b119528-da6f-4f43-b6cb-dcdcd7aa7ab1.sql",
    "supabase/migrations/20261122140000_acknowledge_security_digest.sql",
    "supabase/migrations/20261218000000_profiles_economia_rpcs.sql",
+   "supabase/migrations/20261220000000_fix_sre_rpcs_and_dispatch_trigger.sql",
    "src/integrations/supabase/types.ts"
   ],
   "rls": {
@@ -41039,6 +41043,46 @@
     "objkind": "table",
     "roles": "authenticated",
     "src": "supabase/migrations/20261218000000_profiles_economia_rpcs.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "execute",
+    "object": "get_error_budget_30d",
+    "objkind": "function",
+    "roles": "PUBLIC, anon",
+    "src": "supabase/migrations/20261220000000_fix_sre_rpcs_and_dispatch_trigger.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "get_error_budget_30d",
+    "objkind": "function",
+    "roles": "authenticated, service_role",
+    "src": "supabase/migrations/20261220000000_fix_sre_rpcs_and_dispatch_trigger.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "execute",
+    "object": "get_webhook_delivery_stats_1h",
+    "objkind": "function",
+    "roles": "PUBLIC, anon",
+    "src": "supabase/migrations/20261220000000_fix_sre_rpcs_and_dispatch_trigger.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "get_webhook_delivery_stats_1h",
+    "objkind": "function",
+    "roles": "authenticated, service_role",
+    "src": "supabase/migrations/20261220000000_fix_sre_rpcs_and_dispatch_trigger.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "execute",
+    "object": "trigger_dispatch_critical_alert",
+    "objkind": "function",
+    "roles": "PUBLIC",
+    "src": "supabase/migrations/20261220000000_fix_sre_rpcs_and_dispatch_trigger.sql"
    }
   ],
   "raises": [
@@ -41126,11 +41170,6 @@
     "function": "get_reliability_slo",
     "msg": "forbidden: admin_only",
     "src": "supabase/migrations/20260712214816_6fc5c315-ea1a-4b7e-90af-4cd2960bd17a.sql"
-   },
-   {
-    "function": "get_error_budget_30d",
-    "msg": "access_denied: admin only",
-    "src": "supabase/migrations/20260712215914_4eec2b74-d615-4e45-8655-fc7c8b022d10.sql"
    },
    {
     "function": "acknowledge_security_alert",
@@ -41946,6 +41985,11 @@
     "function": "increment_quests_completed",
     "msg": "perfil não encontrado",
     "src": "supabase/migrations/20261218000000_profiles_economia_rpcs.sql"
+   },
+   {
+    "function": "get_error_budget_30d",
+    "msg": "insufficient_privilege",
+    "src": "supabase/migrations/20261220000000_fix_sre_rpcs_and_dispatch_trigger.sql"
    }
   ],
   "seed": [],
@@ -49481,8 +49525,8 @@
   },
   {
    "module": "supabase/migrations",
-   "files": 272,
-   "lines": 29658,
+   "files": 273,
+   "lines": 29920,
    "tables": [],
    "exports": [],
    "docs": [],
@@ -57658,6 +57702,10 @@
    },
    {
     "file": "supabase/migrations/20261109120000_fix_cron_wrong_project.sql",
+    "msg": ",\n    headers := jsonb_build_object(\n      "
+   },
+   {
+    "file": "supabase/migrations/20261220000000_fix_sre_rpcs_and_dispatch_trigger.sql",
     "msg": ",\n    headers := jsonb_build_object(\n      "
    }
   ],
@@ -78830,6 +78878,26 @@
    {
     "file": "supabase/migrations/20261218000000_profiles_economia_rpcs.sql",
     "line": "IF v_last IS NULL OR (now() - v_last) > interval '48 hours' THEN"
+   },
+   {
+    "file": "supabase/migrations/20261220000000_fix_sre_rpcs_and_dispatch_trigger.sql",
+    "line": "AND l.created_at >= now() - interval '1 hour'"
+   },
+   {
+    "file": "supabase/migrations/20261220000000_fix_sre_rpcs_and_dispatch_trigger.sql",
+    "line": "WHERE created_at >= now() - interval '30 days'"
+   },
+   {
+    "file": "supabase/migrations/20261220000000_fix_sre_rpcs_and_dispatch_trigger.sql",
+    "line": "WHERE created_at >= now() - interval '30 days';"
+   },
+   {
+    "file": "supabase/migrations/20261220000000_fix_sre_rpcs_and_dispatch_trigger.sql",
+    "line": "date_trunc('day', now() - interval '29 days'),"
+   },
+   {
+    "file": "supabase/migrations/20261220000000_fix_sre_rpcs_and_dispatch_trigger.sql",
+    "line": "interval '1 day'"
    }
   ],
   "percents": [
@@ -94764,10 +94832,10 @@
     "args": "",
     "returns": "TABLE (\n  subscription_id UUID,\n  subscription_name TEXT,\n  subscription_url TEXT,\n  total_deliveries BIGINT,\n  successful_deliveries BIGINT,\n  failed_deliveries BIGINT,\n  success_rate_pct NUMERIC\n)",
     "lang": "sql",
-    "src": "supabase/migrations/20260712194608_bed9b5c6-221d-45ce-a0e5-cedd4aa2cf57.sql",
+    "src": "supabase/migrations/20261220000000_fix_sre_rpcs_and_dispatch_trigger.sql",
     "security_definer": true,
     "search_path": true,
-    "body": "SELECT s.id AS subscription_id, s.name AS subscription_name, s.url AS subscription_url, COUNT(l.id)::BIGINT AS total_deliveries, COUNT(l.id) FILTER (WHERE l.success)::BIGINT AS successful_deliveries, COUNT(l.id) FILTER (WHERE NOT l.success)::BIGINT AS failed_deliveries, CASE WHEN COUNT(l.id) > 0 THEN ROUND((COUNT(l.id) FILTER (WHERE l.success)::NUMERIC / COUNT(l.id)) * 100, 2) ELSE NULL END AS success_rate_pct FROM public.webhook_subscriptions s LEFT JOIN public.webhook_delivery_logs l ON l.subscription_id = s.id AND l.created_at >= now() - interval '1 hour' WHERE current_setting('request.jwt.claim.role', true) = 'service_role' OR public.has_role(auth.uid(), 'admin'::app_role) GROUP BY s.id, …",
+    "body": "SELECT s.id AS subscription_id, s.name AS subscription_name, s.url AS subscription_url, COUNT(l.id)::BIGINT AS total_deliveries, COUNT(l.id) FILTER (WHERE l.success)::BIGINT AS successful_deliveries, COUNT(l.id) FILTER (WHERE NOT l.success)::BIGINT AS failed_deliveries, CASE WHEN COUNT(l.id) > 0 THEN ROUND((COUNT(l.id) FILTER (WHERE l.success)::NUMERIC / COUNT(l.id)) * 100, 2) ELSE NULL END AS success_rate_pct FROM public.webhook_subscriptions s LEFT JOIN public.webhook_delivery_logs l ON l.subscription_id = s.id AND l.created_at >= now() - interval '1 hour' WHERE auth.uid() IS NULL OR public.has_role(auth.uid(), 'admin'::app_role) GROUP BY s.id, s.name, s.url;",
     "raises": [],
     "tables": [
      "webhook_delivery_logs",
@@ -94918,12 +94986,15 @@
     "args": "",
     "returns": "TRIGGER",
     "lang": "plpgsql",
-    "src": "supabase/migrations/20261109120000_fix_cron_wrong_project.sql",
+    "src": "supabase/migrations/20261220000000_fix_sre_rpcs_and_dispatch_trigger.sql",
     "security_definer": true,
     "search_path": true,
-    "body": "DECLARE v_project_url TEXT := 'https://eidsaqymojyuhprobfpn.supabase.co'; v_anon_key TEXT := '[REDACTED]'; BEGIN IF LOWER(COALESCE(NEW.severity, '')) NOT IN ('high', 'critical') THEN RETURN NEW; END IF; PERFORM net.http_post( url := v_project_url || '/functions/v1/dispatch-critical-alert', headers := jsonb_build_object( 'Content-Type', 'application/json', 'apikey', v_anon_key, 'Authorization', 'Bearer ' || v_anon_key ), body := jsonb_build_object( 'alert_id', NEW.id, 'alert_type', NEW.alert_type, 'severity', NEW.severity, 'title', NEW.title, 'description', NEW.description, 'metadata', NEW.metadata ) ); RETURN NEW; EXCEPTION WHEN OTHERS THEN RAISE WARNING 'dispatch-critical-alert failed: %', …",
+    "body": "DECLARE v_project_url TEXT := 'https://eidsaqymojyuhprobfpn.supabase.co'; v_secret TEXT; BEGIN IF LOWER(COALESCE(NEW.severity, '')) NOT IN ('high', 'critical') THEN RETURN NEW; END IF; BEGIN SELECT decrypted_secret INTO v_secret FROM vault.decrypted_secrets WHERE name = 'internal_dispatch_secret' LIMIT 1; EXCEPTION WHEN OTHERS THEN v_secret := NULL; END; IF v_secret IS NULL OR v_secret = '' THEN RAISE WARNING 'dispatch-critical-alert skipped: vault secret internal_dispatch_secret not found'; RETURN NEW; END IF; PERFORM net.http_post( url := v_project_url || '/functions/v1/dispatch-critical-alert', headers := jsonb_build_object( 'Content-Type', 'application/json', 'x-internal-secret', v_secre …",
     "raises": [],
-    "tables": []
+    "tables": [
+     "v_secret",
+     "vault"
+    ]
    },
    "get_alert_mttr_by_type_7d": {
     "args": "",
@@ -95010,12 +95081,12 @@
     "args": "p_webhook_slo NUMERIC DEFAULT 99.0, p_api_slo NUMERIC DEFAULT 99.0",
     "returns": "JSONB",
     "lang": "plpgsql",
-    "src": "supabase/migrations/20260712215914_4eec2b74-d615-4e45-8655-fc7c8b022d10.sql",
+    "src": "supabase/migrations/20261220000000_fix_sre_rpcs_and_dispatch_trigger.sql",
     "security_definer": true,
     "search_path": true,
-    "body": "DECLARE v_is_admin BOOLEAN; v_result JSONB; v_wh_total BIGINT; v_wh_success BIGINT; v_wh_fail BIGINT; v_wh_rate NUMERIC; v_wh_budget_total NUMERIC; v_wh_budget_consumed NUMERIC; v_wh_burn_pct NUMERIC; v_api_total BIGINT; v_api_success BIGINT; v_api_fail BIGINT; v_api_rate NUMERIC; v_api_budget_total NUMERIC; v_api_budget_consumed NUMERIC; v_api_burn_pct NUMERIC; v_timeline JSONB; BEGIN SELECT public.has_role(auth.uid(), 'admin'::app_role) INTO v_is_admin; IF NOT COALESCE(v_is_admin, false) THEN RAISE EXCEPTION 'access_denied: admin only'; END IF; SELECT COUNT(*)::BIGINT, COUNT(*) FILTER (WHERE success = true)::BIGINT, COUNT(*) FILTER (WHERE success = false)::BIGINT INTO v_wh_total, v_wh_succ …",
+    "body": "DECLARE v_is_admin BOOLEAN; v_result JSONB; v_wh_total BIGINT; v_wh_success BIGINT; v_wh_fail BIGINT; v_wh_rate NUMERIC; v_wh_budget_total NUMERIC; v_wh_budget_consumed NUMERIC; v_wh_burn_pct NUMERIC; v_api_total BIGINT; v_api_success BIGINT; v_api_fail BIGINT; v_api_rate NUMERIC; v_api_budget_total NUMERIC; v_api_budget_consumed NUMERIC; v_api_burn_pct NUMERIC; v_timeline JSONB; BEGIN SELECT public.has_role(auth.uid(), 'admin'::app_role) INTO v_is_admin; IF auth.uid() IS NOT NULL AND NOT COALESCE(v_is_admin, false) THEN RAISE EXCEPTION 'insufficient_privilege' USING ERRCODE = '42501'; END IF; SELECT COUNT(*)::BIGINT, COUNT(*) FILTER (WHERE success = true)::BIGINT, COUNT(*) FILTER (WHERE suc …",
     "raises": [
-     "access_denied: admin only"
+     "insufficient_privilege"
     ],
     "tables": [
      "api",
@@ -98613,11 +98684,6 @@
     "src": "supabase/migrations/20260712214816_6fc5c315-ea1a-4b7e-90af-4cd2960bd17a.sql"
    },
    {
-    "function": "get_error_budget_30d",
-    "msg": "access_denied: admin only",
-    "src": "supabase/migrations/20260712215914_4eec2b74-d615-4e45-8655-fc7c8b022d10.sql"
-   },
-   {
     "function": "acknowledge_security_alert",
     "msg": "forbidden",
     "src": "supabase/migrations/20260712220916_7df9a342-9572-4145-996a-0f4460cdba43.sql"
@@ -99431,6 +99497,11 @@
     "function": "increment_quests_completed",
     "msg": "perfil não encontrado",
     "src": "supabase/migrations/20261218000000_profiles_economia_rpcs.sql"
+   },
+   {
+    "function": "get_error_budget_30d",
+    "msg": "insufficient_privilege",
+    "src": "supabase/migrations/20261220000000_fix_sre_rpcs_and_dispatch_trigger.sql"
    }
   ],
   "db_generated": [
@@ -105108,7 +105179,8 @@
    "supabase/migrations/20260728205541_a9eda956-7c86-4797-a55a-f6b543975fc2.sql",
    "supabase/migrations/20260728205741_a19b425a-9dbf-41f9-8a3c-efb2d4b41560.sql",
    "supabase/migrations/20261114110500_fix_cron_campaigns_alert_check.sql",
-   "supabase/migrations/20261114134238_9b119528-da6f-4f43-b6cb-dcdcd7aa7ab1.sql"
+   "supabase/migrations/20261114134238_9b119528-da6f-4f43-b6cb-dcdcd7aa7ab1.sql",
+   "supabase/migrations/20261220000000_fix_sre_rpcs_and_dispatch_trigger.sql"
   ],
   "security_definer_fns": [
    "_grant_card_pack_internal",
@@ -112741,6 +112813,46 @@
     "objkind": "table",
     "roles": "authenticated",
     "src": "supabase/migrations/20261218000000_profiles_economia_rpcs.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "execute",
+    "object": "get_error_budget_30d",
+    "objkind": "function",
+    "roles": "PUBLIC, anon",
+    "src": "supabase/migrations/20261220000000_fix_sre_rpcs_and_dispatch_trigger.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "get_error_budget_30d",
+    "objkind": "function",
+    "roles": "authenticated, service_role",
+    "src": "supabase/migrations/20261220000000_fix_sre_rpcs_and_dispatch_trigger.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "execute",
+    "object": "get_webhook_delivery_stats_1h",
+    "objkind": "function",
+    "roles": "PUBLIC, anon",
+    "src": "supabase/migrations/20261220000000_fix_sre_rpcs_and_dispatch_trigger.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "get_webhook_delivery_stats_1h",
+    "objkind": "function",
+    "roles": "authenticated, service_role",
+    "src": "supabase/migrations/20261220000000_fix_sre_rpcs_and_dispatch_trigger.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "execute",
+    "object": "trigger_dispatch_critical_alert",
+    "objkind": "function",
+    "roles": "PUBLIC",
+    "src": "supabase/migrations/20261220000000_fix_sre_rpcs_and_dispatch_trigger.sql"
    }
   ],
   "guards": [
@@ -151109,6 +151221,21 @@
     "IF v_last IS NULL OR (now() - v_last) > interval '48 hours' THEN"
    ]
   },
+  "supabase/migrations/20261220000000_fix_sre_rpcs_and_dispatch_trigger.sql": {
+   "path": "supabase/migrations/20261220000000_fix_sre_rpcs_and_dispatch_trigger.sql",
+   "lines": 262,
+   "errors": [
+    ",\n    headers := jsonb_build_object(\n      "
+   ],
+   "temporal": [
+    "AND l.created_at >= now() - interval '1 hour'",
+    "WHERE created_at >= now() - interval '30 days'",
+    "WHERE created_at >= now() - interval '30 days';",
+    "date_trunc('day', now() - interval '29 days'),",
+    "interval '1 day'"
+   ],
+   "uses_service_role": true
+  },
   "tests/auth-flow.spec.ts": {
    "path": "tests/auth-flow.spec.ts",
    "lines": 34,
@@ -151183,10 +151310,19 @@
   }
  },
  "git": {
-  "sha": "119cff5eafc0957a68bfeedd2e430ae276086b68",
+  "sha": "c0ab58e8a96e0bf9560616f1f1798dbe14db55ed",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "commits": [
+   {
+    "sha": "c0ab58e",
+    "date": "2026-11-23",
+    "author": "adm01-debug",
+    "subject": "fix(sre): corrige RPCs de error-budget/webhook-stats e trigger de dispatch apontando para projeto errado (#106)",
+    "files": [
+     "supabase/migrations/20261220000000_fix_sre_rpcs_and_dispatch_trigger.sql"
+    ]
+   },
    {
     "sha": "119cff5",
     "date": "2026-11-22",
@@ -151560,15 +151696,6 @@
     "files": [
      ".env.example",
      ".github/workflows/ci.yml"
-    ]
-   },
-   {
-    "sha": "d3d388e",
-    "date": "2026-11-20",
-    "author": "adm01-debug",
-    "subject": "fix: excludes assets/ do rewrite SPA para expor 404 real de chunks obsoletos (#76)",
-    "files": [
-     "vercel.json"
     ]
    }
   ],

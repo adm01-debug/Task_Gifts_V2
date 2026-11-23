@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "119cff5eafc0957a68bfeedd2e430ae276086b68",
+  "commit": "c0ab58e8a96e0bf9560616f1f1798dbe14db55ed",
   "branch": "main",
-  "data_commit": "2026-11-22T19:38:47-03:00",
+  "data_commit": "2026-11-23T08:04:44-03:00",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "ultimos_commits": [
+   {
+    "sha": "c0ab58e",
+    "data": "2026-11-23",
+    "assunto": "fix(sre): corrige RPCs de error-budget/webhook-stats e trigger de dispatch apontando para projeto errado (#106)"
+   },
    {
     "sha": "119cff5",
     "data": "2026-11-22",
@@ -126,14 +131,9 @@
     "sha": "cb42df7",
     "data": "2026-11-21",
     "assunto": "build(deps-dev): bump jsdom from 30.1.3 to 31.0.1 (#83)"
-   },
-   {
-    "sha": "0132b7c",
-    "data": "2026-11-21",
-    "assunto": "build(deps): bump the dependencies group with 30 updates (#82)"
    }
   ],
-  "arquivos_mudados_7d": 106,
+  "arquivos_mudados_7d": 107,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "supabase/functions/_shared",
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 75
+    "commits": 76
    },
    {
     "autor": "dependabot[bot]",
@@ -310,7 +310,7 @@
   ]
  },
  "contagens": {
-  "arquivos_total": 1538,
+  "arquivos_total": 1539,
   "arquivos_codigo": 1166,
   "linhas_codigo": 227410,
   "rotas": 83,
@@ -322,7 +322,7 @@
   "hooks": 155,
   "edge_functions": 22,
   "tabelas": 236,
-  "migrations": 272,
+  "migrations": 273,
   "cron_jobs": 22,
   "testes": 161,
   "workflows": 6,

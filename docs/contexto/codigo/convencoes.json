@@ -59,11 +59,11 @@
  "commits": {
   "convencao": "conventional commits (observado)",
   "exemplos": [
+   "fix(sre): corrige RPCs de error-budget/webhook-stats e trigger de dispatch apontando para projeto errado (#106)",
    "feat(db): RPC acknowledge_security_digest para marcar digest semanal como revisado (#103)",
    "fix(sre): reconstroi os 3 monitores + dispatch-critical-alert e destrava auth dos crons (#105)",
    "chore(automacao): reconstroi security-weekly-digest e conecta ao cron 33 (#104)",
-   "feat(edge): ponte admin para webhook-dispatcher (webhook-ping) (#102)",
-   "fix(edge): aceita url de app no push e ajusta contrato de versao do webhook (#101)"
+   "feat(edge): ponte admin para webhook-dispatcher (webhook-ping) (#102)"
   ]
  },
  "pr_template": ".github/PULL_REQUEST_TEMPLATE.md",
