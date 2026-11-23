@@ -1058,7 +1058,7 @@
     "useState"
    ],
    "canais_realtime": [],
-   "usado_por": 96,
+   "usado_por": 97,
    "usado_por_arquivos": [
     "src/App.tsx",
     "src/components/ActivityComments.tsx",
@@ -1084,12 +1084,12 @@
     "src/components/dashboard/DashboardHeader.tsx",
     "src/components/lms/ModuleViewer.tsx",
     "src/components/manager/QuestsList.tsx",
+    "src/components/manager/TeamCompetencyDashboard.tsx",
     "src/components/quiz/QuizDailyRanking.tsx",
     "src/components/rbac/ProtectedRoute.tsx",
     "src/components/security/ReauthProvider.tsx",
     "src/components/security/SessionsPanel.tsx",
-    "src/hooks/useAICoach.ts",
-    "src/hooks/useAchievements.ts"
+    "src/hooks/useAICoach.ts"
    ],
    "coberto_por_testes": 2
   },

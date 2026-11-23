@@ -1,7 +1,7 @@
 # Contexto do projeto para agentes de IA
 
 GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.
-Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `ceef1b84c2a9ebd21866923e69533687050717af` (2026-11-23T11:44:47-03:00).
+Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `0a7aeb7b705315718a8b758f836af8044fca83f5` (2026-11-23T12:13:41-03:00).
 
 ## Como usar (leia antes de planejar ou executar qualquer tarefa)
 1. **Tela/rota/menu** → `rotas.json` (url/vista/menu → arquivo → hooks → tabelas → edges; `rotas_http_backend` para APIs) e `modulos.json` (módulo inteiro + dependências entre módulos).
@@ -36,7 +36,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 |---|---|
 | arquivos_total | 1539 |
 | arquivos_codigo | 1166 |
-| linhas_codigo | 227654 |
+| linhas_codigo | 227656 |
 | rotas | 83 |
 | rotas_http_backend | 0 |
 | vistas_por_id | 0 |
@@ -271,8 +271,8 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - possiveis_segredos_no_codigo: 0
 
 ## Grafo de código (graphify)
-- 10078 nós · 28061 arestas · 614 comunidades · grafo do commit `ceef1b84`
-- comunidades maiores: card.tsx (293), react (284), lucide-react (170), cn (147), QuizAdmin.tsx (137), date-fns (127), AdminPanel.tsx (116), useToast (110), profilesService.ts (88), useAuth (87), DashboardRightColumn.tsx (86), contracts/index.ts (86)
+- 10078 nós · 28064 arestas · 623 comunidades · grafo do commit `0a7aeb7b`
+- comunidades maiores: lucide-react (298), react (286), cn (147), badge.tsx (146), useToast (117), navigation/index.ts (116), ManagerDashboard.tsx (103), client.ts (96), QuizAdmin.tsx (92), DashboardRightColumn.tsx (89), contracts/index.ts (86), gerar.mjs (79)
 - símbolos mais chamados: cn() (src/lib/utils.ts), useAuth() (src/hooks/useAuth.tsx), useIsMobile() (src/hooks/use-mobile.tsx), q() (scripts/supabase_snapshot/snapshot.py), useDepartments() (src/hooks/useDepartments.ts), useToast() (src/hooks/use-toast.ts), useRBAC() (src/hooks/useRBAC.ts), useProfiles() (src/hooks/useProfiles.ts), useSEO() (src/hooks/useSEO.ts), useSoundEffects() (src/hooks/useSoundEffects.tsx), .collect() (scripts/supabase_snapshot/test_snapshot.py), downloadCSV() (src/lib/csvExport.ts)
 - consulta local: `graphify query "<pergunta>"`, `graphify path "<A>" "<B>"`, `graphify explain "<X>"`
 
@@ -358,6 +358,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 
 
 ## Últimos commits
+- 2026-11-23 `0a7aeb7` ﻿fix: usa JWT de sessao no trail-recommendations (#119)
 - 2026-11-23 `ceef1b8` ﻿fix(manager): dados reais de departamento, quests e exportacao no dashboard (#118)
 - 2026-11-23 `57527b0` fix(reports): exporta relatório de engajamento em CSV real (#117)
 - 2026-11-23 `8f235c2` fix(rbac): adiciona guard admin nas rotas /analytics e /security-dashboard (#116)
@@ -372,7 +373,6 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - 2026-11-23 `fe0784d` docs: atualiza 05-edge-functions com fixes SRE (PR #106) e VAPID keys
 - 2026-11-23 `c0ab58e` fix(sre): corrige RPCs de error-budget/webhook-stats e trigger de dispatch apontando para projeto errado (#106)
 - 2026-11-22 `119cff5` feat(db): RPC acknowledge_security_digest para marcar digest semanal como revisado (#103)
-- 2026-11-22 `11d2c1e` fix(sre): reconstroi os 3 monitores + dispatch-critical-alert e destrava auth dos crons (#105)
 
 ## Arquivos deste diretório
 - `docs/contexto/codigo/rotas.json`

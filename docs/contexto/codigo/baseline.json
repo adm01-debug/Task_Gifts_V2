@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "ceef1b84c2a9ebd21866923e69533687050717af",
+  "commit": "0a7aeb7b705315718a8b758f836af8044fca83f5",
   "branch": "main",
-  "data_commit": "2026-11-23T11:44:47-03:00",
+  "data_commit": "2026-11-23T12:13:41-03:00",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "ultimos_commits": [
+   {
+    "sha": "0a7aeb7",
+    "data": "2026-11-23",
+    "assunto": "﻿fix: usa JWT de sessao no trail-recommendations (#119)"
+   },
    {
     "sha": "ceef1b8",
     "data": "2026-11-23",
@@ -126,14 +131,9 @@
     "sha": "6925771",
     "data": "2026-11-22",
     "assunto": "fix(auth): bloqueia senha vazada (HIBP) no cadastro (#95)"
-   },
-   {
-    "sha": "16748b9",
-    "data": "2026-11-22",
-    "assunto": "fix(e2e): happy-paths com rotas/UI reais e credenciais de teste por env (#94)"
    }
   ],
-  "arquivos_mudados_7d": 121,
+  "arquivos_mudados_7d": 122,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "supabase/functions/_shared",
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 86
+    "commits": 87
    },
    {
     "autor": "dependabot[bot]",
@@ -312,7 +312,7 @@
  "contagens": {
   "arquivos_total": 1539,
   "arquivos_codigo": 1166,
-  "linhas_codigo": 227654,
+  "linhas_codigo": 227656,
   "rotas": 83,
   "rotas_http_backend": 0,
   "vistas_por_id": 0,
@@ -400,7 +400,7 @@
   },
   "src/components": {
    "arquivos": 461,
-   "linhas": 77766
+   "linhas": 77768
   },
   "src/constants": {
    "arquivos": 1,

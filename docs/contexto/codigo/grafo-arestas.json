@@ -2124,6 +2124,7 @@
    "src/components/ui/collapsible.tsx",
    "src/components/ui/progress.tsx",
    "src/components/ui/skeleton.tsx",
+   "src/hooks/useAuth.tsx",
    "src/services/competencyService.ts",
    "src/services/profilesService.ts"
   ],
