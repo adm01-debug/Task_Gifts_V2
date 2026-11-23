@@ -28,3 +28,21 @@ Data: 2026-11-26 · Main: `b30f52b` (`chore: CI roda testes de seguranca RPC com
 
 ## Estrutura de pendências (este diretório)
 Um arquivo por item pendente real (estado CONCLUÍDO/AGUARDANDO HUMANO/DESCARTADO). Os itens #2/#3 foram resolvidos via PR; os demais aguardam decisão (DDL/infra = regra 8).
+
+## Revalidação em produção — 2026-11-23 (main `046ebeb`)
+
+Estado de cada achado conferido no banco/API reais, não inferido do código:
+
+| # | Achado | Estado verificado | Evidência |
+|---|---|---|---|
+| 0 | `.mcp.json` versionado com token | **PERSISTE — AGUARDANDO HUMANO** | `git ls-files .mcp.json` presente; rotação externa (regra 8) |
+| 1 | Economia de `profiles` manipulável | **CONCLUÍDO** | RPCs em `pg_proc`; `authenticated` só edita `avatar_url/birth_date/display_name/hire_date`; zero `.from('profiles').update({xp|coins|level})` no client |
+| 2 | CSP bloqueia HIBP | **CONCLUÍDO** (PR #71 mergeada) | `vercel.json` connect-src |
+| 3 | Rotas sem entrada na nav | **CONCLUÍDO** (PR #72 mergeada) | AppSidebar/MobileDrawer/Breadcrumbs |
+| 4 | Lockfiles triplos | **CONCLUÍDO** | main tem só `bun.lock` + `deno.lock`; `package-lock.json` npm órfão foi removido |
+| 5 | CSP meta | OK (não é bug) | headers em `vercel.json` |
+
+**CVEs**: 0 alertas Dependabot abertos e SBOM do GitHub lendo 115 pacotes do `bun.lock` real → os 50 CVEs (1 crítica, 24 altas) vinham do `package-lock.json` npm órfão, já removido. Nenhum CVE real no lockfile efetivo.
+
+**Risco residual aberto**: RPCs de economia aceitam `p_amount` arbitrário do próprio usuário (ver `02-...md`, seção "Risco residual") — exige cálculo server-side do prêmio, mudança de arquitetura (regra 8).
+
