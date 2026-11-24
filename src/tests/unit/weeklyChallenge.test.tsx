@@ -102,10 +102,53 @@ describe('useWeeklyChallenge - notificacao do desafio', () => {
     ]);
   });
 
+  it('mantem o desafio quando o aviso ao oponente e recusado pela RLS', async () => {
+    mockGetCurrentChallenge.mockResolvedValue(null);
+    mockGetById.mockResolvedValue(profile);
+    mockProfilesOrder.mockResolvedValue({
+      data: [
+        { id: 'u1', xp: 100 },
+        { id: 'u2', xp: 100 },
+      ],
+    });
+    mockCreateChallenge.mockResolvedValue(buildChallenge('c9'));
+    mockCreateNotification.mockReset();
+    mockCreateNotification
+      .mockResolvedValueOnce({ id: 'n1' })
+      .mockRejectedValueOnce(new Error('new row violates row-level security policy'));
+
+    const { result } = renderHook(() => useWeeklyChallenge(), { wrapper: makeWrapper() });
+
+    await waitFor(() => expect(result.current.challenge?.id).toBe('c9'));
+    expect(mockCreateNotification).toHaveBeenCalledTimes(2);
+  });
+
   it('gera payloads distintos em desafios de semanas diferentes (nao colide no indice unico)', async () => {
     const semana1 = await createChallengeAndCollectPayloads('c1');
     const semana2 = await createChallengeAndCollectPayloads('c2');
 
     expect(new Set([...semana1, ...semana2]).size).toBe(2);
+  });
+
+  it('inclui o id do desafio no aviso de vitoria', async () => {
+    mockGetCurrentChallenge.mockResolvedValue({
+      ...buildChallenge('c7'),
+      challenger_xp_start: 100,
+      opponent_xp_start: 140,
+      week_end: '2026-11-20T00:00:00Z',
+    });
+    mockGetById.mockImplementation((id: string) =>
+      Promise.resolve(id === 'u1' ? { ...profile, xp: 150 } : { ...profile, id: 'u2' })
+    );
+    mockCreateNotification.mockReset();
+    mockCreateNotification.mockResolvedValue({ id: 'n1' });
+
+    renderHook(() => useWeeklyChallenge(), { wrapper: makeWrapper() });
+
+    await waitFor(() =>
+      expect(mockCreateNotification).toHaveBeenCalledWith(
+        expect.objectContaining({ type: 'victory', data: { challenge_id: 'c7' } })
+      )
+    );
   });
 });
