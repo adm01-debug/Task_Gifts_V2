@@ -205,6 +205,7 @@ export const shopService = {
         title: "🛍️ Compra Realizada!",
         message: `Você resgatou: ${typedReward.name}`,
         data: {
+          purchase_id: purchase.id,
           reward_id: rewardId,
           reward_name: typedReward.name,
           total_coins: totalCost,

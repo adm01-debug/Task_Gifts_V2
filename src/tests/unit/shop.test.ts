@@ -79,5 +79,27 @@ describe('shopService', () => {
         p_amount: 100,
       });
     });
+
+    it('identifica cada compra no payload da notificação (duas compras do mesmo prêmio não colidem)', async () => {
+      const { notificationsService } = await import('../../services/notificationsService');
+      const create = vi.mocked(notificationsService.create);
+
+      const mockReward = { id: 'r1', name: 'Cool Item', price_coins: 100, stock: 10 };
+      mockMaybeSingle
+        .mockResolvedValueOnce({ data: mockReward, error: null })
+        .mockResolvedValueOnce({ data: { id: 'p1', user_id: 'u1', reward_id: 'r1', total_coins: 100 }, error: null })
+        .mockResolvedValueOnce({ data: mockReward, error: null })
+        .mockResolvedValueOnce({ data: { id: 'p2', user_id: 'u1', reward_id: 'r1', total_coins: 100 }, error: null });
+      mockRpc.mockResolvedValue({ data: [{ id: 'u1', coins: 100 }], error: null });
+
+      await shopService.purchaseReward('u1', 'r1');
+      await shopService.purchaseReward('u1', 'r1');
+
+      expect(create).toHaveBeenCalledTimes(2);
+      const payloads = create.mock.calls.map(([arg]) => (arg as { data: Record<string, unknown> }).data);
+      expect(payloads[0].purchase_id).toBe('p1');
+      expect(payloads[1].purchase_id).toBe('p2');
+      expect(JSON.stringify(payloads[0])).not.toBe(JSON.stringify(payloads[1]));
+    });
   });
 });
