@@ -57,7 +57,11 @@ async function remainingSeconds(
     });
     const body = await response.json();
     const ttl = Number(body?.result);
-    return Number.isFinite(ttl) && ttl > 0 ? Math.min(ttl, fallback) : fallback;
+    // -1 (sem expiração) e -2 (chave ausente) não dizem nada sobre a espera.
+    if (!Number.isFinite(ttl) || ttl < 0) return fallback;
+    // TTL 0 = expira em menos de um segundo; anunciar a janela inteira faria a
+    // tela pedir 60 s de espera para um bloqueio que já acabou.
+    return Math.max(1, Math.min(ttl, fallback));
   } catch {
     return fallback;
   }

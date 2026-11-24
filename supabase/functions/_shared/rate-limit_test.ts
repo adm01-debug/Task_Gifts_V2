@@ -95,6 +95,28 @@ Deno.test("espera devolvida no bloqueio e o ttl restante da chave", async () => 
   }
 });
 
+Deno.test("ttl zero nao anuncia a janela inteira", async () => {
+  globalThis.fetch = ((input: string | URL | Request) => {
+    const target = String(input);
+    const body = target.includes("/ttl/") ? { result: 0 } : { result: 99 };
+    return Promise.resolve(
+      new Response(JSON.stringify(body), {
+        status: 200,
+        headers: { "content-type": "application/json" },
+      }),
+    );
+  }) as unknown as typeof fetch;
+
+  try {
+    const out = await checkRateLimit("ip:4.4.4.4", 5, 60);
+    assertEquals(out.success, false);
+    if (out.success) throw new Error("unreachable");
+    assertEquals(out.reset, 1);
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
+});
+
 Deno.test("ttl indisponivel cai para a janela configurada", async () => {
   globalThis.fetch = ((input: string | URL | Request) => {
     if (String(input).includes("/ttl/")) {
@@ -110,6 +132,28 @@ Deno.test("ttl indisponivel cai para a janela configurada", async () => {
 
   try {
     const out = await checkRateLimit("ip:9.9.9.9", 5, 60);
+    assertEquals(out.success, false);
+    if (out.success) throw new Error("unreachable");
+    assertEquals(out.reset, 60);
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
+});
+
+Deno.test("ttl negativo (chave ausente) cai para a janela configurada", async () => {
+  globalThis.fetch = ((input: string | URL | Request) => {
+    const target = String(input);
+    const body = target.includes("/ttl/") ? { result: -2 } : { result: 99 };
+    return Promise.resolve(
+      new Response(JSON.stringify(body), {
+        status: 200,
+        headers: { "content-type": "application/json" },
+      }),
+    );
+  }) as unknown as typeof fetch;
+
+  try {
+    const out = await checkRateLimit("ip:7.7.7.7", 5, 60);
     assertEquals(out.success, false);
     if (out.success) throw new Error("unreachable");
     assertEquals(out.reset, 60);
