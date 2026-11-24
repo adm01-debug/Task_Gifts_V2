@@ -20,6 +20,7 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { useUnsavedChanges } from "@/hooks/useUnsavedChanges";
 import { Progress } from "@/components/ui/progress";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Switch } from "@/components/ui/switch";
@@ -783,6 +784,16 @@ function AdminMissionsTab() {
   const [coinReward, setCoinReward] = useState("25");
 
   const missions = allMissionsQuery.data ?? [];
+
+  // O formulário só limpa título, descrição, ícone e recompensas no sucesso,
+  // então é exatamente esse conjunto que define "alteração não salva".
+  const hasUnsavedChanges =
+    title.trim() !== "" ||
+    description.trim() !== "" ||
+    icon !== "🎯" ||
+    xpReward !== "50" ||
+    coinReward !== "25";
+  useUnsavedChanges(hasUnsavedChanges);
 
   const submit = () => {
     if (!title.trim()) return;
