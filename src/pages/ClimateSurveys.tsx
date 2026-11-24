@@ -35,7 +35,11 @@ function ClimateSurveyCard({
   alreadyAnswered: boolean;
 }) {
   const [isOpen, setIsOpen] = useState(false);
-  const { data: questions, isLoading: isLoadingQuestions } = useSurveyQuestions(isOpen ? survey.id : "");
+  const {
+    data: questions,
+    isLoading: isLoadingQuestions,
+    isError: isQuestionsError,
+  } = useSurveyQuestions(isOpen ? survey.id : "");
   const submitResponse = useSubmitSurveyResponse();
   const withinPeriod = isWithinPeriod(survey);
   const isAnswered = alreadyAnswered && !submitResponse.isPending;
@@ -72,6 +76,11 @@ function ClimateSurveyCard({
         {isOpen ? (
           isLoadingQuestions ? (
             <Skeleton className="h-40 w-full" />
+          ) : isQuestionsError ? (
+            <p className="rounded-lg border border-dashed p-4 text-center text-xs text-muted-foreground">
+              Não foi possível carregar as perguntas desta pesquisa. Feche e abra o
+              formulário novamente; se o problema continuar, avise o time técnico.
+            </p>
           ) : (questions ?? []).length === 0 ? (
             <p className="rounded-lg border border-dashed p-4 text-center text-xs text-muted-foreground">
               Esta pesquisa ainda não tem perguntas cadastradas.
@@ -158,7 +167,7 @@ export default function ClimateSurveys() {
           <CardContent className="py-10 text-center">
             <p className="text-sm font-medium">Nenhuma pesquisa ativa no momento</p>
             <p className="mt-1 text-xs text-muted-foreground">
-              Você será avisado quando o RH publicar a próxima pesquisa de clima.
+              Quando o RH publicar uma nova pesquisa de clima, ela aparece aqui.
             </p>
           </CardContent>
         </Card>

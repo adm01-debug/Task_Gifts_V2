@@ -21,7 +21,10 @@ const SURVEY_TYPES = [
   { value: "custom", label: "Personalizada" },
 ];
 
-const toIsoDate = (value: string) => new Date(`${value}T00:00:00`).toISOString();
+// Inicio e fim do periodo: o encerramento vale ate o fim do dia escolhido, senao a
+// pesquisa aparece como "Fora do periodo" no proprio ultimo dia.
+const toIsoStart = (value: string) => new Date(`${value}T00:00:00`).toISOString();
+const toIsoEnd = (value: string) => new Date(`${value}T23:59:59.999`).toISOString();
 
 const toInputDate = (date: Date) => {
   const local = new Date(date.getTime() - date.getTimezoneOffset() * 60000);
@@ -59,7 +62,7 @@ export function ClimateSurveyForm({ creatorId, isSubmitting, onSubmit, onCancel 
       setError("Informe o período da pesquisa.");
       return;
     }
-    if (toIsoDate(endsAt) <= toIsoDate(startsAt)) {
+    if (endsAt <= startsAt) {
       setError("A data de encerramento precisa ser posterior à data de início.");
       return;
     }
@@ -70,8 +73,8 @@ export function ClimateSurveyForm({ creatorId, isSubmitting, onSubmit, onCancel 
       description: description.trim() || null,
       survey_type: surveyType,
       status: "draft",
-      starts_at: toIsoDate(startsAt),
-      ends_at: toIsoDate(endsAt),
+      starts_at: toIsoStart(startsAt),
+      ends_at: toIsoEnd(endsAt),
       is_anonymous: isAnonymous,
       is_recurring: false,
       recurrence_pattern: null,

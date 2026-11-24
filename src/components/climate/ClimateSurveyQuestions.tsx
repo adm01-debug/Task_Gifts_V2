@@ -79,7 +79,9 @@ export function ClimateSurveyQuestions({
       question_type: questionType,
       options: null,
       is_required: isRequired,
-      order_index: orderedQuestions.length + 1,
+      // Proximo indice a partir do maior ja usado: excluir perguntas deixa lacunas,
+      // e `length + 1` reusava um indice existente (a nova pergunta caia no meio).
+      order_index: Math.max(0, ...orderedQuestions.map((question) => question.order_index)) + 1,
     });
     setQuestionText("");
   };

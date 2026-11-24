@@ -30,6 +30,7 @@ SECURITY DEFINER
 SET search_path = public
 AS $$
 DECLARE
+  v_min        integer := GREATEST(COALESCE(p_min_responses, 5), 5);
   v_responders integer;
   v_written    integer := 0;
     v_marca      timestamptz := clock_timestamp();
@@ -39,11 +40,15 @@ BEGIN
       RETURN 0;
     END IF;
 
+    -- Serializa os recalculos da mesma pesquisa: dois envios simultaneos nao
+    -- podem contar conjuntos diferentes de respostas nem gravar placar defasado.
+    PERFORM pg_advisory_xact_lock(hashtextextended(p_survey_id::text, 0));
+
   SELECT count(*) INTO v_responders
   FROM public.climate_survey_responses
   WHERE survey_id = p_survey_id AND is_complete;
 
-    IF COALESCE(v_responders, 0) >= GREATEST(COALESCE(p_min_responses, 5), 1) THEN
+    IF COALESCE(v_responders, 0) >= v_min THEN
       INSERT INTO public.climate_pillar_scores
         (survey_id, department_id, pillar, score, response_count, calculated_at)
       SELECT p_survey_id, NULL, q.pillar,
@@ -63,6 +68,9 @@ BEGIN
       AND a.score IS NOT NULL
       AND q.question_type IN ('likert_5', 'likert_10', 'nps')
     GROUP BY q.pillar
+    -- Pilar com menos respondentes que o minimo nao e' exposto: um pilar pode ter
+    -- amostra propria menor que o total da pesquisa.
+    HAVING count(DISTINCT resp.user_id) >= v_min
       ON CONFLICT (survey_id, pillar) WHERE department_id IS NULL
       DO UPDATE SET score          = EXCLUDED.score,
                     response_count = EXCLUDED.response_count,
@@ -131,7 +139,7 @@ SET search_path = public
 AS $$
 DECLARE
   v_user_id    uuid := auth.uid();
-  v_min        integer := GREATEST(COALESCE(p_min_responses, 5), 1);
+  v_min        integer := GREATEST(COALESCE(p_min_responses, 5), 5);
   v_responders integer := 0;
   v_total      integer := 0;
   v_promoters  integer := 0;
@@ -160,14 +168,6 @@ BEGIN
   WHERE survey_id = p_survey_id AND is_complete;
   v_responders := COALESCE(v_responders, 0);
 
-  IF v_responders < v_min THEN
-    RETURN jsonb_build_object(
-      'enps', 0, 'promoters', 0, 'passives', 0, 'detractors', 0,
-      'total', 0, 'response_count', v_responders,
-      'suppressed', true, 'min_responses', v_min
-    );
-  END IF;
-
   SELECT count(*),
          count(*) FILTER (WHERE a.score >= 9),
          count(*) FILTER (WHERE a.score >= 7 AND a.score < 9),
@@ -190,6 +190,18 @@ BEGIN
         )
       )
     );
+
+  v_total := COALESCE(v_total, 0);
+
+  -- Amostra insuficiente (de respondentes ou de notas elegiveis) suprime o eNPS:
+  -- devolve `suppressed` em vez de zero, para a tela nao anunciar "0" sem base.
+  IF v_responders < v_min OR v_total < v_min THEN
+    RETURN jsonb_build_object(
+      'enps', 0, 'promoters', 0, 'passives', 0, 'detractors', 0,
+      'total', 0, 'response_count', v_responders,
+      'suppressed', true, 'min_responses', v_min
+    );
+  END IF;
 
   IF v_total > 0 THEN
     v_enps := round(((v_promoters - v_detractors)::numeric / v_total) * 100);
@@ -224,6 +236,8 @@ AS $$
 DECLARE
   v_user_id     uuid := auth.uid();
   v_status      text;
+  v_starts_at   timestamptz;
+  v_ends_at     timestamptz;
   v_response_id uuid;
 BEGIN
   IF v_user_id IS NULL THEN
@@ -234,12 +248,21 @@ BEGIN
     RAISE EXCEPTION 'answers required';
   END IF;
 
-  SELECT status INTO v_status FROM public.climate_surveys WHERE id = p_survey_id;
+  SELECT status, starts_at, ends_at
+    INTO v_status, v_starts_at, v_ends_at
+    FROM public.climate_surveys WHERE id = p_survey_id;
   IF v_status IS NULL THEN
     RAISE EXCEPTION 'survey not found';
   END IF;
   IF v_status <> 'active' THEN
     RAISE EXCEPTION 'survey is not active';
+  END IF;
+  -- O periodo e' regra do servidor: a tela nao pode ser o unico limite.
+  IF v_starts_at IS NOT NULL AND now() < v_starts_at THEN
+    RAISE EXCEPTION 'survey is not open yet';
+  END IF;
+  IF v_ends_at IS NOT NULL AND now() > v_ends_at THEN
+    RAISE EXCEPTION 'survey period is over';
   END IF;
 
   IF EXISTS (
@@ -300,3 +323,57 @@ $$;
 
 GRANT EXECUTE ON FUNCTION public.climate_submit_response(uuid, jsonb) TO authenticated;
 REVOKE ALL ON FUNCTION public.climate_submit_response(uuid, jsonb) FROM anon;
+
+-- 6) Endurecimento da RLS: o cliente nao escreve nas tabelas de clima.
+-- 6.1) Escrita so pelo envio atomico `climate_submit_response`. As politicas
+-- antigas deixavam inserir/alterar resposta e nota direto do cliente, contornando
+-- a validacao de escala, de pesquisa e de periodo.
+DROP POLICY IF EXISTS "Users can submit responses" ON public.climate_survey_responses;
+DROP POLICY IF EXISTS "Users can update own responses" ON public.climate_survey_responses;
+DROP POLICY IF EXISTS "Users can answer questions" ON public.climate_question_answers;
+DROP POLICY IF EXISTS "Users update own answers" ON public.climate_question_answers;
+
+-- 6.2) Anonimato na leitura: admin/gestor NAO leem de quem e a nota; so o autor
+-- le a propria resposta. Quem vê resultado sao os agregados (climate_pillar_scores
+-- e climate_survey_enps).
+DROP POLICY IF EXISTS "Users can view own responses" ON public.climate_survey_responses;
+CREATE POLICY "Users can view own responses"
+ON public.climate_survey_responses FOR SELECT
+USING (user_id = auth.uid());
+
+DROP POLICY IF EXISTS "Users view own answers" ON public.climate_question_answers;
+CREATE POLICY "Users view own answers"
+ON public.climate_question_answers FOR SELECT
+USING (EXISTS (
+  SELECT 1 FROM public.climate_survey_responses r
+  WHERE r.id = climate_question_answers.response_id AND r.user_id = auth.uid()
+));
+
+-- 6.3) Pergunta publicada nao pode ser excluida: a FK em cascata apagava as
+-- respostas ligadas a ela. Os ids dos pilares mudariam o resultado historico.
+DROP POLICY IF EXISTS "Manage survey questions" ON public.climate_survey_questions;
+DROP POLICY IF EXISTS "Managers can add survey questions" ON public.climate_survey_questions;
+CREATE POLICY "Managers can add survey questions"
+ON public.climate_survey_questions FOR INSERT
+WITH CHECK (EXISTS (
+  SELECT 1 FROM public.climate_surveys s
+  WHERE s.id = survey_id AND (s.created_by = auth.uid() OR public.has_role(auth.uid(), 'admin'))
+));
+
+DROP POLICY IF EXISTS "Managers can update survey questions" ON public.climate_survey_questions;
+CREATE POLICY "Managers can update survey questions"
+ON public.climate_survey_questions FOR UPDATE
+USING (EXISTS (
+  SELECT 1 FROM public.climate_surveys s
+  WHERE s.id = survey_id AND (s.created_by = auth.uid() OR public.has_role(auth.uid(), 'admin'))
+));
+
+DROP POLICY IF EXISTS "Managers can delete draft survey questions" ON public.climate_survey_questions;
+CREATE POLICY "Managers can delete draft survey questions"
+ON public.climate_survey_questions FOR DELETE
+USING (EXISTS (
+  SELECT 1 FROM public.climate_surveys s
+  WHERE s.id = survey_id
+    AND s.status = 'draft'
+    AND (s.created_by = auth.uid() OR public.has_role(auth.uid(), 'admin'))
+));
