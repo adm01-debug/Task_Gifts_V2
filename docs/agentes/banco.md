@@ -33,8 +33,8 @@ neste repo.
 | URL | `https://eidsaqymojyuhprobfpn.supabase.co` (valor de `VITE_SUPABASE_URL`) |
 | Dashboard | https://supabase.com/dashboard/project/eidsaqymojyuhprobfpn |
 | MCP para SQL | servidor **`supabase`** declarado em `.mcp.json` (gateway Cloudflare Worker `supabase-eidsaqymo-mcp`) — acesso total: `SELECT/INSERT/UPDATE/DELETE/DDL` |
-| Ledger de migrations | **não existe** (`supabase_migrations.schema_migrations` ausente) |
-| Migrations no repo | 266 arquivos `.sql` em `supabase/migrations/` |
+| Ledger de migrations | **existe** (`supabase_migrations.schema_migrations`, 271 versões em 2026-11-24) — mas **não é fonte de verdade**: 7 dos 278 arquivos do repo não têm registro; ver regra 2 |
+| Migrations no repo | 278 arquivos `.sql` em `supabase/migrations/` |
 
 ### Projetos que NÃO são este (não escrever neles)
 
@@ -66,8 +66,10 @@ credencial e decisão do dono), mas:
    **nunca** antes do deploy do código correspondente.
 2. **Toda migration idempotente** — `CREATE TABLE IF NOT EXISTS`, `CREATE POLICY` guardado por
    `DROP POLICY IF EXISTS`, `INSERT ... ON CONFLICT DO NOTHING` (o
-   `.github/PULL_REQUEST_TEMPLATE.md` cobra isso). Sem ledger, reaplicar é o modo normal de operar: uma
-   migration não idempotente trava o próximo apply.
+   `.github/PULL_REQUEST_TEMPLATE.md` cobra isso). O ledger (`supabase_migrations.schema_migrations`)
+   **existe** (contagem atual na tabela do **Banco OFICIAL**, acima), mas não é fonte de verdade: há
+   arquivos aplicados sem registro e registros com nome fora do padrão do repo. Reaplicar idempotente
+   continua sendo o modo normal de operar — uma migration não idempotente trava o próximo apply.
 3. **Versão sem colisão:** antes de criar arquivo, no mesmo turno: `ls supabase/migrations | tail` e busca
    de PRs abertas tocando `supabase/migrations/`. O padrão de nome vigente é `AAAAMMDDHHMMSS_<slug>.sql`
    (os arquivos antigos usam `_<uuid>`; para arquivo novo prefira o slug descritivo).
@@ -77,7 +79,8 @@ credencial e decisão do dono), mas:
    quando a função/tabela for consumida por edge.
 5. **`CREATE INDEX CONCURRENTLY` não funciona pelo MCP** (a chamada é envolvida em transação) — use
    `CREATE INDEX` simples. `VACUUM` também não roda por lá.
-6. **O estado real do banco é a verdade, não o arquivo.** Sem ledger, só a introspecção prova o que rodou:
+6. **O estado real do banco é a verdade, não o arquivo.** O ledger não cobre tudo (migrations aplicadas
+   sem registro, funções alteradas direto no banco), então só a introspecção prova o que rodou:
    `pg_get_functiondef`, `pg_policies`, `pg_indexes`, `information_schema.columns`. Antes de criar um objeto
    "ausente", confira se ele já existe com outro nome.
 7. Objetos que o código assume e que a auditoria de 2026-08 não encontrou no banco (confira antes de usar):
@@ -88,7 +91,8 @@ credencial e decisão do dono), mas:
 
 | Divergência | Evidência | Efeito |
 |---|---|---|
-| Sem ledger de migrations | ausência de `supabase_migrations.schema_migrations` | não há como provar que banco == repo |
+| Ledger não cobre o repo | `supabase_migrations.schema_migrations` tem 271 versões, mas 7 dos 278 arquivos de `supabase/migrations/` não têm registro; nesses, a conferência foi por introspecção dos objetos-chave (não pela execução integral do SQL) | o ledger não prova banco == repo; introspecção continua obrigatória |
+| `trigger_dispatch_critical_alert` diverge do repo | no banco (2026-11-24) lê `_internal.dispatch_config`; `20261220000000_fix_sre_rpcs_and_dispatch_trigger.sql` recria com `vault.decrypted_secrets` | **não aplique** essa migration sem reconciliar: ela sobrescreve a versão que está em produção |
 | `VITE_SUPABASE_ANON_KEY` no `.env.example`, `VITE_SUPABASE_PUBLISHABLE_KEY` no código | `.env.example:9` vs `src/integrations/supabase/client.ts:6` | quem seguir o example sobe o app sem chave; dois testes de segurança (`src/test/rls.test.ts`, `src/test/rpcAccess.test.ts`) ficam `skip` por causa dessa variável |
 | Anon key errada em SQL de cron | `supabase/migrations/20260712194718_*.sql:5`, `20260712203400_*.sql:11` | URL corrigida; anon key ainda é de `awzhgfmqwddzgbqzqusc` — 2 jobs falham auth até o dono atualizar |
 
