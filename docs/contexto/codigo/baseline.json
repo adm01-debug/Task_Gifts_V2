@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "373deda31bbcfc6e95c273ed776521855dab8795",
+  "commit": "de4eaadee13053c332f86b6c53b6b47562c5f9f8",
   "branch": "main",
-  "data_commit": "2026-11-24T13:09:30-03:00",
+  "data_commit": "2026-11-24T13:10:32-03:00",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "ultimos_commits": [
+   {
+    "sha": "de4eaad",
+    "data": "2026-11-24",
+    "assunto": "docs(estado): alinha o trigger do alerta critico com o estado real (URL e segredo) (#146)"
+   },
    {
     "sha": "373deda",
     "data": "2026-11-24",
@@ -126,11 +131,6 @@
     "sha": "b6c89af",
     "data": "2026-11-23",
     "assunto": "chore(docs): registra estado verificado das pendencias em producao (#121)"
-   },
-   {
-    "sha": "046ebeb",
-    "data": "2026-11-23",
-    "assunto": "fix: liga acoes Editar/Excluir sem handler no painel admin (#120)"
    }
   ],
   "arquivos_mudados_7d": 205,
@@ -161,7 +161,7 @@
    },
    {
     "pasta": "docs/estado/05-edge-functions.md",
-    "mudancas": 8
+    "mudancas": 9
    },
    {
     "pasta": "AGENTS.md",
@@ -215,7 +215,7 @@
    },
    {
     "arquivo": "docs/estado/05-edge-functions.md",
-    "mudancas": 8
+    "mudancas": 9
    },
    {
     "arquivo": "AGENTS.md",
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 113
+    "commits": 114
    },
    {
     "autor": "dependabot[bot]",

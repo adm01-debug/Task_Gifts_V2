@@ -1,9 +1,9 @@
 {
  "meta": {
-  "sha": "373deda31bbcfc6e95c273ed776521855dab8795",
+  "sha": "de4eaadee13053c332f86b6c53b6b47562c5f9f8",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
-  "generated_at": "2026-11-24 16:09 UTC",
+  "generated_at": "2026-11-24 16:15 UTC",
   "files_total": 1583,
   "code_files": 1476,
   "code_lines": 268865
@@ -155038,10 +155038,19 @@
   }
  },
  "git": {
-  "sha": "373deda31bbcfc6e95c273ed776521855dab8795",
+  "sha": "de4eaadee13053c332f86b6c53b6b47562c5f9f8",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "commits": [
+   {
+    "sha": "de4eaad",
+    "date": "2026-11-24",
+    "author": "adm01-debug",
+    "subject": "docs(estado): alinha o trigger do alerta critico com o estado real (URL e segredo) (#146)",
+    "files": [
+     "docs/estado/05-edge-functions.md"
+    ]
+   },
    {
     "sha": "373deda",
     "date": "2026-11-24",
@@ -155411,15 +155420,6 @@
     "files": [
      "src/pages/EngagementReports.tsx"
     ]
-   },
-   {
-    "sha": "8f235c2",
-    "date": "2026-11-23",
-    "author": "adm01-debug",
-    "subject": "fix(rbac): adiciona guard admin nas rotas /analytics e /security-dashboard (#116)",
-    "files": [
-     "src/App.tsx"
-    ]
    }
   ],
   "hot_files": [
@@ -155432,20 +155432,20 @@
     6
    ],
    [
-    "src/App.tsx",
-    5
-   ],
-   [
     "docs/estado/02-componentes.md",
     4
    ],
    [
-    "INVENTARIO_FUNCIONALIDADES.md",
-    3
+    "src/App.tsx",
+    4
    ],
    [
     "docs/estado/05-edge-functions.md",
-    2
+    3
+   ],
+   [
+    "INVENTARIO_FUNCIONALIDADES.md",
+    3
    ],
    [
     "scripts/db-audit/README.md",
