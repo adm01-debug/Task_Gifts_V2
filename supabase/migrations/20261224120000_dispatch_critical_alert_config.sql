@@ -4,24 +4,31 @@
 -- entregue num ambiente reconstruido a partir do repositorio. Idempotente.
 --
 -- 1) O trigger autenticava na edge function com um segredo que nenhuma migration
---    provisionava. A fonte da verdade e' o Vault -
---    vault.decrypted_secrets('internal_dispatch_secret') - lido a cada disparo.
---    `_internal.dispatch_config('dispatch_secret')` fica como sobrescrita
---    explicita de operador, e por isso esta migration NAO escreve nessa chave:
---    uma copia automatica do Vault congela o valor de ontem e, depois de uma
---    rotacao, faz a edge responder 401 sem que ninguem perceba (o alerta critico
---    se perde em silencio). Ultimo recurso do trigger: 'cron_secret', token
---    medido como aceito em 2026-11-24 (dispatch-critical-alert HTTP 200).
+--    provisionava. A ordem de resolucao do segredo e' Vault ->
+--    `_internal.dispatch_config('dispatch_secret')` -> `('cron_secret')`, e por
+--    isso `dispatch_secret` e' um FALLBACK de operador, nao uma sobrescrita com
+--    prioridade: enquanto `vault.decrypted_secrets('internal_dispatch_secret')`
+--    responder, e' ele que vai no header. Se a edge rejeitar o token, o lugar de
+--    corrigir e' o Vault; mexer so nessa chave nao muda o que e' enviado.
+--    Esta migration NAO escreve em `dispatch_secret`: uma copia automatica do
+--    Vault congela o valor de ontem e, depois de uma rotacao, faz a edge
+--    responder 401 sem que ninguem perceba (o alerta critico se perde em
+--    silencio). Ultimo recurso: 'cron_secret', token medido como aceito em
+--    2026-11-24 (dispatch-critical-alert HTTP 200).
 --    Num rebuild o Vault tambem nao vem do repositorio: provisione
---    `internal_dispatch_secret` (ou grave `dispatch_secret` como override) antes
---    de contar com o alerta. Sem nenhum dos dois o trigger emite WARNING com o
+--    `internal_dispatch_secret` (ou grave `dispatch_secret` como fallback) antes
+--    de contar com o alerta. Sem nenhum dos tres o trigger emite WARNING com o
 --    nome das chaves em vez de entregar um 401 silencioso.
 --
 -- 2) A URL do projeto estava fixa dentro da funcao do trigger. Num projeto
 --    recriado ela apontaria para eidsaqymojyuhprobfpn mesmo estando em outro.
 --    Passa a ler _internal.dispatch_config('project_url'); se a chave nao
 --    existir (ordem de aplicacao antes da migration de cron) usa a URL atual,
---    entao a producao de hoje nao muda de comportamento.
+--    entao a producao de hoje nao muda de comportamento. O valor de
+--    `project_url` tambem e' gravado pela migration 20261224110000: num projeto
+--    novo, atualize essa linha (UPDATE _internal.dispatch_config SET value =
+--    '<url do projeto>' WHERE key = 'project_url') - o repositorio nao tem como
+--    deduzir a URL em tempo de execucao.
 
 CREATE SCHEMA IF NOT EXISTS _internal;
 
