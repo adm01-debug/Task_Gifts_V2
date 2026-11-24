@@ -74,6 +74,9 @@ export function MyDevelopmentPlanWidget() {
             <Target className="w-10 h-10 mx-auto mb-2 opacity-30" />
             <p className="text-sm">Nenhum PDI ativo no momento</p>
             <p className="text-xs mt-1">Seu gestor criará um plano quando necessário</p>
+            <Button variant="outline" size="sm" className="mt-3" onClick={() => navigate("/pdi")}>
+              Abrir PDI
+            </Button>
           </div>
         </CardContent>
       </Card>
@@ -92,7 +95,12 @@ export function MyDevelopmentPlanWidget() {
               <FileText className="w-4 h-4 text-primary" />
               Meu Plano de Desenvolvimento
             </CardTitle>
-            <Badge variant="secondary">{activePlans.length} ativo(s)</Badge>
+            <div className="flex items-center gap-2">
+              <Badge variant="secondary">{activePlans.length} ativo(s)</Badge>
+              <Button variant="ghost" size="sm" onClick={() => navigate("/pdi")}>
+                Gerenciar
+              </Button>
+            </div>
           </div>
         </CardHeader>
         <CardContent className="space-y-3">

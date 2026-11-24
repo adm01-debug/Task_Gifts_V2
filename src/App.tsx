@@ -78,6 +78,7 @@ const OpinionChannel = lazy(() => import("./pages/OpinionChannel"));
 const ActionPlans = lazy(() => import("./pages/ActionPlans"));
 const Nr1Risks = lazy(() => import("./pages/Nr1Risks"));
 const Checkins = lazy(() => import("./pages/Checkins"));
+const Pdi = lazy(() => import("./pages/Pdi"));
 const Leagues = lazy(() => import("./pages/Leagues"));
 const Mentoria = lazy(() => import("./pages/Mentoria"));
 const Surveys = lazy(() => import("./pages/Surveys"));
@@ -274,6 +275,7 @@ const AnimatedRoutes = () => {
         <Route path="/planos-acao" element={<ProtectedRoute requiredRole="manager"><PageTransition><ActionPlans /></PageTransition></ProtectedRoute>} />
         <Route path="/engajamento/nr1" element={<ProtectedRoute requiredRole="manager"><PageTransition><Nr1Risks /></PageTransition></ProtectedRoute>} />
         <Route path="/checkins" element={<ProtectedRoute requiredRole="manager"><PageTransition><Checkins /></PageTransition></ProtectedRoute>} />
+        <Route path="/pdi" element={<ProtectedRoute><PageTransition><Pdi /></PageTransition></ProtectedRoute>} />
         <Route path="/leagues" element={<ProtectedRoute><PageTransition><Leagues /></PageTransition></ProtectedRoute>} />
         <Route path="/mentoria" element={<ProtectedRoute><PageTransition><Mentoria /></PageTransition></ProtectedRoute>} />
         <Route path="/surveys" element={<ProtectedRoute><PageTransition><Surveys /></PageTransition></ProtectedRoute>} />
