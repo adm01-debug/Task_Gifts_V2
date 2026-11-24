@@ -204,11 +204,16 @@ GRANT EXECUTE ON FUNCTION public.get_webhook_delivery_stats_1h() TO authenticate
 -- 3) trigger_dispatch_critical_alert:
 --    URL do projeto certo (eidsaqymojyuhprobfpn) + autenticacao por segredo interno
 --    (x-internal-secret) em vez do JWT anon errado. Sem hardcode de segredo no codigo.
---    Fonte primaria do segredo: _internal.dispatch_config('dispatch_secret') - a mesma
---    que roda em producao desde 2026-11-24. Fallback: vault.decrypted_secrets
---    ('internal_dispatch_secret'), para ambientes recriados a partir do repo.
---    Em producao os dois valores sao identicos (conferido em 2026-11-24:
---    segredos_iguais = true, 64 chars em ambos), entao aplicar este arquivo e no-op.
+--    Fonte da verdade deste trigger e' 20261224120000_dispatch_critical_alert_config.sql
+--    (a ultima CREATE OR REPLACE vence). O corpo abaixo esta alinhado com a definicao
+--    viva em producao (`pg_get_functiondef`, conferido em 2026-11-24) de proposito:
+--    aplicar SOMENTE este arquivo num banco que ja rodou a 20261224120000 precisa ser
+--    no-op, e nao rebaixar o trigger para URL fixa e ordem antiga de segredo.
+--    Ordem de resolucao do segredo: vault.decrypted_secrets('internal_dispatch_secret')
+--    -> _internal.dispatch_config('dispatch_secret') -> ('cron_secret').
+--    Medido em producao em 2026-11-24: os dois segredos em jogo tem 64 chars e NAO sao
+--    iguais, e a tabela de config nao tem a chave 'dispatch_secret' - o valor efetivo
+--    hoje sai do Vault.
 --    Sem segredo em nenhuma das fontes, o trigger avisa e NAO dispara - nunca chama
 --    a edge function sem autenticar.
 CREATE OR REPLACE FUNCTION public.trigger_dispatch_critical_alert()
@@ -218,7 +223,7 @@ SECURITY DEFINER
 SET search_path = public
 AS $$
 DECLARE
-  v_project_url TEXT := 'https://eidsaqymojyuhprobfpn.supabase.co';
+  v_project_url TEXT;
   v_secret TEXT;
 BEGIN
   IF LOWER(COALESCE(NEW.severity, '')) NOT IN ('high', 'critical') THEN
@@ -226,9 +231,26 @@ BEGIN
   END IF;
 
   BEGIN
-    SELECT value INTO v_secret
+    SELECT value INTO v_project_url
     FROM _internal.dispatch_config
-    WHERE key = 'dispatch_secret'
+    WHERE key = 'project_url'
+    LIMIT 1;
+  EXCEPTION WHEN OTHERS THEN
+    v_project_url := NULL;
+  END;
+
+  IF v_project_url IS NULL OR v_project_url = '' THEN
+    v_project_url := 'https://eidsaqymojyuhprobfpn.supabase.co';
+  END IF;
+
+  -- O Vault vem primeiro de proposito: `_internal.dispatch_config.dispatch_secret`
+  -- e' a copia estatica feita no provisionamento. Depois de rotacionar o segredo no
+  -- Vault, uma copia antiga aqui faria o trigger enviar o valor revogado, a edge
+  -- devolver 401 e o alerta critico se perder em silencio.
+  BEGIN
+    SELECT decrypted_secret INTO v_secret
+    FROM vault.decrypted_secrets
+    WHERE name = 'internal_dispatch_secret'
     LIMIT 1;
   EXCEPTION WHEN OTHERS THEN
     v_secret := NULL;
@@ -236,9 +258,22 @@ BEGIN
 
   IF v_secret IS NULL OR v_secret = '' THEN
     BEGIN
-      SELECT decrypted_secret INTO v_secret
-      FROM vault.decrypted_secrets
-      WHERE name = 'internal_dispatch_secret'
+      SELECT value INTO v_secret
+      FROM _internal.dispatch_config
+      WHERE key = 'dispatch_secret'
+      LIMIT 1;
+    EXCEPTION WHEN OTHERS THEN
+      v_secret := NULL;
+    END;
+  END IF;
+
+  -- Ultimo recurso: 'cron_secret' e' um token ja aceito pelas funcoes internas,
+  -- entao serve quando o Vault nao esta acessivel nem ha sobrescrita explicita.
+  IF v_secret IS NULL OR v_secret = '' THEN
+    BEGIN
+      SELECT value INTO v_secret
+      FROM _internal.dispatch_config
+      WHERE key = 'cron_secret'
       LIMIT 1;
     EXCEPTION WHEN OTHERS THEN
       v_secret := NULL;
@@ -246,12 +281,12 @@ BEGIN
   END IF;
 
   IF v_secret IS NULL OR v_secret = '' THEN
-    RAISE WARNING 'dispatch-critical-alert skipped: segredo ausente em _internal.dispatch_config e no vault';
+    RAISE WARNING 'dispatch-critical-alert skipped: segredo ausente no vault e em _internal.dispatch_config (dispatch_secret/cron_secret)';
     RETURN NEW;
   END IF;
 
   PERFORM net.http_post(
-    url := v_project_url || '/functions/v1/dispatch-critical-alert',
+    url := rtrim(v_project_url, '/') || '/functions/v1/dispatch-critical-alert',
     headers := jsonb_build_object(
       'Content-Type', 'application/json',
       'x-internal-secret', v_secret
