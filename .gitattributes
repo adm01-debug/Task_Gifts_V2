@@ -1,0 +1,2 @@
+# Runners bash precisam de LF mesmo em checkout Windows (core.autocrlf=true).
+scripts/climate-sql-check/*.sh text eol=lf

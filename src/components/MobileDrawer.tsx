@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
- import { Flame, Zap, Trophy, Target, Users, BarChart3, Gift, Settings, Home, Medal, X, ClipboardList, PlusCircle, Shield, Activity, BookOpen, Clock, LineChart, ShoppingBag, MessageSquare, TrendingUp, Swords, Heart, Gamepad2, HelpCircle, Bot, Search, LogOut } from "lucide-react";
+ import { Flame, Zap, Trophy, Target, Users, BarChart3, Gift, Settings, Home, Medal, X, ClipboardList, PlusCircle, Shield, Activity, BookOpen, Clock, LineChart, ShoppingBag, MessageSquare, TrendingUp, Swords, Heart, Gamepad2, HelpCircle, Bot, Search, LogOut, Gauge } from "lucide-react";
 import { useState, useCallback, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { cn } from "@/lib/utils";
@@ -30,6 +30,7 @@ const navItems: NavItem[] = [
   { icon: ClipboardList, label: "Check-ins 1:1", path: "/checkins" },
   { icon: Trophy, label: "Ligas", path: "/leagues" },
   { icon: BarChart3, label: "Pulse Surveys", path: "/surveys" },
+  { icon: Gauge, label: "Pesquisa de Clima", path: "/clima" },
   { icon: MessageSquare, label: "Feedback 360°", path: "/feedback" },
   { icon: Gift, label: "Anúncios", path: "/announcements" },
   { icon: Trophy, label: "Conquistas", path: "/conquistas" },

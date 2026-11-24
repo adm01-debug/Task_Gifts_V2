@@ -1,5 +1,6 @@
 import { supabase } from "@/integrations/supabase/client";
 import { logger } from "@/services/loggingService";
+import { MIN_RESPONDENTS } from "@/services/engagementDiagnosticsService";
 import type { Database, Json } from "@/integrations/supabase/types";
 
 export type ClimatePillar = 
@@ -50,6 +51,17 @@ export interface ClimatePillarScore {
   response_count: number;
   department_id: string | null;
   calculated_at: string;
+}
+
+export interface ClimateSurveyEnps {
+  enps: number;
+  promoters: number;
+  passives: number;
+  detractors: number;
+  total: number;
+  response_count: number;
+  suppressed: boolean;
+  min_responses: number;
 }
 
 export const PILLAR_LABELS: Record<ClimatePillar, { pt: string; en: string; es: string }> = {
@@ -165,39 +177,63 @@ export const climateSurveyService = {
     return data as unknown as ClimateSurveyQuestion;
   },
 
-  async submitResponse(surveyId: string, userId: string, answers: { questionId: string; score?: number; textAnswer?: string }[]): Promise<void> {
-    const { data: response, error: responseError } = await supabase
-      .from('climate_survey_responses')
-      .insert({
-        survey_id: surveyId,
-        user_id: userId,
-        is_complete: true,
-        completed_at: new Date().toISOString(),
-      })
-      .select()
-      .single();
+  async deleteQuestion(questionId: string): Promise<void> {
+    const { error } = await supabase
+      .from('climate_survey_questions')
+      .delete()
+      .eq('id', questionId);
 
-    if (responseError) {
-      logger.error('Failed to create survey response', 'ClimateSurveyService', responseError);
-      throw responseError;
+    if (error) {
+      logger.error('Failed to delete survey question', 'ClimateSurveyService', error);
+      throw error;
     }
+  },
 
-    const answersToInsert = answers.map(a => ({
-      response_id: response.id,
-      question_id: a.questionId,
-      score: a.score,
-      text_answer: a.textAnswer,
-      skipped: !a.score && !a.textAnswer,
+  async submitResponse(surveyId: string, answers: { questionId: string; score?: number; textAnswer?: string }[]): Promise<void> {
+    const payload = answers.map((answer) => ({
+      question_id: answer.questionId,
+      score: answer.score ?? null,
+      text_answer: answer.textAnswer ?? null,
     }));
 
-    const { error: answersError } = await supabase
-      .from('climate_question_answers')
-      .insert(answersToInsert);
+    const { error } = await supabase.rpc('climate_submit_response', {
+      p_survey_id: surveyId,
+      p_answers: payload as unknown as Json,
+    });
 
-    if (answersError) {
-      logger.error('Failed to save answers', 'ClimateSurveyService', answersError);
-      throw answersError;
+    if (error) {
+      logger.error('Failed to submit survey response', 'ClimateSurveyService', error);
+      if (error.code === '23505') {
+        throw new Error('Você já respondeu esta pesquisa.');
+      }
+      throw error;
     }
+  },
+
+  async getMyAnsweredSurveyIds(userId: string): Promise<string[]> {
+    const { data, error } = await supabase
+      .from('climate_survey_responses')
+      .select('survey_id')
+      .eq('user_id', userId);
+
+    if (error) {
+      logger.error('Failed to fetch answered surveys', 'ClimateSurveyService', error);
+      throw error;
+    }
+    return (data || []).map((row) => row.survey_id);
+  },
+
+  async recalculatePillarScores(surveyId: string, minResponses = MIN_RESPONDENTS): Promise<number> {
+    const { data, error } = await supabase.rpc('climate_recalculate_pillar_scores', {
+      p_survey_id: surveyId,
+      p_min_responses: minResponses,
+    });
+
+    if (error) {
+      logger.error('Failed to recalculate pillar scores', 'ClimateSurveyService', error);
+      throw error;
+    }
+    return data ?? 0;
   },
 
   async getPillarScores(surveyId: string, departmentId?: string): Promise<ClimatePillarScore[]> {
@@ -212,6 +248,9 @@ export const climateSurveyService = {
       query = query.is('department_id', null);
     }
 
+        // Linhas zeradas sao placar de pilar sem amostra valida: nao pontuam.
+        query = query.gt('response_count', 0);
+
     const { data, error } = await query;
     if (error) {
       logger.error('Failed to fetch pillar scores', 'ClimateSurveyService', error);
@@ -220,31 +259,16 @@ export const climateSurveyService = {
     return (data || []) as unknown as ClimatePillarScore[];
   },
 
-  async calculateENPS(surveyId: string): Promise<{ enps: number; promoters: number; passives: number; detractors: number }> {
-    const { data, error } = await supabase
-      .from('climate_question_answers')
-      .select(`
-        score,
-        climate_survey_responses!inner(survey_id)
-      `)
-      .eq('climate_survey_responses.survey_id', surveyId);
+  async calculateENPS(surveyId: string, minResponses = MIN_RESPONDENTS): Promise<ClimateSurveyEnps> {
+    const { data, error } = await supabase.rpc('climate_survey_enps', {
+      p_survey_id: surveyId,
+      p_min_responses: minResponses,
+    });
 
     if (error) {
       logger.error('Failed to calculate eNPS', 'ClimateSurveyService', error);
       throw error;
     }
-
-    interface ScoreData { score: number | null }
-    const scores = (data || []).map((d: ScoreData) => d.score).filter((s): s is number => s !== null);
-    const total = scores.length;
-    if (total === 0) return { enps: 0, promoters: 0, passives: 0, detractors: 0 };
-
-    const promoters = scores.filter((s) => s >= 9).length;
-    const passives = scores.filter((s) => s >= 7 && s < 9).length;
-    const detractors = scores.filter((s) => s < 7).length;
-
-    const enps = Math.round(((promoters - detractors) / total) * 100);
-
-    return { enps, promoters, passives, detractors };
+    return data as unknown as ClimateSurveyEnps;
   },
 };

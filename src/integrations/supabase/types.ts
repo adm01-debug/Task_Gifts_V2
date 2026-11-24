@@ -11443,6 +11443,18 @@ export type Database = {
         Args: { p_days_to_keep?: number }
         Returns: Json
       }
+      climate_recalculate_pillar_scores: {
+        Args: { p_survey_id: string; p_min_responses?: number }
+        Returns: number
+      }
+      climate_submit_response: {
+        Args: { p_survey_id: string; p_answers: Json }
+        Returns: undefined
+      }
+      climate_survey_enps: {
+        Args: { p_survey_id: string; p_min_responses?: number }
+        Returns: Json
+      }
       close_auction: { Args: { p_auction_id: string }; Returns: Json }
       close_expired_auctions: { Args: never; Returns: number }
       close_expired_sales_campaigns: {
