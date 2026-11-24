@@ -67,9 +67,11 @@ credencial e decisão do dono), mas:
 2. **Toda migration idempotente** — `CREATE TABLE IF NOT EXISTS`, `CREATE POLICY` guardado por
    `DROP POLICY IF EXISTS`, `INSERT ... ON CONFLICT DO NOTHING` (o
    `.github/PULL_REQUEST_TEMPLATE.md` cobra isso). O ledger (`supabase_migrations.schema_migrations`)
-   **existe** e **cobre o repo hoje** (contagem na tabela do **Banco OFICIAL**, acima), mas registra
-   *que* o arquivo foi aplicado, não *em que estado* ficaram os objetos. Reaplicar idempotente continua
-   sendo o modo normal de operar — uma migration não idempotente trava o próximo apply.
+   **existe** e **cobre o repo hoje** (contagem na tabela do **Banco OFICIAL**, acima), mas a linha
+   registrada diz que *a versão foi marcada como aplicada* — por execução do arquivo ou por registro
+   manual depois de conferir os objetos-chave (foi o caso de seis versões em 2026-11-24) — e não *em que
+   estado* ficaram os objetos. Reaplicar idempotente continua sendo o modo normal de operar: uma migration
+   não idempotente trava o próximo apply.
 3. **Versão sem colisão:** antes de criar arquivo, no mesmo turno: `ls supabase/migrations | tail` e busca
    de PRs abertas tocando `supabase/migrations/`. O padrão de nome vigente é `AAAAMMDDHHMMSS_<slug>.sql`
    (os arquivos antigos usam `_<uuid>`; para arquivo novo prefira o slug descritivo).
