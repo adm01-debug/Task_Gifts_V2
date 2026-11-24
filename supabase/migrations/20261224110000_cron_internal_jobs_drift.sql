@@ -17,9 +17,21 @@
 -- trigger de alerta (medido: position(dispatch_secret in command) = false nos 5
 -- jobs), entao trocar um pelo outro quebraria o guard do digest semanal.
 --
--- O segredo nao entra neste arquivo. Ele fica em `_internal.dispatch_config` e e'
--- lido em tempo de aplicacao; a primeira aplicacao semeia a chave `cron_secret`
--- com o valor que os jobs ja usam, para nao mudar nada em producao.
+-- O segredo nao entra neste arquivo nem no comando gravado em `cron.job`: ele fica
+-- em `_internal.dispatch_config` e e' lido em tempo de execucao, dentro do proprio
+-- SQL do job. A primeira aplicacao semeia a chave `cron_secret` com o valor que os
+-- jobs ja usam, para nao mudar nada em producao.
+
+-- 0) Garante a tabela de configuracao -------------------------------------------
+-- Nenhuma migration do repo criava `_internal.dispatch_config`: em banco
+-- reconstruido o INSERT abaixo abortava a migration inteira antes de agendar
+-- qualquer job. `IF NOT EXISTS` e' no-op na producao atual.
+CREATE SCHEMA IF NOT EXISTS _internal;
+
+CREATE TABLE IF NOT EXISTS _internal.dispatch_config (
+  key   TEXT PRIMARY KEY,
+  value TEXT
+);
 
 -- 1) Destino comum ---------------------------------------------------------------
 -- A URL do projeto nao e' segredo e ja aparece em outras migrations. Guarda-la em
@@ -32,22 +44,30 @@ ON CONFLICT (key) DO NOTHING;
 -- 2) Semeia o segredo dos jobs com o que ja roda ---------------------------------
 -- Em rebuild limpo nao existe job para copiar e a chave continua ausente: o passo 3
 -- entao recusa recriar os jobs sem credencial em vez de deixa-los tomando 401.
--- A regex cobre `"x-internal-secret":"valor"` e `"x-internal-secret": "valor"`: os
--- jobs antigos foram gravados com format() e os recriados por esta migration usam
--- jsonb_build_object(...)::text, que insere espaco depois dos dois-pontos.
+-- A busca fica restrita aos cinco jobs medidos (por nome), para nao copiar o
+-- cabecalho de um job de outro grupo que por acaso use o mesmo header.
+-- A regex cobre `"x-internal-secret":"valor"` e `"x-internal-secret": "valor"`, que sao
+-- as duas formas ja gravadas por jobs antigos deste projeto.
 INSERT INTO _internal.dispatch_config (key, value)
 SELECT 'cron_secret', v.secret
   FROM (
     SELECT (regexp_match(command, '"x-internal-secret"\s*:\s*"([^"]+)"'))[1] AS secret
       FROM cron.job
      WHERE command LIKE '%"x-internal-secret"%'
+       AND jobname IN ('push-outbox-dispatcher',
+                       'burn-rate-monitor-5min',
+                       'error-budget-monitor-daily',
+                       'security-weekly-digest',
+                       'webhook-health-monitor-every-15min')
      ORDER BY jobid
      LIMIT 1
   ) v
  WHERE length(v.secret) >= 32
 ON CONFLICT (key) DO NOTHING;
 
--- 3) Recria os cinco jobs com `x-internal-secret` ---------------------------------
+-- 3) Recria os cinco jobs com `x-internal-secret` lido da config ------------------
+-- O comando gravado em `cron.job` nao contem o segredo: ele e' resolvido pelo
+-- subselect no momento da execucao, entao rotacionar a chave nao exige reagendar.
 -- cron.schedule(nome, ...) faz upsert por nome (pg_cron 1.6.4): reaplicar atualiza o
 -- job no lugar, sem duplicar e sem tocar no jobid. `postgres` nao tem UPDATE em
 -- cron.job, mas cron.schedule e' SECURITY DEFINER e funciona (conferido em producao).
@@ -76,11 +96,11 @@ BEGIN
   SELECT value INTO v_secret FROM _internal.dispatch_config WHERE key = 'cron_secret';
 
   IF v_secret IS NULL OR length(v_secret) < 32 THEN
+      -- Nao copia `dispatch_secret` para `cron_secret`: gravar um valor de outra
+      -- origem mascararia o drift e poderia deixar o digest sem token valido.
+      -- Usa o valor so como credencial desta execucao e avisa para provisionar.
     SELECT value INTO v_secret FROM _internal.dispatch_config WHERE key = 'dispatch_secret';
     IF v_secret IS NOT NULL AND length(v_secret) >= 32 THEN
-      INSERT INTO _internal.dispatch_config (key, value)
-      VALUES ('cron_secret', v_secret)
-      ON CONFLICT (key) DO NOTHING;
       RAISE WARNING 'cron_secret ausente; jobs internos usando dispatch_secret - confirme que security-weekly-digest aceita esse valor';
     END IF;
   END IF;
@@ -96,14 +116,15 @@ BEGIN
       v_scheds[i],
       format($cmd$
   SELECT net.http_post(
-    url := %L,
-    headers := %L::jsonb,
+    url := (SELECT value FROM _internal.dispatch_config WHERE key = 'project_url')
+           || '/functions/v1/%s',
+    headers := jsonb_build_object(
+      'Content-Type', 'application/json',
+      'x-internal-secret', (SELECT value FROM _internal.dispatch_config WHERE key = 'cron_secret')
+    ),
     body := '{}'::jsonb
   );
-$cmd$,
-        v_url || '/functions/v1/' || v_slugs[i],
-        jsonb_build_object('Content-Type', 'application/json',
-                           'x-internal-secret', v_secret)::text)
+$cmd$, v_slugs[i])
     );
   END LOOP;
 END $outer$;
