@@ -43,11 +43,11 @@
   {
    "arquivo": "scripts/ci/check-migration-drift.unit.mjs",
    "tipo": "unit",
-   "linhas": 326,
+   "linhas": 346,
    "testa": [
     "scripts/db-audit/check-migration-drift.mjs"
    ],
-   "casos": 41
+   "casos": 42
   },
   {
    "arquivo": "scripts/ci/check-supabase-env.unit.mjs",

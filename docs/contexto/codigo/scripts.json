@@ -75,7 +75,7 @@
   {
    "arquivo": "scripts/db-audit/check-migration-drift.mjs",
    "descricao": "* Guarda das migrations de supabase/migrations/.",
-   "linhas": 604,
+   "linhas": 617,
    "env": [
     "MIGRATIONS_DIR",
     "MIGRATION_BASELINE"

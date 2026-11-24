@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "d344ae90d68da384ce32dad00ee581473e1e8868",
+  "commit": "96c33826aa496dcd595690665e5a3e59b2848ca3",
   "branch": "main",
-  "data_commit": "2026-11-24T10:12:34-03:00",
+  "data_commit": "2026-11-24T10:33:25-03:00",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "ultimos_commits": [
+   {
+    "sha": "96c3382",
+    "data": "2026-11-24",
+    "assunto": "fix: tira BOM das migrations pendentes e remove rascunho obsoleto do digest (Supabase Preview 42601) (#138)"
+   },
    {
     "sha": "d344ae9",
     "data": "2026-11-24",
@@ -126,14 +131,9 @@
     "sha": "7ca11a0",
     "data": "2026-11-23",
     "assunto": "fix(feedback): adiciona fluxo de resposta com pontuacao, pontos fortes e melhorias (#115)"
-   },
-   {
-    "sha": "ba994f9",
-    "data": "2026-11-23",
-    "assunto": "fix(quiz): persiste 'Concluido hoje' em quiz_scores (resiste ao reload) (#114)"
    }
   ],
-  "arquivos_mudados_7d": 199,
+  "arquivos_mudados_7d": 202,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "supabase/functions/_shared",
@@ -157,6 +157,10 @@
    },
    {
     "pasta": "docs/agentes/banco.md",
+    "mudancas": 8
+   },
+   {
+    "pasta": "AGENTS.md",
     "mudancas": 7
    },
    {
@@ -176,16 +180,12 @@
     "mudancas": 6
    },
    {
-    "pasta": "AGENTS.md",
+    "pasta": "docs/agentes/mapa-repo.md",
     "mudancas": 6
    },
    {
     "pasta": "supabase/config.toml",
     "mudancas": 6
-   },
-   {
-    "pasta": "docs/agentes/mapa-repo.md",
-    "mudancas": 5
    },
    {
     "pasta": "docs/prod-readiness.md",
@@ -211,6 +211,10 @@
    },
    {
     "arquivo": "docs/agentes/banco.md",
+    "mudancas": 8
+   },
+   {
+    "arquivo": "AGENTS.md",
     "mudancas": 7
    },
    {
@@ -230,16 +234,12 @@
     "mudancas": 7
    },
    {
-    "arquivo": "AGENTS.md",
+    "arquivo": "docs/agentes/mapa-repo.md",
     "mudancas": 6
    },
    {
     "arquivo": "supabase/functions/_shared/contracts/_fixtures/index.ts",
     "mudancas": 6
-   },
-   {
-    "arquivo": "docs/agentes/mapa-repo.md",
-    "mudancas": 5
    },
    {
     "arquivo": "docs/prod-readiness.md",
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 106
+    "commits": 107
    },
    {
     "autor": "dependabot[bot]",
@@ -310,9 +310,9 @@
   ]
  },
  "contagens": {
-  "arquivos_total": 1570,
+  "arquivos_total": 1569,
   "arquivos_codigo": 1188,
-  "linhas_codigo": 235856,
+  "linhas_codigo": 235889,
   "rotas": 87,
   "rotas_http_backend": 0,
   "vistas_por_id": 0,
@@ -322,7 +322,7 @@
   "hooks": 155,
   "edge_functions": 23,
   "tabelas": 237,
-  "migrations": 278,
+  "migrations": 277,
   "cron_jobs": 22,
   "testes": 171,
   "workflows": 6,
@@ -364,11 +364,11 @@
   },
   "scripts/ci": {
    "arquivos": 9,
-   "linhas": 1552
+   "linhas": 1572
   },
   "scripts/db-audit": {
    "arquivos": 1,
-   "linhas": 604
+   "linhas": 617
   },
   "scripts/graphify-local.mjs": {
    "arquivos": 1,
@@ -558,7 +558,7 @@
   },
   {
    "arquivo": "scripts/db-audit/check-migration-drift.mjs",
-   "linhas": 604
+   "linhas": 617
   },
   {
    "arquivo": "src/pages/WagerQuestionAdminPage.tsx",

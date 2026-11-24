@@ -1,6 +1,6 @@
 # 07 · REGRAS DE NEGÓCIO
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `d344ae90d6` · branch `main` · 2026-11-24 13:15 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `96c33826aa` · branch `main` · 2026-11-24 13:34 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## A. Regras escritas por humanos (`manual/` — prioridade máxima, nunca sobrescrito)
@@ -919,8 +919,8 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `get_2fa_status` | insufficient_privilege | `supabase/migrations/20261114134238_9b119528-da6f-4f43-b6cb-dcdcd7aa7ab1.sql` |
 | `user_has_passkeys` | insufficient_privilege | `supabase/migrations/20261114134238_9b119528-da6f-4f43-b6cb-dcdcd7aa7ab1.sql` |
 | `validate_reset_token` | insufficient_privilege | `supabase/migrations/20261114134238_9b119528-da6f-4f43-b6cb-dcdcd7aa7ab1.sql` |
-| `acknowledge_security_digest` | not authenticated | `supabase/migrations/20261123000001_create_acknowledge_security_digest.sql` |
-| `acknowledge_security_digest` | digest not found: % | `supabase/migrations/20261123000001_create_acknowledge_security_digest.sql` |
+| `acknowledge_security_digest` | not_authenticated | `supabase/migrations/20261122140000_acknowledge_security_digest.sql` |
+| `acknowledge_security_digest` | forbidden | `supabase/migrations/20261122140000_acknowledge_security_digest.sql` |
 | `climate_recalculate_pillar_scores` | not authenticated | `supabase/migrations/20261123180000_climate_survey_engine.sql` |
 | `climate_recalculate_pillar_scores` | not authorized | `supabase/migrations/20261123180000_climate_survey_engine.sql` |
 | `climate_survey_enps` | not authenticated | `supabase/migrations/20261123180000_climate_survey_engine.sql` |

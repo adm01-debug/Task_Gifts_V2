@@ -59,11 +59,11 @@
  "commits": {
   "convencao": "conventional commits (observado)",
   "exemplos": [
+   "fix: tira BOM das migrations pendentes e remove rascunho obsoleto do digest (Supabase Preview 42601) (#138)",
    "fix: guarda UPDATE cron.job por privilegio (Supabase Preview 42501) (#137)",
    "fix: normaliza versao do ledger que reprovava o Supabase Preview (#136)",
    "fix: alinha trigger de dispatch ao banco vivo e encerra a divergencia do repo (#135)",
-   "fix: remove BOM UTF-8 do supabase/config.toml que quebra o Supabase Preview (#134)",
-   "chore(docs): corrige estado do ledger de migrations e documenta divergencia do dispatch trigger (#133)"
+   "fix: remove BOM UTF-8 do supabase/config.toml que quebra o Supabase Preview (#134)"
   ]
  },
  "pr_template": ".github/PULL_REQUEST_TEMPLATE.md",

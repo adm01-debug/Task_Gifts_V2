@@ -1,6 +1,6 @@
 # 10 · ACESSO E SEGURANÇA — quem pode o quê
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `d344ae90d6` · branch `main` · 2026-11-24 13:15 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `96c33826aa` · branch `main` · 2026-11-24 13:34 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## Perfis / roles identificados
@@ -749,7 +749,7 @@ Middleware matcher (Next.js): nenhum
 | grant | anon, authenticated | select | `weekly_challenges`, `organizations` |
 | grant | anon, authenticated, service_role | execute | `get_2fa_status`, `user_has_passkeys` |
 | grant | authenticated | delete | `pdi_mentors` |
-| grant | authenticated | execute | `get_executive_metrics`, `get_monthly_trends`, `get_department_metrics`, `generate_engagement_snapshot`, `get_department_metrics`, `get_executive_metrics`, `get_monthly_trends`, `get_nine_box_distribution`, `get_security_stats`, `generate_engagement_snapshot`, `get_quiz_category_stats`, `get_webhook_delivery_hourly_24h`, `get_alert_mttr_by_type_7d`, `get_alert_heatmap_30d`, `get_security_digest_history` … +104 |
+| grant | authenticated | execute | `get_executive_metrics`, `get_monthly_trends`, `get_department_metrics`, `generate_engagement_snapshot`, `get_department_metrics`, `get_executive_metrics`, `get_monthly_trends`, `get_nine_box_distribution`, `get_security_stats`, `generate_engagement_snapshot`, `get_quiz_category_stats`, `get_webhook_delivery_hourly_24h`, `get_alert_mttr_by_type_7d`, `get_alert_heatmap_30d`, `get_security_digest_history` … +103 |
 | grant | authenticated | insert | `user_challenges` |
 | grant | authenticated | insert, update, delete | `boss_battles`, `boss_win_rate_goals`, `memory_decks`, `memory_pairs` |
 | grant | authenticated | select | `push_notification_logs`, `engagement_action_playbooks`, `nr1_risk_categories`, `nr1_factor_mappings`, `purchase_approvals`, `campaign_team_split_batches`, `campaign_team_split_entries`, `lucky_wheel_prize_audit`, `lucky_wheel_payout_snapshots`, `lucky_wheel_settings_audit`, `scratch_card_prizes`, `scratch_cards`, `lightning_quiz_sessions`, `lightning_quiz_answers`, `lightning_quiz_sessions` … +39 |
