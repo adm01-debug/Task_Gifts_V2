@@ -111,7 +111,7 @@ Método: leitura integral de todos os `index.ts` e de `_shared/*`; `grep` de cad
 16. `survey-reminders`
 17. `verify-geo`
 18. `weekly-league-processing`
-Casos limítrofes na auditoria (chamador **declarado** em migration, mas job **ausente** na lista de pg_cron medida então): `security-weekly-digest`, `push-outbox-dispatcher`, `webhook-health-monitor` — **os três viraram jobs ativos hoje** (#30, #33, #34; ver §3). `dispatch-critical-alert` continua sem chamador **declarado em migration**: o único caminho declarado é o trigger DB, e `security_alerts`=0 mostra que ele nunca disparou. Isso **não** prova que o dispatcher nunca foi chamado — `burn-rate-monitor` (`:79`) e `error-budget-monitor` (`:61`) o invocam direto, sem passar por `security_alerts`.
+Casos limítrofes na auditoria (chamador **declarado** em migration, mas job **ausente** na lista de pg_cron medida então): `security-weekly-digest`, `push-outbox-dispatcher`, `webhook-health-monitor` — **os três viraram jobs ativos hoje** (#30, #33, #34; ver §3). `dispatch-critical-alert` continua sem chamador **declarado em migration**: o único caminho declarado é o trigger DB, que observa `security_alerts`. Os três caminhos existentes gravam em `security_alerts` **antes** de dispatchar — o trigger pela própria tabela, `burn-rate-monitor` insere (`:62-73`) e só então invoca (`:79`), e `error-budget-monitor` insere com dedupe diário (`:80-110`) — e a tabela está vazia hoje. Isso é indício de que nenhum alerta foi criado na amostra atual, **não** prova do histórico: linhas podem ter sido removidas ou resolvidas.
 
 ---
 
@@ -202,7 +202,7 @@ As quatro migrations originais declaram a invocação de edge function via `net.
 | 33 | `security-weekly-digest` | `0 13 * * 1` | sim, mas com a autenticação antiga |
 | 34 | `webhook-health-monitor-every-15min` | `*/15 * * * *` | sim, mas com a autenticação antiga |
 
-O trigger `trigger_dispatch_critical_alert` também está corrigido (`x-internal-secret` de `_internal.dispatch_config`, migration `20261220000000_...`, aplicada; ledger 277/277).
+O trigger `trigger_dispatch_critical_alert` também está corrigido: a função reescrita por `20261220000000_...` (aplicada; ledger 277/277) lê o segredo de `_internal.dispatch_config` (`:230`) com fallback para `vault.decrypted_secrets` (`:240`) e envia `x-internal-secret` (`:257`). **Ela não provisiona o segredo**: num ambiente recriado, sem nenhuma das duas fontes ela emite `RAISE WARNING 'dispatch-critical-alert skipped: segredo ausente...'` (`:249`) e **não** envia o alerta.
 
 **Resposta HTTP: o que foi verificado, em que janela e de quem.** `net._http_response` tem **457 respostas, todas `status_code=200`**, entre `2026-11-24T08:16Z` e `2026-11-24T14:15Z` (≈6 h). O fuso do banco é `UTC` (`current_setting('TimeZone')`), então o horário do `cron.schedule` é UTC. A distribuição horária identifica os chamadores: **76 respostas/hora** = 60 do `push-outbox-dispatcher` (`* * * * *`) + 12 do `burn-rate-monitor-5min` (`*/5 * * * *`) + 4 do `webhook-health-monitor-every-15min` (`*/15 * * * *`); a hora **12:00 tem 77** — a resposta extra é o `error-budget-monitor-daily` (`0 12 * * *`), logo **#32 está dentro da amostra**. **Não** coberto: `security-weekly-digest` (#33, `0 13 * * 1`), semanal, que não caiu na janela.
 
