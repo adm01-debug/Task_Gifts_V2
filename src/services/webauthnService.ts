@@ -90,10 +90,17 @@ export function passkeyFailureMessage(
   code: string,
   error: EdgeErrorInfo | null | undefined,
   fallback: string,
+  options: { emailInformed?: boolean } = {},
 ): string {
   if (error?.kind === "rate_limited") {
     const seconds = error.retryAfterSeconds ?? 60;
     return `Muitas tentativas. Aguarde ${seconds} segundos e tente novamente.`;
+  }
+  // O contrato de `options` aceita o campo vazio, então 422 ali só pode ser o
+  // formato do e-mail. Sem dizer o que corrigir, o usuário repete a tentativa
+  // igual e o erro parece ser da biometria.
+  if (error?.status === 422 && options.emailInformed) {
+    return "E-mail inválido para login por passkey. Corrija o endereço ou limpe o campo para escolher a conta no dispositivo.";
   }
   return PASSKEY_ERROR_MESSAGES[code] ?? fallback;
 }
@@ -309,7 +316,8 @@ export const webauthnService = {
           error: passkeyFailureMessage(
             optionsResult.error?.payloadCode ?? optionsResult.error?.message ?? "",
             optionsResult.error,
-            "Não foi possível iniciar o login por passkey"
+            "Não foi possível iniciar o login por passkey",
+            { emailInformed: Boolean(email?.trim()) }
           )
         };
       }

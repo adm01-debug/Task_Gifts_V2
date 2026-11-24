@@ -187,6 +187,14 @@ describe("código do corpo preservado (401/429 trocam a mensagem)", () => {
       fakeInvokeError(409, { ok: false, error: "conta_diferente" }),
     );
     expect(conflict.payloadCode).toBe("conta_diferente");
+
+    // 422 do contrato: o corpo traz prosa em `error` (não um código), mas o
+    // status precisa sobreviver para a tela dizer o que corrigir.
+    const invalidEmail = await describeEdgeError(
+      fakeInvokeError(422, { error: "A validação dos dados falhou", code: "VALIDATION_ERROR" }),
+    );
+    expect(invalidEmail.status).toBe(422);
+    expect(invalidEmail.payloadCode).toBeNull();
   });
 
   it("ignora prosa, código gigante e código ausente", () => {

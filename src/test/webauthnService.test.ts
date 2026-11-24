@@ -341,4 +341,47 @@ describe("webauthnService.authenticate — login por passkey verificado no servi
     expect(result.success).toBe(false);
     expect(result.error).toBe("Tempo de autenticação expirado. Tente novamente.");
   });
+
+  it("explica que o e-mail informado está inválido quando o contrato responde 422", async () => {
+    invokeEdgeSafeMock.mockResolvedValueOnce({
+      data: null,
+      error: {
+        kind: "invalid",
+        status: 422,
+        retryable: false,
+        retryAfterSeconds: null,
+        message: "A validação dos dados falhou: 1 campo(s) inválido(s)",
+        payloadCode: null,
+      },
+      requestId: "req-1",
+      attempts: 1,
+    });
+
+    const result = await webauthnService.authenticate("email-invalido");
+
+    expect(result.success).toBe(false);
+    expect(result.error).toContain("E-mail inválido");
+    expect(result.error).toContain("limpe o campo");
+  });
+
+  it("mantém a mensagem genérica no 422 quando nenhum e-mail foi informado", async () => {
+    invokeEdgeSafeMock.mockResolvedValueOnce({
+      data: null,
+      error: {
+        kind: "invalid",
+        status: 422,
+        retryable: false,
+        retryAfterSeconds: null,
+        message: "A validação dos dados falhou: 1 campo(s) inválido(s)",
+        payloadCode: null,
+      },
+      requestId: "req-1",
+      attempts: 1,
+    });
+
+    const result = await webauthnService.authenticate();
+
+    expect(result.success).toBe(false);
+    expect(result.error).toBe("Não foi possível iniciar o login por passkey");
+  });
 });
