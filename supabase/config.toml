@@ -1,4 +1,4 @@
-﻿project_id = "eidsaqymojyuhprobfpn"
+project_id = "eidsaqymojyuhprobfpn"
 
 [functions.passkey-auth]
 verify_jwt = false
