@@ -14,7 +14,10 @@ export async function checkRateLimit(identifier: string, limit: number = 10, win
 
   try {
     const key = `rate_limit:${identifier}`;
-    const response = await fetch(`${url}/incr/${key}`, {
+    // `encodeURIComponent`: a chave vem de dados do chamador (id de credencial,
+    // e-mail, IP) e sem codificação um `/` ou `?` mudaria a rota chamada no
+    // Upstash usando o token do projeto.
+    const response = await fetch(`${url}/incr/${encodeURIComponent(key)}`, {
       headers: { Authorization: `Bearer ${token}` },
     });
 
@@ -23,7 +26,7 @@ export async function checkRateLimit(identifier: string, limit: number = 10, win
 
     if (count === 1) {
       // Set expiration for new key
-      await fetch(`${url}/expire/${key}/${windowSeconds}`, {
+      await fetch(`${url}/expire/${encodeURIComponent(key)}/${windowSeconds}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
     }

@@ -2,6 +2,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { logger } from "@/services/loggingService";
 import { invokeEdgeSafe } from "@/lib/requestId";
 import { isFunctionDeployed } from "@/lib/edgeAvailability";
+import type { EdgeErrorInfo } from "@/lib/edgeErrors";
 
 // Tipos
 export interface WebAuthnCredential {
@@ -67,7 +68,7 @@ const PASSKEY_ERROR_MESSAGES: Record<string, string> = {
   rate_limited: "Muitas tentativas. Aguarde um minuto e tente novamente.",
   challenge_invalido: "Tempo de autenticação expirado. Tente novamente.",
   credencial_nao_encontrada: "Nenhuma passkey ativa para este dispositivo.",
-  credencial_invalida: "Esta passkey está corrompida. Cadastre novamente em Segurança → Passkeys.",
+  credencial_invalida: "Esta passkey está corrompida. Cadastre novamente em Perfil → Passkeys.",
   conta_diferente: "Essa passkey pertence a outra conta. Use a passkey do e-mail informado.",
   mfa_obrigatorio:
     "Sua conta usa verificação em duas etapas. Entre com e-mail e senha e confirme o código.",
@@ -80,6 +81,22 @@ const PASSKEY_ERROR_MESSAGES: Record<string, string> = {
   usuario_nao_presente: "Presença do usuário não confirmada.",
   verificacao_do_usuario_ausente: "Confirme a biometria ou o PIN do dispositivo.",
 };
+
+/**
+ * Mensagem de usuário para o motivo da recusa. O 429 tem prioridade porque a
+ * espera exata (`retryAfterSeconds`) importa mais que o rótulo do motivo.
+ */
+export function passkeyFailureMessage(
+  code: string,
+  error: EdgeErrorInfo | null | undefined,
+  fallback: string,
+): string {
+  if (error?.kind === "rate_limited") {
+    const seconds = error.retryAfterSeconds ?? 60;
+    return `Muitas tentativas. Aguarde ${seconds} segundos e tente novamente.`;
+  }
+  return PASSKEY_ERROR_MESSAGES[code] ?? fallback;
+}
 
 // Utilitários
 function base64URLEncode(buffer: ArrayBuffer): string {
@@ -289,9 +306,11 @@ export const webauthnService = {
         logger.apiError("WebAuthn options", optionsResult.error ?? new Error("resposta inválida"), "webauthnService");
         return {
           success: false,
-          error:
-            PASSKEY_ERROR_MESSAGES[optionsResult.error?.message ?? ""] ??
+          error: passkeyFailureMessage(
+            optionsResult.error?.payloadCode ?? optionsResult.error?.message ?? "",
+            optionsResult.error,
             "Não foi possível iniciar o login por passkey"
+          )
         };
       }
 
@@ -333,13 +352,19 @@ export const webauthnService = {
 
       const verified = verifyResult.data;
       // Em resposta 4xx o corpo do erro carrega o código (`mfa_obrigatorio`,
-      // `conta_diferente`, ...) e `invokeEdgeSafe` devolve `data: null`, então o
-      // código vem de `error.message` (preenchido pelo body da função).
-      const failureCode = verified?.error ?? verifyResult.error?.message ?? "";
+      // `conta_diferente`, ...) e `invokeEdgeSafe` devolve `data: null`. Em
+      // 401/429 o classificador troca a mensagem por uma fixa, então o código
+      // vem de `payloadCode`; `error.message` fica como reserva.
+      const failureCode =
+        verified?.error ?? verifyResult.error?.payloadCode ?? verifyResult.error?.message ?? "";
       if (verifyResult.error || !verified?.ok || !verified.tokenHash || !verified.email) {
         return {
           success: false,
-          error: PASSKEY_ERROR_MESSAGES[failureCode] ?? "Não foi possível validar a passkey"
+          error: passkeyFailureMessage(
+            failureCode,
+            verifyResult.error,
+            "Não foi possível validar a passkey"
+          )
         };
       }
 

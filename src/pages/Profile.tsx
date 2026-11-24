@@ -24,6 +24,7 @@ import { GameNotificationPreferences } from "@/components/GameNotificationPrefer
 import { ExecutiveReportPreferenceToggle } from "@/components/ExecutiveReportPreferenceToggle";
 import { SectionErrorBoundary } from "@/components/SectionErrorBoundary";
 import { TwoFactorSetup } from "@/components/auth/TwoFactorSetup";
+import { PasskeysPanel } from "@/components/security/PasskeysPanel";
 import { MyNineBoxWidget } from "@/components/MyNineBoxWidget";
 import { MyDevelopmentPlanWidget } from "@/components/MyDevelopmentPlanWidget";
 import { ProfileActivityTimeline } from "@/components/profile/ProfileActivityTimeline";
@@ -226,6 +227,7 @@ const Profile = () => {
         <SectionErrorBoundary sectionName="PDI"><MyDevelopmentPlanWidget /></SectionErrorBoundary>
         <ProfileActivityTimeline userId={user?.id as string} />
         <SectionErrorBoundary sectionName="Segurança"><TwoFactorSetup /></SectionErrorBoundary>
+        <SectionErrorBoundary sectionName="Passkeys"><PasskeysPanel /></SectionErrorBoundary>
         <SoundSettingsCard />
         <PushNotificationToggle />
         <SectionErrorBoundary sectionName="Dispositivos"><PushDeviceList /></SectionErrorBoundary>

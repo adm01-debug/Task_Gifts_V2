@@ -39,6 +39,12 @@ export interface EdgeErrorInfo {
   status: number | null;
   /** Segundos sugeridos de espera (apenas em `rate_limited`). */
   retryAfterSeconds: number | null;
+  /**
+   * Código curto devolvido pela edge em `payload.error` (`rate_limited`,
+   * `credencial_nao_encontrada`, ...). Status com mensagem fixa (401/429)
+   * descartariam o código, e a tela não teria como diferenciar os motivos.
+   */
+  payloadCode?: string | null;
   /** Mensagem amigável em PT-BR, segura para exibir ao usuário. */
   message: string;
   /** Indica se faz sentido oferecer "Tentar novamente" imediatamente. */
@@ -75,6 +81,19 @@ function pickPayloadMessage(payload: EdgeErrorPayload | null): string | null {
     return candidate;
   }
   return null;
+}
+
+/**
+ * Códigos das edges são identificadores (`snake_case`). A mensagem humana
+ * também chega em `error` (ver `_shared/contracts/README.md`), então só
+ * aceitamos o que parece código — assim nada de prosa interna vaza para a UI.
+ */
+const PAYLOAD_CODE_PATTERN = /^[a-z][a-z0-9_]{0,39}$/;
+
+/** Código curto de `payload.error`, quando ele é um identificador. */
+export function pickPayloadCode(payload: EdgeErrorPayload | null): string | null {
+  const candidate = payload?.error;
+  return typeof candidate === "string" && PAYLOAD_CODE_PATTERN.test(candidate) ? candidate : null;
 }
 
 /**
@@ -226,7 +245,7 @@ export async function describeEdgeError(err: unknown): Promise<EdgeErrorInfo> {
         : undefined;
 
   const { status, payload } = await readContext(err);
-  return classifyEdgeError(status, payload, fallback);
+  return { ...classifyEdgeError(status, payload, fallback), payloadCode: pickPayloadCode(payload) };
 }
 
 /** Açúcar sintático quando só a mensagem importa. */

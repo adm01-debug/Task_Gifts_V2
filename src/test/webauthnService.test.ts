@@ -285,4 +285,60 @@ describe("webauthnService.authenticate — login por passkey verificado no servi
     expect(result.error).toContain("não é suportado");
     expect(invokeEdgeSafeMock).not.toHaveBeenCalled();
   });
+
+  it("informa o tempo de espera quando o limite de tentativas é atingido", async () => {
+    invokeEdgeSafeMock
+      .mockResolvedValueOnce({
+        data: { ok: true, challenge: CHALLENGE, rpId: "app.exemplo.com" },
+        error: null,
+        requestId: "req-1",
+        attempts: 1,
+      })
+      .mockResolvedValueOnce({
+        data: null,
+        error: {
+          kind: "rate_limited",
+          status: 429,
+          retryable: false,
+          retryAfterSeconds: 45,
+          message: "Muitas solicitações seguidas. Tente novamente em 45 segundos.",
+          payloadCode: "rate_limited",
+        },
+        requestId: "req-2",
+        attempts: 1,
+      });
+
+    const result = await webauthnService.authenticate();
+
+    expect(result.success).toBe(false);
+    expect(result.error).toBe("Muitas tentativas. Aguarde 45 segundos e tente novamente.");
+  });
+
+  it("usa o código do corpo quando o status 401 troca a mensagem por uma fixa", async () => {
+    invokeEdgeSafeMock
+      .mockResolvedValueOnce({
+        data: { ok: true, challenge: CHALLENGE, rpId: "app.exemplo.com" },
+        error: null,
+        requestId: "req-1",
+        attempts: 1,
+      })
+      .mockResolvedValueOnce({
+        data: null,
+        error: {
+          kind: "unauthorized",
+          status: 401,
+          retryable: false,
+          retryAfterSeconds: null,
+          message: "Sessão expirada. Entre novamente para continuar.",
+          payloadCode: "challenge_invalido",
+        },
+        requestId: "req-2",
+        attempts: 1,
+      });
+
+    const result = await webauthnService.authenticate();
+
+    expect(result.success).toBe(false);
+    expect(result.error).toBe("Tempo de autenticação expirado. Tente novamente.");
+  });
 });

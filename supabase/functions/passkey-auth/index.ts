@@ -189,7 +189,7 @@ Deno.serve(async (req) => {
     const limit = action === "options" ? { max: 20, window: 60 } : { max: 10, window: 60 };
     const rate = await checkRateLimit(`passkey-auth:${action}:${ipKey}`, limit.max, limit.window);
     if (!rate.success) {
-      return jsonResponse({ ok: false, error: "rate_limited" }, 429, req);
+      return jsonResponse({ ok: false, error: "rate_limited", retryAfter: rate.reset ?? 60 }, 429, req);
     }
 
     const admin = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!, {
@@ -264,15 +264,21 @@ Deno.serve(async (req) => {
     const authenticatorData = requiredString(body.authenticatorData, "authenticatorData");
     const signature = requiredString(body.signature, "signature");
 
-    // Limite por credencial além do limite por IP: o IP vem de header e é
-    // forjável, a credencial que o atacante quer quebrar não é.
+    // Limite por (credencial + cliente) além do limite por IP: o balde global
+    // por credencial deixava qualquer um esgotar a cota de outra pessoa só
+    // sabendo o id da passkey (que a etapa `options` publica), então o balde é
+    // por par — quem abusa consome a própria cota, não a da vítima.
     const credentialRate = await checkRateLimit(
-      `passkey-auth:verify:cred:${credentialId}`,
+      `passkey-auth:verify:cred:${credentialId}:${ipKey}`,
       VERIFY_LIMIT_PER_CREDENTIAL,
       60,
     );
     if (!credentialRate.success) {
-      return jsonResponse({ ok: false, error: "rate_limited" }, 429, req);
+      return jsonResponse(
+        { ok: false, error: "rate_limited", retryAfter: credentialRate.reset ?? 60 },
+        429,
+        req,
+      );
     }
 
     let clientDataBytes: Uint8Array;
@@ -328,13 +334,6 @@ Deno.serve(async (req) => {
       console.warn("[passkey-auth] credencial sem chave pública", credential.id);
       return jsonResponse({ ok: false, error: "credencial_invalida" }, 409, req);
     }
-    // `challengeRow.user_id` só é preenchido quando o `options` identificou a
-    // conta dona do e-mail; nesse caso a passkey apresentada tem que ser dela.
-    if (challengeRow.user_id && String(challengeRow.user_id) !== String(credential.user_id)) {
-      console.warn("[passkey-auth] passkey de outra conta apresentada", credential.id);
-      return jsonResponse({ ok: false, error: "conta_diferente" }, 409, req);
-    }
-
     let verification: Awaited<ReturnType<typeof verifyAssertion>>;
     try {
       verification = await verifyAssertion({
@@ -353,6 +352,16 @@ Deno.serve(async (req) => {
     if (!verification.ok) {
       console.warn("[passkey-auth] asserção rejeitada", verification.reason);
       return jsonResponse({ ok: false, error: verification.reason }, 401, req);
+    }
+
+    // `challengeRow.user_id` só é preenchido quando o `options` identificou a
+    // conta dona do e-mail; nesse caso a passkey apresentada tem que ser dela.
+    // A checagem vem DEPOIS da assinatura validada: antes dela, um chamador
+    // anônimo distinguia "e-mail cadastrado" de "inexistente" apresentando a
+    // própria passkey — a resposta é a mesma para quem não tem a chave.
+    if (challengeRow.user_id && String(challengeRow.user_id) !== String(credential.user_id)) {
+      console.warn("[passkey-auth] passkey de outra conta apresentada", credential.id);
+      return jsonResponse({ ok: false, error: "conta_diferente" }, 409, req);
     }
 
     // Passkey não substitui o segundo fator. A sessão só é criada ao final
