@@ -87,10 +87,16 @@ permanente por configuração.
 
 > **ERRATA (2026-11-24).** A CSP acima **não é a efetiva**. `index.html` não contém nenhum `meta` de
 > Content-Security-Policy; a CSP que vale em produção é a de `vercel.json:18`, e ela declara
-> `frame-src https://www.youtube.com` e `connect-src … https://api.pwnedpasswords.com`. Ou seja: os três
-> bloqueios desta seção **não acontecem em produção**, e a métrica de "falha permanente por configuração"
-> não se aplica. O fail-open do HIBP continua sendo uma decisão declarada do código
-> (`authValidations.ts:95-116`, timeout de 4s), não um efeito de CSP.
+> `frame-src https://www.youtube.com` e `connect-src … https://api.pwnedpasswords.com`. Portanto:
+> **os dois primeiros bloqueios desta seção não acontecem em produção** (HIBP e o embed do YouTube), e a
+> métrica de "falha permanente por configuração" não se aplica a eles. O fail-open do HIBP continua sendo
+> uma decisão declarada do código (`authValidations.ts:95-116`, timeout de 4s), não um efeito de CSP.
+>
+> **O terceiro item continua valendo, com outro alcance.** A CSP de produção restringe `media-src` a
+> `'self' blob: https://*.supabase.co`, e o editor de trilhas aceita URL HTTP(S) de qualquer domínio
+> (`src/lib/trailAuthoring.ts:68-82`), que o player usa direto (`src/components/lms/ModuleViewer.tsx:128-133`).
+> Vídeo hospedado fora de `*.supabase.co` é bloqueado de fato — não por "faltar `media-src`" (a diretiva
+> existe), mas porque a allowlist não cobre o domínio escolhido.
 
 ### 3.2 Três lockfiles versionados, sem `packageManager`
 
