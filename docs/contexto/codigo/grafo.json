@@ -1,8 +1,8 @@
 {
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
- "nos": 1008,
- "arestas": 4363,
+ "nos": 1006,
+ "arestas": 4354,
  "hubs": [
   {
    "arquivo": "src/components/ui/card.tsx",
@@ -10,11 +10,11 @@
   },
   {
    "arquivo": "src/components/ui/button.tsx",
-   "importado_por": 287
+   "importado_por": 286
   },
   {
    "arquivo": "src/components/ui/badge.tsx",
-   "importado_por": 244
+   "importado_por": 243
   },
   {
    "arquivo": "src/lib/utils.ts",
@@ -38,7 +38,7 @@
   },
   {
    "arquivo": "src/components/ui/input.tsx",
-   "importado_por": 92
+   "importado_por": 91
   },
   {
    "arquivo": "src/components/ui/select.tsx",
@@ -50,11 +50,11 @@
   },
   {
    "arquivo": "src/components/ui/label.tsx",
-   "importado_por": 80
+   "importado_por": 79
   },
   {
    "arquivo": "src/components/ui/dialog.tsx",
-   "importado_por": 77
+   "importado_por": 76
   },
   {
    "arquivo": "src/components/navigation/index.ts",
@@ -66,7 +66,7 @@
   },
   {
    "arquivo": "src/components/ui/avatar.tsx",
-   "importado_por": 45
+   "importado_por": 44
   },
   {
    "arquivo": "src/components/SEOHead.tsx",
@@ -145,10 +145,6 @@
    "importado_por": 18
   },
   {
-   "arquivo": "src/services/profilesService.ts",
-   "importado_por": 18
-  },
-  {
    "arquivo": "src/components/ui/alert.tsx",
    "importado_por": 17
   },
@@ -158,6 +154,10 @@
   },
   {
    "arquivo": "src/lib/requestId.ts",
+   "importado_por": 17
+  },
+  {
+   "arquivo": "src/services/profilesService.ts",
    "importado_por": 17
   },
   {
@@ -196,7 +196,6 @@
   "src/components/admin/telemetry/TelemetryTable.tsx",
   "src/components/analytics/AnalyticsBottomSection.tsx",
   "src/components/auth/PasskeyLogin.tsx",
-  "src/components/checkins/CheckinDetailDialog.tsx",
   "src/components/copilot/CopilotAlertCard.tsx",
   "src/components/dashboard/DashboardTabs.tsx",
   "src/components/security/index.ts",
@@ -219,7 +218,6 @@
   "src/components/weekly/WeeklyMetricCards.tsx",
   "src/constants/texts.ts",
   "src/hooks/useClimateSurveys.ts",
-  "src/hooks/useLeaderboard.ts",
   "src/hooks/usePDI.ts",
   "src/hooks/useUnsavedChanges.ts",
   "src/lib/auctionEngine.ts",

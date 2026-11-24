@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "24cdeddbd9faf0995fe9706db70ad2127f503ae4",
+  "sha": "a18b67fa0fe80ee4d0abbfdcd2b70e3fbf22b44c",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
-  "generated_at": "2026-11-23 22:24 UTC",
-  "files_total": 1556,
-  "code_files": 1452,
-  "code_lines": 262090
+  "generated_at": "2026-11-24 01:43 UTC",
+  "files_total": 1554,
+  "code_files": 1450,
+  "code_lines": 261931
  },
  "version": "1.3.2",
- "facts_hash": "0c36a1fcbf2c412b",
+ "facts_hash": "dde8643cb41b141b",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -194,8 +194,8 @@
   ],
   "package_manager": "bun",
   "languages": {
-   ".ts": 579,
-   ".tsx": 566,
+   ".ts": 578,
+   ".tsx": 565,
    ".sql": 275,
    ".mjs": 21,
    ".js": 5,
@@ -45603,7 +45603,7 @@
     "file": ".github/workflows/contexto.yml"
    }
   ],
-  "components_count": 466,
+  "components_count": 465,
   "hooks": [
    {
     "name": "useContacts",
@@ -46576,22 +46576,6 @@
    {
     "name": "useDeleteKudos",
     "file": "src/hooks/useKudos.ts"
-   },
-   {
-    "name": "useWeeklyLeaderboard",
-    "file": "src/hooks/useLeaderboard.ts"
-   },
-   {
-    "name": "useMonthlyLeaderboard",
-    "file": "src/hooks/useLeaderboard.ts"
-   },
-   {
-    "name": "useAllTimeLeaderboard",
-    "file": "src/hooks/useLeaderboard.ts"
-   },
-   {
-    "name": "useLeaderboard",
-    "file": "src/hooks/useLeaderboard.ts"
    },
    {
     "name": "useLeagues",
@@ -48266,8 +48250,8 @@
   },
   {
    "module": "src/components",
-   "files": 461,
-   "lines": 78041,
+   "files": 460,
+   "lines": 77945,
    "tables": [
     "attendance_records",
     "audit_logs",
@@ -48498,8 +48482,8 @@
   },
   {
    "module": "src/hooks",
-   "files": 130,
-   "lines": 14787,
+   "files": 129,
+   "lines": 14724,
    "tables": [
     "certifications",
     "development_plan_actions",
@@ -48640,7 +48624,6 @@
     "src/hooks/useIpWhitelist.ts",
     "src/hooks/useKeyboardShortcuts.ts",
     "src/hooks/useKudos.ts",
-    "src/hooks/useLeaderboard.ts",
     "src/hooks/useLeagues.ts",
     "src/hooks/useLightningQuiz.ts",
     "src/hooks/useListenToRankChanges.ts",
@@ -48659,7 +48642,8 @@
     "src/hooks/useOneOnOnePreparation.ts",
     "src/hooks/useOnlineStatus.ts",
     "src/hooks/useOpinions.ts",
-    "src/hooks/useOrganization.ts"
+    "src/hooks/useOrganization.ts",
+    "src/hooks/usePDI.ts"
    ]
   },
   {
@@ -72486,12 +72470,6 @@
     "file": "src/components/checkins/CheckinCard.tsx",
     "field": "status",
     "value": "cancelled",
-    "kind": "compara"
-   },
-   {
-    "file": "src/components/checkins/CheckinDetailDialog.tsx",
-    "field": "status",
-    "value": "completed",
     "kind": "compara"
    },
    {
@@ -102058,7 +102036,6 @@
       "compara:src/components/admin/pdi/PlanDetailView.tsx",
       "compara:src/components/campaigns/CampaignTeamSplitTrail.tsx",
       "compara:src/components/checkins/CheckinCard.tsx",
-      "compara:src/components/checkins/CheckinDetailDialog.tsx",
       "compara:src/components/duels/DuelCard.tsx",
       "compara:src/components/engagement/plans/ActionPlanItemList.tsx",
       "compara:src/components/goals/GoalCard.tsx",
@@ -122055,20 +122032,6 @@
     }
    ]
   },
-  "src/components/checkins/CheckinDetailDialog.tsx": {
-   "path": "src/components/checkins/CheckinDetailDialog.tsx",
-   "lines": 96,
-   "exports": [
-    "function CheckinDetailDialog"
-   ],
-   "status_values": [
-    {
-     "field": "status",
-     "value": "completed",
-     "kind": "compara"
-    }
-   ]
-  },
   "src/components/checkins/OneOnOnePreparationPanel.tsx": {
    "path": "src/components/checkins/OneOnOnePreparationPanel.tsx",
    "lines": 294,
@@ -127653,24 +127616,6 @@
     "useKudosCount",
     "useGiveKudos",
     "useDeleteKudos"
-   ]
-  },
-  "src/hooks/useLeaderboard.ts": {
-   "path": "src/hooks/useLeaderboard.ts",
-   "lines": 63,
-   "exports": [
-    "interface LeaderboardEntry",
-    "const leaderboardKeys",
-    "function useWeeklyLeaderboard",
-    "function useMonthlyLeaderboard",
-    "function useAllTimeLeaderboard",
-    "function useLeaderboard"
-   ],
-   "hooks": [
-    "useWeeklyLeaderboard",
-    "useMonthlyLeaderboard",
-    "useAllTimeLeaderboard",
-    "useLeaderboard"
    ]
   },
   "src/hooks/useLeagues.ts": {
@@ -152825,10 +152770,23 @@
   }
  },
  "git": {
-  "sha": "24cdeddbd9faf0995fe9706db70ad2127f503ae4",
+  "sha": "a18b67fa0fe80ee4d0abbfdcd2b70e3fbf22b44c",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "commits": [
+   {
+    "sha": "a18b67f",
+    "date": "2026-11-23",
+    "author": "adm01-debug",
+    "subject": "chore: remove duplicatas comprovadas (leaderboard e dialogo de check-in) (#127)",
+    "files": [
+     "INVENTARIO_FUNCIONALIDADES.md",
+     "docs/estado/02-componentes.md",
+     "docs/estado/03-hooks-services-lib.md",
+     "src/components/checkins/CheckinDetailDialog.tsx",
+     "src/hooks/useLeaderboard.ts"
+    ]
+   },
    {
     "sha": "24cdedd",
     "date": "2026-11-23",
@@ -153207,15 +153165,6 @@
      "bun.lock",
      "package.json"
     ]
-   },
-   {
-    "sha": "6fd6436",
-    "date": "2026-11-22",
-    "author": "adm01-debug",
-    "subject": "docs(edge-functions): encerra pendencia 03 com validacao em producao (#96)",
-    "files": [
-     "docs/estado/05-edge-functions.md"
-    ]
    }
   ],
   "hot_files": [
@@ -153248,15 +153197,15 @@
     3
    ],
    [
-    "docs/estado/05-edge-functions.md",
-    3
-   ],
-   [
     "supabase/functions/webhook-dispatcher/index.ts",
     3
    ],
    [
     "src/pages/ManagerDashboard.tsx",
+    2
+   ],
+   [
+    "docs/estado/05-edge-functions.md",
     2
    ],
    [

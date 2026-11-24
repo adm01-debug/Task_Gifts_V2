@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "24cdeddbd9faf0995fe9706db70ad2127f503ae4",
+  "commit": "a18b67fa0fe80ee4d0abbfdcd2b70e3fbf22b44c",
   "branch": "main",
-  "data_commit": "2026-11-23T19:23:56-03:00",
+  "data_commit": "2026-11-23T22:41:25-03:00",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "ultimos_commits": [
+   {
+    "sha": "a18b67f",
+    "data": "2026-11-23",
+    "assunto": "chore: remove duplicatas comprovadas (leaderboard e dialogo de check-in) (#127)"
+   },
    {
     "sha": "24cdedd",
     "data": "2026-11-23",
@@ -126,14 +131,9 @@
     "sha": "2d24251",
     "data": "2026-11-22",
     "assunto": "feat(edge): ponte admin para webhook-dispatcher (webhook-ping) (#102)"
-   },
-   {
-    "sha": "e5fb530",
-    "data": "2026-11-22",
-    "assunto": "fix(edge): aceita url de app no push e ajusta contrato de versao do webhook (#101)"
    }
   ],
-  "arquivos_mudados_7d": 144,
+  "arquivos_mudados_7d": 148,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "supabase/functions/_shared",
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 93
+    "commits": 94
    },
    {
     "autor": "dependabot[bot]",
@@ -310,16 +310,16 @@
   ]
  },
  "contagens": {
-  "arquivos_total": 1546,
-  "arquivos_codigo": 1171,
-  "linhas_codigo": 230511,
+  "arquivos_total": 1544,
+  "arquivos_codigo": 1169,
+  "linhas_codigo": 230352,
   "rotas": 84,
   "rotas_http_backend": 0,
   "vistas_por_id": 0,
   "itens_menu": 64,
   "modulos": 71,
-  "componentes": 522,
-  "hooks": 156,
+  "componentes": 521,
+  "hooks": 155,
   "edge_functions": 22,
   "tabelas": 237,
   "migrations": 275,
@@ -399,8 +399,8 @@
    "linhas": 336
   },
   "src/components": {
-   "arquivos": 461,
-   "linhas": 78041
+   "arquivos": 460,
+   "linhas": 77945
   },
   "src/constants": {
    "arquivos": 1,
@@ -411,8 +411,8 @@
    "linhas": 520
   },
   "src/hooks": {
-   "arquivos": 130,
-   "linhas": 14787
+   "arquivos": 129,
+   "linhas": 14724
   },
   "src/i18n": {
    "arquivos": 1,
@@ -651,7 +651,6 @@
    "src/components/admin/telemetry/TelemetryTable.tsx",
    "src/components/analytics/AnalyticsBottomSection.tsx",
    "src/components/auth/PasskeyLogin.tsx",
-   "src/components/checkins/CheckinDetailDialog.tsx",
    "src/components/copilot/CopilotAlertCard.tsx",
    "src/components/dashboard/DashboardTabs.tsx",
    "src/components/MobilePullToRefresh.tsx",

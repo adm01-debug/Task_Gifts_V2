@@ -1903,7 +1903,6 @@
    "src/hooks/useIpWhitelist.ts",
    "src/hooks/useKeyboardShortcuts.ts",
    "src/hooks/useKudos.ts",
-   "src/hooks/useLeaderboard.ts",
    "src/hooks/useLeagues.ts",
    "src/hooks/useLightningQuiz.ts",
    "src/hooks/useListenToRankChanges.ts",

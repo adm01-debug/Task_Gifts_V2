@@ -1633,13 +1633,13 @@
   },
   {
    "modulo": "components/checkins",
-   "arquivos": 3,
+   "arquivos": 2,
    "testes": 0,
-   "linhas": 489,
+   "linhas": 393,
    "itens_menu": [],
    "telas": [],
    "rotas_http": [],
-   "componentes": 3,
+   "componentes": 2,
    "hooks_locais": [
     "useAccessibility",
     "useSoundFeedback"
@@ -4902,9 +4902,9 @@
   },
   {
    "modulo": "hooks",
-   "arquivos": 130,
+   "arquivos": 129,
    "testes": 0,
-   "linhas": 14787,
+   "linhas": 14724,
    "itens_menu": [],
    "telas": [],
    "rotas_http": [],
@@ -4947,7 +4947,6 @@
     "useAllMissions",
     "useAllRankings",
     "useAllTeamMembers",
-    "useAllTimeLeaderboard",
     "useAllUserRoles",
     "useAnalyzePurchaseRisk",
     "useAnnouncements",
@@ -5170,7 +5169,6 @@
     "useMentorshipCandidates",
     "useMentorshipMissions",
     "useModuleProgress",
-    "useMonthlyLeaderboard",
     "useMonthlyTrends",
     "useMoodTracker",
     "useMyAssignments",
@@ -5399,8 +5397,7 @@
     "useWarLeadershipWatch",
     "useWebAuthn",
     "useWeeklyChallenge",
-    "useWeeklyEngagement",
-    "useWeeklyLeaderboard"
+    "useWeeklyEngagement"
    ],
    "hooks_definidos": [
     "useIsMobile",
@@ -5626,10 +5623,6 @@
     "useKudosGiven",
     "useKudosReceived",
     "useRecentKudos",
-    "useAllTimeLeaderboard",
-    "useLeaderboard",
-    "useMonthlyLeaderboard",
-    "useWeeklyLeaderboard",
     "useLeagues",
     "useAnswerLightningQuestion",
     "useFinishLightningRound",

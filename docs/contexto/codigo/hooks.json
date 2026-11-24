@@ -1,7 +1,7 @@
 {
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
- "total": 156,
+ "total": 155,
  "hooks": [
   {
    "arquivo": "src/components/accessibility/AccessibilityProvider.tsx",
@@ -2333,27 +2333,6 @@
     "src/components/ProfileKudosSection.tsx",
     "src/pages/ManagerDashboard.tsx"
    ],
-   "coberto_por_testes": 0
-  },
-  {
-   "arquivo": "src/hooks/useLeaderboard.ts",
-   "hooks_exportados": [
-    "useAllTimeLeaderboard",
-    "useLeaderboard",
-    "useMonthlyLeaderboard",
-    "useWeeklyLeaderboard"
-   ],
-   "linhas": 63,
-   "dominio": "hooks",
-   "tabelas": [],
-   "rpcs": [],
-   "edges": [],
-   "hooks_internos": [
-    "useQuery"
-   ],
-   "canais_realtime": [],
-   "usado_por": 0,
-   "usado_por_arquivos": [],
    "coberto_por_testes": 0
   },
   {

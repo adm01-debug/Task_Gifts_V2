@@ -1,6 +1,6 @@
 # 07 · REGRAS DE NEGÓCIO
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `24cdeddbd9` · branch `main` · 2026-11-23 22:24 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `a18b67fa0f` · branch `main` · 2026-11-24 01:43 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## A. Regras escritas por humanos (`manual/` — prioridade máxima, nunca sobrescrito)
@@ -1189,7 +1189,7 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `status` | `bye` | compara | `src/components/tournament/TournamentBracketView.tsx`<br>`src/pages/TournamentsPage.tsx` |
 | `status` | `cancelled` | compara, escreve | `src/components/checkins/CheckinCard.tsx`<br>`src/components/duels/DuelCard.tsx`<br>`src/components/shop-admin/PurchaseGovernanceDialog.tsx`<br>`src/lib/auctionAdmin.ts`<br>`src/services/duelsService.ts`<br>… +1 |
 | `status` | `closed` | compara, escreve | `src/components/admin/SurveyCreator.tsx`<br>`src/components/auction/AuctionCard.tsx`<br>`src/lib/auctionAdmin.ts`<br>`src/services/pulseSurveysService.ts` |
-| `status` | `completed` | compara, escreve, filtra | `src/components/GoalsWidget.tsx`<br>`src/components/MyDevelopmentPlanWidget.tsx`<br>`src/components/admin/DevelopmentPlanManager.tsx`<br>`src/components/admin/pdi/PlanDetailView.tsx`<br>`src/components/campaigns/CampaignTeamSplitTrail.tsx`<br>… +22 |
+| `status` | `completed` | compara, escreve, filtra | `src/components/GoalsWidget.tsx`<br>`src/components/MyDevelopmentPlanWidget.tsx`<br>`src/components/admin/DevelopmentPlanManager.tsx`<br>`src/components/admin/pdi/PlanDetailView.tsx`<br>`src/components/campaigns/CampaignTeamSplitTrail.tsx`<br>… +21 |
 | `status` | `critical` | compara | `src/lib/luckyWheelPayoutHistory.ts`<br>`src/pages/ErrorBudget.tsx` |
 | `status` | `decided` | compara | `src/components/tournament/TournamentBracketView.tsx`<br>`src/pages/TournamentsPage.tsx` |
 | `status` | `declined` | compara, escreve | `src/components/duels/DuelCard.tsx`<br>`src/services/duelsService.ts` |

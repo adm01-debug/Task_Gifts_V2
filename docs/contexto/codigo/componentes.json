@@ -1,8 +1,8 @@
 {
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
- "total": 522,
- "orfaos": 24,
+ "total": 521,
+ "orfaos": 23,
  "nomes_duplicados": {
   "CopilotAlert": [
    "src/components/copilot/CopilotAlertCard.tsx",
@@ -2142,20 +2142,6 @@
    "edges": [],
    "usado_por": 1,
    "orfao": false
-  },
-  {
-   "arquivo": "src/components/checkins/CheckinDetailDialog.tsx",
-   "exports": [
-    "CheckinDetailDialog"
-   ],
-   "export_default": null,
-   "linhas": 96,
-   "dominio": "components/checkins",
-   "hooks_locais": [],
-   "tabelas": [],
-   "edges": [],
-   "usado_por": 0,
-   "orfao": true
   },
   {
    "arquivo": "src/components/checkins/OneOnOnePreparationPanel.tsx",
@@ -5936,7 +5922,7 @@
    "hooks_locais": [],
    "tabelas": [],
    "edges": [],
-   "usado_por": 45,
+   "usado_por": 44,
    "orfao": false
   },
   {
@@ -5951,7 +5937,7 @@
    "hooks_locais": [],
    "tabelas": [],
    "edges": [],
-   "usado_por": 244,
+   "usado_por": 243,
    "orfao": false
   },
   {
@@ -5988,7 +5974,7 @@
    ],
    "tabelas": [],
    "edges": [],
-   "usado_por": 287,
+   "usado_por": 286,
    "orfao": false
   },
   {
@@ -6075,7 +6061,7 @@
    "hooks_locais": [],
    "tabelas": [],
    "edges": [],
-   "usado_por": 11,
+   "usado_por": 10,
    "orfao": false
   },
   {
@@ -6193,7 +6179,7 @@
    "hooks_locais": [],
    "tabelas": [],
    "edges": [],
-   "usado_por": 77,
+   "usado_por": 76,
    "orfao": false
   },
   {
@@ -6328,7 +6314,7 @@
    "hooks_locais": [],
    "tabelas": [],
    "edges": [],
-   "usado_por": 92,
+   "usado_por": 91,
    "orfao": false
   },
   {
@@ -6342,7 +6328,7 @@
    "hooks_locais": [],
    "tabelas": [],
    "edges": [],
-   "usado_por": 80,
+   "usado_por": 79,
    "orfao": false
   },
   {

@@ -7,12 +7,12 @@
    "src/components (1)"
   ],
   "componentes": [
-   "src/components (432)",
+   "src/components (431)",
    "src/pages (83)",
    "src/contexts (4)"
   ],
   "hooks": [
-   "src/hooks (130)",
+   "src/hooks (129)",
    "src/components (22)",
    "src/contexts (4)"
   ],
@@ -48,7 +48,7 @@
  },
  "barrels_index": 16,
  "extensao_componentes": [
-  ".tsx (522)"
+  ".tsx (521)"
  ],
  "alias_imports": {
   "(raiz)": {
@@ -59,11 +59,11 @@
  "commits": {
   "convencao": "conventional commits (observado)",
   "exemplos": [
+   "chore: remove duplicatas comprovadas (leaderboard e dialogo de check-in) (#127)",
    "feat: liga biblioteca de relatórios (CSV/Excel/PDF) nos dashboards (#124)",
    "fix: liga telas orfas na navegacao e remove links sem destino (#123)",
    "feat: cria fluxo completo de mentoria (pagina, servico, hooks e missoes) (#122)",
-   "chore(docs): registra estado verificado das pendencias em producao (#121)",
-   "fix: liga acoes Editar/Excluir sem handler no painel admin (#120)"
+   "chore(docs): registra estado verificado das pendencias em producao (#121)"
   ]
  },
  "pr_template": ".github/PULL_REQUEST_TEMPLATE.md",
