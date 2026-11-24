@@ -1,9 +1,9 @@
 {
  "meta": {
-  "sha": "d727dcc7d56906c2d0d1596132845389ffa5f7b8",
+  "sha": "943fe9e5223da43642826b6de26a6935539d9246",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
-  "generated_at": "2026-11-24 10:18 UTC",
+  "generated_at": "2026-11-24 12:20 UTC",
   "files_total": 1581,
   "code_files": 1474,
   "code_lines": 268410
@@ -154883,10 +154883,21 @@
   }
  },
  "git": {
-  "sha": "d727dcc7d56906c2d0d1596132845389ffa5f7b8",
+  "sha": "943fe9e5223da43642826b6de26a6935539d9246",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "commits": [
+   {
+    "sha": "943fe9e",
+    "date": "2026-11-24",
+    "author": "adm01-debug",
+    "subject": "chore(docs): corrige estado do ledger de migrations e documenta divergencia do dispatch trigger (#133)",
+    "files": [
+     "AGENTS.md",
+     "docs/agentes/banco.md",
+     "docs/agentes/mapa-repo.md"
+    ]
+   },
    {
     "sha": "d727dcc",
     "date": "2026-11-24",
@@ -155252,27 +155263,6 @@
     "files": [
      "supabase/migrations/20261122140000_acknowledge_security_digest.sql"
     ]
-   },
-   {
-    "sha": "11d2c1e",
-    "date": "2026-11-22",
-    "author": "adm01-debug",
-    "subject": "fix(sre): reconstroi os 3 monitores + dispatch-critical-alert e destrava auth dos crons (#105)",
-    "files": [
-     "supabase/config.toml",
-     "supabase/functions/_shared/contracts/_fixtures/index.ts",
-     "supabase/functions/_shared/contracts/_fixtures/responses.ts",
-     "supabase/functions/_shared/contracts/burn-rate-monitor.ts",
-     "supabase/functions/_shared/contracts/dispatch-critical-alert.ts",
-     "supabase/functions/_shared/contracts/error-budget-monitor.ts",
-     "supabase/functions/_shared/contracts/index.ts",
-     "supabase/functions/_shared/contracts/webhook-health-monitor.ts",
-     "supabase/functions/_shared/security.ts",
-     "supabase/functions/burn-rate-monitor/index.ts",
-     "supabase/functions/dispatch-critical-alert/index.ts",
-     "supabase/functions/error-budget-monitor/index.ts",
-     "supabase/functions/webhook-health-monitor/index.ts"
-    ]
    }
   ],
   "hot_files": [
@@ -155298,22 +155288,6 @@
    ],
    [
     "src/components/CommandPalette.tsx",
-    2
-   ],
-   [
-    "supabase/config.toml",
-    2
-   ],
-   [
-    "supabase/functions/_shared/contracts/_fixtures/index.ts",
-    2
-   ],
-   [
-    "supabase/functions/_shared/contracts/_fixtures/responses.ts",
-    2
-   ],
-   [
-    "supabase/functions/_shared/contracts/index.ts",
     2
    ],
    [
@@ -155349,11 +155323,27 @@
     2
    ],
    [
+    "AGENTS.md",
+    1
+   ],
+   [
+    "docs/agentes/banco.md",
+    1
+   ],
+   [
+    "docs/agentes/mapa-repo.md",
+    1
+   ],
+   [
     "src/components/MyDevelopmentPlanWidget.tsx",
     1
    ],
    [
     "src/components/navigation/GlobalBreadcrumbs.tsx",
+    1
+   ],
+   [
+    "src/hooks/usePDI.ts",
     1
    ]
   ]

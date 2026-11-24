@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "d727dcc7d56906c2d0d1596132845389ffa5f7b8",
+  "commit": "943fe9e5223da43642826b6de26a6935539d9246",
   "branch": "main",
-  "data_commit": "2026-11-24T07:18:17-03:00",
+  "data_commit": "2026-11-24T08:19:36-03:00",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "ultimos_commits": [
+   {
+    "sha": "943fe9e",
+    "data": "2026-11-24",
+    "assunto": "chore(docs): corrige estado do ledger de migrations e documenta divergencia do dispatch trigger (#133)"
+   },
    {
     "sha": "d727dcc",
     "data": "2026-11-24",
@@ -126,14 +131,9 @@
     "sha": "e2dff92",
     "data": "2026-11-23",
     "assunto": "fix(shop/rbac): desconto flash sale cobrado + toast false success em permissões (#109)"
-   },
-   {
-    "sha": "87508de",
-    "data": "2026-11-23",
-    "assunto": "build(deps-dev): bump @testing-library/jest-dom from 7.0.1 to 8.0.0 (#108)"
    }
   ],
-  "arquivos_mudados_7d": 195,
+  "arquivos_mudados_7d": 198,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "supabase/functions/_shared",
@@ -173,6 +173,10 @@
    },
    {
     "pasta": "AGENTS.md",
+    "mudancas": 6
+   },
+   {
+    "pasta": "docs/agentes/mapa-repo.md",
     "mudancas": 5
    },
    {
@@ -189,10 +193,6 @@
    },
    {
     "pasta": ".env.example",
-    "mudancas": 4
-   },
-   {
-    "pasta": ".github/workflows/contexto.yml",
     "mudancas": 4
    }
   ],
@@ -222,6 +222,10 @@
     "mudancas": 7
    },
    {
+    "arquivo": "AGENTS.md",
+    "mudancas": 6
+   },
+   {
     "arquivo": "supabase/config.toml",
     "mudancas": 6
    },
@@ -230,7 +234,7 @@
     "mudancas": 6
    },
    {
-    "arquivo": "AGENTS.md",
+    "arquivo": "docs/agentes/mapa-repo.md",
     "mudancas": 5
    },
    {
@@ -262,11 +266,11 @@
     "mudancas": 4
    },
    {
-    "arquivo": "docs/agentes/github-ci.md",
+    "arquivo": "docs/agentes/banco.md",
     "mudancas": 4
    },
    {
-    "arquivo": "docs/agentes/mapa-repo.md",
+    "arquivo": "docs/agentes/github-ci.md",
     "mudancas": 4
    },
    {
@@ -292,16 +296,12 @@
    {
     "arquivo": "INVENTARIO_FUNCIONALIDADES.md",
     "mudancas": 3
-   },
-   {
-    "arquivo": "PENDENCIAS.md",
-    "mudancas": 3
    }
   ],
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 101
+    "commits": 102
    },
    {
     "autor": "dependabot[bot]",

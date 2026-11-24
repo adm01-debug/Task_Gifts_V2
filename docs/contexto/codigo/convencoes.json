@@ -59,11 +59,11 @@
  "commits": {
   "convencao": "conventional commits (observado)",
   "exemplos": [
+   "chore(docs): corrige estado do ledger de migrations e documenta divergencia do dispatch trigger (#133)",
    "feat(pdi): tela de PDI com templates, mentores e check-ins (#128)",
    "feat: liga login por passkey/biometria com verificação real de assinatura (#126)",
    "feat: tela de Pesquisa de Clima (criar, responder, eNPS e score por pilar) (#125)",
-   "feat(feedback): tela para pedir feedback 360 e ver o resumo do avaliado (#132)",
-   "chore: remove feedback360Service, duplicata morta do 360 que ja roda em /feedback (#131)"
+   "feat(feedback): tela para pedir feedback 360 e ver o resumo do avaliado (#132)"
   ]
  },
  "pr_template": ".github/PULL_REQUEST_TEMPLATE.md",
