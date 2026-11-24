@@ -1,6 +1,6 @@
 # 07 · REGRAS DE NEGÓCIO
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `f5f05bc103` · branch `main` · 2026-11-24 12:45 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `d344ae90d6` · branch `main` · 2026-11-24 13:13 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## A. Regras escritas por humanos (`manual/` — prioridade máxima, nunca sobrescrito)
@@ -3575,7 +3575,7 @@ _nenhum item encontrado_
 | Nenhum dado disponível para exportar. | `src/pages/EngagementReports.tsx` |
 |  aria-live= | `src/pages/ExecutiveMonthlyReport.tsx` |
 | Nada para investigar neste período. | `src/pages/ExecutiveMonthlyReport.tsx` |
-| … +188 linhas — lista completa em `context.json` | |
+| … +187 linhas — lista completa em `context.json` | |
 
 ## J. Controle de acesso no código (checagens de perfil/permissão)
 

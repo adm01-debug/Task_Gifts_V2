@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "f5f05bc10394f29367bd6dfcd4a46ac369e49a45",
+  "sha": "d344ae90d68da384ce32dad00ee581473e1e8868",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
-  "generated_at": "2026-11-24 12:45 UTC",
+  "generated_at": "2026-11-24 13:13 UTC",
   "files_total": 1581,
   "code_files": 1474,
-  "code_lines": 268424
+  "code_lines": 268406
  },
  "version": "1.3.2",
- "facts_hash": "81350cbd0e1858eb",
+ "facts_hash": "b79d6effee33065a",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -41161,14 +41161,6 @@
    },
    {
     "kind": "revoke",
-    "privs": "execute",
-    "object": "trigger_dispatch_critical_alert",
-    "objkind": "function",
-    "roles": "PUBLIC",
-    "src": "supabase/migrations/20261109120000_fix_cron_wrong_project.sql"
-   },
-   {
-    "kind": "revoke",
     "privs": "all",
     "object": "close_expired_sales_campaigns",
     "objkind": "function",
@@ -50295,7 +50287,7 @@
   {
    "module": "supabase/migrations",
    "files": 278,
-   "lines": 30467,
+   "lines": 30449,
    "tables": [],
    "exports": [],
    "docs": [],
@@ -58749,10 +58741,6 @@
    {
     "file": "supabase/migrations/20260728180730_1d09218b-0f91-4b02-9127-2009c4de7589.sql",
     "msg": ",\n    "
-   },
-   {
-    "file": "supabase/migrations/20261109120000_fix_cron_wrong_project.sql",
-    "msg": ",\n    headers := jsonb_build_object(\n      "
    },
    {
     "file": "supabase/migrations/20261220000000_fix_sre_rpcs_and_dispatch_trigger.sql",
@@ -114965,14 +114953,6 @@
    },
    {
     "kind": "revoke",
-    "privs": "execute",
-    "object": "trigger_dispatch_critical_alert",
-    "objkind": "function",
-    "roles": "PUBLIC",
-    "src": "supabase/migrations/20261109120000_fix_cron_wrong_project.sql"
-   },
-   {
-    "kind": "revoke",
     "privs": "all",
     "object": "close_expired_sales_campaigns",
     "objkind": "function",
@@ -154716,10 +154696,7 @@
   },
   "supabase/migrations/20261109120000_fix_cron_wrong_project.sql": {
    "path": "supabase/migrations/20261109120000_fix_cron_wrong_project.sql",
-   "lines": 51,
-   "errors": [
-    ",\n    headers := jsonb_build_object(\n      "
-   ]
+   "lines": 33
   },
   "supabase/migrations/20261114095829_revoke_vistas_diagnostico.sql": {
    "path": "supabase/migrations/20261114095829_revoke_vistas_diagnostico.sql",
@@ -154885,10 +154862,29 @@
   }
  },
  "git": {
-  "sha": "f5f05bc10394f29367bd6dfcd4a46ac369e49a45",
+  "sha": "d344ae90d68da384ce32dad00ee581473e1e8868",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "commits": [
+   {
+    "sha": "d344ae9",
+    "date": "2026-11-24",
+    "author": "adm01-debug",
+    "subject": "fix: guarda UPDATE cron.job por privilegio (Supabase Preview 42501) (#137)",
+    "files": [
+     "docs/agentes/banco.md",
+     "supabase/migrations/20261109120000_fix_cron_wrong_project.sql"
+    ]
+   },
+   {
+    "sha": "c5d1ae0",
+    "date": "2026-11-24",
+    "author": "adm01-debug",
+    "subject": "fix: normaliza versao do ledger que reprovava o Supabase Preview (#136)",
+    "files": [
+     "docs/agentes/banco.md"
+    ]
+   },
    {
     "sha": "f5f05bc",
     "date": "2026-11-24",
@@ -155247,25 +155243,6 @@
      "bun.lock",
      "package.json"
     ]
-   },
-   {
-    "sha": "095c05b",
-    "date": "2026-11-23",
-    "author": "dependabot[bot]",
-    "subject": "build(deps): bump the dependencies group with 13 updates (#107)",
-    "files": [
-     "bun.lock",
-     "package.json"
-    ]
-   },
-   {
-    "sha": "fe0784d",
-    "date": "2026-11-23",
-    "author": "adm01-debug",
-    "subject": "docs: atualiza 05-edge-functions com fixes SRE (PR #106) e VAPID keys",
-    "files": [
-     "docs/estado/05-edge-functions.md"
-    ]
    }
   ],
   "hot_files": [
@@ -155278,6 +155255,10 @@
     5
    ],
    [
+    "docs/agentes/banco.md",
+    4
+   ],
+   [
     "docs/estado/02-componentes.md",
     4
    ],
@@ -155288,10 +155269,6 @@
    [
     "src/pages/EngagementReports.tsx",
     3
-   ],
-   [
-    "docs/agentes/banco.md",
-    2
    ],
    [
     "supabase/config.toml",
@@ -155318,20 +155295,12 @@
     2
    ],
    [
-    "docs/estado/05-edge-functions.md",
-    2
-   ],
-   [
     "src/pages/ManagerDashboard.tsx",
     2
    ],
    [
-    "bun.lock",
-    2
-   ],
-   [
-    "package.json",
-    2
+    "supabase/migrations/20261109120000_fix_cron_wrong_project.sql",
+    1
    ],
    [
     "supabase/migrations/20261220000000_fix_sre_rpcs_and_dispatch_trigger.sql",
@@ -155347,6 +155316,14 @@
    ],
    [
     "src/components/MyDevelopmentPlanWidget.tsx",
+    1
+   ],
+   [
+    "src/components/navigation/GlobalBreadcrumbs.tsx",
+    1
+   ],
+   [
+    "src/hooks/usePDI.ts",
     1
    ]
   ]

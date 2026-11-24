@@ -2,11 +2,21 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "f5f05bc10394f29367bd6dfcd4a46ac369e49a45",
+  "commit": "d344ae90d68da384ce32dad00ee581473e1e8868",
   "branch": "main",
-  "data_commit": "2026-11-24T09:45:04-03:00",
+  "data_commit": "2026-11-24T10:12:34-03:00",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "ultimos_commits": [
+   {
+    "sha": "d344ae9",
+    "data": "2026-11-24",
+    "assunto": "fix: guarda UPDATE cron.job por privilegio (Supabase Preview 42501) (#137)"
+   },
+   {
+    "sha": "c5d1ae0",
+    "data": "2026-11-24",
+    "assunto": "fix: normaliza versao do ledger que reprovava o Supabase Preview (#136)"
+   },
    {
     "sha": "f5f05bc",
     "data": "2026-11-24",
@@ -121,19 +131,9 @@
     "sha": "ba994f9",
     "data": "2026-11-23",
     "assunto": "fix(quiz): persiste 'Concluido hoje' em quiz_scores (resiste ao reload) (#114)"
-   },
-   {
-    "sha": "3d91e00",
-    "data": "2026-11-23",
-    "assunto": "fix(succession): calcula successorCount/readyNowCount com dados reais de highPotential (#113)"
-   },
-   {
-    "sha": "9616112",
-    "data": "2026-11-23",
-    "assunto": "fix(dashboard/audit): heatmap dados reais de audit_logs + auditService dev logs"
    }
   ],
-  "arquivos_mudados_7d": 198,
+  "arquivos_mudados_7d": 199,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "supabase/functions/_shared",
@@ -154,6 +154,10 @@
    {
     "pasta": "src/components/admin",
     "mudancas": 10
+   },
+   {
+    "pasta": "docs/agentes/banco.md",
+    "mudancas": 7
    },
    {
     "pasta": "docs/estado/03-hooks-services-lib.md",
@@ -178,10 +182,6 @@
    {
     "pasta": "supabase/config.toml",
     "mudancas": 6
-   },
-   {
-    "pasta": "docs/agentes/banco.md",
-    "mudancas": 5
    },
    {
     "pasta": "docs/agentes/mapa-repo.md",
@@ -210,6 +210,10 @@
     "mudancas": 12
    },
    {
+    "arquivo": "docs/agentes/banco.md",
+    "mudancas": 7
+   },
+   {
     "arquivo": "docs/estado/03-hooks-services-lib.md",
     "mudancas": 7
    },
@@ -232,10 +236,6 @@
    {
     "arquivo": "supabase/functions/_shared/contracts/_fixtures/index.ts",
     "mudancas": 6
-   },
-   {
-    "arquivo": "docs/agentes/banco.md",
-    "mudancas": 5
    },
    {
     "arquivo": "docs/agentes/mapa-repo.md",
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 104
+    "commits": 106
    },
    {
     "autor": "dependabot[bot]",
