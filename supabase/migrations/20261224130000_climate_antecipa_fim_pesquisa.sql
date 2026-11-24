@@ -15,6 +15,14 @@
 -- Idempotente e guardada:
 --   * so move pesquisas `active` cujo `ends_at` esta DEPOIS do alvo: nunca
 --     estende pesquisa que termina antes e nunca toca em `completed`/`cancelled`;
+--   * so move pesquisa que ja ABRIU (`starts_at < alvo`): antecipar o fim de uma
+--     pesquisa publicada com inicio em dezembro inverteria o periodo
+--     (`starts_at > ends_at`) e ninguem conseguiria responder, porque a area do
+--     colaborador e a validacao de envio exigem `now()` dentro de
+--     `[starts_at, ends_at]` - essa pesquisa fica intocada de proposito;
+--   * grava os `ends_at` originais no log (`RAISE NOTICE`) antes do UPDATE:
+--     reverter a migration nao restaura os prazos, esse registro e' o que
+--     permite uma correcao direcionada por id;
 --   * se aplicada depois de 2026-11-30 23:59:59-03, vira no-op com WARNING - sem
 --     essa guarda o proximo `expire_climate_surveys()` encerraria a pesquisa no
 --     mesmo minuto e a coleta nao aconteceria;
@@ -28,6 +36,7 @@
 DO $antecipa$
 DECLARE
   v_alvo     timestamptz := timestamptz '2026-11-30 23:59:59-03';
+  v_originais jsonb;
   v_afetadas integer;
 BEGIN
   IF now() >= v_alvo THEN
@@ -35,11 +44,26 @@ BEGIN
     RETURN;
   END IF;
 
+  -- Snapshot dos prazos que serao sobrescritos. Sem isso uma reversao nao tem
+  -- como saber o `ends_at` anterior de cada pesquisa.
+  SELECT coalesce(
+           jsonb_agg(jsonb_build_object('id', id, 'starts_at', starts_at, 'ends_at', ends_at) ORDER BY id),
+           '[]'::jsonb
+         )
+    INTO v_originais
+    FROM public.climate_surveys
+   WHERE status = 'active'
+     AND ends_at > v_alvo
+     AND starts_at < v_alvo;
+
+  RAISE NOTICE 'climate: prazos originais antes da antecipacao: %', v_originais;
+
   UPDATE public.climate_surveys
      SET ends_at = v_alvo,
          updated_at = now()
    WHERE status = 'active'
-     AND ends_at > v_alvo;
+     AND ends_at > v_alvo
+     AND starts_at < v_alvo;
 
   GET DIAGNOSTICS v_afetadas = ROW_COUNT;
   RAISE NOTICE 'climate: fim da pesquisa ativa antecipado para % (% linha(s) alterada(s))', v_alvo, v_afetadas;
