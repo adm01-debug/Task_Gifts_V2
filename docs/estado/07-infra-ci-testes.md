@@ -4,6 +4,16 @@
 > Evidência em `arquivo:linha`. Correções da Fase D estão em `ESTADO_ATUAL.md` e em `04-dados-e-runtime.md`.
 > Runtime de build/teste = `NAO_VERIFICADO` (node_modules ausente no ambiente da auditoria).
 
+> ## STATUS ATUAL (2026-11-24) — leia antes da tabela e dos "Achados graves" abaixo
+>
+> Retrato da **auditoria original**; onde divergir do código, vale o código.
+>
+> | Afirmação no documento | Estado real hoje |
+> |---|---|
+> | "O CI nunca executou um único comando" / "YAML inválido, 0 de 10 steps" (tabela e **Achado grave 1**) | **Corrigido.** O `ci.yml` atual é válido e os jobs rodam de fato: `quality`, `Contratos da automação local`, `Tipos e testes das Edge Functions`, `Dependency Review`. Evidência: `quality` verde nas PRs #125, #126, #127 e na `main`. O histórico de 372 runs com 100% de falha é anterior à correção. |
+> | "`typecheck` é no-op" (**Achado grave 2**) | **Corrigido.** `package.json:16` = `tsc --noEmit -p tsconfig.app.json && tsc --noEmit -p tsconfig.node.json`; compila os dois projetos e falha em erro de tipo. É esse comando que o job `quality` executa. |
+> | "Só existe `ci.yml`" | **Desatualizado.** `.github/workflows/` tem 6 arquivos: `ci.yml`, `deno.yml`, `deploy-edge-functions.yml`, `dependency-review.yml`, `automation-local.yml`, `contexto.yml`. O deploy das **Edge Functions** roda no Actions (`deploy-edge-functions.yml`, `workflow_dispatch` + push na `main`); o **front** é deployado pelo Vercel (fora do Actions). |
+
 ---
 
 # Auditoria — Testes e Infra (task-gifts-v2)
@@ -215,10 +225,10 @@ Legenda: ✅ ok · 🟨 funciona com risco/inconsistência · 🟦 configurado m
 
 | Item | Arquivo:linha | Estado | Avaliação |
 |---|---|:--:|---|
-| **GitHub Actions CI** | `.github/workflows/ci.yml:25` | ⬛ | YAML inválido. 0 de 10 steps executam. 372 runs, 100% failure na amostra. Não há job de deploy — o CI é só quality gate, e o gate está desligado. |
-| **Único pipeline de CI** | `.github/workflows/` | ⬛ | Só existe `ci.yml`. Não há `deploy.yml`, `vercel.json`, `netlify.toml`, `Dockerfile`, `fly.toml`. |
+| **GitHub Actions CI** | `.github/workflows/ci.yml` | ✅ | **Corrigido.** O YAML é válido e os jobs executam de fato (`quality`, `Contratos da automação local`, `Tipos e testes das Edge Functions`, `Dependency Review`). Evidência: `quality` verde em PRs recentes (#125, #126, #127) e na `main`. Continua **só quality gate** para o front — o deploy do front é feito pelo Vercel fora do Actions; o das Edge Functions roda no Actions (`deploy-edge-functions.yml`). |
+| **Único pipeline de CI** | `.github/workflows/` | 🟨 | Existem 6 workflows: `ci.yml`, `deno.yml`, `deploy-edge-functions.yml`, `dependency-review.yml`, `automation-local.yml`, `contexto.yml`. Não há `Dockerfile`, `fly.toml` nem `netlify.toml`. O deploy do **front** fica fora do repo (Vercel). Efeito líquido: o portão de qualidade do front (`quality`) existe e roda, mas o Vercel publica sem depender dele. |
 | **Pipelines de deploy concorrentes** | `package.json:19,118`, `.lovable/plan.md`, `.mcp.json` | 🟨 | Não há dois pipelines de deploy no repo. Há **um deploy fora do repo**: a plataforma Lovable (deps `@lovable.dev/cloud-auth-js`, `lovable-tagger`, diretório `.lovable/`). Concorrência real = **Lovable publica sem passar pelo CI do GitHub**, e o CI do GitHub (que seria o gate) está morto. Efeito líquido: **deploy sem nenhum portão de qualidade**. |
-| **`typecheck` é no-op** | `tsconfig.json:16-24` + `package.json:11` | ⬛ | `"files": []` + `"references"` faz de `tsconfig.json` um *solution file*. `tsc --noEmit` (sem `--build`) **não resolve as references** → compila **zero arquivos** e sai com código 0. O script `typecheck` passa vacuamente. Correção seria `tsc -b --noEmit` ou apontar para `tsconfig.app.json`. `NAO_VERIFICADO` em runtime (sem `node_modules`), mas é comportamento documentado do TypeScript. |
+| **`typecheck` é no-op** | `tsconfig.json:16-24` + `package.json:16` | ✅ | **Corrigido.** O script é `tsc --noEmit -p tsconfig.app.json && tsc --noEmit -p tsconfig.node.json` — compila os dois projetos de verdade e falha se houver erro de tipo. É esse comando que o job `quality` executa em `.github/workflows/ci.yml`. O `tsconfig.json` raiz continua sendo um *solution file* (`"files": []` + `references`), mas nada depende de rodá-lo sozinho. |
 | **`strict` divergente entre tsconfigs** | `tsconfig.json:6-7` vs `tsconfig.app.json:20-21` | 🟨 | Raiz: `noUnusedLocals: true`, `noUnusedParameters: true`. App: ambos `false`. Como o raiz não compila nada, os valores permissivos do app são os únicos que valeriam — as flags estritas da raiz são decorativas. |
 | **ESLint** | `eslint.config.js:23` | 🟨 | `"@typescript-eslint/no-unused-vars": "off"` desliga a regra que mais pega código morto — justamente o tipo de resíduo encontrado nos testes. Sem `eslint-plugin-storybook`, sem `eslint-plugin-playwright`, sem `plugin:vitest`. `ignores: ["dist"]` apenas. |
 | **husky pre-commit** | `.husky/pre-commit:1` | 🟨 | Conteúdo: `npx lint-staged`. Instalado via `"prepare": "husky"` (`package.json:14`). Modo do arquivo é **644 (não executável)** e `.git/hooks/` contém **apenas os `.sample`** — ou seja, no clone atual **o hook não está instalado**; só passa a existir após um `npm/bun install` que dispare `prepare`. |
@@ -229,7 +239,7 @@ Legenda: ✅ ok · 🟨 funciona com risco/inconsistência · 🟦 configurado m
 | **PWA — inerte em dev/teste** | `vite.config.ts:14` (ausência de `devOptions`) | 🟦 | Sem `devOptions: { enabled: true }`, o SW e o manifest **não existem em `bun run dev`**. Como o Playwright sobe justamente o dev server (`playwright.config.ts:21`), o único teste de PWA (`tests/e2e/smoke.spec.ts:64`) nunca encontra o manifest e passa vazio. **A PWA nunca foi validada por nenhum teste.** |
 | **PWA — nome do manifest** | `tests/e2e/smoke.spec.ts:66` vs vite-plugin-pwa | 🟨 | O teste pede `/manifest.json`; o plugin emite `manifest.webmanifest`. Mesmo em build o assert erraria o alvo. |
 | **PWA — ícones** | `vite.config.ts:33-44` | 🟨 | Referencia `/pwa-192x192.png` e `/pwa-512x512.png`. Não verifiquei presença em `public/` como bloqueante, mas o `includeAssets` (`:16`) lista só `favicon.ico`, `placeholder.svg`, `og-image.jpg` — os PNGs do PWA não estão no `includeAssets`. |
-| **CSP x PWA** | `index.html:6` | 🟨 | CSP inline declara `worker-src 'self' blob:` e `manifest-src 'self'` (ok para SW), mas `script-src` inclui `'unsafe-inline' 'unsafe-eval'` — o que anula boa parte do valor da CSP. Fora do meu escopo de segurança; registrado como fato. |
+| **CSP x PWA** | `vercel.json:18` | 🟨 | A CSP efetiva é a do deploy (`vercel.json`), não `index.html` — `index.html` não tem CSP. Ela declara `worker-src 'self' blob:` e `manifest-src 'self'` (ok para SW), mas `script-src` inclui `'unsafe-inline'` — o que reduz boa parte do valor da CSP. Fora do meu escopo de segurança; registrado como fato. |
 | **Storybook — config** | `.storybook/main.ts:4`, `preview.ts:1-48` | 🟦 | Config válida: stories em `../src/**/*.{mdx,stories.*}`, 3 addons, framework `react-vite`, alias `@`→`/src`, decorator de tema dark/light. Nada de errado no arquivo. |
 | **Storybook — sem script** | `package.json:6-16` | ⬛ | **Não existe `"storybook"` nem `"build-storybook"`.** Não há como iniciar nem buildar o Storybook por script. 30 arquivos / 7.195 linhas de stories inalcançáveis. Nenhum step de CI o builda (e o CI não roda de todo jeito). |
 | **Storybook — versões incompatíveis** | `package.json:51-56, 93` | ⬛ | `storybook@^10.1.11`, `@storybook/react@^10.1.11`, `@storybook/react-vite@^10.1.11`, `@storybook/addon-a11y@^10.1.11` **misturados com** `@storybook/addon-essentials@^8.6.14`, `@storybook/addon-interactions@^8.6.14`, `@storybook/blocks@^8.6.14`. `addon-essentials` e `addon-interactions` foram absorvidos pelo core a partir do SB 9 e não existem como addons no SB 10. O `.storybook/main.ts:5-9` os lista explicitamente → **o Storybook não subiria mesmo se houvesse script**. `NAO_VERIFICADO` (sem install), mas o desalinhamento major 8↔10 é inequívoco. |
@@ -245,7 +255,7 @@ Legenda: ✅ ok · 🟨 funciona com risco/inconsistência · 🟦 configurado m
 | **`.env` vs `.env.example` divergentes** | `.env` vs `.env.example` | ⬛ | `.env.example` documenta `VITE_SUPABASE_ANON_KEY`, `VITE_APP_ENV`, `VITE_APP_NAME`, `VITE_BITRIX_WEBHOOK_URL`, `VITE_ENABLE_ANALYTICS`, `VITE_ENABLE_DEBUG` — **nenhuma delas existe no `.env` real**. E `VITE_SUPABASE_PROJECT_ID`/`PUBLISHABLE_KEY`/`DEPLOYED_EDGE_FUNCTIONS` do `.env` real **não estão no example**. Interseção: só `VITE_SUPABASE_URL`. |
 | **CI: step "Generate Audit PDF"** | `ci.yml:34-43` | 🟨 | Gera PDF de `audit_report.md` (4.320 bytes, existe) usando `md-to-pdf` — que baixa **Chromium via Puppeteer** em todo run. Custo alto num pipeline de qualidade; deveria ser job separado/manual. Como nada roda, é hipotético. |
 | **`components.json` (shadcn)** | `components.json:1-20` | ✅ | Coerente com `tailwind.config.ts`, `src/index.css` e os aliases `@/components`, `@/lib/utils`, `@/hooks`. Sem divergências. |
-| **`index.html`** | `index.html:6` | ✅ (estrutura) | Presente, com CSP inline. Sem `<link rel="manifest">` explícito — correto, o vite-plugin-pwa injeta no build. |
+| **`index.html`** | `index.html:6` | ✅ (estrutura) | Presente e **sem CSP** (a CSP efetiva é `vercel.json:18`, no deploy). Sem `<link rel="manifest">` explícito — correto, o vite-plugin-pwa injeta no build. |
 | **`playwright.config.ts`** | `playwright.config.ts:6-8, 20-24` | ✅ | `forbidOnly` em CI, `retries: 2` em CI, `workers: 1` em CI, `reuseExistingServer` só fora de CI. Configuração sã. Único senão: um só projeto (`chromium`), sem cobertura cross-browser/mobile. |
 | **`vitest.config.ts`** | `vitest.config.ts:12-13` | 🟨 | `testTimeout: 60000` e `hookTimeout: 30000` — timeouts altíssimos para testes de lógica pura. Mascaram lentidão e loops. Sem `coverage` configurado → **não há métrica de cobertura em lugar nenhum**. Sem `pool`/`threads` tuning para 1.618 casos. |
 | **`src/test/setup.ts`** | `src/test/setup.ts:3-23` | ✅ | Polyfills mínimos e corretos: `matchMedia` e `ResizeObserver` (necessário para recharts). Sem `cleanup()` explícito, mas o Testing Library v16 faz auto-cleanup com `globals: true`. |
@@ -253,6 +263,8 @@ Legenda: ✅ ok · 🟨 funciona com risco/inconsistência · 🟦 configurado m
 ---
 
 ## Achados graves
+
+> **Achados 1 e 2 estão corrigidos no código atual** (ver bloco STATUS ATUAL no topo): o `ci.yml` é válido e roda, e o `typecheck` compila de verdade. Mantidos abaixo como registro do diagnóstico original.
 
 ### 1. ⬛ O CI nunca executou um único comando — 372 runs, 100% de falha no parse
 `.github/workflows/ci.yml:25` quebra o YAML (`- name: Unit Tests` em indent 8 contra indent 7 dos itens
