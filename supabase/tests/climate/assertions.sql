@@ -223,7 +223,7 @@ begin
       '[{"question_id":"6a000000-0000-0000-0000-000000000001","score":3}]'::jsonb);
   exception when others then v_msg := sqlerrm;
   end;
-  if v_msg <> 'survey period is over' then raise exception 'pesquisa encerrada deveria recusar envio, veio: %', coalesce(v_msg, 'sem erro'); end if;
+  if v_msg is distinct from 'survey period is over' then raise exception 'pesquisa encerrada deveria recusar envio, veio: %', coalesce(v_msg, 'sem erro'); end if;
 
   v_msg := null;
   begin
@@ -231,7 +231,7 @@ begin
       '[{"question_id":"7a000000-0000-0000-0000-000000000001","score":3}]'::jsonb);
   exception when others then v_msg := sqlerrm;
   end;
-  if v_msg <> 'survey is not open yet' then raise exception 'pesquisa futura deveria recusar envio, veio: %', coalesce(v_msg, 'sem erro'); end if;
+  if v_msg is distinct from 'survey is not open yet' then raise exception 'pesquisa futura deveria recusar envio, veio: %', coalesce(v_msg, 'sem erro'); end if;
 
   v_msg := null;
   begin
@@ -239,7 +239,7 @@ begin
       '[{"question_id":"9a000000-0000-0000-0000-000000000001","score":3}]'::jsonb);
   exception when others then v_msg := sqlerrm;
   end;
-  if v_msg <> 'survey is not active' then raise exception 'rascunho deveria recusar envio, veio: %', coalesce(v_msg, 'sem erro'); end if;
+  if v_msg is distinct from 'survey is not active' then raise exception 'rascunho deveria recusar envio, veio: %', coalesce(v_msg, 'sem erro'); end if;
 
   v_msg := null;
   begin
@@ -247,14 +247,14 @@ begin
       '[{"question_id":"6a000000-0000-0000-0000-000000000001","score":3}]'::jsonb);
   exception when others then v_msg := sqlerrm;
   end;
-  if v_msg <> 'survey not found' then raise exception 'pesquisa inexistente deveria falhar, veio: %', coalesce(v_msg, 'sem erro'); end if;
+  if v_msg is distinct from 'survey not found' then raise exception 'pesquisa inexistente deveria falhar, veio: %', coalesce(v_msg, 'sem erro'); end if;
 
   v_msg := null;
   begin
     perform public.climate_submit_response('80000000-0000-0000-0000-000000000001', '[]'::jsonb);
   exception when others then v_msg := sqlerrm;
   end;
-  if v_msg <> 'answers required' then raise exception 'payload vazio deveria falhar, veio: %', coalesce(v_msg, 'sem erro'); end if;
+  if v_msg is distinct from 'answers required' then raise exception 'payload vazio deveria falhar, veio: %', coalesce(v_msg, 'sem erro'); end if;
 
   v_msg := null;
   begin
@@ -262,7 +262,7 @@ begin
       '[{"question_id":"8a000000-0000-0000-0000-000000000001","score":99}]'::jsonb);
   exception when others then v_msg := sqlerrm;
   end;
-  if v_msg <> 'invalid answers' then raise exception 'nota fora da escala deveria falhar, veio: %', coalesce(v_msg, 'sem erro'); end if;
+  if v_msg is distinct from 'invalid answers' then raise exception 'nota fora da escala deveria falhar, veio: %', coalesce(v_msg, 'sem erro'); end if;
 
   v_msg := null;
   begin
@@ -270,7 +270,7 @@ begin
       '[{"question_id":"1a000000-0000-0000-0000-000000000002","score":5}]'::jsonb);
   exception when others then v_msg := sqlerrm;
   end;
-  if v_msg <> 'invalid answers' then raise exception 'pergunta de outra pesquisa deveria falhar, veio: %', coalesce(v_msg, 'sem erro'); end if;
+  if v_msg is distinct from 'invalid answers' then raise exception 'pergunta de outra pesquisa deveria falhar, veio: %', coalesce(v_msg, 'sem erro'); end if;
 
   v_id := public.climate_submit_response('80000000-0000-0000-0000-000000000001',
     '[{"question_id":"8a000000-0000-0000-0000-000000000001","score":4}]'::jsonb);
@@ -290,7 +290,7 @@ begin
       '[{"question_id":"8a000000-0000-0000-0000-000000000001","score":5}]'::jsonb);
   exception when unique_violation then v_msg := 'duplicado';
   end;
-  if v_msg <> 'duplicado' then raise exception 'envio duplicado deveria violar unicidade'; end if;
+  if v_msg is distinct from 'duplicado' then raise exception 'envio duplicado deveria violar unicidade'; end if;
 
   raise notice 'OK envio atomico (periodo, escala, pesquisa, duplicidade)';
 end $$;

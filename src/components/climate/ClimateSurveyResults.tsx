@@ -53,7 +53,20 @@ export function ClimateSurveyResults({ surveyId }: { surveyId: string }) {
       {isLoadingEnps ? (
         <Skeleton className="h-36 w-full" />
       ) : enps?.suppressed ? (
-        <AnonymityGuardNotice context={`${enps.response_count} resposta(s) registrada(s) até agora.`} />
+        enps.total < enps.min_responses && enps.response_count >= enps.min_responses ? (
+          <Card className="border-dashed">
+            <CardContent className="space-y-1 py-8 text-center">
+              <p className="text-sm font-medium">eNPS precisa de uma pergunta de 0 a 10</p>
+              <p className="mx-auto max-w-md text-xs text-muted-foreground">
+                {enps.response_count} resposta(s) registrada(s), mas nenhuma pergunta de eNPS
+                (escala 0 a 10) foi respondida. Inclua uma pergunta do tipo NPS — ou de escala
+                de 0 a 10 — para calcular o eNPS.
+              </p>
+            </CardContent>
+          </Card>
+        ) : (
+          <AnonymityGuardNotice context={`${enps.response_count} resposta(s) registrada(s) até agora.`} />
+        )
       ) : enps ? (
         <Card>
           <CardHeader className="pb-2">

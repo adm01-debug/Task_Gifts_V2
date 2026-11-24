@@ -4,6 +4,7 @@ import { ClimateSurveyAnswerForm } from "@/components/climate/ClimateSurveyAnswe
 import { ClimateSurveyForm } from "@/components/climate/ClimateSurveyForm";
 import { ClimateSurveyResults } from "@/components/climate/ClimateSurveyResults";
 import { ClimateSurveyQuestions } from "@/components/climate/ClimateSurveyQuestions";
+import { ClimateSurveyCard } from "@/pages/ClimateSurveys";
 import type { ClimateSurvey, ClimateSurveyQuestion } from "@/services/climateSurveyService";
 
 const h = vi.hoisted(() => ({
@@ -11,12 +12,21 @@ const h = vi.hoisted(() => ({
   pillars: { data: undefined as unknown, isLoading: false, isError: false },
   mutate: vi.fn(),
   recalcPending: false,
+  questionsFeed: {
+    data: undefined as unknown,
+    isLoading: false,
+    isError: false,
+    refetch: vi.fn(),
+  },
+  submit: { mutate: vi.fn(), isPending: false },
 }));
 
 vi.mock("@/hooks/useClimateSurveys", () => ({
   useENPS: () => h.enps,
   usePillarScores: () => h.pillars,
   useRecalculatePillarScores: () => ({ mutate: h.mutate, isPending: h.recalcPending }),
+  useSurveyQuestions: () => h.questionsFeed,
+  useSubmitSurveyResponse: () => h.submit,
 }));
 
 vi.mock("@/components/engagement/diagnostics/AnonymityGuardNotice", () => ({
@@ -53,6 +63,8 @@ beforeEach(() => {
   h.pillars = { data: [], isLoading: false, isError: false };
   h.mutate = vi.fn();
   h.recalcPending = false;
+  h.questionsFeed = { data: undefined, isLoading: false, isError: false, refetch: vi.fn() };
+  h.submit = { mutate: vi.fn(), isPending: false };
 });
 
 describe("ClimateSurveyAnswerForm", () => {
@@ -305,5 +317,46 @@ describe("ClimateSurveyResults", () => {
     fireEvent.click(screen.getByRole("button", { name: /Recalcular resultados/ }));
 
     expect(h.mutate).toHaveBeenCalledWith({ surveyId: "s1" });
+  });
+
+  it("explica que falta pergunta de eNPS quando há respostas mas nenhuma nota elegível", () => {
+    h.enps = {
+      data: { survey_id: "s1", enps: 0, promoters: 0, passives: 0, detractors: 0, total: 0, response_count: 12, min_responses: 5, suppressed: true },
+      isLoading: false,
+      isError: false,
+    };
+
+    render(<ClimateSurveyResults surveyId="s1" />);
+
+    expect(screen.getByText("eNPS precisa de uma pergunta de 0 a 10")).toBeInTheDocument();
+    expect(screen.queryByTestId("aviso-anonimato")).not.toBeInTheDocument();
+  });
+});
+
+describe("ClimateSurveyCard", () => {
+  const dentroDoPeriodo = {
+    starts_at: "2020-01-01T00:00:00Z",
+    ends_at: "2035-01-01T00:00:00Z",
+  };
+
+  it("anuncia a hora do encerramento, não só a data", () => {
+    render(
+      <ClimateSurveyCard
+        survey={survey({ starts_at: "2026-01-05T00:00:00Z", ends_at: "2026-01-20T23:59:00Z" })}
+        alreadyAnswered={false}
+      />,
+    );
+
+    expect(screen.getByText(/até .*\d{1,2}:\d{2}/)).toBeInTheDocument();
+  });
+
+  it("recarrega as perguntas sem obrigar a fechar o formulário", () => {
+    h.questionsFeed = { data: undefined, isLoading: false, isError: true, refetch: vi.fn() };
+
+    render(<ClimateSurveyCard survey={survey(dentroDoPeriodo)} alreadyAnswered={false} />);
+    fireEvent.click(screen.getByRole("button", { name: /Responder/ }));
+    fireEvent.click(screen.getByRole("button", { name: /Tentar novamente/ }));
+
+    expect(h.questionsFeed.refetch).toHaveBeenCalledTimes(1);
   });
 });

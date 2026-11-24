@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { ClipboardCheck, Gauge, Settings2 } from "lucide-react";
+import { ClipboardCheck, Gauge, RefreshCw, Settings2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -27,7 +27,7 @@ const isWithinPeriod = (survey: ClimateSurvey) => {
   return new Date(survey.starts_at).getTime() <= now && new Date(survey.ends_at).getTime() >= now;
 };
 
-function ClimateSurveyCard({
+export function ClimateSurveyCard({
   survey,
   alreadyAnswered,
 }: {
@@ -39,6 +39,7 @@ function ClimateSurveyCard({
     data: questions,
     isLoading: isLoadingQuestions,
     isError: isQuestionsError,
+    refetch: refetchQuestions,
   } = useSurveyQuestions(isOpen ? survey.id : "");
   const submitResponse = useSubmitSurveyResponse();
   const withinPeriod = isWithinPeriod(survey);
@@ -63,7 +64,10 @@ function ClimateSurveyCard({
         {survey.description && <CardDescription>{survey.description}</CardDescription>}
         <p className="text-xs text-muted-foreground">
           {new Date(survey.starts_at).toLocaleDateString("pt-BR")} até{" "}
-          {new Date(survey.ends_at).toLocaleDateString("pt-BR")}
+          {new Date(survey.ends_at).toLocaleString("pt-BR", {
+            dateStyle: "short",
+            timeStyle: "short",
+          })}
         </p>
       </CardHeader>
       <CardContent className="space-y-4">
@@ -77,10 +81,15 @@ function ClimateSurveyCard({
           isLoadingQuestions ? (
             <Skeleton className="h-40 w-full" />
           ) : isQuestionsError ? (
-            <p className="rounded-lg border border-dashed p-4 text-center text-xs text-muted-foreground">
-              Não foi possível carregar as perguntas desta pesquisa. Feche e abra o
-              formulário novamente; se o problema continuar, avise o time técnico.
-            </p>
+            <div className="space-y-2 rounded-lg border border-dashed p-4 text-center">
+              <p className="text-xs text-muted-foreground">
+                Não foi possível carregar as perguntas desta pesquisa.
+              </p>
+              <Button size="sm" variant="outline" onClick={() => void refetchQuestions()}>
+                <RefreshCw className="mr-2 h-4 w-4" aria-hidden />
+                Tentar novamente
+              </Button>
+            </div>
           ) : (questions ?? []).length === 0 ? (
             <p className="rounded-lg border border-dashed p-4 text-center text-xs text-muted-foreground">
               Esta pesquisa ainda não tem perguntas cadastradas.
