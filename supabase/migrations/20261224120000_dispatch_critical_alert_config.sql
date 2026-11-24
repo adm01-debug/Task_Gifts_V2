@@ -3,17 +3,15 @@
 -- Fecha as duas lacunas que impediam o alerta critico de seguranca de ser
 -- entregue num ambiente reconstruido a partir do repositorio. Idempotente.
 --
--- 1) O segredo que autentica o trigger na edge function dispatch-critical-alert
---    nunca foi provisionado por migration. Como _internal.dispatch_config nao e
---    criada por nenhum arquivo do repo, um rebuild chega ao trigger sem
---    'dispatch_secret' e sem vault, cai no RAISE WARNING e nao entrega nada.
---    Aqui a tabela de config e garantida e o valor e semeado SEM literal de
---    segredo no repositorio, nesta ordem:
---      a) vault.decrypted_secrets('internal_dispatch_secret')
---      b) _internal.dispatch_config('cron_secret') - conferido em 2026-11-24:
---         dispatch-critical-alert aceita esse token (HTTP 200,
---         {"success":true,"skipped":true,"reason":"severity_below_threshold"})
---    Se ja existir 'dispatch_secret', nada e alterado (producao: no-op).
+-- 1) O trigger autenticava na edge function com um segredo que nenhuma migration
+--    provisionava. A fonte da verdade e' o Vault -
+--    vault.decrypted_secrets('internal_dispatch_secret') - lido a cada disparo.
+--    `_internal.dispatch_config('dispatch_secret')` fica como sobrescrita
+--    explicita de operador, e por isso esta migration NAO escreve nessa chave:
+--    uma copia automatica do Vault congela o valor de ontem e, depois de uma
+--    rotacao, faz a edge responder 401 sem que ninguem perceba (o alerta critico
+--    se perde em silencio). Ultimo recurso do trigger: 'cron_secret', token
+--    medido como aceito em 2026-11-24 (dispatch-critical-alert HTTP 200).
 --
 -- 2) A URL do projeto estava fixa dentro da funcao do trigger. Num projeto
 --    recriado ela apontaria para eidsaqymojyuhprobfpn mesmo estando em outro.
@@ -34,45 +32,6 @@ CREATE TABLE IF NOT EXISTS _internal.dispatch_config (
 -- (`postgres`) e o service_role (BYPASSRLS) continuam lendo normalmente, e o trigger
 -- e' SECURITY DEFINER do proprio `postgres`.
 ALTER TABLE _internal.dispatch_config ENABLE ROW LEVEL SECURITY;
-
-DO $outer$
-DECLARE
-  v_secret TEXT;
-BEGIN
-  IF EXISTS (
-    SELECT 1 FROM _internal.dispatch_config
-    WHERE key = 'dispatch_secret' AND COALESCE(value, '') <> ''
-  ) THEN
-    RETURN;
-  END IF;
-
-  BEGIN
-    SELECT decrypted_secret INTO v_secret
-    FROM vault.decrypted_secrets
-    WHERE name = 'internal_dispatch_secret'
-    LIMIT 1;
-  EXCEPTION WHEN OTHERS THEN
-    v_secret := NULL;
-  END;
-
-  IF v_secret IS NULL OR v_secret = '' THEN
-    SELECT value INTO v_secret
-    FROM _internal.dispatch_config
-    WHERE key = 'cron_secret'
-    LIMIT 1;
-  END IF;
-
-  IF v_secret IS NULL OR v_secret = '' THEN
-    RAISE WARNING 'dispatch_secret nao provisionado: sem vault e sem cron_secret';
-    RETURN;
-  END IF;
-
-  INSERT INTO _internal.dispatch_config (key, value)
-  VALUES ('dispatch_secret', v_secret)
-  ON CONFLICT (key) DO UPDATE SET value = EXCLUDED.value
-  WHERE COALESCE(_internal.dispatch_config.value, '') = '';
-END;
-$outer$;
 
 CREATE OR REPLACE FUNCTION public.trigger_dispatch_critical_alert()
 RETURNS TRIGGER
@@ -125,8 +84,21 @@ BEGIN
     END;
   END IF;
 
+  -- Ultimo recurso: 'cron_secret' e' um token ja aceito pelas funcoes internas,
+  -- entao serve quando o Vault nao esta acessivel nem ha sobrescrita explicita.
   IF v_secret IS NULL OR v_secret = '' THEN
-    RAISE WARNING 'dispatch-critical-alert skipped: segredo ausente em _internal.dispatch_config e no vault';
+    BEGIN
+      SELECT value INTO v_secret
+      FROM _internal.dispatch_config
+      WHERE key = 'cron_secret'
+      LIMIT 1;
+    EXCEPTION WHEN OTHERS THEN
+      v_secret := NULL;
+    END;
+  END IF;
+
+  IF v_secret IS NULL OR v_secret = '' THEN
+    RAISE WARNING 'dispatch-critical-alert skipped: segredo ausente no vault e em _internal.dispatch_config (dispatch_secret/cron_secret)';
     RETURN NEW;
   END IF;
 
