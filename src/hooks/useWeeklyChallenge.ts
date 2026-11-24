@@ -75,14 +75,22 @@ export function useWeeklyChallenge() {
           type: "challenge",
           title: "🎯 Novo Desafio Semanal!",
           message: "Um novo desafio semanal começou! Ganhe mais XP que seu oponente para vencer.",
+          data: { challenge_id: currentChallenge.id },
         });
 
-        await notificationsService.create({
-          user_id: opponent.id,
-          type: "challenge",
-          title: "🎯 Novo Desafio Semanal!",
-          message: "Você foi desafiado! Ganhe mais XP que seu oponente para vencer.",
-        });
+        // A RLS de notifications so aceita INSERT com user_id = auth.uid() (ou admin);
+        // recusa do aviso ao oponente nao pode derrubar o desafio.
+        try {
+          await notificationsService.create({
+            user_id: opponent.id,
+            type: "challenge",
+            title: "🎯 Novo Desafio Semanal!",
+            message: "Você foi desafiado! Ganhe mais XP que seu oponente para vencer.",
+            data: { challenge_id: currentChallenge.id },
+          });
+        } catch (error) {
+          console.warn("aviso do desafio semanal nao entregue ao oponente", error);
+        }
       }
 
       // Fetch profiles for both users
@@ -215,6 +223,7 @@ export function useWeeklyChallenge() {
             type: "victory",
             title: "🏆 Desafio Semanal Vencido!",
             message: `Você venceu ${opponentProfile?.display_name || "seu oponente"} e ganhou ${challenge.xp_reward} XP e ${challenge.coin_reward} moedas!`,
+            data: { challenge_id: challenge.id },
           });
         }
       }
