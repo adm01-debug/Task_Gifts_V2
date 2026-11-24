@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "57326cf1c58474c3f37550cad5bbf6199285d595",
+  "sha": "85ba135b99c7e5e30edeb00546ae5d38ed48aa83",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
-  "generated_at": "2026-11-24 15:16 UTC",
-  "files_total": 1580,
-  "code_files": 1473,
-  "code_lines": 268419
+  "generated_at": "2026-11-24 15:35 UTC",
+  "files_total": 1581,
+  "code_files": 1474,
+  "code_lines": 268550
  },
  "version": "1.3.2",
- "facts_hash": "1447f2cdc7672356",
+ "facts_hash": "a546eea57d7231b1",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -196,7 +196,7 @@
   "languages": {
    ".ts": 584,
    ".tsx": 578,
-   ".sql": 279,
+   ".sql": 280,
    ".mjs": 21,
    ".js": 5,
    ".py": 5,
@@ -19592,6 +19592,28 @@
     "comment": "",
     "origin": "migration"
    },
+   "_internal.dispatch_config": {
+    "columns": [
+     {
+      "name": "key",
+      "type": "TEXT PRIMARY KEY",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20261224110000_cron_internal_jobs_drift.sql"
+     },
+     {
+      "name": "value",
+      "type": "TEXT",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20261224110000_cron_internal_jobs_drift.sql"
+     }
+    ],
+    "constraints": [],
+    "src": "supabase/migrations/20261224110000_cron_internal_jobs_drift.sql",
+    "comment": "",
+    "origin": "migration"
+   },
    "demographic_attributes": {
     "columns": [
      {
@@ -33715,6 +33737,7 @@
    "supabase/migrations/20261220000000_fix_sre_rpcs_and_dispatch_trigger.sql",
    "supabase/migrations/20261221000000_pdi_mentors_delete_policy.sql",
    "supabase/migrations/20261224090000_webauthn_login_hardening.sql",
+   "supabase/migrations/20261224110000_cron_internal_jobs_drift.sql",
    "supabase/tests/climate/assertions.sql",
    "supabase/tests/climate/stubs.sql",
    "src/integrations/supabase/types.ts"
@@ -33946,7 +33969,8 @@
    "board_tiles": "enabled",
    "board_player_states": "enabled",
    "board_moves": "enabled",
-   "goal_templates": "enabled"
+   "goal_templates": "enabled",
+   "_internal.dispatch_config": "enabled"
   },
   "grants": [
    {
@@ -50276,8 +50300,8 @@
   },
   {
    "module": "supabase/migrations",
-   "files": 277,
-   "lines": 30422,
+   "files": 278,
+   "lines": 30553,
    "tables": [],
    "exports": [],
    "docs": [],
@@ -54740,6 +54764,7 @@
    "custom_titles",
    "demographic_attributes",
    "department_war_results",
+   "dispatch_config",
    "engagement_action_playbooks",
    "engagement_answers",
    "engagement_cycles",
@@ -70446,6 +70471,11 @@
     "table": "goal_templates",
     "column": "updated_at",
     "rule": "default now()"
+   },
+   {
+    "table": "_internal.dispatch_config",
+    "column": "key",
+    "rule": "PK"
    },
    {
     "table": "demographic_attributes",
@@ -104027,6 +104057,13 @@
    "is_org_admin"
   ],
   "matrix": {
+   "_internal.dispatch_config": {
+    "rls": "enabled",
+    "SELECT": [],
+    "INSERT": [],
+    "UPDATE": [],
+    "DELETE": []
+   },
    "achievements": {
     "rls": "enabled",
     "SELECT": [
@@ -107477,7 +107514,8 @@
    "supabase/migrations/20260728205741_a19b425a-9dbf-41f9-8a3c-efb2d4b41560.sql",
    "supabase/migrations/20261114110500_fix_cron_campaigns_alert_check.sql",
    "supabase/migrations/20261114134238_9b119528-da6f-4f43-b6cb-dcdcd7aa7ab1.sql",
-   "supabase/migrations/20261220000000_fix_sre_rpcs_and_dispatch_trigger.sql"
+   "supabase/migrations/20261220000000_fix_sre_rpcs_and_dispatch_trigger.sql",
+   "supabase/migrations/20261224110000_cron_internal_jobs_drift.sql"
   ],
   "security_definer_fns": [
    "_climate_recompute_pillar_scores",
@@ -117250,6 +117288,7 @@
     "created_by",
     "updated_at"
    ],
+   "_internal.dispatch_config": [],
    "demographic_attributes": [
     "created_at",
     "updated_at"
@@ -118106,7 +118145,7 @@
    "`wager_integrity_review_events.previous_status` é uma coluna de status sem enum/CHECK — os valores válidos e as transições permitidas não estão no banco.",
    "`wager_integrity_review_events.new_status` é uma coluna de status sem enum/CHECK — os valores válidos e as transições permitidas não estão no banco.",
    "`profiles_public.status` é uma coluna de status sem enum/CHECK — os valores válidos e as transições permitidas não estão no banco.",
-   "236/238 tabelas sem `COMMENT ON TABLE` — o significado de negócio não está no schema: `entity_versions`, `profiles`, `user_roles`, `departments`, `team_members`, `custom_quests`, `quest_steps`, `quest_assignments`, `notifications`, `kudos_badges`, `kudos`, `audit_logs` …",
+   "237/239 tabelas sem `COMMENT ON TABLE` — o significado de negócio não está no schema: `entity_versions`, `profiles`, `user_roles`, `departments`, `team_members`, `custom_quests`, `quest_steps`, `quest_assignments`, `notifications`, `kudos_badges`, `kudos`, `audit_logs` …",
    "Há tabelas usadas no código sem migration no repo — o schema real pode ter sido alterado pelo painel."
   ]
  },
@@ -154744,6 +154783,11 @@
    "path": "supabase/migrations/20261224090000_webauthn_login_hardening.sql",
    "lines": 22
   },
+  "supabase/migrations/20261224110000_cron_internal_jobs_drift.sql": {
+   "path": "supabase/migrations/20261224110000_cron_internal_jobs_drift.sql",
+   "lines": 131,
+   "uses_service_role": true
+  },
   "supabase/tests/climate/assertions.sql": {
    "path": "supabase/tests/climate/assertions.sql",
    "lines": 404,
@@ -154839,10 +154883,19 @@
   }
  },
  "git": {
-  "sha": "57326cf1c58474c3f37550cad5bbf6199285d595",
+  "sha": "85ba135b99c7e5e30edeb00546ae5d38ed48aa83",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "commits": [
+   {
+    "sha": "85ba135",
+    "date": "2026-11-24",
+    "author": "adm01-debug",
+    "subject": "fix(cron): reproduz os jobs internos sem credencial no repositorio (#142)",
+    "files": [
+     "supabase/migrations/20261224110000_cron_internal_jobs_drift.sql"
+    ]
+   },
    {
     "sha": "57326cf",
     "date": "2026-11-24",
@@ -155213,16 +155266,6 @@
      "src/services/engagementReportsService.ts",
      "src/services/successionService.ts"
     ]
-   },
-   {
-    "sha": "9616112",
-    "date": "2026-11-23",
-    "author": "adm01-debug",
-    "subject": "fix(dashboard/audit): heatmap dados reais de audit_logs + auditService dev logs",
-    "files": [
-     "src/components/ActivityHeatmap.tsx",
-     "src/services/auditService.ts"
-    ]
    }
   ],
   "hot_files": [
@@ -155303,7 +155346,7 @@
     2
    ],
    [
-    "scripts/ci/check-migration-drift.unit.mjs",
+    "supabase/migrations/20261224110000_cron_internal_jobs_drift.sql",
     1
    ]
   ]

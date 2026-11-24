@@ -1,12 +1,13 @@
 # 11 · GLOSSÁRIO, DADOS DE REFERÊNCIA E LACUNAS
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `57326cf1c5` · branch `main` · 2026-11-24 15:16 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `85ba135b99` · branch `main` · 2026-11-24 15:35 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## Glossário do domínio (entidades do sistema)
 
 | Termo | Significado / valores | Tamanho | Origem |
 |---|---|---|---|
+| `_internal.dispatch_config` | _(sem COMMENT ON TABLE — significado não documentado)_ | 2 colunas | migration |
 | `achievements` | _(sem COMMENT ON TABLE — significado não documentado)_ | 10 colunas | migration |
 | `action_plan_items` | _(sem COMMENT ON TABLE — significado não documentado)_ | 22 colunas | migration |
 | `action_plan_updates` | _(sem COMMENT ON TABLE — significado não documentado)_ | 8 colunas | migration |
@@ -306,8 +307,7 @@
 | `CardPackSource` (TS) | task \| training \| quest \| campaign \| manual \| streak |  | `src/lib/cardPackTriggers.ts` |
 | `TaskCompletionStatus` (TS) | pending \| on_time \| late \| rejected \| rework |  | `src/lib/cardPackTriggers.ts` |
 | `SetClaimRejection` (TS) | unknown_set \| empty_set \| not_reached \| already_claimed |  | `src/lib/cardSetRewards.ts` |
-| `SET_MILESTONES` (TS) | 25, 50, 75, 100 |  | `src/lib/cardSetRewards.ts` |
-| … +106 linhas — lista completa em `context.json` | | | |
+| … +107 linhas — lista completa em `context.json` | | | |
 
 ## Dados de referência (seed — planos, categorias, perfis fixos)
 
@@ -424,7 +424,7 @@ _nenhum item encontrado_
 - `wager_integrity_review_events.previous_status` é uma coluna de status sem enum/CHECK — os valores válidos e as transições permitidas não estão no banco.
 - `wager_integrity_review_events.new_status` é uma coluna de status sem enum/CHECK — os valores válidos e as transições permitidas não estão no banco.
 - `profiles_public.status` é uma coluna de status sem enum/CHECK — os valores válidos e as transições permitidas não estão no banco.
-- 236/238 tabelas sem `COMMENT ON TABLE` — o significado de negócio não está no schema: `entity_versions`, `profiles`, `user_roles`, `departments`, `team_members`, `custom_quests`, `quest_steps`, `quest_assignments`, `notifications`, `kudos_badges`, `kudos`, `audit_logs` …
+- 237/239 tabelas sem `COMMENT ON TABLE` — o significado de negócio não está no schema: `entity_versions`, `profiles`, `user_roles`, `departments`, `team_members`, `custom_quests`, `quest_steps`, `quest_assignments`, `notifications`, `kudos_badges`, `kudos`, `audit_logs` …
 - Há tabelas usadas no código sem migration no repo — o schema real pode ter sido alterado pelo painel.
 
 ## Regras manuais presentes

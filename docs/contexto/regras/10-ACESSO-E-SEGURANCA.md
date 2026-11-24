@@ -1,6 +1,6 @@
 # 10 · ACESSO E SEGURANÇA — quem pode o quê
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `57326cf1c5` · branch `main` · 2026-11-24 15:16 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `85ba135b99` · branch `main` · 2026-11-24 15:35 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## Perfis / roles identificados
@@ -16,6 +16,7 @@
 
 | Tabela | RLS | SELECT | INSERT | UPDATE | DELETE |
 |---|---|---|---|---|---|
+| `_internal.dispatch_config` | enabled | — | — | — | — |
 | `achievements` | enabled | public: true<br>public: has_role(auth.uid(), 'admin'::app_role) | public: has_role(auth.uid(), 'admin'::app_role) | public: has_role(auth.uid(), 'admin'::app_role) | public: has_role(auth.uid(), 'admin'::app_role) |
 | `action_plan_items` | enabled | public: EXISTS ( SELECT 1 FROM action_plans ap WHERE ap.id = plan_id AND (ap.owner_id = auth.uid() OR ap.reviewer_id = auth.uid() OR has_rol<br>public: EXISTS ( SELECT 1 FROM action_plans ap WHERE ap.id = plan_id AND (ap.owner_id = auth.uid() OR has_role(auth.uid(), 'admin')) ) | public: EXISTS ( SELECT 1 FROM action_plans ap WHERE ap.id = plan_id AND (ap.owner_id = auth.uid() OR has_role(auth.uid(), 'admin')) ) | public: EXISTS ( SELECT 1 FROM action_plans ap WHERE ap.id = plan_id AND (ap.owner_id = auth.uid() OR has_role(auth.uid(), 'admin')) ) | public: EXISTS ( SELECT 1 FROM action_plans ap WHERE ap.id = plan_id AND (ap.owner_id = auth.uid() OR has_role(auth.uid(), 'admin')) ) |
 | `action_plan_updates` | enabled | public: EXISTS ( SELECT 1 FROM action_plans ap WHERE ap.id = plan_id AND (ap.owner_id = auth.uid() OR ap.reviewer_id = auth.uid() OR has_rol | public: auth.uid() = user_id | — | — |
@@ -257,7 +258,7 @@
 
 > `—` com RLS ligado = ninguém além de service_role. `sem RLS` = qualquer chave anon lê/escreve tudo.
 
-## Onde o RLS é IGNORADO (service_role) — 137 arquivo(s)
+## Onde o RLS é IGNORADO (service_role) — 138 arquivo(s)
 
 - `scripts/ai-context/cenarios.mjs`
 - `scripts/ai-context/gerar.unit.mjs`
@@ -396,6 +397,7 @@
 - `supabase/migrations/20261114110500_fix_cron_campaigns_alert_check.sql`
 - `supabase/migrations/20261114134238_9b119528-da6f-4f43-b6cb-dcdcd7aa7ab1.sql`
 - `supabase/migrations/20261220000000_fix_sre_rpcs_and_dispatch_trigger.sql`
+- `supabase/migrations/20261224110000_cron_internal_jobs_drift.sql`
 
 ## Funções SQL `SECURITY DEFINER` (rodam com privilégio do dono, ignoram RLS)
 

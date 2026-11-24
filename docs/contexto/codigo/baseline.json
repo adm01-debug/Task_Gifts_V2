@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "57326cf1c58474c3f37550cad5bbf6199285d595",
+  "commit": "85ba135b99c7e5e30edeb00546ae5d38ed48aa83",
   "branch": "main",
-  "data_commit": "2026-11-24T11:32:48-03:00",
+  "data_commit": "2026-11-24T12:34:40-03:00",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "ultimos_commits": [
+   {
+    "sha": "85ba135",
+    "data": "2026-11-24",
+    "assunto": "fix(cron): reproduz os jobs internos sem credencial no repositorio (#142)"
+   },
    {
     "sha": "57326cf",
     "data": "2026-11-24",
@@ -126,14 +131,9 @@
     "sha": "ceef1b8",
     "data": "2026-11-23",
     "assunto": "﻿fix(manager): dados reais de departamento, quests e exportacao no dashboard (#118)"
-   },
-   {
-    "sha": "57527b0",
-    "data": "2026-11-23",
-    "assunto": "fix(reports): exporta relatório de engajamento em CSV real (#117)"
    }
   ],
-  "arquivos_mudados_7d": 202,
+  "arquivos_mudados_7d": 203,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "supabase/functions/_shared",
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 109
+    "commits": 110
    },
    {
     "autor": "dependabot[bot]",
@@ -310,7 +310,7 @@
   ]
  },
  "contagens": {
-  "arquivos_total": 1569,
+  "arquivos_total": 1570,
   "arquivos_codigo": 1188,
   "linhas_codigo": 235896,
   "rotas": 87,
@@ -321,8 +321,8 @@
   "componentes": 530,
   "hooks": 155,
   "edge_functions": 23,
-  "tabelas": 237,
-  "migrations": 277,
+  "tabelas": 238,
+  "migrations": 278,
   "cron_jobs": 22,
   "testes": 171,
   "workflows": 6,
