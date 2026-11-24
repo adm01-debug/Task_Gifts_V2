@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "f55c5db3cca741374e9a73371b674a864aae8a93",
+  "commit": "eff597a611ab9a2160daa6dc300271b3290da3f0",
   "branch": "main",
-  "data_commit": "2026-11-24T00:24:38-03:00",
+  "data_commit": "2026-11-24T01:17:05-03:00",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "ultimos_commits": [
+   {
+    "sha": "eff597a",
+    "data": "2026-11-24",
+    "assunto": "feat(feedback): tela para pedir feedback 360 e ver o resumo do avaliado (#132)"
+   },
    {
     "sha": "f55c5db",
     "data": "2026-11-24",
@@ -126,14 +131,9 @@
     "sha": "c0ab58e",
     "data": "2026-11-23",
     "assunto": "fix(sre): corrige RPCs de error-budget/webhook-stats e trigger de dispatch apontando para projeto errado (#106)"
-   },
-   {
-    "sha": "119cff5",
-    "data": "2026-11-22",
-    "assunto": "feat(db): RPC acknowledge_security_digest para marcar digest semanal como revisado (#103)"
    }
   ],
-  "arquivos_mudados_7d": 153,
+  "arquivos_mudados_7d": 157,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "supabase/functions/_shared",
@@ -168,11 +168,19 @@
     "mudancas": 5
    },
    {
+    "pasta": "docs/estado/03-hooks-services-lib.md",
+    "mudancas": 5
+   },
+   {
     "pasta": "docs/prod-readiness.md",
     "mudancas": 5
    },
    {
     "pasta": "src/App.tsx",
+    "mudancas": 5
+   },
+   {
+    "pasta": "src/tests/unit",
     "mudancas": 5
    },
    {
@@ -185,14 +193,6 @@
    },
    {
     "pasta": "docs/agentes/github-ci.md",
-    "mudancas": 4
-   },
-   {
-    "pasta": "docs/agentes/mapa-repo.md",
-    "mudancas": 4
-   },
-   {
-    "pasta": "docs/estado/03-hooks-services-lib.md",
     "mudancas": 4
    }
   ],
@@ -215,6 +215,10 @@
    },
    {
     "arquivo": "AGENTS.md",
+    "mudancas": 5
+   },
+   {
+    "arquivo": "docs/estado/03-hooks-services-lib.md",
     "mudancas": 5
    },
    {
@@ -254,10 +258,6 @@
     "mudancas": 4
    },
    {
-    "arquivo": "docs/estado/03-hooks-services-lib.md",
-    "mudancas": 4
-   },
-   {
     "arquivo": "scripts/automation.mjs",
     "mudancas": 4
    },
@@ -286,22 +286,22 @@
     "mudancas": 3
    },
    {
+    "arquivo": "INVENTARIO_FUNCIONALIDADES.md",
+    "mudancas": 3
+   },
+   {
     "arquivo": "PENDENCIAS.md",
     "mudancas": 3
    },
    {
     "arquivo": "docs/agentes/banco.md",
     "mudancas": 3
-   },
-   {
-    "arquivo": "docs/agentes/edge-functions.md",
-    "mudancas": 3
    }
   ],
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 97
+    "commits": 98
    },
    {
     "autor": "dependabot[bot]",
@@ -310,21 +310,21 @@
   ]
  },
  "contagens": {
-  "arquivos_total": 1544,
-  "arquivos_codigo": 1169,
-  "linhas_codigo": 230242,
+  "arquivos_total": 1547,
+  "arquivos_codigo": 1172,
+  "linhas_codigo": 231236,
   "rotas": 84,
   "rotas_http_backend": 0,
   "vistas_por_id": 0,
   "itens_menu": 64,
-  "modulos": 71,
-  "componentes": 521,
+  "modulos": 72,
+  "componentes": 523,
   "hooks": 155,
   "edge_functions": 22,
   "tabelas": 237,
   "migrations": 275,
   "cron_jobs": 22,
-  "testes": 164,
+  "testes": 165,
   "workflows": 6,
   "scripts": 16,
   "docs_md": 55
@@ -399,8 +399,8 @@
    "linhas": 336
   },
   "src/components": {
-   "arquivos": 460,
-   "linhas": 77945
+   "arquivos": 462,
+   "linhas": 78345
   },
   "src/constants": {
    "arquivos": 1,
@@ -412,7 +412,7 @@
   },
   "src/hooks": {
    "arquivos": 129,
-   "linhas": 14724
+   "linhas": 14744
   },
   "src/i18n": {
    "arquivos": 1,
@@ -432,23 +432,23 @@
   },
   "src/pages": {
    "arquivos": 83,
-   "linhas": 23662
+   "linhas": 23686
   },
   "src/services": {
    "arquivos": 99,
-   "linhas": 22132
+   "linhas": 22286
   },
   "src/stories": {
    "arquivos": 29,
    "linhas": 7136
   },
   "src/test": {
-   "arquivos": 130,
-   "linhas": 22812
+   "arquivos": 131,
+   "linhas": 22995
   },
   "src/tests": {
    "arquivos": 16,
-   "linhas": 1062
+   "linhas": 1275
   },
   "src/types": {
    "arquivos": 2,

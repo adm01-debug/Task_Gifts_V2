@@ -588,6 +588,7 @@
     "useEngagementSnapshots",
     "useEnrollInTrail",
     "useFeedback360",
+    "useFeedbackSummary",
     "useFuseSearch",
     "useGenerateSnapshot",
     "useGlobalMessage",
@@ -2248,6 +2249,88 @@
    ],
    "pacotes_externos": [
     "framer-motion",
+    "lucide-react"
+   ]
+  },
+  {
+   "modulo": "components/feedback",
+   "arquivos": 2,
+   "testes": 0,
+   "linhas": 400,
+   "itens_menu": [],
+   "telas": [],
+   "rotas_http": [],
+   "componentes": 2,
+   "hooks_locais": [
+    "useAccessibility",
+    "useAchievementNotification",
+    "useAddCoins",
+    "useAddXp",
+    "useAuth",
+    "useCurrentProfile",
+    "useDeviceDetection",
+    "useFeedback360",
+    "useFeedbackSummary",
+    "useGlobalMessage",
+    "useHapticFeedback",
+    "useHaptics",
+    "useIncrementStreak",
+    "useLeaderboard",
+    "useProfile",
+    "useProfiles",
+    "useProfilesPublic",
+    "useSoundEffects",
+    "useSoundFeedback",
+    "useToast",
+    "useUpdateProfile"
+   ],
+   "hooks_definidos": [],
+   "edges": [
+    "competency-alerts",
+    "detect-new-device"
+   ],
+   "tabelas": [
+    "audit_logs",
+    "feedback_cycles",
+    "feedback_requests",
+    "feedback_responses",
+    "new_device_alerts",
+    "notifications",
+    "profiles",
+    "profiles_public",
+    "user_devices"
+   ],
+   "rpcs": [
+    "add_coins",
+    "add_xp",
+    "get_my_profile_private",
+    "increment_quests_completed",
+    "increment_streak"
+   ],
+   "buckets": [],
+   "canais_realtime": [],
+   "env": [
+    "DEV",
+    "VITE_DEPLOYED_EDGE_FUNCTIONS",
+    "VITE_SUPABASE_PUBLISHABLE_KEY",
+    "VITE_SUPABASE_URL"
+   ],
+   "flags": [],
+   "papeis": [],
+   "diretos": {
+    "edges": [],
+    "tabelas": [],
+    "rpcs": []
+   },
+   "importado_por_outros_modulos": [
+    "pages"
+   ],
+   "depende_de_modulos": [
+    "components/ui",
+    "hooks",
+    "services"
+   ],
+   "pacotes_externos": [
     "lucide-react"
    ]
   },
@@ -4481,6 +4564,7 @@
     "components/duels",
     "components/engagement",
     "components/executive",
+    "components/feedback",
     "components/goals",
     "components/lms",
     "components/luckywheel",
@@ -4904,7 +4988,7 @@
    "modulo": "hooks",
    "arquivos": 129,
    "testes": 0,
-   "linhas": 14724,
+   "linhas": 14744,
    "itens_menu": [],
    "telas": [],
    "rotas_http": [],
@@ -5110,6 +5194,7 @@
     "useExpiredCertifications",
     "useExpiringCertifications",
     "useFeedback360",
+    "useFeedbackSummary",
     "useFinishLightningRound",
     "useFinishMemorySession",
     "useFormDirtyState",
@@ -5601,6 +5686,7 @@
     "useMonthlyTrends",
     "useSoundFeedback",
     "useFeedback360",
+    "useFeedbackSummary",
     "useFirstTimeIndicator",
     "useFuseSearch",
     "useGoalBetFilter",
@@ -6270,6 +6356,7 @@
     "components/duels",
     "components/effects",
     "components/engagement",
+    "components/feedback",
     "components/lms",
     "components/luckywheel",
     "components/manager",
@@ -6566,7 +6653,7 @@
    "modulo": "pages",
    "arquivos": 83,
    "testes": 0,
-   "linhas": 23662,
+   "linhas": 23686,
    "itens_menu": [
     "Admin Loja",
     "Admin Quiz",
@@ -6904,6 +6991,7 @@
     "useExpiredCertifications",
     "useExpiringCertifications",
     "useFeedback360",
+    "useFeedbackSummary",
     "useFinishLightningRound",
     "useFinishMemorySession",
     "useFirstTimeIndicator",
@@ -7666,6 +7754,7 @@
     "components/duels",
     "components/engagement",
     "components/executive",
+    "components/feedback",
     "components/goals",
     "components/lms",
     "components/luckywheel",
@@ -7720,7 +7809,7 @@
    "modulo": "services",
    "arquivos": 96,
    "testes": 0,
-   "linhas": 21553,
+   "linhas": 21707,
    "itens_menu": [],
    "telas": [],
    "rotas_http": [],
@@ -8362,6 +8451,7 @@
     "components/checkins",
     "components/duels",
     "components/engagement",
+    "components/feedback",
     "components/lms",
     "components/luckywheel",
     "components/manager",
@@ -8518,7 +8608,7 @@
   {
    "modulo": "test",
    "arquivos": 0,
-   "testes": 130,
+   "testes": 131,
    "linhas": 0,
    "itens_menu": [],
    "telas": [],

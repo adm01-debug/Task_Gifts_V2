@@ -1,6 +1,6 @@
 # 07 · REGRAS DE NEGÓCIO
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `f55c5db3cc` · branch `main` · 2026-11-24 03:25 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `eff597a611` · branch `main` · 2026-11-24 04:17 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## A. Regras escritas por humanos (`manual/` — prioridade máxima, nunca sobrescrito)
@@ -1839,6 +1839,7 @@ _nenhum item encontrado_
 | `opinion-subject` | max | `src/components/engagement/opinions/OpinionComposer.tsx` |
 | `opinion-content` | max | `src/components/engagement/opinions/OpinionComposer.tsx` |
 | `opinion-response` | max | `src/components/engagement/opinions/OpinionTreatmentDialog.tsx` |
+| `due-date` | type=date | `src/components/feedback/FeedbackRequestForm.tsx` |
 | `coins-per-spin-budget` | disabled=budgetSyncing | `src/components/luckywheel/LuckyWheelWindowComparison.tsx` |
 | `prediction-title` | max | `src/components/prediction/CreateMarketDialog.tsx` |
 | `prediction-description` | max | `src/components/prediction/CreateMarketDialog.tsx` |
@@ -1960,6 +1961,14 @@ _nenhum item encontrado_
 - **ScoreBadge({ score, showLabel = true, className, ...props }: ScoreBadgeProps)** — `src/components/engagement/diagnostics/ScoreBadge.tsx`
   ```
   const zone = scoreZone(score); const value = typeof score === "number" && Number.isFinite(score) ? score.toFixed(1) : "—"; return ( <span className={cn( "inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-xs font-semibold", ZONE_CLASS[zone], className, )} {...props} > {value} {showLabel && <span className="font-normal opacity-80">{ZONE_LABEL[zone]}</span>} </span> );
+  ```
+- **FeedbackRequestForm({ open, onOpenChange, cycles }: FeedbackRequestFormProps)** — `src/components/feedback/FeedbackRequestForm.tsx`
+  ```
+  const { user } = useAuth(); const { data: profiles = [], isLoading: isLoadingProfiles } = useProfiles(); const { createRequest } = useFeedback360(); const [cycleId, setCycleId] = useState(""); const [fromUserId, setFromUserId] = useState(user?.id ?? ""); const [toUserId, setToUserId] = useState(""); const [relationship, setRelationship] = useState<FeedbackRequest["relationship"]>("manager"); const [dueDate, setDueDate] = useState(""); const [error, setError] = useState<string | null>(null); cons …
+  ```
+- **FeedbackSummaryCard()** — `src/components/feedback/FeedbackSummaryCard.tsx`
+  ```
+  const { user } = useAuth(); const { data, isLoading, isError, refetch } = useFeedbackSummary(user?.id); const hasContent = !!data && (data.totalResponses > 0 || data.commonStrengths.length > 0 || data.commonImprovements.length > 0); return ( <Card> <CardHeader> <CardTitle className="flex items-center gap-2"> <Star className="h-5 w-5 text-primary" /> Meu resumo de feedback </CardTitle> </CardHeader> <CardContent> {isLoading ? ( <LoadingState message="Carregando seu resumo..." /> ) : isError ? ( < …
   ```
 - **calculateScore()** — `src/components/lms/ModuleViewer.tsx`
   ```
@@ -2303,7 +2312,7 @@ _nenhum item encontrado_
   ```
 - **Feedback()** — `src/pages/Feedback.tsx`
   ```
-  const { cycles, pendingRequests, isLoading, submitFeedback, isSubmitting } = useFeedback360(); const seoData = useSEO(); const [activeRequest, setActiveRequest] = useState<FeedbackRequest | null>(null); const [strengths, setStrengths] = useState(""); const [improvements, setImprovements] = useState(""); const [overallRating, setOverallRating] = useState<"1" | "2" | "3" | "4" | "5">("5"); const [isAnonymous, setIsAnonymous] = useState(false); const openRespond = (req: FeedbackRequest) => { setAct …
+  const { cycles, pendingRequests, isLoading, submitFeedback, isSubmitting } = useFeedback360(); const { isAdmin, isManager } = useRBAC(); const canManageRequests = isAdmin || isManager; const seoData = useSEO(); const [activeRequest, setActiveRequest] = useState<FeedbackRequest | null>(null); const [isRequestFormOpen, setIsRequestFormOpen] = useState(false); const [strengths, setStrengths] = useState(""); const [improvements, setImprovements] = useState(""); const [overallRating, setOverallRating …
   ```
 - **severityRank(sev: string | null)** — `src/pages/Postmortems.tsx`
   ```
@@ -2360,6 +2369,14 @@ _nenhum item encontrado_
 - **generateSnapshot(departmentId?: string, periodType = "weekly")** — `src/services/enpsService.ts`
   ```
   const { data, error } = await supabase .rpc("generate_engagement_snapshot", { p_department_id: departmentId, p_period_type: periodType, }); if (error) throw error; return data;
+  ```
+- **rankComments(texts: Array<string | null>)** — `src/services/feedbackService.ts`
+  ```
+  const byKey = new Map<string, { text: string; count: number }>(); texts.forEach(raw => { const text = raw?.trim(); if (!text) return; const key = text.toLowerCase().replace(/\s+/g, " "); const entry = byKey.get(key); if (entry) entry.count += 1; else byKey.set(key, { text, count: 1 }); }); return [...byKey.values()] .sort((a, b) => b.count - a.count || a.text.localeCompare(b.text)) .slice(0, 5) .map(entry => entry.text);
+  ```
+- **aggregateFeedbackSummary(rows: FeedbackSummaryRow[])** — `src/services/feedbackService.ts`
+  ```
+  let totalRating = 0; let ratingCount = 0; const byRelationship: Record<string, { count: number; totalRating: number }> = {}; const strengths: string[] = []; const improvements: string[] = []; rows.forEach(row => { // O anonimato vale para o avaliado: um admin consegue ler respostas anônimas // (policy "Admins can view all responses"), mas o resumo dele não pode desfazer // o anonimato — é exatamente o que o card promete na tela. O descarte vem antes do // dedupe: se o mesmo pedido tem uma respos …
   ```
 - **calculateOverallScore(factors: HighPotentialScore['factors'])** — `src/services/highPotentialService.ts`
   ```
@@ -3416,6 +3433,7 @@ _nenhum item encontrado_
 | Erro ao remover: ${error.message} | `src/hooks/useENPS.ts` |
 | Erro ao atualizar ciclo | `src/hooks/useFeedback360.ts` |
 | Erro ao criar ciclo | `src/hooks/useFeedback360.ts` |
+| Erro ao criar pedido de feedback | `src/hooks/useFeedback360.ts` |
 | Erro ao enviar feedback | `src/hooks/useFeedback360.ts` |
 | Erro ao excluir ciclo | `src/hooks/useFeedback360.ts` |
 | Erro ao atualizar meta | `src/hooks/useGoals.ts` |
@@ -3510,8 +3528,7 @@ _nenhum item encontrado_
 | Erro ao processar solicitação | `src/pages/ForgotPassword.tsx` |
 | Muitas tentativas. Aguarde alguns minutos. | `src/pages/ForgotPassword.tsx` |
 | Título obrigatório | `src/pages/Goals.tsx` |
-| Informe o alert_type | `src/pages/IncidentMetrics.tsx` |
-| … +175 linhas — lista completa em `context.json` | |
+| … +176 linhas — lista completa em `context.json` | |
 
 ## J. Controle de acesso no código (checagens de perfil/permissão)
 
@@ -3569,7 +3586,7 @@ _nenhum item encontrado_
 | `admin` | `supabase/migrations/20261122140000_acknowledge_security_digest.sql` |
 | `manager` | `supabase/migrations/20261122140000_acknowledge_security_digest.sql` |
 
-## K. Testes como especificação (2001 testes em 152 arquivos — nomes completos em `context.json`)
+## K. Testes como especificação (2028 testes em 153 arquivos — nomes completos em `context.json`)
 
 | Arquivo | Testes | Exemplos do que o sistema DEVE fazer |
 |---|---|---|
@@ -3617,6 +3634,7 @@ _nenhum item encontrado_
 | `src/test/sequenceGame.simulation.test.ts` | 17 | shuffleSteps · preserva o conjunto de etapas e é determinístico · nunca entrega a ordem correta de saída · tolera listas triviais e posições fora de ordem na origem … |
 | `src/test/unifiedDevices.simulation.test.ts` | 17 | fingerprint — estabilidade e unicidade · é determinística para os mesmos sinais · muda quando qualquer sinal muda · nunca estoura com unicode nem com sinais ausentes … |
 | `src/test/warAutoHooks.simulation.test.ts` | 17 | warAutoHooks — invariantes gerais (900 cenarios) · nunca lanca e sempre devolve intents validos · e deterministico: mesmo evento, mesmo resultado · dedupe keys sao unicas dentro de um mesmo evento … |
+| `src/tests/unit/feedback.test.ts` | 17 | feedbackService · createFeedbackRequest · le a linha inserida com maybeSingle, para nao derrubar a criacao quando a policy esconde a linha · devolve o pedido quando a leitura e permitida … |
 | `src/test/boardStats.simulation.test.ts` | 16 | boardStats — invariantes de acurácia · nunca produz acurácia fora de 0..100 em 500 cenários aleatórios · resiste a NaN, Infinity, negativos e nulos · classifica as cinco faixas de dificuldade … |
 | `src/test/bossLeaderboard.simulation.test.ts` | 16 | buildBossLeaderboard · ignora entradas sem dano ou sem usuário · consolida linhas duplicadas do mesmo usuário · atribui a mesma posição em caso de empate (1,2,2,4) … |
 | `src/test/edgeErrors.simulation.test.ts` | 16 | normalizeRetryAfter · usa 60s como padrão para valores inválidos · aceita números e strings numéricas, arredondando para cima · limita a 1h para evitar mensagens absurdas … |
@@ -3639,6 +3657,7 @@ _nenhum item encontrado_
 | `src/test/bingo.simulation.test.ts` | 13 | Bingo — geometria da cartela · possui exatamente 12 linhas de 5 casas, sem índices fora do intervalo · cada casa participa de pelo menos duas linhas (linha + coluna) · Bingo — detecção de linhas (cenários exaustivos por linha) … |
 | `src/test/boardTrail.simulation.test.ts` | 13 | boardTrail — normalização · ordena, deduplica posições e sanea valores · rejeita tabuleiros curtos ou sem chegada · boardTrail — dado determinístico … |
 | `src/test/clientUpdatePayloads.test.ts` | 13 | payloads de atualização respeitam colunas reais · avatar %s atualiza somente %s · avatar novo mantém user_id e permite limpar a seleção · datas do perfil não alteram outros campos … |
+| `src/test/feedback360Flow.test.tsx` | 13 | aggregateFeedbackSummary · ranks repeated comments by real frequency, ignoring case and extra spaces · caps the ranking at the 5 most cited comments · computes average and breakdown by relationship … |
 | `src/test/goalBetStakePreview.test.ts` | 13 | computeGoalBetStakePreview · bloqueia sem mercado · bloqueia opção inexistente · bloqueia mercado fora de  … |
 | `src/test/memoryGame.simulation.test.ts` | 13 | buildMemoryBoard · gera duas cartas por par e limita o tamanho do tabuleiro · é determinístico para o mesmo seed e varia entre seeds · descarta pares com texto vazio e tolera baralhos menores que o limite … |
 | `src/test/auction.simulation.test.ts` | 12 | auctionEngine — regras de lance · exige o lance inicial no primeiro lance · exige incremento mínimo ao aumentar o próprio lance · retém apenas a diferença ao aumentar (caução incremental) … |
@@ -3719,7 +3738,6 @@ _nenhum item encontrado_
 | `src/test/pushRevocationNotice.simulation.test.ts` | 3 | buildRevocationNotice — simulação combinatória · cobre todas as combinações id × apelido × atual × relógio · é resiliente a entradas inválidas |
 | `src/test/rls.test.ts` | 3 | Anon user should be able to read public profile fields · Anon user should NOT be able to insert into profiles · Anon user should NOT be able to view private kudos |
 | `src/tests/unit/checkins.test.ts` | 3 | checkinsService · toggleActionItem · should flip completed status of the correct action item |
-| `src/tests/unit/feedback.test.ts` | 3 | feedbackService · submitFeedback · should update request status and insert response |
 | `src/tests/unit/kudos.test.ts` | 3 | kudosService · giveKudos · should award XP to recipient and register combo action |
 | `src/tests/unit/leagues.test.ts` | 3 | leaguesService · addWeeklyXP · should update weekly XP if user league exists |
 | `src/tests/unit/logger.test.ts` | 3 | LoggingService · should store logs and keep them under max limit · should format message with context correctly |
@@ -4002,6 +4020,9 @@ _nenhum item encontrado_
 | * Encerramento e credito de premios (apenas admin, idempotente no banco). */ | `src/services/departmentWarService.ts` |
 | * Mínimo de respondentes exigido pelo banco para revelar qualquer recorte. */ | `src/services/engagementDiagnosticsService.ts` |
 | O banco já aplica o mínimo de respondentes por período. | `src/services/engagementDiagnosticsService.ts` |
+| (policy "Admins can view all responses"), mas o resumo dele não pode desfazer | `src/services/feedbackService.ts` |
+| `feedback_requests.relationship`), então a regra vive aqui e é aplicada pelo formulário | `src/services/feedbackService.ts` |
+| de pedido — antes era possível gravar uma avaliação de gestor num ciclo "Apenas Pares". | `src/services/feedbackService.ts` |
 | Limit to 50 for performance | `src/services/highPotentialService.ts` |
 | Log initial placement only if this is the first time (no history row yet). | `src/services/leaguesService.ts` |
 | * Inclui prêmios inativos (visível apenas para admins pela policy de SELECT). */ | `src/services/luckyWheelService.ts` |

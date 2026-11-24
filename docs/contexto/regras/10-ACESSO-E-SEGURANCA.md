@@ -1,6 +1,6 @@
 # 10 · ACESSO E SEGURANÇA — quem pode o quê
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `f55c5db3cc` · branch `main` · 2026-11-24 03:25 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `eff597a611` · branch `main` · 2026-11-24 04:17 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## Perfis / roles identificados
@@ -784,7 +784,7 @@ Middleware matcher (Next.js): nenhum
 | `notification_preferences` | acessada do front (3 arquivo(s)) sem RLS (não encontrado) | `src/components/InAppNotificationToggle.tsx`<br>`src/hooks/useTypePreferences.ts`<br>`src/services/salesCampaignsService.ts` |
 | `pdi_mentors` | front faz DELETE mas nenhuma política RLS permite DELETE → vai falhar/retornar vazio para usuários | `src/services/pdiService.ts` |
 | `pdi_templates` | front faz INSERT mas nenhuma política RLS permite INSERT → vai falhar/retornar vazio para usuários | `src/services/pdiService.ts` |
-| `profiles` | front faz SELECT mas nenhuma política RLS permite SELECT → vai falhar/retornar vazio para usuários | `src/hooks/usePDIAlerts.ts`<br>`src/hooks/useUserRank.ts`<br>`src/hooks/useWeeklyChallenge.ts`<br>`src/pages/Auth.tsx`<br>… +19 |
+| `profiles` | front faz SELECT mas nenhuma política RLS permite SELECT → vai falhar/retornar vazio para usuários | `src/hooks/usePDIAlerts.ts`<br>`src/hooks/useUserRank.ts`<br>`src/hooks/useWeeklyChallenge.ts`<br>`src/pages/Auth.tsx`<br>… +20 |
 | `profiles_public` | acessada do front (5 arquivo(s)) sem RLS (não encontrado) | `src/services/campaignTeamsService.ts`<br>`src/services/luckyWheelService.ts`<br>`src/services/profilesService.ts`<br>`src/services/salesCampaignsService.ts`<br>… +1 |
 | `roles` | front faz INSERT mas nenhuma política RLS permite INSERT → vai falhar/retornar vazio para usuários | `src/services/rbacService.ts` |
 | `roles` | front faz UPDATE mas nenhuma política RLS permite UPDATE → vai falhar/retornar vazio para usuários | `src/services/rbacService.ts` |

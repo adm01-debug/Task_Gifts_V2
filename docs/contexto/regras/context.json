@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "f55c5db3cca741374e9a73371b674a864aae8a93",
+  "sha": "eff597a611ab9a2160daa6dc300271b3290da3f0",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
-  "generated_at": "2026-11-24 03:25 UTC",
-  "files_total": 1554,
-  "code_files": 1450,
-  "code_lines": 261821
+  "generated_at": "2026-11-24 04:17 UTC",
+  "files_total": 1557,
+  "code_files": 1453,
+  "code_lines": 262815
  },
  "version": "1.3.2",
- "facts_hash": "9f8193f6574386c4",
+ "facts_hash": "0a43ec2503891fb1",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -195,7 +195,7 @@
   "package_manager": "bun",
   "languages": {
    ".ts": 577,
-   ".tsx": 566,
+   ".tsx": 569,
    ".sql": 275,
    ".mjs": 21,
    ".js": 5,
@@ -42953,13 +42953,28 @@
     "file": "src/pages/Feedback.tsx",
     "component": "Feedback",
     "tables_transitive": [
+     "audit_logs",
      "feedback_cycles",
      "feedback_requests",
-     "feedback_responses"
+     "feedback_responses",
+     "new_device_alerts",
+     "notifications",
+     "profiles",
+     "profiles_public",
+     "role_permissions",
+     "roles",
+     "user_devices",
+     "user_roles"
     ],
     "invokes_transitive": [],
-    "rpc_transitive": [],
-    "deps_count": 37
+    "rpc_transitive": [
+     "add_coins",
+     "add_xp",
+     "get_my_profile_private",
+     "increment_quests_completed",
+     "increment_streak"
+    ],
+    "deps_count": 55
    },
    {
     "path": "",
@@ -45603,7 +45618,7 @@
     "file": ".github/workflows/contexto.yml"
    }
   ],
-  "components_count": 465,
+  "components_count": 467,
   "hooks": [
    {
     "name": "useContacts",
@@ -46487,6 +46502,10 @@
    },
    {
     "name": "useFeedback360",
+    "file": "src/hooks/useFeedback360.ts"
+   },
+   {
+    "name": "useFeedbackSummary",
     "file": "src/hooks/useFeedback360.ts"
    },
    {
@@ -48250,8 +48269,8 @@
   },
   {
    "module": "src/components",
-   "files": 460,
-   "lines": 77945,
+   "files": 462,
+   "lines": 78345,
    "tables": [
     "attendance_records",
     "audit_logs",
@@ -48483,7 +48502,7 @@
   {
    "module": "src/hooks",
    "files": 129,
-   "lines": 14724,
+   "lines": 14744,
    "tables": [
     "certifications",
     "development_plan_actions",
@@ -48846,7 +48865,7 @@
   {
    "module": "src/pages",
    "files": 83,
-   "lines": 23662,
+   "lines": 23686,
    "tables": [
     "audit_logs",
     "campaign_participants",
@@ -49023,7 +49042,7 @@
   {
    "module": "src/services",
    "files": 99,
-   "lines": 22132,
+   "lines": 22286,
    "tables": [
     "achievements",
     "action_plan_items",
@@ -49226,7 +49245,7 @@
     "engagementReportsService.ts: CompletionTrendData, DepartmentPerformanceData, QuestDifficultyData, WeeklyEngagementData, TopQuestData, StrugglingAreaData",
     "enpsService.ts: ENPSSurvey, ENPSResponse, ENPSStats, EngagementSnapshot, enpsService",
     "executiveService.ts: ExecutiveMetrics, MonthlyTrend, DepartmentMetric, executiveService",
-    "feedbackService.ts: FeedbackCycle, FeedbackQuestion, FeedbackRequest, FeedbackResponse, CycleInsert, feedbackService"
+    "feedbackService.ts: FeedbackCycle, FeedbackQuestion, FeedbackRequest, FeedbackResponse, CycleInsert, FeedbackSummary"
    ],
    "docs": [
     "loggingService.ts: Centralized Logging Service Provides consistent error handling and logging across the application"
@@ -49405,8 +49424,8 @@
   },
   {
    "module": "src/test",
-   "files": 130,
-   "lines": 22812,
+   "files": 131,
+   "lines": 22995,
    "tables": [
     "kudos",
     "profiles"
@@ -49485,6 +49504,7 @@
     "src/test/engagementInsights.simulation.test.ts",
     "src/test/exportReports.test.ts",
     "src/test/external-db-bridge.test.ts",
+    "src/test/feedback360Flow.test.tsx",
     "src/test/goalBetCountdown.test.ts",
     "src/test/goalBetExposure.test.ts",
     "src/test/goalBetFilter.test.ts",
@@ -49516,14 +49536,13 @@
     "src/test/memoryDeckAuthoring.simulation.test.ts",
     "src/test/memoryGame.simulation.test.ts",
     "src/test/mentorshipService.test.ts",
-    "src/test/notificationPrefsCrossModule.simulation.test.ts",
-    "src/test/notificationTypePrefs.simulation.test.ts"
+    "src/test/notificationPrefsCrossModule.simulation.test.ts"
    ]
   },
   {
    "module": "src/tests",
    "files": 16,
-   "lines": 1062,
+   "lines": 1275,
    "tables": [],
    "exports": [],
    "docs": [],
@@ -51059,6 +51078,7 @@
      "src/services/celebrationsService.ts",
      "src/services/duelsService.ts",
      "src/services/engagementReportsService.ts",
+     "src/services/feedbackService.ts",
      "src/services/highPotentialService.ts",
      "src/services/kudosService.ts",
      "src/services/mentorshipService.ts",
@@ -55129,6 +55149,11 @@
     "rules": "max"
    },
    {
+    "file": "src/components/feedback/FeedbackRequestForm.tsx",
+    "field": "due-date",
+    "rules": "type=date"
+   },
+   {
     "file": "src/components/luckywheel/LuckyWheelWindowComparison.tsx",
     "field": "coins-per-spin-budget",
     "rules": "disabled=budgetSyncing"
@@ -56991,6 +57016,10 @@
    {
     "file": "src/hooks/useFeedback360.ts",
     "msg": "Erro ao criar ciclo"
+   },
+   {
+    "file": "src/hooks/useFeedback360.ts",
+    "msg": "Erro ao criar pedido de feedback"
    },
    {
     "file": "src/hooks/useFeedback360.ts",
@@ -59151,6 +59180,18 @@
    {
     "file": "src/services/engagementDiagnosticsService.ts",
     "text": "O banco já aplica o mínimo de respondentes por período."
+   },
+   {
+    "file": "src/services/feedbackService.ts",
+    "text": "(policy \"Admins can view all responses\"), mas o resumo dele não pode desfazer"
+   },
+   {
+    "file": "src/services/feedbackService.ts",
+    "text": "`feedback_requests.relationship`), então a regra vive aqui e é aplicada pelo formulário"
+   },
+   {
+    "file": "src/services/feedbackService.ts",
+    "text": "de pedido — antes era possível gravar uma avaliação de gestor num ciclo \"Apenas Pares\"."
    },
    {
     "file": "src/services/highPotentialService.ts",
@@ -77966,6 +78007,18 @@
     "body": "const zone = scoreZone(score); const value = typeof score === \"number\" && Number.isFinite(score) ? score.toFixed(1) : \"—\"; return ( <span className={cn( \"inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-xs font-semibold\", ZONE_CLASS[zone], className, )} {...props} > {value} {showLabel && <span className=\"font-normal opacity-80\">{ZONE_LABEL[zone]}</span>} </span> );"
    },
    {
+    "file": "src/components/feedback/FeedbackRequestForm.tsx",
+    "name": "FeedbackRequestForm",
+    "params": "{ open, onOpenChange, cycles }: FeedbackRequestFormProps",
+    "body": "const { user } = useAuth(); const { data: profiles = [], isLoading: isLoadingProfiles } = useProfiles(); const { createRequest } = useFeedback360(); const [cycleId, setCycleId] = useState(\"\"); const [fromUserId, setFromUserId] = useState(user?.id ?? \"\"); const [toUserId, setToUserId] = useState(\"\"); const [relationship, setRelationship] = useState<FeedbackRequest[\"relationship\"]>(\"manager\"); const [dueDate, setDueDate] = useState(\"\"); const [error, setError] = useState<string | null>(null); cons …"
+   },
+   {
+    "file": "src/components/feedback/FeedbackSummaryCard.tsx",
+    "name": "FeedbackSummaryCard",
+    "params": "",
+    "body": "const { user } = useAuth(); const { data, isLoading, isError, refetch } = useFeedbackSummary(user?.id); const hasContent = !!data && (data.totalResponses > 0 || data.commonStrengths.length > 0 || data.commonImprovements.length > 0); return ( <Card> <CardHeader> <CardTitle className=\"flex items-center gap-2\"> <Star className=\"h-5 w-5 text-primary\" /> Meu resumo de feedback </CardTitle> </CardHeader> <CardContent> {isLoading ? ( <LoadingState message=\"Carregando seu resumo...\" /> ) : isError ? ( < …"
+   },
+   {
     "file": "src/components/lms/ModuleViewer.tsx",
     "name": "calculateScore",
     "params": "",
@@ -78479,7 +78532,7 @@
     "file": "src/pages/Feedback.tsx",
     "name": "Feedback",
     "params": "",
-    "body": "const { cycles, pendingRequests, isLoading, submitFeedback, isSubmitting } = useFeedback360(); const seoData = useSEO(); const [activeRequest, setActiveRequest] = useState<FeedbackRequest | null>(null); const [strengths, setStrengths] = useState(\"\"); const [improvements, setImprovements] = useState(\"\"); const [overallRating, setOverallRating] = useState<\"1\" | \"2\" | \"3\" | \"4\" | \"5\">(\"5\"); const [isAnonymous, setIsAnonymous] = useState(false); const openRespond = (req: FeedbackRequest) => { setAct …"
+    "body": "const { cycles, pendingRequests, isLoading, submitFeedback, isSubmitting } = useFeedback360(); const { isAdmin, isManager } = useRBAC(); const canManageRequests = isAdmin || isManager; const seoData = useSEO(); const [activeRequest, setActiveRequest] = useState<FeedbackRequest | null>(null); const [isRequestFormOpen, setIsRequestFormOpen] = useState(false); const [strengths, setStrengths] = useState(\"\"); const [improvements, setImprovements] = useState(\"\"); const [overallRating, setOverallRating …"
    },
    {
     "file": "src/pages/Postmortems.tsx",
@@ -78564,6 +78617,18 @@
     "name": "generateSnapshot",
     "params": "departmentId?: string, periodType = \"weekly\"",
     "body": "const { data, error } = await supabase .rpc(\"generate_engagement_snapshot\", { p_department_id: departmentId, p_period_type: periodType, }); if (error) throw error; return data;"
+   },
+   {
+    "file": "src/services/feedbackService.ts",
+    "name": "rankComments",
+    "params": "texts: Array<string | null>",
+    "body": "const byKey = new Map<string, { text: string; count: number }>(); texts.forEach(raw => { const text = raw?.trim(); if (!text) return; const key = text.toLowerCase().replace(/\\s+/g, \" \"); const entry = byKey.get(key); if (entry) entry.count += 1; else byKey.set(key, { text, count: 1 }); }); return [...byKey.values()] .sort((a, b) => b.count - a.count || a.text.localeCompare(b.text)) .slice(0, 5) .map(entry => entry.text);"
+   },
+   {
+    "file": "src/services/feedbackService.ts",
+    "name": "aggregateFeedbackSummary",
+    "params": "rows: FeedbackSummaryRow[]",
+    "body": "let totalRating = 0; let ratingCount = 0; const byRelationship: Record<string, { count: number; totalRating: number }> = {}; const strengths: string[] = []; const improvements: string[] = []; rows.forEach(row => { // O anonimato vale para o avaliado: um admin consegue ler respostas anônimas // (policy \"Admins can view all responses\"), mas o resumo dele não pode desfazer // o anonimato — é exatamente o que o card promete na tela. O descarte vem antes do // dedupe: se o mesmo pedido tem uma respos …"
    },
    {
     "file": "src/services/highPotentialService.ts",
@@ -83416,6 +83481,58 @@
     "name": "allows all origins"
    },
    {
+    "file": "src/test/feedback360Flow.test.tsx",
+    "name": "aggregateFeedbackSummary"
+   },
+   {
+    "file": "src/test/feedback360Flow.test.tsx",
+    "name": "ranks repeated comments by real frequency, ignoring case and extra spaces"
+   },
+   {
+    "file": "src/test/feedback360Flow.test.tsx",
+    "name": "caps the ranking at the 5 most cited comments"
+   },
+   {
+    "file": "src/test/feedback360Flow.test.tsx",
+    "name": "computes average and breakdown by relationship"
+   },
+   {
+    "file": "src/test/feedback360Flow.test.tsx",
+    "name": "keeps comment-only responses out of the rating average"
+   },
+   {
+    "file": "src/test/feedback360Flow.test.tsx",
+    "name": "returns an empty summary when there are no requests"
+   },
+   {
+    "file": "src/test/feedback360Flow.test.tsx",
+    "name": "FeedbackSummaryCard"
+   },
+   {
+    "file": "src/test/feedback360Flow.test.tsx",
+    "name": "shows the consolidated average, the breakdown and the top comments"
+   },
+   {
+    "file": "src/test/feedback360Flow.test.tsx",
+    "name": "shows the empty state when nothing was received"
+   },
+   {
+    "file": "src/test/feedback360Flow.test.tsx",
+    "name": "offers a retry when the summary query fails"
+   },
+   {
+    "file": "src/test/feedback360Flow.test.tsx",
+    "name": "FeedbackRequestForm"
+   },
+   {
+    "file": "src/test/feedback360Flow.test.tsx",
+    "name": "guides the manager when there is no active cycle"
+   },
+   {
+    "file": "src/test/feedback360Flow.test.tsx",
+    "name": "blocks submit until a cycle is chosen"
+   },
+   {
     "file": "src/test/goalBetCountdown.test.ts",
     "name": "computeGoalBetCountdown"
    },
@@ -88021,11 +88138,67 @@
    },
    {
     "file": "src/tests/unit/feedback.test.ts",
+    "name": "createFeedbackRequest"
+   },
+   {
+    "file": "src/tests/unit/feedback.test.ts",
+    "name": "le a linha inserida com maybeSingle, para nao derrubar a criacao quando a policy esconde a linha"
+   },
+   {
+    "file": "src/tests/unit/feedback.test.ts",
+    "name": "devolve o pedido quando a leitura e permitida"
+   },
+   {
+    "file": "src/tests/unit/feedback.test.ts",
     "name": "submitFeedback"
    },
    {
     "file": "src/tests/unit/feedback.test.ts",
-    "name": "should update request status and insert response"
+    "name": "insere a resposta e marca o pedido como enviado"
+   },
+   {
+    "file": "src/tests/unit/feedback.test.ts",
+    "name": "reaproveita a resposta existente em vez de duplicar no retry"
+   },
+   {
+    "file": "src/tests/unit/feedback.test.ts",
+    "name": "propaga o erro da checagem de resposta existente e nao insere nada"
+   },
+   {
+    "file": "src/tests/unit/feedback.test.ts",
+    "name": "getMyPendingRequests"
+   },
+   {
+    "file": "src/tests/unit/feedback.test.ts",
+    "name": "resolve quem recebe numa segunda query, sem depender de embed de profiles"
+   },
+   {
+    "file": "src/tests/unit/feedback.test.ts",
+    "name": "aggregateFeedbackSummary"
+   },
+   {
+    "file": "src/tests/unit/feedback.test.ts",
+    "name": "exclui respostas anonimas do resumo de quem foi avaliado"
+   },
+   {
+    "file": "src/tests/unit/feedback.test.ts",
+    "name": "nao perde a resposta identificada quando o mesmo pedido tem uma anonima mais recente"
+   },
+   {
+    "file": "src/tests/unit/feedback.test.ts",
+    "name": "conta uma vez so quando duas abas gravam o mesmo pedido, mantendo a resposta mais recente"
+   },
+   {
+    "file": "src/tests/unit/feedback.test.ts",
+    "name": "mantem todas as respostas quando a linha nao traz request_id"
+   },
+   {
+    "file": "src/tests/unit/feedback.test.ts",
+    "name": "allowedRelationshipsForCycle"
+   },
+   {
+    "file": "src/tests/unit/feedback.test.ts",
+    "name": "restringe o tipo de avaliacao conforme o tipo do ciclo"
    },
    {
     "file": "src/tests/unit/kudos.test.ts",
@@ -105827,6 +106000,7 @@
      "src/services/celebrationsService.ts",
      "src/services/duelsService.ts",
      "src/services/engagementReportsService.ts",
+     "src/services/feedbackService.ts",
      "src/services/highPotentialService.ts",
      "src/services/kudosService.ts",
      "src/services/mentorshipService.ts",
@@ -122723,6 +122897,40 @@
     "function MetricCard"
    ]
   },
+  "src/components/feedback/FeedbackRequestForm.tsx": {
+   "path": "src/components/feedback/FeedbackRequestForm.tsx",
+   "lines": 275,
+   "exports": [
+    "function FeedbackRequestForm"
+   ],
+   "html_constraints": [
+    {
+     "field": "due-date",
+     "rules": "type=date"
+    }
+   ],
+   "calc_fns": [
+    {
+     "name": "FeedbackRequestForm",
+     "params": "{ open, onOpenChange, cycles }: FeedbackRequestFormProps",
+     "body": "const { user } = useAuth(); const { data: profiles = [], isLoading: isLoadingProfiles } = useProfiles(); const { createRequest } = useFeedback360(); const [cycleId, setCycleId] = useState(\"\"); const [fromUserId, setFromUserId] = useState(user?.id ?? \"\"); const [toUserId, setToUserId] = useState(\"\"); const [relationship, setRelationship] = useState<FeedbackRequest[\"relationship\"]>(\"manager\"); const [dueDate, setDueDate] = useState(\"\"); const [error, setError] = useState<string | null>(null); cons …"
+    }
+   ]
+  },
+  "src/components/feedback/FeedbackSummaryCard.tsx": {
+   "path": "src/components/feedback/FeedbackSummaryCard.tsx",
+   "lines": 125,
+   "exports": [
+    "function FeedbackSummaryCard"
+   ],
+   "calc_fns": [
+    {
+     "name": "FeedbackSummaryCard",
+     "params": "",
+     "body": "const { user } = useAuth(); const { data, isLoading, isError, refetch } = useFeedbackSummary(user?.id); const hasContent = !!data && (data.totalResponses > 0 || data.commonStrengths.length > 0 || data.commonImprovements.length > 0); return ( <Card> <CardHeader> <CardTitle className=\"flex items-center gap-2\"> <Star className=\"h-5 w-5 text-primary\" /> Meu resumo de feedback </CardTitle> </CardHeader> <CardContent> {isLoading ? ( <LoadingState message=\"Carregando seu resumo...\" /> ) : isError ? ( < …"
+    }
+   ]
+  },
   "src/components/goals/GoalCard.tsx": {
    "path": "src/components/goals/GoalCard.tsx",
    "lines": 284,
@@ -127313,18 +127521,21 @@
   },
   "src/hooks/useFeedback360.ts": {
    "path": "src/hooks/useFeedback360.ts",
-   "lines": 119,
+   "lines": 139,
    "exports": [
-    "function useFeedback360"
+    "function useFeedback360",
+    "function useFeedbackSummary"
    ],
    "errors": [
     "Erro ao atualizar ciclo",
     "Erro ao criar ciclo",
+    "Erro ao criar pedido de feedback",
     "Erro ao enviar feedback",
     "Erro ao excluir ciclo"
    ],
    "hooks": [
-    "useFeedback360"
+    "useFeedback360",
+    "useFeedbackSummary"
    ]
   },
   "src/hooks/useFirstTimeIndicator.ts": {
@@ -135149,7 +135360,7 @@
   },
   "src/pages/Feedback.tsx": {
    "path": "src/pages/Feedback.tsx",
-   "lines": 197,
+   "lines": 221,
    "exports": [
     "function Feedback"
    ],
@@ -135157,7 +135368,7 @@
     {
      "name": "Feedback",
      "params": "",
-     "body": "const { cycles, pendingRequests, isLoading, submitFeedback, isSubmitting } = useFeedback360(); const seoData = useSEO(); const [activeRequest, setActiveRequest] = useState<FeedbackRequest | null>(null); const [strengths, setStrengths] = useState(\"\"); const [improvements, setImprovements] = useState(\"\"); const [overallRating, setOverallRating] = useState<\"1\" | \"2\" | \"3\" | \"4\" | \"5\">(\"5\"); const [isAnonymous, setIsAnonymous] = useState(false); const openRespond = (req: FeedbackRequest) => { setAct …"
+     "body": "const { cycles, pendingRequests, isLoading, submitFeedback, isSubmitting } = useFeedback360(); const { isAdmin, isManager } = useRBAC(); const canManageRequests = isAdmin || isManager; const seoData = useSEO(); const [activeRequest, setActiveRequest] = useState<FeedbackRequest | null>(null); const [isRequestFormOpen, setIsRequestFormOpen] = useState(false); const [strengths, setStrengths] = useState(\"\"); const [improvements, setImprovements] = useState(\"\"); const [overallRating, setOverallRating …"
     }
    ]
   },
@@ -139314,16 +139525,24 @@
   },
   "src/services/feedbackService.ts": {
    "path": "src/services/feedbackService.ts",
-   "lines": 339,
+   "lines": 493,
    "exports": [
     "interface FeedbackCycle",
     "interface FeedbackQuestion",
     "interface FeedbackRequest",
     "interface FeedbackResponse",
     "interface CycleInsert",
+    "interface FeedbackSummary",
+    "interface FeedbackSummaryRow",
+    "function aggregateFeedbackSummary",
+    "function allowedRelationshipsForCycle",
     "const feedbackService"
    ],
    "tables": [
+    {
+     "table": "profiles",
+     "op": "select"
+    },
     {
      "table": "feedback_cycles",
      "op": "select"
@@ -139361,12 +139580,12 @@
      "op": "insert,select"
     },
     {
-     "table": "feedback_requests",
-     "op": "update"
-    },
-    {
      "table": "feedback_responses",
      "op": "insert,select"
+    },
+    {
+     "table": "feedback_requests",
+     "op": "update"
     },
     {
      "table": "feedback_responses",
@@ -139378,6 +139597,11 @@
     }
    ],
    "table_cols": {
+    "profiles": [
+     "avatar_url",
+     "display_name",
+     "id"
+    ],
     "feedback_cycles": [
      "id",
      "status"
@@ -139446,6 +139670,23 @@
      "field": "status",
      "value": "submitted",
      "kind": "filtra"
+    }
+   ],
+   "rule_comments": [
+    "(policy \"Admins can view all responses\"), mas o resumo dele não pode desfazer",
+    "`feedback_requests.relationship`), então a regra vive aqui e é aplicada pelo formulário",
+    "de pedido — antes era possível gravar uma avaliação de gestor num ciclo \"Apenas Pares\"."
+   ],
+   "calc_fns": [
+    {
+     "name": "rankComments",
+     "params": "texts: Array<string | null>",
+     "body": "const byKey = new Map<string, { text: string; count: number }>(); texts.forEach(raw => { const text = raw?.trim(); if (!text) return; const key = text.toLowerCase().replace(/\\s+/g, \" \"); const entry = byKey.get(key); if (entry) entry.count += 1; else byKey.set(key, { text, count: 1 }); }); return [...byKey.values()] .sort((a, b) => b.count - a.count || a.text.localeCompare(b.text)) .slice(0, 5) .map(entry => entry.text);"
+    },
+    {
+     "name": "aggregateFeedbackSummary",
+     "params": "rows: FeedbackSummaryRow[]",
+     "body": "let totalRating = 0; let ratingCount = 0; const byRelationship: Record<string, { count: number; totalRating: number }> = {}; const strengths: string[] = []; const improvements: string[] = []; rows.forEach(row => { // O anonimato vale para o avaliado: um admin consegue ler respostas anônimas // (policy \"Admins can view all responses\"), mas o resumo dele não pode desfazer // o anonimato — é exatamente o que o card promete na tela. O descarte vem antes do // dedupe: se o mesmo pedido tem uma respos …"
     }
    ]
   },
@@ -145940,6 +146181,26 @@
     "allows all origins"
    ]
   },
+  "src/test/feedback360Flow.test.tsx": {
+   "path": "src/test/feedback360Flow.test.tsx",
+   "lines": 183,
+   "is_test": true,
+   "tests": [
+    "aggregateFeedbackSummary",
+    "ranks repeated comments by real frequency, ignoring case and extra spaces",
+    "caps the ranking at the 5 most cited comments",
+    "computes average and breakdown by relationship",
+    "keeps comment-only responses out of the rating average",
+    "returns an empty summary when there are no requests",
+    "FeedbackSummaryCard",
+    "shows the consolidated average, the breakdown and the top comments",
+    "shows the empty state when nothing was received",
+    "offers a retry when the summary query fails",
+    "FeedbackRequestForm",
+    "guides the manager when there is no active cycle",
+    "blocks submit until a cycle is chosen"
+   ]
+  },
   "src/test/goalBetCountdown.test.ts": {
    "path": "src/test/goalBetCountdown.test.ts",
    "lines": 77,
@@ -147890,12 +148151,26 @@
   },
   "src/tests/unit/feedback.test.ts": {
    "path": "src/tests/unit/feedback.test.ts",
-   "lines": 50,
+   "lines": 263,
    "is_test": true,
    "tests": [
     "feedbackService",
+    "createFeedbackRequest",
+    "le a linha inserida com maybeSingle, para nao derrubar a criacao quando a policy esconde a linha",
+    "devolve o pedido quando a leitura e permitida",
     "submitFeedback",
-    "should update request status and insert response"
+    "insere a resposta e marca o pedido como enviado",
+    "reaproveita a resposta existente em vez de duplicar no retry",
+    "propaga o erro da checagem de resposta existente e nao insere nada",
+    "getMyPendingRequests",
+    "resolve quem recebe numa segunda query, sem depender de embed de profiles",
+    "aggregateFeedbackSummary",
+    "exclui respostas anonimas do resumo de quem foi avaliado",
+    "nao perde a resposta identificada quando o mesmo pedido tem uma anonima mais recente",
+    "conta uma vez so quando duas abas gravam o mesmo pedido, mantendo a resposta mais recente",
+    "mantem todas as respostas quando a linha nao traz request_id",
+    "allowedRelationshipsForCycle",
+    "restringe o tipo de avaliacao conforme o tipo do ciclo"
    ]
   },
   "src/tests/unit/kudos.test.ts": {
@@ -152623,10 +152898,28 @@
   }
  },
  "git": {
-  "sha": "f55c5db3cca741374e9a73371b674a864aae8a93",
+  "sha": "eff597a611ab9a2160daa6dc300271b3290da3f0",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "commits": [
+   {
+    "sha": "eff597a",
+    "date": "2026-11-24",
+    "author": "adm01-debug",
+    "subject": "feat(feedback): tela para pedir feedback 360 e ver o resumo do avaliado (#132)",
+    "files": [
+     "INVENTARIO_FUNCIONALIDADES.md",
+     "docs/estado/02-componentes.md",
+     "docs/estado/03-hooks-services-lib.md",
+     "src/components/feedback/FeedbackRequestForm.tsx",
+     "src/components/feedback/FeedbackSummaryCard.tsx",
+     "src/hooks/useFeedback360.ts",
+     "src/pages/Feedback.tsx",
+     "src/services/feedbackService.ts",
+     "src/test/feedback360Flow.test.tsx",
+     "src/tests/unit/feedback.test.ts"
+    ]
+   },
    {
     "sha": "f55c5db",
     "date": "2026-11-24",
@@ -152972,18 +153265,13 @@
      "supabase/functions/_shared/validation.ts",
      "supabase/functions/webhook-dispatcher/index.ts"
     ]
-   },
-   {
-    "sha": "03d0d59",
-    "date": "2026-11-22",
-    "author": "adm01-debug",
-    "subject": "fix(webhook-dispatcher): devolve 401 em vez de 500 ao rejeitar token sem permissao (#100)",
-    "files": [
-     "supabase/functions/webhook-dispatcher/index.ts"
-    ]
    }
   ],
   "hot_files": [
+   [
+    "docs/estado/03-hooks-services-lib.md",
+    4
+   ],
    [
     "supabase/functions/_shared/contracts/_fixtures/index.ts",
     4
@@ -152993,7 +153281,11 @@
     4
    ],
    [
-    "docs/estado/03-hooks-services-lib.md",
+    "INVENTARIO_FUNCIONALIDADES.md",
+    3
+   ],
+   [
+    "docs/estado/02-componentes.md",
     3
    ],
    [
@@ -153009,11 +153301,15 @@
     3
    ],
    [
-    "INVENTARIO_FUNCIONALIDADES.md",
+    "src/hooks/useFeedback360.ts",
     2
    ],
    [
-    "docs/estado/02-componentes.md",
+    "src/pages/Feedback.tsx",
+    2
+   ],
+   [
+    "src/services/feedbackService.ts",
     2
    ],
    [
@@ -153041,27 +153337,15 @@
     2
    ],
    [
-    "supabase/functions/webhook-dispatcher/index.ts",
-    2
-   ],
-   [
-    "SYSTEM_RELIABILITY_AUDIT.md",
+    "src/components/feedback/FeedbackRequestForm.tsx",
     1
    ],
    [
-    "src/services/feedback360Service.ts",
+    "src/components/feedback/FeedbackSummaryCard.tsx",
     1
    ],
    [
-    "src/test/useUnsavedChanges.test.tsx",
-    1
-   ],
-   [
-    "docs/estado/06-integracoes.md",
-    1
-   ],
-   [
-    "docs/estado/07-infra-ci-testes.md",
+    "src/test/feedback360Flow.test.tsx",
     1
    ]
   ]

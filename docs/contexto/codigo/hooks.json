@@ -1058,7 +1058,7 @@
     "useState"
    ],
    "canais_realtime": [],
-   "usado_por": 101,
+   "usado_por": 103,
    "usado_por_arquivos": [
     "src/App.tsx",
     "src/components/ActivityComments.tsx",
@@ -1083,13 +1083,13 @@
     "src/components/boss/BossContributorsCard.tsx",
     "src/components/campaigns/MyCampaignBadgeCard.tsx",
     "src/components/dashboard/DashboardHeader.tsx",
+    "src/components/feedback/FeedbackRequestForm.tsx",
+    "src/components/feedback/FeedbackSummaryCard.tsx",
     "src/components/lms/ModuleViewer.tsx",
     "src/components/manager/QuestsList.tsx",
     "src/components/manager/TeamCompetencyDashboard.tsx",
     "src/components/quiz/QuizDailyRanking.tsx",
-    "src/components/rbac/ProtectedRoute.tsx",
-    "src/components/security/ReauthProvider.tsx",
-    "src/components/security/SessionsPanel.tsx"
+    "src/components/rbac/ProtectedRoute.tsx"
    ],
    "coberto_por_testes": 2
   },
@@ -1993,9 +1993,10 @@
   {
    "arquivo": "src/hooks/useFeedback360.ts",
    "hooks_exportados": [
-    "useFeedback360"
+    "useFeedback360",
+    "useFeedbackSummary"
    ],
-   "linhas": 119,
+   "linhas": 139,
    "dominio": "hooks",
    "tabelas": [],
    "rpcs": [],
@@ -2007,9 +2008,11 @@
     "useToast"
    ],
    "canais_realtime": [],
-   "usado_por": 2,
+   "usado_por": 4,
    "usado_por_arquivos": [
     "src/components/admin/FeedbackCycleManager.tsx",
+    "src/components/feedback/FeedbackRequestForm.tsx",
+    "src/components/feedback/FeedbackSummaryCard.tsx",
     "src/pages/Feedback.tsx"
    ],
    "coberto_por_testes": 0
@@ -3104,7 +3107,7 @@
     "useSoundEffects"
    ],
    "canais_realtime": [],
-   "usado_por": 34,
+   "usado_por": 35,
    "usado_por_arquivos": [
     "src/components/AICoachDialog.tsx",
     "src/components/AnalyticsWidget.tsx",
@@ -3127,6 +3130,7 @@
     "src/components/admin/PositionsManager.tsx",
     "src/components/admin/UsersManager.tsx",
     "src/components/certifications/CertificateActions.tsx",
+    "src/components/feedback/FeedbackRequestForm.tsx",
     "src/components/manager/AICopilotDashboard.tsx",
     "src/components/manager/ManagerConsolidatedDashboard.tsx",
     "src/components/prediction/OracleLeaderboard.tsx",
@@ -3134,8 +3138,7 @@
     "src/hooks/useAICoach.ts",
     "src/pages/AdminPanel.tsx",
     "src/pages/AuditLogs.tsx",
-    "src/pages/Checkins.tsx",
-    "src/pages/ManagerDashboard.tsx"
+    "src/pages/Checkins.tsx"
    ],
    "coberto_por_testes": 1
   },
@@ -3473,7 +3476,7 @@
     "useQuery"
    ],
    "canais_realtime": [],
-   "usado_por": 28,
+   "usado_por": 29,
    "usado_por_arquivos": [
     "src/components/ExecutiveReportPreferenceToggle.tsx",
     "src/components/admin/UsersManager.tsx",
@@ -3493,6 +3496,7 @@
     "src/pages/ClimateDiagnostics.tsx",
     "src/pages/ContinuousEngagement.tsx",
     "src/pages/DepartmentWarPage.tsx",
+    "src/pages/Feedback.tsx",
     "src/pages/LuckyWheelPage.tsx",
     "src/pages/MemoryGamePage.tsx",
     "src/pages/Mentoria.tsx",

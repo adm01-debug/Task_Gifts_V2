@@ -1,7 +1,7 @@
 {
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
- "total": 521,
+ "total": 523,
  "orfaos": 23,
  "nomes_duplicados": {
   "CopilotAlert": [
@@ -2948,6 +2948,41 @@
    "hooks_locais": [
     "useRBAC",
     "useTypePreferences"
+   ],
+   "tabelas": [],
+   "edges": [],
+   "usado_por": 1,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/components/feedback/FeedbackRequestForm.tsx",
+   "exports": [
+    "FeedbackRequestForm"
+   ],
+   "export_default": null,
+   "linhas": 275,
+   "dominio": "components/feedback",
+   "hooks_locais": [
+    "useAuth",
+    "useFeedback360",
+    "useProfiles"
+   ],
+   "tabelas": [],
+   "edges": [],
+   "usado_por": 1,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/components/feedback/FeedbackSummaryCard.tsx",
+   "exports": [
+    "FeedbackSummaryCard"
+   ],
+   "export_default": null,
+   "linhas": 125,
+   "dominio": "components/feedback",
+   "hooks_locais": [
+    "useAuth",
+    "useFeedbackSummary"
    ],
    "tabelas": [],
    "edges": [],
@@ -5937,7 +5972,7 @@
    "hooks_locais": [],
    "tabelas": [],
    "edges": [],
-   "usado_por": 243,
+   "usado_por": 244,
    "orfao": false
   },
   {
@@ -5974,7 +6009,7 @@
    ],
    "tabelas": [],
    "edges": [],
-   "usado_por": 286,
+   "usado_por": 288,
    "orfao": false
   },
   {
@@ -6009,7 +6044,7 @@
    "hooks_locais": [],
    "tabelas": [],
    "edges": [],
-   "usado_por": 292,
+   "usado_por": 293,
    "orfao": false
   },
   {
@@ -6179,7 +6214,7 @@
    "hooks_locais": [],
    "tabelas": [],
    "edges": [],
-   "usado_por": 76,
+   "usado_por": 77,
    "orfao": false
   },
   {
@@ -6314,7 +6349,7 @@
    "hooks_locais": [],
    "tabelas": [],
    "edges": [],
-   "usado_por": 91,
+   "usado_por": 92,
    "orfao": false
   },
   {
@@ -6328,7 +6363,7 @@
    "hooks_locais": [],
    "tabelas": [],
    "edges": [],
-   "usado_por": 79,
+   "usado_por": 80,
    "orfao": false
   },
   {
@@ -6645,7 +6680,7 @@
    "hooks_locais": [],
    "tabelas": [],
    "edges": [],
-   "usado_por": 91,
+   "usado_por": 92,
    "orfao": false
   },
   {
@@ -7295,7 +7330,7 @@
    ],
    "tabelas": [],
    "edges": [],
-   "usado_por": 101,
+   "usado_por": 103,
    "orfao": false
   },
   {
@@ -7955,10 +7990,11 @@
     "Feedback"
    ],
    "export_default": "Feedback",
-   "linhas": 197,
+   "linhas": 221,
    "dominio": "pages",
    "hooks_locais": [
     "useFeedback360",
+    "useRBAC",
     "useSEO"
    ],
    "tabelas": [],

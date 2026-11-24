@@ -299,7 +299,7 @@
     "services",
     "services/behavioralBadges"
    ],
-   "coberto_por_testes": 12,
+   "coberto_por_testes": 11,
    "orfao": false
   },
   {
@@ -5394,14 +5394,19 @@
     "FeedbackQuestion",
     "FeedbackRequest",
     "FeedbackResponse",
+    "FeedbackSummary",
+    "FeedbackSummaryRow",
+    "aggregateFeedbackSummary",
+    "allowedRelationshipsForCycle",
     "feedbackService"
    ],
    "export_default": null,
-   "linhas": 339,
+   "linhas": 493,
    "tabelas": [
     "feedback_cycles",
     "feedback_requests",
-    "feedback_responses"
+    "feedback_responses",
+    "profiles"
    ],
    "rpcs": [],
    "edges": [],
@@ -5410,13 +5415,14 @@
    "zod_schemas": 0,
    "flags": [],
    "papeis": [],
-   "usado_por": 3,
+   "usado_por": 4,
    "usado_por_modulos": [
     "components/admin",
+    "components/feedback",
     "hooks",
     "pages"
    ],
-   "coberto_por_testes": 1,
+   "coberto_por_testes": 2,
    "orfao": false
   },
   {
