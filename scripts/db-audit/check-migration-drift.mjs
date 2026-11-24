@@ -10,7 +10,8 @@
  *   FASE 1 (offline, sempre roda) - o arquivo e' seguro de reaplicar?
  *     Sem ledger, qualquer replay/reset reexecuta a migration inteira. Uma
  *     migration nao idempotente aborta no meio e deixa o banco pela metade.
- *     Confere nome, versao duplicada, idempotencia e DDL destrutivo, com
+ *     Confere nome, versao duplicada, codificacao (BOM), idempotencia e DDL
+ *     destrutivo, com
  *     ratchet (scripts/db-audit/migration-baseline.json): o legado nao quebra o
  *     CI, mas nenhum caso novo entra.
  *
@@ -61,9 +62,12 @@ const LIMITE_LISTA = 20;
 export const TIPOS = [
   'nome_invalido',
   'versao_duplicada',
+  'codificacao',
   'nao_idempotente',
   'ddl_destrutivo',
 ];
+
+const BOM = [0xef, 0xbb, 0xbf];
 
 const GUARDAS = /if not exists|if exists|to_regclass|to_regtype|to_regproc|pg_class|pg_policies|pg_policy|pg_type|pg_trigger|pg_proc|pg_matviews|pg_indexes|information_schema|exception when duplicate/;
 
@@ -398,7 +402,16 @@ export function auditar(dir) {
   const versoes = new Map();
   const ordenados = [];
   for (const nome of arquivos) {
-    const texto = fs.readFileSync(path.join(dir, nome), 'utf8');
+    const bruto = fs.readFileSync(path.join(dir, nome));
+    if (BOM.every((b, i) => bruto[i] === b)) {
+      achados.push({
+        tipo: 'codificacao',
+        arquivo: nome,
+        rotulo: 'BOM no inicio do arquivo',
+        detalhe: 'os 3 primeiros bytes sao EF BB BF; o Postgres le o BOM como token e aborta com "syntax error at or near \\ufeff" (SQLSTATE 42601)',
+      });
+    }
+    const texto = bruto.toString('utf8');
     achados.push(...analisarArquivo(nome, texto));
     const m = NOME_RE.exec(nome);
     if (m) {

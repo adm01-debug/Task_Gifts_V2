@@ -1,4 +1,4 @@
-﻿
+
 
 -- =============================================================================
 -- Pendência 02: securitizar escrita de economia em profiles

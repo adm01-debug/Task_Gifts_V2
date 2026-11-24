@@ -33,8 +33,8 @@ neste repo.
 | URL | `https://eidsaqymojyuhprobfpn.supabase.co` (valor de `VITE_SUPABASE_URL`) |
 | Dashboard | https://supabase.com/dashboard/project/eidsaqymojyuhprobfpn |
 | MCP para SQL | servidor **`supabase`** declarado em `.mcp.json` (gateway Cloudflare Worker `supabase-eidsaqymo-mcp`) — acesso total: `SELECT/INSERT/UPDATE/DELETE/DDL` |
-| Ledger de migrations | **existe** (`supabase_migrations.schema_migrations`, 271 versões em 2026-11-24) — mas **não é fonte de verdade**: 7 dos 278 arquivos do repo não têm registro; ver regra 2 |
-| Migrations no repo | 278 arquivos `.sql` em `supabase/migrations/` |
+| Ledger de migrations | **existe** (`supabase_migrations.schema_migrations`, 275 versões em 2026-11-24) — mas **não é fonte de verdade**: 2 dos 277 arquivos do repo não têm registro; ver regra 2 |
+| Migrations no repo | 277 arquivos `.sql` em `supabase/migrations/` |
 
 ### Projetos que NÃO são este (não escrever neles)
 
@@ -86,12 +86,19 @@ credencial e decisão do dono), mas:
 7. Objetos que o código assume e que a auditoria de 2026-08 não encontrou no banco (confira antes de usar):
    `email_outbox`, `push_devices`, `webhook_deliveries`, `public.security_logs`. Se o seu fix depende de um
    deles, o primeiro passo é a migration, não o patch no front.
+8. **Arquivo `.sql` de migration sem BOM.** O CLI lê o arquivo como SQL cru: um `EF BB BF` no começo faz o
+   Postgres devolver `syntax error at or near "\ufeff"` (SQLSTATE 42601) já no statement 0 e o check
+   `Supabase Preview` reprova. Grave sempre UTF-8 **sem** BOM — no Windows PowerShell 5.1 `Set-Content` e
+   `Out-File -Encoding utf8` gravam BOM por padrão (no PowerShell 7, `utf8` já é sem BOM; com BOM é
+   `utf8BOM`); confira os 3 primeiros bytes antes de commitar. O guarda `scripts/db-audit/check-migration-drift.mjs`
+   (job `quality`) acusa o caso como `codificacao`.
 
 ## Divergências conhecidas (confirmar antes de agir)
 
 | Divergência | Evidência | Efeito |
 |---|---|---|
-| Ledger não cobre o repo | `supabase_migrations.schema_migrations` tem 271 versões, mas 7 dos 278 arquivos de `supabase/migrations/` não têm registro; nesses, a conferência foi por introspecção dos objetos-chave (não pela execução integral do SQL) | o ledger não prova banco == repo; introspecção continua obrigatória |
+| Ledger não cobre o repo | `supabase_migrations.schema_migrations` tem 275 versões (2026-11-24) para 277 arquivos em `supabase/migrations/`: 2 seguem sem registro (`20261218000000`, `20261220000000`). Quatro das sete que faltavam (`20261109120000`, `20261114110500`, `20261122140000`, `20261123000000`) entraram no ledger na mesma rodada — `xmin` consecutivos 1752544-1752547, na ordem de versão, parando exatamente no arquivo com BOM que o check acusa; nesses, a conferência foi por introspecção dos objetos-chave (não pela execução integral do SQL) | o ledger não prova banco == repo; introspecção continua obrigatória, e o apply de pendências parece acontecer no push da `main` |
+| Migration duplicada e obsoleta removida (2026-11-24) | `20261123000001_create_acknowledge_security_digest.sql` era um rascunho anterior da mesma RPC, com BOM, nunca registrado no ledger e **sem** o gate de papel. Em produção a versão viva é a de `20261122140000` — exige `has_role(admin/manager)` e faz `REVOKE ALL ... FROM PUBLIC`; conferido com `pg_get_functiondef`. Como o CLI aplica pendências em ordem de versão, o rascunho (versão maior) sobrescreveria a versão boa e derrubaria o gate | o arquivo foi deletado: nenhuma função muda hoje e o próximo apply deixa de rebaixar o `acknowledge_security_digest` |
 | Versão do ledger com nome de arquivo (corrigida em 2026-11-24) | a linha `20261114134238_9b119528-da6f-4f43-b6cb-dcdcd7aa7ab1` tinha `version` = nome completo do arquivo, mas o CLI deriva a versão só até o primeiro `_`; a comparação repo×banco falhava e o check `Supabase Preview` reprovava em toda PR. Normalizada em produção: `version = '20261114134238'`, `name` intacto, 1 linha afetada, nenhum objeto do banco tocado | o CLI volta a reconhecer a migration; nada mudou em dados ou objetos |
 | `trigger_dispatch_critical_alert` reconciliado (2026-11-24) | produção lê `_internal.dispatch_config`; `20261220000000_fix_sre_rpcs_and_dispatch_trigger.sql` foi alinhado a essa fonte (vault só como fallback). Os segredos das duas fontes são idênticos em produção (conferido: `segredos_iguais = true`, 64 chars em ambos) | aplicar o arquivo é no-op de comportamento; sem segredo em nenhuma fonte o trigger avisa e NÃO dispara (nunca chama a edge function sem autenticar) |
 | `VITE_SUPABASE_ANON_KEY` no `.env.example`, `VITE_SUPABASE_PUBLISHABLE_KEY` no código | `.env.example:9` vs `src/integrations/supabase/client.ts:6` | quem seguir o example sobe o app sem chave; dois testes de segurança (`src/test/rls.test.ts`, `src/test/rpcAccess.test.ts`) ficam `skip` por causa dessa variável |
