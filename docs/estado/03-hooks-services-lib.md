@@ -1,6 +1,6 @@
 # Dimensão 3 — Lógica (hooks, services e lib)
 
-> Documento de detalhe — 129 hooks, 96 services, 106 módulos de lib.
+> Documento de detalhe — 128 hooks, 96 services, 106 módulos de lib.
 > Evidência em `arquivo:linha`. Correções da Fase D em `ESTADO_ATUAL.md` e `04-dados-e-runtime.md`.
 > Runtime de build/teste = `NAO_VERIFICADO` (node_modules ausente).
 
@@ -24,24 +24,24 @@
 | `src/styles` | 1 (`.css`) | 134 |
 | **Total lido** | **140** | **~15.4k** |
 
-**486 funções-hook exportadas** em 129 arquivos.
+**486 funções-hook exportadas** em 129 arquivos — baseline da auditoria original. **Recontagem atual: 495 funções-hook em 128 arquivos-hook** (a diferença são as features entregues depois da auditoria e a remoção do `useLeaderboard.ts` na PR #127).
 
 ## Como as contagens foram feitas (para você poder refutar)
 
 1. **Chamadores**: parser de `import ... from '...'` com resolução de alias `@/` e de `index.ts`, sobre TODOS os `.ts/.tsx` de `src`. Um hook só conta como "chamado" se o nome dele aparece na *lista de nomes importados* de um arquivo que resolve para o módulo do hook. Isso elimina falsos positivos de substring — foi assim que se descobriu que `useENPS` de `useClimateSurveys.ts:36` está morto (os componentes importam `useENPS.ts`, outro módulo) e que `useQuestStats` é redefinido localmente em `src/pages/PersonalStats.tsx:59`.
 2. **Tabelas/RPC/Edge**: quase nenhum hook toca o Supabase direto — eles delegam para `@/services/*`. A coluna lista o I/O do hook **mais o dos serviços que ele importa diretamente** (profundidade 1). Padrões capturados: `.from('x')`, `.rpc('x')`, `functions.invoke('x')`, `invokeEdge/invokeEdgeSafe('x')`, `table: 'x'` (realtime), `storage.from('x')`.
-3. Apenas 24 dos 129 hooks importam `@/integrations/supabase/client` diretamente (`grep -c` sobre os imports).
+3. Apenas 24 hooks importam `@/integrations/supabase/client` diretamente (`grep -c` sobre os imports) — número reconferido sobre os 128 hooks atuais.
 
 ## Resumo por classificação
 
 | Classificação | Arquivos-hook | % |
 |---|---|---|
 | ✅ IMPLEMENTADO_TOTAL (usado, 0 hooks órfãos, I/O real) | 90 | 70% |
-| 🟨 IMPLEMENTADO_PARCIAL (usado, mas com superfície morta) | 35 | 27% |
+| 🟨 IMPLEMENTADO_PARCIAL (usado, mas com superfície morta) | 36 | 28% |
 | 🟦 SUGERIDO_OU_INICIADO | 0 | 0% |
-| ⬛ MORTO_OU_ABANDONADO (módulo com 0 importadores) | 4 | 3% |
+| ⬛ MORTO_OU_ABANDONADO (módulo com 0 importadores) | 2 | 2% |
 
-**No nível de função: 96 de 486 hooks exportados (19,8%) têm ZERO chamadores.**
+**No nível de função: 89 de 495 hooks exportados em `src/hooks/**` (18,0%) têm ZERO chamadores.** Recontagem com o mesmo método desta seção (parser de nomes importados), feita depois da remoção do `useLeaderboard.ts` (PR #127) e da adoção do `useUnsavedChanges`. Total de arquivos-hook: 128.
 
 ## Tabela — um arquivo-hook por linha
 
@@ -183,16 +183,17 @@ Legenda da 1ª coluna: `(Nh/M⬛)` = N hooks exportados, M deles sem chamador.
 
 ## Hooks órfãos (⬛)
 
-### A. Módulos inteiros sem nenhum importador — 4 arquivos, 305 linhas mortas
+### A. Módulos inteiros sem nenhum importador — 2 arquivos, 193 linhas mortas
+
+> `src/hooks/useLeaderboard.ts` e `src/hooks/useUnsavedChanges.ts` **saíram desta lista**: o primeiro foi removido (duplicata exata de `useProfiles.ts:54`, PR #127) e o segundo passou a ser consumido (PR #130). Recontagem com o mesmo método: 128 arquivos-hook, 2 sem importador.
 
 | Arquivo | Linhas | Hooks | Prova | O que morre junto |
 |---|---|---|---|---|
 | `src/hooks/useClimateSurveys.ts` | 112 | 9 | `grep -rn "useClimateSurveys" src/` → só o próprio arquivo | CRUD completa de pesquisa de clima: `useCreateClimateSurvey:44`, `useUpdateClimateSurvey:60`, `useCreateSurveyQuestion:77`, `useSubmitSurveyResponse:93`. Tabelas `climate_surveys`, `climate_survey_questions`, `climate_survey_responses`, `climate_question_answers`, `climate_pillar_scores` ficam sem escrita por esta via. |
 | `src/hooks/useLeaderboard.ts` | — | — | REMOVIDO (PR #127) | Duplicata exata de `useProfiles.ts:54` (mesma chamada `profilesService.getLeaderboard`, mesmo `staleTime`); nenhum importador. |
-| `src/hooks/usePDI.ts` | 81 | 1 | `grep -rn "hooks/usePDI[\"']" src/` → 0 resultados | `usePDI:5`. Arrasta junto todo o `src/services/pdiService.ts`, cujo único importador é este hook. Tabelas `pdi_templates`, `pdi_mentors`, `pdi_checkins` ficam **sem nenhum consumidor no cliente**. **Decisão (PR #127): MANTER** — não é duplicata nem código obsoleto; é a camada de templates/mentores/check-ins de PDI que nunca ganhou tela, e as 3 tabelas existem com RLS. Vira item de funcionalidade pendente, não de limpeza. |
-| `src/hooks/useUnsavedChanges.ts` | 53 | 2 | `grep -rn "useUnsavedChanges\|useFormDirtyState" src/` → `Mentoria.tsx:23` (hook) e `src/test/useUnsavedChanges.test.tsx` | `useUnsavedChanges:10` (guarda `beforeunload`) e `useFormDirtyState:45`. **Adotado em `AdminMissionsTab`** (`src/pages/Mentoria.tsx:796`): o rascunho de missão agora avisa em refresh/fechar aba. `useFormDirtyState` segue sem consumidor — não foi usado porque a sujeira deriva do próprio estado do formulário. |
+| `src/hooks/usePDI.ts` | 81 | 1 | `grep -rn "hooks/usePDI[\"']" src/` → 0 resultados | `usePDI:5`. Arrasta junto todo o `src/services/pdiService.ts`, cujo único importador é este hook. Tabelas `pdi_templates`, `pdi_mentors`, `pdi_checkins` ficam **sem nenhum consumidor no cliente**. **Decisão (PR #127): MANTER** — não é duplicata nem código obsoleto; é a camada de templates/mentores/check-ins de PDI que nunca ganhou tela, e as 3 tabelas existem com RLS. Vira item de funcionalidade pendente, não de limpeza. **Resolvido na PR #128**: a tela `/pdi` consome o hook (merge aguardando aprovação — regra 8, DDL de policy). |
 
-### B. Funções-hook órfãs dentro de módulos vivos — 92 funções
+### B. Funções-hook órfãs dentro de módulos vivos — 79 funções (recontagem; a tabela abaixo é a baseline da auditoria original, com 92)
 
 | Hook órfão | Local |
 |---|---|
@@ -292,13 +293,13 @@ Legenda da 1ª coluna: `(Nh/M⬛)` = N hooks exportados, M deles sem chamador.
 | `useFormDirtyState` | src/hooks/useUnsavedChanges.ts:45 |
 | `useMyDepartmentId` | src/hooks/useWarLeadership.ts:17 |
 
-**Total: 96 hooks exportados com 0 chamadores (19,8% de 486).**
+**Total: 96 hooks exportados com 0 chamadores (19,8% de 486)** — baseline da auditoria original. **Recontagem atual: 89 de 495 (18,0%)**, método idêntico (nomes importados), já contando a adoção do `useUnsavedChanges`.
 
 ---
 
 ## Inventário de tabelas/RPC/edge functions referenciados
 
-Consolidado a partir dos 129 hooks + toda a cadeia de serviços que eles importam (`@/services`, `@/lib`, `@/integrations`), profundidade ilimitada. Nomes exatos, prontos para cruzar com o banco vivo.
+Consolidado a partir dos 128 hooks + toda a cadeia de serviços que eles importam (`@/services`, `@/lib`, `@/integrations`), profundidade ilimitada. Nomes exatos, prontos para cruzar com o banco vivo.
 
 ### Tabelas / views (160)
 
