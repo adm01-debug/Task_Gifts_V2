@@ -1,6 +1,6 @@
 # Dimensão 3 — Lógica (hooks, services e lib)
 
-> Documento de detalhe — 128 hooks, 96 services, 106 módulos de lib.
+> Documento de detalhe — 129 hooks, 96 services, 106 módulos de lib.
 > Evidência em `arquivo:linha`. Correções da Fase D em `ESTADO_ATUAL.md` e `04-dados-e-runtime.md`.
 > Runtime de build/teste = `NAO_VERIFICADO` (node_modules ausente).
 
@@ -24,13 +24,15 @@
 | `src/styles` | 1 (`.css`) | 134 |
 | **Total lido** | **140** | **~15.4k** |
 
-**486 funções-hook exportadas** em 129 arquivos — baseline da auditoria original. **Recontagem atual: 495 funções-hook em 128 arquivos-hook** (a diferença são as features entregues depois da auditoria e a remoção do `useLeaderboard.ts` na PR #127).
+**486 funções-hook exportadas** em 129 arquivos — baseline da auditoria original. **Recontagem atual: 496 funções-hook em 129 arquivos-hook** (a diferença são as features entregues depois da auditoria e a remoção do `useLeaderboard.ts` na PR #127).
+
+> Método da contagem de arquivos: `git ls-files src/hooks` → 125 `.ts` + 4 `.tsx` = **129**, e todos os 129 exportam ao menos um hook. Ao recontar, o parser precisa ler **as duas formas de export** — `export function/const useX` **e** blocos `export { ... }`: `src/hooks/use-toast.ts` exporta `useToast` **apenas** pelo bloco, e um parser que só entende a forma inline devolve 128 arquivos e 495 funções (medição anterior desta seção, corrigida aqui).
 
 ## Como as contagens foram feitas (para você poder refutar)
 
 1. **Chamadores**: parser de `import ... from '...'` com resolução de alias `@/` e de `index.ts`, sobre TODOS os `.ts/.tsx` de `src`. Um hook só conta como "chamado" se o nome dele aparece na *lista de nomes importados* de um arquivo que resolve para o módulo do hook. Isso elimina falsos positivos de substring — foi assim que se descobriu que `useENPS` de `useClimateSurveys.ts:36` está morto (os componentes importam `useENPS.ts`, outro módulo) e que `useQuestStats` é redefinido localmente em `src/pages/PersonalStats.tsx:59`.
 2. **Tabelas/RPC/Edge**: quase nenhum hook toca o Supabase direto — eles delegam para `@/services/*`. A coluna lista o I/O do hook **mais o dos serviços que ele importa diretamente** (profundidade 1). Padrões capturados: `.from('x')`, `.rpc('x')`, `functions.invoke('x')`, `invokeEdge/invokeEdgeSafe('x')`, `table: 'x'` (realtime), `storage.from('x')`.
-3. Apenas 24 hooks importam `@/integrations/supabase/client` diretamente (`grep -c` sobre os imports) — número reconferido sobre os 128 hooks atuais.
+3. Apenas 24 hooks importam `@/integrations/supabase/client` diretamente (`grep -c` sobre os imports) — número reconferido sobre os 129 hooks atuais.
 
 ## Resumo por classificação
 
@@ -41,7 +43,7 @@
 | 🟦 SUGERIDO_OU_INICIADO | 0 | 0% |
 | ⬛ MORTO_OU_ABANDONADO (módulo com 0 importadores) | 2 | 2% |
 
-**No nível de função: 89 de 495 hooks exportados em `src/hooks/**` (18,0%) têm ZERO chamadores.** Recontagem com o mesmo método desta seção (parser de nomes importados), feita depois da remoção do `useLeaderboard.ts` (PR #127) e da adoção do `useUnsavedChanges`. Total de arquivos-hook: 128.
+**No nível de função: 89 de 496 hooks exportados em `src/hooks/**` (17,9%) têm ZERO chamadores.** Recontagem com o mesmo método desta seção (parser de nomes importados, lendo `export function/const` **e** blocos `export { ... }`), feita depois da remoção do `useLeaderboard.ts` (PR #127) e da adoção do `useUnsavedChanges`. Total de arquivos-hook: 129.
 
 ## Tabela — um arquivo-hook por linha
 
@@ -185,7 +187,7 @@ Legenda da 1ª coluna: `(Nh/M⬛)` = N hooks exportados, M deles sem chamador.
 
 ### A. Módulos inteiros sem nenhum importador — 2 arquivos, 193 linhas mortas
 
-> `src/hooks/useLeaderboard.ts` e `src/hooks/useUnsavedChanges.ts` **saíram desta lista**: o primeiro foi removido (duplicata exata de `useProfiles.ts:54`, PR #127) e o segundo passou a ser consumido (PR #130). Recontagem com o mesmo método: 128 arquivos-hook, 2 sem importador.
+> `src/hooks/useLeaderboard.ts` e `src/hooks/useUnsavedChanges.ts` **saíram desta lista**: o primeiro foi removido (duplicata exata de `useProfiles.ts:54`, PR #127) e o segundo passou a ser consumido (PR #130). Recontagem com o mesmo método: 129 arquivos-hook, 2 sem importador.
 
 | Arquivo | Linhas | Hooks | Prova | O que morre junto |
 |---|---|---|---|---|
@@ -293,13 +295,13 @@ Legenda da 1ª coluna: `(Nh/M⬛)` = N hooks exportados, M deles sem chamador.
 | `useFormDirtyState` | src/hooks/useUnsavedChanges.ts:45 |
 | `useMyDepartmentId` | src/hooks/useWarLeadership.ts:17 |
 
-**Total: 96 hooks exportados com 0 chamadores (19,8% de 486)** — baseline da auditoria original. **Recontagem atual: 89 de 495 (18,0%)**, método idêntico (nomes importados), já contando a adoção do `useUnsavedChanges`.
+**Total: 96 hooks exportados com 0 chamadores (19,8% de 486)** — baseline da auditoria original. **Recontagem atual: 89 de 496 (17,9%)**, método idêntico (nomes importados), já contando a adoção do `useUnsavedChanges`.
 
 ---
 
 ## Inventário de tabelas/RPC/edge functions referenciados
 
-Consolidado a partir dos 128 hooks + toda a cadeia de serviços que eles importam (`@/services`, `@/lib`, `@/integrations`), profundidade ilimitada. Nomes exatos, prontos para cruzar com o banco vivo.
+Consolidado a partir dos 129 hooks + toda a cadeia de serviços que eles importam (`@/services`, `@/lib`, `@/integrations`), profundidade ilimitada. Nomes exatos, prontos para cruzar com o banco vivo.
 
 ### Tabelas / views (160)
 
