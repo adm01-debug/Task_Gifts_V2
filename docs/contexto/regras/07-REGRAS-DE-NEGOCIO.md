@@ -1,6 +1,6 @@
 # 07 · REGRAS DE NEGÓCIO
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `de4eaadee1` · branch `main` · 2026-11-24 16:15 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `59b21b4989` · branch `main` · 2026-11-24 16:21 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## A. Regras escritas por humanos (`manual/` — prioridade máxima, nunca sobrescrito)
@@ -3636,7 +3636,7 @@ _nenhum item encontrado_
 | `admin` | `supabase/migrations/20261123180000_climate_survey_engine.sql` |
 | `manager` | `supabase/migrations/20261123180000_climate_survey_engine.sql` |
 
-## K. Testes como especificação (2098 testes em 157 arquivos — nomes completos em `context.json`)
+## K. Testes como especificação (2103 testes em 158 arquivos — nomes completos em `context.json`)
 
 | Arquivo | Testes | Exemplos do que o sistema DEVE fazer |
 |---|---|---|
@@ -3778,6 +3778,7 @@ _nenhum item encontrado_
 | `src/test/uiLibraryContracts.test.tsx` | 5 | contratos das bibliotecas de UI instaladas · calendário seleciona uma data e navega para o próximo mês · painéis preservam orientação e tamanhos percentuais da API anterior · tooltip entrega o payload inteiro como quinto argumento do formatter … |
 | `src/tests/unit/notifications.test.ts` | 5 | notificationsService · create · should insert a notification and return it · markAsRead … |
 | `src/tests/unit/onboarding.test.ts` | 5 | onboardingService · completeStep · should return true on success · isOnboardingComplete … |
+| `src/tests/unit/weeklyChallenge.test.tsx` | 5 | useWeeklyChallenge - notificacao do desafio · inclui o id do desafio no payload das notificacoes · mantem o desafio quando o aviso ao oponente e recusado pela RLS · gera payloads distintos em desafios de semanas diferentes (nao colide no indice unico) … |
 | `src/components/shop/__tests__/ProductGridLoading.test.tsx` | 4 | Shop Skeleton and Loading State · should display skeletons while rewards are loading · should transition from skeletons to content smoothly · should maintain layout stability during search/filtering loading |
 | `src/test/nr1Export.simulation.test.ts` | 4 | Exportação NR-1 (simulação combinatória) · nunca emite célula vazia ou  · marca plano obrigatório exatamente para riscos alto e crítico · gera nome de arquivo seguro para recortes com acentos e símbolos |
 | `src/test/passkeysPanel.test.tsx` | 4 | PasskeysPanel — cadastro so quando o login por passkey funciona · libera o cadastro quando a funcao esta publicada e a conta nao exige segundo fator · bloqueia o cadastro e explica quando a conta exige verificacao em duas etapas · bloqueia o cadastro quando a funcao nao esta liberada no ambiente |
@@ -3902,6 +3903,7 @@ _nenhum item encontrado_
 | If requireAll, all checks must pass; otherwise any check passing is enough | `src/hooks/useRBAC.ts` |
 | * Usado apenas em logs, para identificar o modulo de origem. */ | `src/hooks/useTypePreferences.ts` |
 | placares nao deve provocar re-render extra, e o primeiro ciclo apenas | `src/hooks/useWarLeadership.ts` |
+| recusa do aviso ao oponente nao pode derrubar o desafio. | `src/hooks/useWeeklyChallenge.ts` |
 | Regra crítica: encerrar (`close`) apura vencedor e consome a caução; cancelar | `src/lib/auctionAdmin.ts` |
 | - cada participante recebe no máximo UMA notificação; | `src/lib/auctionAdmin.ts` |
 | - preferências desligadas suprimem a notificação, nunca o estorno; | `src/lib/auctionAdmin.ts` |

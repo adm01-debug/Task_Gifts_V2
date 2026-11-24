@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "de4eaadee13053c332f86b6c53b6b47562c5f9f8",
+  "sha": "59b21b49893bea78d01103fa0151eac520d9762f",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
-  "generated_at": "2026-11-24 16:15 UTC",
-  "files_total": 1583,
-  "code_files": 1476,
-  "code_lines": 268865
+  "generated_at": "2026-11-24 16:21 UTC",
+  "files_total": 1584,
+  "code_files": 1477,
+  "code_lines": 269029
  },
  "version": "1.3.2",
- "facts_hash": "cdf4c1651e39e5dd",
+ "facts_hash": "adc6404981da7dc1",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -195,7 +195,7 @@
   "package_manager": "bun",
   "languages": {
    ".ts": 584,
-   ".tsx": 578,
+   ".tsx": 579,
    ".sql": 282,
    ".mjs": 21,
    ".js": 5,
@@ -49077,7 +49077,7 @@
   {
    "module": "src/hooks",
    "files": 129,
-   "lines": 14799,
+   "lines": 14808,
    "tables": [
     "certifications",
     "development_plan_actions",
@@ -50116,12 +50116,13 @@
   },
   {
    "module": "src/tests",
-   "files": 16,
-   "lines": 1298,
+   "files": 17,
+   "lines": 1453,
    "tables": [],
    "exports": [],
    "docs": [],
    "deps": [
+    "@tanstack/react-query",
     "@testing-library/jest-dom",
     "@testing-library/react",
     "react",
@@ -50150,7 +50151,8 @@
     "src/tests/unit/onboarding.test.ts",
     "src/tests/unit/profiles.test.ts",
     "src/tests/unit/shop.test.ts",
-    "src/tests/unit/trails.test.ts"
+    "src/tests/unit/trails.test.ts",
+    "src/tests/unit/weeklyChallenge.test.tsx"
    ]
   },
   {
@@ -59229,6 +59231,10 @@
    {
     "file": "src/hooks/useWarLeadership.ts",
     "text": "placares nao deve provocar re-render extra, e o primeiro ciclo apenas"
+   },
+   {
+    "file": "src/hooks/useWeeklyChallenge.ts",
+    "text": "recusa do aviso ao oponente nao pode derrubar o desafio."
    },
    {
     "file": "src/lib/auctionAdmin.ts",
@@ -89531,6 +89537,26 @@
    {
     "file": "src/tests/unit/trails.test.ts",
     "name": "should register action in comboService and add XP to profile"
+   },
+   {
+    "file": "src/tests/unit/weeklyChallenge.test.tsx",
+    "name": "useWeeklyChallenge - notificacao do desafio"
+   },
+   {
+    "file": "src/tests/unit/weeklyChallenge.test.tsx",
+    "name": "inclui o id do desafio no payload das notificacoes"
+   },
+   {
+    "file": "src/tests/unit/weeklyChallenge.test.tsx",
+    "name": "mantem o desafio quando o aviso ao oponente e recusado pela RLS"
+   },
+   {
+    "file": "src/tests/unit/weeklyChallenge.test.tsx",
+    "name": "gera payloads distintos em desafios de semanas diferentes (nao colide no indice unico)"
+   },
+   {
+    "file": "src/tests/unit/weeklyChallenge.test.tsx",
+    "name": "inclui o id do desafio no aviso de vitoria"
    },
    {
     "file": "supabase/functions/_shared/contracts/registry.contract.spec.ts",
@@ -131030,7 +131056,7 @@
   },
   "src/hooks/useWeeklyChallenge.ts": {
    "path": "src/hooks/useWeeklyChallenge.ts",
-   "lines": 246,
+   "lines": 255,
    "exports": [
     "interface VictoryData",
     "function useWeeklyChallenge"
@@ -131071,6 +131097,9 @@
      "value": "active",
      "kind": "compara"
     }
+   ],
+   "rule_comments": [
+    "recusa do aviso ao oponente nao pode derrubar o desafio."
    ],
    "hooks": [
     "useWeeklyChallenge"
@@ -150105,6 +150134,18 @@
     "should register action in comboService and add XP to profile"
    ]
   },
+  "src/tests/unit/weeklyChallenge.test.tsx": {
+   "path": "src/tests/unit/weeklyChallenge.test.tsx",
+   "lines": 155,
+   "is_test": true,
+   "tests": [
+    "useWeeklyChallenge - notificacao do desafio",
+    "inclui o id do desafio no payload das notificacoes",
+    "mantem o desafio quando o aviso ao oponente e recusado pela RLS",
+    "gera payloads distintos em desafios de semanas diferentes (nao colide no indice unico)",
+    "inclui o id do desafio no aviso de vitoria"
+   ]
+  },
   "src/types/charts.ts": {
    "path": "src/types/charts.ts",
    "lines": 120,
@@ -155038,10 +155079,20 @@
   }
  },
  "git": {
-  "sha": "de4eaadee13053c332f86b6c53b6b47562c5f9f8",
+  "sha": "59b21b49893bea78d01103fa0151eac520d9762f",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "commits": [
+   {
+    "sha": "59b21b4",
+    "date": "2026-11-24",
+    "author": "adm01-debug",
+    "subject": "fix(desafio): notificacao do desafio semanal leva o id do desafio no payload (#145)",
+    "files": [
+     "src/hooks/useWeeklyChallenge.ts",
+     "src/tests/unit/weeklyChallenge.test.tsx"
+    ]
+   },
    {
     "sha": "de4eaad",
     "date": "2026-11-24",
@@ -155411,15 +155462,6 @@
     "files": [
      "src/pages/ManagerDashboard.tsx"
     ]
-   },
-   {
-    "sha": "57527b0",
-    "date": "2026-11-23",
-    "author": "adm01-debug",
-    "subject": "fix(reports): exporta relatório de engajamento em CSV real (#117)",
-    "files": [
-     "src/pages/EngagementReports.tsx"
-    ]
    }
   ],
   "hot_files": [
@@ -155488,19 +155530,19 @@
     2
    ],
    [
-    "src/pages/EngagementReports.tsx",
-    2
-   ],
-   [
     "src/pages/ManagerDashboard.tsx",
     2
    ],
    [
-    "src/services/shopService.ts",
+    "src/hooks/useWeeklyChallenge.ts",
     1
    ],
    [
-    "src/tests/unit/shop.test.ts",
+    "src/tests/unit/weeklyChallenge.test.tsx",
+    1
+   ],
+   [
+    "src/services/shopService.ts",
     1
    ]
   ]

@@ -4334,7 +4334,7 @@
    "hooks_exportados": [
     "useWeeklyChallenge"
    ],
-   "linhas": 246,
+   "linhas": 255,
    "dominio": "hooks",
    "tabelas": [
     "profiles"
@@ -4356,7 +4356,7 @@
    "usado_por_arquivos": [
     "src/components/WeeklyChallengeCard.tsx"
    ],
-   "coberto_por_testes": 0
+   "coberto_por_testes": 1
   }
  ]
 }

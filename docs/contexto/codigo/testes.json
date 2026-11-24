@@ -5,17 +5,17 @@
   "vitest",
   "playwright"
  ],
- "total": 171,
+ "total": 172,
  "por_tipo": {
   "contrato": 3,
   "e2e": 2,
   "pytest": 2,
-  "unit": 162
+  "unit": 163
  },
  "onde_ficam": [
   {
    "padrao": "co-localizado (*.test)",
-   "arquivos": 153
+   "arquivos": 154
   },
   {
    "padrao": "outro",
@@ -1570,6 +1570,15 @@
    "casos": 1
   },
   {
+   "arquivo": "src/tests/unit/weeklyChallenge.test.tsx",
+   "tipo": "unit",
+   "linhas": 155,
+   "testa": [
+    "src/hooks/useWeeklyChallenge.ts"
+   ],
+   "casos": 4
+  },
+  {
    "arquivo": "supabase/functions/_shared/contracts/registry.contract.spec.ts",
    "tipo": "contrato",
    "linhas": 124,
@@ -1660,6 +1669,7 @@
   "src/hooks/useShop.ts": 1,
   "src/hooks/useTypePreferences.ts": 1,
   "src/hooks/useUnsavedChanges.ts": 1,
+  "src/hooks/useWeeklyChallenge.ts": 1,
   "src/i18n/translations.ts": 1,
   "src/integrations/supabase/client.ts": 11,
   "src/lib/auctionAdmin.ts": 3,
@@ -2041,8 +2051,7 @@
    "src/hooks/useWagerAdmin.ts",
    "src/hooks/useWagerIntegrityReviews.ts",
    "src/hooks/useWarLeadership.ts",
-   "src/hooks/useWebAuthn.ts",
-   "src/hooks/useWeeklyChallenge.ts"
+   "src/hooks/useWebAuthn.ts"
   ],
   "edges": [
    "admin-alerts",

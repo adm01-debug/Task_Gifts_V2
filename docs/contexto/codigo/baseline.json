@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "de4eaadee13053c332f86b6c53b6b47562c5f9f8",
+  "commit": "59b21b49893bea78d01103fa0151eac520d9762f",
   "branch": "main",
-  "data_commit": "2026-11-24T13:10:32-03:00",
+  "data_commit": "2026-11-24T13:19:09-03:00",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "ultimos_commits": [
+   {
+    "sha": "59b21b4",
+    "data": "2026-11-24",
+    "assunto": "fix(desafio): notificacao do desafio semanal leva o id do desafio no payload (#145)"
+   },
    {
     "sha": "de4eaad",
     "data": "2026-11-24",
@@ -126,14 +131,9 @@
     "sha": "027cedf",
     "data": "2026-11-23",
     "assunto": "feat: cria fluxo completo de mentoria (pagina, servico, hooks e missoes) (#122)"
-   },
-   {
-    "sha": "b6c89af",
-    "data": "2026-11-23",
-    "assunto": "chore(docs): registra estado verificado das pendencias em producao (#121)"
    }
   ],
-  "arquivos_mudados_7d": 205,
+  "arquivos_mudados_7d": 207,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "supabase/functions/_shared",
@@ -176,15 +176,15 @@
     "mudancas": 7
    },
    {
+    "pasta": "src/tests/unit",
+    "mudancas": 7
+   },
+   {
     "pasta": ".gitignore",
     "mudancas": 6
    },
    {
     "pasta": "docs/agentes/mapa-repo.md",
-    "mudancas": 6
-   },
-   {
-    "pasta": "src/tests/unit",
     "mudancas": 6
    },
    {
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 114
+    "commits": 115
    },
    {
     "autor": "dependabot[bot]",
@@ -310,9 +310,9 @@
   ]
  },
  "contagens": {
-  "arquivos_total": 1572,
-  "arquivos_codigo": 1188,
-  "linhas_codigo": 235920,
+  "arquivos_total": 1573,
+  "arquivos_codigo": 1189,
+  "linhas_codigo": 236084,
   "rotas": 87,
   "rotas_http_backend": 0,
   "vistas_por_id": 0,
@@ -324,7 +324,7 @@
   "tabelas": 238,
   "migrations": 280,
   "cron_jobs": 24,
-  "testes": 171,
+  "testes": 172,
   "workflows": 6,
   "scripts": 17,
   "docs_md": 56
@@ -412,7 +412,7 @@
   },
   "src/hooks": {
    "arquivos": 129,
-   "linhas": 14799
+   "linhas": 14808
   },
   "src/i18n": {
    "arquivos": 1,
@@ -447,8 +447,8 @@
    "linhas": 24092
   },
   "src/tests": {
-   "arquivos": 16,
-   "linhas": 1298
+   "arquivos": 17,
+   "linhas": 1453
   },
   "src/types": {
    "arquivos": 2,

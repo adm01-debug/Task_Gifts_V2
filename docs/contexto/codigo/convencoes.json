@@ -22,7 +22,7 @@
    "src/integrations (3)"
   ],
   "testes": [
-   "co-localizado (*.test) (153)",
+   "co-localizado (*.test) (154)",
    "outro (12)",
    "tests/ (3)"
   ],
@@ -59,11 +59,11 @@
  "commits": {
   "convencao": "conventional commits (observado)",
   "exemplos": [
+   "fix(desafio): notificacao do desafio semanal leva o id do desafio no payload (#145)",
    "docs(estado): alinha o trigger do alerta critico com o estado real (URL e segredo) (#146)",
    "fix(loja): notificacao de compra nao colide mais no indice unico de notificacoes (#144)",
    "fix: provisiona segredo do alerta critico e tira URL fixa do trigger (#143)",
-   "feat(clima): agenda ciclo de vida das pesquisas (expira e lembrete) (#141)",
-   "fix(cron): reproduz os jobs internos sem credencial no repositorio (#142)"
+   "feat(clima): agenda ciclo de vida das pesquisas (expira e lembrete) (#141)"
   ]
  },
  "pr_template": ".github/PULL_REQUEST_TEMPLATE.md",
