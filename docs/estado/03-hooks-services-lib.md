@@ -24,24 +24,26 @@
 | `src/styles` | 1 (`.css`) | 134 |
 | **Total lido** | **140** | **~15.4k** |
 
-**486 funções-hook exportadas** em 129 arquivos.
+**486 funções-hook exportadas** em 129 arquivos — baseline da auditoria original. **Recontagem atual: 496 funções-hook em 129 arquivos-hook** (a diferença são as features entregues depois da auditoria e a remoção do `useLeaderboard.ts` na PR #127).
+
+> Método da contagem de arquivos: `git ls-files src/hooks` → 125 `.ts` + 4 `.tsx` = **129**, e todos os 129 exportam ao menos um hook. Ao recontar, o parser precisa ler **as duas formas de export** — `export function/const useX` **e** blocos `export { ... }`: `src/hooks/use-toast.ts` exporta `useToast` **apenas** pelo bloco, e um parser que só entende a forma inline devolve 128 arquivos e 495 funções (medição anterior desta seção, corrigida aqui).
 
 ## Como as contagens foram feitas (para você poder refutar)
 
 1. **Chamadores**: parser de `import ... from '...'` com resolução de alias `@/` e de `index.ts`, sobre TODOS os `.ts/.tsx` de `src`. Um hook só conta como "chamado" se o nome dele aparece na *lista de nomes importados* de um arquivo que resolve para o módulo do hook. Isso elimina falsos positivos de substring — foi assim que se descobriu que `useENPS` de `useClimateSurveys.ts:36` está morto (os componentes importam `useENPS.ts`, outro módulo) e que `useQuestStats` é redefinido localmente em `src/pages/PersonalStats.tsx:59`.
 2. **Tabelas/RPC/Edge**: quase nenhum hook toca o Supabase direto — eles delegam para `@/services/*`. A coluna lista o I/O do hook **mais o dos serviços que ele importa diretamente** (profundidade 1). Padrões capturados: `.from('x')`, `.rpc('x')`, `functions.invoke('x')`, `invokeEdge/invokeEdgeSafe('x')`, `table: 'x'` (realtime), `storage.from('x')`.
-3. Apenas 24 dos 129 hooks importam `@/integrations/supabase/client` diretamente (`grep -c` sobre os imports).
+3. Apenas 24 hooks importam `@/integrations/supabase/client` diretamente (`grep -c` sobre os imports) — número reconferido sobre os 129 hooks atuais.
 
 ## Resumo por classificação
 
 | Classificação | Arquivos-hook | % |
 |---|---|---|
 | ✅ IMPLEMENTADO_TOTAL (usado, 0 hooks órfãos, I/O real) | 90 | 70% |
-| 🟨 IMPLEMENTADO_PARCIAL (usado, mas com superfície morta) | 35 | 27% |
+| 🟨 IMPLEMENTADO_PARCIAL (usado, mas com superfície morta) | 36 | 28% |
 | 🟦 SUGERIDO_OU_INICIADO | 0 | 0% |
-| ⬛ MORTO_OU_ABANDONADO (módulo com 0 importadores) | 4 | 3% |
+| ⬛ MORTO_OU_ABANDONADO (módulo com 0 importadores) | 2 | 2% |
 
-**No nível de função: 96 de 486 hooks exportados (19,8%) têm ZERO chamadores.**
+**No nível de função: 89 de 496 hooks exportados em `src/hooks/**` (17,9%) têm ZERO chamadores.** Recontagem com o mesmo método desta seção (parser de nomes importados, lendo `export function/const` **e** blocos `export { ... }`), feita depois da remoção do `useLeaderboard.ts` (PR #127) e da adoção do `useUnsavedChanges`. Total de arquivos-hook: 129.
 
 ## Tabela — um arquivo-hook por linha
 
@@ -170,7 +172,7 @@ Legenda da 1ª coluna: `(Nh/M⬛)` = N hooks exportados, M deles sem chamador.
 | `useTrails.ts` (19h/7⬛) | 🟨 IMPLEMENTADO_PARCIAL | 23 · `src/components/GlobalSearch.tsx:11` | **T**: certifications, learning_trails, module_progress, trail_enrollments, trail_modules, trail_prerequisites | `src/hooks/useTrails.ts` · 9 módulos importam | 7/19 mortos: useCreateTrail:133, useUpdateTrail:206, useDeleteTrail:219, useAddPrerequisite:248, useRemovePrerequisite:264, useCheckPrerequisites:238, useTrailsByDepartment:24. Nao existe UI para criar/editar/apagar trilha nem para gerenciar pre-requisitos. |
 | `useTwoFactor.ts` (1h/0⬛) | ✅ IMPLEMENTADO_TOTAL | 3 · `src/components/auth/TwoFactorSetup.tsx:2` | **T**: user_two_factor | `src/hooks/useTwoFactor.ts` · 3 módulos importam | — |
 | `useTypePreferences.ts` (1h/0⬛) | ✅ IMPLEMENTADO_TOTAL | 4 · `src/components/ExecutiveReportPreferenceToggle.tsx:8` | **T**: notification_preferences | `src/hooks/useTypePreferences.ts` · 4 módulos importam | — |
-| `useUnsavedChanges.ts` (2h/2⬛) | ⬛ MORTO_OU_ABANDONADO | 0 · — | — (sem I/O direto) | `src/hooks/useUnsavedChanges.ts` · 0 módulos importam | MODULO NUNCA IMPORTADO. Guarda de navegacao/beforeunload existe mas nunca e montada: formularios podem perder dados sem aviso. |
+| `useUnsavedChanges.ts` (2h/2⬛) | 🟨 IMPLEMENTADO_PARCIAL | 1 · `src/pages/Mentoria.tsx:23` | — (sem I/O direto) | `src/hooks/useUnsavedChanges.ts` · 1 módulos importam | Adotado em `AdminMissionsTab` (`Mentoria.tsx`): o formulário de missão avisa antes de perder o rascunho em refresh/fechar aba. `useFormDirtyState:45` continua sem consumidor. Não bloqueia navegação SPA — o app usa `BrowserRouter` declarativo e `useBlocker` exigiria data router. |
 | `useUserRank.ts` (1h/0⬛) | ✅ IMPLEMENTADO_TOTAL | 4 · `src/components/StatsGrid.tsx:7` | **T**: profiles | `src/hooks/useUserRank.ts` · 4 módulos importam | — |
 | `useViewTransition.ts` (1h/0⬛) | ✅ IMPLEMENTADO_TOTAL | 1 · `src/components/mobile/MobilePageLayout.tsx:9` | — (sem I/O direto) | `src/hooks/useViewTransition.ts` · 1 módulos importam | — |
 | `useWagerAdmin.ts` (6h/0⬛) | ✅ IMPLEMENTADO_TOTAL | 6 · `src/pages/WagerQuestionAdminPage.tsx:25` | **T**: wager_budget_settings, wager_questions<br>**RPC**: list_wager_questions, save_wager_question | `src/hooks/useWagerAdmin.ts` · 2 módulos importam | — |
@@ -183,16 +185,17 @@ Legenda da 1ª coluna: `(Nh/M⬛)` = N hooks exportados, M deles sem chamador.
 
 ## Hooks órfãos (⬛)
 
-### A. Módulos inteiros sem nenhum importador — 4 arquivos, 305 linhas mortas
+### A. Módulos inteiros sem nenhum importador — 2 arquivos, 193 linhas mortas
+
+> `src/hooks/useLeaderboard.ts` e `src/hooks/useUnsavedChanges.ts` **saíram desta lista**: o primeiro foi removido (duplicata exata de `useProfiles.ts:54`, PR #127) e o segundo passou a ser consumido (PR #130). Recontagem com o mesmo método: 129 arquivos-hook, 2 sem importador.
 
 | Arquivo | Linhas | Hooks | Prova | O que morre junto |
 |---|---|---|---|---|
 | `src/hooks/useClimateSurveys.ts` | 112 | 9 | `grep -rn "useClimateSurveys" src/` → só o próprio arquivo | CRUD completa de pesquisa de clima: `useCreateClimateSurvey:44`, `useUpdateClimateSurvey:60`, `useCreateSurveyQuestion:77`, `useSubmitSurveyResponse:93`. Tabelas `climate_surveys`, `climate_survey_questions`, `climate_survey_responses`, `climate_question_answers`, `climate_pillar_scores` ficam sem escrita por esta via. |
 | `src/hooks/useLeaderboard.ts` | — | — | REMOVIDO (PR #127) | Duplicata exata de `useProfiles.ts:54` (mesma chamada `profilesService.getLeaderboard`, mesmo `staleTime`); nenhum importador. |
-| `src/hooks/usePDI.ts` | 81 | 1 | `grep -rn "hooks/usePDI[\"']" src/` → 0 resultados | `usePDI:5`. Arrasta junto todo o `src/services/pdiService.ts`, cujo único importador é este hook. Tabelas `pdi_templates`, `pdi_mentors`, `pdi_checkins` ficam **sem nenhum consumidor no cliente**. **Decisão (PR #127): MANTER** — não é duplicata nem código obsoleto; é a camada de templates/mentores/check-ins de PDI que nunca ganhou tela, e as 3 tabelas existem com RLS. Vira item de funcionalidade pendente, não de limpeza. |
-| `src/hooks/useUnsavedChanges.ts` | 53 | 2 | `grep -rn "useUnsavedChanges\|useFormDirtyState" src/` → só o próprio arquivo | `useUnsavedChanges:10` (guarda `beforeunload`) e `useFormDirtyState:45`. Nenhum formulário do app avisa antes de descartar alterações. **Decisão (PR #127): MANTER** — guarda genérica e correta, sem equivalente no repo; sem consumidor por falta de adoção, não por duplicação. |
+| `src/hooks/usePDI.ts` | 81 | 1 | `grep -rn "hooks/usePDI[\"']" src/` → 0 resultados | `usePDI:5`. Arrasta junto todo o `src/services/pdiService.ts`, cujo único importador é este hook. Tabelas `pdi_templates`, `pdi_mentors`, `pdi_checkins` ficam **sem nenhum consumidor no cliente**. **Decisão (PR #127): MANTER** — não é duplicata nem código obsoleto; é a camada de templates/mentores/check-ins de PDI que nunca ganhou tela, e as 3 tabelas existem com RLS. Vira item de funcionalidade pendente, não de limpeza. **Resolvido na PR #128**: a tela `/pdi` consome o hook (merge aguardando aprovação — regra 8, DDL de policy). |
 
-### B. Funções-hook órfãs dentro de módulos vivos — 92 funções
+### B. Funções-hook órfãs dentro de módulos vivos — 79 funções (recontagem; a tabela abaixo é a baseline da auditoria original, com 92)
 
 | Hook órfão | Local |
 |---|---|
@@ -289,11 +292,10 @@ Legenda da 1ª coluna: `(Nh/M⬛)` = N hooks exportados, M deles sem chamador.
 | `useCheckPrerequisites` | src/hooks/useTrails.ts:238 |
 | `useAddPrerequisite` | src/hooks/useTrails.ts:248 |
 | `useRemovePrerequisite` | src/hooks/useTrails.ts:264 |
-| `useUnsavedChanges` | src/hooks/useUnsavedChanges.ts:10 |
 | `useFormDirtyState` | src/hooks/useUnsavedChanges.ts:45 |
 | `useMyDepartmentId` | src/hooks/useWarLeadership.ts:17 |
 
-**Total: 96 hooks exportados com 0 chamadores (19,8% de 486).**
+**Total: 96 hooks exportados com 0 chamadores (19,8% de 486)** — baseline da auditoria original. **Recontagem atual: 89 de 496 (17,9%)**, método idêntico (nomes importados), já contando a adoção do `useUnsavedChanges`.
 
 ---
 
@@ -468,7 +470,7 @@ Consolidado a partir dos 129 hooks + toda a cadeia de serviços que eles importa
 
 - **Fail-open no lockout de login**: `src/hooks/useLoginLockout.ts:32-35` e `:41-43` — se a RPC `check_login_lockout` falhar (rede, RLS, RPC ausente), `checkLockout` retorna `null`, `lockoutStatus` fica `null` e `isLocked` cai para `false` (`useLoginLockout.ts:130`). O bloqueio visual some exatamente no cenário de erro. (A defesa real depende de o servidor barrar; o cliente não é a última linha, mas também não sinaliza a degradação.)
 - **Detecção de dispositivo novo degrada para "tudo normal"**: `src/hooks/useDeviceDetection.ts:113-115` — no `catch` de `registerDevice` devolve `{ isNewDevice: false, deviceId: null, isTrusted: false }`. Como `src/hooks/useAuth.tsx:70` chama `registerDevice(...).catch(...)` e descarta o resultado, uma falha da edge `detect-new-device` é indistinguível de "dispositivo conhecido". Idem `getUserDevices:130` e `getUnreadAlerts:146`, que engolem erro e retornam `[]` — o painel de dispositivos mostra "nenhum dispositivo" em vez de erro.
-- **`useUnsavedChanges.ts` nunca montado** (módulo com 0 importadores): a guarda `beforeunload`/navegação existe, mas nenhum formulário do app avisa antes de descartar alterações. **Mantido (PR #127)**: não há duplicata — falta adoção nos formulários.
+- **`useUnsavedChanges.ts` ADOTADO** em `AdminMissionsTab` (`src/pages/Mentoria.tsx`): o rascunho do formulário de missão avisa antes de perder dados em refresh/fechar aba (sucesso do submit limpa os campos e desarma o guard). Cobertura: `src/test/useUnsavedChanges.test.tsx`. `useFormDirtyState.ts:45` segue sem consumidor. A guarda **não** bloqueia navegação SPA — `useBlocker` exigiria data router e `App.tsx` usa `BrowserRouter` declarativo.
 - **Cobertura de teste dos hooks ≈ 1,6%**: `grep -rln "renderHook" src/` → **2 arquivos** (`src/test/useTypePreferences.test.tsx`, `src/tests/unit/device.test.ts`) para 129 arquivos de hook. Os 122 arquivos de teste em `src/test/` (majoritariamente `*.simulation.test.ts`) exercitam lógica pura de serviço, não os hooks.
 
 ### Observação de contraste (para não parecer que é tudo ruim)
