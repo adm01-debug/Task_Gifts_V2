@@ -1,6 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { shopService } from '../../services/shopService';
 import { supabase } from '../../integrations/supabase/client';
+import { notificationsService } from '../../services/notificationsService';
 
 const mockSelect = vi.fn().mockReturnThis();
 const mockEq = vi.fn().mockReturnThis();
@@ -74,10 +75,32 @@ describe('shopService', () => {
       const result = await shopService.purchaseReward('u1', 'r1');
 
       expect(result).toEqual(mockPurchase);
+      expect(notificationsService.create).toHaveBeenCalledWith(
+        expect.objectContaining({
+          data: expect.objectContaining({ purchase_id: 'p1', reward_id: 'r1' }),
+        }),
+      );
       expect(mockRpc).toHaveBeenCalledWith('spend_coins', {
         p_user_id: 'u1',
         p_amount: 100,
       });
+    });
+
+    it('gera notificações distintas ao comprar o mesmo prêmio duas vezes', async () => {
+      const mockReward = { id: 'r1', name: 'Cool Item', price_coins: 100, stock: 10 };
+      mockRpc.mockResolvedValue({ data: [{ id: 'u1', coins: 50 }], error: null });
+
+      mockMaybeSingle.mockResolvedValueOnce({ data: mockReward, error: null });
+      mockMaybeSingle.mockResolvedValueOnce({ data: { id: 'p1', user_id: 'u1', reward_id: 'r1', total_coins: 100 }, error: null });
+      await shopService.purchaseReward('u1', 'r1');
+
+      mockMaybeSingle.mockResolvedValueOnce({ data: mockReward, error: null });
+      mockMaybeSingle.mockResolvedValueOnce({ data: { id: 'p2', user_id: 'u1', reward_id: 'r1', total_coins: 100 }, error: null });
+      await shopService.purchaseReward('u1', 'r1');
+
+      const payloads = vi.mocked(notificationsService.create).mock.calls.map(([arg]) => JSON.stringify(arg.data));
+      expect(payloads).toHaveLength(2);
+      expect(new Set(payloads).size).toBe(2);
     });
   });
 });
