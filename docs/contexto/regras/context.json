@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "50530f89cfdcc580bc5d2121a8ea42b2a543e97b",
+  "sha": "f5f05bc10394f29367bd6dfcd4a46ac369e49a45",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
-  "generated_at": "2026-11-24 12:33 UTC",
+  "generated_at": "2026-11-24 12:45 UTC",
   "files_total": 1581,
   "code_files": 1474,
-  "code_lines": 268410
+  "code_lines": 268424
  },
  "version": "1.3.2",
- "facts_hash": "93be3b0751be429d",
+ "facts_hash": "81350cbd0e1858eb",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -27497,9 +27497,10 @@
     "src": "supabase/migrations/20261220000000_fix_sre_rpcs_and_dispatch_trigger.sql",
     "security_definer": true,
     "search_path": true,
-    "body": "DECLARE v_project_url TEXT := 'https://eidsaqymojyuhprobfpn.supabase.co'; v_secret TEXT; BEGIN IF LOWER(COALESCE(NEW.severity, '')) NOT IN ('high', 'critical') THEN RETURN NEW; END IF; BEGIN SELECT decrypted_secret INTO v_secret FROM vault.decrypted_secrets WHERE name = 'internal_dispatch_secret' LIMIT 1; EXCEPTION WHEN OTHERS THEN v_secret := NULL; END; IF v_secret IS NULL OR v_secret = '' THEN RAISE WARNING 'dispatch-critical-alert skipped: vault secret internal_dispatch_secret not found'; RETURN NEW; END IF; PERFORM net.http_post( url := v_project_url || '/functions/v1/dispatch-critical-alert', headers := jsonb_build_object( 'Content-Type', 'application/json', 'x-internal-secret', v_secre …",
+    "body": "DECLARE v_project_url TEXT := 'https://eidsaqymojyuhprobfpn.supabase.co'; v_secret TEXT; BEGIN IF LOWER(COALESCE(NEW.severity, '')) NOT IN ('high', 'critical') THEN RETURN NEW; END IF; BEGIN SELECT value INTO v_secret FROM _internal.dispatch_config WHERE key = 'dispatch_secret' LIMIT 1; EXCEPTION WHEN OTHERS THEN v_secret := NULL; END; IF v_secret IS NULL OR v_secret = '' THEN BEGIN SELECT decrypted_secret INTO v_secret FROM vault.decrypted_secrets WHERE name = 'internal_dispatch_secret' LIMIT 1; EXCEPTION WHEN OTHERS THEN v_secret := NULL; END; END IF; IF v_secret IS NULL OR v_secret = '' THEN RAISE WARNING 'dispatch-critical-alert skipped: segredo ausente em _internal.dispatch_config e no …",
     "raises": [],
     "tables": [
+     "_internal",
      "v_secret",
      "vault"
     ]
@@ -50294,7 +50295,7 @@
   {
    "module": "supabase/migrations",
    "files": 278,
-   "lines": 30453,
+   "lines": 30467,
    "tables": [],
    "exports": [],
    "docs": [],
@@ -97089,9 +97090,10 @@
     "src": "supabase/migrations/20261220000000_fix_sre_rpcs_and_dispatch_trigger.sql",
     "security_definer": true,
     "search_path": true,
-    "body": "DECLARE v_project_url TEXT := 'https://eidsaqymojyuhprobfpn.supabase.co'; v_secret TEXT; BEGIN IF LOWER(COALESCE(NEW.severity, '')) NOT IN ('high', 'critical') THEN RETURN NEW; END IF; BEGIN SELECT decrypted_secret INTO v_secret FROM vault.decrypted_secrets WHERE name = 'internal_dispatch_secret' LIMIT 1; EXCEPTION WHEN OTHERS THEN v_secret := NULL; END; IF v_secret IS NULL OR v_secret = '' THEN RAISE WARNING 'dispatch-critical-alert skipped: vault secret internal_dispatch_secret not found'; RETURN NEW; END IF; PERFORM net.http_post( url := v_project_url || '/functions/v1/dispatch-critical-alert', headers := jsonb_build_object( 'Content-Type', 'application/json', 'x-internal-secret', v_secre …",
+    "body": "DECLARE v_project_url TEXT := 'https://eidsaqymojyuhprobfpn.supabase.co'; v_secret TEXT; BEGIN IF LOWER(COALESCE(NEW.severity, '')) NOT IN ('high', 'critical') THEN RETURN NEW; END IF; BEGIN SELECT value INTO v_secret FROM _internal.dispatch_config WHERE key = 'dispatch_secret' LIMIT 1; EXCEPTION WHEN OTHERS THEN v_secret := NULL; END; IF v_secret IS NULL OR v_secret = '' THEN BEGIN SELECT decrypted_secret INTO v_secret FROM vault.decrypted_secrets WHERE name = 'internal_dispatch_secret' LIMIT 1; EXCEPTION WHEN OTHERS THEN v_secret := NULL; END; END IF; IF v_secret IS NULL OR v_secret = '' THEN RAISE WARNING 'dispatch-critical-alert skipped: segredo ausente em _internal.dispatch_config e no …",
     "raises": [],
     "tables": [
+     "_internal",
      "v_secret",
      "vault"
     ]
@@ -154767,7 +154769,7 @@
   },
   "supabase/migrations/20261220000000_fix_sre_rpcs_and_dispatch_trigger.sql": {
    "path": "supabase/migrations/20261220000000_fix_sre_rpcs_and_dispatch_trigger.sql",
-   "lines": 262,
+   "lines": 276,
    "errors": [
     ",\n    headers := jsonb_build_object(\n      "
    ],
@@ -154883,10 +154885,20 @@
   }
  },
  "git": {
-  "sha": "50530f89cfdcc580bc5d2121a8ea42b2a543e97b",
+  "sha": "f5f05bc10394f29367bd6dfcd4a46ac369e49a45",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "commits": [
+   {
+    "sha": "f5f05bc",
+    "date": "2026-11-24",
+    "author": "adm01-debug",
+    "subject": "fix: alinha trigger de dispatch ao banco vivo e encerra a divergencia do repo (#135)",
+    "files": [
+     "docs/agentes/banco.md",
+     "supabase/migrations/20261220000000_fix_sre_rpcs_and_dispatch_trigger.sql"
+    ]
+   },
    {
     "sha": "50530f8",
     "date": "2026-11-24",
@@ -155254,15 +155266,6 @@
     "files": [
      "docs/estado/05-edge-functions.md"
     ]
-   },
-   {
-    "sha": "c0ab58e",
-    "date": "2026-11-23",
-    "author": "adm01-debug",
-    "subject": "fix(sre): corrige RPCs de error-budget/webhook-stats e trigger de dispatch apontando para projeto errado (#106)",
-    "files": [
-     "supabase/migrations/20261220000000_fix_sre_rpcs_and_dispatch_trigger.sql"
-    ]
    }
   ],
   "hot_files": [
@@ -155285,6 +155288,10 @@
    [
     "src/pages/EngagementReports.tsx",
     3
+   ],
+   [
+    "docs/agentes/banco.md",
+    2
    ],
    [
     "supabase/config.toml",
@@ -155327,11 +155334,11 @@
     2
    ],
    [
-    "AGENTS.md",
+    "supabase/migrations/20261220000000_fix_sre_rpcs_and_dispatch_trigger.sql",
     1
    ],
    [
-    "docs/agentes/banco.md",
+    "AGENTS.md",
     1
    ],
    [
@@ -155340,10 +155347,6 @@
    ],
    [
     "src/components/MyDevelopmentPlanWidget.tsx",
-    1
-   ],
-   [
-    "src/components/navigation/GlobalBreadcrumbs.tsx",
     1
    ]
   ]

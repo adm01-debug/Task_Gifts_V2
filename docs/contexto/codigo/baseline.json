@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "50530f89cfdcc580bc5d2121a8ea42b2a543e97b",
+  "commit": "f5f05bc10394f29367bd6dfcd4a46ac369e49a45",
   "branch": "main",
-  "data_commit": "2026-11-24T09:32:03-03:00",
+  "data_commit": "2026-11-24T09:45:04-03:00",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "ultimos_commits": [
+   {
+    "sha": "f5f05bc",
+    "data": "2026-11-24",
+    "assunto": "fix: alinha trigger de dispatch ao banco vivo e encerra a divergencia do repo (#135)"
+   },
    {
     "sha": "50530f8",
     "data": "2026-11-24",
@@ -126,11 +131,6 @@
     "sha": "9616112",
     "data": "2026-11-23",
     "assunto": "fix(dashboard/audit): heatmap dados reais de audit_logs + auditService dev logs"
-   },
-   {
-    "sha": "130795f",
-    "data": "2026-11-23",
-    "assunto": "fix: remove tendências hardcoded em BIDashboard e corrige 'null%' em ExecutiveDashboard"
    }
   ],
   "arquivos_mudados_7d": 198,
@@ -180,6 +180,10 @@
     "mudancas": 6
    },
    {
+    "pasta": "docs/agentes/banco.md",
+    "mudancas": 5
+   },
+   {
     "pasta": "docs/agentes/mapa-repo.md",
     "mudancas": 5
    },
@@ -190,10 +194,6 @@
    {
     "pasta": "src/tests/unit",
     "mudancas": 5
-   },
-   {
-    "pasta": ".env.example",
-    "mudancas": 4
    }
   ],
   "arquivos_mais_mudados_90d": [
@@ -234,6 +234,10 @@
     "mudancas": 6
    },
    {
+    "arquivo": "docs/agentes/banco.md",
+    "mudancas": 5
+   },
+   {
     "arquivo": "docs/agentes/mapa-repo.md",
     "mudancas": 5
    },
@@ -263,10 +267,6 @@
    },
    {
     "arquivo": "RELATORIO_CI.md",
-    "mudancas": 4
-   },
-   {
-    "arquivo": "docs/agentes/banco.md",
     "mudancas": 4
    },
    {
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 103
+    "commits": 104
    },
    {
     "autor": "dependabot[bot]",
