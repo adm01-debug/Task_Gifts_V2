@@ -92,7 +92,7 @@ credencial e decisão do dono), mas:
 | Divergência | Evidência | Efeito |
 |---|---|---|
 | Ledger não cobre o repo | `supabase_migrations.schema_migrations` tem 271 versões, mas 7 dos 278 arquivos de `supabase/migrations/` não têm registro; nesses, a conferência foi por introspecção dos objetos-chave (não pela execução integral do SQL) | o ledger não prova banco == repo; introspecção continua obrigatória |
-| `trigger_dispatch_critical_alert` diverge do repo | no banco (2026-11-24) lê `_internal.dispatch_config`; `20261220000000_fix_sre_rpcs_and_dispatch_trigger.sql` recria com `vault.decrypted_secrets` | **não aplique** essa migration sem reconciliar: ela sobrescreve a versão que está em produção |
+| `trigger_dispatch_critical_alert` reconciliado (2026-11-24) | produção lê `_internal.dispatch_config`; `20261220000000_fix_sre_rpcs_and_dispatch_trigger.sql` foi alinhado a essa fonte (vault só como fallback). Os segredos das duas fontes são idênticos em produção (conferido: `segredos_iguais = true`, 64 chars em ambos) | aplicar o arquivo é no-op de comportamento; sem segredo em nenhuma fonte o trigger avisa e NÃO dispara (nunca chama a edge function sem autenticar) |
 | `VITE_SUPABASE_ANON_KEY` no `.env.example`, `VITE_SUPABASE_PUBLISHABLE_KEY` no código | `.env.example:9` vs `src/integrations/supabase/client.ts:6` | quem seguir o example sobe o app sem chave; dois testes de segurança (`src/test/rls.test.ts`, `src/test/rpcAccess.test.ts`) ficam `skip` por causa dessa variável |
 | Anon key errada em SQL de cron | `supabase/migrations/20260712194718_*.sql:5`, `20260712203400_*.sql:11` | URL corrigida; anon key ainda é de `awzhgfmqwddzgbqzqusc` — 2 jobs falham auth até o dono atualizar |
 

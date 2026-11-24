@@ -202,12 +202,15 @@ REVOKE EXECUTE ON FUNCTION public.get_webhook_delivery_stats_1h() FROM PUBLIC, a
 GRANT EXECUTE ON FUNCTION public.get_webhook_delivery_stats_1h() TO authenticated, service_role;
 
 -- 3) trigger_dispatch_critical_alert:
---    URL do projeto certo (eidsaqymojyuhprobfpn) + autenticação via segredo do vault
---    (x-internal-secret) em vez do JWT anon errado. Sem hardcode de segredo no código.
---    O secret deverá existir no vault como 'internal_dispatch_secret' (valor:
---    CRON_SECRET / INTERNAL_FUNCTION_SECRET já configurados na edge function).
---    Se o secret não existir no vault, o trigger faz fail-open (avisa e segue),
---    sem bloquear a inserção do alerta.
+--    URL do projeto certo (eidsaqymojyuhprobfpn) + autenticacao por segredo interno
+--    (x-internal-secret) em vez do JWT anon errado. Sem hardcode de segredo no codigo.
+--    Fonte primaria do segredo: _internal.dispatch_config('dispatch_secret') - a mesma
+--    que roda em producao desde 2026-11-24. Fallback: vault.decrypted_secrets
+--    ('internal_dispatch_secret'), para ambientes recriados a partir do repo.
+--    Em producao os dois valores sao identicos (conferido em 2026-11-24:
+--    segredos_iguais = true, 64 chars em ambos), entao aplicar este arquivo e no-op.
+--    Sem segredo em nenhuma das fontes, o trigger avisa e NAO dispara - nunca chama
+--    a edge function sem autenticar.
 CREATE OR REPLACE FUNCTION public.trigger_dispatch_critical_alert()
 RETURNS TRIGGER
 LANGUAGE plpgsql
@@ -223,16 +226,27 @@ BEGIN
   END IF;
 
   BEGIN
-    SELECT decrypted_secret INTO v_secret
-    FROM vault.decrypted_secrets
-    WHERE name = 'internal_dispatch_secret'
+    SELECT value INTO v_secret
+    FROM _internal.dispatch_config
+    WHERE key = 'dispatch_secret'
     LIMIT 1;
   EXCEPTION WHEN OTHERS THEN
     v_secret := NULL;
   END;
 
   IF v_secret IS NULL OR v_secret = '' THEN
-    RAISE WARNING 'dispatch-critical-alert skipped: vault secret internal_dispatch_secret not found';
+    BEGIN
+      SELECT decrypted_secret INTO v_secret
+      FROM vault.decrypted_secrets
+      WHERE name = 'internal_dispatch_secret'
+      LIMIT 1;
+    EXCEPTION WHEN OTHERS THEN
+      v_secret := NULL;
+    END;
+  END IF;
+
+  IF v_secret IS NULL OR v_secret = '' THEN
+    RAISE WARNING 'dispatch-critical-alert skipped: segredo ausente em _internal.dispatch_config e no vault';
     RETURN NEW;
   END IF;
 
