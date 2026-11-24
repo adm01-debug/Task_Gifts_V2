@@ -1,5 +1,7 @@
 import { supabase } from "@/integrations/supabase/client";
 import { logger } from "@/services/loggingService";
+import { invokeEdgeSafe } from "@/lib/requestId";
+import { isFunctionDeployed } from "@/lib/edgeAvailability";
 
 // Tipos
 export interface WebAuthnCredential {
@@ -40,13 +42,39 @@ export interface RegistrationOptions {
   excludeCredentials: { id: ArrayBuffer; type: "public-key"; transports?: AuthenticatorTransport[] }[];
 }
 
-export interface AuthenticationOptions {
-  challenge: string;
-  timeout: number;
-  rpId: string;
-  userVerification: UserVerificationRequirement;
-  allowCredentials: { id: ArrayBuffer; type: "public-key"; transports?: AuthenticatorTransport[] }[];
+/** Resposta de `passkey-auth` no passo `options`. */
+interface PasskeyOptionsResponse {
+  ok: boolean;
+  challenge?: string;
+  rpId?: string;
+  timeout?: number;
+  userVerification?: string;
+  allowCredentials?: { id: string; type?: string }[];
+  error?: string;
 }
+
+/** Resposta de `passkey-auth` no passo `verify`. */
+interface PasskeyVerifyResponse {
+  ok: boolean;
+  tokenHash?: string;
+  email?: string;
+  userId?: string;
+  error?: string;
+}
+
+/** Motivos de recusa devolvidos pela Edge Function, em linguagem de usuário. */
+const PASSKEY_ERROR_MESSAGES: Record<string, string> = {
+  rate_limited: "Muitas tentativas. Aguarde um minuto e tente novamente.",
+  challenge_invalido: "Tempo de autenticação expirado. Tente novamente.",
+  credencial_nao_encontrada: "Nenhuma passkey ativa para este dispositivo.",
+  contador_invalido: "Passkey bloqueada por segurança. Use a senha e cadastre novamente.",
+  concorrencia: "Outra tentativa de login foi concluída. Tente novamente.",
+  assinatura_invalida: "Não foi possível validar a biometria. Tente novamente.",
+  origem_nao_permitida: "Domínio não autorizado para login por passkey.",
+  rp_id_invalido: "Passkey registrada para outro domínio.",
+  usuario_nao_presente: "Presença do usuário não confirmada.",
+  verificacao_do_usuario_ausente: "Confirme a biometria ou o PIN do dispositivo.",
+};
 
 // Utilitários
 function base64URLEncode(buffer: ArrayBuffer): string {
@@ -235,117 +263,91 @@ export const webauthnService = {
     }
   },
 
-  // Gerar opções de autenticação
-  async generateAuthenticationOptions(email?: string): Promise<AuthenticationOptions & { credentialIds: string[] }> {
-    const challenge = generateChallenge();
-    
-    // Salvar challenge
-    await supabase.from("webauthn_challenges").insert({
-      challenge,
-      type: "authentication"
-    });
-
-    let allowCredentials: { id: ArrayBuffer; type: "public-key"; transports?: AuthenticatorTransport[] }[] = [];
-    let credentialIds: string[] = [];
-
-    // Se email fornecido, buscar credenciais do usuário
-    if (email) {
-      const { data: credentials } = await supabase
-        .rpc("get_passkeys_by_email", { p_email: email });
-
-      if (credentials && credentials.length > 0) {
-        allowCredentials = credentials.map((cred: { credential_id: string }) => ({
-          id: base64URLDecode(cred.credential_id),
-          type: "public-key" as const
-        }));
-        credentialIds = credentials.map((cred: { credential_id: string }) => cred.credential_id);
-      }
-    }
-
-    return {
-      challenge,
-      timeout: 60000,
-      rpId: window.location.hostname,
-      userVerification: "required",
-      allowCredentials,
-      credentialIds
-    };
-  },
-
-  // Autenticar com passkey
+  // Autenticar com passkey. O servidor (`passkey-auth`) emite o challenge,
+  // valida a assinatura e só então devolve um token de sessão — o cliente não
+  // decide mais se o login é válido.
   async authenticate(email?: string): Promise<{ success: boolean; userId?: string; error?: string }> {
     try {
       if (!isWebAuthnSupported()) {
         return { success: false, error: "WebAuthn não é suportado neste navegador" };
       }
+      if (!isFunctionDeployed("passkey-auth")) {
+        return { success: false, error: "Login por passkey indisponível no momento" };
+      }
 
-      const options = await this.generateAuthenticationOptions(email);
+      const optionsResult = await invokeEdgeSafe<PasskeyOptionsResponse>("passkey-auth", {
+        body: { action: "options", email: email?.trim() || undefined },
+        maxAttempts: 2
+      });
+      const options = optionsResult.data;
+      if (optionsResult.error || !options?.ok || !options.challenge || !options.rpId) {
+        logger.apiError("WebAuthn options", optionsResult.error ?? new Error("resposta inválida"), "webauthnService");
+        return { success: false, error: "Não foi possível iniciar o login por passkey" };
+      }
 
-      const publicKeyCredentialRequestOptions: PublicKeyCredentialRequestOptions = {
-        challenge: base64URLDecode(options.challenge),
-        timeout: options.timeout,
-        rpId: options.rpId,
-        userVerification: options.userVerification,
-        allowCredentials: options.allowCredentials.length > 0 ? options.allowCredentials : undefined
-      };
+      const allowCredentials = options.allowCredentials?.length
+        ? options.allowCredentials.map((item) => ({
+            id: base64URLDecode(item.id),
+            type: "public-key" as const
+          }))
+        : undefined;
 
-      const assertion = await navigator.credentials.get({
-        publicKey: publicKeyCredentialRequestOptions
-      }) as PublicKeyCredential;
+      const assertion = (await navigator.credentials.get({
+        publicKey: {
+          challenge: base64URLDecode(options.challenge),
+          rpId: options.rpId,
+          timeout: options.timeout ?? 60000,
+          userVerification: (options.userVerification ?? "required") as UserVerificationRequirement,
+          allowCredentials
+        }
+      })) as PublicKeyCredential | null;
 
       if (!assertion) {
         return { success: false, error: "Falha na autenticação" };
       }
 
       const response = assertion.response as AuthenticatorAssertionResponse;
-      const credentialId = base64URLEncode(assertion.rawId);
 
-      // Buscar credencial no banco
-      const { data: credential, error: fetchError } = await supabase
-        .from("webauthn_credentials")
-        .select("*")
-        .eq("credential_id", credentialId)
-        .eq("is_active", true)
-        .maybeSingle();
+      // maxAttempts 1: o challenge é de uso único no servidor; repetir a chamada
+      // só queimaria a tentativa e devolveria erro confuso ao usuário.
+      const verifyResult = await invokeEdgeSafe<PasskeyVerifyResponse>("passkey-auth", {
+        body: {
+          action: "verify",
+          credentialId: base64URLEncode(assertion.rawId),
+          authenticatorData: base64URLEncode(response.authenticatorData),
+          clientDataJSON: base64URLEncode(response.clientDataJSON),
+          signature: base64URLEncode(response.signature)
+        },
+        maxAttempts: 1
+      });
 
-      if (fetchError || !credential) {
-        return { success: false, error: "Credencial não encontrada" };
+      const verified = verifyResult.data;
+      if (verifyResult.error || !verified?.ok || !verified.tokenHash || !verified.email) {
+        return {
+          success: false,
+          error: PASSKEY_ERROR_MESSAGES[verified?.error ?? ""] ?? "Não foi possível validar a passkey"
+        };
       }
 
-      // Verificar contador (proteção contra replay)
-      const clientDataJSON = JSON.parse(new TextDecoder().decode(response.clientDataJSON));
-      const authenticatorData = new Uint8Array(response.authenticatorData);
-      const newCounter = (authenticatorData[33] << 24) | (authenticatorData[34] << 16) | 
-                         (authenticatorData[35] << 8) | authenticatorData[36];
-
-      if (newCounter <= credential.counter && credential.counter !== 0) {
-        return { success: false, error: "Possível ataque de replay detectado" };
+      // A sessão só nasce depois de a assinatura ser validada no servidor.
+      const { error: sessionError } = await supabase.auth.verifyOtp({
+        token_hash: verified.tokenHash,
+        type: "magiclink"
+      });
+      if (sessionError) {
+        logger.apiError("WebAuthn verifyOtp", sessionError, "webauthnService");
+        return { success: false, error: "Não foi possível criar a sessão" };
       }
 
-      // Atualizar contador e último uso
-      await supabase
-        .from("webauthn_credentials")
-        .update({
-          counter: newCounter,
-          last_used_at: new Date().toISOString()
-        })
-        .eq("id", credential.id);
-
-      // Limpar challenge usado
-      await supabase
-        .from("webauthn_challenges")
-        .delete()
-        .eq("challenge", options.challenge);
-
-      return { success: true, userId: credential.user_id };
+      return { success: true, userId: verified.userId };
     } catch (err: unknown) {
-      logger.apiError('WebAuthn authenticate', err, 'webauthnService');
-      
+      logger.apiError("WebAuthn authenticate", err, "webauthnService");
+
       const error = err as Error & { name?: string };
       if (error.name === "NotAllowedError") {
         return { success: false, error: "Operação cancelada pelo usuário" };
       }
-      
+
       return { success: false, error: error.message || "Erro na autenticação" };
     }
   },

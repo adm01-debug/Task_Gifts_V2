@@ -1,5 +1,8 @@
 ﻿project_id = "eidsaqymojyuhprobfpn"
 
+[functions.passkey-auth]
+verify_jwt = false
+
 [functions.migrate-helper]
 verify_jwt = false
 
