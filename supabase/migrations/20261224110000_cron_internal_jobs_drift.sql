@@ -33,6 +33,12 @@ CREATE TABLE IF NOT EXISTS _internal.dispatch_config (
   value TEXT
 );
 
+-- O schema `_internal` nao esta exposto pelo PostgREST e o ACL dele nao da USAGE a
+-- anon/authenticated. Habilitar RLS sem policy e' defesa em profundidade para o caso
+-- de o schema passar a ser exposto: `postgres` (owner) e o service_role (BYPASSRLS)
+-- continuam lendo, inclusive pelos subselects dos jobs e pelo trigger SECURITY DEFINER.
+ALTER TABLE _internal.dispatch_config ENABLE ROW LEVEL SECURITY;
+
 -- 1) Destino comum ---------------------------------------------------------------
 -- A URL do projeto nao e' segredo e ja aparece em outras migrations. Guarda-la em
 -- config permite que o trigger de alerta critico pare de fixar a URL no corpo da
@@ -95,17 +101,11 @@ BEGIN
   SELECT value INTO v_url FROM _internal.dispatch_config WHERE key = 'project_url';
   SELECT value INTO v_secret FROM _internal.dispatch_config WHERE key = 'cron_secret';
 
-  IF v_secret IS NULL OR length(v_secret) < 32 THEN
-      -- Nao copia `dispatch_secret` para `cron_secret`: gravar um valor de outra
-      -- origem mascararia o drift e poderia deixar o digest sem token valido.
-      -- Usa o valor so como credencial desta execucao e avisa para provisionar.
-    SELECT value INTO v_secret FROM _internal.dispatch_config WHERE key = 'dispatch_secret';
-    IF v_secret IS NOT NULL AND length(v_secret) >= 32 THEN
-      RAISE WARNING 'cron_secret ausente; jobs internos usando dispatch_secret - confirme que security-weekly-digest aceita esse valor';
-    END IF;
-  END IF;
-
-  IF v_secret IS NULL OR length(v_secret) < 32 OR v_url IS NULL THEN
+  IF v_url IS NULL OR v_secret IS NULL OR length(v_secret) < 32 THEN
+      -- Sem `cron_secret` os jobs seriam gravados com x-internal-secret nulo (o
+      -- comando resolve a chave em tempo de execucao) e tomariam 401 para sempre.
+      -- `dispatch_secret` NAO serve de substituto aqui: e' outra credencial, nao e'
+      -- a chave que o comando agendado le, e reusa-la mascararia o drift.
     RAISE WARNING 'sem project_url/cron_secret em _internal.dispatch_config: os jobs internos NAO foram recriados (recriar sem credencial geraria 401)';
     RETURN;
   END IF;
