@@ -1,8 +1,9 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { describe, it, expect, vi, beforeEach, type Mock } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
 import { ClimateSurveyAnswerForm } from "@/components/climate/ClimateSurveyAnswerForm";
 import { ClimateSurveyForm } from "@/components/climate/ClimateSurveyForm";
 import { ClimateSurveyResults } from "@/components/climate/ClimateSurveyResults";
+import { ClimateSurveyQuestions } from "@/components/climate/ClimateSurveyQuestions";
 import type { ClimateSurvey, ClimateSurveyQuestion } from "@/services/climateSurveyService";
 
 const h = vi.hoisted(() => ({
@@ -171,8 +172,66 @@ describe("ClimateSurveyForm", () => {
       created_by: "u1",
       department_id: null,
     });
-    expect(payload.starts_at).toContain("2026-05-10");
-    expect(payload.ends_at).toContain("2026-05-17");
+    // Compara com o mesmo cálculo local do componente: asserção por string fixa
+    // quebra em fuso à frente de UTC.
+    expect(payload.starts_at).toBe(new Date("2026-05-10T00:00:00").toISOString());
+    expect(payload.ends_at).toBe(new Date("2026-05-17T23:59:59.999").toISOString());
+  });
+});
+
+describe("ClimateSurveyQuestions", () => {
+  const renderQuestions = (over: {
+    questions?: ClimateSurveyQuestion[];
+    survey?: ClimateSurvey;
+    onAdd?: Mock<(question: Omit<ClimateSurveyQuestion, "id" | "created_at">) => void>;
+  } = {}) => {
+    const onAdd: Mock<(question: Omit<ClimateSurveyQuestion, "id" | "created_at">) => void> =
+      over.onAdd ?? vi.fn();
+    render(
+      <ClimateSurveyQuestions
+        survey={over.survey ?? survey({ status: "draft" })}
+        questions={over.questions ?? []}
+        canManage
+        isAdding={false}
+        isRemoving={false}
+        onAdd={onAdd}
+        onRemove={() => {}}
+      />,
+    );
+    return onAdd;
+  };
+
+  it("continua a numeração a partir do maior índice já usado", () => {
+    const onAdd = renderQuestions({
+      questions: [
+        question({ id: "q1", order_index: 1 }),
+        question({ id: "q3", order_index: 3 }),
+      ],
+    });
+
+    fireEvent.change(screen.getByLabelText("Pergunta"), { target: { value: "Nova pergunta" } });
+    fireEvent.click(screen.getByRole("button", { name: "Adicionar pergunta" }));
+
+    expect(onAdd).toHaveBeenCalledTimes(1);
+    // length + 1 daria 3, colidindo com a pergunta existente e jogando a nova no meio.
+    expect(onAdd.mock.calls[0][0].order_index).toBe(4);
+  });
+
+  it("avisa quando o texto da pergunta está vazio", () => {
+    const onAdd = renderQuestions();
+
+    fireEvent.click(screen.getByRole("button", { name: "Adicionar pergunta" }));
+
+    expect(screen.getByRole("alert")).toHaveTextContent("Escreva o texto da pergunta.");
+    expect(onAdd).not.toHaveBeenCalled();
+  });
+
+  it("trava a edição das perguntas fora do rascunho", () => {
+    renderQuestions({ survey: survey({ status: "active" }) });
+
+    expect(screen.queryByLabelText("Pergunta")).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: /Remover pergunta/ })).not.toBeInTheDocument();
+    expect(screen.getByText("Perguntas travadas após a publicação")).toBeInTheDocument();
   });
 });
 
