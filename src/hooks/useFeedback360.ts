@@ -49,6 +49,13 @@ export function useFeedback360() {
       queryClient.invalidateQueries({ queryKey: ["feedback"] });
       toast({ title: "Solicitação de feedback enviada!" });
     },
+    onError: (error: Error) => {
+      toast({
+        title: "Erro ao criar pedido de feedback",
+        description: error.message,
+        variant: "destructive",
+      });
+    },
   });
 
   const submitFeedbackMutation = useMutation({
@@ -115,4 +122,17 @@ export function useFeedback360() {
     isSubmitting: submitFeedbackMutation.isPending,
     getFeedbackSummary: feedbackService.getFeedbackSummary,
   };
+}
+
+/**
+ * Resumo consolidado dos feedbacks recebidos pelo usuário.
+ * Respostas anônimas não aparecem aqui: a policy "Receivers can view
+ * non-anonymous feedback" esconde `feedback_responses` de quem só recebe.
+ */
+export function useFeedbackSummary(userId?: string) {
+  return useQuery({
+    queryKey: ["feedback", "summary", userId],
+    queryFn: () => feedbackService.getFeedbackSummary(userId as string),
+    enabled: !!userId,
+  });
 }

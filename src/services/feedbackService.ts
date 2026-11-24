@@ -58,6 +58,81 @@ export interface CycleInsert {
   questions: FeedbackQuestion[];
 }
 
+export interface FeedbackSummary {
+  avgRating: number;
+  totalResponses: number;
+  byRelationship: Record<string, { count: number; avgRating: number }>;
+  commonStrengths: string[];
+  commonImprovements: string[];
+}
+
+/** Linha de `feedback_requests` com as respostas visíveis para quem está lendo o resumo. */
+export interface FeedbackSummaryRow {
+  relationship: string;
+  responses: Array<Pick<FeedbackResponse, "overall_rating" | "strengths" | "improvements">>;
+}
+
+/**
+ * Ranking de comentários por frequência real (dedupe por texto normalizado),
+ * preservando a grafia da primeira ocorrência. Textos repetidos viram uma
+ * entrada com `count` maior em vez de ocuparem as 5 vagas sozinhos.
+ */
+function rankComments(texts: Array<string | null>): string[] {
+  const byKey = new Map<string, { text: string; count: number }>();
+
+  texts.forEach(raw => {
+    const text = raw?.trim();
+    if (!text) return;
+    const key = text.toLowerCase().replace(/\s+/g, " ");
+    const entry = byKey.get(key);
+    if (entry) entry.count += 1;
+    else byKey.set(key, { text, count: 1 });
+  });
+
+  return [...byKey.values()]
+    .sort((a, b) => b.count - a.count || a.text.localeCompare(b.text))
+    .slice(0, 5)
+    .map(entry => entry.text);
+}
+
+export function aggregateFeedbackSummary(rows: FeedbackSummaryRow[]): FeedbackSummary {
+  let totalRating = 0;
+  let ratingCount = 0;
+  const byRelationship: Record<string, { count: number; totalRating: number }> = {};
+  const strengths: string[] = [];
+  const improvements: string[] = [];
+
+  rows.forEach(row => {
+    (row.responses ?? []).forEach(resp => {
+      if (resp.overall_rating) {
+        totalRating += resp.overall_rating;
+        ratingCount += 1;
+
+        if (!byRelationship[row.relationship]) {
+          byRelationship[row.relationship] = { count: 0, totalRating: 0 };
+        }
+        byRelationship[row.relationship].count += 1;
+        byRelationship[row.relationship].totalRating += resp.overall_rating;
+      }
+      if (resp.strengths) strengths.push(resp.strengths);
+      if (resp.improvements) improvements.push(resp.improvements);
+    });
+  });
+
+  return {
+    avgRating: ratingCount > 0 ? Math.round((totalRating / ratingCount) * 10) / 10 : 0,
+    totalResponses: ratingCount,
+    byRelationship: Object.fromEntries(
+      Object.entries(byRelationship).map(([rel, data]) => [
+        rel,
+        { count: data.count, avgRating: Math.round((data.totalRating / data.count) * 10) / 10 },
+      ])
+    ),
+    commonStrengths: rankComments(strengths),
+    commonImprovements: rankComments(improvements),
+  };
+}
+
 export const feedbackService = {
   async getActiveCycles(): Promise<FeedbackCycle[]> {
     const { data, error } = await supabase
@@ -241,13 +316,9 @@ export const feedbackService = {
     overallRating?: number,
     isAnonymous = false
   ): Promise<FeedbackResponse> {
-    // Update request status
-    await supabase
-      .from("feedback_requests")
-      .update({ status: 'submitted' })
-      .eq("id", requestId);
-
-    // Insert response
+    // Insere a resposta ANTES de marcar o pedido como enviado: se a inserção
+    // falhar depois do update, o pedido ficaria `submitted` sem resposta
+    // (resposta perdida e avaliação impossível de refazer).
     const { data, error } = await supabase
       .from("feedback_responses")
       .insert({
@@ -262,6 +333,14 @@ export const feedbackService = {
       .single();
 
     if (error) throw error;
+
+    const { error: statusError } = await supabase
+      .from("feedback_requests")
+      .update({ status: 'submitted' })
+      .eq("id", requestId);
+
+    if (statusError) throw statusError;
+
     return data as FeedbackResponse;
   },
 
@@ -276,13 +355,7 @@ export const feedbackService = {
     return data as FeedbackResponse | null;
   },
 
-  async getFeedbackSummary(userId: string, cycleId?: string): Promise<{
-    avgRating: number;
-    totalResponses: number;
-    byRelationship: Record<string, { count: number; avgRating: number }>;
-    commonStrengths: string[];
-    commonImprovements: string[];
-  }> {
+  async getFeedbackSummary(userId: string, cycleId?: string): Promise<FeedbackSummary> {
     let query = supabase
       .from("feedback_requests")
       .select(`
@@ -296,43 +369,15 @@ export const feedbackService = {
       query = query.eq("cycle_id", cycleId);
     }
 
-    const { data } = await query;
+    const { data, error } = await query;
 
-    let totalRating = 0;
-    let ratingCount = 0;
-    const byRelationship: Record<string, { count: number; totalRating: number }> = {};
-    const allStrengths: string[] = [];
-    const allImprovements: string[] = [];
+    if (error) throw error;
 
-    data?.forEach(req => {
-      const responses = req.feedback_responses as unknown as FeedbackResponse[];
-      responses?.forEach(resp => {
-        if (resp.overall_rating) {
-          totalRating += resp.overall_rating;
-          ratingCount++;
-
-          if (!byRelationship[req.relationship]) {
-            byRelationship[req.relationship] = { count: 0, totalRating: 0 };
-          }
-          byRelationship[req.relationship].count++;
-          byRelationship[req.relationship].totalRating += resp.overall_rating;
-        }
-        if (resp.strengths) allStrengths.push(resp.strengths);
-        if (resp.improvements) allImprovements.push(resp.improvements);
-      });
-    });
-
-    return {
-      avgRating: ratingCount > 0 ? Math.round((totalRating / ratingCount) * 10) / 10 : 0,
-      totalResponses: ratingCount,
-      byRelationship: Object.fromEntries(
-        Object.entries(byRelationship).map(([rel, data]) => [
-          rel,
-          { count: data.count, avgRating: Math.round((data.totalRating / data.count) * 10) / 10 },
-        ])
-      ),
-      commonStrengths: allStrengths.slice(0, 5),
-      commonImprovements: allImprovements.slice(0, 5),
-    };
+    return aggregateFeedbackSummary(
+      (data ?? []).map(req => ({
+        relationship: req.relationship as string,
+        responses: (req.feedback_responses ?? []) as unknown as FeedbackSummaryRow["responses"],
+      }))
+    );
   },
 };
