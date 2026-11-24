@@ -28,6 +28,13 @@ CREATE TABLE IF NOT EXISTS _internal.dispatch_config (
   value TEXT
 );
 
+-- O schema `_internal` nao esta exposto pelo PostgREST (so public/graphql_public) e
+-- o ACL dele nao da USAGE a anon/authenticated. Habilitar RLS sem policy e' defesa
+-- em profundidade para o caso de o schema passar a ser exposto: o owner da tabela
+-- (`postgres`) e o service_role (BYPASSRLS) continuam lendo normalmente, e o trigger
+-- e' SECURITY DEFINER do proprio `postgres`.
+ALTER TABLE _internal.dispatch_config ENABLE ROW LEVEL SECURITY;
+
 DO $outer$
 DECLARE
   v_secret TEXT;
@@ -94,10 +101,14 @@ BEGIN
     v_project_url := 'https://eidsaqymojyuhprobfpn.supabase.co';
   END IF;
 
+  -- O Vault vem primeiro de proposito: `_internal.dispatch_config.dispatch_secret`
+  -- e' a copia estatica feita no provisionamento. Depois de rotacionar o segredo no
+  -- Vault, uma copia antiga aqui faria o trigger enviar o valor revogado, a edge
+  -- devolver 401 e o alerta critico se perder em silencio.
   BEGIN
-    SELECT value INTO v_secret
-    FROM _internal.dispatch_config
-    WHERE key = 'dispatch_secret'
+    SELECT decrypted_secret INTO v_secret
+    FROM vault.decrypted_secrets
+    WHERE name = 'internal_dispatch_secret'
     LIMIT 1;
   EXCEPTION WHEN OTHERS THEN
     v_secret := NULL;
@@ -105,9 +116,9 @@ BEGIN
 
   IF v_secret IS NULL OR v_secret = '' THEN
     BEGIN
-      SELECT decrypted_secret INTO v_secret
-      FROM vault.decrypted_secrets
-      WHERE name = 'internal_dispatch_secret'
+      SELECT value INTO v_secret
+      FROM _internal.dispatch_config
+      WHERE key = 'dispatch_secret'
       LIMIT 1;
     EXCEPTION WHEN OTHERS THEN
       v_secret := NULL;
