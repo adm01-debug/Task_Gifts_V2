@@ -14,7 +14,7 @@ Este documento detalha os testes exaustivos e as correções realizadas para gar
 ## 3. Plano de Correções Exaustivas (Executando...)
 
 ### 🛠️ Ação 1: Centralização de Tratamento de Erros nos Serviços
-**Problema:** Serviços como `aiCoachService` e `feedback360Service` retornam null ou arrays vazios em caso de erro, silenciando falhas críticas de infraestrutura.
+**Problema:** Serviços como `aiCoachService` e `feedback360Service` retornam null ou arrays vazios em caso de erro, silenciando falhas críticas de infraestrutura. (`feedback360Service.ts` era uma implementação paralela sem nenhum consumidor e foi **removida** nesta rodada; o 360 em produção é `feedbackService.ts`, servindo `/feedback`.)
 **Solução:** Implementar blocos `try-catch` com integração ao `logger.apiError` e `showErrorToast`.
 
 ### 🛠️ Ação 2: Refatoração de Arquitetura (Service Layer)
@@ -38,7 +38,7 @@ Este documento detalha os testes exaustivos e as correções realizadas para gar
 ### Teste de Concorrência (Simulado)
 - **Cenário:** 1000 check-ins simultâneos via Edge Functions.
 - **Resultado:** A camada de serviços agora lida com `Promise.all` de forma resiliente, capturando falhas individuais sem interromper o fluxo global.
-- **Correção:** Implementado `try-catch` em todos os métodos do `feedback360Service`.
+- **Correção:** Implementado `try-catch` em todos os métodos do `feedback360Service` (arquivo removido nesta rodada por não ter consumidor — ver `docs/estado/03-hooks-services-lib.md`).
 
 ### Teste de Integridade de Dados (Gamificação)
 - **Cenário:** Usuário tentando desbloquear a mesma conquista repetidamente.

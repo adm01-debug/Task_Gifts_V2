@@ -321,7 +321,7 @@
 | Dashboard | `src/components/feedback/Feedback360Dashboard.tsx` | React |
 | Painel | `src/components/feedback/FeedbackPanel.tsx` | React |
 | Ciclos Admin | `src/components/admin/FeedbackCycleManager.tsx` | React |
-| Serviço | `src/services/feedback360Service.ts` | Supabase |
+| Serviço | `src/services/feedbackService.ts` | Supabase |
 | Hook | `src/hooks/useFeedback360.ts` | React Query |
 
 ### 4. Competências
