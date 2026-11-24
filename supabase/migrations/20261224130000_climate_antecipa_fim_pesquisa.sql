@@ -23,7 +23,9 @@
 --   * o snapshot dos prazos originais sai do MESMO comando do UPDATE (CTE
 --     `pre_alvo` com `FOR UPDATE` + `RETURNING`): um SELECT separado poderia
 --     deixar de fora uma pesquisa publicada entre a leitura e a escrita, e ela
---     teria o prazo encurtado sem valor original no log. Reverter a migration
+--     teria o prazo encurtado sem valor original no log. O `RAISE NOTICE` sai
+--     depois do UPDATE, na mesma transacao, mas carrega os valores anteriores
+--     (lidos por `pre_alvo`) das exatas linhas alteradas. Reverter a migration
 --     nao restaura os prazos, esse registro e' o que permite correcao por id;
 --   * se aplicada depois de 2026-11-30 23:59:59-03, vira no-op com WARNING - sem
 --     essa guarda o proximo `expire_climate_surveys()` encerraria a pesquisa no
@@ -73,7 +75,7 @@ BEGIN
     INTO v_originais, v_afetadas
     FROM movidas;
 
-  RAISE NOTICE 'climate: prazos originais antes da antecipacao: %', v_originais;
+  RAISE NOTICE 'climate: prazos originais dos registros antecipados: %', v_originais;
   RAISE NOTICE 'climate: fim da pesquisa ativa antecipado para % (% linha(s) alterada(s))', v_alvo, v_afetadas;
 END
 $antecipa$;
