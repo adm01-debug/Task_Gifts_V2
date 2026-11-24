@@ -227,6 +227,43 @@ const RESPONSES: Record<string, ResponseFixtures> = {
         { nome: "skipped sem reason", payload: { success: true, skipped: true } },
       ],
     },
+    // passkey-auth/index.ts:171 → { ok:true, challenge, rpId, allowCredentials, timeout, userVerification }
+    // passkey-auth/index.ts:296 → { ok:true, tokenHash, email, userId }
+    "passkey-auth": {
+      valid: [
+        {
+          nome: "challenge com credenciais do e-mail",
+          payload: {
+            ok: true,
+            challenge: "kQ3n7c2m9pXr1sV0aB4dE6fG8hJ0kL2mN4oP6qR8sT0",
+            rpId: "app.exemplo.com",
+            allowCredentials: [{ id: "Y3JlZC1kZS1leGVtcGxvLTEyMw", type: "public-key" }],
+            timeout: 60000,
+            userVerification: "required",
+          },
+        },
+        {
+          nome: "challenge sem credenciais (e-mail sem passkey)",
+          payload: {
+            ok: true,
+            challenge: "kQ3n7c2m9pXr1sV0aB4dE6fG8hJ0kL2mN4oP6qR8sT0",
+            rpId: "app.exemplo.com",
+            allowCredentials: [],
+            timeout: 60000,
+            userVerification: "required",
+          },
+        },
+        {
+          nome: "sessão emitida após assinatura válida",
+          payload: { ok: true, tokenHash: "3f2b8c9e1d4a5f60718293a4b5c6d7e8f90a1b2c3d4e5f", email: "ana@empresa.com", userId: UUID_A },
+        },
+      ],
+      invalid: [
+        { nome: "ok false (o handler devolve erro, não 2xx)", payload: { ok: false, error: "challenge_invalido" } },
+        { nome: "challenge sem rpId", payload: { ok: true, challenge: "abc", allowCredentials: [], timeout: 60000, userVerification: "required" } },
+        { nome: "sem tokenHash nem challenge", payload: { ok: true, email: "ana@empresa.com", userId: UUID_A } },
+      ],
+    },
 };
 
 export function responsesFor(name: string): ResponseFixtures | undefined {

@@ -12,6 +12,7 @@ import { dispatchCriticalAlertContract } from "./dispatch-critical-alert.ts";
 import { errorBudgetMonitorContract } from "./error-budget-monitor.ts";
 import { generateQuizQuestionsContract } from "./generate-quiz-questions.ts";
 import { migrateHelperContract } from "./migrate-helper.ts";
+import { passkeyAuthContract } from "./passkey-auth.ts";
 import { pushDeviceRevokedContract } from "./push-device-revoked.ts";
 import { pushOutboxDispatcherContract } from "./push-outbox-dispatcher.ts";
 import { pushPublicKeyContract } from "./push-public-key.ts";
@@ -36,6 +37,7 @@ export * from "./dispatch-critical-alert.ts";
 export * from "./error-budget-monitor.ts";
 export * from "./generate-quiz-questions.ts";
 export * from "./migrate-helper.ts";
+export * from "./passkey-auth.ts";
 export * from "./push-device-revoked.ts";
 export * from "./push-outbox-dispatcher.ts";
 export * from "./push-public-key.ts";
@@ -60,6 +62,7 @@ export const CONTRACTS = {
   "error-budget-monitor": errorBudgetMonitorContract,
   "generate-quiz-questions": generateQuizQuestionsContract,
   "migrate-helper": migrateHelperContract,
+  "passkey-auth": passkeyAuthContract,
   "push-device-revoked": pushDeviceRevokedContract,
   "push-outbox-dispatcher": pushOutboxDispatcherContract,
   "push-public-key": pushPublicKeyContract,

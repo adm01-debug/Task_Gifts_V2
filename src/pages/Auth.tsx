@@ -17,6 +17,7 @@ import { IpCheckingScreen, IpBlockedScreen, AuthLoadingScreen } from "@/componen
 import { AuthBranding, AuthBackground } from "@/components/auth/AuthBranding";
 import { AuthFormContent } from "@/components/auth/AuthFormContent";
 import { GoogleOAuthButton } from "@/components/auth/GoogleOAuthButton";
+import { PasskeyLogin } from "@/components/auth/PasskeyLogin";
 
 type AuthView = "login" | "signup" | "forgot-password" | "2fa-verify";
 
@@ -321,7 +322,14 @@ const Auth = () => {
             </AnimatePresence>
 
             {view !== "forgot-password" && view !== "2fa-verify" && (
-              <GoogleOAuthButton loading={googleLoading} onClick={handleGoogleLogin} />
+                          <>
+                            <GoogleOAuthButton loading={googleLoading} onClick={handleGoogleLogin} />
+                            {/* Login por passkey só aparece quando a edge function está publicada
+                                (VITE_DEPLOYED_EDGE_FUNCTIONS), evitando botão morto em produção. */}
+                            {view === "login" && isFunctionDeployed("passkey-auth") && (
+                              <PasskeyLogin defaultEmail={email} onSuccess={() => navigate("/")} />
+                            )}
+                          </>
             )}
           </div>
         </motion.div>

@@ -72,6 +72,67 @@ const FIXTURES: Record<string, ContractFixtures> = {
   "webhook-health-monitor": emptyBodyFixtures(),
   "migrate-helper": emptyBodyFixtures(),
 
+  // passkey-auth/index.ts → action:options devolve challenge+rpId; action:verify devolve tokenHash
+  "passkey-auth": {
+    valid: [
+      {
+        nome: "pedido de challenge com e-mail (webauthnService.authenticate)",
+        payload: { action: "options", email: "ana@empresa.com" },
+      },
+      { nome: "challenge sem e-mail (credencial descoberta pelo autenticador)", payload: { action: "options" } },
+      {
+        nome: "asserção do autenticador para verificar",
+        payload: {
+          action: "verify",
+          credentialId: "Y3JlZC1kZS1leGVtcGxvLTEyMw",
+          clientDataJSON: "eyJ0eXBlIjoid2ViYXV0aG4uZ2V0In0",
+          authenticatorData: "y2Z9YxNDMgAAAAE",
+          signature: "MEUCIQD-exemplo_assinatura",
+        },
+      },
+    ],
+    missing: [
+      { nome: "sem action", payload: {}, field: "action", code: "invalid_type" },
+      { nome: "verify sem credentialId", payload: { action: "verify" }, field: "credentialId", code: "too_small" },
+      {
+        nome: "verify sem signature",
+        payload: { action: "verify", credentialId: "abc", clientDataJSON: "x", authenticatorData: "y" },
+        field: "signature",
+        code: "too_small",
+      },
+    ],
+    wrongType: [
+      { nome: "action desconhecida", payload: { action: "reset" }, field: "action", code: "invalid_enum_value" },
+      { nome: "action como número", payload: { action: 1 }, field: "action", code: "invalid_type" },
+      { nome: "email como número", payload: { action: "options", email: 42 }, field: "email", code: "invalid_type" },
+      {
+        nome: "credentialId como número",
+        payload: { action: "verify", credentialId: 123, clientDataJSON: "x", authenticatorData: "y", signature: "z" },
+        field: "credentialId",
+        code: "invalid_type",
+      },
+    ],
+    empty: [
+      { nome: "action vazia", payload: { action: "" }, field: "action", code: "invalid_enum_value" },
+      {
+        nome: "credentialId vazio em verify",
+        payload: { action: "verify", credentialId: "", clientDataJSON: "x", authenticatorData: "y", signature: "z" },
+        field: "credentialId",
+        code: "too_small",
+      },
+      {
+        nome: "clientDataJSON vazio em verify",
+        payload: { action: "verify", credentialId: "abc", clientDataJSON: "", authenticatorData: "y", signature: "z" },
+        field: "clientDataJSON",
+        code: "too_small",
+      },
+    ],
+    notObject: [
+      { nome: "string", payload: "verify", field: "(body)", code: "invalid_type" },
+      { nome: "array", payload: [{ action: "options" }], field: "(body)", code: "invalid_type" },
+    ],
+  },
+
   "ai-coach": {
     valid: [
       {

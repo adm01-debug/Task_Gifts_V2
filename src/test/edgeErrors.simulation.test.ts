@@ -7,6 +7,7 @@ import {
   classifyEdgeError,
   describeEdgeError,
   normalizeRetryAfter,
+  pickPayloadCode,
   type EdgeErrorKind,
 } from "@/lib/edgeErrors";
 
@@ -164,5 +165,44 @@ describe("describeEdgeError — integração com FunctionsHttpError", () => {
       const info = await describeEdgeError(raw);
       expect(info.message.length).toBeGreaterThan(0);
     }
+  });
+});
+
+describe("código do corpo preservado (401/429 trocam a mensagem)", () => {
+  it("expõe o código curto em vez de perdê-lo no status", async () => {
+    const unauthorized = await describeEdgeError(
+      fakeInvokeError(401, { ok: false, error: "challenge_invalido" }),
+    );
+    expect(unauthorized.kind).toBe("unauthorized");
+    expect(unauthorized.message).toBe("Sessão expirada. Entre novamente para continuar.");
+    expect(unauthorized.payloadCode).toBe("challenge_invalido");
+
+    const throttled = await describeEdgeError(
+      fakeInvokeError(429, { ok: false, error: "rate_limited", retryAfter: 30 }),
+    );
+    expect(throttled.payloadCode).toBe("rate_limited");
+    expect(throttled.retryAfterSeconds).toBe(30);
+
+    const conflict = await describeEdgeError(
+      fakeInvokeError(409, { ok: false, error: "conta_diferente" }),
+    );
+    expect(conflict.payloadCode).toBe("conta_diferente");
+
+    // 422 do contrato: o corpo traz prosa em `error` (não um código), mas o
+    // status precisa sobreviver para a tela dizer o que corrigir.
+    const invalidEmail = await describeEdgeError(
+      fakeInvokeError(422, { error: "A validação dos dados falhou", code: "VALIDATION_ERROR" }),
+    );
+    expect(invalidEmail.status).toBe(422);
+    expect(invalidEmail.payloadCode).toBeNull();
+  });
+
+  it("ignora prosa, código gigante e código ausente", () => {
+    expect(pickPayloadCode({ error: "A validação dos dados falhou" })).toBeNull();
+    expect(pickPayloadCode({ error: "a".repeat(60) })).toBeNull();
+    expect(pickPayloadCode({ error: 42 })).toBeNull();
+    expect(pickPayloadCode({})).toBeNull();
+    expect(pickPayloadCode(null)).toBeNull();
+    expect(pickPayloadCode({ error: "mfa_obrigatorio" })).toBe("mfa_obrigatorio");
   });
 });
