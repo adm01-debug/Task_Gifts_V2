@@ -161,7 +161,7 @@
 | Leaderboard Live | `src/components/LiveLeaderboard.tsx` | Supabase Realtime |
 | Rankings por Departamento | `src/components/DepartmentRankings.tsx` | React |
 | Badge de Ranking | `src/components/RankingBadge.tsx` | React |
-| Hook de Leaderboard | `src/hooks/useLeaderboard.ts` | React Query |
+| Hook de Leaderboard | `src/hooks/useProfiles.ts:54` | React Query |
 | Listener de Mudanças | `src/hooks/useListenToRankChanges.ts` | Supabase Realtime |
 
 ### 7. Sistema de Ligas
