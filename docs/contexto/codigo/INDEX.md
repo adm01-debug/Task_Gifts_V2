@@ -1,7 +1,7 @@
 # Contexto do projeto para agentes de IA
 
 GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.
-Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `943fe9e5223da43642826b6de26a6935539d9246` (2026-11-24T08:19:36-03:00).
+Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `50530f89cfdcc580bc5d2121a8ea42b2a543e97b` (2026-11-24T09:32:03-03:00).
 
 ## Como usar (leia antes de planejar ou executar qualquer tarefa)
 1. **Tela/rota/menu** → `rotas.json` (url/vista/menu → arquivo → hooks → tabelas → edges; `rotas_http_backend` para APIs) e `modulos.json` (módulo inteiro + dependências entre módulos).
@@ -276,7 +276,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - possiveis_segredos_no_codigo: 0
 
 ## Grafo de código (graphify)
-- 10313 nós · 28866 arestas · 639 comunidades · grafo do commit `943fe9e5`
+- 10313 nós · 28866 arestas · 639 comunidades · grafo do commit `50530f89`
 - comunidades maiores: lucide-react (195), cn (193), App.tsx (153), react (149), QuizAdmin.tsx (145), badge.tsx (135), select.tsx (125), date-fns (106), contracts/index.ts (106), @tanstack/react-query (93), PersonalStats.tsx (81), gerar.mjs (79)
 - símbolos mais chamados: cn() (src/lib/utils.ts), useAuth() (src/hooks/useAuth.tsx), useIsMobile() (src/hooks/use-mobile.tsx), q() (scripts/supabase_snapshot/snapshot.py), useDepartments() (src/hooks/useDepartments.ts), useRBAC() (src/hooks/useRBAC.ts), useProfiles() (src/hooks/useProfiles.ts), useToast() (src/hooks/use-toast.ts), useSEO() (src/hooks/useSEO.ts), useSoundEffects() (src/hooks/useSoundEffects.tsx), .collect() (scripts/supabase_snapshot/test_snapshot.py), excluded_sql() (scripts/supabase_snapshot/snapshot.py)
 - consulta local: `graphify query "<pergunta>"`, `graphify path "<A>" "<B>"`, `graphify explain "<X>"`
@@ -288,8 +288,8 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - docs/estado/03-hooks-services-lib.md (7)
 - docs/estado/05-edge-functions.md (7)
 - src/App.tsx (7)
+- supabase/config.toml (7)
 - AGENTS.md (6)
-- supabase/config.toml (6)
 - supabase/functions/_shared/contracts/_fixtures/index.ts (6)
 - docs/agentes/mapa-repo.md (5)
 - docs/prod-readiness.md (5)
@@ -363,6 +363,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 
 
 ## Últimos commits
+- 2026-11-24 `50530f8` fix: remove BOM UTF-8 do supabase/config.toml que quebra o Supabase Preview (#134)
 - 2026-11-24 `943fe9e` chore(docs): corrige estado do ledger de migrations e documenta divergencia do dispatch trigger (#133)
 - 2026-11-24 `d727dcc` feat(pdi): tela de PDI com templates, mentores e check-ins (#128)
 - 2026-11-24 `7ef5af2` feat: liga login por passkey/biometria com verificação real de assinatura (#126)
@@ -377,7 +378,6 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - 2026-11-23 `027cedf` feat: cria fluxo completo de mentoria (pagina, servico, hooks e missoes) (#122)
 - 2026-11-23 `b6c89af` chore(docs): registra estado verificado das pendencias em producao (#121)
 - 2026-11-23 `046ebeb` fix: liga acoes Editar/Excluir sem handler no painel admin (#120)
-- 2026-11-23 `455eeb6` feat(admin/app): OfflineIndicator global + GoalsManager persistente (Supabase) (#110)
 
 ## Arquivos deste diretório
 - `docs/contexto/codigo/rotas.json`

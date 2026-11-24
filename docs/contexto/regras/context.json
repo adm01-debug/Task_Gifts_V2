@@ -1,9 +1,9 @@
 {
  "meta": {
-  "sha": "943fe9e5223da43642826b6de26a6935539d9246",
+  "sha": "50530f89cfdcc580bc5d2121a8ea42b2a543e97b",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
-  "generated_at": "2026-11-24 12:20 UTC",
+  "generated_at": "2026-11-24 12:33 UTC",
   "files_total": 1581,
   "code_files": 1474,
   "code_lines": 268410
@@ -154883,10 +154883,19 @@
   }
  },
  "git": {
-  "sha": "943fe9e5223da43642826b6de26a6935539d9246",
+  "sha": "50530f89cfdcc580bc5d2121a8ea42b2a543e97b",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "commits": [
+   {
+    "sha": "50530f8",
+    "date": "2026-11-24",
+    "author": "adm01-debug",
+    "subject": "fix: remove BOM UTF-8 do supabase/config.toml que quebra o Supabase Preview (#134)",
+    "files": [
+     "supabase/config.toml"
+    ]
+   },
    {
     "sha": "943fe9e",
     "date": "2026-11-24",
@@ -155254,15 +155263,6 @@
     "files": [
      "supabase/migrations/20261220000000_fix_sre_rpcs_and_dispatch_trigger.sql"
     ]
-   },
-   {
-    "sha": "119cff5",
-    "date": "2026-11-22",
-    "author": "adm01-debug",
-    "subject": "feat(db): RPC acknowledge_security_digest para marcar digest semanal como revisado (#103)",
-    "files": [
-     "supabase/migrations/20261122140000_acknowledge_security_digest.sql"
-    ]
    }
   ],
   "hot_files": [
@@ -155285,6 +155285,10 @@
    [
     "src/pages/EngagementReports.tsx",
     3
+   ],
+   [
+    "supabase/config.toml",
+    2
    ],
    [
     "src/components/CommandPalette.tsx",
@@ -155340,10 +155344,6 @@
    ],
    [
     "src/components/navigation/GlobalBreadcrumbs.tsx",
-    1
-   ],
-   [
-    "src/hooks/usePDI.ts",
     1
    ]
   ]

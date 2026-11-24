@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "943fe9e5223da43642826b6de26a6935539d9246",
+  "commit": "50530f89cfdcc580bc5d2121a8ea42b2a543e97b",
   "branch": "main",
-  "data_commit": "2026-11-24T08:19:36-03:00",
+  "data_commit": "2026-11-24T09:32:03-03:00",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "ultimos_commits": [
+   {
+    "sha": "50530f8",
+    "data": "2026-11-24",
+    "assunto": "fix: remove BOM UTF-8 do supabase/config.toml que quebra o Supabase Preview (#134)"
+   },
    {
     "sha": "943fe9e",
     "data": "2026-11-24",
@@ -126,11 +131,6 @@
     "sha": "130795f",
     "data": "2026-11-23",
     "assunto": "fix: remove tendências hardcoded em BIDashboard e corrige 'null%' em ExecutiveDashboard"
-   },
-   {
-    "sha": "e2dff92",
-    "data": "2026-11-23",
-    "assunto": "fix(shop/rbac): desconto flash sale cobrado + toast false success em permissões (#109)"
    }
   ],
   "arquivos_mudados_7d": 198,
@@ -176,6 +176,10 @@
     "mudancas": 6
    },
    {
+    "pasta": "supabase/config.toml",
+    "mudancas": 6
+   },
+   {
     "pasta": "docs/agentes/mapa-repo.md",
     "mudancas": 5
    },
@@ -185,10 +189,6 @@
    },
    {
     "pasta": "src/tests/unit",
-    "mudancas": 5
-   },
-   {
-    "pasta": "supabase/config.toml",
     "mudancas": 5
    },
    {
@@ -222,11 +222,11 @@
     "mudancas": 7
    },
    {
-    "arquivo": "AGENTS.md",
-    "mudancas": 6
+    "arquivo": "supabase/config.toml",
+    "mudancas": 7
    },
    {
-    "arquivo": "supabase/config.toml",
+    "arquivo": "AGENTS.md",
     "mudancas": 6
    },
    {
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 102
+    "commits": 103
    },
    {
     "autor": "dependabot[bot]",
