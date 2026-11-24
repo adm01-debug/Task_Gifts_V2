@@ -20,9 +20,11 @@
 --     (`starts_at > ends_at`) e ninguem conseguiria responder, porque a area do
 --     colaborador e a validacao de envio exigem `now()` dentro de
 --     `[starts_at, ends_at]` - essa pesquisa fica intocada de proposito;
---   * grava os `ends_at` originais no log (`RAISE NOTICE`) antes do UPDATE:
---     reverter a migration nao restaura os prazos, esse registro e' o que
---     permite uma correcao direcionada por id;
+--   * o snapshot dos prazos originais sai do MESMO comando do UPDATE (CTE
+--     `pre_alvo` com `FOR UPDATE` + `RETURNING`): um SELECT separado poderia
+--     deixar de fora uma pesquisa publicada entre a leitura e a escrita, e ela
+--     teria o prazo encurtado sem valor original no log. Reverter a migration
+--     nao restaura os prazos, esse registro e' o que permite correcao por id;
 --   * se aplicada depois de 2026-11-30 23:59:59-03, vira no-op com WARNING - sem
 --     essa guarda o proximo `expire_climate_surveys()` encerraria a pesquisa no
 --     mesmo minuto e a coleta nao aconteceria;
@@ -44,28 +46,34 @@ BEGIN
     RETURN;
   END IF;
 
-  -- Snapshot dos prazos que serao sobrescritos. Sem isso uma reversao nao tem
-  -- como saber o `ends_at` anterior de cada pesquisa.
+  -- Snapshot e UPDATE num unico comando: `pre_alvo` trava (FOR UPDATE) as linhas
+  -- que serao movidas e o `RETURNING` traz o `ends_at` anterior de cada uma. Um
+  -- SELECT separado deixaria de fora pesquisa publicada entre a leitura e a
+  -- escrita (READ COMMITTED), que seria encurtada sem registro do valor antigo.
+  WITH pre_alvo AS (
+    SELECT id, starts_at, ends_at
+      FROM public.climate_surveys
+     WHERE status = 'active'
+       AND ends_at > v_alvo
+       AND starts_at < v_alvo
+       FOR UPDATE
+  ), movidas AS (
+    UPDATE public.climate_surveys s
+       SET ends_at = v_alvo,
+           updated_at = now()
+      FROM pre_alvo p
+     WHERE s.id = p.id
+    RETURNING p.id, p.starts_at, p.ends_at AS ends_at_original
+  )
   SELECT coalesce(
-           jsonb_agg(jsonb_build_object('id', id, 'starts_at', starts_at, 'ends_at', ends_at) ORDER BY id),
+           jsonb_agg(jsonb_build_object('id', id, 'starts_at', starts_at, 'ends_at', ends_at_original) ORDER BY id),
            '[]'::jsonb
-         )
-    INTO v_originais
-    FROM public.climate_surveys
-   WHERE status = 'active'
-     AND ends_at > v_alvo
-     AND starts_at < v_alvo;
+         ),
+         count(*)
+    INTO v_originais, v_afetadas
+    FROM movidas;
 
   RAISE NOTICE 'climate: prazos originais antes da antecipacao: %', v_originais;
-
-  UPDATE public.climate_surveys
-     SET ends_at = v_alvo,
-         updated_at = now()
-   WHERE status = 'active'
-     AND ends_at > v_alvo
-     AND starts_at < v_alvo;
-
-  GET DIAGNOSTICS v_afetadas = ROW_COUNT;
   RAISE NOTICE 'climate: fim da pesquisa ativa antecipado para % (% linha(s) alterada(s))', v_alvo, v_afetadas;
 END
 $antecipa$;
