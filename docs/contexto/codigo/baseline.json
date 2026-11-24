@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "d9f07180a777a528e043f577c7ead637d52e8d31",
+  "commit": "e681a89f061b36859e26ee3fd6e77182343048a2",
   "branch": "main",
-  "data_commit": "2026-11-24T17:56:45-03:00",
+  "data_commit": "2026-11-24T18:06:59-03:00",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "ultimos_commits": [
+   {
+    "sha": "e681a89",
+    "data": "2026-11-24",
+    "assunto": "chore: sobe o ledger para 282 nas docs (#154)"
+   },
    {
     "sha": "d9f0718",
     "data": "2026-11-24",
@@ -126,11 +131,6 @@
     "sha": "f55c5db",
     "data": "2026-11-24",
     "assunto": "chore: remove feedback360Service, duplicata morta do 360 que ja roda em /feedback (#131)"
-   },
-   {
-    "sha": "c0090e3",
-    "data": "2026-11-24",
-    "assunto": "feat(mentoria): monta o guard de alteracoes nao salvas no formulario de missoes (#130)"
    }
   ],
   "arquivos_mudados_7d": 209,
@@ -149,6 +149,10 @@
    },
    {
     "pasta": "docs/estado/05-edge-functions.md",
+    "mudancas": 13
+   },
+   {
+    "pasta": "docs/agentes/banco.md",
     "mudancas": 12
    },
    {
@@ -156,20 +160,16 @@
     "mudancas": 11
    },
    {
-    "pasta": "docs/agentes/banco.md",
-    "mudancas": 11
+    "pasta": "AGENTS.md",
+    "mudancas": 10
    },
    {
     "pasta": "src/components/admin",
     "mudancas": 10
    },
    {
-    "pasta": "AGENTS.md",
-    "mudancas": 9
-   },
-   {
     "pasta": "docs/agentes/mapa-repo.md",
-    "mudancas": 8
+    "mudancas": 9
    },
    {
     "pasta": "docs/estado/03-hooks-services-lib.md",
@@ -188,12 +188,12 @@
     "mudancas": 6
    },
    {
-    "pasta": "supabase/config.toml",
+    "pasta": "scripts/db-audit/README.md",
     "mudancas": 6
    },
    {
-    "pasta": "docs/prod-readiness.md",
-    "mudancas": 5
+    "pasta": "scripts/db-audit/check-migration-drift.mjs",
+    "mudancas": 6
    }
   ],
   "arquivos_mais_mudados_90d": [
@@ -206,24 +206,24 @@
     "mudancas": 15
    },
    {
+    "arquivo": "docs/estado/05-edge-functions.md",
+    "mudancas": 13
+   },
+   {
     "arquivo": ".github/workflows/ci.yml",
     "mudancas": 12
    },
    {
-    "arquivo": "docs/estado/05-edge-functions.md",
+    "arquivo": "docs/agentes/banco.md",
     "mudancas": 12
    },
    {
-    "arquivo": "docs/agentes/banco.md",
-    "mudancas": 11
-   },
-   {
     "arquivo": "AGENTS.md",
-    "mudancas": 9
+    "mudancas": 10
    },
    {
     "arquivo": "docs/agentes/mapa-repo.md",
-    "mudancas": 8
+    "mudancas": 9
    },
    {
     "arquivo": "docs/estado/03-hooks-services-lib.md",
@@ -238,19 +238,19 @@
     "mudancas": 7
    },
    {
+    "arquivo": "scripts/db-audit/README.md",
+    "mudancas": 6
+   },
+   {
+    "arquivo": "scripts/db-audit/check-migration-drift.mjs",
+    "mudancas": 6
+   },
+   {
     "arquivo": "supabase/functions/_shared/contracts/_fixtures/index.ts",
     "mudancas": 6
    },
    {
     "arquivo": "docs/prod-readiness.md",
-    "mudancas": 5
-   },
-   {
-    "arquivo": "scripts/db-audit/README.md",
-    "mudancas": 5
-   },
-   {
-    "arquivo": "scripts/db-audit/check-migration-drift.mjs",
     "mudancas": 5
    },
    {
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 120
+    "commits": 121
    },
    {
     "autor": "dependabot[bot]",

@@ -1,7 +1,7 @@
 # Contexto do projeto para agentes de IA
 
 GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.
-Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `d9f07180a777a528e043f577c7ead637d52e8d31` (2026-11-24T17:56:45-03:00).
+Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `e681a89f061b36859e26ee3fd6e77182343048a2` (2026-11-24T18:06:59-03:00).
 
 ## Como usar (leia antes de planejar ou executar qualquer tarefa)
 1. **Tela/rota/menu** → `rotas.json` (url/vista/menu → arquivo → hooks → tabelas → edges; `rotas_http_backend` para APIs) e `modulos.json` (módulo inteiro + dependências entre módulos).
@@ -278,7 +278,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - possiveis_segredos_no_codigo: 0
 
 ## Grafo de código (graphify)
-- 10343 nós · 28904 arestas · 653 comunidades · grafo do commit `d9f07180`
+- 10343 nós · 28904 arestas · 653 comunidades · grafo do commit `e681a89f`
 - comunidades maiores: react (311), lucide-react (296), App.tsx (195), badge.tsx (192), cn (147), client.ts (118), @tanstack/react-query (112), useToast (108), profilesService.ts (96), mobile/index.ts (95), contracts/index.ts (93), AdminTelemetria.tsx (83)
 - símbolos mais chamados: cn() (src/lib/utils.ts), useAuth() (src/hooks/useAuth.tsx), useIsMobile() (src/hooks/use-mobile.tsx), q() (scripts/supabase_snapshot/snapshot.py), useDepartments() (src/hooks/useDepartments.ts), useRBAC() (src/hooks/useRBAC.ts), useProfiles() (src/hooks/useProfiles.ts), useToast() (src/hooks/use-toast.ts), useSEO() (src/hooks/useSEO.ts), useSoundEffects() (src/hooks/useSoundEffects.tsx), .collect() (scripts/supabase_snapshot/test_snapshot.py), excluded_sql() (scripts/supabase_snapshot/snapshot.py)
 - consulta local: `graphify query "<pergunta>"`, `graphify path "<A>" "<B>"`, `graphify explain "<X>"`
@@ -286,18 +286,18 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 ## Hotspots (arquivos mais alterados, 90 dias)
 - package.json (23)
 - bun.lock (15)
+- docs/estado/05-edge-functions.md (13)
 - .github/workflows/ci.yml (12)
-- docs/estado/05-edge-functions.md (12)
-- docs/agentes/banco.md (11)
-- AGENTS.md (9)
-- docs/agentes/mapa-repo.md (8)
+- docs/agentes/banco.md (12)
+- AGENTS.md (10)
+- docs/agentes/mapa-repo.md (9)
 - docs/estado/03-hooks-services-lib.md (7)
 - src/App.tsx (7)
 - supabase/config.toml (7)
+- scripts/db-audit/README.md (6)
+- scripts/db-audit/check-migration-drift.mjs (6)
 - supabase/functions/_shared/contracts/_fixtures/index.ts (6)
 - docs/prod-readiness.md (5)
-- scripts/db-audit/README.md (5)
-- scripts/db-audit/check-migration-drift.mjs (5)
 - supabase/functions/_shared/contracts/_fixtures/responses.ts (5)
 
 ## Workflows
@@ -365,6 +365,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 
 
 ## Últimos commits
+- 2026-11-24 `e681a89` chore: sobe o ledger para 282 nas docs (#154)
 - 2026-11-24 `d9f0718` feat: envia lembrete de clima por push alem do in-app (#153)
 - 2026-11-24 `a2a5bc3` fix(supabase): alinha 20261220000000 ao trigger vivo do alerta critico (#152)
 - 2026-11-24 `88e4b45` fix(clima): antecipa o fim da pesquisa ativa para 30/11 e destrava o lembrete (#148)
@@ -379,7 +380,6 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - 2026-11-24 `57326cf` chore: alinha doc de edge functions com o estado real (cron 200, trigger corrigido) (#139)
 - 2026-11-24 `240770f` chore(db-audit): corrige o texto do ledger e faz o guard rodar fora do Linux (#140)
 - 2026-11-24 `96c3382` fix: tira BOM das migrations pendentes e remove rascunho obsoleto do digest (Supabase Preview 42601) (#138)
-- 2026-11-24 `d344ae9` fix: guarda UPDATE cron.job por privilegio (Supabase Preview 42501) (#137)
 
 ## Arquivos deste diretório
 - `docs/contexto/codigo/rotas.json`

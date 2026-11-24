@@ -1,9 +1,9 @@
 {
  "meta": {
-  "sha": "d9f07180a777a528e043f577c7ead637d52e8d31",
+  "sha": "e681a89f061b36859e26ee3fd6e77182343048a2",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
-  "generated_at": "2026-11-24 20:57 UTC",
+  "generated_at": "2026-11-24 21:12 UTC",
   "files_total": 1586,
   "code_files": 1479,
   "code_lines": 269249
@@ -155105,10 +155105,24 @@
   }
  },
  "git": {
-  "sha": "d9f07180a777a528e043f577c7ead637d52e8d31",
+  "sha": "e681a89f061b36859e26ee3fd6e77182343048a2",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "commits": [
+   {
+    "sha": "e681a89",
+    "date": "2026-11-24",
+    "author": "adm01-debug",
+    "subject": "chore: sobe o ledger para 282 nas docs (#154)",
+    "files": [
+     "AGENTS.md",
+     "docs/agentes/banco.md",
+     "docs/agentes/mapa-repo.md",
+     "docs/estado/05-edge-functions.md",
+     "scripts/db-audit/README.md",
+     "scripts/db-audit/check-migration-drift.mjs"
+    ]
+   },
    {
     "sha": "d9f0718",
     "date": "2026-11-24",
@@ -155473,30 +155487,16 @@
      "src/pages/SalesCampaigns.tsx",
      "src/pages/SecurityRunbook.tsx"
     ]
-   },
-   {
-    "sha": "027cedf",
-    "date": "2026-11-23",
-    "author": "adm01-debug",
-    "subject": "feat: cria fluxo completo de mentoria (pagina, servico, hooks e missoes) (#122)",
-    "files": [
-     "src/App.tsx",
-     "src/hooks/useMentorship.ts",
-     "src/pages/Mentoria.tsx",
-     "src/services/highPotentialService.ts",
-     "src/services/mentorshipService.ts",
-     "src/test/mentorshipService.test.ts"
-    ]
    }
   ],
   "hot_files": [
    [
     "docs/agentes/banco.md",
-    8
+    9
    ],
    [
     "docs/estado/05-edge-functions.md",
-    6
+    7
    ],
    [
     "docs/estado/03-hooks-services-lib.md",
@@ -155504,27 +155504,23 @@
    ],
    [
     "AGENTS.md",
-    4
+    5
    ],
    [
     "docs/agentes/mapa-repo.md",
-    4
+    5
    ],
    [
     "scripts/db-audit/README.md",
-    4
+    5
    ],
    [
     "scripts/db-audit/check-migration-drift.mjs",
-    4
+    5
    ],
    [
     "docs/estado/02-componentes.md",
     4
-   ],
-   [
-    "src/App.tsx",
-    3
    ],
    [
     "INVENTARIO_FUNCIONALIDADES.md",
@@ -155539,11 +155535,11 @@
     2
    ],
    [
-    "src/components/CommandPalette.tsx",
+    "src/App.tsx",
     2
    ],
    [
-    "src/pages/Mentoria.tsx",
+    "src/components/CommandPalette.tsx",
     2
    ],
    [
@@ -155568,6 +155564,10 @@
    ],
    [
     "src/tests/unit/shop.test.ts",
+    1
+   ],
+   [
+    "supabase/migrations/20261224120000_dispatch_critical_alert_config.sql",
     1
    ]
   ]
