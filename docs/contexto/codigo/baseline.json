@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "59b21b49893bea78d01103fa0151eac520d9762f",
+  "commit": "c567ffec515866d13a936a88415becaa49f116d5",
   "branch": "main",
-  "data_commit": "2026-11-24T13:19:09-03:00",
+  "data_commit": "2026-11-24T13:38:09-03:00",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "ultimos_commits": [
+   {
+    "sha": "c567ffe",
+    "data": "2026-11-24",
+    "assunto": "docs(edge-functions): corrige o drift do agendamento dos jobs internos e a semeadura de cron_secret (#149)"
+   },
    {
     "sha": "59b21b4",
     "data": "2026-11-24",
@@ -126,11 +131,6 @@
     "sha": "f5e9ae6",
     "data": "2026-11-23",
     "assunto": "fix: liga telas orfas na navegacao e remove links sem destino (#123)"
-   },
-   {
-    "sha": "027cedf",
-    "data": "2026-11-23",
-    "assunto": "feat: cria fluxo completo de mentoria (pagina, servico, hooks e missoes) (#122)"
    }
   ],
   "arquivos_mudados_7d": 207,
@@ -152,15 +152,15 @@
     "mudancas": 11
    },
    {
+    "pasta": "docs/estado/05-edge-functions.md",
+    "mudancas": 10
+   },
+   {
     "pasta": "src/components/admin",
     "mudancas": 10
    },
    {
     "pasta": "docs/agentes/banco.md",
-    "mudancas": 9
-   },
-   {
-    "pasta": "docs/estado/05-edge-functions.md",
     "mudancas": 9
    },
    {
@@ -210,11 +210,11 @@
     "mudancas": 12
    },
    {
-    "arquivo": "docs/agentes/banco.md",
-    "mudancas": 9
+    "arquivo": "docs/estado/05-edge-functions.md",
+    "mudancas": 10
    },
    {
-    "arquivo": "docs/estado/05-edge-functions.md",
+    "arquivo": "docs/agentes/banco.md",
     "mudancas": 9
    },
    {
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 115
+    "commits": 116
    },
    {
     "autor": "dependabot[bot]",

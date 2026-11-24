@@ -1,9 +1,9 @@
 {
  "meta": {
-  "sha": "59b21b49893bea78d01103fa0151eac520d9762f",
+  "sha": "c567ffec515866d13a936a88415becaa49f116d5",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
-  "generated_at": "2026-11-24 16:21 UTC",
+  "generated_at": "2026-11-24 17:13 UTC",
   "files_total": 1584,
   "code_files": 1477,
   "code_lines": 269029
@@ -155079,10 +155079,19 @@
   }
  },
  "git": {
-  "sha": "59b21b49893bea78d01103fa0151eac520d9762f",
+  "sha": "c567ffec515866d13a936a88415becaa49f116d5",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "commits": [
+   {
+    "sha": "c567ffe",
+    "date": "2026-11-24",
+    "author": "adm01-debug",
+    "subject": "docs(edge-functions): corrige o drift do agendamento dos jobs internos e a semeadura de cron_secret (#149)",
+    "files": [
+     "docs/estado/05-edge-functions.md"
+    ]
+   },
    {
     "sha": "59b21b4",
     "date": "2026-11-24",
@@ -155453,15 +155462,6 @@
     "files": [
      "src/components/manager/TeamCompetencyDashboard.tsx"
     ]
-   },
-   {
-    "sha": "ceef1b8",
-    "date": "2026-11-23",
-    "author": "adm01-debug",
-    "subject": "﻿fix(manager): dados reais de departamento, quests e exportacao no dashboard (#118)",
-    "files": [
-     "src/pages/ManagerDashboard.tsx"
-    ]
    }
   ],
   "hot_files": [
@@ -155474,16 +155474,16 @@
     6
    ],
    [
+    "docs/estado/05-edge-functions.md",
+    4
+   ],
+   [
     "docs/estado/02-componentes.md",
     4
    ],
    [
     "src/App.tsx",
     4
-   ],
-   [
-    "docs/estado/05-edge-functions.md",
-    3
    ],
    [
     "INVENTARIO_FUNCIONALIDADES.md",
@@ -155530,10 +155530,6 @@
     2
    ],
    [
-    "src/pages/ManagerDashboard.tsx",
-    2
-   ],
-   [
     "src/hooks/useWeeklyChallenge.ts",
     1
    ],
@@ -155543,6 +155539,10 @@
    ],
    [
     "src/services/shopService.ts",
+    1
+   ],
+   [
+    "src/tests/unit/shop.test.ts",
     1
    ]
   ]
