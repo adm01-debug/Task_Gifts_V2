@@ -5469,10 +5469,6 @@
    "src/integrations/supabase/client.ts",
    "src/services/loggingService.ts"
   ],
-  "src/services/feedback360Service.ts": [
-   "src/integrations/supabase/client.ts",
-   "src/services/loggingService.ts"
-  ],
   "src/services/feedbackService.ts": [
    "src/integrations/supabase/client.ts"
   ],

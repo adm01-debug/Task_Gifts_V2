@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "c0090e33a59279b782bcc27d9e3c282f189e8146",
+  "commit": "f55c5db3cca741374e9a73371b674a864aae8a93",
   "branch": "main",
-  "data_commit": "2026-11-24T00:17:11-03:00",
+  "data_commit": "2026-11-24T00:24:38-03:00",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "ultimos_commits": [
+   {
+    "sha": "f55c5db",
+    "data": "2026-11-24",
+    "assunto": "chore: remove feedback360Service, duplicata morta do 360 que ja roda em /feedback (#131)"
+   },
    {
     "sha": "c0090e3",
     "data": "2026-11-24",
@@ -126,14 +131,9 @@
     "sha": "119cff5",
     "data": "2026-11-22",
     "assunto": "feat(db): RPC acknowledge_security_digest para marcar digest semanal como revisado (#103)"
-   },
-   {
-    "sha": "11d2c1e",
-    "data": "2026-11-22",
-    "assunto": "fix(sre): reconstroi os 3 monitores + dispatch-critical-alert e destrava auth dos crons (#105)"
    }
   ],
-  "arquivos_mudados_7d": 151,
+  "arquivos_mudados_7d": 153,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "supabase/functions/_shared",
@@ -192,7 +192,7 @@
     "mudancas": 4
    },
    {
-    "pasta": "scripts/automation.mjs",
+    "pasta": "docs/estado/03-hooks-services-lib.md",
     "mudancas": 4
    }
   ],
@@ -254,6 +254,10 @@
     "mudancas": 4
    },
    {
+    "arquivo": "docs/estado/03-hooks-services-lib.md",
+    "mudancas": 4
+   },
+   {
     "arquivo": "scripts/automation.mjs",
     "mudancas": 4
    },
@@ -292,16 +296,12 @@
    {
     "arquivo": "docs/agentes/edge-functions.md",
     "mudancas": 3
-   },
-   {
-    "arquivo": "docs/estado/03-hooks-services-lib.md",
-    "mudancas": 3
    }
   ],
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 96
+    "commits": 97
    },
    {
     "autor": "dependabot[bot]",
@@ -310,9 +310,9 @@
   ]
  },
  "contagens": {
-  "arquivos_total": 1545,
-  "arquivos_codigo": 1170,
-  "linhas_codigo": 230456,
+  "arquivos_total": 1544,
+  "arquivos_codigo": 1169,
+  "linhas_codigo": 230242,
   "rotas": 84,
   "rotas_http_backend": 0,
   "vistas_por_id": 0,
@@ -435,8 +435,8 @@
    "linhas": 23662
   },
   "src/services": {
-   "arquivos": 100,
-   "linhas": 22346
+   "arquivos": 99,
+   "linhas": 22132
   },
   "src/stories": {
    "arquivos": 29,

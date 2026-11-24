@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "c0090e33a59279b782bcc27d9e3c282f189e8146",
+  "sha": "f55c5db3cca741374e9a73371b674a864aae8a93",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
-  "generated_at": "2026-11-24 03:17 UTC",
-  "files_total": 1555,
-  "code_files": 1451,
-  "code_lines": 262035
+  "generated_at": "2026-11-24 03:25 UTC",
+  "files_total": 1554,
+  "code_files": 1450,
+  "code_lines": 261821
  },
  "version": "1.3.2",
- "facts_hash": "3aa5e8cc18447924",
+ "facts_hash": "9f8193f6574386c4",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -194,7 +194,7 @@
   ],
   "package_manager": "bun",
   "languages": {
-   ".ts": 578,
+   ".ts": 577,
    ".tsx": 566,
    ".sql": 275,
    ".mjs": 21,
@@ -49022,8 +49022,8 @@
   },
   {
    "module": "src/services",
-   "files": 100,
-   "lines": 22346,
+   "files": 99,
+   "lines": 22132,
    "tables": [
     "achievements",
     "action_plan_items",
@@ -49086,11 +49086,8 @@
     "enps_responses",
     "enps_surveys",
     "feedback_cycles",
-    "feedback_evaluations",
-    "feedback_questions",
     "feedback_requests",
     "feedback_responses",
-    "feedback_results",
     "goal_updates",
     "goals",
     "ip_access_logs",
@@ -49229,7 +49226,7 @@
     "engagementReportsService.ts: CompletionTrendData, DepartmentPerformanceData, QuestDifficultyData, WeeklyEngagementData, TopQuestData, StrugglingAreaData",
     "enpsService.ts: ENPSSurvey, ENPSResponse, ENPSStats, EngagementSnapshot, enpsService",
     "executiveService.ts: ExecutiveMetrics, MonthlyTrend, DepartmentMetric, executiveService",
-    "feedback360Service.ts: FeedbackCycle, FeedbackQuestion, FeedbackEvaluation, FeedbackResult, feedback360Service"
+    "feedbackService.ts: FeedbackCycle, FeedbackQuestion, FeedbackRequest, FeedbackResponse, CycleInsert, feedbackService"
    ],
    "docs": [
     "loggingService.ts: Centralized Logging Service Provides consistent error handling and logging across the application"
@@ -49285,7 +49282,6 @@
     "src/services/engagementReportsService.ts",
     "src/services/enpsService.ts",
     "src/services/executiveService.ts",
-    "src/services/feedback360Service.ts",
     "src/services/feedbackService.ts",
     "src/services/goalsService.ts",
     "src/services/highPotentialService.ts",
@@ -49324,7 +49320,8 @@
     "src/services/quizStatsService.ts",
     "src/services/rbacService.ts",
     "src/services/salesCampaignsService.ts",
-    "src/services/scratchCardService.ts"
+    "src/services/scratchCardService.ts",
+    "src/services/seasonalEventsService.ts"
    ]
   },
   {
@@ -50482,35 +50479,16 @@
    },
    "feedback_cycles": {
     "select": [
-     "src/services/feedback360Service.ts",
      "src/services/feedbackService.ts"
     ],
     "insert": [
-     "src/services/feedback360Service.ts",
      "src/services/feedbackService.ts"
     ],
     "update": [
-     "src/services/feedback360Service.ts",
      "src/services/feedbackService.ts"
     ],
     "delete": [
      "src/services/feedbackService.ts"
-    ]
-   },
-   "feedback_evaluations": {
-    "select": [
-     "src/services/feedback360Service.ts"
-    ],
-    "insert": [
-     "src/services/feedback360Service.ts"
-    ],
-    "update": [
-     "src/services/feedback360Service.ts"
-    ]
-   },
-   "feedback_questions": {
-    "select": [
-     "src/services/feedback360Service.ts"
     ]
    },
    "feedback_requests": {
@@ -50530,11 +50508,6 @@
     ],
     "select": [
      "src/services/feedbackService.ts"
-    ]
-   },
-   "feedback_results": {
-    "select": [
-     "src/services/feedback360Service.ts"
     ]
    },
    "fixture_table": {
@@ -52176,14 +52149,6 @@
     "id",
     "status"
    ],
-   "feedback_evaluations": [
-    "evaluatee_id",
-    "evaluator_id",
-    "id"
-   ],
-   "feedback_questions": [
-    "cycle_id"
-   ],
    "feedback_requests": [
     "from_user_id",
     "id",
@@ -52193,9 +52158,6 @@
    ],
    "feedback_responses": [
     "request_id"
-   ],
-   "feedback_results": [
-    "user_id"
    ],
    "goal_updates": [
     "goal_id"
@@ -54233,6 +54195,9 @@
    "entity_versions",
    "external_api_keys",
    "external_tasks",
+   "feedback_evaluations",
+   "feedback_questions",
+   "feedback_results",
    "gamification_themes",
    "geo_access_logs",
    "geo_allowed_countries",
@@ -57742,42 +57707,6 @@
    {
     "file": "src/services/enpsService.ts",
     "msg": "Survey not found"
-   },
-   {
-    "file": "src/services/feedback360Service.ts",
-    "msg": "Erro ao carregar avaliações pendentes"
-   },
-   {
-    "file": "src/services/feedback360Service.ts",
-    "msg": "Erro ao carregar ciclo de feedback"
-   },
-   {
-    "file": "src/services/feedback360Service.ts",
-    "msg": "Erro ao carregar ciclos de feedback"
-   },
-   {
-    "file": "src/services/feedback360Service.ts",
-    "msg": "Erro ao carregar perguntas de feedback"
-   },
-   {
-    "file": "src/services/feedback360Service.ts",
-    "msg": "Erro ao carregar resultados de feedback"
-   },
-   {
-    "file": "src/services/feedback360Service.ts",
-    "msg": "Erro ao carregar suas avaliações"
-   },
-   {
-    "file": "src/services/feedback360Service.ts",
-    "msg": "Failed to create evaluation"
-   },
-   {
-    "file": "src/services/feedback360Service.ts",
-    "msg": "Failed to create feedback cycle"
-   },
-   {
-    "file": "src/services/feedback360Service.ts",
-    "msg": "Feedback cycle not found"
    },
    {
     "file": "src/services/feedbackService.ts",
@@ -76239,24 +76168,6 @@
     "field": "status",
     "value": "active",
     "kind": "filtra"
-   },
-   {
-    "file": "src/services/feedback360Service.ts",
-    "field": "status",
-    "value": "draft",
-    "kind": "escreve"
-   },
-   {
-    "file": "src/services/feedback360Service.ts",
-    "field": "status",
-    "value": "pending",
-    "kind": "escreve"
-   },
-   {
-    "file": "src/services/feedback360Service.ts",
-    "field": "status",
-    "value": "completed",
-    "kind": "escreve"
    },
    {
     "file": "src/services/feedbackService.ts",
@@ -102082,7 +101993,6 @@
       "escreve:src/components/goals/GoalCard.tsx",
       "escreve:src/services/checkinsService.ts",
       "escreve:src/services/duelsService.ts",
-      "escreve:src/services/feedback360Service.ts",
       "escreve:src/services/weeklyChallengesService.ts",
       "escreve:supabase/functions/_shared/webhookSecurity.ts",
       "filtra:src/services/behavioralBadges/index.ts",
@@ -102127,7 +102037,6 @@
       "escreve:src/services/departmentWarAdminService.ts",
       "escreve:src/services/developmentPlanService.ts",
       "escreve:src/services/enpsService.ts",
-      "escreve:src/services/feedback360Service.ts",
       "escreve:src/services/feedbackService.ts",
       "escreve:src/services/goalsService.ts",
       "escreve:src/services/pulseSurveysService.ts",
@@ -102159,7 +102068,6 @@
       "escreve:src/services/campaignImportService.ts",
       "escreve:src/services/developmentPlanService.ts",
       "escreve:src/services/duelsService.ts",
-      "escreve:src/services/feedback360Service.ts",
       "escreve:src/services/feedbackService.ts",
       "escreve:src/services/passwordResetService.ts",
       "escreve:src/services/pdiGeneratorService.ts",
@@ -139404,103 +139312,6 @@
     "get_monthly_trends"
    ]
   },
-  "src/services/feedback360Service.ts": {
-   "path": "src/services/feedback360Service.ts",
-   "lines": 214,
-   "exports": [
-    "interface FeedbackCycle",
-    "interface FeedbackQuestion",
-    "interface FeedbackEvaluation",
-    "interface FeedbackResult",
-    "const feedback360Service"
-   ],
-   "tables": [
-    {
-     "table": "feedback_cycles",
-     "op": "select"
-    },
-    {
-     "table": "feedback_cycles",
-     "op": "select"
-    },
-    {
-     "table": "feedback_cycles",
-     "op": "insert,select"
-    },
-    {
-     "table": "feedback_cycles",
-     "op": "select,update"
-    },
-    {
-     "table": "feedback_questions",
-     "op": "select"
-    },
-    {
-     "table": "feedback_evaluations",
-     "op": "select"
-    },
-    {
-     "table": "feedback_evaluations",
-     "op": "select"
-    },
-    {
-     "table": "feedback_evaluations",
-     "op": "insert,select"
-    },
-    {
-     "table": "feedback_evaluations",
-     "op": "update"
-    },
-    {
-     "table": "feedback_results",
-     "op": "select"
-    }
-   ],
-   "table_cols": {
-    "feedback_cycles": [
-     "id"
-    ],
-    "feedback_questions": [
-     "cycle_id"
-    ],
-    "feedback_evaluations": [
-     "evaluatee_id",
-     "evaluator_id",
-     "id"
-    ],
-    "feedback_results": [
-     "user_id"
-    ]
-   },
-   "errors": [
-    "Erro ao carregar avaliações pendentes",
-    "Erro ao carregar ciclo de feedback",
-    "Erro ao carregar ciclos de feedback",
-    "Erro ao carregar perguntas de feedback",
-    "Erro ao carregar resultados de feedback",
-    "Erro ao carregar suas avaliações",
-    "Failed to create evaluation",
-    "Failed to create feedback cycle",
-    "Feedback cycle not found"
-   ],
-   "status_values": [
-    {
-     "field": "status",
-     "value": "draft",
-     "kind": "escreve"
-    },
-    {
-     "field": "status",
-     "value": "pending",
-     "kind": "escreve"
-    },
-    {
-     "field": "status",
-     "value": "completed",
-     "kind": "escreve"
-    }
-   ]
-  },
   "src/services/feedbackService.ts": {
    "path": "src/services/feedbackService.ts",
    "lines": 339,
@@ -152812,10 +152623,23 @@
   }
  },
  "git": {
-  "sha": "c0090e33a59279b782bcc27d9e3c282f189e8146",
+  "sha": "f55c5db3cca741374e9a73371b674a864aae8a93",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "commits": [
+   {
+    "sha": "f55c5db",
+    "date": "2026-11-24",
+    "author": "adm01-debug",
+    "subject": "chore: remove feedback360Service, duplicata morta do 360 que ja roda em /feedback (#131)",
+    "files": [
+     "INVENTARIO_FUNCIONALIDADES.md",
+     "SYSTEM_RELIABILITY_AUDIT.md",
+     "docs/estado/02-componentes.md",
+     "docs/estado/03-hooks-services-lib.md",
+     "src/services/feedback360Service.ts"
+    ]
+   },
    {
     "sha": "c0090e3",
     "date": "2026-11-24",
@@ -153157,71 +152981,20 @@
     "files": [
      "supabase/functions/webhook-dispatcher/index.ts"
     ]
-   },
-   {
-    "sha": "d04ac2d",
-    "date": "2026-11-22",
-    "author": "adm01-debug",
-    "subject": "feat(edge): contratos zod, 422 unico e versionamento v1/v2 dos webhooks (#99)",
-    "files": [
-     ".gitignore",
-     "docs/agentes/edge-functions.md",
-     "package.json",
-     "supabase/functions/_shared/contracts/README.md",
-     "supabase/functions/_shared/contracts/_fixtures/index.ts",
-     "supabase/functions/_shared/contracts/_fixtures/types.ts",
-     "supabase/functions/_shared/contracts/_testkit.ts",
-     "supabase/functions/_shared/contracts/admin-alerts.ts",
-     "supabase/functions/_shared/contracts/ai-coach.ts",
-     "supabase/functions/_shared/contracts/ai-course-builder.ts",
-     "supabase/functions/_shared/contracts/churn-prediction.ts",
-     "supabase/functions/_shared/contracts/common.ts",
-     "supabase/functions/_shared/contracts/competency-alerts.ts",
-     "supabase/functions/_shared/contracts/contracts_test.ts",
-     "supabase/functions/_shared/contracts/detect-new-device.ts",
-     "supabase/functions/_shared/contracts/generate-quiz-questions.ts",
-     "supabase/functions/_shared/contracts/index.ts",
-     "supabase/functions/_shared/contracts/migrate-helper.ts",
-     "supabase/functions/_shared/contracts/push-device-revoked.ts",
-     "supabase/functions/_shared/contracts/push-outbox-dispatcher.ts",
-     "supabase/functions/_shared/contracts/push-public-key.ts",
-     "supabase/functions/_shared/contracts/registry.contract.spec.ts",
-     "supabase/functions/_shared/contracts/reward-approval-review.ts",
-     "supabase/functions/_shared/contracts/send-campaign-push.ts",
-     "supabase/functions/_shared/contracts/trail-recommendations.ts",
-     "supabase/functions/_shared/contracts/validation.contract.spec.ts",
-     "supabase/functions/_shared/contracts/verify-ip.ts",
-     "supabase/functions/_shared/contracts/webhook-dispatcher.ts",
-     "supabase/functions/_shared/contracts/webhook-versioning.contract.spec.ts",
-     "supabase/functions/_shared/validation.ts",
-     "supabase/functions/_shared/validation_test.ts",
-     "supabase/functions/ai-coach/index.ts",
-     "supabase/functions/ai-course-builder/index.ts",
-     "supabase/functions/competency-alerts/index.ts",
-     "supabase/functions/detect-new-device/index.ts",
-     "supabase/functions/generate-quiz-questions/index.ts",
-     "supabase/functions/migrate-helper/index.ts",
-     "supabase/functions/push-device-revoked/index.ts",
-     "supabase/functions/reward-approval-review/index.ts",
-     "supabase/functions/send-campaign-push/index.ts",
-     "supabase/functions/trail-recommendations/index.ts",
-     "supabase/functions/webhook-dispatcher/index.ts",
-     "vitest.config.ts"
-    ]
    }
   ],
   "hot_files": [
    [
     "supabase/functions/_shared/contracts/_fixtures/index.ts",
-    5
+    4
    ],
    [
     "supabase/functions/_shared/contracts/_fixtures/responses.ts",
     4
    ],
    [
-    "supabase/functions/_shared/contracts/index.ts",
-    4
+    "docs/estado/03-hooks-services-lib.md",
+    3
    ],
    [
     "src/pages/EngagementReports.tsx",
@@ -153232,15 +153005,15 @@
     3
    ],
    [
-    "package.json",
+    "supabase/functions/_shared/contracts/index.ts",
     3
    ],
    [
-    "supabase/functions/webhook-dispatcher/index.ts",
-    3
+    "INVENTARIO_FUNCIONALIDADES.md",
+    2
    ],
    [
-    "docs/estado/03-hooks-services-lib.md",
+    "docs/estado/02-componentes.md",
     2
    ],
    [
@@ -153260,36 +153033,36 @@
     2
    ],
    [
+    "package.json",
+    2
+   ],
+   [
     "supabase/config.toml",
     2
    ],
    [
-    "docs/agentes/edge-functions.md",
+    "supabase/functions/webhook-dispatcher/index.ts",
     2
    ],
    [
-    "supabase/functions/_shared/contracts/README.md",
-    2
+    "SYSTEM_RELIABILITY_AUDIT.md",
+    1
    ],
    [
-    "supabase/functions/_shared/contracts/ai-coach.ts",
-    2
+    "src/services/feedback360Service.ts",
+    1
    ],
    [
-    "supabase/functions/_shared/contracts/common.ts",
-    2
+    "src/test/useUnsavedChanges.test.tsx",
+    1
    ],
    [
-    "supabase/functions/_shared/contracts/contracts_test.ts",
-    2
+    "docs/estado/06-integracoes.md",
+    1
    ],
    [
-    "supabase/functions/_shared/contracts/migrate-helper.ts",
-    2
-   ],
-   [
-    "supabase/functions/_shared/contracts/push-device-revoked.ts",
-    2
+    "docs/estado/07-infra-ci-testes.md",
+    1
    ]
   ]
  }

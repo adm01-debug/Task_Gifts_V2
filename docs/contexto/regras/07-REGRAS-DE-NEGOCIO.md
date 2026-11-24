@@ -1,6 +1,6 @@
 # 07 · REGRAS DE NEGÓCIO
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `c0090e33a5` · branch `main` · 2026-11-24 03:17 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `f55c5db3cc` · branch `main` · 2026-11-24 03:25 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## A. Regras escritas por humanos (`manual/` — prioridade máxima, nunca sobrescrito)
@@ -1189,12 +1189,12 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `status` | `bye` | compara | `src/components/tournament/TournamentBracketView.tsx`<br>`src/pages/TournamentsPage.tsx` |
 | `status` | `cancelled` | compara, escreve | `src/components/checkins/CheckinCard.tsx`<br>`src/components/duels/DuelCard.tsx`<br>`src/components/shop-admin/PurchaseGovernanceDialog.tsx`<br>`src/lib/auctionAdmin.ts`<br>`src/services/duelsService.ts`<br>… +1 |
 | `status` | `closed` | compara, escreve | `src/components/admin/SurveyCreator.tsx`<br>`src/components/auction/AuctionCard.tsx`<br>`src/lib/auctionAdmin.ts`<br>`src/services/pulseSurveysService.ts` |
-| `status` | `completed` | compara, escreve, filtra | `src/components/GoalsWidget.tsx`<br>`src/components/MyDevelopmentPlanWidget.tsx`<br>`src/components/admin/DevelopmentPlanManager.tsx`<br>`src/components/admin/pdi/PlanDetailView.tsx`<br>`src/components/campaigns/CampaignTeamSplitTrail.tsx`<br>… +21 |
+| `status` | `completed` | compara, escreve, filtra | `src/components/GoalsWidget.tsx`<br>`src/components/MyDevelopmentPlanWidget.tsx`<br>`src/components/admin/DevelopmentPlanManager.tsx`<br>`src/components/admin/pdi/PlanDetailView.tsx`<br>`src/components/campaigns/CampaignTeamSplitTrail.tsx`<br>… +20 |
 | `status` | `critical` | compara | `src/lib/luckyWheelPayoutHistory.ts`<br>`src/pages/ErrorBudget.tsx` |
 | `status` | `decided` | compara | `src/components/tournament/TournamentBracketView.tsx`<br>`src/pages/TournamentsPage.tsx` |
 | `status` | `declined` | compara, escreve | `src/components/duels/DuelCard.tsx`<br>`src/services/duelsService.ts` |
 | `status` | `delivered` | compara | `src/components/shop-admin/PurchaseGovernanceDialog.tsx` |
-| `status` | `draft` | compara, escreve, filtra | `src/components/admin/FeedbackCycleManager.tsx`<br>`src/components/admin/SurveyCreator.tsx`<br>`src/components/auction/AuctionAdminForm.tsx`<br>`src/components/boss/BossBattleAdminDialog.tsx`<br>`src/components/campaigns/CampaignGoalBetPanel.tsx`<br>… +28 |
+| `status` | `draft` | compara, escreve, filtra | `src/components/admin/FeedbackCycleManager.tsx`<br>`src/components/admin/SurveyCreator.tsx`<br>`src/components/auction/AuctionAdminForm.tsx`<br>`src/components/boss/BossBattleAdminDialog.tsx`<br>`src/components/campaigns/CampaignGoalBetPanel.tsx`<br>… +27 |
 | `status` | `error` | escreve | `supabase/functions/_shared/sentry.ts` |
 | `status` | `expired` | compara, escreve, filtra | `src/lib/bossHistory.ts`<br>`src/services/bossBattleService.ts`<br>`src/services/certificationsService.ts`<br>`supabase/migrations/20251213164818_77e12a61-a727-4556-b33b-03828d080ab1.sql` |
 | `status` | `expiring_soon` | compara | `src/services/certificationsService.ts` |
@@ -1223,7 +1223,7 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `status` | `online` | escreve | `src/stories/data-display/StatsAndTables.stories.tsx` |
 | `status` | `open` | compara, escreve | `src/components/prediction/PredictionAdminRow.tsx`<br>`src/components/prediction/PredictionMarketCard.tsx`<br>`src/lib/goalBetCountdown.ts`<br>`src/lib/goalBetFilter.ts`<br>`src/lib/goalBetStakePreview.ts`<br>… +4 |
 | `status` | `opened` | compara | `src/components/cards/PackList.tsx` |
-| `status` | `pending` | compara, escreve, filtra | `src/components/admin/PasswordResetApprovalPanel.tsx`<br>`src/components/cards/TradeInbox.tsx`<br>`src/components/duels/DuelCard.tsx`<br>`src/components/engagement/plans/ActionPlanItemList.tsx`<br>`src/components/shop-admin/PurchaseGovernanceDialog.tsx`<br>… +24 |
+| `status` | `pending` | compara, escreve, filtra | `src/components/admin/PasswordResetApprovalPanel.tsx`<br>`src/components/cards/TradeInbox.tsx`<br>`src/components/duels/DuelCard.tsx`<br>`src/components/engagement/plans/ActionPlanItemList.tsx`<br>`src/components/shop-admin/PurchaseGovernanceDialog.tsx`<br>… +23 |
 | `status` | `processing` | compara, escreve, filtra | `src/components/trails/AICourseBuilderDialog.tsx`<br>`src/lib/pushOutbox.ts`<br>`supabase/functions/_shared/webhookSecurity.ts`<br>`supabase/functions/ai-course-builder/index.ts` |
 | `status` | `published` | compara, filtra | `src/pages/Postmortems.tsx`<br>`src/services/trailsService.ts`<br>`supabase/functions/trail-recommendations/index.ts` |
 | `status` | `punctual` | compara | `src/components/AttendanceCalendar.tsx` |
@@ -3511,7 +3511,7 @@ _nenhum item encontrado_
 | Muitas tentativas. Aguarde alguns minutos. | `src/pages/ForgotPassword.tsx` |
 | Título obrigatório | `src/pages/Goals.tsx` |
 | Informe o alert_type | `src/pages/IncidentMetrics.tsx` |
-| … +184 linhas — lista completa em `context.json` | |
+| … +175 linhas — lista completa em `context.json` | |
 
 ## J. Controle de acesso no código (checagens de perfil/permissão)
 

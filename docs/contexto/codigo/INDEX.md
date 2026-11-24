@@ -1,7 +1,7 @@
 # Contexto do projeto para agentes de IA
 
 GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.
-Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `c0090e33a59279b782bcc27d9e3c282f189e8146` (2026-11-24T00:17:11-03:00).
+Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `f55c5db3cca741374e9a73371b674a864aae8a93` (2026-11-24T00:24:38-03:00).
 
 ## Como usar (leia antes de planejar ou executar qualquer tarefa)
 1. **Tela/rota/menu** → `rotas.json` (url/vista/menu → arquivo → hooks → tabelas → edges; `rotas_http_backend` para APIs) e `modulos.json` (módulo inteiro + dependências entre módulos).
@@ -14,7 +14,7 @@ Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR
 Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua tarefa; não carregue tudo.
 
 ## Stack
-- linguagens: TypeScript (1142), SQL (275), Markdown (55), JavaScript (24), JSON (14), YAML (9), Python (5), Shell (4)
+- linguagens: TypeScript (1141), SQL (275), Markdown (55), JavaScript (24), JSON (14), YAML (9), Python (5), Shell (4)
 - linguagem_principal: TypeScript
 - framework: React
 - backend_http: n/d
@@ -34,9 +34,9 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 ## Números
 | item | qtd |
 |---|---|
-| arquivos_total | 1545 |
-| arquivos_codigo | 1170 |
-| linhas_codigo | 230456 |
+| arquivos_total | 1544 |
+| arquivos_codigo | 1169 |
+| linhas_codigo | 230242 |
 | rotas | 84 |
 | rotas_http_backend | 0 |
 | vistas_por_id | 0 |
@@ -57,7 +57,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - telas: src/pages (82), src/components (1)
 - componentes: src/components (431), src/pages (83), src/contexts (4)
 - hooks: src/hooks (129), src/components (22), src/contexts (4)
-- servicos_logica: src/lib (106), src/services (100), src/integrations (3)
+- servicos_logica: src/lib (106), src/services (99), src/integrations (3)
 - testes: co-localizado (*.test) (148), outro (12), tests/ (3)
 - edge_functions: supabase/functions
 - migrations: supabase/migrations
@@ -99,7 +99,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 | hooks | 0 | 0 | 129 | 488 | 9 | 158 |
 | lib | 0 | 0 | 106 | 0 | 0 | 16 |
 | pages | 47 | 83 | 83 | 489 | 14 | 173 |
-| services | 0 | 0 | 97 | 7 | 8 | 165 |
+| services | 0 | 0 | 96 | 7 | 8 | 162 |
 | stories | 0 | 0 | 29 | 5 | 0 | 0 |
 
 ## Rotas (url → arquivo)
@@ -272,8 +272,8 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - possiveis_segredos_no_codigo: 0
 
 ## Grafo de código (graphify)
-- 10144 nós · 28252 arestas · 652 comunidades · grafo do commit `c0090e33`
-- comunidades maiores: card.tsx (228), button.tsx (177), select.tsx (167), badge.tsx (165), react (149), cn (126), lucide-react (117), profilesService.ts (115), client.ts (92), contracts/index.ts (89), ref_https (83), gerar.mjs (79)
+- 10138 nós · 28242 arestas · 655 comunidades · grafo do commit `f55c5db3`
+- comunidades maiores: lucide-react (340), react (187), select.tsx (172), ManagerDashboard.tsx (165), cn (142), AdminPanel.tsx (132), client.ts (103), react-router-dom (95), App.tsx (94), contracts/index.ts (89), useToast (88), mobile/index.ts (86)
 - símbolos mais chamados: cn() (src/lib/utils.ts), useAuth() (src/hooks/useAuth.tsx), useIsMobile() (src/hooks/use-mobile.tsx), q() (scripts/supabase_snapshot/snapshot.py), useDepartments() (src/hooks/useDepartments.ts), useRBAC() (src/hooks/useRBAC.ts), useToast() (src/hooks/use-toast.ts), useProfiles() (src/hooks/useProfiles.ts), useSEO() (src/hooks/useSEO.ts), useSoundEffects() (src/hooks/useSoundEffects.tsx), .collect() (scripts/supabase_snapshot/test_snapshot.py), excluded_sql() (scripts/supabase_snapshot/snapshot.py)
 - consulta local: `graphify query "<pergunta>"`, `graphify path "<A>" "<B>"`, `graphify explain "<X>"`
 
@@ -292,7 +292,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - RELATORIO_CI.md (4)
 - docs/agentes/github-ci.md (4)
 - docs/agentes/mapa-repo.md (4)
-- scripts/automation.mjs (4)
+- docs/estado/03-hooks-services-lib.md (4)
 
 ## Workflows
 - `automation-local.yml` — Automação local (pull_request, push, workflow_dispatch)
@@ -359,6 +359,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 
 
 ## Últimos commits
+- 2026-11-24 `f55c5db` chore: remove feedback360Service, duplicata morta do 360 que ja roda em /feedback (#131)
 - 2026-11-24 `c0090e3` feat(mentoria): monta o guard de alteracoes nao salvas no formulario de missoes (#130)
 - 2026-11-23 `43c41a1` chore(docs): corrige auditoria desatualizada (edge functions, HIBP, CI/typecheck) (#129)
 - 2026-11-23 `a18b67f` chore: remove duplicatas comprovadas (leaderboard e dialogo de check-in) (#127)
@@ -373,7 +374,6 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - 2026-11-23 `57527b0` fix(reports): exporta relatório de engajamento em CSV real (#117)
 - 2026-11-23 `8f235c2` fix(rbac): adiciona guard admin nas rotas /analytics e /security-dashboard (#116)
 - 2026-11-23 `7ca11a0` fix(feedback): adiciona fluxo de resposta com pontuacao, pontos fortes e melhorias (#115)
-- 2026-11-23 `ba994f9` fix(quiz): persiste 'Concluido hoje' em quiz_scores (resiste ao reload) (#114)
 
 ## Arquivos deste diretório
 - `docs/contexto/codigo/rotas.json`

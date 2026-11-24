@@ -1,12 +1,12 @@
 {
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
- "total": 215,
+ "total": 214,
  "por_camada": {
   "integrations": 3,
   "lib": 106,
   "python": 3,
-  "services": 100,
+  "services": 99,
   "utils": 3
  },
  "arquivos": [
@@ -283,7 +283,7 @@
    "zod_schemas": 0,
    "flags": [],
    "papeis": [],
-   "usado_por": 167,
+   "usado_por": 166,
    "usado_por_modulos": [
     "components",
     "components/admin",
@@ -5386,38 +5386,6 @@
    "orfao": false
   },
   {
-   "arquivo": "src/services/feedback360Service.ts",
-   "camada": "services",
-   "exports": [
-    "FeedbackCycle",
-    "FeedbackEvaluation",
-    "FeedbackQuestion",
-    "FeedbackResult",
-    "feedback360Service"
-   ],
-   "export_default": null,
-   "linhas": 214,
-   "tabelas": [
-    "feedback_cycles",
-    "feedback_evaluations",
-    "feedback_questions",
-    "feedback_results"
-   ],
-   "rpcs": [],
-   "edges": [],
-   "env": [],
-   "externos": [
-    "sonner"
-   ],
-   "zod_schemas": 0,
-   "flags": [],
-   "papeis": [],
-   "usado_por": 0,
-   "usado_por_modulos": [],
-   "coberto_por_testes": 0,
-   "orfao": true
-  },
-  {
    "arquivo": "src/services/feedbackService.ts",
    "camada": "services",
    "exports": [
@@ -5675,7 +5643,7 @@
    "zod_schemas": 0,
    "flags": [],
    "papeis": [],
-   "usado_por": 102,
+   "usado_por": 101,
    "usado_por_modulos": [
     "components",
     "components/auth",

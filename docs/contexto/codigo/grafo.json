@@ -1,8 +1,8 @@
 {
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
- "nos": 1006,
- "arestas": 4355,
+ "nos": 1005,
+ "arestas": 4353,
  "hubs": [
   {
    "arquivo": "src/components/ui/card.tsx",
@@ -22,7 +22,7 @@
   },
   {
    "arquivo": "src/integrations/supabase/client.ts",
-   "importado_por": 179
+   "importado_por": 178
   },
   {
    "arquivo": "src/components/ui/skeleton.tsx",
@@ -34,7 +34,7 @@
   },
   {
    "arquivo": "src/services/loggingService.ts",
-   "importado_por": 103
+   "importado_por": 102
   },
   {
    "arquivo": "src/components/ui/input.tsx",
@@ -226,7 +226,6 @@
   "src/lib/cardPackNotifications.ts",
   "src/lib/pushOutbox.ts",
   "src/lib/warAutoHooks.ts",
-  "src/services/feedback360Service.ts",
   "src/services/predictiveFeedbackService.ts",
   "src/services/xpBalancingService.ts",
   "src/utils/formatters.ts",
