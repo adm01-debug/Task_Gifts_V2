@@ -319,12 +319,28 @@ describe("ClimateSurveyResults", () => {
     expect(h.mutate).toHaveBeenCalledWith({ surveyId: "s1" });
   });
 
-  it("explica que falta pergunta de eNPS quando há respostas mas nenhuma nota elegível", () => {
+  it("avisa que faltam notas de eNPS quando a pesquisa já tem pergunta elegível", () => {
+    h.enps = {
+      data: { survey_id: "s1", enps: 0, promoters: 0, passives: 0, detractors: 0, total: 0, response_count: 5, min_responses: 5, suppressed: true },
+      isLoading: false,
+      isError: false,
+    };
+    h.questionsFeed = { ...h.questionsFeed, data: [question({ question_type: "nps" })] };
+
+    render(<ClimateSurveyResults surveyId="s1" />);
+
+    expect(screen.getByText("Ainda não há notas de eNPS suficientes")).toBeInTheDocument();
+    expect(screen.queryByText("eNPS precisa de uma pergunta de 0 a 10")).not.toBeInTheDocument();
+    expect(screen.queryByTestId("aviso-anonimato")).not.toBeInTheDocument();
+  });
+
+  it("explica que falta pergunta de eNPS quando há respostas mas nenhuma escala elegível", () => {
     h.enps = {
       data: { survey_id: "s1", enps: 0, promoters: 0, passives: 0, detractors: 0, total: 0, response_count: 12, min_responses: 5, suppressed: true },
       isLoading: false,
       isError: false,
     };
+    h.questionsFeed = { ...h.questionsFeed, data: [question({ question_type: "likert_5" })] };
 
     render(<ClimateSurveyResults surveyId="s1" />);
 

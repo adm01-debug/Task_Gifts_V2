@@ -6,7 +6,7 @@ import { Progress } from "@/components/ui/progress";
 import { Skeleton } from "@/components/ui/skeleton";
 import { AnonymityGuardNotice } from "@/components/engagement/diagnostics/AnonymityGuardNotice";
 import { PILLAR_LABELS } from "@/services/climateSurveyService";
-import { useENPS, usePillarScores, useRecalculatePillarScores } from "@/hooks/useClimateSurveys";
+import { useENPS, usePillarScores, useRecalculatePillarScores, useSurveyQuestions } from "@/hooks/useClimateSurveys";
 
 const enpsTone = (enps: number) =>
   enps >= 50 ? "text-emerald-600" : enps >= 0 ? "text-amber-600" : "text-destructive";
@@ -14,9 +14,47 @@ const enpsTone = (enps: number) =>
 const pillarTone = (score: number) =>
   score >= 70 ? "text-emerald-600" : score >= 50 ? "text-amber-600" : "text-destructive";
 
+/**
+ * Sob supressão a RPC devolve `total: 0` mesmo com notas elegíveis registradas, então a causa
+ * (amostra pequena, notas de eNPS insuficientes ou pesquisa sem pergunta 0–10) vem da lista de perguntas.
+ */
+function SuppressedEnps({
+  responseCount,
+  minResponses,
+  hasEligibleQuestion,
+  questionsLoaded,
+}: {
+  responseCount: number;
+  minResponses: number;
+  hasEligibleQuestion: boolean;
+  questionsLoaded: boolean;
+}) {
+  if (!questionsLoaded || responseCount < minResponses) {
+    return <AnonymityGuardNotice context={`${responseCount} resposta(s) registrada(s) até agora.`} />;
+  }
+
+  return (
+    <Card className="border-dashed">
+      <CardContent className="space-y-1 py-8 text-center">
+        <p className="text-sm font-medium">
+          {hasEligibleQuestion
+            ? "Ainda não há notas de eNPS suficientes"
+            : "eNPS precisa de uma pergunta de 0 a 10"}
+        </p>
+        <p className="mx-auto max-w-md text-xs text-muted-foreground">
+          {hasEligibleQuestion
+            ? `${responseCount} resposta(s) registrada(s), mas as notas de eNPS (escala 0 a 10) ainda não chegaram a ${minResponses}. O eNPS aparece assim que a pesquisa somar ${minResponses} notas elegíveis.`
+            : `${responseCount} resposta(s) registrada(s), mas esta pesquisa não tem pergunta de eNPS (escala 0 a 10). Pesquisa publicada não aceita novas perguntas: se ainda for rascunho, inclua uma pergunta do tipo NPS.`}
+        </p>
+      </CardContent>
+    </Card>
+  );
+}
+
 export function ClimateSurveyResults({ surveyId }: { surveyId: string }) {
   const { data: enps, isLoading: isLoadingEnps, isError: enpsError } = useENPS(surveyId);
   const { data: pillarScores, isLoading: isLoadingPillars, isError: pillarsError } = usePillarScores(surveyId);
+  const { data: questions } = useSurveyQuestions(surveyId);
   const recalculate = useRecalculatePillarScores();
 
   if (enpsError || pillarsError) {
@@ -53,20 +91,14 @@ export function ClimateSurveyResults({ surveyId }: { surveyId: string }) {
       {isLoadingEnps ? (
         <Skeleton className="h-36 w-full" />
       ) : enps?.suppressed ? (
-        enps.total < enps.min_responses && enps.response_count >= enps.min_responses ? (
-          <Card className="border-dashed">
-            <CardContent className="space-y-1 py-8 text-center">
-              <p className="text-sm font-medium">eNPS precisa de uma pergunta de 0 a 10</p>
-              <p className="mx-auto max-w-md text-xs text-muted-foreground">
-                {enps.response_count} resposta(s) registrada(s), mas nenhuma pergunta de eNPS
-                (escala 0 a 10) foi respondida. Inclua uma pergunta do tipo NPS — ou de escala
-                de 0 a 10 — para calcular o eNPS.
-              </p>
-            </CardContent>
-          </Card>
-        ) : (
-          <AnonymityGuardNotice context={`${enps.response_count} resposta(s) registrada(s) até agora.`} />
-        )
+        <SuppressedEnps
+          responseCount={enps.response_count}
+          minResponses={enps.min_responses}
+          questionsLoaded={questions !== undefined}
+          hasEligibleQuestion={(questions ?? []).some(
+            (question) => question.question_type === "nps" || question.question_type === "likert_10",
+          )}
+        />
       ) : enps ? (
         <Card>
           <CardHeader className="pb-2">
