@@ -33,7 +33,7 @@ neste repo.
 | URL | `https://eidsaqymojyuhprobfpn.supabase.co` (valor de `VITE_SUPABASE_URL`) |
 | Dashboard | https://supabase.com/dashboard/project/eidsaqymojyuhprobfpn |
 | MCP para SQL | servidor **`supabase`** declarado em `.mcp.json` (gateway Cloudflare Worker `supabase-eidsaqymo-mcp`) — acesso total: `SELECT/INSERT/UPDATE/DELETE/DDL` |
-| Ledger de migrations | **existe** (`supabase_migrations.schema_migrations`, 275 versões em 2026-11-24) — mas **não é fonte de verdade**: 2 dos 277 arquivos do repo não têm registro; ver regra 2 |
+| Ledger de migrations | **existe** (`supabase_migrations.schema_migrations`, **277 versões para 277 arquivos**, medido em 2026-11-24T14:15Z — nenhum arquivo sem registro). Mesmo assim **não é fonte de verdade** do estado dos objetos; ver regra 2 |
 | Migrations no repo | 277 arquivos `.sql` em `supabase/migrations/` |
 
 ### Projetos que NÃO são este (não escrever neles)
@@ -67,9 +67,11 @@ credencial e decisão do dono), mas:
 2. **Toda migration idempotente** — `CREATE TABLE IF NOT EXISTS`, `CREATE POLICY` guardado por
    `DROP POLICY IF EXISTS`, `INSERT ... ON CONFLICT DO NOTHING` (o
    `.github/PULL_REQUEST_TEMPLATE.md` cobra isso). O ledger (`supabase_migrations.schema_migrations`)
-   **existe** (contagem atual na tabela do **Banco OFICIAL**, acima), mas não é fonte de verdade: há
-   arquivos aplicados sem registro e registros com nome fora do padrão do repo. Reaplicar idempotente
-   continua sendo o modo normal de operar — uma migration não idempotente trava o próximo apply.
+   **existe** e **cobre o repo hoje** (contagem na tabela do **Banco OFICIAL**, acima), mas a linha
+   registrada diz que *a versão foi marcada como aplicada* — por execução do arquivo ou por registro
+   manual depois de conferir os objetos-chave (foi o caso de seis versões em 2026-11-24) — e não *em que
+   estado* ficaram os objetos. Reaplicar idempotente continua sendo o modo normal de operar: uma migration
+   não idempotente trava o próximo apply.
 3. **Versão sem colisão:** antes de criar arquivo, no mesmo turno: `ls supabase/migrations | tail` e busca
    de PRs abertas tocando `supabase/migrations/`. O padrão de nome vigente é `AAAAMMDDHHMMSS_<slug>.sql`
    (os arquivos antigos usam `_<uuid>`; para arquivo novo prefira o slug descritivo).
@@ -79,10 +81,10 @@ credencial e decisão do dono), mas:
    quando a função/tabela for consumida por edge.
 5. **`CREATE INDEX CONCURRENTLY` não funciona pelo MCP** (a chamada é envolvida em transação) — use
    `CREATE INDEX` simples. `VACUUM` também não roda por lá.
-6. **O estado real do banco é a verdade, não o arquivo.** O ledger não cobre tudo (migrations aplicadas
-   sem registro, funções alteradas direto no banco), então só a introspecção prova o que rodou:
-   `pg_get_functiondef`, `pg_policies`, `pg_indexes`, `information_schema.columns`. Antes de criar um objeto
-   "ausente", confira se ele já existe com outro nome.
+6. **O estado real do banco é a verdade, não o arquivo.** O ledger diz que a migration rodou, não que o
+   objeto ficou como o arquivo descreve (funções alteradas direto no banco, ordem de aplicação), então só a
+   introspecção prova o que está vivo: `pg_get_functiondef`, `pg_policies`, `pg_indexes`,
+   `information_schema.columns`. Antes de criar um objeto "ausente", confira se ele já existe com outro nome.
 7. Objetos que o código assume e que a auditoria de 2026-08 não encontrou no banco (confira antes de usar):
    `email_outbox`, `push_devices`, `webhook_deliveries`, `public.security_logs`. Se o seu fix depende de um
    deles, o primeiro passo é a migration, não o patch no front.
@@ -97,7 +99,7 @@ credencial e decisão do dono), mas:
 
 | Divergência | Evidência | Efeito |
 |---|---|---|
-| Ledger não cobre o repo | `supabase_migrations.schema_migrations` tem 275 versões (2026-11-24) para 277 arquivos em `supabase/migrations/`: 2 seguem sem registro (`20261218000000`, `20261220000000`). Quatro das sete que faltavam (`20261109120000`, `20261114110500`, `20261122140000`, `20261123000000`) entraram no ledger na mesma rodada — `xmin` consecutivos 1752544-1752547, na ordem de versão, parando exatamente no arquivo com BOM que o check acusa; nesses, a conferência foi por introspecção dos objetos-chave (não pela execução integral do SQL) | o ledger não prova banco == repo; introspecção continua obrigatória, e o apply de pendências parece acontecer no push da `main` |
+| Ledger × repo (regularizado em 2026-11-24) | Fecham em **277 × 277**: medido em 2026-11-24T14:15Z, `supabase_migrations.schema_migrations` tem 277 versões e todas as 277 versões de `supabase/migrations/*.sql` estão registradas — **zero** arquivo sem registro. Os dois últimos pendentes (`20261218000000`, `20261220000000`) entraram no ledger após a auditoria das 14:00Z; antes disso eram sete, e quatro (`20261109120000`, `20261114110500`, `20261122140000`, `20261123000000`) entraram na mesma rodada — `xmin` consecutivos 1752544-1752547, na ordem de versão, parando exatamente no arquivo com BOM que o check acusa; nesses, a conferência foi por introspecção dos objetos-chave, não pela execução integral do SQL | o ledger **não** prova banco == repo, só que o apply aconteceu; introspecção continua obrigatória |
 | Migration duplicada e obsoleta removida (2026-11-24) | `20261123000001_create_acknowledge_security_digest.sql` era um rascunho anterior da mesma RPC, com BOM, nunca registrado no ledger e **sem** o gate de papel. Em produção a versão viva é a de `20261122140000` — exige `has_role(admin/manager)` e faz `REVOKE ALL ... FROM PUBLIC`; conferido com `pg_get_functiondef`. Como o CLI aplica pendências em ordem de versão, o rascunho (versão maior) sobrescreveria a versão boa e derrubaria o gate | o arquivo foi deletado: nenhuma função muda hoje e o próximo apply deixa de rebaixar o `acknowledge_security_digest` |
 | Versão do ledger com nome de arquivo (corrigida em 2026-11-24) | a linha `20261114134238_9b119528-da6f-4f43-b6cb-dcdcd7aa7ab1` tinha `version` = nome completo do arquivo, mas o CLI deriva a versão só até o primeiro `_`; a comparação repo×banco falhava e o check `Supabase Preview` reprovava em toda PR. Normalizada em produção: `version = '20261114134238'`, `name` intacto, 1 linha afetada, nenhum objeto do banco tocado | o CLI volta a reconhecer a migration; nada mudou em dados ou objetos |
 | `trigger_dispatch_critical_alert` reconciliado (2026-11-24) | produção lê `_internal.dispatch_config`; `20261220000000_fix_sre_rpcs_and_dispatch_trigger.sql` foi alinhado a essa fonte (vault só como fallback). Os segredos das duas fontes são idênticos em produção (conferido: `segredos_iguais = true`, 64 chars em ambos) | aplicar o arquivo é no-op de comportamento; sem segredo em nenhuma fonte o trigger avisa e NÃO dispara (nunca chama a edge function sem autenticar) |
