@@ -5,7 +5,7 @@
  * Por que existe: a comparacao arquivo x ledger do Zapp_Web_V2
  * (scripts/db-audit/check-migration-drift.mjs de la') nao roda aqui, porque este
  * guarda roda no CI, sem credencial de banco. O banco TEM
- * `supabase_migrations.schema_migrations` - 277 registros para 277 arquivos, 0
+ * `supabase_migrations.schema_migrations` - 280 registros para 280 arquivos, 0
  * pendentes (medido em 2026-11-24; ver docs/agentes/banco.md). Sem consultar o
  * ledger, "esta aplicada?" so' tem duas respostas possiveis:
  *
