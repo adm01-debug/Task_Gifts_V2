@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "85ba135b99c7e5e30edeb00546ae5d38ed48aa83",
+  "commit": "716355da6b72930a86480d21df754e86bf1ddef6",
   "branch": "main",
-  "data_commit": "2026-11-24T12:34:40-03:00",
+  "data_commit": "2026-11-24T12:35:39-03:00",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "ultimos_commits": [
+   {
+    "sha": "716355d",
+    "data": "2026-11-24",
+    "assunto": "feat(clima): agenda ciclo de vida das pesquisas (expira e lembrete) (#141)"
+   },
    {
     "sha": "85ba135",
     "data": "2026-11-24",
@@ -126,14 +131,9 @@
     "sha": "0a7aeb7",
     "data": "2026-11-23",
     "assunto": "﻿fix: usa JWT de sessao no trail-recommendations (#119)"
-   },
-   {
-    "sha": "ceef1b8",
-    "data": "2026-11-23",
-    "assunto": "﻿fix(manager): dados reais de departamento, quests e exportacao no dashboard (#118)"
    }
   ],
-  "arquivos_mudados_7d": 203,
+  "arquivos_mudados_7d": 204,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "supabase/functions/_shared",
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 110
+    "commits": 111
    },
    {
     "autor": "dependabot[bot]",
@@ -310,7 +310,7 @@
   ]
  },
  "contagens": {
-  "arquivos_total": 1570,
+  "arquivos_total": 1571,
   "arquivos_codigo": 1188,
   "linhas_codigo": 235896,
   "rotas": 87,
@@ -322,8 +322,8 @@
   "hooks": 155,
   "edge_functions": 23,
   "tabelas": 238,
-  "migrations": 278,
-  "cron_jobs": 22,
+  "migrations": 279,
+  "cron_jobs": 24,
   "testes": 171,
   "workflows": 6,
   "scripts": 17,

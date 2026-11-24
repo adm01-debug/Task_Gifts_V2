@@ -1,6 +1,6 @@
 # 07 · REGRAS DE NEGÓCIO
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `85ba135b99` · branch `main` · 2026-11-24 15:35 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `716355da6b` · branch `main` · 2026-11-24 15:36 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## A. Regras escritas por humanos (`manual/` — prioridade máxima, nunca sobrescrito)
@@ -3217,6 +3217,7 @@ _nenhum item encontrado_
 | `WHERE created_at >= now() - interval '30 days';` | `supabase/migrations/20261220000000_fix_sre_rpcs_and_dispatch_trigger.sql` |
 | `date_trunc('day', now() - interval '29 days'),` | `supabase/migrations/20261220000000_fix_sre_rpcs_and_dispatch_trigger.sql` |
 | `interval '1 day'` | `supabase/migrations/20261220000000_fix_sre_rpcs_and_dispatch_trigger.sql` |
+| `-- por `now() + interval '7 days'` empurrava o primeiro lembrete para o dia` | `supabase/migrations/20261224100000_climate_survey_cycle_jobs.sql` |
 
 ### H.3 Limites de paginação
 

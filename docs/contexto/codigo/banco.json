@@ -6,7 +6,7 @@
   "src/integrations/supabase/types.ts",
   "supabase/migrations"
  ],
- "migrations": 278,
+ "migrations": 279,
  "seeds": [],
  "avisos": [
   "11 bloco(s) com DDL dinâmico (EXECUTE format/...) não modelado — policies/colunas criadas dinamicamente podem faltar; confira no banco vivo"
@@ -242,6 +242,7 @@
   "ensure_single_default_filter",
   "erf_inverse",
   "expire_card_trades",
+  "expire_climate_surveys",
   "finish_lightning_round",
   "finish_memory_session",
   "generate_action_plan_from_factor",
@@ -375,6 +376,7 @@
   "save_board_trail",
   "save_sequence_procedure",
   "save_wager_question",
+  "send_climate_survey_reminders",
   "set_certificate_identity",
   "set_external_api_key_active",
   "set_goal_templates_updated_at",
@@ -1301,6 +1303,11 @@
    "migration": "20260728115201_58fcd8a8-c7ad-4a49-863c-74e07cdbc8e5.sql"
   },
   {
+   "nome": "climate-survey-reminders",
+   "agenda": "0 12 * * *",
+   "migration": "20261224100000_climate_survey_cycle_jobs.sql"
+  },
+  {
    "nome": "close-expired-auctions",
    "agenda": "*/5 * * * *",
    "migration": "20260728103701_298e9bca-0b39-4dba-aef0-058a9b24a556.sql"
@@ -1334,6 +1341,11 @@
    "nome": "expire-card-trades-daily",
    "agenda": "15 3 * * *",
    "migration": "20260728121542_4ac8cbd1-0d6d-410d-8734-4fd032804ddc.sql"
+  },
+  {
+   "nome": "expire-climate-surveys",
+   "agenda": "*/15 * * * *",
+   "migration": "20261224100000_climate_survey_cycle_jobs.sql"
   },
   {
    "nome": "lucky-wheel-payout-snapshot",
@@ -18917,6 +18929,11 @@
      "nome": "idx_notifications_user_unread",
      "colunas": "user_id, read",
      "unico": false
+    },
+    {
+     "nome": "notifications_user_type_data_unique",
+     "colunas": "user_id, type, (((data",
+     "unico": true
     }
    ],
    "fks": [],

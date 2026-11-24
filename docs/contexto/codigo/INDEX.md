@@ -1,7 +1,7 @@
 # Contexto do projeto para agentes de IA
 
 GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.
-Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `85ba135b99c7e5e30edeb00546ae5d38ed48aa83` (2026-11-24T12:34:40-03:00).
+Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `716355da6b72930a86480d21df754e86bf1ddef6` (2026-11-24T12:35:39-03:00).
 
 ## Como usar (leia antes de planejar ou executar qualquer tarefa)
 1. **Tela/rota/menu** → `rotas.json` (url/vista/menu → arquivo → hooks → tabelas → edges; `rotas_http_backend` para APIs) e `modulos.json` (módulo inteiro + dependências entre módulos).
@@ -14,7 +14,7 @@ Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR
 Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua tarefa; não carregue tudo.
 
 ## Stack
-- linguagens: TypeScript (1160), SQL (280), Markdown (56), JavaScript (24), JSON (14), YAML (9), Python (5), Shell (5)
+- linguagens: TypeScript (1160), SQL (281), Markdown (56), JavaScript (24), JSON (14), YAML (9), Python (5), Shell (5)
 - linguagem_principal: TypeScript
 - framework: React
 - backend_http: n/d
@@ -34,7 +34,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 ## Números
 | item | qtd |
 |---|---|
-| arquivos_total | 1570 |
+| arquivos_total | 1571 |
 | arquivos_codigo | 1188 |
 | linhas_codigo | 235896 |
 | rotas | 87 |
@@ -46,8 +46,8 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 | hooks | 155 |
 | edge_functions | 23 |
 | tabelas | 238 |
-| migrations | 278 |
-| cron_jobs | 22 |
+| migrations | 279 |
+| cron_jobs | 24 |
 | testes | 171 |
 | workflows | 6 |
 | scripts | 17 |
@@ -228,6 +228,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - `auto-promote-expired-webhook-secrets` 0 3 * * * (20260712200006_664f7c03-75c3-4a12-9b8d-1d6da5c917d2.sql)
 - `board-auto-unblock-daily` 0 4 * * * (20260728175346_9062e6fd-34a2-4490-82cd-d4877f2beafd.sql)
 - `check-prediction-markets-health` */15 * * * * (20260728115201_58fcd8a8-c7ad-4a49-863c-74e07cdbc8e5.sql)
+- `climate-survey-reminders` 0 12 * * * (20261224100000_climate_survey_cycle_jobs.sql)
 - `close-expired-auctions` */5 * * * * (20260728103701_298e9bca-0b39-4dba-aef0-058a9b24a556.sql)
 - `close-expired-sales-campaigns` 15 0 * * * (20260723150852_6048cf0f-c3a4-48e7-9f40-e2b293b020b9.sql)
 - `daily-cleanup-idempotency` 25 3 * * * (20260712115320_24a903a0-f49b-4374-b87b-b0775838c874.sql)
@@ -235,6 +236,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - `daily-cleanup-security-logs-90d` 15 3 * * * (20260712115320_24a903a0-f49b-4374-b87b-b0775838c874.sql)
 - `exec_monthly_report_generation` 0 6 1 * * (20260712222455_cdcbc232-1f35-4c6c-9c2c-0e4bf903e241.sql)
 - `expire-card-trades-daily` 15 3 * * * (20260728121542_4ac8cbd1-0d6d-410d-8734-4fd032804ddc.sql)
+- `expire-climate-surveys` */15 * * * * (20261224100000_climate_survey_cycle_jobs.sql)
 - `lucky-wheel-payout-snapshot` 0 7 * * * (20260727211017_30d9a02a-0c84-4b45-8702-4bab7e71f005.sql)
 - `lucky-wheel-window-alerts` 5 6 * * * (20260727213924_1ac322ab-1677-4094-96a8-c1ad0812647f.sql)
 - `postmortem_overdue_daily_check` 0 9 * * * (20260712222316_d8f7eabc-3e3b-437f-b041-70b9f3b88f9b.sql)
@@ -276,8 +278,8 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - possiveis_segredos_no_codigo: 0
 
 ## Grafo de código (graphify)
-- 10313 nós · 28867 arestas · 643 comunidades · grafo do commit `85ba135b`
-- comunidades maiores: lucide-react (396), react (265), App.tsx (255), skeleton.tsx (147), cn (135), profilesService.ts (123), contracts/index.ts (106), mobile/index.ts (100), useToast (96), client.ts (93), useProfiles.ts (93), DashboardRightColumn.tsx (93)
+- 10319 nós · 28872 arestas · 649 comunidades · grafo do commit `716355da`
+- comunidades maiores: lucide-react (351), react (225), select.tsx (191), App.tsx (163), cn (130), sonner (109), DashboardRightColumn.tsx (99), useToast (93), Checkins.tsx (92), mobile/index.ts (90), contracts/index.ts (90), useAuth (80)
 - símbolos mais chamados: cn() (src/lib/utils.ts), useAuth() (src/hooks/useAuth.tsx), useIsMobile() (src/hooks/use-mobile.tsx), q() (scripts/supabase_snapshot/snapshot.py), useDepartments() (src/hooks/useDepartments.ts), useRBAC() (src/hooks/useRBAC.ts), useProfiles() (src/hooks/useProfiles.ts), useToast() (src/hooks/use-toast.ts), useSEO() (src/hooks/useSEO.ts), useSoundEffects() (src/hooks/useSoundEffects.tsx), .collect() (scripts/supabase_snapshot/test_snapshot.py), excluded_sql() (scripts/supabase_snapshot/snapshot.py)
 - consulta local: `graphify query "<pergunta>"`, `graphify path "<A>" "<B>"`, `graphify explain "<X>"`
 
@@ -363,6 +365,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 
 
 ## Últimos commits
+- 2026-11-24 `716355d` feat(clima): agenda ciclo de vida das pesquisas (expira e lembrete) (#141)
 - 2026-11-24 `85ba135` fix(cron): reproduz os jobs internos sem credencial no repositorio (#142)
 - 2026-11-24 `57326cf` chore: alinha doc de edge functions com o estado real (cron 200, trigger corrigido) (#139)
 - 2026-11-24 `240770f` chore(db-audit): corrige o texto do ledger e faz o guard rodar fora do Linux (#140)
@@ -377,7 +380,6 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - 2026-11-24 `9a04825` feat: tela de Pesquisa de Clima (criar, responder, eNPS e score por pilar) (#125)
 - 2026-11-24 `eff597a` feat(feedback): tela para pedir feedback 360 e ver o resumo do avaliado (#132)
 - 2026-11-24 `f55c5db` chore: remove feedback360Service, duplicata morta do 360 que ja roda em /feedback (#131)
-- 2026-11-24 `c0090e3` feat(mentoria): monta o guard de alteracoes nao salvas no formulario de missoes (#130)
 
 ## Arquivos deste diretório
 - `docs/contexto/codigo/rotas.json`

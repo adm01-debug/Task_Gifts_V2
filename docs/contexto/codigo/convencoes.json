@@ -59,11 +59,11 @@
  "commits": {
   "convencao": "conventional commits (observado)",
   "exemplos": [
+   "feat(clima): agenda ciclo de vida das pesquisas (expira e lembrete) (#141)",
    "fix(cron): reproduz os jobs internos sem credencial no repositorio (#142)",
    "chore: alinha doc de edge functions com o estado real (cron 200, trigger corrigido) (#139)",
    "chore(db-audit): corrige o texto do ledger e faz o guard rodar fora do Linux (#140)",
-   "fix: tira BOM das migrations pendentes e remove rascunho obsoleto do digest (Supabase Preview 42601) (#138)",
-   "fix: guarda UPDATE cron.job por privilegio (Supabase Preview 42501) (#137)"
+   "fix: tira BOM das migrations pendentes e remove rascunho obsoleto do digest (Supabase Preview 42601) (#138)"
   ]
  },
  "pr_template": ".github/PULL_REQUEST_TEMPLATE.md",

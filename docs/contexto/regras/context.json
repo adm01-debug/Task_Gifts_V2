@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "85ba135b99c7e5e30edeb00546ae5d38ed48aa83",
+  "sha": "716355da6b72930a86480d21df754e86bf1ddef6",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
-  "generated_at": "2026-11-24 15:35 UTC",
-  "files_total": 1581,
-  "code_files": 1474,
-  "code_lines": 268550
+  "generated_at": "2026-11-24 15:36 UTC",
+  "files_total": 1582,
+  "code_files": 1475,
+  "code_lines": 268702
  },
  "version": "1.3.2",
- "facts_hash": "a546eea57d7231b1",
+ "facts_hash": "a2391eac7d041c94",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -196,7 +196,7 @@
   "languages": {
    ".ts": 584,
    ".tsx": 578,
-   ".sql": 280,
+   ".sql": 281,
    ".mjs": 21,
    ".js": 5,
    ".py": 5,
@@ -30876,6 +30876,36 @@
      "v_count"
     ]
    },
+   "expire_climate_surveys": {
+    "args": "",
+    "returns": "integer",
+    "lang": "plpgsql",
+    "src": "supabase/migrations/20261224100000_climate_survey_cycle_jobs.sql",
+    "security_definer": true,
+    "search_path": true,
+    "body": "DECLARE v_rows integer; BEGIN UPDATE public.climate_surveys SET status = 'completed', updated_at = now() WHERE status = 'active' AND ends_at IS NOT NULL AND ends_at < now(); GET DIAGNOSTICS v_rows = ROW_COUNT; RETURN v_rows; END;",
+    "raises": [],
+    "tables": [
+     "climate_surveys"
+    ]
+   },
+   "send_climate_survey_reminders": {
+    "args": "",
+    "returns": "integer",
+    "lang": "plpgsql",
+    "src": "supabase/migrations/20261224100000_climate_survey_cycle_jobs.sql",
+    "security_definer": true,
+    "search_path": true,
+    "body": "DECLARE v_rows integer; BEGIN WITH elegiveis AS ( SELECT s.id AS survey_id, s.title AS survey_title, s.ends_at, s.is_anonymous, p.id AS user_id, CASE WHEN s.reminder_frequency = 'weekly' THEN date_trunc('week', now())::date ELSE current_date END AS balde FROM public.climate_surveys s JOIN public.profiles p ON p.status = 'confirmed' WHERE s.status = 'active' AND s.send_reminders AND public.user_wants_in_app_notification(p.id, 'climate_survey_reminder') AND (s.starts_at IS NULL OR s.starts_at <= now()) AND s.ends_at IS NOT NULL AND s.ends_at > now() AND (s.ends_at AT TIME ZONE 'America/Sao_Paulo')::date <= ((now() AT TIME ZONE 'America/Sao_Paulo')::date + 7) AND NOT EXISTS ( SELECT 1 FROM publ …",
+    "raises": [],
+    "tables": [
+     "climate_survey_responses",
+     "climate_surveys",
+     "elegiveis",
+     "notifications",
+     "profiles"
+    ]
+   },
    "Args": {
     "args": "",
     "returns": "?",
@@ -33447,6 +33477,18 @@
     "schedule": "0 9 * * 1",
     "body": "SELECT public.check_api_key_rotation_overdue();",
     "src": "supabase/migrations/20260728210216_01d79f58-57ea-48d9-a859-ef3ddf891190.sql"
+   },
+   {
+    "job": "expire-climate-surveys",
+    "schedule": "*/15 * * * *",
+    "body": "SELECT public.expire_climate_surveys();",
+    "src": "supabase/migrations/20261224100000_climate_survey_cycle_jobs.sql"
+   },
+   {
+    "job": "climate-survey-reminders",
+    "schedule": "0 12 * * *",
+    "body": "SELECT public.send_climate_survey_reminders();",
+    "src": "supabase/migrations/20261224100000_climate_survey_cycle_jobs.sql"
    }
   ],
   "views": {
@@ -33737,6 +33779,7 @@
    "supabase/migrations/20261220000000_fix_sre_rpcs_and_dispatch_trigger.sql",
    "supabase/migrations/20261221000000_pdi_mentors_delete_policy.sql",
    "supabase/migrations/20261224090000_webauthn_login_hardening.sql",
+   "supabase/migrations/20261224100000_climate_survey_cycle_jobs.sql",
    "supabase/migrations/20261224110000_cron_internal_jobs_drift.sql",
    "supabase/tests/climate/assertions.sql",
    "supabase/tests/climate/stubs.sql",
@@ -41468,6 +41511,22 @@
     "objkind": "table",
     "roles": "authenticated",
     "src": "supabase/migrations/20261221000000_pdi_mentors_delete_policy.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "all",
+    "object": "expire_climate_surveys",
+    "objkind": "function",
+    "roles": "PUBLIC, anon, authenticated",
+    "src": "supabase/migrations/20261224100000_climate_survey_cycle_jobs.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "all",
+    "object": "send_climate_survey_reminders",
+    "objkind": "function",
+    "roles": "PUBLIC, anon, authenticated",
+    "src": "supabase/migrations/20261224100000_climate_survey_cycle_jobs.sql"
    },
    {
     "kind": "grant",
@@ -50300,8 +50359,8 @@
   },
   {
    "module": "supabase/migrations",
-   "files": 278,
-   "lines": 30553,
+   "files": 279,
+   "lines": 30705,
    "tables": [],
    "exports": [],
    "docs": [],
@@ -80406,6 +80465,10 @@
    {
     "file": "supabase/migrations/20261220000000_fix_sre_rpcs_and_dispatch_trigger.sql",
     "line": "interval '1 day'"
+   },
+   {
+    "file": "supabase/migrations/20261224100000_climate_survey_cycle_jobs.sql",
+    "line": "-- por `now() + interval '7 days'` empurrava o primeiro lembrete para o dia"
    }
   ],
   "percents": [
@@ -100455,6 +100518,36 @@
      "v_count"
     ]
    },
+   "expire_climate_surveys": {
+    "args": "",
+    "returns": "integer",
+    "lang": "plpgsql",
+    "src": "supabase/migrations/20261224100000_climate_survey_cycle_jobs.sql",
+    "security_definer": true,
+    "search_path": true,
+    "body": "DECLARE v_rows integer; BEGIN UPDATE public.climate_surveys SET status = 'completed', updated_at = now() WHERE status = 'active' AND ends_at IS NOT NULL AND ends_at < now(); GET DIAGNOSTICS v_rows = ROW_COUNT; RETURN v_rows; END;",
+    "raises": [],
+    "tables": [
+     "climate_surveys"
+    ]
+   },
+   "send_climate_survey_reminders": {
+    "args": "",
+    "returns": "integer",
+    "lang": "plpgsql",
+    "src": "supabase/migrations/20261224100000_climate_survey_cycle_jobs.sql",
+    "security_definer": true,
+    "search_path": true,
+    "body": "DECLARE v_rows integer; BEGIN WITH elegiveis AS ( SELECT s.id AS survey_id, s.title AS survey_title, s.ends_at, s.is_anonymous, p.id AS user_id, CASE WHEN s.reminder_frequency = 'weekly' THEN date_trunc('week', now())::date ELSE current_date END AS balde FROM public.climate_surveys s JOIN public.profiles p ON p.status = 'confirmed' WHERE s.status = 'active' AND s.send_reminders AND public.user_wants_in_app_notification(p.id, 'climate_survey_reminder') AND (s.starts_at IS NULL OR s.starts_at <= now()) AND s.ends_at IS NOT NULL AND s.ends_at > now() AND (s.ends_at AT TIME ZONE 'America/Sao_Paulo')::date <= ((now() AT TIME ZONE 'America/Sao_Paulo')::date + 7) AND NOT EXISTS ( SELECT 1 FROM publ …",
+    "raises": [],
+    "tables": [
+     "climate_survey_responses",
+     "climate_surveys",
+     "elegiveis",
+     "notifications",
+     "profiles"
+    ]
+   },
    "Args": {
     "args": "",
     "returns": "?",
@@ -107584,6 +107677,7 @@
    "enforce_campaign_team_consistency",
    "enqueue_push",
    "expire_card_trades",
+   "expire_climate_surveys",
    "finish_lightning_round",
    "finish_memory_session",
    "generate_action_plan_from_factor",
@@ -107716,6 +107810,7 @@
    "save_board_trail",
    "save_sequence_procedure",
    "save_wager_question",
+   "send_climate_survey_reminders",
    "set_external_api_key_active",
    "set_opinion_status",
    "settle_auction",
@@ -115265,6 +115360,22 @@
     "objkind": "table",
     "roles": "authenticated",
     "src": "supabase/migrations/20261221000000_pdi_mentors_delete_policy.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "all",
+    "object": "expire_climate_surveys",
+    "objkind": "function",
+    "roles": "PUBLIC, anon, authenticated",
+    "src": "supabase/migrations/20261224100000_climate_survey_cycle_jobs.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "all",
+    "object": "send_climate_survey_reminders",
+    "objkind": "function",
+    "roles": "PUBLIC, anon, authenticated",
+    "src": "supabase/migrations/20261224100000_climate_survey_cycle_jobs.sql"
    },
    {
     "kind": "grant",
@@ -154783,6 +154894,13 @@
    "path": "supabase/migrations/20261224090000_webauthn_login_hardening.sql",
    "lines": 22
   },
+  "supabase/migrations/20261224100000_climate_survey_cycle_jobs.sql": {
+   "path": "supabase/migrations/20261224100000_climate_survey_cycle_jobs.sql",
+   "lines": 152,
+   "temporal": [
+    "-- por `now() + interval '7 days'` empurrava o primeiro lembrete para o dia"
+   ]
+  },
   "supabase/migrations/20261224110000_cron_internal_jobs_drift.sql": {
    "path": "supabase/migrations/20261224110000_cron_internal_jobs_drift.sql",
    "lines": 131,
@@ -154883,10 +155001,19 @@
   }
  },
  "git": {
-  "sha": "85ba135b99c7e5e30edeb00546ae5d38ed48aa83",
+  "sha": "716355da6b72930a86480d21df754e86bf1ddef6",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "commits": [
+   {
+    "sha": "716355d",
+    "date": "2026-11-24",
+    "author": "adm01-debug",
+    "subject": "feat(clima): agenda ciclo de vida das pesquisas (expira e lembrete) (#141)",
+    "files": [
+     "supabase/migrations/20261224100000_climate_survey_cycle_jobs.sql"
+    ]
+   },
    {
     "sha": "85ba135",
     "date": "2026-11-24",
@@ -155255,17 +155382,6 @@
     "files": [
      "src/pages/DailyQuiz.tsx"
     ]
-   },
-   {
-    "sha": "3d91e00",
-    "date": "2026-11-23",
-    "author": "adm01-debug",
-    "subject": "fix(succession): calcula successorCount/readyNowCount com dados reais de highPotential (#113)",
-    "files": [
-     "src/pages/EngagementReports.tsx",
-     "src/services/engagementReportsService.ts",
-     "src/services/successionService.ts"
-    ]
    }
   ],
   "hot_files": [
@@ -155287,10 +155403,6 @@
    ],
    [
     "INVENTARIO_FUNCIONALIDADES.md",
-    3
-   ],
-   [
-    "src/pages/EngagementReports.tsx",
     3
    ],
    [
@@ -155342,11 +155454,15 @@
     2
    ],
    [
+    "src/pages/EngagementReports.tsx",
+    2
+   ],
+   [
     "src/pages/ManagerDashboard.tsx",
     2
    ],
    [
-    "supabase/migrations/20261224110000_cron_internal_jobs_drift.sql",
+    "supabase/migrations/20261224100000_climate_survey_cycle_jobs.sql",
     1
    ]
   ]
