@@ -1,9 +1,9 @@
 {
  "meta": {
-  "sha": "52db204ec33b25483a18f80c46c1d26632002194",
+  "sha": "c941b100320cda426bd575ca6e4fd21ca5253d45",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
-  "generated_at": "2026-11-24 21:53 UTC",
+  "generated_at": "2026-11-24 22:13 UTC",
   "files_total": 1587,
   "code_files": 1480,
   "code_lines": 269281
@@ -155139,10 +155139,19 @@
   }
  },
  "git": {
-  "sha": "52db204ec33b25483a18f80c46c1d26632002194",
+  "sha": "c941b100320cda426bd575ca6e4fd21ca5253d45",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "commits": [
+   {
+    "sha": "c941b10",
+    "date": "2026-11-24",
+    "author": "adm01-debug",
+    "subject": "docs: corrige o nome da migration que reagenda o job 33 (#157)",
+    "files": [
+     "docs/estado/05-edge-functions.md"
+    ]
+   },
    {
     "sha": "52db204",
     "date": "2026-11-24",
@@ -155504,33 +155513,16 @@
      "docs/estado/07-infra-ci-testes.md",
      "docs/estado/09-validacao-e-errata.md"
     ]
-   },
-   {
-    "sha": "a18b67f",
-    "date": "2026-11-23",
-    "author": "adm01-debug",
-    "subject": "chore: remove duplicatas comprovadas (leaderboard e dialogo de check-in) (#127)",
-    "files": [
-     "INVENTARIO_FUNCIONALIDADES.md",
-     "docs/estado/02-componentes.md",
-     "docs/estado/03-hooks-services-lib.md",
-     "src/components/checkins/CheckinDetailDialog.tsx",
-     "src/hooks/useLeaderboard.ts"
-    ]
    }
   ],
   "hot_files": [
    [
-    "docs/agentes/banco.md",
+    "docs/estado/05-edge-functions.md",
     9
    ],
    [
-    "docs/estado/05-edge-functions.md",
-    8
-   ],
-   [
-    "docs/estado/03-hooks-services-lib.md",
-    6
+    "docs/agentes/banco.md",
+    9
    ],
    [
     "AGENTS.md",
@@ -155549,11 +155541,11 @@
     5
    ],
    [
-    "docs/estado/02-componentes.md",
-    4
+    "docs/estado/03-hooks-services-lib.md",
+    5
    ],
    [
-    "INVENTARIO_FUNCIONALIDADES.md",
+    "docs/estado/02-componentes.md",
     3
    ],
    [
@@ -155574,6 +155566,10 @@
    ],
    [
     "src/components/CommandPalette.tsx",
+    2
+   ],
+   [
+    "INVENTARIO_FUNCIONALIDADES.md",
     2
    ],
    [

@@ -59,11 +59,11 @@
  "commits": {
   "convencao": "conventional commits (observado)",
   "exemplos": [
+   "docs: corrige o nome da migration que reagenda o job 33 (#157)",
    "fix: libera cadastro e login por passkey na allowlist de producao (#156)",
    "docs: corrige o drift do cron de push e do digest semanal (401 que nao existe) (#155)",
    "chore: sobe o ledger para 282 nas docs (#154)",
-   "feat: envia lembrete de clima por push alem do in-app (#153)",
-   "fix(supabase): alinha 20261220000000 ao trigger vivo do alerta critico (#152)"
+   "feat: envia lembrete de clima por push alem do in-app (#153)"
   ]
  },
  "pr_template": ".github/PULL_REQUEST_TEMPLATE.md",
