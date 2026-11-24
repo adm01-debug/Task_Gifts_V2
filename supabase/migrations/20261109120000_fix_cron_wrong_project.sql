@@ -3,9 +3,25 @@
 -- Idempotente: pode ser reaplicado sem efeito colateral.
 
 -- 1. Atualiza URL nos jobs de cron existentes
-UPDATE cron.job
-SET command = replace(command, 'awzhgfmqwddzgbqzqusc', 'eidsaqymojyuhprobfpn')
-WHERE command LIKE '%awzhgfmqwddzgbqzqusc%';
+--    cron.job pertence a supabase_admin e `postgres` NAO tem UPDATE nele (conferido em
+--    producao em 2026-11-24: has_table_privilege('postgres','cron.job','UPDATE') = false),
+--    por isso o UPDATE solto abortava a aplicacao da migration com 42501 em qualquer base.
+--    Guardado por excecao: corrige onde houver privilegio e avisa onde nao houver.
+DO $$
+DECLARE
+  v_afetados int := 0;
+BEGIN
+  UPDATE cron.job
+     SET command = replace(command, 'awzhgfmqwddzgbqzqusc', 'eidsaqymojyuhprobfpn')
+   WHERE command LIKE '%awzhgfmqwddzgbqzqusc%';
+  GET DIAGNOSTICS v_afetados = ROW_COUNT;
+  RAISE NOTICE 'cron.job: % job(s) com o projeto antigo corrigido(s)', v_afetados;
+EXCEPTION
+  WHEN insufficient_privilege THEN
+    RAISE WARNING 'cron.job: sem privilegio de UPDATE (schema pertence a supabase_admin); confira manualmente se algum job aponta para awzhgfmqwddzgbqzqusc';
+  WHEN undefined_table THEN
+    RAISE NOTICE 'cron.job ausente nesta base; nada a corrigir';
+END $$;
 
 -- 2. Recria trigger_dispatch_critical_alert com URL correta
 -- FIXME: v_anon_key abaixo ainda é a de awzhgfmqwddzgbqzqusc.
