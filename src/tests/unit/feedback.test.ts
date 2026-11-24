@@ -179,6 +179,36 @@ describe('aggregateFeedbackSummary', () => {
     expect(summary.commonImprovements).toEqual(['prazos']);
   });
 
+  it('nao perde a resposta identificada quando o mesmo pedido tem uma anonima mais recente', () => {
+    const summary = aggregateFeedbackSummary([
+      {
+        relationship: 'peer',
+        responses: [
+          {
+            overall_rating: 3,
+            strengths: 'comunicacao',
+            improvements: null,
+            is_anonymous: false,
+            request_id: 'req1',
+            submitted_at: '2026-01-01T10:00:00Z',
+          },
+          {
+            overall_rating: 5,
+            strengths: 'entregas',
+            improvements: null,
+            is_anonymous: true,
+            request_id: 'req1',
+            submitted_at: '2026-01-01T10:05:00Z',
+          },
+        ],
+      },
+    ]);
+
+    expect(summary.totalResponses).toBe(1);
+    expect(summary.avgRating).toBe(3);
+    expect(summary.commonStrengths).toEqual(['comunicacao']);
+  });
+
   it('conta uma vez so quando duas abas gravam o mesmo pedido, mantendo a resposta mais recente', () => {
     const summary = aggregateFeedbackSummary([
       {

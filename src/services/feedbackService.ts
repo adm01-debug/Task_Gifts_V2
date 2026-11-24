@@ -135,12 +135,14 @@ export function aggregateFeedbackSummary(rows: FeedbackSummaryRow[]): FeedbackSu
   const improvements: string[] = [];
 
   rows.forEach(row => {
-    latestResponsePerRequest(row.responses ?? []).forEach(resp => {
-      // O anonimato vale para o avaliado: um admin consegue ler respostas anônimas
-      // (policy "Admins can view all responses"), mas o resumo dele não pode desfazer
-      // o anonimato — é exatamente o que o card promete na tela.
-      if (resp.is_anonymous) return;
+    // O anonimato vale para o avaliado: um admin consegue ler respostas anônimas
+    // (policy "Admins can view all responses"), mas o resumo dele não pode desfazer
+    // o anonimato — é exatamente o que o card promete na tela. O descarte vem antes do
+    // dedupe: se o mesmo pedido tem uma resposta identificada e outra anônima, o resumo
+    // fica com a identificada em vez de perder as duas.
+    const visible = (row.responses ?? []).filter(resp => !resp.is_anonymous);
 
+    latestResponsePerRequest(visible).forEach(resp => {
       if (resp.overall_rating) {
         totalRating += resp.overall_rating;
         ratingCount += 1;
