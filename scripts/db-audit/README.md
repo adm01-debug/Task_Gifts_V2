@@ -2,19 +2,20 @@
 
 ## `check-migration-drift.mjs`
 
-Responde, sem ledger, as duas perguntas que `supabase/migrations/` não responde sozinho.
+Responde, sem consultar o ledger, as duas perguntas que `supabase/migrations/` não responde sozinho.
 
-**Por que sem ledger:** este banco **não tem** `supabase_migrations.schema_migrations`
-(`docs/agentes/banco.md`), então as 266 migrations não estão rastreadas. O guarda equivalente do
-`adm01-debug/Zapp_Web_V2` (`scripts/db-audit/check-migration-drift.mjs` lá) compara arquivo × ledger;
-aqui isso é impossível, e um port literal seria código morto.
+**Por que o guarda não lê o ledger:** o banco **tem** `supabase_migrations.schema_migrations` — 277
+registros para 277 arquivos, 0 pendentes (medido em 2026-11-24; ver `docs/agentes/banco.md`). O guarda
+roda no CI, sem credencial de banco, e a fase 1 (idempotência) não depende do ledger. O guarda
+equivalente do `adm01-debug/Zapp_Web_V2` (`scripts/db-audit/check-migration-drift.mjs` lá) compara
+arquivo × ledger; aqui essa comparação não roda no CI.
 
 | Fase | Precisa de | Pergunta | Sem isso |
 |---|---|---|---|
 | 1 | nada | o arquivo é seguro de reaplicar? | — (sempre roda) |
 | 2 | `docs/contexto/supabase/snapshot.json` | o objeto existe no banco de verdade? | **PULADA** com aviso |
 
-A fase 1 importa porque, sem ledger, qualquer replay/reset reexecuta a migration inteira: uma
+A fase 1 importa porque qualquer replay/reset reexecuta a migration inteira: uma
 migration não idempotente aborta no meio e deixa o banco pela metade.
 
 ### Como a análise funciona (e por que não é um grep)
@@ -77,9 +78,9 @@ sem drop), `20251212193329_5c696f63-….sql:3` (`CREATE TYPE public.app_role`).
 
 ### Fase 2 — o que é comparado
 
-`declaradas` é um **ledger**: processa as migrations em ordem e desconta `DROP TABLE`. Hoje dá **226**
-tabelas (as 230 declaradas menos 4 que migrations posteriores derrubaram). `create temp table` não
-entra — em replay a sessão é nova.
+`declaradas` é um **ledger**: processa as migrations em ordem e desconta `DROP TABLE`. Hoje dá **227**
+tabelas (o bruto declarado menos as que migrations posteriores derrubaram — medido em 2026-11-24, com
+277 arquivos). `create temp table` não entra — em replay a sessão é nova.
 
 Do lado do banco, dois conjuntos, porque as perguntas são diferentes:
 

@@ -2,13 +2,15 @@
 /**
  * Guarda das migrations de supabase/migrations/.
  *
- * Por que existe: este banco NAO tem `supabase_migrations.schema_migrations`
- * (ver docs/agentes/banco.md), logo nao da' para comparar arquivo x ledger como
- * no Zapp_Web_V2 (scripts/db-audit/check-migration-drift.mjs de la'). Sem ledger,
- * "esta aplicada?" so' tem duas respostas possiveis:
+ * Por que existe: a comparacao arquivo x ledger do Zapp_Web_V2
+ * (scripts/db-audit/check-migration-drift.mjs de la') nao roda aqui, porque este
+ * guarda roda no CI, sem credencial de banco. O banco TEM
+ * `supabase_migrations.schema_migrations` - 277 registros para 277 arquivos, 0
+ * pendentes (medido em 2026-11-24; ver docs/agentes/banco.md). Sem consultar o
+ * ledger, "esta aplicada?" so' tem duas respostas possiveis:
  *
  *   FASE 1 (offline, sempre roda) - o arquivo e' seguro de reaplicar?
- *     Sem ledger, qualquer replay/reset reexecuta a migration inteira. Uma
+ *     Qualquer replay/reset reexecuta a migration inteira. Uma
  *     migration nao idempotente aborta no meio e deixa o banco pela metade.
  *     Confere nome, versao duplicada, codificacao (BOM), idempotencia e DDL
  *     destrutivo, com
@@ -53,6 +55,7 @@
  */
 import fs from 'node:fs';
 import path from 'node:path';
+import { pathToFileURL } from 'node:url';
 
 const DIR = process.env.MIGRATIONS_DIR || 'supabase/migrations';
 const BASELINE_PATH = process.env.MIGRATION_BASELINE || 'scripts/db-audit/migration-baseline.json';
@@ -613,4 +616,8 @@ function main(argv) {
   return falhou ? 1 : 0;
 }
 
-if (import.meta.url === `file://${process.argv[1]}`) process.exit(main(process.argv.slice(2)));
+// `file://${process.argv[1]}` nunca casa no Windows (barra invertida e drive), e o
+// script saia com exit 0 sem analisar nada. pathToFileURL normaliza nos dois SOs.
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
+  process.exit(main(process.argv.slice(2)));
+}
