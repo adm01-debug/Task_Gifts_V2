@@ -22,7 +22,7 @@
    "src/integrations (3)"
   ],
   "testes": [
-   "co-localizado (*.test) (147)",
+   "co-localizado (*.test) (148)",
    "outro (12)",
    "tests/ (3)"
   ],
@@ -59,11 +59,11 @@
  "commits": {
   "convencao": "conventional commits (observado)",
   "exemplos": [
+   "feat(mentoria): monta o guard de alteracoes nao salvas no formulario de missoes (#130)",
    "chore(docs): corrige auditoria desatualizada (edge functions, HIBP, CI/typecheck) (#129)",
    "chore: remove duplicatas comprovadas (leaderboard e dialogo de check-in) (#127)",
    "feat: liga biblioteca de relatórios (CSV/Excel/PDF) nos dashboards (#124)",
-   "fix: liga telas orfas na navegacao e remove links sem destino (#123)",
-   "feat: cria fluxo completo de mentoria (pagina, servico, hooks e missoes) (#122)"
+   "fix: liga telas orfas na navegacao e remove links sem destino (#123)"
   ]
  },
  "pr_template": ".github/PULL_REQUEST_TEMPLATE.md",

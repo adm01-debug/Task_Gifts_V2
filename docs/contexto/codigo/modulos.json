@@ -6566,7 +6566,7 @@
    "modulo": "pages",
    "arquivos": 83,
    "testes": 0,
-   "linhas": 23651,
+   "linhas": 23662,
    "itens_menu": [
     "Admin Loja",
     "Admin Quiz",
@@ -6907,6 +6907,7 @@
     "useFinishLightningRound",
     "useFinishMemorySession",
     "useFirstTimeIndicator",
+    "useFormDirtyState",
     "useFormField",
     "useFuseSearch",
     "useGenerateActionPlanFromFactor",
@@ -7147,6 +7148,7 @@
     "useUnblockBoardPlayers",
     "useUnlockAchievement",
     "useUnlockItem",
+    "useUnsavedChanges",
     "useUpdateActionItemStatus",
     "useUpdateActionPlanStatus",
     "useUpdateAvatarConfig",
@@ -8522,7 +8524,7 @@
   {
    "modulo": "test",
    "arquivos": 0,
-   "testes": 129,
+   "testes": 130,
    "linhas": 0,
    "itens_menu": [],
    "telas": [],

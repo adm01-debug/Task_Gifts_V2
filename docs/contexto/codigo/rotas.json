@@ -10555,6 +10555,7 @@
     "useArchiveQuest",
     "useAssignQuest",
     "useAuth",
+    "useBeforeUnload",
     "useCallback",
     "useCanAccess",
     "useCheckPrerequisites",
@@ -10582,6 +10583,7 @@
     "useDeviceDetection",
     "useEffect",
     "useEnrollInTrail",
+    "useFormDirtyState",
     "useFuseSearch",
     "useGlobalMessage",
     "useHapticFeedback",
@@ -10637,6 +10639,7 @@
     "useTrailPrerequisites",
     "useTrailWithModules",
     "useTrailsByDepartment",
+    "useUnsavedChanges",
     "useUpdateDepartment",
     "useUpdateModule",
     "useUpdateProfile",
@@ -10682,6 +10685,7 @@
     "useDepartments",
     "useDeviceDetection",
     "useEnrollInTrail",
+    "useFormDirtyState",
     "useFuseSearch",
     "useGlobalMessage",
     "useHapticFeedback",
@@ -10729,6 +10733,7 @@
     "useTrailPrerequisites",
     "useTrailWithModules",
     "useTrailsByDepartment",
+    "useUnsavedChanges",
     "useUpdateDepartment",
     "useUpdateModule",
     "useUpdateProfile",
@@ -10796,7 +10801,7 @@
     "presentation",
     "user"
    ],
-   "arquivos_puxados": 88
+   "arquivos_puxados": 89
   },
   {
    "protegida": true,

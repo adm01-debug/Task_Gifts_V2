@@ -4150,9 +4150,11 @@
     "useState"
    ],
    "canais_realtime": [],
-   "usado_por": 0,
-   "usado_por_arquivos": [],
-   "coberto_por_testes": 0
+   "usado_por": 1,
+   "usado_por_arquivos": [
+    "src/pages/Mentoria.tsx"
+   ],
+   "coberto_por_testes": 1
   },
   {
    "arquivo": "src/hooks/useUserRank.ts",

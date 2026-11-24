@@ -5,17 +5,17 @@
   "vitest",
   "playwright"
  ],
- "total": 163,
+ "total": 164,
  "por_tipo": {
   "contrato": 3,
   "e2e": 2,
   "pytest": 2,
-  "unit": 156
+  "unit": 157
  },
  "onde_ficam": [
   {
    "padrao": "co-localizado (*.test)",
-   "arquivos": 147
+   "arquivos": 148
   },
   {
    "padrao": "outro",
@@ -1222,6 +1222,15 @@
    "casos": 8
   },
   {
+   "arquivo": "src/test/useUnsavedChanges.test.tsx",
+   "tipo": "unit",
+   "linhas": 93,
+   "testa": [
+    "src/hooks/useUnsavedChanges.ts"
+   ],
+   "casos": 6
+  },
+  {
    "arquivo": "src/test/validationLibraryContracts.test.ts",
    "tipo": "unit",
    "linhas": 35,
@@ -1588,6 +1597,7 @@
   "src/hooks/useRBAC.ts": 1,
   "src/hooks/useShop.ts": 1,
   "src/hooks/useTypePreferences.ts": 1,
+  "src/hooks/useUnsavedChanges.ts": 1,
   "src/i18n/translations.ts": 1,
   "src/integrations/supabase/client.ts": 12,
   "src/lib/auctionAdmin.ts": 3,
@@ -1960,7 +1970,6 @@
    "src/hooks/useTradingCards.ts",
    "src/hooks/useTrails.ts",
    "src/hooks/useTwoFactor.ts",
-   "src/hooks/useUnsavedChanges.ts",
    "src/hooks/useUserRank.ts",
    "src/hooks/useViewTransition.ts",
    "src/hooks/useWagerAdmin.ts",

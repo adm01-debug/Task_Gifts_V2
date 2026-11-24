@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "43c41a1c8fb49b3e69be8159078ac1121177d7c4",
+  "commit": "c0090e33a59279b782bcc27d9e3c282f189e8146",
   "branch": "main",
-  "data_commit": "2026-11-23T23:53:12-03:00",
+  "data_commit": "2026-11-24T00:17:11-03:00",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "ultimos_commits": [
+   {
+    "sha": "c0090e3",
+    "data": "2026-11-24",
+    "assunto": "feat(mentoria): monta o guard de alteracoes nao salvas no formulario de missoes (#130)"
+   },
    {
     "sha": "43c41a1",
     "data": "2026-11-23",
@@ -126,14 +131,9 @@
     "sha": "11d2c1e",
     "data": "2026-11-22",
     "assunto": "fix(sre): reconstroi os 3 monitores + dispatch-critical-alert e destrava auth dos crons (#105)"
-   },
-   {
-    "sha": "8247352",
-    "data": "2026-11-22",
-    "assunto": "chore(automacao): reconstroi security-weekly-digest e conecta ao cron 33 (#104)"
    }
   ],
-  "arquivos_mudados_7d": 150,
+  "arquivos_mudados_7d": 151,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "supabase/functions/_shared",
@@ -294,14 +294,14 @@
     "mudancas": 3
    },
    {
-    "arquivo": "docs/pendencias/02-profiles-update-sem-restricao-de-coluna.md",
+    "arquivo": "docs/estado/03-hooks-services-lib.md",
     "mudancas": 3
    }
   ],
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 95
+    "commits": 96
    },
    {
     "autor": "dependabot[bot]",
@@ -310,9 +310,9 @@
   ]
  },
  "contagens": {
-  "arquivos_total": 1544,
-  "arquivos_codigo": 1169,
-  "linhas_codigo": 230352,
+  "arquivos_total": 1545,
+  "arquivos_codigo": 1170,
+  "linhas_codigo": 230456,
   "rotas": 84,
   "rotas_http_backend": 0,
   "vistas_por_id": 0,
@@ -324,7 +324,7 @@
   "tabelas": 237,
   "migrations": 275,
   "cron_jobs": 22,
-  "testes": 163,
+  "testes": 164,
   "workflows": 6,
   "scripts": 16,
   "docs_md": 55
@@ -432,7 +432,7 @@
   },
   "src/pages": {
    "arquivos": 83,
-   "linhas": 23651
+   "linhas": 23662
   },
   "src/services": {
    "arquivos": 100,
@@ -443,8 +443,8 @@
    "linhas": 7136
   },
   "src/test": {
-   "arquivos": 129,
-   "linhas": 22719
+   "arquivos": 130,
+   "linhas": 22812
   },
   "src/tests": {
    "arquivos": 16,
@@ -510,7 +510,7 @@
   },
   {
    "arquivo": "src/pages/Mentoria.tsx",
-   "linhas": 952
+   "linhas": 963
   },
   {
    "arquivo": "src/i18n/translations.ts",

@@ -1,6 +1,6 @@
 # 07 · REGRAS DE NEGÓCIO
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `43c41a1c8f` · branch `main` · 2026-11-24 03:17 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `c0090e33a5` · branch `main` · 2026-11-24 03:17 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## A. Regras escritas por humanos (`manual/` — prioridade máxima, nunca sobrescrito)
@@ -3569,7 +3569,7 @@ _nenhum item encontrado_
 | `admin` | `supabase/migrations/20261122140000_acknowledge_security_digest.sql` |
 | `manager` | `supabase/migrations/20261122140000_acknowledge_security_digest.sql` |
 
-## K. Testes como especificação (1994 testes em 151 arquivos — nomes completos em `context.json`)
+## K. Testes como especificação (2001 testes em 152 arquivos — nomes completos em `context.json`)
 
 | Arquivo | Testes | Exemplos do que o sistema DEVE fazer |
 |---|---|---|
@@ -3681,6 +3681,7 @@ _nenhum item encontrado_
 | `src/test/goalBetting.test.ts` | 7 | goalBetting · ordena por percentual e ignora quem recusou a meta · gera rótulos únicos para homônimos (B1) · respeita o teto de opções do servidor (B2) … |
 | `src/test/predictionOracle.simulation.test.ts` | 7 | ranking Oráculo — simulação massiva · preserva invariantes de pontuação, ordenação e elegibilidade · é indiferente à ordem de chegada dos aportes · não recompensa quem apenas copia o consenso … |
 | `src/test/scratchCardOdds.simulation.test.ts` | 7 | Raspadinha — grade semeada · soma 100% de probabilidade e não tem prêmio inalcançável · não produz problemas bloqueantes de configuração · mapeia todos os rolls possíveis para um prêmio válido e contíguo … |
+| `src/test/useUnsavedChanges.test.tsx` | 7 | useUnsavedChanges · bloqueia beforeunload quando ha alteracoes nao salvas · nao bloqueia beforeunload quando o formulario esta limpo · remove o listener ao desmontar … |
 | `tests/e2e/happy-paths.spec.ts` | 7 | Happy Paths - Task Gifts · 1. Fluxo de login redireciona para a dashboard · 2. Rota protegida /profile redireciona para /auth sem sessao · 3. Rota protegida /trails redireciona para /auth sem sessao … |
 | `src/test/bossReport.simulation.test.ts` | 6 | buildBossReport — simulação massiva · mantém coerência entre seções em 600 cenários · gera CSV multi-seção seguro contra injeção de fórmula · sem janela, o resumo equivale ao motor de histórico … |
 | `src/test/bossWinRateGoals.simulation.test.ts` | 6 | evaluateWinRateGoals — simulação massiva · mantém invariantes em 800 cenários · não sobrepõe janelas: batalha do limite entra em apenas uma · detecta queda crítica de aproveitamento … |

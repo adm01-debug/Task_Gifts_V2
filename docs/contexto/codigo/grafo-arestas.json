@@ -4767,6 +4767,7 @@
    "src/hooks/useAuth.tsx",
    "src/hooks/useMentorship.ts",
    "src/hooks/useRBAC.ts",
+   "src/hooks/useUnsavedChanges.ts",
    "src/services/mentorshipService.ts"
   ],
   "src/pages/NotFound.tsx": [

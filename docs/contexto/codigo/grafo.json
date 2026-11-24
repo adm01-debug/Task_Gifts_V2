@@ -2,7 +2,7 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "nos": 1006,
- "arestas": 4354,
+ "arestas": 4355,
  "hubs": [
   {
    "arquivo": "src/components/ui/card.tsx",
@@ -219,7 +219,6 @@
   "src/constants/texts.ts",
   "src/hooks/useClimateSurveys.ts",
   "src/hooks/usePDI.ts",
-  "src/hooks/useUnsavedChanges.ts",
   "src/lib/auctionEngine.ts",
   "src/lib/bossAlerts.ts",
   "src/lib/bossAutoHooks.ts",
