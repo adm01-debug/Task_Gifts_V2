@@ -213,6 +213,26 @@ test('versao duplicada e acusada uma vez', (t) => {
   assert.equal(auditar(dir).achados.filter((x) => x.tipo === 'versao_duplicada').length, 1);
 });
 
+test('REGRESSAO: BOM no inicio do arquivo vira achado `codificacao`', (t) => {
+  // O CLI entrega o arquivo cru ao Postgres: o BOM vira token e aborta o parse
+  // (`syntax error at or near "\ufeff"`), e o arquivo nunca entra no ledger.
+  const comBom = Buffer.concat([
+    Buffer.from([0xef, 0xbb, 0xbf]),
+    Buffer.from('-- ok\nCREATE TABLE IF NOT EXISTS public.a (id int);\n'),
+  ]);
+  const dir = raiz(t, {
+    '20260101000000_bom.sql': comBom,
+    '20260101000001_limpo.sql': '-- ok\nCREATE TABLE IF NOT EXISTS public.b (id int);\n',
+  });
+  const achados = auditar(dir).achados;
+  const cod = achados.filter((x) => x.tipo === 'codificacao');
+  assert.equal(cod.length, 1);
+  assert.equal(cod[0].arquivo, '20260101000000_bom.sql');
+  assert.equal(contar(achados).codificacao, 1);
+  // BOM novo em arquivo nao baselinado e caso novo para o ratchet.
+  assert.equal(comparar(achados, { achados: {} }).novos.some((n) => n.tipo === 'codificacao'), true);
+});
+
 // ───────────────────── ledger de tabelas ─────────────────
 
 test('REGRESSAO: ledger desconta tabela dropada por migration posterior', (t) => {

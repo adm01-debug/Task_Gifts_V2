@@ -61,6 +61,11 @@ Env de teste: `MIGRATIONS_DIR`, `MIGRATION_BASELINE`.
 | `nao_idempotente` | **1.062** | 546 `create policy` sem `DROP POLICY IF EXISTS` da mesma policy · 200 `create table` sem `IF NOT EXISTS` · 199 `create index` sem `IF NOT EXISTS` · 98 `create trigger` sem drop/`OR REPLACE` · 19 `create type` |
 | `ddl_destrutivo` | **39** | 35 `delete from` · 2 `drop table` · 1 `truncate` · 1 `drop column` |
 
+`codificacao` foi acrescentado em 2026-11-24, depois de um BOM (`EF BB BF`) derrubar o check
+`Supabase Preview` no statement 0 de uma migration pendente (`syntax error at or near "\ufeff"`).
+Medido então em **0** dos 277 arquivos — o tipo existe para que o próximo BOM reprove no CI do PR, e
+não no apply em produção.
+
 A 1ª versão deste guarda relatava 249 chaves porque um único bloco `$$` citando uma guarda zerava o
 arquivo inteiro e qualquer `DROP … IF EXISTS` dispensava todos os `CREATE` do mesmo tipo. A auditoria
 adversarial de 2026-11-08 quebrou essa versão em 18 pontos; os 14 casos de fixture viraram regressão

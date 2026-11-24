@@ -88,8 +88,10 @@ credencial e decisão do dono), mas:
    deles, o primeiro passo é a migration, não o patch no front.
 8. **Arquivo `.sql` de migration sem BOM.** O CLI lê o arquivo como SQL cru: um `EF BB BF` no começo faz o
    Postgres devolver `syntax error at or near "\ufeff"` (SQLSTATE 42601) já no statement 0 e o check
-   `Supabase Preview` reprova. Grave sempre UTF-8 **sem** BOM — no PowerShell `Set-Content` e
-   `Out-File -Encoding utf8` gravam BOM por padrão; confira os 3 primeiros bytes antes de commitar.
+   `Supabase Preview` reprova. Grave sempre UTF-8 **sem** BOM — no Windows PowerShell 5.1 `Set-Content` e
+   `Out-File -Encoding utf8` gravam BOM por padrão (no PowerShell 7, `utf8` já é sem BOM; com BOM é
+   `utf8BOM`); confira os 3 primeiros bytes antes de commitar. O guarda `scripts/db-audit/check-migration-drift.mjs`
+   (job `quality`) acusa o caso como `codificacao`.
 
 ## Divergências conhecidas (confirmar antes de agir)
 
