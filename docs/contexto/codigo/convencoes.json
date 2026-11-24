@@ -3,12 +3,12 @@
  "format_version": 2,
  "onde_ficam": {
   "telas": [
-   "src/pages (82)",
+   "src/pages (84)",
    "src/components (1)"
   ],
   "componentes": [
-   "src/components (433)",
-   "src/pages (83)",
+   "src/components (437)",
+   "src/pages (85)",
    "src/contexts (4)"
   ],
   "hooks": [
@@ -22,7 +22,7 @@
    "src/integrations (3)"
   ],
   "testes": [
-   "co-localizado (*.test) (149)",
+   "co-localizado (*.test) (151)",
    "outro (12)",
    "tests/ (3)"
   ],
@@ -48,7 +48,7 @@
  },
  "barrels_index": 16,
  "extensao_componentes": [
-  ".tsx (523)"
+  ".tsx (529)"
  ],
  "alias_imports": {
   "(raiz)": {
@@ -59,11 +59,11 @@
  "commits": {
   "convencao": "conventional commits (observado)",
   "exemplos": [
+   "feat: tela de Pesquisa de Clima (criar, responder, eNPS e score por pilar) (#125)",
    "feat(feedback): tela para pedir feedback 360 e ver o resumo do avaliado (#132)",
    "chore: remove feedback360Service, duplicata morta do 360 que ja roda em /feedback (#131)",
    "feat(mentoria): monta o guard de alteracoes nao salvas no formulario de missoes (#130)",
-   "chore(docs): corrige auditoria desatualizada (edge functions, HIBP, CI/typecheck) (#129)",
-   "chore: remove duplicatas comprovadas (leaderboard e dialogo de check-in) (#127)"
+   "chore(docs): corrige auditoria desatualizada (edge functions, HIBP, CI/typecheck) (#129)"
   ]
  },
  "pr_template": ".github/PULL_REQUEST_TEMPLATE.md",

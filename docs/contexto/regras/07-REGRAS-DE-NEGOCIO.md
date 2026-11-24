@@ -1,6 +1,6 @@
 # 07 · REGRAS DE NEGÓCIO
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `eff597a611` · branch `main` · 2026-11-24 04:17 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `9a048250d3` · branch `main` · 2026-11-24 09:57 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## A. Regras escritas por humanos (`manual/` — prioridade máxima, nunca sobrescrito)
@@ -253,20 +253,6 @@ _Nenhum arquivo em `manual/`. Copie `manual/TEMPLATE-regras-de-negocio.md` para 
 | `ip_whitelist` | Admins can update IP whitelist | UPDATE | authenticated | permissive | `public.has_role(auth.uid(), 'admin')` |  |
 | `ip_whitelist` | Admins can delete IP whitelist | DELETE | authenticated | permissive | `public.has_role(auth.uid(), 'admin')` |  |
 | `ip_access_logs` | Admins can view IP access logs | SELECT | authenticated | permissive | `public.has_role(auth.uid(), 'admin')` |  |
-| `climate_surveys` | Managers can create climate surveys | INSERT | public | permissive |  | `has_role(auth.uid(), 'admin') OR has_role(auth.uid(), 'manager')` |
-| `climate_surveys` | Everyone can view active surveys | SELECT | public | permissive | `status IN ('active', 'completed') OR created_by = auth.uid() OR has_role(auth.uid(), 'admin')` |  |
-| `climate_surveys` | Creators can update surveys | UPDATE | public | permissive | `created_by = auth.uid() OR has_role(auth.uid(), 'admin')` |  |
-| `climate_surveys` | Admins can delete surveys | DELETE | public | permissive | `has_role(auth.uid(), 'admin')` |  |
-| `climate_survey_questions` | View survey questions | SELECT | public | permissive | `EXISTS (SELECT 1 FROM climate_surveys s WHERE s.id = survey_id AND (s.status IN ('active', 'completed') OR s.created_by = auth.uid() OR has_role(auth.uid(), 'admin')))` |  |
-| `climate_survey_questions` | Manage survey questions | ALL | public | permissive | `EXISTS (SELECT 1 FROM climate_surveys s WHERE s.id = survey_id AND (s.created_by = auth.uid() OR has_role(auth.uid(), 'admin')))` |  |
-| `climate_survey_responses` | Users can submit responses | INSERT | public | permissive |  | `auth.uid() = user_id` |
-| `climate_survey_responses` | Users can view own responses | SELECT | public | permissive | `user_id = auth.uid() OR has_role(auth.uid(), 'admin')` |  |
-| `climate_survey_responses` | Users can update own responses | UPDATE | public | permissive | `user_id = auth.uid()` |  |
-| `climate_question_answers` | Users can answer questions | INSERT | public | permissive |  | `EXISTS (SELECT 1 FROM climate_survey_responses r WHERE r.id = response_id AND r.user_id = auth.uid())` |
-| `climate_question_answers` | Users view own answers | SELECT | public | permissive | `EXISTS (SELECT 1 FROM climate_survey_responses r WHERE r.id = response_id AND (r.user_id = auth.uid() OR has_role(auth.uid(), 'admin')))` |  |
-| `climate_question_answers` | Users update own answers | UPDATE | public | permissive | `EXISTS (SELECT 1 FROM climate_survey_responses r WHERE r.id = response_id AND r.user_id = auth.uid())` |  |
-| `climate_pillar_scores` | Managers can view pillar scores | SELECT | public | permissive | `has_role(auth.uid(), 'admin') OR has_role(auth.uid(), 'manager')` |  |
-| `climate_pillar_scores` | System can manage pillar scores | ALL | public | permissive | `has_role(auth.uid(), 'admin')` |  |
 | `climate_benchmarks` | Everyone can view benchmarks | SELECT | public | permissive | `true` |  |
 | `climate_benchmarks` | Admins manage benchmarks | ALL | public | permissive | `has_role(auth.uid(), 'admin')` |  |
 | `opinions` | Users can create opinions | INSERT | public | permissive |  | `auth.uid() = sender_id` |
@@ -311,7 +297,21 @@ _Nenhum arquivo em `manual/`. Copie `manual/TEMPLATE-regras-de-negocio.md` para 
 | `new_device_alerts` | Users can view their own alerts | SELECT | public | permissive | `auth.uid() = user_id` |  |
 | `new_device_alerts` | Users can update their own alerts | UPDATE | public | permissive | `auth.uid() = user_id` |  |
 | `webauthn_credentials` | Users can view their own credentials | SELECT | public | permissive | `auth.uid() = user_id` |  |
-| … +221 linhas — lista completa em `context.json` | | | | | | |
+| `webauthn_credentials` | Users can insert their own credentials | INSERT | public | permissive |  | `auth.uid() = user_id` |
+| `webauthn_credentials` | Users can update their own credentials | UPDATE | public | permissive | `auth.uid() = user_id` |  |
+| `webauthn_credentials` | Users can delete their own credentials | DELETE | public | permissive | `auth.uid() = user_id` |  |
+| `webauthn_challenges` | Users can manage their own challenges | ALL | public | permissive | `auth.uid() = user_id OR user_id IS NULL` |  |
+| `permissions` | Admins can manage permissions | ALL | public | permissive | `has_role(auth.uid(), 'admin'::app_role)` |  |
+| `role_permissions` | Admins can manage role permissions | ALL | public | permissive | `has_role(auth.uid(), 'admin'::app_role)` |  |
+| `geo_allowed_countries` | Admins can manage allowed countries | ALL | public | permissive | `EXISTS ( SELECT 1 FROM public.user_roles ur WHERE ur.user_id = auth.uid() AND ur.role = 'admin'::app_role )` |  |
+| `geo_settings` | Admins can manage geo settings | ALL | public | permissive | `EXISTS ( SELECT 1 FROM public.user_roles ur WHERE ur.user_id = auth.uid() AND ur.role = 'admin'::app_role )` |  |
+| `task_scores` | Users can view own task scores | SELECT | authenticated | permissive | `user_id = auth.uid() OR has_role(auth.uid(), 'manager'::app_role) OR has_role(auth.uid(), 'admin'::app_role)` |  |
+| `task_scores` | Admins can manage task scores | ALL | authenticated | permissive | `has_role(auth.uid(), 'admin'::app_role) OR has_role(auth.uid(), 'manager'::app_role)` | `has_role(auth.uid(), 'admin'::app_role) OR has_role(auth.uid(), 'manager'::app_role)` |
+| `external_tasks` | Admins manage external tasks | ALL | authenticated | permissive | `has_role(auth.uid(), 'admin'::app_role)` | `has_role(auth.uid(), 'admin'::app_role)` |
+| `position_competencies` | Admins manage position competencies | ALL | authenticated | permissive | `has_role(auth.uid(), 'admin'::app_role)` | `has_role(auth.uid(), 'admin'::app_role)` |
+| `feedback_evaluations` | Users insert own evaluations | INSERT | authenticated | permissive |  | `evaluator_id = auth.uid()` |
+| `feedback_results` | Managers insert feedback results | INSERT | authenticated | permissive |  | `has_role(auth.uid(), 'manager'::app_role) OR has_role(auth.uid(), 'admin'::app_role)` |
+| … +224 linhas — lista completa em `context.json` | | | | | | |
 
 ## C. Restrições de dados (obrigatório / único / default / CHECK / FK / calculada)
 
@@ -350,10 +350,9 @@ _Nenhum arquivo em `manual/`. Copie `manual/TEMPLATE-regras-de-negocio.md` para 
 | `user_roles` | `created_at` | default now() |
 | `user_roles` | `(tabela)` | UNIQUE (user_id, role) |
 | `departments` | `id` | PK; default gen_random_uuid() |
+| `departments` | `created_at` | obrigatório |
 | `departments` | `name` | obrigatório |
-| `departments` | `color` | default '#6366f1' |
-| `departments` | `created_at` | default now() |
-| `departments` | `updated_at` | default now() |
+| `departments` | `updated_at` | obrigatório |
 | `team_members` | `id` | PK; default gen_random_uuid() |
 | `team_members` | `user_id` | obrigatório; FK → users.id ON DELETE CASCADE |
 | `team_members` | `department_id` | obrigatório; FK → departments.id ON DELETE CASCADE |
@@ -617,7 +616,8 @@ _Nenhum arquivo em `manual/`. Copie `manual/TEMPLATE-regras-de-negocio.md` para 
 | `user_seasonal_progress` | `claimed` | default false |
 | `user_seasonal_progress` | `created_at` | default now() |
 | `user_seasonal_progress` | `updated_at` | default now() |
-| … +1810 linhas — lista completa em `context.json` | | |
+| `user_seasonal_progress` | `(tabela)` | UNIQUE(user_id, challenge_id) |
+| … +1808 linhas — lista completa em `context.json` | | |
 
 ## D. Automações no banco (triggers e funções — regras que rodam sozinhas)
 
@@ -921,6 +921,20 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `validate_reset_token` | insufficient_privilege | `supabase/migrations/20261114134238_9b119528-da6f-4f43-b6cb-dcdcd7aa7ab1.sql` |
 | `acknowledge_security_digest` | not authenticated | `supabase/migrations/20261123000001_create_acknowledge_security_digest.sql` |
 | `acknowledge_security_digest` | digest not found: % | `supabase/migrations/20261123000001_create_acknowledge_security_digest.sql` |
+| `climate_recalculate_pillar_scores` | not authenticated | `supabase/migrations/20261123180000_climate_survey_engine.sql` |
+| `climate_recalculate_pillar_scores` | not authorized | `supabase/migrations/20261123180000_climate_survey_engine.sql` |
+| `climate_survey_enps` | not authenticated | `supabase/migrations/20261123180000_climate_survey_engine.sql` |
+| `climate_survey_enps` | survey not found | `supabase/migrations/20261123180000_climate_survey_engine.sql` |
+| `climate_survey_enps` | not authorized | `supabase/migrations/20261123180000_climate_survey_engine.sql` |
+| `climate_submit_response` | not authenticated | `supabase/migrations/20261123180000_climate_survey_engine.sql` |
+| `climate_submit_response` | answers required | `supabase/migrations/20261123180000_climate_survey_engine.sql` |
+| `climate_submit_response` | survey not found | `supabase/migrations/20261123180000_climate_survey_engine.sql` |
+| `climate_submit_response` | survey is not active | `supabase/migrations/20261123180000_climate_survey_engine.sql` |
+| `climate_submit_response` | survey is not open yet | `supabase/migrations/20261123180000_climate_survey_engine.sql` |
+| `climate_submit_response` | survey period is over | `supabase/migrations/20261123180000_climate_survey_engine.sql` |
+| `climate_submit_response` | survey already answered | `supabase/migrations/20261123180000_climate_survey_engine.sql` |
+| `climate_submit_response` | invalid answers | `supabase/migrations/20261123180000_climate_survey_engine.sql` |
+| `climate_submit_response` | required question missing | `supabase/migrations/20261123180000_climate_survey_engine.sql` |
 | `add_xp` | p_amount deve ser positivo | `supabase/migrations/20261218000000_profiles_economia_rpcs.sql` |
 | `add_xp` | perfil não encontrado | `supabase/migrations/20261218000000_profiles_economia_rpcs.sql` |
 | `add_coins` | p_amount deve ser positivo | `supabase/migrations/20261218000000_profiles_economia_rpcs.sql` |
@@ -962,7 +976,7 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `development_plans` | `status` | `active`, `cancelled`, `completed`, `draft` | `active` |
 | `development_plan_actions` | `status` | `cancelled`, `completed`, `in_progress`, `pending` | `pending` |
 | `enps_surveys` | `status` | `active`, `archived`, `closed`, `draft` | `draft` |
-| `climate_surveys` | `status` | `active`, `cancelled`, `completed`, `draft`, `scheduled` | `draft` |
+| `climate_surveys` | `status` | **livre (sem enum/CHECK)** | `draft` |
 | `opinions` | `status` | `new`, `read`, `in_progress`, `resolved`, `archived` | `new` |
 | `action_plans` | `status` | `active`, `cancelled`, `completed`, `paused`, `planning` | `planning` |
 | `action_plan_items` | `status` | `blocked`, `cancelled`, `completed`, `in_progress`, `pending` | `pending` |
@@ -1177,7 +1191,7 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `status` | `SUBSCRIBED` | compara | `src/hooks/useNotifications.ts` |
 | `status` | `absent` | compara, escreve | `src/components/AttendanceCalendar.tsx` |
 | `status` | `accepted` | compara, escreve | `src/components/duels/DuelCard.tsx`<br>`src/hooks/useMentorship.ts`<br>`src/pages/Mentoria.tsx`<br>`src/services/mentorshipService.ts` |
-| `status` | `active` | compara, escreve, filtra | `src/components/CertificationsPanel.tsx`<br>`src/components/GoalsWidget.tsx`<br>`src/components/MyDevelopmentPlanWidget.tsx`<br>`src/components/TeamChallenges.tsx`<br>`src/components/admin/DevelopmentPlanManager.tsx`<br>… +39 |
+| `status` | `active` | compara, escreve, filtra | `src/components/CertificationsPanel.tsx`<br>`src/components/GoalsWidget.tsx`<br>`src/components/MyDevelopmentPlanWidget.tsx`<br>`src/components/TeamChallenges.tsx`<br>`src/components/admin/DevelopmentPlanManager.tsx`<br>… +40 |
 | `status` | `all` | compara | `src/components/PushNotificationHistory.tsx`<br>`src/components/manager/QuestsList.tsx`<br>`src/services/actionPlansService.ts` |
 | `status` | `anomaly` | compara | `src/lib/luckyWheelPayout.ts` |
 | `status` | `applied` | compara, filtra | `src/components/campaigns/CampaignImportHistory.tsx`<br>`src/services/campaignImportService.ts` |
@@ -1194,7 +1208,7 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `status` | `decided` | compara | `src/components/tournament/TournamentBracketView.tsx`<br>`src/pages/TournamentsPage.tsx` |
 | `status` | `declined` | compara, escreve | `src/components/duels/DuelCard.tsx`<br>`src/services/duelsService.ts` |
 | `status` | `delivered` | compara | `src/components/shop-admin/PurchaseGovernanceDialog.tsx` |
-| `status` | `draft` | compara, escreve, filtra | `src/components/admin/FeedbackCycleManager.tsx`<br>`src/components/admin/SurveyCreator.tsx`<br>`src/components/auction/AuctionAdminForm.tsx`<br>`src/components/boss/BossBattleAdminDialog.tsx`<br>`src/components/campaigns/CampaignGoalBetPanel.tsx`<br>… +27 |
+| `status` | `draft` | compara, escreve, filtra | `src/components/admin/FeedbackCycleManager.tsx`<br>`src/components/admin/SurveyCreator.tsx`<br>`src/components/auction/AuctionAdminForm.tsx`<br>`src/components/boss/BossBattleAdminDialog.tsx`<br>`src/components/campaigns/CampaignGoalBetPanel.tsx`<br>… +29 |
 | `status` | `error` | escreve | `supabase/functions/_shared/sentry.ts` |
 | `status` | `expired` | compara, escreve, filtra | `src/lib/bossHistory.ts`<br>`src/services/bossBattleService.ts`<br>`src/services/certificationsService.ts`<br>`supabase/migrations/20251213164818_77e12a61-a727-4556-b33b-03828d080ab1.sql` |
 | `status` | `expiring_soon` | compara | `src/services/certificationsService.ts` |
@@ -1836,6 +1850,8 @@ _nenhum item encontrado_
 | `boss-coins-cap` | type=number, min=0 | `src/components/boss/BossBattleAdminDialog.tsx` |
 | `campaign-import-file` | accept=.csv,.xlsx,.xls,text/csv, disabled=stage ===  | `src/components/campaigns/CampaignImportDialog.tsx` |
 | `team-target` | type=number, min=0 | `src/components/campaigns/CampaignTeamsPanel.tsx` |
+| `climate-start` | type=date | `src/components/climate/ClimateSurveyForm.tsx` |
+| `climate-end` | type=date | `src/components/climate/ClimateSurveyForm.tsx` |
 | `opinion-subject` | max | `src/components/engagement/opinions/OpinionComposer.tsx` |
 | `opinion-content` | max | `src/components/engagement/opinions/OpinionComposer.tsx` |
 | `opinion-response` | max | `src/components/engagement/opinions/OpinionTreatmentDialog.tsx` |
@@ -2350,9 +2366,9 @@ _nenhum item encontrado_
   ```
   const { data: profile } = await supabase .from("profiles") .select("display_name, birth_date, hire_date") .eq("id", userId) .maybeSingle(); if (!profile) return; const currentYear = new Date().getFullYear(); const celebrations: Omit<Celebration, 'id' | 'created_at' | 'profile'>[] = []; // Birthday if (profile.birth_date) { const birthDate = new Date(profile.birth_date); const thisYearBirthday = new Date(currentYear, birthDate.getMonth(), birthDate.getDate()); celebrations.push({ user_id: userId, …
   ```
-- **calculateENPS(surveyId: string)** — `src/services/climateSurveyService.ts`
+- **calculateENPS(surveyId: string, minResponses = MIN_RESPONDENTS)** — `src/services/climateSurveyService.ts`
   ```
-  enps: number; promoters: number; passives: number; detractors: number
+  const { data, error } = await supabase.rpc('climate_survey_enps', { p_survey_id: surveyId, p_min_responses: minResponses, }); if (error) { logger.error('Failed to calculate eNPS', 'ClimateSurveyService', error); throw error; } return data as unknown as ClimateSurveyEnps;
   ```
 - **applyReverse(score: number | null, isReverse: boolean)** — `src/services/continuousEngagementService.ts`
   ```
@@ -3018,6 +3034,7 @@ _nenhum item encontrado_
 | `Date.now() - new Date(campaign.created_at).getTime() < 48 * 60 * 60 * 1000;` | `src/components/campaigns/CampaignCard.tsx` |
 | `: Date.now() - Number(period) * 24 * 60 * 60 * 1000;` | `src/components/campaigns/CampaignProgressChart.tsx` |
 | `setTimeout(() => setCopied(false), 2000);` | `src/components/certifications/CertificateActions.tsx` |
+| `const nextWeek = new Date(today.getTime() + 7 * 24 * 60 * 60 * 1000);` | `src/components/climate/ClimateSurveyForm.tsx` |
 | `const timer = setTimeout(() => { setParticles([]); onComplete?.(); }, 2000);` | `src/components/effects/AnimatedXPParticles.tsx` |
 | `const timer = setTimeout(() => { setShow(false); onComplete?.(); }, 1500);` | `src/components/effects/ComboExplosion.tsx` |
 | `const timer = setTimeout(() => { setShowGlow(false); setParticles([]); onComplete?.(); }, 2500);` | `src/components/effects/MiniConfetti.tsx` |
@@ -3309,6 +3326,9 @@ _nenhum item encontrado_
 | Não foi possível abrir o pacote agora. | `src/components/cards/PackList.tsx` |
 | Falha ao responder à proposta. | `src/components/cards/TradeInbox.tsx` |
 | Não foi possível gerar o PDF | `src/components/certifications/CertificateActions.tsx` |
+| >           {error}         </p>       )}        <div className= | `src/components/climate/ClimateSurveyAnswerForm.tsx` |
+| >           {error}         </p>       )}        <div className= | `src/components/climate/ClimateSurveyForm.tsx` |
+| >               {error}             </p>           )}           <Button onClick={handleAdd} disabled={isAdding}>             <Plus className= | `src/components/climate/ClimateSurveyQuestions.tsx` |
 | ; import { Badge } from  | `src/components/luckywheel/LuckyWheelPayoutPanel.tsx` |
 | ; import { Badge } from  | `src/components/luckywheel/LuckyWheelPayoutTrend.tsx` |
 | ; import { Badge } from  | `src/components/luckywheel/LuckyWheelWindowComparison.tsx` |
@@ -3414,7 +3434,8 @@ _nenhum item encontrado_
 | Erro ao adicionar pergunta | `src/hooks/useClimateSurveys.ts` |
 | Erro ao atualizar pesquisa | `src/hooks/useClimateSurveys.ts` |
 | Erro ao criar pesquisa de clima | `src/hooks/useClimateSurveys.ts` |
-| Erro ao enviar resposta | `src/hooks/useClimateSurveys.ts` |
+| Erro ao recalcular resultados | `src/hooks/useClimateSurveys.ts` |
+| Erro ao remover pergunta | `src/hooks/useClimateSurveys.ts` |
 | User not authenticated | `src/hooks/useCombo.ts` |
 | ${error.message} (requestId=${requestId}) | `src/hooks/useCompetencyAlerts.ts` |
 | Erro ao analisar competências | `src/hooks/useCompetencyAlerts.ts` |
@@ -3524,11 +3545,7 @@ _nenhum item encontrado_
 | Nenhum dado disponível para exportar. | `src/pages/EngagementReports.tsx` |
 |  aria-live= | `src/pages/ExecutiveMonthlyReport.tsx` |
 | Nada para investigar neste período. | `src/pages/ExecutiveMonthlyReport.tsx` |
-| ; import { ArrowLeft, Mail, CheckCircle2, Loader2, Shield } from  | `src/pages/ForgotPassword.tsx` |
-| Erro ao processar solicitação | `src/pages/ForgotPassword.tsx` |
-| Muitas tentativas. Aguarde alguns minutos. | `src/pages/ForgotPassword.tsx` |
-| Título obrigatório | `src/pages/Goals.tsx` |
-| … +176 linhas — lista completa em `context.json` | |
+| … +181 linhas — lista completa em `context.json` | |
 
 ## J. Controle de acesso no código (checagens de perfil/permissão)
 
@@ -3585,8 +3602,10 @@ _nenhum item encontrado_
 | `manager` | `supabase/migrations/20260807030000_fix_opinion_feed_rpc.sql` |
 | `admin` | `supabase/migrations/20261122140000_acknowledge_security_digest.sql` |
 | `manager` | `supabase/migrations/20261122140000_acknowledge_security_digest.sql` |
+| `admin` | `supabase/migrations/20261123180000_climate_survey_engine.sql` |
+| `manager` | `supabase/migrations/20261123180000_climate_survey_engine.sql` |
 
-## K. Testes como especificação (2028 testes em 153 arquivos — nomes completos em `context.json`)
+## K. Testes como especificação (2073 testes em 155 arquivos — nomes completos em `context.json`)
 
 | Arquivo | Testes | Exemplos do que o sistema DEVE fazer |
 |---|---|---|
@@ -3600,6 +3619,7 @@ _nenhum item encontrado_
 | `src/test/luckyWheelAudit.simulation.test.ts` | 30 | diffSnapshots — detecção de alterações · não reporta mudança quando os snapshots são idênticos · detecta exatamente o conjunto de campos alterados em 400 cenários · ignora ruído de serialização JSON (número como string, boolean como string) … |
 | `src/test/campaignTeamSplit.simulation.test.ts` | 29 | rateio team_split — arredondamento · replica ROUND() do Postgres (half away from zero) · rateio team_split — grade combinatória · t=${teams} m=${members} ${mode} xp=${pool.xp} coins=${pool.coins} … |
 | `src/test/bossReport.edgecases.test.ts` | 25 | buildBossReport — fronteiras da janela · inclui os extremos exatos e exclui 1 ms fora · janela 0 traz todo o histórico, inclusive o futuro registrado · normaliza dias inválidos (NaN, negativo, fracionário) … |
+| `src/test/climateSurveysFlow.test.tsx` | 25 | ClimateSurveyAnswerForm · envia a nota escolhida para cada pergunta respondida · bloqueia o envio quando nenhuma pergunta foi respondida · quando a pesquisa não permite pular, cobra todas as perguntas obrigatórias … |
 | `src/test/wagerBulkImport.test.ts` | 25 | parseWagerImportCsv · importa uma linha válida · rejeita arquivo vazio · exige colunas obrigatórias … |
 | `src/test/tournamentBracket.simulation.test.ts` | 23 | tournamentBracket — tamanho e rodadas · rejeita torneios com menos de 2 participantes · sempre gera potência de 2 >= participantes (2..256) · tournamentBracket — chaveamento canônico … |
 | `src/test/luckyWheelPayout.simulation.test.ts` | 22 | payout — convergência estatística · 100.000 giros simulados ficam dentro da faixa de normalidade (\|z\| < 3.5) · custo realizado converge para o projetado em amostra grande (< 3%) · 200 amostras independentes: no máximo 5% dos setores marcados como anomalia … |
@@ -3613,6 +3633,7 @@ _nenhum item encontrado_
 | `src/test/wagerScheduleExport.test.ts` | 21 | buildWagerScheduleCsv · gera cabeçalho e uma linha por pergunta · ordena por data agendada · exporta o gabarito como letra posicional … |
 | `src/test/bingoRpc.simulation.test.ts` | 20 | get_or_create_bingo_card — idempotência · retorna sempre a MESMA cartela em chamadas repetidas · id explícito e id implícito convergem para a mesma cartela · isola cartelas por usuário e por tabuleiro … |
 | `src/test/cardPackTriggers.simulation.test.ts` | 20 | gatilho de tarefa no prazo · cobre todas as transições de status (25 cenários) · insert já concluído paga uma única vez · rejeita entrega com atraso ou retrabalho (200 cenários) … |
+| `src/test/climateSurveyService.test.ts` | 20 | climateSurveyService · submitResponse · envia as respostas pela RPC com score e texto normalizados · traduz a violação de unicidade (23505) em mensagem clara … |
 | `src/test/departmentWarConfig.simulation.test.ts` | 20 | departmentWarConfig — normalizacao · nunca lanca e sempre devolve estrutura valida em 600 cenarios aleatorios · deduplica metricas e departamentos por chave · e idempotente: normalizar duas vezes nao muda nada … |
 | `src/test/engagementInsights.simulation.test.ts` | 20 | engagementInsights — entradas degeneradas · nunca lança e sempre devolve array · engagementInsights — matriz de pilares · cobre score × respondentes sem violar guardas … |
 | `src/test/opinionChannel.simulation.test.ts` | 20 | sanitizeOpinionText — texto livre hostil · remove controle, bidi e colapsa espaços em todas as combinações · nunca lança com entradas não textuais · trunca conteúdo gigante mantendo o limite … |

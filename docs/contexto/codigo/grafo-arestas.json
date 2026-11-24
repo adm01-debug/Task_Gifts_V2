@@ -51,6 +51,8 @@
    "src/pages/CertificateVerify.tsx",
    "src/pages/Checkins.tsx",
    "src/pages/ClimateDiagnostics.tsx",
+   "src/pages/ClimateSurveyAdmin.tsx",
+   "src/pages/ClimateSurveys.tsx",
    "src/pages/ContinuousEngagement.tsx",
    "src/pages/DailyQuiz.tsx",
    "src/pages/DailyWagerPage.tsx",
@@ -1681,6 +1683,42 @@
    "src/components/ui/scroll-area.tsx",
    "src/components/ui/skeleton.tsx",
    "src/services/oneOnOnePreparationService.ts"
+  ],
+  "src/components/climate/ClimateSurveyAnswerForm.tsx": [
+   "src/components/ui/badge.tsx",
+   "src/components/ui/button.tsx",
+   "src/components/ui/label.tsx",
+   "src/components/ui/radio-group.tsx",
+   "src/components/ui/textarea.tsx",
+   "src/services/climateSurveyService.ts"
+  ],
+  "src/components/climate/ClimateSurveyForm.tsx": [
+   "src/components/ui/button.tsx",
+   "src/components/ui/input.tsx",
+   "src/components/ui/label.tsx",
+   "src/components/ui/select.tsx",
+   "src/components/ui/switch.tsx",
+   "src/components/ui/textarea.tsx",
+   "src/services/climateSurveyService.ts"
+  ],
+  "src/components/climate/ClimateSurveyQuestions.tsx": [
+   "src/components/ui/badge.tsx",
+   "src/components/ui/button.tsx",
+   "src/components/ui/input.tsx",
+   "src/components/ui/label.tsx",
+   "src/components/ui/select.tsx",
+   "src/components/ui/switch.tsx",
+   "src/services/climateSurveyService.ts"
+  ],
+  "src/components/climate/ClimateSurveyResults.tsx": [
+   "src/components/engagement/diagnostics/AnonymityGuardNotice.tsx",
+   "src/components/ui/badge.tsx",
+   "src/components/ui/button.tsx",
+   "src/components/ui/card.tsx",
+   "src/components/ui/progress.tsx",
+   "src/components/ui/skeleton.tsx",
+   "src/hooks/useClimateSurveys.ts",
+   "src/services/climateSurveyService.ts"
   ],
   "src/components/copilot/CopilotAlertCard.tsx": [
    "src/components/ui/avatar.tsx",
@@ -3504,7 +3542,8 @@
    "src/services/churnPredictionService.ts"
   ],
   "src/hooks/useClimateSurveys.ts": [
-   "src/services/climateSurveyService.ts"
+   "src/services/climateSurveyService.ts",
+   "src/services/engagementDiagnosticsService.ts"
   ],
   "src/hooks/useCombo.ts": [
    "src/hooks/useAuth.tsx",
@@ -4418,6 +4457,41 @@
    "src/lib/climateBenchmark.ts",
    "src/lib/npsHistory.ts",
    "src/services/engagementDiagnosticsService.ts"
+  ],
+  "src/pages/ClimateSurveyAdmin.tsx": [
+   "src/components/PageWrapper.tsx",
+   "src/components/SEOHead.tsx",
+   "src/components/climate/ClimateSurveyForm.tsx",
+   "src/components/climate/ClimateSurveyQuestions.tsx",
+   "src/components/climate/ClimateSurveyResults.tsx",
+   "src/components/mobile/index.ts",
+   "src/components/navigation/index.ts",
+   "src/components/ui/badge.tsx",
+   "src/components/ui/button.tsx",
+   "src/components/ui/card.tsx",
+   "src/components/ui/skeleton.tsx",
+   "src/hooks/use-mobile.tsx",
+   "src/hooks/useAuth.tsx",
+   "src/hooks/useClimateSurveys.ts",
+   "src/hooks/useRBAC.ts",
+   "src/hooks/useSEO.ts"
+  ],
+  "src/pages/ClimateSurveys.tsx": [
+   "src/components/PageWrapper.tsx",
+   "src/components/SEOHead.tsx",
+   "src/components/climate/ClimateSurveyAnswerForm.tsx",
+   "src/components/mobile/index.ts",
+   "src/components/navigation/index.ts",
+   "src/components/ui/badge.tsx",
+   "src/components/ui/button.tsx",
+   "src/components/ui/card.tsx",
+   "src/components/ui/skeleton.tsx",
+   "src/hooks/use-mobile.tsx",
+   "src/hooks/useAuth.tsx",
+   "src/hooks/useClimateSurveys.ts",
+   "src/hooks/useRBAC.ts",
+   "src/hooks/useSEO.ts",
+   "src/services/climateSurveyService.ts"
   ],
   "src/pages/ContinuousEngagement.tsx": [
    "src/components/engagement/ContinuousSurveyWidget.tsx",
@@ -5431,6 +5505,7 @@
   "src/services/climateSurveyService.ts": [
    "src/integrations/supabase/client.ts",
    "src/integrations/supabase/types.ts",
+   "src/services/engagementDiagnosticsService.ts",
    "src/services/loggingService.ts"
   ],
   "src/services/comboService.ts": [

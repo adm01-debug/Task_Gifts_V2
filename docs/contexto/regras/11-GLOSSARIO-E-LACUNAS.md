@@ -1,6 +1,6 @@
 # 11 · GLOSSÁRIO, DADOS DE REFERÊNCIA E LACUNAS
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `eff597a611` · branch `main` · 2026-11-24 04:17 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `9a048250d3` · branch `main` · 2026-11-24 09:57 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## Glossário do domínio (entidades do sistema)
@@ -415,6 +415,7 @@ _nenhum item encontrado_
 - `webhook_subscriptions.last_status` é uma coluna de status sem enum/CHECK — os valores válidos e as transições permitidas não estão no banco.
 - `webhook_delivery_logs.response_status` é uma coluna de status sem enum/CHECK — os valores válidos e as transições permitidas não estão no banco.
 - `external_tasks.status` é uma coluna de status sem enum/CHECK — os valores válidos e as transições permitidas não estão no banco.
+- `climate_surveys.status` é uma coluna de status sem enum/CHECK — os valores válidos e as transições permitidas não estão no banco.
 - `feedback_evaluations.status` é uma coluna de status sem enum/CHECK — os valores válidos e as transições permitidas não estão no banco.
 - `pdi_mentors.status` é uma coluna de status sem enum/CHECK — os valores válidos e as transições permitidas não estão no banco.
 - `webhook_idempotency.status` é uma coluna de status sem enum/CHECK — os valores válidos e as transições permitidas não estão no banco.

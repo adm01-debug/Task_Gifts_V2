@@ -1,20 +1,20 @@
 {
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
- "nos": 1007,
- "arestas": 4371,
+ "nos": 1013,
+ "arestas": 4434,
  "hubs": [
   {
    "arquivo": "src/components/ui/card.tsx",
-   "importado_por": 293
+   "importado_por": 296
   },
   {
    "arquivo": "src/components/ui/button.tsx",
-   "importado_por": 288
+   "importado_por": 294
   },
   {
    "arquivo": "src/components/ui/badge.tsx",
-   "importado_por": 244
+   "importado_por": 249
   },
   {
    "arquivo": "src/lib/utils.ts",
@@ -26,11 +26,11 @@
   },
   {
    "arquivo": "src/components/ui/skeleton.tsx",
-   "importado_por": 155
+   "importado_por": 158
   },
   {
    "arquivo": "src/hooks/useAuth.tsx",
-   "importado_por": 105
+   "importado_por": 107
   },
   {
    "arquivo": "src/services/loggingService.ts",
@@ -38,19 +38,19 @@
   },
   {
    "arquivo": "src/components/ui/input.tsx",
-   "importado_por": 92
+   "importado_por": 94
   },
   {
    "arquivo": "src/components/ui/select.tsx",
-   "importado_por": 92
+   "importado_por": 94
   },
   {
    "arquivo": "src/components/ui/progress.tsx",
-   "importado_por": 87
+   "importado_por": 88
   },
   {
    "arquivo": "src/components/ui/label.tsx",
-   "importado_por": 80
+   "importado_por": 83
   },
   {
    "arquivo": "src/components/ui/dialog.tsx",
@@ -58,23 +58,23 @@
   },
   {
    "arquivo": "src/components/navigation/index.ts",
-   "importado_por": 59
+   "importado_por": 61
   },
   {
    "arquivo": "src/components/ui/textarea.tsx",
-   "importado_por": 56
+   "importado_por": 58
+  },
+  {
+   "arquivo": "src/components/SEOHead.tsx",
+   "importado_por": 44
   },
   {
    "arquivo": "src/components/ui/avatar.tsx",
    "importado_por": 44
   },
   {
-   "arquivo": "src/components/SEOHead.tsx",
-   "importado_por": 42
-  },
-  {
    "arquivo": "src/components/ui/switch.tsx",
-   "importado_por": 41
+   "importado_por": 43
   },
   {
    "arquivo": "src/components/ui/tabs.tsx",
@@ -93,11 +93,11 @@
    "importado_por": 32
   },
   {
-   "arquivo": "src/hooks/useHaptics.ts",
-   "importado_por": 30
+   "arquivo": "src/hooks/useRBAC.ts",
+   "importado_por": 32
   },
   {
-   "arquivo": "src/hooks/useRBAC.ts",
+   "arquivo": "src/hooks/useHaptics.ts",
    "importado_por": 30
   },
   {
@@ -105,12 +105,12 @@
    "importado_por": 30
   },
   {
-   "arquivo": "src/hooks/useDepartments.ts",
+   "arquivo": "src/hooks/use-mobile.tsx",
    "importado_por": 27
   },
   {
-   "arquivo": "src/hooks/use-mobile.tsx",
-   "importado_por": 25
+   "arquivo": "src/hooks/useDepartments.ts",
+   "importado_por": 27
   },
   {
    "arquivo": "supabase/functions/_shared/contracts/common.ts",
@@ -129,11 +129,15 @@
    "importado_por": 21
   },
   {
+   "arquivo": "src/hooks/useSEO.ts",
+   "importado_por": 21
+  },
+  {
    "arquivo": "supabase/functions/_shared/validation.ts",
    "importado_por": 20
   },
   {
-   "arquivo": "src/hooks/useSEO.ts",
+   "arquivo": "src/services/climateSurveyService.ts",
    "importado_por": 19
   },
   {
@@ -159,14 +163,10 @@
   {
    "arquivo": "src/services/profilesService.ts",
    "importado_por": 17
-  },
-  {
-   "arquivo": "src/components/ui/empty-state.tsx",
-   "importado_por": 16
   }
  ],
  "ciclos": {
-  "total": 2,
+  "total": 3,
   "maiores": [
    {
     "tamanho": 3,
@@ -174,6 +174,14 @@
      "src/components/admin/telemetry/TelemetryStatsCards.tsx",
      "src/components/admin/telemetry/TopOffendersCard.tsx",
      "src/pages/AdminTelemetria.tsx"
+    ]
+   },
+   {
+    "tamanho": 3,
+    "arquivos": [
+     "src/lib/climateBenchmark.ts",
+     "src/services/climateSurveyService.ts",
+     "src/services/engagementDiagnosticsService.ts"
     ]
    },
    {
@@ -217,7 +225,6 @@
   "src/components/ui/use-toast.ts",
   "src/components/weekly/WeeklyMetricCards.tsx",
   "src/constants/texts.ts",
-  "src/hooks/useClimateSurveys.ts",
   "src/hooks/usePDI.ts",
   "src/lib/auctionEngine.ts",
   "src/lib/bossAlerts.ts",
@@ -235,17 +242,17 @@
   {
    "modulo": "components/ui",
    "depende_de": 2,
-   "importado_por": 55
+   "importado_por": 56
   },
   {
    "modulo": "pages",
-   "depende_de": 52,
+   "depende_de": 53,
    "importado_por": 1
   },
   {
    "modulo": "hooks",
    "depende_de": 8,
-   "importado_por": 42
+   "importado_por": 43
   },
   {
    "modulo": "lib",
@@ -255,7 +262,7 @@
   {
    "modulo": "services",
    "depende_de": 4,
-   "importado_por": 30
+   "importado_por": 31
   },
   {
    "modulo": "components",
@@ -298,6 +305,11 @@
    "importado_por": 1
   },
   {
+   "modulo": "components/engagement",
+   "depende_de": 4,
+   "importado_por": 2
+  },
+  {
    "modulo": "components/lms",
    "depende_de": 4,
    "importado_por": 2
@@ -324,11 +336,6 @@
   },
   {
    "modulo": "components/quiz",
-   "depende_de": 5,
-   "importado_por": 1
-  },
-  {
-   "modulo": "components/security",
    "depende_de": 5,
    "importado_por": 1
   }

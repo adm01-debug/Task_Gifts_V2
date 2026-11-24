@@ -215,7 +215,7 @@
    "edges": [],
    "hooks_internos": [],
    "canais_realtime": [],
-   "usado_por": 14,
+   "usado_por": 16,
    "usado_por_arquivos": [
     "src/App.tsx",
     "src/pages/ActionPlans.tsx",
@@ -223,6 +223,8 @@
     "src/pages/Attendance.tsx",
     "src/pages/Checkins.tsx",
     "src/pages/ClimateDiagnostics.tsx",
+    "src/pages/ClimateSurveyAdmin.tsx",
+    "src/pages/ClimateSurveys.tsx",
     "src/pages/ContinuousEngagement.tsx",
     "src/pages/DailyQuiz.tsx",
     "src/pages/Index.tsx",
@@ -268,7 +270,7 @@
    "edges": [],
    "hooks_internos": [],
    "canais_realtime": [],
-   "usado_por": 59,
+   "usado_por": 61,
    "usado_por_arquivos": [
     "src/pages/Achievements.tsx",
     "src/pages/ActionPlans.tsx",
@@ -288,6 +290,8 @@
     "src/pages/CardAlbumPage.tsx",
     "src/pages/Checkins.tsx",
     "src/pages/ClimateDiagnostics.tsx",
+    "src/pages/ClimateSurveyAdmin.tsx",
+    "src/pages/ClimateSurveys.tsx",
     "src/pages/ContinuousEngagement.tsx",
     "src/pages/DailyQuiz.tsx",
     "src/pages/DailyWagerPage.tsx",
@@ -297,9 +301,7 @@
     "src/pages/ExecutiveDashboard.tsx",
     "src/pages/Feedback.tsx",
     "src/pages/Goals.tsx",
-    "src/pages/Index.tsx",
-    "src/pages/Leagues.tsx",
-    "src/pages/LearningTrails.tsx"
+    "src/pages/Index.tsx"
    ],
    "coberto_por_testes": 0
   },
@@ -625,7 +627,7 @@
     "useState"
    ],
    "canais_realtime": [],
-   "usado_por": 25,
+   "usado_por": 27,
    "usado_por_arquivos": [
     "src/App.tsx",
     "src/components/FloatingActionButton.tsx",
@@ -643,6 +645,8 @@
     "src/pages/Attendance.tsx",
     "src/pages/Checkins.tsx",
     "src/pages/ClimateDiagnostics.tsx",
+    "src/pages/ClimateSurveyAdmin.tsx",
+    "src/pages/ClimateSurveys.tsx",
     "src/pages/ContinuousEngagement.tsx",
     "src/pages/DailyQuiz.tsx",
     "src/pages/Goals.tsx",
@@ -1058,7 +1062,7 @@
     "useState"
    ],
    "canais_realtime": [],
-   "usado_por": 103,
+   "usado_por": 105,
    "usado_por_arquivos": [
     "src/App.tsx",
     "src/components/ActivityComments.tsx",
@@ -1490,13 +1494,16 @@
     "useClimateSurveys",
     "useCreateClimateSurvey",
     "useCreateSurveyQuestion",
+    "useDeleteSurveyQuestion",
     "useENPS",
+    "useMyAnsweredSurveyIds",
     "usePillarScores",
+    "useRecalculatePillarScores",
     "useSubmitSurveyResponse",
     "useSurveyQuestions",
     "useUpdateClimateSurvey"
    ],
-   "linhas": 112,
+   "linhas": 158,
    "dominio": "hooks",
    "tabelas": [],
    "rpcs": [],
@@ -1507,8 +1514,12 @@
     "useQueryClient"
    ],
    "canais_realtime": [],
-   "usado_por": 0,
-   "usado_por_arquivos": [],
+   "usado_por": 3,
+   "usado_por_arquivos": [
+    "src/components/climate/ClimateSurveyResults.tsx",
+    "src/pages/ClimateSurveyAdmin.tsx",
+    "src/pages/ClimateSurveys.tsx"
+   ],
    "coberto_por_testes": 0
   },
   {
@@ -3476,7 +3487,7 @@
     "useQuery"
    ],
    "canais_realtime": [],
-   "usado_por": 29,
+   "usado_por": 31,
    "usado_por_arquivos": [
     "src/components/ExecutiveReportPreferenceToggle.tsx",
     "src/components/admin/UsersManager.tsx",
@@ -3494,6 +3505,8 @@
     "src/pages/BoardTrailPage.tsx",
     "src/pages/BossBattlePage.tsx",
     "src/pages/ClimateDiagnostics.tsx",
+    "src/pages/ClimateSurveyAdmin.tsx",
+    "src/pages/ClimateSurveys.tsx",
     "src/pages/ContinuousEngagement.tsx",
     "src/pages/DepartmentWarPage.tsx",
     "src/pages/Feedback.tsx",
@@ -3505,8 +3518,7 @@
     "src/pages/SalesCampaigns.tsx",
     "src/pages/SecurityRunbook.tsx",
     "src/pages/TournamentsPage.tsx",
-    "src/pages/TrailDetail.tsx",
-    "src/services/rbacService.ts"
+    "src/pages/TrailDetail.tsx"
    ],
    "coberto_por_testes": 1
   },
@@ -3715,13 +3727,15 @@
     "useMemo"
    ],
    "canais_realtime": [],
-   "usado_por": 19,
+   "usado_por": 21,
    "usado_por_arquivos": [
     "src/pages/Achievements.tsx",
     "src/pages/AdminPanel.tsx",
     "src/pages/Announcements.tsx",
     "src/pages/Attendance.tsx",
     "src/pages/BIDashboard.tsx",
+    "src/pages/ClimateSurveyAdmin.tsx",
+    "src/pages/ClimateSurveys.tsx",
     "src/pages/DailyQuiz.tsx",
     "src/pages/Duels.tsx",
     "src/pages/ExecutiveDashboard.tsx",

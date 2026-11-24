@@ -1,7 +1,7 @@
 {
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
- "total": 523,
+ "total": 529,
  "orfaos": 23,
  "nomes_duplicados": {
   "CopilotAlert": [
@@ -44,7 +44,7 @@
     "App"
    ],
    "export_default": "App",
-   "linhas": 336,
+   "linhas": 340,
    "dominio": null,
    "hooks_locais": [
     "useAuth",
@@ -1102,7 +1102,7 @@
     "AppSidebar"
    ],
    "export_default": null,
-   "linhas": 175,
+   "linhas": 177,
    "dominio": "components",
    "hooks_locais": [],
    "tabelas": [],
@@ -2174,6 +2174,68 @@
    "orfao": false
   },
   {
+   "arquivo": "src/components/climate/ClimateSurveyAnswerForm.tsx",
+   "exports": [
+    "ClimateSurveyAnswerForm"
+   ],
+   "export_default": null,
+   "linhas": 176,
+   "dominio": "components/climate",
+   "hooks_locais": [],
+   "tabelas": [],
+   "edges": [],
+   "usado_por": 1,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/components/climate/ClimateSurveyForm.tsx",
+   "exports": [
+    "ClimateSurveyForm",
+    "NewClimateSurvey"
+   ],
+   "export_default": null,
+   "linhas": 188,
+   "dominio": "components/climate",
+   "hooks_locais": [],
+   "tabelas": [],
+   "edges": [],
+   "usado_por": 1,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/components/climate/ClimateSurveyQuestions.tsx",
+   "exports": [
+    "ClimateSurveyQuestions"
+   ],
+   "export_default": null,
+   "linhas": 196,
+   "dominio": "components/climate",
+   "hooks_locais": [],
+   "tabelas": [],
+   "edges": [],
+   "usado_por": 1,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/components/climate/ClimateSurveyResults.tsx",
+   "exports": [
+    "ClimateSurveyResults"
+   ],
+   "export_default": null,
+   "linhas": 156,
+   "dominio": "components/climate",
+   "hooks_locais": [
+    "useENPS",
+    "usePillarScores",
+    "useRecalculatePillarScores",
+    "useSurveyQuestions"
+   ],
+   "tabelas": [],
+   "edges": [],
+   "usado_por": 1,
+   "orfao": false
+  },
+  {
    "arquivo": "src/components/ComboHistory.tsx",
    "exports": [
     "ComboHistory"
@@ -2211,7 +2273,7 @@
     "CommandPalette"
    ],
    "export_default": null,
-   "linhas": 275,
+   "linhas": 276,
    "dominio": "components",
    "hooks_locais": [
     "useAuth",
@@ -2643,7 +2705,7 @@
    "hooks_locais": [],
    "tabelas": [],
    "edges": [],
-   "usado_por": 2,
+   "usado_por": 3,
    "orfao": false
   },
   {
@@ -3785,7 +3847,7 @@
     "MobileDrawer"
    ],
    "export_default": null,
-   "linhas": 302,
+   "linhas": 303,
    "dominio": "components",
    "hooks_locais": [
     "useAuth",
@@ -4124,7 +4186,7 @@
    ],
    "tabelas": [],
    "edges": [],
-   "usado_por": 14,
+   "usado_por": 16,
    "orfao": false
   },
   {
@@ -5972,7 +6034,7 @@
    "hooks_locais": [],
    "tabelas": [],
    "edges": [],
-   "usado_por": 244,
+   "usado_por": 249,
    "orfao": false
   },
   {
@@ -6009,7 +6071,7 @@
    ],
    "tabelas": [],
    "edges": [],
-   "usado_por": 288,
+   "usado_por": 294,
    "orfao": false
   },
   {
@@ -6044,7 +6106,7 @@
    "hooks_locais": [],
    "tabelas": [],
    "edges": [],
-   "usado_por": 293,
+   "usado_por": 296,
    "orfao": false
   },
   {
@@ -6349,7 +6411,7 @@
    "hooks_locais": [],
    "tabelas": [],
    "edges": [],
-   "usado_por": 92,
+   "usado_por": 94,
    "orfao": false
   },
   {
@@ -6363,7 +6425,7 @@
    "hooks_locais": [],
    "tabelas": [],
    "edges": [],
-   "usado_por": 80,
+   "usado_por": 83,
    "orfao": false
   },
   {
@@ -6588,7 +6650,7 @@
    "hooks_locais": [],
    "tabelas": [],
    "edges": [],
-   "usado_por": 87,
+   "usado_por": 88,
    "orfao": false
   },
   {
@@ -6603,7 +6665,7 @@
    "hooks_locais": [],
    "tabelas": [],
    "edges": [],
-   "usado_por": 6,
+   "usado_por": 7,
    "orfao": false
   },
   {
@@ -6680,7 +6742,7 @@
    "hooks_locais": [],
    "tabelas": [],
    "edges": [],
-   "usado_por": 92,
+   "usado_por": 94,
    "orfao": false
   },
   {
@@ -6803,7 +6865,7 @@
    "hooks_locais": [],
    "tabelas": [],
    "edges": [],
-   "usado_por": 155,
+   "usado_por": 158,
    "orfao": false
   },
   {
@@ -6877,7 +6939,7 @@
    "hooks_locais": [],
    "tabelas": [],
    "edges": [],
-   "usado_por": 41,
+   "usado_por": 43,
    "orfao": false
   },
   {
@@ -6945,7 +7007,7 @@
    "hooks_locais": [],
    "tabelas": [],
    "edges": [],
-   "usado_por": 56,
+   "usado_por": 58,
    "orfao": false
   },
   {
@@ -7330,7 +7392,7 @@
    ],
    "tabelas": [],
    "edges": [],
-   "usado_por": 103,
+   "usado_por": 105,
    "orfao": false
   },
   {
@@ -7802,6 +7864,55 @@
     "useGenerateActionPlanFromFactor",
     "useIsMobile",
     "useRBAC"
+   ],
+   "tabelas": [],
+   "edges": [],
+   "usado_por": 1,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/pages/ClimateSurveyAdmin.tsx",
+   "exports": [
+    "ClimateSurveyAdmin"
+   ],
+   "export_default": "ClimateSurveyAdmin",
+   "linhas": 266,
+   "dominio": "pages",
+   "hooks_locais": [
+    "useAuth",
+    "useClimateSurveys",
+    "useCreateClimateSurvey",
+    "useCreateSurveyQuestion",
+    "useDeleteSurveyQuestion",
+    "useIsMobile",
+    "useRBAC",
+    "useSEO",
+    "useSurveyQuestions",
+    "useUpdateClimateSurvey"
+   ],
+   "tabelas": [],
+   "edges": [],
+   "usado_por": 1,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/pages/ClimateSurveys.tsx",
+   "exports": [
+    "ClimateSurveyCard",
+    "ClimateSurveys"
+   ],
+   "export_default": "ClimateSurveys",
+   "linhas": 207,
+   "dominio": "pages",
+   "hooks_locais": [
+    "useAuth",
+    "useClimateSurveys",
+    "useIsMobile",
+    "useMyAnsweredSurveyIds",
+    "useRBAC",
+    "useSEO",
+    "useSubmitSurveyResponse",
+    "useSurveyQuestions"
    ],
    "tabelas": [],
    "edges": [],

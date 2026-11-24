@@ -316,7 +316,7 @@
     "TablesUpdate"
    ],
    "export_default": null,
-   "linhas": 12973,
+   "linhas": 12985,
    "tabelas": [],
    "rpcs": [],
    "edges": [],
@@ -4910,34 +4910,40 @@
     "ClimatePillar",
     "ClimatePillarScore",
     "ClimateSurvey",
+    "ClimateSurveyEnps",
     "ClimateSurveyQuestion",
     "PILLAR_LABELS",
     "climateSurveyService"
    ],
    "export_default": null,
-   "linhas": 251,
+   "linhas": 275,
    "tabelas": [
     "climate_pillar_scores",
-    "climate_question_answers",
     "climate_survey_questions",
     "climate_survey_responses",
     "climate_surveys"
    ],
-   "rpcs": [],
+   "rpcs": [
+    "climate_recalculate_pillar_scores",
+    "climate_submit_response",
+    "climate_survey_enps"
+   ],
    "edges": [],
    "env": [],
    "externos": [],
    "zod_schemas": 0,
    "flags": [],
    "papeis": [],
-   "usado_por": 11,
+   "usado_por": 16,
    "usado_por_modulos": [
+    "components/climate",
     "components/engagement",
     "hooks",
     "lib",
+    "pages",
     "services"
    ],
-   "coberto_por_testes": 1,
+   "coberto_por_testes": 3,
    "orfao": false
   },
   {
@@ -5269,7 +5275,7 @@
    "zod_schemas": 0,
    "flags": [],
    "papeis": [],
-   "usado_por": 10,
+   "usado_por": 12,
    "usado_por_modulos": [
     "components/engagement",
     "hooks",

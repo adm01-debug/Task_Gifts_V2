@@ -3,14 +3,14 @@
  "format_version": 2,
  "stack": {
   "linguagens": [
-   "TypeScript (1144)",
-   "SQL (275)",
-   "Markdown (55)",
+   "TypeScript (1152)",
+   "SQL (278)",
+   "Markdown (56)",
    "JavaScript (24)",
    "JSON (14)",
    "YAML (9)",
    "Python (5)",
-   "Shell (4)"
+   "Shell (5)"
   ],
   "linguagem_principal": "TypeScript",
   "framework": "React",
@@ -707,7 +707,7 @@
    },
    {
     "papel": "alert",
-    "ocorrencias": 9
+    "ocorrencias": 12
    },
    {
     "papel": "user",
@@ -856,7 +856,7 @@
    "src/components/rbac/AccessControl.tsx",
    "src/components/rbac/ProtectedRoute.tsx"
   ],
-  "rotas_protegidas": 79,
+  "rotas_protegidas": 81,
   "rotas_publicas": [
    "/*",
    "/forgot-password",

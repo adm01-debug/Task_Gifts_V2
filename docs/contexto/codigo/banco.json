@@ -6,7 +6,7 @@
   "src/integrations/supabase/types.ts",
   "supabase/migrations"
  ],
- "migrations": 275,
+ "migrations": 276,
  "seeds": [],
  "avisos": [
   "11 bloco(s) com DDL dinâmico (EXECUTE format/...) não modelado — policies/colunas criadas dinamicamente podem faltar; confira no banco vivo"
@@ -172,6 +172,7 @@
  "funcoes": [
   "_card_rarity_value",
   "_card_set_milestone_split",
+  "_climate_recompute_pillar_scores",
   "_grant_card_pack_internal",
   "_guard_manager_or_admin_if_user",
   "_require_admin",
@@ -221,6 +222,9 @@
   "cleanup_expired_challenges",
   "cleanup_expired_idempotency_keys",
   "cleanup_old_security_logs",
+  "climate_recalculate_pillar_scores",
+  "climate_submit_response",
+  "climate_survey_enps",
   "close_auction",
   "close_expired_auctions",
   "close_expired_sales_campaigns",
@@ -8516,6 +8520,11 @@
    ],
    "indices": [
     {
+     "nome": "climate_pillar_scores_global_key",
+     "colunas": "survey_id, pillar",
+     "unico": true
+    },
+    {
      "nome": "idx_climate_pillar_scores_survey",
      "colunas": "survey_id",
      "unico": false
@@ -8609,18 +8618,6 @@
    "rls": true,
    "policies": [
     {
-     "nome": "Users can answer questions",
-     "comando": "insert",
-     "para": "public",
-     "tipo": "permissive"
-    },
-    {
-     "nome": "Users update own answers",
-     "comando": "update",
-     "para": "public",
-     "tipo": "permissive"
-    },
-    {
      "nome": "Users view own answers",
      "comando": "select",
      "para": "public",
@@ -8647,11 +8644,11 @@
     "so_na_migration": [],
     "so_no_types": []
    },
-   "usada_no_front": 1,
+   "usada_no_front": 0,
    "usada_em_edges": [],
    "triggers": [],
    "sem_rls": false,
-   "nao_usada": false
+   "nao_usada": true
   },
   "climate_survey_questions": {
    "colunas": {
@@ -8736,8 +8733,20 @@
    "rls": true,
    "policies": [
     {
-     "nome": "Manage survey questions",
-     "comando": "all",
+     "nome": "Managers can add survey questions",
+     "comando": "insert",
+     "para": "public",
+     "tipo": "permissive"
+    },
+    {
+     "nome": "Managers can delete draft survey questions",
+     "comando": "delete",
+     "para": "public",
+     "tipo": "permissive"
+    },
+    {
+     "nome": "Managers can update survey questions",
+     "comando": "update",
      "para": "public",
      "tipo": "permissive"
     },
@@ -8844,18 +8853,6 @@
    "rls": true,
    "policies": [
     {
-     "nome": "Users can submit responses",
-     "comando": "insert",
-     "para": "public",
-     "tipo": "permissive"
-    },
-    {
-     "nome": "Users can update own responses",
-     "comando": "update",
-     "para": "public",
-     "tipo": "permissive"
-    },
-    {
      "nome": "Users can view own responses",
      "comando": "select",
      "para": "public",
@@ -8863,6 +8860,11 @@
     }
    ],
    "indices": [
+    {
+     "nome": "climate_survey_responses_survey_user_key",
+     "colunas": "survey_id, user_id",
+     "unico": true
+    },
     {
      "nome": "idx_climate_survey_responses_survey",
      "colunas": "survey_id",
@@ -31339,6 +31341,21 @@
    "nome": "cleanup_old_security_logs",
    "definida": true,
    "usada_em": 2
+  },
+  {
+   "nome": "climate_recalculate_pillar_scores",
+   "definida": true,
+   "usada_em": 1
+  },
+  {
+   "nome": "climate_submit_response",
+   "definida": true,
+   "usada_em": 1
+  },
+  {
+   "nome": "climate_survey_enps",
+   "definida": true,
+   "usada_em": 1
   },
   {
    "nome": "close_auction",

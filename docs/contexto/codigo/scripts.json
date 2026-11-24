@@ -1,7 +1,7 @@
 {
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
- "total": 16,
+ "total": 17,
  "scripts": [
   {
    "arquivo": "scripts/automation.mjs",
@@ -56,6 +56,19 @@
    "linhas": 108,
    "env": [],
    "npm_scripts": [],
+   "workflows": [],
+   "orfao": false
+  },
+  {
+   "arquivo": "scripts/climate-sql-check/run.sh",
+   "descricao": "Roda as assercoes versionadas do motor de Pesquisa de Clima num Postgres 16 efemero. Uso: bash scripts/climate-sql-check/run.sh",
+   "linhas": 36,
+   "env": [],
+   "npm_scripts": [
+    "maintenance:doctor",
+    "maintenance:check",
+    "maintenance:heal"
+   ],
    "workflows": [],
    "orfao": false
   },

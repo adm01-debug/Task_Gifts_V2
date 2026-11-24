@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "eff597a611ab9a2160daa6dc300271b3290da3f0",
+  "sha": "9a048250d34237f5621ff5741f08659420c12e2a",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
-  "generated_at": "2026-11-24 04:17 UTC",
-  "files_total": 1557,
-  "code_files": 1453,
-  "code_lines": 262815
+  "generated_at": "2026-11-24 09:57 UTC",
+  "files_total": 1571,
+  "code_files": 1464,
+  "code_lines": 265605
  },
  "version": "1.3.2",
- "facts_hash": "0a43ec2503891fb1",
+ "facts_hash": "0369f26309e519b9",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -194,9 +194,9 @@
   ],
   "package_manager": "bun",
   "languages": {
-   ".ts": 577,
-   ".tsx": 569,
-   ".sql": 275,
+   ".ts": 578,
+   ".tsx": 576,
+   ".sql": 278,
    ".mjs": 21,
    ".js": 5,
    ".py": 5,
@@ -550,49 +550,49 @@
     "columns": [
      {
       "name": "id",
-      "type": "UUID PRIMARY KEY DEFAULT gen_random_uuid()",
+      "type": "uuid primary key default gen_random_uuid()",
       "fk": "",
       "generated": "",
-      "src": "supabase/migrations/20251212193329_5c696f63-c339-422b-ae1a-5164c51e7f44.sql"
-     },
-     {
-      "name": "name",
-      "type": "TEXT NOT NULL",
-      "fk": "",
-      "generated": "",
-      "src": "supabase/migrations/20251212193329_5c696f63-c339-422b-ae1a-5164c51e7f44.sql"
-     },
-     {
-      "name": "description",
-      "type": "TEXT",
-      "fk": "",
-      "generated": "",
-      "src": "supabase/migrations/20251212193329_5c696f63-c339-422b-ae1a-5164c51e7f44.sql"
+      "src": "supabase/tests/climate/stubs.sql"
      },
      {
       "name": "color",
-      "type": "TEXT DEFAULT '#6366f1'",
+      "type": "string | null",
       "fk": "",
       "generated": "",
-      "src": "supabase/migrations/20251212193329_5c696f63-c339-422b-ae1a-5164c51e7f44.sql"
+      "src": "src/integrations/supabase/types.ts"
      },
      {
       "name": "created_at",
-      "type": "TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now()",
+      "type": "string not null",
       "fk": "",
       "generated": "",
-      "src": "supabase/migrations/20251212193329_5c696f63-c339-422b-ae1a-5164c51e7f44.sql"
+      "src": "src/integrations/supabase/types.ts"
+     },
+     {
+      "name": "description",
+      "type": "string | null",
+      "fk": "",
+      "generated": "",
+      "src": "src/integrations/supabase/types.ts"
+     },
+     {
+      "name": "name",
+      "type": "string not null",
+      "fk": "",
+      "generated": "",
+      "src": "src/integrations/supabase/types.ts"
      },
      {
       "name": "updated_at",
-      "type": "TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now()",
+      "type": "string not null",
       "fk": "",
       "generated": "",
-      "src": "supabase/migrations/20251212193329_5c696f63-c339-422b-ae1a-5164c51e7f44.sql"
+      "src": "src/integrations/supabase/types.ts"
      }
     ],
     "constraints": [],
-    "src": "supabase/migrations/20251212193329_5c696f63-c339-422b-ae1a-5164c51e7f44.sql",
+    "src": "supabase/tests/climate/stubs.sql",
     "comment": "",
     "origin": "migration"
    },
@@ -8318,126 +8318,126 @@
     "columns": [
      {
       "name": "id",
-      "type": "UUID NOT NULL DEFAULT gen_random_uuid() PRIMARY KEY",
+      "type": "uuid primary key default gen_random_uuid()",
       "fk": "",
       "generated": "",
-      "src": "supabase/migrations/20251225223108_0cefeb56-0f31-454b-8422-7dad048d070f.sql"
+      "src": "supabase/tests/climate/stubs.sql"
      },
      {
       "name": "title",
-      "type": "TEXT NOT NULL",
+      "type": "text not null",
       "fk": "",
       "generated": "",
-      "src": "supabase/migrations/20251225223108_0cefeb56-0f31-454b-8422-7dad048d070f.sql"
+      "src": "supabase/tests/climate/stubs.sql"
      },
      {
       "name": "description",
-      "type": "TEXT",
+      "type": "text",
       "fk": "",
       "generated": "",
-      "src": "supabase/migrations/20251225223108_0cefeb56-0f31-454b-8422-7dad048d070f.sql"
+      "src": "supabase/tests/climate/stubs.sql"
      },
      {
       "name": "survey_type",
-      "type": "TEXT NOT NULL DEFAULT 'weekly' CHECK (survey_type IN ('weekly', 'monthly', 'quarterly', 'annual', 'custom'))",
+      "type": "text not null default 'weekly'",
       "fk": "",
       "generated": "",
-      "src": "supabase/migrations/20251225223108_0cefeb56-0f31-454b-8422-7dad048d070f.sql"
+      "src": "supabase/tests/climate/stubs.sql"
      },
      {
       "name": "status",
-      "type": "TEXT NOT NULL DEFAULT 'draft' CHECK (status IN ('draft', 'scheduled', 'active', 'completed', 'cancelled'))",
+      "type": "text not null default 'draft'",
       "fk": "",
       "generated": "",
-      "src": "supabase/migrations/20251225223108_0cefeb56-0f31-454b-8422-7dad048d070f.sql"
+      "src": "supabase/tests/climate/stubs.sql"
      },
      {
       "name": "created_by",
-      "type": "UUID NOT NULL",
+      "type": "uuid not null",
       "fk": "",
       "generated": "",
-      "src": "supabase/migrations/20251225223108_0cefeb56-0f31-454b-8422-7dad048d070f.sql"
+      "src": "supabase/tests/climate/stubs.sql"
      },
      {
       "name": "department_id",
-      "type": "UUID REFERENCES public.departments(id)",
+      "type": "uuid references public.departments(id)",
       "fk": "departments.id",
       "generated": "",
-      "src": "supabase/migrations/20251225223108_0cefeb56-0f31-454b-8422-7dad048d070f.sql"
+      "src": "supabase/tests/climate/stubs.sql"
      },
      {
       "name": "starts_at",
-      "type": "TIMESTAMP WITH TIME ZONE NOT NULL",
+      "type": "timestamptz not null default now()",
       "fk": "",
       "generated": "",
-      "src": "supabase/migrations/20251225223108_0cefeb56-0f31-454b-8422-7dad048d070f.sql"
+      "src": "supabase/tests/climate/stubs.sql"
      },
      {
       "name": "ends_at",
-      "type": "TIMESTAMP WITH TIME ZONE NOT NULL",
+      "type": "timestamptz not null default now()",
       "fk": "",
       "generated": "",
-      "src": "supabase/migrations/20251225223108_0cefeb56-0f31-454b-8422-7dad048d070f.sql"
+      "src": "supabase/tests/climate/stubs.sql"
      },
      {
       "name": "is_anonymous",
-      "type": "BOOLEAN NOT NULL DEFAULT true",
+      "type": "boolean not null default true",
       "fk": "",
       "generated": "",
-      "src": "supabase/migrations/20251225223108_0cefeb56-0f31-454b-8422-7dad048d070f.sql"
+      "src": "supabase/tests/climate/stubs.sql"
      },
      {
       "name": "allow_skip",
-      "type": "BOOLEAN NOT NULL DEFAULT true",
+      "type": "boolean not null default true",
       "fk": "",
       "generated": "",
-      "src": "supabase/migrations/20251225223108_0cefeb56-0f31-454b-8422-7dad048d070f.sql"
+      "src": "supabase/tests/climate/stubs.sql"
      },
      {
       "name": "send_reminders",
-      "type": "BOOLEAN NOT NULL DEFAULT true",
+      "type": "boolean not null default true",
       "fk": "",
       "generated": "",
-      "src": "supabase/migrations/20251225223108_0cefeb56-0f31-454b-8422-7dad048d070f.sql"
-     },
-     {
-      "name": "reminder_frequency",
-      "type": "TEXT DEFAULT 'daily'",
-      "fk": "",
-      "generated": "",
-      "src": "supabase/migrations/20251225223108_0cefeb56-0f31-454b-8422-7dad048d070f.sql"
-     },
-     {
-      "name": "is_recurring",
-      "type": "BOOLEAN NOT NULL DEFAULT false",
-      "fk": "",
-      "generated": "",
-      "src": "supabase/migrations/20251225223108_0cefeb56-0f31-454b-8422-7dad048d070f.sql"
-     },
-     {
-      "name": "recurrence_pattern",
-      "type": "TEXT",
-      "fk": "",
-      "generated": "",
-      "src": "supabase/migrations/20251225223108_0cefeb56-0f31-454b-8422-7dad048d070f.sql"
+      "src": "supabase/tests/climate/stubs.sql"
      },
      {
       "name": "created_at",
-      "type": "TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now()",
+      "type": "timestamptz not null default now()",
       "fk": "",
       "generated": "",
-      "src": "supabase/migrations/20251225223108_0cefeb56-0f31-454b-8422-7dad048d070f.sql"
+      "src": "supabase/tests/climate/stubs.sql"
      },
      {
       "name": "updated_at",
-      "type": "TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now()",
+      "type": "timestamptz not null default now()",
       "fk": "",
       "generated": "",
-      "src": "supabase/migrations/20251225223108_0cefeb56-0f31-454b-8422-7dad048d070f.sql"
+      "src": "supabase/tests/climate/stubs.sql"
+     },
+     {
+      "name": "is_recurring",
+      "type": "boolean not null",
+      "fk": "",
+      "generated": "",
+      "src": "src/integrations/supabase/types.ts"
+     },
+     {
+      "name": "recurrence_pattern",
+      "type": "string | null",
+      "fk": "",
+      "generated": "",
+      "src": "src/integrations/supabase/types.ts"
+     },
+     {
+      "name": "reminder_frequency",
+      "type": "string | null",
+      "fk": "",
+      "generated": "",
+      "src": "src/integrations/supabase/types.ts"
      }
     ],
     "constraints": [],
-    "src": "supabase/migrations/20251225223108_0cefeb56-0f31-454b-8422-7dad048d070f.sql",
+    "src": "supabase/tests/climate/stubs.sql",
     "comment": "",
     "origin": "migration"
    },
@@ -8445,84 +8445,84 @@
     "columns": [
      {
       "name": "id",
-      "type": "UUID NOT NULL DEFAULT gen_random_uuid() PRIMARY KEY",
+      "type": "uuid primary key default gen_random_uuid()",
       "fk": "",
       "generated": "",
-      "src": "supabase/migrations/20251225223108_0cefeb56-0f31-454b-8422-7dad048d070f.sql"
+      "src": "supabase/tests/climate/stubs.sql"
      },
      {
       "name": "survey_id",
-      "type": "UUID NOT NULL REFERENCES public.climate_surveys(id) ON DELETE CASCADE",
-      "fk": "climate_surveys.id ON DELETE CASCADE",
+      "type": "uuid not null references public.climate_surveys(id) on delete cascade",
+      "fk": "climate_surveys.id on delete cascade",
       "generated": "",
-      "src": "supabase/migrations/20251225223108_0cefeb56-0f31-454b-8422-7dad048d070f.sql"
+      "src": "supabase/tests/climate/stubs.sql"
      },
      {
       "name": "pillar",
-      "type": "public.climate_pillar NOT NULL",
+      "type": "public.climate_pillar not null",
       "fk": "",
       "generated": "",
-      "src": "supabase/migrations/20251225223108_0cefeb56-0f31-454b-8422-7dad048d070f.sql"
+      "src": "supabase/tests/climate/stubs.sql"
      },
      {
       "name": "question_text",
-      "type": "TEXT NOT NULL",
+      "type": "text not null",
       "fk": "",
       "generated": "",
-      "src": "supabase/migrations/20251225223108_0cefeb56-0f31-454b-8422-7dad048d070f.sql"
-     },
-     {
-      "name": "question_text_en",
-      "type": "TEXT",
-      "fk": "",
-      "generated": "",
-      "src": "supabase/migrations/20251225223108_0cefeb56-0f31-454b-8422-7dad048d070f.sql"
-     },
-     {
-      "name": "question_text_es",
-      "type": "TEXT",
-      "fk": "",
-      "generated": "",
-      "src": "supabase/migrations/20251225223108_0cefeb56-0f31-454b-8422-7dad048d070f.sql"
+      "src": "supabase/tests/climate/stubs.sql"
      },
      {
       "name": "question_type",
-      "type": "TEXT NOT NULL DEFAULT 'likert_5' CHECK (question_type IN ('likert_5', 'likert_10', 'nps', 'yes_no', 'multiple_choice', 'text'))",
+      "type": "text not null default 'likert_5'",
       "fk": "",
       "generated": "",
-      "src": "supabase/migrations/20251225223108_0cefeb56-0f31-454b-8422-7dad048d070f.sql"
+      "src": "supabase/tests/climate/stubs.sql"
      },
      {
       "name": "options",
-      "type": "JSONB",
+      "type": "jsonb",
       "fk": "",
       "generated": "",
-      "src": "supabase/migrations/20251225223108_0cefeb56-0f31-454b-8422-7dad048d070f.sql"
+      "src": "supabase/tests/climate/stubs.sql"
      },
      {
       "name": "is_required",
-      "type": "BOOLEAN NOT NULL DEFAULT true",
+      "type": "boolean not null default true",
       "fk": "",
       "generated": "",
-      "src": "supabase/migrations/20251225223108_0cefeb56-0f31-454b-8422-7dad048d070f.sql"
+      "src": "supabase/tests/climate/stubs.sql"
      },
      {
       "name": "order_index",
-      "type": "INTEGER NOT NULL DEFAULT 0",
+      "type": "integer not null default 0",
       "fk": "",
       "generated": "",
-      "src": "supabase/migrations/20251225223108_0cefeb56-0f31-454b-8422-7dad048d070f.sql"
+      "src": "supabase/tests/climate/stubs.sql"
      },
      {
       "name": "created_at",
-      "type": "TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now()",
+      "type": "timestamptz not null default now()",
       "fk": "",
       "generated": "",
-      "src": "supabase/migrations/20251225223108_0cefeb56-0f31-454b-8422-7dad048d070f.sql"
+      "src": "supabase/tests/climate/stubs.sql"
+     },
+     {
+      "name": "question_text_en",
+      "type": "string | null",
+      "fk": "",
+      "generated": "",
+      "src": "src/integrations/supabase/types.ts"
+     },
+     {
+      "name": "question_text_es",
+      "type": "string | null",
+      "fk": "",
+      "generated": "",
+      "src": "src/integrations/supabase/types.ts"
      }
     ],
     "constraints": [],
-    "src": "supabase/migrations/20251225223108_0cefeb56-0f31-454b-8422-7dad048d070f.sql",
+    "src": "supabase/tests/climate/stubs.sql",
     "comment": "",
     "origin": "migration"
    },
@@ -8530,63 +8530,63 @@
     "columns": [
      {
       "name": "id",
-      "type": "UUID NOT NULL DEFAULT gen_random_uuid() PRIMARY KEY",
+      "type": "uuid primary key default gen_random_uuid()",
       "fk": "",
       "generated": "",
-      "src": "supabase/migrations/20251225223108_0cefeb56-0f31-454b-8422-7dad048d070f.sql"
+      "src": "supabase/tests/climate/stubs.sql"
      },
      {
       "name": "survey_id",
-      "type": "UUID NOT NULL REFERENCES public.climate_surveys(id) ON DELETE CASCADE",
-      "fk": "climate_surveys.id ON DELETE CASCADE",
+      "type": "uuid not null references public.climate_surveys(id) on delete cascade",
+      "fk": "climate_surveys.id on delete cascade",
       "generated": "",
-      "src": "supabase/migrations/20251225223108_0cefeb56-0f31-454b-8422-7dad048d070f.sql"
+      "src": "supabase/tests/climate/stubs.sql"
      },
      {
       "name": "user_id",
-      "type": "UUID NOT NULL",
+      "type": "uuid not null",
       "fk": "",
       "generated": "",
-      "src": "supabase/migrations/20251225223108_0cefeb56-0f31-454b-8422-7dad048d070f.sql"
+      "src": "supabase/tests/climate/stubs.sql"
      },
      {
       "name": "is_complete",
-      "type": "BOOLEAN NOT NULL DEFAULT false",
+      "type": "boolean not null default false",
       "fk": "",
       "generated": "",
-      "src": "supabase/migrations/20251225223108_0cefeb56-0f31-454b-8422-7dad048d070f.sql"
+      "src": "supabase/tests/climate/stubs.sql"
      },
      {
       "name": "completion_time_seconds",
-      "type": "INTEGER",
+      "type": "integer",
       "fk": "",
       "generated": "",
-      "src": "supabase/migrations/20251225223108_0cefeb56-0f31-454b-8422-7dad048d070f.sql"
+      "src": "supabase/tests/climate/stubs.sql"
      },
      {
       "name": "started_at",
-      "type": "TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now()",
+      "type": "timestamptz not null default now()",
       "fk": "",
       "generated": "",
-      "src": "supabase/migrations/20251225223108_0cefeb56-0f31-454b-8422-7dad048d070f.sql"
+      "src": "supabase/tests/climate/stubs.sql"
      },
      {
       "name": "completed_at",
-      "type": "TIMESTAMP WITH TIME ZONE",
+      "type": "timestamptz",
       "fk": "",
       "generated": "",
-      "src": "supabase/migrations/20251225223108_0cefeb56-0f31-454b-8422-7dad048d070f.sql"
+      "src": "supabase/tests/climate/stubs.sql"
      },
      {
       "name": "created_at",
-      "type": "TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now()",
+      "type": "timestamptz not null default now()",
       "fk": "",
       "generated": "",
-      "src": "supabase/migrations/20251225223108_0cefeb56-0f31-454b-8422-7dad048d070f.sql"
+      "src": "supabase/tests/climate/stubs.sql"
      }
     ],
     "constraints": [],
-    "src": "supabase/migrations/20251225223108_0cefeb56-0f31-454b-8422-7dad048d070f.sql",
+    "src": "supabase/tests/climate/stubs.sql",
     "comment": "",
     "origin": "migration"
    },
@@ -8594,63 +8594,63 @@
     "columns": [
      {
       "name": "id",
-      "type": "UUID NOT NULL DEFAULT gen_random_uuid() PRIMARY KEY",
+      "type": "uuid primary key default gen_random_uuid()",
       "fk": "",
       "generated": "",
-      "src": "supabase/migrations/20251225223108_0cefeb56-0f31-454b-8422-7dad048d070f.sql"
+      "src": "supabase/tests/climate/stubs.sql"
      },
      {
       "name": "response_id",
-      "type": "UUID NOT NULL REFERENCES public.climate_survey_responses(id) ON DELETE CASCADE",
-      "fk": "climate_survey_responses.id ON DELETE CASCADE",
+      "type": "uuid not null references public.climate_survey_responses(id) on delete cascade",
+      "fk": "climate_survey_responses.id on delete cascade",
       "generated": "",
-      "src": "supabase/migrations/20251225223108_0cefeb56-0f31-454b-8422-7dad048d070f.sql"
+      "src": "supabase/tests/climate/stubs.sql"
      },
      {
       "name": "question_id",
-      "type": "UUID NOT NULL REFERENCES public.climate_survey_questions(id) ON DELETE CASCADE",
-      "fk": "climate_survey_questions.id ON DELETE CASCADE",
+      "type": "uuid not null references public.climate_survey_questions(id) on delete cascade",
+      "fk": "climate_survey_questions.id on delete cascade",
       "generated": "",
-      "src": "supabase/migrations/20251225223108_0cefeb56-0f31-454b-8422-7dad048d070f.sql"
+      "src": "supabase/tests/climate/stubs.sql"
      },
      {
       "name": "score",
-      "type": "INTEGER",
+      "type": "integer",
       "fk": "",
       "generated": "",
-      "src": "supabase/migrations/20251225223108_0cefeb56-0f31-454b-8422-7dad048d070f.sql"
+      "src": "supabase/tests/climate/stubs.sql"
      },
      {
       "name": "text_answer",
-      "type": "TEXT",
+      "type": "text",
       "fk": "",
       "generated": "",
-      "src": "supabase/migrations/20251225223108_0cefeb56-0f31-454b-8422-7dad048d070f.sql"
+      "src": "supabase/tests/climate/stubs.sql"
      },
      {
       "name": "selected_options",
-      "type": "JSONB",
+      "type": "jsonb",
       "fk": "",
       "generated": "",
-      "src": "supabase/migrations/20251225223108_0cefeb56-0f31-454b-8422-7dad048d070f.sql"
+      "src": "supabase/tests/climate/stubs.sql"
      },
      {
       "name": "skipped",
-      "type": "BOOLEAN NOT NULL DEFAULT false",
+      "type": "boolean not null default false",
       "fk": "",
       "generated": "",
-      "src": "supabase/migrations/20251225223108_0cefeb56-0f31-454b-8422-7dad048d070f.sql"
+      "src": "supabase/tests/climate/stubs.sql"
      },
      {
       "name": "created_at",
-      "type": "TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now()",
+      "type": "timestamptz not null default now()",
       "fk": "",
       "generated": "",
-      "src": "supabase/migrations/20251225223108_0cefeb56-0f31-454b-8422-7dad048d070f.sql"
+      "src": "supabase/tests/climate/stubs.sql"
      }
     ],
     "constraints": [],
-    "src": "supabase/migrations/20251225223108_0cefeb56-0f31-454b-8422-7dad048d070f.sql",
+    "src": "supabase/tests/climate/stubs.sql",
     "comment": "",
     "origin": "migration"
    },
@@ -8658,72 +8658,72 @@
     "columns": [
      {
       "name": "id",
-      "type": "UUID NOT NULL DEFAULT gen_random_uuid() PRIMARY KEY",
+      "type": "uuid primary key default gen_random_uuid()",
       "fk": "",
       "generated": "",
-      "src": "supabase/migrations/20251225223108_0cefeb56-0f31-454b-8422-7dad048d070f.sql"
+      "src": "supabase/tests/climate/stubs.sql"
      },
      {
       "name": "survey_id",
-      "type": "UUID NOT NULL REFERENCES public.climate_surveys(id) ON DELETE CASCADE",
-      "fk": "climate_surveys.id ON DELETE CASCADE",
+      "type": "uuid not null references public.climate_surveys(id) on delete cascade",
+      "fk": "climate_surveys.id on delete cascade",
       "generated": "",
-      "src": "supabase/migrations/20251225223108_0cefeb56-0f31-454b-8422-7dad048d070f.sql"
+      "src": "supabase/tests/climate/stubs.sql"
      },
      {
       "name": "department_id",
-      "type": "UUID REFERENCES public.departments(id)",
+      "type": "uuid references public.departments(id)",
       "fk": "departments.id",
       "generated": "",
-      "src": "supabase/migrations/20251225223108_0cefeb56-0f31-454b-8422-7dad048d070f.sql"
+      "src": "supabase/tests/climate/stubs.sql"
      },
      {
       "name": "pillar",
-      "type": "public.climate_pillar NOT NULL",
+      "type": "public.climate_pillar not null",
       "fk": "",
       "generated": "",
-      "src": "supabase/migrations/20251225223108_0cefeb56-0f31-454b-8422-7dad048d070f.sql"
+      "src": "supabase/tests/climate/stubs.sql"
      },
      {
       "name": "score",
-      "type": "NUMERIC(5,2) NOT NULL",
+      "type": "numeric(5,2) not null",
       "fk": "",
       "generated": "",
-      "src": "supabase/migrations/20251225223108_0cefeb56-0f31-454b-8422-7dad048d070f.sql"
+      "src": "supabase/tests/climate/stubs.sql"
      },
      {
       "name": "response_count",
-      "type": "INTEGER NOT NULL DEFAULT 0",
+      "type": "integer not null default 0",
       "fk": "",
       "generated": "",
-      "src": "supabase/migrations/20251225223108_0cefeb56-0f31-454b-8422-7dad048d070f.sql"
+      "src": "supabase/tests/climate/stubs.sql"
      },
      {
       "name": "previous_score",
-      "type": "NUMERIC(5,2)",
+      "type": "numeric(5,2)",
       "fk": "",
       "generated": "",
-      "src": "supabase/migrations/20251225223108_0cefeb56-0f31-454b-8422-7dad048d070f.sql"
+      "src": "supabase/tests/climate/stubs.sql"
      },
      {
       "name": "trend",
-      "type": "TEXT CHECK (trend IN ('up', 'down', 'stable'))",
+      "type": "text check (trend in ('up','down','stable'))",
       "fk": "",
       "generated": "",
-      "src": "supabase/migrations/20251225223108_0cefeb56-0f31-454b-8422-7dad048d070f.sql"
+      "src": "supabase/tests/climate/stubs.sql"
      },
      {
       "name": "calculated_at",
-      "type": "TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now()",
+      "type": "timestamptz not null default now()",
       "fk": "",
       "generated": "",
-      "src": "supabase/migrations/20251225223108_0cefeb56-0f31-454b-8422-7dad048d070f.sql"
+      "src": "supabase/tests/climate/stubs.sql"
      }
     ],
     "constraints": [
-     "UNIQUE(survey_id, department_id, pillar)"
+     "unique (survey_id, department_id, pillar)"
     ],
-    "src": "supabase/migrations/20251225223108_0cefeb56-0f31-454b-8422-7dad048d070f.sql",
+    "src": "supabase/tests/climate/stubs.sql",
     "comment": "",
     "origin": "migration"
    },
@@ -22716,146 +22716,6 @@
     "src": "supabase/migrations/20251225192828_0004b3a0-0a25-47a3-a965-13e4afaef232.sql"
    },
    {
-    "name": "Managers can create climate surveys",
-    "table": "climate_surveys",
-    "cmd": "INSERT",
-    "roles": "public",
-    "mode": "permissive",
-    "using": "",
-    "check": "has_role(auth.uid(), 'admin') OR has_role(auth.uid(), 'manager')",
-    "src": "supabase/migrations/20251225223108_0cefeb56-0f31-454b-8422-7dad048d070f.sql"
-   },
-   {
-    "name": "Everyone can view active surveys",
-    "table": "climate_surveys",
-    "cmd": "SELECT",
-    "roles": "public",
-    "mode": "permissive",
-    "using": "status IN ('active', 'completed') OR created_by = auth.uid() OR has_role(auth.uid(), 'admin')",
-    "check": "",
-    "src": "supabase/migrations/20251225223108_0cefeb56-0f31-454b-8422-7dad048d070f.sql"
-   },
-   {
-    "name": "Creators can update surveys",
-    "table": "climate_surveys",
-    "cmd": "UPDATE",
-    "roles": "public",
-    "mode": "permissive",
-    "using": "created_by = auth.uid() OR has_role(auth.uid(), 'admin')",
-    "check": "",
-    "src": "supabase/migrations/20251225223108_0cefeb56-0f31-454b-8422-7dad048d070f.sql"
-   },
-   {
-    "name": "Admins can delete surveys",
-    "table": "climate_surveys",
-    "cmd": "DELETE",
-    "roles": "public",
-    "mode": "permissive",
-    "using": "has_role(auth.uid(), 'admin')",
-    "check": "",
-    "src": "supabase/migrations/20251225223108_0cefeb56-0f31-454b-8422-7dad048d070f.sql"
-   },
-   {
-    "name": "View survey questions",
-    "table": "climate_survey_questions",
-    "cmd": "SELECT",
-    "roles": "public",
-    "mode": "permissive",
-    "using": "EXISTS (SELECT 1 FROM climate_surveys s WHERE s.id = survey_id AND (s.status IN ('active', 'completed') OR s.created_by = auth.uid() OR has_role(auth.uid(), 'admin')))",
-    "check": "",
-    "src": "supabase/migrations/20251225223108_0cefeb56-0f31-454b-8422-7dad048d070f.sql"
-   },
-   {
-    "name": "Manage survey questions",
-    "table": "climate_survey_questions",
-    "cmd": "ALL",
-    "roles": "public",
-    "mode": "permissive",
-    "using": "EXISTS (SELECT 1 FROM climate_surveys s WHERE s.id = survey_id AND (s.created_by = auth.uid() OR has_role(auth.uid(), 'admin')))",
-    "check": "",
-    "src": "supabase/migrations/20251225223108_0cefeb56-0f31-454b-8422-7dad048d070f.sql"
-   },
-   {
-    "name": "Users can submit responses",
-    "table": "climate_survey_responses",
-    "cmd": "INSERT",
-    "roles": "public",
-    "mode": "permissive",
-    "using": "",
-    "check": "auth.uid() = user_id",
-    "src": "supabase/migrations/20251225223108_0cefeb56-0f31-454b-8422-7dad048d070f.sql"
-   },
-   {
-    "name": "Users can view own responses",
-    "table": "climate_survey_responses",
-    "cmd": "SELECT",
-    "roles": "public",
-    "mode": "permissive",
-    "using": "user_id = auth.uid() OR has_role(auth.uid(), 'admin')",
-    "check": "",
-    "src": "supabase/migrations/20251225223108_0cefeb56-0f31-454b-8422-7dad048d070f.sql"
-   },
-   {
-    "name": "Users can update own responses",
-    "table": "climate_survey_responses",
-    "cmd": "UPDATE",
-    "roles": "public",
-    "mode": "permissive",
-    "using": "user_id = auth.uid()",
-    "check": "",
-    "src": "supabase/migrations/20251225223108_0cefeb56-0f31-454b-8422-7dad048d070f.sql"
-   },
-   {
-    "name": "Users can answer questions",
-    "table": "climate_question_answers",
-    "cmd": "INSERT",
-    "roles": "public",
-    "mode": "permissive",
-    "using": "",
-    "check": "EXISTS (SELECT 1 FROM climate_survey_responses r WHERE r.id = response_id AND r.user_id = auth.uid())",
-    "src": "supabase/migrations/20251225223108_0cefeb56-0f31-454b-8422-7dad048d070f.sql"
-   },
-   {
-    "name": "Users view own answers",
-    "table": "climate_question_answers",
-    "cmd": "SELECT",
-    "roles": "public",
-    "mode": "permissive",
-    "using": "EXISTS (SELECT 1 FROM climate_survey_responses r WHERE r.id = response_id AND (r.user_id = auth.uid() OR has_role(auth.uid(), 'admin')))",
-    "check": "",
-    "src": "supabase/migrations/20251225223108_0cefeb56-0f31-454b-8422-7dad048d070f.sql"
-   },
-   {
-    "name": "Users update own answers",
-    "table": "climate_question_answers",
-    "cmd": "UPDATE",
-    "roles": "public",
-    "mode": "permissive",
-    "using": "EXISTS (SELECT 1 FROM climate_survey_responses r WHERE r.id = response_id AND r.user_id = auth.uid())",
-    "check": "",
-    "src": "supabase/migrations/20251225223108_0cefeb56-0f31-454b-8422-7dad048d070f.sql"
-   },
-   {
-    "name": "Managers can view pillar scores",
-    "table": "climate_pillar_scores",
-    "cmd": "SELECT",
-    "roles": "public",
-    "mode": "permissive",
-    "using": "has_role(auth.uid(), 'admin') OR has_role(auth.uid(), 'manager')",
-    "check": "",
-    "src": "supabase/migrations/20251225223108_0cefeb56-0f31-454b-8422-7dad048d070f.sql"
-   },
-   {
-    "name": "System can manage pillar scores",
-    "table": "climate_pillar_scores",
-    "cmd": "ALL",
-    "roles": "public",
-    "mode": "permissive",
-    "using": "has_role(auth.uid(), 'admin')",
-    "check": "",
-    "src": "supabase/migrations/20251225223108_0cefeb56-0f31-454b-8422-7dad048d070f.sql"
-   },
-   {
     "name": "Everyone can view benchmarks",
     "table": "climate_benchmarks",
     "cmd": "SELECT",
@@ -25504,6 +25364,176 @@
     "using": "EXISTS ( SELECT 1 FROM public.user_roles ur WHERE ur.user_id = auth.uid() AND ur.role = 'admin' )",
     "check": "",
     "src": "supabase/migrations/20261123000000_create_goal_templates.sql"
+   },
+   {
+    "name": "Managers can add survey questions",
+    "table": "climate_survey_questions",
+    "cmd": "INSERT",
+    "roles": "public",
+    "mode": "permissive",
+    "using": "",
+    "check": "EXISTS ( SELECT 1 FROM public.climate_surveys s WHERE s.id = survey_id AND (s.created_by = auth.uid() OR public.has_role(auth.uid(), 'admin')) )",
+    "src": "supabase/migrations/20261123180000_climate_survey_engine.sql"
+   },
+   {
+    "name": "Managers can update survey questions",
+    "table": "climate_survey_questions",
+    "cmd": "UPDATE",
+    "roles": "public",
+    "mode": "permissive",
+    "using": "EXISTS ( SELECT 1 FROM public.climate_surveys s WHERE s.id = survey_id AND (s.created_by = auth.uid() OR public.has_role(auth.uid(), 'admin')) )",
+    "check": "",
+    "src": "supabase/migrations/20261123180000_climate_survey_engine.sql"
+   },
+   {
+    "name": "Managers can delete draft survey questions",
+    "table": "climate_survey_questions",
+    "cmd": "DELETE",
+    "roles": "public",
+    "mode": "permissive",
+    "using": "EXISTS ( SELECT 1 FROM public.climate_surveys s WHERE s.id = survey_id AND s.status = 'draft' AND (s.created_by = auth.uid() OR public.has_role(auth.uid(), 'admin')) )",
+    "check": "",
+    "src": "supabase/migrations/20261123180000_climate_survey_engine.sql"
+   },
+   {
+    "name": "Managers can create climate surveys",
+    "table": "climate_surveys",
+    "cmd": "INSERT",
+    "roles": "public",
+    "mode": "permissive",
+    "using": "",
+    "check": "has_role(auth.uid(), 'admin') or has_role(auth.uid(), 'manager')",
+    "src": "supabase/tests/climate/stubs.sql"
+   },
+   {
+    "name": "Everyone can view active surveys",
+    "table": "climate_surveys",
+    "cmd": "SELECT",
+    "roles": "public",
+    "mode": "permissive",
+    "using": "status in ('active', 'completed') or created_by = auth.uid() or has_role(auth.uid(), 'admin')",
+    "check": "",
+    "src": "supabase/tests/climate/stubs.sql"
+   },
+   {
+    "name": "Creators can update surveys",
+    "table": "climate_surveys",
+    "cmd": "UPDATE",
+    "roles": "public",
+    "mode": "permissive",
+    "using": "created_by = auth.uid() or has_role(auth.uid(), 'admin')",
+    "check": "",
+    "src": "supabase/tests/climate/stubs.sql"
+   },
+   {
+    "name": "Admins can delete surveys",
+    "table": "climate_surveys",
+    "cmd": "DELETE",
+    "roles": "public",
+    "mode": "permissive",
+    "using": "has_role(auth.uid(), 'admin')",
+    "check": "",
+    "src": "supabase/tests/climate/stubs.sql"
+   },
+   {
+    "name": "View survey questions",
+    "table": "climate_survey_questions",
+    "cmd": "SELECT",
+    "roles": "public",
+    "mode": "permissive",
+    "using": "exists (select 1 from climate_surveys s where s.id = survey_id and (s.status in ('active','completed') or s.created_by = auth.uid() or has_role(auth.uid(), 'admin')))",
+    "check": "",
+    "src": "supabase/tests/climate/stubs.sql"
+   },
+   {
+    "name": "Manage survey questions",
+    "table": "climate_survey_questions",
+    "cmd": "ALL",
+    "roles": "public",
+    "mode": "permissive",
+    "using": "exists (select 1 from climate_surveys s where s.id = survey_id and (s.created_by = auth.uid() or has_role(auth.uid(), 'admin')))",
+    "check": "",
+    "src": "supabase/tests/climate/stubs.sql"
+   },
+   {
+    "name": "Users can submit responses",
+    "table": "climate_survey_responses",
+    "cmd": "INSERT",
+    "roles": "public",
+    "mode": "permissive",
+    "using": "",
+    "check": "auth.uid() = user_id",
+    "src": "supabase/tests/climate/stubs.sql"
+   },
+   {
+    "name": "Users can view own responses",
+    "table": "climate_survey_responses",
+    "cmd": "SELECT",
+    "roles": "public",
+    "mode": "permissive",
+    "using": "user_id = auth.uid() or has_role(auth.uid(), 'admin')",
+    "check": "",
+    "src": "supabase/tests/climate/stubs.sql"
+   },
+   {
+    "name": "Users can update own responses",
+    "table": "climate_survey_responses",
+    "cmd": "UPDATE",
+    "roles": "public",
+    "mode": "permissive",
+    "using": "user_id = auth.uid()",
+    "check": "",
+    "src": "supabase/tests/climate/stubs.sql"
+   },
+   {
+    "name": "Users can answer questions",
+    "table": "climate_question_answers",
+    "cmd": "INSERT",
+    "roles": "public",
+    "mode": "permissive",
+    "using": "",
+    "check": "exists (select 1 from climate_survey_responses r where r.id = response_id and r.user_id = auth.uid())",
+    "src": "supabase/tests/climate/stubs.sql"
+   },
+   {
+    "name": "Users view own answers",
+    "table": "climate_question_answers",
+    "cmd": "SELECT",
+    "roles": "public",
+    "mode": "permissive",
+    "using": "exists (select 1 from climate_survey_responses r where r.id = response_id and (r.user_id = auth.uid() or has_role(auth.uid(), 'admin')))",
+    "check": "",
+    "src": "supabase/tests/climate/stubs.sql"
+   },
+   {
+    "name": "Users update own answers",
+    "table": "climate_question_answers",
+    "cmd": "UPDATE",
+    "roles": "public",
+    "mode": "permissive",
+    "using": "exists (select 1 from climate_survey_responses r where r.id = response_id and r.user_id = auth.uid())",
+    "check": "",
+    "src": "supabase/tests/climate/stubs.sql"
+   },
+   {
+    "name": "Managers can view pillar scores",
+    "table": "climate_pillar_scores",
+    "cmd": "SELECT",
+    "roles": "public",
+    "mode": "permissive",
+    "using": "has_role(auth.uid(), 'admin') or has_role(auth.uid(), 'manager')",
+    "check": "",
+    "src": "supabase/tests/climate/stubs.sql"
+   },
+   {
+    "name": "System can manage pillar scores",
+    "table": "climate_pillar_scores",
+    "cmd": "ALL",
+    "roles": "public",
+    "mode": "permissive",
+    "using": "has_role(auth.uid(), 'admin')",
+    "check": "",
+    "src": "supabase/tests/climate/stubs.sql"
    }
   ],
   "triggers": [
@@ -30643,6 +30673,92 @@
     "raises": [],
     "tables": []
    },
+   "_climate_recompute_pillar_scores": {
+    "args": "p_survey_id uuid, p_min_responses integer",
+    "returns": "integer",
+    "lang": "plpgsql",
+    "src": "supabase/migrations/20261123180000_climate_survey_engine.sql",
+    "security_definer": true,
+    "search_path": true,
+    "body": "DECLARE v_min integer := GREATEST(COALESCE(p_min_responses, 5), 5); v_responders integer; v_written integer := 0; v_marca timestamptz := clock_timestamp(); BEGIN IF NOT EXISTS (SELECT 1 FROM public.climate_surveys s WHERE s.id = p_survey_id) THEN RETURN 0; END IF; PERFORM pg_advisory_xact_lock(hashtextextended(p_survey_id::text, 0)); SELECT count(*) INTO v_responders FROM public.climate_survey_responses WHERE survey_id = p_survey_id AND is_complete; IF COALESCE(v_responders, 0) >= v_min THEN INSERT INTO public.climate_pillar_scores (survey_id, department_id, pillar, score, response_count, calculated_at) SELECT p_survey_id, NULL, q.pillar, round(avg(CASE q.question_type WHEN 'likert_10' THEN …",
+    "raises": [],
+    "tables": [
+     "SET",
+     "climate_pillar_scores",
+     "climate_question_answers",
+     "climate_survey_questions",
+     "climate_survey_responses",
+     "climate_surveys",
+     "v_responders"
+    ]
+   },
+   "climate_recalculate_pillar_scores": {
+    "args": "p_survey_id uuid, p_min_responses integer DEFAULT 5",
+    "returns": "integer",
+    "lang": "plpgsql",
+    "src": "supabase/migrations/20261123180000_climate_survey_engine.sql",
+    "security_definer": true,
+    "search_path": true,
+    "body": "DECLARE v_user_id uuid := auth.uid(); BEGIN IF v_user_id IS NULL THEN RAISE EXCEPTION 'not authenticated'; END IF; IF NOT ( public.has_role(v_user_id, 'admin') OR public.has_role(v_user_id, 'manager') OR EXISTS (SELECT 1 FROM public.climate_surveys s WHERE s.id = p_survey_id AND s.created_by = v_user_id) ) THEN RAISE EXCEPTION 'not authorized'; END IF; RETURN public._climate_recompute_pillar_scores(p_survey_id, p_min_responses); END;",
+    "raises": [
+     "not authenticated",
+     "not authorized"
+    ],
+    "tables": [
+     "climate_surveys"
+    ]
+   },
+   "climate_survey_enps": {
+    "args": "p_survey_id uuid, p_min_responses integer DEFAULT 5",
+    "returns": "jsonb",
+    "lang": "plpgsql",
+    "src": "supabase/migrations/20261123180000_climate_survey_engine.sql",
+    "security_definer": true,
+    "search_path": true,
+    "body": "DECLARE v_user_id uuid := auth.uid(); v_min integer := GREATEST(COALESCE(p_min_responses, 5), 5); v_responders integer := 0; v_total integer := 0; v_promoters integer := 0; v_passives integer := 0; v_detractors integer := 0; v_enps integer := 0; BEGIN IF v_user_id IS NULL THEN RAISE EXCEPTION 'not authenticated'; END IF; IF NOT EXISTS (SELECT 1 FROM public.climate_surveys s WHERE s.id = p_survey_id) THEN RAISE EXCEPTION 'survey not found'; END IF; IF NOT ( public.has_role(v_user_id, 'admin') OR public.has_role(v_user_id, 'manager') OR EXISTS (SELECT 1 FROM public.climate_surveys s WHERE s.id = p_survey_id AND s.created_by = v_user_id) ) THEN RAISE EXCEPTION 'not authorized'; END IF; SELECT c …",
+    "raises": [
+     "not authenticated",
+     "survey not found",
+     "not authorized"
+    ],
+    "tables": [
+     "climate_question_answers",
+     "climate_survey_questions",
+     "climate_survey_responses",
+     "climate_surveys",
+     "v_responders",
+     "v_total"
+    ]
+   },
+   "climate_submit_response": {
+    "args": "p_survey_id uuid, p_answers jsonb",
+    "returns": "uuid",
+    "lang": "plpgsql",
+    "src": "supabase/migrations/20261123180000_climate_survey_engine.sql",
+    "security_definer": true,
+    "search_path": true,
+    "body": "DECLARE v_user_id uuid := auth.uid(); v_status text; v_starts_at timestamptz; v_ends_at timestamptz; v_response_id uuid; BEGIN IF v_user_id IS NULL THEN RAISE EXCEPTION 'not authenticated'; END IF; IF p_answers IS NULL OR jsonb_typeof(p_answers) <> 'array' OR jsonb_array_length(p_answers) = 0 THEN RAISE EXCEPTION 'answers required'; END IF; SELECT status, starts_at, ends_at INTO v_status, v_starts_at, v_ends_at FROM public.climate_surveys WHERE id = p_survey_id; IF v_status IS NULL THEN RAISE EXCEPTION 'survey not found'; END IF; IF v_status <> 'active' THEN RAISE EXCEPTION 'survey is not active'; END IF; IF v_starts_at IS NOT NULL AND now() < v_starts_at THEN RAISE EXCEPTION 'survey is not …",
+    "raises": [
+     "not authenticated",
+     "answers required",
+     "survey not found",
+     "survey is not active",
+     "survey is not open yet",
+     "survey period is over",
+     "survey already answered",
+     "invalid answers",
+     "required question missing"
+    ],
+    "tables": [
+     "climate_question_answers",
+     "climate_survey_questions",
+     "climate_survey_responses",
+     "climate_surveys",
+     "jsonb_to_recordset",
+     "v_response_id",
+     "v_status"
+    ]
+   },
    "add_xp": {
     "args": "p_user_id uuid, p_amount integer, p_source text DEFAULT NULL",
     "returns": "TABLE (id uuid, xp integer, level integer)",
@@ -33196,6 +33312,22 @@
     "unique": true,
     "where": "",
     "src": "supabase/migrations/20261114110500_fix_cron_campaigns_alert_check.sql"
+   },
+   {
+    "name": "climate_survey_responses_survey_user_key",
+    "table": "climate_survey_responses",
+    "columns": "survey_id, user_id",
+    "unique": true,
+    "where": "",
+    "src": "supabase/migrations/20261123180000_climate_survey_engine.sql"
+   },
+   {
+    "name": "climate_pillar_scores_global_key",
+    "table": "climate_pillar_scores",
+    "columns": "survey_id, pillar",
+    "unique": true,
+    "where": "WHERE department_id IS NULL",
+    "src": "supabase/migrations/20261123180000_climate_survey_engine.sql"
    }
   ],
   "cron_jobs": [
@@ -33568,8 +33700,11 @@
    "supabase/migrations/20261122140000_acknowledge_security_digest.sql",
    "supabase/migrations/20261123000000_create_goal_templates.sql",
    "supabase/migrations/20261123000001_create_acknowledge_security_digest.sql",
+   "supabase/migrations/20261123180000_climate_survey_engine.sql",
    "supabase/migrations/20261218000000_profiles_economia_rpcs.sql",
    "supabase/migrations/20261220000000_fix_sre_rpcs_and_dispatch_trigger.sql",
+   "supabase/tests/climate/assertions.sql",
+   "supabase/tests/climate/stubs.sql",
    "src/integrations/supabase/types.ts"
   ],
   "rls": {
@@ -41109,6 +41244,78 @@
    {
     "kind": "revoke",
     "privs": "all",
+    "object": "_climate_recompute_pillar_scores",
+    "objkind": "function",
+    "roles": "PUBLIC",
+    "src": "supabase/migrations/20261123180000_climate_survey_engine.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "all",
+    "object": "_climate_recompute_pillar_scores",
+    "objkind": "function",
+    "roles": "anon",
+    "src": "supabase/migrations/20261123180000_climate_survey_engine.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "all",
+    "object": "_climate_recompute_pillar_scores",
+    "objkind": "function",
+    "roles": "authenticated",
+    "src": "supabase/migrations/20261123180000_climate_survey_engine.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "climate_recalculate_pillar_scores",
+    "objkind": "function",
+    "roles": "authenticated",
+    "src": "supabase/migrations/20261123180000_climate_survey_engine.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "all",
+    "object": "climate_recalculate_pillar_scores",
+    "objkind": "function",
+    "roles": "anon",
+    "src": "supabase/migrations/20261123180000_climate_survey_engine.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "climate_survey_enps",
+    "objkind": "function",
+    "roles": "authenticated",
+    "src": "supabase/migrations/20261123180000_climate_survey_engine.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "all",
+    "object": "climate_survey_enps",
+    "objkind": "function",
+    "roles": "anon",
+    "src": "supabase/migrations/20261123180000_climate_survey_engine.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "climate_submit_response",
+    "objkind": "function",
+    "roles": "authenticated",
+    "src": "supabase/migrations/20261123180000_climate_survey_engine.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "all",
+    "object": "climate_submit_response",
+    "objkind": "function",
+    "roles": "anon",
+    "src": "supabase/migrations/20261123180000_climate_survey_engine.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "all",
     "object": "add_xp",
     "objkind": "function",
     "roles": "PUBLIC, anon",
@@ -41233,6 +41440,14 @@
     "objkind": "function",
     "roles": "PUBLIC",
     "src": "supabase/migrations/20261220000000_fix_sre_rpcs_and_dispatch_trigger.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "select, insert, update, delete",
+    "object": "public",
+    "objkind": "tables",
+    "roles": "authenticated",
+    "src": "supabase/tests/climate/stubs.sql"
    }
   ],
   "raises": [
@@ -42097,6 +42312,76 @@
     "src": "supabase/migrations/20261123000001_create_acknowledge_security_digest.sql"
    },
    {
+    "function": "climate_recalculate_pillar_scores",
+    "msg": "not authenticated",
+    "src": "supabase/migrations/20261123180000_climate_survey_engine.sql"
+   },
+   {
+    "function": "climate_recalculate_pillar_scores",
+    "msg": "not authorized",
+    "src": "supabase/migrations/20261123180000_climate_survey_engine.sql"
+   },
+   {
+    "function": "climate_survey_enps",
+    "msg": "not authenticated",
+    "src": "supabase/migrations/20261123180000_climate_survey_engine.sql"
+   },
+   {
+    "function": "climate_survey_enps",
+    "msg": "survey not found",
+    "src": "supabase/migrations/20261123180000_climate_survey_engine.sql"
+   },
+   {
+    "function": "climate_survey_enps",
+    "msg": "not authorized",
+    "src": "supabase/migrations/20261123180000_climate_survey_engine.sql"
+   },
+   {
+    "function": "climate_submit_response",
+    "msg": "not authenticated",
+    "src": "supabase/migrations/20261123180000_climate_survey_engine.sql"
+   },
+   {
+    "function": "climate_submit_response",
+    "msg": "answers required",
+    "src": "supabase/migrations/20261123180000_climate_survey_engine.sql"
+   },
+   {
+    "function": "climate_submit_response",
+    "msg": "survey not found",
+    "src": "supabase/migrations/20261123180000_climate_survey_engine.sql"
+   },
+   {
+    "function": "climate_submit_response",
+    "msg": "survey is not active",
+    "src": "supabase/migrations/20261123180000_climate_survey_engine.sql"
+   },
+   {
+    "function": "climate_submit_response",
+    "msg": "survey is not open yet",
+    "src": "supabase/migrations/20261123180000_climate_survey_engine.sql"
+   },
+   {
+    "function": "climate_submit_response",
+    "msg": "survey period is over",
+    "src": "supabase/migrations/20261123180000_climate_survey_engine.sql"
+   },
+   {
+    "function": "climate_submit_response",
+    "msg": "survey already answered",
+    "src": "supabase/migrations/20261123180000_climate_survey_engine.sql"
+   },
+   {
+    "function": "climate_submit_response",
+    "msg": "invalid answers",
+    "src": "supabase/migrations/20261123180000_climate_survey_engine.sql"
+   },
+   {
+    "function": "climate_submit_response",
+    "msg": "required question missing",
+    "src": "supabase/migrations/20261123180000_climate_survey_engine.sql"
+   },
+   {
     "function": "add_xp",
     "msg": "p_amount deve ser positivo",
     "src": "supabase/migrations/20261218000000_profiles_economia_rpcs.sql"
@@ -42194,7 +42479,6 @@
      "action_plan_items",
      "action_plans",
      "climate_pillar_scores",
-     "climate_question_answers",
      "climate_survey_questions",
      "climate_survey_responses",
      "climate_surveys",
@@ -42205,8 +42489,19 @@
      "user_roles"
     ],
     "invokes_transitive": [],
-    "rpc_transitive": [],
-    "deps_count": 56
+    "rpc_transitive": [
+     "climate_recalculate_pillar_scores",
+     "climate_submit_response",
+     "climate_survey_enps",
+     "get_engagement_factor_scores",
+     "get_engagement_nps",
+     "get_engagement_nps_history",
+     "get_engagement_overview",
+     "get_engagement_pillar_benchmark",
+     "get_engagement_pillar_correlations",
+     "get_engagement_pillar_scores"
+    ],
+    "deps_count": 59
    },
    {
     "path": "",
@@ -42767,7 +43062,6 @@
     "component": "ClimateDiagnostics",
     "tables_transitive": [
      "climate_pillar_scores",
-     "climate_question_answers",
      "climate_survey_questions",
      "climate_survey_responses",
      "climate_surveys",
@@ -42781,6 +43075,9 @@
     ],
     "invokes_transitive": [],
     "rpc_transitive": [
+     "climate_recalculate_pillar_scores",
+     "climate_submit_response",
+     "climate_survey_enps",
      "generate_action_plan_from_factor",
      "get_engagement_factor_scores",
      "get_engagement_nps",
@@ -42794,11 +43091,70 @@
    },
    {
     "path": "",
+    "file": "src/pages/ClimateSurveyAdmin.tsx",
+    "component": "ClimateSurveyAdmin",
+    "tables_transitive": [
+     "climate_pillar_scores",
+     "climate_survey_questions",
+     "climate_survey_responses",
+     "climate_surveys",
+     "new_device_alerts",
+     "role_permissions",
+     "roles",
+     "user_devices",
+     "user_roles"
+    ],
+    "invokes_transitive": [],
+    "rpc_transitive": [
+     "climate_recalculate_pillar_scores",
+     "climate_submit_response",
+     "climate_survey_enps",
+     "get_engagement_factor_scores",
+     "get_engagement_nps",
+     "get_engagement_nps_history",
+     "get_engagement_overview",
+     "get_engagement_pillar_benchmark",
+     "get_engagement_pillar_correlations",
+     "get_engagement_pillar_scores"
+    ],
+    "deps_count": 72
+   },
+   {
+    "path": "",
+    "file": "src/pages/ClimateSurveys.tsx",
+    "component": "ClimateSurveys",
+    "tables_transitive": [
+     "climate_pillar_scores",
+     "climate_survey_questions",
+     "climate_survey_responses",
+     "climate_surveys",
+     "new_device_alerts",
+     "role_permissions",
+     "roles",
+     "user_devices",
+     "user_roles"
+    ],
+    "invokes_transitive": [],
+    "rpc_transitive": [
+     "climate_recalculate_pillar_scores",
+     "climate_submit_response",
+     "climate_survey_enps",
+     "get_engagement_factor_scores",
+     "get_engagement_nps",
+     "get_engagement_nps_history",
+     "get_engagement_overview",
+     "get_engagement_pillar_benchmark",
+     "get_engagement_pillar_correlations",
+     "get_engagement_pillar_scores"
+    ],
+    "deps_count": 66
+   },
+   {
+    "path": "",
     "file": "src/pages/ContinuousEngagement.tsx",
     "component": "ContinuousEngagement",
     "tables_transitive": [
      "climate_pillar_scores",
-     "climate_question_answers",
      "climate_survey_questions",
      "climate_survey_responses",
      "climate_surveys",
@@ -42811,11 +43167,21 @@
     "invokes_transitive": [],
     "rpc_transitive": [
      "assign_engagement_questions",
+     "climate_recalculate_pillar_scores",
+     "climate_submit_response",
+     "climate_survey_enps",
      "get_active_engagement_cycle",
      "get_engagement_cycle_progress",
+     "get_engagement_factor_scores",
+     "get_engagement_nps",
+     "get_engagement_nps_history",
+     "get_engagement_overview",
+     "get_engagement_pillar_benchmark",
+     "get_engagement_pillar_correlations",
+     "get_engagement_pillar_scores",
      "submit_engagement_answer"
     ],
-    "deps_count": 57
+    "deps_count": 60
    },
    {
     "path": "",
@@ -43316,7 +43682,6 @@
     "component": "Nr1Risks",
     "tables_transitive": [
      "climate_pillar_scores",
-     "climate_question_answers",
      "climate_survey_questions",
      "climate_survey_responses",
      "climate_surveys",
@@ -43325,6 +43690,9 @@
     ],
     "invokes_transitive": [],
     "rpc_transitive": [
+     "climate_recalculate_pillar_scores",
+     "climate_submit_response",
+     "climate_survey_enps",
      "generate_action_plan_from_nr1_category",
      "get_engagement_factor_scores",
      "get_engagement_nps",
@@ -45130,6 +45498,22 @@
     "file": "src/App.tsx"
    },
    {
+    "path": "/clima",
+    "component": "PageTransition",
+    "guard": "ProtectedRoute",
+    "roles": [],
+    "file": "src/App.tsx"
+   },
+   {
+    "path": "/clima/admin",
+    "component": "PageTransition",
+    "guard": "ProtectedRoute",
+    "roles": [
+     "manager"
+    ],
+    "file": "src/App.tsx"
+   },
+   {
     "path": "/conquistas",
     "component": "PageTransition",
     "guard": "ProtectedRoute",
@@ -45618,7 +46002,7 @@
     "file": ".github/workflows/contexto.yml"
    }
   ],
-  "components_count": 467,
+  "components_count": 471,
   "hooks": [
    {
     "name": "useContacts",
@@ -46153,7 +46537,19 @@
     "file": "src/hooks/useClimateSurveys.ts"
    },
    {
+    "name": "useDeleteSurveyQuestion",
+    "file": "src/hooks/useClimateSurveys.ts"
+   },
+   {
     "name": "useSubmitSurveyResponse",
+    "file": "src/hooks/useClimateSurveys.ts"
+   },
+   {
+    "name": "useMyAnsweredSurveyIds",
+    "file": "src/hooks/useClimateSurveys.ts"
+   },
+   {
+    "name": "useRecalculatePillarScores",
     "file": "src/hooks/useClimateSurveys.ts"
    },
    {
@@ -48005,6 +48401,14 @@
    },
    {
     "guard": "ProtectedRoute",
+    "file": "src/App.tsx"
+   },
+   {
+    "guard": "ProtectedRoute",
+    "file": "src/App.tsx"
+   },
+   {
+    "guard": "ProtectedRoute",
     "file": "src/components/rbac/ProtectedRoute.tsx"
    },
    {
@@ -48237,7 +48641,7 @@
   {
    "module": "src",
    "files": 3,
-   "lines": 418,
+   "lines": 422,
    "tables": [],
    "exports": [
     "App.tsx: App"
@@ -48269,8 +48673,8 @@
   },
   {
    "module": "src/components",
-   "files": 462,
-   "lines": 78345,
+   "files": 466,
+   "lines": 79065,
    "tables": [
     "attendance_records",
     "audit_logs",
@@ -48502,7 +48906,7 @@
   {
    "module": "src/hooks",
    "files": 129,
-   "lines": 14744,
+   "lines": 14790,
    "tables": [
     "certifications",
     "development_plan_actions",
@@ -48685,7 +49089,7 @@
   {
    "module": "src/integrations",
    "files": 3,
-   "lines": 13029,
+   "lines": 13041,
    "tables": [],
    "exports": [
     "index.ts: lovable",
@@ -48864,8 +49268,8 @@
   },
   {
    "module": "src/pages",
-   "files": 83,
-   "lines": 23686,
+   "files": 85,
+   "lines": 24159,
    "tables": [
     "audit_logs",
     "campaign_participants",
@@ -48911,6 +49315,8 @@
     "CertificateVerify.tsx: CertificateVerify",
     "Checkins.tsx: Checkins",
     "ClimateDiagnostics.tsx: ClimateDiagnostics",
+    "ClimateSurveyAdmin.tsx: ClimateSurveyAdmin",
+    "ClimateSurveys.tsx: ClimateSurveyCard, ClimateSurveys",
     "ContinuousEngagement.tsx: ContinuousEngagement",
     "DailyQuiz.tsx: DailyQuiz",
     "DailyWagerPage.tsx: DailyWagerPage",
@@ -48924,9 +49330,7 @@
     "ForgotPassword.tsx: ForgotPassword",
     "Goals.tsx: Goals",
     "IncidentMetrics.tsx: IncidentMetrics",
-    "Index.tsx: Index",
-    "LearningTrails.tsx: LearningTrails",
-    "LightningQuizPage.tsx: LightningQuizPage"
+    "Index.tsx: Index"
    ],
    "docs": [
     "Index.tsx: Core & Libs"
@@ -48981,6 +49385,8 @@
     "src/pages/CertificateVerify.tsx",
     "src/pages/Checkins.tsx",
     "src/pages/ClimateDiagnostics.tsx",
+    "src/pages/ClimateSurveyAdmin.tsx",
+    "src/pages/ClimateSurveys.tsx",
     "src/pages/ContinuousEngagement.tsx",
     "src/pages/DailyQuiz.tsx",
     "src/pages/DailyWagerPage.tsx",
@@ -49034,15 +49440,13 @@
     "src/pages/SocialFeed.tsx",
     "src/pages/Surveys.tsx",
     "src/pages/TournamentsPage.tsx",
-    "src/pages/TrailDetail.tsx",
-    "src/pages/WagerQuestionAdminPage.tsx",
-    "src/pages/WebhookSubscriptionDetail.tsx"
+    "src/pages/TrailDetail.tsx"
    ]
   },
   {
    "module": "src/services",
    "files": 99,
-   "lines": 22286,
+   "lines": 22310,
    "tables": [
     "achievements",
     "action_plan_items",
@@ -49085,7 +49489,6 @@
     "checkin_templates",
     "checkins",
     "climate_pillar_scores",
-    "climate_question_answers",
     "climate_survey_questions",
     "climate_survey_responses",
     "climate_surveys",
@@ -49231,7 +49634,7 @@
     "certificationsService.ts: Certification, UserCertification, CertificateVerification, certificationsService",
     "checkinsService.ts: CheckinTemplate, CheckinQuestion, Checkin, ActionItem, CheckinInsert, checkinsService",
     "churnPredictionService.ts: ChurnPrediction, ChurnPredictionSummary, ChurnPredictionResponse, churnPredictionService",
-    "climateSurveyService.ts: ClimatePillar, ClimateSurvey, ClimateSurveyQuestion, ClimatePillarScore, PILLAR_LABELS, climateSurveyService",
+    "climateSurveyService.ts: ClimatePillar, ClimateSurvey, ClimateSurveyQuestion, ClimatePillarScore, ClimateSurveyEnps, PILLAR_LABELS",
     "comboService.ts: UserCombo, COMBO_TIERS, comboService",
     "competencyService.ts: CompetencyData, competencyService",
     "continuousEngagementService.ts: EngagementAnswerFormat, EngagementCycle, EngagementAssignment, EngagementProgress, SubmitAnswerInput, normalizeAnswer",
@@ -49424,8 +49827,8 @@
   },
   {
    "module": "src/test",
-   "files": 131,
-   "lines": 22995,
+   "files": 133,
+   "lines": 23573,
    "tables": [
     "kudos",
     "profiles"
@@ -49454,6 +49857,7 @@
     "src/hooks",
     "src/i18n",
     "src/lib",
+    "src/pages",
     "src/services"
    ],
    "file_list": [
@@ -49494,6 +49898,8 @@
     "src/test/clientUpdatePayloads.test.ts",
     "src/test/climateBenchmark.simulation.test.ts",
     "src/test/climateBenchmarkSegments.simulation.test.ts",
+    "src/test/climateSurveyService.test.ts",
+    "src/test/climateSurveysFlow.test.tsx",
     "src/test/continuousEngagement.simulation.test.ts",
     "src/test/dailyWager.test.ts",
     "src/test/departmentWar.simulation.test.ts",
@@ -49534,9 +49940,7 @@
     "src/test/luckyWheelPayoutTrendCsv.simulation.test.ts",
     "src/test/luckyWheelWhatIfSignature.simulation.test.ts",
     "src/test/memoryDeckAuthoring.simulation.test.ts",
-    "src/test/memoryGame.simulation.test.ts",
-    "src/test/mentorshipService.test.ts",
-    "src/test/notificationPrefsCrossModule.simulation.test.ts"
+    "src/test/memoryGame.simulation.test.ts"
    ]
   },
   {
@@ -49784,8 +50188,8 @@
   },
   {
    "module": "supabase/migrations",
-   "files": 275,
-   "lines": 30032,
+   "files": 276,
+   "lines": 30411,
    "tables": [],
    "exports": [],
    "docs": [],
@@ -49872,6 +50276,20 @@
     "supabase/migrations/20260522144401_4396f719-927b-4c72-ad5a-2ed5fd187d0c.sql",
     "supabase/migrations/20260522200427_b6b2928a-137a-42cb-9484-ad82508d6a18.sql",
     "supabase/migrations/20260711153125_3080af6a-d23d-4b9b-ba1f-02dba6d44dd4.sql"
+   ]
+  },
+  {
+   "module": "supabase/tests",
+   "files": 2,
+   "lines": 554,
+   "tables": [],
+   "exports": [],
+   "docs": [],
+   "deps": [],
+   "imports_modules": [],
+   "file_list": [
+    "supabase/tests/climate/assertions.sql",
+    "supabase/tests/climate/stubs.sql"
    ]
   },
   {
@@ -50269,26 +50687,18 @@
      "src/services/climateSurveyService.ts"
     ]
    },
-   "climate_question_answers": {
-    "insert": [
-     "src/services/climateSurveyService.ts"
-    ],
-    "select": [
-     "src/services/climateSurveyService.ts"
-    ]
-   },
    "climate_survey_questions": {
     "select": [
      "src/services/climateSurveyService.ts"
     ],
     "insert": [
      "src/services/climateSurveyService.ts"
+    ],
+    "delete": [
+     "src/services/climateSurveyService.ts"
     ]
    },
    "climate_survey_responses": {
-    "insert": [
-     "src/services/climateSurveyService.ts"
-    ],
     "select": [
      "src/services/climateSurveyService.ts"
     ]
@@ -52077,11 +52487,13 @@
    "climate_pillar_scores": [
     "survey_id"
    ],
-   "climate_question_answers": [
-    "score"
-   ],
    "climate_survey_questions": [
+    "id",
     "survey_id"
+   ],
+   "climate_survey_responses": [
+    "survey_id",
+    "user_id"
    ],
    "climate_surveys": [
     "id"
@@ -53249,6 +53661,15 @@
     "src/pages/RateLimitDashboard.tsx",
     "src/pages/SecurityDashboard.tsx"
    ],
+   "climate_recalculate_pillar_scores": [
+    "src/services/climateSurveyService.ts"
+   ],
+   "climate_submit_response": [
+    "src/services/climateSurveyService.ts"
+   ],
+   "climate_survey_enps": [
+    "src/services/climateSurveyService.ts"
+   ],
    "close_auction": [
     "src/services/auctionService.ts"
    ],
@@ -54201,6 +54622,7 @@
    "boss_battle_rewards",
    "card_set_claims",
    "climate_benchmarks",
+   "climate_question_answers",
    "custom_badges",
    "custom_ranks",
    "custom_titles",
@@ -55132,6 +55554,16 @@
     "file": "src/components/campaigns/CampaignTeamsPanel.tsx",
     "field": "team-target",
     "rules": "type=number, min=0"
+   },
+   {
+    "file": "src/components/climate/ClimateSurveyForm.tsx",
+    "field": "climate-start",
+    "rules": "type=date"
+   },
+   {
+    "file": "src/components/climate/ClimateSurveyForm.tsx",
+    "field": "climate-end",
+    "rules": "type=date"
    },
    {
     "file": "src/components/engagement/opinions/OpinionComposer.tsx",
@@ -56522,6 +56954,18 @@
     "msg": "Não foi possível gerar o PDF"
    },
    {
+    "file": "src/components/climate/ClimateSurveyAnswerForm.tsx",
+    "msg": ">\n          {error}\n        </p>\n      )}\n\n      <div className="
+   },
+   {
+    "file": "src/components/climate/ClimateSurveyForm.tsx",
+    "msg": ">\n          {error}\n        </p>\n      )}\n\n      <div className="
+   },
+   {
+    "file": "src/components/climate/ClimateSurveyQuestions.tsx",
+    "msg": ">\n              {error}\n            </p>\n          )}\n          <Button onClick={handleAdd} disabled={isAdding}>\n            <Plus className="
+   },
+   {
     "file": "src/components/luckywheel/LuckyWheelPayoutPanel.tsx",
     "msg": ";\nimport { Badge } from "
    },
@@ -56943,7 +57387,11 @@
    },
    {
     "file": "src/hooks/useClimateSurveys.ts",
-    "msg": "Erro ao enviar resposta"
+    "msg": "Erro ao recalcular resultados"
+   },
+   {
+    "file": "src/hooks/useClimateSurveys.ts",
+    "msg": "Erro ao remover pergunta"
    },
    {
     "file": "src/hooks/useCombo.ts",
@@ -57730,6 +58178,10 @@
     "msg": "Resposta inválida do serviço de previsão de churn."
    },
    {
+    "file": "src/services/climateSurveyService.ts",
+    "msg": "Você já respondeu esta pesquisa."
+   },
+   {
     "file": "src/services/duelsService.ts",
     "msg": "Duel not found"
    },
@@ -58305,6 +58757,14 @@
    },
    {
     "file": "supabase/migrations/20261122140000_acknowledge_security_digest.sql",
+    "value": "manager"
+   },
+   {
+    "file": "supabase/migrations/20261123180000_climate_survey_engine.sql",
+    "value": "admin"
+   },
+   {
+    "file": "supabase/migrations/20261123180000_climate_survey_engine.sql",
     "value": "manager"
    }
   ],
@@ -59626,23 +60086,18 @@
    },
    {
     "table": "departments",
+    "column": "created_at",
+    "rule": "obrigatório"
+   },
+   {
+    "table": "departments",
     "column": "name",
     "rule": "obrigatório"
    },
    {
     "table": "departments",
-    "column": "color",
-    "rule": "default '#6366f1'"
-   },
-   {
-    "table": "departments",
-    "column": "created_at",
-    "rule": "default now()"
-   },
-   {
-    "table": "departments",
     "column": "updated_at",
-    "rule": "default now()"
+    "rule": "obrigatório"
    },
    {
     "table": "team_members",
@@ -63832,12 +64287,12 @@
    {
     "table": "climate_surveys",
     "column": "survey_type",
-    "rule": "default 'weekly'; CHECK survey_type IN ('weekly', 'monthly', 'quarterly', 'annual', 'custom')"
+    "rule": "default 'weekly'"
    },
    {
     "table": "climate_surveys",
     "column": "status",
-    "rule": "default 'draft'; CHECK status IN ('draft', 'scheduled', 'active', 'completed', 'cancelled')"
+    "rule": "default 'draft'"
    },
    {
     "table": "climate_surveys",
@@ -63852,12 +64307,12 @@
    {
     "table": "climate_surveys",
     "column": "starts_at",
-    "rule": "obrigatório"
+    "rule": "default now()"
    },
    {
     "table": "climate_surveys",
     "column": "ends_at",
-    "rule": "obrigatório"
+    "rule": "default now()"
    },
    {
     "table": "climate_surveys",
@@ -63876,16 +64331,6 @@
    },
    {
     "table": "climate_surveys",
-    "column": "reminder_frequency",
-    "rule": "default 'daily'"
-   },
-   {
-    "table": "climate_surveys",
-    "column": "is_recurring",
-    "rule": "default false"
-   },
-   {
-    "table": "climate_surveys",
     "column": "created_at",
     "rule": "default now()"
    },
@@ -63895,6 +64340,11 @@
     "rule": "default now()"
    },
    {
+    "table": "climate_surveys",
+    "column": "is_recurring",
+    "rule": "obrigatório"
+   },
+   {
     "table": "climate_survey_questions",
     "column": "id",
     "rule": "PK; default gen_random_uuid()"
@@ -63902,7 +64352,7 @@
    {
     "table": "climate_survey_questions",
     "column": "survey_id",
-    "rule": "obrigatório; FK → climate_surveys.id ON DELETE CASCADE"
+    "rule": "obrigatório; FK → climate_surveys.id on delete cascade"
    },
    {
     "table": "climate_survey_questions",
@@ -63917,7 +64367,7 @@
    {
     "table": "climate_survey_questions",
     "column": "question_type",
-    "rule": "default 'likert_5'; CHECK question_type IN ('likert_5', 'likert_10', 'nps', 'yes_no', 'multiple_choice', 'text')"
+    "rule": "default 'likert_5'"
    },
    {
     "table": "climate_survey_questions",
@@ -63942,7 +64392,7 @@
    {
     "table": "climate_survey_responses",
     "column": "survey_id",
-    "rule": "obrigatório; FK → climate_surveys.id ON DELETE CASCADE"
+    "rule": "obrigatório; FK → climate_surveys.id on delete cascade"
    },
    {
     "table": "climate_survey_responses",
@@ -63972,12 +64422,12 @@
    {
     "table": "climate_question_answers",
     "column": "response_id",
-    "rule": "obrigatório; FK → climate_survey_responses.id ON DELETE CASCADE"
+    "rule": "obrigatório; FK → climate_survey_responses.id on delete cascade"
    },
    {
     "table": "climate_question_answers",
     "column": "question_id",
-    "rule": "obrigatório; FK → climate_survey_questions.id ON DELETE CASCADE"
+    "rule": "obrigatório; FK → climate_survey_questions.id on delete cascade"
    },
    {
     "table": "climate_question_answers",
@@ -63997,7 +64447,7 @@
    {
     "table": "climate_pillar_scores",
     "column": "survey_id",
-    "rule": "obrigatório; FK → climate_surveys.id ON DELETE CASCADE"
+    "rule": "obrigatório; FK → climate_surveys.id on delete cascade"
    },
    {
     "table": "climate_pillar_scores",
@@ -64022,7 +64472,7 @@
    {
     "table": "climate_pillar_scores",
     "column": "trend",
-    "rule": "CHECK trend IN ('up', 'down', 'stable')"
+    "rule": "CHECK trend in ('up','down','stable')"
    },
    {
     "table": "climate_pillar_scores",
@@ -64032,7 +64482,7 @@
    {
     "table": "climate_pillar_scores",
     "column": "(tabela)",
-    "rule": "UNIQUE(survey_id, department_id, pillar)"
+    "rule": "unique (survey_id, department_id, pillar)"
    },
    {
     "table": "climate_benchmarks",
@@ -72443,6 +72893,18 @@
     "kind": "compara"
    },
    {
+    "file": "src/components/climate/ClimateSurveyForm.tsx",
+    "field": "status",
+    "value": "draft",
+    "kind": "escreve"
+   },
+   {
+    "file": "src/components/climate/ClimateSurveyQuestions.tsx",
+    "field": "status",
+    "value": "draft",
+    "kind": "compara"
+   },
+   {
     "file": "src/components/copilot/CopilotAlertCard.tsx",
     "field": "type",
     "value": "urgent",
@@ -75182,6 +75644,36 @@
     "file": "src/pages/Checkins.tsx",
     "field": "status",
     "value": "completed",
+    "kind": "compara"
+   },
+   {
+    "file": "src/pages/ClimateSurveyAdmin.tsx",
+    "field": "status",
+    "value": "active",
+    "kind": "compara"
+   },
+   {
+    "file": "src/pages/ClimateSurveyAdmin.tsx",
+    "field": "status",
+    "value": "active",
+    "kind": "compara"
+   },
+   {
+    "file": "src/pages/ClimateSurveyAdmin.tsx",
+    "field": "status",
+    "value": "active",
+    "kind": "compara"
+   },
+   {
+    "file": "src/pages/ClimateSurveyAdmin.tsx",
+    "field": "status",
+    "value": "active",
+    "kind": "compara"
+   },
+   {
+    "file": "src/pages/ClimateSurveyAdmin.tsx",
+    "field": "status",
+    "value": "active",
     "kind": "compara"
    },
    {
@@ -78591,8 +79083,8 @@
    {
     "file": "src/services/climateSurveyService.ts",
     "name": "calculateENPS",
-    "params": "surveyId: string",
-    "body": "enps: number; promoters: number; passives: number; detractors: number"
+    "params": "surveyId: string, minResponses = MIN_RESPONDENTS",
+    "body": "const { data, error } = await supabase.rpc('climate_survey_enps', { p_survey_id: surveyId, p_min_responses: minResponses, }); if (error) { logger.error('Failed to calculate eNPS', 'ClimateSurveyService', error); throw error; } return data as unknown as ClimateSurveyEnps;"
    },
    {
     "file": "src/services/continuousEngagementService.ts",
@@ -78963,6 +79455,10 @@
    {
     "file": "src/components/certifications/CertificateActions.tsx",
     "line": "setTimeout(() => setCopied(false), 2000);"
+   },
+   {
+    "file": "src/components/climate/ClimateSurveyForm.tsx",
+    "line": "const nextWeek = new Date(today.getTime() + 7 * 24 * 60 * 60 * 1000);"
    },
    {
     "file": "src/components/effects/AnimatedXPParticles.tsx",
@@ -82471,6 +82967,186 @@
    {
     "file": "src/test/climateBenchmarkSegments.simulation.test.ts",
     "name": "usa a primeira linha que carrega origem, ignorando linhas sem referência"
+   },
+   {
+    "file": "src/test/climateSurveyService.test.ts",
+    "name": "climateSurveyService"
+   },
+   {
+    "file": "src/test/climateSurveyService.test.ts",
+    "name": "submitResponse"
+   },
+   {
+    "file": "src/test/climateSurveyService.test.ts",
+    "name": "envia as respostas pela RPC com score e texto normalizados"
+   },
+   {
+    "file": "src/test/climateSurveyService.test.ts",
+    "name": "traduz a violação de unicidade (23505) em mensagem clara"
+   },
+   {
+    "file": "src/test/climateSurveyService.test.ts",
+    "name": "propaga outros erros sem mascarar"
+   },
+   {
+    "file": "src/test/climateSurveyService.test.ts",
+    "name": "getMyAnsweredSurveyIds"
+   },
+   {
+    "file": "src/test/climateSurveyService.test.ts",
+    "name": "filtra pelas respostas do usuário e devolve só os ids das pesquisas"
+   },
+   {
+    "file": "src/test/climateSurveyService.test.ts",
+    "name": "devolve lista vazia quando o usuário ainda não respondeu nada"
+   },
+   {
+    "file": "src/test/climateSurveyService.test.ts",
+    "name": "recalculatePillarScores"
+   },
+   {
+    "file": "src/test/climateSurveyService.test.ts",
+    "name": "usa o limite de anonimato padrão e devolve quantos pilares foram recalculados"
+   },
+   {
+    "file": "src/test/climateSurveyService.test.ts",
+    "name": "devolve 0 quando a RPC responde nulo"
+   },
+   {
+    "file": "src/test/climateSurveyService.test.ts",
+    "name": "calculateENPS"
+   },
+   {
+    "file": "src/test/climateSurveyService.test.ts",
+    "name": "lê o eNPS da RPC e devolve o payload completo"
+   },
+   {
+    "file": "src/test/climateSurveyService.test.ts",
+    "name": "propaga erro da RPC em vez de devolver eNPS falso"
+   },
+   {
+    "file": "src/test/climateSurveyService.test.ts",
+    "name": "deleteQuestion"
+   },
+   {
+    "file": "src/test/climateSurveyService.test.ts",
+    "name": "remove a pergunta pelo id"
+   },
+   {
+    "file": "src/test/climateSurveyService.test.ts",
+    "name": "propaga erro de RLS ao remover pergunta de pesquisa alheia"
+   },
+   {
+    "file": "src/test/climateSurveyService.test.ts",
+    "name": "getPillarScores"
+   },
+   {
+    "file": "src/test/climateSurveyService.test.ts",
+    "name": "busca os scores consolidados (department_id nulo) por padrão"
+   },
+   {
+    "file": "src/test/climateSurveyService.test.ts",
+    "name": "filtra por departamento quando informado"
+   },
+   {
+    "file": "src/test/climateSurveysFlow.test.tsx",
+    "name": "ClimateSurveyAnswerForm"
+   },
+   {
+    "file": "src/test/climateSurveysFlow.test.tsx",
+    "name": "envia a nota escolhida para cada pergunta respondida"
+   },
+   {
+    "file": "src/test/climateSurveysFlow.test.tsx",
+    "name": "bloqueia o envio quando nenhuma pergunta foi respondida"
+   },
+   {
+    "file": "src/test/climateSurveysFlow.test.tsx",
+    "name": "quando a pesquisa não permite pular, cobra todas as perguntas obrigatórias"
+   },
+   {
+    "file": "src/test/climateSurveysFlow.test.tsx",
+    "name": "desabilita o envio enquanto a resposta está sendo gravada"
+   },
+   {
+    "file": "src/test/climateSurveysFlow.test.tsx",
+    "name": "ClimateSurveyForm"
+   },
+   {
+    "file": "src/test/climateSurveysFlow.test.tsx",
+    "name": "exige título antes de criar"
+   },
+   {
+    "file": "src/test/climateSurveysFlow.test.tsx",
+    "name": "recusa período com encerramento anterior ao início"
+   },
+   {
+    "file": "src/test/climateSurveysFlow.test.tsx",
+    "name": "cria a pesquisa como rascunho com o período e o criador informados"
+   },
+   {
+    "file": "src/test/climateSurveysFlow.test.tsx",
+    "name": "ClimateSurveyQuestions"
+   },
+   {
+    "file": "src/test/climateSurveysFlow.test.tsx",
+    "name": "continua a numeração a partir do maior índice já usado"
+   },
+   {
+    "file": "src/test/climateSurveysFlow.test.tsx",
+    "name": "avisa quando o texto da pergunta está vazio"
+   },
+   {
+    "file": "src/test/climateSurveysFlow.test.tsx",
+    "name": "trava a edição das perguntas fora do rascunho"
+   },
+   {
+    "file": "src/test/climateSurveysFlow.test.tsx",
+    "name": "ClimateSurveyResults"
+   },
+   {
+    "file": "src/test/climateSurveysFlow.test.tsx",
+    "name": "esconde o eNPS enquanto a amostra mínima não é atingida"
+   },
+   {
+    "file": "src/test/climateSurveysFlow.test.tsx",
+    "name": "mostra o eNPS e a divisão de promotores, neutros e detratores"
+   },
+   {
+    "file": "src/test/climateSurveysFlow.test.tsx",
+    "name": "ordena os pilares do maior para o menor score"
+   },
+   {
+    "file": "src/test/climateSurveysFlow.test.tsx",
+    "name": "explica o estado vazio quando nenhum pilar foi calculado"
+   },
+   {
+    "file": "src/test/climateSurveysFlow.test.tsx",
+    "name": "avisa quando o motor de resultados não está disponível no ambiente"
+   },
+   {
+    "file": "src/test/climateSurveysFlow.test.tsx",
+    "name": "pede o recálculo dos pilares da pesquisa exibida"
+   },
+   {
+    "file": "src/test/climateSurveysFlow.test.tsx",
+    "name": "avisa que faltam notas de eNPS quando a pesquisa já tem pergunta elegível"
+   },
+   {
+    "file": "src/test/climateSurveysFlow.test.tsx",
+    "name": "explica que falta pergunta de eNPS quando há respostas mas nenhuma escala elegível"
+   },
+   {
+    "file": "src/test/climateSurveysFlow.test.tsx",
+    "name": "ClimateSurveyCard"
+   },
+   {
+    "file": "src/test/climateSurveysFlow.test.tsx",
+    "name": "anuncia a hora do encerramento, não só a data"
+   },
+   {
+    "file": "src/test/climateSurveysFlow.test.tsx",
+    "name": "recarrega as perguntas sem obrigar a fechar o formulário"
    },
    {
     "file": "src/test/continuousEngagement.simulation.test.ts",
@@ -91211,146 +91887,6 @@
     "src": "supabase/migrations/20251225192828_0004b3a0-0a25-47a3-a965-13e4afaef232.sql"
    },
    {
-    "name": "Managers can create climate surveys",
-    "table": "climate_surveys",
-    "cmd": "INSERT",
-    "roles": "public",
-    "mode": "permissive",
-    "using": "",
-    "check": "has_role(auth.uid(), 'admin') OR has_role(auth.uid(), 'manager')",
-    "src": "supabase/migrations/20251225223108_0cefeb56-0f31-454b-8422-7dad048d070f.sql"
-   },
-   {
-    "name": "Everyone can view active surveys",
-    "table": "climate_surveys",
-    "cmd": "SELECT",
-    "roles": "public",
-    "mode": "permissive",
-    "using": "status IN ('active', 'completed') OR created_by = auth.uid() OR has_role(auth.uid(), 'admin')",
-    "check": "",
-    "src": "supabase/migrations/20251225223108_0cefeb56-0f31-454b-8422-7dad048d070f.sql"
-   },
-   {
-    "name": "Creators can update surveys",
-    "table": "climate_surveys",
-    "cmd": "UPDATE",
-    "roles": "public",
-    "mode": "permissive",
-    "using": "created_by = auth.uid() OR has_role(auth.uid(), 'admin')",
-    "check": "",
-    "src": "supabase/migrations/20251225223108_0cefeb56-0f31-454b-8422-7dad048d070f.sql"
-   },
-   {
-    "name": "Admins can delete surveys",
-    "table": "climate_surveys",
-    "cmd": "DELETE",
-    "roles": "public",
-    "mode": "permissive",
-    "using": "has_role(auth.uid(), 'admin')",
-    "check": "",
-    "src": "supabase/migrations/20251225223108_0cefeb56-0f31-454b-8422-7dad048d070f.sql"
-   },
-   {
-    "name": "View survey questions",
-    "table": "climate_survey_questions",
-    "cmd": "SELECT",
-    "roles": "public",
-    "mode": "permissive",
-    "using": "EXISTS (SELECT 1 FROM climate_surveys s WHERE s.id = survey_id AND (s.status IN ('active', 'completed') OR s.created_by = auth.uid() OR has_role(auth.uid(), 'admin')))",
-    "check": "",
-    "src": "supabase/migrations/20251225223108_0cefeb56-0f31-454b-8422-7dad048d070f.sql"
-   },
-   {
-    "name": "Manage survey questions",
-    "table": "climate_survey_questions",
-    "cmd": "ALL",
-    "roles": "public",
-    "mode": "permissive",
-    "using": "EXISTS (SELECT 1 FROM climate_surveys s WHERE s.id = survey_id AND (s.created_by = auth.uid() OR has_role(auth.uid(), 'admin')))",
-    "check": "",
-    "src": "supabase/migrations/20251225223108_0cefeb56-0f31-454b-8422-7dad048d070f.sql"
-   },
-   {
-    "name": "Users can submit responses",
-    "table": "climate_survey_responses",
-    "cmd": "INSERT",
-    "roles": "public",
-    "mode": "permissive",
-    "using": "",
-    "check": "auth.uid() = user_id",
-    "src": "supabase/migrations/20251225223108_0cefeb56-0f31-454b-8422-7dad048d070f.sql"
-   },
-   {
-    "name": "Users can view own responses",
-    "table": "climate_survey_responses",
-    "cmd": "SELECT",
-    "roles": "public",
-    "mode": "permissive",
-    "using": "user_id = auth.uid() OR has_role(auth.uid(), 'admin')",
-    "check": "",
-    "src": "supabase/migrations/20251225223108_0cefeb56-0f31-454b-8422-7dad048d070f.sql"
-   },
-   {
-    "name": "Users can update own responses",
-    "table": "climate_survey_responses",
-    "cmd": "UPDATE",
-    "roles": "public",
-    "mode": "permissive",
-    "using": "user_id = auth.uid()",
-    "check": "",
-    "src": "supabase/migrations/20251225223108_0cefeb56-0f31-454b-8422-7dad048d070f.sql"
-   },
-   {
-    "name": "Users can answer questions",
-    "table": "climate_question_answers",
-    "cmd": "INSERT",
-    "roles": "public",
-    "mode": "permissive",
-    "using": "",
-    "check": "EXISTS (SELECT 1 FROM climate_survey_responses r WHERE r.id = response_id AND r.user_id = auth.uid())",
-    "src": "supabase/migrations/20251225223108_0cefeb56-0f31-454b-8422-7dad048d070f.sql"
-   },
-   {
-    "name": "Users view own answers",
-    "table": "climate_question_answers",
-    "cmd": "SELECT",
-    "roles": "public",
-    "mode": "permissive",
-    "using": "EXISTS (SELECT 1 FROM climate_survey_responses r WHERE r.id = response_id AND (r.user_id = auth.uid() OR has_role(auth.uid(), 'admin')))",
-    "check": "",
-    "src": "supabase/migrations/20251225223108_0cefeb56-0f31-454b-8422-7dad048d070f.sql"
-   },
-   {
-    "name": "Users update own answers",
-    "table": "climate_question_answers",
-    "cmd": "UPDATE",
-    "roles": "public",
-    "mode": "permissive",
-    "using": "EXISTS (SELECT 1 FROM climate_survey_responses r WHERE r.id = response_id AND r.user_id = auth.uid())",
-    "check": "",
-    "src": "supabase/migrations/20251225223108_0cefeb56-0f31-454b-8422-7dad048d070f.sql"
-   },
-   {
-    "name": "Managers can view pillar scores",
-    "table": "climate_pillar_scores",
-    "cmd": "SELECT",
-    "roles": "public",
-    "mode": "permissive",
-    "using": "has_role(auth.uid(), 'admin') OR has_role(auth.uid(), 'manager')",
-    "check": "",
-    "src": "supabase/migrations/20251225223108_0cefeb56-0f31-454b-8422-7dad048d070f.sql"
-   },
-   {
-    "name": "System can manage pillar scores",
-    "table": "climate_pillar_scores",
-    "cmd": "ALL",
-    "roles": "public",
-    "mode": "permissive",
-    "using": "has_role(auth.uid(), 'admin')",
-    "check": "",
-    "src": "supabase/migrations/20251225223108_0cefeb56-0f31-454b-8422-7dad048d070f.sql"
-   },
-   {
     "name": "Everyone can view benchmarks",
     "table": "climate_benchmarks",
     "cmd": "SELECT",
@@ -93999,6 +94535,176 @@
     "using": "EXISTS ( SELECT 1 FROM public.user_roles ur WHERE ur.user_id = auth.uid() AND ur.role = 'admin' )",
     "check": "",
     "src": "supabase/migrations/20261123000000_create_goal_templates.sql"
+   },
+   {
+    "name": "Managers can add survey questions",
+    "table": "climate_survey_questions",
+    "cmd": "INSERT",
+    "roles": "public",
+    "mode": "permissive",
+    "using": "",
+    "check": "EXISTS ( SELECT 1 FROM public.climate_surveys s WHERE s.id = survey_id AND (s.created_by = auth.uid() OR public.has_role(auth.uid(), 'admin')) )",
+    "src": "supabase/migrations/20261123180000_climate_survey_engine.sql"
+   },
+   {
+    "name": "Managers can update survey questions",
+    "table": "climate_survey_questions",
+    "cmd": "UPDATE",
+    "roles": "public",
+    "mode": "permissive",
+    "using": "EXISTS ( SELECT 1 FROM public.climate_surveys s WHERE s.id = survey_id AND (s.created_by = auth.uid() OR public.has_role(auth.uid(), 'admin')) )",
+    "check": "",
+    "src": "supabase/migrations/20261123180000_climate_survey_engine.sql"
+   },
+   {
+    "name": "Managers can delete draft survey questions",
+    "table": "climate_survey_questions",
+    "cmd": "DELETE",
+    "roles": "public",
+    "mode": "permissive",
+    "using": "EXISTS ( SELECT 1 FROM public.climate_surveys s WHERE s.id = survey_id AND s.status = 'draft' AND (s.created_by = auth.uid() OR public.has_role(auth.uid(), 'admin')) )",
+    "check": "",
+    "src": "supabase/migrations/20261123180000_climate_survey_engine.sql"
+   },
+   {
+    "name": "Managers can create climate surveys",
+    "table": "climate_surveys",
+    "cmd": "INSERT",
+    "roles": "public",
+    "mode": "permissive",
+    "using": "",
+    "check": "has_role(auth.uid(), 'admin') or has_role(auth.uid(), 'manager')",
+    "src": "supabase/tests/climate/stubs.sql"
+   },
+   {
+    "name": "Everyone can view active surveys",
+    "table": "climate_surveys",
+    "cmd": "SELECT",
+    "roles": "public",
+    "mode": "permissive",
+    "using": "status in ('active', 'completed') or created_by = auth.uid() or has_role(auth.uid(), 'admin')",
+    "check": "",
+    "src": "supabase/tests/climate/stubs.sql"
+   },
+   {
+    "name": "Creators can update surveys",
+    "table": "climate_surveys",
+    "cmd": "UPDATE",
+    "roles": "public",
+    "mode": "permissive",
+    "using": "created_by = auth.uid() or has_role(auth.uid(), 'admin')",
+    "check": "",
+    "src": "supabase/tests/climate/stubs.sql"
+   },
+   {
+    "name": "Admins can delete surveys",
+    "table": "climate_surveys",
+    "cmd": "DELETE",
+    "roles": "public",
+    "mode": "permissive",
+    "using": "has_role(auth.uid(), 'admin')",
+    "check": "",
+    "src": "supabase/tests/climate/stubs.sql"
+   },
+   {
+    "name": "View survey questions",
+    "table": "climate_survey_questions",
+    "cmd": "SELECT",
+    "roles": "public",
+    "mode": "permissive",
+    "using": "exists (select 1 from climate_surveys s where s.id = survey_id and (s.status in ('active','completed') or s.created_by = auth.uid() or has_role(auth.uid(), 'admin')))",
+    "check": "",
+    "src": "supabase/tests/climate/stubs.sql"
+   },
+   {
+    "name": "Manage survey questions",
+    "table": "climate_survey_questions",
+    "cmd": "ALL",
+    "roles": "public",
+    "mode": "permissive",
+    "using": "exists (select 1 from climate_surveys s where s.id = survey_id and (s.created_by = auth.uid() or has_role(auth.uid(), 'admin')))",
+    "check": "",
+    "src": "supabase/tests/climate/stubs.sql"
+   },
+   {
+    "name": "Users can submit responses",
+    "table": "climate_survey_responses",
+    "cmd": "INSERT",
+    "roles": "public",
+    "mode": "permissive",
+    "using": "",
+    "check": "auth.uid() = user_id",
+    "src": "supabase/tests/climate/stubs.sql"
+   },
+   {
+    "name": "Users can view own responses",
+    "table": "climate_survey_responses",
+    "cmd": "SELECT",
+    "roles": "public",
+    "mode": "permissive",
+    "using": "user_id = auth.uid() or has_role(auth.uid(), 'admin')",
+    "check": "",
+    "src": "supabase/tests/climate/stubs.sql"
+   },
+   {
+    "name": "Users can update own responses",
+    "table": "climate_survey_responses",
+    "cmd": "UPDATE",
+    "roles": "public",
+    "mode": "permissive",
+    "using": "user_id = auth.uid()",
+    "check": "",
+    "src": "supabase/tests/climate/stubs.sql"
+   },
+   {
+    "name": "Users can answer questions",
+    "table": "climate_question_answers",
+    "cmd": "INSERT",
+    "roles": "public",
+    "mode": "permissive",
+    "using": "",
+    "check": "exists (select 1 from climate_survey_responses r where r.id = response_id and r.user_id = auth.uid())",
+    "src": "supabase/tests/climate/stubs.sql"
+   },
+   {
+    "name": "Users view own answers",
+    "table": "climate_question_answers",
+    "cmd": "SELECT",
+    "roles": "public",
+    "mode": "permissive",
+    "using": "exists (select 1 from climate_survey_responses r where r.id = response_id and (r.user_id = auth.uid() or has_role(auth.uid(), 'admin')))",
+    "check": "",
+    "src": "supabase/tests/climate/stubs.sql"
+   },
+   {
+    "name": "Users update own answers",
+    "table": "climate_question_answers",
+    "cmd": "UPDATE",
+    "roles": "public",
+    "mode": "permissive",
+    "using": "exists (select 1 from climate_survey_responses r where r.id = response_id and r.user_id = auth.uid())",
+    "check": "",
+    "src": "supabase/tests/climate/stubs.sql"
+   },
+   {
+    "name": "Managers can view pillar scores",
+    "table": "climate_pillar_scores",
+    "cmd": "SELECT",
+    "roles": "public",
+    "mode": "permissive",
+    "using": "has_role(auth.uid(), 'admin') or has_role(auth.uid(), 'manager')",
+    "check": "",
+    "src": "supabase/tests/climate/stubs.sql"
+   },
+   {
+    "name": "System can manage pillar scores",
+    "table": "climate_pillar_scores",
+    "cmd": "ALL",
+    "roles": "public",
+    "mode": "permissive",
+    "using": "has_role(auth.uid(), 'admin')",
+    "check": "",
+    "src": "supabase/tests/climate/stubs.sql"
    }
   ],
   "db_triggers": [
@@ -99138,6 +99844,92 @@
     "raises": [],
     "tables": []
    },
+   "_climate_recompute_pillar_scores": {
+    "args": "p_survey_id uuid, p_min_responses integer",
+    "returns": "integer",
+    "lang": "plpgsql",
+    "src": "supabase/migrations/20261123180000_climate_survey_engine.sql",
+    "security_definer": true,
+    "search_path": true,
+    "body": "DECLARE v_min integer := GREATEST(COALESCE(p_min_responses, 5), 5); v_responders integer; v_written integer := 0; v_marca timestamptz := clock_timestamp(); BEGIN IF NOT EXISTS (SELECT 1 FROM public.climate_surveys s WHERE s.id = p_survey_id) THEN RETURN 0; END IF; PERFORM pg_advisory_xact_lock(hashtextextended(p_survey_id::text, 0)); SELECT count(*) INTO v_responders FROM public.climate_survey_responses WHERE survey_id = p_survey_id AND is_complete; IF COALESCE(v_responders, 0) >= v_min THEN INSERT INTO public.climate_pillar_scores (survey_id, department_id, pillar, score, response_count, calculated_at) SELECT p_survey_id, NULL, q.pillar, round(avg(CASE q.question_type WHEN 'likert_10' THEN …",
+    "raises": [],
+    "tables": [
+     "SET",
+     "climate_pillar_scores",
+     "climate_question_answers",
+     "climate_survey_questions",
+     "climate_survey_responses",
+     "climate_surveys",
+     "v_responders"
+    ]
+   },
+   "climate_recalculate_pillar_scores": {
+    "args": "p_survey_id uuid, p_min_responses integer DEFAULT 5",
+    "returns": "integer",
+    "lang": "plpgsql",
+    "src": "supabase/migrations/20261123180000_climate_survey_engine.sql",
+    "security_definer": true,
+    "search_path": true,
+    "body": "DECLARE v_user_id uuid := auth.uid(); BEGIN IF v_user_id IS NULL THEN RAISE EXCEPTION 'not authenticated'; END IF; IF NOT ( public.has_role(v_user_id, 'admin') OR public.has_role(v_user_id, 'manager') OR EXISTS (SELECT 1 FROM public.climate_surveys s WHERE s.id = p_survey_id AND s.created_by = v_user_id) ) THEN RAISE EXCEPTION 'not authorized'; END IF; RETURN public._climate_recompute_pillar_scores(p_survey_id, p_min_responses); END;",
+    "raises": [
+     "not authenticated",
+     "not authorized"
+    ],
+    "tables": [
+     "climate_surveys"
+    ]
+   },
+   "climate_survey_enps": {
+    "args": "p_survey_id uuid, p_min_responses integer DEFAULT 5",
+    "returns": "jsonb",
+    "lang": "plpgsql",
+    "src": "supabase/migrations/20261123180000_climate_survey_engine.sql",
+    "security_definer": true,
+    "search_path": true,
+    "body": "DECLARE v_user_id uuid := auth.uid(); v_min integer := GREATEST(COALESCE(p_min_responses, 5), 5); v_responders integer := 0; v_total integer := 0; v_promoters integer := 0; v_passives integer := 0; v_detractors integer := 0; v_enps integer := 0; BEGIN IF v_user_id IS NULL THEN RAISE EXCEPTION 'not authenticated'; END IF; IF NOT EXISTS (SELECT 1 FROM public.climate_surveys s WHERE s.id = p_survey_id) THEN RAISE EXCEPTION 'survey not found'; END IF; IF NOT ( public.has_role(v_user_id, 'admin') OR public.has_role(v_user_id, 'manager') OR EXISTS (SELECT 1 FROM public.climate_surveys s WHERE s.id = p_survey_id AND s.created_by = v_user_id) ) THEN RAISE EXCEPTION 'not authorized'; END IF; SELECT c …",
+    "raises": [
+     "not authenticated",
+     "survey not found",
+     "not authorized"
+    ],
+    "tables": [
+     "climate_question_answers",
+     "climate_survey_questions",
+     "climate_survey_responses",
+     "climate_surveys",
+     "v_responders",
+     "v_total"
+    ]
+   },
+   "climate_submit_response": {
+    "args": "p_survey_id uuid, p_answers jsonb",
+    "returns": "uuid",
+    "lang": "plpgsql",
+    "src": "supabase/migrations/20261123180000_climate_survey_engine.sql",
+    "security_definer": true,
+    "search_path": true,
+    "body": "DECLARE v_user_id uuid := auth.uid(); v_status text; v_starts_at timestamptz; v_ends_at timestamptz; v_response_id uuid; BEGIN IF v_user_id IS NULL THEN RAISE EXCEPTION 'not authenticated'; END IF; IF p_answers IS NULL OR jsonb_typeof(p_answers) <> 'array' OR jsonb_array_length(p_answers) = 0 THEN RAISE EXCEPTION 'answers required'; END IF; SELECT status, starts_at, ends_at INTO v_status, v_starts_at, v_ends_at FROM public.climate_surveys WHERE id = p_survey_id; IF v_status IS NULL THEN RAISE EXCEPTION 'survey not found'; END IF; IF v_status <> 'active' THEN RAISE EXCEPTION 'survey is not active'; END IF; IF v_starts_at IS NOT NULL AND now() < v_starts_at THEN RAISE EXCEPTION 'survey is not …",
+    "raises": [
+     "not authenticated",
+     "answers required",
+     "survey not found",
+     "survey is not active",
+     "survey is not open yet",
+     "survey period is over",
+     "survey already answered",
+     "invalid answers",
+     "required question missing"
+    ],
+    "tables": [
+     "climate_question_answers",
+     "climate_survey_questions",
+     "climate_survey_responses",
+     "climate_surveys",
+     "jsonb_to_recordset",
+     "v_response_id",
+     "v_status"
+    ]
+   },
    "add_xp": {
     "args": "p_user_id uuid, p_amount integer, p_source text DEFAULT NULL",
     "returns": "TABLE (id uuid, xp integer, level integer)",
@@ -100433,6 +101225,76 @@
     "src": "supabase/migrations/20261123000001_create_acknowledge_security_digest.sql"
    },
    {
+    "function": "climate_recalculate_pillar_scores",
+    "msg": "not authenticated",
+    "src": "supabase/migrations/20261123180000_climate_survey_engine.sql"
+   },
+   {
+    "function": "climate_recalculate_pillar_scores",
+    "msg": "not authorized",
+    "src": "supabase/migrations/20261123180000_climate_survey_engine.sql"
+   },
+   {
+    "function": "climate_survey_enps",
+    "msg": "not authenticated",
+    "src": "supabase/migrations/20261123180000_climate_survey_engine.sql"
+   },
+   {
+    "function": "climate_survey_enps",
+    "msg": "survey not found",
+    "src": "supabase/migrations/20261123180000_climate_survey_engine.sql"
+   },
+   {
+    "function": "climate_survey_enps",
+    "msg": "not authorized",
+    "src": "supabase/migrations/20261123180000_climate_survey_engine.sql"
+   },
+   {
+    "function": "climate_submit_response",
+    "msg": "not authenticated",
+    "src": "supabase/migrations/20261123180000_climate_survey_engine.sql"
+   },
+   {
+    "function": "climate_submit_response",
+    "msg": "answers required",
+    "src": "supabase/migrations/20261123180000_climate_survey_engine.sql"
+   },
+   {
+    "function": "climate_submit_response",
+    "msg": "survey not found",
+    "src": "supabase/migrations/20261123180000_climate_survey_engine.sql"
+   },
+   {
+    "function": "climate_submit_response",
+    "msg": "survey is not active",
+    "src": "supabase/migrations/20261123180000_climate_survey_engine.sql"
+   },
+   {
+    "function": "climate_submit_response",
+    "msg": "survey is not open yet",
+    "src": "supabase/migrations/20261123180000_climate_survey_engine.sql"
+   },
+   {
+    "function": "climate_submit_response",
+    "msg": "survey period is over",
+    "src": "supabase/migrations/20261123180000_climate_survey_engine.sql"
+   },
+   {
+    "function": "climate_submit_response",
+    "msg": "survey already answered",
+    "src": "supabase/migrations/20261123180000_climate_survey_engine.sql"
+   },
+   {
+    "function": "climate_submit_response",
+    "msg": "invalid answers",
+    "src": "supabase/migrations/20261123180000_climate_survey_engine.sql"
+   },
+   {
+    "function": "climate_submit_response",
+    "msg": "required question missing",
+    "src": "supabase/migrations/20261123180000_climate_survey_engine.sql"
+   },
+   {
     "function": "add_xp",
     "msg": "p_amount deve ser positivo",
     "src": "supabase/migrations/20261218000000_profiles_economia_rpcs.sql"
@@ -100966,15 +101828,9 @@
      "table": "climate_surveys",
      "column": "status",
      "enum": "",
-     "allowed": [
-      "active",
-      "cancelled",
-      "completed",
-      "draft",
-      "scheduled"
-     ],
+     "allowed": [],
      "default": "draft",
-     "type": "TEXT NOT NULL DEFAULT 'draft' CHECK (status IN ('draft', 'scheduled', 'active', 'completed', 'cancelled'))"
+     "type": "text not null default 'draft'"
     },
     {
      "table": "opinions",
@@ -102107,6 +102963,7 @@
       "compara:src/hooks/useWeeklyChallenge.ts",
       "compara:src/lib/auctionAdmin.ts",
       "compara:src/lib/auctionEngine.ts",
+      "compara:src/pages/ClimateSurveyAdmin.tsx",
       "compara:src/pages/Goals.tsx",
       "compara:src/pages/Mentoria.tsx",
       "compara:src/pages/QuestBuilder.tsx",
@@ -102190,6 +103047,7 @@
       "compara:src/components/admin/FeedbackCycleManager.tsx",
       "compara:src/components/admin/SurveyCreator.tsx",
       "compara:src/components/campaigns/CampaignGoalBetPanel.tsx",
+      "compara:src/components/climate/ClimateSurveyQuestions.tsx",
       "compara:src/components/manager/QuestCard.tsx",
       "compara:src/components/manager/QuestsList.tsx",
       "compara:src/components/prediction/PredictionMarketCard.tsx",
@@ -102201,6 +103059,7 @@
       "escreve:src/components/auction/AuctionAdminForm.tsx",
       "escreve:src/components/boss/BossBattleAdminDialog.tsx",
       "escreve:src/components/campaigns/CreateCampaignDialog.tsx",
+      "escreve:src/components/climate/ClimateSurveyForm.tsx",
       "escreve:src/lib/boardTrailAuthoring.ts",
       "escreve:src/pages/BoardTrailAdminPage.tsx",
       "escreve:src/pages/ExecutiveMonthlyReport.tsx",
@@ -103454,7 +104313,7 @@
    "climate_pillar_scores": {
     "rls": "enabled",
     "SELECT": [
-     "public: has_role(auth.uid(), 'admin') OR has_role(auth.uid(), 'manager')",
+     "public: has_role(auth.uid(), 'admin') or has_role(auth.uid(), 'manager')",
      "public: has_role(auth.uid(), 'admin')"
     ],
     "INSERT": [
@@ -103470,36 +104329,39 @@
    "climate_question_answers": {
     "rls": "enabled",
     "SELECT": [
-     "public: EXISTS (SELECT 1 FROM climate_survey_responses r WHERE r.id = response_id AND (r.user_id = auth.uid() OR has_role(auth.uid(), 'admin"
+     "public: exists (select 1 from climate_survey_responses r where r.id = response_id and (r.user_id = auth.uid() or has_role(auth.uid(), 'admin"
     ],
     "INSERT": [
-     "public: EXISTS (SELECT 1 FROM climate_survey_responses r WHERE r.id = response_id AND r.user_id = auth.uid())"
+     "public: exists (select 1 from climate_survey_responses r where r.id = response_id and r.user_id = auth.uid())"
     ],
     "UPDATE": [
-     "public: EXISTS (SELECT 1 FROM climate_survey_responses r WHERE r.id = response_id AND r.user_id = auth.uid())"
+     "public: exists (select 1 from climate_survey_responses r where r.id = response_id and r.user_id = auth.uid())"
     ],
     "DELETE": []
    },
    "climate_survey_questions": {
     "rls": "enabled",
     "SELECT": [
-     "public: EXISTS (SELECT 1 FROM climate_surveys s WHERE s.id = survey_id AND (s.status IN ('active', 'completed') OR s.created_by = auth.uid()",
-     "public: EXISTS (SELECT 1 FROM climate_surveys s WHERE s.id = survey_id AND (s.created_by = auth.uid() OR has_role(auth.uid(), 'admin')))"
+     "public: exists (select 1 from climate_surveys s where s.id = survey_id and (s.status in ('active','completed') or s.created_by = auth.uid() ",
+     "public: exists (select 1 from climate_surveys s where s.id = survey_id and (s.created_by = auth.uid() or has_role(auth.uid(), 'admin')))"
     ],
     "INSERT": [
-     "public: EXISTS (SELECT 1 FROM climate_surveys s WHERE s.id = survey_id AND (s.created_by = auth.uid() OR has_role(auth.uid(), 'admin')))"
+     "public: EXISTS ( SELECT 1 FROM public.climate_surveys s WHERE s.id = survey_id AND (s.created_by = auth.uid() OR public.has_role(auth.uid(),",
+     "public: exists (select 1 from climate_surveys s where s.id = survey_id and (s.created_by = auth.uid() or has_role(auth.uid(), 'admin')))"
     ],
     "UPDATE": [
-     "public: EXISTS (SELECT 1 FROM climate_surveys s WHERE s.id = survey_id AND (s.created_by = auth.uid() OR has_role(auth.uid(), 'admin')))"
+     "public: EXISTS ( SELECT 1 FROM public.climate_surveys s WHERE s.id = survey_id AND (s.created_by = auth.uid() OR public.has_role(auth.uid(),",
+     "public: exists (select 1 from climate_surveys s where s.id = survey_id and (s.created_by = auth.uid() or has_role(auth.uid(), 'admin')))"
     ],
     "DELETE": [
-     "public: EXISTS (SELECT 1 FROM climate_surveys s WHERE s.id = survey_id AND (s.created_by = auth.uid() OR has_role(auth.uid(), 'admin')))"
+     "public: EXISTS ( SELECT 1 FROM public.climate_surveys s WHERE s.id = survey_id AND s.status = 'draft' AND (s.created_by = auth.uid() OR publ",
+     "public: exists (select 1 from climate_surveys s where s.id = survey_id and (s.created_by = auth.uid() or has_role(auth.uid(), 'admin')))"
     ]
    },
    "climate_survey_responses": {
     "rls": "enabled",
     "SELECT": [
-     "public: user_id = auth.uid() OR has_role(auth.uid(), 'admin')"
+     "public: user_id = auth.uid() or has_role(auth.uid(), 'admin')"
     ],
     "INSERT": [
      "public: auth.uid() = user_id"
@@ -103512,13 +104374,13 @@
    "climate_surveys": {
     "rls": "enabled",
     "SELECT": [
-     "public: status IN ('active', 'completed') OR created_by = auth.uid() OR has_role(auth.uid(), 'admin')"
+     "public: status in ('active', 'completed') or created_by = auth.uid() or has_role(auth.uid(), 'admin')"
     ],
     "INSERT": [
-     "public: has_role(auth.uid(), 'admin') OR has_role(auth.uid(), 'manager')"
+     "public: has_role(auth.uid(), 'admin') or has_role(auth.uid(), 'manager')"
     ],
     "UPDATE": [
-     "public: created_by = auth.uid() OR has_role(auth.uid(), 'admin')"
+     "public: created_by = auth.uid() or has_role(auth.uid(), 'admin')"
     ],
     "DELETE": [
      "public: has_role(auth.uid(), 'admin')"
@@ -106194,6 +107056,7 @@
    "supabase/migrations/20261220000000_fix_sre_rpcs_and_dispatch_trigger.sql"
   ],
   "security_definer_fns": [
+   "_climate_recompute_pillar_scores",
    "_grant_card_pack_internal",
    "_guard_manager_or_admin_if_user",
    "_require_admin",
@@ -106242,6 +107105,9 @@
    "cleanup_expired_challenges",
    "cleanup_expired_idempotency_keys",
    "cleanup_old_security_logs",
+   "climate_recalculate_pillar_scores",
+   "climate_submit_response",
+   "climate_survey_enps",
    "close_auction",
    "close_expired_auctions",
    "close_expired_sales_campaigns",
@@ -113748,6 +114614,78 @@
    {
     "kind": "revoke",
     "privs": "all",
+    "object": "_climate_recompute_pillar_scores",
+    "objkind": "function",
+    "roles": "PUBLIC",
+    "src": "supabase/migrations/20261123180000_climate_survey_engine.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "all",
+    "object": "_climate_recompute_pillar_scores",
+    "objkind": "function",
+    "roles": "anon",
+    "src": "supabase/migrations/20261123180000_climate_survey_engine.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "all",
+    "object": "_climate_recompute_pillar_scores",
+    "objkind": "function",
+    "roles": "authenticated",
+    "src": "supabase/migrations/20261123180000_climate_survey_engine.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "climate_recalculate_pillar_scores",
+    "objkind": "function",
+    "roles": "authenticated",
+    "src": "supabase/migrations/20261123180000_climate_survey_engine.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "all",
+    "object": "climate_recalculate_pillar_scores",
+    "objkind": "function",
+    "roles": "anon",
+    "src": "supabase/migrations/20261123180000_climate_survey_engine.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "climate_survey_enps",
+    "objkind": "function",
+    "roles": "authenticated",
+    "src": "supabase/migrations/20261123180000_climate_survey_engine.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "all",
+    "object": "climate_survey_enps",
+    "objkind": "function",
+    "roles": "anon",
+    "src": "supabase/migrations/20261123180000_climate_survey_engine.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "climate_submit_response",
+    "objkind": "function",
+    "roles": "authenticated",
+    "src": "supabase/migrations/20261123180000_climate_survey_engine.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "all",
+    "object": "climate_submit_response",
+    "objkind": "function",
+    "roles": "anon",
+    "src": "supabase/migrations/20261123180000_climate_survey_engine.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "all",
     "object": "add_xp",
     "objkind": "function",
     "roles": "PUBLIC, anon",
@@ -113872,6 +114810,14 @@
     "objkind": "function",
     "roles": "PUBLIC",
     "src": "supabase/migrations/20261220000000_fix_sre_rpcs_and_dispatch_trigger.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "select, insert, update, delete",
+    "object": "public",
+    "objkind": "tables",
+    "roles": "authenticated",
+    "src": "supabase/tests/climate/stubs.sql"
    }
   ],
   "guards": [
@@ -113882,6 +114828,14 @@
    {
     "guard": "ProtectedRoute",
     "file": "scripts/ai-context/gerar.unit.mjs"
+   },
+   {
+    "guard": "ProtectedRoute",
+    "file": "src/App.tsx"
+   },
+   {
+    "guard": "ProtectedRoute",
+    "file": "src/App.tsx"
    },
    {
     "guard": "ProtectedRoute",
@@ -114501,6 +115455,22 @@
     "component": "PageTransition",
     "guard": "ProtectedRoute",
     "roles": [],
+    "file": "src/App.tsx"
+   },
+   {
+    "path": "/clima",
+    "component": "PageTransition",
+    "guard": "ProtectedRoute",
+    "roles": [],
+    "file": "src/App.tsx"
+   },
+   {
+    "path": "/clima/admin",
+    "component": "PageTransition",
+    "guard": "ProtectedRoute",
+    "roles": [
+     "manager"
+    ],
     "file": "src/App.tsx"
    },
    {
@@ -116705,6 +117675,7 @@
    "`webhook_subscriptions.last_status` é uma coluna de status sem enum/CHECK — os valores válidos e as transições permitidas não estão no banco.",
    "`webhook_delivery_logs.response_status` é uma coluna de status sem enum/CHECK — os valores válidos e as transições permitidas não estão no banco.",
    "`external_tasks.status` é uma coluna de status sem enum/CHECK — os valores válidos e as transições permitidas não estão no banco.",
+   "`climate_surveys.status` é uma coluna de status sem enum/CHECK — os valores válidos e as transições permitidas não estão no banco.",
    "`feedback_evaluations.status` é uma coluna de status sem enum/CHECK — os valores válidos e as transições permitidas não estão no banco.",
    "`pdi_mentors.status` é uma coluna de status sem enum/CHECK — os valores válidos e as transições permitidas não estão no banco.",
    "`webhook_idempotency.status` é uma coluna de status sem enum/CHECK — os valores válidos e as transições permitidas não estão no banco.",
@@ -118024,7 +118995,7 @@
   },
   "src/App.tsx": {
    "path": "src/App.tsx",
-   "lines": 336,
+   "lines": 340,
    "exports": [
     "default App"
    ],
@@ -118420,6 +119391,20 @@
      "roles": []
     },
     {
+     "path": "/clima",
+     "component": "PageTransition",
+     "guard": "ProtectedRoute",
+     "roles": []
+    },
+    {
+     "path": "/clima/admin",
+     "component": "PageTransition",
+     "guard": "ProtectedRoute",
+     "roles": [
+      "manager"
+     ]
+    },
+    {
      "path": "/feedback",
      "component": "PageTransition",
      "guard": "ProtectedRoute",
@@ -118613,6 +119598,8 @@
     }
    ],
    "guards": [
+    "ProtectedRoute",
+    "ProtectedRoute",
     "ProtectedRoute",
     "ProtectedRoute",
     "ProtectedRoute",
@@ -118910,7 +119897,7 @@
   },
   "src/components/AppSidebar.tsx": {
    "path": "src/components/AppSidebar.tsx",
-   "lines": 175,
+   "lines": 177,
    "exports": [
     "const AppSidebar"
    ]
@@ -119228,7 +120215,7 @@
   },
   "src/components/CommandPalette.tsx": {
    "path": "src/components/CommandPalette.tsx",
-   "lines": 275,
+   "lines": 276,
    "exports": [
     "function CommandPalette"
    ],
@@ -119676,7 +120663,7 @@
   },
   "src/components/MobileDrawer.tsx": {
    "path": "src/components/MobileDrawer.tsx",
-   "lines": 302,
+   "lines": 303,
    "exports": [
     "const MobileDrawer"
    ],
@@ -122147,6 +123134,71 @@
    "lines": 294,
    "exports": [
     "function OneOnOnePreparationPanel"
+   ]
+  },
+  "src/components/climate/ClimateSurveyAnswerForm.tsx": {
+   "path": "src/components/climate/ClimateSurveyAnswerForm.tsx",
+   "lines": 176,
+   "exports": [
+    "function ClimateSurveyAnswerForm"
+   ],
+   "errors": [
+    ">\n          {error}\n        </p>\n      )}\n\n      <div className="
+   ]
+  },
+  "src/components/climate/ClimateSurveyForm.tsx": {
+   "path": "src/components/climate/ClimateSurveyForm.tsx",
+   "lines": 188,
+   "exports": [
+    "type NewClimateSurvey",
+    "function ClimateSurveyForm"
+   ],
+   "errors": [
+    ">\n          {error}\n        </p>\n      )}\n\n      <div className="
+   ],
+   "html_constraints": [
+    {
+     "field": "climate-start",
+     "rules": "type=date"
+    },
+    {
+     "field": "climate-end",
+     "rules": "type=date"
+    }
+   ],
+   "status_values": [
+    {
+     "field": "status",
+     "value": "draft",
+     "kind": "escreve"
+    }
+   ],
+   "temporal": [
+    "const nextWeek = new Date(today.getTime() + 7 * 24 * 60 * 60 * 1000);"
+   ]
+  },
+  "src/components/climate/ClimateSurveyQuestions.tsx": {
+   "path": "src/components/climate/ClimateSurveyQuestions.tsx",
+   "lines": 196,
+   "exports": [
+    "function ClimateSurveyQuestions"
+   ],
+   "errors": [
+    ">\n              {error}\n            </p>\n          )}\n          <Button onClick={handleAdd} disabled={isAdding}>\n            <Plus className="
+   ],
+   "status_values": [
+    {
+     "field": "status",
+     "value": "draft",
+     "kind": "compara"
+    }
+   ]
+  },
+  "src/components/climate/ClimateSurveyResults.tsx": {
+   "path": "src/components/climate/ClimateSurveyResults.tsx",
+   "lines": 156,
+   "exports": [
+    "function ClimateSurveyResults"
    ]
   },
   "src/components/copilot/CopilotAlertCard.tsx": {
@@ -127042,7 +128094,7 @@
   },
   "src/hooks/useClimateSurveys.ts": {
    "path": "src/hooks/useClimateSurveys.ts",
-   "lines": 112,
+   "lines": 158,
    "exports": [
     "function useClimateSurveys",
     "function useClimateSurvey",
@@ -127052,13 +128104,17 @@
     "function useCreateClimateSurvey",
     "function useUpdateClimateSurvey",
     "function useCreateSurveyQuestion",
-    "function useSubmitSurveyResponse"
+    "function useDeleteSurveyQuestion",
+    "function useSubmitSurveyResponse",
+    "function useMyAnsweredSurveyIds",
+    "function useRecalculatePillarScores"
    ],
    "errors": [
     "Erro ao adicionar pergunta",
     "Erro ao atualizar pesquisa",
     "Erro ao criar pesquisa de clima",
-    "Erro ao enviar resposta"
+    "Erro ao recalcular resultados",
+    "Erro ao remover pergunta"
    ],
    "hooks": [
     "useClimateSurveys",
@@ -127069,7 +128125,10 @@
     "useCreateClimateSurvey",
     "useUpdateClimateSurvey",
     "useCreateSurveyQuestion",
-    "useSubmitSurveyResponse"
+    "useDeleteSurveyQuestion",
+    "useSubmitSurveyResponse",
+    "useMyAnsweredSurveyIds",
+    "useRecalculatePillarScores"
    ]
   },
   "src/hooks/useCombo.ts": {
@@ -129444,7 +130503,7 @@
   },
   "src/integrations/supabase/types.ts": {
    "path": "src/integrations/supabase/types.ts",
-   "lines": 12973,
+   "lines": 12985,
    "exports": [
     "type Json",
     "type Database",
@@ -134960,6 +136019,48 @@
     }
    ]
   },
+  "src/pages/ClimateSurveyAdmin.tsx": {
+   "path": "src/pages/ClimateSurveyAdmin.tsx",
+   "lines": 266,
+   "exports": [
+    "function ClimateSurveyAdmin"
+   ],
+   "status_values": [
+    {
+     "field": "status",
+     "value": "active",
+     "kind": "compara"
+    },
+    {
+     "field": "status",
+     "value": "active",
+     "kind": "compara"
+    },
+    {
+     "field": "status",
+     "value": "active",
+     "kind": "compara"
+    },
+    {
+     "field": "status",
+     "value": "active",
+     "kind": "compara"
+    },
+    {
+     "field": "status",
+     "value": "active",
+     "kind": "compara"
+    }
+   ]
+  },
+  "src/pages/ClimateSurveys.tsx": {
+   "path": "src/pages/ClimateSurveys.tsx",
+   "lines": 207,
+   "exports": [
+    "function ClimateSurveyCard",
+    "function ClimateSurveys"
+   ]
+  },
   "src/pages/ContinuousEngagement.tsx": {
    "path": "src/pages/ContinuousEngagement.tsx",
    "lines": 88,
@@ -138502,12 +139603,13 @@
   },
   "src/services/climateSurveyService.ts": {
    "path": "src/services/climateSurveyService.ts",
-   "lines": 251,
+   "lines": 275,
    "exports": [
     "type ClimatePillar",
     "interface ClimateSurvey",
     "interface ClimateSurveyQuestion",
     "interface ClimatePillarScore",
+    "interface ClimateSurveyEnps",
     "const PILLAR_LABELS",
     "const climateSurveyService"
    ],
@@ -138537,19 +139639,15 @@
      "op": "insert,select"
     },
     {
+     "table": "climate_survey_questions",
+     "op": "delete"
+    },
+    {
      "table": "climate_survey_responses",
-     "op": "insert,select"
-    },
-    {
-     "table": "climate_question_answers",
-     "op": "insert"
-    },
-    {
-     "table": "climate_pillar_scores",
      "op": "select"
     },
     {
-     "table": "climate_question_answers",
+     "table": "climate_pillar_scores",
      "op": "select"
     }
    ],
@@ -138558,15 +139656,25 @@
      "id"
     ],
     "climate_survey_questions": [
+     "id",
      "survey_id"
+    ],
+    "climate_survey_responses": [
+     "survey_id",
+     "user_id"
     ],
     "climate_pillar_scores": [
      "survey_id"
-    ],
-    "climate_question_answers": [
-     "score"
     ]
    },
+   "rpc": [
+    "climate_recalculate_pillar_scores",
+    "climate_submit_response",
+    "climate_survey_enps"
+   ],
+   "errors": [
+    "Você já respondeu esta pesquisa."
+   ],
    "enums": [
     {
      "name": "ClimatePillar",
@@ -138576,8 +139684,8 @@
    "calc_fns": [
     {
      "name": "calculateENPS",
-     "params": "surveyId: string",
-     "body": "enps: number; promoters: number; passives: number; detractors: number"
+     "params": "surveyId: string, minResponses = MIN_RESPONDENTS",
+     "body": "const { data, error } = await supabase.rpc('climate_survey_enps', { p_survey_id: surveyId, p_min_responses: minResponses, }); if (error) { logger.error('Failed to calculate eNPS', 'ClimateSurveyService', error); throw error; } return data as unknown as ClimateSurveyEnps;"
     }
    ]
   },
@@ -145804,6 +146912,71 @@
     "usa a primeira linha que carrega origem, ignorando linhas sem referência"
    ]
   },
+  "src/test/climateSurveyService.test.ts": {
+   "path": "src/test/climateSurveyService.test.ts",
+   "lines": 200,
+   "is_test": true,
+   "tests": [
+    "climateSurveyService",
+    "submitResponse",
+    "envia as respostas pela RPC com score e texto normalizados",
+    "traduz a violação de unicidade (23505) em mensagem clara",
+    "propaga outros erros sem mascarar",
+    "getMyAnsweredSurveyIds",
+    "filtra pelas respostas do usuário e devolve só os ids das pesquisas",
+    "devolve lista vazia quando o usuário ainda não respondeu nada",
+    "recalculatePillarScores",
+    "usa o limite de anonimato padrão e devolve quantos pilares foram recalculados",
+    "devolve 0 quando a RPC responde nulo",
+    "calculateENPS",
+    "lê o eNPS da RPC e devolve o payload completo",
+    "propaga erro da RPC em vez de devolver eNPS falso",
+    "deleteQuestion",
+    "remove a pergunta pelo id",
+    "propaga erro de RLS ao remover pergunta de pesquisa alheia",
+    "getPillarScores",
+    "busca os scores consolidados (department_id nulo) por padrão",
+    "filtra por departamento quando informado"
+   ],
+   "side_effects": [
+    "enqueue("
+   ]
+  },
+  "src/test/climateSurveysFlow.test.tsx": {
+   "path": "src/test/climateSurveysFlow.test.tsx",
+   "lines": 378,
+   "is_test": true,
+   "errors": [
+    ")).toHaveTextContent("
+   ],
+   "tests": [
+    "ClimateSurveyAnswerForm",
+    "envia a nota escolhida para cada pergunta respondida",
+    "bloqueia o envio quando nenhuma pergunta foi respondida",
+    "quando a pesquisa não permite pular, cobra todas as perguntas obrigatórias",
+    "desabilita o envio enquanto a resposta está sendo gravada",
+    "ClimateSurveyForm",
+    "exige título antes de criar",
+    "recusa período com encerramento anterior ao início",
+    "cria a pesquisa como rascunho com o período e o criador informados",
+    "ClimateSurveyQuestions",
+    "continua a numeração a partir do maior índice já usado",
+    "avisa quando o texto da pergunta está vazio",
+    "trava a edição das perguntas fora do rascunho",
+    "ClimateSurveyResults",
+    "esconde o eNPS enquanto a amostra mínima não é atingida",
+    "mostra o eNPS e a divisão de promotores, neutros e detratores",
+    "ordena os pilares do maior para o menor score",
+    "explica o estado vazio quando nenhum pilar foi calculado",
+    "avisa quando o motor de resultados não está disponível no ambiente",
+    "pede o recálculo dos pilares da pesquisa exibida",
+    "avisa que faltam notas de eNPS quando a pesquisa já tem pergunta elegível",
+    "explica que falta pergunta de eNPS quando há respostas mas nenhuma escala elegível",
+    "ClimateSurveyCard",
+    "anuncia a hora do encerramento, não só a data",
+    "recarrega as perguntas sem obrigar a fechar o formulário"
+   ]
+  },
   "src/test/continuousEngagement.simulation.test.ts": {
    "path": "src/test/continuousEngagement.simulation.test.ts",
    "lines": 242,
@@ -152801,6 +153974,14 @@
    "path": "supabase/migrations/20261123000001_create_acknowledge_security_digest.sql",
    "lines": 27
   },
+  "supabase/migrations/20261123180000_climate_survey_engine.sql": {
+   "path": "supabase/migrations/20261123180000_climate_survey_engine.sql",
+   "lines": 379,
+   "role_checks": [
+    "admin",
+    "manager"
+   ]
+  },
   "supabase/migrations/20261218000000_profiles_economia_rpcs.sql": {
    "path": "supabase/migrations/20261218000000_profiles_economia_rpcs.sql",
    "lines": 215,
@@ -152823,6 +154004,27 @@
     "interval '1 day'"
    ],
    "uses_service_role": true
+  },
+  "supabase/tests/climate/assertions.sql": {
+   "path": "supabase/tests/climate/assertions.sql",
+   "lines": 404,
+   "is_test": true,
+   "temporal": [
+    "('10000000-0000-0000-0000-000000000001', 'Clima A', 'active', '99999999-9999-9999-9999-999999999999', now() - interval '1 day', now() + interval '1 day'),",
+    "('20000000-0000-0000-0000-000000000001', 'Clima B', 'active', '99999999-9999-9999-9999-999999999999', now() - interval '1 day', now() + interval '1 day'),",
+    "('30000000-0000-0000-0000-000000000001', 'Clima C', 'active', '99999999-9999-9999-9999-999999999999', now() - interval '1 day', now() + interval '1 day'),",
+    "('40000000-0000-0000-0000-000000000001', 'Clima D', 'active', '99999999-9999-9999-9999-999999999999', now() - interval '1 day', now() + interval '1 day'),",
+    "('50000000-0000-0000-0000-000000000001', 'Clima E', 'active', '99999999-9999-9999-9999-999999999999', now() - interval '1 day', now() + interval '1 day'),",
+    "('60000000-0000-0000-0000-000000000001', 'Clima F', 'active', '99999999-9999-9999-9999-999999999999', now() - interval '3 day', now() - interval '1 day'),",
+    "('70000000-0000-0000-0000-000000000001', 'Clima G', 'active', '99999999-9999-9999-9999-999999999999', now() + interval '1 day', now() + interval '3 day'),",
+    "('80000000-0000-0000-0000-000000000001', 'Clima H', 'active', '99999999-9999-9999-9999-999999999999', now() - interval '1 day', now() + interval '1 day'),",
+    "('90000000-0000-0000-0000-000000000001', 'Clima I', 'draft', 'bbbbbbbb-0000-0000-0000-000000000001', now() - interval '1 day', now() + interval '1 day');"
+   ]
+  },
+  "supabase/tests/climate/stubs.sql": {
+   "path": "supabase/tests/climate/stubs.sql",
+   "lines": 150,
+   "is_test": true
   },
   "tests/auth-flow.spec.ts": {
    "path": "tests/auth-flow.spec.ts",
@@ -152898,10 +154100,41 @@
   }
  },
  "git": {
-  "sha": "eff597a611ab9a2160daa6dc300271b3290da3f0",
+  "sha": "9a048250d34237f5621ff5741f08659420c12e2a",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "commits": [
+   {
+    "sha": "9a04825",
+    "date": "2026-11-24",
+    "author": "adm01-debug",
+    "subject": "feat: tela de Pesquisa de Clima (criar, responder, eNPS e score por pilar) (#125)",
+    "files": [
+     ".gitattributes",
+     "docs/estado/03-hooks-services-lib.md",
+     "scripts/automation.config.json",
+     "scripts/climate-sql-check/README.md",
+     "scripts/climate-sql-check/run.sh",
+     "src/App.tsx",
+     "src/components/AppSidebar.tsx",
+     "src/components/CommandPalette.tsx",
+     "src/components/MobileDrawer.tsx",
+     "src/components/climate/ClimateSurveyAnswerForm.tsx",
+     "src/components/climate/ClimateSurveyForm.tsx",
+     "src/components/climate/ClimateSurveyQuestions.tsx",
+     "src/components/climate/ClimateSurveyResults.tsx",
+     "src/hooks/useClimateSurveys.ts",
+     "src/integrations/supabase/types.ts",
+     "src/pages/ClimateSurveyAdmin.tsx",
+     "src/pages/ClimateSurveys.tsx",
+     "src/services/climateSurveyService.ts",
+     "src/test/climateSurveyService.test.ts",
+     "src/test/climateSurveysFlow.test.tsx",
+     "supabase/migrations/20261123180000_climate_survey_engine.sql",
+     "supabase/tests/climate/assertions.sql",
+     "supabase/tests/climate/stubs.sql"
+    ]
+   },
    {
     "sha": "eff597a",
     "date": "2026-11-24",
@@ -153241,43 +154474,15 @@
      "supabase/functions/_shared/contracts/webhook-ping.ts",
      "supabase/functions/webhook-ping/index.ts"
     ]
-   },
-   {
-    "sha": "e5fb530",
-    "date": "2026-11-22",
-    "author": "adm01-debug",
-    "subject": "fix(edge): aceita url de app no push e ajusta contrato de versao do webhook (#101)",
-    "files": [
-     "docs/agentes/edge-functions.md",
-     "supabase/functions/_shared/contracts/README.md",
-     "supabase/functions/_shared/contracts/_fixtures/index.ts",
-     "supabase/functions/_shared/contracts/_fixtures/responses.ts",
-     "supabase/functions/_shared/contracts/ai-coach.ts",
-     "supabase/functions/_shared/contracts/common.ts",
-     "supabase/functions/_shared/contracts/contracts_test.ts",
-     "supabase/functions/_shared/contracts/migrate-helper.ts",
-     "supabase/functions/_shared/contracts/push-device-revoked.ts",
-     "supabase/functions/_shared/contracts/registry.contract.spec.ts",
-     "supabase/functions/_shared/contracts/send-campaign-push.ts",
-     "supabase/functions/_shared/contracts/validation.contract.spec.ts",
-     "supabase/functions/_shared/contracts/webhook-dispatcher.ts",
-     "supabase/functions/_shared/contracts/webhook-versioning.contract.spec.ts",
-     "supabase/functions/_shared/validation.ts",
-     "supabase/functions/webhook-dispatcher/index.ts"
-    ]
    }
   ],
   "hot_files": [
    [
     "docs/estado/03-hooks-services-lib.md",
-    4
+    5
    ],
    [
-    "supabase/functions/_shared/contracts/_fixtures/index.ts",
-    4
-   ],
-   [
-    "supabase/functions/_shared/contracts/_fixtures/responses.ts",
+    "src/App.tsx",
     4
    ],
    [
@@ -153293,7 +154498,11 @@
     3
    ],
    [
-    "src/App.tsx",
+    "supabase/functions/_shared/contracts/_fixtures/index.ts",
+    3
+   ],
+   [
+    "supabase/functions/_shared/contracts/_fixtures/responses.ts",
     3
    ],
    [
@@ -153337,15 +154546,15 @@
     2
    ],
    [
-    "src/components/feedback/FeedbackRequestForm.tsx",
+    ".gitattributes",
     1
    ],
    [
-    "src/components/feedback/FeedbackSummaryCard.tsx",
+    "scripts/automation.config.json",
     1
    ],
    [
-    "src/test/feedback360Flow.test.tsx",
+    "scripts/climate-sql-check/README.md",
     1
    ]
   ]
