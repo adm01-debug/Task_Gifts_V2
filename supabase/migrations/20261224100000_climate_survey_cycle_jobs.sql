@@ -38,16 +38,26 @@ COMMENT ON FUNCTION public.expire_climate_surveys() IS
 
 REVOKE ALL ON FUNCTION public.expire_climate_surveys() FROM PUBLIC, anon, authenticated;
 
+-- 1.1) Indice unico do dedupe das notificacoes ---------------------------------
+-- Existe em producao desde antes deste arquivo, mas nenhuma migration do repo o
+-- criava: num banco reconstruido `ON CONFLICT DO NOTHING` sozinho nao impede
+-- duas notificacoes com o mesmo destinatario, tipo e `data`.
+CREATE UNIQUE INDEX IF NOT EXISTS notifications_user_type_data_unique
+  ON public.notifications USING btree (user_id, type, (((data))::text));
+
 -- 2) Lembra quem nao respondeu -------------------------------------------------
--- Publico: contas `confirmed` (profiles_status_check) sem resposta registrada.
+-- Publico: contas `confirmed` (profiles_status_check) sem resposta registrada e
+-- que nao pausaram as notificacoes no proprio perfil - quem optou por nao
+-- receber in-app nao recebe lembrete (public.user_wants_in_app_notification).
 -- Janela: pesquisa `active`, dentro do periodo e a no maximo 7 dias do fim.
 -- Depois de `ends_at` o proprio `climate_submit_response` recusa a resposta
 -- ("survey period is over"), entao lembrar ali seria inutil - quem encerra e' a
 -- rotina 1.
 -- Cadencia: `reminder_frequency = 'weekly'` agrupa por semana (date_trunc('week')),
 -- qualquer outro valor cai no balde diario. O balde entra em `data` e o indice
--- unico `notifications_user_type_data_unique` (user_id, type, (data)::text)
--- garante no maximo um lembrete por balde e por pesquisa.
+-- unico `notifications_user_type_data_unique` (criado no bloco 1.1)
+-- garante no maximo um lembrete por balde e por pesquisa. `ends_at` tambem vai
+-- no `data` para a central formatar no fuso de quem le.
 CREATE OR REPLACE FUNCTION public.send_climate_survey_reminders()
 RETURNS integer
 LANGUAGE plpgsql
@@ -61,6 +71,7 @@ BEGIN
     SELECT s.id    AS survey_id,
            s.title AS survey_title,
            s.ends_at,
+               s.is_anonymous,
            p.id    AS user_id,
            CASE WHEN s.reminder_frequency = 'weekly'
                 THEN date_trunc('week', now())::date
@@ -71,6 +82,7 @@ BEGIN
         ON p.status = 'confirmed'
      WHERE s.status = 'active'
        AND s.send_reminders
+           AND public.user_wants_in_app_notification(p.id, 'climate_survey_reminder')
        AND (s.starts_at IS NULL OR s.starts_at <= now())
        AND s.ends_at IS NOT NULL
        AND s.ends_at > now()
@@ -88,8 +100,9 @@ BEGIN
          'Pesquisa de clima aberta',
          'A pesquisa "' || e.survey_title || '" fica aberta ate '
            || to_char(e.ends_at AT TIME ZONE 'America/Sao_Paulo', 'DD/MM')
-           || '. A resposta leva poucos minutos e e anonima.',
-         jsonb_build_object('survey_id', e.survey_id, 'balde', e.balde)
+                    || ' (horario de Brasilia). A resposta leva poucos minutos'
+                    || CASE WHEN e.is_anonymous THEN ' e e anonima.' ELSE '.' END,
+                  jsonb_build_object('survey_id', e.survey_id, 'balde', e.balde, 'ends_at', e.ends_at)
     FROM elegiveis e
   ON CONFLICT DO NOTHING;
 
