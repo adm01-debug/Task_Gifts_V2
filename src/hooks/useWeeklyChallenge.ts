@@ -75,6 +75,7 @@ export function useWeeklyChallenge() {
           type: "challenge",
           title: "🎯 Novo Desafio Semanal!",
           message: "Um novo desafio semanal começou! Ganhe mais XP que seu oponente para vencer.",
+          data: { challenge_id: currentChallenge.id },
         });
 
         await notificationsService.create({
@@ -82,6 +83,7 @@ export function useWeeklyChallenge() {
           type: "challenge",
           title: "🎯 Novo Desafio Semanal!",
           message: "Você foi desafiado! Ganhe mais XP que seu oponente para vencer.",
+          data: { challenge_id: currentChallenge.id },
         });
       }
 
@@ -215,6 +217,7 @@ export function useWeeklyChallenge() {
             type: "victory",
             title: "🏆 Desafio Semanal Vencido!",
             message: `Você venceu ${opponentProfile?.display_name || "seu oponente"} e ganhou ${challenge.xp_reward} XP e ${challenge.coin_reward} moedas!`,
+            data: { challenge_id: challenge.id },
           });
         }
       }
