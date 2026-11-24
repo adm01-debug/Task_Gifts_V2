@@ -2,11 +2,21 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "96c33826aa496dcd595690665e5a3e59b2848ca3",
+  "commit": "57326cf1c58474c3f37550cad5bbf6199285d595",
   "branch": "main",
-  "data_commit": "2026-11-24T10:33:25-03:00",
+  "data_commit": "2026-11-24T11:32:48-03:00",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "ultimos_commits": [
+   {
+    "sha": "57326cf",
+    "data": "2026-11-24",
+    "assunto": "chore: alinha doc de edge functions com o estado real (cron 200, trigger corrigido) (#139)"
+   },
+   {
+    "sha": "240770f",
+    "data": "2026-11-24",
+    "assunto": "chore(db-audit): corrige o texto do ledger e faz o guard rodar fora do Linux (#140)"
+   },
    {
     "sha": "96c3382",
     "data": "2026-11-24",
@@ -121,16 +131,6 @@
     "sha": "57527b0",
     "data": "2026-11-23",
     "assunto": "fix(reports): exporta relatório de engajamento em CSV real (#117)"
-   },
-   {
-    "sha": "8f235c2",
-    "data": "2026-11-23",
-    "assunto": "fix(rbac): adiciona guard admin nas rotas /analytics e /security-dashboard (#116)"
-   },
-   {
-    "sha": "7ca11a0",
-    "data": "2026-11-23",
-    "assunto": "fix(feedback): adiciona fluxo de resposta com pontuacao, pontos fortes e melhorias (#115)"
    }
   ],
   "arquivos_mudados_7d": 202,
@@ -157,6 +157,10 @@
    },
    {
     "pasta": "docs/agentes/banco.md",
+    "mudancas": 9
+   },
+   {
+    "pasta": "docs/estado/05-edge-functions.md",
     "mudancas": 8
    },
    {
@@ -165,10 +169,6 @@
    },
    {
     "pasta": "docs/estado/03-hooks-services-lib.md",
-    "mudancas": 7
-   },
-   {
-    "pasta": "docs/estado/05-edge-functions.md",
     "mudancas": 7
    },
    {
@@ -211,6 +211,10 @@
    },
    {
     "arquivo": "docs/agentes/banco.md",
+    "mudancas": 9
+   },
+   {
+    "arquivo": "docs/estado/05-edge-functions.md",
     "mudancas": 8
    },
    {
@@ -219,10 +223,6 @@
    },
    {
     "arquivo": "docs/estado/03-hooks-services-lib.md",
-    "mudancas": 7
-   },
-   {
-    "arquivo": "docs/estado/05-edge-functions.md",
     "mudancas": 7
    },
    {
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 107
+    "commits": 109
    },
    {
     "autor": "dependabot[bot]",
@@ -312,7 +312,7 @@
  "contagens": {
   "arquivos_total": 1569,
   "arquivos_codigo": 1188,
-  "linhas_codigo": 235889,
+  "linhas_codigo": 235896,
   "rotas": 87,
   "rotas_http_backend": 0,
   "vistas_por_id": 0,
@@ -368,7 +368,7 @@
   },
   "scripts/db-audit": {
    "arquivos": 1,
-   "linhas": 617
+   "linhas": 624
   },
   "scripts/graphify-local.mjs": {
    "arquivos": 1,
@@ -558,7 +558,7 @@
   },
   {
    "arquivo": "scripts/db-audit/check-migration-drift.mjs",
-   "linhas": 617
+   "linhas": 624
   },
   {
    "arquivo": "src/pages/WagerQuestionAdminPage.tsx",

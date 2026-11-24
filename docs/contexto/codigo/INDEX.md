@@ -1,7 +1,7 @@
 # Contexto do projeto para agentes de IA
 
 GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.
-Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `96c33826aa496dcd595690665e5a3e59b2848ca3` (2026-11-24T10:33:25-03:00).
+Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `57326cf1c58474c3f37550cad5bbf6199285d595` (2026-11-24T11:32:48-03:00).
 
 ## Como usar (leia antes de planejar ou executar qualquer tarefa)
 1. **Tela/rota/menu** → `rotas.json` (url/vista/menu → arquivo → hooks → tabelas → edges; `rotas_http_backend` para APIs) e `modulos.json` (módulo inteiro + dependências entre módulos).
@@ -36,7 +36,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 |---|---|
 | arquivos_total | 1569 |
 | arquivos_codigo | 1188 |
-| linhas_codigo | 235889 |
+| linhas_codigo | 235896 |
 | rotas | 87 |
 | rotas_http_backend | 0 |
 | vistas_por_id | 0 |
@@ -276,7 +276,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - possiveis_segredos_no_codigo: 0
 
 ## Grafo de código (graphify)
-- 10311 nós · 28865 arestas · 658 comunidades · grafo do commit `96c33826`
+- 10311 nós · 28866 arestas · 658 comunidades · grafo do commit `57326cf1`
 - comunidades maiores: card.tsx (288), react (253), App.tsx (204), select.tsx (190), lucide-react (182), cn (152), contracts/index.ts (106), @tanstack/react-query (104), StatsGrid.tsx (89), client.ts (89), ManagerDashboard.tsx (86), mobile/index.ts (84)
 - símbolos mais chamados: cn() (src/lib/utils.ts), useAuth() (src/hooks/useAuth.tsx), useIsMobile() (src/hooks/use-mobile.tsx), q() (scripts/supabase_snapshot/snapshot.py), useDepartments() (src/hooks/useDepartments.ts), useRBAC() (src/hooks/useRBAC.ts), useProfiles() (src/hooks/useProfiles.ts), useToast() (src/hooks/use-toast.ts), useSEO() (src/hooks/useSEO.ts), useSoundEffects() (src/hooks/useSoundEffects.tsx), .collect() (scripts/supabase_snapshot/test_snapshot.py), excluded_sql() (scripts/supabase_snapshot/snapshot.py)
 - consulta local: `graphify query "<pergunta>"`, `graphify path "<A>" "<B>"`, `graphify explain "<X>"`
@@ -285,10 +285,10 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - package.json (23)
 - bun.lock (15)
 - .github/workflows/ci.yml (12)
-- docs/agentes/banco.md (8)
+- docs/agentes/banco.md (9)
+- docs/estado/05-edge-functions.md (8)
 - AGENTS.md (7)
 - docs/estado/03-hooks-services-lib.md (7)
-- docs/estado/05-edge-functions.md (7)
 - src/App.tsx (7)
 - supabase/config.toml (7)
 - docs/agentes/mapa-repo.md (6)
@@ -363,6 +363,8 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 
 
 ## Últimos commits
+- 2026-11-24 `57326cf` chore: alinha doc de edge functions com o estado real (cron 200, trigger corrigido) (#139)
+- 2026-11-24 `240770f` chore(db-audit): corrige o texto do ledger e faz o guard rodar fora do Linux (#140)
 - 2026-11-24 `96c3382` fix: tira BOM das migrations pendentes e remove rascunho obsoleto do digest (Supabase Preview 42601) (#138)
 - 2026-11-24 `d344ae9` fix: guarda UPDATE cron.job por privilegio (Supabase Preview 42501) (#137)
 - 2026-11-24 `c5d1ae0` fix: normaliza versao do ledger que reprovava o Supabase Preview (#136)
@@ -376,8 +378,6 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - 2026-11-24 `f55c5db` chore: remove feedback360Service, duplicata morta do 360 que ja roda em /feedback (#131)
 - 2026-11-24 `c0090e3` feat(mentoria): monta o guard de alteracoes nao salvas no formulario de missoes (#130)
 - 2026-11-23 `43c41a1` chore(docs): corrige auditoria desatualizada (edge functions, HIBP, CI/typecheck) (#129)
-- 2026-11-23 `a18b67f` chore: remove duplicatas comprovadas (leaderboard e dialogo de check-in) (#127)
-- 2026-11-23 `24cdedd` feat: liga biblioteca de relatórios (CSV/Excel/PDF) nos dashboards (#124)
 
 ## Arquivos deste diretório
 - `docs/contexto/codigo/rotas.json`
