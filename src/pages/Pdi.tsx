@@ -70,8 +70,24 @@ export default function Pdi() {
     [plans, planId],
   );
 
-  const { templates, mentors, checkins, addMentor, removeMentor, createCheckin, applyTemplate } =
-    usePDI(activePlan?.id);
+  const {
+      templates,
+      mentors,
+      checkins,
+      addMentor,
+      removeMentor,
+      createCheckin,
+      applyTemplate,
+      templatesLoading,
+      mentorsLoading,
+      checkinsLoading,
+      templatesError,
+      mentorsError,
+      checkinsError,
+      refetchTemplates,
+      refetchMentors,
+      refetchCheckins,
+    } = usePDI(activePlan?.id);
 
   if (plansLoading) {
     return (
@@ -146,7 +162,15 @@ export default function Pdi() {
             <CardDescription>
               Aplicar um template copia as ações previstas para este PDI. Ações já registradas são mantidas.
             </CardDescription>
-            {templates.length === 0 ? (
+            {templatesLoading || templatesError ? (
+              <QueryStateCard
+                loading={templatesLoading}
+                error={templatesError}
+                onRetry={() => {
+                  void refetchTemplates();
+                }}
+              />
+            ) : templates.length === 0 ? (
               <Card>
                 <CardContent className="p-6 text-sm text-muted-foreground">
                   Nenhum template ativo cadastrado. Peça ao RH para cadastrar templates de PDI.
@@ -233,7 +257,15 @@ export default function Pdi() {
                 </span>
               )}
             </div>
-            {mentors.length === 0 ? (
+            {mentorsLoading || mentorsError ? (
+              <QueryStateCard
+                loading={mentorsLoading}
+                error={mentorsError}
+                onRetry={() => {
+                  void refetchMentors();
+                }}
+              />
+            ) : mentors.length === 0 ? (
               <Card>
                 <CardContent className="p-6 text-sm text-muted-foreground">
                   Nenhum mentor vinculado a este PDI.
@@ -295,7 +327,15 @@ export default function Pdi() {
                 }
               />
             </div>
-            {checkins.length === 0 ? (
+            {checkinsLoading || checkinsError ? (
+              <QueryStateCard
+                loading={checkinsLoading}
+                error={checkinsError}
+                onRetry={() => {
+                  void refetchCheckins();
+                }}
+              />
+            ) : checkins.length === 0 ? (
               <Card>
                 <CardContent className="p-6 text-sm text-muted-foreground">
                   Nenhum check-in registrado. O primeiro check-in normalmente acontece na primeira conversa com o
@@ -340,6 +380,38 @@ export default function Pdi() {
         </Tabs>
       </div>
     </PageShell>
+  );
+}
+
+function QueryStateCard({
+  loading,
+  error,
+  onRetry,
+}: {
+  loading: boolean;
+  error: Error | null;
+  onRetry: () => void;
+}) {
+  if (loading) {
+    return (
+      <Card>
+        <CardContent className="p-6 text-sm text-muted-foreground flex items-center gap-2">
+          <Loader2 className="w-4 h-4 animate-spin" /> Carregando...
+        </CardContent>
+      </Card>
+    );
+  }
+  if (!error) return null;
+  return (
+    <Card>
+      <CardContent className="p-6 space-y-2">
+        <p className="text-sm text-destructive">Não foi possível carregar os dados.</p>
+        <p className="text-xs text-muted-foreground break-words">{error.message}</p>
+        <Button size="sm" variant="outline" onClick={onRetry}>
+          Tentar novamente
+        </Button>
+      </CardContent>
+    </Card>
   );
 }
 
@@ -486,7 +558,7 @@ function AddCheckinDialog({
   ) => void;
 }) {
   const [open, setOpen] = useState(false);
-  const [checkinDate, setCheckinDate] = useState(() => new Date().toISOString().slice(0, 10));
+  const [checkinDate, setCheckinDate] = useState(() => format(new Date(), "yyyy-MM-dd"));
   const [progress, setProgress] = useState("");
   const [blockers, setBlockers] = useState("");
   const [nextSteps, setNextSteps] = useState("");
