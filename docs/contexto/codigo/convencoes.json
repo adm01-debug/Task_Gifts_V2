@@ -22,7 +22,7 @@
    "src/integrations (3)"
   ],
   "testes": [
-   "co-localizado (*.test) (154)",
+   "co-localizado (*.test) (155)",
    "outro (12)",
    "tests/ (3)"
   ],
@@ -59,11 +59,11 @@
  "commits": {
   "convencao": "conventional commits (observado)",
   "exemplos": [
+   "fix: libera cadastro e login por passkey na allowlist de producao (#156)",
+   "docs: corrige o drift do cron de push e do digest semanal (401 que nao existe) (#155)",
    "chore: sobe o ledger para 282 nas docs (#154)",
    "feat: envia lembrete de clima por push alem do in-app (#153)",
-   "fix(supabase): alinha 20261220000000 ao trigger vivo do alerta critico (#152)",
-   "fix(clima): antecipa o fim da pesquisa ativa para 30/11 e destrava o lembrete (#148)",
-   "chore(docs): ledger 280x280 e jobs internos medidos (preserva o trabalho da #150) (#151)"
+   "fix(supabase): alinha 20261220000000 ao trigger vivo do alerta critico (#152)"
   ]
  },
  "pr_template": ".github/PULL_REQUEST_TEMPLATE.md",

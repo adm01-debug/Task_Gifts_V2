@@ -5,17 +5,17 @@
   "vitest",
   "playwright"
  ],
- "total": 172,
+ "total": 173,
  "por_tipo": {
   "contrato": 3,
   "e2e": 2,
   "pytest": 2,
-  "unit": 163
+  "unit": 164
  },
  "onde_ficam": [
   {
    "padrao": "co-localizado (*.test)",
-   "arquivos": 154
+   "arquivos": 155
   },
   {
    "padrao": "outro",
@@ -554,6 +554,15 @@
     "src/lib/deviceLabel.ts"
    ],
    "casos": 14
+  },
+  {
+   "arquivo": "src/test/edgeAvailability.test.ts",
+   "tipo": "unit",
+   "linhas": 24,
+   "testa": [
+    "src/lib/edgeAvailability.ts"
+   ],
+   "casos": 3
   },
   {
    "arquivo": "src/test/edgeErrors.simulation.test.ts",
@@ -1708,6 +1717,7 @@
   "src/lib/departmentWarConfig.ts": 1,
   "src/lib/deviceFingerprint.ts": 1,
   "src/lib/deviceLabel.ts": 1,
+  "src/lib/edgeAvailability.ts": 1,
   "src/lib/edgeErrors.ts": 2,
   "src/lib/engagementInsights.ts": 1,
   "src/lib/exportReports.ts": 1,

@@ -2,11 +2,21 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "e681a89f061b36859e26ee3fd6e77182343048a2",
+  "commit": "52db204ec33b25483a18f80c46c1d26632002194",
   "branch": "main",
-  "data_commit": "2026-11-24T18:06:59-03:00",
+  "data_commit": "2026-11-24T18:53:23-03:00",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "ultimos_commits": [
+   {
+    "sha": "52db204",
+    "data": "2026-11-24",
+    "assunto": "fix: libera cadastro e login por passkey na allowlist de producao (#156)"
+   },
+   {
+    "sha": "ac84238",
+    "data": "2026-11-24",
+    "assunto": "docs: corrige o drift do cron de push e do digest semanal (401 que nao existe) (#155)"
+   },
    {
     "sha": "e681a89",
     "data": "2026-11-24",
@@ -121,19 +131,9 @@
     "sha": "9a04825",
     "data": "2026-11-24",
     "assunto": "feat: tela de Pesquisa de Clima (criar, responder, eNPS e score por pilar) (#125)"
-   },
-   {
-    "sha": "eff597a",
-    "data": "2026-11-24",
-    "assunto": "feat(feedback): tela para pedir feedback 360 e ver o resumo do avaliado (#132)"
-   },
-   {
-    "sha": "f55c5db",
-    "data": "2026-11-24",
-    "assunto": "chore: remove feedback360Service, duplicata morta do 360 que ja roda em /feedback (#131)"
    }
   ],
-  "arquivos_mudados_7d": 209,
+  "arquivos_mudados_7d": 211,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "supabase/functions/_shared",
@@ -144,11 +144,11 @@
     "mudancas": 21
    },
    {
-    "pasta": "bun.lock",
-    "mudancas": 13
+    "pasta": "docs/estado/05-edge-functions.md",
+    "mudancas": 14
    },
    {
-    "pasta": "docs/estado/05-edge-functions.md",
+    "pasta": "bun.lock",
     "mudancas": 13
    },
    {
@@ -207,7 +207,7 @@
    },
    {
     "arquivo": "docs/estado/05-edge-functions.md",
-    "mudancas": 13
+    "mudancas": 14
    },
    {
     "arquivo": ".github/workflows/ci.yml",
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 121
+    "commits": 123
    },
    {
     "autor": "dependabot[bot]",
@@ -310,9 +310,9 @@
   ]
  },
  "contagens": {
-  "arquivos_total": 1575,
-  "arquivos_codigo": 1189,
-  "linhas_codigo": 236084,
+  "arquivos_total": 1576,
+  "arquivos_codigo": 1190,
+  "linhas_codigo": 236116,
   "rotas": 87,
   "rotas_http_backend": 0,
   "vistas_por_id": 0,
@@ -324,7 +324,7 @@
   "tabelas": 238,
   "migrations": 282,
   "cron_jobs": 24,
-  "testes": 172,
+  "testes": 173,
   "workflows": 6,
   "scripts": 17,
   "docs_md": 56
@@ -424,7 +424,7 @@
   },
   "src/lib": {
    "arquivos": 106,
-   "linhas": 22086
+   "linhas": 22094
   },
   "src/main.tsx": {
    "arquivos": 1,
@@ -443,8 +443,8 @@
    "linhas": 7136
   },
   "src/test": {
-   "arquivos": 135,
-   "linhas": 24092
+   "arquivos": 136,
+   "linhas": 24116
   },
   "src/tests": {
    "arquivos": 17,

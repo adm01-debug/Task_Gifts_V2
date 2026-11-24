@@ -6609,7 +6609,7 @@
    "modulo": "lib",
    "arquivos": 106,
    "testes": 0,
-   "linhas": 22086,
+   "linhas": 22094,
    "itens_menu": [],
    "telas": [],
    "rotas_http": [],
@@ -8725,7 +8725,7 @@
   {
    "modulo": "test",
    "arquivos": 0,
-   "testes": 135,
+   "testes": 136,
    "linhas": 0,
    "itens_menu": [],
    "telas": [],

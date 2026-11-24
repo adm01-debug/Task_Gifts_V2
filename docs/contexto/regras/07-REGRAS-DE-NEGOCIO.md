@@ -1,6 +1,6 @@
 # 07 · REGRAS DE NEGÓCIO
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `e681a89f06` · branch `main` · 2026-11-24 21:12 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `52db204ec3` · branch `main` · 2026-11-24 21:53 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## A. Regras escritas por humanos (`manual/` — prioridade máxima, nunca sobrescrito)
@@ -3636,7 +3636,7 @@ _nenhum item encontrado_
 | `admin` | `supabase/migrations/20261123180000_climate_survey_engine.sql` |
 | `manager` | `supabase/migrations/20261123180000_climate_survey_engine.sql` |
 
-## K. Testes como especificação (2103 testes em 158 arquivos — nomes completos em `context.json`)
+## K. Testes como especificação (2107 testes em 159 arquivos — nomes completos em `context.json`)
 
 | Arquivo | Testes | Exemplos do que o sistema DEVE fazer |
 |---|---|---|
@@ -3780,6 +3780,7 @@ _nenhum item encontrado_
 | `src/tests/unit/onboarding.test.ts` | 5 | onboardingService · completeStep · should return true on success · isOnboardingComplete … |
 | `src/tests/unit/weeklyChallenge.test.tsx` | 5 | useWeeklyChallenge - notificacao do desafio · inclui o id do desafio no payload das notificacoes · mantem o desafio quando o aviso ao oponente e recusado pela RLS · gera payloads distintos em desafios de semanas diferentes (nao colide no indice unico) … |
 | `src/components/shop/__tests__/ProductGridLoading.test.tsx` | 4 | Shop Skeleton and Loading State · should display skeletons while rewards are loading · should transition from skeletons to content smoothly · should maintain layout stability during search/filtering loading |
+| `src/test/edgeAvailability.test.ts` | 4 | isFunctionDeployed — allowlist compilada · allowlist vazia bloqueia todas as funções (kill switch documentado) · passkey-auth é reconhecida mesmo quando a env do Vercel não a lista · função fora da lista continua bloqueada |
 | `src/test/nr1Export.simulation.test.ts` | 4 | Exportação NR-1 (simulação combinatória) · nunca emite célula vazia ou  · marca plano obrigatório exatamente para riscos alto e crítico · gera nome de arquivo seguro para recortes com acentos e símbolos |
 | `src/test/passkeysPanel.test.tsx` | 4 | PasskeysPanel — cadastro so quando o login por passkey funciona · libera o cadastro quando a funcao esta publicada e a conta nao exige segundo fator · bloqueia o cadastro e explica quando a conta exige verificacao em duas etapas · bloqueia o cadastro quando a funcao nao esta liberada no ambiente |
 | `src/test/validationLibraryContracts.test.ts` | 4 | migração de validação preserva mensagens e resultados · mantém mensagem obrigatória em entrada ausente · validateData retorna mensagens Zod 4 sem lançar exceção · XLSX preserva fórmulas/rich text e rejeita erros/booleanos como crédito |
@@ -3954,6 +3955,7 @@ _nenhum item encontrado_
 | * Limite gravado no banco — mantém o rótulo legível em badges e listas. */ | `src/lib/deviceLabel.ts` |
 | * Sugestão de apelido a partir do user agent — usada apenas como valor inicial | `src/lib/deviceLabel.ts` |
 | silêncio — o painel nunca deve renderizar um item sem significado. | `src/lib/deviceLabel.ts` |
+| 405 (GET) e 422 de validação (POST) desde 2026-11-24, nunca 404. A env do Vercel | `src/lib/edgeAvailability.ts` |
 | tela branca quando a função respondia 429 (rate limit). | `src/lib/edgeErrors.ts` |
 | * Segundos sugeridos de espera (apenas em `rate_limited`). */ | `src/lib/edgeErrors.ts` |
 | * Retorna a string apenas se ela tiver conteúdo útil. */ | `src/lib/edgeErrors.ts` |
