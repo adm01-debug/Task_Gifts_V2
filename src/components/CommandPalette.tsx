@@ -117,6 +117,7 @@ export function CommandPalette() {
     { id: "trails", label: "Trilhas de Aprendizado", icon: BookOpen, action: () => handleNavigate("/trails"), keywords: ["cursos", "learning"], category: "navigation" },
     { id: "quiz", label: "Quiz Diário", icon: Gamepad2, action: () => handleNavigate("/quiz"), keywords: ["perguntas", "game"], category: "navigation" },
     { id: "mentorship", label: "Mentoria", icon: Heart, action: () => handleNavigate("/mentoria"), keywords: ["mentor", "coach"], category: "navigation" },
+    { id: "pdi", label: "PDI", icon: Target, action: () => handleNavigate("/pdi"), keywords: ["desenvolvimento", "plano individual", "template", "mentor", "check-in", "carreira"], category: "navigation" },
     { id: "leagues", label: "Ligas", icon: Award, action: () => handleNavigate("/leagues"), keywords: ["competição", "ranking"], category: "navigation" },
     { id: "duels", label: "Duelos", icon: Swords, action: () => handleNavigate("/duelos"), keywords: ["batalha", "1v1"], category: "navigation" },
     { id: "lucky-wheel", label: "Roleta da Sorte", icon: Dices, action: () => handleNavigate("/roleta"), keywords: ["roleta", "sorte", "giro", "premio"], category: "navigation" },

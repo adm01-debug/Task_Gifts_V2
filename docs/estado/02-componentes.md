@@ -688,6 +688,8 @@ Com 15 conquistas e 13 desbloqueios, é uma das poucas features com uso real —
 | CheckinCard + página de 1:1 | 🟨 | `pages/Checkins.tsx` | `checkins`(**0**), `checkin_templates`(**0**) | Não | `checkins/CheckinCard.tsx:33-90` | Zero 1:1 agendados; sem templates cadastrados |
 | CheckinDetailDialog | 🗑️ | **nenhum** | — | Não | Removido (PR #127): `checkins/CheckinDetailDialog.tsx` refazia, com menos recursos e sem IDs reais de ação, o mesmo diálogo que `pages/Checkins.tsx:129-154` já implementa inline (com notas, data formatada e `toggleActionItem` por `itemId`). |
 | OneOnOnePreparationPanel (IA) | 🟨 | `pages/Checkins.tsx:21` | `checkins`(0), `development_plans`(0), `mood_entries`(0), `kudos`(0), `nine_box`(0), `goals`(3) | Quase nada | `checkins/OneOnOnePreparationPanel.tsx:34-61`; `services/oneOnOnePreparationService.ts` | Pauta gerada a partir de 7 tabelas, 6 vazias |
+| **PDI** |
+| Tela de PDI (templates, mentores, check-ins) | ✅ | `pages/Pdi.tsx` (rota `/pdi`), `components/MyDevelopmentPlanWidget.tsx` (atalho) | `pdi_templates`, `pdi_mentors`, `pdi_checkins`, `development_plans`, `development_plan_actions` | **Sim** | `pages/Pdi.tsx` consome `hooks/usePDI.ts` → `services/pdiService.ts`; criar template exige policy de INSERT em `pdi_templates` (hoje só SELECT), e remover mentor exige a policy de DELETE da migration `20261221000000_pdi_mentors_delete_policy.sql`. |
 | **GOALS** |
 | GoalCard (OKR + Key Results) | ✅ | `pages/Goals.tsx` | `goals`(**3**), `key_results`(**10**) | **Sim** | `goals/GoalCard.tsx:75-282` | Funciona, mas paleta **hardcoded dark-only**: `bg-[#0A0C10]`, `text-white`, `text-slate-400/500/700` (`:88,115,124,137,158`) → ilegível no tema claro |
 | **SUCCESSION / POSITIONS / CERTIFICATIONS / ATTENDANCE** |
