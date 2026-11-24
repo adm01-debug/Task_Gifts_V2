@@ -81,8 +81,8 @@ Repo `adm01-debug/Task_Gifts_V2`, branch `main`, **público**. Produção: https
 - **Em uso (produção): `eidsaqymojyuhprobfpn`** — é o que o app lê em `VITE_SUPABASE_URL` e o que o MCP
   `supabase` do `.mcp.json` alcança. `supabase/config.toml:1` está alinhado com produção (corrigido no PR #33).
 - SQL pelo MCP **`supabase`** (gateway em `.mcp.json`) — tem acesso total (DDL e DML). O ledger
-  `supabase_migrations.schema_migrations` **existe** e fecha com o repo (280 versões para 280 arquivos,
-  0 fora do padrão — medido em 2026-11-24T16:13Z, ver `docs/agentes/banco.md`), mas ele só prova que a
+  `supabase_migrations.schema_migrations` **existe** e fecha com o repo (281 versões para 281 arquivos,
+  0 fora do padrão — medido em 2026-11-24T17:46Z, ver `docs/agentes/banco.md`), mas ele só prova que a
   versão foi **marcada** como aplicada, não que o SQL de cada arquivo rodou: o estado real é a verdade
   (`pg_get_functiondef`,
   `pg_policies`, `information_schema`).

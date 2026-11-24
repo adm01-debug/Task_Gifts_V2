@@ -5,7 +5,7 @@
 Responde, sem consultar o ledger, as duas perguntas que `supabase/migrations/` não responde sozinho.
 
 **Por que o guarda não lê o ledger:** o banco **tem** `supabase_migrations.schema_migrations` — 280
-registros para 280 arquivos, 0 pendentes (medido em 2026-11-24T16:13Z; ver `docs/agentes/banco.md`). O guarda
+registros para 281 arquivos, 0 pendentes (medido em 2026-11-24T17:46Z; ver `docs/agentes/banco.md`). O guarda
 roda no CI, sem credencial de banco, e a fase 1 (idempotência) não depende do ledger. O guarda
 equivalente do `adm01-debug/Zapp_Web_V2` (`scripts/db-audit/check-migration-drift.mjs` lá) compara
 arquivo × ledger; aqui essa comparação não roda no CI.
@@ -64,7 +64,7 @@ Env de teste: `MIGRATIONS_DIR`, `MIGRATION_BASELINE`.
 
 `codificacao` foi acrescentado em 2026-11-24, depois de um BOM (`EF BB BF`) derrubar o check
 `Supabase Preview` no statement 0 de uma migration pendente (`syntax error at or near "\ufeff"`).
-Medido então em **0** dos 280 arquivos — o tipo existe para que o próximo BOM reprove no CI do PR, e
+Medido então em **0** dos 281 arquivos — o tipo existe para que o próximo BOM reprove no CI do PR, e
 não no apply em produção.
 
 A 1ª versão deste guarda relatava 249 chaves porque um único bloco `$$` citando uma guarda zerava o
