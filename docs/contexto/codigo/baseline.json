@@ -2,11 +2,21 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "c567ffec515866d13a936a88415becaa49f116d5",
+  "commit": "88e4b4515b5c3dd77c1bbb2635f2699f1ee27754",
   "branch": "main",
-  "data_commit": "2026-11-24T13:38:09-03:00",
+  "data_commit": "2026-11-24T14:43:13-03:00",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "ultimos_commits": [
+   {
+    "sha": "88e4b45",
+    "data": "2026-11-24",
+    "assunto": "fix(clima): antecipa o fim da pesquisa ativa para 30/11 e destrava o lembrete (#148)"
+   },
+   {
+    "sha": "fc6ade9",
+    "data": "2026-11-24",
+    "assunto": "chore(docs): ledger 280x280 e jobs internos medidos (preserva o trabalho da #150) (#151)"
+   },
    {
     "sha": "c567ffe",
     "data": "2026-11-24",
@@ -121,19 +131,9 @@
     "sha": "a18b67f",
     "data": "2026-11-23",
     "assunto": "chore: remove duplicatas comprovadas (leaderboard e dialogo de check-in) (#127)"
-   },
-   {
-    "sha": "24cdedd",
-    "data": "2026-11-23",
-    "assunto": "feat: liga biblioteca de relatórios (CSV/Excel/PDF) nos dashboards (#124)"
-   },
-   {
-    "sha": "f5e9ae6",
-    "data": "2026-11-23",
-    "assunto": "fix: liga telas orfas na navegacao e remove links sem destino (#123)"
    }
   ],
-  "arquivos_mudados_7d": 207,
+  "arquivos_mudados_7d": 208,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "supabase/functions/_shared",
@@ -153,6 +153,10 @@
    },
    {
     "pasta": "docs/estado/05-edge-functions.md",
+    "mudancas": 11
+   },
+   {
+    "pasta": "docs/agentes/banco.md",
     "mudancas": 10
    },
    {
@@ -160,11 +164,11 @@
     "mudancas": 10
    },
    {
-    "pasta": "docs/agentes/banco.md",
-    "mudancas": 9
+    "pasta": "AGENTS.md",
+    "mudancas": 8
    },
    {
-    "pasta": "AGENTS.md",
+    "pasta": "docs/agentes/mapa-repo.md",
     "mudancas": 7
    },
    {
@@ -181,10 +185,6 @@
    },
    {
     "pasta": ".gitignore",
-    "mudancas": 6
-   },
-   {
-    "pasta": "docs/agentes/mapa-repo.md",
     "mudancas": 6
    },
    {
@@ -211,14 +211,18 @@
    },
    {
     "arquivo": "docs/estado/05-edge-functions.md",
-    "mudancas": 10
+    "mudancas": 11
    },
    {
     "arquivo": "docs/agentes/banco.md",
-    "mudancas": 9
+    "mudancas": 10
    },
    {
     "arquivo": "AGENTS.md",
+    "mudancas": 8
+   },
+   {
+    "arquivo": "docs/agentes/mapa-repo.md",
     "mudancas": 7
    },
    {
@@ -232,10 +236,6 @@
    {
     "arquivo": "supabase/config.toml",
     "mudancas": 7
-   },
-   {
-    "arquivo": "docs/agentes/mapa-repo.md",
-    "mudancas": 6
    },
    {
     "arquivo": "supabase/functions/_shared/contracts/_fixtures/index.ts",
@@ -282,26 +282,26 @@
     "mudancas": 4
    },
    {
+    "arquivo": "scripts/db-audit/README.md",
+    "mudancas": 4
+   },
+   {
+    "arquivo": "scripts/db-audit/check-migration-drift.mjs",
+    "mudancas": 4
+   },
+   {
     "arquivo": "supabase/functions/webhook-dispatcher/index.ts",
     "mudancas": 4
    },
    {
     "arquivo": ".github/workflows/automation-local.yml",
     "mudancas": 3
-   },
-   {
-    "arquivo": ".github/workflows/deploy-edge-functions.yml",
-    "mudancas": 3
-   },
-   {
-    "arquivo": "INVENTARIO_FUNCIONALIDADES.md",
-    "mudancas": 3
    }
   ],
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 116
+    "commits": 118
    },
    {
     "autor": "dependabot[bot]",
@@ -310,7 +310,7 @@
   ]
  },
  "contagens": {
-  "arquivos_total": 1573,
+  "arquivos_total": 1574,
   "arquivos_codigo": 1189,
   "linhas_codigo": 236084,
   "rotas": 87,
@@ -322,7 +322,7 @@
   "hooks": 155,
   "edge_functions": 23,
   "tabelas": 238,
-  "migrations": 280,
+  "migrations": 281,
   "cron_jobs": 24,
   "testes": 172,
   "workflows": 6,
