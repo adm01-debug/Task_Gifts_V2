@@ -12,6 +12,13 @@
 CREATE UNIQUE INDEX IF NOT EXISTS climate_survey_responses_survey_user_key
   ON public.climate_survey_responses (survey_id, user_id);
 
+-- 1.1) Placar global da pesquisa (department_id nulo) tem chave propria: o
+-- UNIQUE da tabela trata NULLs como distintos, entao o upsert abaixo precisa
+-- deste indice parcial para nao duplicar linha a cada recalculo.
+CREATE UNIQUE INDEX IF NOT EXISTS climate_pillar_scores_global_key
+  ON public.climate_pillar_scores (survey_id, pillar)
+  WHERE department_id IS NULL;
+
 -- 2) Recalculo interno (sem checagem de autorizacao; EXECUTE revogado do cliente)
 CREATE OR REPLACE FUNCTION public._climate_recompute_pillar_scores(
   p_survey_id uuid,
@@ -25,27 +32,28 @@ AS $$
 DECLARE
   v_responders integer;
   v_written    integer := 0;
-  r            record;
+    v_marca      timestamptz := clock_timestamp();
 BEGIN
+    -- Sem a pesquisa, nada a agregar (evita linhas orfas de placar).
+    IF NOT EXISTS (SELECT 1 FROM public.climate_surveys s WHERE s.id = p_survey_id) THEN
+      RETURN 0;
+    END IF;
+
   SELECT count(*) INTO v_responders
   FROM public.climate_survey_responses
   WHERE survey_id = p_survey_id AND is_complete;
 
-  DELETE FROM public.climate_pillar_scores
-  WHERE survey_id = p_survey_id AND department_id IS NULL;
-
-  IF COALESCE(v_responders, 0) < GREATEST(COALESCE(p_min_responses, 5), 1) THEN
-    RETURN 0;
-  END IF;
-
-  FOR r IN
-    SELECT q.pillar AS pillar,
+    IF COALESCE(v_responders, 0) >= GREATEST(COALESCE(p_min_responses, 5), 1) THEN
+      INSERT INTO public.climate_pillar_scores
+        (survey_id, department_id, pillar, score, response_count, calculated_at)
+      SELECT p_survey_id, NULL, q.pillar,
            round(avg(CASE q.question_type
                        WHEN 'likert_10' THEN a.score * 10.0
                        WHEN 'nps'       THEN a.score * 10.0
                        WHEN 'likert_5'  THEN (a.score - 1) * 25.0
-                     END), 2) AS score,
-           count(DISTINCT resp.user_id) AS response_count
+                       END), 2),
+             count(DISTINCT resp.user_id),
+             v_marca
     FROM public.climate_question_answers a
     JOIN public.climate_survey_responses resp ON resp.id = a.response_id
     JOIN public.climate_survey_questions q ON q.id = a.question_id
@@ -55,13 +63,21 @@ BEGIN
       AND a.score IS NOT NULL
       AND q.question_type IN ('likert_5', 'likert_10', 'nps')
     GROUP BY q.pillar
-  LOOP
-    INSERT INTO public.climate_pillar_scores
-      (survey_id, department_id, pillar, score, response_count)
-    VALUES
-      (p_survey_id, NULL, r.pillar, r.score, r.response_count);
-    v_written := v_written + 1;
-  END LOOP;
+      ON CONFLICT (survey_id, pillar) WHERE department_id IS NULL
+      DO UPDATE SET score          = EXCLUDED.score,
+                    response_count = EXCLUDED.response_count,
+                    calculated_at  = EXCLUDED.calculated_at;
+
+      GET DIAGNOSTICS v_written = ROW_COUNT;
+    END IF;
+
+    -- Placar que nao foi reescrito agora nao pode continuar visivel: ou o pilar
+    -- deixou de existir na pesquisa, ou a amostra caiu abaixo do minimo.
+    UPDATE public.climate_pillar_scores
+       SET score = 0, response_count = 0, calculated_at = v_marca
+     WHERE survey_id = p_survey_id
+       AND department_id IS NULL
+       AND calculated_at < v_marca;
 
   RETURN v_written;
 END;

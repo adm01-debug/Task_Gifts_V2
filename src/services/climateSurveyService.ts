@@ -248,6 +248,9 @@ export const climateSurveyService = {
       query = query.is('department_id', null);
     }
 
+        // Linhas zeradas sao placar de pilar sem amostra valida: nao pontuam.
+        query = query.gt('response_count', 0);
+
     const { data, error } = await query;
     if (error) {
       logger.error('Failed to fetch pillar scores', 'ClimateSurveyService', error);

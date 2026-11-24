@@ -31,6 +31,7 @@ const db = vi.hoisted(() => {
       delete: () => { record.op = "delete"; record.methods.push("delete"); return builder; },
       eq: (column: string, value: unknown) => { record.filters.push([column, value]); record.methods.push("eq"); return builder; },
       is: (column: string, value: unknown) => { record.filters.push([`is:${column}`, value]); record.methods.push("is"); return builder; },
+      gt: (column: string, value: unknown) => { record.filters.push([`gt:${column}`, value]); record.methods.push("gt"); return builder; },
       maybeSingle: async () => { record.methods.push("maybeSingle"); return settle(); },
       single: async () => { record.methods.push("single"); return settle(); },
       then: (resolve: (value: Result) => unknown, reject?: (reason: unknown) => unknown) => settle().then(resolve, reject),
@@ -183,7 +184,7 @@ describe("climateSurveyService", () => {
       expect(scores[0].score).toBe(72.5);
 
       const record = db.records[db.records.length - 1];
-      expect(record.filters).toEqual([["survey_id", "survey-1"], ["is:department_id", null]]);
+      expect(record.filters).toEqual([["survey_id", "survey-1"], ["is:department_id", null], ["gt:response_count", 0]]);
     });
 
     it("filtra por departamento quando informado", async () => {
@@ -192,7 +193,7 @@ describe("climateSurveyService", () => {
       await climateSurveyService.getPillarScores("survey-1", "dep-1");
 
       const record = db.records[db.records.length - 1];
-      expect(record.filters).toEqual([["survey_id", "survey-1"], ["department_id", "dep-1"]]);
+      expect(record.filters).toEqual([["survey_id", "survey-1"], ["department_id", "dep-1"], ["gt:response_count", 0]]);
     });
   });
 });
