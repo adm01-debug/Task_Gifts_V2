@@ -195,7 +195,10 @@ export const webauthnService = {
       timeout: 60000,
       attestation: "none",
       authenticatorSelection: {
-        authenticatorAttachment: "platform",
+        // Sem `authenticatorAttachment`: restringir a "platform" escondia as
+        // chaves externas (USB/NFC) que o painel manda usar quando o aparelho
+        // não tem biometria. O login não restringe acessório e a credencial
+        // residente é exigida abaixo.
         requireResidentKey: true,
         residentKey: "required",
         userVerification: "required"

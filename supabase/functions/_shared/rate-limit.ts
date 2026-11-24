@@ -32,12 +32,33 @@ export async function checkRateLimit(identifier: string, limit: number = 10, win
     }
 
     if (count > limit) {
-      return { success: false, remaining: 0, reset: windowSeconds };
+      // Janela real restante: sem consultar o TTL a tela anuncia a janela
+      // inteira como espera, mesmo quando faltam poucos segundos.
+      return { success: false, remaining: 0, reset: await remainingSeconds(url, token, key, windowSeconds) };
     }
 
     return { success: true, remaining: limit - count };
   } catch (error) {
     console.error("Rate limit check failed:", error);
     return { success: true }; // Fail open to avoid blocking users
+  }
+}
+
+/** Segundos que ainda faltam para a chave expirar, com a janela como teto. */
+async function remainingSeconds(
+  url: string,
+  token: string,
+  key: string,
+  fallback: number,
+): Promise<number> {
+  try {
+    const response = await fetch(`${url}/ttl/${encodeURIComponent(key)}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    const body = await response.json();
+    const ttl = Number(body?.result);
+    return Number.isFinite(ttl) && ttl > 0 ? Math.min(ttl, fallback) : fallback;
+  } catch {
+    return fallback;
   }
 }

@@ -56,15 +56,66 @@ Deno.test("chaves que colidiriam sem codificacao seguem separadas", async () => 
   assertEquals(first[0] === second[0], false);
 });
 
-Deno.test("acima do limite devolve success=false e nao cria expiracao", async () => {
+Deno.test("acima do limite devolve success=false e expoe o ttl da chave", async () => {
   const urls = captureFetch({ result: 99 });
   try {
     const out = await checkRateLimit("ip:1.2.3.4", 5, 30);
     assertEquals(out.success, false);
+    if (out.success) throw new Error("unreachable");
+    // Stub devolve 99 > janela: o teto da janela prevalece.
+    assertEquals(out.reset, 30);
   } finally {
     globalThis.fetch = originalFetch;
   }
-  assertEquals(urls.length, 1);
+  assertEquals(urls.length, 2);
+  assertStringIncludes(urls[1], "/ttl/rate_limit%3Aip%3A1.2.3.4");
+});
+
+Deno.test("espera devolvida no bloqueio e o ttl restante da chave", async () => {
+  const urls: string[] = [];
+  globalThis.fetch = ((input: string | URL | Request) => {
+    const target = String(input);
+    urls.push(target);
+    const body = target.includes("/ttl/") ? { result: 12 } : { result: 99 };
+    return Promise.resolve(
+      new Response(JSON.stringify(body), {
+        status: 200,
+        headers: { "content-type": "application/json" },
+      }),
+    );
+  }) as unknown as typeof fetch;
+
+  try {
+    const out = await checkRateLimit("ip:5.6.7.8", 5, 60);
+    assertEquals(out.success, false);
+    if (out.success) throw new Error("unreachable");
+    assertEquals(out.reset, 12);
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
+});
+
+Deno.test("ttl indisponivel cai para a janela configurada", async () => {
+  globalThis.fetch = ((input: string | URL | Request) => {
+    if (String(input).includes("/ttl/")) {
+      return Promise.reject(new Error("upstash fora do ar"));
+    }
+    return Promise.resolve(
+      new Response(JSON.stringify({ result: 42 }), {
+        status: 200,
+        headers: { "content-type": "application/json" },
+      }),
+    );
+  }) as unknown as typeof fetch;
+
+  try {
+    const out = await checkRateLimit("ip:9.9.9.9", 5, 60);
+    assertEquals(out.success, false);
+    if (out.success) throw new Error("unreachable");
+    assertEquals(out.reset, 60);
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
 });
 
 Deno.test("sem credenciais do Upstash nao chama a rede", async () => {

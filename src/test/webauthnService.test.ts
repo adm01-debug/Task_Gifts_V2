@@ -1,9 +1,10 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 
-const { invokeEdgeSafeMock, isFunctionDeployedMock, verifyOtpMock, loggerMock } = vi.hoisted(() => ({
+const { invokeEdgeSafeMock, isFunctionDeployedMock, verifyOtpMock, fromMock, loggerMock } = vi.hoisted(() => ({
   invokeEdgeSafeMock: vi.fn(),
   isFunctionDeployedMock: vi.fn(),
   verifyOtpMock: vi.fn(),
+  fromMock: vi.fn(),
   loggerMock: { apiError: vi.fn(), error: vi.fn(), warn: vi.fn(), info: vi.fn(), debug: vi.fn() },
 }));
 
@@ -11,7 +12,7 @@ vi.mock("@/lib/requestId", () => ({ invokeEdgeSafe: invokeEdgeSafeMock }));
 vi.mock("@/lib/edgeAvailability", () => ({ isFunctionDeployed: isFunctionDeployedMock }));
 vi.mock("@/services/loggingService", () => ({ logger: loggerMock }));
 vi.mock("@/integrations/supabase/client", () => ({
-  supabase: { auth: { verifyOtp: verifyOtpMock }, from: vi.fn() },
+  supabase: { auth: { verifyOtp: verifyOtpMock }, from: fromMock },
 }));
 
 const { webauthnService } = await import("@/services/webauthnService");
@@ -42,6 +43,15 @@ beforeEach(() => {
   vi.clearAllMocks();
   isFunctionDeployedMock.mockReturnValue(true);
   verifyOtpMock.mockResolvedValue({ error: null });
+  // Cadeia do supabase-js para `webauthn_challenges`/`webauthn_credentials`:
+  // `insert` resolve sem erro e `select(...).eq(...).eq(...)` devolve o mesmo
+  // objeto (as queries de cadastro aceitam lista vazia de credenciais).
+  const chain: Record<string, unknown> = {
+    insert: vi.fn().mockResolvedValue({ error: null }),
+  };
+  chain.select = vi.fn(() => chain);
+  chain.eq = vi.fn(() => chain);
+  fromMock.mockReturnValue(chain);
   Object.defineProperty(window, "PublicKeyCredential", {
     value: function PublicKeyCredential() {},
     configurable: true,
@@ -383,5 +393,21 @@ describe("webauthnService.authenticate — login por passkey verificado no servi
 
     expect(result.success).toBe(false);
     expect(result.error).toBe("Não foi possível iniciar o login por passkey");
+  });
+});
+
+describe("webauthnService.generateRegistrationOptions — cadastro de passkey", () => {
+  it("não restringe o cadastro ao autenticador de plataforma (chave externa)", async () => {
+    const options = await webauthnService.generateRegistrationOptions(
+      "user-1",
+      "rh@empresa.com",
+      "RH",
+    );
+
+    expect(options.authenticatorSelection.authenticatorAttachment).toBeUndefined();
+    expect(options.authenticatorSelection.requireResidentKey).toBe(true);
+    expect(options.authenticatorSelection.residentKey).toBe("required");
+    expect(options.authenticatorSelection.userVerification).toBe("required");
+    expect(options.rp.id).toBe(window.location.hostname);
   });
 });

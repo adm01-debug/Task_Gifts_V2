@@ -23,6 +23,8 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { useWebAuthn } from "@/hooks/useWebAuthn";
+import { useTwoFactor } from "@/hooks/useTwoFactor";
+import { isFunctionDeployed } from "@/lib/edgeAvailability";
 import { formatDistanceToNow } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import {
@@ -58,6 +60,19 @@ export function PasskeysPanel() {
   const [newName, setNewName] = useState("");
   const [addDialogOpen, setAddDialogOpen] = useState(false);
   const [deviceName, setDeviceName] = useState("");
+
+  // O cadastro depende do login estar liberado e de a conta não exigir segundo
+  // fator: o servidor recusa a passkey em `mfa_obrigatorio` e a tela de login
+  // nem mostra a opção quando a função não está na allowlist — sem este aviso
+  // a pessoa cadastra uma passkey que não consegue usar.
+  const { isEnabled: isTwoFactorEnabled } = useTwoFactor();
+  const passkeyLoginReleased = isFunctionDeployed("passkey-auth");
+  const canAddPasskey = passkeyLoginReleased && !isTwoFactorEnabled;
+  const addBlockedReason = !passkeyLoginReleased
+    ? "O login por passkey ainda não está liberado neste ambiente, então o cadastro fica indisponível."
+    : isTwoFactorEnabled
+      ? "Sua conta usa verificação em duas etapas, que o login por passkey não substitui. Desative a verificação em duas etapas para entrar com biometria; as passkeys existentes podem ser removidas normalmente."
+      : null;
 
   const handleAddPasskey = async () => {
     await register(deviceName || undefined);
@@ -143,7 +158,7 @@ export function PasskeysPanel() {
                 Login biométrico usando impressão digital ou reconhecimento facial
               </CardDescription>
             </div>
-            <Button onClick={() => setAddDialogOpen(true)} disabled={isRegistering}>
+            <Button onClick={() => setAddDialogOpen(true)} disabled={isRegistering || !canAddPasskey}>
               <Plus className="h-4 w-4 mr-2" />
               Adicionar Passkey
             </Button>
@@ -170,6 +185,13 @@ export function PasskeysPanel() {
           </div>
 
           {/* Lista de credenciais */}
+          {addBlockedReason && (
+            <div className="flex items-start gap-3 p-3 rounded-lg bg-destructive/10 border border-destructive/20">
+              <AlertTriangle className="h-5 w-5 text-destructive shrink-0" />
+              <p className="text-sm text-destructive">{addBlockedReason}</p>
+            </div>
+          )}
+
           {isLoading ? (
             <div className="space-y-3">
               {[1, 2].map((i) => (
