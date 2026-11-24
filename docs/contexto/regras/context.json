@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "716355da6b72930a86480d21df754e86bf1ddef6",
+  "sha": "82066d76a9f4fe8b8fb55b153d7aef6ca58c64d5",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
-  "generated_at": "2026-11-24 15:36 UTC",
-  "files_total": 1582,
-  "code_files": 1475,
-  "code_lines": 268702
+  "generated_at": "2026-11-24 15:37 UTC",
+  "files_total": 1583,
+  "code_files": 1476,
+  "code_lines": 268841
  },
  "version": "1.3.2",
- "facts_hash": "a2391eac7d041c94",
+ "facts_hash": "afaef5bf80e8d43b",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -196,7 +196,7 @@
   "languages": {
    ".ts": 584,
    ".tsx": 578,
-   ".sql": 281,
+   ".sql": 282,
    ".mjs": 21,
    ".js": 5,
    ".py": 5,
@@ -19599,18 +19599,18 @@
       "type": "TEXT PRIMARY KEY",
       "fk": "",
       "generated": "",
-      "src": "supabase/migrations/20261224110000_cron_internal_jobs_drift.sql"
+      "src": "supabase/migrations/20261224120000_dispatch_critical_alert_config.sql"
      },
      {
       "name": "value",
       "type": "TEXT",
       "fk": "",
       "generated": "",
-      "src": "supabase/migrations/20261224110000_cron_internal_jobs_drift.sql"
+      "src": "supabase/migrations/20261224120000_dispatch_critical_alert_config.sql"
      }
     ],
     "constraints": [],
-    "src": "supabase/migrations/20261224110000_cron_internal_jobs_drift.sql",
+    "src": "supabase/migrations/20261224120000_dispatch_critical_alert_config.sql",
     "comment": "",
     "origin": "migration"
    },
@@ -27516,13 +27516,14 @@
     "args": "",
     "returns": "TRIGGER",
     "lang": "plpgsql",
-    "src": "supabase/migrations/20261220000000_fix_sre_rpcs_and_dispatch_trigger.sql",
+    "src": "supabase/migrations/20261224120000_dispatch_critical_alert_config.sql",
     "security_definer": true,
     "search_path": true,
-    "body": "DECLARE v_project_url TEXT := 'https://eidsaqymojyuhprobfpn.supabase.co'; v_secret TEXT; BEGIN IF LOWER(COALESCE(NEW.severity, '')) NOT IN ('high', 'critical') THEN RETURN NEW; END IF; BEGIN SELECT value INTO v_secret FROM _internal.dispatch_config WHERE key = 'dispatch_secret' LIMIT 1; EXCEPTION WHEN OTHERS THEN v_secret := NULL; END; IF v_secret IS NULL OR v_secret = '' THEN BEGIN SELECT decrypted_secret INTO v_secret FROM vault.decrypted_secrets WHERE name = 'internal_dispatch_secret' LIMIT 1; EXCEPTION WHEN OTHERS THEN v_secret := NULL; END; END IF; IF v_secret IS NULL OR v_secret = '' THEN RAISE WARNING 'dispatch-critical-alert skipped: segredo ausente em _internal.dispatch_config e no …",
+    "body": "DECLARE v_project_url TEXT; v_secret TEXT; BEGIN IF LOWER(COALESCE(NEW.severity, '')) NOT IN ('high', 'critical') THEN RETURN NEW; END IF; BEGIN SELECT value INTO v_project_url FROM _internal.dispatch_config WHERE key = 'project_url' LIMIT 1; EXCEPTION WHEN OTHERS THEN v_project_url := NULL; END; IF v_project_url IS NULL OR v_project_url = '' THEN v_project_url := 'https://eidsaqymojyuhprobfpn.supabase.co'; END IF; BEGIN SELECT decrypted_secret INTO v_secret FROM vault.decrypted_secrets WHERE name = 'internal_dispatch_secret' LIMIT 1; EXCEPTION WHEN OTHERS THEN v_secret := NULL; END; IF v_secret IS NULL OR v_secret = '' THEN BEGIN SELECT value INTO v_secret FROM _internal.dispatch_config WHE …",
     "raises": [],
     "tables": [
      "_internal",
+     "v_project_url",
      "v_secret",
      "vault"
     ]
@@ -33781,6 +33782,7 @@
    "supabase/migrations/20261224090000_webauthn_login_hardening.sql",
    "supabase/migrations/20261224100000_climate_survey_cycle_jobs.sql",
    "supabase/migrations/20261224110000_cron_internal_jobs_drift.sql",
+   "supabase/migrations/20261224120000_dispatch_critical_alert_config.sql",
    "supabase/tests/climate/assertions.sql",
    "supabase/tests/climate/stubs.sql",
    "src/integrations/supabase/types.ts"
@@ -41527,6 +41529,14 @@
     "objkind": "function",
     "roles": "PUBLIC, anon, authenticated",
     "src": "supabase/migrations/20261224100000_climate_survey_cycle_jobs.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "execute",
+    "object": "trigger_dispatch_critical_alert",
+    "objkind": "function",
+    "roles": "PUBLIC",
+    "src": "supabase/migrations/20261224120000_dispatch_critical_alert_config.sql"
    },
    {
     "kind": "grant",
@@ -50359,8 +50369,8 @@
   },
   {
    "module": "supabase/migrations",
-   "files": 279,
-   "lines": 30705,
+   "files": 280,
+   "lines": 30844,
    "tables": [],
    "exports": [],
    "docs": [],
@@ -58818,6 +58828,10 @@
    },
    {
     "file": "supabase/migrations/20261220000000_fix_sre_rpcs_and_dispatch_trigger.sql",
+    "msg": ",\n    headers := jsonb_build_object(\n      "
+   },
+   {
+    "file": "supabase/migrations/20261224120000_dispatch_critical_alert_config.sql",
     "msg": ",\n    headers := jsonb_build_object(\n      "
    }
   ],
@@ -97158,13 +97172,14 @@
     "args": "",
     "returns": "TRIGGER",
     "lang": "plpgsql",
-    "src": "supabase/migrations/20261220000000_fix_sre_rpcs_and_dispatch_trigger.sql",
+    "src": "supabase/migrations/20261224120000_dispatch_critical_alert_config.sql",
     "security_definer": true,
     "search_path": true,
-    "body": "DECLARE v_project_url TEXT := 'https://eidsaqymojyuhprobfpn.supabase.co'; v_secret TEXT; BEGIN IF LOWER(COALESCE(NEW.severity, '')) NOT IN ('high', 'critical') THEN RETURN NEW; END IF; BEGIN SELECT value INTO v_secret FROM _internal.dispatch_config WHERE key = 'dispatch_secret' LIMIT 1; EXCEPTION WHEN OTHERS THEN v_secret := NULL; END; IF v_secret IS NULL OR v_secret = '' THEN BEGIN SELECT decrypted_secret INTO v_secret FROM vault.decrypted_secrets WHERE name = 'internal_dispatch_secret' LIMIT 1; EXCEPTION WHEN OTHERS THEN v_secret := NULL; END; END IF; IF v_secret IS NULL OR v_secret = '' THEN RAISE WARNING 'dispatch-critical-alert skipped: segredo ausente em _internal.dispatch_config e no …",
+    "body": "DECLARE v_project_url TEXT; v_secret TEXT; BEGIN IF LOWER(COALESCE(NEW.severity, '')) NOT IN ('high', 'critical') THEN RETURN NEW; END IF; BEGIN SELECT value INTO v_project_url FROM _internal.dispatch_config WHERE key = 'project_url' LIMIT 1; EXCEPTION WHEN OTHERS THEN v_project_url := NULL; END; IF v_project_url IS NULL OR v_project_url = '' THEN v_project_url := 'https://eidsaqymojyuhprobfpn.supabase.co'; END IF; BEGIN SELECT decrypted_secret INTO v_secret FROM vault.decrypted_secrets WHERE name = 'internal_dispatch_secret' LIMIT 1; EXCEPTION WHEN OTHERS THEN v_secret := NULL; END; IF v_secret IS NULL OR v_secret = '' THEN BEGIN SELECT value INTO v_secret FROM _internal.dispatch_config WHE …",
     "raises": [],
     "tables": [
      "_internal",
+     "v_project_url",
      "v_secret",
      "vault"
     ]
@@ -107608,7 +107623,8 @@
    "supabase/migrations/20261114110500_fix_cron_campaigns_alert_check.sql",
    "supabase/migrations/20261114134238_9b119528-da6f-4f43-b6cb-dcdcd7aa7ab1.sql",
    "supabase/migrations/20261220000000_fix_sre_rpcs_and_dispatch_trigger.sql",
-   "supabase/migrations/20261224110000_cron_internal_jobs_drift.sql"
+   "supabase/migrations/20261224110000_cron_internal_jobs_drift.sql",
+   "supabase/migrations/20261224120000_dispatch_critical_alert_config.sql"
   ],
   "security_definer_fns": [
    "_climate_recompute_pillar_scores",
@@ -115376,6 +115392,14 @@
     "objkind": "function",
     "roles": "PUBLIC, anon, authenticated",
     "src": "supabase/migrations/20261224100000_climate_survey_cycle_jobs.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "execute",
+    "object": "trigger_dispatch_critical_alert",
+    "objkind": "function",
+    "roles": "PUBLIC",
+    "src": "supabase/migrations/20261224120000_dispatch_critical_alert_config.sql"
    },
    {
     "kind": "grant",
@@ -154906,6 +154930,14 @@
    "lines": 131,
    "uses_service_role": true
   },
+  "supabase/migrations/20261224120000_dispatch_critical_alert_config.sql": {
+   "path": "supabase/migrations/20261224120000_dispatch_critical_alert_config.sql",
+   "lines": 139,
+   "errors": [
+    ",\n    headers := jsonb_build_object(\n      "
+   ],
+   "uses_service_role": true
+  },
   "supabase/tests/climate/assertions.sql": {
    "path": "supabase/tests/climate/assertions.sql",
    "lines": 404,
@@ -155001,10 +155033,19 @@
   }
  },
  "git": {
-  "sha": "716355da6b72930a86480d21df754e86bf1ddef6",
+  "sha": "82066d76a9f4fe8b8fb55b153d7aef6ca58c64d5",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "commits": [
+   {
+    "sha": "82066d7",
+    "date": "2026-11-24",
+    "author": "adm01-debug",
+    "subject": "fix: provisiona segredo do alerta critico e tira URL fixa do trigger (#143)",
+    "files": [
+     "supabase/migrations/20261224120000_dispatch_critical_alert_config.sql"
+    ]
+   },
    {
     "sha": "716355d",
     "date": "2026-11-24",
@@ -155373,15 +155414,6 @@
     "files": [
      "src/pages/Feedback.tsx"
     ]
-   },
-   {
-    "sha": "ba994f9",
-    "date": "2026-11-23",
-    "author": "adm01-debug",
-    "subject": "fix(quiz): persiste 'Concluido hoje' em quiz_scores (resiste ao reload) (#114)",
-    "files": [
-     "src/pages/DailyQuiz.tsx"
-    ]
    }
   ],
   "hot_files": [
@@ -155462,7 +155494,7 @@
     2
    ],
    [
-    "supabase/migrations/20261224100000_climate_survey_cycle_jobs.sql",
+    "supabase/migrations/20261224120000_dispatch_critical_alert_config.sql",
     1
    ]
   ]

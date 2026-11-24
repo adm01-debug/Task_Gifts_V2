@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "716355da6b72930a86480d21df754e86bf1ddef6",
+  "commit": "82066d76a9f4fe8b8fb55b153d7aef6ca58c64d5",
   "branch": "main",
-  "data_commit": "2026-11-24T12:35:39-03:00",
+  "data_commit": "2026-11-24T12:35:58-03:00",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "ultimos_commits": [
+   {
+    "sha": "82066d7",
+    "data": "2026-11-24",
+    "assunto": "fix: provisiona segredo do alerta critico e tira URL fixa do trigger (#143)"
+   },
    {
     "sha": "716355d",
     "data": "2026-11-24",
@@ -126,14 +131,9 @@
     "sha": "455eeb6",
     "data": "2026-11-23",
     "assunto": "feat(admin/app): OfflineIndicator global + GoalsManager persistente (Supabase) (#110)"
-   },
-   {
-    "sha": "0a7aeb7",
-    "data": "2026-11-23",
-    "assunto": "﻿fix: usa JWT de sessao no trail-recommendations (#119)"
    }
   ],
-  "arquivos_mudados_7d": 204,
+  "arquivos_mudados_7d": 205,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "supabase/functions/_shared",
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 111
+    "commits": 112
    },
    {
     "autor": "dependabot[bot]",
@@ -310,7 +310,7 @@
   ]
  },
  "contagens": {
-  "arquivos_total": 1571,
+  "arquivos_total": 1572,
   "arquivos_codigo": 1188,
   "linhas_codigo": 235896,
   "rotas": 87,
@@ -322,7 +322,7 @@
   "hooks": 155,
   "edge_functions": 23,
   "tabelas": 238,
-  "migrations": 279,
+  "migrations": 280,
   "cron_jobs": 24,
   "testes": 171,
   "workflows": 6,

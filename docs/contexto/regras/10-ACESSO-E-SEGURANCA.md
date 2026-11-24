@@ -1,6 +1,6 @@
 # 10 · ACESSO E SEGURANÇA — quem pode o quê
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `716355da6b` · branch `main` · 2026-11-24 15:36 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `82066d76a9` · branch `main` · 2026-11-24 15:37 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## Perfis / roles identificados
@@ -258,7 +258,7 @@
 
 > `—` com RLS ligado = ninguém além de service_role. `sem RLS` = qualquer chave anon lê/escreve tudo.
 
-## Onde o RLS é IGNORADO (service_role) — 138 arquivo(s)
+## Onde o RLS é IGNORADO (service_role) — 139 arquivo(s)
 
 - `scripts/ai-context/cenarios.mjs`
 - `scripts/ai-context/gerar.unit.mjs`
@@ -398,6 +398,7 @@
 - `supabase/migrations/20261114134238_9b119528-da6f-4f43-b6cb-dcdcd7aa7ab1.sql`
 - `supabase/migrations/20261220000000_fix_sre_rpcs_and_dispatch_trigger.sql`
 - `supabase/migrations/20261224110000_cron_internal_jobs_drift.sql`
+- `supabase/migrations/20261224120000_dispatch_critical_alert_config.sql`
 
 ## Funções SQL `SECURITY DEFINER` (rodam com privilégio do dono, ignoram RLS)
 
@@ -770,7 +771,7 @@ Middleware matcher (Next.js): nenhum
 | grant | service_role | select, insert, update, delete | `webhook_idempotency` |
 | grant | service_role, authenticated | execute | `get_security_stats`, `log_login_attempt`, `get_nine_box_distribution`, `get_department_metrics`, `get_monthly_trends`, `get_executive_metrics` |
 | revoke | PUBLIC | all | `get_security_digest_history`, `get_reliability_slo`, `get_reliability_timeline`, `acknowledge_security_alert`, `log_runbook_step`, `get_incident_metrics`, `get_incident_metrics`, `recalc_campaign_progress`, `close_expired_sales_campaigns`, `user_wants_in_app_notification`, `close_expired_sales_campaigns`, `user_wants_push_notification`, `user_wants_email_notification`, `enqueue_push`, `claim_push_outbox` … +18 |
-| revoke | PUBLIC | execute | `cleanup_old_security_logs`, `public`, `approve_password_reset`, `reject_password_reset`, `auto_block_ip`, `cleanup_old_security_logs`, `cleanup_old_security_logs`, `cleanup_expired_idempotency_keys`, `cleanup_expired_challenges`, `get_security_stats`, `update_certification_statuses`, `log_ip_access`, `log_geo_access`, `validate_api_key`, `process_external_task` … +26 |
+| revoke | PUBLIC | execute | `cleanup_old_security_logs`, `public`, `approve_password_reset`, `reject_password_reset`, `auto_block_ip`, `cleanup_old_security_logs`, `cleanup_old_security_logs`, `cleanup_expired_idempotency_keys`, `cleanup_expired_challenges`, `get_security_stats`, `update_certification_statuses`, `log_ip_access`, `log_geo_access`, `validate_api_key`, `process_external_task` … +27 |
 | revoke | PUBLIC, anon | all | `generate_executive_monthly_report`, `generate_action_plan_from_factor`, `generate_action_plan_from_nr1_category`, `get_engagement_nps_history`, `get_engagement_pillar_benchmark`, `get_engagement_pillar_benchmark`, `trim_push_sync_events`, `revoke_push_device`, `can_handle_opinion`, `get_opinion_feed`, `toggle_opinion_support`, `respond_to_opinion`, `set_opinion_status`, `generate_action_plan_from_opinion`, `revoke_push_device` … +88 |
 | revoke | PUBLIC, anon | execute | `get_webhook_delivery_stats_24h`, `get_webhook_delivery_hourly_24h`, `get_webhook_delivery_stats_1h`, `get_webhook_delivery_logs`, `get_error_budget_30d`, `get_burn_rate`, `get_burn_rate`, `is_org_admin`, `is_org_member`, `get_active_engagement_cycle`, `assign_engagement_questions`, `submit_engagement_answer`, `get_engagement_cycle_progress`, `engagement_min_respondents`, `get_engagement_pillar_scores` … +15 |
 | revoke | PUBLIC, anon, authenticated | all | `webhook_delivery_stats_24h`, `check_sla_breaches_and_alert`, `auto_create_postmortem_on_resolve`, `check_overdue_postmortem_actions`, `notify_admins_of_monthly_report`, `close_expired_sales_campaigns`, `increment_push_failures`, `reset_push_failures`, `log_lucky_wheel_prize_change`, `chi_square_critical`, `erf_inverse`, `snapshot_lucky_wheel_payout`, `raise_lucky_wheel_window_alerts`, `raise_lucky_wheel_window_alerts`, `log_lucky_wheel_budget_change` … +22 |
