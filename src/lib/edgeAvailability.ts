@@ -31,15 +31,23 @@ type AvailabilityMap = Record<string, boolean>;
 
 // ── Layer 1: compiled allowlist ─────────────────────────────────────────────
 
+// Piso de funções com deploy confirmado em produção: a `passkey-auth` responde
+// 405 (GET) e 422 de validação (POST) desde 2026-11-24, nunca 404. A env do Vercel
+// não a lista, e sem este piso o cadastro (`PasskeysPanel`) e o login por passkey
+// ficam invisíveis no site publicado. Lista vazia continua bloqueando tudo.
+const VERIFIED_DEPLOYED = ["passkey-auth"] as const;
+
 function getDeployedAllowlist(): Set<string> {
   const raw = import.meta.env.VITE_DEPLOYED_EDGE_FUNCTIONS as string | undefined;
   if (!raw) return new Set();
-  return new Set(
+  const allowlist = new Set(
     raw
       .split(",")
       .map((s) => s.trim().toLowerCase())
       .filter(Boolean),
   );
+  for (const fn of VERIFIED_DEPLOYED) allowlist.add(fn);
+  return allowlist;
 }
 
 /** Returns true if fnName is in the compiled allowlist (i.e. explicitly deployed). */
