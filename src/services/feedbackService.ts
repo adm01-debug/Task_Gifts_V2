@@ -69,7 +69,9 @@ export interface FeedbackSummary {
 /** Linha de `feedback_requests` com as respostas visíveis para quem está lendo o resumo. */
 export interface FeedbackSummaryRow {
   relationship: string;
-  responses: Array<Pick<FeedbackResponse, "overall_rating" | "strengths" | "improvements">>;
+  responses: Array<
+    Pick<FeedbackResponse, "overall_rating" | "strengths" | "improvements"> & { is_anonymous?: boolean }
+  >;
 }
 
 /**
@@ -104,6 +106,11 @@ export function aggregateFeedbackSummary(rows: FeedbackSummaryRow[]): FeedbackSu
 
   rows.forEach(row => {
     (row.responses ?? []).forEach(resp => {
+      // O anonimato vale para o avaliado: um admin consegue ler respostas anônimas
+      // (policy "Admins can view all responses"), mas o resumo dele não pode desfazer
+      // o anonimato — é exatamente o que o card promete na tela.
+      if (resp.is_anonymous) return;
+
       if (resp.overall_rating) {
         totalRating += resp.overall_rating;
         ratingCount += 1;
@@ -131,6 +138,53 @@ export function aggregateFeedbackSummary(rows: FeedbackSummaryRow[]): FeedbackSu
     commonStrengths: rankComments(strengths),
     commonImprovements: rankComments(improvements),
   };
+}
+
+const RELATIONSHIPS_BY_CYCLE: Record<FeedbackCycle["cycle_type"], FeedbackRequest["relationship"][]> = {
+  "360": ["manager", "direct_report", "peer", "self"],
+  manager: ["manager", "direct_report"],
+  peer: ["peer"],
+  self: ["self"],
+};
+
+/**
+ * Quais tipos de avaliação o ciclo aceita. O banco valida `cycle_type` e `relationship`
+ * separadamente, nunca a combinação (`CHECK` em `feedback_cycles.cycle_type` e em
+ * `feedback_requests.relationship`), então a regra vive aqui e é aplicada pelo formulário
+ * de pedido — antes era possível gravar uma avaliação de gestor num ciclo "Apenas Pares".
+ */
+export function allowedRelationshipsForCycle(
+  cycleType: FeedbackCycle["cycle_type"]
+): FeedbackRequest["relationship"][] {
+  return RELATIONSHIPS_BY_CYCLE[cycleType] ?? RELATIONSHIPS_BY_CYCLE["360"];
+}
+
+type ProfileLite = { display_name: string | null; avatar_url: string | null };
+
+/**
+ * `feedback_requests` não tem FK para `profiles` (`from_user_id`/`to_user_id` são UUID
+ * soltos, sem `REFERENCES`), então não existe a relação que os embeds
+ * `profiles!feedback_requests_to_user_id_fkey` / `..._from_user_id_fkey` presumiam: o
+ * PostgREST recusa a consulta e as listas de pedidos pendentes/recebidos não carregavam.
+ * Os perfis vêm numa segunda query, por id.
+ */
+async function loadProfileMap(ids: string[]): Promise<Map<string, ProfileLite>> {
+  const unique = [...new Set(ids.filter(Boolean))];
+  if (unique.length === 0) return new Map();
+
+  const { data, error } = await supabase
+    .from("profiles")
+    .select("id, display_name, avatar_url")
+    .in("id", unique);
+
+  if (error) throw error;
+
+  return new Map(
+    (data ?? []).map(profile => [
+      profile.id,
+      { display_name: profile.display_name, avatar_url: profile.avatar_url },
+    ])
+  );
 }
 
 export const feedbackService = {
@@ -169,20 +223,24 @@ export const feedbackService = {
       .from("feedback_requests")
       .select(`
         *,
-        cycle:feedback_cycles(*),
-        to_user:profiles!feedback_requests_to_user_id_fkey(display_name, avatar_url)
+        cycle:feedback_cycles(*)
       `)
       .eq("from_user_id", user.id)
       .in("status", ["pending", "in_progress"])
       .order("due_date", { ascending: true });
 
     if (error) throw error;
-    return (data ?? []).map(r => ({
+
+    const requests = data ?? [];
+    const profiles = await loadProfileMap(requests.map(request => request.to_user_id));
+
+    return requests.map(r => ({
       ...r,
       cycle: r.cycle ? {
         ...r.cycle,
         questions: r.cycle.questions as unknown as FeedbackQuestion[],
       } : undefined,
+      to_user: profiles.get(r.to_user_id),
     })) as unknown as FeedbackRequest[];
   },
 
@@ -194,20 +252,24 @@ export const feedbackService = {
       .from("feedback_requests")
       .select(`
         *,
-        cycle:feedback_cycles(*),
-        from_user:profiles!feedback_requests_from_user_id_fkey(display_name, avatar_url)
+        cycle:feedback_cycles(*)
       `)
       .eq("to_user_id", user.id)
       .eq("status", "submitted")
       .order("updated_at", { ascending: false });
 
     if (error) throw error;
-    return (data ?? []).map(r => ({
+
+    const requests = data ?? [];
+    const profiles = await loadProfileMap(requests.map(request => request.from_user_id));
+
+    return requests.map(r => ({
       ...r,
       cycle: r.cycle ? {
         ...r.cycle,
         questions: r.cycle.questions as unknown as FeedbackQuestion[],
       } : undefined,
+      from_user: profiles.get(r.from_user_id),
     })) as unknown as FeedbackRequest[];
   },
 
@@ -291,7 +353,12 @@ export const feedbackService = {
     toUserId: string,
     relationship: FeedbackRequest['relationship'],
     dueDate?: string
-  ): Promise<FeedbackRequest> {
+  ): Promise<FeedbackRequest | null> {
+    // `maybeSingle`, não `single`: a policy de SELECT de `feedback_requests` só libera
+    // as linhas em que a pessoa é avaliador, avaliada ou admin. Um gestor (sem admin)
+    // criando um pedido entre dois terceiros insere com sucesso, mas não consegue ler a
+    // linha de volta — com `single()` o PostgREST devolvia erro e a criação inteira era
+    // descartada, mesmo tendo gravado no banco.
     const { data, error } = await supabase
       .from("feedback_requests")
       .insert({
@@ -302,10 +369,10 @@ export const feedbackService = {
         due_date: dueDate,
       })
       .select()
-      .single();
+      .maybeSingle();
 
     if (error) throw error;
-    return data as FeedbackRequest;
+    return (data as FeedbackRequest | null) ?? null;
   },
 
   async submitFeedback(
@@ -316,23 +383,33 @@ export const feedbackService = {
     overallRating?: number,
     isAnonymous = false
   ): Promise<FeedbackResponse> {
-    // Insere a resposta ANTES de marcar o pedido como enviado: se a inserção
-    // falhar depois do update, o pedido ficaria `submitted` sem resposta
-    // (resposta perdida e avaliação impossível de refazer).
-    const { data, error } = await supabase
-      .from("feedback_responses")
-      .insert({
-        request_id: requestId,
-        answers,
-        strengths,
-        improvements,
-        overall_rating: overallRating,
-        is_anonymous: isAnonymous,
-      })
-      .select()
-      .single();
+    // Idempotente de propósito: `feedback_responses` não tem UNIQUE por `request_id` e a
+    // tela volta a oferecer o envio quando algo falha. Se um retry reinserisse, o resumo
+    // do avaliado contaria o mesmo voto duas vezes.
+    const existing = await feedbackService.getFeedbackResponse(requestId);
 
-    if (error) throw error;
+    let response = existing;
+
+    if (!response) {
+      // Insere a resposta ANTES de marcar o pedido como enviado: se a inserção falhar
+      // depois do update, o pedido ficaria `submitted` sem resposta (resposta perdida e
+      // avaliação impossível de refazer).
+      const { data, error } = await supabase
+        .from("feedback_responses")
+        .insert({
+          request_id: requestId,
+          answers,
+          strengths,
+          improvements,
+          overall_rating: overallRating,
+          is_anonymous: isAnonymous,
+        })
+        .select()
+        .single();
+
+      if (error) throw error;
+      response = data as FeedbackResponse;
+    }
 
     const { error: statusError } = await supabase
       .from("feedback_requests")
@@ -341,7 +418,7 @@ export const feedbackService = {
 
     if (statusError) throw statusError;
 
-    return data as FeedbackResponse;
+    return response;
   },
 
   async getFeedbackResponse(requestId: string): Promise<FeedbackResponse | null> {
@@ -360,7 +437,7 @@ export const feedbackService = {
       .from("feedback_requests")
       .select(`
         relationship,
-        feedback_responses(overall_rating, strengths, improvements)
+        feedback_responses(overall_rating, strengths, improvements, is_anonymous)
       `)
       .eq("to_user_id", userId)
       .eq("status", "submitted");

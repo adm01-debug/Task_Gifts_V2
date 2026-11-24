@@ -20,6 +20,7 @@ import {
 import { useAuth } from "@/hooks/useAuth";
 import { useProfiles } from "@/hooks/useProfiles";
 import { useFeedback360 } from "@/hooks/useFeedback360";
+import { allowedRelationshipsForCycle } from "@/services/feedbackService";
 import type { FeedbackCycle, FeedbackRequest } from "@/services/feedbackService";
 
 const RELATIONSHIPS: Array<{ value: FeedbackRequest["relationship"]; label: string }> = [
@@ -74,9 +75,42 @@ export function FeedbackRequestForm({ open, onOpenChange, cycles }: FeedbackRequ
     setIsSubmitting(false);
   };
 
+  const selectedCycle = cycles.find(cycle => cycle.id === cycleId);
+  const allowedRelationships = selectedCycle
+    ? allowedRelationshipsForCycle(selectedCycle.cycle_type)
+    : RELATIONSHIPS.map(option => option.value);
+  const relationshipOptions = RELATIONSHIPS.filter(option => allowedRelationships.includes(option.value));
+
+  const handleCycleChange = (nextCycleId: string) => {
+    setCycleId(nextCycleId);
+    setError(null);
+
+    const nextCycle = cycles.find(cycle => cycle.id === nextCycleId);
+    if (nextCycle && !allowedRelationshipsForCycle(nextCycle.cycle_type).includes(relationship)) {
+      const fallback = allowedRelationshipsForCycle(nextCycle.cycle_type)[0];
+      setRelationship(fallback);
+      if (fallback === "self") setToUserId(fromUserId);
+    }
+  };
+
+  const handleRelationshipChange = (value: string) => {
+    const next = value as FeedbackRequest["relationship"];
+    setRelationship(next);
+    setError(null);
+    // Autoavaliação só faz sentido com a mesma pessoa nos dois lados; alinhar aqui evita
+    // que o usuário tenha que escolher o próprio nome duas vezes.
+    if (next === "self") setToUserId(fromUserId);
+  };
+
   const handleSubmit = () => {
     if (!cycleId) {
       setError("Escolha o ciclo de feedback.");
+      return;
+    }
+    if (!allowedRelationships.includes(relationship)) {
+      setError(
+        `O ciclo selecionado (${selectedCycle?.name ?? "ciclo"}) é do tipo ${selectedCycle?.cycle_type ?? "360"} e não aceita esse tipo de avaliação.`
+      );
       return;
     }
     if (!fromUserId) {
@@ -133,7 +167,7 @@ export function FeedbackRequestForm({ open, onOpenChange, cycles }: FeedbackRequ
           <div className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="cycle">Ciclo</Label>
-              <Select value={cycleId} onValueChange={setCycleId}>
+              <Select value={cycleId} onValueChange={handleCycleChange}>
                 <SelectTrigger id="cycle">
                   <SelectValue placeholder="Escolha o ciclo" />
                 </SelectTrigger>
@@ -151,19 +185,25 @@ export function FeedbackRequestForm({ open, onOpenChange, cycles }: FeedbackRequ
               <Label htmlFor="relationship">Tipo de avaliação</Label>
               <Select
                 value={relationship}
-                onValueChange={(value) => setRelationship(value as FeedbackRequest["relationship"])}
+                onValueChange={handleRelationshipChange}
               >
                 <SelectTrigger id="relationship">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  {RELATIONSHIPS.map(option => (
+                  {relationshipOptions.map(option => (
                     <SelectItem key={option.value} value={option.value}>
                       {option.label}
                     </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
+              {selectedCycle && relationshipOptions.length < RELATIONSHIPS.length && (
+                <p className="text-xs text-muted-foreground">
+                  O ciclo “{selectedCycle.name}” só aceita:{" "}
+                  {relationshipOptions.map(option => option.label.toLowerCase()).join(", ")}.
+                </p>
+              )}
             </div>
 
             <div className="space-y-2">
