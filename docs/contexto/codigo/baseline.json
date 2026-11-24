@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "9a048250d34237f5621ff5741f08659420c12e2a",
+  "commit": "7ef5af2ddc26e48bf585909f103c4503e5357d2d",
   "branch": "main",
-  "data_commit": "2026-11-24T06:56:44-03:00",
+  "data_commit": "2026-11-24T06:57:49-03:00",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "ultimos_commits": [
+   {
+    "sha": "7ef5af2",
+    "data": "2026-11-24",
+    "assunto": "feat: liga login por passkey/biometria com verificação real de assinatura (#126)"
+   },
    {
     "sha": "9a04825",
     "data": "2026-11-24",
@@ -126,18 +131,13 @@
     "sha": "095c05b",
     "data": "2026-11-23",
     "assunto": "build(deps): bump the dependencies group with 13 updates (#107)"
-   },
-   {
-    "sha": "fe0784d",
-    "data": "2026-11-23",
-    "assunto": "docs: atualiza 05-edge-functions com fixes SRE (PR #106) e VAPID keys"
    }
   ],
-  "arquivos_mudados_7d": 176,
+  "arquivos_mudados_7d": 191,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "supabase/functions/_shared",
-    "mudancas": 61
+    "mudancas": 69
    },
    {
     "pasta": "package.json",
@@ -184,15 +184,15 @@
     "mudancas": 5
    },
    {
+    "pasta": "supabase/config.toml",
+    "mudancas": 5
+   },
+   {
+    "pasta": ".env.example",
+    "mudancas": 4
+   },
+   {
     "pasta": ".github/workflows/contexto.yml",
-    "mudancas": 4
-   },
-   {
-    "pasta": "RELATORIO_CI.md",
-    "mudancas": 4
-   },
-   {
-    "pasta": "docs/agentes/github-ci.md",
     "mudancas": 4
    }
   ],
@@ -222,6 +222,14 @@
     "mudancas": 6
    },
    {
+    "arquivo": "supabase/config.toml",
+    "mudancas": 6
+   },
+   {
+    "arquivo": "supabase/functions/_shared/contracts/_fixtures/index.ts",
+    "mudancas": 6
+   },
+   {
     "arquivo": "AGENTS.md",
     "mudancas": 5
    },
@@ -230,16 +238,20 @@
     "mudancas": 5
    },
    {
-    "arquivo": "supabase/config.toml",
+    "arquivo": "supabase/functions/_shared/contracts/_fixtures/responses.ts",
     "mudancas": 5
    },
    {
-    "arquivo": "supabase/functions/_shared/contracts/_fixtures/index.ts",
+    "arquivo": "supabase/functions/_shared/contracts/index.ts",
     "mudancas": 5
    },
    {
     "arquivo": "vercel.json",
     "mudancas": 5
+   },
+   {
+    "arquivo": ".env.example",
+    "mudancas": 4
    },
    {
     "arquivo": ".github/workflows/contexto.yml",
@@ -262,20 +274,8 @@
     "mudancas": 4
    },
    {
-    "arquivo": "supabase/functions/_shared/contracts/_fixtures/responses.ts",
-    "mudancas": 4
-   },
-   {
-    "arquivo": "supabase/functions/_shared/contracts/index.ts",
-    "mudancas": 4
-   },
-   {
     "arquivo": "supabase/functions/webhook-dispatcher/index.ts",
     "mudancas": 4
-   },
-   {
-    "arquivo": ".env.example",
-    "mudancas": 3
    },
    {
     "arquivo": ".github/workflows/automation-local.yml",
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 99
+    "commits": 100
    },
    {
     "autor": "dependabot[bot]",
@@ -310,9 +310,9 @@
   ]
  },
  "contagens": {
-  "arquivos_total": 1560,
-  "arquivos_codigo": 1180,
-  "linhas_codigo": 233093,
+  "arquivos_total": 1568,
+  "arquivos_codigo": 1187,
+  "linhas_codigo": 235171,
   "rotas": 86,
   "rotas_http_backend": 0,
   "vistas_por_id": 0,
@@ -320,11 +320,11 @@
   "modulos": 73,
   "componentes": 529,
   "hooks": 155,
-  "edge_functions": 22,
+  "edge_functions": 23,
   "tabelas": 237,
-  "migrations": 276,
+  "migrations": 277,
   "cron_jobs": 22,
-  "testes": 169,
+  "testes": 171,
   "workflows": 6,
   "scripts": 17,
   "docs_md": 56
@@ -400,7 +400,7 @@
   },
   "src/components": {
    "arquivos": 466,
-   "linhas": 79065
+   "linhas": 79090
   },
   "src/constants": {
    "arquivos": 1,
@@ -424,7 +424,7 @@
   },
   "src/lib": {
    "arquivos": 106,
-   "linhas": 22067
+   "linhas": 22086
   },
   "src/main.tsx": {
    "arquivos": 1,
@@ -432,19 +432,19 @@
   },
   "src/pages": {
    "arquivos": 85,
-   "linhas": 24159
+   "linhas": 24169
   },
   "src/services": {
    "arquivos": 99,
-   "linhas": 22310
+   "linhas": 22362
   },
   "src/stories": {
    "arquivos": 29,
    "linhas": 7136
   },
   "src/test": {
-   "arquivos": 133,
-   "linhas": 23573
+   "arquivos": 135,
+   "linhas": 24092
   },
   "src/tests": {
    "arquivos": 16,
@@ -459,8 +459,8 @@
    "linhas": 152
   },
   "supabase/functions": {
-   "arquivos": 65,
-   "linhas": 7826
+   "arquivos": 70,
+   "linhas": 9279
   },
   "tailwind.config.ts": {
    "arquivos": 1,
@@ -650,7 +650,6 @@
    "src/components/admin/permissions/PermissionModuleAccordion.tsx",
    "src/components/admin/telemetry/TelemetryTable.tsx",
    "src/components/analytics/AnalyticsBottomSection.tsx",
-   "src/components/auth/PasskeyLogin.tsx",
    "src/components/copilot/CopilotAlertCard.tsx",
    "src/components/dashboard/DashboardTabs.tsx",
    "src/components/MobilePullToRefresh.tsx",

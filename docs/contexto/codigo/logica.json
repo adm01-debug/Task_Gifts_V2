@@ -1714,12 +1714,14 @@
    "zod_schemas": 0,
    "flags": [],
    "papeis": [],
-   "usado_por": 4,
+   "usado_por": 6,
    "usado_por_modulos": [
     "components",
+    "components/security",
     "hooks",
     "lib",
-    "pages"
+    "pages",
+    "services"
    ],
    "coberto_por_testes": 0,
    "orfao": false
@@ -1734,10 +1736,11 @@
     "classifyEdgeError",
     "describeEdgeError",
     "describeEdgeErrorMessage",
-    "normalizeRetryAfter"
+    "normalizeRetryAfter",
+    "pickPayloadCode"
    ],
    "export_default": null,
-   "linhas": 236,
+   "linhas": 255,
    "tabelas": [],
    "rpcs": [],
    "edges": [],
@@ -1746,9 +1749,10 @@
    "zod_schemas": 0,
    "flags": [],
    "papeis": [],
-   "usado_por": 1,
+   "usado_por": 2,
    "usado_por_modulos": [
-    "lib"
+    "lib",
+    "services"
    ],
    "coberto_por_testes": 2,
    "orfao": false
@@ -3167,7 +3171,7 @@
    "zod_schemas": 0,
    "flags": [],
    "papeis": [],
-   "usado_por": 16,
+   "usado_por": 17,
    "usado_por_modulos": [
     "components",
     "components/quiz",
@@ -7261,24 +7265,25 @@
    "arquivo": "src/services/webauthnService.ts",
    "camada": "services",
    "exports": [
-    "AuthenticationOptions",
     "RegistrationOptions",
     "WebAuthnCredential",
     "isBiometricAvailable",
     "isWebAuthnSupported",
+    "passkeyFailureMessage",
     "webauthnService"
    ],
    "export_default": null,
-   "linhas": 421,
+   "linhas": 473,
    "tabelas": [
     "webauthn_challenges",
     "webauthn_credentials"
    ],
    "rpcs": [
-    "get_passkeys_by_email",
     "user_has_passkeys"
    ],
-   "edges": [],
+   "edges": [
+    "passkey-auth"
+   ],
    "env": [],
    "externos": [],
    "zod_schemas": 0,
@@ -7289,7 +7294,7 @@
     "components/auth",
     "hooks"
    ],
-   "coberto_por_testes": 0,
+   "coberto_por_testes": 1,
    "orfao": false
   },
   {

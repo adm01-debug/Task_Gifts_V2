@@ -1327,6 +1327,7 @@
   "src/components/auth/PasskeyLogin.tsx": [
    "src/components/ui/button.tsx",
    "src/components/ui/input.tsx",
+   "src/components/ui/label.tsx",
    "src/integrations/supabase/client.ts",
    "src/services/loggingService.ts",
    "src/services/webauthnService.ts"
@@ -2754,7 +2755,9 @@
    "src/components/ui/dialog.tsx",
    "src/components/ui/input.tsx",
    "src/components/ui/skeleton.tsx",
-   "src/hooks/useWebAuthn.ts"
+   "src/hooks/useTwoFactor.ts",
+   "src/hooks/useWebAuthn.ts",
+   "src/lib/edgeAvailability.ts"
   ],
   "src/components/security/PushOutboxHealthPanel.tsx": [
    "src/components/ui/alert.tsx",
@@ -4240,6 +4243,7 @@
    "src/components/auth/AuthFormContent.tsx",
    "src/components/auth/AuthScreens.tsx",
    "src/components/auth/GoogleOAuthButton.tsx",
+   "src/components/auth/PasskeyLogin.tsx",
    "src/hooks/useAuth.tsx",
    "src/hooks/useLoginLockout.ts",
    "src/integrations/lovable/index.ts",
@@ -4997,6 +5001,7 @@
    "src/components/profile/ProfileActivityTimeline.tsx",
    "src/components/push/PushDeviceList.tsx",
    "src/components/push/PushSyncHistory.tsx",
+   "src/components/security/PasskeysPanel.tsx",
    "src/components/ui/button.tsx",
    "src/components/ui/input.tsx",
    "src/hooks/useAuth.tsx",
@@ -5820,6 +5825,9 @@
   ],
   "src/services/webauthnService.ts": [
    "src/integrations/supabase/client.ts",
+   "src/lib/edgeAvailability.ts",
+   "src/lib/edgeErrors.ts",
+   "src/lib/requestId.ts",
    "src/services/loggingService.ts"
   ],
   "src/services/weeklyChallengesService.ts": [
@@ -6036,6 +6044,7 @@
    "supabase/functions/_shared/contracts/error-budget-monitor.ts",
    "supabase/functions/_shared/contracts/generate-quiz-questions.ts",
    "supabase/functions/_shared/contracts/migrate-helper.ts",
+   "supabase/functions/_shared/contracts/passkey-auth.ts",
    "supabase/functions/_shared/contracts/push-device-revoked.ts",
    "supabase/functions/_shared/contracts/push-outbox-dispatcher.ts",
    "supabase/functions/_shared/contracts/push-public-key.ts",
@@ -6050,6 +6059,10 @@
   ],
   "supabase/functions/_shared/contracts/migrate-helper.ts": [
    "supabase/functions/_shared/contracts/common.ts"
+  ],
+  "supabase/functions/_shared/contracts/passkey-auth.ts": [
+   "supabase/functions/_shared/contracts/common.ts",
+   "supabase/functions/_shared/validation.ts"
   ],
   "supabase/functions/_shared/contracts/push-device-revoked.ts": [
    "supabase/functions/_shared/contracts/common.ts"
@@ -6086,6 +6099,9 @@
    "supabase/functions/_shared/contracts/common.ts",
    "supabase/functions/_shared/contracts/webhook-dispatcher.ts"
   ],
+  "supabase/functions/_shared/rate-limit_test.ts": [
+   "supabase/functions/_shared/rate-limit.ts"
+  ],
   "supabase/functions/_shared/rate-limiter.ts": [
    "supabase/functions/_shared/clientIp.ts"
   ],
@@ -6094,6 +6110,9 @@
   ],
   "supabase/functions/_shared/validation_test.ts": [
    "supabase/functions/_shared/validation.ts"
+  ],
+  "supabase/functions/_shared/webauthn_test.ts": [
+   "supabase/functions/_shared/webauthn.ts"
   ],
   "supabase/functions/admin-alerts/index.ts": [
    "supabase/functions/_shared/security.ts"
@@ -6146,6 +6165,14 @@
   "supabase/functions/migrate-helper/index.ts": [
    "supabase/functions/_shared/contracts/migrate-helper.ts",
    "supabase/functions/_shared/validation.ts"
+  ],
+  "supabase/functions/passkey-auth/index.ts": [
+   "supabase/functions/_shared/clientIp.ts",
+   "supabase/functions/_shared/contracts/passkey-auth.ts",
+   "supabase/functions/_shared/rate-limit.ts",
+   "supabase/functions/_shared/security.ts",
+   "supabase/functions/_shared/validation.ts",
+   "supabase/functions/_shared/webauthn.ts"
   ],
   "supabase/functions/push-device-revoked/index.ts": [
    "supabase/functions/_shared/contracts/push-device-revoked.ts",

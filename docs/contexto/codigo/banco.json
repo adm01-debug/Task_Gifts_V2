@@ -6,7 +6,7 @@
   "src/integrations/supabase/types.ts",
   "supabase/migrations"
  ],
- "migrations": 276,
+ "migrations": 277,
  "seeds": [],
  "avisos": [
   "11 bloco(s) com DDL dinâmico (EXECUTE format/...) não modelado — policies/colunas criadas dinamicamente podem faltar; confira no banco vivo"
@@ -22026,6 +22026,7 @@
     "churn-prediction",
     "competency-alerts",
     "detect-new-device",
+    "passkey-auth",
     "reward-approval-review",
     "trail-recommendations"
    ],
@@ -29834,7 +29835,9 @@
     "so_no_types": []
    },
    "usada_no_front": 1,
-   "usada_em_edges": [],
+   "usada_em_edges": [
+    "passkey-auth"
+   ],
    "triggers": [
     "update_user_two_factor_updated_at"
    ],
@@ -30540,7 +30543,9 @@
     "so_no_types": []
    },
    "usada_no_front": 1,
-   "usada_em_edges": [],
+   "usada_em_edges": [
+    "passkey-auth"
+   ],
    "triggers": [],
    "sem_rls": false,
    "nao_usada": false
@@ -30555,7 +30560,7 @@
      "ref": null
     },
     "counter": {
-     "tipo": "integer",
+     "tipo": "bigint",
      "nn": true,
      "pk": false,
      "default": "0",
@@ -30689,7 +30694,9 @@
     "so_no_types": []
    },
    "usada_no_front": 1,
-   "usada_em_edges": [],
+   "usada_em_edges": [
+    "passkey-auth"
+   ],
    "triggers": [],
    "sem_rls": false,
    "nao_usada": false

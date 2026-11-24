@@ -2,12 +2,13 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "pasta": "supabase/functions",
- "total": 22,
+ "total": 23,
  "verify_jwt_false": [
   "burn-rate-monitor",
   "dispatch-critical-alert",
   "error-budget-monitor",
   "migrate-helper",
+  "passkey-auth",
   "push-outbox-dispatcher",
   "push-public-key",
   "security-weekly-digest",
@@ -35,6 +36,7 @@
   "supabase/functions/_shared/contracts/generate-quiz-questions.ts",
   "supabase/functions/_shared/contracts/index.ts",
   "supabase/functions/_shared/contracts/migrate-helper.ts",
+  "supabase/functions/_shared/contracts/passkey-auth.ts",
   "supabase/functions/_shared/contracts/push-device-revoked.ts",
   "supabase/functions/_shared/contracts/push-outbox-dispatcher.ts",
   "supabase/functions/_shared/contracts/push-public-key.ts",
@@ -50,12 +52,15 @@
   "supabase/functions/_shared/contracts/webhook-ping.ts",
   "supabase/functions/_shared/contracts/webhook-versioning.contract.spec.ts",
   "supabase/functions/_shared/rate-limit.ts",
+  "supabase/functions/_shared/rate-limit_test.ts",
   "supabase/functions/_shared/rate-limiter.ts",
   "supabase/functions/_shared/security.ts",
   "supabase/functions/_shared/sentry.ts",
   "supabase/functions/_shared/sentry_test.ts",
   "supabase/functions/_shared/validation.ts",
   "supabase/functions/_shared/validation_test.ts",
+  "supabase/functions/_shared/webauthn.ts",
+  "supabase/functions/_shared/webauthn_test.ts",
   "supabase/functions/_shared/webhookSecurity.ts"
  ],
  "edges": [
@@ -460,6 +465,50 @@
     "validation.ts"
    ],
    "chamada_pelo_front": [],
+   "chamada_por_edges": [],
+   "chamada_por_sql_ou_cron": false,
+   "orfa": false,
+   "testes": 0
+  },
+  {
+   "nome": "passkey-auth",
+   "entrada": "supabase/functions/passkey-auth/index.ts",
+   "arquivos": 1,
+   "linhas": 435,
+   "verify_jwt": false,
+   "metodos": [
+    "OPTIONS",
+    "POST"
+   ],
+   "tabelas": [
+    "profiles",
+    "user_two_factor",
+    "webauthn_challenges",
+    "webauthn_credentials"
+   ],
+   "rpcs": [
+    "get_passkeys_by_email"
+   ],
+   "env": [
+    "SUPABASE_SERVICE_ROLE_KEY",
+    "SUPABASE_URL",
+    "WEBAUTHN_ALLOWED_ORIGINS",
+    "WEBAUTHN_RP_ID"
+   ],
+   "buckets": [],
+   "chama_edges": [],
+   "hosts_externos": [],
+   "usa_shared": [
+    "clientIp.ts",
+    "passkey-auth.ts",
+    "rate-limit.ts",
+    "security.ts",
+    "validation.ts",
+    "webauthn.ts"
+   ],
+   "chamada_pelo_front": [
+    "src/services/webauthnService.ts"
+   ],
    "chamada_por_edges": [],
    "chamada_por_sql_ou_cron": false,
    "orfa": false,

@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "9a048250d34237f5621ff5741f08659420c12e2a",
+  "sha": "7ef5af2ddc26e48bf585909f103c4503e5357d2d",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
-  "generated_at": "2026-11-24 09:57 UTC",
-  "files_total": 1571,
-  "code_files": 1464,
-  "code_lines": 265605
+  "generated_at": "2026-11-24 09:58 UTC",
+  "files_total": 1579,
+  "code_files": 1472,
+  "code_lines": 267705
  },
  "version": "1.3.2",
- "facts_hash": "0369f26309e519b9",
+ "facts_hash": "5e79a53a026e5e60",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -194,9 +194,9 @@
   ],
   "package_manager": "bun",
   "languages": {
-   ".ts": 578,
-   ".tsx": 576,
-   ".sql": 278,
+   ".ts": 584,
+   ".tsx": 577,
+   ".sql": 279,
    ".mjs": 21,
    ".js": 5,
    ".py": 5,
@@ -205,6 +205,7 @@
   "monorepo_packages": [],
   "supabase_config": {
    "functions_no_jwt": [
+    "passkey-auth",
     "migrate-helper",
     "push-public-key",
     "push-outbox-dispatcher",
@@ -11508,7 +11509,7 @@
      },
      {
       "name": "counter",
-      "type": "INTEGER NOT NULL DEFAULT 0",
+      "type": "BIGINT USING counter::bigint NOT NULL DEFAULT 0",
       "fk": "",
       "generated": "",
       "src": "supabase/migrations/20251231124457_aa8a8f7e-bc42-420d-bfb8-9b569a1ddf59.sql"
@@ -23186,16 +23187,6 @@
     "src": "supabase/migrations/20251231124457_aa8a8f7e-bc42-420d-bfb8-9b569a1ddf59.sql"
    },
    {
-    "name": "Users can manage their own challenges",
-    "table": "webauthn_challenges",
-    "cmd": "ALL",
-    "roles": "public",
-    "mode": "permissive",
-    "using": "auth.uid() = user_id OR user_id IS NULL",
-    "check": "",
-    "src": "supabase/migrations/20251231124457_aa8a8f7e-bc42-420d-bfb8-9b569a1ddf59.sql"
-   },
-   {
     "name": "Admins can manage permissions",
     "table": "permissions",
     "cmd": "ALL",
@@ -25394,6 +25385,16 @@
     "using": "EXISTS ( SELECT 1 FROM public.climate_surveys s WHERE s.id = survey_id AND s.status = 'draft' AND (s.created_by = auth.uid() OR public.has_role(auth.uid(), 'admin')) )",
     "check": "",
     "src": "supabase/migrations/20261123180000_climate_survey_engine.sql"
+   },
+   {
+    "name": "Users can manage their own challenges",
+    "table": "webauthn_challenges",
+    "cmd": "ALL",
+    "roles": "public",
+    "mode": "permissive",
+    "using": "auth.uid() = user_id",
+    "check": "auth.uid() = user_id",
+    "src": "supabase/migrations/20261224090000_webauthn_login_hardening.sql"
    },
    {
     "name": "Managers can create climate surveys",
@@ -33703,6 +33704,7 @@
    "supabase/migrations/20261123180000_climate_survey_engine.sql",
    "supabase/migrations/20261218000000_profiles_economia_rpcs.sql",
    "supabase/migrations/20261220000000_fix_sre_rpcs_and_dispatch_trigger.sql",
+   "supabase/migrations/20261224090000_webauthn_login_hardening.sql",
    "supabase/tests/climate/assertions.sql",
    "supabase/tests/climate/stubs.sql",
    "src/integrations/supabase/types.ts"
@@ -42761,7 +42763,9 @@
      "new_device_alerts",
      "password_reset_requests",
      "user_devices",
-     "user_two_factor"
+     "user_two_factor",
+     "webauthn_challenges",
+     "webauthn_credentials"
     ],
     "invokes_transitive": [],
     "rpc_transitive": [
@@ -42770,9 +42774,10 @@
      "log_login_attempt",
      "reject_password_reset",
      "request_password_reset",
-     "reset_login_attempts"
+     "reset_login_attempts",
+     "user_has_passkeys"
     ],
-    "deps_count": 30
+    "deps_count": 34
    },
    {
     "path": "",
@@ -43897,7 +43902,9 @@
      "user_devices",
      "user_mission_progress",
      "user_roles",
-     "user_two_factor"
+     "user_two_factor",
+     "webauthn_challenges",
+     "webauthn_credentials"
     ],
     "invokes_transitive": [],
     "rpc_transitive": [
@@ -43911,9 +43918,10 @@
      "revoke_device_by_fingerprint",
      "revoke_push_device",
      "spend_coins",
+     "user_has_passkeys",
      "verify_certificate"
     ],
-    "deps_count": 121
+    "deps_count": 124
    },
    {
     "path": "",
@@ -44189,7 +44197,6 @@
     "invokes_transitive": [],
     "rpc_transitive": [
      "get_account_devices",
-     "get_passkeys_by_email",
      "get_push_outbox_health",
      "get_push_outbox_health_trend",
      "requeue_push_outbox",
@@ -44778,6 +44785,33 @@
      "unauthorized",
      "unknown_action"
     ],
+    "side_effects": [],
+    "webhook_events": [],
+    "idempotency": false
+   },
+   {
+    "name": "passkey-auth",
+    "file": "supabase/functions/passkey-auth/index.ts",
+    "methods": [
+     "OPTIONS"
+    ],
+    "auth": "PÚBLICA (verify_jwt=false em config.toml)",
+    "tables": [
+     "profiles",
+     "user_two_factor",
+     "webauthn_challenges",
+     "webauthn_credentials"
+    ],
+    "env": [
+     "SUPABASE_SERVICE_ROLE_KEY",
+     "SUPABASE_URL",
+     "WEBAUTHN_ALLOWED_ORIGINS",
+     "WEBAUTHN_RP_ID"
+    ],
+    "external": [],
+    "invokes": [],
+    "doc": "",
+    "errors": [],
     "side_effects": [],
     "webhook_events": [],
     "idempotency": false
@@ -48674,7 +48708,7 @@
   {
    "module": "src/components",
    "files": 466,
-   "lines": 79065,
+   "lines": 79090,
    "tables": [
     "attendance_records",
     "audit_logs",
@@ -49114,7 +49148,7 @@
   {
    "module": "src/lib",
    "files": 106,
-   "lines": 22067,
+   "lines": 22086,
    "tables": [
     "lucky_wheel_settings",
     "lucky_wheel_settings_audit",
@@ -49269,7 +49303,7 @@
   {
    "module": "src/pages",
    "files": 85,
-   "lines": 24159,
+   "lines": 24169,
    "tables": [
     "audit_logs",
     "campaign_participants",
@@ -49446,7 +49480,7 @@
   {
    "module": "src/services",
    "files": 99,
-   "lines": 22310,
+   "lines": 22362,
    "tables": [
     "achievements",
     "action_plan_items",
@@ -49827,8 +49861,8 @@
   },
   {
    "module": "src/test",
-   "files": 133,
-   "lines": 23573,
+   "files": 135,
+   "lines": 24092,
    "tables": [
     "kudos",
     "profiles"
@@ -50028,8 +50062,8 @@
   },
   {
    "module": "supabase/functions",
-   "files": 65,
-   "lines": 7826,
+   "files": 70,
+   "lines": 9279,
    "tables": [
     "ai_course_jobs",
     "attendance_records",
@@ -50058,6 +50092,9 @@
     "user_certifications",
     "user_combos",
     "user_roles",
+    "user_two_factor",
+    "webauthn_challenges",
+    "webauthn_credentials",
     "webhook_delivery_logs",
     "webhook_idempotency",
     "webhook_subscriptions"
@@ -50070,6 +50107,7 @@
     "security.ts: corsHeaders, getCorsHeaders, HttpError, errorResponse, verifyUser, verifyServiceRole",
     "sentry.ts: initSentry, captureException, captureMessage, addBreadcrumb, recordMetric, timeStep",
     "validation.ts: VALIDATION_ERROR_CODES, ValidationErrorCode, ValidationErrorFieldSchema, ValidationErrorSchema, ValidationError, ValidationErrorField",
+    "webauthn.ts: ParsedClientData, ParsedAuthenticatorData, AssertionFailure, AssertionCheck, AssertionVerificationInput, bytesToBase64Url",
     "webhookSecurity.ts: computeHmacSha256, verifyHmacSha256, SignatureCheck, verifySignedWebhook, IdempotencyClaim, derivedIdempotencyKey",
     "_testkit.ts: jsonRequest, validateWithContract, expectUnifiedValidationError, expectValidationResponse, toResponse",
     "admin-alerts.ts: AdminAlertSchema, AdminAlertsResponseSchema, adminAlertsContract",
@@ -50085,6 +50123,7 @@
     "generate-quiz-questions.ts: GenerateQuizQuestionsRequestSchema, GeneratedQuestionSchema, GenerateQuizQuestionsResponseSchema, generateQuizQuestionsContract",
     "index.ts: CONTRACTS, EdgeFunctionName, EDGE_FUNCTION_NAMES, getContract",
     "migrate-helper.ts: MigrateHelperQuerySchema, migrateHelperContract",
+    "passkey-auth.ts: PasskeyAuthRequestSchema, PasskeyAuthRequest, PasskeyOptionsResponseSchema, PasskeyVerifyResponseSchema, PasskeyAuthResponseSchema, passkeyAuthContract",
     "push-device-revoked.ts: PushDeviceRevokedRequestSchema, PushDeviceRevokedResponseSchema, pushDeviceRevokedContract",
     "push-outbox-dispatcher.ts: PushOutboxDispatcherResponseSchema, pushOutboxDispatcherContract",
     "push-public-key.ts: PushPublicKeyResponseSchema, pushPublicKeyContract",
@@ -50104,10 +50143,10 @@
    "docs": [
     "cache.ts: Shared Cache Utility using Upstash Redis Essential for high-performance rankings and dashboards.",
     "rate-limit.ts: Shared Rate Limiting Utility using Upstash Redis Recommended for high-traffic or sensitive Edge Functions.",
+    "rate-limit_test.ts: Testes Deno do limitador compartilhado. Rodam no CI pelo workflow deno.yml (job \"Tipos e testes das Edge Functions\"); local: `bun run test:edge`.",
     "rate-limiter.ts: Hybrid Rate Limiter for Supabase Edge Functions Uses Upstash Redis for global consistency, falls back to in-memory for performance/offline. ATENÇÃO: `checkRateLimit` é assíncrona. Chamar sem `await` faz `result.allowed` ser `undefined`, o que bloqueia 100% do tráfego com 429.",
     "sentry.ts: Dynamic import keeps Sentry optional and avoids type-check pulling the module. deno-lint-ignore no-explicit-any",
-    "validation.ts: Versão FIXADA: sem versão, cada execução baixava o zod mais novo (comportamento imprevisível e risco de cadeia de suprimentos). v3.25 é a que já resolvia em 12/11/2026 — comportamento inalterado. No vitest, esta URL é resolvida para `zod/v3` (alias em vitest.config.ts), então os testes de contrato r …",
-    "validation_test.ts: Testes Deno dos helpers de validação (formato único 422). Rodam no CI pelo workflow deno.yml (job \"Tipos e testes das Edge Functions\"); local: `bun run test:edge` (bunx deno@2 test)."
+    "validation.ts: Versão FIXADA: sem versão, cada execução baixava o zod mais novo (comportamento imprevisível e risco de cadeia de suprimentos). v3.25 é a que já resolvia em 12/11/2026 — comportamento inalterado. No vitest, esta URL é resolvida para `zod/v3` (alias em vitest.config.ts), então os testes de contrato r …"
    ],
    "deps": [
     "https:",
@@ -50122,12 +50161,15 @@
     "supabase/functions/_shared/cache.ts",
     "supabase/functions/_shared/clientIp.ts",
     "supabase/functions/_shared/rate-limit.ts",
+    "supabase/functions/_shared/rate-limit_test.ts",
     "supabase/functions/_shared/rate-limiter.ts",
     "supabase/functions/_shared/security.ts",
     "supabase/functions/_shared/sentry.ts",
     "supabase/functions/_shared/sentry_test.ts",
     "supabase/functions/_shared/validation.ts",
     "supabase/functions/_shared/validation_test.ts",
+    "supabase/functions/_shared/webauthn.ts",
+    "supabase/functions/_shared/webauthn_test.ts",
     "supabase/functions/_shared/webhookSecurity.ts",
     "supabase/functions/_shared/contracts/_testkit.ts",
     "supabase/functions/_shared/contracts/admin-alerts.ts",
@@ -50144,6 +50186,7 @@
     "supabase/functions/_shared/contracts/generate-quiz-questions.ts",
     "supabase/functions/_shared/contracts/index.ts",
     "supabase/functions/_shared/contracts/migrate-helper.ts",
+    "supabase/functions/_shared/contracts/passkey-auth.ts",
     "supabase/functions/_shared/contracts/push-device-revoked.ts",
     "supabase/functions/_shared/contracts/push-outbox-dispatcher.ts",
     "supabase/functions/_shared/contracts/push-public-key.ts",
@@ -50172,6 +50215,7 @@
     "supabase/functions/error-budget-monitor/index.ts",
     "supabase/functions/generate-quiz-questions/index.ts",
     "supabase/functions/migrate-helper/index.ts",
+    "supabase/functions/passkey-auth/index.ts",
     "supabase/functions/push-device-revoked/index.ts",
     "supabase/functions/push-outbox-dispatcher/index.ts",
     "supabase/functions/push-public-key/index.ts",
@@ -50188,8 +50232,8 @@
   },
   {
    "module": "supabase/migrations",
-   "files": 276,
-   "lines": 30411,
+   "files": 277,
+   "lines": 30433,
    "tables": [],
    "exports": [],
    "docs": [],
@@ -51506,6 +51550,7 @@
      "supabase/functions/churn-prediction/index.ts",
      "supabase/functions/competency-alerts/index.ts",
      "supabase/functions/detect-new-device/index.ts",
+     "supabase/functions/passkey-auth/index.ts",
      "supabase/functions/reward-approval-review/index.ts",
      "supabase/functions/trail-recommendations/index.ts"
     ],
@@ -52140,7 +52185,8 @@
    },
    "user_two_factor": {
     "select": [
-     "src/services/twoFactorService.ts"
+     "src/services/twoFactorService.ts",
+     "supabase/functions/passkey-auth/index.ts"
     ],
     "update": [
      "src/services/twoFactorService.ts"
@@ -52185,18 +52231,27 @@
      "src/services/webauthnService.ts"
     ],
     "delete": [
-     "src/services/webauthnService.ts"
+     "src/services/webauthnService.ts",
+     "supabase/functions/passkey-auth/index.ts"
+    ],
+    "ref": [
+     "supabase/functions/passkey-auth/index.ts"
+    ],
+    "select": [
+     "supabase/functions/passkey-auth/index.ts"
     ]
    },
    "webauthn_credentials": {
     "select": [
-     "src/services/webauthnService.ts"
+     "src/services/webauthnService.ts",
+     "supabase/functions/passkey-auth/index.ts"
     ],
     "insert": [
      "src/services/webauthnService.ts"
     ],
     "update": [
-     "src/services/webauthnService.ts"
+     "src/services/webauthnService.ts",
+     "supabase/functions/passkey-auth/index.ts"
     ]
    },
    "webhook_delivery_logs": {
@@ -53254,12 +53309,17 @@
    ],
    "webauthn_challenges": [
     "challenge",
+    "expires_at",
+    "id",
+    "type",
     "user_id"
    ],
    "webauthn_credentials": [
+    "counter",
     "credential_id",
     "id",
     "is_active",
+    "public_key",
     "transports",
     "user_id"
    ],
@@ -53478,6 +53538,7 @@
     "supabase/functions/error-budget-monitor/index.ts",
     "supabase/functions/generate-quiz-questions/index.ts",
     "supabase/functions/migrate-helper/index.ts",
+    "supabase/functions/passkey-auth/index.ts",
     "supabase/functions/push-device-revoked/index.ts",
     "supabase/functions/push-outbox-dispatcher/index.ts",
     "supabase/functions/reward-approval-review/index.ts",
@@ -53505,6 +53566,7 @@
     "supabase/functions/error-budget-monitor/index.ts",
     "supabase/functions/generate-quiz-questions/index.ts",
     "supabase/functions/migrate-helper/index.ts",
+    "supabase/functions/passkey-auth/index.ts",
     "supabase/functions/push-device-revoked/index.ts",
     "supabase/functions/push-outbox-dispatcher/index.ts",
     "supabase/functions/reward-approval-review/index.ts",
@@ -53585,6 +53647,12 @@
     "src/test/rls.test.ts",
     "src/test/rpcAccess.test.ts",
     "src/test/setup.ts"
+   ],
+   "WEBAUTHN_ALLOWED_ORIGINS": [
+    "supabase/functions/passkey-auth/index.ts"
+   ],
+   "WEBAUTHN_RP_ID": [
+    "supabase/functions/passkey-auth/index.ts"
    ],
    "WEBHOOK_HEALTH_MIN_SAMPLE": [
     "supabase/functions/webhook-health-monitor/index.ts"
@@ -53840,7 +53908,7 @@
     "src/services/bingoService.ts"
    ],
    "get_passkeys_by_email": [
-    "src/services/webauthnService.ts"
+    "supabase/functions/passkey-auth/index.ts"
    ],
    "get_prediction_odds_history": [
     "src/services/predictionMarketService.ts"
@@ -55216,6 +55284,38 @@
     "chain": []
    },
    {
+    "file": "supabase/functions/_shared/contracts/passkey-auth.ts",
+    "name": "PasskeyAuthRequestSchema",
+    "kind": "object",
+    "body": "{ action: z.enum([\"options\", \"verify\"]), email: z.string().trim().email().max(255).optional(), credentialId: z.string().trim().max(2048).optional(), authenticatorData: z.string().trim().max(8192).optional(), clientDataJSON: z.string().trim().max(8192).optional(), signature: z.string().trim().max(8192).optional(), }",
+    "refines": [],
+    "chain": []
+   },
+   {
+    "file": "supabase/functions/_shared/contracts/passkey-auth.ts",
+    "name": "PasskeyOptionsResponseSchema",
+    "kind": "object",
+    "body": "{ ok: z.literal(true), challenge: z.string().min(1), rpId: z.string().min(1), allowCredentials: z.array(z.object({ id: z.string(), type: z.literal(\"public-key\") })), timeout: z.number().int().positive(), userVerification: z.literal(\"required\"), }",
+    "refines": [],
+    "chain": []
+   },
+   {
+    "file": "supabase/functions/_shared/contracts/passkey-auth.ts",
+    "name": "PasskeyVerifyResponseSchema",
+    "kind": "object",
+    "body": "{ ok: z.literal(true), tokenHash: z.string().min(1), email: z.string().email(), userId: uuid, }",
+    "refines": [],
+    "chain": []
+   },
+   {
+    "file": "supabase/functions/_shared/contracts/passkey-auth.ts",
+    "name": "PasskeyAuthResponseSchema",
+    "kind": "union",
+    "body": "[ PasskeyOptionsResponseSchema, PasskeyVerifyResponseSchema, ]",
+    "refines": [],
+    "chain": []
+   },
+   {
     "file": "supabase/functions/_shared/contracts/push-device-revoked.ts",
     "name": "PushDeviceRevokedRequestSchema",
     "kind": "object",
@@ -55494,6 +55594,11 @@
     "file": "src/components/auction/BidDialog.tsx",
     "field": "bid-amount",
     "rules": "type=number, min=minNextBid"
+   },
+   {
+    "file": "src/components/auth/PasskeyLogin.tsx",
+    "field": "passkey-email",
+    "rules": "type=email"
    },
    {
     "file": "src/components/board/BoardStuckPlayersPanel.tsx",
@@ -56613,6 +56718,11 @@
     "values": "\"VALIDATION_ERROR\", \"INVALID_JSON\", \"UNSUPPORTED_VERSION\""
    },
    {
+    "file": "supabase/functions/_shared/webauthn.ts",
+    "name": "AssertionFailure",
+    "values": "payload_malformado | client_data_invalido | tipo_invalido | challenge_invalido | origem_nao_permitida | authenticator_data_invalido | rp_id_invalido | usuario_nao_presente | verificacao_do_usuario_ausente | chave_publica_invalida | assinatura_invalida"
+   },
+   {
     "file": "supabase/functions/_shared/contracts/common.ts",
     "name": "HTTP_METHODS",
     "values": "\"GET\", \"POST\""
@@ -56891,7 +57001,7 @@
    },
    {
     "file": "src/components/auth/PasskeyLogin.tsx",
-    "msg": "Biometria reconhecida, mas a sessão não pôde ser emitida. Entre com e-mail e senha."
+    "msg": "Passkey validada, mas a sessão não foi criada. Entre com e-mail e senha."
    },
    {
     "file": "src/components/auth/PasskeyLogin.tsx",
@@ -58430,6 +58540,10 @@
     "msg": ">\n            <AlertCircle className="
    },
    {
+    "file": "supabase/functions/_shared/rate-limit_test.ts",
+    "msg": "unreachable"
+   },
+   {
     "file": "supabase/functions/_shared/contracts/dispatch-critical-alert.ts",
     "msg": ",\n  methods: ["
    },
@@ -58796,10 +58910,6 @@
    {
     "file": "src/components/admin/RolePermissionsManager.tsx",
     "text": "Toggle permission"
-   },
-   {
-    "file": "src/components/auth/PasskeyLogin.tsx",
-    "text": "confiamos apenas no resultado verificado no cliente."
    },
    {
     "file": "src/components/boss/BossDamageSourcesCard.tsx",
@@ -59790,6 +59900,10 @@
     "text": "* Cadeia bruta, apenas para auditoria/diagnóstico — nunca para decisão. */"
    },
    {
+    "file": "supabase/functions/_shared/rate-limit.ts",
+    "text": "TTL 0 = expira em menos de um segundo; anunciar a janela inteira faria a"
+   },
+   {
     "file": "supabase/functions/_shared/rate-limiter.ts",
     "text": "controlado pelo cliente permitiria burlar o limite trocando o header."
    },
@@ -59812,6 +59926,14 @@
    {
     "file": "supabase/functions/_shared/validation_test.ts",
     "text": "Testes Deno dos helpers de validação (formato único 422). Rodam no CI pelo workflow deno.yml"
+   },
+   {
+    "file": "supabase/functions/_shared/webauthn.ts",
+    "text": "usa somente WebCrypto."
+   },
+   {
+    "file": "supabase/functions/_shared/webauthn.ts",
+    "text": "* Restrição adicional de origem; vazio significa \"apenas o rpId manda\". */"
    },
    {
     "file": "supabase/functions/_shared/webhookSecurity.ts",
@@ -59854,6 +59976,10 @@
     "text": "zod sairia como `invalid_union` na raiz). Deve devolver o MESMO formato 422 de validation.ts."
    },
    {
+    "file": "supabase/functions/_shared/contracts/passkey-auth.ts",
+    "text": "`zod` não expressa \"obrigatório apenas quando action=verify\" sem união"
+   },
+   {
     "file": "supabase/functions/_shared/contracts/_fixtures/types.ts",
     "text": "* Caso inválido: payload + campo que deve aparecer em `fields` (com código opcional). */"
    },
@@ -59872,6 +59998,34 @@
    {
     "file": "supabase/functions/burn-rate-monitor/index.ts",
     "text": "volume mínimo para evitar falso positivo"
+   },
+   {
+    "file": "supabase/functions/passkey-auth/index.ts",
+    "text": "* Falha de validação no formato único das edge functions (HTTP 422, ver"
+   },
+   {
+    "file": "supabase/functions/passkey-auth/index.ts",
+    "text": "`Content-Length` declarado corta o caso comum e o leitor aborta no limite"
+   },
+   {
+    "file": "supabase/functions/passkey-auth/index.ts",
+    "text": "Só `cf-connecting-ip` (sobrescrito pelo proxy) alimenta o limite por IP."
+   },
+   {
+    "file": "supabase/functions/passkey-auth/index.ts",
+    "text": "E-mail desconhecido apenas não restringe credenciais; não revelamos"
+   },
+   {
+    "file": "supabase/functions/passkey-auth/index.ts",
+    "text": "e-mail com curinga não pode \"pescar\" o dono de outra conta."
+   },
+   {
+    "file": "supabase/functions/passkey-auth/index.ts",
+    "text": "Limite por (credencial + cliente) além do limite por IP: o balde global"
+   },
+   {
+    "file": "supabase/functions/passkey-auth/index.ts",
+    "text": "caminho não pode emitir sessão."
    },
    {
     "file": "supabase/functions/reward-approval-review/index.ts",
@@ -71532,6 +71686,11 @@
     "value": "422"
    },
    {
+    "file": "supabase/functions/_shared/webauthn_test.ts",
+    "name": "CHALLENGE",
+    "value": "\"Y2hhbGxlbmdlLWRlLXRlc3RlLTEyMzQ1Njc4OTA\""
+   },
+   {
     "file": "supabase/functions/_shared/webhookSecurity.ts",
     "name": "REPLAY_WINDOW_SECONDS",
     "value": "300"
@@ -71565,6 +71724,21 @@
     "file": "supabase/functions/error-budget-monitor/index.ts",
     "name": "BURN_CRITICAL",
     "value": "90"
+   },
+   {
+    "file": "supabase/functions/passkey-auth/index.ts",
+    "name": "MAX_BODY_BYTES",
+    "value": "16"
+   },
+   {
+    "file": "supabase/functions/passkey-auth/index.ts",
+    "name": "CHALLENGE_TTL_MS",
+    "value": "5"
+   },
+   {
+    "file": "supabase/functions/passkey-auth/index.ts",
+    "name": "VERIFY_LIMIT_PER_CREDENTIAL",
+    "value": "15"
    },
    {
     "file": "supabase/functions/push-device-revoked/index.ts",
@@ -77263,12 +77437,6 @@
    {
     "file": "src/services/webauthnService.ts",
     "field": "type",
-    "value": "public-key",
-    "kind": "escreve"
-   },
-   {
-    "file": "src/services/webauthnService.ts",
-    "field": "type",
     "value": "registration",
     "kind": "escreve"
    },
@@ -77293,19 +77461,13 @@
    {
     "file": "src/services/webauthnService.ts",
     "field": "type",
-    "value": "authentication",
-    "kind": "escreve"
-   },
-   {
-    "file": "src/services/webauthnService.ts",
-    "field": "type",
     "value": "public-key",
     "kind": "escreve"
    },
    {
     "file": "src/services/webauthnService.ts",
     "field": "type",
-    "value": "public-key",
+    "value": "magiclink",
     "kind": "escreve"
    },
    {
@@ -77531,6 +77693,12 @@
     "kind": "escreve"
    },
    {
+    "file": "supabase/functions/_shared/webauthn.ts",
+    "field": "type",
+    "value": "string",
+    "kind": "compara"
+   },
+   {
     "file": "supabase/functions/_shared/webhookSecurity.ts",
     "field": "state",
     "value": "fresh",
@@ -77708,6 +77876,12 @@
     "file": "supabase/functions/_shared/contracts/_fixtures/responses.ts",
     "field": "type",
     "value": "rate_limit_breach",
+    "kind": "escreve"
+   },
+   {
+    "file": "supabase/functions/_shared/contracts/_fixtures/responses.ts",
+    "field": "type",
+    "value": "public-key",
     "kind": "escreve"
    },
    {
@@ -78159,6 +78333,42 @@
     "field": "role",
     "value": "user",
     "kind": "escreve"
+   },
+   {
+    "file": "supabase/functions/passkey-auth/index.ts",
+    "field": "type",
+    "value": "magiclink",
+    "kind": "escreve"
+   },
+   {
+    "file": "supabase/functions/passkey-auth/index.ts",
+    "field": "type",
+    "value": "public-key",
+    "kind": "escreve"
+   },
+   {
+    "file": "supabase/functions/passkey-auth/index.ts",
+    "field": "type",
+    "value": "public-key",
+    "kind": "escreve"
+   },
+   {
+    "file": "supabase/functions/passkey-auth/index.ts",
+    "field": "type",
+    "value": "authentication",
+    "kind": "escreve"
+   },
+   {
+    "file": "supabase/functions/passkey-auth/index.ts",
+    "field": "type",
+    "value": "magiclink",
+    "kind": "escreve"
+   },
+   {
+    "file": "supabase/functions/passkey-auth/index.ts",
+    "field": "type",
+    "value": "authentication",
+    "kind": "filtra"
    },
    {
     "file": "supabase/functions/push-device-revoked/index.ts",
@@ -79869,6 +80079,14 @@
     "line": "await new Promise((resolve) => setTimeout(resolve, 2000));"
    },
    {
+    "file": "supabase/functions/_shared/contracts/_fixtures/responses.ts",
+    "line": "timeout: 60000,"
+   },
+   {
+    "file": "supabase/functions/_shared/contracts/_fixtures/responses.ts",
+    "line": "{ nome: \"challenge sem rpId\", payload: { ok: true, challenge: \"abc\", allowCredentials: [], timeout: 60000, userVerification: \"required\" } },"
+   },
+   {
     "file": "supabase/functions/churn-prediction/index.ts",
     "line": "const daysInactive = Math.floor((now.getTime() - lastActive.getTime()) / (1000 * 60 * 60 * 24));"
    },
@@ -79883,6 +80101,14 @@
    {
     "file": "supabase/functions/competency-alerts/index.ts",
     "line": ".gte('created_at', new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString())"
+   },
+   {
+    "file": "supabase/functions/passkey-auth/index.ts",
+    "line": "const CHALLENGE_TTL_MS = 5 * 60 * 1000;"
+   },
+   {
+    "file": "supabase/functions/passkey-auth/index.ts",
+    "line": "timeout: 60_000,"
    },
    {
     "file": "supabase/functions/security-weekly-digest/index.ts",
@@ -83605,6 +83831,18 @@
     "name": "aceita erros não-Error sem quebrar"
    },
    {
+    "file": "src/test/edgeErrors.simulation.test.ts",
+    "name": "código do corpo preservado (401/429 trocam a mensagem)"
+   },
+   {
+    "file": "src/test/edgeErrors.simulation.test.ts",
+    "name": "expõe o código curto em vez de perdê-lo no status"
+   },
+   {
+    "file": "src/test/edgeErrors.simulation.test.ts",
+    "name": "ignora prosa, código gigante e código ausente"
+   },
+   {
     "file": "src/test/engagementDiagnostics.simulation.test.ts",
     "name": "scoreZone — invariantes de classificação"
    },
@@ -86043,6 +86281,22 @@
    {
     "file": "src/test/opinionChannel.simulation.test.ts",
     "name": "gera semente 5W2H sem vazar identidade"
+   },
+   {
+    "file": "src/test/passkeysPanel.test.tsx",
+    "name": "PasskeysPanel — cadastro so quando o login por passkey funciona"
+   },
+   {
+    "file": "src/test/passkeysPanel.test.tsx",
+    "name": "libera o cadastro quando a funcao esta publicada e a conta nao exige segundo fator"
+   },
+   {
+    "file": "src/test/passkeysPanel.test.tsx",
+    "name": "bloqueia o cadastro e explica quando a conta exige verificacao em duas etapas"
+   },
+   {
+    "file": "src/test/passkeysPanel.test.tsx",
+    "name": "bloqueia o cadastro quando a funcao nao esta liberada no ambiente"
    },
    {
     "file": "src/test/playerResume.simulation.test.ts",
@@ -88617,6 +88871,74 @@
     "name": "lider real nunca tem alvo acima"
    },
    {
+    "file": "src/test/webauthnService.test.ts",
+    "name": "webauthnService.authenticate — login por passkey verificado no servidor"
+   },
+   {
+    "file": "src/test/webauthnService.test.ts",
+    "name": "emite sessão só depois de options → get → verify e confirma o token"
+   },
+   {
+    "file": "src/test/webauthnService.test.ts",
+    "name": "restrição de credenciais é repassada ao autenticador"
+   },
+   {
+    "file": "src/test/webauthnService.test.ts",
+    "name": "não chama a rede quando a função não está na allowlist de deploy"
+   },
+   {
+    "file": "src/test/webauthnService.test.ts",
+    "name": "devolve mensagem clara quando o contador sai de ordem (sem bloquear a passkey)"
+   },
+   {
+    "file": "src/test/webauthnService.test.ts",
+    "name": "avisa quando a passkey apresentada é de outra conta"
+   },
+   {
+    "file": "src/test/webauthnService.test.ts",
+    "name": "não emite sessão quando a conta exige segundo fator"
+   },
+   {
+    "file": "src/test/webauthnService.test.ts",
+    "name": "falha sem criar sessão quando o token não pôde ser trocado por sessão"
+   },
+   {
+    "file": "src/test/webauthnService.test.ts",
+    "name": "aborta antes da biometria quando o servidor não emite o challenge"
+   },
+   {
+    "file": "src/test/webauthnService.test.ts",
+    "name": "trata cancelamento do usuário no prompt biométrico"
+   },
+   {
+    "file": "src/test/webauthnService.test.ts",
+    "name": "não tenta autenticar quando o navegador não suporta WebAuthn"
+   },
+   {
+    "file": "src/test/webauthnService.test.ts",
+    "name": "informa o tempo de espera quando o limite de tentativas é atingido"
+   },
+   {
+    "file": "src/test/webauthnService.test.ts",
+    "name": "usa o código do corpo quando o status 401 troca a mensagem por uma fixa"
+   },
+   {
+    "file": "src/test/webauthnService.test.ts",
+    "name": "explica que o e-mail informado está inválido quando o contrato responde 422"
+   },
+   {
+    "file": "src/test/webauthnService.test.ts",
+    "name": "mantém a mensagem genérica no 422 quando nenhum e-mail foi informado"
+   },
+   {
+    "file": "src/test/webauthnService.test.ts",
+    "name": "webauthnService.generateRegistrationOptions — cadastro de passkey"
+   },
+   {
+    "file": "src/test/webauthnService.test.ts",
+    "name": "não restringe o cadastro ao autenticador de plataforma (chave externa)"
+   },
+   {
     "file": "src/test/xpBalancing.test.ts",
     "name": "xpBalancingService"
    },
@@ -89297,6 +89619,10 @@
    {
     "file": "public/sw.js",
     "event": "SKIP_WAITING"
+   },
+   {
+    "file": "supabase/functions/_shared/contracts/passkey-auth.ts",
+    "event": "verify"
    }
   ],
   "side_effects": [
@@ -92357,16 +92683,6 @@
     "src": "supabase/migrations/20251231124457_aa8a8f7e-bc42-420d-bfb8-9b569a1ddf59.sql"
    },
    {
-    "name": "Users can manage their own challenges",
-    "table": "webauthn_challenges",
-    "cmd": "ALL",
-    "roles": "public",
-    "mode": "permissive",
-    "using": "auth.uid() = user_id OR user_id IS NULL",
-    "check": "",
-    "src": "supabase/migrations/20251231124457_aa8a8f7e-bc42-420d-bfb8-9b569a1ddf59.sql"
-   },
-   {
     "name": "Admins can manage permissions",
     "table": "permissions",
     "cmd": "ALL",
@@ -94565,6 +94881,16 @@
     "using": "EXISTS ( SELECT 1 FROM public.climate_surveys s WHERE s.id = survey_id AND s.status = 'draft' AND (s.created_by = auth.uid() OR public.has_role(auth.uid(), 'admin')) )",
     "check": "",
     "src": "supabase/migrations/20261123180000_climate_survey_engine.sql"
+   },
+   {
+    "name": "Users can manage their own challenges",
+    "table": "webauthn_challenges",
+    "cmd": "ALL",
+    "roles": "public",
+    "mode": "permissive",
+    "using": "auth.uid() = user_id",
+    "check": "auth.uid() = user_id",
+    "src": "supabase/migrations/20261224090000_webauthn_login_hardening.sql"
    },
    {
     "name": "Managers can create climate surveys",
@@ -101535,6 +101861,14 @@
     "limit": "1"
    },
    {
+    "file": "supabase/functions/passkey-auth/index.ts",
+    "limit": "1"
+   },
+   {
+    "file": "supabase/functions/passkey-auth/index.ts",
+    "limit": "5"
+   },
+   {
     "file": "supabase/functions/reward-approval-review/index.ts",
     "limit": "500"
    },
@@ -102586,6 +102920,7 @@
      ],
      "string": [
       "compara:src/components/security/SecurityAlertsPanel.tsx",
+      "compara:supabase/functions/_shared/webauthn.ts",
       "escreve:supabase/functions/ai-course-builder/index.ts",
       "escreve:supabase/functions/churn-prediction/index.ts",
       "escreve:supabase/functions/reward-approval-review/index.ts"
@@ -102790,13 +103125,16 @@
       "escreve:src/services/trailsService.ts"
      ],
      "public-key": [
-      "escreve:src/services/webauthnService.ts"
+      "escreve:src/services/webauthnService.ts",
+      "escreve:supabase/functions/_shared/contracts/_fixtures/responses.ts",
+      "escreve:supabase/functions/passkey-auth/index.ts"
      ],
      "registration": [
       "escreve:src/services/webauthnService.ts"
      ],
-     "authentication": [
-      "escreve:src/services/webauthnService.ts"
+     "magiclink": [
+      "escreve:src/services/webauthnService.ts",
+      "escreve:supabase/functions/passkey-auth/index.ts"
      ],
      "range": [
       "escreve:src/stories/components/Progress.stories.tsx"
@@ -102861,6 +103199,10 @@
      ],
      "security": [
       "escreve:supabase/functions/dispatch-critical-alert/index.ts"
+     ],
+     "authentication": [
+      "escreve:supabase/functions/passkey-auth/index.ts",
+      "filtra:supabase/functions/passkey-auth/index.ts"
      ],
      "security_weekly_digest": [
       "escreve:supabase/functions/security-weekly-digest/index.ts",
@@ -106702,16 +107044,16 @@
    "webauthn_challenges": {
     "rls": "enabled",
     "SELECT": [
-     "public: auth.uid() = user_id OR user_id IS NULL"
+     "public: auth.uid() = user_id"
     ],
     "INSERT": [
-     "public: auth.uid() = user_id OR user_id IS NULL"
+     "public: auth.uid() = user_id"
     ],
     "UPDATE": [
-     "public: auth.uid() = user_id OR user_id IS NULL"
+     "public: auth.uid() = user_id"
     ],
     "DELETE": [
-     "public: auth.uid() = user_id OR user_id IS NULL"
+     "public: auth.uid() = user_id"
     ]
    },
    "webauthn_credentials": {
@@ -106934,6 +107276,7 @@
    "supabase/functions/error-budget-monitor/index.ts",
    "supabase/functions/generate-quiz-questions/index.ts",
    "supabase/functions/migrate-helper/index.ts",
+   "supabase/functions/passkey-auth/index.ts",
    "supabase/functions/push-device-revoked/index.ts",
    "supabase/functions/push-outbox-dispatcher/index.ts",
    "supabase/functions/reward-approval-review/index.ts",
@@ -107296,6 +107639,7 @@
    "war_hook_trail_enrollments"
   ],
   "public_functions": [
+   "passkey-auth",
    "migrate-helper",
    "push-public-key",
    "push-outbox-dispatcher",
@@ -122336,16 +122680,19 @@
   },
   "src/components/auth/PasskeyLogin.tsx": {
    "path": "src/components/auth/PasskeyLogin.tsx",
-   "lines": 96,
+   "lines": 99,
    "exports": [
     "function PasskeyLogin"
    ],
    "errors": [
-    "Biometria reconhecida, mas a sessão não pôde ser emitida. Entre com e-mail e senha.",
+    "Passkey validada, mas a sessão não foi criada. Entre com e-mail e senha.",
     "Seu navegador não suporta login com passkey"
    ],
-   "rule_comments": [
-    "confiamos apenas no resultado verificado no cliente."
+   "html_constraints": [
+    {
+     "field": "passkey-email",
+     "rules": "type=email"
+    }
    ]
   },
   "src/components/auth/TwoFactorSetup.tsx": {
@@ -125506,7 +125853,7 @@
   },
   "src/components/security/PasskeysPanel.tsx": {
    "path": "src/components/security/PasskeysPanel.tsx",
-   "lines": 354,
+   "lines": 376,
    "exports": [
     "function PasskeysPanel"
    ]
@@ -132373,12 +132720,13 @@
   },
   "src/lib/edgeErrors.ts": {
    "path": "src/lib/edgeErrors.ts",
-   "lines": 236,
+   "lines": 255,
    "exports": [
     "type EdgeErrorKind",
     "interface EdgeErrorPayload",
     "interface EdgeErrorInfo",
     "function normalizeRetryAfter",
+    "function pickPayloadCode",
     "function classifyEdgeError",
     "function describeEdgeError",
     "function describeEdgeErrorMessage"
@@ -135666,7 +136014,7 @@
   },
   "src/pages/Auth.tsx": {
    "path": "src/pages/Auth.tsx",
-   "lines": 334,
+   "lines": 342,
    "exports": [
     "default Auth"
    ],
@@ -137086,7 +137434,7 @@
   },
   "src/pages/Profile.tsx": {
    "path": "src/pages/Profile.tsx",
-   "lines": 245,
+   "lines": 247,
    "exports": [
     "default Profile"
    ],
@@ -145098,11 +145446,11 @@
   },
   "src/services/webauthnService.ts": {
    "path": "src/services/webauthnService.ts",
-   "lines": 421,
+   "lines": 473,
    "exports": [
     "interface WebAuthnCredential",
     "interface RegistrationOptions",
-    "interface AuthenticationOptions",
+    "function passkeyFailureMessage",
     "function isWebAuthnSupported",
     "function isBiometricAvailable",
     "const webauthnService"
@@ -145119,22 +145467,6 @@
     {
      "table": "webauthn_credentials",
      "op": "insert"
-    },
-    {
-     "table": "webauthn_challenges",
-     "op": "delete"
-    },
-    {
-     "table": "webauthn_challenges",
-     "op": "insert"
-    },
-    {
-     "table": "webauthn_credentials",
-     "op": "select"
-    },
-    {
-     "table": "webauthn_credentials",
-     "op": "update"
     },
     {
      "table": "webauthn_challenges",
@@ -145167,15 +145499,9 @@
     ]
    },
    "rpc": [
-    "get_passkeys_by_email",
     "user_has_passkeys"
    ],
    "status_values": [
-    {
-     "field": "type",
-     "value": "public-key",
-     "kind": "escreve"
-    },
     {
      "field": "type",
      "value": "public-key",
@@ -145208,17 +145534,12 @@
     },
     {
      "field": "type",
-     "value": "authentication",
-     "kind": "escreve"
-    },
-    {
-     "field": "type",
      "value": "public-key",
      "kind": "escreve"
     },
     {
      "field": "type",
-     "value": "public-key",
+     "value": "magiclink",
      "kind": "escreve"
     }
    ],
@@ -147119,7 +147440,7 @@
   },
   "src/test/edgeErrors.simulation.test.ts": {
    "path": "src/test/edgeErrors.simulation.test.ts",
-   "lines": 169,
+   "lines": 209,
    "is_test": true,
    "doc": "Simulação exaustiva do classificador de erros de Edge Functions. Cobre ~1.000 combinações de status x corpo x header x erro local.",
    "tests": [
@@ -147138,7 +147459,10 @@
     "usa o header Retry-After quando o corpo não traz o campo",
     "sobrevive a corpo não-JSON",
     "classifica erro de rede sem context",
-    "aceita erros não-Error sem quebrar"
+    "aceita erros não-Error sem quebrar",
+    "código do corpo preservado (401/429 trocam a mensagem)",
+    "expõe o código curto em vez de perdê-lo no status",
+    "ignora prosa, código gigante e código ausente"
    ]
   },
   "src/test/engagementDiagnostics.simulation.test.ts": {
@@ -148122,6 +148446,17 @@
     "ordena a fila por atraso, urgência e apoio",
     "buildOpinionActionPlanSeed",
     "gera semente 5W2H sem vazar identidade"
+   ]
+  },
+  "src/test/passkeysPanel.test.tsx": {
+   "path": "src/test/passkeysPanel.test.tsx",
+   "lines": 65,
+   "is_test": true,
+   "tests": [
+    "PasskeysPanel — cadastro so quando o login por passkey funciona",
+    "libera o cadastro quando a funcao esta publicada e a conta nao exige segundo fator",
+    "bloqueia o cadastro e explica quando a conta exige verificacao em duas etapas",
+    "bloqueia o cadastro quando a funcao nao esta liberada no ambiente"
    ]
   },
   "src/test/playerResume.simulation.test.ts": {
@@ -149210,6 +149545,39 @@
     "lider real nunca tem alvo acima"
    ]
   },
+  "src/test/webauthnService.test.ts": {
+   "path": "src/test/webauthnService.test.ts",
+   "lines": 414,
+   "is_test": true,
+   "params": [
+    {
+     "name": "CHALLENGE",
+     "value": "\"Y2hhbGxlbmdlLWRlLXRlc3Rl\""
+    }
+   ],
+   "temporal": [
+    "timeout: 60000,"
+   ],
+   "tests": [
+    "webauthnService.authenticate — login por passkey verificado no servidor",
+    "emite sessão só depois de options → get → verify e confirma o token",
+    "restrição de credenciais é repassada ao autenticador",
+    "não chama a rede quando a função não está na allowlist de deploy",
+    "devolve mensagem clara quando o contador sai de ordem (sem bloquear a passkey)",
+    "avisa quando a passkey apresentada é de outra conta",
+    "não emite sessão quando a conta exige segundo fator",
+    "falha sem criar sessão quando o token não pôde ser trocado por sessão",
+    "aborta antes da biometria quando o servidor não emite o challenge",
+    "trata cancelamento do usuário no prompt biométrico",
+    "não tenta autenticar quando o navegador não suporta WebAuthn",
+    "informa o tempo de espera quando o limite de tentativas é atingido",
+    "usa o código do corpo quando o status 401 troca a mensagem por uma fixa",
+    "explica que o e-mail informado está inválido quando o contrato responde 422",
+    "mantém a mensagem genérica no 422 quando nenhum e-mail foi informado",
+    "webauthnService.generateRegistrationOptions — cadastro de passkey",
+    "não restringe o cadastro ao autenticador de plataforma (chave externa)"
+   ]
+  },
   "src/test/xpBalancing.test.ts": {
    "path": "src/test/xpBalancing.test.ts",
    "lines": 85,
@@ -149547,7 +149915,7 @@
   },
   "supabase/functions/_shared/rate-limit.ts": {
    "path": "supabase/functions/_shared/rate-limit.ts",
-   "lines": 41,
+   "lines": 69,
    "exports": [
     "function checkRateLimit"
    ],
@@ -149555,7 +149923,18 @@
     "UPSTASH_REDIS_REST_TOKEN",
     "UPSTASH_REDIS_REST_URL"
    ],
+   "rule_comments": [
+    "TTL 0 = expira em menos de um segundo; anunciar a janela inteira faria a"
+   ],
    "doc": "Shared Rate Limiting Utility using Upstash Redis Recommended for high-traffic or sensitive Edge Functions."
+  },
+  "supabase/functions/_shared/rate-limit_test.ts": {
+   "path": "supabase/functions/_shared/rate-limit_test.ts",
+   "lines": 176,
+   "errors": [
+    "unreachable"
+   ],
+   "doc": "Testes Deno do limitador compartilhado. Rodam no CI pelo workflow deno.yml (job \"Tipos e testes das Edge Functions\"); local: `bun run test:edge`."
   },
   "supabase/functions/_shared/rate-limiter.ts": {
    "path": "supabase/functions/_shared/rate-limiter.ts",
@@ -149734,6 +150113,57 @@
     "Testes Deno dos helpers de validação (formato único 422). Rodam no CI pelo workflow deno.yml"
    ],
    "doc": "Testes Deno dos helpers de validação (formato único 422). Rodam no CI pelo workflow deno.yml (job \"Tipos e testes das Edge Functions\"); local: `bun run test:edge` (bunx deno@2 test)."
+  },
+  "supabase/functions/_shared/webauthn.ts": {
+   "path": "supabase/functions/_shared/webauthn.ts",
+   "lines": 321,
+   "exports": [
+    "interface ParsedClientData",
+    "interface ParsedAuthenticatorData",
+    "type AssertionFailure",
+    "type AssertionCheck",
+    "interface AssertionVerificationInput",
+    "function bytesToBase64Url",
+    "function base64UrlToBytes",
+    "function sha256",
+    "function constantTimeEquals",
+    "function timingSafeStringEquals",
+    "function parseClientDataJSON",
+    "function parseAuthenticatorData",
+    "function derToRawEcdsaSignature",
+    "function verifyAssertionSignature",
+    "function isOriginAllowed",
+    "function isCounterAcceptable",
+    "function verifyAssertion"
+   ],
+   "enums": [
+    {
+     "name": "AssertionFailure",
+     "values": "payload_malformado | client_data_invalido | tipo_invalido | challenge_invalido | origem_nao_permitida | authenticator_data_invalido | rp_id_invalido | usuario_nao_presente | verificacao_do_usuario_ausente | chave_publica_invalida | assinatura_invalida"
+    }
+   ],
+   "status_values": [
+    {
+     "field": "type",
+     "value": "string",
+     "kind": "compara"
+    }
+   ],
+   "rule_comments": [
+    "usa somente WebCrypto.",
+    "* Restrição adicional de origem; vazio significa \"apenas o rpId manda\". */"
+   ]
+  },
+  "supabase/functions/_shared/webauthn_test.ts": {
+   "path": "supabase/functions/_shared/webauthn_test.ts",
+   "lines": 308,
+   "params": [
+    {
+     "name": "CHALLENGE",
+     "value": "\"Y2hhbGxlbmdlLWRlLXRlc3RlLTEyMzQ1Njc4OTA\""
+    }
+   ],
+   "doc": "Testes Deno da verificação de asserção WebAuthn. Rodam no CI pelo workflow deno.yml (\"Tipos e testes das Edge Functions\"); local: `bun run test:edge`. O par de chaves é gerado em runtime pelo WebCrypto, então nenhum segredo entra no repo."
   },
   "supabase/functions/_shared/webhookSecurity.ts": {
    "path": "supabase/functions/_shared/webhookSecurity.ts",
@@ -150251,7 +150681,7 @@
   },
   "supabase/functions/_shared/contracts/index.ts": {
    "path": "supabase/functions/_shared/contracts/index.ts",
-   "lines": 83,
+   "lines": 86,
    "exports": [
     "const CONTRACTS",
     "type EdgeFunctionName",
@@ -150278,6 +150708,54 @@
      "refines": [],
      "chain": []
     }
+   ]
+  },
+  "supabase/functions/_shared/contracts/passkey-auth.ts": {
+   "path": "supabase/functions/_shared/contracts/passkey-auth.ts",
+   "lines": 84,
+   "exports": [
+    "const PasskeyAuthRequestSchema",
+    "type PasskeyAuthRequest",
+    "const PasskeyOptionsResponseSchema",
+    "const PasskeyVerifyResponseSchema",
+    "const PasskeyAuthResponseSchema",
+    "const passkeyAuthContract"
+   ],
+   "zod": [
+    {
+     "name": "PasskeyAuthRequestSchema",
+     "kind": "object",
+     "body": "{ action: z.enum([\"options\", \"verify\"]), email: z.string().trim().email().max(255).optional(), credentialId: z.string().trim().max(2048).optional(), authenticatorData: z.string().trim().max(8192).optional(), clientDataJSON: z.string().trim().max(8192).optional(), signature: z.string().trim().max(8192).optional(), }",
+     "refines": [],
+     "chain": []
+    },
+    {
+     "name": "PasskeyOptionsResponseSchema",
+     "kind": "object",
+     "body": "{ ok: z.literal(true), challenge: z.string().min(1), rpId: z.string().min(1), allowCredentials: z.array(z.object({ id: z.string(), type: z.literal(\"public-key\") })), timeout: z.number().int().positive(), userVerification: z.literal(\"required\"), }",
+     "refines": [],
+     "chain": []
+    },
+    {
+     "name": "PasskeyVerifyResponseSchema",
+     "kind": "object",
+     "body": "{ ok: z.literal(true), tokenHash: z.string().min(1), email: z.string().email(), userId: uuid, }",
+     "refines": [],
+     "chain": []
+    },
+    {
+     "name": "PasskeyAuthResponseSchema",
+     "kind": "union",
+     "body": "[ PasskeyOptionsResponseSchema, PasskeyVerifyResponseSchema, ]",
+     "refines": [],
+     "chain": []
+    }
+   ],
+   "rule_comments": [
+    "`zod` não expressa \"obrigatório apenas quando action=verify\" sem união"
+   ],
+   "webhook_events": [
+    "verify"
    ]
   },
   "supabase/functions/_shared/contracts/push-device-revoked.ts": {
@@ -150658,7 +151136,7 @@
   },
   "supabase/functions/_shared/contracts/_fixtures/index.ts": {
    "path": "supabase/functions/_shared/contracts/_fixtures/index.ts",
-   "lines": 295,
+   "lines": 356,
    "exports": [
     "function emptyBodyFixtures",
     "function fixturesFor",
@@ -150722,7 +151200,7 @@
   },
   "supabase/functions/_shared/contracts/_fixtures/responses.ts": {
    "path": "supabase/functions/_shared/contracts/_fixtures/responses.ts",
-   "lines": 235,
+   "lines": 272,
    "exports": [
     "interface ResponseFixtures",
     "function responsesFor"
@@ -150750,9 +151228,18 @@
      "field": "type",
      "value": "rate_limit_breach",
      "kind": "escreve"
+    },
+    {
+     "field": "type",
+     "value": "public-key",
+     "kind": "escreve"
     }
    ],
-   "doc": "Amostras do CORPO de resposta de cada função, copiadas do `return` real do handler. Servem para o `registry.contract.spec.ts` provar que o `response` do contrato descreve o que a função devolve (o teste anterior só checava que uma string não passa no schema — não provava nada). O schema de resposta …"
+   "doc": "Amostras do CORPO de resposta de cada função, copiadas do `return` real do handler. Servem para o `registry.contract.spec.ts` provar que o `response` do contrato descreve o que a função devolve (o teste anterior só checava que uma string não passa no schema — não provava nada). O schema de resposta …",
+   "temporal": [
+    "timeout: 60000,",
+    "{ nome: \"challenge sem rpId\", payload: { ok: true, challenge: \"abc\", allowCredentials: [], timeout: 60000, userVerification: \"required\" } },"
+   ]
   },
   "supabase/functions/_shared/contracts/_fixtures/types.ts": {
    "path": "supabase/functions/_shared/contracts/_fixtures/types.ts",
@@ -151775,6 +152262,142 @@
     "unknown_action"
    ],
    "doc": "Edge function temporária para migração de banco. Cole em: Cloud > Edge Functions > migrate-helper > View code Após a migração, remova esta função.",
+   "uses_service_role": true
+  },
+  "supabase/functions/passkey-auth/index.ts": {
+   "path": "supabase/functions/passkey-auth/index.ts",
+   "lines": 435,
+   "tables": [
+    {
+     "table": "webauthn_challenges",
+     "op": "delete"
+    },
+    {
+     "table": "profiles",
+     "op": "select"
+    },
+    {
+     "table": "webauthn_challenges",
+     "op": "ref"
+    },
+    {
+     "table": "webauthn_challenges",
+     "op": "select"
+    },
+    {
+     "table": "webauthn_challenges",
+     "op": "delete,select"
+    },
+    {
+     "table": "webauthn_credentials",
+     "op": "select"
+    },
+    {
+     "table": "user_two_factor",
+     "op": "select"
+    },
+    {
+     "table": "webauthn_credentials",
+     "op": "update"
+    }
+   ],
+   "table_cols": {
+    "webauthn_challenges": [
+     "challenge",
+     "expires_at",
+     "id",
+     "type",
+     "user_id"
+    ],
+    "profiles": [
+     "email",
+     "id"
+    ],
+    "webauthn_credentials": [
+     "counter",
+     "credential_id",
+     "id",
+     "is_active",
+     "public_key",
+     "user_id"
+    ],
+    "user_two_factor": [
+     "is_enabled",
+     "user_id"
+    ]
+   },
+   "rpc": [
+    "get_passkeys_by_email"
+   ],
+   "env": [
+    "SUPABASE_SERVICE_ROLE_KEY",
+    "SUPABASE_URL",
+    "WEBAUTHN_ALLOWED_ORIGINS",
+    "WEBAUTHN_RP_ID"
+   ],
+   "params": [
+    {
+     "name": "MAX_BODY_BYTES",
+     "value": "16"
+    },
+    {
+     "name": "CHALLENGE_TTL_MS",
+     "value": "5"
+    },
+    {
+     "name": "VERIFY_LIMIT_PER_CREDENTIAL",
+     "value": "15"
+    }
+   ],
+   "status_values": [
+    {
+     "field": "type",
+     "value": "magiclink",
+     "kind": "escreve"
+    },
+    {
+     "field": "type",
+     "value": "public-key",
+     "kind": "escreve"
+    },
+    {
+     "field": "type",
+     "value": "public-key",
+     "kind": "escreve"
+    },
+    {
+     "field": "type",
+     "value": "authentication",
+     "kind": "escreve"
+    },
+    {
+     "field": "type",
+     "value": "magiclink",
+     "kind": "escreve"
+    },
+    {
+     "field": "type",
+     "value": "authentication",
+     "kind": "filtra"
+    }
+   ],
+   "rule_comments": [
+    "* Falha de validação no formato único das edge functions (HTTP 422, ver",
+    "`Content-Length` declarado corta o caso comum e o leitor aborta no limite",
+    "Só `cf-connecting-ip` (sobrescrito pelo proxy) alimenta o limite por IP.",
+    "E-mail desconhecido apenas não restringe credenciais; não revelamos",
+    "e-mail com curinga não pode \"pescar\" o dono de outra conta.",
+    "Limite por (credencial + cliente) além do limite por IP: o balde global",
+    "caminho não pode emitir sessão."
+   ],
+   "temporal": [
+    "const CHALLENGE_TTL_MS = 5 * 60 * 1000;",
+    "timeout: 60_000,"
+   ],
+   "pagination": [
+    "1",
+    "5"
+   ],
    "uses_service_role": true
   },
   "supabase/functions/push-device-revoked/index.ts": {
@@ -154005,6 +154628,10 @@
    ],
    "uses_service_role": true
   },
+  "supabase/migrations/20261224090000_webauthn_login_hardening.sql": {
+   "path": "supabase/migrations/20261224090000_webauthn_login_hardening.sql",
+   "lines": 22
+  },
   "supabase/tests/climate/assertions.sql": {
    "path": "supabase/tests/climate/assertions.sql",
    "lines": 404,
@@ -154100,10 +154727,39 @@
   }
  },
  "git": {
-  "sha": "9a048250d34237f5621ff5741f08659420c12e2a",
+  "sha": "7ef5af2ddc26e48bf585909f103c4503e5357d2d",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "commits": [
+   {
+    "sha": "7ef5af2",
+    "date": "2026-11-24",
+    "author": "adm01-debug",
+    "subject": "feat: liga login por passkey/biometria com verificação real de assinatura (#126)",
+    "files": [
+     ".env.example",
+     "src/components/auth/PasskeyLogin.tsx",
+     "src/components/security/PasskeysPanel.tsx",
+     "src/lib/edgeErrors.ts",
+     "src/pages/Auth.tsx",
+     "src/pages/Profile.tsx",
+     "src/services/webauthnService.ts",
+     "src/test/edgeErrors.simulation.test.ts",
+     "src/test/passkeysPanel.test.tsx",
+     "src/test/webauthnService.test.ts",
+     "supabase/config.toml",
+     "supabase/functions/_shared/contracts/_fixtures/index.ts",
+     "supabase/functions/_shared/contracts/_fixtures/responses.ts",
+     "supabase/functions/_shared/contracts/index.ts",
+     "supabase/functions/_shared/contracts/passkey-auth.ts",
+     "supabase/functions/_shared/rate-limit.ts",
+     "supabase/functions/_shared/rate-limit_test.ts",
+     "supabase/functions/_shared/webauthn.ts",
+     "supabase/functions/_shared/webauthn_test.ts",
+     "supabase/functions/passkey-auth/index.ts",
+     "supabase/migrations/20261224090000_webauthn_login_hardening.sql"
+    ]
+   },
    {
     "sha": "9a04825",
     "date": "2026-11-24",
@@ -154458,22 +155114,6 @@
      "supabase/functions/_shared/contracts/security-weekly-digest.ts",
      "supabase/functions/security-weekly-digest/index.ts"
     ]
-   },
-   {
-    "sha": "2d24251",
-    "date": "2026-11-22",
-    "author": "adm01-debug",
-    "subject": "feat(edge): ponte admin para webhook-dispatcher (webhook-ping) (#102)",
-    "files": [
-     ".env.example",
-     "src/pages/WebhookSubscriptionDetail.tsx",
-     "src/pages/WebhooksAdmin.tsx",
-     "supabase/functions/_shared/contracts/_fixtures/index.ts",
-     "supabase/functions/_shared/contracts/_fixtures/responses.ts",
-     "supabase/functions/_shared/contracts/index.ts",
-     "supabase/functions/_shared/contracts/webhook-ping.ts",
-     "supabase/functions/webhook-ping/index.ts"
-    ]
    }
   ],
   "hot_files": [
@@ -154486,15 +155126,7 @@
     4
    ],
    [
-    "INVENTARIO_FUNCIONALIDADES.md",
-    3
-   ],
-   [
-    "docs/estado/02-componentes.md",
-    3
-   ],
-   [
-    "src/pages/EngagementReports.tsx",
+    "supabase/config.toml",
     3
    ],
    [
@@ -154507,6 +155139,18 @@
    ],
    [
     "supabase/functions/_shared/contracts/index.ts",
+    3
+   ],
+   [
+    "INVENTARIO_FUNCIONALIDADES.md",
+    3
+   ],
+   [
+    "docs/estado/02-componentes.md",
+    3
+   ],
+   [
+    "src/pages/EngagementReports.tsx",
     3
    ],
    [
@@ -154542,19 +155186,15 @@
     2
    ],
    [
-    "supabase/config.toml",
-    2
-   ],
-   [
-    ".gitattributes",
+    ".env.example",
     1
    ],
    [
-    "scripts/automation.config.json",
+    "src/components/auth/PasskeyLogin.tsx",
     1
    ],
    [
-    "scripts/climate-sql-check/README.md",
+    "src/components/security/PasskeysPanel.tsx",
     1
    ]
   ]

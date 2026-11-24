@@ -1,6 +1,6 @@
 # 10 · ACESSO E SEGURANÇA — quem pode o quê
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `9a048250d3` · branch `main` · 2026-11-24 09:57 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `7ef5af2ddc` · branch `main` · 2026-11-24 09:58 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## Perfis / roles identificados
@@ -247,7 +247,7 @@
 | `wager_integrity_review_events` | enabled | authenticated: public.has_role(auth.uid(), 'admin') OR public.has_role(auth.uid(), 'manager') | — | — | — |
 | `wager_integrity_reviews` | enabled | authenticated: public.has_role(auth.uid(), 'admin') OR public.has_role(auth.uid(), 'manager') | authenticated: public.has_role(auth.uid(), 'admin') AND reviewed_by = auth.uid() | authenticated: public.has_role(auth.uid(), 'admin') | authenticated: public.has_role(auth.uid(), 'admin') |
 | `wager_questions` | enabled | authenticated: is_active OR public.has_role(auth.uid(), 'admin') OR public.has_role(auth.uid(), 'manager')<br>authenticated: public.has_role(auth.uid(), 'admin') OR public.has_role(auth.uid(), 'manager') | authenticated: public.has_role(auth.uid(), 'admin') OR public.has_role(auth.uid(), 'manager') | authenticated: public.has_role(auth.uid(), 'admin') OR public.has_role(auth.uid(), 'manager') | authenticated: public.has_role(auth.uid(), 'admin') OR public.has_role(auth.uid(), 'manager') |
-| `webauthn_challenges` | enabled | public: auth.uid() = user_id OR user_id IS NULL | public: auth.uid() = user_id OR user_id IS NULL | public: auth.uid() = user_id OR user_id IS NULL | public: auth.uid() = user_id OR user_id IS NULL |
+| `webauthn_challenges` | enabled | public: auth.uid() = user_id | public: auth.uid() = user_id | public: auth.uid() = user_id | public: auth.uid() = user_id |
 | `webauthn_credentials` | enabled | public: auth.uid() = user_id | public: auth.uid() = user_id | public: auth.uid() = user_id | public: auth.uid() = user_id |
 | `webhook_delivery_logs` | enabled | public: has_role(auth.uid(), 'admin') | — | — | — |
 | `webhook_delivery_stats_24h` | não encontrado | sem RLS | sem RLS | sem RLS | sem RLS |
@@ -257,7 +257,7 @@
 
 > `—` com RLS ligado = ninguém além de service_role. `sem RLS` = qualquer chave anon lê/escreve tudo.
 
-## Onde o RLS é IGNORADO (service_role) — 136 arquivo(s)
+## Onde o RLS é IGNORADO (service_role) — 137 arquivo(s)
 
 - `scripts/ai-context/cenarios.mjs`
 - `scripts/ai-context/gerar.unit.mjs`
@@ -275,6 +275,7 @@
 - `supabase/functions/error-budget-monitor/index.ts`
 - `supabase/functions/generate-quiz-questions/index.ts`
 - `supabase/functions/migrate-helper/index.ts`
+- `supabase/functions/passkey-auth/index.ts`
 - `supabase/functions/push-device-revoked/index.ts`
 - `supabase/functions/push-outbox-dispatcher/index.ts`
 - `supabase/functions/reward-approval-review/index.ts`
@@ -639,6 +640,7 @@
 
 ## Edge functions públicas (sem JWT — qualquer um chama)
 
+- `passkey-auth`
 - `migrate-helper`
 - `push-public-key`
 - `push-outbox-dispatcher`

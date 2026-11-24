@@ -1050,7 +1050,7 @@
    "modulo": "components/auth",
    "arquivos": 7,
    "testes": 0,
-   "linhas": 941,
+   "linhas": 944,
    "itens_menu": [],
    "telas": [],
    "rotas_http": [],
@@ -1065,7 +1065,8 @@
    ],
    "hooks_definidos": [],
    "edges": [
-    "detect-new-device"
+    "detect-new-device",
+    "passkey-auth"
    ],
    "tabelas": [
     "new_device_alerts",
@@ -1075,7 +1076,6 @@
     "webauthn_credentials"
    ],
    "rpcs": [
-    "get_passkeys_by_email",
     "user_has_passkeys"
    ],
    "buckets": [],
@@ -3778,7 +3778,7 @@
    "modulo": "components/security",
    "arquivos": 16,
    "testes": 0,
-   "linhas": 3301,
+   "linhas": 3323,
    "itens_menu": [],
    "telas": [],
    "rotas_http": [],
@@ -3805,6 +3805,7 @@
    ],
    "edges": [
     "detect-new-device",
+    "passkey-auth",
     "push-device-revoked",
     "push-public-key"
    ],
@@ -3827,7 +3828,6 @@
    "rpcs": [
     "get_account_devices",
     "get_alert_heatmap_30d",
-    "get_passkeys_by_email",
     "get_push_outbox_health",
     "get_push_outbox_health_trend",
     "requeue_push_outbox",
@@ -6073,6 +6073,7 @@
     "churn-prediction",
     "competency-alerts",
     "detect-new-device",
+    "passkey-auth",
     "push-device-revoked",
     "push-public-key",
     "reward-approval-review",
@@ -6296,7 +6297,6 @@
     "get_nr1_summary",
     "get_opinion_feed",
     "get_or_create_bingo_card",
-    "get_passkeys_by_email",
     "get_prediction_odds_history",
     "get_prediction_oracle_aggregates",
     "get_quiz_category_stats",
@@ -6609,7 +6609,7 @@
    "modulo": "lib",
    "arquivos": 106,
    "testes": 0,
-   "linhas": 22067,
+   "linhas": 22086,
    "itens_menu": [],
    "telas": [],
    "rotas_http": [],
@@ -6742,7 +6742,7 @@
    "modulo": "pages",
    "arquivos": 85,
    "testes": 0,
-   "linhas": 24159,
+   "linhas": 24169,
    "itens_menu": [
     "Admin Loja",
     "Admin Quiz",
@@ -7395,6 +7395,7 @@
     "competency-alerts",
     "detect-new-device",
     "generate-quiz-questions",
+    "passkey-auth",
     "push-device-revoked",
     "push-public-key",
     "reward-approval-review",
@@ -7648,7 +7649,6 @@
     "get_nr1_summary",
     "get_opinion_feed",
     "get_or_create_bingo_card",
-    "get_passkeys_by_email",
     "get_prediction_odds_history",
     "get_prediction_oracle_aggregates",
     "get_push_outbox_health",
@@ -7916,7 +7916,7 @@
    "modulo": "services",
    "arquivos": 96,
    "testes": 0,
-   "linhas": 21731,
+   "linhas": 21783,
    "itens_menu": [],
    "telas": [],
    "rotas_http": [],
@@ -7936,6 +7936,7 @@
     "churn-prediction",
     "competency-alerts",
     "detect-new-device",
+    "passkey-auth",
     "push-device-revoked",
     "push-public-key",
     "reward-approval-review",
@@ -8165,7 +8166,6 @@
     "get_nr1_summary",
     "get_opinion_feed",
     "get_or_create_bingo_card",
-    "get_passkeys_by_email",
     "get_prediction_odds_history",
     "get_prediction_oracle_aggregates",
     "get_quiz_category_stats",
@@ -8254,6 +8254,7 @@
      "ai-course-builder",
      "churn-prediction",
      "competency-alerts",
+     "passkey-auth",
      "push-device-revoked",
      "push-public-key",
      "reward-approval-review",
@@ -8481,7 +8482,6 @@
      "get_nr1_summary",
      "get_opinion_feed",
      "get_or_create_bingo_card",
-     "get_passkeys_by_email",
      "get_prediction_odds_history",
      "get_prediction_oracle_aggregates",
      "get_quiz_category_stats",
@@ -8720,7 +8720,7 @@
   {
    "modulo": "test",
    "arquivos": 0,
-   "testes": 133,
+   "testes": 135,
    "linhas": 0,
    "itens_menu": [],
    "telas": [],

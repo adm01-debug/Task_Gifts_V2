@@ -5,17 +5,17 @@
   "vitest",
   "playwright"
  ],
- "total": 169,
+ "total": 171,
  "por_tipo": {
   "contrato": 3,
   "e2e": 2,
   "pytest": 2,
-  "unit": 160
+  "unit": 162
  },
  "onde_ficam": [
   {
    "padrao": "co-localizado (*.test)",
-   "arquivos": 151
+   "arquivos": 153
   },
   {
    "padrao": "outro",
@@ -558,11 +558,11 @@
   {
    "arquivo": "src/test/edgeErrors.simulation.test.ts",
    "tipo": "unit",
-   "linhas": 169,
+   "linhas": 209,
    "testa": [
     "src/lib/edgeErrors.ts"
    ],
-   "casos": 12
+   "casos": 14
   },
   {
    "arquivo": "src/test/engagementDiagnostics.simulation.test.ts",
@@ -979,6 +979,15 @@
    "casos": 14
   },
   {
+   "arquivo": "src/test/passkeysPanel.test.tsx",
+   "tipo": "unit",
+   "linhas": 65,
+   "testa": [
+    "src/components/security/PasskeysPanel.tsx"
+   ],
+   "casos": 3
+  },
+  {
    "arquivo": "src/test/playerResume.simulation.test.ts",
    "tipo": "unit",
    "linhas": 146,
@@ -1380,6 +1389,15 @@
    "casos": 15
   },
   {
+   "arquivo": "src/test/webauthnService.test.ts",
+   "tipo": "unit",
+   "linhas": 414,
+   "testa": [
+    "src/services/webauthnService.ts"
+   ],
+   "casos": 15
+  },
+  {
    "arquivo": "src/test/xpBalancing.test.ts",
    "tipo": "unit",
    "linhas": 85,
@@ -1629,6 +1647,7 @@
   "src/components/feedback/FeedbackRequestForm.tsx": 1,
   "src/components/feedback/FeedbackSummaryCard.tsx": 1,
   "src/components/rbac/ProtectedRoute.tsx": 1,
+  "src/components/security/PasskeysPanel.tsx": 1,
   "src/components/ui/calendar.tsx": 1,
   "src/components/ui/chart.tsx": 1,
   "src/components/ui/resizable.tsx": 1,
@@ -1776,6 +1795,7 @@
   "src/services/wagerAdminService.ts": 2,
   "src/services/wagerBudgetService.ts": 1,
   "src/services/wagerIntegrityReviewService.ts": 1,
+  "src/services/webauthnService.ts": 1,
   "src/services/weeklyChallengesService.ts": 1,
   "src/services/xpBalancingService.ts": 1,
   "supabase/functions/_shared/contracts/_fixtures/index.ts": 1,
@@ -2034,6 +2054,7 @@
    "error-budget-monitor",
    "generate-quiz-questions",
    "migrate-helper",
+   "passkey-auth",
    "push-device-revoked",
    "push-outbox-dispatcher",
    "push-public-key",
@@ -2109,8 +2130,7 @@
    "src/services/tournamentService.ts",
    "src/services/tradingCardsService.ts",
    "src/services/twoFactorService.ts",
-   "src/services/wagerIntegrityReviewEventService.ts",
-   "src/services/webauthnService.ts"
+   "src/services/wagerIntegrityReviewEventService.ts"
   ]
  }
 }

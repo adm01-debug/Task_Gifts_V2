@@ -13191,7 +13191,8 @@
     "useUserCertifications",
     "useUserEnrollments",
     "useUserRank",
-    "useViewTransition"
+    "useViewTransition",
+    "useWebAuthn"
    ],
    "hooks_locais": [
     "useAICoach",
@@ -13332,7 +13333,8 @@
     "useUserCertifications",
     "useUserEnrollments",
     "useUserRank",
-    "useViewTransition"
+    "useViewTransition",
+    "useWebAuthn"
    ],
    "tabelas": [
     "achievements",
@@ -13381,7 +13383,9 @@
     "user_devices",
     "user_mission_progress",
     "user_roles",
-    "user_two_factor"
+    "user_two_factor",
+    "webauthn_challenges",
+    "webauthn_credentials"
    ],
    "rpcs": [
     "add_coins",
@@ -13394,12 +13398,14 @@
     "revoke_device_by_fingerprint",
     "revoke_push_device",
     "spend_coins",
+    "user_has_passkeys",
     "verify_certificate"
    ],
    "edges": [
     "ai-coach",
     "competency-alerts",
     "detect-new-device",
+    "passkey-auth",
     "push-device-revoked",
     "push-public-key"
    ],
@@ -13415,7 +13421,7 @@
     "presentation",
     "user"
    ],
-   "arquivos_puxados": 145
+   "arquivos_puxados": 148
   },
   {
    "protegida": true,
@@ -15830,7 +15836,6 @@
    "rpcs": [
     "cleanup_old_security_logs",
     "get_account_devices",
-    "get_passkeys_by_email",
     "get_push_outbox_health",
     "get_push_outbox_health_trend",
     "get_security_stats",
@@ -15841,6 +15846,7 @@
    ],
    "edges": [
     "detect-new-device",
+    "passkey-auth",
     "push-device-revoked",
     "push-public-key"
    ],

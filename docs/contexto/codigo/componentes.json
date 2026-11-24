@@ -2,7 +2,7 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "total": 529,
- "orfaos": 23,
+ "orfaos": 22,
  "nomes_duplicados": {
   "CopilotAlert": [
    "src/components/copilot/CopilotAlertCard.tsx",
@@ -1349,13 +1349,13 @@
     "PasskeyLogin"
    ],
    "export_default": null,
-   "linhas": 96,
+   "linhas": 99,
    "dominio": "components/auth",
    "hooks_locais": [],
    "tabelas": [],
    "edges": [],
-   "usado_por": 0,
-   "orfao": true
+   "usado_por": 1,
+   "orfao": false
   },
   {
    "arquivo": "src/components/auth/TwoFactorSetup.tsx",
@@ -5208,14 +5208,15 @@
     "PasskeysPanel"
    ],
    "export_default": null,
-   "linhas": 354,
+   "linhas": 376,
    "dominio": "components/security",
    "hooks_locais": [
+    "useTwoFactor",
     "useWebAuthn"
    ],
    "tabelas": [],
    "edges": [],
-   "usado_por": 2,
+   "usado_por": 3,
    "orfao": false
   },
   {
@@ -6425,7 +6426,7 @@
    "hooks_locais": [],
    "tabelas": [],
    "edges": [],
-   "usado_por": 83,
+   "usado_por": 84,
    "orfao": false
   },
   {
@@ -7602,7 +7603,7 @@
     "Auth"
    ],
    "export_default": "Auth",
-   "linhas": 334,
+   "linhas": 342,
    "dominio": "pages",
    "hooks_locais": [
     "useAuth",
@@ -8537,7 +8538,7 @@
     "Profile"
    ],
    "export_default": "Profile",
-   "linhas": 245,
+   "linhas": 247,
    "dominio": "pages",
    "hooks_locais": [
     "useAuth",

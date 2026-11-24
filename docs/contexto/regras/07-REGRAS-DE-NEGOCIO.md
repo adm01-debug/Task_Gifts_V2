@@ -1,6 +1,6 @@
 # 07 · REGRAS DE NEGÓCIO
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `9a048250d3` · branch `main` · 2026-11-24 09:57 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `7ef5af2ddc` · branch `main` · 2026-11-24 09:58 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## A. Regras escritas por humanos (`manual/` — prioridade máxima, nunca sobrescrito)
@@ -300,7 +300,6 @@ _Nenhum arquivo em `manual/`. Copie `manual/TEMPLATE-regras-de-negocio.md` para 
 | `webauthn_credentials` | Users can insert their own credentials | INSERT | public | permissive |  | `auth.uid() = user_id` |
 | `webauthn_credentials` | Users can update their own credentials | UPDATE | public | permissive | `auth.uid() = user_id` |  |
 | `webauthn_credentials` | Users can delete their own credentials | DELETE | public | permissive | `auth.uid() = user_id` |  |
-| `webauthn_challenges` | Users can manage their own challenges | ALL | public | permissive | `auth.uid() = user_id OR user_id IS NULL` |  |
 | `permissions` | Admins can manage permissions | ALL | public | permissive | `has_role(auth.uid(), 'admin'::app_role)` |  |
 | `role_permissions` | Admins can manage role permissions | ALL | public | permissive | `has_role(auth.uid(), 'admin'::app_role)` |  |
 | `geo_allowed_countries` | Admins can manage allowed countries | ALL | public | permissive | `EXISTS ( SELECT 1 FROM public.user_roles ur WHERE ur.user_id = auth.uid() AND ur.role = 'admin'::app_role )` |  |
@@ -311,6 +310,7 @@ _Nenhum arquivo em `manual/`. Copie `manual/TEMPLATE-regras-de-negocio.md` para 
 | `position_competencies` | Admins manage position competencies | ALL | authenticated | permissive | `has_role(auth.uid(), 'admin'::app_role)` | `has_role(auth.uid(), 'admin'::app_role)` |
 | `feedback_evaluations` | Users insert own evaluations | INSERT | authenticated | permissive |  | `evaluator_id = auth.uid()` |
 | `feedback_results` | Managers insert feedback results | INSERT | authenticated | permissive |  | `has_role(auth.uid(), 'manager'::app_role) OR has_role(auth.uid(), 'admin'::app_role)` |
+| `pdi_mentors` | Managers assign PDI mentors | INSERT | authenticated | permissive |  | `has_role(auth.uid(), 'manager'::app_role) OR has_role(auth.uid(), 'admin'::app_role)` |
 | … +224 linhas — lista completa em `context.json` | | | | | | |
 
 ## C. Restrições de dados (obrigatório / único / default / CHECK / FK / calculada)
@@ -1059,7 +1059,7 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `type` | `announcement` | compara | `public/sw.js` |
 | `type` | `array` | escreve | `supabase/functions/ai-course-builder/index.ts`<br>`supabase/functions/churn-prediction/index.ts` |
 | `type` | `attendance` | compara, escreve | `src/lib/warAutoHooks.ts` |
-| `type` | `authentication` | escreve | `src/services/webauthnService.ts` |
+| `type` | `authentication` | escreve, filtra | `supabase/functions/passkey-auth/index.ts` |
 | `type` | `badge` | compara, escreve | `src/components/ui/lucky-drop.tsx` |
 | `type` | `basic` | compara | `public/sw.js` |
 | `type` | `bonus` | compara, escreve | `src/lib/boardTrail.ts`<br>`src/lib/boardTrailAuthoring.ts` |
@@ -1113,6 +1113,7 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `type` | `login_anomaly` | escreve | `supabase/functions/_shared/contracts/_fixtures/responses.ts` |
 | `type` | `low_attendance` | escreve | `supabase/functions/_shared/contracts/_fixtures/responses.ts`<br>`supabase/functions/admin-alerts/index.ts` |
 | `type` | `low_performance` | escreve | `src/hooks/usePDIAlerts.ts` |
+| `type` | `magiclink` | escreve | `src/services/webauthnService.ts`<br>`supabase/functions/passkey-auth/index.ts` |
 | `type` | `mobile` | compara | `src/components/security/DevicesPanel.tsx` |
 | `type` | `module_progress` | compara, escreve | `src/lib/warAutoHooks.ts` |
 | `type` | `neutral` | compara, escreve | `src/lib/boardTrailAuthoring.ts`<br>`src/pages/BoardTrailAdminPage.tsx` |
@@ -1130,7 +1131,7 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `type` | `prediction_lock_overdue` | escreve | `src/lib/predictionWatchdog.ts` |
 | `type` | `prediction_settlement_overdue` | escreve | `src/lib/predictionWatchdog.ts` |
 | `type` | `proportional` | escreve | `src/components/campaigns/CreateCampaignDialog.tsx`<br>`src/services/salesCampaignsService.ts` |
-| `type` | `public-key` | escreve | `src/services/webauthnService.ts` |
+| `type` | `public-key` | escreve | `src/services/webauthnService.ts`<br>`supabase/functions/_shared/contracts/_fixtures/responses.ts`<br>`supabase/functions/passkey-auth/index.ts` |
 | `type` | `quest` | compara, escreve | `public/sw.js`<br>`src/components/GlobalSearch.tsx`<br>`src/components/search/SearchResultsList.tsx`<br>`src/services/notificationsService.ts` |
 | `type` | `quest_complete` | escreve | `src/services/questsService.ts` |
 | `type` | `quest_completed` | compara | `src/pages/SocialFeed.tsx` |
@@ -1151,7 +1152,7 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `type` | `spring` | escreve | `src/components/AchievementSystem.tsx`<br>`src/components/ActivityHeatmap.tsx`<br>`src/components/ENPSSurveyWidget.tsx`<br>`src/components/ErrorBoundary.tsx`<br>`src/components/LeagueCard.tsx`<br>… +32 |
 | `type` | `start` | compara, escreve | `src/lib/boardTrailAuthoring.ts` |
 | `type` | `streak` | compara, escreve | `src/components/effects/MiniConfetti.tsx`<br>`src/hooks/useFirstTimeIndicator.ts`<br>`src/services/autoChallengesService.ts` |
-| `type` | `string` | compara, escreve | `src/components/security/SecurityAlertsPanel.tsx`<br>`supabase/functions/ai-course-builder/index.ts`<br>`supabase/functions/churn-prediction/index.ts`<br>`supabase/functions/reward-approval-review/index.ts` |
+| `type` | `string` | compara, escreve | `src/components/security/SecurityAlertsPanel.tsx`<br>`supabase/functions/_shared/webauthn.ts`<br>`supabase/functions/ai-course-builder/index.ts`<br>`supabase/functions/churn-prediction/index.ts`<br>`supabase/functions/reward-approval-review/index.ts` |
 | `type` | `success` | compara, escreve | `src/components/GlobalMessageProvider.tsx`<br>`src/components/mobile/HapticWrapper.tsx`<br>`src/hooks/useFeedback.ts`<br>`src/stories/feedback/Notifications.stories.tsx` |
 | `type` | `suggestion` | compara | `src/components/copilot/CopilotAlertCard.tsx`<br>`src/components/copilot/CopilotAlertSection.tsx` |
 | `type` | `summary` | escreve | `src/lib/exportReports.ts`<br>`src/pages/EngagementReports.tsx`<br>`src/pages/ManagerDashboard.tsx` |
@@ -1465,6 +1466,7 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | WagerReviewStatus | investigating \| confirmed \| false_positive | `src/services/wagerIntegrityReviewService.ts` |
 | EconomyHealth | healthy \| inflated \| stagnant \| unbalanced | `src/services/xpBalancingService.ts` |
 | VALIDATION_ERROR_CODES | "VALIDATION_ERROR", "INVALID_JSON", "UNSUPPORTED_VERSION" | `supabase/functions/_shared/validation.ts` |
+| AssertionFailure | payload_malformado \| client_data_invalido \| tipo_invalido \| challenge_invalido \| origem_nao_permitida \| authenticator_data_invalido \| rp_id_invalido \| usuario_nao_presente \| verificacao_do_usuario_ausente \| chave_publica_invalida \| assinatura_invalida | `supabase/functions/_shared/webauthn.ts` |
 | HTTP_METHODS | "GET", "POST" | `supabase/functions/_shared/contracts/common.ts` |
 | WEBHOOK_CONTRACT_VERSIONS | "v1", "v2" | `supabase/functions/_shared/contracts/webhook-dispatcher.ts` |
 | RiskLevel | low \| medium \| high \| critical | `supabase/functions/reward-approval-review/risk.ts` |
@@ -1728,6 +1730,22 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
   ```ts
   { // `?action=` (vazio) vinha caindo em "ping" no código antigo (`|| "ping"`); sem o preprocess // viraria 422 e a URL usada no runbook de migração deixaria de funcionar. action: z.preprocess( (v) => (v === "" || v === undefined || v === null ? "ping" : v), z.enum(["ping", "credentials"]), ), }
   ```
+- **PasskeyAuthRequestSchema** (`supabase/functions/_shared/contracts/passkey-auth.ts`, z.object):
+  ```ts
+  { action: z.enum(["options", "verify"]), email: z.string().trim().email().max(255).optional(), credentialId: z.string().trim().max(2048).optional(), authenticatorData: z.string().trim().max(8192).optional(), clientDataJSON: z.string().trim().max(8192).optional(), signature: z.string().trim().max(8192).optional(), }
+  ```
+- **PasskeyOptionsResponseSchema** (`supabase/functions/_shared/contracts/passkey-auth.ts`, z.object):
+  ```ts
+  { ok: z.literal(true), challenge: z.string().min(1), rpId: z.string().min(1), allowCredentials: z.array(z.object({ id: z.string(), type: z.literal("public-key") })), timeout: z.number().int().positive(), userVerification: z.literal("required"), }
+  ```
+- **PasskeyVerifyResponseSchema** (`supabase/functions/_shared/contracts/passkey-auth.ts`, z.object):
+  ```ts
+  { ok: z.literal(true), tokenHash: z.string().min(1), email: z.string().email(), userId: uuid, }
+  ```
+- **PasskeyAuthResponseSchema** (`supabase/functions/_shared/contracts/passkey-auth.ts`, z.union):
+  ```ts
+  [ PasskeyOptionsResponseSchema, PasskeyVerifyResponseSchema, ]
+  ```
 - **PushDeviceRevokedRequestSchema** (`supabase/functions/_shared/contracts/push-device-revoked.ts`, z.object):
   ```ts
   { exclude_subscription_id: uuid, title: texto(120), message: texto(400), url: destinoUrl().optional(), data: jsonRecord.optional(), }
@@ -1838,6 +1856,7 @@ _nenhum item encontrado_
 | `auction-starts-at` | type=datetime-local | `src/components/auction/AuctionAdminForm.tsx` |
 | `auction-ends-at` | type=datetime-local | `src/components/auction/AuctionAdminForm.tsx` |
 | `bid-amount` | type=number, min=minNextBid | `src/components/auction/BidDialog.tsx` |
+| `passkey-email` | type=email | `src/components/auth/PasskeyLogin.tsx` |
 | `stuck-hours` | type=number, min=MIN_HOURS, max=MAX_HOURS | `src/components/board/BoardStuckPlayersPanel.tsx` |
 | `boss-title` | max | `src/components/boss/BossBattleAdminDialog.tsx` |
 | `boss-people` | type=number, min=1 | `src/components/boss/BossBattleAdminDialog.tsx` |
@@ -2976,6 +2995,7 @@ _nenhum item encontrado_
 | `MAX_BUDGET` | `10` | `src/services/wagerBudgetService.ts` |
 | `MAX_PLAYERS` | `100` | `src/services/wagerBudgetService.ts` |
 | `VALIDATION_ERROR_STATUS` | `422` | `supabase/functions/_shared/validation.ts` |
+| `CHALLENGE` | `"Y2hhbGxlbmdlLWRlLXRlc3RlLTEyMzQ1Njc4OTA"` | `supabase/functions/_shared/webauthn_test.ts` |
 | `REPLAY_WINDOW_SECONDS` | `300` | `supabase/functions/_shared/webhookSecurity.ts` |
 | `STALE_PROCESSING_SECONDS` | `300` | `supabase/functions/_shared/webhookSecurity.ts` |
 | `WEBHOOK_CURRENT_VERSION` | `"v2"` | `supabase/functions/_shared/contracts/webhook-dispatcher.ts` |
@@ -2983,6 +3003,9 @@ _nenhum item encontrado_
 | `UUID_B` | `"0f1e2d3c-4b5a-4968-8777-66554433aabb"` | `supabase/functions/_shared/contracts/_fixtures/types.ts` |
 | `BURN_HIGH` | `75` | `supabase/functions/error-budget-monitor/index.ts` |
 | `BURN_CRITICAL` | `90` | `supabase/functions/error-budget-monitor/index.ts` |
+| `MAX_BODY_BYTES` | `16` | `supabase/functions/passkey-auth/index.ts` |
+| `CHALLENGE_TTL_MS` | `5` | `supabase/functions/passkey-auth/index.ts` |
+| `VERIFY_LIMIT_PER_CREDENTIAL` | `15` | `supabase/functions/passkey-auth/index.ts` |
 | `TYPE` | `"security_device_revoked"` | `supabase/functions/push-device-revoked/index.ts` |
 | `BATCH_SIZE` | `100` | `supabase/functions/push-outbox-dispatcher/index.ts` |
 | `MAX_ATTEMPTS` | `3` | `supabase/functions/push-outbox-dispatcher/index.ts` |
@@ -3137,10 +3160,14 @@ _nenhum item encontrado_
 | `tenure = Math.floor((new Date().getTime() - createdAt.getTime()) / (1000 * 60 * 60 * 24 * 365));` | `src/services/successionService.ts` |
 | `timeout: 60000,` | `src/services/webauthnService.ts` |
 | `await new Promise((resolve) => setTimeout(resolve, 2000));` | `src/stories/mobile/MobileComponents.stories.tsx` |
+| `timeout: 60000,` | `supabase/functions/_shared/contracts/_fixtures/responses.ts` |
+| `{ nome: "challenge sem rpId", payload: { ok: true, challenge: "abc", allowCredentials: [], timeout: 60000, userVerification: "required" } },` | `supabase/functions/_shared/contracts/_fixtures/responses.ts` |
 | `const daysInactive = Math.floor((now.getTime() - lastActive.getTime()) / (1000 * 60 * 60 * 24));` | `supabase/functions/churn-prediction/index.ts` |
 | `const sevenDaysAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);` | `supabase/functions/churn-prediction/index.ts` |
 | `const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);` | `supabase/functions/churn-prediction/index.ts` |
 | `.gte('created_at', new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString())` | `supabase/functions/competency-alerts/index.ts` |
+| `const CHALLENGE_TTL_MS = 5 * 60 * 1000;` | `supabase/functions/passkey-auth/index.ts` |
+| `timeout: 60_000,` | `supabase/functions/passkey-auth/index.ts` |
 | `const since = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();` | `supabase/functions/security-weekly-digest/index.ts` |
 | `WHERE created_at < now() - interval '90 days';` | `supabase/migrations/20260520162624_05dce903-e1a2-49e8-93a1-64ec4f6421b4.sql` |
 | `WHERE processed = true AND created_at < now() - interval '30 days';` | `supabase/migrations/20260520162624_05dce903-e1a2-49e8-93a1-64ec4f6421b4.sql` |
@@ -3238,6 +3265,8 @@ _nenhum item encontrado_
 | 1 | `supabase/functions/burn-rate-monitor/index.ts` |
 | 1 | `supabase/functions/competency-alerts/index.ts` |
 | 1 | `supabase/functions/error-budget-monitor/index.ts` |
+| 1 | `supabase/functions/passkey-auth/index.ts` |
+| 5 | `supabase/functions/passkey-auth/index.ts` |
 | 500 | `supabase/functions/reward-approval-review/index.ts` |
 | 1 | `supabase/functions/security-weekly-digest/index.ts` |
 
@@ -3310,7 +3339,7 @@ _nenhum item encontrado_
 | Falha de comunicação. Tente novamente. | `src/components/auction/BidDialog.tsx` |
 | ; import { PasswordStrengthIndicator } from  | `src/components/auth/AuthFormContent.tsx` |
 | >{errors.password}</p>}         {view ===  | `src/components/auth/AuthFormContent.tsx` |
-| Biometria reconhecida, mas a sessão não pôde ser emitida. Entre com e-mail e senha. | `src/components/auth/PasskeyLogin.tsx` |
+| Passkey validada, mas a sessão não foi criada. Entre com e-mail e senha. | `src/components/auth/PasskeyLogin.tsx` |
 | Seu navegador não suporta login com passkey | `src/components/auth/PasskeyLogin.tsx` |
 | Digite um código de 6 dígitos | `src/components/auth/TwoFactorSetup.tsx` |
 | Resposta incorreta. A casa foi liberada, mas sem recompensa. | `src/components/board/BoardChallengeDialog.tsx` |
@@ -3545,7 +3574,7 @@ _nenhum item encontrado_
 | Nenhum dado disponível para exportar. | `src/pages/EngagementReports.tsx` |
 |  aria-live= | `src/pages/ExecutiveMonthlyReport.tsx` |
 | Nada para investigar neste período. | `src/pages/ExecutiveMonthlyReport.tsx` |
-| … +181 linhas — lista completa em `context.json` | |
+| … +182 linhas — lista completa em `context.json` | |
 
 ## J. Controle de acesso no código (checagens de perfil/permissão)
 
@@ -3605,7 +3634,7 @@ _nenhum item encontrado_
 | `admin` | `supabase/migrations/20261123180000_climate_survey_engine.sql` |
 | `manager` | `supabase/migrations/20261123180000_climate_survey_engine.sql` |
 
-## K. Testes como especificação (2073 testes em 155 arquivos — nomes completos em `context.json`)
+## K. Testes como especificação (2097 testes em 157 arquivos — nomes completos em `context.json`)
 
 | Arquivo | Testes | Exemplos do que o sistema DEVE fazer |
 |---|---|---|
@@ -3638,6 +3667,7 @@ _nenhum item encontrado_
 | `src/test/engagementInsights.simulation.test.ts` | 20 | engagementInsights — entradas degeneradas · nunca lança e sempre devolve array · engagementInsights — matriz de pilares · cobre score × respondentes sem violar guardas … |
 | `src/test/opinionChannel.simulation.test.ts` | 20 | sanitizeOpinionText — texto livre hostil · remove controle, bidi e colapsa espaços em todas as combinações · nunca lança com entradas não textuais · trunca conteúdo gigante mantendo o limite … |
 | `src/test/wagerLeaderboard.test.ts` | 20 | parseWagerLeaderboard · retorna vazio para payloads inválidos · descarta linhas sem identificador · mapeia uma linha completa … |
+| `src/test/edgeErrors.simulation.test.ts` | 19 | normalizeRetryAfter · usa 60s como padrão para valores inválidos · aceita números e strings numéricas, arredondando para cima · limita a 1h para evitar mensagens absurdas … |
 | `src/test/purchaseRisk.simulation.test.ts` | 19 | purchaseRisk — invariantes fundamentais · mantém a pontuação sempre entre 0 e 100 em 500 cenários aleatórios · é determinístico: mesma entrada produz sempre a mesma saída · é monotônico no valor do resgate (mantendo os demais sinais) … |
 | `supabase/functions/_shared/contracts/validation.contract.spec.ts` | 19 | destino de notificação (destinoUrl) · aceita caminho relativo do app — é o que salesCampaignsService envia · recusa esquema perigoso e texto que não é rota nem URL · migrate-helper: ?action= vazio cai em ping (compatível com o comportamento antigo) … |
 | `src/test/climateBenchmark.simulation.test.ts` | 18 | normalizeThresholds — monotonicidade garantida · corrige limiares invertidos em centenas de combinações · tolera nulos e lixo · benchmarkPosition — simulação exaustiva score × limiares … |
@@ -3655,10 +3685,10 @@ _nenhum item encontrado_
 | `src/test/sequenceGame.simulation.test.ts` | 17 | shuffleSteps · preserva o conjunto de etapas e é determinístico · nunca entrega a ordem correta de saída · tolera listas triviais e posições fora de ordem na origem … |
 | `src/test/unifiedDevices.simulation.test.ts` | 17 | fingerprint — estabilidade e unicidade · é determinística para os mesmos sinais · muda quando qualquer sinal muda · nunca estoura com unicode nem com sinais ausentes … |
 | `src/test/warAutoHooks.simulation.test.ts` | 17 | warAutoHooks — invariantes gerais (900 cenarios) · nunca lanca e sempre devolve intents validos · e deterministico: mesmo evento, mesmo resultado · dedupe keys sao unicas dentro de um mesmo evento … |
+| `src/test/webauthnService.test.ts` | 17 | webauthnService.authenticate — login por passkey verificado no servidor · emite sessão só depois de options → get → verify e confirma o token · restrição de credenciais é repassada ao autenticador · não chama a rede quando a função não está na allowlist de deploy … |
 | `src/tests/unit/feedback.test.ts` | 17 | feedbackService · createFeedbackRequest · le a linha inserida com maybeSingle, para nao derrubar a criacao quando a policy esconde a linha · devolve o pedido quando a leitura e permitida … |
 | `src/test/boardStats.simulation.test.ts` | 16 | boardStats — invariantes de acurácia · nunca produz acurácia fora de 0..100 em 500 cenários aleatórios · resiste a NaN, Infinity, negativos e nulos · classifica as cinco faixas de dificuldade … |
 | `src/test/bossLeaderboard.simulation.test.ts` | 16 | buildBossLeaderboard · ignora entradas sem dano ou sem usuário · consolida linhas duplicadas do mesmo usuário · atribui a mesma posição em caso de empate (1,2,2,4) … |
-| `src/test/edgeErrors.simulation.test.ts` | 16 | normalizeRetryAfter · usa 60s como padrão para valores inválidos · aceita números e strings numéricas, arredondando para cima · limita a 1h para evitar mensagens absurdas … |
 | `src/test/goalBetSearch.test.ts` | 16 | normalizeSearchText · remove acentos, caixa e espaços redundantes · tolera valores nulos · parseSearchTerms … |
 | `src/test/wagerIntegrityExport.test.ts` | 16 | wagerIntegrityExport · inclui metadados do relatório no cabeçalho · exporta anomalia sem apuração como Pendente · casa a apuração pela chave usuário+código+janela … |
 | `src/test/auctionAdmin.simulation.test.ts` | 15 | auctionAdmin — validação de rascunho · aceita um rascunho bem formado · rejeita título curto ou longo demais · rejeita valores econômicos inválidos … |
@@ -3748,6 +3778,7 @@ _nenhum item encontrado_
 | `src/tests/unit/shop.test.ts` | 5 | shopService · purchaseReward · should throw error if item is out of stock · should throw error if spend_coins fails (insufficient coins) … |
 | `src/components/shop/__tests__/ProductGridLoading.test.tsx` | 4 | Shop Skeleton and Loading State · should display skeletons while rewards are loading · should transition from skeletons to content smoothly · should maintain layout stability during search/filtering loading |
 | `src/test/nr1Export.simulation.test.ts` | 4 | Exportação NR-1 (simulação combinatória) · nunca emite célula vazia ou  · marca plano obrigatório exatamente para riscos alto e crítico · gera nome de arquivo seguro para recortes com acentos e símbolos |
+| `src/test/passkeysPanel.test.tsx` | 4 | PasskeysPanel — cadastro so quando o login por passkey funciona · libera o cadastro quando a funcao esta publicada e a conta nao exige segundo fator · bloqueia o cadastro e explica quando a conta exige verificacao em duas etapas · bloqueia o cadastro quando a funcao nao esta liberada no ambiente |
 | `src/test/validationLibraryContracts.test.ts` | 4 | migração de validação preserva mensagens e resultados · mantém mensagem obrigatória em entrada ausente · validateData retorna mensagens Zod 4 sem lançar exceção · XLSX preserva fórmulas/rich text e rejeita erros/booleanos como crédito |
 | `src/tests/unit/access.test.tsx` | 4 | ProtectedRoute · should redirect to login if not authenticated · should show content if authenticated and no RBAC check needed · should show access denied if RBAC check fails |
 | `src/tests/unit/achievements.test.ts` | 4 | achievementsService · unlockAchievement · should award rewards and create notification if not already unlocked · should return alreadyUnlocked if already has it |
@@ -3772,6 +3803,7 @@ _nenhum item encontrado_
 | `CACHE_ASSETS` | `public/sw.js` |
 | `SHOW_NOTIFICATION` | `public/sw.js` |
 | `SKIP_WAITING` | `public/sw.js` |
+| `verify` | `supabase/functions/_shared/contracts/passkey-auth.ts` |
 
 ## M. Efeitos colaterais (e-mail, SMS, cobrança, fila — não são idempotentes por padrão)
 
@@ -3830,7 +3862,6 @@ _nenhum item encontrado_
 | Evita disparos concorrentes que estouram o rate limit da edge function. | `src/components/TrailRecommendations.tsx` |
 | momento — o banco guarda apenas o hash, então não há como recuperá-lo depois. | `src/components/admin/IssuedCredentialDialog.tsx` |
 | Toggle permission | `src/components/admin/RolePermissionsManager.tsx` |
-| confiamos apenas no resultado verificado no cliente. | `src/components/auth/PasskeyLogin.tsx` |
 | e direciona o comportamento (entregar no prazo vale mais que entregar). | `src/components/boss/BossDamageSourcesCard.tsx` |
 | * Visível apenas para gestores e administradores — a leitura consolidada de | `src/components/boss/BossExecutiveSummaryCard.tsx` |
 | Libera a memória apenas após o download ser iniciado pelo browser. | `src/components/boss/BossHistoryCard.tsx` |
@@ -4078,12 +4109,15 @@ _nenhum item encontrado_
 | resultado é marcado como não confiável e a decisão de segurança deve | `supabase/functions/_shared/clientIp.ts` |
 | * true somente quando veio de um header sobrescrito pelo proxy. */ | `supabase/functions/_shared/clientIp.ts` |
 | * Cadeia bruta, apenas para auditoria/diagnóstico — nunca para decisão. */ | `supabase/functions/_shared/clientIp.ts` |
+| TTL 0 = expira em menos de um segundo; anunciar a janela inteira faria a | `supabase/functions/_shared/rate-limit.ts` |
 | controlado pelo cliente permitiria burlar o limite trocando o header. | `supabase/functions/_shared/rate-limiter.ts` |
 | comportamento cai para wildcard apenas em dev local (deno serve). | `supabase/functions/_shared/security.ts` |
 | expõe a mensagem de exceções inesperadas (mantidas apenas no log). | `supabase/functions/_shared/security.ts` |
 | * FORMATO ÚNICO de erro de validação (HTTP 422) de TODAS as edge functions. | `supabase/functions/_shared/validation.ts` |
 | * Validação pura: `{ success, data }` ou `{ success:false, error }`. */ | `supabase/functions/_shared/validation.ts` |
 | Testes Deno dos helpers de validação (formato único 422). Rodam no CI pelo workflow deno.yml | `supabase/functions/_shared/validation_test.ts` |
+| usa somente WebCrypto. | `supabase/functions/_shared/webauthn.ts` |
+| * Restrição adicional de origem; vazio significa "apenas o rpId manda". */ | `supabase/functions/_shared/webauthn.ts` |
 | webhook é aceito sem nenhuma autenticação. Validação de autenticidade nunca | `supabase/functions/_shared/webhookSecurity.ts` |
 | Indisponibilidade do controle não deve derrubar o webhook: seguimos | `supabase/functions/_shared/webhookSecurity.ts` |
 | O histórico vem de `ai_coach_messages.content` (TEXT, sem limite): uma resposta longa do | `supabase/functions/_shared/contracts/ai-coach.ts` |
@@ -4094,11 +4128,19 @@ _nenhum item encontrado_
 | * Schema dos query params (somente quando a função os lê). */ | `supabase/functions/_shared/contracts/common.ts` |
 | * Validação customizada quando `request.safeParse` não basta (ex.: união versionada, cujo erro | `supabase/functions/_shared/contracts/common.ts` |
 | zod sairia como `invalid_union` na raiz). Deve devolver o MESMO formato 422 de validation.ts. | `supabase/functions/_shared/contracts/common.ts` |
+| `zod` não expressa "obrigatório apenas quando action=verify" sem união | `supabase/functions/_shared/contracts/passkey-auth.ts` |
 | * Caso inválido: payload + campo que deve aparecer em `fields` (com código opcional). */ | `supabase/functions/_shared/contracts/_fixtures/types.ts` |
 | JWT validation | `supabase/functions/ai-course-builder/index.ts` |
 | Load job (must belong to user) | `supabase/functions/ai-course-builder/index.ts` |
 | Dispara apenas quando AMBAS as janelas (curta e longa) cruzam o limite (menos ruído). | `supabase/functions/burn-rate-monitor/index.ts` |
 | volume mínimo para evitar falso positivo | `supabase/functions/burn-rate-monitor/index.ts` |
+| * Falha de validação no formato único das edge functions (HTTP 422, ver | `supabase/functions/passkey-auth/index.ts` |
+| `Content-Length` declarado corta o caso comum e o leitor aborta no limite | `supabase/functions/passkey-auth/index.ts` |
+| Só `cf-connecting-ip` (sobrescrito pelo proxy) alimenta o limite por IP. | `supabase/functions/passkey-auth/index.ts` |
+| E-mail desconhecido apenas não restringe credenciais; não revelamos | `supabase/functions/passkey-auth/index.ts` |
+| e-mail com curinga não pode "pescar" o dono de outra conta. | `supabase/functions/passkey-auth/index.ts` |
+| Limite por (credencial + cliente) além do limite por IP: o balde global | `supabase/functions/passkey-auth/index.ts` |
+| caminho não pode emitir sessão. | `supabase/functions/passkey-auth/index.ts` |
 | A IA é um complemento: falha nela não pode travar a governança. | `supabase/functions/reward-approval-review/index.ts` |
 | Apenas gestores/administradores podem disparar a análise. | `supabase/functions/reward-approval-review/index.ts` |
 | * A IA nunca decide sozinha: ela apenas ajusta a pontuação heurística dentro | `supabase/functions/reward-approval-review/risk.ts` |

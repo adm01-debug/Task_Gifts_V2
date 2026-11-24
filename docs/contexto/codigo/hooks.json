@@ -4114,9 +4114,10 @@
     "useQueryClient"
    ],
    "canais_realtime": [],
-   "usado_por": 3,
+   "usado_por": 4,
    "usado_por_arquivos": [
     "src/components/auth/TwoFactorSetup.tsx",
+    "src/components/security/PasskeysPanel.tsx",
     "src/components/security/ReauthProvider.tsx",
     "src/pages/SecurityDashboard.tsx"
    ],

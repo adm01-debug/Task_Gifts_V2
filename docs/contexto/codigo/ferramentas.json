@@ -3,8 +3,8 @@
  "format_version": 2,
  "stack": {
   "linguagens": [
-   "TypeScript (1152)",
-   "SQL (278)",
+   "TypeScript (1159)",
+   "SQL (279)",
    "Markdown (56)",
    "JavaScript (24)",
    "JSON (14)",
@@ -481,6 +481,8 @@
    "VAPID_PRIVATE_KEY",
    "VAPID_PUBLIC_KEY",
    "VAPID_SUBJECT",
+   "WEBAUTHN_ALLOWED_ORIGINS",
+   "WEBAUTHN_RP_ID",
    "WEBHOOK_HEALTH_MIN_SAMPLE",
    "WEBHOOK_HEALTH_THRESHOLD"
   ],
@@ -571,6 +573,10 @@
     "arquivos": 3
    },
    {
+    "host": "app.exemplo.com",
+    "arquivos": 2
+   },
+   {
     "host": "fcm.googleapis.com",
     "arquivos": 2
    },
@@ -587,6 +593,10 @@
     "arquivos": 2
    },
    {
+    "host": "a.b.exemplo.com",
+    "arquivos": 1
+   },
+   {
     "host": "a.com",
     "arquivos": 1
    },
@@ -596,10 +606,6 @@
    },
    {
     "host": "api.resend.com",
-    "arquivos": 1
-   },
-   {
-    "host": "app.exemplo.com",
     "arquivos": 1
    },
    {
@@ -623,7 +629,19 @@
     "arquivos": 1
    },
    {
+    "host": "malicioso.com",
+    "arquivos": 1
+   },
+   {
+    "host": "outro.com",
+    "arquivos": 1
+   },
+   {
     "host": "placeholder.supabase.co",
+    "arquivos": 1
+   },
+   {
+    "host": "preview.exemplo.com",
     "arquivos": 1
    },
    {
@@ -639,6 +657,10 @@
     "arquivos": 1
    },
    {
+    "host": "sub.app.exemplo.com",
+    "arquivos": 1
+   },
+   {
     "host": "task-gifts-v2.vercel.app",
     "arquivos": 1
    },
@@ -648,6 +670,10 @@
    },
    {
     "host": "twitter.com",
+    "arquivos": 1
+   },
+   {
+    "host": "upstash.exemplo.com",
     "arquivos": 1
    }
   ],
@@ -671,6 +697,7 @@
    "dispatch-critical-alert",
    "error-budget-monitor",
    "migrate-helper",
+   "passkey-auth",
    "push-outbox-dispatcher",
    "push-public-key",
    "security-weekly-digest",
