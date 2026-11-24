@@ -12,6 +12,10 @@
 --    rotacao, faz a edge responder 401 sem que ninguem perceba (o alerta critico
 --    se perde em silencio). Ultimo recurso do trigger: 'cron_secret', token
 --    medido como aceito em 2026-11-24 (dispatch-critical-alert HTTP 200).
+--    Num rebuild o Vault tambem nao vem do repositorio: provisione
+--    `internal_dispatch_secret` (ou grave `dispatch_secret` como override) antes
+--    de contar com o alerta. Sem nenhum dos dois o trigger emite WARNING com o
+--    nome das chaves em vez de entregar um 401 silencioso.
 --
 -- 2) A URL do projeto estava fixa dentro da funcao do trigger. Num projeto
 --    recriado ela apontaria para eidsaqymojyuhprobfpn mesmo estando em outro.
