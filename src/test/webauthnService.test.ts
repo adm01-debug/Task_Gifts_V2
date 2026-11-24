@@ -136,7 +136,7 @@ describe("webauthnService.authenticate — login por passkey verificado no servi
     expect(verifyOtpMock).not.toHaveBeenCalled();
   });
 
-  it("devolve mensagem clara quando o servidor rejeita por contador (credencial bloqueada)", async () => {
+  it("devolve mensagem clara quando o contador sai de ordem (sem bloquear a passkey)", async () => {
     invokeEdgeSafeMock
       .mockResolvedValueOnce({
         data: { ok: true, challenge: CHALLENGE, rpId: "app.exemplo.com" },
@@ -145,8 +145,14 @@ describe("webauthnService.authenticate — login por passkey verificado no servi
         attempts: 1,
       })
       .mockResolvedValueOnce({
-        data: { ok: false, error: "contador_invalido" },
-        error: null,
+        data: null,
+        error: {
+          kind: "bad_request",
+          status: 409,
+          retryable: false,
+          retryAfterSeconds: null,
+          message: "contador_fora_de_ordem",
+        },
         requestId: "req-2",
         attempts: 1,
       });
@@ -154,7 +160,64 @@ describe("webauthnService.authenticate — login por passkey verificado no servi
     const result = await webauthnService.authenticate();
 
     expect(result.success).toBe(false);
-    expect(result.error).toContain("bloqueada por segurança");
+    expect(result.error).toContain("Tente novamente em alguns segundos");
+    expect(result.error).not.toContain("bloqueada");
+    expect(verifyOtpMock).not.toHaveBeenCalled();
+  });
+
+  it("avisa quando a passkey apresentada é de outra conta", async () => {
+    invokeEdgeSafeMock
+      .mockResolvedValueOnce({
+        data: { ok: true, challenge: CHALLENGE, rpId: "app.exemplo.com" },
+        error: null,
+        requestId: "req-1",
+        attempts: 1,
+      })
+      .mockResolvedValueOnce({
+        data: null,
+        error: {
+          kind: "bad_request",
+          status: 409,
+          retryable: false,
+          retryAfterSeconds: null,
+          message: "conta_diferente",
+        },
+        requestId: "req-2",
+        attempts: 1,
+      });
+
+    const result = await webauthnService.authenticate("rh@empresa.com");
+
+    expect(result.success).toBe(false);
+    expect(result.error).toContain("outra conta");
+    expect(verifyOtpMock).not.toHaveBeenCalled();
+  });
+
+  it("não emite sessão quando a conta exige segundo fator", async () => {
+    invokeEdgeSafeMock
+      .mockResolvedValueOnce({
+        data: { ok: true, challenge: CHALLENGE, rpId: "app.exemplo.com" },
+        error: null,
+        requestId: "req-1",
+        attempts: 1,
+      })
+      .mockResolvedValueOnce({
+        data: null,
+        error: {
+          kind: "forbidden",
+          status: 403,
+          retryable: false,
+          retryAfterSeconds: null,
+          message: "mfa_obrigatorio",
+        },
+        requestId: "req-2",
+        attempts: 1,
+      });
+
+    const result = await webauthnService.authenticate();
+
+    expect(result.success).toBe(false);
+    expect(result.error).toContain("duas etapas");
     expect(verifyOtpMock).not.toHaveBeenCalled();
   });
 

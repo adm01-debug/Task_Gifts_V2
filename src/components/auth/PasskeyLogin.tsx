@@ -90,7 +90,9 @@ export function PasskeyLogin({ onSuccess, defaultEmail = "" }: PasskeyLoginProps
       </Button>
 
       <p className="text-xs text-center text-muted-foreground">
-        Use sua impressão digital, Face ID, PIN do dispositivo ou chave de segurança
+        Use sua impressão digital, Face ID, PIN do dispositivo ou chave de segurança.
+        A passkey precisa estar cadastrada antes em <strong>Segurança → Passkeys</strong>{" "}
+        (com a conta já logada); sem cadastro prévio, entre com e-mail e senha.
       </p>
     </div>
   );

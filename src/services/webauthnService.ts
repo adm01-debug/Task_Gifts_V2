@@ -67,7 +67,12 @@ const PASSKEY_ERROR_MESSAGES: Record<string, string> = {
   rate_limited: "Muitas tentativas. Aguarde um minuto e tente novamente.",
   challenge_invalido: "Tempo de autenticação expirado. Tente novamente.",
   credencial_nao_encontrada: "Nenhuma passkey ativa para este dispositivo.",
-  contador_invalido: "Passkey bloqueada por segurança. Use a senha e cadastre novamente.",
+  credencial_invalida: "Esta passkey está corrompida. Cadastre novamente em Segurança → Passkeys.",
+  conta_diferente: "Essa passkey pertence a outra conta. Use a passkey do e-mail informado.",
+  mfa_obrigatorio:
+    "Sua conta usa verificação em duas etapas. Entre com e-mail e senha e confirme o código.",
+  contador_fora_de_ordem:
+    "Não foi possível confirmar a passkey agora. Tente novamente em alguns segundos.",
   concorrencia: "Outra tentativa de login foi concluída. Tente novamente.",
   assinatura_invalida: "Não foi possível validar a biometria. Tente novamente.",
   origem_nao_permitida: "Domínio não autorizado para login por passkey.",
@@ -282,7 +287,12 @@ export const webauthnService = {
       const options = optionsResult.data;
       if (optionsResult.error || !options?.ok || !options.challenge || !options.rpId) {
         logger.apiError("WebAuthn options", optionsResult.error ?? new Error("resposta inválida"), "webauthnService");
-        return { success: false, error: "Não foi possível iniciar o login por passkey" };
+        return {
+          success: false,
+          error:
+            PASSKEY_ERROR_MESSAGES[optionsResult.error?.message ?? ""] ??
+            "Não foi possível iniciar o login por passkey"
+        };
       }
 
       const allowCredentials = options.allowCredentials?.length
@@ -322,10 +332,14 @@ export const webauthnService = {
       });
 
       const verified = verifyResult.data;
+      // Em resposta 4xx o corpo do erro carrega o código (`mfa_obrigatorio`,
+      // `conta_diferente`, ...) e `invokeEdgeSafe` devolve `data: null`, então o
+      // código vem de `error.message` (preenchido pelo body da função).
+      const failureCode = verified?.error ?? verifyResult.error?.message ?? "";
       if (verifyResult.error || !verified?.ok || !verified.tokenHash || !verified.email) {
         return {
           success: false,
-          error: PASSKEY_ERROR_MESSAGES[verified?.error ?? ""] ?? "Não foi possível validar a passkey"
+          error: PASSKEY_ERROR_MESSAGES[failureCode] ?? "Não foi possível validar a passkey"
         };
       }
 
