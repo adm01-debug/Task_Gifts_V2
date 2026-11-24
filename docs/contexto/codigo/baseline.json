@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "82066d76a9f4fe8b8fb55b153d7aef6ca58c64d5",
+  "commit": "373deda31bbcfc6e95c273ed776521855dab8795",
   "branch": "main",
-  "data_commit": "2026-11-24T12:35:58-03:00",
+  "data_commit": "2026-11-24T13:09:30-03:00",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "ultimos_commits": [
+   {
+    "sha": "373deda",
+    "data": "2026-11-24",
+    "assunto": "fix(loja): notificacao de compra nao colide mais no indice unico de notificacoes (#144)"
+   },
    {
     "sha": "82066d7",
     "data": "2026-11-24",
@@ -126,11 +131,6 @@
     "sha": "046ebeb",
     "data": "2026-11-23",
     "assunto": "fix: liga acoes Editar/Excluir sem handler no painel admin (#120)"
-   },
-   {
-    "sha": "455eeb6",
-    "data": "2026-11-23",
-    "assunto": "feat(admin/app): OfflineIndicator global + GoalsManager persistente (Supabase) (#110)"
    }
   ],
   "arquivos_mudados_7d": 205,
@@ -184,15 +184,15 @@
     "mudancas": 6
    },
    {
+    "pasta": "src/tests/unit",
+    "mudancas": 6
+   },
+   {
     "pasta": "supabase/config.toml",
     "mudancas": 6
    },
    {
     "pasta": "docs/prod-readiness.md",
-    "mudancas": 5
-   },
-   {
-    "pasta": "src/tests/unit",
     "mudancas": 5
    }
   ],
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 112
+    "commits": 113
    },
    {
     "autor": "dependabot[bot]",
@@ -312,7 +312,7 @@
  "contagens": {
   "arquivos_total": 1572,
   "arquivos_codigo": 1188,
-  "linhas_codigo": 235896,
+  "linhas_codigo": 235920,
   "rotas": 87,
   "rotas_http_backend": 0,
   "vistas_por_id": 0,
@@ -436,7 +436,7 @@
   },
   "src/services": {
    "arquivos": 99,
-   "linhas": 22362
+   "linhas": 22363
   },
   "src/stories": {
    "arquivos": 29,
@@ -448,7 +448,7 @@
   },
   "src/tests": {
    "arquivos": 16,
-   "linhas": 1275
+   "linhas": 1298
   },
   "src/types": {
    "arquivos": 2,

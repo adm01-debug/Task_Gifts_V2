@@ -1549,12 +1549,13 @@
   {
    "arquivo": "src/tests/unit/shop.test.ts",
    "tipo": "unit",
-   "linhas": 83,
+   "linhas": 106,
    "testa": [
     "src/integrations/supabase/client.ts",
+    "src/services/notificationsService.ts",
     "src/services/shopService.ts"
    ],
-   "casos": 3
+   "casos": 4
   },
   {
    "arquivo": "src/tests/unit/trails.test.ts",
@@ -1782,7 +1783,7 @@
   "src/services/loggingService.ts": 1,
   "src/services/mentorshipService.ts": 1,
   "src/services/nineBoxService.ts": 1,
-  "src/services/notificationsService.ts": 1,
+  "src/services/notificationsService.ts": 2,
   "src/services/nr1RiskService.ts": 3,
   "src/services/onboardingService.ts": 1,
   "src/services/positionsService.ts": 1,

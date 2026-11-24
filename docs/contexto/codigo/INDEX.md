@@ -1,7 +1,7 @@
 # Contexto do projeto para agentes de IA
 
 GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.
-Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `82066d76a9f4fe8b8fb55b153d7aef6ca58c64d5` (2026-11-24T12:35:58-03:00).
+Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `373deda31bbcfc6e95c273ed776521855dab8795` (2026-11-24T13:09:30-03:00).
 
 ## Como usar (leia antes de planejar ou executar qualquer tarefa)
 1. **Tela/rota/menu** → `rotas.json` (url/vista/menu → arquivo → hooks → tabelas → edges; `rotas_http_backend` para APIs) e `modulos.json` (módulo inteiro + dependências entre módulos).
@@ -36,7 +36,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 |---|---|
 | arquivos_total | 1572 |
 | arquivos_codigo | 1188 |
-| linhas_codigo | 235896 |
+| linhas_codigo | 235920 |
 | rotas | 87 |
 | rotas_http_backend | 0 |
 | vistas_por_id | 0 |
@@ -278,7 +278,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - possiveis_segredos_no_codigo: 0
 
 ## Grafo de código (graphify)
-- 10323 nós · 28876 arestas · 670 comunidades · grafo do commit `82066d76`
+- 10323 nós · 28878 arestas · 670 comunidades · grafo do commit `373deda3`
 - comunidades maiores: react (276), lucide-react (271), badge.tsx (232), App.tsx (194), cn (135), SecurityDashboard.tsx (102), contracts/index.ts (96), ManagerDashboard.tsx (95), client.ts (89), DashboardRightColumn.tsx (86), useToast (83), mobile/index.ts (80)
 - símbolos mais chamados: cn() (src/lib/utils.ts), useAuth() (src/hooks/useAuth.tsx), useIsMobile() (src/hooks/use-mobile.tsx), q() (scripts/supabase_snapshot/snapshot.py), useDepartments() (src/hooks/useDepartments.ts), useRBAC() (src/hooks/useRBAC.ts), useProfiles() (src/hooks/useProfiles.ts), useToast() (src/hooks/use-toast.ts), useSEO() (src/hooks/useSEO.ts), useSoundEffects() (src/hooks/useSoundEffects.tsx), .collect() (scripts/supabase_snapshot/test_snapshot.py), excluded_sql() (scripts/supabase_snapshot/snapshot.py)
 - consulta local: `graphify query "<pergunta>"`, `graphify path "<A>" "<B>"`, `graphify explain "<X>"`
@@ -365,6 +365,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 
 
 ## Últimos commits
+- 2026-11-24 `373deda` fix(loja): notificacao de compra nao colide mais no indice unico de notificacoes (#144)
 - 2026-11-24 `82066d7` fix: provisiona segredo do alerta critico e tira URL fixa do trigger (#143)
 - 2026-11-24 `716355d` feat(clima): agenda ciclo de vida das pesquisas (expira e lembrete) (#141)
 - 2026-11-24 `85ba135` fix(cron): reproduz os jobs internos sem credencial no repositorio (#142)
@@ -379,7 +380,6 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - 2026-11-24 `d727dcc` feat(pdi): tela de PDI com templates, mentores e check-ins (#128)
 - 2026-11-24 `7ef5af2` feat: liga login por passkey/biometria com verificação real de assinatura (#126)
 - 2026-11-24 `9a04825` feat: tela de Pesquisa de Clima (criar, responder, eNPS e score por pilar) (#125)
-- 2026-11-24 `eff597a` feat(feedback): tela para pedir feedback 360 e ver o resumo do avaliado (#132)
 
 ## Arquivos deste diretório
 - `docs/contexto/codigo/rotas.json`

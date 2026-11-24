@@ -1,6 +1,6 @@
 # 07 · REGRAS DE NEGÓCIO
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `82066d76a9` · branch `main` · 2026-11-24 15:37 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `373deda31b` · branch `main` · 2026-11-24 16:09 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## A. Regras escritas por humanos (`manual/` — prioridade máxima, nunca sobrescrito)
@@ -3636,7 +3636,7 @@ _nenhum item encontrado_
 | `admin` | `supabase/migrations/20261123180000_climate_survey_engine.sql` |
 | `manager` | `supabase/migrations/20261123180000_climate_survey_engine.sql` |
 
-## K. Testes como especificação (2097 testes em 157 arquivos — nomes completos em `context.json`)
+## K. Testes como especificação (2098 testes em 157 arquivos — nomes completos em `context.json`)
 
 | Arquivo | Testes | Exemplos do que o sistema DEVE fazer |
 |---|---|---|
@@ -3762,6 +3762,7 @@ _nenhum item encontrado_
 | `src/test/notificationPrefsCrossModule.simulation.test.ts` | 6 | preferencias compartilhadas entre modulos · nao perde tipos de outros modulos em 400 sequencias aleatorias · preserva a prioridade do modulo executivo apos escritas de outros modulos · silenciar push em lote nos jogos nao altera campanhas nem executivo … |
 | `src/test/predictionOddsHistory.simulation.test.ts` | 6 | histórico de cotações — simulação massiva · preserva conservação do pote, normalização e coerência dos multiplicadores · é determinístico e imune à ordem de chegada das linhas · descarta linhas órfãs sem corromper a série … |
 | `src/test/rpcAccess.test.ts` | 6 | anon deve receber 42501 ao chamar ${fn} · anon deve receber erro ao chamar get_leaderboard_api · anon deve receber erro ao chamar get_user_stats_api · anon deve receber erro ao chamar get_2fa_status de outro usuário … |
+| `src/tests/unit/shop.test.ts` | 6 | shopService · purchaseReward · should throw error if item is out of stock · should throw error if spend_coins fails (insufficient coins) … |
 | `src/test/auctionNotifications.simulation.test.ts` | 5 | notificações de apuração de leilão · não notifica ninguém quando não há lances · avisa o vencedor de item esgotado em vez de vitória · respeita a preferência desligada sem suprimir o estorno … |
 | `src/test/boardStatsPdf.simulation.test.ts` | 5 | boardStatsPdf — invariantes · gera nome .pdf coerente com o CSV e cabeçalho estável · tolera payload nulo/corrompido sem lançar nem vazar NaN · boardStatsPdf — simulação em massa … |
 | `src/test/bossDepartmentComparisonExport.simulation.test.ts` | 5 | buildBossComparisonCsv — simulação massiva · mantém integridade em 600 cenários · escapa aspas, vírgulas e fórmulas nos rótulos · gera nomes de arquivo seguros e estáveis … |
@@ -3777,7 +3778,6 @@ _nenhum item encontrado_
 | `src/test/uiLibraryContracts.test.tsx` | 5 | contratos das bibliotecas de UI instaladas · calendário seleciona uma data e navega para o próximo mês · painéis preservam orientação e tamanhos percentuais da API anterior · tooltip entrega o payload inteiro como quinto argumento do formatter … |
 | `src/tests/unit/notifications.test.ts` | 5 | notificationsService · create · should insert a notification and return it · markAsRead … |
 | `src/tests/unit/onboarding.test.ts` | 5 | onboardingService · completeStep · should return true on success · isOnboardingComplete … |
-| `src/tests/unit/shop.test.ts` | 5 | shopService · purchaseReward · should throw error if item is out of stock · should throw error if spend_coins fails (insufficient coins) … |
 | `src/components/shop/__tests__/ProductGridLoading.test.tsx` | 4 | Shop Skeleton and Loading State · should display skeletons while rewards are loading · should transition from skeletons to content smoothly · should maintain layout stability during search/filtering loading |
 | `src/test/nr1Export.simulation.test.ts` | 4 | Exportação NR-1 (simulação combinatória) · nunca emite célula vazia ou  · marca plano obrigatório exatamente para riscos alto e crítico · gera nome de arquivo seguro para recortes com acentos e símbolos |
 | `src/test/passkeysPanel.test.tsx` | 4 | PasskeysPanel — cadastro so quando o login por passkey funciona · libera o cadastro quando a funcao esta publicada e a conta nao exige segundo fator · bloqueia o cadastro e explica quando a conta exige verificacao em duas etapas · bloqueia o cadastro quando a funcao nao esta liberada no ambiente |

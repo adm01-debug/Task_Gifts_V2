@@ -5937,7 +5937,7 @@
     "hooks",
     "services"
    ],
-   "coberto_por_testes": 1,
+   "coberto_por_testes": 2,
    "orfao": false
   },
   {
@@ -6893,7 +6893,7 @@
     "shopService"
    ],
    "export_default": null,
-   "linhas": 477,
+   "linhas": 478,
    "tabelas": [
     "shop_promotions",
     "shop_purchases",
