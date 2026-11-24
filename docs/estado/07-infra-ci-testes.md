@@ -4,6 +4,16 @@
 > Evidência em `arquivo:linha`. Correções da Fase D estão em `ESTADO_ATUAL.md` e em `04-dados-e-runtime.md`.
 > Runtime de build/teste = `NAO_VERIFICADO` (node_modules ausente no ambiente da auditoria).
 
+> ## STATUS ATUAL (2026-11-24) — leia antes da tabela e dos "Achados graves" abaixo
+>
+> Retrato da **auditoria original**; onde divergir do código, vale o código.
+>
+> | Afirmação no documento | Estado real hoje |
+> |---|---|
+> | "O CI nunca executou um único comando" / "YAML inválido, 0 de 10 steps" (tabela e **Achado grave 1**) | **Corrigido.** O `ci.yml` atual é válido e os jobs rodam de fato: `quality`, `Contratos da automação local`, `Tipos e testes das Edge Functions`, `Dependency Review`. Evidência: `quality` verde nas PRs #125, #126, #127 e na `main`. O histórico de 372 runs com 100% de falha é anterior à correção. |
+> | "`typecheck` é no-op" (**Achado grave 2**) | **Corrigido.** `package.json:16` = `tsc --noEmit -p tsconfig.app.json && tsc --noEmit -p tsconfig.node.json`; compila os dois projetos e falha em erro de tipo. É esse comando que o job `quality` executa. |
+> | "Só existe `ci.yml`" | **Desatualizado.** `.github/workflows/` tem 6 arquivos: `ci.yml`, `deno.yml`, `deploy-edge-functions.yml`, `dependency-review.yml`, `automation-local.yml`, `contexto.yml`. O deploy das **Edge Functions** roda no Actions (`deploy-edge-functions.yml`, `workflow_dispatch` + push na `main`); o **front** é deployado pelo Vercel (fora do Actions). |
+
 ---
 
 # Auditoria — Testes e Infra (task-gifts-v2)
@@ -215,8 +225,8 @@ Legenda: ✅ ok · 🟨 funciona com risco/inconsistência · 🟦 configurado m
 
 | Item | Arquivo:linha | Estado | Avaliação |
 |---|---|:--:|---|
-| **GitHub Actions CI** | `.github/workflows/ci.yml` | ✅ | **Corrigido.** O YAML é válido e os jobs executam de fato (`quality`, `Contratos da automação local`, `Tipos e testes das Edge Functions`, `Dependency Review`). Evidência: `quality` verde em PRs recentes (#125, #126, #127) e na `main`. Continua **só quality gate** — o deploy é feito pelo Vercel fora do Actions. |
-| **Único pipeline de CI** | `.github/workflows/` | ⬛ | Só existe `ci.yml`. Não há `deploy.yml`, `vercel.json`, `netlify.toml`, `Dockerfile`, `fly.toml`. |
+| **GitHub Actions CI** | `.github/workflows/ci.yml` | ✅ | **Corrigido.** O YAML é válido e os jobs executam de fato (`quality`, `Contratos da automação local`, `Tipos e testes das Edge Functions`, `Dependency Review`). Evidência: `quality` verde em PRs recentes (#125, #126, #127) e na `main`. Continua **só quality gate** para o front — o deploy do front é feito pelo Vercel fora do Actions; o das Edge Functions roda no Actions (`deploy-edge-functions.yml`). |
+| **Único pipeline de CI** | `.github/workflows/` | 🟨 | Existem 6 workflows: `ci.yml`, `deno.yml`, `deploy-edge-functions.yml`, `dependency-review.yml`, `automation-local.yml`, `contexto.yml`. Não há `Dockerfile`, `fly.toml` nem `netlify.toml`. O deploy do **front** fica fora do repo (Vercel). Efeito líquido: o portão de qualidade do front (`quality`) existe e roda, mas o Vercel publica sem depender dele. |
 | **Pipelines de deploy concorrentes** | `package.json:19,118`, `.lovable/plan.md`, `.mcp.json` | 🟨 | Não há dois pipelines de deploy no repo. Há **um deploy fora do repo**: a plataforma Lovable (deps `@lovable.dev/cloud-auth-js`, `lovable-tagger`, diretório `.lovable/`). Concorrência real = **Lovable publica sem passar pelo CI do GitHub**, e o CI do GitHub (que seria o gate) está morto. Efeito líquido: **deploy sem nenhum portão de qualidade**. |
 | **`typecheck` é no-op** | `tsconfig.json:16-24` + `package.json:16` | ✅ | **Corrigido.** O script é `tsc --noEmit -p tsconfig.app.json && tsc --noEmit -p tsconfig.node.json` — compila os dois projetos de verdade e falha se houver erro de tipo. É esse comando que o job `quality` executa em `.github/workflows/ci.yml`. O `tsconfig.json` raiz continua sendo um *solution file* (`"files": []` + `references`), mas nada depende de rodá-lo sozinho. |
 | **`strict` divergente entre tsconfigs** | `tsconfig.json:6-7` vs `tsconfig.app.json:20-21` | 🟨 | Raiz: `noUnusedLocals: true`, `noUnusedParameters: true`. App: ambos `false`. Como o raiz não compila nada, os valores permissivos do app são os únicos que valeriam — as flags estritas da raiz são decorativas. |
@@ -253,6 +263,8 @@ Legenda: ✅ ok · 🟨 funciona com risco/inconsistência · 🟦 configurado m
 ---
 
 ## Achados graves
+
+> **Achados 1 e 2 estão corrigidos no código atual** (ver bloco STATUS ATUAL no topo): o `ci.yml` é válido e roda, e o `typecheck` compila de verdade. Mantidos abaixo como registro do diagnóstico original.
 
 ### 1. ⬛ O CI nunca executou um único comando — 372 runs, 100% de falha no parse
 `.github/workflows/ci.yml:25` quebra o YAML (`- name: Unit Tests` em indent 8 contra indent 7 dos itens

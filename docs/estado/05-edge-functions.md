@@ -2,14 +2,15 @@
 
 > ## STATUS ATUAL (2026-11-24) — leia antes da tabela abaixo
 >
-> Este documento é um **retrato da auditoria original** e está **desatualizado** em 4 pontos. Onde ele divergir do código, vale o código.
+> Este documento é um **retrato da auditoria original** e está **desatualizado** em 5 pontos. Onde ele divergir do código, vale o código.
 >
 > | Divergência | Estado real hoje |
 > |---|---|
 > | Tabela lista **36 funções** | ``supabase/functions`` tem **22** diretórios de função (+ `_shared/`). As demais foram podadas. |
 > | `bitrix24-api`, `bitrix24-oauth`, `bitrix24-webhook`, `external-db-bridge` aparecem como funções existentes | **Removidas do repositório.** Achados ligados a elas (proxy REST Bitrix, OAuth Bitrix, executor de query genérica) são **obsoletos** — não há o que corrigir. |
-> | Pendência 03: HMAC falsificável em `webhook-dispatcher`, fail-open em `verify-ip`, IDOR em `trail-recommendations` | **Resolvida** no código atual: `_shared/webhookSecurity.ts:57-84` compara HMAC com `timingSafeEqualBytes` (`:24`) e `derivedIdempotencyKey`/`claimIdempotency` (`:119,133`) tornam replay inócuo; `verify-ip/index.ts:36,75` **falha fechado** quando não consegue determinar o IP; `trail-recommendations/index.ts:69-80` só aceita `userId` de terceiro para admin/gestor. |
-> | HIBP aparece em `06-integracoes.md` como "MORTO" | **Implementado e ligado**: `src/lib/authValidations.ts` (`checkPasswordLeaked` com timeout de 4s) é chamado por `src/pages/Auth.tsx:195` e `src/components/PasswordStrengthIndicator.tsx:51`; CSP libera `https://api.pwnedpasswords.com` em `vercel.json`. |
+> | Pendência 03: HMAC falsificável em `webhook-dispatcher`, fail-open em `verify-ip`, IDOR em `trail-recommendations` | **Parcialmente resolvida — 2 dos 3 itens fechados.** (a) `webhook-dispatcher` hoje é **só saída**: entra por `verifyServiceRole` (`index.ts:30`) e assina o payload enviado (`index.ts:81`, `generateSignature` em `:274-278`) — não existe receptor de webhook de terceiro no repo (grep por header de assinatura de entrada retorna apenas a geração da saída), então "HMAC falsificável de entrada" **não se aplica mais**. (b) `verify-ip` **falha fechado** quando a contagem da whitelist dá erro (`:34-58`, 503) e quando a whitelist está ativa e o IP de origem não é determinável (`:76-92`, 403); **whitelist vazia libera tudo por design** (`:62-73`, documentado em comentário). (c) `trail-recommendations` fecha o IDOR: `userId` de terceiro só passa para `admin`/`manager` (`:74-89`, 403 caso contrário). |
+> | Gap que sobra do item (a) | `_shared/webhookSecurity.ts` tem a verificação de entrada pronta e **sem nenhum chamador**: `verifySignedWebhook` (`:84-110`, comparação com `timingSafeEqualBytes` em `:24`), `derivedIdempotencyKey` (`:119`) e `claimIdempotency` (`:133`) não são importados por nenhuma função — a tabela `webhook_idempotency` só é tocada por esse módulo. Enquanto não existir receptor de webhook de entrada, é biblioteca dormente (não é falha de segurança ativa). |
+> | HIBP aparece em `06-integracoes.md` como "MORTO" | **Implementado e ligado**: `checkPasswordLeaked` (`src/lib/authValidations.ts:95`, fetch em `:116` com timeout de 4s em `:115`) é chamado por `src/pages/Auth.tsx:195` e `src/components/PasswordStrengthIndicator.tsx:51`; CSP libera `https://api.pwnedpasswords.com` em `vercel.json`. |
 >
 > Correção estrutural que continua valendo: funções sem chamador no cliente **não estão mortas** quando o disparo é por `pg_cron`/trigger/webhook — ver `07-infra-ci-testes.md`.
 

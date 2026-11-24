@@ -4,6 +4,16 @@
 > Evidência em `arquivo:linha`. Correções da Fase D estão em `ESTADO_ATUAL.md` e em `04-dados-e-runtime.md`.
 > Runtime de build/teste = `NAO_VERIFICADO` (node_modules ausente no ambiente da auditoria).
 
+> ## STATUS ATUAL (2026-11-24) — leia antes das tabelas abaixo
+>
+> Retrato da **auditoria original**; onde divergir do código, vale o código.
+>
+> | Afirmação no documento | Estado real hoje |
+> |---|---|
+> | HIBP "⬛ MORTO / zero chamadores / bloqueado pela CSP" (tabela de integrações, inventário de domínios `src/` e achados secundários) | **Implementado e ligado.** `checkPasswordLeaked` (`src/lib/authValidations.ts:95`) faz fetch com timeout de 4s (`:115-116`) e é chamado por `src/pages/Auth.tsx:195` e `src/components/PasswordStrengthIndicator.tsx:51`. A CSP de produção (`vercel.json`) libera `https://api.pwnedpasswords.com`; o bloqueio citado era de `index.html`. |
+> | `bitrix24-oauth`, `bitrix24-api`, `bitrix24-webhook`, `external-db-bridge` como integrações existentes | **Removidas do repo.** Os achados de proxy REST Bitrix, OAuth Bitrix e executor de query genérica são obsoletos (não há função para corrigir). O link morto `/bitrix24` no menu mobile também já não existe. |
+> | `lovable-tagger` devDependency morta | **Continua valendo** (`package.json:134`, sem import em `vite.config.ts`). |
+
 ---
 
 # Auditoria de INTEGRAÇÕES — task-gifts-v2
@@ -146,7 +156,7 @@ O `.env:7` já corrige o texto ("NENHUMA FUNÇÃO LISTADA = …"), mas o `.env.e
 | `https://i.pravatar.cc` | 14 | Avatares fake em Storybook (`src/stories/…`) |
 | `https://www.youtube.com` | 2 | Embed de vídeo LMS (`ModuleViewer.tsx:90`) — **bloqueado pela CSP** |
 | `https://fcm.googleapis.com` | 2 | Endpoints Web Push em testes/fixtures |
-| `https://api.pwnedpasswords.com` | 1 | HIBP (`authValidations.ts:94`) — **sem chamador e bloqueado pela CSP** |
+| `https://api.pwnedpasswords.com` | 1 | HIBP (`authValidations.ts:116`, k-anonymity) — **chamado** por `Auth.tsx:195` e `PasswordStrengthIndicator.tsx:51`; liberado na CSP de `vercel.json` |
 | `https://fonts.googleapis.com` / `gstatic.com` | 1 + workbox | Fontes (liberadas na CSP e cacheadas por workbox) |
 | `https://taskgifts.app`, `https://app.exemplo.com`, `https://push.example`, `https://a.com` | 2+2+2+2 | Placeholders / fixtures de teste |
 | `github.com`, `twitter.com`, `linkedin.com`, `schema.org` | 1 cada | Links estáticos / metadados |
@@ -210,6 +220,6 @@ Todas as tabelas (`bitrix24_tokens`, `bitrix24_sync_mappings`, `bitrix24_webhook
 - **Conflito de versão Sentry confirmado**: `@sentry/tracing@^7.120.4` (major 7, pacote deprecado) convive com `@sentry/react|browser|deno@^10.53.1`. Os três pacotes não-`react` têm **zero imports** no repo.
 - **E-mail é 90% stub**: `send-email-digest` e `send-email-notifications` não leem nenhum secret de e-mail e apenas logam (`send-email-notifications:172-178`). O único envio real (`detect-new-device`) usa `onboarding@resend.dev`, domínio sandbox que só entrega ao dono da conta Resend.
 - **3 service workers em `public/`** (`sw.js`, `sw-push.js`, `push-sw.js`) enquanto o VitePWA gera seu próprio `sw.js` — colisão de nome no build; o app só registra `/push-sw.js`.
-- **CSP bloqueia integrações do próprio código**: `index.html:6` não tem `frame-src` (YouTube em `ModuleViewer.tsx:90` bloqueado) e `connect-src` não inclui `api.pwnedpasswords.com` (`authValidations.ts:94`, que de todo modo não tem chamador).
+- **CSP bloqueia integrações do próprio código**: `index.html:6` não tem `frame-src` (YouTube em `ModuleViewer.tsx:90` bloqueado). O caso do `api.pwnedpasswords.com` (`authValidations.ts:116`) **já está corrigido** na CSP de produção (`vercel.json`), e a chamada existe (`Auth.tsx:195`).
 - **`verify-geo` chama `http://ip-api.com` sem TLS** (`verify-geo:19`) e é *fail-open* em erro; a função sequer tem chamador no frontend.
 - **`lovable-tagger`** é devDependency morta: `vite.config.ts` não a importa (sobrou só o `.filter(Boolean)` na linha 148).
