@@ -7,7 +7,7 @@
    "modulo": "components",
    "arquivos": 81,
    "testes": 0,
-   "linhas": 18122,
+   "linhas": 18131,
    "itens_menu": [],
    "telas": [],
    "rotas_http": [],
@@ -2905,7 +2905,7 @@
    "modulo": "components/navigation",
    "arquivos": 7,
    "testes": 0,
-   "linhas": 649,
+   "linhas": 650,
    "itens_menu": [],
    "telas": [
     "/auth"
@@ -5066,7 +5066,7 @@
    "modulo": "hooks",
    "arquivos": 129,
    "testes": 0,
-   "linhas": 14790,
+   "linhas": 14799,
    "itens_menu": [],
    "telas": [],
    "rotas_http": [],
@@ -6740,9 +6740,9 @@
   },
   {
    "modulo": "pages",
-   "arquivos": 85,
+   "arquivos": 86,
    "testes": 0,
-   "linhas": 24169,
+   "linhas": 24833,
    "itens_menu": [
     "Admin Loja",
     "Admin Quiz",
@@ -6851,6 +6851,7 @@
     "/memoria",
     "/memoria/admin",
     "/mentoria",
+    "/pdi",
     "/pergunta-do-dia",
     "/pergunta-do-dia/admin",
     "/planos-acao",
@@ -6881,7 +6882,7 @@
     "/verificar/:code"
    ],
    "rotas_http": [],
-   "componentes": 85,
+   "componentes": 86,
    "hooks_locais": [
     "useAICoach",
     "useAcceptDuel",
@@ -7184,6 +7185,7 @@
     "useOracleAggregates",
     "useOrganization",
     "useOwnedCards",
+    "usePDI",
     "usePDIAlertCounts",
     "usePDIAlerts",
     "usePairProgress",
@@ -7508,6 +7510,9 @@
     "org_theme_history",
     "organizations",
     "password_reset_requests",
+    "pdi_checkins",
+    "pdi_mentors",
+    "pdi_templates",
     "penalty_rules",
     "permissions",
     "position_task_templates",

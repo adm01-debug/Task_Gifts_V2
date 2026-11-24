@@ -1,6 +1,6 @@
 # 07 · REGRAS DE NEGÓCIO
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `7ef5af2ddc` · branch `main` · 2026-11-24 09:58 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `d727dcc7d5` · branch `main` · 2026-11-24 10:18 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## A. Regras escritas por humanos (`manual/` — prioridade máxima, nunca sobrescrito)
@@ -311,7 +311,7 @@ _Nenhum arquivo em `manual/`. Copie `manual/TEMPLATE-regras-de-negocio.md` para 
 | `feedback_evaluations` | Users insert own evaluations | INSERT | authenticated | permissive |  | `evaluator_id = auth.uid()` |
 | `feedback_results` | Managers insert feedback results | INSERT | authenticated | permissive |  | `has_role(auth.uid(), 'manager'::app_role) OR has_role(auth.uid(), 'admin'::app_role)` |
 | `pdi_mentors` | Managers assign PDI mentors | INSERT | authenticated | permissive |  | `has_role(auth.uid(), 'manager'::app_role) OR has_role(auth.uid(), 'admin'::app_role)` |
-| … +224 linhas — lista completa em `context.json` | | | | | | |
+| … +225 linhas — lista completa em `context.json` | | | | | | |
 
 ## C. Restrições de dados (obrigatório / único / default / CHECK / FK / calculada)
 
@@ -1192,7 +1192,7 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `status` | `SUBSCRIBED` | compara | `src/hooks/useNotifications.ts` |
 | `status` | `absent` | compara, escreve | `src/components/AttendanceCalendar.tsx` |
 | `status` | `accepted` | compara, escreve | `src/components/duels/DuelCard.tsx`<br>`src/hooks/useMentorship.ts`<br>`src/pages/Mentoria.tsx`<br>`src/services/mentorshipService.ts` |
-| `status` | `active` | compara, escreve, filtra | `src/components/CertificationsPanel.tsx`<br>`src/components/GoalsWidget.tsx`<br>`src/components/MyDevelopmentPlanWidget.tsx`<br>`src/components/TeamChallenges.tsx`<br>`src/components/admin/DevelopmentPlanManager.tsx`<br>… +40 |
+| `status` | `active` | compara, escreve, filtra | `src/components/CertificationsPanel.tsx`<br>`src/components/GoalsWidget.tsx`<br>`src/components/MyDevelopmentPlanWidget.tsx`<br>`src/components/TeamChallenges.tsx`<br>`src/components/admin/DevelopmentPlanManager.tsx`<br>… +41 |
 | `status` | `all` | compara | `src/components/PushNotificationHistory.tsx`<br>`src/components/manager/QuestsList.tsx`<br>`src/services/actionPlansService.ts` |
 | `status` | `anomaly` | compara | `src/lib/luckyWheelPayout.ts` |
 | `status` | `applied` | compara, filtra | `src/components/campaigns/CampaignImportHistory.tsx`<br>`src/services/campaignImportService.ts` |
@@ -1919,6 +1919,7 @@ _nenhum item encontrado_
 | `participation` | type=number, min=0, max=100 | `src/pages/LuckyWheelAdmin.tsx` |
 | `mission-xp` | type=number, min=0 | `src/pages/Mentoria.tsx` |
 | `mission-coins` | type=number, min=0 | `src/pages/Mentoria.tsx` |
+| `checkin-date` | type=date | `src/pages/Pdi.tsx` |
 | `wager-question` | disabled=isLocked | `src/pages/WagerQuestionAdminPage.tsx` |
 | `wager-date` | type=date, disabled=isLocked | `src/pages/WagerQuestionAdminPage.tsx` |
 | `wager-multiplier` | type=number, step=0.1, min=1.1, max=5, disabled=isLocked | `src/pages/WagerQuestionAdminPage.tsx` |
@@ -3574,7 +3575,7 @@ _nenhum item encontrado_
 | Nenhum dado disponível para exportar. | `src/pages/EngagementReports.tsx` |
 |  aria-live= | `src/pages/ExecutiveMonthlyReport.tsx` |
 | Nada para investigar neste período. | `src/pages/ExecutiveMonthlyReport.tsx` |
-| … +182 linhas — lista completa em `context.json` | |
+| … +188 linhas — lista completa em `context.json` | |
 
 ## J. Controle de acesso no código (checagens de perfil/permissão)
 

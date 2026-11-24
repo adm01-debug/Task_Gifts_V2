@@ -1861,6 +1861,7 @@
    "src/pages/NotFound.tsx",
    "src/pages/Nr1Risks.tsx",
    "src/pages/OpinionChannel.tsx",
+   "src/pages/Pdi.tsx",
    "src/pages/PermissionsAdmin.tsx",
    "src/pages/PersonalStats.tsx",
    "src/pages/Postmortems.tsx",

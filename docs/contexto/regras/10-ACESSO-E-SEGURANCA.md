@@ -1,6 +1,6 @@
 # 10 · ACESSO E SEGURANÇA — quem pode o quê
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `7ef5af2ddc` · branch `main` · 2026-11-24 09:58 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `d727dcc7d5` · branch `main` · 2026-11-24 10:18 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## Perfis / roles identificados
@@ -164,7 +164,7 @@
 | `organizations` | enabled | public: true | — | authenticated: public.is_org_admin(auth.uid(), id) | — |
 | `password_reset_requests` | enabled | public: auth.uid() = user_id<br>public: EXISTS ( SELECT 1 FROM public.team_members tm1 JOIN public.team_members tm2 ON tm1.department_id = tm2.department_id WHERE tm1.user_ | public: auth.uid() = user_id | public: EXISTS ( SELECT 1 FROM public.team_members tm1 JOIN public.team_members tm2 ON tm1.department_id = tm2.department_id WHERE tm1.user_ | — |
 | `pdi_checkins` | enabled | public: EXISTS (SELECT 1 FROM public.development_plans dp WHERE dp.id = plan_id AND dp.user_id = auth.uid()) | public: auth.uid() = created_by | — | — |
-| `pdi_mentors` | enabled | public: auth.uid() = mentor_id OR EXISTS (SELECT 1 FROM public.development_plans dp WHERE dp.id = plan_id AND dp.user_id = auth.uid()) | authenticated: has_role(auth.uid(), 'manager'::app_role) OR has_role(auth.uid(), 'admin'::app_role) | — | — |
+| `pdi_mentors` | enabled | public: auth.uid() = mentor_id OR EXISTS (SELECT 1 FROM public.development_plans dp WHERE dp.id = plan_id AND dp.user_id = auth.uid()) | authenticated: has_role(auth.uid(), 'manager'::app_role) OR has_role(auth.uid(), 'admin'::app_role) | — | authenticated: auth.uid() = mentor_id OR has_role(auth.uid(), 'manager'::app_role) OR has_role(auth.uid(), 'admin'::app_role) |
 | `pdi_templates` | enabled | authenticated: is_active = true | — | — | — |
 | `penalty_rules` | enabled | public: is_active = true OR has_role(auth.uid(), 'admin')<br>public: has_role(auth.uid(), 'admin') | public: has_role(auth.uid(), 'admin') | public: has_role(auth.uid(), 'admin') | public: has_role(auth.uid(), 'admin') |
 | `permission_groups` | não encontrado | sem RLS | sem RLS | sem RLS | sem RLS |
@@ -710,6 +710,7 @@
 | /memoria | ProtectedRoute |  | `src/App.tsx` |
 | /memoria/admin | ProtectedRoute | admin | `src/App.tsx` |
 | /mentoria | ProtectedRoute |  | `src/App.tsx` |
+| /pdi | ProtectedRoute |  | `src/App.tsx` |
 | /pergunta-do-dia | ProtectedRoute |  | `src/App.tsx` |
 | /pergunta-do-dia/admin | ProtectedRoute | admin | `src/App.tsx` |
 | /planos-acao | ProtectedRoute | manager | `src/App.tsx` |
@@ -747,6 +748,7 @@ Middleware matcher (Next.js): nenhum
 | grant | anon, authenticated | execute | `get_passkeys_by_email`, `user_has_passkeys`, `verify_certificate`, `get_passkeys_by_email` |
 | grant | anon, authenticated | select | `weekly_challenges`, `organizations` |
 | grant | anon, authenticated, service_role | execute | `get_2fa_status`, `user_has_passkeys` |
+| grant | authenticated | delete | `pdi_mentors` |
 | grant | authenticated | execute | `get_executive_metrics`, `get_monthly_trends`, `get_department_metrics`, `generate_engagement_snapshot`, `get_department_metrics`, `get_executive_metrics`, `get_monthly_trends`, `get_nine_box_distribution`, `get_security_stats`, `generate_engagement_snapshot`, `get_quiz_category_stats`, `get_webhook_delivery_hourly_24h`, `get_alert_mttr_by_type_7d`, `get_alert_heatmap_30d`, `get_security_digest_history` … +104 |
 | grant | authenticated | insert | `user_challenges` |
 | grant | authenticated | insert, update, delete | `boss_battles`, `boss_win_rate_goals`, `memory_decks`, `memory_pairs` |
@@ -790,7 +792,6 @@ Middleware matcher (Next.js): nenhum
 | `lucky_wheel_prizes` | acessada do front (1 arquivo(s)) sem RLS (não encontrado) | `src/services/luckyWheelService.ts` |
 | `lucky_wheel_spins` | acessada do front (1 arquivo(s)) sem RLS (não encontrado) | `src/services/luckyWheelService.ts` |
 | `notification_preferences` | acessada do front (3 arquivo(s)) sem RLS (não encontrado) | `src/components/InAppNotificationToggle.tsx`<br>`src/hooks/useTypePreferences.ts`<br>`src/services/salesCampaignsService.ts` |
-| `pdi_mentors` | front faz DELETE mas nenhuma política RLS permite DELETE → vai falhar/retornar vazio para usuários | `src/services/pdiService.ts` |
 | `pdi_templates` | front faz INSERT mas nenhuma política RLS permite INSERT → vai falhar/retornar vazio para usuários | `src/services/pdiService.ts` |
 | `profiles` | front faz SELECT mas nenhuma política RLS permite SELECT → vai falhar/retornar vazio para usuários | `src/hooks/usePDIAlerts.ts`<br>`src/hooks/useUserRank.ts`<br>`src/hooks/useWeeklyChallenge.ts`<br>`src/pages/Auth.tsx`<br>… +20 |
 | `profiles_public` | acessada do front (5 arquivo(s)) sem RLS (não encontrado) | `src/services/campaignTeamsService.ts`<br>`src/services/luckyWheelService.ts`<br>`src/services/profilesService.ts`<br>`src/services/salesCampaignsService.ts`<br>… +1 |

@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "7ef5af2ddc26e48bf585909f103c4503e5357d2d",
+  "sha": "d727dcc7d56906c2d0d1596132845389ffa5f7b8",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
-  "generated_at": "2026-11-24 09:58 UTC",
-  "files_total": 1579,
-  "code_files": 1472,
-  "code_lines": 267705
+  "generated_at": "2026-11-24 10:18 UTC",
+  "files_total": 1581,
+  "code_files": 1474,
+  "code_lines": 268410
  },
  "version": "1.3.2",
- "facts_hash": "5e79a53a026e5e60",
+ "facts_hash": "93be3b0751be429d",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -195,8 +195,8 @@
   "package_manager": "bun",
   "languages": {
    ".ts": 584,
-   ".tsx": 577,
-   ".sql": 279,
+   ".tsx": 578,
+   ".sql": 280,
    ".mjs": 21,
    ".js": 5,
    ".py": 5,
@@ -25387,6 +25387,16 @@
     "src": "supabase/migrations/20261123180000_climate_survey_engine.sql"
    },
    {
+    "name": "pdi_mentors_delete",
+    "table": "pdi_mentors",
+    "cmd": "DELETE",
+    "roles": "authenticated",
+    "mode": "permissive",
+    "using": "auth.uid() = mentor_id OR has_role(auth.uid(), 'manager'::app_role) OR has_role(auth.uid(), 'admin'::app_role)",
+    "check": "",
+    "src": "supabase/migrations/20261221000000_pdi_mentors_delete_policy.sql"
+   },
+   {
     "name": "Users can manage their own challenges",
     "table": "webauthn_challenges",
     "cmd": "ALL",
@@ -33704,6 +33714,7 @@
    "supabase/migrations/20261123180000_climate_survey_engine.sql",
    "supabase/migrations/20261218000000_profiles_economia_rpcs.sql",
    "supabase/migrations/20261220000000_fix_sre_rpcs_and_dispatch_trigger.sql",
+   "supabase/migrations/20261221000000_pdi_mentors_delete_policy.sql",
    "supabase/migrations/20261224090000_webauthn_login_hardening.sql",
    "supabase/tests/climate/assertions.sql",
    "supabase/tests/climate/stubs.sql",
@@ -41445,6 +41456,14 @@
    },
    {
     "kind": "grant",
+    "privs": "delete",
+    "object": "pdi_mentors",
+    "objkind": "table",
+    "roles": "authenticated",
+    "src": "supabase/migrations/20261221000000_pdi_mentors_delete_policy.sql"
+   },
+   {
+    "kind": "grant",
     "privs": "select, insert, update, delete",
     "object": "public",
     "objkind": "tables",
@@ -43736,6 +43755,37 @@
    },
    {
     "path": "",
+    "file": "src/pages/Pdi.tsx",
+    "component": "Pdi",
+    "tables_transitive": [
+     "audit_logs",
+     "competencies",
+     "development_plan_actions",
+     "development_plans",
+     "new_device_alerts",
+     "notifications",
+     "pdi_checkins",
+     "pdi_mentors",
+     "pdi_templates",
+     "profiles",
+     "profiles_public",
+     "role_permissions",
+     "roles",
+     "user_devices",
+     "user_roles"
+    ],
+    "invokes_transitive": [],
+    "rpc_transitive": [
+     "add_coins",
+     "add_xp",
+     "get_my_profile_private",
+     "increment_quests_completed",
+     "increment_streak"
+    ],
+    "deps_count": 50
+   },
+   {
+    "path": "",
     "file": "src/pages/PermissionsAdmin.tsx",
     "component": "PermissionsAdmin",
     "tables_transitive": [
@@ -45756,6 +45806,13 @@
     "guard": "",
     "roles": [],
     "file": "scripts/ai-context/gerar.unit.mjs"
+   },
+   {
+    "path": "/pdi",
+    "component": "PageTransition",
+    "guard": "ProtectedRoute",
+    "roles": [],
+    "file": "src/App.tsx"
    },
    {
     "path": "/pergunta-do-dia",
@@ -48443,6 +48500,10 @@
    },
    {
     "guard": "ProtectedRoute",
+    "file": "src/App.tsx"
+   },
+   {
+    "guard": "ProtectedRoute",
     "file": "src/components/rbac/ProtectedRoute.tsx"
    },
    {
@@ -48675,7 +48736,7 @@
   {
    "module": "src",
    "files": 3,
-   "lines": 422,
+   "lines": 424,
    "tables": [],
    "exports": [
     "App.tsx: App"
@@ -48708,7 +48769,7 @@
   {
    "module": "src/components",
    "files": 466,
-   "lines": 79090,
+   "lines": 79100,
    "tables": [
     "attendance_records",
     "audit_logs",
@@ -48940,7 +49001,7 @@
   {
    "module": "src/hooks",
    "files": 129,
-   "lines": 14790,
+   "lines": 14799,
    "tables": [
     "certifications",
     "development_plan_actions",
@@ -49302,8 +49363,8 @@
   },
   {
    "module": "src/pages",
-   "files": 85,
-   "lines": 24169,
+   "files": 86,
+   "lines": 24833,
    "tables": [
     "audit_logs",
     "campaign_participants",
@@ -49447,6 +49508,7 @@
     "src/pages/NotFound.tsx",
     "src/pages/Nr1Risks.tsx",
     "src/pages/OpinionChannel.tsx",
+    "src/pages/Pdi.tsx",
     "src/pages/PermissionsAdmin.tsx",
     "src/pages/PersonalStats.tsx",
     "src/pages/Postmortems.tsx",
@@ -49473,8 +49535,7 @@
     "src/pages/ShopAdmin.tsx",
     "src/pages/SocialFeed.tsx",
     "src/pages/Surveys.tsx",
-    "src/pages/TournamentsPage.tsx",
-    "src/pages/TrailDetail.tsx"
+    "src/pages/TournamentsPage.tsx"
    ]
   },
   {
@@ -50232,8 +50293,8 @@
   },
   {
    "module": "supabase/migrations",
-   "files": 277,
-   "lines": 30433,
+   "files": 278,
+   "lines": 30453,
    "tables": [],
    "exports": [],
    "docs": [],
@@ -55911,6 +55972,11 @@
     "rules": "type=number, min=0"
    },
    {
+    "file": "src/pages/Pdi.tsx",
+    "field": "checkin-date",
+    "rules": "type=date"
+   },
+   {
     "file": "src/pages/WagerQuestionAdminPage.tsx",
     "field": "wager-question",
     "rules": "disabled=isLocked"
@@ -58046,6 +58112,30 @@
    {
     "file": "src/pages/Nr1Risks.tsx",
     "msg": "Não foi possível exportar o PDF"
+   },
+   {
+    "file": "src/pages/Pdi.tsx",
+    "msg": "Informe a data do check-in"
+   },
+   {
+    "file": "src/pages/Pdi.tsx",
+    "msg": "Não foi possível adicionar o mentor"
+   },
+   {
+    "file": "src/pages/Pdi.tsx",
+    "msg": "Não foi possível aplicar o template"
+   },
+   {
+    "file": "src/pages/Pdi.tsx",
+    "msg": "Não foi possível registrar o check-in"
+   },
+   {
+    "file": "src/pages/Pdi.tsx",
+    "msg": "Não foi possível remover o mentor"
+   },
+   {
+    "file": "src/pages/Pdi.tsx",
+    "msg": "Selecione quem vai acompanhar o PDI"
    },
    {
     "file": "src/pages/Profile.tsx",
@@ -76226,6 +76316,12 @@
     "file": "src/pages/NotFound.tsx",
     "field": "type",
     "value": "spring",
+    "kind": "escreve"
+   },
+   {
+    "file": "src/pages/Pdi.tsx",
+    "field": "status",
+    "value": "active",
     "kind": "escreve"
    },
    {
@@ -94883,6 +94979,16 @@
     "src": "supabase/migrations/20261123180000_climate_survey_engine.sql"
    },
    {
+    "name": "pdi_mentors_delete",
+    "table": "pdi_mentors",
+    "cmd": "DELETE",
+    "roles": "authenticated",
+    "mode": "permissive",
+    "using": "auth.uid() = mentor_id OR has_role(auth.uid(), 'manager'::app_role) OR has_role(auth.uid(), 'admin'::app_role)",
+    "check": "",
+    "src": "supabase/migrations/20261221000000_pdi_mentors_delete_policy.sql"
+   },
+   {
     "name": "Users can manage their own challenges",
     "table": "webauthn_challenges",
     "cmd": "ALL",
@@ -103315,6 +103421,7 @@
       "escreve:src/components/manager/QuestsList.tsx",
       "escreve:src/hooks/usePulseSurveys.ts",
       "escreve:src/lib/auctionEngine.ts",
+      "escreve:src/pages/Pdi.tsx",
       "escreve:src/services/certificationsService.ts",
       "escreve:src/services/duelsService.ts",
       "escreve:src/services/feedbackService.ts",
@@ -105948,7 +106055,9 @@
      "authenticated: has_role(auth.uid(), 'manager'::app_role) OR has_role(auth.uid(), 'admin'::app_role)"
     ],
     "UPDATE": [],
-    "DELETE": []
+    "DELETE": [
+     "authenticated: auth.uid() = mentor_id OR has_role(auth.uid(), 'manager'::app_role) OR has_role(auth.uid(), 'admin'::app_role)"
+    ]
    },
    "pdi_templates": {
     "rls": "enabled",
@@ -107173,13 +107282,6 @@
      "src/components/InAppNotificationToggle.tsx",
      "src/hooks/useTypePreferences.ts",
      "src/services/salesCampaignsService.ts"
-    ]
-   },
-   {
-    "table": "pdi_mentors",
-    "issue": "front faz DELETE mas nenhuma política RLS permite DELETE → vai falhar/retornar vazio para usuários",
-    "files": [
-     "src/services/pdiService.ts"
     ]
    },
    {
@@ -115157,6 +115259,14 @@
    },
    {
     "kind": "grant",
+    "privs": "delete",
+    "object": "pdi_mentors",
+    "objkind": "table",
+    "roles": "authenticated",
+    "src": "supabase/migrations/20261221000000_pdi_mentors_delete_policy.sql"
+   },
+   {
+    "kind": "grant",
     "privs": "select, insert, update, delete",
     "object": "public",
     "objkind": "tables",
@@ -115172,6 +115282,10 @@
    {
     "guard": "ProtectedRoute",
     "file": "scripts/ai-context/gerar.unit.mjs"
+   },
+   {
+    "guard": "ProtectedRoute",
+    "file": "src/App.tsx"
    },
    {
     "guard": "ProtectedRoute",
@@ -115980,6 +116094,13 @@
    },
    {
     "path": "/mentoria",
+    "component": "PageTransition",
+    "guard": "ProtectedRoute",
+    "roles": [],
+    "file": "src/App.tsx"
+   },
+   {
+    "path": "/pdi",
     "component": "PageTransition",
     "guard": "ProtectedRoute",
     "roles": [],
@@ -117786,13 +117907,6 @@
    },
    {
     "kind": "rls",
-    "msg": "`pdi_mentors`: front faz DELETE mas nenhuma política RLS permite DELETE → vai falhar/retornar vazio para usuários",
-    "where": [
-     "src/services/pdiService.ts"
-    ]
-   },
-   {
-    "kind": "rls",
     "msg": "`pdi_templates`: front faz INSERT mas nenhuma política RLS permite INSERT → vai falhar/retornar vazio para usuários",
     "where": [
      "src/services/pdiService.ts"
@@ -119339,7 +119453,7 @@
   },
   "src/App.tsx": {
    "path": "src/App.tsx",
-   "lines": 340,
+   "lines": 342,
    "exports": [
     "default App"
    ],
@@ -119717,6 +119831,12 @@
      ]
     },
     {
+     "path": "/pdi",
+     "component": "PageTransition",
+     "guard": "ProtectedRoute",
+     "roles": []
+    },
+    {
      "path": "/leagues",
      "component": "PageTransition",
      "guard": "ProtectedRoute",
@@ -119942,6 +120062,7 @@
     }
    ],
    "guards": [
+    "ProtectedRoute",
     "ProtectedRoute",
     "ProtectedRoute",
     "ProtectedRoute",
@@ -120559,7 +120680,7 @@
   },
   "src/components/CommandPalette.tsx": {
    "path": "src/components/CommandPalette.tsx",
-   "lines": 276,
+   "lines": 277,
    "exports": [
     "function CommandPalette"
    ],
@@ -121048,9 +121169,12 @@
   },
   "src/components/MyDevelopmentPlanWidget.tsx": {
    "path": "src/components/MyDevelopmentPlanWidget.tsx",
-   "lines": 236,
+   "lines": 244,
    "exports": [
     "function MyDevelopmentPlanWidget"
+   ],
+   "navigates": [
+    "/pdi"
    ],
    "status_values": [
     {
@@ -125013,7 +125137,7 @@
   },
   "src/components/navigation/GlobalBreadcrumbs.tsx": {
    "path": "src/components/navigation/GlobalBreadcrumbs.tsx",
-   "lines": 282,
+   "lines": 283,
    "exports": [
     "function GlobalBreadcrumbs",
     "function useCurrentRoute"
@@ -129579,7 +129703,7 @@
   },
   "src/hooks/usePDI.ts": {
    "path": "src/hooks/usePDI.ts",
-   "lines": 81,
+   "lines": 90,
    "exports": [
     "const usePDI"
    ],
@@ -137220,6 +137344,34 @@
     {
      "name": "ALL_STATUS",
      "value": "\"all\""
+    }
+   ]
+  },
+  "src/pages/Pdi.tsx": {
+   "path": "src/pages/Pdi.tsx",
+   "lines": 664,
+   "exports": [
+    "function Pdi"
+   ],
+   "errors": [
+    "Informe a data do check-in",
+    "Não foi possível adicionar o mentor",
+    "Não foi possível aplicar o template",
+    "Não foi possível registrar o check-in",
+    "Não foi possível remover o mentor",
+    "Selecione quem vai acompanhar o PDI"
+   ],
+   "html_constraints": [
+    {
+     "field": "checkin-date",
+     "rules": "type=date"
+    }
+   ],
+   "status_values": [
+    {
+     "field": "status",
+     "value": "active",
+     "kind": "escreve"
     }
    ]
   },
@@ -154628,6 +154780,10 @@
    ],
    "uses_service_role": true
   },
+  "supabase/migrations/20261221000000_pdi_mentors_delete_policy.sql": {
+   "path": "supabase/migrations/20261221000000_pdi_mentors_delete_policy.sql",
+   "lines": 20
+  },
   "supabase/migrations/20261224090000_webauthn_login_hardening.sql": {
    "path": "supabase/migrations/20261224090000_webauthn_login_hardening.sql",
    "lines": 22
@@ -154727,10 +154883,27 @@
   }
  },
  "git": {
-  "sha": "7ef5af2ddc26e48bf585909f103c4503e5357d2d",
+  "sha": "d727dcc7d56906c2d0d1596132845389ffa5f7b8",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "commits": [
+   {
+    "sha": "d727dcc",
+    "date": "2026-11-24",
+    "author": "adm01-debug",
+    "subject": "feat(pdi): tela de PDI com templates, mentores e check-ins (#128)",
+    "files": [
+     "docs/estado/02-componentes.md",
+     "docs/estado/03-hooks-services-lib.md",
+     "src/App.tsx",
+     "src/components/CommandPalette.tsx",
+     "src/components/MyDevelopmentPlanWidget.tsx",
+     "src/components/navigation/GlobalBreadcrumbs.tsx",
+     "src/hooks/usePDI.ts",
+     "src/pages/Pdi.tsx",
+     "supabase/migrations/20261221000000_pdi_mentors_delete_policy.sql"
+    ]
+   },
    {
     "sha": "7ef5af2",
     "date": "2026-11-24",
@@ -155100,58 +155273,48 @@
      "supabase/functions/error-budget-monitor/index.ts",
      "supabase/functions/webhook-health-monitor/index.ts"
     ]
-   },
-   {
-    "sha": "8247352",
-    "date": "2026-11-22",
-    "author": "adm01-debug",
-    "subject": "chore(automacao): reconstroi security-weekly-digest e conecta ao cron 33 (#104)",
-    "files": [
-     "supabase/config.toml",
-     "supabase/functions/_shared/contracts/_fixtures/index.ts",
-     "supabase/functions/_shared/contracts/_fixtures/responses.ts",
-     "supabase/functions/_shared/contracts/index.ts",
-     "supabase/functions/_shared/contracts/security-weekly-digest.ts",
-     "supabase/functions/security-weekly-digest/index.ts"
-    ]
    }
   ],
   "hot_files": [
    [
     "docs/estado/03-hooks-services-lib.md",
-    5
+    6
    ],
    [
     "src/App.tsx",
+    5
+   ],
+   [
+    "docs/estado/02-componentes.md",
     4
-   ],
-   [
-    "supabase/config.toml",
-    3
-   ],
-   [
-    "supabase/functions/_shared/contracts/_fixtures/index.ts",
-    3
-   ],
-   [
-    "supabase/functions/_shared/contracts/_fixtures/responses.ts",
-    3
-   ],
-   [
-    "supabase/functions/_shared/contracts/index.ts",
-    3
    ],
    [
     "INVENTARIO_FUNCIONALIDADES.md",
     3
    ],
    [
-    "docs/estado/02-componentes.md",
+    "src/pages/EngagementReports.tsx",
     3
    ],
    [
-    "src/pages/EngagementReports.tsx",
-    3
+    "src/components/CommandPalette.tsx",
+    2
+   ],
+   [
+    "supabase/config.toml",
+    2
+   ],
+   [
+    "supabase/functions/_shared/contracts/_fixtures/index.ts",
+    2
+   ],
+   [
+    "supabase/functions/_shared/contracts/_fixtures/responses.ts",
+    2
+   ],
+   [
+    "supabase/functions/_shared/contracts/index.ts",
+    2
    ],
    [
     "src/hooks/useFeedback360.ts",
@@ -155186,15 +155349,11 @@
     2
    ],
    [
-    ".env.example",
+    "src/components/MyDevelopmentPlanWidget.tsx",
     1
    ],
    [
-    "src/components/auth/PasskeyLogin.tsx",
-    1
-   ],
-   [
-    "src/components/security/PasskeysPanel.tsx",
+    "src/components/navigation/GlobalBreadcrumbs.tsx",
     1
    ]
   ]

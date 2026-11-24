@@ -241,7 +241,7 @@
    "hooks_exportados": [
     "useCurrentRoute"
    ],
-   "linhas": 282,
+   "linhas": 283,
    "dominio": "components/navigation",
    "tabelas": [],
    "rpcs": [],
@@ -270,7 +270,7 @@
    "edges": [],
    "hooks_internos": [],
    "canais_realtime": [],
-   "usado_por": 61,
+   "usado_por": 62,
    "usado_por_arquivos": [
     "src/pages/Achievements.tsx",
     "src/pages/ActionPlans.tsx",
@@ -1062,7 +1062,7 @@
     "useState"
    ],
    "canais_realtime": [],
-   "usado_por": 105,
+   "usado_por": 106,
    "usado_por_arquivos": [
     "src/App.tsx",
     "src/components/ActivityComments.tsx",
@@ -1797,14 +1797,15 @@
     "useQueryClient"
    ],
    "canais_realtime": [],
-   "usado_por": 6,
+   "usado_por": 7,
    "usado_por_arquivos": [
     "src/components/MyDevelopmentPlanWidget.tsx",
     "src/components/admin/DevelopmentPlanManager.tsx",
     "src/components/admin/pdi/CreatePlanForm.tsx",
     "src/components/admin/pdi/PlanDetailView.tsx",
     "src/components/manager/AICopilotDashboard.tsx",
-    "src/components/manager/ManagerConsolidatedDashboard.tsx"
+    "src/components/manager/ManagerConsolidatedDashboard.tsx",
+    "src/pages/Pdi.tsx"
    ],
    "coberto_por_testes": 0
   },
@@ -2917,7 +2918,7 @@
    "hooks_exportados": [
     "usePDI"
    ],
-   "linhas": 81,
+   "linhas": 90,
    "dominio": "hooks",
    "tabelas": [],
    "rpcs": [],
@@ -2928,8 +2929,10 @@
     "useQueryClient"
    ],
    "canais_realtime": [],
-   "usado_por": 0,
-   "usado_por_arquivos": [],
+   "usado_por": 1,
+   "usado_por_arquivos": [
+    "src/pages/Pdi.tsx"
+   ],
    "coberto_por_testes": 0
   },
   {
@@ -3118,7 +3121,7 @@
     "useSoundEffects"
    ],
    "canais_realtime": [],
-   "usado_por": 35,
+   "usado_por": 36,
    "usado_por_arquivos": [
     "src/components/AICoachDialog.tsx",
     "src/components/AnalyticsWidget.tsx",
@@ -3487,7 +3490,7 @@
     "useQuery"
    ],
    "canais_realtime": [],
-   "usado_por": 31,
+   "usado_por": 32,
    "usado_por_arquivos": [
     "src/components/ExecutiveReportPreferenceToggle.tsx",
     "src/components/admin/UsersManager.tsx",
@@ -3514,11 +3517,11 @@
     "src/pages/MemoryGamePage.tsx",
     "src/pages/Mentoria.tsx",
     "src/pages/OpinionChannel.tsx",
+    "src/pages/Pdi.tsx",
     "src/pages/SalesCampaignDetail.tsx",
     "src/pages/SalesCampaigns.tsx",
     "src/pages/SecurityRunbook.tsx",
-    "src/pages/TournamentsPage.tsx",
-    "src/pages/TrailDetail.tsx"
+    "src/pages/TournamentsPage.tsx"
    ],
    "coberto_por_testes": 1
   },
