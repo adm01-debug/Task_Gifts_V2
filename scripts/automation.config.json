@@ -264,6 +264,14 @@
       "manual": ["node", "--test", "scripts/ci/check-supabase-env.unit.mjs"],
       "triggers": ["manual"],
       "reason": "Suite unitaria da guarda de env do build; chamada por test:guard-env no ci.yml quality. O dispatcher nao executa esta operacao."
+    },
+    {
+      "id": "legacy-climate-sql-check",
+      "kind": "legacy",
+      "files": ["scripts/climate-sql-check/run.sh"],
+      "manual": ["sh", "scripts/climate-sql-check/run.sh"],
+      "triggers": ["manual"],
+      "reason": "Checagem SQL do motor de clima em container Postgres efemero; exige Docker, entao roda so por comando manual do desenvolvedor. O dispatcher nao executa esta operacao."
     }
   ],
   "ci": [
