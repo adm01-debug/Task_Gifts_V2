@@ -295,6 +295,8 @@ Legenda: ✅ IMPLEMENTADO_TOTAL · 🟨 IMPLEMENTADO_PARCIAL · 🟦 SUGERIDO_OU
 | admin/DevelopmentPlanManager.tsx | ✅ | pages/AdminPanel.tsx | `development_plans` | `admin/DevelopmentPlanManager.tsx:38-40`, delete `:146` | — |
 | admin/ENPSDashboard.tsx | ✅ | pages/AdminPanel.tsx | `enps_surveys`, `engagement_snapshots`, RPC `generate_engagement_snapshot` | `admin/ENPSDashboard.tsx:64-68`; RPC em `services/enpsService.ts:251` | — |
 | admin/ENPSTrendChart.tsx | 🟨 | admin/ENPSDashboard.tsx:215 | `engagement_snapshots` | `admin/ENPSTrendChart.tsx:43-61` | `<SelectItem value="">` em `:111` (Radix rejeita value vazio); ícone `Download` importado `:9` sem botão de export |
+| feedback/FeedbackRequestForm.tsx | ✅ | pages/Feedback.tsx:89 (`Solicitar feedback`, só admin/manager) | `feedback_requests` via useFeedback360 | `feedback/FeedbackRequestForm.tsx:105` → `hooks/useFeedback360.ts:41` → `services/feedbackService.ts:350` | Valida ciclo/avaliador/avaliado antes do INSERT; a policy *Managers can create requests* restringe o INSERT a admin/manager. A relação oferecida é limitada pelo `cycle_type` do ciclo (`allowedRelationshipsForCycle:80`, aviso visual em `:201`) — autoavaliação se auto-alinha com o avaliador (`:84`, `:96`) — porque o banco valida os dois campos separadamente e nada impediria gravar avaliação de gestor num ciclo "Apenas Pares" |
+| feedback/FeedbackSummaryCard.tsx | ✅ | pages/Feedback.tsx:155 | `feedback_requests` + `feedback_responses` via useFeedbackSummary | `feedback/FeedbackSummaryCard.tsx:23` → `hooks/useFeedback360.ts:132` → `services/feedbackService.ts:358` | Só respostas **não anônimas** entram (policy *Receivers can view non-anonymous feedback*) — o card diz isso ao usuário |
 | admin/FeedbackCycleManager.tsx | 🟨 | pages/AdminPanel.tsx | `feedback_cycles` via useFeedback360 | criar persiste `hooks/useFeedback360.ts:30` → `services/feedbackService.ts:139` | `questions: []` fixo em `:48` (sem editor de perguntas); Editar `:226` e Excluir `:229` **sem onClick** |
 | admin/GoalsManager.tsx | 🟦 | pages/AdminPanel.tsx | **NENHUMA** | `admin/GoalsManager.tsx:36-64` (3 templates hardcoded), `:67` `useState(defaultTemplates)`, `:75-88`, `:102`, `:112` só mexem em estado local | Persistência inteira. Ver Achado #1 |
 | admin/IpWhitelistManager.tsx | 🟨 | pages/AdminPanel.tsx | `ip_whitelist`, `ip_access_logs` | CRUD real em `hooks/useIpWhitelist.ts:19-58` | Controle **não é aplicado** na config atual (Achado #3); aba de logs sempre vazia |
@@ -930,7 +932,7 @@ Ressalva: `skeleton.tsx` (700 ln, 36 exports) e `sidebar.tsx` (643 ln) estão li
 | `empty-state.tsx` | 128 | 14 | Bem adotado | ✅ |
 | `spinner.tsx` | 52 | **0** | Órfão | ⬛ |
 | `all-select-item.tsx` | 15 | 9 | Em uso | ✅ |
-| `states.ts` | 9 | 1 (`pages/Feedback.tsx`) | Barrel de reexport quase morto | 🟦 |
+| `states.ts` | 9 | 2 (`pages/Feedback.tsx`, `feedback/FeedbackSummaryCard.tsx`) | Barrel de reexport quase morto | 🟦 |
 
 ### Órfãos em `ui/` — ZERO importadores no repo inteiro (incl. stories e testes)
 

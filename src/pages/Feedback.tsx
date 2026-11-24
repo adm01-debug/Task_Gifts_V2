@@ -1,13 +1,16 @@
 import { useState } from "react";
-import { MessageCircle, Inbox } from "lucide-react";
+import { MessageCircle, Inbox, UserPlus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useFeedback360 } from "@/hooks/useFeedback360";
+import { useRBAC } from "@/hooks/useRBAC";
 import { Badge } from "@/components/ui/badge";
 import { PageShell } from "@/components/navigation";
 import { SEOHead } from "@/components/SEOHead";
 import { useSEO } from "@/hooks/useSEO";
 import { LoadingState, EmptyState } from "@/components/ui/states";
+import { FeedbackRequestForm } from "@/components/feedback/FeedbackRequestForm";
+import { FeedbackSummaryCard } from "@/components/feedback/FeedbackSummaryCard";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
@@ -24,8 +27,11 @@ import type { FeedbackCycle, FeedbackRequest } from "@/services/feedbackService"
 
 export default function Feedback() {
   const { cycles, pendingRequests, isLoading, submitFeedback, isSubmitting } = useFeedback360();
+  const { isAdmin, isManager } = useRBAC();
+  const canManageRequests = isAdmin || isManager;
   const seoData = useSEO();
   const [activeRequest, setActiveRequest] = useState<FeedbackRequest | null>(null);
+  const [isRequestFormOpen, setIsRequestFormOpen] = useState(false);
   const [strengths, setStrengths] = useState("");
   const [improvements, setImprovements] = useState("");
   const [overallRating, setOverallRating] = useState<"1" | "2" | "3" | "4" | "5">("5");
@@ -73,6 +79,16 @@ export default function Feedback() {
         <div className="flex h-16 shrink-0 items-center gap-2 px-4 md:px-6">
           <MessageCircle className="h-6 w-6 text-primary" />
           <h1 className="text-xl font-bold">Feedback 360°</h1>
+          {canManageRequests && (
+            <Button
+              size="sm"
+              className="ml-auto"
+              onClick={() => setIsRequestFormOpen(true)}
+            >
+              <UserPlus className="h-4 w-4 mr-2" />
+              Solicitar feedback
+            </Button>
+          )}
         </div>
 
       <main className="p-4 md:p-6 space-y-6 max-w-4xl mx-auto">
@@ -135,6 +151,8 @@ export default function Feedback() {
             )}
           </CardContent>
         </Card>
+
+        <FeedbackSummaryCard />
       </main>
 
       <Dialog open={!!activeRequest} onOpenChange={(open) => !open && setActiveRequest(null)}>
@@ -190,6 +208,12 @@ export default function Feedback() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      <FeedbackRequestForm
+        open={isRequestFormOpen}
+        onOpenChange={setIsRequestFormOpen}
+        cycles={cycles}
+      />
     </div>
   </PageShell>
   );

@@ -318,8 +318,8 @@
 | Funcionalidade | Arquivo | Ferramentas |
 |----------------|---------|-------------|
 | Página | `src/pages/Feedback.tsx` | React |
-| Dashboard | `src/components/feedback/Feedback360Dashboard.tsx` | React |
-| Painel | `src/components/feedback/FeedbackPanel.tsx` | React |
+| Solicitar pedido | `src/components/feedback/FeedbackRequestForm.tsx` | React |
+| Meu resumo | `src/components/feedback/FeedbackSummaryCard.tsx` | React |
 | Ciclos Admin | `src/components/admin/FeedbackCycleManager.tsx` | React |
 | Serviço | `src/services/feedbackService.ts` | Supabase |
 | Hook | `src/hooks/useFeedback360.ts` | React Query |
