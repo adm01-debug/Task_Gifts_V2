@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "a18b67fa0fe80ee4d0abbfdcd2b70e3fbf22b44c",
+  "commit": "43c41a1c8fb49b3e69be8159078ac1121177d7c4",
   "branch": "main",
-  "data_commit": "2026-11-23T22:41:25-03:00",
+  "data_commit": "2026-11-23T23:53:12-03:00",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "ultimos_commits": [
+   {
+    "sha": "43c41a1",
+    "data": "2026-11-23",
+    "assunto": "chore(docs): corrige auditoria desatualizada (edge functions, HIBP, CI/typecheck) (#129)"
+   },
    {
     "sha": "a18b67f",
     "data": "2026-11-23",
@@ -126,14 +131,9 @@
     "sha": "8247352",
     "data": "2026-11-22",
     "assunto": "chore(automacao): reconstroi security-weekly-digest e conecta ao cron 33 (#104)"
-   },
-   {
-    "sha": "2d24251",
-    "data": "2026-11-22",
-    "assunto": "feat(edge): ponte admin para webhook-dispatcher (webhook-ping) (#102)"
    }
   ],
-  "arquivos_mudados_7d": 148,
+  "arquivos_mudados_7d": 150,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "supabase/functions/_shared",
@@ -156,11 +156,11 @@
     "mudancas": 10
    },
    {
-    "pasta": ".gitignore",
-    "mudancas": 6
+    "pasta": "docs/estado/05-edge-functions.md",
+    "mudancas": 7
    },
    {
-    "pasta": "docs/estado/05-edge-functions.md",
+    "pasta": ".gitignore",
     "mudancas": 6
    },
    {
@@ -211,7 +211,7 @@
    },
    {
     "arquivo": "docs/estado/05-edge-functions.md",
-    "mudancas": 6
+    "mudancas": 7
    },
    {
     "arquivo": "AGENTS.md",
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 94
+    "commits": 95
    },
    {
     "autor": "dependabot[bot]",

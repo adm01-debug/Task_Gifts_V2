@@ -1,9 +1,9 @@
 {
  "meta": {
-  "sha": "a18b67fa0fe80ee4d0abbfdcd2b70e3fbf22b44c",
+  "sha": "43c41a1c8fb49b3e69be8159078ac1121177d7c4",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
-  "generated_at": "2026-11-24 01:43 UTC",
+  "generated_at": "2026-11-24 03:17 UTC",
   "files_total": 1554,
   "code_files": 1450,
   "code_lines": 261931
@@ -152770,10 +152770,22 @@
   }
  },
  "git": {
-  "sha": "a18b67fa0fe80ee4d0abbfdcd2b70e3fbf22b44c",
+  "sha": "43c41a1c8fb49b3e69be8159078ac1121177d7c4",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "commits": [
+   {
+    "sha": "43c41a1",
+    "date": "2026-11-23",
+    "author": "adm01-debug",
+    "subject": "chore(docs): corrige auditoria desatualizada (edge functions, HIBP, CI/typecheck) (#129)",
+    "files": [
+     "docs/estado/05-edge-functions.md",
+     "docs/estado/06-integracoes.md",
+     "docs/estado/07-infra-ci-testes.md",
+     "docs/estado/09-validacao-e-errata.md"
+    ]
+   },
    {
     "sha": "a18b67f",
     "date": "2026-11-23",
@@ -153155,26 +153167,12 @@
      "src/components/AICoachDialog.tsx",
      "src/hooks/useAICoach.ts"
     ]
-   },
-   {
-    "sha": "0134cf0",
-    "date": "2026-11-22",
-    "author": "adm01-debug",
-    "subject": "fix(deps): corrige CVE alto zod transitivo via override chromium-bidi (#97)",
-    "files": [
-     "bun.lock",
-     "package.json"
-    ]
    }
   ],
   "hot_files": [
    [
     "supabase/functions/_shared/contracts/_fixtures/index.ts",
     5
-   ],
-   [
-    "package.json",
-    4
    ],
    [
     "supabase/functions/_shared/contracts/_fixtures/responses.ts",
@@ -153185,6 +153183,10 @@
     4
    ],
    [
+    "docs/estado/05-edge-functions.md",
+    3
+   ],
+   [
     "src/pages/EngagementReports.tsx",
     3
    ],
@@ -153193,7 +153195,7 @@
     3
    ],
    [
-    "bun.lock",
+    "package.json",
     3
    ],
    [
@@ -153205,7 +153207,7 @@
     2
    ],
    [
-    "docs/estado/05-edge-functions.md",
+    "bun.lock",
     2
    ],
    [
