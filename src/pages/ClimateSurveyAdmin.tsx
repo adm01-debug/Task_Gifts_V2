@@ -160,7 +160,10 @@ export default function ClimateSurveyAdmin() {
                   </Badge>
                   <span className="text-[11px] text-muted-foreground">
                     {new Date(survey.starts_at).toLocaleDateString("pt-BR")} —{" "}
-                    {new Date(survey.ends_at).toLocaleDateString("pt-BR")}
+                    {new Date(survey.ends_at).toLocaleString("pt-BR", {
+                      dateStyle: "short",
+                      timeStyle: "short",
+                    })}
                   </span>
                 </span>
               </button>
