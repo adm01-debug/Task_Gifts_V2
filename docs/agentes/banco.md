@@ -11,6 +11,7 @@ neste repo.
 | Diagnóstico | **produção, só leitura** | `SELECT` pelo MCP `supabase` do `.mcp.json`; nunca escrita para "testar" |
 | Migration nova | arquivo em `supabase/migrations/` | PR → merge → deploy do código → apply (abaixo) |
 | Teste de comportamento de banco | **Postgres descartável** | nunca no banco oficial |
+| Prova de caminho interno que só existe em produção (trigger → edge → notificação) | **produção, com autorização do dono do projeto** | exceção à linha acima: Postgres descartável não tem o segredo do Vault nem a edge real. Uma linha sintética mínima (ex.: `security_alerts` `critical` com `[TESTE]` no título), conferir `net._http_response` e a notificação criada, e apagar as linhas na mesma sessão. Feito em 2026-11-24 para o `trigger_dispatch_critical_alert`: 200 e `in_app_notifications: 1`, depois `security_alerts` de volta a 0 |
 | Migration destrutiva, segredos, rotação de chaves | **só com o dono do projeto** | — |
 
 1. **O app aponta para produção por padrão.** `src/integrations/supabase/client.ts:5-6` lê
