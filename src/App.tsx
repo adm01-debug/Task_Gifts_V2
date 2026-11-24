@@ -81,6 +81,8 @@ const Checkins = lazy(() => import("./pages/Checkins"));
 const Leagues = lazy(() => import("./pages/Leagues"));
 const Mentoria = lazy(() => import("./pages/Mentoria"));
 const Surveys = lazy(() => import("./pages/Surveys"));
+const ClimateSurveys = lazy(() => import("./pages/ClimateSurveys"));
+const ClimateSurveyAdmin = lazy(() => import("./pages/ClimateSurveyAdmin"));
 const Feedback = lazy(() => import("./pages/Feedback"));
 const Announcements = lazy(() => import("./pages/Announcements"));
 const ForgotPassword = lazy(() => import("./pages/ForgotPassword"));
@@ -275,6 +277,8 @@ const AnimatedRoutes = () => {
         <Route path="/leagues" element={<ProtectedRoute><PageTransition><Leagues /></PageTransition></ProtectedRoute>} />
         <Route path="/mentoria" element={<ProtectedRoute><PageTransition><Mentoria /></PageTransition></ProtectedRoute>} />
         <Route path="/surveys" element={<ProtectedRoute><PageTransition><Surveys /></PageTransition></ProtectedRoute>} />
+        <Route path="/clima" element={<ProtectedRoute><PageTransition><ClimateSurveys /></PageTransition></ProtectedRoute>} />
+        <Route path="/clima/admin" element={<ProtectedRoute requiredRole="manager"><PageTransition><ClimateSurveyAdmin /></PageTransition></ProtectedRoute>} />
         <Route path="/feedback" element={<ProtectedRoute><PageTransition><Feedback /></PageTransition></ProtectedRoute>} />
         <Route path="/announcements" element={<ProtectedRoute><PageTransition><Announcements /></PageTransition></ProtectedRoute>} />
         <Route path="/security-dashboard" element={<ProtectedRoute requiredRole="admin"><PageTransition><SecurityDashboard /></PageTransition></ProtectedRoute>} />

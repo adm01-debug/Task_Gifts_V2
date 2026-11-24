@@ -31,6 +31,7 @@ import {
   Brain,
   ListOrdered,
     HelpCircle,
+  Gauge,
 } from "lucide-react";
 import { memo } from "react";
 import {
@@ -112,6 +113,7 @@ const navCategories = [
         path: "/engajamento/opinioes",
       },
       { icon: BarChart3, label: "Pulse Surveys", path: "/surveys" },
+      { icon: Gauge, label: "Pesquisa de Clima", path: "/clima" },
       { icon: MessageSquare, label: "Feedback 360°", path: "/feedback" },
       { icon: Megaphone, label: "Anúncios", path: "/announcements" },
     ],
