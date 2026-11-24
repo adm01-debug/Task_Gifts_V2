@@ -42,8 +42,26 @@ REVOKE ALL ON FUNCTION public.expire_climate_surveys() FROM PUBLIC, anon, authen
 -- Existe em producao desde antes deste arquivo, mas nenhuma migration do repo o
 -- criava: num banco reconstruido `ON CONFLICT DO NOTHING` sozinho nao impede
 -- duas notificacoes com o mesmo destinatario, tipo e `data`.
-CREATE UNIQUE INDEX IF NOT EXISTS notifications_user_type_data_unique
-  ON public.notifications USING btree (user_id, type, (((data))::text));
+-- A criacao fica dentro de um bloco com EXCEPTION porque um unico historico
+-- duplicado faria o `CREATE UNIQUE INDEX` abortar a migration inteira e os jobs
+-- do bloco 3 nunca seriam agendados. Com duplicata o indice e' pulado com WARNING
+-- e o resto da migration segue - degrada o dedupe, nao derruba o ciclo.
+DO $idx$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1
+      FROM pg_class c
+      JOIN pg_namespace n ON n.oid = c.relnamespace
+     WHERE n.nspname = 'public'
+       AND c.relname = 'notifications_user_type_data_unique'
+  ) THEN
+    CREATE UNIQUE INDEX notifications_user_type_data_unique
+      ON public.notifications USING btree (user_id, type, (((data))::text));
+  END IF;
+EXCEPTION WHEN OTHERS THEN
+  RAISE WARNING 'notifications_user_type_data_unique nao criado (%): dedupe de notificacoes fica desligado', SQLERRM;
+END;
+$idx$;
 
 -- 2) Lembra quem nao respondeu -------------------------------------------------
 -- Publico: contas `confirmed` (profiles_status_check) sem resposta registrada e
@@ -56,8 +74,11 @@ CREATE UNIQUE INDEX IF NOT EXISTS notifications_user_type_data_unique
 -- Cadencia: `reminder_frequency = 'weekly'` agrupa por semana (date_trunc('week')),
 -- qualquer outro valor cai no balde diario. O balde entra em `data` e o indice
 -- unico `notifications_user_type_data_unique` (criado no bloco 1.1)
--- garante no maximo um lembrete por balde e por pesquisa. `ends_at` tambem vai
--- no `data` para a central formatar no fuso de quem le.
+-- garante no maximo um lembrete por balde e por pesquisa. `data` leva so
+-- `survey_id` e `balde`: o prazo fica no texto da mensagem, ja convertido para
+-- Brasilia. Manter `ends_at` tambem no `data` so enfraqueceria a chave do dedupe
+-- (mudar o prazo da pesquisa liberaria um lembrete extra) e nenhuma tela le esse
+-- campo - a central de notificacoes exibe o texto gravado.
 CREATE OR REPLACE FUNCTION public.send_climate_survey_reminders()
 RETURNS integer
 LANGUAGE plpgsql
@@ -102,7 +123,7 @@ BEGIN
            || to_char(e.ends_at AT TIME ZONE 'America/Sao_Paulo', 'DD/MM')
                     || ' (horario de Brasilia). A resposta leva poucos minutos'
                     || CASE WHEN e.is_anonymous THEN ' e e anonima.' ELSE '.' END,
-                  jsonb_build_object('survey_id', e.survey_id, 'balde', e.balde, 'ends_at', e.ends_at)
+                  jsonb_build_object('survey_id', e.survey_id, 'balde', e.balde)
     FROM elegiveis e
   ON CONFLICT DO NOTHING;
 
