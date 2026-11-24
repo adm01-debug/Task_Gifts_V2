@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "88e4b4515b5c3dd77c1bbb2635f2699f1ee27754",
+  "commit": "a2a5bc3d8b9ee128da75f4129c8ea6867f3c9e1a",
   "branch": "main",
-  "data_commit": "2026-11-24T14:43:13-03:00",
+  "data_commit": "2026-11-24T17:35:07-03:00",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "ultimos_commits": [
+   {
+    "sha": "a2a5bc3",
+    "data": "2026-11-24",
+    "assunto": "fix(supabase): alinha 20261220000000 ao trigger vivo do alerta critico (#152)"
+   },
    {
     "sha": "88e4b45",
     "data": "2026-11-24",
@@ -126,11 +131,6 @@
     "sha": "43c41a1",
     "data": "2026-11-23",
     "assunto": "chore(docs): corrige auditoria desatualizada (edge functions, HIBP, CI/typecheck) (#129)"
-   },
-   {
-    "sha": "a18b67f",
-    "data": "2026-11-23",
-    "assunto": "chore: remove duplicatas comprovadas (leaderboard e dialogo de check-in) (#127)"
    }
   ],
   "arquivos_mudados_7d": 208,
@@ -148,16 +148,16 @@
     "mudancas": 13
    },
    {
+    "pasta": "docs/estado/05-edge-functions.md",
+    "mudancas": 12
+   },
+   {
     "pasta": ".github/workflows/ci.yml",
     "mudancas": 11
    },
    {
-    "pasta": "docs/estado/05-edge-functions.md",
-    "mudancas": 11
-   },
-   {
     "pasta": "docs/agentes/banco.md",
-    "mudancas": 10
+    "mudancas": 11
    },
    {
     "pasta": "src/components/admin",
@@ -165,11 +165,11 @@
    },
    {
     "pasta": "AGENTS.md",
-    "mudancas": 8
+    "mudancas": 9
    },
    {
     "pasta": "docs/agentes/mapa-repo.md",
-    "mudancas": 7
+    "mudancas": 8
    },
    {
     "pasta": "docs/estado/03-hooks-services-lib.md",
@@ -211,19 +211,19 @@
    },
    {
     "arquivo": "docs/estado/05-edge-functions.md",
-    "mudancas": 11
+    "mudancas": 12
    },
    {
     "arquivo": "docs/agentes/banco.md",
-    "mudancas": 10
+    "mudancas": 11
    },
    {
     "arquivo": "AGENTS.md",
-    "mudancas": 8
+    "mudancas": 9
    },
    {
     "arquivo": "docs/agentes/mapa-repo.md",
-    "mudancas": 7
+    "mudancas": 8
    },
    {
     "arquivo": "docs/estado/03-hooks-services-lib.md",
@@ -243,6 +243,14 @@
    },
    {
     "arquivo": "docs/prod-readiness.md",
+    "mudancas": 5
+   },
+   {
+    "arquivo": "scripts/db-audit/README.md",
+    "mudancas": 5
+   },
+   {
+    "arquivo": "scripts/db-audit/check-migration-drift.mjs",
     "mudancas": 5
    },
    {
@@ -282,14 +290,6 @@
     "mudancas": 4
    },
    {
-    "arquivo": "scripts/db-audit/README.md",
-    "mudancas": 4
-   },
-   {
-    "arquivo": "scripts/db-audit/check-migration-drift.mjs",
-    "mudancas": 4
-   },
-   {
     "arquivo": "supabase/functions/webhook-dispatcher/index.ts",
     "mudancas": 4
    },
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 118
+    "commits": 119
    },
    {
     "autor": "dependabot[bot]",

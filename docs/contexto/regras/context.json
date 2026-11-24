@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "88e4b4515b5c3dd77c1bbb2635f2699f1ee27754",
+  "sha": "a2a5bc3d8b9ee128da75f4129c8ea6867f3c9e1a",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
-  "generated_at": "2026-11-24 17:45 UTC",
+  "generated_at": "2026-11-24 20:35 UTC",
   "files_total": 1585,
   "code_files": 1478,
-  "code_lines": 269110
+  "code_lines": 269145
  },
  "version": "1.3.2",
- "facts_hash": "10988b94b9a89763",
+ "facts_hash": "28cde14f2101695c",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -50373,7 +50373,7 @@
   {
    "module": "supabase/migrations",
    "files": 281,
-   "lines": 30925,
+   "lines": 30960,
    "tables": [],
    "exports": [],
    "docs": [],
@@ -154944,7 +154944,7 @@
   },
   "supabase/migrations/20261220000000_fix_sre_rpcs_and_dispatch_trigger.sql": {
    "path": "supabase/migrations/20261220000000_fix_sre_rpcs_and_dispatch_trigger.sql",
-   "lines": 276,
+   "lines": 311,
    "errors": [
     ",\n    headers := jsonb_build_object(\n      "
    ],
@@ -155084,10 +155084,25 @@
   }
  },
  "git": {
-  "sha": "88e4b4515b5c3dd77c1bbb2635f2699f1ee27754",
+  "sha": "a2a5bc3d8b9ee128da75f4129c8ea6867f3c9e1a",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "commits": [
+   {
+    "sha": "a2a5bc3",
+    "date": "2026-11-24",
+    "author": "adm01-debug",
+    "subject": "fix(supabase): alinha 20261220000000 ao trigger vivo do alerta critico (#152)",
+    "files": [
+     "AGENTS.md",
+     "docs/agentes/banco.md",
+     "docs/agentes/mapa-repo.md",
+     "docs/estado/05-edge-functions.md",
+     "scripts/db-audit/README.md",
+     "scripts/db-audit/check-migration-drift.mjs",
+     "supabase/migrations/20261220000000_fix_sre_rpcs_and_dispatch_trigger.sql"
+    ]
+   },
    {
     "sha": "88e4b45",
     "date": "2026-11-24",
@@ -155453,56 +155468,40 @@
      "docs/pendencias/_linha-de-base.md",
      "docs/pendencias/_ordem.md"
     ]
-   },
-   {
-    "sha": "046ebeb",
-    "date": "2026-11-23",
-    "author": "adm01-debug",
-    "subject": "fix: liga acoes Editar/Excluir sem handler no painel admin (#120)",
-    "files": [
-     "src/components/admin/AnnouncementPublisher.tsx",
-     "src/components/admin/FeedbackCycleManager.tsx",
-     "src/components/admin/SurveyCreator.tsx",
-     "src/hooks/useAnnouncements.ts",
-     "src/hooks/useFeedback360.ts",
-     "src/hooks/usePulseSurveys.ts",
-     "src/services/feedbackService.ts",
-     "src/services/pulseSurveysService.ts"
-    ]
    }
   ],
   "hot_files": [
    [
     "docs/agentes/banco.md",
-    7
+    8
+   ],
+   [
+    "docs/estado/05-edge-functions.md",
+    6
    ],
    [
     "docs/estado/03-hooks-services-lib.md",
     6
    ],
    [
-    "docs/estado/05-edge-functions.md",
-    5
+    "AGENTS.md",
+    4
+   ],
+   [
+    "docs/agentes/mapa-repo.md",
+    4
+   ],
+   [
+    "scripts/db-audit/README.md",
+    4
+   ],
+   [
+    "scripts/db-audit/check-migration-drift.mjs",
+    4
    ],
    [
     "docs/estado/02-componentes.md",
     4
-   ],
-   [
-    "AGENTS.md",
-    3
-   ],
-   [
-    "docs/agentes/mapa-repo.md",
-    3
-   ],
-   [
-    "scripts/db-audit/README.md",
-    3
-   ],
-   [
-    "scripts/db-audit/check-migration-drift.mjs",
-    3
    ],
    [
     "src/App.tsx",
@@ -155513,19 +155512,15 @@
     3
    ],
    [
+    "supabase/migrations/20261220000000_fix_sre_rpcs_and_dispatch_trigger.sql",
+    2
+   ],
+   [
     "supabase/config.toml",
     2
    ],
    [
     "src/components/CommandPalette.tsx",
-    2
-   ],
-   [
-    "src/hooks/useFeedback360.ts",
-    2
-   ],
-   [
-    "src/services/feedbackService.ts",
     2
    ],
    [
@@ -155550,6 +155545,10 @@
    ],
    [
     "src/tests/unit/shop.test.ts",
+    1
+   ],
+   [
+    "supabase/migrations/20261224120000_dispatch_critical_alert_config.sql",
     1
    ]
   ]

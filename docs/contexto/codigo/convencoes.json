@@ -59,11 +59,11 @@
  "commits": {
   "convencao": "conventional commits (observado)",
   "exemplos": [
+   "fix(supabase): alinha 20261220000000 ao trigger vivo do alerta critico (#152)",
    "fix(clima): antecipa o fim da pesquisa ativa para 30/11 e destrava o lembrete (#148)",
    "chore(docs): ledger 280x280 e jobs internos medidos (preserva o trabalho da #150) (#151)",
    "docs(edge-functions): corrige o drift do agendamento dos jobs internos e a semeadura de cron_secret (#149)",
-   "fix(desafio): notificacao do desafio semanal leva o id do desafio no payload (#145)",
-   "docs(estado): alinha o trigger do alerta critico com o estado real (URL e segredo) (#146)"
+   "fix(desafio): notificacao do desafio semanal leva o id do desafio no payload (#145)"
   ]
  },
  "pr_template": ".github/PULL_REQUEST_TEMPLATE.md",
