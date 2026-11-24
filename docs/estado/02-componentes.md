@@ -684,7 +684,7 @@ Com 15 conquistas e 13 desbloqueios, é uma das poucas features com uso real —
 | goalsTour / trailsTour / allTours | ⬛ | **nenhum** (só reexportados em `index.ts`) | — | Não | `onboarding/tours/dashboardTour.ts:98,128,151`; `onboarding/index.ts:4` | Tours definidos e nunca registrados em nenhuma rota |
 | **CHECKINS** |
 | CheckinCard + página de 1:1 | 🟨 | `pages/Checkins.tsx` | `checkins`(**0**), `checkin_templates`(**0**) | Não | `checkins/CheckinCard.tsx:33-90` | Zero 1:1 agendados; sem templates cadastrados |
-| CheckinDetailDialog | ⬛ | **nenhum** | `checkins`(0) | Não | `checkins/CheckinDetailDialog.tsx:23`; `pages/Checkins.tsx:7,13,25` importa `Dialog`/`Checkbox`/`moodEmojis` e refaz o diálogo inline | 95 linhas órfãs + lógica duplicada na página |
+| CheckinDetailDialog | 🗑️ | **nenhum** | — | Não | Removido (PR #127): `checkins/CheckinDetailDialog.tsx` refazia, com menos recursos e sem IDs reais de ação, o mesmo diálogo que `pages/Checkins.tsx:129-154` já implementa inline (com notas, data formatada e `toggleActionItem` por `itemId`). |
 | OneOnOnePreparationPanel (IA) | 🟨 | `pages/Checkins.tsx:21` | `checkins`(0), `development_plans`(0), `mood_entries`(0), `kudos`(0), `nine_box`(0), `goals`(3) | Quase nada | `checkins/OneOnOnePreparationPanel.tsx:34-61`; `services/oneOnOnePreparationService.ts` | Pauta gerada a partir de 7 tabelas, 6 vazias |
 | **GOALS** |
 | GoalCard (OKR + Key Results) | ✅ | `pages/Goals.tsx` | `goals`(**3**), `key_results`(**10**) | **Sim** | `goals/GoalCard.tsx:75-282` | Funciona, mas paleta **hardcoded dark-only**: `bg-[#0A0C10]`, `text-white`, `text-slate-400/500/700` (`:88,115,124,137,158`) → ilegível no tema claro |
