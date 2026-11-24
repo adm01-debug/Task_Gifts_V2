@@ -187,12 +187,12 @@ Evidência medida:
 - `bitrix24-oauth/index.ts:9-20`: sem auth; `action=status` expõe estado de configuração e `action=refresh` gira os tokens OAuth de terceiros.
 Ambas são mitigadas hoje apenas por acidente: `supabase/config.toml` tem uma única linha (`project_id`), sem bloco `[functions]`, então `verify_jwt` fica no default `true` e exige ao menos a anon key — que é pública no bundle do frontend.
 
-### 3. Cadeia cron/trigger → Edge Function: corrigida em produção, mas as migrations ainda recriam o defeito
-As quatro migrations originais declaram a invocação de edge function via `net.http_post` e **estão erradas** — nenhuma envia `x-internal-secret` ou service-role:
+### 3. Cadeia cron/trigger → Edge Function: corrigida em produção e reproduzida pelo repositório desde 2026-11-24
+As quatro migrations originais declaram a invocação de edge function via `net.http_post` com autenticação errada — nenhuma envia `x-internal-secret` ou service-role. Os arquivos continuam assim no repositório, mas o estado final do banco **não** é mais o deles: `20261224110000` (jobs) e `20261224120000` (trigger) rodam depois e reescrevem tudo lendo URL e segredo de `_internal.dispatch_config` em tempo de execução — na base atual, que já tem `cron_secret` (o rebuild do zero está tratado no fim desta seção). Os trechos abaixo descrevem o que os arquivos antigos gravam:
 - `20260712212544_...sql:1,5` (cron `security-weekly-digest`) e `20260728112123_...sql:243,247` (cron `push-outbox-dispatcher`, `* * * * *`) enviam **sem header `Authorization`** → `guardInternalRequest` responde 401 (`security-weekly-digest/index.ts:32`, `push-outbox-dispatcher/index.ts:27`).
 - `20260712194718_...sql:10,14` (cron `webhook-health-monitor-every-15min`) e `20260712203400_...sql:18,47` (trigger `trigger_dispatch_critical_alert`) enviam a **anon key** (do projeto morto `awzhgfmqwddzgbqzqusc`) como Bearer, mas `verifyServiceRole` (`_shared/security.ts:98-102`) só aceita service-role / `INTERNAL_FUNCTION_SECRET` / `CRON_SECRET` → 401.
 
-**O estado vivo em produção já foi corrigido fora das migrations.** Medido em 2026-11-24, `cron.job` tem os cinco jobs `active=true`, todos apontando para `eidsaqymojyuhprobfpn.supabase.co` e enviando `x-internal-secret` (nenhum usa a anon key):
+**O estado vivo em produção está corrigido e o repositório passou a reproduzi-lo em 2026-11-24.** Medido em 2026-11-24, `cron.job` tem os cinco jobs `active=true`, todos apontando para `eidsaqymojyuhprobfpn.supabase.co` e enviando `x-internal-secret` (nenhum usa a anon key):
 
 | jobid | jobname | schedule | criado por migration? |
 |---|---|---|---|
