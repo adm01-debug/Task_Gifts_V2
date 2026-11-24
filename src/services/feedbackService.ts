@@ -70,8 +70,38 @@ export interface FeedbackSummary {
 export interface FeedbackSummaryRow {
   relationship: string;
   responses: Array<
-    Pick<FeedbackResponse, "overall_rating" | "strengths" | "improvements"> & { is_anonymous?: boolean }
+    Pick<FeedbackResponse, "overall_rating" | "strengths" | "improvements"> & {
+      is_anonymous?: boolean;
+      request_id?: string;
+      submitted_at?: string;
+    }
   >;
+}
+
+/**
+ * Mantém só a resposta mais recente de cada pedido. `feedback_responses` não tem UNIQUE
+ * por `request_id`: duas abas conseguem passar pela checagem de idempotência antes de
+ * qualquer gravação e inserir duas linhas. Sem o dedupe, o resumo contaria o mesmo voto
+ * duas vezes.
+ */
+function latestResponsePerRequest(
+  responses: FeedbackSummaryRow["responses"]
+): FeedbackSummaryRow["responses"] {
+  const byRequest = new Map<string, FeedbackSummaryRow["responses"][number]>();
+  const withoutRequestId: FeedbackSummaryRow["responses"] = [];
+
+  responses.forEach(resp => {
+    if (!resp.request_id) {
+      withoutRequestId.push(resp);
+      return;
+    }
+    const current = byRequest.get(resp.request_id);
+    if (!current || (resp.submitted_at ?? "") >= (current.submitted_at ?? "")) {
+      byRequest.set(resp.request_id, resp);
+    }
+  });
+
+  return [...withoutRequestId, ...byRequest.values()];
 }
 
 /**
@@ -105,7 +135,7 @@ export function aggregateFeedbackSummary(rows: FeedbackSummaryRow[]): FeedbackSu
   const improvements: string[] = [];
 
   rows.forEach(row => {
-    (row.responses ?? []).forEach(resp => {
+    latestResponsePerRequest(row.responses ?? []).forEach(resp => {
       // O anonimato vale para o avaliado: um admin consegue ler respostas anônimas
       // (policy "Admins can view all responses"), mas o resumo dele não pode desfazer
       // o anonimato — é exatamente o que o card promete na tela.
@@ -437,7 +467,7 @@ export const feedbackService = {
       .from("feedback_requests")
       .select(`
         relationship,
-        feedback_responses(overall_rating, strengths, improvements, is_anonymous)
+        feedback_responses(overall_rating, strengths, improvements, is_anonymous, request_id, submitted_at)
       `)
       .eq("to_user_id", userId)
       .eq("status", "submitted");

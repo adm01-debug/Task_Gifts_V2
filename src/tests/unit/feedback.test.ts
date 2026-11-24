@@ -178,6 +178,49 @@ describe('aggregateFeedbackSummary', () => {
     expect(summary.commonStrengths).toEqual([]);
     expect(summary.commonImprovements).toEqual(['prazos']);
   });
+
+  it('conta uma vez so quando duas abas gravam o mesmo pedido, mantendo a resposta mais recente', () => {
+    const summary = aggregateFeedbackSummary([
+      {
+        relationship: 'peer',
+        responses: [
+          {
+            overall_rating: 5,
+            strengths: null,
+            improvements: null,
+            request_id: 'req1',
+            submitted_at: '2026-01-01T10:00:00Z',
+          },
+          {
+            overall_rating: 1,
+            strengths: null,
+            improvements: null,
+            request_id: 'req1',
+            submitted_at: '2026-01-01T10:05:00Z',
+          },
+        ],
+      },
+    ]);
+
+    expect(summary.totalResponses).toBe(1);
+    expect(summary.avgRating).toBe(1);
+    expect(summary.byRelationship.peer).toEqual({ count: 1, avgRating: 1 });
+  });
+
+  it('mantem todas as respostas quando a linha nao traz request_id', () => {
+    const summary = aggregateFeedbackSummary([
+      {
+        relationship: 'peer',
+        responses: [
+          { overall_rating: 4, strengths: null, improvements: null },
+          { overall_rating: 2, strengths: null, improvements: null },
+        ],
+      },
+    ]);
+
+    expect(summary.totalResponses).toBe(2);
+    expect(summary.avgRating).toBe(3);
+  });
 });
 
 describe('allowedRelationshipsForCycle', () => {
