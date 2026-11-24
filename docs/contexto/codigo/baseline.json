@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "a2a5bc3d8b9ee128da75f4129c8ea6867f3c9e1a",
+  "commit": "d9f07180a777a528e043f577c7ead637d52e8d31",
   "branch": "main",
-  "data_commit": "2026-11-24T17:35:07-03:00",
+  "data_commit": "2026-11-24T17:56:45-03:00",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "ultimos_commits": [
+   {
+    "sha": "d9f0718",
+    "data": "2026-11-24",
+    "assunto": "feat: envia lembrete de clima por push alem do in-app (#153)"
+   },
    {
     "sha": "a2a5bc3",
     "data": "2026-11-24",
@@ -126,14 +131,9 @@
     "sha": "c0090e3",
     "data": "2026-11-24",
     "assunto": "feat(mentoria): monta o guard de alteracoes nao salvas no formulario de missoes (#130)"
-   },
-   {
-    "sha": "43c41a1",
-    "data": "2026-11-23",
-    "assunto": "chore(docs): corrige auditoria desatualizada (edge functions, HIBP, CI/typecheck) (#129)"
    }
   ],
-  "arquivos_mudados_7d": 208,
+  "arquivos_mudados_7d": 209,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "supabase/functions/_shared",
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 119
+    "commits": 120
    },
    {
     "autor": "dependabot[bot]",
@@ -310,7 +310,7 @@
   ]
  },
  "contagens": {
-  "arquivos_total": 1574,
+  "arquivos_total": 1575,
   "arquivos_codigo": 1189,
   "linhas_codigo": 236084,
   "rotas": 87,
@@ -322,7 +322,7 @@
   "hooks": 155,
   "edge_functions": 23,
   "tabelas": 238,
-  "migrations": 281,
+  "migrations": 282,
   "cron_jobs": 24,
   "testes": 172,
   "workflows": 6,
