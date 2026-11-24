@@ -68,6 +68,9 @@ $idx$;
 -- que nao pausaram as notificacoes no proprio perfil - quem optou por nao
 -- receber in-app nao recebe lembrete (public.user_wants_in_app_notification).
 -- Janela: pesquisa `active`, dentro do periodo e a no maximo 7 dias do fim.
+-- A comparacao e' por data no fuso de Brasilia (mesmo fuso da mensagem): contar
+-- por `now() + interval '7 days'` empurrava o primeiro lembrete para o dia
+-- seguinte quando o `ends_at` estava algumas horas depois da hora do job.
 -- Depois de `ends_at` o proprio `climate_submit_response` recusa a resposta
 -- ("survey period is over"), entao lembrar ali seria inutil - quem encerra e' a
 -- rotina 1.
@@ -107,7 +110,8 @@ BEGIN
        AND (s.starts_at IS NULL OR s.starts_at <= now())
        AND s.ends_at IS NOT NULL
        AND s.ends_at > now()
-       AND s.ends_at <= now() + interval '7 days'
+       AND (s.ends_at AT TIME ZONE 'America/Sao_Paulo')::date
+           <= ((now() AT TIME ZONE 'America/Sao_Paulo')::date + 7)
        AND NOT EXISTS (
              SELECT 1
                FROM public.climate_survey_responses r
