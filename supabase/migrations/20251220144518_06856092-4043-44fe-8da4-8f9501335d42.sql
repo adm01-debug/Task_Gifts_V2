@@ -628,3 +628,286 @@ CREATE TRIGGER update_pulse_surveys_updated_at BEFORE UPDATE ON public.pulse_sur
 CREATE TRIGGER update_announcements_updated_at BEFORE UPDATE ON public.announcements FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 CREATE TRIGGER update_feedback_cycles_updated_at BEFORE UPDATE ON public.feedback_cycles FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 CREATE TRIGGER update_feedback_requests_updated_at BEFORE UPDATE ON public.feedback_requests FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+
+-- =============================================================================
+-- 2026-11-25 | Recuperacao de drift de esquema (nao existia no versionamento)
+-- -----------------------------------------------------------------------------
+-- Por que este bloco mora AQUI e nao numa migration nova:
+--   `20251225230238:59` faz ALTER TABLE public.notification_preferences e a
+--   tabela nunca era criada em nenhuma migration -> um `supabase db reset`
+--   abortava ali. Uma migration nova com versao retroativa nao resolveria
+--   (o `supabase db push` nao aplica versao anterior a ultima do ledger) e
+--   ainda travaria os applies seguintes. Criar as tabelas neste arquivo,
+--   ja aplicado, e o mesmo caminho usado em outras correcoes de rebuild.
+--
+-- Estrutura copiada do catalogo de producao em 2026-11-25 (pg_attribute,
+-- pg_constraint, pg_indexes, pg_policies, relacl) - 7 tabelas, 73 colunas,
+-- 11 policies, 8 indices extras. Em producao este bloco e INERTE: o arquivo
+-- ja esta no ledger, e cada statement e idempotente (`CREATE TABLE IF NOT
+-- EXISTS` pula a tabela existente, `DROP ... IF EXISTS` antes de criar).
+-- =============================================================================
+
+-- Funcao do trigger de updated_at de notification_preferences (duplicata
+-- proposital de update_updated_at_column(), com o nome que existe em producao).
+CREATE OR REPLACE FUNCTION public.update_notification_prefs_updated_at()
+RETURNS trigger
+LANGUAGE plpgsql
+SET search_path TO 'public'
+AS $function$
+BEGIN
+  NEW.updated_at = now();
+  RETURN NEW;
+END;
+$function$;
+
+CREATE TABLE IF NOT EXISTS public.demographic_attributes (
+  id uuid DEFAULT gen_random_uuid() NOT NULL,
+  name text NOT NULL,
+  name_en text,
+  name_es text,
+  attribute_type text DEFAULT 'single_select'::text NOT NULL,
+  options jsonb DEFAULT '[]'::jsonb,
+  is_required boolean DEFAULT false NOT NULL,
+  is_visible_in_reports boolean DEFAULT true NOT NULL,
+  is_restricted boolean DEFAULT false NOT NULL,
+  allow_prefer_not_answer boolean DEFAULT true NOT NULL,
+  order_index integer DEFAULT 0 NOT NULL,
+  is_active boolean DEFAULT true NOT NULL,
+  created_at timestamp with time zone DEFAULT now() NOT NULL,
+  updated_at timestamp with time zone DEFAULT now() NOT NULL,
+  CONSTRAINT demographic_attributes_pkey PRIMARY KEY (id),
+  CONSTRAINT demographic_attributes_attribute_type_check CHECK (attribute_type = ANY (ARRAY['text'::text, 'single_select'::text, 'multi_select'::text, 'number'::text, 'date'::text, 'calculated'::text]))
+);
+
+CREATE TABLE IF NOT EXISTS public.user_demographic_values (
+  id uuid DEFAULT gen_random_uuid() NOT NULL,
+  user_id uuid NOT NULL,
+  attribute_id uuid NOT NULL,
+  value text,
+  values_array jsonb DEFAULT '[]'::jsonb,
+  number_value numeric,
+  date_value date,
+  created_at timestamp with time zone DEFAULT now() NOT NULL,
+  updated_at timestamp with time zone DEFAULT now() NOT NULL,
+  CONSTRAINT user_demographic_values_pkey PRIMARY KEY (id),
+  CONSTRAINT unique_user_demographic_value UNIQUE (user_id, attribute_id),
+  CONSTRAINT user_demographic_values_attribute_id_fkey FOREIGN KEY (attribute_id) REFERENCES public.demographic_attributes(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS public.permission_groups (
+  id uuid DEFAULT gen_random_uuid() NOT NULL,
+  name text NOT NULL,
+  description text,
+  is_system boolean DEFAULT false NOT NULL,
+  permissions jsonb DEFAULT '{}'::jsonb NOT NULL,
+  created_at timestamp with time zone DEFAULT now() NOT NULL,
+  updated_at timestamp with time zone DEFAULT now() NOT NULL,
+  CONSTRAINT permission_groups_pkey PRIMARY KEY (id)
+);
+
+CREATE TABLE IF NOT EXISTS public.user_permission_groups (
+  id uuid DEFAULT gen_random_uuid() NOT NULL,
+  user_id uuid NOT NULL,
+  permission_group_id uuid NOT NULL,
+  created_at timestamp with time zone DEFAULT now() NOT NULL,
+  CONSTRAINT user_permission_groups_pkey PRIMARY KEY (id),
+  CONSTRAINT unique_user_permission_group UNIQUE (user_id, permission_group_id),
+  CONSTRAINT user_permission_groups_permission_group_id_fkey FOREIGN KEY (permission_group_id) REFERENCES public.permission_groups(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS public.geo_blocking_rules (
+  id uuid DEFAULT gen_random_uuid() NOT NULL,
+  country_code character varying(2) NOT NULL,
+  country_name character varying(100) NOT NULL,
+  is_allowed boolean DEFAULT true NOT NULL,
+  created_by uuid,
+  created_at timestamp with time zone DEFAULT now() NOT NULL,
+  updated_at timestamp with time zone DEFAULT now() NOT NULL,
+  CONSTRAINT geo_blocking_rules_pkey PRIMARY KEY (id),
+  CONSTRAINT geo_blocking_rules_country_code_key UNIQUE (country_code),
+  CONSTRAINT geo_blocking_rules_created_by_fkey FOREIGN KEY (created_by) REFERENCES auth.users(id)
+);
+
+CREATE TABLE IF NOT EXISTS public.geo_access_logs (
+  id uuid DEFAULT gen_random_uuid() NOT NULL,
+  ip_address inet NOT NULL,
+  country_code character varying(2),
+  country_name character varying(100),
+  user_id uuid,
+  was_allowed boolean NOT NULL,
+  reason text,
+  user_agent text,
+  endpoint text,
+  created_at timestamp with time zone DEFAULT now() NOT NULL,
+  CONSTRAINT geo_access_logs_pkey PRIMARY KEY (id),
+  CONSTRAINT geo_access_logs_user_id_fkey FOREIGN KEY (user_id) REFERENCES auth.users(id)
+);
+
+CREATE TABLE IF NOT EXISTS public.notification_preferences (
+  id uuid DEFAULT gen_random_uuid() NOT NULL,
+  user_id uuid NOT NULL,
+  email_enabled boolean DEFAULT true NOT NULL,
+  push_enabled boolean DEFAULT true NOT NULL,
+  in_app_enabled boolean DEFAULT true NOT NULL,
+  type_preferences jsonb DEFAULT '{"xp": {"push": false, "email": false, "in_app": true, "priority": "low"}, "goal": {"push": true, "email": true, "in_app": true, "priority": "high"}, "quest": {"push": true, "email": true, "in_app": true, "priority": "normal"}, "survey": {"push": true, "email": true, "in_app": true, "priority": "high"}, "checkin": {"push": false, "email": true, "in_app": true, "priority": "normal"}, "feedback": {"push": true, "email": true, "in_app": true, "priority": "high"}, "level_up": {"push": true, "email": true, "in_app": true, "priority": "high"}, "achievement": {"push": true, "email": true, "in_app": true, "priority": "normal"}, "leaderboard": {"push": true, "email": false, "in_app": true, "priority": "normal"}, "announcement": {"push": true, "email": true, "in_app": true, "priority": "normal"}, "competency_gap": {"push": true, "email": true, "in_app": true, "priority": "high"}, "campaign_closed": {"push": true, "email": true, "in_app": true, "priority": "normal"}, "development_tip": {"push": false, "email": true, "in_app": true, "priority": "low"}, "campaign_enrolled": {"push": true, "email": false, "in_app": true, "priority": "normal"}, "campaign_progress": {"push": false, "email": false, "in_app": true, "priority": "low"}, "campaign_completed": {"push": true, "email": true, "in_app": true, "priority": "high"}, "campaign_milestone": {"push": true, "email": false, "in_app": true, "priority": "normal"}}'::jsonb NOT NULL,
+  do_not_disturb_enabled boolean DEFAULT false NOT NULL,
+  do_not_disturb_start time without time zone DEFAULT '22:00:00'::time without time zone,
+  do_not_disturb_end time without time zone DEFAULT '08:00:00'::time without time zone,
+  do_not_disturb_weekends boolean DEFAULT true NOT NULL,
+  digest_enabled boolean DEFAULT true NOT NULL,
+  digest_frequency text DEFAULT 'daily'::text NOT NULL,
+  digest_time time without time zone DEFAULT '09:00:00'::time without time zone,
+  language text DEFAULT 'pt-BR'::text NOT NULL,
+  created_at timestamp with time zone DEFAULT now() NOT NULL,
+  updated_at timestamp with time zone DEFAULT now() NOT NULL,
+  channel_email boolean DEFAULT true,
+  channel_push boolean DEFAULT true,
+  channel_in_app boolean DEFAULT true,
+  quiet_hours_start time without time zone,
+  quiet_hours_end time without time zone,
+  frequency text DEFAULT 'instant'::text,
+  CONSTRAINT notification_preferences_pkey PRIMARY KEY (id),
+  CONSTRAINT unique_user_notification_prefs UNIQUE (user_id),
+  CONSTRAINT notification_preferences_digest_frequency_check CHECK (digest_frequency = ANY (ARRAY['hourly'::text, 'daily'::text, 'weekly'::text]))
+);
+-- Indices que nao vem das constraints acima (nomes identicos aos de producao).
+CREATE INDEX IF NOT EXISTS idx_geo_access_logs_allowed ON public.geo_access_logs USING btree (was_allowed);
+CREATE INDEX IF NOT EXISTS idx_geo_access_logs_country ON public.geo_access_logs USING btree (country_code);
+CREATE INDEX IF NOT EXISTS idx_geo_access_logs_created ON public.geo_access_logs USING btree (created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_geo_access_logs_user_id ON public.geo_access_logs USING btree (user_id);
+CREATE INDEX IF NOT EXISTS idx_geo_blocking_rules_allowed ON public.geo_blocking_rules USING btree (is_allowed);
+CREATE INDEX IF NOT EXISTS idx_geo_blocking_rules_created_by ON public.geo_blocking_rules USING btree (created_by);
+CREATE INDEX IF NOT EXISTS idx_user_demographic_values_attribute_id ON public.user_demographic_values USING btree (attribute_id);
+CREATE INDEX IF NOT EXISTS idx_user_permission_groups_permission_group_id ON public.user_permission_groups USING btree (permission_group_id);
+
+-- RLS: as 7 tabelas sao deny-by-default em producao.
+ALTER TABLE public.demographic_attributes ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.geo_access_logs ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.geo_blocking_rules ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.notification_preferences ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.permission_groups ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.user_demographic_values ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.user_permission_groups ENABLE ROW LEVEL SECURITY;
+
+-- ACL de producao: authenticated/service_role com ALL, anon sem acesso
+-- (exceto leitura em geo_blocking_rules e permission_groups).
+GRANT ALL ON public.demographic_attributes TO authenticated, service_role;
+GRANT ALL ON public.geo_access_logs TO authenticated, service_role;
+GRANT ALL ON public.geo_blocking_rules TO authenticated, service_role;
+GRANT ALL ON public.notification_preferences TO authenticated, service_role;
+GRANT ALL ON public.permission_groups TO authenticated, service_role;
+GRANT ALL ON public.user_demographic_values TO authenticated, service_role;
+GRANT ALL ON public.user_permission_groups TO authenticated, service_role;
+REVOKE ALL ON public.demographic_attributes FROM anon;
+REVOKE ALL ON public.geo_access_logs FROM anon;
+REVOKE ALL ON public.geo_blocking_rules FROM anon;
+REVOKE ALL ON public.notification_preferences FROM anon;
+REVOKE ALL ON public.permission_groups FROM anon;
+REVOKE ALL ON public.user_demographic_values FROM anon;
+REVOKE ALL ON public.user_permission_groups FROM anon;
+GRANT SELECT ON public.geo_blocking_rules TO anon;
+GRANT SELECT ON public.permission_groups TO anon;
+
+-- Policies (as 2 de geo_* criadas em migrations posteriores nao sao repetidas aqui).
+DROP POLICY IF EXISTS "Admins can manage demographic attributes" ON public.demographic_attributes;
+CREATE POLICY "Admins can manage demographic attributes" ON public.demographic_attributes FOR ALL USING (has_role(auth.uid(), 'admin'));
+DROP POLICY IF EXISTS "Everyone can view active demographic attributes" ON public.demographic_attributes;
+CREATE POLICY "Everyone can view active demographic attributes" ON public.demographic_attributes FOR SELECT USING (is_active OR has_role(auth.uid(), 'admin'));
+DROP POLICY IF EXISTS "Admins podem ver logs de acesso geografico" ON public.geo_access_logs;
+CREATE POLICY "Admins podem ver logs de acesso geografico" ON public.geo_access_logs FOR SELECT USING (has_role(auth.uid(), 'admin'));
+DROP POLICY IF EXISTS "Admins podem gerenciar regras de geo blocking" ON public.geo_blocking_rules;
+CREATE POLICY "Admins podem gerenciar regras de geo blocking" ON public.geo_blocking_rules FOR ALL USING (has_role(auth.uid(), 'admin'));
+DROP POLICY IF EXISTS "Users can manage own notification preferences" ON public.notification_preferences;
+CREATE POLICY "Users can manage own notification preferences" ON public.notification_preferences FOR ALL USING (auth.uid() = user_id) WITH CHECK (auth.uid() = user_id);
+DROP POLICY IF EXISTS "Admins can manage permission groups" ON public.permission_groups;
+CREATE POLICY "Admins can manage permission groups" ON public.permission_groups FOR ALL USING (has_role(auth.uid(), 'admin'));
+DROP POLICY IF EXISTS "Everyone can view permission groups" ON public.permission_groups;
+CREATE POLICY "Everyone can view permission groups" ON public.permission_groups FOR SELECT USING (true);
+DROP POLICY IF EXISTS "Admins and managers can view demographic values" ON public.user_demographic_values;
+CREATE POLICY "Admins and managers can view demographic values" ON public.user_demographic_values FOR SELECT USING (has_role(auth.uid(), 'admin') OR has_role(auth.uid(), 'manager'));
+DROP POLICY IF EXISTS "Users can manage own demographic values" ON public.user_demographic_values;
+CREATE POLICY "Users can manage own demographic values" ON public.user_demographic_values FOR ALL USING (auth.uid() = user_id) WITH CHECK (auth.uid() = user_id);
+DROP POLICY IF EXISTS "Admins can manage user permission groups" ON public.user_permission_groups;
+CREATE POLICY "Admins can manage user permission groups" ON public.user_permission_groups FOR ALL USING (has_role(auth.uid(), 'admin'));
+DROP POLICY IF EXISTS "Users can view own permission groups" ON public.user_permission_groups;
+CREATE POLICY "Users can view own permission groups" ON public.user_permission_groups FOR SELECT USING (auth.uid() = user_id);
+
+-- Triggers de updated_at (os de geo_access_logs/user_permission_groups nao existem em producao).
+DROP TRIGGER IF EXISTS update_demographic_attributes_updated_at ON public.demographic_attributes;
+CREATE TRIGGER update_demographic_attributes_updated_at BEFORE UPDATE ON public.demographic_attributes FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+DROP TRIGGER IF EXISTS update_geo_blocking_rules_updated_at ON public.geo_blocking_rules;
+CREATE TRIGGER update_geo_blocking_rules_updated_at BEFORE UPDATE ON public.geo_blocking_rules FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+DROP TRIGGER IF EXISTS update_notification_preferences_updated_at ON public.notification_preferences;
+CREATE TRIGGER update_notification_preferences_updated_at BEFORE UPDATE ON public.notification_preferences FOR EACH ROW EXECUTE FUNCTION update_notification_prefs_updated_at();
+DROP TRIGGER IF EXISTS update_permission_groups_updated_at ON public.permission_groups;
+CREATE TRIGGER update_permission_groups_updated_at BEFORE UPDATE ON public.permission_groups FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+DROP TRIGGER IF EXISTS update_user_demographic_values_updated_at ON public.user_demographic_values;
+CREATE TRIGGER update_user_demographic_values_updated_at BEFORE UPDATE ON public.user_demographic_values FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+
+-- Colunas de aprovacao de compra: existem em producao desde a aprovacao em
+-- duas etapas, nunca foram versionadas. `ADD COLUMN IF NOT EXISTS` e no-op la.
+ALTER TABLE public.shop_purchases
+  ADD COLUMN IF NOT EXISTS approval_status TEXT NOT NULL DEFAULT 'pending',
+  ADD COLUMN IF NOT EXISTS approved_by UUID,
+  ADD COLUMN IF NOT EXISTS approval_reason TEXT,
+  ADD COLUMN IF NOT EXISTS risk_flags JSONB DEFAULT '[]'::jsonb;
+
+DO $do$
+BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'shop_purchases_approval_status_check' AND conrelid = 'public.shop_purchases'::regclass) THEN
+    ALTER TABLE public.shop_purchases ADD CONSTRAINT shop_purchases_approval_status_check CHECK (approval_status = ANY (ARRAY['pending'::text, 'approved'::text, 'rejected'::text, 'auto_approved'::text]));
+  END IF;
+  IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'shop_purchases_approved_by_fkey' AND conrelid = 'public.shop_purchases'::regclass) THEN
+    ALTER TABLE public.shop_purchases ADD CONSTRAINT shop_purchases_approved_by_fkey FOREIGN KEY (approved_by) REFERENCES auth.users(id) ON DELETE SET NULL;
+  END IF;
+END
+$do$;
+-- -----------------------------------------------------------------------------
+-- Funcoes de producao que nunca foram versionadas mas sao citadas por
+-- migrations posteriores (ALTER/REVOKE/GRANT em cima delas). Sem elas, o
+-- replay aborta em 20260522143342 e 20260905120000.
+-- -----------------------------------------------------------------------------
+CREATE OR REPLACE FUNCTION public.log_geo_access(p_ip_address inet, p_country_code character varying, p_country_name character varying, p_user_id uuid, p_was_allowed boolean, p_reason text, p_user_agent text, p_endpoint text DEFAULT NULL::text)
+ RETURNS uuid
+ LANGUAGE plpgsql
+ SECURITY DEFINER
+ SET search_path TO 'public'
+AS $function$
+DECLARE
+    v_log_id UUID;
+BEGIN
+    INSERT INTO public.geo_access_logs (
+        ip_address, country_code, country_name, user_id, 
+        was_allowed, reason, user_agent, endpoint
+    )
+    VALUES (
+        p_ip_address, p_country_code, p_country_name, p_user_id,
+        p_was_allowed, p_reason, p_user_agent, p_endpoint
+    )
+    RETURNING id INTO v_log_id;
+    
+    RETURN v_log_id;
+END;
+$function$;
+
+-- Trigger de auditoria da Roleta da Sorte: em producao o trigger aponta para
+-- esta funcao (criada no dashboard). O repositorio usa a versao evoluida
+-- log_lucky_wheel_prize_change(); esta fica apenas para o ALTER de 20260905.
+CREATE OR REPLACE FUNCTION public.audit_lucky_wheel_prize()
+ RETURNS trigger
+ LANGUAGE plpgsql
+ SECURITY DEFINER
+ SET search_path TO 'public', 'extensions'
+AS $function$
+BEGIN
+  INSERT INTO public.lucky_wheel_prize_audit(prize_id, operation, changed_by, before_data, after_data)
+  VALUES (
+    COALESCE(OLD.id, NEW.id),
+    TG_OP,
+    auth.uid(),
+    CASE WHEN TG_OP = 'INSERT' THEN NULL ELSE row_to_json(OLD)::jsonb END,
+    CASE WHEN TG_OP = 'DELETE' THEN NULL ELSE row_to_json(NEW)::jsonb END
+  );
+  RETURN COALESCE(NEW, OLD);
+END;
+$function$;
