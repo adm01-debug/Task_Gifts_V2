@@ -105,9 +105,18 @@ interface RewardCardProps {
                 )}
              >
                 <div className="absolute inset-0 bg-gradient-to-tr from-white/20 to-transparent pointer-events-none rounded-[2rem]" />
-                <span className="drop-shadow-lg filter group-hover:brightness-110 transition-all">
-                  {categoryConfig.icon}
-                </span>
+                                {reward.image_url ? (
+                                  <img
+                                    src={reward.image_url}
+                                    alt={reward.name}
+                                    loading="lazy"
+                                    className="absolute inset-0 w-full h-full object-cover rounded-[2rem] filter group-hover:brightness-110 transition-all"
+                                  />
+                                ) : (
+                                  <span className="drop-shadow-lg filter group-hover:brightness-110 transition-all">
+                                    {categoryConfig.icon}
+                                  </span>
+                                )}
                 
                 {reward.rarity === "legendary" && (
                   <div className="absolute -top-2 -right-2">
