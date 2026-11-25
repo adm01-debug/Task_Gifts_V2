@@ -2,11 +2,21 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "a6a9bc631d0de5e01b8d0f579275ee57fdc90966",
+  "commit": "bef27bdcf5dcd942436b92d6f45615beb408bff7",
   "branch": "main",
-  "data_commit": "2026-11-25T09:49:10-03:00",
+  "data_commit": "2026-11-25T09:49:28-03:00",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "ultimos_commits": [
+   {
+    "sha": "bef27bd",
+    "data": "2026-11-25",
+    "assunto": "feat: cadastro de templates de PDI com policy de escrita para admin (#160)"
+   },
+   {
+    "sha": "f41bdee",
+    "data": "2026-11-25",
+    "assunto": "fix: conserta pedido de reset de senha do usuario deslogado (#159)"
+   },
    {
     "sha": "a6a9bc6",
     "data": "2026-11-25",
@@ -121,19 +131,9 @@
     "sha": "d344ae9",
     "data": "2026-11-24",
     "assunto": "fix: guarda UPDATE cron.job por privilegio (Supabase Preview 42501) (#137)"
-   },
-   {
-    "sha": "c5d1ae0",
-    "data": "2026-11-24",
-    "assunto": "fix: normaliza versao do ledger que reprovava o Supabase Preview (#136)"
-   },
-   {
-    "sha": "f5f05bc",
-    "data": "2026-11-24",
-    "assunto": "fix: alinha trigger de dispatch ao banco vivo e encerra a divergencia do repo (#135)"
    }
   ],
-  "arquivos_mudados_7d": 218,
+  "arquivos_mudados_7d": 231,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "supabase/functions/_shared",
@@ -153,7 +153,7 @@
    },
    {
     "pasta": "docs/agentes/banco.md",
-    "mudancas": 12
+    "mudancas": 13
    },
    {
     "pasta": ".github/workflows/ci.yml",
@@ -161,18 +161,22 @@
    },
    {
     "pasta": "AGENTS.md",
-    "mudancas": 10
+    "mudancas": 11
    },
    {
     "pasta": "src/components/admin",
-    "mudancas": 10
+    "mudancas": 11
    },
    {
     "pasta": "docs/agentes/mapa-repo.md",
-    "mudancas": 9
+    "mudancas": 10
    },
    {
     "pasta": "docs/estado/03-hooks-services-lib.md",
+    "mudancas": 8
+   },
+   {
+    "pasta": "scripts/db-audit/README.md",
     "mudancas": 7
    },
    {
@@ -185,10 +189,6 @@
    },
    {
     "pasta": ".gitignore",
-    "mudancas": 6
-   },
-   {
-    "pasta": "scripts/db-audit/README.md",
     "mudancas": 6
    },
    {
@@ -210,23 +210,27 @@
     "mudancas": 15
    },
    {
+    "arquivo": "docs/agentes/banco.md",
+    "mudancas": 13
+   },
+   {
     "arquivo": ".github/workflows/ci.yml",
     "mudancas": 12
    },
    {
-    "arquivo": "docs/agentes/banco.md",
-    "mudancas": 12
-   },
-   {
     "arquivo": "AGENTS.md",
-    "mudancas": 10
+    "mudancas": 11
    },
    {
     "arquivo": "docs/agentes/mapa-repo.md",
-    "mudancas": 9
+    "mudancas": 10
    },
    {
     "arquivo": "docs/estado/03-hooks-services-lib.md",
+    "mudancas": 8
+   },
+   {
+    "arquivo": "scripts/db-audit/README.md",
     "mudancas": 7
    },
    {
@@ -236,10 +240,6 @@
    {
     "arquivo": "supabase/config.toml",
     "mudancas": 7
-   },
-   {
-    "arquivo": "scripts/db-audit/README.md",
-    "mudancas": 6
    },
    {
     "arquivo": "scripts/db-audit/check-migration-drift.mjs",
@@ -294,14 +294,14 @@
     "mudancas": 4
    },
    {
-    "arquivo": "supabase/functions/webhook-dispatcher/index.ts",
+    "arquivo": "src/pages/Auth.tsx",
     "mudancas": 4
    }
   ],
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 128
+    "commits": 130
    },
    {
     "autor": "dependabot[bot]",
@@ -310,9 +310,9 @@
   ]
  },
  "contagens": {
-  "arquivos_total": 1580,
+  "arquivos_total": 1586,
   "arquivos_codigo": 1190,
-  "linhas_codigo": 236185,
+  "linhas_codigo": 236364,
   "rotas": 87,
   "rotas_http_backend": 0,
   "vistas_por_id": 0,
@@ -322,7 +322,7 @@
   "hooks": 155,
   "edge_functions": 23,
   "tabelas": 238,
-  "migrations": 286,
+  "migrations": 292,
   "cron_jobs": 24,
   "testes": 173,
   "workflows": 6,
@@ -400,7 +400,7 @@
   },
   "src/components": {
    "arquivos": 466,
-   "linhas": 79100
+   "linhas": 79127
   },
   "src/constants": {
    "arquivos": 1,
@@ -420,7 +420,7 @@
   },
   "src/integrations": {
    "arquivos": 3,
-   "linhas": 13041
+   "linhas": 13060
   },
   "src/lib": {
    "arquivos": 106,
@@ -432,11 +432,11 @@
   },
   "src/pages": {
    "arquivos": 86,
-   "linhas": 24833
+   "linhas": 24959
   },
   "src/services": {
    "arquivos": 99,
-   "linhas": 22432
+   "linhas": 22439
   },
   "src/stories": {
    "arquivos": 29,
@@ -486,7 +486,7 @@
  "maiores_arquivos": [
   {
    "arquivo": "src/integrations/supabase/types.ts",
-   "linhas": 12985
+   "linhas": 13004
   },
   {
    "arquivo": "scripts/regras_negocio/generate.py",
@@ -529,6 +529,10 @@
    "linhas": 855
   },
   {
+   "arquivo": "src/pages/Pdi.tsx",
+   "linhas": 779
+  },
+  {
    "arquivo": "src/lib/campaignImport.ts",
    "linhas": 771
   },
@@ -543,10 +547,6 @@
   {
    "arquivo": "src/components/ui/skeleton.tsx",
    "linhas": 701
-  },
-  {
-   "arquivo": "src/pages/Pdi.tsx",
-   "linhas": 664
   },
   {
    "arquivo": "src/services/mentorshipService.ts",

@@ -982,6 +982,7 @@
    "src/components/ui/button.tsx",
    "src/components/ui/card.tsx",
    "src/components/ui/dialog.tsx",
+   "src/components/ui/input.tsx",
    "src/components/ui/scroll-area.tsx",
    "src/components/ui/table.tsx",
    "src/components/ui/tabs.tsx",
@@ -4253,7 +4254,6 @@
    "src/lib/edgeAvailability.ts",
    "src/lib/requestId.ts",
    "src/services/loggingService.ts",
-   "src/services/passwordResetService.ts",
    "src/services/twoFactorService.ts"
   ],
   "src/pages/BIDashboard.tsx": [
@@ -4791,6 +4791,7 @@
    "src/components/SectionErrorBoundary.tsx",
    "src/components/TeamCertificationsPanel.tsx",
    "src/components/admin/PDIAlertsPanel.tsx",
+   "src/components/admin/PasswordResetApprovalPanel.tsx",
    "src/components/manager/AICopilotDashboard.tsx",
    "src/components/manager/HighPotentialsPanel.tsx",
    "src/components/manager/ManagerComponents.tsx",

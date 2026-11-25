@@ -650,14 +650,14 @@
     "PasswordResetApprovalPanel"
    ],
    "export_default": null,
-   "linhas": 332,
+   "linhas": 408,
    "dominio": "components/admin",
    "hooks_locais": [
     "usePasswordResetRealtime"
    ],
    "tabelas": [],
    "edges": [],
-   "usado_por": 1,
+   "usado_por": 2,
    "orfao": false
   },
   {
@@ -1305,7 +1305,7 @@
     "AuthFormContent"
    ],
    "export_default": null,
-   "linhas": 274,
+   "linhas": 225,
    "dominio": "components/auth",
    "hooks_locais": [],
    "tabelas": [],
@@ -6412,7 +6412,7 @@
    "hooks_locais": [],
    "tabelas": [],
    "edges": [],
-   "usado_por": 95,
+   "usado_por": 96,
    "orfao": false
   },
   {
@@ -7603,15 +7603,13 @@
     "Auth"
    ],
    "export_default": "Auth",
-   "linhas": 342,
+   "linhas": 318,
    "dominio": "pages",
    "hooks_locais": [
     "useAuth",
     "useLoginLockout"
    ],
-   "tabelas": [
-    "profiles"
-   ],
+   "tabelas": [],
    "edges": [
     "verify-ip"
    ],
@@ -8120,7 +8118,7 @@
     "ForgotPassword"
    ],
    "export_default": "ForgotPassword",
-   "linhas": 170,
+   "linhas": 175,
    "dominio": "pages",
    "hooks_locais": [
     "useAuth"
@@ -8291,7 +8289,7 @@
     "ManagerDashboard"
    ],
    "export_default": "ManagerDashboard",
-   "linhas": 272,
+   "linhas": 275,
    "dominio": "pages",
    "hooks_locais": [
     "useAllTeamMembers",
@@ -8441,7 +8439,7 @@
     "Pdi"
    ],
    "export_default": "Pdi",
-   "linhas": 664,
+   "linhas": 779,
    "dominio": "pages",
    "hooks_locais": [
     "useAuth",
@@ -8669,7 +8667,7 @@
     "ResetPassword"
    ],
    "export_default": "ResetPassword",
-   "linhas": 345,
+   "linhas": 372,
    "dominio": "pages",
    "hooks_locais": [
     "useAuth"

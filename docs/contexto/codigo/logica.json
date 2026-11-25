@@ -316,7 +316,7 @@
     "TablesUpdate"
    ],
    "export_default": null,
-   "linhas": 12985,
+   "linhas": 13004,
    "tabelas": [],
    "rpcs": [],
    "edges": [],
@@ -6127,13 +6127,14 @@
     "passwordResetService"
    ],
    "export_default": null,
-   "linhas": 204,
+   "linhas": 211,
    "tabelas": [
     "password_reset_requests",
     "profiles"
    ],
    "rpcs": [
     "approve_password_reset",
+    "get_pending_password_reset_requests",
     "reject_password_reset",
     "request_password_reset"
    ],
@@ -6143,10 +6144,9 @@
    "zod_schemas": 0,
    "flags": [],
    "papeis": [],
-   "usado_por": 2,
+   "usado_por": 1,
    "usado_por_modulos": [
-    "components/admin",
-    "pages"
+    "components/admin"
    ],
    "coberto_por_testes": 0,
    "orfao": false

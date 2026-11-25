@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "a6a9bc631d0de5e01b8d0f579275ee57fdc90966",
+  "sha": "bef27bdcf5dcd942436b92d6f45615beb408bff7",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
-  "generated_at": "2026-11-25 12:49 UTC",
-  "files_total": 1591,
-  "code_files": 1484,
-  "code_lines": 269754
+  "generated_at": "2026-11-25 12:51 UTC",
+  "files_total": 1597,
+  "code_files": 1490,
+  "code_lines": 270550
  },
  "version": "1.3.2",
- "facts_hash": "4b6102b8279856f5",
+ "facts_hash": "41ca9d48a65c1567",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -196,7 +196,7 @@
   "languages": {
    ".ts": 585,
    ".tsx": 579,
-   ".sql": 288,
+   ".sql": 294,
    ".mjs": 21,
    ".js": 5,
    ".py": 5,
@@ -25429,6 +25429,36 @@
     "src": "supabase/migrations/20261224090000_webauthn_login_hardening.sql"
    },
    {
+    "name": "pdi_templates_insert_admin",
+    "table": "pdi_templates",
+    "cmd": "INSERT",
+    "roles": "authenticated",
+    "mode": "permissive",
+    "using": "",
+    "check": "public.has_role(auth.uid(), 'admin')",
+    "src": "supabase/migrations/20261226190000_pdi_templates_escrita_admin.sql"
+   },
+   {
+    "name": "pdi_templates_update_admin",
+    "table": "pdi_templates",
+    "cmd": "UPDATE",
+    "roles": "authenticated",
+    "mode": "permissive",
+    "using": "public.has_role(auth.uid(), 'admin')",
+    "check": "public.has_role(auth.uid(), 'admin')",
+    "src": "supabase/migrations/20261226190000_pdi_templates_escrita_admin.sql"
+   },
+   {
+    "name": "pdi_templates_delete_admin",
+    "table": "pdi_templates",
+    "cmd": "DELETE",
+    "roles": "authenticated",
+    "mode": "permissive",
+    "using": "public.has_role(auth.uid(), 'admin')",
+    "check": "",
+    "src": "supabase/migrations/20261226190000_pdi_templates_escrita_admin.sql"
+   },
+   {
     "name": "Managers can create climate surveys",
     "table": "climate_surveys",
     "cmd": "INSERT",
@@ -27054,31 +27084,33 @@
     ]
    },
    "approve_password_reset": {
-    "args": "p_request_id UUID, p_notes TEXT DEFAULT NULL",
-    "returns": "JSONB",
+    "args": "p_request_id uuid, p_notes text DEFAULT NULL::text",
+    "returns": "jsonb",
     "lang": "plpgsql",
-    "src": "supabase/migrations/20251231024333_e62d585a-a5ec-4885-b28a-65ff2d73b23e.sql",
+    "src": "supabase/migrations/20261226195000_reset_senha_consistencia.sql",
     "security_definer": true,
     "search_path": true,
-    "body": "DECLARE v_request password_reset_requests%ROWTYPE; v_reset_token UUID; BEGIN SELECT * INTO v_request FROM password_reset_requests WHERE id = p_request_id; IF v_request IS NULL THEN RETURN jsonb_build_object('success', false, 'error', 'Solicitação não encontrada'); END IF; IF v_request.status != 'pending' THEN RETURN jsonb_build_object('success', false, 'error', 'Solicitação não está pendente'); END IF; IF v_request.expires_at < now() THEN UPDATE password_reset_requests SET status = 'expired' WHERE id = p_request_id; RETURN jsonb_build_object('success', false, 'error', 'Solicitação expirada'); END IF; v_reset_token := gen_random_uuid(); UPDATE password_reset_requests SET status = 'approved', …",
+    "body": "DECLARE v_user_id uuid; v_expires_at timestamptz; v_reset_token uuid := gen_random_uuid(); v_updated integer; BEGIN SELECT user_id, expires_at INTO v_user_id, v_expires_at FROM password_reset_requests WHERE id = p_request_id; IF v_user_id IS NULL THEN RETURN jsonb_build_object('success', false, 'error', 'Solicitação não encontrada'); END IF; IF NOT ( has_role(auth.uid(), 'admin'::app_role) OR EXISTS ( SELECT 1 FROM team_members tm1 JOIN team_members tm2 ON tm1.department_id = tm2.department_id WHERE tm1.user_id = auth.uid() AND tm1.is_manager = true AND tm2.user_id = v_user_id ) ) THEN RETURN jsonb_build_object('success', false, 'error', 'Sem permissão para aprovar esta solicitação'); END IF …",
     "raises": [],
     "tables": [
      "password_reset_requests",
-     "v_request"
+     "team_members",
+     "v_user_id"
     ]
    },
    "reject_password_reset": {
-    "args": "p_request_id UUID, p_notes TEXT DEFAULT NULL",
-    "returns": "JSONB",
+    "args": "p_request_id uuid, p_notes text DEFAULT NULL::text",
+    "returns": "jsonb",
     "lang": "plpgsql",
-    "src": "supabase/migrations/20251231024333_e62d585a-a5ec-4885-b28a-65ff2d73b23e.sql",
+    "src": "supabase/migrations/20261226195000_reset_senha_consistencia.sql",
     "security_definer": true,
     "search_path": true,
-    "body": "DECLARE v_request password_reset_requests%ROWTYPE; BEGIN SELECT * INTO v_request FROM password_reset_requests WHERE id = p_request_id; IF v_request IS NULL THEN RETURN jsonb_build_object('success', false, 'error', 'Solicitação não encontrada'); END IF; IF v_request.status != 'pending' THEN RETURN jsonb_build_object('success', false, 'error', 'Solicitação não está pendente'); END IF; UPDATE password_reset_requests SET status = 'rejected', reviewed_by = auth.uid(), reviewed_at = now(), review_notes = p_notes WHERE id = p_request_id; RETURN jsonb_build_object('success', true); END;",
+    "body": "DECLARE v_user_id uuid; v_updated integer; BEGIN SELECT user_id INTO v_user_id FROM password_reset_requests WHERE id = p_request_id; IF v_user_id IS NULL THEN RETURN jsonb_build_object('success', false, 'error', 'Solicitação não encontrada'); END IF; IF NOT ( has_role(auth.uid(), 'admin'::app_role) OR EXISTS ( SELECT 1 FROM team_members tm1 JOIN team_members tm2 ON tm1.department_id = tm2.department_id WHERE tm1.user_id = auth.uid() AND tm1.is_manager = true AND tm2.user_id = v_user_id ) ) THEN RETURN jsonb_build_object('success', false, 'error', 'Sem permissão para rejeitar esta solicitação'); END IF; UPDATE password_reset_requests SET status = 'rejected', reviewed_by = auth.uid(), reviewed …",
     "raises": [],
     "tables": [
      "password_reset_requests",
-     "v_request"
+     "team_members",
+     "v_user_id"
     ]
    },
    "is_ip_blocked": {
@@ -30910,6 +30942,54 @@
      "profiles"
     ]
    },
+   "request_password_reset_by_email": {
+    "args": "p_email text",
+    "returns": "boolean",
+    "lang": "plpgsql",
+    "src": "supabase/migrations/20261226170000_reset_senha_busca_auth_users.sql",
+    "security_definer": true,
+    "search_path": true,
+    "body": "DECLARE v_user_id uuid; v_recentes integer; BEGIN IF p_email IS NULL OR btrim(p_email) = '' THEN RETURN true; END IF; SELECT u.id INTO v_user_id FROM auth.users u WHERE lower(u.email) = lower(btrim(p_email)) LIMIT 1; IF v_user_id IS NULL THEN SELECT p.id INTO v_user_id FROM public.profiles p WHERE lower(p.email) = lower(btrim(p_email)) LIMIT 1; END IF; IF v_user_id IS NULL THEN RETURN true; END IF; UPDATE public.password_reset_requests SET status = 'expired' WHERE user_id = v_user_id AND status = 'pending' AND expires_at <= now(); SELECT count(*) INTO v_recentes FROM public.password_reset_requests WHERE user_id = v_user_id AND created_at > now() - INTERVAL '1 hour'; IF v_recentes >= 5 THEN R …",
+    "raises": [],
+    "tables": [
+     "auth",
+     "password_reset_requests",
+     "profiles",
+     "v_recentes",
+     "v_user_id"
+    ]
+   },
+   "reset_password_with_token": {
+    "args": "p_token uuid, p_password text",
+    "returns": "jsonb",
+    "lang": "plpgsql",
+    "src": "supabase/migrations/20261226195000_reset_senha_consistencia.sql",
+    "security_definer": true,
+    "search_path": true,
+    "body": "DECLARE v_request_id uuid; v_user_id uuid; BEGIN IF p_token IS NULL THEN RETURN jsonb_build_object('success', false, 'error', 'Link inválido ou expirado.'); END IF; IF p_password IS NULL OR length(p_password) < 8 THEN RETURN jsonb_build_object('success', false, 'error', 'A senha precisa ter ao menos 8 caracteres.'); END IF; UPDATE public.password_reset_requests SET status = 'completed', completed_at = now(), reset_token = NULL, updated_at = now() WHERE reset_token = p_token AND status = 'approved' AND completed_at IS NULL AND reset_token_expires_at IS NOT NULL AND reset_token_expires_at > now() RETURNING id, user_id INTO v_request_id, v_user_id; IF v_user_id IS NULL THEN RETURN jsonb_build_o …",
+    "raises": [],
+    "tables": [
+     "auth",
+     "password_reset_requests",
+     "v_request_id"
+    ]
+   },
+   "get_pending_password_reset_requests": {
+    "args": "",
+    "returns": "TABLE (\n  id uuid,\n  user_id uuid,\n  email text,\n  display_name text,\n  requested_at timestamptz,\n  expires_at timestamptz\n)",
+    "lang": "plpgsql",
+    "src": "supabase/migrations/20261226195000_reset_senha_consistencia.sql",
+    "security_definer": true,
+    "search_path": true,
+    "body": "DECLARE v_uid uuid := auth.uid(); BEGIN IF v_uid IS NULL THEN RETURN; END IF; RETURN QUERY SELECT r.id, r.user_id, u.email::text AS email, COALESCE( NULLIF(p.display_name, ''), NULLIF(split_part(coalesce(u.email, ''), '@', 1), '') ) AS display_name, r.requested_at, r.expires_at FROM public.password_reset_requests r LEFT JOIN public.profiles p ON p.id = r.user_id LEFT JOIN auth.users u ON u.id = r.user_id WHERE r.status = 'pending' AND ( has_role(v_uid, 'admin'::app_role) OR EXISTS ( SELECT 1 FROM team_members tm1 JOIN team_members tm2 ON tm1.department_id = tm2.department_id WHERE tm1.user_id = v_uid AND tm1.is_manager = true AND tm2.user_id = r.user_id ) ) ORDER BY r.requested_at ASC; END;",
+    "raises": [],
+    "tables": [
+     "auth",
+     "password_reset_requests",
+     "profiles",
+     "team_members"
+    ]
+   },
    "Args": {
     "args": "",
     "returns": "?",
@@ -33395,6 +33475,14 @@
     "unique": true,
     "where": "WHERE department_id IS NULL",
     "src": "supabase/migrations/20261123180000_climate_survey_engine.sql"
+   },
+   {
+    "name": "uq_password_reset_pendente_por_usuario",
+    "table": "password_reset_requests",
+    "columns": "user_id",
+    "unique": true,
+    "where": "WHERE status = 'pending'",
+    "src": "supabase/migrations/20261226150000_reset_senha_fluxo_completo.sql"
    }
   ],
   "cron_jobs": [
@@ -33789,8 +33877,14 @@
    "supabase/migrations/20261224130000_climate_antecipa_fim_pesquisa.sql",
    "supabase/migrations/20261224140000_climate_reminder_push.sql",
    "supabase/migrations/20261226120000_revoga_execute_anon_security_definer.sql",
+   "supabase/migrations/20261226130000_reset_senha_por_email.sql",
    "supabase/migrations/20261226140000_corrige_grants_rls_e_rpcs_internos.sql",
+   "supabase/migrations/20261226150000_reset_senha_fluxo_completo.sql",
+   "supabase/migrations/20261226160000_reset_senha_guardas_aprovacao.sql",
+   "supabase/migrations/20261226170000_reset_senha_busca_auth_users.sql",
    "supabase/migrations/20261226180000_escopo_gestor_rpcs_relatorio.sql",
+   "supabase/migrations/20261226190000_pdi_templates_escrita_admin.sql",
+   "supabase/migrations/20261226195000_reset_senha_consistencia.sql",
    "supabase/migrations/20261226200000_profiles_select_colunas_sensiveis.sql",
    "supabase/tests/climate/assertions.sql",
    "supabase/tests/climate/stubs.sql",
@@ -41580,6 +41674,22 @@
     "src": "supabase/migrations/20261226120000_revoga_execute_anon_security_definer.sql"
    },
    {
+    "kind": "revoke",
+    "privs": "all",
+    "object": "request_password_reset_by_email",
+    "objkind": "function",
+    "roles": "PUBLIC",
+    "src": "supabase/migrations/20261226130000_reset_senha_por_email.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "request_password_reset_by_email",
+    "objkind": "function",
+    "roles": "anon, authenticated, service_role",
+    "src": "supabase/migrations/20261226130000_reset_senha_por_email.sql"
+   },
+   {
     "kind": "grant",
     "privs": "execute",
     "object": "has_role",
@@ -41794,6 +41904,142 @@
     "objkind": "function",
     "roles": "authenticated",
     "src": "supabase/migrations/20261226140000_corrige_grants_rls_e_rpcs_internos.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "all",
+    "object": "request_password_reset_by_email",
+    "objkind": "function",
+    "roles": "PUBLIC",
+    "src": "supabase/migrations/20261226150000_reset_senha_fluxo_completo.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "request_password_reset_by_email",
+    "objkind": "function",
+    "roles": "anon, authenticated, service_role",
+    "src": "supabase/migrations/20261226150000_reset_senha_fluxo_completo.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "all",
+    "object": "reset_password_with_token",
+    "objkind": "function",
+    "roles": "PUBLIC",
+    "src": "supabase/migrations/20261226150000_reset_senha_fluxo_completo.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "reset_password_with_token",
+    "objkind": "function",
+    "roles": "anon, authenticated, service_role",
+    "src": "supabase/migrations/20261226150000_reset_senha_fluxo_completo.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "all",
+    "object": "approve_password_reset",
+    "objkind": "function",
+    "roles": "anon",
+    "src": "supabase/migrations/20261226160000_reset_senha_guardas_aprovacao.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "all",
+    "object": "reject_password_reset",
+    "objkind": "function",
+    "roles": "anon",
+    "src": "supabase/migrations/20261226160000_reset_senha_guardas_aprovacao.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "approve_password_reset",
+    "objkind": "function",
+    "roles": "authenticated, service_role",
+    "src": "supabase/migrations/20261226160000_reset_senha_guardas_aprovacao.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "reject_password_reset",
+    "objkind": "function",
+    "roles": "authenticated, service_role",
+    "src": "supabase/migrations/20261226160000_reset_senha_guardas_aprovacao.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "request_password_reset_by_email",
+    "objkind": "function",
+    "roles": "anon, authenticated, service_role",
+    "src": "supabase/migrations/20261226170000_reset_senha_busca_auth_users.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "all",
+    "object": "approve_password_reset",
+    "objkind": "function",
+    "roles": "anon",
+    "src": "supabase/migrations/20261226195000_reset_senha_consistencia.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "all",
+    "object": "reject_password_reset",
+    "objkind": "function",
+    "roles": "anon",
+    "src": "supabase/migrations/20261226195000_reset_senha_consistencia.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "all",
+    "object": "reset_password_with_token",
+    "objkind": "function",
+    "roles": "PUBLIC",
+    "src": "supabase/migrations/20261226195000_reset_senha_consistencia.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "approve_password_reset",
+    "objkind": "function",
+    "roles": "authenticated, service_role",
+    "src": "supabase/migrations/20261226195000_reset_senha_consistencia.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "reject_password_reset",
+    "objkind": "function",
+    "roles": "authenticated, service_role",
+    "src": "supabase/migrations/20261226195000_reset_senha_consistencia.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "reset_password_with_token",
+    "objkind": "function",
+    "roles": "anon, authenticated, service_role",
+    "src": "supabase/migrations/20261226195000_reset_senha_consistencia.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "all",
+    "object": "get_pending_password_reset_requests",
+    "objkind": "function",
+    "roles": "PUBLIC, anon",
+    "src": "supabase/migrations/20261226195000_reset_senha_consistencia.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "get_pending_password_reset_requests",
+    "objkind": "function",
+    "roles": "authenticated, service_role",
+    "src": "supabase/migrations/20261226195000_reset_senha_consistencia.sql"
    },
    {
     "kind": "revoke",
@@ -42960,6 +43206,7 @@
      "generate_engagement_snapshot",
      "get_my_profile_private",
      "get_nine_box_distribution",
+     "get_pending_password_reset_requests",
      "get_quiz_lifeline",
      "get_quiz_play_set",
      "grade_quiz_answer",
@@ -43134,7 +43381,6 @@
     "component": "Auth",
     "tables_transitive": [
      "new_device_alerts",
-     "password_reset_requests",
      "user_devices",
      "user_two_factor",
      "webauthn_challenges",
@@ -43142,15 +43388,12 @@
     ],
     "invokes_transitive": [],
     "rpc_transitive": [
-     "approve_password_reset",
      "check_login_lockout",
      "log_login_attempt",
-     "reject_password_reset",
-     "request_password_reset",
      "reset_login_attempts",
      "user_has_passkeys"
     ],
-    "deps_count": 34
+    "deps_count": 33
    },
    {
     "path": "",
@@ -43956,6 +44199,7 @@
      "new_device_alerts",
      "nine_box_evaluations",
      "notifications",
+     "password_reset_requests",
      "positions",
      "profiles",
      "profiles_public",
@@ -43977,13 +44221,17 @@
     "rpc_transitive": [
      "add_coins",
      "add_xp",
+     "approve_password_reset",
      "get_my_profile_private",
      "get_nine_box_distribution",
+     "get_pending_password_reset_requests",
      "increment_quests_completed",
      "increment_streak",
+     "reject_password_reset",
+     "request_password_reset",
      "verify_certificate"
     ],
-    "deps_count": 101
+    "deps_count": 106
    },
    {
     "path": "",
@@ -49124,7 +49372,7 @@
   {
    "module": "src/components",
    "files": 466,
-   "lines": 79100,
+   "lines": 79127,
    "tables": [
     "attendance_records",
     "audit_logs",
@@ -49539,7 +49787,7 @@
   {
    "module": "src/integrations",
    "files": 3,
-   "lines": 13041,
+   "lines": 13060,
    "tables": [],
    "exports": [
     "index.ts: lovable",
@@ -49719,7 +49967,7 @@
   {
    "module": "src/pages",
    "files": 86,
-   "lines": 24833,
+   "lines": 24959,
    "tables": [
     "audit_logs",
     "campaign_participants",
@@ -49896,7 +50144,7 @@
   {
    "module": "src/services",
    "files": 99,
-   "lines": 22432,
+   "lines": 22439,
    "tables": [
     "achievements",
     "action_plan_items",
@@ -50650,8 +50898,8 @@
   },
   {
    "module": "supabase/migrations",
-   "files": 286,
-   "lines": 31468,
+   "files": 292,
+   "lines": 32085,
    "tables": [],
    "exports": [],
    "docs": [],
@@ -51942,7 +52190,6 @@
      "src/hooks/usePDIAlerts.ts",
      "src/hooks/useUserRank.ts",
      "src/hooks/useWeeklyChallenge.ts",
-     "src/pages/Auth.tsx",
      "src/pages/Profile.tsx",
      "src/services/achievementsService.ts",
      "src/services/activityCommentsService.ts",
@@ -54332,6 +54579,9 @@
    "get_passkeys_by_email": [
     "supabase/functions/passkey-auth/index.ts"
    ],
+   "get_pending_password_reset_requests": [
+    "src/services/passwordResetService.ts"
+   ],
    "get_prediction_odds_history": [
     "src/services/predictionMarketService.ts"
    ],
@@ -54492,11 +54742,17 @@
    "request_password_reset": [
     "src/services/passwordResetService.ts"
    ],
+   "request_password_reset_by_email": [
+    "src/pages/ForgotPassword.tsx"
+   ],
    "requeue_push_outbox": [
     "src/components/security/PushOutboxHealthPanel.tsx"
    ],
    "reset_login_attempts": [
     "src/hooks/useLoginLockout.ts"
+   ],
+   "reset_password_with_token": [
+    "src/pages/ResetPassword.tsx"
    ],
    "reset_push_failures": [
     "supabase/functions/send-campaign-push/index.ts"
@@ -56332,6 +56588,11 @@
     "file": "src/pages/Mentoria.tsx",
     "field": "mission-coins",
     "rules": "type=number, min=0"
+   },
+   {
+    "file": "src/pages/Pdi.tsx",
+    "field": "pdi-template-months",
+    "rules": "type=number, min=1"
    },
    {
     "file": "src/pages/Pdi.tsx",
@@ -58281,10 +58542,6 @@
    },
    {
     "file": "src/pages/Auth.tsx",
-    "msg": "Email não encontrado no sistema"
-   },
-   {
-    "file": "src/pages/Auth.tsx",
     "msg": "Email ou senha incorretos"
    },
    {
@@ -58298,10 +58555,6 @@
    {
     "file": "src/pages/Auth.tsx",
     "msg": "Erro ao processar autenticação. Tente novamente."
-   },
-   {
-    "file": "src/pages/Auth.tsx",
-    "msg": "Erro ao solicitar reset de senha. Tente novamente."
    },
    {
     "file": "src/pages/BingoPage.tsx",
@@ -58481,11 +58734,19 @@
    },
    {
     "file": "src/pages/Pdi.tsx",
+    "msg": "Informe o nome e a categoria do template."
+   },
+   {
+    "file": "src/pages/Pdi.tsx",
     "msg": "Não foi possível adicionar o mentor"
    },
    {
     "file": "src/pages/Pdi.tsx",
     "msg": "Não foi possível aplicar o template"
+   },
+   {
+    "file": "src/pages/Pdi.tsx",
+    "msg": "Não foi possível criar o template."
    },
    {
     "file": "src/pages/Pdi.tsx",
@@ -58498,6 +58759,10 @@
    {
     "file": "src/pages/Pdi.tsx",
     "msg": "Selecione quem vai acompanhar o PDI"
+   },
+   {
+    "file": "src/pages/Pdi.tsx",
+    "msg": "Sessão expirada. Entre novamente para cadastrar o template."
    },
    {
     "file": "src/pages/Profile.tsx",
@@ -59332,6 +59597,10 @@
    {
     "file": "supabase/migrations/20261123180000_climate_survey_engine.sql",
     "value": "manager"
+   },
+   {
+    "file": "supabase/migrations/20261226195000_reset_senha_consistencia.sql",
+    "value": "admin"
    }
   ],
   "comments": [
@@ -73144,6 +73413,12 @@
    {
     "file": "src/components/admin/PasswordResetApprovalPanel.tsx",
     "field": "status",
+    "value": "approved",
+    "kind": "compara"
+   },
+   {
+    "file": "src/components/admin/PasswordResetApprovalPanel.tsx",
+    "field": "status",
     "value": "pending",
     "kind": "compara"
    },
@@ -77621,7 +77896,7 @@
     "file": "src/services/passwordResetService.ts",
     "field": "status",
     "value": "pending",
-    "kind": "filtra"
+    "kind": "escreve"
    },
    {
     "file": "src/services/passwordResetService.ts",
@@ -79110,6 +79385,18 @@
     "field": "status",
     "value": "pending",
     "kind": "compara"
+   },
+   {
+    "file": "supabase/migrations/20261226160000_reset_senha_guardas_aprovacao.sql",
+    "field": "status",
+    "value": "pending",
+    "kind": "compara"
+   },
+   {
+    "file": "supabase/migrations/20261226160000_reset_senha_guardas_aprovacao.sql",
+    "field": "status",
+    "value": "pending",
+    "kind": "compara"
    }
   ],
   "calc_fns": [
@@ -79675,7 +79962,7 @@
     "file": "src/pages/Auth.tsx",
     "name": "validateForm",
     "params": "",
-    "body": "const newErrors: typeof errors = {}; if (view === \"forgot-password\") { const r = emailSchema.safeParse(email); if (!r.success) newErrors.email = r.error.issues[0].message; } else if (view === \"login\") { const r = loginSchema.safeParse({ email, password }); if (!r.success) r.error.issues.forEach((e) => { if (e.path[0] === \"email\") newErrors.email = e.message; if (e.path[0] === \"password\") newErrors.password = e.message; }); } else { const r = signupSchema.safeParse({ email, password, displayName: …"
+    "body": "const newErrors: typeof errors = {}; if (view === \"login\") { const r = loginSchema.safeParse({ email, password }); if (!r.success) r.error.issues.forEach((e) => { if (e.path[0] === \"email\") newErrors.email = e.message; if (e.path[0] === \"password\") newErrors.password = e.message; }); } else { const r = signupSchema.safeParse({ email, password, displayName: displayName || undefined }); if (!r.success) r.error.issues.forEach((e) => { if (e.path[0] === \"email\") newErrors.email = e.message; if (e.pa …"
    },
    {
     "file": "src/pages/CampaignHistory.tsx",
@@ -80440,6 +80727,10 @@
    {
     "file": "src/pages/RealTimeAnalytics.tsx",
     "line": "const hours = eachHourOfInterval({ start: subDays(now, 1), end: now });"
+   },
+   {
+    "file": "src/pages/ResetPassword.tsx",
+    "line": "setTimeout(() => navigate(\"/auth\"), 3000);"
    },
    {
     "file": "src/pages/ResetPassword.tsx",
@@ -95418,6 +95709,36 @@
     "src": "supabase/migrations/20261224090000_webauthn_login_hardening.sql"
    },
    {
+    "name": "pdi_templates_insert_admin",
+    "table": "pdi_templates",
+    "cmd": "INSERT",
+    "roles": "authenticated",
+    "mode": "permissive",
+    "using": "",
+    "check": "public.has_role(auth.uid(), 'admin')",
+    "src": "supabase/migrations/20261226190000_pdi_templates_escrita_admin.sql"
+   },
+   {
+    "name": "pdi_templates_update_admin",
+    "table": "pdi_templates",
+    "cmd": "UPDATE",
+    "roles": "authenticated",
+    "mode": "permissive",
+    "using": "public.has_role(auth.uid(), 'admin')",
+    "check": "public.has_role(auth.uid(), 'admin')",
+    "src": "supabase/migrations/20261226190000_pdi_templates_escrita_admin.sql"
+   },
+   {
+    "name": "pdi_templates_delete_admin",
+    "table": "pdi_templates",
+    "cmd": "DELETE",
+    "roles": "authenticated",
+    "mode": "permissive",
+    "using": "public.has_role(auth.uid(), 'admin')",
+    "check": "",
+    "src": "supabase/migrations/20261226190000_pdi_templates_escrita_admin.sql"
+   },
+   {
     "name": "Managers can create climate surveys",
     "table": "climate_surveys",
     "cmd": "INSERT",
@@ -97043,31 +97364,33 @@
     ]
    },
    "approve_password_reset": {
-    "args": "p_request_id UUID, p_notes TEXT DEFAULT NULL",
-    "returns": "JSONB",
+    "args": "p_request_id uuid, p_notes text DEFAULT NULL::text",
+    "returns": "jsonb",
     "lang": "plpgsql",
-    "src": "supabase/migrations/20251231024333_e62d585a-a5ec-4885-b28a-65ff2d73b23e.sql",
+    "src": "supabase/migrations/20261226195000_reset_senha_consistencia.sql",
     "security_definer": true,
     "search_path": true,
-    "body": "DECLARE v_request password_reset_requests%ROWTYPE; v_reset_token UUID; BEGIN SELECT * INTO v_request FROM password_reset_requests WHERE id = p_request_id; IF v_request IS NULL THEN RETURN jsonb_build_object('success', false, 'error', 'Solicitação não encontrada'); END IF; IF v_request.status != 'pending' THEN RETURN jsonb_build_object('success', false, 'error', 'Solicitação não está pendente'); END IF; IF v_request.expires_at < now() THEN UPDATE password_reset_requests SET status = 'expired' WHERE id = p_request_id; RETURN jsonb_build_object('success', false, 'error', 'Solicitação expirada'); END IF; v_reset_token := gen_random_uuid(); UPDATE password_reset_requests SET status = 'approved', …",
+    "body": "DECLARE v_user_id uuid; v_expires_at timestamptz; v_reset_token uuid := gen_random_uuid(); v_updated integer; BEGIN SELECT user_id, expires_at INTO v_user_id, v_expires_at FROM password_reset_requests WHERE id = p_request_id; IF v_user_id IS NULL THEN RETURN jsonb_build_object('success', false, 'error', 'Solicitação não encontrada'); END IF; IF NOT ( has_role(auth.uid(), 'admin'::app_role) OR EXISTS ( SELECT 1 FROM team_members tm1 JOIN team_members tm2 ON tm1.department_id = tm2.department_id WHERE tm1.user_id = auth.uid() AND tm1.is_manager = true AND tm2.user_id = v_user_id ) ) THEN RETURN jsonb_build_object('success', false, 'error', 'Sem permissão para aprovar esta solicitação'); END IF …",
     "raises": [],
     "tables": [
      "password_reset_requests",
-     "v_request"
+     "team_members",
+     "v_user_id"
     ]
    },
    "reject_password_reset": {
-    "args": "p_request_id UUID, p_notes TEXT DEFAULT NULL",
-    "returns": "JSONB",
+    "args": "p_request_id uuid, p_notes text DEFAULT NULL::text",
+    "returns": "jsonb",
     "lang": "plpgsql",
-    "src": "supabase/migrations/20251231024333_e62d585a-a5ec-4885-b28a-65ff2d73b23e.sql",
+    "src": "supabase/migrations/20261226195000_reset_senha_consistencia.sql",
     "security_definer": true,
     "search_path": true,
-    "body": "DECLARE v_request password_reset_requests%ROWTYPE; BEGIN SELECT * INTO v_request FROM password_reset_requests WHERE id = p_request_id; IF v_request IS NULL THEN RETURN jsonb_build_object('success', false, 'error', 'Solicitação não encontrada'); END IF; IF v_request.status != 'pending' THEN RETURN jsonb_build_object('success', false, 'error', 'Solicitação não está pendente'); END IF; UPDATE password_reset_requests SET status = 'rejected', reviewed_by = auth.uid(), reviewed_at = now(), review_notes = p_notes WHERE id = p_request_id; RETURN jsonb_build_object('success', true); END;",
+    "body": "DECLARE v_user_id uuid; v_updated integer; BEGIN SELECT user_id INTO v_user_id FROM password_reset_requests WHERE id = p_request_id; IF v_user_id IS NULL THEN RETURN jsonb_build_object('success', false, 'error', 'Solicitação não encontrada'); END IF; IF NOT ( has_role(auth.uid(), 'admin'::app_role) OR EXISTS ( SELECT 1 FROM team_members tm1 JOIN team_members tm2 ON tm1.department_id = tm2.department_id WHERE tm1.user_id = auth.uid() AND tm1.is_manager = true AND tm2.user_id = v_user_id ) ) THEN RETURN jsonb_build_object('success', false, 'error', 'Sem permissão para rejeitar esta solicitação'); END IF; UPDATE password_reset_requests SET status = 'rejected', reviewed_by = auth.uid(), reviewed …",
     "raises": [],
     "tables": [
      "password_reset_requests",
-     "v_request"
+     "team_members",
+     "v_user_id"
     ]
    },
    "is_ip_blocked": {
@@ -100899,6 +101222,54 @@
      "profiles"
     ]
    },
+   "request_password_reset_by_email": {
+    "args": "p_email text",
+    "returns": "boolean",
+    "lang": "plpgsql",
+    "src": "supabase/migrations/20261226170000_reset_senha_busca_auth_users.sql",
+    "security_definer": true,
+    "search_path": true,
+    "body": "DECLARE v_user_id uuid; v_recentes integer; BEGIN IF p_email IS NULL OR btrim(p_email) = '' THEN RETURN true; END IF; SELECT u.id INTO v_user_id FROM auth.users u WHERE lower(u.email) = lower(btrim(p_email)) LIMIT 1; IF v_user_id IS NULL THEN SELECT p.id INTO v_user_id FROM public.profiles p WHERE lower(p.email) = lower(btrim(p_email)) LIMIT 1; END IF; IF v_user_id IS NULL THEN RETURN true; END IF; UPDATE public.password_reset_requests SET status = 'expired' WHERE user_id = v_user_id AND status = 'pending' AND expires_at <= now(); SELECT count(*) INTO v_recentes FROM public.password_reset_requests WHERE user_id = v_user_id AND created_at > now() - INTERVAL '1 hour'; IF v_recentes >= 5 THEN R …",
+    "raises": [],
+    "tables": [
+     "auth",
+     "password_reset_requests",
+     "profiles",
+     "v_recentes",
+     "v_user_id"
+    ]
+   },
+   "reset_password_with_token": {
+    "args": "p_token uuid, p_password text",
+    "returns": "jsonb",
+    "lang": "plpgsql",
+    "src": "supabase/migrations/20261226195000_reset_senha_consistencia.sql",
+    "security_definer": true,
+    "search_path": true,
+    "body": "DECLARE v_request_id uuid; v_user_id uuid; BEGIN IF p_token IS NULL THEN RETURN jsonb_build_object('success', false, 'error', 'Link inválido ou expirado.'); END IF; IF p_password IS NULL OR length(p_password) < 8 THEN RETURN jsonb_build_object('success', false, 'error', 'A senha precisa ter ao menos 8 caracteres.'); END IF; UPDATE public.password_reset_requests SET status = 'completed', completed_at = now(), reset_token = NULL, updated_at = now() WHERE reset_token = p_token AND status = 'approved' AND completed_at IS NULL AND reset_token_expires_at IS NOT NULL AND reset_token_expires_at > now() RETURNING id, user_id INTO v_request_id, v_user_id; IF v_user_id IS NULL THEN RETURN jsonb_build_o …",
+    "raises": [],
+    "tables": [
+     "auth",
+     "password_reset_requests",
+     "v_request_id"
+    ]
+   },
+   "get_pending_password_reset_requests": {
+    "args": "",
+    "returns": "TABLE (\n  id uuid,\n  user_id uuid,\n  email text,\n  display_name text,\n  requested_at timestamptz,\n  expires_at timestamptz\n)",
+    "lang": "plpgsql",
+    "src": "supabase/migrations/20261226195000_reset_senha_consistencia.sql",
+    "security_definer": true,
+    "search_path": true,
+    "body": "DECLARE v_uid uuid := auth.uid(); BEGIN IF v_uid IS NULL THEN RETURN; END IF; RETURN QUERY SELECT r.id, r.user_id, u.email::text AS email, COALESCE( NULLIF(p.display_name, ''), NULLIF(split_part(coalesce(u.email, ''), '@', 1), '') ) AS display_name, r.requested_at, r.expires_at FROM public.password_reset_requests r LEFT JOIN public.profiles p ON p.id = r.user_id LEFT JOIN auth.users u ON u.id = r.user_id WHERE r.status = 'pending' AND ( has_role(v_uid, 'admin'::app_role) OR EXISTS ( SELECT 1 FROM team_members tm1 JOIN team_members tm2 ON tm1.department_id = tm2.department_id WHERE tm1.user_id = v_uid AND tm1.is_manager = true AND tm2.user_id = r.user_id ) ) ORDER BY r.requested_at ASC; END;",
+    "raises": [],
+    "tables": [
+     "auth",
+     "password_reset_requests",
+     "profiles",
+     "team_members"
+    ]
+   },
    "Args": {
     "args": "",
     "returns": "?",
@@ -103986,6 +104357,10 @@
       "filtra:src/services/auctionService.ts",
       "filtra:src/services/bossBattleService.ts"
      ],
+     "approved": [
+      "compara:src/components/admin/PasswordResetApprovalPanel.tsx",
+      "compara:src/components/shop-admin/PurchaseGovernanceDialog.tsx"
+     ],
      "pending": [
       "compara:src/components/admin/PasswordResetApprovalPanel.tsx",
       "compara:src/components/cards/TradeInbox.tsx",
@@ -104002,6 +104377,7 @@
       "compara:supabase/functions/ai-course-builder/index.ts",
       "compara:supabase/functions/push-outbox-dispatcher/index.ts",
       "compara:supabase/migrations/20251231024333_e62d585a-a5ec-4885-b28a-65ff2d73b23e.sql",
+      "compara:supabase/migrations/20261226160000_reset_senha_guardas_aprovacao.sql",
       "escreve:src/lib/pushOutbox.ts",
       "escreve:src/pages/Duels.tsx",
       "escreve:src/services/campaignImportService.ts",
@@ -104129,9 +104505,6 @@
       "compara:supabase/migrations/20251213164818_77e12a61-a727-4556-b33b-03828d080ab1.sql"
      ],
      "delivered": [
-      "compara:src/components/shop-admin/PurchaseGovernanceDialog.tsx"
-     ],
-     "approved": [
       "compara:src/components/shop-admin/PurchaseGovernanceDialog.tsx"
      ],
      "ready": [
@@ -106529,9 +106902,15 @@
     "SELECT": [
      "authenticated: is_active = true"
     ],
-    "INSERT": [],
-    "UPDATE": [],
-    "DELETE": []
+    "INSERT": [
+     "authenticated: public.has_role(auth.uid(), 'admin')"
+    ],
+    "UPDATE": [
+     "authenticated: public.has_role(auth.uid(), 'admin')"
+    ],
+    "DELETE": [
+     "authenticated: public.has_role(auth.uid(), 'admin')"
+    ]
    },
    "penalty_rules": {
     "rls": "enabled",
@@ -107750,20 +108129,12 @@
     ]
    },
    {
-    "table": "pdi_templates",
-    "issue": "front faz INSERT mas nenhuma política RLS permite INSERT → vai falhar/retornar vazio para usuários",
-    "files": [
-     "src/services/pdiService.ts"
-    ]
-   },
-   {
     "table": "profiles",
     "issue": "front faz SELECT mas nenhuma política RLS permite SELECT → vai falhar/retornar vazio para usuários",
     "files": [
      "src/hooks/usePDIAlerts.ts",
      "src/hooks/useUserRank.ts",
      "src/hooks/useWeeklyChallenge.ts",
-     "src/pages/Auth.tsx",
      "src/pages/Profile.tsx",
      "src/services/achievementsService.ts",
      "src/services/activityCommentsService.ts",
@@ -107969,8 +108340,13 @@
    "supabase/migrations/20261224110000_cron_internal_jobs_drift.sql",
    "supabase/migrations/20261224120000_dispatch_critical_alert_config.sql",
    "supabase/migrations/20261226120000_revoga_execute_anon_security_definer.sql",
+   "supabase/migrations/20261226130000_reset_senha_por_email.sql",
    "supabase/migrations/20261226140000_corrige_grants_rls_e_rpcs_internos.sql",
-   "supabase/migrations/20261226180000_escopo_gestor_rpcs_relatorio.sql"
+   "supabase/migrations/20261226150000_reset_senha_fluxo_completo.sql",
+   "supabase/migrations/20261226160000_reset_senha_guardas_aprovacao.sql",
+   "supabase/migrations/20261226170000_reset_senha_busca_auth_users.sql",
+   "supabase/migrations/20261226180000_escopo_gestor_rpcs_relatorio.sql",
+   "supabase/migrations/20261226195000_reset_senha_consistencia.sql"
   ],
   "security_definer_fns": [
    "_climate_recompute_pillar_scores",
@@ -108085,6 +108461,7 @@
    "get_opinion_feed",
    "get_or_create_bingo_card",
    "get_passkeys_by_email",
+   "get_pending_password_reset_requests",
    "get_prediction_odds_history",
    "get_prediction_oracle_aggregates",
    "get_push_outbox_health",
@@ -108154,8 +108531,10 @@
    "reject_password_reset",
    "report_tournament_match",
    "request_password_reset",
+   "request_password_reset_by_email",
    "requeue_push_outbox",
    "reset_login_attempts",
+   "reset_password_with_token",
    "reset_push_failures",
    "resolve_board_challenge",
    "respond_card_trade",
@@ -115780,6 +116159,22 @@
     "src": "supabase/migrations/20261226120000_revoga_execute_anon_security_definer.sql"
    },
    {
+    "kind": "revoke",
+    "privs": "all",
+    "object": "request_password_reset_by_email",
+    "objkind": "function",
+    "roles": "PUBLIC",
+    "src": "supabase/migrations/20261226130000_reset_senha_por_email.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "request_password_reset_by_email",
+    "objkind": "function",
+    "roles": "anon, authenticated, service_role",
+    "src": "supabase/migrations/20261226130000_reset_senha_por_email.sql"
+   },
+   {
     "kind": "grant",
     "privs": "execute",
     "object": "has_role",
@@ -115994,6 +116389,142 @@
     "objkind": "function",
     "roles": "authenticated",
     "src": "supabase/migrations/20261226140000_corrige_grants_rls_e_rpcs_internos.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "all",
+    "object": "request_password_reset_by_email",
+    "objkind": "function",
+    "roles": "PUBLIC",
+    "src": "supabase/migrations/20261226150000_reset_senha_fluxo_completo.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "request_password_reset_by_email",
+    "objkind": "function",
+    "roles": "anon, authenticated, service_role",
+    "src": "supabase/migrations/20261226150000_reset_senha_fluxo_completo.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "all",
+    "object": "reset_password_with_token",
+    "objkind": "function",
+    "roles": "PUBLIC",
+    "src": "supabase/migrations/20261226150000_reset_senha_fluxo_completo.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "reset_password_with_token",
+    "objkind": "function",
+    "roles": "anon, authenticated, service_role",
+    "src": "supabase/migrations/20261226150000_reset_senha_fluxo_completo.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "all",
+    "object": "approve_password_reset",
+    "objkind": "function",
+    "roles": "anon",
+    "src": "supabase/migrations/20261226160000_reset_senha_guardas_aprovacao.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "all",
+    "object": "reject_password_reset",
+    "objkind": "function",
+    "roles": "anon",
+    "src": "supabase/migrations/20261226160000_reset_senha_guardas_aprovacao.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "approve_password_reset",
+    "objkind": "function",
+    "roles": "authenticated, service_role",
+    "src": "supabase/migrations/20261226160000_reset_senha_guardas_aprovacao.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "reject_password_reset",
+    "objkind": "function",
+    "roles": "authenticated, service_role",
+    "src": "supabase/migrations/20261226160000_reset_senha_guardas_aprovacao.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "request_password_reset_by_email",
+    "objkind": "function",
+    "roles": "anon, authenticated, service_role",
+    "src": "supabase/migrations/20261226170000_reset_senha_busca_auth_users.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "all",
+    "object": "approve_password_reset",
+    "objkind": "function",
+    "roles": "anon",
+    "src": "supabase/migrations/20261226195000_reset_senha_consistencia.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "all",
+    "object": "reject_password_reset",
+    "objkind": "function",
+    "roles": "anon",
+    "src": "supabase/migrations/20261226195000_reset_senha_consistencia.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "all",
+    "object": "reset_password_with_token",
+    "objkind": "function",
+    "roles": "PUBLIC",
+    "src": "supabase/migrations/20261226195000_reset_senha_consistencia.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "approve_password_reset",
+    "objkind": "function",
+    "roles": "authenticated, service_role",
+    "src": "supabase/migrations/20261226195000_reset_senha_consistencia.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "reject_password_reset",
+    "objkind": "function",
+    "roles": "authenticated, service_role",
+    "src": "supabase/migrations/20261226195000_reset_senha_consistencia.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "reset_password_with_token",
+    "objkind": "function",
+    "roles": "anon, authenticated, service_role",
+    "src": "supabase/migrations/20261226195000_reset_senha_consistencia.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "all",
+    "object": "get_pending_password_reset_requests",
+    "objkind": "function",
+    "roles": "PUBLIC, anon",
+    "src": "supabase/migrations/20261226195000_reset_senha_consistencia.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "get_pending_password_reset_requests",
+    "objkind": "function",
+    "roles": "authenticated, service_role",
+    "src": "supabase/migrations/20261226195000_reset_senha_consistencia.sql"
    },
    {
     "kind": "revoke",
@@ -118654,19 +119185,12 @@
    },
    {
     "kind": "rls",
-    "msg": "`pdi_templates`: front faz INSERT mas nenhuma política RLS permite INSERT → vai falhar/retornar vazio para usuários",
-    "where": [
-     "src/services/pdiService.ts"
-    ]
-   },
-   {
-    "kind": "rls",
     "msg": "`profiles`: front faz SELECT mas nenhuma política RLS permite SELECT → vai falhar/retornar vazio para usuários",
     "where": [
      "src/hooks/usePDIAlerts.ts",
      "src/hooks/useUserRank.ts",
      "src/hooks/useWeeklyChallenge.ts",
-     "src/pages/Auth.tsx"
+     "src/pages/Profile.tsx"
     ]
    },
    {
@@ -122984,7 +123508,7 @@
   },
   "src/components/admin/PasswordResetApprovalPanel.tsx": {
    "path": "src/components/admin/PasswordResetApprovalPanel.tsx",
-   "lines": 332,
+   "lines": 408,
    "exports": [
     "function PasswordResetApprovalPanel"
    ],
@@ -122993,6 +123517,11 @@
     "Erro ao rejeitar solicitação"
    ],
    "status_values": [
+    {
+     "field": "status",
+     "value": "approved",
+     "kind": "compara"
+    },
     {
      "field": "status",
      "value": "pending",
@@ -123524,7 +124053,7 @@
   },
   "src/components/auth/AuthFormContent.tsx": {
    "path": "src/components/auth/AuthFormContent.tsx",
-   "lines": 274,
+   "lines": 225,
    "exports": [
     "function AuthFormContent"
    ],
@@ -131724,7 +132253,7 @@
   },
   "src/integrations/supabase/types.ts": {
    "path": "src/integrations/supabase/types.ts",
-   "lines": 12985,
+   "lines": 13004,
    "exports": [
     "type Json",
     "type Database",
@@ -136891,22 +137420,10 @@
   },
   "src/pages/Auth.tsx": {
    "path": "src/pages/Auth.tsx",
-   "lines": 342,
+   "lines": 318,
    "exports": [
     "default Auth"
    ],
-   "tables": [
-    {
-     "table": "profiles",
-     "op": "select"
-    }
-   ],
-   "table_cols": {
-    "profiles": [
-     "email",
-     "id"
-    ]
-   },
    "navigates": [
     "/"
    ],
@@ -136916,18 +137433,16 @@
     "Conta bloqueada por ${Math.ceil(lr.remaining_seconds / 60)} min.",
     "Conta bloqueada. Tente em ${Math.ceil(lockoutStatus.remaining_seconds / 60)} min.",
     "Credenciais incorretas. ${5 - lr.failed_attempts} tentativa(s).",
-    "Email não encontrado no sistema",
     "Email ou senha incorretos",
     "Erro ao fazer login com Google",
     "Erro ao finalizar login",
-    "Erro ao processar autenticação. Tente novamente.",
-    "Erro ao solicitar reset de senha. Tente novamente."
+    "Erro ao processar autenticação. Tente novamente."
    ],
    "calc_fns": [
     {
      "name": "validateForm",
      "params": "",
-     "body": "const newErrors: typeof errors = {}; if (view === \"forgot-password\") { const r = emailSchema.safeParse(email); if (!r.success) newErrors.email = r.error.issues[0].message; } else if (view === \"login\") { const r = loginSchema.safeParse({ email, password }); if (!r.success) r.error.issues.forEach((e) => { if (e.path[0] === \"email\") newErrors.email = e.message; if (e.path[0] === \"password\") newErrors.password = e.message; }); } else { const r = signupSchema.safeParse({ email, password, displayName: …"
+     "body": "const newErrors: typeof errors = {}; if (view === \"login\") { const r = loginSchema.safeParse({ email, password }); if (!r.success) r.error.issues.forEach((e) => { if (e.path[0] === \"email\") newErrors.email = e.message; if (e.path[0] === \"password\") newErrors.password = e.message; }); } else { const r = signupSchema.safeParse({ email, password, displayName: displayName || undefined }); if (!r.success) r.error.issues.forEach((e) => { if (e.path[0] === \"email\") newErrors.email = e.message; if (e.pa …"
     }
    ]
   },
@@ -137700,9 +138215,12 @@
   },
   "src/pages/ForgotPassword.tsx": {
    "path": "src/pages/ForgotPassword.tsx",
-   "lines": 170,
+   "lines": 175,
    "exports": [
     "function ForgotPassword"
+   ],
+   "rpc": [
+    "request_password_reset_by_email"
    ],
    "navigates": [
     "/"
@@ -137899,7 +138417,7 @@
   },
   "src/pages/ManagerDashboard.tsx": {
    "path": "src/pages/ManagerDashboard.tsx",
-   "lines": 272,
+   "lines": 275,
    "exports": [
     "function ManagerDashboard"
    ],
@@ -138102,19 +138620,26 @@
   },
   "src/pages/Pdi.tsx": {
    "path": "src/pages/Pdi.tsx",
-   "lines": 664,
+   "lines": 779,
    "exports": [
     "function Pdi"
    ],
    "errors": [
     "Informe a data do check-in",
+    "Informe o nome e a categoria do template.",
     "Não foi possível adicionar o mentor",
     "Não foi possível aplicar o template",
+    "Não foi possível criar o template.",
     "Não foi possível registrar o check-in",
     "Não foi possível remover o mentor",
-    "Selecione quem vai acompanhar o PDI"
+    "Selecione quem vai acompanhar o PDI",
+    "Sessão expirada. Entre novamente para cadastrar o template."
    ],
    "html_constraints": [
+    {
+     "field": "pdi-template-months",
+     "rules": "type=number, min=1"
+    },
     {
      "field": "checkin-date",
      "rules": "type=date"
@@ -138474,9 +138999,12 @@
   },
   "src/pages/ResetPassword.tsx": {
    "path": "src/pages/ResetPassword.tsx",
-   "lines": 345,
+   "lines": 372,
    "exports": [
     "function ResetPassword"
+   ],
+   "rpc": [
+    "reset_password_with_token"
    ],
    "navigates": [
     "/",
@@ -138510,6 +139038,7 @@
     }
    ],
    "temporal": [
+    "setTimeout(() => navigate(\"/auth\"), 3000);",
     "setTimeout(async () => { await supabase.auth.signOut(); navigate(\"/auth\"); }, 3000);"
    ]
   },
@@ -143779,20 +144308,12 @@
   },
   "src/services/passwordResetService.ts": {
    "path": "src/services/passwordResetService.ts",
-   "lines": 204,
+   "lines": 211,
    "exports": [
     "interface PasswordResetRequest",
     "const passwordResetService"
    ],
    "tables": [
-    {
-     "table": "password_reset_requests",
-     "op": "select"
-    },
-    {
-     "table": "profiles",
-     "op": "select"
-    },
     {
      "table": "password_reset_requests",
      "op": "select"
@@ -143837,6 +144358,7 @@
    },
    "rpc": [
     "approve_password_reset",
+    "get_pending_password_reset_requests",
     "reject_password_reset",
     "request_password_reset"
    ],
@@ -143852,7 +144374,7 @@
     {
      "field": "status",
      "value": "pending",
-     "kind": "filtra"
+     "kind": "escreve"
     },
     {
      "field": "status",
@@ -155647,14 +156169,58 @@
    "lines": 156,
    "uses_service_role": true
   },
+  "supabase/migrations/20261226130000_reset_senha_por_email.sql": {
+   "path": "supabase/migrations/20261226130000_reset_senha_por_email.sql",
+   "lines": 48,
+   "uses_service_role": true
+  },
   "supabase/migrations/20261226140000_corrige_grants_rls_e_rpcs_internos.sql": {
    "path": "supabase/migrations/20261226140000_corrige_grants_rls_e_rpcs_internos.sql",
    "lines": 52,
    "uses_service_role": true
   },
+  "supabase/migrations/20261226150000_reset_senha_fluxo_completo.sql": {
+   "path": "supabase/migrations/20261226150000_reset_senha_fluxo_completo.sql",
+   "lines": 117,
+   "uses_service_role": true
+  },
+  "supabase/migrations/20261226160000_reset_senha_guardas_aprovacao.sql": {
+   "path": "supabase/migrations/20261226160000_reset_senha_guardas_aprovacao.sql",
+   "lines": 119,
+   "status_values": [
+    {
+     "field": "status",
+     "value": "pending",
+     "kind": "compara"
+    },
+    {
+     "field": "status",
+     "value": "pending",
+     "kind": "compara"
+    }
+   ],
+   "uses_service_role": true
+  },
+  "supabase/migrations/20261226170000_reset_senha_busca_auth_users.sql": {
+   "path": "supabase/migrations/20261226170000_reset_senha_busca_auth_users.sql",
+   "lines": 64,
+   "uses_service_role": true
+  },
   "supabase/migrations/20261226180000_escopo_gestor_rpcs_relatorio.sql": {
    "path": "supabase/migrations/20261226180000_escopo_gestor_rpcs_relatorio.sql",
    "lines": 135,
+   "uses_service_role": true
+  },
+  "supabase/migrations/20261226190000_pdi_templates_escrita_admin.sql": {
+   "path": "supabase/migrations/20261226190000_pdi_templates_escrita_admin.sql",
+   "lines": 22
+  },
+  "supabase/migrations/20261226195000_reset_senha_consistencia.sql": {
+   "path": "supabase/migrations/20261226195000_reset_senha_consistencia.sql",
+   "lines": 247,
+   "role_checks": [
+    "admin"
+   ],
    "uses_service_role": true
   },
   "supabase/migrations/20261226200000_profiles_select_colunas_sensiveis.sql": {
@@ -155756,10 +156322,49 @@
   }
  },
  "git": {
-  "sha": "a6a9bc631d0de5e01b8d0f579275ee57fdc90966",
+  "sha": "bef27bdcf5dcd942436b92d6f45615beb408bff7",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "commits": [
+   {
+    "sha": "bef27bd",
+    "date": "2026-11-25",
+    "author": "adm01-debug",
+    "subject": "feat: cadastro de templates de PDI com policy de escrita para admin (#160)",
+    "files": [
+     "src/pages/Pdi.tsx",
+     "supabase/migrations/20261226190000_pdi_templates_escrita_admin.sql"
+    ]
+   },
+   {
+    "sha": "f41bdee",
+    "date": "2026-11-25",
+    "author": "adm01-debug",
+    "subject": "fix: conserta pedido de reset de senha do usuario deslogado (#159)",
+    "files": [
+     "AGENTS.md",
+     "docs/agentes/banco.md",
+     "docs/agentes/mapa-repo.md",
+     "docs/estado/01-paginas-e-rotas.md",
+     "docs/estado/03-hooks-services-lib.md",
+     "docs/estado/07-infra-ci-testes.md",
+     "scripts/db-audit/README.md",
+     "scripts/db-audit/migration-baseline.json",
+     "src/components/admin/PasswordResetApprovalPanel.tsx",
+     "src/components/auth/AuthFormContent.tsx",
+     "src/integrations/supabase/types.ts",
+     "src/pages/Auth.tsx",
+     "src/pages/ForgotPassword.tsx",
+     "src/pages/ManagerDashboard.tsx",
+     "src/pages/ResetPassword.tsx",
+     "src/services/passwordResetService.ts",
+     "supabase/migrations/20261226130000_reset_senha_por_email.sql",
+     "supabase/migrations/20261226150000_reset_senha_fluxo_completo.sql",
+     "supabase/migrations/20261226160000_reset_senha_guardas_aprovacao.sql",
+     "supabase/migrations/20261226170000_reset_senha_busca_auth_users.sql",
+     "supabase/migrations/20261226195000_reset_senha_consistencia.sql"
+    ]
+   },
    {
     "sha": "a6a9bc6",
     "date": "2026-11-25",
@@ -156059,72 +156664,12 @@
      "src/pages/Pdi.tsx",
      "supabase/migrations/20261221000000_pdi_mentors_delete_policy.sql"
     ]
-   },
-   {
-    "sha": "7ef5af2",
-    "date": "2026-11-24",
-    "author": "adm01-debug",
-    "subject": "feat: liga login por passkey/biometria com verificação real de assinatura (#126)",
-    "files": [
-     ".env.example",
-     "src/components/auth/PasskeyLogin.tsx",
-     "src/components/security/PasskeysPanel.tsx",
-     "src/lib/edgeErrors.ts",
-     "src/pages/Auth.tsx",
-     "src/pages/Profile.tsx",
-     "src/services/webauthnService.ts",
-     "src/test/edgeErrors.simulation.test.ts",
-     "src/test/passkeysPanel.test.tsx",
-     "src/test/webauthnService.test.ts",
-     "supabase/config.toml",
-     "supabase/functions/_shared/contracts/_fixtures/index.ts",
-     "supabase/functions/_shared/contracts/_fixtures/responses.ts",
-     "supabase/functions/_shared/contracts/index.ts",
-     "supabase/functions/_shared/contracts/passkey-auth.ts",
-     "supabase/functions/_shared/rate-limit.ts",
-     "supabase/functions/_shared/rate-limit_test.ts",
-     "supabase/functions/_shared/webauthn.ts",
-     "supabase/functions/_shared/webauthn_test.ts",
-     "supabase/functions/passkey-auth/index.ts",
-     "supabase/migrations/20261224090000_webauthn_login_hardening.sql"
-    ]
-   },
-   {
-    "sha": "9a04825",
-    "date": "2026-11-24",
-    "author": "adm01-debug",
-    "subject": "feat: tela de Pesquisa de Clima (criar, responder, eNPS e score por pilar) (#125)",
-    "files": [
-     ".gitattributes",
-     "docs/estado/03-hooks-services-lib.md",
-     "scripts/automation.config.json",
-     "scripts/climate-sql-check/README.md",
-     "scripts/climate-sql-check/run.sh",
-     "src/App.tsx",
-     "src/components/AppSidebar.tsx",
-     "src/components/CommandPalette.tsx",
-     "src/components/MobileDrawer.tsx",
-     "src/components/climate/ClimateSurveyAnswerForm.tsx",
-     "src/components/climate/ClimateSurveyForm.tsx",
-     "src/components/climate/ClimateSurveyQuestions.tsx",
-     "src/components/climate/ClimateSurveyResults.tsx",
-     "src/hooks/useClimateSurveys.ts",
-     "src/integrations/supabase/types.ts",
-     "src/pages/ClimateSurveyAdmin.tsx",
-     "src/pages/ClimateSurveys.tsx",
-     "src/services/climateSurveyService.ts",
-     "src/test/climateSurveyService.test.ts",
-     "src/test/climateSurveysFlow.test.tsx",
-     "supabase/migrations/20261123180000_climate_survey_engine.sql",
-     "supabase/tests/climate/assertions.sql",
-     "supabase/tests/climate/stubs.sql"
-    ]
    }
   ],
   "hot_files": [
    [
     "docs/agentes/banco.md",
-    9
+    10
    ],
    [
     "docs/estado/05-edge-functions.md",
@@ -156132,26 +156677,22 @@
    ],
    [
     "AGENTS.md",
-    5
+    6
    ],
    [
     "docs/agentes/mapa-repo.md",
-    5
+    6
    ],
    [
     "scripts/db-audit/README.md",
-    5
+    6
    ],
    [
     "scripts/db-audit/check-migration-drift.mjs",
     5
    ],
    [
-    "supabase/migrations/20261220000000_fix_sre_rpcs_and_dispatch_trigger.sql",
-    2
-   ],
-   [
-    "supabase/config.toml",
+    "src/pages/Pdi.tsx",
     2
    ],
    [
@@ -156159,47 +156700,51 @@
     2
    ],
    [
-    "src/App.tsx",
+    "supabase/migrations/20261220000000_fix_sre_rpcs_and_dispatch_trigger.sql",
     2
    ],
    [
-    "src/components/CommandPalette.tsx",
-    2
-   ],
-   [
-    "supabase/migrations/20261226120000_revoga_execute_anon_security_definer.sql",
+    "supabase/migrations/20261226190000_pdi_templates_escrita_admin.sql",
     1
    ],
    [
-    "supabase/migrations/20261226140000_corrige_grants_rls_e_rpcs_internos.sql",
+    "docs/estado/01-paginas-e-rotas.md",
     1
    ],
    [
-    "supabase/migrations/20261226180000_escopo_gestor_rpcs_relatorio.sql",
+    "docs/estado/07-infra-ci-testes.md",
     1
    ],
    [
-    "docs/pendencias/02-profiles-update-sem-restricao-de-coluna.md",
+    "scripts/db-audit/migration-baseline.json",
     1
    ],
    [
-    "src/services/engagementReportsService.ts",
+    "src/components/admin/PasswordResetApprovalPanel.tsx",
     1
    ],
    [
-    "src/services/profilesService.ts",
+    "src/components/auth/AuthFormContent.tsx",
     1
    ],
    [
-    "supabase/migrations/20261226200000_profiles_select_colunas_sensiveis.sql",
+    "src/integrations/supabase/types.ts",
     1
    ],
    [
-    "src/services/attendanceService.ts",
+    "src/pages/Auth.tsx",
     1
    ],
    [
-    "src/services/certificationsService.ts",
+    "src/pages/ForgotPassword.tsx",
+    1
+   ],
+   [
+    "src/pages/ManagerDashboard.tsx",
+    1
+   ],
+   [
+    "src/pages/ResetPassword.tsx",
     1
    ]
   ]

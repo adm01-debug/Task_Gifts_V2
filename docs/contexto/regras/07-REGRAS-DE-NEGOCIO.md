@@ -1,6 +1,6 @@
 # 07 · REGRAS DE NEGÓCIO
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `a6a9bc631d` · branch `main` · 2026-11-25 12:49 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `bef27bdcf5` · branch `main` · 2026-11-25 12:51 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## A. Regras escritas por humanos (`manual/` — prioridade máxima, nunca sobrescrito)
@@ -311,7 +311,7 @@ _Nenhum arquivo em `manual/`. Copie `manual/TEMPLATE-regras-de-negocio.md` para 
 | `feedback_evaluations` | Users insert own evaluations | INSERT | authenticated | permissive |  | `evaluator_id = auth.uid()` |
 | `feedback_results` | Managers insert feedback results | INSERT | authenticated | permissive |  | `has_role(auth.uid(), 'manager'::app_role) OR has_role(auth.uid(), 'admin'::app_role)` |
 | `pdi_mentors` | Managers assign PDI mentors | INSERT | authenticated | permissive |  | `has_role(auth.uid(), 'manager'::app_role) OR has_role(auth.uid(), 'admin'::app_role)` |
-| … +225 linhas — lista completa em `context.json` | | | | | | |
+| … +228 linhas — lista completa em `context.json` | | | | | | |
 
 ## C. Restrições de dados (obrigatório / único / default / CHECK / FK / calculada)
 
@@ -1197,7 +1197,7 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `status` | `all` | compara | `src/components/PushNotificationHistory.tsx`<br>`src/components/manager/QuestsList.tsx`<br>`src/services/actionPlansService.ts` |
 | `status` | `anomaly` | compara | `src/lib/luckyWheelPayout.ts` |
 | `status` | `applied` | compara, filtra | `src/components/campaigns/CampaignImportHistory.tsx`<br>`src/services/campaignImportService.ts` |
-| `status` | `approved` | compara | `src/components/shop-admin/PurchaseGovernanceDialog.tsx` |
+| `status` | `approved` | compara | `src/components/admin/PasswordResetApprovalPanel.tsx`<br>`src/components/shop-admin/PurchaseGovernanceDialog.tsx` |
 | `status` | `archived` | compara, escreve | `src/components/manager/QuestCard.tsx`<br>`src/components/manager/QuestsList.tsx`<br>`src/services/questsService.ts` |
 | `status` | `at_risk` | compara | `src/components/goals/GoalCard.tsx` |
 | `status` | `away` | escreve | `src/stories/data-display/StatsAndTables.stories.tsx` |
@@ -1239,7 +1239,7 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `status` | `online` | escreve | `src/stories/data-display/StatsAndTables.stories.tsx` |
 | `status` | `open` | compara, escreve | `src/components/prediction/PredictionAdminRow.tsx`<br>`src/components/prediction/PredictionMarketCard.tsx`<br>`src/lib/goalBetCountdown.ts`<br>`src/lib/goalBetFilter.ts`<br>`src/lib/goalBetStakePreview.ts`<br>… +4 |
 | `status` | `opened` | compara | `src/components/cards/PackList.tsx` |
-| `status` | `pending` | compara, escreve, filtra | `src/components/admin/PasswordResetApprovalPanel.tsx`<br>`src/components/cards/TradeInbox.tsx`<br>`src/components/duels/DuelCard.tsx`<br>`src/components/engagement/plans/ActionPlanItemList.tsx`<br>`src/components/shop-admin/PurchaseGovernanceDialog.tsx`<br>… +23 |
+| `status` | `pending` | compara, escreve, filtra | `src/components/admin/PasswordResetApprovalPanel.tsx`<br>`src/components/cards/TradeInbox.tsx`<br>`src/components/duels/DuelCard.tsx`<br>`src/components/engagement/plans/ActionPlanItemList.tsx`<br>`src/components/shop-admin/PurchaseGovernanceDialog.tsx`<br>… +24 |
 | `status` | `processing` | compara, escreve, filtra | `src/components/trails/AICourseBuilderDialog.tsx`<br>`src/lib/pushOutbox.ts`<br>`supabase/functions/_shared/webhookSecurity.ts`<br>`supabase/functions/ai-course-builder/index.ts` |
 | `status` | `published` | compara, filtra | `src/pages/Postmortems.tsx`<br>`src/services/trailsService.ts`<br>`supabase/functions/trail-recommendations/index.ts` |
 | `status` | `punctual` | compara | `src/components/AttendanceCalendar.tsx` |
@@ -1920,6 +1920,7 @@ _nenhum item encontrado_
 | `participation` | type=number, min=0, max=100 | `src/pages/LuckyWheelAdmin.tsx` |
 | `mission-xp` | type=number, min=0 | `src/pages/Mentoria.tsx` |
 | `mission-coins` | type=number, min=0 | `src/pages/Mentoria.tsx` |
+| `pdi-template-months` | type=number, min=1 | `src/pages/Pdi.tsx` |
 | `checkin-date` | type=date | `src/pages/Pdi.tsx` |
 | `wager-question` | disabled=isLocked | `src/pages/WagerQuestionAdminPage.tsx` |
 | `wager-date` | type=date, disabled=isLocked | `src/pages/WagerQuestionAdminPage.tsx` |
@@ -2329,7 +2330,7 @@ _nenhum item encontrado_
   ```
 - **validateForm()** — `src/pages/Auth.tsx`
   ```
-  const newErrors: typeof errors = {}; if (view === "forgot-password") { const r = emailSchema.safeParse(email); if (!r.success) newErrors.email = r.error.issues[0].message; } else if (view === "login") { const r = loginSchema.safeParse({ email, password }); if (!r.success) r.error.issues.forEach((e) => { if (e.path[0] === "email") newErrors.email = e.message; if (e.path[0] === "password") newErrors.password = e.message; }); } else { const r = signupSchema.safeParse({ email, password, displayName: …
+  const newErrors: typeof errors = {}; if (view === "login") { const r = loginSchema.safeParse({ email, password }); if (!r.success) r.error.issues.forEach((e) => { if (e.path[0] === "email") newErrors.email = e.message; if (e.path[0] === "password") newErrors.password = e.message; }); } else { const r = signupSchema.safeParse({ email, password, displayName: displayName || undefined }); if (!r.success) r.error.issues.forEach((e) => { if (e.path[0] === "email") newErrors.email = e.message; if (e.pa …
   ```
 - **rankMedal(position: number | null)** — `src/pages/CampaignHistory.tsx`
   ```
@@ -3135,6 +3136,7 @@ _nenhum item encontrado_
 | `setTimeout(() => navigate("/manager"), 1500);` | `src/pages/QuestBuilder.tsx` |
 | `const days = eachDayOfInterval({ start: subDays(now, 6), end: now });` | `src/pages/RealTimeAnalytics.tsx` |
 | `const hours = eachHourOfInterval({ start: subDays(now, 1), end: now });` | `src/pages/RealTimeAnalytics.tsx` |
+| `setTimeout(() => navigate("/auth"), 3000);` | `src/pages/ResetPassword.tsx` |
 | `setTimeout(async () => { await supabase.auth.signOut(); navigate("/auth"); }, 3000);` | `src/pages/ResetPassword.tsx` |
 | `staleTime: 5 * 60 * 1000,` | `src/pages/SecurityDigests.tsx` |
 | `const t = setTimeout(() => setHighlighted(null), 2500);` | `src/pages/SecurityRunbook.tsx` |
@@ -3555,12 +3557,10 @@ _nenhum item encontrado_
 | Conta bloqueada por ${Math.ceil(lr.remaining_seconds / 60)} min. | `src/pages/Auth.tsx` |
 | Conta bloqueada. Tente em ${Math.ceil(lockoutStatus.remaining_seconds / 60)} min. | `src/pages/Auth.tsx` |
 | Credenciais incorretas. ${5 - lr.failed_attempts} tentativa(s). | `src/pages/Auth.tsx` |
-| Email não encontrado no sistema | `src/pages/Auth.tsx` |
 | Email ou senha incorretos | `src/pages/Auth.tsx` |
 | Erro ao fazer login com Google | `src/pages/Auth.tsx` |
 | Erro ao finalizar login | `src/pages/Auth.tsx` |
 | Erro ao processar autenticação. Tente novamente. | `src/pages/Auth.tsx` |
-| Erro ao solicitar reset de senha. Tente novamente. | `src/pages/Auth.tsx` |
 | Falha ao sincronizar a cartela. | `src/pages/BingoPage.tsx` |
 | Não foi possível sincronizar a cartela agora. | `src/pages/BingoPage.tsx` |
 | Corrija os erros do tabuleiro antes de salvar. | `src/pages/BoardTrailAdminPage.tsx` |
@@ -3577,7 +3577,9 @@ _nenhum item encontrado_
 | Nenhum dado disponível para exportar. | `src/pages/EngagementReports.tsx` |
 |  aria-live= | `src/pages/ExecutiveMonthlyReport.tsx` |
 | Nada para investigar neste período. | `src/pages/ExecutiveMonthlyReport.tsx` |
-| … +188 linhas — lista completa em `context.json` | |
+| ; import { ArrowLeft, Mail, CheckCircle2, Loader2, Shield } from  | `src/pages/ForgotPassword.tsx` |
+| Erro ao processar solicitação | `src/pages/ForgotPassword.tsx` |
+| … +189 linhas — lista completa em `context.json` | |
 
 ## J. Controle de acesso no código (checagens de perfil/permissão)
 
@@ -3636,6 +3638,7 @@ _nenhum item encontrado_
 | `manager` | `supabase/migrations/20261122140000_acknowledge_security_digest.sql` |
 | `admin` | `supabase/migrations/20261123180000_climate_survey_engine.sql` |
 | `manager` | `supabase/migrations/20261123180000_climate_survey_engine.sql` |
+| `admin` | `supabase/migrations/20261226195000_reset_senha_consistencia.sql` |
 
 ## K. Testes como especificação (2107 testes em 159 arquivos — nomes completos em `context.json`)
 
