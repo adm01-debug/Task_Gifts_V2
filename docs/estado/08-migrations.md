@@ -4,7 +4,7 @@
 > Evidência em `arquivo:linha`. Correções da Fase D estão em `ESTADO_ATUAL.md` e em `04-dados-e-runtime.md`.
 > Runtime de build/teste = `NAO_VERIFICADO` (node_modules ausente no ambiente da auditoria).
 >
-> **Atualização 25/11/2026 (reconstrução provada):** o inventário acima é o retrato da auditoria (262 arquivos). O repositório já está em **299 migrations** e um `supabase db reset` do zero roda com exit 0; o banco reconstruído tem o mesmo catálogo do vivo (tabelas, colunas, funções, 6 views, RLS em 236 tabelas, 548 policies, grants). Detalhe e evidências na PR #172.
+> **Atualização 25/11/2026 (reconstrução provada):** o inventário acima é o retrato da auditoria (262 arquivos). O repositório já está em **300 migrations** e um `supabase db reset` do zero roda com exit 0; o banco reconstruído tem o mesmo catálogo do vivo (tabelas, colunas, funções, 6 views, RLS em 236 tabelas, 548 policies, grants). A comparação das 548 policies foi feita por hash (`md5` de tabela+nome+comando+perfis+`USING`+`WITH CHECK`) e deu igual dos dois lados, e dos grants de `anon`+`authenticated` sobrou só o que as migrations pendentes revogam no vivo. Única divergência consciente: `external_api_keys.api_secret` deixa de ser `NOT NULL` (ver `20261228160000`), porque a coluna é obrigatória no vivo e nenhuma função a escreve — criar chave de API falhava com *not-null constraint*. Detalhe e evidências na PR #172.
 
 ---
 

@@ -355,18 +355,13 @@ COMMENT ON VIEW public.query_performance_summary IS 'Top consultas por tempo tot
 -- Colunas que existem no banco vivo e nunca foram versionadas. As duas sao
 -- idempotentes de reaplicar e deixam o esquema local igual ao de producao.
 --   api_secret: derrubado por 20260728205541, mas o DDL nunca foi efetivado em
---     producao, entao a coluna continua la (tabela com 0 linhas);
+--     producao, entao a coluna continua la (tabela com 0 linhas). Nasce aqui
+--     como NULLABLE de proposito: no vivo ela e NOT NULL e e exatamente isso que
+--     quebra a criacao de chave de API, porque a RPC nunca escreve a coluna - a
+--     20261228160000 conserta o banco vivo, e o banco reconstruido ja nasce certo;
 --   resolved: espelho gerado de is_resolved, lido por 20251231115905 e pela
 --     tela de seguranca.
 ALTER TABLE public.external_api_keys ADD COLUMN IF NOT EXISTS api_secret text;
-
-DO $do$
-BEGIN
-  IF NOT EXISTS (SELECT 1 FROM public.external_api_keys WHERE api_secret IS NULL) THEN
-    ALTER TABLE public.external_api_keys ALTER COLUMN api_secret SET NOT NULL;
-  END IF;
-END
-$do$;
 
 ALTER TABLE public.security_alerts
   ADD COLUMN IF NOT EXISTS resolved boolean GENERATED ALWAYS AS (is_resolved) STORED;
