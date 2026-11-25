@@ -22,10 +22,11 @@ ALTER TABLE public.wager_questions DROP CONSTRAINT IF EXISTS wager_questions_sch
 -- 3) Metrica com peso zero na guerra de departamentos.
 -- O formulario aceita peso zero desde que outra metrica tenha peso positivo
 -- (src/lib/departmentWarConfig.ts:339), mas a trava exigia weight > 0.
-ALTER TABLE public.department_war_metrics DROP CONSTRAINT IF EXISTS department_war_metrics_weight_check;
+-- DROP e ADD no mesmo bloco: se a nova definicao nao validar, a anterior continua valendo.
 DO $do$
 BEGIN
   BEGIN
+    ALTER TABLE public.department_war_metrics DROP CONSTRAINT IF EXISTS department_war_metrics_weight_check;
     ALTER TABLE public.department_war_metrics ADD CONSTRAINT department_war_metrics_weight_check CHECK ((weight >= (0)::numeric));
   EXCEPTION WHEN others THEN
     RAISE NOTICE 'nao reaplicada % em %: %', 'department_war_metrics_weight_check', 'department_war_metrics', SQLERRM;
