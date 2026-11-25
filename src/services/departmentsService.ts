@@ -67,6 +67,16 @@ export const departmentsService = {
   },
 
   async delete(id: string): Promise<void> {
+    // A meta departamental vira meta global quando `department_id` fica nulo
+    // (ON DELETE SET NULL) e o indice unico aceita so uma meta global: apagar a meta
+    // do departamento antes evita que a exclusao falhe por 23505 e que a meta mude de escopo.
+    const { error: goalError } = await supabase
+      .from("boss_win_rate_goals")
+      .delete()
+      .eq("department_id", id);
+
+    if (goalError) throw goalError;
+
     const { error } = await supabase
       .from("departments")
       .delete()
