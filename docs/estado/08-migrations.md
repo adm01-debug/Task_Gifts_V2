@@ -71,8 +71,14 @@ pendência e o efeito em produção é nenhum (`ADD COLUMN IF NOT EXISTS` + guar
 terminava com `</content>` e `</invoke>` (restos de uma chamada de ferramenta colada dentro do arquivo):
 um rebuild morria no statement 3 com `syntax error at or near "</"`. As duas linhas foram removidas
 (787 → 766 bytes); o SQL de fato era só a policy. Com isso os **296** arquivos de migration passam no
-parser oficial do PostgreSQL (`libpg-query`) sem um único erro, o que é a prova estática de que o
-esquema é reconstruível — `supabase db reset` segue impossível nesta máquina (sem Docker/CLI).
+parser oficial do PostgreSQL (`libpg-query`) sem um único erro de sintaxe.
+
+**O que isso prova e o que não prova:** prova que nenhum arquivo tem SQL inválido. **Não** prova a ordem
+das dependências nem que um banco limpo chega ao fim — `supabase db reset` não roda nesta máquina (sem
+Docker/CLI) e um rebuild ainda falharia por drift fora do escopo desta nota: `20251225230238:59` faz
+`ALTER TABLE public.notification_preferences`, tabela que nenhuma migration cria, e há mais 5 tabelas
+(`CREATE TABLE` inexistente no repo) e 22 colunas ausentes — lista medida na PR #171, seção "Fora do
+escopo". Reconstrução só é considerada provada quando esse drift zerar e houver um `db reset` verde.
 
 Primeira/última migration:
 - `supabase/migrations/20241231000000_saved_filters.sql`
