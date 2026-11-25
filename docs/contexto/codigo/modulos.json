@@ -5,13 +5,13 @@
  "modulos": [
   {
    "modulo": "components",
-   "arquivos": 81,
+   "arquivos": 82,
    "testes": 0,
-   "linhas": 18131,
+   "linhas": 18245,
    "itens_menu": [],
    "telas": [],
    "rotas_http": [],
-   "componentes": 79,
+   "componentes": 80,
    "hooks_locais": [
     "useAICoach",
     "useAcceptDuel",
@@ -6752,7 +6752,7 @@
    "modulo": "pages",
    "arquivos": 86,
    "testes": 0,
-   "linhas": 24958,
+   "linhas": 24960,
    "itens_menu": [
     "Admin Loja",
     "Admin Quiz",
@@ -8742,7 +8742,7 @@
   {
    "modulo": "test",
    "arquivos": 0,
-   "testes": 136,
+   "testes": 137,
    "linhas": 0,
    "itens_menu": [],
    "telas": [],

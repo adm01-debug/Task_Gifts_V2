@@ -1,7 +1,7 @@
 {
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
- "total": 530,
+ "total": 531,
  "orfaos": 22,
  "nomes_duplicados": {
   "CopilotAlert": [
@@ -5759,6 +5759,22 @@
    "orfao": false
   },
   {
+   "arquivo": "src/components/SurveyNotificationPreferences.tsx",
+   "exports": [
+    "SurveyNotificationPreferences"
+   ],
+   "export_default": "SurveyNotificationPreferences",
+   "linhas": 114,
+   "dominio": "components",
+   "hooks_locais": [
+    "useTypePreferences"
+   ],
+   "tabelas": [],
+   "edges": [],
+   "usado_por": 1,
+   "orfao": false
+  },
+  {
    "arquivo": "src/components/TeamCertificationsPanel.tsx",
    "exports": [
     "TeamCertificationsPanel"
@@ -6107,7 +6123,7 @@
    "hooks_locais": [],
    "tabelas": [],
    "edges": [],
-   "usado_por": 297,
+   "usado_por": 298,
    "orfao": false
   },
   {
@@ -6426,7 +6442,7 @@
    "hooks_locais": [],
    "tabelas": [],
    "edges": [],
-   "usado_por": 85,
+   "usado_por": 86,
    "orfao": false
   },
   {
@@ -6866,7 +6882,7 @@
    "hooks_locais": [],
    "tabelas": [],
    "edges": [],
-   "usado_por": 158,
+   "usado_por": 159,
    "orfao": false
   },
   {
@@ -6940,7 +6956,7 @@
    "hooks_locais": [],
    "tabelas": [],
    "edges": [],
-   "usado_por": 43,
+   "usado_por": 44,
    "orfao": false
   },
   {
@@ -8556,7 +8572,7 @@
     "Profile"
    ],
    "export_default": "Profile",
-   "linhas": 246,
+   "linhas": 248,
    "dominio": "pages",
    "hooks_locais": [
     "useAuth",

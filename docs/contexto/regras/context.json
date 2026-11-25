@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "cc240b7f306a652b4fdbfa9b9bb764c49814d99a",
+  "sha": "84e8ba28320d82e631b5da35d410d28d8108b0c1",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
-  "generated_at": "2026-11-25 15:35 UTC",
-  "files_total": 1601,
-  "code_files": 1494,
-  "code_lines": 270872
+  "generated_at": "2026-11-25 15:56 UTC",
+  "files_total": 1603,
+  "code_files": 1496,
+  "code_lines": 271074
  },
  "version": "1.3.2",
- "facts_hash": "9ea876a695a31e93",
+ "facts_hash": "49fc8a7645c53f5e",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -195,7 +195,7 @@
   "package_manager": "bun",
   "languages": {
    ".ts": 585,
-   ".tsx": 580,
+   ".tsx": 582,
    ".sql": 297,
    ".mjs": 21,
    ".js": 5,
@@ -44665,7 +44665,7 @@
      "user_has_passkeys",
      "verify_certificate"
     ],
-    "deps_count": 124
+    "deps_count": 125
    },
    {
     "path": "",
@@ -46789,7 +46789,7 @@
     "file": ".github/workflows/contexto.yml"
    }
   ],
-  "components_count": 472,
+  "components_count": 473,
   "hooks": [
    {
     "name": "useContacts",
@@ -49464,8 +49464,8 @@
   },
   {
    "module": "src/components",
-   "files": 467,
-   "lines": 79179,
+   "files": 468,
+   "lines": 79293,
    "tables": [
     "attendance_records",
     "audit_logs",
@@ -49641,13 +49641,13 @@
     "src/components/SoundSettingsCard.tsx",
     "src/components/StaggeredContainer.tsx",
     "src/components/StatsGrid.tsx",
+    "src/components/SurveyNotificationPreferences.tsx",
     "src/components/TeamCertificationsPanel.tsx",
     "src/components/TeamChallenges.tsx",
     "src/components/ThemeToggle.tsx",
     "src/components/TrailDependencyTree.tsx",
     "src/components/TrailRecommendations.tsx",
-    "src/components/UndoToast.tsx",
-    "src/components/WeeklyChallengeCard.tsx"
+    "src/components/UndoToast.tsx"
    ]
   },
   {
@@ -50060,7 +50060,7 @@
   {
    "module": "src/pages",
    "files": 86,
-   "lines": 24958,
+   "lines": 24960,
    "tables": [
     "audit_logs",
     "campaign_participants",
@@ -50618,8 +50618,8 @@
   },
   {
    "module": "src/test",
-   "files": 136,
-   "lines": 24116,
+   "files": 137,
+   "lines": 24202,
    "tables": [
     "kudos",
     "profiles"
@@ -50638,6 +50638,7 @@
     "@tanstack/react-query",
     "@testing-library/jest-dom",
     "@testing-library/react",
+    "@testing-library/user-event",
     "date-fns",
     "react",
     "react-router-dom",
@@ -59709,6 +59710,10 @@
    {
     "file": "src/components/IpAccessGuard.tsx",
     "text": "Fail open: indisponibilidade do verificador não pode travar o acesso."
+   },
+   {
+    "file": "src/components/SurveyNotificationPreferences.tsx",
+    "text": "Somente os canais que estes lembretes realmente usam. Os dois tipos chamam"
    },
    {
     "file": "src/components/TrailRecommendations.tsx",
@@ -88217,6 +88222,22 @@
    {
     "file": "src/test/slaTargets.simulation.test.ts",
     "name": "é resiliente a entradas inválidas"
+   },
+   {
+    "file": "src/test/surveyNotificationPreferences.test.tsx",
+    "name": "SurveyNotificationPreferences"
+   },
+   {
+    "file": "src/test/surveyNotificationPreferences.test.tsx",
+    "name": "mostra in-app e push dos dois lembretes, ligados por padrao"
+   },
+   {
+    "file": "src/test/surveyNotificationPreferences.test.tsx",
+    "name": "hidrata o que ja esta salvo sem alterar o outro lembrete"
+   },
+   {
+    "file": "src/test/surveyNotificationPreferences.test.tsx",
+    "name": "desligar um canal grava so aquele tipo e preserva os demais modulos"
    },
    {
     "file": "src/test/telemetry.test.tsx",
@@ -123063,6 +123084,16 @@
     "transition={{ delay: 0.6 + index * 0.1 }}"
    ]
   },
+  "src/components/SurveyNotificationPreferences.tsx": {
+   "path": "src/components/SurveyNotificationPreferences.tsx",
+   "lines": 114,
+   "exports": [
+    "function SurveyNotificationPreferences"
+   ],
+   "rule_comments": [
+    "Somente os canais que estes lembretes realmente usam. Os dois tipos chamam"
+   ]
+  },
   "src/components/TeamCertificationsPanel.tsx": {
    "path": "src/components/TeamCertificationsPanel.tsx",
    "lines": 269,
@@ -139053,7 +139084,7 @@
   },
   "src/pages/Profile.tsx": {
    "path": "src/pages/Profile.tsx",
-   "lines": 246,
+   "lines": 248,
    "exports": [
     "default Profile"
    ],
@@ -150697,6 +150728,17 @@
     "é resiliente a entradas inválidas"
    ]
   },
+  "src/test/surveyNotificationPreferences.test.tsx": {
+   "path": "src/test/surveyNotificationPreferences.test.tsx",
+   "lines": 86,
+   "is_test": true,
+   "tests": [
+    "SurveyNotificationPreferences",
+    "mostra in-app e push dos dois lembretes, ligados por padrao",
+    "hidrata o que ja esta salvo sem alterar o outro lembrete",
+    "desligar um canal grava so aquele tipo e preserva os demais modulos"
+   ]
+  },
   "src/test/telemetry.test.tsx": {
    "path": "src/test/telemetry.test.tsx",
    "lines": 595,
@@ -156524,10 +156566,21 @@
   }
  },
  "git": {
-  "sha": "cc240b7f306a652b4fdbfa9b9bb764c49814d99a",
+  "sha": "84e8ba28320d82e631b5da35d410d28d8108b0c1",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "commits": [
+   {
+    "sha": "84e8ba2",
+    "date": "2026-11-25",
+    "author": "adm01-debug",
+    "subject": "feat: interruptor proprio para os avisos de pesquisa no perfil (#169)",
+    "files": [
+     "src/components/SurveyNotificationPreferences.tsx",
+     "src/pages/Profile.tsx",
+     "src/test/surveyNotificationPreferences.test.tsx"
+    ]
+   },
    {
     "sha": "cc240b7",
     "date": "2026-11-25",
@@ -156863,22 +156916,12 @@
      "supabase/migrations/20261123000001_create_acknowledge_security_digest.sql",
      "supabase/migrations/20261218000000_profiles_economia_rpcs.sql"
     ]
-   },
-   {
-    "sha": "d344ae9",
-    "date": "2026-11-24",
-    "author": "adm01-debug",
-    "subject": "fix: guarda UPDATE cron.job por privilegio (Supabase Preview 42501) (#137)",
-    "files": [
-     "docs/agentes/banco.md",
-     "supabase/migrations/20261109120000_fix_cron_wrong_project.sql"
-    ]
    }
   ],
   "hot_files": [
    [
     "docs/agentes/banco.md",
-    10
+    9
    ],
    [
     "docs/agentes/mapa-repo.md",
@@ -156899,6 +156942,10 @@
    [
     "scripts/db-audit/check-migration-drift.mjs",
     5
+   ],
+   [
+    "src/pages/Profile.tsx",
+    2
    ],
    [
     "scripts/db-audit/migration-baseline.json",
@@ -156929,6 +156976,14 @@
     2
    ],
    [
+    "src/components/SurveyNotificationPreferences.tsx",
+    1
+   ],
+   [
+    "src/test/surveyNotificationPreferences.test.tsx",
+    1
+   ],
+   [
     "supabase/migrations/20261227140000_engagement_reminder.sql",
     1
    ],
@@ -156942,18 +156997,6 @@
    ],
    [
     "supabase/migrations/20261227120000_engagement_integridade_e_anon.sql",
-    1
-   ],
-   [
-    "src/components/manager/TeamCompetencyDashboard.tsx",
-    1
-   ],
-   [
-    "src/pages/Profile.tsx",
-    1
-   ],
-   [
-    "src/test/rls.test.ts",
     1
    ]
   ]

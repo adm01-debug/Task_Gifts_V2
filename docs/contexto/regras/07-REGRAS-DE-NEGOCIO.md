@@ -1,6 +1,6 @@
 # 07 · REGRAS DE NEGÓCIO
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `cc240b7f30` · branch `main` · 2026-11-25 15:35 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `84e8ba2832` · branch `main` · 2026-11-25 15:56 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## A. Regras escritas por humanos (`manual/` — prioridade máxima, nunca sobrescrito)
@@ -3643,7 +3643,7 @@ _nenhum item encontrado_
 | `manager` | `supabase/migrations/20261123180000_climate_survey_engine.sql` |
 | `admin` | `supabase/migrations/20261226195000_reset_senha_consistencia.sql` |
 
-## K. Testes como especificação (2110 testes em 160 arquivos — nomes completos em `context.json`)
+## K. Testes como especificação (2114 testes em 161 arquivos — nomes completos em `context.json`)
 
 | Arquivo | Testes | Exemplos do que o sistema DEVE fazer |
 |---|---|---|
@@ -3790,6 +3790,7 @@ _nenhum item encontrado_
 | `src/test/edgeAvailability.test.ts` | 4 | isFunctionDeployed — allowlist compilada · allowlist vazia bloqueia todas as funções (kill switch documentado) · passkey-auth é reconhecida mesmo quando a env do Vercel não a lista · função fora da lista continua bloqueada |
 | `src/test/nr1Export.simulation.test.ts` | 4 | Exportação NR-1 (simulação combinatória) · nunca emite célula vazia ou  · marca plano obrigatório exatamente para riscos alto e crítico · gera nome de arquivo seguro para recortes com acentos e símbolos |
 | `src/test/passkeysPanel.test.tsx` | 4 | PasskeysPanel — cadastro so quando o login por passkey funciona · libera o cadastro quando a funcao esta publicada e a conta nao exige segundo fator · bloqueia o cadastro e explica quando a conta exige verificacao em duas etapas · bloqueia o cadastro quando a funcao nao esta liberada no ambiente |
+| `src/test/surveyNotificationPreferences.test.tsx` | 4 | SurveyNotificationPreferences · mostra in-app e push dos dois lembretes, ligados por padrao · hidrata o que ja esta salvo sem alterar o outro lembrete · desligar um canal grava so aquele tipo e preserva os demais modulos |
 | `src/test/validationLibraryContracts.test.ts` | 4 | migração de validação preserva mensagens e resultados · mantém mensagem obrigatória em entrada ausente · validateData retorna mensagens Zod 4 sem lançar exceção · XLSX preserva fórmulas/rich text e rejeita erros/booleanos como crédito |
 | `src/tests/unit/access.test.tsx` | 4 | ProtectedRoute · should redirect to login if not authenticated · should show content if authenticated and no RBAC check needed · should show access denied if RBAC check fails |
 | `src/tests/unit/achievements.test.ts` | 4 | achievementsService · unlockAchievement · should award rewards and create notification if not already unlocked · should return alreadyUnlocked if already has it |
@@ -3871,6 +3872,7 @@ _nenhum item encontrado_
 | Limit to 5 trails | `src/components/AICoachDialog.tsx` |
 | CustomTooltip must be a simple function (not a component receiving refs) | `src/components/CompetencyRadar.tsx` |
 | Fail open: indisponibilidade do verificador não pode travar o acesso. | `src/components/IpAccessGuard.tsx` |
+| Somente os canais que estes lembretes realmente usam. Os dois tipos chamam | `src/components/SurveyNotificationPreferences.tsx` |
 | Evita disparos concorrentes que estouram o rate limit da edge function. | `src/components/TrailRecommendations.tsx` |
 | momento — o banco guarda apenas o hash, então não há como recuperá-lo depois. | `src/components/admin/IssuedCredentialDialog.tsx` |
 | Toggle permission | `src/components/admin/RolePermissionsManager.tsx` |

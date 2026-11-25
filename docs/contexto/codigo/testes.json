@@ -5,17 +5,17 @@
   "vitest",
   "playwright"
  ],
- "total": 174,
+ "total": 175,
  "por_tipo": {
   "contrato": 3,
   "e2e": 2,
   "pytest": 2,
-  "unit": 165
+  "unit": 166
  },
  "onde_ficam": [
   {
    "padrao": "co-localizado (*.test)",
-   "arquivos": 155
+   "arquivos": 156
   },
   {
    "padrao": "outro",
@@ -1227,6 +1227,15 @@
    "casos": 8
   },
   {
+   "arquivo": "src/test/surveyNotificationPreferences.test.tsx",
+   "tipo": "unit",
+   "linhas": 86,
+   "testa": [
+    "src/components/SurveyNotificationPreferences.tsx"
+   ],
+   "casos": 3
+  },
+  {
    "arquivo": "src/test/telemetry.test.tsx",
    "tipo": "unit",
    "linhas": 595,
@@ -1667,6 +1676,7 @@
   "scripts/graphify-local.mjs": 1,
   "scripts/maintenance/lib.mjs": 1,
   "scripts/maintenance/run.mjs": 1,
+  "src/components/SurveyNotificationPreferences.tsx": 1,
   "src/components/accessibility/index.ts": 1,
   "src/components/admin/telemetry/TelemetryCharts.tsx": 1,
   "src/components/climate/ClimateSurveyAnswerForm.tsx": 1,

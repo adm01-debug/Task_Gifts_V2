@@ -682,6 +682,14 @@
    "src/hooks/useUserRank.ts",
    "src/lib/utils.ts"
   ],
+  "src/components/SurveyNotificationPreferences.tsx": [
+   "src/components/ui/card.tsx",
+   "src/components/ui/label.tsx",
+   "src/components/ui/skeleton.tsx",
+   "src/components/ui/switch.tsx",
+   "src/hooks/useTypePreferences.ts",
+   "src/lib/notificationTypePrefs.ts"
+  ],
   "src/components/TeamCertificationsPanel.tsx": [
    "src/components/ui/avatar.tsx",
    "src/components/ui/badge.tsx",
@@ -5012,6 +5020,7 @@
    "src/components/SEOHead.tsx",
    "src/components/SectionErrorBoundary.tsx",
    "src/components/SoundSettingsCard.tsx",
+   "src/components/SurveyNotificationPreferences.tsx",
    "src/components/auth/TwoFactorSetup.tsx",
    "src/components/campaigns/MyCampaignBadgeCard.tsx",
    "src/components/mobile/MobilePageLayout.tsx",

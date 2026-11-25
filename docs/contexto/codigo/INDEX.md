@@ -1,7 +1,7 @@
 # Contexto do projeto para agentes de IA
 
 GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.
-Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `cc240b7f306a652b4fdbfa9b9bb764c49814d99a` (2026-11-25T12:35:00-03:00).
+Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `84e8ba28320d82e631b5da35d410d28d8108b0c1` (2026-11-25T12:55:48-03:00).
 
 ## Como usar (leia antes de planejar ou executar qualquer tarefa)
 1. **Tela/rota/menu** → `rotas.json` (url/vista/menu → arquivo → hooks → tabelas → edges; `rotas_http_backend` para APIs) e `modulos.json` (módulo inteiro + dependências entre módulos).
@@ -14,7 +14,7 @@ Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR
 Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua tarefa; não carregue tudo.
 
 ## Stack
-- linguagens: TypeScript (1163), SQL (297), Markdown (56), JavaScript (24), JSON (14), YAML (9), Python (5), Shell (5)
+- linguagens: TypeScript (1165), SQL (297), Markdown (56), JavaScript (24), JSON (14), YAML (9), Python (5), Shell (5)
 - linguagem_principal: TypeScript
 - framework: React
 - backend_http: n/d
@@ -34,31 +34,31 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 ## Números
 | item | qtd |
 |---|---|
-| arquivos_total | 1590 |
-| arquivos_codigo | 1191 |
-| linhas_codigo | 236443 |
+| arquivos_total | 1592 |
+| arquivos_codigo | 1193 |
+| linhas_codigo | 236645 |
 | rotas | 87 |
 | rotas_http_backend | 0 |
 | vistas_por_id | 0 |
 | itens_menu | 65 |
 | modulos | 73 |
-| componentes | 530 |
+| componentes | 531 |
 | hooks | 155 |
 | edge_functions | 23 |
 | tabelas | 238 |
 | migrations | 295 |
 | cron_jobs | 25 |
-| testes | 174 |
+| testes | 175 |
 | workflows | 6 |
 | scripts | 17 |
 | docs_md | 56 |
 
 ## Onde ficam as coisas
 - telas: src/pages (85), src/components (1)
-- componentes: src/components (437), src/pages (86), src/contexts (4)
+- componentes: src/components (438), src/pages (86), src/contexts (4)
 - hooks: src/hooks (129), src/components (22), src/contexts (4)
 - servicos_logica: src/lib (106), src/services (99), src/integrations (3)
-- testes: co-localizado (*.test) (155), outro (12), tests/ (3)
+- testes: co-localizado (*.test) (156), outro (12), tests/ (3)
 - edge_functions: supabase/functions
 - migrations: supabase/migrations
 - scripts: scripts/maintenance (4), scripts/ci (3), scripts/regras_negocio (3)
@@ -69,7 +69,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 ## Módulos (menu → domínio)
 | módulo | itens de menu | telas/rotas | arquivos | hooks locais | edges | tabelas |
 |---|---|---|---|---|---|---|
-| components | 0 | 0 | 81 | 217 | 8 | 76 |
+| components | 0 | 0 | 82 | 217 | 8 | 76 |
 | components/accessibility | 0 | 0 | 5 | 2 | 0 | 0 |
 | components/admin | 0 | 0 | 46 | 150 | 4 | 67 |
 | components/analytics | 0 | 0 | 5 | 0 | 0 | 0 |
@@ -279,8 +279,8 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - possiveis_segredos_no_codigo: 0
 
 ## Grafo de código (graphify)
-- 10395 nós · 28957 arestas · 674 comunidades · grafo do commit `cc240b7f`
-- comunidades maiores: react (217), sonner (200), BossWinRateGoalsCard.tsx (173), CardHeader (168), card.tsx (155), cn (131), useAuth.tsx (117), skeleton.tsx (111), contracts/index.ts (106), badge.tsx (100), button.tsx (100), framer-motion (95)
+- 10406 nós · 28994 arestas · 665 comunidades · grafo do commit `84e8ba28`
+- comunidades maiores: react (224), lucide-react (200), Button (150), client.ts (145), cn (141), badge.tsx (111), profilesService.ts (105), framer-motion (96), requestId.ts (93), button.tsx (92), useToast (91), contracts/index.ts (91)
 - símbolos mais chamados: cn() (src/lib/utils.ts), useAuth() (src/hooks/useAuth.tsx), useIsMobile() (src/hooks/use-mobile.tsx), q() (scripts/supabase_snapshot/snapshot.py), useDepartments() (src/hooks/useDepartments.ts), useRBAC() (src/hooks/useRBAC.ts), useProfiles() (src/hooks/useProfiles.ts), useToast() (src/hooks/use-toast.ts), useSEO() (src/hooks/useSEO.ts), useSoundEffects() (src/hooks/useSoundEffects.tsx), .collect() (scripts/supabase_snapshot/test_snapshot.py), excluded_sql() (scripts/supabase_snapshot/snapshot.py)
 - consulta local: `graphify query "<pergunta>"`, `graphify path "<A>" "<B>"`, `graphify explain "<X>"`
 
@@ -366,6 +366,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 
 
 ## Últimos commits
+- 2026-11-25 `84e8ba2` feat: interruptor proprio para os avisos de pesquisa no perfil (#169)
 - 2026-11-25 `cc240b7` feat: lembrete semanal de pesquisa de engajamento pendente (#168)
 - 2026-11-25 `ebbb9a0` feat: mostra a foto do premio na loja quando o admin cadastra (#167)
 - 2026-11-25 `f61144b` security: engajamento com score validado e anon fora das tabelas de escrita (#166)
@@ -380,7 +381,6 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - 2026-11-24 `c941b10` docs: corrige o nome da migration que reagenda o job 33 (#157)
 - 2026-11-24 `52db204` fix: libera cadastro e login por passkey na allowlist de producao (#156)
 - 2026-11-24 `ac84238` docs: corrige o drift do cron de push e do digest semanal (401 que nao existe) (#155)
-- 2026-11-24 `e681a89` chore: sobe o ledger para 282 nas docs (#154)
 
 ## Arquivos deste diretório
 - `docs/contexto/codigo/rotas.json`

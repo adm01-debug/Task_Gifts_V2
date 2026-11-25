@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "cc240b7f306a652b4fdbfa9b9bb764c49814d99a",
+  "commit": "84e8ba28320d82e631b5da35d410d28d8108b0c1",
   "branch": "main",
-  "data_commit": "2026-11-25T12:35:00-03:00",
+  "data_commit": "2026-11-25T12:55:48-03:00",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "ultimos_commits": [
+   {
+    "sha": "84e8ba2",
+    "data": "2026-11-25",
+    "assunto": "feat: interruptor proprio para os avisos de pesquisa no perfil (#169)"
+   },
    {
     "sha": "cc240b7",
     "data": "2026-11-25",
@@ -126,14 +131,9 @@
     "sha": "82066d7",
     "data": "2026-11-24",
     "assunto": "fix: provisiona segredo do alerta critico e tira URL fixa do trigger (#143)"
-   },
-   {
-    "sha": "716355d",
-    "data": "2026-11-24",
-    "assunto": "feat(clima): agenda ciclo de vida das pesquisas (expira e lembrete) (#141)"
    }
   ],
-  "arquivos_mudados_7d": 237,
+  "arquivos_mudados_7d": 239,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "supabase/functions/_shared",
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 135
+    "commits": 136
    },
    {
     "autor": "dependabot[bot]",
@@ -310,21 +310,21 @@
   ]
  },
  "contagens": {
-  "arquivos_total": 1590,
-  "arquivos_codigo": 1191,
-  "linhas_codigo": 236443,
+  "arquivos_total": 1592,
+  "arquivos_codigo": 1193,
+  "linhas_codigo": 236645,
   "rotas": 87,
   "rotas_http_backend": 0,
   "vistas_por_id": 0,
   "itens_menu": 65,
   "modulos": 73,
-  "componentes": 530,
+  "componentes": 531,
   "hooks": 155,
   "edge_functions": 23,
   "tabelas": 238,
   "migrations": 295,
   "cron_jobs": 25,
-  "testes": 174,
+  "testes": 175,
   "workflows": 6,
   "scripts": 17,
   "docs_md": 56
@@ -399,8 +399,8 @@
    "linhas": 342
   },
   "src/components": {
-   "arquivos": 467,
-   "linhas": 79179
+   "arquivos": 468,
+   "linhas": 79293
   },
   "src/constants": {
    "arquivos": 1,
@@ -432,7 +432,7 @@
   },
   "src/pages": {
    "arquivos": 86,
-   "linhas": 24958
+   "linhas": 24960
   },
   "src/services": {
    "arquivos": 99,
@@ -443,8 +443,8 @@
    "linhas": 7136
   },
   "src/test": {
-   "arquivos": 136,
-   "linhas": 24116
+   "arquivos": 137,
+   "linhas": 24202
   },
   "src/tests": {
    "arquivos": 17,
