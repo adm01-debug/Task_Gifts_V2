@@ -92,12 +92,13 @@ BEGIN
 END
 $do$;
 
--- producao ja era o superconjunto
+-- uniao: >= 0 aceita o peso zero que o formulario permite
+-- (src/lib/departmentWarConfig.ts:339 exige peso > 0 em AO MENOS UMA metrica)
 ALTER TABLE public.department_war_metrics DROP CONSTRAINT IF EXISTS department_war_metrics_weight_check;
 DO $do$
 BEGIN
   BEGIN
-    ALTER TABLE public.department_war_metrics ADD CONSTRAINT department_war_metrics_weight_check CHECK ((weight > (0)::numeric));
+    ALTER TABLE public.department_war_metrics ADD CONSTRAINT department_war_metrics_weight_check CHECK ((weight >= (0)::numeric));
   EXCEPTION WHEN others THEN
     RAISE NOTICE 'nao reaplicada % em %: %', 'department_war_metrics_weight_check', 'department_war_metrics', SQLERRM;
   END;

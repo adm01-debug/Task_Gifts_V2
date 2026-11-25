@@ -1004,17 +1004,11 @@ BEGIN
 END
 $do$;
 
-DO $do$
-BEGIN
-  IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'sequence_steps_unique' AND conrelid = 'public.sequence_steps'::regclass) THEN
-    BEGIN
-      ALTER TABLE public.sequence_steps ADD CONSTRAINT sequence_steps_unique UNIQUE (procedure_id, "position");
-    EXCEPTION WHEN others THEN
-      RAISE NOTICE 'pulada % em %: %', 'sequence_steps_unique', 'sequence_steps', SQLERRM;
-    END;
-  END IF;
-END
-$do$;
+-- sequence_steps_unique NAO e recriada aqui de proposito: e uma UNIQUE IMEDIATA
+-- redundante com sequence_steps_procedure_id_position_key (DEFERRABLE INITIALLY
+-- DEFERRED) e quebra a troca de duas etapas, porque save_sequence_procedure faz
+-- SET CONSTRAINTS ALL DEFERRED (migration 20260728161526, linha 93) e atualiza
+-- uma etapa por vez. A 20261228270000 remove essa trava de producao.
 
 DO $do$
 BEGIN
@@ -1220,14 +1214,9 @@ BEGIN
 END
 $do$;
 
-DO $do$
-BEGIN
-  IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'wager_questions_scheduled_date_key' AND conrelid = 'public.wager_questions'::regclass) THEN
-    BEGIN
-      ALTER TABLE public.wager_questions ADD CONSTRAINT wager_questions_scheduled_date_key UNIQUE (scheduled_date);
-    EXCEPTION WHEN others THEN
-      RAISE NOTICE 'pulada % em %: %', 'wager_questions_scheduled_date_key', 'wager_questions', SQLERRM;
-    END;
-  END IF;
-END
-$do$;
+-- wager_questions_scheduled_date_key NAO e recriada aqui de proposito: a UNIQUE
+-- incondicional em (scheduled_date) quebra a substituicao da pergunta do dia,
+-- porque save_wager_question desativa a anterior (linhas 96-98) e insere a nova na
+-- mesma data (linha 105) - migration 20260728163529. O contrato real e "uma
+-- pergunta ATIVA por data", garantido pelo indice unico parcial
+-- uq_wager_questions_date_active. A 20261228270000 remove essa trava de producao.
