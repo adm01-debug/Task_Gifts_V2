@@ -389,25 +389,53 @@ export const highPotentialService = {
   },
 
   async identifyHighPotentials(departmentId?: string): Promise<HighPotentialScore[]> {
-    // Fetch all profiles (optionally filtered by department)
-    const query = supabase
+    // `team_members.user_id` e `user_positions.user_id` nao tem FK para
+    // `profiles` (apontam para auth.users), entao os embeds
+    // `team_members(...)`/`user_positions(...)` respondem PGRST200 e a consulta
+    // inteira falhava, deixando o painel vazio. Busca em 3 queries + merge.
+    const { data: profiles } = await supabase
       .from("profiles")
-      .select("id, display_name, avatar_url, level, xp, coins, streak, best_streak, quests_completed, status, created_at, updated_at, email, birth_date, hire_date, last_access_at, team_members(department_id, departments(name)), user_positions(positions(name))");
-
-    const { data: profiles } = await query;
+      .select("id, display_name, avatar_url, level, xp, coins, streak, best_streak, quests_completed, status, created_at, updated_at, email, birth_date, hire_date, last_access_at");
 
     if (!profiles) return [];
 
     // Filter by department if specified - use unknown first due to dynamic relation types
     type TeamMember = { department_id: string; departments: { name: string } | null };
     type UserPosition = { positions: { name: string } | null };
-    
-    let filteredProfiles = profiles;
-    if (departmentId) {
-      filteredProfiles = profiles.filter((p) => {
-        const teamMembers = p.team_members as unknown as TeamMember[] | null;
-        return teamMembers?.some((tm) => tm.department_id === departmentId);
+
+    const userIds = profiles.map((p) => p.id);
+    const [{ data: teamMembers }, { data: userPositions }] = await Promise.all([
+      supabase.from("team_members").select("user_id, department_id, departments(name)").in("user_id", userIds),
+      supabase.from("user_positions").select("user_id, positions(name)").in("user_id", userIds),
+    ]);
+
+    const membersByUser = new Map<string, TeamMember[]>();
+    for (const member of teamMembers ?? []) {
+      const list = membersByUser.get(member.user_id) ?? [];
+      list.push({
+        department_id: member.department_id,
+        departments: member.departments as unknown as { name: string } | null,
       });
+      membersByUser.set(member.user_id, list);
+    }
+
+    const positionsByUser = new Map<string, UserPosition[]>();
+    for (const userPosition of userPositions ?? []) {
+      const list = positionsByUser.get(userPosition.user_id) ?? [];
+      list.push({ positions: userPosition.positions as unknown as { name: string } | null });
+      positionsByUser.set(userPosition.user_id, list);
+    }
+
+    let filteredProfiles = profiles.map((profile) => ({
+      ...profile,
+      team_members: membersByUser.get(profile.id) ?? [],
+      user_positions: positionsByUser.get(profile.id) ?? [],
+    }));
+
+    if (departmentId) {
+      filteredProfiles = filteredProfiles.filter((p) =>
+        p.team_members.some((tm) => tm.department_id === departmentId),
+      );
     }
 
     const results: HighPotentialScore[] = [];
@@ -425,7 +453,6 @@ export const highPotentialService = {
         // Cast nested relations using unknown first for type safety
         const teamMembers = profile.team_members as unknown as TeamMember[] | null;
         const userPositions = profile.user_positions as unknown as UserPosition[] | null;
-
         results.push({
           userId: profile.id,
           displayName: profile.display_name || profile.email?.split('@')[0] || 'Usuário',

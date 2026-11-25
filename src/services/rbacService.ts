@@ -50,17 +50,33 @@ export const rbacService = {
     user_roles: Array<{ id: string; role: AppRole; created_at: string }>;
   }>> {
     try {
-      const { data, error } = await supabase
+      // `user_roles.user_id` referencia `auth.users`, nao `profiles`: o embed
+      // `user_roles (...)` responde PGRST200 e a lista voltava vazia. Duas
+      // consultas + merge, mesmo padrao de `getAllUserRoles`.
+      const { data: profiles, error } = await supabase
         .from("profiles")
-        .select("id, display_name, email, user_roles (id, role, created_at)")
+        .select("id, display_name, email")
         .order("display_name");
       if (error) throw error;
-      return (data || []) as unknown as Array<{
-        id: string;
-        display_name: string | null;
-        email: string | null;
-        user_roles: Array<{ id: string; role: AppRole; created_at: string }>;
-      }>;
+
+      const { data: roles, error: rolesError } = await supabase
+        .from("user_roles")
+        .select("id, user_id, role, created_at");
+      if (rolesError) throw rolesError;
+
+      const rolesByUser = new Map<string, Array<{ id: string; role: AppRole; created_at: string }>>();
+      for (const role of roles ?? []) {
+        const list = rolesByUser.get(role.user_id) ?? [];
+        list.push({ id: role.id, role: role.role as AppRole, created_at: role.created_at });
+        rolesByUser.set(role.user_id, list);
+      }
+
+      return (profiles ?? []).map((profile) => ({
+        id: profile.id,
+        display_name: profile.display_name,
+        email: profile.email,
+        user_roles: rolesByUser.get(profile.id) ?? [],
+      }));
     } catch (error) {
       logger.apiError("getUsersWithRoles", error, "RBACService");
       return [];
