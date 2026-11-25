@@ -765,6 +765,13 @@ nomes substituídos (`daily-cleanup-idempotency`, `daily-cleanup-security-logs-9
 `20261224110000_cron_internal_jobs_drift.sql`, que os reagenda lendo o `x-internal-secret` de
 `_internal.dispatch_config`.
 
+Num **rebuild limpo** o `cron.job` termina com **32** jobs, não 34: os dois monitores internos são
+recusados de propósito (`20261224110000`, linhas 50-52 e 104-111) porque num banco vazio não existe job
+de onde copiar a chave, e agendar sem credencial geraria 401 silencioso para sempre. Eles entram
+normalmente ao aplicar sobre o banco vivo, que já tem a chave. Medido no replay de 25/11/2026
+(`select count(*) from cron.job` = 32; ausentes apenas `burn-rate-monitor-5min` e
+`error-budget-monitor-daily`).
+
 **22 jobs ativos** (nome = 1º argumento de `cron.schedule`), ordenados alfabeticamente:
 
 | # | Nome do job | Arquivo:linha |
