@@ -319,19 +319,25 @@ export const shopService = {
   },
 
   // Get all purchases (admin) with user profiles
-  async getAllPurchasesAdmin(): Promise<(ShopPurchase & { profile?: { display_name: string; email: string } })[]> {
+    async getAllPurchasesAdmin(): Promise<(ShopPurchase & { profile?: { display_name: string; email: string | null } })[]> {
     const { data, error } = await supabase
       .from("shop_purchases")
-      .select("*, reward:shop_rewards(*), profile:profiles(display_name, email)")
+        .select("*, reward:shop_rewards(*), profile:profiles(display_name)")
       .order("created_at", { ascending: false });
 
     if (error) throw error;
+
+      // E-mail nao esta mais no SELECT de `profiles` (LGPD): vem da RPC de gestao.
+      const { data: directory } = await supabase.rpc("admin_profile_directory");
+      const emailById = new Map((directory ?? []).map((entry) => [entry.id, entry.email]));
+
     return (data || []).map((p: unknown) => {
-      const purchase = p as PurchaseQueryResult & { profile?: { display_name: string; email: string } };
+        const purchase = p as PurchaseQueryResult & { profile?: { display_name: string; email: string | null } };
+        const email = emailById.get(purchase.user_id) ?? null;
       return {
         ...purchase,
         reward: purchase.reward as ShopReward,
-        profile: purchase.profile,
+          profile: purchase.profile ? { ...purchase.profile, email } : undefined,
       };
     });
   },

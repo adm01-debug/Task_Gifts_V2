@@ -55,9 +55,14 @@ export const rbacService = {
       // consultas + merge, mesmo padrao de `getAllUserRoles`.
       const { data: profiles, error } = await supabase
         .from("profiles")
-        .select("id, display_name, email")
+              .select("id, display_name")
         .order("display_name");
       if (error) throw error;
+
+            // E-mail saiu do SELECT de `profiles` (LGPD): o diretorio de gestao vem
+            // da RPC admin_profile_directory, que exige admin/gestor.
+            const { data: directory } = await supabase.rpc("admin_profile_directory");
+            const emailById = new Map((directory ?? []).map((entry) => [entry.id, entry.email]));
 
       const { data: roles, error: rolesError } = await supabase
         .from("user_roles")
@@ -74,7 +79,7 @@ export const rbacService = {
       return (profiles ?? []).map((profile) => ({
         id: profile.id,
         display_name: profile.display_name,
-        email: profile.email,
+        email: emailById.get(profile.id) ?? null,
         user_roles: rolesByUser.get(profile.id) ?? [],
       }));
     } catch (error) {

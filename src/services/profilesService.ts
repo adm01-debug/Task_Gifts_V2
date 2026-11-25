@@ -24,7 +24,13 @@ export interface PublicProfile {
  * dados sensíveis e a RPC `admin_profile_directory` para fluxos de gestão.
  */
 export const PROFILE_SAFE_COLUMNS =
-  "id, display_name, avatar_url, level, xp, coins, streak, best_streak, quests_completed, status, created_at, updated_at, email, birth_date, hire_date, last_access_at" as const;
+  "id, display_name, avatar_url, level, xp, coins, streak, best_streak, quests_completed, status, created_at, updated_at, birth_date, hire_date, last_access_at" as const;
+
+/**
+ * E-mail e dados pessoais saíram do SELECT de `profiles` para qualquer usuário
+ * autenticado. Fluxos de gestão usam a RPC `admin_profile_directory`; o próprio
+ * usuário usa `getMyPrivate()` (ou `supabase.auth.getUser()`).
+ */
 
 const PUBLIC_PROFILE_COLUMNS = PROFILE_SAFE_COLUMNS;
 
