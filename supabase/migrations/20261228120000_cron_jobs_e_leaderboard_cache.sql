@@ -17,7 +17,11 @@
 -- producao.
 --
 -- Idempotente: em producao, onde tudo ja existe, esta migration e no-op
--- (CREATE ... IF NOT EXISTS + guarda por nome em cron.job).
+-- (CREATE ... IF NOT EXISTS + guarda por nome em cron.job) - com uma excecao
+-- deliberada: o ACL da matview. Producao da GRANT ALL a authenticated e
+-- service_role; aqui authenticated e anon recebem REVOKE ALL e o grant fica so
+-- em service_role, para nao expor employee_id de todos a qualquer usuario
+-- logado (ver o bloco do GRANT, item 1).
 
 CREATE EXTENSION IF NOT EXISTS pg_cron;
 

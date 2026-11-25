@@ -51,16 +51,28 @@ Distribuição de migrations por mês (timestamp do nome):
 
 > 66% de todas as migrations do projeto (172/262) foram criadas em julho/2026 — sinal de um ciclo de retrabalho intenso e concentrado.
 
-**Nota (2026-11-25) — drift de schema fechado:** `20251221000000_profiles_colunas_faltantes.sql`
-versiona 8 colunas de `public.profiles` que só existiam em produção (`hire_date`, `status`, `phone`,
-`personal_email`, `cpf`, `employee_id`, `contract_type`, `last_access_at`) mais as CHECKs
-`profiles_status_check` e `profiles_contract_type_check`. Objetos já versionados dependiam delas e
-quebravam num banco limpo: `20260728184034:2-12` (RPC `get_my_profile_private`, `LANGUAGE sql`,
-validada na criação), `20260728184034:39-43`, `20261218000000:211,214` e `20261226200000:41,44-61`
-(GRANT por coluna em `hire_date`/`status`/`last_access_at`) e a matview de `20261228120000`.
-`sync_department_war_headcount` (`20260727230544:549`) só quebrava em runtime — mesmo sintoma,
-invisível no rebuild. O arquivo fica logo depois de `birth_date` (`20251220144518:354`) para
-preservar a ordem ordinal das colunas em produção (13..21).
+**Nota (2026-11-25) — drift de schema fechado:** `20251220144518:355-393` (arquivo já aplicado, alinhado
+ao banco como já se fez com `20261220000000`) passa a versionar as **7** colunas de `public.profiles` que
+só existiam em produção (`status`, `phone`, `personal_email`, `cpf`, `employee_id`, `contract_type`,
+`last_access_at`) mais as CHECKs `profiles_status_check` e `profiles_contract_type_check` — definições
+medidas em `pg_constraint` e tipos/defaults em `information_schema.columns`, na ordem ordinal 15..21 de
+produção (`hire_date`, ordinal 14, já era versionado na mesma migration). Objetos já versionados
+dependiam dessas colunas e quebravam num banco limpo: `20260728184034:2-12` (RPC
+`get_my_profile_private`, `LANGUAGE sql`, validada na criação), `20260728184034:39-43`,
+`20261218000000:211,214` e `20261226200000:41,44-61` (GRANT por coluna em
+`hire_date`/`status`/`last_access_at`) e a matview de `20261228120000`. `sync_department_war_headcount`
+(`20260727230544:549`) só quebrava em runtime — mesmo sintoma, invisível no rebuild. **Não** virou
+arquivo novo com versão retroativa de propósito: o `supabase db push` padrão não aplica migration mais
+antiga que a última do ledger (só com `--include-all`), então um `2025122…` novo travaria todo apply
+seguinte e deixaria o ledger sem a versão. Folding no arquivo aplicado não cria versão, não cria
+pendência e o efeito em produção é nenhum (`ADD COLUMN IF NOT EXISTS` + guarda em `pg_constraint`).
+
+**Nota (2026-11-25) — dois arquivos `.sql` não eram SQL válido:** `20260806141640_user_challenges_insert_policy.sql`
+terminava com `</content>` e `</invoke>` (restos de uma chamada de ferramenta colada dentro do arquivo):
+um rebuild morria no statement 3 com `syntax error at or near "</"`. As duas linhas foram removidas
+(787 → 766 bytes); o SQL de fato era só a policy. Com isso os **296** arquivos de migration passam no
+parser oficial do PostgreSQL (`libpg-query`) sem um único erro, o que é a prova estática de que o
+esquema é reconstruível — `supabase db reset` segue impossível nesta máquina (sem Docker/CLI).
 
 Primeira/última migration:
 - `supabase/migrations/20241231000000_saved_filters.sql`

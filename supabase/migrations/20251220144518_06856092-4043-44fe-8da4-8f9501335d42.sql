@@ -352,7 +352,45 @@ CREATE TABLE public.celebrations (
 -- User profile extensions for celebrations
 ALTER TABLE public.profiles 
   ADD COLUMN IF NOT EXISTS birth_date DATE,
-  ADD COLUMN IF NOT EXISTS hire_date DATE;
+  ADD COLUMN IF NOT EXISTS hire_date DATE,
+  -- Colunas criadas direto em producao e nunca versionadas. Objetos do proprio
+  -- repositorio ja dependem delas, entao um rebuild sem elas quebra:
+  --   get_my_profile_private (20260728184034:2-12, LANGUAGE sql),
+  --   GRANT SELECT/UPDATE por coluna (20260728184034:39-43, 20261218000000:211,214,
+  --   20261226200000:41,44-61) e a matview leaderboard_cache (20261228120000).
+  -- Tipos, defaults e ordem reproduzem information_schema.columns de producao.
+  ADD COLUMN IF NOT EXISTS status TEXT NOT NULL DEFAULT 'confirmed',
+  ADD COLUMN IF NOT EXISTS phone TEXT,
+  ADD COLUMN IF NOT EXISTS personal_email TEXT,
+  ADD COLUMN IF NOT EXISTS cpf TEXT,
+  ADD COLUMN IF NOT EXISTS employee_id TEXT,
+  ADD COLUMN IF NOT EXISTS contract_type TEXT DEFAULT 'clt',
+  ADD COLUMN IF NOT EXISTS last_access_at TIMESTAMP WITH TIME ZONE;
+
+-- CHECKs de producao, com os mesmos nomes. `status` e regra de negocio: so
+-- 'confirmed' recebe os lembretes de clima (20261224100000:67). Guardados por
+-- pg_constraint para nao falhar onde ja existem.
+DO $do$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_constraint
+    WHERE conrelid = 'public.profiles'::regclass
+      AND conname = 'profiles_status_check'
+  ) THEN
+    ALTER TABLE public.profiles ADD CONSTRAINT profiles_status_check
+      CHECK (status = ANY (ARRAY['invited'::text, 'confirmed'::text, 'inactive'::text, 'deleted'::text]));
+  END IF;
+
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_constraint
+    WHERE conrelid = 'public.profiles'::regclass
+      AND conname = 'profiles_contract_type_check'
+  ) THEN
+    ALTER TABLE public.profiles ADD CONSTRAINT profiles_contract_type_check
+      CHECK (contract_type = ANY (ARRAY['clt'::text, 'pj'::text, 'intern'::text, 'temporary'::text]));
+  END IF;
+END
+$do$;
 
 -- Enable RLS
 ALTER TABLE public.celebrations ENABLE ROW LEVEL SECURITY;
