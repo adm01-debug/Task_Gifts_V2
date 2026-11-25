@@ -467,6 +467,16 @@ BEGIN
 END;
 $function$;
 
+-- `get_passkeys_by_email` e o unico caso em que a definicao VIVA de producao
+-- devolve outra assinatura: `TABLE(credential_id text, user_id uuid)`. Ela e a
+-- versao anterior a 20260728184541 — compara e-mail exato (sem lower/trim) e e
+-- VOLATILE —, e CREATE OR REPLACE recusa trocar o tipo de retorno (42P13).
+-- Por isso o DROP antes. O consumidor (supabase/functions/passkey-auth/index.ts)
+-- le so `credential_id`, e o repositorio manda o e-mail digitado pelo usuario,
+-- entao a versao com lower/trim e a correta. DROP zera a ACL da funcao, que
+-- 20261226140000 havia fechado: o REVOKE/GRANT abaixo devolve o mesmo estado.
+DROP FUNCTION IF EXISTS public.get_passkeys_by_email(text);
+
 CREATE OR REPLACE FUNCTION public.get_passkeys_by_email(p_email text)
  RETURNS TABLE(credential_id text)
  LANGUAGE plpgsql
@@ -487,6 +497,9 @@ BEGIN
   LIMIT 20;
 END;
 $function$;
+
+  REVOKE ALL ON FUNCTION public.get_passkeys_by_email(text) FROM PUBLIC, anon, authenticated;
+  GRANT EXECUTE ON FUNCTION public.get_passkeys_by_email(text) TO service_role;
 
 CREATE OR REPLACE FUNCTION public.get_push_outbox_health(p_hours integer DEFAULT 24)
  RETURNS jsonb
