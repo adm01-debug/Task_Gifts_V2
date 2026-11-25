@@ -1415,9 +1415,11 @@ TO anon;
 -- banco reconstruido negava UPDATE/DELETE/INSERT que producao permite. Sao 108
 -- tabelas. GRANT repetido e no-op.
 -- Fora daqui de proposito: TRUNCATE, REFERENCES e TRIGGER, que producao concede a
--- authenticated em 3 tabelas. Nenhum deles e exercitado pela API (PostgREST nao
+-- authenticated em 3 relacoes. Nenhum deles e exercitado pela API (PostgREST nao
 -- expoe TRUNCATE/REFERENCES/TRIGGER) e TRUNCATE ignora RLS, entao nao se
--- institucionaliza no repositorio. Revogar no vivo fica para PR de hardening.
+-- institucionaliza no repositorio: a `20261228150000` revoga esses privilegios no
+-- vivo (TRUNCATE, REFERENCES e TRIGGER em profiles, profiles_public e
+-- webhook_delivery_stats_24h), e as duas pontas passam a ter o mesmo conjunto de grants.
 GRANT UPDATE, DELETE ON TABLE public.action_plan_updates TO authenticated;
 GRANT UPDATE ON TABLE public.activity_reactions TO authenticated;
 GRANT UPDATE ON TABLE public.ai_coach_messages TO authenticated;
