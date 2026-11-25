@@ -12444,6 +12444,10 @@ export type Database = {
         Returns: Json
       }
       request_password_reset: { Args: { p_user_id: string }; Returns: string }
+      request_password_reset_by_email: {
+        Args: { p_email: string }
+        Returns: boolean
+      }
       requeue_push_outbox: {
         Args: { p_ids?: string[]; p_include_stuck?: boolean }
         Returns: number

@@ -9,7 +9,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { invokeEdgeSafe } from "@/lib/requestId";
 import { isFunctionDeployed } from "@/lib/edgeAvailability";
 import { logger } from "@/services/loggingService";
-import { passwordResetService } from "@/services/passwordResetService";
+
 import { twoFactorService } from "@/services/twoFactorService";
 import { lovable } from "@/integrations/lovable/index";
 import { emailSchema, loginSchema, signupSchema, checkPasswordLeaked } from "@/lib/authValidations";
@@ -142,10 +142,8 @@ const Auth = () => {
     if (!r.success) { setErrors({ email: r.error.issues[0].message }); return; }
     setLoading(true);
     try {
-      const { data: userData, error: userError } = await supabase
-        .from("profiles").select("id").eq("email", email).maybeSingle();
-      if (userError || !userData) { toast.error("Email não encontrado no sistema"); setLoading(false); return; }
-      await passwordResetService.requestPasswordReset();
+      const { data: requested, error: requestError } = await supabase.rpc("request_password_reset_by_email", { p_email: email.trim() });
+            if (requestError || !requested) { toast.error("Email não encontrado no sistema"); setLoading(false); return; }
       toast.success("Solicitação enviada! Aguarde a aprovação do seu gestor.", { duration: 6000 });
       setView("login");
     } catch (err: unknown) {
