@@ -289,20 +289,29 @@ export const certificationsService = {
     expiredCertifications: number;
     mandatoryMissing: number;
   }[]> {
-    // Get team members
+    // `team_members.user_id` referencia `auth.users`, nao `profiles`: o embed
+        // `profiles!inner(...)` falha com PGRST200. Duas consultas + merge.
+        const managerDepartmentId = (
+          await supabase
+            .from('team_members')
+            .select('department_id')
+            .eq('user_id', managerId)
+            .eq('is_manager', true)
+            .maybeSingle()
+        ).data?.department_id || '';
+
     const { data: teamMembers, error: teamError } = await supabase
       .from('team_members')
-      .select('user_id, profiles!inner(id, display_name)')
-      .eq('department_id', (
-        await supabase
-          .from('team_members')
-          .select('department_id')
-          .eq('user_id', managerId)
-          .eq('is_manager', true)
-          .maybeSingle()
-      ).data?.department_id || '');
+          .select('user_id, department_id')
+          .eq('department_id', managerDepartmentId);
 
     if (teamError) throw teamError;
+
+        const memberIds = (teamMembers || []).map(m => m.user_id);
+        const { data: memberProfiles } = memberIds.length
+          ? await supabase.from('profiles').select('id, display_name').in('id', memberIds)
+          : { data: [] as { id: string; display_name: string | null }[] };
+        const displayNameById = new Map((memberProfiles || []).map(p => [p.id, p.display_name]));
 
     // Get mandatory certifications count
     const { count: mandatoryCount } = await supabase
@@ -333,7 +342,7 @@ export const certificationsService = {
 
       results.push({
         userId: member.user_id,
-        displayName: (member.profiles as { display_name?: string } | null)?.display_name || 'Usuário',
+        displayName: displayNameById.get(member.user_id) || 'Usuário',
         totalCertifications: userCerts?.length || 0,
         activeCertifications: activeCerts.length,
         expiringCertifications: expiringCerts.length,
