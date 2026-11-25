@@ -51,6 +51,17 @@ Distribuição de migrations por mês (timestamp do nome):
 
 > 66% de todas as migrations do projeto (172/262) foram criadas em julho/2026 — sinal de um ciclo de retrabalho intenso e concentrado.
 
+**Nota (2026-11-25) — drift de schema fechado:** `20251221000000_profiles_colunas_faltantes.sql`
+versiona 8 colunas de `public.profiles` que só existiam em produção (`hire_date`, `status`, `phone`,
+`personal_email`, `cpf`, `employee_id`, `contract_type`, `last_access_at`) mais as CHECKs
+`profiles_status_check` e `profiles_contract_type_check`. Objetos já versionados dependiam delas e
+quebravam num banco limpo: `20260728184034:2-12` (RPC `get_my_profile_private`, `LANGUAGE sql`,
+validada na criação), `20260728184034:39-43`, `20261218000000:211,214` e `20261226200000:41,44-61`
+(GRANT por coluna em `hire_date`/`status`/`last_access_at`) e a matview de `20261228120000`.
+`sync_department_war_headcount` (`20260727230544:549`) só quebrava em runtime — mesmo sintoma,
+invisível no rebuild. O arquivo fica logo depois de `birth_date` (`20251220144518:354`) para
+preservar a ordem ordinal das colunas em produção (13..21).
+
 Primeira/última migration:
 - `supabase/migrations/20241231000000_saved_filters.sql`
 - `supabase/migrations/20260807030000_fix_opinion_feed_rpc.sql`
