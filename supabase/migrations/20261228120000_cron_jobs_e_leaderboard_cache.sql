@@ -62,7 +62,16 @@ CREATE INDEX IF NOT EXISTS idx_leaderboard_cache_xp ON public.leaderboard_cache 
 CREATE INDEX IF NOT EXISTS idx_leaderboard_cache_dept ON public.leaderboard_cache (department_id, dept_rank);
 CREATE INDEX IF NOT EXISTS idx_leaderboard_cache_level ON public.leaderboard_cache (level DESC, xp DESC);
 
-GRANT ALL ON public.leaderboard_cache TO authenticated, service_role;
+-- ACL de producao medida: `authenticated` e `service_role` com ALL. Aqui o grant
+-- vai so para `service_role`: `employee_id` e dado restrito a gestor
+-- (`20261226200000_profiles_select_colunas_sensiveis.sql` tira a coluna do SELECT de
+-- `authenticated`), e a matview projetaria `employee_id` + totais de tarefas de todos
+-- os colaboradores para qualquer usuario logado via PostgREST, driblando aquele
+-- allowlist. Nenhum codigo le a matview (0 referencias fora das migrations), entao
+-- `authenticated` nao tem consumidor para perder. Em producao isto remove o grant
+-- que existe la hoje (unica diferenca intencional em relacao ao medido).
+GRANT ALL ON public.leaderboard_cache TO service_role;
+REVOKE ALL ON public.leaderboard_cache FROM authenticated, anon;
 
 -- 2) Jobs do pg_cron presentes em producao e ausentes do repositorio
 DO $$
