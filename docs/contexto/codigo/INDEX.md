@@ -1,7 +1,7 @@
 # Contexto do projeto para agentes de IA
 
 GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.
-Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `b9db75da8505eb66d066841f5f58b72d3e41f2c4` (2026-11-25T09:42:23-03:00).
+Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `a6a9bc631d0de5e01b8d0f579275ee57fdc90966` (2026-11-25T09:49:10-03:00).
 
 ## Como usar (leia antes de planejar ou executar qualquer tarefa)
 1. **Tela/rota/menu** → `rotas.json` (url/vista/menu → arquivo → hooks → tabelas → edges; `rotas_http_backend` para APIs) e `modulos.json` (módulo inteiro + dependências entre módulos).
@@ -14,7 +14,7 @@ Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR
 Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua tarefa; não carregue tudo.
 
 ## Stack
-- linguagens: TypeScript (1162), SQL (285), Markdown (56), JavaScript (24), JSON (14), YAML (9), Python (5), Shell (5)
+- linguagens: TypeScript (1162), SQL (288), Markdown (56), JavaScript (24), JSON (14), YAML (9), Python (5), Shell (5)
 - linguagem_principal: TypeScript
 - framework: React
 - backend_http: n/d
@@ -34,7 +34,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 ## Números
 | item | qtd |
 |---|---|
-| arquivos_total | 1577 |
+| arquivos_total | 1580 |
 | arquivos_codigo | 1190 |
 | linhas_codigo | 236185 |
 | rotas | 87 |
@@ -46,7 +46,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 | hooks | 155 |
 | edge_functions | 23 |
 | tabelas | 238 |
-| migrations | 283 |
+| migrations | 286 |
 | cron_jobs | 24 |
 | testes | 173 |
 | workflows | 6 |
@@ -278,8 +278,8 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - possiveis_segredos_no_codigo: 0
 
 ## Grafo de código (graphify)
-- 10347 nós · 28909 arestas · 651 comunidades · grafo do commit `b9db75da`
-- comunidades maiores: react (265), card.tsx (252), App.tsx (246), lucide-react (226), cn (155), Mentoria.tsx (132), useAuth (108), client.ts (106), contracts/index.ts (106), useToast (100), mobile/index.ts (98), LuckyWheelWindowComparison.tsx (94)
+- 10352 nós · 28911 arestas · 653 comunidades · grafo do commit `a6a9bc63`
+- comunidades maiores: lucide-react (323), button.tsx (254), AdminPanel.tsx (146), cn (120), App.tsx (119), contracts/index.ts (97), ManagerDashboard.tsx (93), requestId.ts (93), useAuth (90), client.ts (89), progress.tsx (88), trailsService.ts (88)
 - símbolos mais chamados: cn() (src/lib/utils.ts), useAuth() (src/hooks/useAuth.tsx), useIsMobile() (src/hooks/use-mobile.tsx), q() (scripts/supabase_snapshot/snapshot.py), useDepartments() (src/hooks/useDepartments.ts), useRBAC() (src/hooks/useRBAC.ts), useProfiles() (src/hooks/useProfiles.ts), useToast() (src/hooks/use-toast.ts), useSEO() (src/hooks/useSEO.ts), useSoundEffects() (src/hooks/useSoundEffects.tsx), .collect() (scripts/supabase_snapshot/test_snapshot.py), excluded_sql() (scripts/supabase_snapshot/snapshot.py)
 - consulta local: `graphify query "<pergunta>"`, `graphify path "<A>" "<B>"`, `graphify explain "<X>"`
 
@@ -365,6 +365,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 
 
 ## Últimos commits
+- 2026-11-25 `a6a9bc6` fix: revoga execucao anonima das funcoes SECURITY DEFINER (#158)
 - 2026-11-25 `b9db75d` fix: restringe SELECT de profiles ao allowlist de colunas (LGPD) (#161)
 - 2026-11-25 `0c592ca` fix: painel de certificacoes e entrega do time voltam a carregar (#163)
 - 2026-11-25 `8430c1b` fix: lista de usuarios por papel e painel de alto potencial voltam a carregar (#162)
@@ -379,7 +380,6 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - 2026-11-24 `c567ffe` docs(edge-functions): corrige o drift do agendamento dos jobs internos e a semeadura de cron_secret (#149)
 - 2026-11-24 `59b21b4` fix(desafio): notificacao do desafio semanal leva o id do desafio no payload (#145)
 - 2026-11-24 `de4eaad` docs(estado): alinha o trigger do alerta critico com o estado real (URL e segredo) (#146)
-- 2026-11-24 `373deda` fix(loja): notificacao de compra nao colide mais no indice unico de notificacoes (#144)
 
 ## Arquivos deste diretório
 - `docs/contexto/codigo/rotas.json`

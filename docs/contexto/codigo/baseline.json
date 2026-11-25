@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "b9db75da8505eb66d066841f5f58b72d3e41f2c4",
+  "commit": "a6a9bc631d0de5e01b8d0f579275ee57fdc90966",
   "branch": "main",
-  "data_commit": "2026-11-25T09:42:23-03:00",
+  "data_commit": "2026-11-25T09:49:10-03:00",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "ultimos_commits": [
+   {
+    "sha": "a6a9bc6",
+    "data": "2026-11-25",
+    "assunto": "fix: revoga execucao anonima das funcoes SECURITY DEFINER (#158)"
+   },
    {
     "sha": "b9db75d",
     "data": "2026-11-25",
@@ -126,14 +131,9 @@
     "sha": "f5f05bc",
     "data": "2026-11-24",
     "assunto": "fix: alinha trigger de dispatch ao banco vivo e encerra a divergencia do repo (#135)"
-   },
-   {
-    "sha": "50530f8",
-    "data": "2026-11-24",
-    "assunto": "fix: remove BOM UTF-8 do supabase/config.toml que quebra o Supabase Preview (#134)"
    }
   ],
-  "arquivos_mudados_7d": 215,
+  "arquivos_mudados_7d": 218,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "supabase/functions/_shared",
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 127
+    "commits": 128
    },
    {
     "autor": "dependabot[bot]",
@@ -310,7 +310,7 @@
   ]
  },
  "contagens": {
-  "arquivos_total": 1577,
+  "arquivos_total": 1580,
   "arquivos_codigo": 1190,
   "linhas_codigo": 236185,
   "rotas": 87,
@@ -322,7 +322,7 @@
   "hooks": 155,
   "edge_functions": 23,
   "tabelas": 238,
-  "migrations": 283,
+  "migrations": 286,
   "cron_jobs": 24,
   "testes": 173,
   "workflows": 6,

@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "b9db75da8505eb66d066841f5f58b72d3e41f2c4",
+  "sha": "a6a9bc631d0de5e01b8d0f579275ee57fdc90966",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
-  "generated_at": "2026-11-25 12:43 UTC",
-  "files_total": 1588,
-  "code_files": 1481,
-  "code_lines": 269411
+  "generated_at": "2026-11-25 12:49 UTC",
+  "files_total": 1591,
+  "code_files": 1484,
+  "code_lines": 269754
  },
  "version": "1.3.2",
- "facts_hash": "bdb857eccc48dcdb",
+ "facts_hash": "4b6102b8279856f5",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -196,7 +196,7 @@
   "languages": {
    ".ts": 585,
    ".tsx": 579,
-   ".sql": 285,
+   ".sql": 288,
    ".mjs": 21,
    ".js": 5,
    ".py": 5,
@@ -26918,10 +26918,10 @@
     "args": "p_user_email text",
     "returns": "jsonb",
     "lang": "plpgsql",
-    "src": "supabase/migrations/20260712110906_6f06bfaf-b2de-4467-ad0d-409654b66791.sql",
+    "src": "supabase/migrations/20261226180000_escopo_gestor_rpcs_relatorio.sql",
     "security_definer": true,
     "search_path": true,
-    "body": "DECLARE v_user profiles%ROWTYPE; v_rank INTEGER; v_department TEXT; v_position TEXT; BEGIN PERFORM public._require_manager_or_admin(); SELECT * INTO v_user FROM profiles WHERE email = p_user_email; IF v_user IS NULL THEN RETURN jsonb_build_object('success', false, 'error', 'User not found'); END IF; SELECT COUNT(*) + 1 INTO v_rank FROM profiles WHERE xp > v_user.xp; SELECT d.name INTO v_department FROM team_members tm JOIN departments d ON d.id = tm.department_id WHERE tm.user_id = v_user.id LIMIT 1; SELECT p.name INTO v_position FROM user_positions up JOIN positions p ON p.id = up.position_id WHERE up.user_id = v_user.id AND up.is_primary = true LIMIT 1; RETURN jsonb_build_object( 'success' …",
+    "body": "DECLARE v_user profiles%ROWTYPE; v_user_id uuid; v_rank INTEGER; v_department TEXT; v_position TEXT; v_bypass BOOLEAN; BEGIN PERFORM public._require_manager_or_admin(); v_bypass := public.has_role(auth.uid(), 'admin') OR coalesce(current_setting('request.jwt.claim.role', true) = 'service_role', false); SELECT id INTO v_user_id FROM profiles WHERE email = p_user_email; IF v_user_id IS NULL THEN RETURN jsonb_build_object('success', false, 'error', 'User not found'); END IF; IF NOT v_bypass AND v_user_id <> auth.uid() AND NOT EXISTS ( SELECT 1 FROM team_members tm_gestor JOIN team_members tm_alvo ON tm_alvo.department_id = tm_gestor.department_id WHERE tm_gestor.user_id = auth.uid() AND tm_gest …",
     "raises": [],
     "tables": [
      "departments",
@@ -26932,18 +26932,21 @@
      "v_department",
      "v_position",
      "v_rank",
-     "v_user"
+     "v_user",
+     "v_user_id"
     ]
    },
    "get_leaderboard_api": {
     "args": "p_limit integer DEFAULT 10, p_department_id uuid DEFAULT NULL::uuid",
     "returns": "jsonb",
     "lang": "plpgsql",
-    "src": "supabase/migrations/20260712110906_6f06bfaf-b2de-4467-ad0d-409654b66791.sql",
+    "src": "supabase/migrations/20261226180000_escopo_gestor_rpcs_relatorio.sql",
     "security_definer": true,
     "search_path": true,
-    "body": "DECLARE v_result JSONB; BEGIN PERFORM public._require_manager_or_admin(); SELECT jsonb_build_object( 'success', true, 'leaderboard', COALESCE(jsonb_agg(row_data ORDER BY rn), '[]'::jsonb) ) INTO v_result FROM ( SELECT jsonb_build_object( 'rank', ROW_NUMBER() OVER (ORDER BY p.xp DESC), 'user_id', p.id, 'display_name', p.display_name, 'email', p.email, 'level', p.level, 'xp', p.xp, 'coins', p.coins, 'streak', p.streak, 'quests_completed', p.quests_completed ) as row_data, ROW_NUMBER() OVER (ORDER BY p.xp DESC) as rn FROM profiles p LEFT JOIN team_members tm ON tm.user_id = p.id WHERE p_department_id IS NULL OR tm.department_id = p_department_id ORDER BY p.xp DESC LIMIT p_limit ) ranked; RETURN …",
-    "raises": [],
+    "body": "DECLARE v_result JSONB; v_bypass BOOLEAN; BEGIN PERFORM public._require_manager_or_admin(); v_bypass := public.has_role(auth.uid(), 'admin') OR coalesce(current_setting('request.jwt.claim.role', true) = 'service_role', false); IF p_department_id IS NOT NULL AND NOT v_bypass THEN IF NOT EXISTS ( SELECT 1 FROM team_members tm WHERE tm.user_id = auth.uid() AND tm.is_manager AND tm.department_id = p_department_id ) THEN RAISE EXCEPTION 'insufficient_privilege' USING ERRCODE = '42501'; END IF; END IF; SELECT jsonb_build_object( 'success', true, 'leaderboard', COALESCE(jsonb_agg(row_data ORDER BY rn), '[]'::jsonb) ) INTO v_result FROM ( SELECT jsonb_build_object( 'rank', ROW_NUMBER() OVER (ORDER B …",
+    "raises": [
+     "insufficient_privilege"
+    ],
     "tables": [
      "profiles",
      "team_members",
@@ -33785,6 +33788,9 @@
    "supabase/migrations/20261224120000_dispatch_critical_alert_config.sql",
    "supabase/migrations/20261224130000_climate_antecipa_fim_pesquisa.sql",
    "supabase/migrations/20261224140000_climate_reminder_push.sql",
+   "supabase/migrations/20261226120000_revoga_execute_anon_security_definer.sql",
+   "supabase/migrations/20261226140000_corrige_grants_rls_e_rpcs_internos.sql",
+   "supabase/migrations/20261226180000_escopo_gestor_rpcs_relatorio.sql",
    "supabase/migrations/20261226200000_profiles_select_colunas_sensiveis.sql",
    "supabase/tests/climate/assertions.sql",
    "supabase/tests/climate/stubs.sql",
@@ -41552,6 +41558,246 @@
    {
     "kind": "revoke",
     "privs": "select",
+    "object": "webhook_delivery_stats_24h",
+    "objkind": "table",
+    "roles": "anon, authenticated",
+    "src": "supabase/migrations/20261226120000_revoga_execute_anon_security_definer.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "select",
+    "object": "webhook_delivery_stats_24h",
+    "objkind": "table",
+    "roles": "service_role",
+    "src": "supabase/migrations/20261226120000_revoga_execute_anon_security_definer.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "execute",
+    "object": "reset_login_attempts",
+    "objkind": "function",
+    "roles": "anon",
+    "src": "supabase/migrations/20261226120000_revoga_execute_anon_security_definer.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "has_role",
+    "objkind": "function",
+    "roles": "anon, authenticated",
+    "src": "supabase/migrations/20261226140000_corrige_grants_rls_e_rpcs_internos.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "is_department_manager",
+    "objkind": "function",
+    "roles": "anon, authenticated",
+    "src": "supabase/migrations/20261226140000_corrige_grants_rls_e_rpcs_internos.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "is_org_admin",
+    "objkind": "function",
+    "roles": "authenticated",
+    "src": "supabase/migrations/20261226140000_corrige_grants_rls_e_rpcs_internos.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "execute",
+    "object": "is_org_admin",
+    "objkind": "function",
+    "roles": "anon",
+    "src": "supabase/migrations/20261226140000_corrige_grants_rls_e_rpcs_internos.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "is_org_member",
+    "objkind": "function",
+    "roles": "authenticated",
+    "src": "supabase/migrations/20261226140000_corrige_grants_rls_e_rpcs_internos.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "execute",
+    "object": "is_org_member",
+    "objkind": "function",
+    "roles": "anon",
+    "src": "supabase/migrations/20261226140000_corrige_grants_rls_e_rpcs_internos.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "can_handle_opinion",
+    "objkind": "function",
+    "roles": "authenticated",
+    "src": "supabase/migrations/20261226140000_corrige_grants_rls_e_rpcs_internos.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "execute",
+    "object": "can_handle_opinion",
+    "objkind": "function",
+    "roles": "anon",
+    "src": "supabase/migrations/20261226140000_corrige_grants_rls_e_rpcs_internos.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "generate_certificate_code",
+    "objkind": "function",
+    "roles": "authenticated",
+    "src": "supabase/migrations/20261226140000_corrige_grants_rls_e_rpcs_internos.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "execute",
+    "object": "generate_certificate_code",
+    "objkind": "function",
+    "roles": "anon",
+    "src": "supabase/migrations/20261226140000_corrige_grants_rls_e_rpcs_internos.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "execute",
+    "object": "claim_push_outbox",
+    "objkind": "function",
+    "roles": "PUBLIC, anon, authenticated",
+    "src": "supabase/migrations/20261226140000_corrige_grants_rls_e_rpcs_internos.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "claim_push_outbox",
+    "objkind": "function",
+    "roles": "service_role",
+    "src": "supabase/migrations/20261226140000_corrige_grants_rls_e_rpcs_internos.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "execute",
+    "object": "increment_push_failures",
+    "objkind": "function",
+    "roles": "PUBLIC, anon, authenticated",
+    "src": "supabase/migrations/20261226140000_corrige_grants_rls_e_rpcs_internos.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "increment_push_failures",
+    "objkind": "function",
+    "roles": "service_role",
+    "src": "supabase/migrations/20261226140000_corrige_grants_rls_e_rpcs_internos.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "execute",
+    "object": "reset_push_failures",
+    "objkind": "function",
+    "roles": "PUBLIC, anon, authenticated",
+    "src": "supabase/migrations/20261226140000_corrige_grants_rls_e_rpcs_internos.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "reset_push_failures",
+    "objkind": "function",
+    "roles": "service_role",
+    "src": "supabase/migrations/20261226140000_corrige_grants_rls_e_rpcs_internos.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "execute",
+    "object": "user_wants_push_notification",
+    "objkind": "function",
+    "roles": "PUBLIC, anon, authenticated",
+    "src": "supabase/migrations/20261226140000_corrige_grants_rls_e_rpcs_internos.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "user_wants_push_notification",
+    "objkind": "function",
+    "roles": "service_role",
+    "src": "supabase/migrations/20261226140000_corrige_grants_rls_e_rpcs_internos.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "execute",
+    "object": "get_passkeys_by_email",
+    "objkind": "function",
+    "roles": "PUBLIC, anon, authenticated",
+    "src": "supabase/migrations/20261226140000_corrige_grants_rls_e_rpcs_internos.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "get_passkeys_by_email",
+    "objkind": "function",
+    "roles": "service_role",
+    "src": "supabase/migrations/20261226140000_corrige_grants_rls_e_rpcs_internos.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "execute",
+    "object": "register_device",
+    "objkind": "function",
+    "roles": "PUBLIC, anon, authenticated",
+    "src": "supabase/migrations/20261226140000_corrige_grants_rls_e_rpcs_internos.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "register_device",
+    "objkind": "function",
+    "roles": "service_role",
+    "src": "supabase/migrations/20261226140000_corrige_grants_rls_e_rpcs_internos.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "insert, update, delete",
+    "object": "push_outbox",
+    "objkind": "table",
+    "roles": "anon",
+    "src": "supabase/migrations/20261226140000_corrige_grants_rls_e_rpcs_internos.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "insert, update, delete",
+    "object": "user_devices",
+    "objkind": "table",
+    "roles": "anon",
+    "src": "supabase/migrations/20261226140000_corrige_grants_rls_e_rpcs_internos.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "get_leaderboard_api",
+    "objkind": "function",
+    "roles": "authenticated",
+    "src": "supabase/migrations/20261226140000_corrige_grants_rls_e_rpcs_internos.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "get_user_stats_api",
+    "objkind": "function",
+    "roles": "authenticated",
+    "src": "supabase/migrations/20261226140000_corrige_grants_rls_e_rpcs_internos.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "validate_reset_token",
+    "objkind": "function",
+    "roles": "authenticated",
+    "src": "supabase/migrations/20261226140000_corrige_grants_rls_e_rpcs_internos.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "select",
     "object": "profiles",
     "objkind": "table",
     "roles": "authenticated",
@@ -42549,6 +42795,11 @@
     "function": "get_error_budget_30d",
     "msg": "insufficient_privilege",
     "src": "supabase/migrations/20261220000000_fix_sre_rpcs_and_dispatch_trigger.sql"
+   },
+   {
+    "function": "get_leaderboard_api",
+    "msg": "insufficient_privilege",
+    "src": "supabase/migrations/20261226180000_escopo_gestor_rpcs_relatorio.sql"
    }
   ],
   "seed": [],
@@ -50399,8 +50650,8 @@
   },
   {
    "module": "supabase/migrations",
-   "files": 283,
-   "lines": 31125,
+   "files": 286,
+   "lines": 31468,
    "tables": [],
    "exports": [],
    "docs": [],
@@ -96656,10 +96907,10 @@
     "args": "p_user_email text",
     "returns": "jsonb",
     "lang": "plpgsql",
-    "src": "supabase/migrations/20260712110906_6f06bfaf-b2de-4467-ad0d-409654b66791.sql",
+    "src": "supabase/migrations/20261226180000_escopo_gestor_rpcs_relatorio.sql",
     "security_definer": true,
     "search_path": true,
-    "body": "DECLARE v_user profiles%ROWTYPE; v_rank INTEGER; v_department TEXT; v_position TEXT; BEGIN PERFORM public._require_manager_or_admin(); SELECT * INTO v_user FROM profiles WHERE email = p_user_email; IF v_user IS NULL THEN RETURN jsonb_build_object('success', false, 'error', 'User not found'); END IF; SELECT COUNT(*) + 1 INTO v_rank FROM profiles WHERE xp > v_user.xp; SELECT d.name INTO v_department FROM team_members tm JOIN departments d ON d.id = tm.department_id WHERE tm.user_id = v_user.id LIMIT 1; SELECT p.name INTO v_position FROM user_positions up JOIN positions p ON p.id = up.position_id WHERE up.user_id = v_user.id AND up.is_primary = true LIMIT 1; RETURN jsonb_build_object( 'success' …",
+    "body": "DECLARE v_user profiles%ROWTYPE; v_user_id uuid; v_rank INTEGER; v_department TEXT; v_position TEXT; v_bypass BOOLEAN; BEGIN PERFORM public._require_manager_or_admin(); v_bypass := public.has_role(auth.uid(), 'admin') OR coalesce(current_setting('request.jwt.claim.role', true) = 'service_role', false); SELECT id INTO v_user_id FROM profiles WHERE email = p_user_email; IF v_user_id IS NULL THEN RETURN jsonb_build_object('success', false, 'error', 'User not found'); END IF; IF NOT v_bypass AND v_user_id <> auth.uid() AND NOT EXISTS ( SELECT 1 FROM team_members tm_gestor JOIN team_members tm_alvo ON tm_alvo.department_id = tm_gestor.department_id WHERE tm_gestor.user_id = auth.uid() AND tm_gest …",
     "raises": [],
     "tables": [
      "departments",
@@ -96670,18 +96921,21 @@
      "v_department",
      "v_position",
      "v_rank",
-     "v_user"
+     "v_user",
+     "v_user_id"
     ]
    },
    "get_leaderboard_api": {
     "args": "p_limit integer DEFAULT 10, p_department_id uuid DEFAULT NULL::uuid",
     "returns": "jsonb",
     "lang": "plpgsql",
-    "src": "supabase/migrations/20260712110906_6f06bfaf-b2de-4467-ad0d-409654b66791.sql",
+    "src": "supabase/migrations/20261226180000_escopo_gestor_rpcs_relatorio.sql",
     "security_definer": true,
     "search_path": true,
-    "body": "DECLARE v_result JSONB; BEGIN PERFORM public._require_manager_or_admin(); SELECT jsonb_build_object( 'success', true, 'leaderboard', COALESCE(jsonb_agg(row_data ORDER BY rn), '[]'::jsonb) ) INTO v_result FROM ( SELECT jsonb_build_object( 'rank', ROW_NUMBER() OVER (ORDER BY p.xp DESC), 'user_id', p.id, 'display_name', p.display_name, 'email', p.email, 'level', p.level, 'xp', p.xp, 'coins', p.coins, 'streak', p.streak, 'quests_completed', p.quests_completed ) as row_data, ROW_NUMBER() OVER (ORDER BY p.xp DESC) as rn FROM profiles p LEFT JOIN team_members tm ON tm.user_id = p.id WHERE p_department_id IS NULL OR tm.department_id = p_department_id ORDER BY p.xp DESC LIMIT p_limit ) ranked; RETURN …",
-    "raises": [],
+    "body": "DECLARE v_result JSONB; v_bypass BOOLEAN; BEGIN PERFORM public._require_manager_or_admin(); v_bypass := public.has_role(auth.uid(), 'admin') OR coalesce(current_setting('request.jwt.claim.role', true) = 'service_role', false); IF p_department_id IS NOT NULL AND NOT v_bypass THEN IF NOT EXISTS ( SELECT 1 FROM team_members tm WHERE tm.user_id = auth.uid() AND tm.is_manager AND tm.department_id = p_department_id ) THEN RAISE EXCEPTION 'insufficient_privilege' USING ERRCODE = '42501'; END IF; END IF; SELECT jsonb_build_object( 'success', true, 'leaderboard', COALESCE(jsonb_agg(row_data ORDER BY rn), '[]'::jsonb) ) INTO v_result FROM ( SELECT jsonb_build_object( 'rank', ROW_NUMBER() OVER (ORDER B …",
+    "raises": [
+     "insufficient_privilege"
+    ],
     "tables": [
      "profiles",
      "team_members",
@@ -101969,6 +102223,11 @@
     "function": "get_error_budget_30d",
     "msg": "insufficient_privilege",
     "src": "supabase/migrations/20261220000000_fix_sre_rpcs_and_dispatch_trigger.sql"
+   },
+   {
+    "function": "get_leaderboard_api",
+    "msg": "insufficient_privilege",
+    "src": "supabase/migrations/20261226180000_escopo_gestor_rpcs_relatorio.sql"
    }
   ],
   "db_generated": [
@@ -107708,7 +107967,10 @@
    "supabase/migrations/20261114134238_9b119528-da6f-4f43-b6cb-dcdcd7aa7ab1.sql",
    "supabase/migrations/20261220000000_fix_sre_rpcs_and_dispatch_trigger.sql",
    "supabase/migrations/20261224110000_cron_internal_jobs_drift.sql",
-   "supabase/migrations/20261224120000_dispatch_critical_alert_config.sql"
+   "supabase/migrations/20261224120000_dispatch_critical_alert_config.sql",
+   "supabase/migrations/20261226120000_revoga_execute_anon_security_definer.sql",
+   "supabase/migrations/20261226140000_corrige_grants_rls_e_rpcs_internos.sql",
+   "supabase/migrations/20261226180000_escopo_gestor_rpcs_relatorio.sql"
   ],
   "security_definer_fns": [
    "_climate_recompute_pillar_scores",
@@ -115492,6 +115754,246 @@
     "objkind": "function",
     "roles": "PUBLIC, anon, authenticated",
     "src": "supabase/migrations/20261224140000_climate_reminder_push.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "select",
+    "object": "webhook_delivery_stats_24h",
+    "objkind": "table",
+    "roles": "anon, authenticated",
+    "src": "supabase/migrations/20261226120000_revoga_execute_anon_security_definer.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "select",
+    "object": "webhook_delivery_stats_24h",
+    "objkind": "table",
+    "roles": "service_role",
+    "src": "supabase/migrations/20261226120000_revoga_execute_anon_security_definer.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "execute",
+    "object": "reset_login_attempts",
+    "objkind": "function",
+    "roles": "anon",
+    "src": "supabase/migrations/20261226120000_revoga_execute_anon_security_definer.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "has_role",
+    "objkind": "function",
+    "roles": "anon, authenticated",
+    "src": "supabase/migrations/20261226140000_corrige_grants_rls_e_rpcs_internos.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "is_department_manager",
+    "objkind": "function",
+    "roles": "anon, authenticated",
+    "src": "supabase/migrations/20261226140000_corrige_grants_rls_e_rpcs_internos.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "is_org_admin",
+    "objkind": "function",
+    "roles": "authenticated",
+    "src": "supabase/migrations/20261226140000_corrige_grants_rls_e_rpcs_internos.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "execute",
+    "object": "is_org_admin",
+    "objkind": "function",
+    "roles": "anon",
+    "src": "supabase/migrations/20261226140000_corrige_grants_rls_e_rpcs_internos.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "is_org_member",
+    "objkind": "function",
+    "roles": "authenticated",
+    "src": "supabase/migrations/20261226140000_corrige_grants_rls_e_rpcs_internos.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "execute",
+    "object": "is_org_member",
+    "objkind": "function",
+    "roles": "anon",
+    "src": "supabase/migrations/20261226140000_corrige_grants_rls_e_rpcs_internos.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "can_handle_opinion",
+    "objkind": "function",
+    "roles": "authenticated",
+    "src": "supabase/migrations/20261226140000_corrige_grants_rls_e_rpcs_internos.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "execute",
+    "object": "can_handle_opinion",
+    "objkind": "function",
+    "roles": "anon",
+    "src": "supabase/migrations/20261226140000_corrige_grants_rls_e_rpcs_internos.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "generate_certificate_code",
+    "objkind": "function",
+    "roles": "authenticated",
+    "src": "supabase/migrations/20261226140000_corrige_grants_rls_e_rpcs_internos.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "execute",
+    "object": "generate_certificate_code",
+    "objkind": "function",
+    "roles": "anon",
+    "src": "supabase/migrations/20261226140000_corrige_grants_rls_e_rpcs_internos.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "execute",
+    "object": "claim_push_outbox",
+    "objkind": "function",
+    "roles": "PUBLIC, anon, authenticated",
+    "src": "supabase/migrations/20261226140000_corrige_grants_rls_e_rpcs_internos.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "claim_push_outbox",
+    "objkind": "function",
+    "roles": "service_role",
+    "src": "supabase/migrations/20261226140000_corrige_grants_rls_e_rpcs_internos.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "execute",
+    "object": "increment_push_failures",
+    "objkind": "function",
+    "roles": "PUBLIC, anon, authenticated",
+    "src": "supabase/migrations/20261226140000_corrige_grants_rls_e_rpcs_internos.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "increment_push_failures",
+    "objkind": "function",
+    "roles": "service_role",
+    "src": "supabase/migrations/20261226140000_corrige_grants_rls_e_rpcs_internos.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "execute",
+    "object": "reset_push_failures",
+    "objkind": "function",
+    "roles": "PUBLIC, anon, authenticated",
+    "src": "supabase/migrations/20261226140000_corrige_grants_rls_e_rpcs_internos.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "reset_push_failures",
+    "objkind": "function",
+    "roles": "service_role",
+    "src": "supabase/migrations/20261226140000_corrige_grants_rls_e_rpcs_internos.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "execute",
+    "object": "user_wants_push_notification",
+    "objkind": "function",
+    "roles": "PUBLIC, anon, authenticated",
+    "src": "supabase/migrations/20261226140000_corrige_grants_rls_e_rpcs_internos.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "user_wants_push_notification",
+    "objkind": "function",
+    "roles": "service_role",
+    "src": "supabase/migrations/20261226140000_corrige_grants_rls_e_rpcs_internos.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "execute",
+    "object": "get_passkeys_by_email",
+    "objkind": "function",
+    "roles": "PUBLIC, anon, authenticated",
+    "src": "supabase/migrations/20261226140000_corrige_grants_rls_e_rpcs_internos.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "get_passkeys_by_email",
+    "objkind": "function",
+    "roles": "service_role",
+    "src": "supabase/migrations/20261226140000_corrige_grants_rls_e_rpcs_internos.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "execute",
+    "object": "register_device",
+    "objkind": "function",
+    "roles": "PUBLIC, anon, authenticated",
+    "src": "supabase/migrations/20261226140000_corrige_grants_rls_e_rpcs_internos.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "register_device",
+    "objkind": "function",
+    "roles": "service_role",
+    "src": "supabase/migrations/20261226140000_corrige_grants_rls_e_rpcs_internos.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "insert, update, delete",
+    "object": "push_outbox",
+    "objkind": "table",
+    "roles": "anon",
+    "src": "supabase/migrations/20261226140000_corrige_grants_rls_e_rpcs_internos.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "insert, update, delete",
+    "object": "user_devices",
+    "objkind": "table",
+    "roles": "anon",
+    "src": "supabase/migrations/20261226140000_corrige_grants_rls_e_rpcs_internos.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "get_leaderboard_api",
+    "objkind": "function",
+    "roles": "authenticated",
+    "src": "supabase/migrations/20261226140000_corrige_grants_rls_e_rpcs_internos.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "get_user_stats_api",
+    "objkind": "function",
+    "roles": "authenticated",
+    "src": "supabase/migrations/20261226140000_corrige_grants_rls_e_rpcs_internos.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "validate_reset_token",
+    "objkind": "function",
+    "roles": "authenticated",
+    "src": "supabase/migrations/20261226140000_corrige_grants_rls_e_rpcs_internos.sql"
    },
    {
     "kind": "revoke",
@@ -155140,6 +155642,21 @@
    "path": "supabase/migrations/20261224140000_climate_reminder_push.sql",
    "lines": 104
   },
+  "supabase/migrations/20261226120000_revoga_execute_anon_security_definer.sql": {
+   "path": "supabase/migrations/20261226120000_revoga_execute_anon_security_definer.sql",
+   "lines": 156,
+   "uses_service_role": true
+  },
+  "supabase/migrations/20261226140000_corrige_grants_rls_e_rpcs_internos.sql": {
+   "path": "supabase/migrations/20261226140000_corrige_grants_rls_e_rpcs_internos.sql",
+   "lines": 52,
+   "uses_service_role": true
+  },
+  "supabase/migrations/20261226180000_escopo_gestor_rpcs_relatorio.sql": {
+   "path": "supabase/migrations/20261226180000_escopo_gestor_rpcs_relatorio.sql",
+   "lines": 135,
+   "uses_service_role": true
+  },
   "supabase/migrations/20261226200000_profiles_select_colunas_sensiveis.sql": {
    "path": "supabase/migrations/20261226200000_profiles_select_colunas_sensiveis.sql",
    "lines": 61
@@ -155239,10 +155756,21 @@
   }
  },
  "git": {
-  "sha": "b9db75da8505eb66d066841f5f58b72d3e41f2c4",
+  "sha": "a6a9bc631d0de5e01b8d0f579275ee57fdc90966",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "commits": [
+   {
+    "sha": "a6a9bc6",
+    "date": "2026-11-25",
+    "author": "adm01-debug",
+    "subject": "fix: revoga execucao anonima das funcoes SECURITY DEFINER (#158)",
+    "files": [
+     "supabase/migrations/20261226120000_revoga_execute_anon_security_definer.sql",
+     "supabase/migrations/20261226140000_corrige_grants_rls_e_rpcs_internos.sql",
+     "supabase/migrations/20261226180000_escopo_gestor_rpcs_relatorio.sql"
+    ]
+   },
    {
     "sha": "b9db75d",
     "date": "2026-11-25",
@@ -155591,24 +156119,6 @@
      "supabase/tests/climate/assertions.sql",
      "supabase/tests/climate/stubs.sql"
     ]
-   },
-   {
-    "sha": "eff597a",
-    "date": "2026-11-24",
-    "author": "adm01-debug",
-    "subject": "feat(feedback): tela para pedir feedback 360 e ver o resumo do avaliado (#132)",
-    "files": [
-     "INVENTARIO_FUNCIONALIDADES.md",
-     "docs/estado/02-componentes.md",
-     "docs/estado/03-hooks-services-lib.md",
-     "src/components/feedback/FeedbackRequestForm.tsx",
-     "src/components/feedback/FeedbackSummaryCard.tsx",
-     "src/hooks/useFeedback360.ts",
-     "src/pages/Feedback.tsx",
-     "src/services/feedbackService.ts",
-     "src/test/feedback360Flow.test.tsx",
-     "src/tests/unit/feedback.test.ts"
-    ]
    }
   ],
   "hot_files": [
@@ -155637,10 +156147,6 @@
     5
    ],
    [
-    "docs/estado/03-hooks-services-lib.md",
-    3
-   ],
-   [
     "supabase/migrations/20261220000000_fix_sre_rpcs_and_dispatch_trigger.sql",
     2
    ],
@@ -155649,7 +156155,7 @@
     2
    ],
    [
-    "docs/estado/02-componentes.md",
+    "docs/estado/03-hooks-services-lib.md",
     2
    ],
    [
@@ -155659,6 +156165,18 @@
    [
     "src/components/CommandPalette.tsx",
     2
+   ],
+   [
+    "supabase/migrations/20261226120000_revoga_execute_anon_security_definer.sql",
+    1
+   ],
+   [
+    "supabase/migrations/20261226140000_corrige_grants_rls_e_rpcs_internos.sql",
+    1
+   ],
+   [
+    "supabase/migrations/20261226180000_escopo_gestor_rpcs_relatorio.sql",
+    1
    ],
    [
     "docs/pendencias/02-profiles-update-sem-restricao-de-coluna.md",
@@ -155682,14 +156200,6 @@
    ],
    [
     "src/services/certificationsService.ts",
-    1
-   ],
-   [
-    "src/services/highPotentialService.ts",
-    1
-   ],
-   [
-    "src/services/rbacService.ts",
     1
    ]
   ]

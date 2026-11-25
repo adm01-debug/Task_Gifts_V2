@@ -1,6 +1,6 @@
 # 07 · REGRAS DE NEGÓCIO
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `b9db75da85` · branch `main` · 2026-11-25 12:43 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `a6a9bc631d` · branch `main` · 2026-11-25 12:49 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## A. Regras escritas por humanos (`manual/` — prioridade máxima, nunca sobrescrito)
@@ -944,6 +944,7 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `increment_streak` | perfil não encontrado | `supabase/migrations/20261218000000_profiles_economia_rpcs.sql` |
 | `increment_quests_completed` | perfil não encontrado | `supabase/migrations/20261218000000_profiles_economia_rpcs.sql` |
 | `get_error_budget_30d` | insufficient_privilege | `supabase/migrations/20261220000000_fix_sre_rpcs_and_dispatch_trigger.sql` |
+| `get_leaderboard_api` | insufficient_privilege | `supabase/migrations/20261226180000_escopo_gestor_rpcs_relatorio.sql` |
 
 ## E. Estados, máquinas de estado e transições
 
