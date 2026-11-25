@@ -1,6 +1,6 @@
 # 10 · ACESSO E SEGURANÇA — quem pode o quê
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `0c592ca286` · branch `main` · 2026-11-25 12:21 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `b9db75da85` · branch `main` · 2026-11-25 12:43 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## Perfis / roles identificados
@@ -776,13 +776,14 @@ Middleware matcher (Next.js): nenhum
 | revoke | PUBLIC, anon | execute | `get_webhook_delivery_stats_24h`, `get_webhook_delivery_hourly_24h`, `get_webhook_delivery_stats_1h`, `get_webhook_delivery_logs`, `get_error_budget_30d`, `get_burn_rate`, `get_burn_rate`, `is_org_admin`, `is_org_member`, `get_active_engagement_cycle`, `assign_engagement_questions`, `submit_engagement_answer`, `get_engagement_cycle_progress`, `engagement_min_respondents`, `get_engagement_pillar_scores` … +15 |
 | revoke | PUBLIC, anon, authenticated | all | `webhook_delivery_stats_24h`, `check_sla_breaches_and_alert`, `auto_create_postmortem_on_resolve`, `check_overdue_postmortem_actions`, `notify_admins_of_monthly_report`, `close_expired_sales_campaigns`, `increment_push_failures`, `reset_push_failures`, `log_lucky_wheel_prize_change`, `chi_square_critical`, `erf_inverse`, `snapshot_lucky_wheel_payout`, `raise_lucky_wheel_window_alerts`, `raise_lucky_wheel_window_alerts`, `log_lucky_wheel_budget_change` … +23 |
 | revoke | PUBLIC, anon, authenticated | execute | `validate_reset_token`, `generate_certificate_code`, `ingest_war_event`, `war_hook_task_scores`, `war_hook_attendance`, `war_hook_trail_enrollments`, `war_hook_module_progress`, `war_hook_quiz_scores`, `war_hook_kudos`, `validate_reset_token` |
-| revoke | anon | all | `public`, `public`, `profiles_public`, `_climate_recompute_pillar_scores`, `climate_recalculate_pillar_scores`, `climate_survey_enps`, `climate_submit_response` |
+| revoke | anon | all | `public`, `public`, `profiles_public`, `_climate_recompute_pillar_scores`, `climate_recalculate_pillar_scores`, `climate_survey_enps`, `climate_submit_response`, `profiles` |
 | revoke | anon | execute | `get_lucky_wheel_prizes_display` |
 | revoke | anon, authenticated | execute | `cleanup_old_security_logs` |
 | revoke | authenticated | all | `profiles_public`, `_climate_recompute_pillar_scores` |
 | revoke | authenticated | delete | `action_plan_updates`, `ai_course_jobs`, `announcement_reads`, `api_request_logs`, `attendance_records`, `auction_admin_events`, `auction_bids`, `audit_logs`, `bingo_cards`, `bingo_marks`, `bitrix24_webhook_logs`, `board_moves`, `board_player_states`, `boss_battle_damage`, `boss_battle_rewards` … +86 |
 | revoke | authenticated | execute | `approve_password_reset`, `reject_password_reset`, `get_department_metrics`, `get_executive_metrics`, `get_monthly_trends`, `get_nine_box_distribution`, `get_security_stats`, `generate_engagement_snapshot`, `apply_task_penalty`, `get_quiz_category_stats` |
 | revoke | authenticated | insert | `api_request_logs`, `auction_admin_events`, `auction_bids`, `bingo_cards`, `bingo_marks`, `board_moves`, `board_player_states`, `boss_battle_damage`, `boss_battle_rewards`, `campaign_team_split_batches`, `campaign_team_split_entries`, `card_packs`, `card_set_claims`, `card_trades`, `department_war_contributions` … +33 |
+| revoke | authenticated | select | `profiles` |
 | revoke | authenticated | select, delete, truncate | `profiles` |
 | revoke | authenticated | update | `action_plan_updates`, `activity_reactions`, `ai_coach_messages`, `announcement_reads`, `api_request_logs`, `attendance_records`, `auction_admin_events`, `auction_bids`, `audit_logs`, `bingo_cards`, `bingo_marks`, `bitrix24_webhook_logs`, `board_moves`, `board_player_states`, `boss_battle_damage` … +59 |
 | revoke | authenticated, anon | all | `webhook_delivery_stats_24h` |

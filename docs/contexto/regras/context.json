@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "0c592ca286b6cbbd35a1a0a5b5bbe3c677553e19",
+  "sha": "b9db75da8505eb66d066841f5f58b72d3e41f2c4",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
-  "generated_at": "2026-11-25 12:21 UTC",
-  "files_total": 1587,
-  "code_files": 1480,
-  "code_lines": 269350
+  "generated_at": "2026-11-25 12:43 UTC",
+  "files_total": 1588,
+  "code_files": 1481,
+  "code_lines": 269411
  },
  "version": "1.3.2",
- "facts_hash": "43df71c3a2f8820e",
+ "facts_hash": "bdb857eccc48dcdb",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -196,7 +196,7 @@
   "languages": {
    ".ts": 585,
    ".tsx": 579,
-   ".sql": 284,
+   ".sql": 285,
    ".mjs": 21,
    ".js": 5,
    ".py": 5,
@@ -33785,6 +33785,7 @@
    "supabase/migrations/20261224120000_dispatch_critical_alert_config.sql",
    "supabase/migrations/20261224130000_climate_antecipa_fim_pesquisa.sql",
    "supabase/migrations/20261224140000_climate_reminder_push.sql",
+   "supabase/migrations/20261226200000_profiles_select_colunas_sensiveis.sql",
    "supabase/tests/climate/assertions.sql",
    "supabase/tests/climate/stubs.sql",
    "src/integrations/supabase/types.ts"
@@ -41547,6 +41548,22 @@
     "objkind": "function",
     "roles": "PUBLIC, anon, authenticated",
     "src": "supabase/migrations/20261224140000_climate_reminder_push.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "select",
+    "object": "profiles",
+    "objkind": "table",
+    "roles": "authenticated",
+    "src": "supabase/migrations/20261226200000_profiles_select_colunas_sensiveis.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "all",
+    "object": "profiles",
+    "objkind": "table",
+    "roles": "anon",
+    "src": "supabase/migrations/20261226200000_profiles_select_colunas_sensiveis.sql"
    },
    {
     "kind": "grant",
@@ -50382,8 +50399,8 @@
   },
   {
    "module": "supabase/migrations",
-   "files": 282,
-   "lines": 31064,
+   "files": 283,
+   "lines": 31125,
    "tables": [],
    "exports": [],
    "docs": [],
@@ -115477,6 +115494,22 @@
     "src": "supabase/migrations/20261224140000_climate_reminder_push.sql"
    },
    {
+    "kind": "revoke",
+    "privs": "select",
+    "object": "profiles",
+    "objkind": "table",
+    "roles": "authenticated",
+    "src": "supabase/migrations/20261226200000_profiles_select_colunas_sensiveis.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "all",
+    "object": "profiles",
+    "objkind": "table",
+    "roles": "anon",
+    "src": "supabase/migrations/20261226200000_profiles_select_colunas_sensiveis.sql"
+   },
+   {
     "kind": "grant",
     "privs": "select, insert, update, delete",
     "object": "public",
@@ -141223,6 +141256,9 @@
      "id",
      "status",
      "title"
+    ],
+    "profiles": [
+     "id"
     ]
    },
    "status_values": [
@@ -155104,6 +155140,10 @@
    "path": "supabase/migrations/20261224140000_climate_reminder_push.sql",
    "lines": 104
   },
+  "supabase/migrations/20261226200000_profiles_select_colunas_sensiveis.sql": {
+   "path": "supabase/migrations/20261226200000_profiles_select_colunas_sensiveis.sql",
+   "lines": 61
+  },
   "supabase/tests/climate/assertions.sql": {
    "path": "supabase/tests/climate/assertions.sql",
    "lines": 404,
@@ -155199,10 +155239,22 @@
   }
  },
  "git": {
-  "sha": "0c592ca286b6cbbd35a1a0a5b5bbe3c677553e19",
+  "sha": "b9db75da8505eb66d066841f5f58b72d3e41f2c4",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "commits": [
+   {
+    "sha": "b9db75d",
+    "date": "2026-11-25",
+    "author": "adm01-debug",
+    "subject": "fix: restringe SELECT de profiles ao allowlist de colunas (LGPD) (#161)",
+    "files": [
+     "docs/pendencias/02-profiles-update-sem-restricao-de-coluna.md",
+     "src/services/engagementReportsService.ts",
+     "src/services/profilesService.ts",
+     "supabase/migrations/20261226200000_profiles_select_colunas_sensiveis.sql"
+    ]
+   },
    {
     "sha": "0c592ca",
     "date": "2026-11-25",
@@ -155557,19 +155609,6 @@
      "src/test/feedback360Flow.test.tsx",
      "src/tests/unit/feedback.test.ts"
     ]
-   },
-   {
-    "sha": "f55c5db",
-    "date": "2026-11-24",
-    "author": "adm01-debug",
-    "subject": "chore: remove feedback360Service, duplicata morta do 360 que ja roda em /feedback (#131)",
-    "files": [
-     "INVENTARIO_FUNCIONALIDADES.md",
-     "SYSTEM_RELIABILITY_AUDIT.md",
-     "docs/estado/02-componentes.md",
-     "docs/estado/03-hooks-services-lib.md",
-     "src/services/feedback360Service.ts"
-    ]
    }
   ],
   "hot_files": [
@@ -155599,10 +155638,6 @@
    ],
    [
     "docs/estado/03-hooks-services-lib.md",
-    4
-   ],
-   [
-    "docs/estado/02-componentes.md",
     3
    ],
    [
@@ -155614,6 +155649,10 @@
     2
    ],
    [
+    "docs/estado/02-componentes.md",
+    2
+   ],
+   [
     "src/App.tsx",
     2
    ],
@@ -155622,8 +155661,20 @@
     2
    ],
    [
-    "INVENTARIO_FUNCIONALIDADES.md",
-    2
+    "docs/pendencias/02-profiles-update-sem-restricao-de-coluna.md",
+    1
+   ],
+   [
+    "src/services/engagementReportsService.ts",
+    1
+   ],
+   [
+    "src/services/profilesService.ts",
+    1
+   ],
+   [
+    "supabase/migrations/20261226200000_profiles_select_colunas_sensiveis.sql",
+    1
    ],
    [
     "src/services/attendanceService.ts",
@@ -155639,18 +155690,6 @@
    ],
    [
     "src/services/rbacService.ts",
-    1
-   ],
-   [
-    "src/lib/edgeAvailability.ts",
-    1
-   ],
-   [
-    "src/test/edgeAvailability.test.ts",
-    1
-   ],
-   [
-    "docs/estado/06-integracoes.md",
     1
    ]
   ]

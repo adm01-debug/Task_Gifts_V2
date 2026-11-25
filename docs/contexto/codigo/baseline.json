@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "0c592ca286b6cbbd35a1a0a5b5bbe3c677553e19",
+  "commit": "b9db75da8505eb66d066841f5f58b72d3e41f2c4",
   "branch": "main",
-  "data_commit": "2026-11-25T09:16:55-03:00",
+  "data_commit": "2026-11-25T09:42:23-03:00",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "ultimos_commits": [
+   {
+    "sha": "b9db75d",
+    "data": "2026-11-25",
+    "assunto": "fix: restringe SELECT de profiles ao allowlist de colunas (LGPD) (#161)"
+   },
    {
     "sha": "0c592ca",
     "data": "2026-11-25",
@@ -126,14 +131,9 @@
     "sha": "50530f8",
     "data": "2026-11-24",
     "assunto": "fix: remove BOM UTF-8 do supabase/config.toml que quebra o Supabase Preview (#134)"
-   },
-   {
-    "sha": "943fe9e",
-    "data": "2026-11-24",
-    "assunto": "chore(docs): corrige estado do ledger de migrations e documenta divergencia do dispatch trigger (#133)"
    }
   ],
-  "arquivos_mudados_7d": 214,
+  "arquivos_mudados_7d": 215,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "supabase/functions/_shared",
@@ -286,22 +286,22 @@
     "mudancas": 4
    },
    {
+    "arquivo": "docs/pendencias/02-profiles-update-sem-restricao-de-coluna.md",
+    "mudancas": 4
+   },
+   {
     "arquivo": "scripts/automation.mjs",
     "mudancas": 4
    },
    {
     "arquivo": "supabase/functions/webhook-dispatcher/index.ts",
     "mudancas": 4
-   },
-   {
-    "arquivo": ".github/workflows/automation-local.yml",
-    "mudancas": 3
    }
   ],
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 126
+    "commits": 127
    },
    {
     "autor": "dependabot[bot]",
@@ -310,7 +310,7 @@
   ]
  },
  "contagens": {
-  "arquivos_total": 1576,
+  "arquivos_total": 1577,
   "arquivos_codigo": 1190,
   "linhas_codigo": 236185,
   "rotas": 87,
@@ -322,7 +322,7 @@
   "hooks": 155,
   "edge_functions": 23,
   "tabelas": 238,
-  "migrations": 282,
+  "migrations": 283,
   "cron_jobs": 24,
   "testes": 173,
   "workflows": 6,
