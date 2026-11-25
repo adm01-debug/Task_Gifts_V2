@@ -395,7 +395,7 @@ export const highPotentialService = {
     // inteira falhava, deixando o painel vazio. Busca em 3 queries + merge.
     const { data: profiles } = await supabase
       .from("profiles")
-      .select("id, display_name, avatar_url, level, xp, coins, streak, best_streak, quests_completed, status, created_at, updated_at, email, birth_date, hire_date, last_access_at");
+      .select("id, display_name, avatar_url, level, xp, coins, streak, best_streak, quests_completed, status, created_at, updated_at, birth_date, hire_date, last_access_at");
 
     if (!profiles) return [];
 
@@ -455,7 +455,7 @@ export const highPotentialService = {
         const userPositions = profile.user_positions as unknown as UserPosition[] | null;
         results.push({
           userId: profile.id,
-          displayName: profile.display_name || profile.email?.split('@')[0] || 'Usuário',
+          displayName: profile.display_name || 'Usuário',
           avatarUrl: profile.avatar_url || undefined,
           department: teamMembers?.[0]?.departments?.name,
           position: userPositions?.[0]?.positions?.name,

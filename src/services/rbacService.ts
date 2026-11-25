@@ -288,13 +288,19 @@ export const rbacService = {
     const userIds = [...new Set(userRoles?.map(r => r.user_id) || [])];
     const { data: profiles, error: profilesError } = await supabase
       .from("profiles")
-      .select("id, display_name, email")
+      .select("id, display_name")
       .in("id", userIds);
 
     if (profilesError) throw profilesError;
 
+    // `email` saiu do SELECT de `profiles` (LGPD): vem do diretório de gestão.
+    const { data: directory } = await supabase.rpc("admin_profile_directory");
+    const emailById = new Map((directory ?? []).map((entry) => [entry.id, entry.email]));
+
     // Map profiles to roles
-    const profileMap = new Map(profiles?.map(p => [p.id, p]) || []);
+    const profileMap = new Map(
+      (profiles ?? []).map((p) => [p.id, { id: p.id, display_name: p.display_name, email: emailById.get(p.id) ?? null }]),
+    );
     
     return (userRoles || []).map(role => ({
       ...role,

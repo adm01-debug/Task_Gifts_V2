@@ -84,7 +84,6 @@ export const passwordResetService = {
     const { data, error } = await supabase.rpc("get_pending_password_reset_requests");
 
     if (error) throw error;
-
     return (data || []).map(
       (row: {
         id: string;
@@ -125,15 +124,21 @@ export const passwordResetService = {
     if (error) throw error;
     
     // Fetch profiles and reviewers separately
+    // `email` saiu do SELECT de `profiles` (LGPD): vem do diretório de gestão.
+    const { data: directory } = await supabase.rpc("admin_profile_directory");
+    const emailById = new Map((directory ?? []).map((entry) => [entry.id, entry.email]));
+
     const requests = data || [];
     for (const req of requests) {
       const { data: profile } = await supabase
         .from("profiles")
-        .select("display_name, email")
+        .select("display_name")
         .eq("id", req.user_id)
         .maybeSingle();
       // Extend request with profile data dynamically
-      Object.assign(req, { profiles: profile });
+      Object.assign(req, {
+        profiles: profile ? { ...profile, email: emailById.get(req.user_id) ?? null } : profile,
+      });
       
       if (req.reviewed_by) {
         const { data: reviewer } = await supabase

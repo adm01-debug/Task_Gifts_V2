@@ -106,15 +106,15 @@ export const profilesService = {
      return (data ?? []) as unknown as Profile[];
    },
 
-   getTopByLevel: async (limit = 20): Promise<Array<Pick<Profile, "id" | "display_name" | "email" | "level" | "xp">>> => {
+   getTopByLevel: async (limit = 20): Promise<Array<Pick<Profile, "id" | "display_name" | "level" | "xp">>> => {
      try {
        const { data, error } = await supabase
          .from("profiles")
-         .select("id, display_name, email, level, xp")
+         .select("id, display_name, level, xp")
          .order("level", { ascending: false })
          .limit(limit);
        if (error) throw error;
-       return (data ?? []) as Array<Pick<Profile, "id" | "display_name" | "email" | "level" | "xp">>;
+       return (data ?? []) as Array<Pick<Profile, "id" | "display_name" | "level" | "xp">>;
      } catch (error) {
        logger.apiError("getTopByLevel", error, "ProfilesService");
        return [];

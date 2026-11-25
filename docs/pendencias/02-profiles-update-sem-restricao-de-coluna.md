@@ -69,3 +69,25 @@ A pendencia acima tratava da **escrita**. Na mesma tabela havia um furo de **lei
 Causa: a migration `20260728184034` ja revogava `SELECT`, e `20261218000000:214` tinha allowlist de colunas, mas o estado vivo era um `GRANT` de tabela (concede todas as colunas) — o allowlist nao surtia efeito e `cpf`/`personal_email`/`phone`/`employee_id`/`contract_type` eram legiveis por qualquer usuario logado. O ledger conter a versao nao prova que o SQL rodou; o reparo foi feito a partir da medicao de `has_*_privilege`.
 
 Aplicado por `20261226200000_profiles_select_colunas_sensiveis.sql`: `REVOKE SELECT` de tabela em `authenticated`, `REVOKE ALL` em `anon` e `GRANT SELECT` no allowlist de `PROFILE_SAFE_COLUMNS`. Front ajustado onde o `select` nao era explicito: `profilesService.update` (`select(PROFILE_SAFE_COLUMNS)`) e `engagementReportsService` (`select("id", { head: true })`).
+
+
+## E-mail corporativo fechado (2026-11-25, PR `fix: e-mail corporativo sai do SELECT aberto`)
+
+O allowlist anterior ainda liberava `email`: qualquer colaborador autenticado lia o e-mail
+de todos os colegas. Fechado por `20261226210000_profiles_email_fora_do_allowlist.sql`
+(`REVOKE SELECT (email)` de `authenticated` e `anon`), medida com usuario descartavel:
+
+| Checagem | Antes | Depois |
+|---|---|---|
+| `has_column_privilege('authenticated','public.profiles','email','SELECT')` | `true` | `false` |
+| `GET /rest/v1/profiles?select=id,email&limit=2` (colaborador comum) | **200** com o e-mail de outros | **403** `42501` |
+| `GET /rest/v1/profiles?select=id,display_name,...` (allowlist) | 200 | 200 |
+| `POST /rest/v1/rpc/get_my_profile_private` | 200 | 200 (o proprio e-mail) |
+| `POST /rest/v1/rpc/admin_profile_directory` (comum / admin) | 403 | 403 / 200 com `email` |
+| `PATCH /rest/v1/profiles` em `display_name` com `select=<allowlist>` | 200 | 200 |
+| `PATCH /rest/v1/profiles` com `select=*` | 200 | **403** `42501` |
+
+Caminhos do front que ainda precisavam do e-mail foram migrados para
+`admin_profile_directory()` (RBAC, compras da loja, solicitacoes de reset de senha) e para
+`supabase.auth` (tela de perfil). O rotulo de ranking cai em `display_name` quando o e-mail
+nao esta acessivel.
