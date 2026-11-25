@@ -1,12 +1,12 @@
 {
   "aviso": "GERADO por scripts/db-audit/check-migration-drift.mjs --atualizar-baseline. Contagem por chave; deve apenas CAIR.",
-  "gerado_de": "301 arquivos",
+  "gerado_de": "306 arquivos",
   "contagem": {
     "nome_invalido": 0,
     "versao_duplicada": 0,
     "codificacao": 0,
     "nao_idempotente": 1052,
-    "ddl_destrutivo": 47
+    "ddl_destrutivo": 49
   },
   "achados": {
     "nome_invalido": {},
@@ -346,7 +346,8 @@
       "20260807010000_board_trail_rpcs.sql :: delete from": 1,
       "20261226195000_reset_senha_consistencia.sql :: delete from": 2,
       "20261227120000_engagement_integridade_e_anon.sql :: drop table": 1,
-      "20261228170000_reaplica_funcoes_desatualizadas_em_producao.sql :: delete from": 5
+      "20261228170000_reaplica_funcoes_desatualizadas_em_producao.sql :: delete from": 5,
+      "20261228210000_reaplica_mensagens_funcoes_divergentes.sql :: delete from": 2
     }
   }
 }
