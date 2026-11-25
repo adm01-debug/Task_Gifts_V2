@@ -1,0 +1,31 @@
+-- Conserta a criacao de chave de API, que esta quebrada no banco vivo.
+--
+-- `public.create_external_api_key` (a versao aplicada em producao e a que existe
+-- no repositorio, ambas identicas) insere 10 colunas:
+--
+--   name, description, api_key, secret_salt, secret_hash, system_type,
+--   permissions, rate_limit_per_minute, created_by, secret_last_rotated_at
+--
+-- `api_secret` nao esta nessa lista. Como a coluna e `NOT NULL` e nao tem default
+-- em producao, todo INSERT feito pela RPC morre com
+--
+--   ERROR: null value in column "api_secret" of relation "external_api_keys"
+--          violates not-null constraint
+--
+-- Ou seja: a tela de chaves de API nao consegue criar chave nenhuma hoje. A tabela
+-- tem 0 linhas, entao nao existe chave legada para preservar.
+--
+-- Desde 20260728205541 o segredo passou a ser guardado com salt + hash
+-- (`secret_salt` / `secret_hash`), que e o que a RPC escreve. `api_secret` ficou
+-- como sobra do modelo antigo. Medicao em producao (25/11): a definicao VIVA de
+-- `validate_api_key` ainda compara `api_secret` em texto puro, enquanto a versao
+-- do repositorio valida por hash+salt. A migration 20261228170000 reaplica em
+-- producao a versao do repositorio para as 29 funcoes que ficaram atras; depois
+-- dela nenhum codigo le `api_secret`. A coluna continua existindo apenas para nao
+-- apagar dado historico (a tabela tem 0 linhas) - e deixa de ser obrigatoria.
+--
+-- Divergencia consciente com o banco vivo: `is_nullable` de `api_secret` sai de NO
+-- para YES. E a unica diferenca estrutural entre repositorio e producao nesta PR,
+-- e ela existe para devolver o caminho de criacao de chave.
+
+ALTER TABLE public.external_api_keys ALTER COLUMN api_secret DROP NOT NULL;
