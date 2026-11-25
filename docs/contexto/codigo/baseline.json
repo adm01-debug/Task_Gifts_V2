@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "ebbb9a0156321ee22960d9c9e05a71633146ddf2",
+  "commit": "cc240b7f306a652b4fdbfa9b9bb764c49814d99a",
   "branch": "main",
-  "data_commit": "2026-11-25T12:21:38-03:00",
+  "data_commit": "2026-11-25T12:35:00-03:00",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "ultimos_commits": [
+   {
+    "sha": "cc240b7",
+    "data": "2026-11-25",
+    "assunto": "feat: lembrete semanal de pesquisa de engajamento pendente (#168)"
+   },
    {
     "sha": "ebbb9a0",
     "data": "2026-11-25",
@@ -126,14 +131,9 @@
     "sha": "716355d",
     "data": "2026-11-24",
     "assunto": "feat(clima): agenda ciclo de vida das pesquisas (expira e lembrete) (#141)"
-   },
-   {
-    "sha": "85ba135",
-    "data": "2026-11-24",
-    "assunto": "fix(cron): reproduz os jobs internos sem credencial no repositorio (#142)"
    }
   ],
-  "arquivos_mudados_7d": 236,
+  "arquivos_mudados_7d": 237,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "supabase/functions/_shared",
@@ -145,7 +145,7 @@
    },
    {
     "pasta": "docs/agentes/banco.md",
-    "mudancas": 15
+    "mudancas": 16
    },
    {
     "pasta": "docs/estado/05-edge-functions.md",
@@ -157,7 +157,7 @@
    },
    {
     "pasta": "docs/agentes/mapa-repo.md",
-    "mudancas": 12
+    "mudancas": 13
    },
    {
     "pasta": ".github/workflows/ci.yml",
@@ -202,11 +202,11 @@
     "mudancas": 23
    },
    {
-    "arquivo": "bun.lock",
-    "mudancas": 15
+    "arquivo": "docs/agentes/banco.md",
+    "mudancas": 16
    },
    {
-    "arquivo": "docs/agentes/banco.md",
+    "arquivo": "bun.lock",
     "mudancas": 15
    },
    {
@@ -214,11 +214,11 @@
     "mudancas": 15
    },
    {
-    "arquivo": ".github/workflows/ci.yml",
-    "mudancas": 12
+    "arquivo": "docs/agentes/mapa-repo.md",
+    "mudancas": 13
    },
    {
-    "arquivo": "docs/agentes/mapa-repo.md",
+    "arquivo": ".github/workflows/ci.yml",
     "mudancas": 12
    },
    {
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 134
+    "commits": 135
    },
    {
     "autor": "dependabot[bot]",
@@ -310,7 +310,7 @@
   ]
  },
  "contagens": {
-  "arquivos_total": 1589,
+  "arquivos_total": 1590,
   "arquivos_codigo": 1191,
   "linhas_codigo": 236443,
   "rotas": 87,
@@ -322,8 +322,8 @@
   "hooks": 155,
   "edge_functions": 23,
   "tabelas": 238,
-  "migrations": 294,
-  "cron_jobs": 24,
+  "migrations": 295,
+  "cron_jobs": 25,
   "testes": 174,
   "workflows": 6,
   "scripts": 17,

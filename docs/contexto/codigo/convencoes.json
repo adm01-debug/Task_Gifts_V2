@@ -59,11 +59,11 @@
  "commits": {
   "convencao": "conventional commits (observado)",
   "exemplos": [
+   "feat: lembrete semanal de pesquisa de engajamento pendente (#168)",
    "feat: mostra a foto do premio na loja quando o admin cadastra (#167)",
    "security: engajamento com score validado e anon fora das tabelas de escrita (#166)",
    "chore: alinha a documentacao do ledger com os 293 arquivos da main (#165)",
-   "fix: e-mail corporativo sai do SELECT aberto de profiles (LGPD) (#164)",
-   "feat: cadastro de templates de PDI com policy de escrita para admin (#160)"
+   "fix: e-mail corporativo sai do SELECT aberto de profiles (LGPD) (#164)"
   ]
  },
  "pr_template": ".github/PULL_REQUEST_TEMPLATE.md",

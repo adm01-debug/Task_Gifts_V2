@@ -6,7 +6,7 @@
   "src/integrations/supabase/types.ts",
   "supabase/migrations"
  ],
- "migrations": 294,
+ "migrations": 295,
  "seeds": [],
  "avisos": [
   "14 bloco(s) com DDL dinâmico (EXECUTE format/...) não modelado — policies/colunas criadas dinamicamente podem faltar; confira no banco vivo"
@@ -381,6 +381,7 @@
   "save_sequence_procedure",
   "save_wager_question",
   "send_climate_survey_reminders",
+  "send_engagement_reminders",
   "set_certificate_identity",
   "set_external_api_key_active",
   "set_goal_templates_updated_at",
@@ -1342,6 +1343,11 @@
    "nome": "daily-cleanup-security-logs-90d",
    "agenda": "15 3 * * *",
    "migration": "20260712115320_24a903a0-f49b-4374-b87b-b0775838c874.sql"
+  },
+  {
+   "nome": "engagement-reminders",
+   "agenda": "0 11 * * 1",
+   "migration": "20261227140000_engagement_reminder.sql"
   },
   {
    "nome": "exec_monthly_report_generation",
