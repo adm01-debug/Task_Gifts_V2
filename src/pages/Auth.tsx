@@ -9,17 +9,17 @@ import { supabase } from "@/integrations/supabase/client";
 import { invokeEdgeSafe } from "@/lib/requestId";
 import { isFunctionDeployed } from "@/lib/edgeAvailability";
 import { logger } from "@/services/loggingService";
-import { passwordResetService } from "@/services/passwordResetService";
+
 import { twoFactorService } from "@/services/twoFactorService";
 import { lovable } from "@/integrations/lovable/index";
-import { emailSchema, loginSchema, signupSchema, checkPasswordLeaked } from "@/lib/authValidations";
+import { loginSchema, signupSchema, checkPasswordLeaked } from "@/lib/authValidations";
 import { IpCheckingScreen, IpBlockedScreen, AuthLoadingScreen } from "@/components/auth/AuthScreens";
 import { AuthBranding, AuthBackground } from "@/components/auth/AuthBranding";
 import { AuthFormContent } from "@/components/auth/AuthFormContent";
 import { GoogleOAuthButton } from "@/components/auth/GoogleOAuthButton";
 import { PasskeyLogin } from "@/components/auth/PasskeyLogin";
 
-type AuthView = "login" | "signup" | "forgot-password" | "2fa-verify";
+type AuthView = "login" | "signup" | "2fa-verify";
 
 interface IpVerificationResult {
   allowed: boolean;
@@ -116,10 +116,7 @@ const Auth = () => {
 
   const validateForm = () => {
     const newErrors: typeof errors = {};
-    if (view === "forgot-password") {
-      const r = emailSchema.safeParse(email);
-      if (!r.success) newErrors.email = r.error.issues[0].message;
-    } else if (view === "login") {
+    if (view === "login") {
       const r = loginSchema.safeParse({ email, password });
       if (!r.success) r.error.issues.forEach((e) => {
         if (e.path[0] === "email") newErrors.email = e.message;
@@ -137,29 +134,8 @@ const Auth = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleForgotPassword = async () => {
-    const r = emailSchema.safeParse(email);
-    if (!r.success) { setErrors({ email: r.error.issues[0].message }); return; }
-    setLoading(true);
-    try {
-      const { data: userData, error: userError } = await supabase
-        .from("profiles").select("id").eq("email", email).maybeSingle();
-      if (userError || !userData) { toast.error("Email não encontrado no sistema"); setLoading(false); return; }
-      await passwordResetService.requestPasswordReset();
-      toast.success("Solicitação enviada! Aguarde a aprovação do seu gestor.", { duration: 6000 });
-      setView("login");
-    } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : String(err);
-      if (msg.includes("pendente")) toast.info("Você já possui uma solicitação pendente.");
-      else toast.error("Erro ao solicitar reset de senha. Tente novamente.");
-    } finally {
-      setLoading(false);
-    }
-  };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (view === "forgot-password") { await handleForgotPassword(); return; }
     if (!validateForm()) return;
     if (view === "login") {
       const lockoutStatus = await checkLockout();
@@ -279,7 +255,7 @@ const Auth = () => {
             </div>
 
             {/* Tabs */}
-            {view !== "forgot-password" && view !== "2fa-verify" && (
+            {view !== "2fa-verify" && (
               <div className="flex gap-1 p-1 rounded-xl bg-muted/50 mb-8">
                 {["Login", "Cadastro"].map((tab, i) => (
                   <button
@@ -321,7 +297,7 @@ const Auth = () => {
               />
             </AnimatePresence>
 
-            {view !== "forgot-password" && view !== "2fa-verify" && (
+            {view !== "2fa-verify" && (
                           <>
                             <GoogleOAuthButton loading={googleLoading} onClick={handleGoogleLogin} />
                             {/* Login por passkey só aparece quando a edge function está publicada

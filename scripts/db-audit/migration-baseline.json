@@ -1,15 +1,17 @@
 {
   "aviso": "GERADO por scripts/db-audit/check-migration-drift.mjs --atualizar-baseline. Contagem por chave; deve apenas CAIR.",
-  "gerado_de": "266 arquivos",
+  "gerado_de": "287 arquivos",
   "contagem": {
     "nome_invalido": 0,
     "versao_duplicada": 0,
+    "codificacao": 0,
     "nao_idempotente": 1062,
-    "ddl_destrutivo": 39
+    "ddl_destrutivo": 41
   },
   "achados": {
     "nome_invalido": {},
     "versao_duplicada": {},
+    "codificacao": {},
     "nao_idempotente": {
       "20241231000000_saved_filters.sql :: create policy sem DROP POLICY IF EXISTS da mesma policy": 4,
       "20241231000001_entity_versions.sql :: create policy sem DROP POLICY IF EXISTS da mesma policy": 2,
@@ -345,7 +347,8 @@
       "20260728205741_a19b425a-9dbf-41f9-8a3c-efb2d4b41560.sql :: delete from": 1,
       "20260728210216_01d79f58-57ea-48d9-a859-ef3ddf891190.sql :: delete from": 1,
       "20260806230000_lightning_relampago_rpcs_only.sql :: delete from": 1,
-      "20260807010000_board_trail_rpcs.sql :: delete from": 1
+      "20260807010000_board_trail_rpcs.sql :: delete from": 1,
+      "20261226195000_reset_senha_consistencia.sql :: delete from": 2
     }
   }
 }

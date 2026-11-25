@@ -31,7 +31,7 @@ dela que você vá usar como base de um fix precisa ser reconfirmada no código/
 | `tests/` | Playwright: `auth-flow.spec.ts`, `e2e/smoke.spec.ts` (gate do CI), `e2e/happy-paths.spec.ts` (não-bloqueante) |
 | `src/stories/` + `.storybook/` | 30 stories e config válida, **sem script `storybook`/`build-storybook`** no `package.json` — hoje não há como subir nem buildar |
 | `supabase/functions/` | 37 edge functions + `_shared/` |
-| `supabase/migrations/` | 282 arquivos `.sql` — o ledger cobre todos (282 versões, 0 sem registro; ver `banco.md`) |
+| `supabase/migrations/` | 286 arquivos `.sql` nesta branch (282 na `main`; o ledger cobre 289 versões, incluindo as 3 da PR #158 ainda aberta — ver `banco.md`) |
 | `supabase/config.toml` | `project_id` **divergente** do projeto em uso + único `verify_jwt=false` |
 | `scripts/ci/` | guardas de repo: `check-claude-md-integrity.mjs` (GA02), `commit-msg-lint.mjs`, e os adaptadores `*.unit.mjs` das automações de contexto |
 | `scripts/ai-context/` | produtor `codigo/` do contexto: rotas, módulos, hooks, edges, grafo, testes, convenções |

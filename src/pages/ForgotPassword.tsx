@@ -38,10 +38,12 @@ export default function ForgotPassword() {
 
   const onSubmit = async (data: ForgotPasswordForm) => {
     setIsLoading(true);
-    
+
     try {
-      const { error } = await supabase.auth.resetPasswordForEmail(data.email, {
-        redirectTo: `${window.location.origin}/reset-password`,
+      // A RPC registra o pedido e não informa se o e-mail tem conta,
+      // para não permitir descobrir quem está cadastrado.
+      const { error } = await supabase.rpc("request_password_reset_by_email", {
+        p_email: data.email.trim(),
       });
 
       if (error) {
@@ -49,11 +51,12 @@ export default function ForgotPassword() {
           toast.error("Muitas tentativas. Aguarde alguns minutos.");
           return;
         }
+        throw error;
       }
 
       setEmailSent(true);
       setSentEmail(data.email);
-      toast.success("Instruções enviadas!");
+      toast.success("Solicitação registrada!");
     } catch {
       toast.error("Erro ao processar solicitação");
     } finally {
@@ -69,16 +72,18 @@ export default function ForgotPassword() {
             <div className="mx-auto w-16 h-16 bg-green-500/10 rounded-full flex items-center justify-center">
               <CheckCircle2 className="w-8 h-8 text-green-500" />
             </div>
-            <CardTitle className="text-2xl">Email Enviado!</CardTitle>
+            <CardTitle className="text-2xl">Solicitação Registrada!</CardTitle>
             <CardDescription className="text-base">
-              Se existe uma conta com <strong>{sentEmail}</strong>, você receberá um link para redefinir sua senha.
+              Se existe uma conta com <strong>{sentEmail}</strong>, o pedido de redefinição de senha
+              aguarda a aprovação do seu gestor.
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <Alert>
               <Shield className="h-4 w-4" />
               <AlertDescription>
-                O link expira em <strong>1 hora</strong>. Verifique também sua pasta de spam.
+                Quem libera a redefinição é o seu gestor. Assim que ele aprovar, você recebe um link
+                válido por <strong>1 hora</strong>.
               </AlertDescription>
             </Alert>
             
@@ -114,7 +119,7 @@ export default function ForgotPassword() {
           </div>
           <CardTitle className="text-2xl">Esqueceu sua senha?</CardTitle>
           <CardDescription className="text-base">
-            Digite seu email e enviaremos instruções para redefinir sua senha.
+            Digite seu email para pedir a redefinição. Por segurança, a liberação é feita pelo seu gestor.
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -149,7 +154,7 @@ export default function ForgotPassword() {
                 ) : (
                   <>
                     <Mail className="w-4 h-4 mr-2" />
-                    Enviar instruções
+                    Solicitar redefinição
                   </>
                 )}
               </Button>

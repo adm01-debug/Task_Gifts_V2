@@ -1,12 +1,12 @@
 import { motion, AnimatePresence } from "framer-motion";
-import { Mail, Lock, User, Eye, EyeOff, Loader2, ArrowRight, ArrowLeft, Clock, AlertTriangle, Timer } from "lucide-react";
+import { Mail, Lock, User, Eye, EyeOff, Loader2, ArrowRight, ArrowLeft, AlertTriangle, Timer } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { PasswordStrengthIndicator } from "@/components/PasswordStrengthIndicator";
 import { TwoFactorVerify } from "@/components/auth/TwoFactorVerify";
 
-type AuthView = "login" | "signup" | "forgot-password" | "2fa-verify";
+type AuthView = "login" | "signup" | "2fa-verify";
 
 interface AuthFormErrors {
   email?: string;
@@ -71,55 +71,6 @@ export function AuthFormContent({
           onCancel={onCancel2FA}
           isLoading={verifying2FA}
         />
-      </motion.div>
-    );
-  }
-
-  if (view === "forgot-password") {
-    return (
-      <motion.div
-        key="forgot-password"
-        initial={{ opacity: 0, x: 20 }}
-        animate={{ opacity: 1, x: 0 }}
-        exit={{ opacity: 0, x: -20 }}
-        transition={{ duration: 0.2 }}
-        className="space-y-5"
-      >
-        <button
-          type="button"
-          onClick={onCancel2FA}
-          className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
-        >
-          <ArrowLeft className="w-4 h-4" />
-          Voltar ao login
-        </button>
-
-        <div className="text-center mb-6">
-          <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-primary/10 flex items-center justify-center">
-            <Clock className="w-8 h-8 text-primary" />
-          </div>
-          <h3 className="text-xl font-semibold mb-2">Redefinir senha</h3>
-          <p className="text-sm text-muted-foreground">
-            Por segurança, a redefinição de senha requer aprovação do seu gestor.
-          </p>
-        </div>
-
-        <form onSubmit={onSubmit} className="space-y-5">
-          <InputField
-            label="Email"
-            type="email"
-            icon={<Mail className="w-5 h-5" />}
-            value={email}
-            onChange={(v) => { setEmail(v); setErrors({ ...errors, email: undefined }); }}
-            placeholder="seu@email.com"
-            error={errors.email}
-          />
-          <Button type="submit" disabled={loading} className="w-full h-12 text-base" variant="hero">
-            {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : (
-              <>Solicitar redefinição<ArrowRight className="w-5 h-5 ml-2" /></>
-            )}
-          </Button>
-        </form>
       </motion.div>
     );
   }

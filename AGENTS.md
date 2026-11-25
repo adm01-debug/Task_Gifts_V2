@@ -92,7 +92,8 @@ Repo `adm01-debug/Task_Gifts_V2`, branch `main`, **público**. Produção: https
 - Diagnóstico = produção só leitura; teste de comportamento de banco = Postgres descartável. DDL só pelo
   fluxo de `banco.md` (arquivo em `supabase/migrations/` → PR → merge → deploy do código → apply; nunca de
   branch aberta). Migration idempotente (`IF NOT EXISTS` / `ON CONFLICT`). Destrutivo, segredos e rotação:
-  só com o dono.
+  só com o dono. **Única exceção:** quando o dono autoriza aplicar em produção com a PR aberta como registro
+  (regra 8 do fluxo dele) — autorização explícita, sempre registrada na tabela de situações do `banco.md`.
 
 ## Serviços
 - **Edge Functions (Supabase)** — ler `docs/agentes/edge-functions.md` ao mexer em qualquer função de

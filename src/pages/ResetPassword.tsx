@@ -69,6 +69,12 @@ export default function ResetPassword() {
   useEffect(() => {
     const checkSession = async () => {
       try {
+        // Link de redefinição entregue pelo gestor: /reset-password?token=<uuid>
+        if (searchParams.get("token")) {
+          setIsValidToken(true);
+          return;
+        }
+
         const { data: { session }, error } = await supabase.auth.getSession();
         
         if (error) {
@@ -117,6 +123,27 @@ export default function ResetPassword() {
     setIsLoading(true);
 
     try {
+      const resetToken = searchParams.get("token");
+
+      if (resetToken) {
+        const { data: result, error } = await supabase.rpc("reset_password_with_token", {
+          p_token: resetToken,
+          p_password: data.password,
+        });
+
+        const res = result as { success: boolean; error?: string } | null;
+        if (error || !res?.success) {
+          toast.error(res?.error || "Link inválido ou expirado. Peça um novo ao seu gestor.");
+          setIsValidToken(false);
+          return;
+        }
+
+        setIsSuccess(true);
+        toast.success("Senha redefinida com sucesso!");
+        setTimeout(() => navigate("/auth"), 3000);
+        return;
+      }
+
       const { error } = await supabase.auth.updateUser({
         password: data.password,
       });

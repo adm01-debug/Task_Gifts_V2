@@ -12047,6 +12047,17 @@ export type Database = {
           credential_id: string
         }[]
       }
+      get_pending_password_reset_requests: {
+        Args: never
+        Returns: {
+          display_name: string
+          email: string
+          expires_at: string
+          id: string
+          requested_at: string
+          user_id: string
+        }[]
+      }
       get_prediction_odds_history: {
         Args: { p_buckets?: number; p_market_id: string }
         Returns: {
@@ -12444,6 +12455,10 @@ export type Database = {
         Returns: Json
       }
       request_password_reset: { Args: { p_user_id: string }; Returns: string }
+      request_password_reset_by_email: {
+        Args: { p_email: string }
+        Returns: boolean
+      }
       requeue_push_outbox: {
         Args: { p_ids?: string[]; p_include_stuck?: boolean }
         Returns: number
@@ -12659,6 +12674,10 @@ export type Database = {
         }[]
       }
       validate_reset_token: { Args: { p_token: string }; Returns: boolean }
+      reset_password_with_token: {
+        Args: { p_token: string; p_password: string }
+        Returns: Json
+      }
       verify_certificate: {
         Args: { _code: string }
         Returns: {

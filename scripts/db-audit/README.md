@@ -4,8 +4,7 @@
 
 Responde, sem consultar o ledger, as duas perguntas que `supabase/migrations/` não responde sozinho.
 
-**Por que o guarda não lê o ledger:** o banco **tem** `supabase_migrations.schema_migrations` — 282
-registros para 282 arquivos, 0 pendentes (medido em 2026-11-24T18:00Z; ver `docs/agentes/banco.md`). O guarda
+**Por que o guarda não lê o ledger:** o banco **tem** `supabase_migrations.schema_migrations` — 289 registros (medido em 2026-11-25T11:00Z), contra 282 arquivos na `main` e 286 nesta branch; a diferença são as 7 migrations das PRs #158/#159 aplicadas em produção (ver `docs/agentes/banco.md`). O guarda
 roda no CI, sem credencial de banco, e a fase 1 (idempotência) não depende do ledger. O guarda
 equivalente do `adm01-debug/Zapp_Web_V2` (`scripts/db-audit/check-migration-drift.mjs` lá) compara
 arquivo × ledger; aqui essa comparação não roda no CI.
