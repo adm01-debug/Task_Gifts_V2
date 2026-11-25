@@ -55,9 +55,14 @@ export const rbacService = {
       // consultas + merge, mesmo padrao de `getAllUserRoles`.
       const { data: profiles, error } = await supabase
         .from("profiles")
-        .select("id, display_name, email")
+              .select("id, display_name")
         .order("display_name");
       if (error) throw error;
+
+            // E-mail saiu do SELECT de `profiles` (LGPD): o diretorio de gestao vem
+            // da RPC admin_profile_directory, que exige admin/gestor.
+            const { data: directory } = await supabase.rpc("admin_profile_directory");
+            const emailById = new Map((directory ?? []).map((entry) => [entry.id, entry.email]));
 
       const { data: roles, error: rolesError } = await supabase
         .from("user_roles")
@@ -74,7 +79,7 @@ export const rbacService = {
       return (profiles ?? []).map((profile) => ({
         id: profile.id,
         display_name: profile.display_name,
-        email: profile.email,
+        email: emailById.get(profile.id) ?? null,
         user_roles: rolesByUser.get(profile.id) ?? [],
       }));
     } catch (error) {
@@ -283,13 +288,19 @@ export const rbacService = {
     const userIds = [...new Set(userRoles?.map(r => r.user_id) || [])];
     const { data: profiles, error: profilesError } = await supabase
       .from("profiles")
-      .select("id, display_name, email")
+      .select("id, display_name")
       .in("id", userIds);
 
     if (profilesError) throw profilesError;
 
+    // `email` saiu do SELECT de `profiles` (LGPD): vem do diretório de gestão.
+    const { data: directory } = await supabase.rpc("admin_profile_directory");
+    const emailById = new Map((directory ?? []).map((entry) => [entry.id, entry.email]));
+
     // Map profiles to roles
-    const profileMap = new Map(profiles?.map(p => [p.id, p]) || []);
+    const profileMap = new Map(
+      (profiles ?? []).map((p) => [p.id, { id: p.id, display_name: p.display_name, email: emailById.get(p.id) ?? null }]),
+    );
     
     return (userRoles || []).map(role => ({
       ...role,

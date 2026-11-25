@@ -22,7 +22,7 @@ describeIf('RLS Policies - Profiles Table', () => {
     const anonClient = getAnonClient();
     const { data, error } = await anonClient
       .from('profiles')
-      .select('id, username, display_name')
+      .select('id, display_name')
       .limit(1);
     
     // In a secured system, either public profiles are readable or this should fail

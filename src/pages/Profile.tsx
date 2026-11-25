@@ -45,7 +45,6 @@ import { User, Settings } from "lucide-react";
 interface ProfileData {
   id: string;
   display_name: string;
-  email: string;
   avatar_url: string | null;
   level: number;
   xp: number;
@@ -191,7 +190,7 @@ const Profile = () => {
                     </>
                   )}
                 </div>
-                <p className="text-muted-foreground mb-4">{profile?.email}</p>
+                <p className="text-muted-foreground mb-4">{user?.email}</p>
                 <div className="max-w-md">
                   <div className="flex justify-between text-sm mb-2"><span className="text-muted-foreground">Nível {profile?.level || 1}</span><span className="text-xp font-semibold">{currentLevelXP.toLocaleString()} / {xpForNextLevel(profile?.level || 1).toLocaleString()} XP</span></div>
                   <div className="h-3 rounded-full bg-muted overflow-hidden"><motion.div initial={{ width: 0 }} animate={{ width: `${xpProgress}%` }} transition={{ duration: 1, delay: 0.3 }} className="h-full xp-bar rounded-full" /></div>

@@ -24,7 +24,13 @@ export interface PublicProfile {
  * dados sensíveis e a RPC `admin_profile_directory` para fluxos de gestão.
  */
 export const PROFILE_SAFE_COLUMNS =
-  "id, display_name, avatar_url, level, xp, coins, streak, best_streak, quests_completed, status, created_at, updated_at, email, birth_date, hire_date, last_access_at" as const;
+  "id, display_name, avatar_url, level, xp, coins, streak, best_streak, quests_completed, status, created_at, updated_at, birth_date, hire_date, last_access_at" as const;
+
+/**
+ * E-mail e dados pessoais saíram do SELECT de `profiles` para qualquer usuário
+ * autenticado. Fluxos de gestão usam a RPC `admin_profile_directory`; o próprio
+ * usuário usa `getMyPrivate()` (ou `supabase.auth.getUser()`).
+ */
 
 const PUBLIC_PROFILE_COLUMNS = PROFILE_SAFE_COLUMNS;
 
@@ -100,15 +106,15 @@ export const profilesService = {
      return (data ?? []) as unknown as Profile[];
    },
 
-   getTopByLevel: async (limit = 20): Promise<Array<Pick<Profile, "id" | "display_name" | "email" | "level" | "xp">>> => {
+   getTopByLevel: async (limit = 20): Promise<Array<Pick<Profile, "id" | "display_name" | "level" | "xp">>> => {
      try {
        const { data, error } = await supabase
          .from("profiles")
-         .select("id, display_name, email, level, xp")
+         .select("id, display_name, level, xp")
          .order("level", { ascending: false })
          .limit(limit);
        if (error) throw error;
-       return (data ?? []) as Array<Pick<Profile, "id" | "display_name" | "email" | "level" | "xp">>;
+       return (data ?? []) as Array<Pick<Profile, "id" | "display_name" | "level" | "xp">>;
      } catch (error) {
        logger.apiError("getTopByLevel", error, "ProfilesService");
        return [];

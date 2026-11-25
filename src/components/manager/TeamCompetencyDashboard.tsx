@@ -22,7 +22,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { CompetencyRecommendationsDialog, type RecommendationsResponse } from "./CompetencyRecommendationsDialog";
 
 interface TeamMemberCompetency {
-  userId: string; displayName: string; email: string; level: number;
+  userId: string; displayName: string; level: number;
   competencies: CompetencyData[]; avgScore: number; gaps: string[]; strengths: string[];
 }
 
@@ -54,8 +54,8 @@ export function TeamCompetencyDashboard() {
         const competencies = await competencyService.getUserCompetencies(member.id);
         const avgScore = competencies.reduce((acc, c) => acc + c.value, 0) / competencies.length;
         results.push({
-          userId: member.id, displayName: member.display_name || member.email?.split("@")[0] || "Usuário",
-          email: member.email || "", level: member.level, competencies, avgScore: Math.round(avgScore),
+          userId: member.id, displayName: member.display_name || "Usuário",
+          level: member.level, competencies, avgScore: Math.round(avgScore),
           gaps: competencies.filter(c => c.value < 40).map(c => c.area),
           strengths: competencies.filter(c => c.value >= 70).map(c => c.area),
         });
