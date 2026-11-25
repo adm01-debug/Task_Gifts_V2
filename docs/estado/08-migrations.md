@@ -3,6 +3,8 @@
 > Documento de detalhe da auditoria de estado — 262 arquivos SQL, inventário por altitude.
 > Evidência em `arquivo:linha`. Correções da Fase D estão em `ESTADO_ATUAL.md` e em `04-dados-e-runtime.md`.
 > Runtime de build/teste = `NAO_VERIFICADO` (node_modules ausente no ambiente da auditoria).
+>
+> **Atualização 25/11/2026 (reconstrução provada):** o inventário acima é o retrato da auditoria (262 arquivos). O repositório já está em **298 migrations** e um `supabase db reset` do zero roda com exit 0; o banco reconstruído tem o mesmo catálogo do vivo (tabelas, colunas, funções, 6 views, RLS em 236 tabelas, 548 policies, grants). Detalhe e evidências na PR #172.
 
 ---
 
