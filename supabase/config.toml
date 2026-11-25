@@ -1,5 +1,11 @@
 project_id = "eidsaqymojyuhprobfpn"
 
+# Producao roda PostgreSQL 17.6. Fixar a major aqui evita que `supabase start`
+# suba em PG15 (default de CLIs antigas) e faca a migration 20261228150000
+# falhar em `REVOKE ... MAINTAIN`, que so existe a partir do PG17.
+[db]
+major_version = 17
+
 [functions.passkey-auth]
 verify_jwt = false
 

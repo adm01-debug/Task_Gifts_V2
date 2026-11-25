@@ -17,9 +17,12 @@
 --
 -- Desde 20260728205541 o segredo passou a ser guardado com salt + hash
 -- (`secret_salt` / `secret_hash`), que e o que a RPC escreve. `api_secret` ficou
--- como sobra do modelo antigo, mas continua sendo lida por `validate_api_key`
--- para chaves antigas - por isso a coluna NAO e removida, apenas deixa de ser
--- obrigatoria.
+-- como sobra do modelo antigo. Medicao em producao (25/11): a definicao VIVA de
+-- `validate_api_key` ainda compara `api_secret` em texto puro, enquanto a versao
+-- do repositorio valida por hash+salt. A migration 20261228170000 reaplica em
+-- producao a versao do repositorio para as 29 funcoes que ficaram atras; depois
+-- dela nenhum codigo le `api_secret`. A coluna continua existindo apenas para nao
+-- apagar dado historico (a tabela tem 0 linhas) - e deixa de ser obrigatoria.
 --
 -- Divergencia consciente com o banco vivo: `is_nullable` de `api_secret` sai de NO
 -- para YES. E a unica diferenca estrutural entre repositorio e producao nesta PR,
