@@ -20,9 +20,17 @@
 --   4. revoga a leitura anônima da view webhook_delivery_stats_24h, que expõe
 --      a URL dos webhooks (subscription_url) e não é usada pelo front.
 
--- 1. exec_sql: função morta, execução de SQL arbitrário como postgres
-REVOKE ALL ON FUNCTION public.exec_sql(text) FROM PUBLIC, anon, authenticated;
-GRANT EXECUTE ON FUNCTION public.exec_sql(text) TO service_role;
+-- 1. exec_sql: função morta, execução de SQL arbitrário como postgres.
+--    `to_regprocedure` porque nenhuma migration versionada cria a função: em banco
+--    reconstruído ela não existe e o REVOKE direto abortaria a migration.
+DO $exec_sql_acl$
+BEGIN
+  IF to_regprocedure('public.exec_sql(text)') IS NOT NULL THEN
+    EXECUTE 'REVOKE ALL ON FUNCTION public.exec_sql(text) FROM PUBLIC, anon, authenticated';
+    EXECUTE 'GRANT EXECUTE ON FUNCTION public.exec_sql(text) TO service_role';
+  END IF;
+END
+$exec_sql_acl$;
 
 -- 4. view de webhooks: o front usa a RPC get_webhook_delivery_stats_24h, não a view
 REVOKE SELECT ON public.webhook_delivery_stats_24h FROM anon, authenticated;
@@ -92,6 +100,20 @@ DECLARE
     'has_role','is_org_admin','is_org_member','is_department_manager','can_handle_opinion',
     'get_user_department_id'
   ];
+    -- Helpers avaliados por policies de RLS que qualquer papel (inclusive anon) passa:
+    -- precisam de EXECUTE para authenticated tambem, senao org_members/team_members quebram.
+    helpers_rls text[] := ARRAY['has_role','is_department_manager'];
+    -- Helpers de policy/default de coluna que só fazem sentido com sessão:
+    -- authenticated mantem, anon perde (evita oráculo de vínculo sem login).
+    helpers_sessao text[] := ARRAY[
+      'is_org_admin','is_org_member','can_handle_opinion','generate_certificate_code'
+    ];
+    -- RPCs chamadas somente por Edge Function com service role: qualquer grant a
+    -- authenticated deixa a conta ler/consumir fila interna de terceiros.
+    internal_only text[] := ARRAY[
+      'claim_push_outbox','increment_push_failures','reset_push_failures',
+      'user_wants_push_notification','get_passkeys_by_email','register_device'
+    ];
 BEGIN
   FOR r IN
     SELECT p.oid::regprocedure AS sig, p.proname
@@ -104,7 +126,10 @@ BEGIN
   LOOP
     EXECUTE format('REVOKE EXECUTE ON FUNCTION %s FROM PUBLIC', r.sig);
 
-    IF r.proname = ANY(app_calls) THEN
+    IF r.proname = ANY(internal_only) THEN
+      EXECUTE format('REVOKE EXECUTE ON FUNCTION %s FROM anon, authenticated', r.sig);
+      EXECUTE format('GRANT EXECUTE ON FUNCTION %s TO service_role', r.sig);
+    ELSIF r.proname = ANY(app_calls) THEN
       EXECUTE format('REVOKE EXECUTE ON FUNCTION %s FROM anon', r.sig);
       EXECUTE format('GRANT EXECUTE ON FUNCTION %s TO authenticated, service_role', r.sig);
     ELSE
@@ -115,6 +140,17 @@ BEGIN
     IF r.proname = ANY(anon_ok) THEN
       EXECUTE format('GRANT EXECUTE ON FUNCTION %s TO anon', r.sig);
     END IF;
+
+        -- Policies de RLS e DEFAULT de coluna sao avaliados com o privilegio de quem
+        -- consulta/insere: sem EXECUTE para authenticated a query falha mesmo que o
+        -- front nunca chame a funcao por RPC.
+        IF r.proname = ANY(helpers_rls) OR r.proname = ANY(helpers_sessao) THEN
+          EXECUTE format('GRANT EXECUTE ON FUNCTION %s TO authenticated', r.sig);
+        END IF;
+
+        IF r.proname = ANY(helpers_sessao) THEN
+          EXECUTE format('REVOKE EXECUTE ON FUNCTION %s FROM anon', r.sig);
+        END IF;
   END LOOP;
 END
 $hardening$;
