@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "a3fb38b6f50e36b2d8f48c13fb2b2a3d0fd680eb",
+  "commit": "556ec21ce4bdc0dbe1ee669e9b7b224c92ceb1ee",
   "branch": "main",
-  "data_commit": "2026-11-25T13:45:28-03:00",
+  "data_commit": "2026-11-25T18:25:26-03:00",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "ultimos_commits": [
+   {
+    "sha": "556ec21",
+    "data": "2026-11-25",
+    "assunto": "chore(banco): paridade de jobs do cron, matview leaderboard_cache e colunas de profiles (#171)"
+   },
    {
     "sha": "a3fb38b",
     "data": "2026-11-25",
@@ -126,14 +131,9 @@
     "sha": "de4eaad",
     "data": "2026-11-24",
     "assunto": "docs(estado): alinha o trigger do alerta critico com o estado real (URL e segredo) (#146)"
-   },
-   {
-    "sha": "373deda",
-    "data": "2026-11-24",
-    "assunto": "fix(loja): notificacao de compra nao colide mais no indice unico de notificacoes (#144)"
    }
   ],
-  "arquivos_mudados_7d": 243,
+  "arquivos_mudados_7d": 247,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "supabase/functions/_shared",
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 137
+    "commits": 138
    },
    {
     "autor": "dependabot[bot]",
@@ -310,7 +310,7 @@
   ]
  },
  "contagens": {
-  "arquivos_total": 1595,
+  "arquivos_total": 1596,
   "arquivos_codigo": 1196,
   "linhas_codigo": 236866,
   "rotas": 87,
@@ -321,9 +321,9 @@
   "componentes": 531,
   "hooks": 155,
   "edge_functions": 23,
-  "tabelas": 238,
-  "migrations": 295,
-  "cron_jobs": 25,
+  "tabelas": 239,
+  "migrations": 296,
+  "cron_jobs": 40,
   "testes": 177,
   "workflows": 6,
   "scripts": 17,
@@ -638,7 +638,6 @@
    "notification_templates",
    "nr1_risk_categories",
    "permissions",
-   "profiles",
    "roles",
    "trail_modules"
   ],

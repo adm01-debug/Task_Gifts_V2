@@ -1,6 +1,6 @@
 # 10 · ACESSO E SEGURANÇA — quem pode o quê
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `a3fb38b6f5` · branch `main` · 2026-11-25 16:46 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `556ec21ce4` · branch `main` · 2026-11-25 21:25 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## Perfis / roles identificados
@@ -258,7 +258,7 @@
 
 > `—` com RLS ligado = ninguém além de service_role. `sem RLS` = qualquer chave anon lê/escreve tudo.
 
-## Onde o RLS é IGNORADO (service_role) — 148 arquivo(s)
+## Onde o RLS é IGNORADO (service_role) — 149 arquivo(s)
 
 - `scripts/ai-context/cenarios.mjs`
 - `scripts/ai-context/gerar.unit.mjs`
@@ -408,6 +408,7 @@
 - `supabase/migrations/20261226180000_escopo_gestor_rpcs_relatorio.sql`
 - `supabase/migrations/20261226195000_reset_senha_consistencia.sql`
 - `supabase/migrations/20261227120000_engagement_integridade_e_anon.sql`
+- `supabase/migrations/20261228120000_cron_jobs_e_leaderboard_cache.sql`
 
 ## Funções SQL `SECURITY DEFINER` (rodam com privilégio do dono, ignoram RLS)
 
@@ -779,7 +780,7 @@ Middleware matcher (Next.js): nenhum
 | grant | authenticated | update | `organizations` |
 | grant | authenticated, anon | select | `profiles_public`, `profiles_public` |
 | grant | authenticated, service_role | execute | `public`, `_require_admin`, `get_webhook_delivery_stats_24h`, `get_webhook_delivery_stats_1h`, `get_webhook_delivery_logs`, `rotate_webhook_secret`, `promote_webhook_secret`, `cancel_webhook_secret_rotation`, `bulk_rotate_webhook_secrets`, `get_webhook_executive_metrics_7d`, `check_webhook_sla_and_alert`, `get_error_budget_30d`, `get_burn_rate`, `generate_executive_monthly_report`, `get_burn_rate` … +64 |
-| grant | service_role | all | `runbook_executions`, `sla_targets`, `postmortems`, `postmortem_actions`, `executive_monthly_reports`, `ai_course_jobs`, `organizations`, `org_members`, `org_theme_history`, `sales_campaigns`, `campaign_participants`, `campaign_progress_events`, `push_subscriptions`, `push_notification_logs`, `engagement_factors` … +73 |
+| grant | service_role | all | `runbook_executions`, `sla_targets`, `postmortems`, `postmortem_actions`, `executive_monthly_reports`, `ai_course_jobs`, `organizations`, `org_members`, `org_theme_history`, `sales_campaigns`, `campaign_participants`, `campaign_progress_events`, `push_subscriptions`, `push_notification_logs`, `engagement_factors` … +74 |
 | grant | service_role | execute | `cleanup_old_security_logs`, `approve_password_reset`, `reject_password_reset`, `auto_block_ip`, `cleanup_old_security_logs`, `cleanup_old_security_logs`, `cleanup_expired_idempotency_keys`, `cleanup_expired_challenges`, `update_certification_statuses`, `log_ip_access`, `log_geo_access`, `validate_api_key`, `process_external_task`, `complete_external_task`, `apply_task_penalty` … +31 |
 | grant | service_role | select | `webhook_delivery_stats_24h`, `webhook_delivery_stats_24h` |
 | grant | service_role | select, insert, update, delete | `webhook_idempotency` |
@@ -802,7 +803,7 @@ Middleware matcher (Next.js): nenhum
 | revoke | authenticated | select | `profiles` |
 | revoke | authenticated | select, delete, truncate | `profiles` |
 | revoke | authenticated | update | `action_plan_updates`, `activity_reactions`, `ai_coach_messages`, `announcement_reads`, `api_request_logs`, `attendance_records`, `auction_admin_events`, `auction_bids`, `audit_logs`, `bingo_cards`, `bingo_marks`, `bitrix24_webhook_logs`, `board_moves`, `board_player_states`, `boss_battle_damage` … +59 |
-| revoke | authenticated, anon | all | `webhook_delivery_stats_24h` |
+| revoke | authenticated, anon | all | `webhook_delivery_stats_24h`, `leaderboard_cache` |
 | revoke | public, anon | all | `unblock_board_players`, `list_stuck_board_players`, `unblock_board_players`, `unblock_board_players`, `unblock_board_players` |
 
 ## Riscos de acesso detectados

@@ -1,7 +1,7 @@
 # Contexto do projeto para agentes de IA
 
 GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.
-Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `a3fb38b6f50e36b2d8f48c13fb2b2a3d0fd680eb` (2026-11-25T13:45:28-03:00).
+Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `556ec21ce4bdc0dbe1ee669e9b7b224c92ceb1ee` (2026-11-25T18:25:26-03:00).
 
 ## Como usar (leia antes de planejar ou executar qualquer tarefa)
 1. **Tela/rota/menu** → `rotas.json` (url/vista/menu → arquivo → hooks → tabelas → edges; `rotas_http_backend` para APIs) e `modulos.json` (módulo inteiro + dependências entre módulos).
@@ -14,7 +14,7 @@ Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR
 Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua tarefa; não carregue tudo.
 
 ## Stack
-- linguagens: TypeScript (1168), SQL (297), Markdown (56), JavaScript (24), JSON (14), YAML (9), Python (5), Shell (5)
+- linguagens: TypeScript (1168), SQL (298), Markdown (56), JavaScript (24), JSON (14), YAML (9), Python (5), Shell (5)
 - linguagem_principal: TypeScript
 - framework: React
 - backend_http: n/d
@@ -34,7 +34,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 ## Números
 | item | qtd |
 |---|---|
-| arquivos_total | 1595 |
+| arquivos_total | 1596 |
 | arquivos_codigo | 1196 |
 | linhas_codigo | 236866 |
 | rotas | 87 |
@@ -45,9 +45,9 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 | componentes | 531 |
 | hooks | 155 |
 | edge_functions | 23 |
-| tabelas | 238 |
-| migrations | 295 |
-| cron_jobs | 25 |
+| tabelas | 239 |
+| migrations | 296 |
+| cron_jobs | 40 |
 | testes | 177 |
 | workflows | 6 |
 | scripts | 17 |
@@ -226,16 +226,27 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - `api-key-rotation-overdue-weekly` 0 9 * * 1 (20260728210216_01d79f58-57ea-48d9-a859-ef3ddf891190.sql)
 - `auto-lock-prediction-markets` */5 * * * * (20260728114514_7f6f6bd8-8c0c-4762-9f48-2e4474ed0b2b.sql)
 - `auto-promote-expired-webhook-secrets` 0 3 * * * (20260712200006_664f7c03-75c3-4a12-9b8d-1d6da5c917d2.sql)
+- `auto-promote-webhook-secrets` 0 3 * * * (20261228120000_cron_jobs_e_leaderboard_cache.sql)
 - `board-auto-unblock-daily` 0 4 * * * (20260728175346_9062e6fd-34a2-4490-82cd-d4877f2beafd.sql)
+- `boss-win-rate-critical-alerts` 0 12 * * * (20261228120000_cron_jobs_e_leaderboard_cache.sql)
+- `check-overdue-postmortems` 0 9 * * * (20261228120000_cron_jobs_e_leaderboard_cache.sql)
 - `check-prediction-markets-health` */15 * * * * (20260728115201_58fcd8a8-c7ad-4a49-863c-74e07cdbc8e5.sql)
+- `cleanup-expired-challenges` 0 * * * * (20261228120000_cron_jobs_e_leaderboard_cache.sql)
+- `cleanup-idempotency-keys` 0 */2 * * * (20261228120000_cron_jobs_e_leaderboard_cache.sql)
+- `cleanup-job-run-details-7d` 30 4 * * * (20261228120000_cron_jobs_e_leaderboard_cache.sql)
+- `cleanup-old-security-logs` 0 3 * * * (20261228120000_cron_jobs_e_leaderboard_cache.sql)
+- `cleanup-query-telemetry` 0 1 * * * (20261228120000_cron_jobs_e_leaderboard_cache.sql)
+- `cleanup-webhook-logs` 0 4 * * * (20261228120000_cron_jobs_e_leaderboard_cache.sql)
 - `climate-survey-reminders` 0 12 * * * (20261224100000_climate_survey_cycle_jobs.sql)
 - `close-expired-auctions` */5 * * * * (20260728103701_298e9bca-0b39-4dba-aef0-058a9b24a556.sql)
+- `close-expired-campaigns` 30 * * * * (20261228120000_cron_jobs_e_leaderboard_cache.sql)
 - `close-expired-sales-campaigns` 15 0 * * * (20260723150852_6048cf0f-c3a4-48e7-9f40-e2b293b020b9.sql)
 - `daily-cleanup-idempotency` 25 3 * * * (20260712115320_24a903a0-f49b-4374-b87b-b0775838c874.sql)
 - `daily-cleanup-security-logs-30d` 20 3 * * * (20260712115320_24a903a0-f49b-4374-b87b-b0775838c874.sql)
 - `daily-cleanup-security-logs-90d` 15 3 * * * (20260712115320_24a903a0-f49b-4374-b87b-b0775838c874.sql)
 - `engagement-reminders` 0 11 * * 1 (20261227140000_engagement_reminder.sql)
 - `exec_monthly_report_generation` 0 6 1 * * (20260712222455_cdcbc232-1f35-4c6c-9c2c-0e4bf903e241.sql)
+- `exec-monthly-report-generation` 0 6 1 * * (20261228120000_cron_jobs_e_leaderboard_cache.sql)
 - `expire-card-trades-daily` 15 3 * * * (20260728121542_4ac8cbd1-0d6d-410d-8734-4fd032804ddc.sql)
 - `expire-climate-surveys` */15 * * * * (20261224100000_climate_survey_cycle_jobs.sql)
 - `lucky-wheel-payout-snapshot` 0 7 * * * (20260727211017_30d9a02a-0c84-4b45-8702-4bab7e71f005.sql)
@@ -243,10 +254,14 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - `postmortem_overdue_daily_check` 0 9 * * * (20260712222316_d8f7eabc-3e3b-437f-b041-70b9f3b88f9b.sql)
 - `push-outbox-dispatcher` * * * * * → edge push-outbox-dispatcher (20260728112123_ea25bb13-aa3c-4f75-9892-c58e2785e70b.sql)
 - `push-outbox-health-snapshot` */15 * * * * (20260728112815_fd49db87-3ae3-448d-b394-dfe7f248adae.sql)
+- `refresh-leaderboard-cache` */5 * * * * (20261228120000_cron_jobs_e_leaderboard_cache.sql)
 - `security-weekly-digest` 0 13 * * 1 → edge security-weekly-digest (20260712212544_f5c57b6a-8da7-4609-9178-803cbf5741f6.sql)
 - `sla_breach_weekly_check` 0 8 * * 1 (20260712222009_147eee74-b689-46b7-b92b-d903d1e4754b.sql)
+- `sla-breach-weekly-check` 0 8 * * 1 (20261228120000_cron_jobs_e_leaderboard_cache.sql)
+- `update-certification-statuses` 0 6 * * * (20261228120000_cron_jobs_e_leaderboard_cache.sql)
 - `webhook-health-monitor-every-15min` */15 * * * * (20260712194718_bff07c8c-5744-4682-bba1-33f9ca2a1ecb.sql)
 - `webhook-sla-daily-check` 0 4 * * * (20260712203117_fac39bdd-c966-4e9e-96f4-feee404f2a82.sql)
+- `weekly-analyze` 0 2 * * 0 (20261228120000_cron_jobs_e_leaderboard_cache.sql)
 - `weekly-cleanup-expired-challenges` 30 3 * * 0 (20260712115320_24a903a0-f49b-4374-b87b-b0775838c874.sql)
 
 ## Integrações externas
@@ -269,7 +284,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - edges_chamadas_sem_pasta: 0
 - tabelas_sem_rls: 1 — ex.: lucky_wheel_prizes
 - tabelas_usadas_sem_definicao: 0
-- tabelas_com_drift_migration_vs_types: 11 — ex.: achievements, engagement_factors, lucky_wheel_prizes
+- tabelas_com_drift_migration_vs_types: 10 — ex.: achievements, engagement_factors, lucky_wheel_prizes
 - rpcs_sem_definicao: 1 — ex.: get_lucky_wheel_status
 - componentes_orfaos: 22 — ex.: src/components/admin/metrics/AdminMetricsCharts.tsx, src/components/admin/permissions/PermissionModuleAccordion.tsx, src/components/admin/telemetry/TelemetryTable.tsx
 - componentes_com_nome_duplicado: 8 — ex.: CopilotAlert, LevelUpCelebration, PageTransition
@@ -279,8 +294,8 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - possiveis_segredos_no_codigo: 0
 
 ## Grafo de código (graphify)
-- 10420 nós · 29021 arestas · 660 comunidades · grafo do commit `a3fb38b6`
-- comunidades maiores: card.tsx (287), lucide-react (259), react (255), AdminPanel.tsx (174), Mentoria.tsx (136), cn (132), contracts/index.ts (103), useToast (94), useProfiles.ts (89), gerar.mjs (79), useAuth (77), vitest (76)
+- 10446 nós · 29062 arestas · 677 comunidades · grafo do commit `556ec21c`
+- comunidades maiores: lucide-react (318), react (233), skeleton.tsx (166), react-router-dom (156), DevelopmentPlanManager.tsx (122), cn (109), @tanstack/react-query (102), contracts/index.ts (94), Auth.tsx (90), Mentoria.tsx (87), profilesService.ts (83), useAuth (82)
 - símbolos mais chamados: cn() (src/lib/utils.ts), useAuth() (src/hooks/useAuth.tsx), useIsMobile() (src/hooks/use-mobile.tsx), q() (scripts/supabase_snapshot/snapshot.py), useDepartments() (src/hooks/useDepartments.ts), useRBAC() (src/hooks/useRBAC.ts), useProfiles() (src/hooks/useProfiles.ts), useToast() (src/hooks/use-toast.ts), useSEO() (src/hooks/useSEO.ts), useSoundEffects() (src/hooks/useSoundEffects.tsx), .collect() (scripts/supabase_snapshot/test_snapshot.py), excluded_sql() (scripts/supabase_snapshot/snapshot.py)
 - consulta local: `graphify query "<pergunta>"`, `graphify path "<A>" "<B>"`, `graphify explain "<X>"`
 
@@ -366,6 +381,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 
 
 ## Últimos commits
+- 2026-11-25 `556ec21` chore(banco): paridade de jobs do cron, matview leaderboard_cache e colunas de profiles (#171)
 - 2026-11-25 `a3fb38b` fix: destino dos avisos de notificação (51 avisos sem rota)
 - 2026-11-25 `84e8ba2` feat: interruptor proprio para os avisos de pesquisa no perfil (#169)
 - 2026-11-25 `cc240b7` feat: lembrete semanal de pesquisa de engajamento pendente (#168)
@@ -380,7 +396,6 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - 2026-11-25 `0c592ca` fix: painel de certificacoes e entrega do time voltam a carregar (#163)
 - 2026-11-25 `8430c1b` fix: lista de usuarios por papel e painel de alto potencial voltam a carregar (#162)
 - 2026-11-24 `c941b10` docs: corrige o nome da migration que reagenda o job 33 (#157)
-- 2026-11-24 `52db204` fix: libera cadastro e login por passkey na allowlist de producao (#156)
 
 ## Arquivos deste diretório
 - `docs/contexto/codigo/rotas.json`

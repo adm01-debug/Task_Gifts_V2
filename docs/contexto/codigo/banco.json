@@ -6,7 +6,7 @@
   "src/integrations/supabase/types.ts",
   "supabase/migrations"
  ],
- "migrations": 295,
+ "migrations": 296,
  "seeds": [],
  "avisos": [
   "14 bloco(s) com DDL dinâmico (EXECUTE format/...) não modelado — policies/colunas criadas dinamicamente podem faltar; confira no banco vivo"
@@ -166,6 +166,7 @@
   ]
  },
  "views": [
+  "IF",
   "profiles_public",
   "webhook_delivery_stats_24h"
  ],
@@ -1305,14 +1306,59 @@
    "migration": "20260712200006_664f7c03-75c3-4a12-9b8d-1d6da5c917d2.sql"
   },
   {
+   "nome": "auto-promote-webhook-secrets",
+   "agenda": "0 3 * * *",
+   "migration": "20261228120000_cron_jobs_e_leaderboard_cache.sql"
+  },
+  {
    "nome": "board-auto-unblock-daily",
    "agenda": "0 4 * * *",
    "migration": "20260728175346_9062e6fd-34a2-4490-82cd-d4877f2beafd.sql"
   },
   {
+   "nome": "boss-win-rate-critical-alerts",
+   "agenda": "0 12 * * *",
+   "migration": "20261228120000_cron_jobs_e_leaderboard_cache.sql"
+  },
+  {
+   "nome": "check-overdue-postmortems",
+   "agenda": "0 9 * * *",
+   "migration": "20261228120000_cron_jobs_e_leaderboard_cache.sql"
+  },
+  {
    "nome": "check-prediction-markets-health",
    "agenda": "*/15 * * * *",
    "migration": "20260728115201_58fcd8a8-c7ad-4a49-863c-74e07cdbc8e5.sql"
+  },
+  {
+   "nome": "cleanup-expired-challenges",
+   "agenda": "0 * * * *",
+   "migration": "20261228120000_cron_jobs_e_leaderboard_cache.sql"
+  },
+  {
+   "nome": "cleanup-idempotency-keys",
+   "agenda": "0 */2 * * *",
+   "migration": "20261228120000_cron_jobs_e_leaderboard_cache.sql"
+  },
+  {
+   "nome": "cleanup-job-run-details-7d",
+   "agenda": "30 4 * * *",
+   "migration": "20261228120000_cron_jobs_e_leaderboard_cache.sql"
+  },
+  {
+   "nome": "cleanup-old-security-logs",
+   "agenda": "0 3 * * *",
+   "migration": "20261228120000_cron_jobs_e_leaderboard_cache.sql"
+  },
+  {
+   "nome": "cleanup-query-telemetry",
+   "agenda": "0 1 * * *",
+   "migration": "20261228120000_cron_jobs_e_leaderboard_cache.sql"
+  },
+  {
+   "nome": "cleanup-webhook-logs",
+   "agenda": "0 4 * * *",
+   "migration": "20261228120000_cron_jobs_e_leaderboard_cache.sql"
   },
   {
    "nome": "climate-survey-reminders",
@@ -1323,6 +1369,11 @@
    "nome": "close-expired-auctions",
    "agenda": "*/5 * * * *",
    "migration": "20260728103701_298e9bca-0b39-4dba-aef0-058a9b24a556.sql"
+  },
+  {
+   "nome": "close-expired-campaigns",
+   "agenda": "30 * * * *",
+   "migration": "20261228120000_cron_jobs_e_leaderboard_cache.sql"
   },
   {
    "nome": "close-expired-sales-campaigns",
@@ -1353,6 +1404,11 @@
    "nome": "exec_monthly_report_generation",
    "agenda": "0 6 1 * *",
    "migration": "20260712222455_cdcbc232-1f35-4c6c-9c2c-0e4bf903e241.sql"
+  },
+  {
+   "nome": "exec-monthly-report-generation",
+   "agenda": "0 6 1 * *",
+   "migration": "20261228120000_cron_jobs_e_leaderboard_cache.sql"
   },
   {
    "nome": "expire-card-trades-daily",
@@ -1391,6 +1447,11 @@
    "migration": "20260728112815_fd49db87-3ae3-448d-b394-dfe7f248adae.sql"
   },
   {
+   "nome": "refresh-leaderboard-cache",
+   "agenda": "*/5 * * * *",
+   "migration": "20261228120000_cron_jobs_e_leaderboard_cache.sql"
+  },
+  {
    "nome": "security-weekly-digest",
    "agenda": "0 13 * * 1",
    "migration": "20260712212544_f5c57b6a-8da7-4609-9178-803cbf5741f6.sql",
@@ -1402,6 +1463,16 @@
    "migration": "20260712222009_147eee74-b689-46b7-b92b-d903d1e4754b.sql"
   },
   {
+   "nome": "sla-breach-weekly-check",
+   "agenda": "0 8 * * 1",
+   "migration": "20261228120000_cron_jobs_e_leaderboard_cache.sql"
+  },
+  {
+   "nome": "update-certification-statuses",
+   "agenda": "0 6 * * *",
+   "migration": "20261228120000_cron_jobs_e_leaderboard_cache.sql"
+  },
+  {
    "nome": "webhook-health-monitor-every-15min",
    "agenda": "*/15 * * * *",
    "migration": "20260712194718_bff07c8c-5744-4682-bba1-33f9ca2a1ecb.sql"
@@ -1410,6 +1481,11 @@
    "nome": "webhook-sla-daily-check",
    "agenda": "0 4 * * *",
    "migration": "20260712203117_fac39bdd-c966-4e9e-96f4-feee404f2a82.sql"
+  },
+  {
+   "nome": "weekly-analyze",
+   "agenda": "0 2 * * 0",
+   "migration": "20261228120000_cron_jobs_e_leaderboard_cache.sql"
   },
   {
    "nome": "weekly-cleanup-expired-challenges",
@@ -15545,6 +15621,40 @@
    "sem_rls": false,
    "nao_usada": false
   },
+  "leaderboard_cache": {
+   "colunas": {},
+   "rls": false,
+   "policies": [],
+   "indices": [
+    {
+     "nome": "idx_leaderboard_cache_dept",
+     "colunas": "department_id, dept_rank",
+     "unico": false
+    },
+    {
+     "nome": "idx_leaderboard_cache_level",
+     "colunas": "level DESC, xp DESC",
+     "unico": false
+    },
+    {
+     "nome": "idx_leaderboard_cache_user",
+     "colunas": "user_id",
+     "unico": true
+    },
+    {
+     "nome": "idx_leaderboard_cache_xp",
+     "colunas": "xp DESC, global_rank",
+     "unico": false
+    }
+   ],
+   "fks": [],
+   "criada_em": null,
+   "usada_no_front": 0,
+   "usada_em_edges": [],
+   "triggers": [],
+   "sem_rls": false,
+   "nao_usada": true
+  },
   "league_history": {
    "colunas": {
     "change_type": {
@@ -21980,6 +22090,20 @@
      "default": "0",
      "ref": null
     },
+    "contract_type": {
+     "tipo": "text",
+     "nn": false,
+     "pk": false,
+     "default": "'clt'",
+     "ref": null
+    },
+    "cpf": {
+     "tipo": "text",
+     "nn": false,
+     "pk": false,
+     "default": null,
+     "ref": null
+    },
     "created_at": {
      "tipo": "timestamp with time zone",
      "nn": true,
@@ -22001,6 +22125,13 @@
      "default": null,
      "ref": null
     },
+    "employee_id": {
+     "tipo": "text",
+     "nn": false,
+     "pk": false,
+     "default": null,
+     "ref": null
+    },
     "hire_date": {
      "tipo": "date",
      "nn": false,
@@ -22015,6 +22146,13 @@
      "default": null,
      "ref": "auth"
     },
+    "last_access_at": {
+     "tipo": "timestamp with time zone",
+     "nn": false,
+     "pk": false,
+     "default": null,
+     "ref": null
+    },
     "level": {
      "tipo": "integer",
      "nn": true,
@@ -22022,11 +22160,32 @@
      "default": "1",
      "ref": null
     },
+    "personal_email": {
+     "tipo": "text",
+     "nn": false,
+     "pk": false,
+     "default": null,
+     "ref": null
+    },
+    "phone": {
+     "tipo": "text",
+     "nn": false,
+     "pk": false,
+     "default": null,
+     "ref": null
+    },
     "quests_completed": {
      "tipo": "integer",
      "nn": true,
      "pk": false,
      "default": "0",
+     "ref": null
+    },
+    "status": {
+     "tipo": "text",
+     "nn": true,
+     "pk": false,
+     "default": "'confirmed'",
      "ref": null
     },
     "streak": {
@@ -22102,15 +22261,7 @@
    },
    "drift": {
     "so_na_migration": [],
-    "so_no_types": [
-     "contract_type",
-     "cpf",
-     "employee_id",
-     "last_access_at",
-     "personal_email",
-     "phone",
-     "status"
-    ]
+    "so_no_types": []
    },
    "usada_no_front": 26,
    "usada_em_edges": [
