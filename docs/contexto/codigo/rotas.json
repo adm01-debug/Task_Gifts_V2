@@ -477,6 +477,7 @@
    "rpcs": [
     "add_coins",
     "add_xp",
+    "admin_profile_directory",
     "calculate_enps_score",
     "generate_engagement_snapshot",
     "get_my_profile_private",
@@ -1015,6 +1016,7 @@
    "rpcs": [
     "add_coins",
     "add_xp",
+    "admin_profile_directory",
     "apply_task_penalty",
     "approve_password_reset",
     "calculate_enps_score",
@@ -9409,6 +9411,7 @@
    "rpcs": [
     "add_coins",
     "add_xp",
+    "admin_profile_directory",
     "cancel_auction",
     "close_auction",
     "create_auction_draft",
@@ -9699,6 +9702,7 @@
    "rpcs": [
     "add_coins",
     "add_xp",
+    "admin_profile_directory",
     "cancel_auction",
     "close_auction",
     "create_auction_draft",
@@ -9974,6 +9978,7 @@
    "rpcs": [
     "add_coins",
     "add_xp",
+    "admin_profile_directory",
     "get_my_profile_private",
     "increment_quests_completed",
     "increment_streak",
@@ -10242,6 +10247,7 @@
    "rpcs": [
     "add_coins",
     "add_xp",
+    "admin_profile_directory",
     "get_my_profile_private",
     "increment_quests_completed",
     "increment_streak",
@@ -10616,6 +10622,7 @@
    "rpcs": [
     "add_coins",
     "add_xp",
+    "admin_profile_directory",
     "approve_password_reset",
     "get_my_profile_private",
     "get_nine_box_distribution",

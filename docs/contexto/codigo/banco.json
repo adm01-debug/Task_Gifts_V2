@@ -6,7 +6,7 @@
   "src/integrations/supabase/types.ts",
   "supabase/migrations"
  ],
- "migrations": 292,
+ "migrations": 293,
  "seeds": [],
  "avisos": [
   "13 bloco(s) com DDL dinâmico (EXECUTE format/...) não modelado — policies/colunas criadas dinamicamente podem faltar; confira no banco vivo"
@@ -31342,7 +31342,7 @@
   {
    "nome": "admin_profile_directory",
    "definida": true,
-   "usada_em": 1
+   "usada_em": 4
   },
   {
    "nome": "advance_board_trail",

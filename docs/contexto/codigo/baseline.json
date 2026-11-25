@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "bef27bdcf5dcd942436b92d6f45615beb408bff7",
+  "commit": "220d1d636215da238598d236a61c4d9d1017255e",
   "branch": "main",
-  "data_commit": "2026-11-25T09:49:28-03:00",
+  "data_commit": "2026-11-25T10:08:42-03:00",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "ultimos_commits": [
+   {
+    "sha": "220d1d6",
+    "data": "2026-11-25",
+    "assunto": "fix: e-mail corporativo sai do SELECT aberto de profiles (LGPD) (#164)"
+   },
    {
     "sha": "bef27bd",
     "data": "2026-11-25",
@@ -126,14 +131,9 @@
     "sha": "96c3382",
     "data": "2026-11-24",
     "assunto": "fix: tira BOM das migrations pendentes e remove rascunho obsoleto do digest (Supabase Preview 42601) (#138)"
-   },
-   {
-    "sha": "d344ae9",
-    "data": "2026-11-24",
-    "assunto": "fix: guarda UPDATE cron.job por privilegio (Supabase Preview 42501) (#137)"
    }
   ],
-  "arquivos_mudados_7d": 231,
+  "arquivos_mudados_7d": 233,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "supabase/functions/_shared",
@@ -250,6 +250,10 @@
     "mudancas": 6
    },
    {
+    "arquivo": "docs/pendencias/02-profiles-update-sem-restricao-de-coluna.md",
+    "mudancas": 5
+   },
+   {
     "arquivo": "docs/prod-readiness.md",
     "mudancas": 5
    },
@@ -286,10 +290,6 @@
     "mudancas": 4
    },
    {
-    "arquivo": "docs/pendencias/02-profiles-update-sem-restricao-de-coluna.md",
-    "mudancas": 4
-   },
-   {
     "arquivo": "scripts/automation.mjs",
     "mudancas": 4
    },
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 130
+    "commits": 131
    },
    {
     "autor": "dependabot[bot]",
@@ -310,9 +310,9 @@
   ]
  },
  "contagens": {
-  "arquivos_total": 1586,
+  "arquivos_total": 1587,
   "arquivos_codigo": 1190,
-  "linhas_codigo": 236364,
+  "linhas_codigo": 236391,
   "rotas": 87,
   "rotas_http_backend": 0,
   "vistas_por_id": 0,
@@ -322,7 +322,7 @@
   "hooks": 155,
   "edge_functions": 23,
   "tabelas": 238,
-  "migrations": 292,
+  "migrations": 293,
   "cron_jobs": 24,
   "testes": 173,
   "workflows": 6,
@@ -432,11 +432,11 @@
   },
   "src/pages": {
    "arquivos": 86,
-   "linhas": 24959
+   "linhas": 24958
   },
   "src/services": {
    "arquivos": 99,
-   "linhas": 22439
+   "linhas": 22467
   },
   "src/stories": {
    "arquivos": 29,

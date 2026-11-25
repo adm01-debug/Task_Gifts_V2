@@ -6127,12 +6127,13 @@
     "passwordResetService"
    ],
    "export_default": null,
-   "linhas": 211,
+   "linhas": 216,
    "tabelas": [
     "password_reset_requests",
     "profiles"
    ],
    "rpcs": [
+    "admin_profile_directory",
     "approve_password_reset",
     "get_pending_password_reset_requests",
     "reject_password_reset",
@@ -6372,7 +6373,7 @@
     "profilesService"
    ],
    "export_default": null,
-   "linhas": 186,
+   "linhas": 192,
    "tabelas": [
     "profiles",
     "profiles_public"
@@ -6682,7 +6683,7 @@
     "rbacService"
    ],
    "export_default": null,
-   "linhas": 396,
+   "linhas": 407,
    "tabelas": [
     "permissions",
     "profiles",
@@ -6690,7 +6691,9 @@
     "roles",
     "user_roles"
    ],
-   "rpcs": [],
+   "rpcs": [
+    "admin_profile_directory"
+   ],
    "edges": [],
    "env": [],
    "externos": [],
@@ -6897,13 +6900,14 @@
     "shopService"
    ],
    "export_default": null,
-   "linhas": 478,
+   "linhas": 484,
    "tabelas": [
     "shop_promotions",
     "shop_purchases",
     "shop_rewards"
    ],
    "rpcs": [
+    "admin_profile_directory",
     "spend_coins"
    ],
    "edges": [],

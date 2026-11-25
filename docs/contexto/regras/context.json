@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "bef27bdcf5dcd942436b92d6f45615beb408bff7",
+  "sha": "220d1d636215da238598d236a61c4d9d1017255e",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
-  "generated_at": "2026-11-25 12:51 UTC",
-  "files_total": 1597,
-  "code_files": 1490,
-  "code_lines": 270550
+  "generated_at": "2026-11-25 13:09 UTC",
+  "files_total": 1598,
+  "code_files": 1491,
+  "code_lines": 270597
  },
  "version": "1.3.2",
- "facts_hash": "41ca9d48a65c1567",
+ "facts_hash": "b25a5234bf26f3ee",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -196,7 +196,7 @@
   "languages": {
    ".ts": 585,
    ".tsx": 579,
-   ".sql": 294,
+   ".sql": 295,
    ".mjs": 21,
    ".js": 5,
    ".py": 5,
@@ -33886,6 +33886,7 @@
    "supabase/migrations/20261226190000_pdi_templates_escrita_admin.sql",
    "supabase/migrations/20261226195000_reset_senha_consistencia.sql",
    "supabase/migrations/20261226200000_profiles_select_colunas_sensiveis.sql",
+   "supabase/migrations/20261226210000_profiles_email_fora_do_allowlist.sql",
    "supabase/tests/climate/assertions.sql",
    "supabase/tests/climate/stubs.sql",
    "src/integrations/supabase/types.ts"
@@ -43199,6 +43200,7 @@
     "rpc_transitive": [
      "add_coins",
      "add_xp",
+     "admin_profile_directory",
      "apply_task_penalty",
      "approve_password_reset",
      "calculate_enps_score",
@@ -43317,6 +43319,7 @@
     ],
     "invokes_transitive": [],
     "rpc_transitive": [
+     "admin_profile_directory",
      "cancel_auction",
      "close_auction",
      "create_auction_draft",
@@ -43343,6 +43346,7 @@
     ],
     "invokes_transitive": [],
     "rpc_transitive": [
+     "admin_profile_directory",
      "cancel_auction",
      "close_auction",
      "create_auction_draft",
@@ -44221,6 +44225,7 @@
     "rpc_transitive": [
      "add_coins",
      "add_xp",
+     "admin_profile_directory",
      "approve_password_reset",
      "get_my_profile_private",
      "get_nine_box_distribution",
@@ -44944,6 +44949,7 @@
     "rpc_transitive": [
      "add_coins",
      "add_xp",
+     "admin_profile_directory",
      "get_my_profile_private",
      "increment_quests_completed",
      "increment_streak",
@@ -44968,6 +44974,7 @@
     ],
     "invokes_transitive": [],
     "rpc_transitive": [
+     "admin_profile_directory",
      "review_purchase",
      "spend_coins"
     ],
@@ -49967,7 +49974,7 @@
   {
    "module": "src/pages",
    "files": 86,
-   "lines": 24959,
+   "lines": 24958,
    "tables": [
     "audit_logs",
     "campaign_participants",
@@ -50144,7 +50151,7 @@
   {
    "module": "src/services",
    "files": 99,
-   "lines": 22439,
+   "lines": 22467,
    "tables": [
     "achievements",
     "action_plan_items",
@@ -50898,8 +50905,8 @@
   },
   {
    "module": "supabase/migrations",
-   "files": 292,
-   "lines": 32085,
+   "files": 293,
+   "lines": 32105,
    "tables": [],
    "exports": [],
    "docs": [],
@@ -53626,7 +53633,6 @@
     "status",
     "streak",
     "updated_at",
-    "username",
     "xp"
    ],
    "profiles_public": [
@@ -54350,7 +54356,10 @@
     "src/services/seasonalEventsService.ts"
    ],
    "admin_profile_directory": [
-    "src/services/campaignImportService.ts"
+    "src/services/campaignImportService.ts",
+    "src/services/passwordResetService.ts",
+    "src/services/rbacService.ts",
+    "src/services/shopService.ts"
    ],
    "advance_board_trail": [
     "src/services/boardTrailService.ts"
@@ -55419,12 +55428,7 @@
    "user_titles",
    "webhook_delivery_stats_24h"
   ],
-  "columns_unknown": [
-   {
-    "table": "profiles",
-    "column": "username"
-   }
-  ]
+  "columns_unknown": []
  },
  "rules": {
   "validation_schemas": [
@@ -119044,11 +119048,6 @@
     ]
    },
    {
-    "kind": "coluna",
-    "msg": "coluna `username` usada no código não existe no schema de `profiles`",
-    "where": []
-   },
-   {
     "kind": "tabela",
     "msg": "tabela `a` usada no código não existe nas migrations/types do repo",
     "where": [
@@ -138864,7 +138863,7 @@
   },
   "src/pages/Profile.tsx": {
    "path": "src/pages/Profile.tsx",
-   "lines": 247,
+   "lines": 246,
    "exports": [
     "default Profile"
    ],
@@ -142788,7 +142787,6 @@
      "coins",
      "created_at",
      "display_name",
-     "email",
      "hire_date",
      "id",
      "last_access_at",
@@ -144308,7 +144306,7 @@
   },
   "src/services/passwordResetService.ts": {
    "path": "src/services/passwordResetService.ts",
-   "lines": 211,
+   "lines": 216,
    "exports": [
     "interface PasswordResetRequest",
     "const passwordResetService"
@@ -144352,11 +144350,11 @@
     ],
     "profiles": [
      "display_name",
-     "email",
      "id"
     ]
    },
    "rpc": [
+    "admin_profile_directory",
     "approve_password_reset",
     "get_pending_password_reset_requests",
     "reject_password_reset",
@@ -144871,7 +144869,7 @@
   },
   "src/services/profilesService.ts": {
    "path": "src/services/profilesService.ts",
-   "lines": 186,
+   "lines": 192,
    "exports": [
     "type Profile",
     "type ProfileInsert",
@@ -144915,7 +144913,6 @@
     ],
     "profiles": [
      "display_name",
-     "email",
      "id",
      "level",
      "xp"
@@ -145512,7 +145509,7 @@
   },
   "src/services/rbacService.ts": {
    "path": "src/services/rbacService.ts",
-   "lines": 396,
+   "lines": 407,
    "exports": [
     "interface Permission",
     "interface Role",
@@ -145630,7 +145627,6 @@
    "table_cols": {
     "profiles": [
      "display_name",
-     "email",
      "id"
     ],
     "user_roles": [
@@ -145652,6 +145648,9 @@
      "role_id"
     ]
    },
+   "rpc": [
+    "admin_profile_directory"
+   ],
    "role_checks": [
     "admin",
     "permissionKey"
@@ -146112,7 +146111,7 @@
   },
   "src/services/shopService.ts": {
    "path": "src/services/shopService.ts",
-   "lines": 478,
+   "lines": 484,
    "exports": [
     "type RewardCategory",
     "type RewardRarity",
@@ -146218,6 +146217,7 @@
     ]
    },
    "rpc": [
+    "admin_profile_directory",
     "spend_coins"
    ],
    "errors": [
@@ -150327,8 +150327,7 @@
    "table_cols": {
     "profiles": [
      "display_name",
-     "id",
-     "username"
+     "id"
     ]
    },
    "env": [
@@ -156227,6 +156226,10 @@
    "path": "supabase/migrations/20261226200000_profiles_select_colunas_sensiveis.sql",
    "lines": 61
   },
+  "supabase/migrations/20261226210000_profiles_email_fora_do_allowlist.sql": {
+   "path": "supabase/migrations/20261226210000_profiles_email_fora_do_allowlist.sql",
+   "lines": 20
+  },
   "supabase/tests/climate/assertions.sql": {
    "path": "supabase/tests/climate/assertions.sql",
    "lines": 404,
@@ -156322,10 +156325,28 @@
   }
  },
  "git": {
-  "sha": "bef27bdcf5dcd942436b92d6f45615beb408bff7",
+  "sha": "220d1d636215da238598d236a61c4d9d1017255e",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "commits": [
+   {
+    "sha": "220d1d6",
+    "date": "2026-11-25",
+    "author": "adm01-debug",
+    "subject": "fix: e-mail corporativo sai do SELECT aberto de profiles (LGPD) (#164)",
+    "files": [
+     "docs/pendencias/02-profiles-update-sem-restricao-de-coluna.md",
+     "src/components/manager/TeamCompetencyDashboard.tsx",
+     "src/pages/Profile.tsx",
+     "src/services/highPotentialService.ts",
+     "src/services/passwordResetService.ts",
+     "src/services/profilesService.ts",
+     "src/services/rbacService.ts",
+     "src/services/shopService.ts",
+     "src/test/rls.test.ts",
+     "supabase/migrations/20261226210000_profiles_email_fora_do_allowlist.sql"
+    ]
+   },
    {
     "sha": "bef27bd",
     "date": "2026-11-25",
@@ -156647,23 +156668,6 @@
      "docs/agentes/banco.md",
      "docs/agentes/mapa-repo.md"
     ]
-   },
-   {
-    "sha": "d727dcc",
-    "date": "2026-11-24",
-    "author": "adm01-debug",
-    "subject": "feat(pdi): tela de PDI com templates, mentores e check-ins (#128)",
-    "files": [
-     "docs/estado/02-componentes.md",
-     "docs/estado/03-hooks-services-lib.md",
-     "src/App.tsx",
-     "src/components/CommandPalette.tsx",
-     "src/components/MyDevelopmentPlanWidget.tsx",
-     "src/components/navigation/GlobalBreadcrumbs.tsx",
-     "src/hooks/usePDI.ts",
-     "src/pages/Pdi.tsx",
-     "supabase/migrations/20261221000000_pdi_mentors_delete_policy.sql"
-    ]
    }
   ],
   "hot_files": [
@@ -156692,11 +156696,27 @@
     5
    ],
    [
-    "src/pages/Pdi.tsx",
+    "docs/pendencias/02-profiles-update-sem-restricao-de-coluna.md",
     2
    ],
    [
-    "docs/estado/03-hooks-services-lib.md",
+    "src/services/highPotentialService.ts",
+    2
+   ],
+   [
+    "src/services/passwordResetService.ts",
+    2
+   ],
+   [
+    "src/services/profilesService.ts",
+    2
+   ],
+   [
+    "src/services/rbacService.ts",
+    2
+   ],
+   [
+    "src/services/shopService.ts",
     2
    ],
    [
@@ -156704,47 +156724,31 @@
     2
    ],
    [
+    "src/components/manager/TeamCompetencyDashboard.tsx",
+    1
+   ],
+   [
+    "src/pages/Profile.tsx",
+    1
+   ],
+   [
+    "src/test/rls.test.ts",
+    1
+   ],
+   [
+    "supabase/migrations/20261226210000_profiles_email_fora_do_allowlist.sql",
+    1
+   ],
+   [
+    "src/pages/Pdi.tsx",
+    1
+   ],
+   [
     "supabase/migrations/20261226190000_pdi_templates_escrita_admin.sql",
     1
    ],
    [
     "docs/estado/01-paginas-e-rotas.md",
-    1
-   ],
-   [
-    "docs/estado/07-infra-ci-testes.md",
-    1
-   ],
-   [
-    "scripts/db-audit/migration-baseline.json",
-    1
-   ],
-   [
-    "src/components/admin/PasswordResetApprovalPanel.tsx",
-    1
-   ],
-   [
-    "src/components/auth/AuthFormContent.tsx",
-    1
-   ],
-   [
-    "src/integrations/supabase/types.ts",
-    1
-   ],
-   [
-    "src/pages/Auth.tsx",
-    1
-   ],
-   [
-    "src/pages/ForgotPassword.tsx",
-    1
-   ],
-   [
-    "src/pages/ManagerDashboard.tsx",
-    1
-   ],
-   [
-    "src/pages/ResetPassword.tsx",
     1
    ]
   ]

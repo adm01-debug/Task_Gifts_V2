@@ -8556,7 +8556,7 @@
     "Profile"
    ],
    "export_default": "Profile",
-   "linhas": 247,
+   "linhas": 246,
    "dominio": "pages",
    "hooks_locais": [
     "useAuth",

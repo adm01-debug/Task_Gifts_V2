@@ -59,11 +59,11 @@
  "commits": {
   "convencao": "conventional commits (observado)",
   "exemplos": [
+   "fix: e-mail corporativo sai do SELECT aberto de profiles (LGPD) (#164)",
    "feat: cadastro de templates de PDI com policy de escrita para admin (#160)",
    "fix: conserta pedido de reset de senha do usuario deslogado (#159)",
    "fix: revoga execucao anonima das funcoes SECURITY DEFINER (#158)",
-   "fix: restringe SELECT de profiles ao allowlist de colunas (LGPD) (#161)",
-   "fix: painel de certificacoes e entrega do time voltam a carregar (#163)"
+   "fix: restringe SELECT de profiles ao allowlist de colunas (LGPD) (#161)"
   ]
  },
  "pr_template": ".github/PULL_REQUEST_TEMPLATE.md",

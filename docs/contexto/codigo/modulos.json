@@ -328,6 +328,7 @@
    "rpcs": [
     "add_coins",
     "add_xp",
+    "admin_profile_directory",
     "calculate_enps_score",
     "generate_engagement_snapshot",
     "get_account_devices",
@@ -749,6 +750,7 @@
    "rpcs": [
     "add_coins",
     "add_xp",
+    "admin_profile_directory",
     "apply_task_penalty",
     "approve_password_reset",
     "calculate_enps_score",
@@ -956,6 +958,7 @@
     "user_devices"
    ],
    "rpcs": [
+    "admin_profile_directory",
     "cancel_auction",
     "close_auction",
     "create_auction_draft",
@@ -2045,6 +2048,7 @@
    "rpcs": [
     "add_coins",
     "add_xp",
+    "admin_profile_directory",
     "calculate_enps_score",
     "generate_engagement_snapshot",
     "get_my_profile_private",
@@ -3668,7 +3672,9 @@
     "user_devices",
     "user_roles"
    ],
-   "rpcs": [],
+   "rpcs": [
+    "admin_profile_directory"
+   ],
    "buckets": [],
    "canais_realtime": [],
    "env": [
@@ -4004,6 +4010,7 @@
     "user_devices"
    ],
    "rpcs": [
+    "admin_profile_directory",
     "spend_coins"
    ],
    "buckets": [],
@@ -4088,6 +4095,7 @@
     "user_devices"
    ],
    "rpcs": [
+    "admin_profile_directory",
     "review_purchase",
     "spend_coins"
    ],
@@ -6744,7 +6752,7 @@
    "modulo": "pages",
    "arquivos": 86,
    "testes": 0,
-   "linhas": 24959,
+   "linhas": 24958,
    "itens_menu": [
     "Admin Loja",
     "Admin Quiz",
@@ -7928,7 +7936,7 @@
    "modulo": "services",
    "arquivos": 96,
    "testes": 0,
-   "linhas": 21860,
+   "linhas": 21888,
    "itens_menu": [],
    "telas": [],
    "rotas_http": [],
