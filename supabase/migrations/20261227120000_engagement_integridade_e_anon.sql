@@ -51,3 +51,56 @@ DROP TABLE IF EXISTS public._rls_probe;
 
 REVOKE ALL ON ALL TABLES IN SCHEMA public FROM anon;
 ALTER DEFAULT PRIVILEGES IN SCHEMA public REVOKE ALL ON TABLES FROM anon;
+
+-- Leitura anonima de volta onde a propria policy declara leitura publica (qual = true).
+-- Sem isto o visitante deslogado perde a marca da organizacao (organizationService le
+-- "organizations" pelo hostname antes do login) e passa a receber 401 em vez de lista vazia.
+DO $$
+DECLARE r record;
+BEGIN
+  FOR r IN
+    SELECT DISTINCT tablename FROM pg_policies
+    WHERE schemaname = 'public' AND cmd = 'SELECT' AND qual = 'true'
+      AND roles::text LIKE '%public%'
+  LOOP
+    EXECUTE format('GRANT SELECT ON public.%I TO anon', r.tablename);
+  END LOOP;
+END $$;
+
+-- A resposta direta pelo PostgREST nao pode furar a atribuicao. O EXISTS dentro da policy
+-- nao serve (a subconsulta reavalia a RLS da tabela alvo e nunca enxerga a linha nova),
+-- entao a regra vai num trigger SECURITY DEFINER, que enxerga as atribuicoes e vale para
+-- qualquer caminho de escrita. Chamadas sem JWT (service_role, migrations) passam.
+CREATE OR REPLACE FUNCTION public.guard_engagement_answer_assignment()
+RETURNS trigger
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path TO 'public'
+AS $function$
+BEGIN
+  IF auth.uid() IS NULL OR public.has_role(auth.uid(), 'admin'::public.app_role) THEN
+    RETURN NEW;
+  END IF;
+  IF NOT EXISTS (
+    SELECT 1 FROM public.engagement_question_assignments a
+    WHERE a.cycle_id = NEW.cycle_id
+      AND a.question_id = NEW.question_id
+      AND a.user_id = NEW.user_id
+  ) THEN
+    RAISE EXCEPTION 'resposta sem atribuicao no ciclo' USING ERRCODE = '42501';
+  END IF;
+  RETURN NEW;
+END; $function$;
+
+DROP TRIGGER IF EXISTS trg_guard_engagement_answer_assignment ON public.engagement_answers;
+CREATE TRIGGER trg_guard_engagement_answer_assignment
+  BEFORE INSERT OR UPDATE ON public.engagement_answers
+  FOR EACH ROW EXECUTE FUNCTION public.guard_engagement_answer_assignment();
+
+-- O colaborador nao pode mais criar/mexer na propria atribuicao (seria o caminho para
+-- responder qualquer pergunta do pool). A atribuicao continua sendo criada pela RPC
+-- assign_engagement_questions, que e SECURITY DEFINER.
+DROP POLICY IF EXISTS engagement_question_assignments_user_own ON public.engagement_question_assignments;
+CREATE POLICY engagement_question_assignments_user_own ON public.engagement_question_assignments
+  FOR SELECT TO authenticated
+  USING (user_id = auth.uid());
