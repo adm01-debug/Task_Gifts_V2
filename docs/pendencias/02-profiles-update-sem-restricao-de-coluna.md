@@ -48,3 +48,24 @@ As RPCs sao `SECURITY DEFINER` e aceitam `p_amount` arbitrario. Como `auth.uid()
 
 Fechar isso exige o premio ser calculado no servidor (edge function com `service_role`, ou trigger sobre o evento que gera o ganho) e as RPCs de escrita passarem a `service_role`-only. E mudanca de arquitetura da economia + toca todas as features que hoje premiam no client → **regra 8** (decisao do dono).
 
+
+## Leitura de PII fechada (2026-11-25, PR `fix: profiles SELECT por allowlist`)
+
+A pendencia acima tratava da **escrita**. Na mesma tabela havia um furo de **leitura**, medido no banco real:
+
+| Checagem (probe com usuario descartavel, `authenticated`) | Antes | Depois |
+|---|---|---|
+| `has_table_privilege('authenticated','public.profiles','SELECT')` | `true` (todas as 21 colunas) | `false` |
+| `has_column_privilege(...,'cpf','SELECT')` | `true` | `false` |
+| `GET /rest/v1/profiles?select=id,display_name,cpf,personal_email,phone,employee_id,contract_type&id=eq.<outro usuario>` | **200** com CPF, e-mail pessoal, telefone, matricula e tipo de contrato de OUTRO colaborador | **403** `42501 permission denied` |
+| `GET /rest/v1/profiles?select=*` | 200 | **403** |
+| `GET /rest/v1/profiles?select=id,display_name,avatar_url,xp,coins` (leaderboards, duels, rankings) | 200 | 200 |
+| `GET /rest/v1/profiles_public` (view do front) | 200 | 200 |
+| `POST /rest/v1/rpc/get_my_profile_private` (proprios dados) | 200 | 200 |
+| `POST /rest/v1/rpc/admin_profile_directory` (nao-admin) | — | 403 `insufficient_privilege` |
+| `PATCH /rest/v1/profiles` em `display_name` / em `coins` / em `cpf` | 204 / 403 / 403 | 204 / 403 / 403 |
+| `anon` em `public.profiles` (SELECT/UPDATE/DELETE) | `true` (RLS negava linhas) | `false` (defesa em profundidade) |
+
+Causa: a migration `20260728184034` ja revogava `SELECT`, e `20261218000000:214` tinha allowlist de colunas, mas o estado vivo era um `GRANT` de tabela (concede todas as colunas) — o allowlist nao surtia efeito e `cpf`/`personal_email`/`phone`/`employee_id`/`contract_type` eram legiveis por qualquer usuario logado. O ledger conter a versao nao prova que o SQL rodou; o reparo foi feito a partir da medicao de `has_*_privilege`.
+
+Aplicado por `20261226200000_profiles_select_colunas_sensiveis.sql`: `REVOKE SELECT` de tabela em `authenticated`, `REVOKE ALL` em `anon` e `GRANT SELECT` no allowlist de `PROFILE_SAFE_COLUMNS`. Front ajustado onde o `select` nao era explicito: `profilesService.update` (`select(PROFILE_SAFE_COLUMNS)`) e `engagementReportsService` (`select("id", { head: true })`).

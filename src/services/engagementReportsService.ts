@@ -383,7 +383,7 @@ export const engagementReportsService = {
 
     const { count: totalUsers } = await supabase
       .from("profiles")
-      .select("*", { count: "exact", head: true });
+      .select("id", { count: "exact", head: true });
 
     const activityRate = totalUsers ? ((activeUsers || 0) / totalUsers) * 100 : 0;
     const engagementScore = Math.min(100, Math.round(

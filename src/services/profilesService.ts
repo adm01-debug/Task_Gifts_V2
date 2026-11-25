@@ -117,9 +117,9 @@ export const profilesService = {
 
   async update(id: string, updates: ProfileUpdate): Promise<Profile> {
     try {
-      const { data, error } = await supabase.from("profiles").update(updates).eq("id", id).select().single();
+      const { data, error } = await supabase.from("profiles").update(updates).eq("id", id).select(PROFILE_SAFE_COLUMNS).single();
       if (error) throw error;
-      return data;
+      return data as unknown as Profile;
     } catch (error) {
       logger.apiError("updateProfile", error, "ProfilesService");
       throw error;
