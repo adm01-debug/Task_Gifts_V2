@@ -4,6 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
+import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import {
   Table,
@@ -38,6 +39,8 @@ import {
   Calendar,
   MessageSquare,
   Bell,
+  Copy,
+  Link2,
 } from "lucide-react";
 import { formatDistanceToNow, format } from "date-fns";
 import { ptBR } from "date-fns/locale";
@@ -52,6 +55,7 @@ export function PasswordResetApprovalPanel() {
   const [selectedRequest, setSelectedRequest] = useState<PasswordResetRequest | null>(null);
   const [notes, setNotes] = useState("");
   const [dialogAction, setDialogAction] = useState<"approve" | "reject" | null>(null);
+  const [approvedLink, setApprovedLink] = useState<string | null>(null);
   const queryClient = useQueryClient();
 
   const { data: pendingRequests = [], isLoading: pendingLoading } = useQuery({
@@ -70,8 +74,13 @@ export function PasswordResetApprovalPanel() {
     onSuccess: (result) => {
       if (result.success) {
         queryClient.invalidateQueries({ queryKey: ["password-reset-requests"] });
-        toast.success("Solicitação aprovada!");
-        closeDialog();
+        if (result.reset_token) {
+          setApprovedLink(`${window.location.origin}/reset-password?token=${result.reset_token}`);
+          toast.success("Solicitação aprovada! Entregue o link ao colaborador.");
+        } else {
+          toast.success("Solicitação aprovada!");
+          closeDialog();
+        }
       } else {
         toast.error(result.error || "Erro ao aprovar");
       }
@@ -104,6 +113,7 @@ export function PasswordResetApprovalPanel() {
     setSelectedRequest(null);
     setDialogAction(null);
     setNotes("");
+    setApprovedLink(null);
   };
 
   const handleConfirm = () => {
@@ -307,6 +317,30 @@ export function PasswordResetApprovalPanel() {
                 onChange={(e) => setNotes(e.target.value)}
               />
             </div>
+
+            {approvedLink && (
+              <div className="space-y-2">
+                <label className="text-sm font-medium flex items-center gap-2">
+                  <Link2 className="h-4 w-4" />
+                  Link para o colaborador (válido por 1 hora)
+                </label>
+                <div className="flex gap-2">
+                  <Input readOnly value={approvedLink} className="text-xs" />
+                  <Button
+                    variant="outline"
+                    onClick={() => {
+                      navigator.clipboard.writeText(approvedLink);
+                      toast.success("Link copiado!");
+                    }}
+                  >
+                    <Copy className="h-4 w-4" />
+                  </Button>
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  Envie este link para o colaborador definir a nova senha dele.
+                </p>
+              </div>
+            )}
           </div>
 
           <DialogFooter>

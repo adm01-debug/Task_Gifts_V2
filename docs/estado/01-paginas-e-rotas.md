@@ -51,7 +51,7 @@ Rotas: **todas as 41 páginas estão registradas em `src/App.tsx`** (linhas 218�
 | ExecutiveDashboard | `/executivo` (App.tsx:235) | 🟨 IMPLEMENTADO_PARCIAL | ExecutiveDashboard.tsx:34-44 ROI e "Custo Turnover Evitado (R$)" derivados de fórmula inventada (`totalXp/100 + quests*5 + kudos*2`, `trainingRate*500`, `punctualityRate*300`); :140 `description={\`Ano anterior: ${null}%\`}` renderiza "Ano anterior: null%"; :47-51 eNPS/turnover/absenteísmo/custo-por-contratação = `null` sem fonte; :164 "OKRs Q4 2025" fixo | RPC `get_executive_metrics`, `get_monthly_trends`, `get_department_metrics` | Fonte real para eNPS/turnover/absenteísmo/custo; ROI e economia em R$ não devem ser apresentados como financeiro real; corrigir "null%" |
 | ExecutiveMonthlyReport | `/admin/executive-report` (App.tsx:292) | ✅ IMPLEMENTADO_TOTAL | EMR.tsx:82 `from("executive_monthly_reports")`; :113 salva comentário; :173 `rpc("generate_executive_monthly_report")`; :280 cria postmortem; :184 CSV real | `executive_monthly_reports`, `postmortems`; RPC `generate_executive_monthly_report` | — |
 | Feedback | `/feedback` (App.tsx:276) | 🟨 IMPLEMENTADO_PARCIAL | Feedback.tsx:82 `<Button size="sm">Responder</Button>` — **sem `onClick`**; :81 exibe `{req.to_user_id}` (UUID cru na tela); `navigate` (:15) nunca usado | `feedback_cycles`, `feedback_requests`, `feedback_responses` | Fluxo de responder feedback não existe na página; resolver nome do usuário |
-| ForgotPassword | `/forgot-password` (App.tsx:220) | 🟨 IMPLEMENTADO_PARCIAL | ForgotPassword.tsx:43 `supabase.auth.resetPasswordForEmail` — mas Auth.tsx:147 usa `passwordResetService.requestPasswordReset()` (fluxo de aprovação por gestor) para a mesma intenção | supabase.auth; (Auth.tsx: `profiles` + tabela de reset via service) | **Dois fluxos de reset contraditórios** convivendo; definir qual é o oficial |
+| ForgotPassword | `/forgot-password` (App.tsx:220) | ✅ IMPLEMENTADO_TOTAL | ForgotPassword.tsx:39 `rpc("request_password_reset_by_email")` — fluxo único, provado ponta a ponta em 2026-11-25: pedido público → aprovação de gestor/admin (`PasswordResetApprovalPanel.tsx`) → link `?token=` → `ResetPassword.tsx` `rpc("reset_password_with_token")` grava a senha em `auth.users` | `password_reset_requests`; RPCs `request_password_reset_by_email`, `approve_password_reset`, `reject_password_reset`, `reset_password_with_token` | — |
 | Goals | `/goals` (App.tsx:267) | ✅ IMPLEMENTADO_TOTAL | Goals.tsx:28 `useGoals` (create/update/createKeyResult/delete); :37 create; :72 key result | `goals`, `key_results`, `goal_updates` | `navigate` e imports `Filter/List/Search/Sparkles/TrendingUp` não usados (:2,:26) |
 | IncidentMetrics | `/admin/incident-metrics` (App.tsx:290) | ✅ IMPLEMENTADO_TOTAL | IncidentMetrics.tsx:74 `rpc("get_incident_metrics")`; :306 `from("sla_targets")`; :325/:349/:362 update/delete/insert; :127 CSV real | RPC `get_incident_metrics`; `sla_targets` | — |
 | Index | `/` (App.tsx:218) | ✅ IMPLEMENTADO_TOTAL | Index.tsx:183 `StatsGrid`; :199/:207 colunas do dashboard; :65-69 side-effects | Indireto via widgets (fora do lote) | Página é orquestradora; conteúdo dos widgets NAO_VERIFICADO |
@@ -102,12 +102,11 @@ Valores em reais e percentual de ROI apresentados a diretoria sem qualquer input
 ### 6. Card "Premium Status" e "Divisional Perks" totalmente hardcoded
 `src/pages/Leagues.tsx:78-81` e `:160-189` — promete "até 20% mais XP em todas as atividades", "descontos em itens raros na Loja", "Daily XP Yield +10%", "Tournament Fee GRÁTIS". Nenhum desses valores vem de `leagues`/`user_leagues` nem é aplicado em regra alguma no código lido. É copy fixa vendendo benefício que o sistema não implementa nesta camada.
 
-### 7. Dois fluxos de recuperação de senha contraditórios
-- `src/pages/ForgotPassword.tsx:43` — `supabase.auth.resetPasswordForEmail(...)` (e-mail automático com link).
-- `src/pages/Auth.tsx:147` — `passwordResetService.requestPasswordReset()` + toast *"Aguarde a aprovação do seu gestor"*.
-Ambos alcançáveis pelo usuário (rota `/forgot-password` e a aba interna do `/auth`), com semânticas incompatíveis. Existe ainda um `PasswordResetApprovalPanel` no AdminPanel (`AdminPanel.tsx:184`) que só faz sentido para o segundo fluxo.
-
-### 8. Trava diária do Quiz existe só na memória do browser
+### 7. Fluxo de recuperação de senha — único (resolvido em 2026-11-25)
+- `src/pages/ForgotPassword.tsx` chama `rpc("request_password_reset_by_email")`: o pedido entra em `password_reset_requests` e aguarda aprovação de gestor/admin; a resposta é sempre a mesma, sem revelar se o e-mail tem conta.
+- `src/components/admin/PasswordResetApprovalPanel.tsx` aprova/rejeita e exibe o link `?token=` (válido 1h) para entregar ao colaborador.
+- `src/pages/ResetPassword.tsx` aceita `?token=` e chama `rpc("reset_password_with_token")`, que grava a senha em `auth.users` e conclui o pedido.
+- O caminho por e-mail (`supabase.auth.resetPasswordForEmail`) e a aba interna `forgot-password` de `/auth` foram removidos — eram o artefato do fluxo antigo, sem entrega.### 8. Trava diária do Quiz existe só na memória do browser
 `src/pages/DailyQuiz.tsx:71,102,116` — `completedToday` é `useState` local. O selo "✓ Concluído hoje" desaparece a cada reload e a página não consulta o servidor para saber se o quiz do dia já foi jogado.
 
 ### 9. Classes Tailwind dinâmicas que nunca são geradas

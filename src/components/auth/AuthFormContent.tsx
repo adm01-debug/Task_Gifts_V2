@@ -1,12 +1,12 @@
 import { motion, AnimatePresence } from "framer-motion";
-import { Mail, Lock, User, Eye, EyeOff, Loader2, ArrowRight, ArrowLeft, Clock, AlertTriangle, Timer } from "lucide-react";
+import { Mail, Lock, User, Eye, EyeOff, Loader2, ArrowRight, ArrowLeft, AlertTriangle, Timer } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { PasswordStrengthIndicator } from "@/components/PasswordStrengthIndicator";
 import { TwoFactorVerify } from "@/components/auth/TwoFactorVerify";
 
-type AuthView = "login" | "signup" | "forgot-password" | "2fa-verify";
+type AuthView = "login" | "signup" | "2fa-verify";
 
 interface AuthFormErrors {
   email?: string;
@@ -75,55 +75,6 @@ export function AuthFormContent({
     );
   }
 
-  if (view === "forgot-password") {
-    return (
-      <motion.div
-        key="forgot-password"
-        initial={{ opacity: 0, x: 20 }}
-        animate={{ opacity: 1, x: 0 }}
-        exit={{ opacity: 0, x: -20 }}
-        transition={{ duration: 0.2 }}
-        className="space-y-5"
-      >
-        <button
-          type="button"
-          onClick={onCancel2FA}
-          className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
-        >
-          <ArrowLeft className="w-4 h-4" />
-          Voltar ao login
-        </button>
-
-        <div className="text-center mb-6">
-          <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-primary/10 flex items-center justify-center">
-            <Clock className="w-8 h-8 text-primary" />
-          </div>
-          <h3 className="text-xl font-semibold mb-2">Redefinir senha</h3>
-          <p className="text-sm text-muted-foreground">
-            Por segurança, a redefinição de senha requer aprovação do seu gestor.
-          </p>
-        </div>
-
-        <form onSubmit={onSubmit} className="space-y-5">
-          <InputField
-            label="Email"
-            type="email"
-            icon={<Mail className="w-5 h-5" />}
-            value={email}
-            onChange={(v) => { setEmail(v); setErrors({ ...errors, email: undefined }); }}
-            placeholder="seu@email.com"
-            error={errors.email}
-          />
-          <Button type="submit" disabled={loading} className="w-full h-12 text-base" variant="hero">
-            {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : (
-              <>Solicitar redefinição<ArrowRight className="w-5 h-5 ml-2" /></>
-            )}
-          </Button>
-        </form>
-      </motion.div>
-    );
-  }
-
   return (
     <motion.form
       key={view}
@@ -136,7 +87,7 @@ export function AuthFormContent({
     >
       {view === "signup" && (
         <InputField
-          label="Nome de exibição"
+          label="Nome de exibiÃ§Ã£o"
           type="text"
           icon={<User className="w-5 h-5" />}
           value={displayName}
@@ -163,7 +114,7 @@ export function AuthFormContent({
             type={showPassword ? "text" : "password"}
             value={password}
             onChange={(e) => { setPassword(e.target.value); setErrors({ ...errors, password: undefined }); }}
-            placeholder="••••••••"
+            placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢"
             className={`w-full pl-12 pr-12 py-3 rounded-xl bg-muted/50 border outline-none transition-all ${
               errors.password
                 ? "border-destructive focus:border-destructive focus:ring-destructive/20"
@@ -196,7 +147,7 @@ export function AuthFormContent({
           <Alert variant="destructive" className="border-destructive/50 bg-destructive/10">
             <Timer className="h-4 w-4" />
             <AlertDescription className="flex items-center justify-between">
-              <span>Conta bloqueada após {failedAttempts} tentativas.</span>
+              <span>Conta bloqueada apÃ³s {failedAttempts} tentativas.</span>
               <span className="font-mono font-bold text-lg">{formatRemainingTime()}</span>
             </AlertDescription>
           </Alert>
@@ -208,7 +159,7 @@ export function AuthFormContent({
           <Alert className="border-amber-500/50 bg-amber-500/10">
             <AlertTriangle className="h-4 w-4 text-amber-500" />
             <AlertDescription className="text-amber-600 dark:text-amber-400">
-              Atenção: {5 - failedAttempts} tentativa(s) restante(s) antes do bloqueio temporário.
+              AtenÃ§Ã£o: {5 - failedAttempts} tentativa(s) restante(s) antes do bloqueio temporÃ¡rio.
             </AlertDescription>
           </Alert>
         </motion.div>

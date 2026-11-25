@@ -12663,6 +12663,10 @@ export type Database = {
         }[]
       }
       validate_reset_token: { Args: { p_token: string }; Returns: boolean }
+      reset_password_with_token: {
+        Args: { p_token: string; p_password: string }
+        Returns: Json
+      }
       verify_certificate: {
         Args: { _code: string }
         Returns: {
