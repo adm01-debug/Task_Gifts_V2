@@ -31,6 +31,7 @@ import {
   useClearAllNotifications 
 } from "@/hooks/useNotifications";
 import { cn } from "@/lib/utils";
+import { resolveNotificationUrl } from "@/lib/notificationUrl";
 import { formatDistanceToNow } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import type { Notification } from "@/services/notificationsService";
@@ -67,7 +68,7 @@ const NotificationItem = memo(({ notification, onMarkRead, onDelete, onNavigate 
     locale: ptBR 
   });
   const data = (notification.data ?? {}) as Record<string, unknown>;
-  const url = typeof data.url === "string" ? data.url : null;
+  const url = resolveNotificationUrl(notification.type, data);
 
   return (
     <motion.div
@@ -193,7 +194,7 @@ export const NotificationCenter = () => {
   const handleNavigate = useCallback(
     (notification: Notification) => {
       const data = (notification.data ?? {}) as Record<string, unknown>;
-      const url = typeof data.url === "string" ? data.url : null;
+      const url = resolveNotificationUrl(notification.type, data);
       if (!url) return;
       if (!notification.read) markAsRead.mutate(notification.id);
       setOpen(false);
