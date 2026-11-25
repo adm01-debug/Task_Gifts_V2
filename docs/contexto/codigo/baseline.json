@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "f61144b60aac4987b9317ae3e2046255f5502480",
+  "commit": "ebbb9a0156321ee22960d9c9e05a71633146ddf2",
   "branch": "main",
-  "data_commit": "2026-11-25T11:19:44-03:00",
+  "data_commit": "2026-11-25T12:21:38-03:00",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "ultimos_commits": [
+   {
+    "sha": "ebbb9a0",
+    "data": "2026-11-25",
+    "assunto": "feat: mostra a foto do premio na loja quando o admin cadastra (#167)"
+   },
    {
     "sha": "f61144b",
     "data": "2026-11-25",
@@ -126,14 +131,9 @@
     "sha": "85ba135",
     "data": "2026-11-24",
     "assunto": "fix(cron): reproduz os jobs internos sem credencial no repositorio (#142)"
-   },
-   {
-    "sha": "57326cf",
-    "data": "2026-11-24",
-    "assunto": "chore: alinha doc de edge functions com o estado real (cron 200, trigger corrigido) (#139)"
    }
   ],
-  "arquivos_mudados_7d": 234,
+  "arquivos_mudados_7d": 236,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "supabase/functions/_shared",
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 133
+    "commits": 134
    },
    {
     "autor": "dependabot[bot]",
@@ -310,9 +310,9 @@
   ]
  },
  "contagens": {
-  "arquivos_total": 1588,
-  "arquivos_codigo": 1190,
-  "linhas_codigo": 236391,
+  "arquivos_total": 1589,
+  "arquivos_codigo": 1191,
+  "linhas_codigo": 236443,
   "rotas": 87,
   "rotas_http_backend": 0,
   "vistas_por_id": 0,
@@ -324,7 +324,7 @@
   "tabelas": 238,
   "migrations": 294,
   "cron_jobs": 24,
-  "testes": 173,
+  "testes": 174,
   "workflows": 6,
   "scripts": 17,
   "docs_md": 56
@@ -399,8 +399,8 @@
    "linhas": 342
   },
   "src/components": {
-   "arquivos": 466,
-   "linhas": 79127
+   "arquivos": 467,
+   "linhas": 79179
   },
   "src/constants": {
    "arquivos": 1,

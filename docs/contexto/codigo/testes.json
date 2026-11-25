@@ -5,12 +5,12 @@
   "vitest",
   "playwright"
  ],
- "total": 173,
+ "total": 174,
  "por_tipo": {
   "contrato": 3,
   "e2e": 2,
   "pytest": 2,
-  "unit": 164
+  "unit": 165
  },
  "onde_ficam": [
   {
@@ -27,7 +27,7 @@
   },
   {
    "padrao": "co-localizado (__tests__)",
-   "arquivos": 1
+   "arquivos": 2
   }
  ],
  "arquivos": [
@@ -131,6 +131,16 @@
     "src/pages/Shop.tsx"
    ],
    "casos": 3
+  },
+  {
+   "arquivo": "src/components/shop/__tests__/RewardCardImage.test.tsx",
+   "tipo": "unit",
+   "linhas": 43,
+   "testa": [
+    "src/components/shop/RewardCard.tsx",
+    "src/services/shopService.ts"
+   ],
+   "casos": 2
   },
   {
    "arquivo": "src/test/auction.simulation.test.ts",
@@ -1667,6 +1677,7 @@
   "src/components/feedback/FeedbackSummaryCard.tsx": 1,
   "src/components/rbac/ProtectedRoute.tsx": 1,
   "src/components/security/PasskeysPanel.tsx": 1,
+  "src/components/shop/RewardCard.tsx": 1,
   "src/components/ui/calendar.tsx": 1,
   "src/components/ui/chart.tsx": 1,
   "src/components/ui/resizable.tsx": 1,
@@ -1811,7 +1822,7 @@
   "src/services/predictiveFeedbackService.ts": 1,
   "src/services/profilesService.ts": 3,
   "src/services/quizQuestionsService.ts": 1,
-  "src/services/shopService.ts": 1,
+  "src/services/shopService.ts": 2,
   "src/services/trailsService.ts": 1,
   "src/services/wagerAdminService.ts": 2,
   "src/services/wagerBudgetService.ts": 1,

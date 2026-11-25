@@ -1,6 +1,6 @@
 # 07 · REGRAS DE NEGÓCIO
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `f61144b60a` · branch `main` · 2026-11-25 14:20 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `ebbb9a0156` · branch `main` · 2026-11-25 15:22 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## A. Regras escritas por humanos (`manual/` — prioridade máxima, nunca sobrescrito)
@@ -3643,7 +3643,7 @@ _nenhum item encontrado_
 | `manager` | `supabase/migrations/20261123180000_climate_survey_engine.sql` |
 | `admin` | `supabase/migrations/20261226195000_reset_senha_consistencia.sql` |
 
-## K. Testes como especificação (2107 testes em 159 arquivos — nomes completos em `context.json`)
+## K. Testes como especificação (2110 testes em 160 arquivos — nomes completos em `context.json`)
 
 | Arquivo | Testes | Exemplos do que o sistema DEVE fazer |
 |---|---|---|
@@ -3797,6 +3797,7 @@ _nenhum item encontrado_
 | `src/tests/unit/badges.test.ts` | 4 | Behavioral Badges Conditions · Feedback Champion Bronze condition should pass with 10 feedbacks · Check-in Regular condition should pass with 4 consecutive weeks · Goal Perfectionist should only pass if totalGoals > 0 and all are on track |
 | `src/tests/unit/device.test.ts` | 4 | useDeviceDetection · generateFingerprint · should generate a consistent fingerprint string · should correctly identify browser and OS from user agent |
 | `tests/auth-flow.spec.ts` | 4 | Autenticação e Proteção de Rotas 10/10 · redirecionamento de não autenticado para /auth · página /auth exibe formulário de login · acesso à página de recuperar senha |
+| `src/components/shop/__tests__/RewardCardImage.test.tsx` | 3 | RewardCard imagem do premio · mostra a foto quando o premio tem image_url · cai no icone da categoria quando nao ha image_url |
 | `src/test/pushRevocationBroadcast.simulation.test.ts` | 3 | buildRevocationBroadcast — simulação combinatória · cobre id × apelido × atual × relógio · resiste a entradas inválidas |
 | `src/test/pushRevocationNotice.simulation.test.ts` | 3 | buildRevocationNotice — simulação combinatória · cobre todas as combinações id × apelido × atual × relógio · é resiliente a entradas inválidas |
 | `src/test/rls.test.ts` | 3 | Anon user should be able to read public profile fields · Anon user should NOT be able to insert into profiles · Anon user should NOT be able to view private kudos |

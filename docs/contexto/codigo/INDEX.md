@@ -1,7 +1,7 @@
 # Contexto do projeto para agentes de IA
 
 GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.
-Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `f61144b60aac4987b9317ae3e2046255f5502480` (2026-11-25T11:19:44-03:00).
+Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `ebbb9a0156321ee22960d9c9e05a71633146ddf2` (2026-11-25T12:21:38-03:00).
 
 ## Como usar (leia antes de planejar ou executar qualquer tarefa)
 1. **Tela/rota/menu** → `rotas.json` (url/vista/menu → arquivo → hooks → tabelas → edges; `rotas_http_backend` para APIs) e `modulos.json` (módulo inteiro + dependências entre módulos).
@@ -14,7 +14,7 @@ Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR
 Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua tarefa; não carregue tudo.
 
 ## Stack
-- linguagens: TypeScript (1162), SQL (296), Markdown (56), JavaScript (24), JSON (14), YAML (9), Python (5), Shell (5)
+- linguagens: TypeScript (1163), SQL (296), Markdown (56), JavaScript (24), JSON (14), YAML (9), Python (5), Shell (5)
 - linguagem_principal: TypeScript
 - framework: React
 - backend_http: n/d
@@ -34,9 +34,9 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 ## Números
 | item | qtd |
 |---|---|
-| arquivos_total | 1588 |
-| arquivos_codigo | 1190 |
-| linhas_codigo | 236391 |
+| arquivos_total | 1589 |
+| arquivos_codigo | 1191 |
+| linhas_codigo | 236443 |
 | rotas | 87 |
 | rotas_http_backend | 0 |
 | vistas_por_id | 0 |
@@ -48,7 +48,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 | tabelas | 238 |
 | migrations | 294 |
 | cron_jobs | 24 |
-| testes | 173 |
+| testes | 174 |
 | workflows | 6 |
 | scripts | 17 |
 | docs_md | 56 |
@@ -278,8 +278,8 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - possiveis_segredos_no_codigo: 0
 
 ## Grafo de código (graphify)
-- 10387 nós · 28945 arestas · 652 comunidades · grafo do commit `f61144b6`
-- comunidades maiores: react (270), card.tsx (243), App.tsx (220), badge.tsx (210), cn (146), useProfiles.ts (128), ManagerDashboard.tsx (115), lucide-react (109), mobile/index.ts (104), client.ts (99), tradingCards.ts (92), contracts/index.ts (90)
+- 10390 nós · 28953 arestas · 672 comunidades · grafo do commit `ebbb9a01`
+- comunidades maiores: lucide-react (319), client.ts (251), react (241), Checkins.tsx (140), cn (113), @tanstack/react-query (90), contracts/index.ts (87), requestId.ts (80), gerar.mjs (79), generate.py (75), Shop.tsx (72), AdminTelemetria.tsx (70)
 - símbolos mais chamados: cn() (src/lib/utils.ts), useAuth() (src/hooks/useAuth.tsx), useIsMobile() (src/hooks/use-mobile.tsx), q() (scripts/supabase_snapshot/snapshot.py), useDepartments() (src/hooks/useDepartments.ts), useRBAC() (src/hooks/useRBAC.ts), useProfiles() (src/hooks/useProfiles.ts), useToast() (src/hooks/use-toast.ts), useSEO() (src/hooks/useSEO.ts), useSoundEffects() (src/hooks/useSoundEffects.tsx), .collect() (scripts/supabase_snapshot/test_snapshot.py), excluded_sql() (scripts/supabase_snapshot/snapshot.py)
 - consulta local: `graphify query "<pergunta>"`, `graphify path "<A>" "<B>"`, `graphify explain "<X>"`
 
@@ -365,6 +365,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 
 
 ## Últimos commits
+- 2026-11-25 `ebbb9a0` feat: mostra a foto do premio na loja quando o admin cadastra (#167)
 - 2026-11-25 `f61144b` security: engajamento com score validado e anon fora das tabelas de escrita (#166)
 - 2026-11-25 `b5c751f` chore: alinha a documentacao do ledger com os 293 arquivos da main (#165)
 - 2026-11-25 `220d1d6` fix: e-mail corporativo sai do SELECT aberto de profiles (LGPD) (#164)
@@ -379,7 +380,6 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - 2026-11-24 `ac84238` docs: corrige o drift do cron de push e do digest semanal (401 que nao existe) (#155)
 - 2026-11-24 `e681a89` chore: sobe o ledger para 282 nas docs (#154)
 - 2026-11-24 `d9f0718` feat: envia lembrete de clima por push alem do in-app (#153)
-- 2026-11-24 `a2a5bc3` fix(supabase): alinha 20261220000000 ao trigger vivo do alerta critico (#152)
 
 ## Arquivos deste diretório
 - `docs/contexto/codigo/rotas.json`

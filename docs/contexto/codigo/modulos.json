@@ -3967,8 +3967,8 @@
   {
    "modulo": "components/shop",
    "arquivos": 2,
-   "testes": 1,
-   "linhas": 333,
+   "testes": 2,
+   "linhas": 342,
    "itens_menu": [],
    "telas": [],
    "rotas_http": [],

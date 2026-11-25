@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "f61144b60aac4987b9317ae3e2046255f5502480",
+  "sha": "ebbb9a0156321ee22960d9c9e05a71633146ddf2",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
-  "generated_at": "2026-11-25 14:20 UTC",
-  "files_total": 1599,
-  "code_files": 1492,
-  "code_lines": 270703
+  "generated_at": "2026-11-25 15:22 UTC",
+  "files_total": 1600,
+  "code_files": 1493,
+  "code_lines": 270755
  },
  "version": "1.3.2",
- "facts_hash": "31e719a82ad73686",
+ "facts_hash": "82e98abfdc1a7524",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -195,7 +195,7 @@
   "package_manager": "bun",
   "languages": {
    ".ts": 585,
-   ".tsx": 579,
+   ".tsx": 580,
    ".sql": 296,
    ".mjs": 21,
    ".js": 5,
@@ -46757,7 +46757,7 @@
     "file": ".github/workflows/contexto.yml"
    }
   ],
-  "components_count": 471,
+  "components_count": 472,
   "hooks": [
    {
     "name": "useContacts",
@@ -49432,8 +49432,8 @@
   },
   {
    "module": "src/components",
-   "files": 466,
-   "lines": 79127,
+   "files": 467,
+   "lines": 79179,
    "tables": [
     "attendance_records",
     "audit_logs",
@@ -82057,6 +82057,18 @@
    {
     "file": "src/components/shop/__tests__/ProductGridLoading.test.tsx",
     "name": "should maintain layout stability during search/filtering loading"
+   },
+   {
+    "file": "src/components/shop/__tests__/RewardCardImage.test.tsx",
+    "name": "RewardCard imagem do premio"
+   },
+   {
+    "file": "src/components/shop/__tests__/RewardCardImage.test.tsx",
+    "name": "mostra a foto quando o premio tem image_url"
+   },
+   {
+    "file": "src/components/shop/__tests__/RewardCardImage.test.tsx",
+    "name": "cai no icone da categoria quando nao ha image_url"
    },
    {
     "file": "src/test/auction.simulation.test.ts",
@@ -127630,7 +127642,7 @@
   },
   "src/components/shop/RewardCard.tsx": {
    "path": "src/components/shop/RewardCard.tsx",
-   "lines": 186
+   "lines": 195
   },
   "src/components/shop/__tests__/ProductGridLoading.test.tsx": {
    "path": "src/components/shop/__tests__/ProductGridLoading.test.tsx",
@@ -127641,6 +127653,16 @@
     "should display skeletons while rewards are loading",
     "should transition from skeletons to content smoothly",
     "should maintain layout stability during search/filtering loading"
+   ]
+  },
+  "src/components/shop/__tests__/RewardCardImage.test.tsx": {
+   "path": "src/components/shop/__tests__/RewardCardImage.test.tsx",
+   "lines": 43,
+   "is_test": true,
+   "tests": [
+    "RewardCard imagem do premio",
+    "mostra a foto quando o premio tem image_url",
+    "cai no icone da categoria quando nao ha image_url"
    ]
   },
   "src/components/shop-admin/PromotionFormDialog.tsx": {
@@ -156440,10 +156462,20 @@
   }
  },
  "git": {
-  "sha": "f61144b60aac4987b9317ae3e2046255f5502480",
+  "sha": "ebbb9a0156321ee22960d9c9e05a71633146ddf2",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "commits": [
+   {
+    "sha": "ebbb9a0",
+    "date": "2026-11-25",
+    "author": "adm01-debug",
+    "subject": "feat: mostra a foto do premio na loja quando o admin cadastra (#167)",
+    "files": [
+     "src/components/shop/RewardCard.tsx",
+     "src/components/shop/__tests__/RewardCardImage.test.tsx"
+    ]
+   },
    {
     "sha": "f61144b",
     "date": "2026-11-25",
@@ -156777,22 +156809,12 @@
     "files": [
      "docs/agentes/banco.md"
     ]
-   },
-   {
-    "sha": "f5f05bc",
-    "date": "2026-11-24",
-    "author": "adm01-debug",
-    "subject": "fix: alinha trigger de dispatch ao banco vivo e encerra a divergencia do repo (#135)",
-    "files": [
-     "docs/agentes/banco.md",
-     "supabase/migrations/20261220000000_fix_sre_rpcs_and_dispatch_trigger.sql"
-    ]
    }
   ],
   "hot_files": [
    [
     "docs/agentes/banco.md",
-    11
+    10
    ],
    [
     "scripts/db-audit/README.md",
@@ -156843,8 +156865,12 @@
     2
    ],
    [
-    "supabase/migrations/20261220000000_fix_sre_rpcs_and_dispatch_trigger.sql",
-    2
+    "src/components/shop/RewardCard.tsx",
+    1
+   ],
+   [
+    "src/components/shop/__tests__/RewardCardImage.test.tsx",
+    1
    ],
    [
     "supabase/migrations/20261227120000_engagement_integridade_e_anon.sql",
@@ -156864,10 +156890,6 @@
    ],
    [
     "supabase/migrations/20261226210000_profiles_email_fora_do_allowlist.sql",
-    1
-   ],
-   [
-    "src/pages/Pdi.tsx",
     1
    ]
   ]
