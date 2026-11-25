@@ -78,6 +78,7 @@ export default function Pdi() {
       removeMentor,
       createCheckin,
       applyTemplate,
+      createTemplate,
       templatesLoading,
       mentorsLoading,
       checkinsLoading,
@@ -88,6 +89,51 @@ export default function Pdi() {
       refetchMentors,
       refetchCheckins,
     } = usePDI(activePlan?.id);
+
+  const [templateDialogOpen, setTemplateDialogOpen] = useState(false);
+  const [templateName, setTemplateName] = useState("");
+  const [templateCategory, setTemplateCategory] = useState("");
+  const [templateMonths, setTemplateMonths] = useState("");
+  const [templateDescription, setTemplateDescription] = useState("");
+
+  const resetTemplateForm = () => {
+    setTemplateName("");
+    setTemplateCategory("");
+    setTemplateMonths("");
+    setTemplateDescription("");
+  };
+
+  const handleCreateTemplate = () => {
+    if (!user) {
+      toast.error("Sessão expirada. Entre novamente para cadastrar o template.");
+      return;
+    }
+    if (!templateName.trim() || !templateCategory.trim()) {
+      toast.error("Informe o nome e a categoria do template.");
+      return;
+    }
+    const months = Number.parseInt(templateMonths, 10);
+    createTemplate(
+      {
+        name: templateName.trim(),
+        category: templateCategory.trim(),
+        description: templateDescription.trim() || undefined,
+        actions_template: [],
+        estimated_duration_months: Number.isFinite(months) && months > 0 ? months : undefined,
+        is_active: true,
+        created_by: user.id,
+      },
+      {
+        onSuccess: () => {
+          resetTemplateForm();
+          setTemplateDialogOpen(false);
+        },
+        onError: (error) => {
+          toast.error("Não foi possível criar o template.", { description: error.message });
+        },
+      },
+    );
+  };
 
   if (plansLoading) {
     return (
@@ -159,6 +205,72 @@ export default function Pdi() {
           </TabsList>
 
           <TabsContent value="templates" className="space-y-4">
+            {isAdmin && (
+              <div className="flex justify-end">
+                <Dialog open={templateDialogOpen} onOpenChange={setTemplateDialogOpen}>
+                  <DialogTrigger asChild>
+                    <Button size="sm" variant="outline">
+                      <Plus className="w-4 h-4 mr-2" /> Novo template
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent>
+                    <DialogHeader>
+                      <DialogTitle>Novo template de PDI</DialogTitle>
+                      <DialogDescription>
+                        O template fica disponível para todos os colaboradores aplicarem ao próprio PDI.
+                      </DialogDescription>
+                    </DialogHeader>
+                    <div className="space-y-3">
+                      <div className="space-y-1">
+                        <Label htmlFor="pdi-template-name">Nome</Label>
+                        <Input
+                          id="pdi-template-name"
+                          value={templateName}
+                          onChange={(event) => setTemplateName(event.target.value)}
+                          placeholder="Ex.: Trilha de liderança"
+                        />
+                      </div>
+                      <div className="space-y-1">
+                        <Label htmlFor="pdi-template-category">Categoria</Label>
+                        <Input
+                          id="pdi-template-category"
+                          value={templateCategory}
+                          onChange={(event) => setTemplateCategory(event.target.value)}
+                          placeholder="Ex.: Liderança"
+                        />
+                      </div>
+                      <div className="space-y-1">
+                        <Label htmlFor="pdi-template-months">Duração (meses)</Label>
+                        <Input
+                          id="pdi-template-months"
+                          type="number"
+                          min={1}
+                          value={templateMonths}
+                          onChange={(event) => setTemplateMonths(event.target.value)}
+                          placeholder="6"
+                        />
+                      </div>
+                      <div className="space-y-1">
+                        <Label htmlFor="pdi-template-description">Descrição</Label>
+                        <Textarea
+                          id="pdi-template-description"
+                          rows={3}
+                          value={templateDescription}
+                          onChange={(event) => setTemplateDescription(event.target.value)}
+                          placeholder="O que o colaborador desenvolve com este template"
+                        />
+                      </div>
+                    </div>
+                    <DialogFooter>
+                      <Button variant="ghost" onClick={() => setTemplateDialogOpen(false)}>
+                        Cancelar
+                      </Button>
+                      <Button onClick={handleCreateTemplate}>Criar template</Button>
+                    </DialogFooter>
+                  </DialogContent>
+                </Dialog>
+              </div>
+            )}
             <CardDescription>
               Aplicar um template copia as ações previstas para este PDI. Ações já registradas são mantidas.
             </CardDescription>
@@ -173,7 +285,9 @@ export default function Pdi() {
             ) : templates.length === 0 ? (
               <Card>
                 <CardContent className="p-6 text-sm text-muted-foreground">
-                  Nenhum template ativo cadastrado. Peça ao RH para cadastrar templates de PDI.
+                  {isAdmin
+                    ? "Nenhum template ativo cadastrado. Crie o primeiro pelo botão Novo template."
+                    : "Nenhum template ativo cadastrado. Peça ao RH para cadastrar templates de PDI."}
                 </CardContent>
               </Card>
             ) : (
