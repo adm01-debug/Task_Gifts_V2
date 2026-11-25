@@ -32,9 +32,9 @@ Método: extração por `grep`/`perl` sobre o texto das migrations. Tudo abaixo 
 | Objetos distintos com política RLS | **231** | 230 tabelas `public.*` + `storage.objects` |
 | Ocorrências `CREATE [UNIQUE] INDEX` | 276 | grep |
 | **Índices distintos declarados** | **259** | nomes únicos |
-| Ocorrências `cron.schedule` | 23 | grep |
-| **Jobs cron distintos declarados (ativos)** | **22** | 1 das 23 está comentada |
-| Ocorrências `cron.unschedule` | 13 | grep |
+| Ocorrências `cron.schedule` | 44 | grep (3 comentadas) |
+| **Jobs cron distintos declarados** | **40 nomes** | 8 nomes antigos são desagendados por `20261228120000`; 32 ativos em rebuild |
+| Ocorrências `cron.unschedule` | 14 | grep (1 dinâmica, dentro de loop) |
 | Statements `DROP` | 137 | 81 POLICY, 31 TRIGGER, 13 FUNCTION, 13 CONSTRAINT, 9 INDEX, 3 TABLE, 1 VIEW, 1 COLUMN |
 
 Distribuição de migrations por mês (timestamp do nome):
@@ -719,6 +719,22 @@ Nota: `profiles_public` foi criada e imediatamente recriada com 29 segundos de d
 ---
 
 ## Jobs cron declarados no repo
+
+**Nota (2026-11-25):** a tabela abaixo é o retrato da maior migration da época. A paridade com
+produção — 34 jobs ativos medidos em `cron.job` — foi fechada por
+`20261228120000_cron_jobs_e_leaderboard_cache.sql`, que declara os 15 jobs que faltavam
+(`auto-promote-webhook-secrets`, `boss-win-rate-critical-alerts`, `check-overdue-postmortems`,
+`cleanup-expired-challenges`, `cleanup-idempotency-keys`, `cleanup-job-run-details-7d`,
+`cleanup-old-security-logs`, `cleanup-query-telemetry`, `cleanup-webhook-logs`,
+`close-expired-campaigns`, `exec-monthly-report-generation`, `refresh-leaderboard-cache`,
+`sla-breach-weekly-check`, `update-certification-statuses`, `weekly-analyze`) e desagenda os 8
+nomes substituídos (`daily-cleanup-idempotency`, `daily-cleanup-security-logs-90d`,
+`weekly-cleanup-expired-challenges`, `close-expired-sales-campaigns`,
+`postmortem_overdue_daily_check`, `auto-promote-expired-webhook-secrets`,
+`exec_monthly_report_generation`, `sla_breach_weekly_check`). Os jobs internos
+`burn-rate-monitor-5min` e `error-budget-monitor-daily` continuam vindo de
+`20261224110000_cron_internal_jobs_drift.sql`, que os reagenda lendo o `x-internal-secret` de
+`_internal.dispatch_config`.
 
 **22 jobs ativos** (nome = 1º argumento de `cron.schedule`), ordenados alfabeticamente:
 
