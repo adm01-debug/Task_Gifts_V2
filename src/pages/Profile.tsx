@@ -19,6 +19,7 @@ import { PushNotificationHistory } from "@/components/PushNotificationHistory";
 import { PushSyncHistory } from "@/components/push/PushSyncHistory";
 import { PushDeviceList } from "@/components/push/PushDeviceList";
 import { CampaignNotificationPreferences } from "@/components/CampaignNotificationPreferences";
+import { SurveyNotificationPreferences } from "@/components/SurveyNotificationPreferences";
 import { InAppNotificationToggle } from "@/components/InAppNotificationToggle";
 import { GameNotificationPreferences } from "@/components/GameNotificationPreferences";
 import { ExecutiveReportPreferenceToggle } from "@/components/ExecutiveReportPreferenceToggle";
@@ -233,6 +234,7 @@ const Profile = () => {
         <SectionErrorBoundary sectionName="Sincronizações"><PushSyncHistory /></SectionErrorBoundary>
         <SectionErrorBoundary sectionName="Histórico de Push"><PushNotificationHistory /></SectionErrorBoundary>
         <InAppNotificationToggle />
+        <SurveyNotificationPreferences />
         <CampaignNotificationPreferences />
         <SectionErrorBoundary sectionName="Notificações dos Jogos"><GameNotificationPreferences /></SectionErrorBoundary>
         <ExecutiveReportPreferenceToggle />
