@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "556ec21ce4bdc0dbe1ee669e9b7b224c92ceb1ee",
+  "commit": "324e51a9c4b21f9078658cbb3809b4846d9cc816",
   "branch": "main",
-  "data_commit": "2026-11-25T18:25:26-03:00",
+  "data_commit": "2026-11-25T19:08:10-03:00",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "ultimos_commits": [
+   {
+    "sha": "324e51a",
+    "data": "2026-11-25",
+    "assunto": "fix(banco): fecha o rebuild - tabelas, colunas, funcoes, views, RLS e grants de producao (#172)"
+   },
    {
     "sha": "556ec21",
     "data": "2026-11-25",
@@ -126,14 +131,9 @@
     "sha": "59b21b4",
     "data": "2026-11-24",
     "assunto": "fix(desafio): notificacao do desafio semanal leva o id do desafio no payload (#145)"
-   },
-   {
-    "sha": "de4eaad",
-    "data": "2026-11-24",
-    "assunto": "docs(estado): alinha o trigger do alerta critico com o estado real (URL e segredo) (#146)"
    }
   ],
-  "arquivos_mudados_7d": 247,
+  "arquivos_mudados_7d": 254,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "supabase/functions/_shared",
@@ -188,11 +188,11 @@
     "mudancas": 7
    },
    {
-    "pasta": ".gitignore",
-    "mudancas": 6
+    "pasta": "supabase/config.toml",
+    "mudancas": 7
    },
    {
-    "pasta": "scripts/db-audit/check-migration-drift.mjs",
+    "pasta": ".gitignore",
     "mudancas": 6
    }
   ],
@@ -206,12 +206,12 @@
     "mudancas": 16
    },
    {
-    "arquivo": "bun.lock",
+    "arquivo": "docs/estado/05-edge-functions.md",
     "mudancas": 15
    },
    {
-    "arquivo": "docs/estado/05-edge-functions.md",
-    "mudancas": 15
+    "arquivo": "bun.lock",
+    "mudancas": 14
    },
    {
     "arquivo": "docs/agentes/mapa-repo.md",
@@ -294,14 +294,14 @@
     "mudancas": 4
    },
    {
-    "arquivo": "src/pages/Auth.tsx",
+    "arquivo": "scripts/db-audit/migration-baseline.json",
     "mudancas": 4
    }
   ],
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 138
+    "commits": 139
    },
    {
     "autor": "dependabot[bot]",
@@ -310,7 +310,7 @@
   ]
  },
  "contagens": {
-  "arquivos_total": 1596,
+  "arquivos_total": 1601,
   "arquivos_codigo": 1196,
   "linhas_codigo": 236866,
   "rotas": 87,
@@ -322,7 +322,7 @@
   "hooks": 155,
   "edge_functions": 23,
   "tabelas": 239,
-  "migrations": 296,
+  "migrations": 301,
   "cron_jobs": 40,
   "testes": 177,
   "workflows": 6,
@@ -632,18 +632,18 @@
   "tabelas_com_drift_migration_vs_types": [
    "achievements",
    "engagement_factors",
+   "external_api_keys",
    "lucky_wheel_prizes",
    "lucky_wheel_spins",
-   "notification_preferences",
    "notification_templates",
    "nr1_risk_categories",
    "permissions",
    "roles",
+   "security_alerts",
+   "shop_purchases",
    "trail_modules"
   ],
-  "rpcs_sem_definicao": [
-   "get_lucky_wheel_status"
-  ],
+  "rpcs_sem_definicao": [],
   "componentes_orfaos": [
    "src/components/admin/metrics/AdminMetricsCharts.tsx",
    "src/components/admin/permissions/PermissionModuleAccordion.tsx",

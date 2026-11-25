@@ -1,6 +1,6 @@
 # 11 · GLOSSÁRIO, DADOS DE REFERÊNCIA E LACUNAS
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `556ec21ce4` · branch `main` · 2026-11-25 21:25 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `324e51a9c4` · branch `main` · 2026-11-25 22:11 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## Glossário do domínio (entidades do sistema)
@@ -71,7 +71,7 @@
 | `custom_quests` | _(sem COMMENT ON TABLE — significado não documentado)_ | 16 colunas | migration |
 | `custom_ranks` | _(sem COMMENT ON TABLE — significado não documentado)_ | 16 colunas | migration |
 | `custom_titles` | _(sem COMMENT ON TABLE — significado não documentado)_ | 16 colunas | migration |
-| `demographic_attributes` | _(sem COMMENT ON TABLE — significado não documentado)_ | 14 colunas | types.ts |
+| `demographic_attributes` | _(sem COMMENT ON TABLE — significado não documentado)_ | 14 colunas | migration |
 | `department_missions` | _(sem COMMENT ON TABLE — significado não documentado)_ | 14 colunas | migration |
 | `department_rankings` | _(sem COMMENT ON TABLE — significado não documentado)_ | 11 colunas | migration |
 | `department_war_contributions` | _(sem COMMENT ON TABLE — significado não documentado)_ | 8 colunas | migration |
@@ -94,7 +94,7 @@
 | `enps_surveys` | _(sem COMMENT ON TABLE — significado não documentado)_ | 12 colunas | migration |
 | `entity_versions` | _(sem COMMENT ON TABLE — significado não documentado)_ | 8 colunas | migration |
 | `executive_monthly_reports` | _(sem COMMENT ON TABLE — significado não documentado)_ | 22 colunas | migration |
-| `external_api_keys` | _(sem COMMENT ON TABLE — significado não documentado)_ | 15 colunas | migration |
+| `external_api_keys` | _(sem COMMENT ON TABLE — significado não documentado)_ | 16 colunas | migration |
 | `external_tasks` | _(sem COMMENT ON TABLE — significado não documentado)_ | 21 colunas | migration |
 | `feedback_cycles` | _(sem COMMENT ON TABLE — significado não documentado)_ | 19 colunas | migration |
 | `feedback_evaluations` | _(sem COMMENT ON TABLE — significado não documentado)_ | 11 colunas | migration |
@@ -103,9 +103,9 @@
 | `feedback_responses` | _(sem COMMENT ON TABLE — significado não documentado)_ | 8 colunas | migration |
 | `feedback_results` | _(sem COMMENT ON TABLE — significado não documentado)_ | 14 colunas | migration |
 | `gamification_themes` | _(sem COMMENT ON TABLE — significado não documentado)_ | 11 colunas | migration |
-| `geo_access_logs` | _(sem COMMENT ON TABLE — significado não documentado)_ | 10 colunas | types.ts |
+| `geo_access_logs` | _(sem COMMENT ON TABLE — significado não documentado)_ | 10 colunas | migration |
 | `geo_allowed_countries` | _(sem COMMENT ON TABLE — significado não documentado)_ | 7 colunas | migration |
-| `geo_blocking_rules` | _(sem COMMENT ON TABLE — significado não documentado)_ | 7 colunas | types.ts |
+| `geo_blocking_rules` | _(sem COMMENT ON TABLE — significado não documentado)_ | 7 colunas | migration |
 | `geo_settings` | _(sem COMMENT ON TABLE — significado não documentado)_ | 6 colunas | migration |
 | `goal_templates` | _(sem COMMENT ON TABLE — significado não documentado)_ | 10 colunas | migration |
 | `goal_updates` | _(sem COMMENT ON TABLE — significado não documentado)_ | 8 colunas | migration |
@@ -159,7 +159,7 @@
 | `pdi_mentors` | _(sem COMMENT ON TABLE — significado não documentado)_ | 7 colunas | migration |
 | `pdi_templates` | _(sem COMMENT ON TABLE — significado não documentado)_ | 12 colunas | migration |
 | `penalty_rules` | _(sem COMMENT ON TABLE — significado não documentado)_ | 14 colunas | migration |
-| `permission_groups` | _(sem COMMENT ON TABLE — significado não documentado)_ | 7 colunas | types.ts |
+| `permission_groups` | _(sem COMMENT ON TABLE — significado não documentado)_ | 7 colunas | migration |
 | `permissions` | _(sem COMMENT ON TABLE — significado não documentado)_ | 9 colunas | migration |
 | `position_competencies` | _(sem COMMENT ON TABLE — significado não documentado)_ | 8 colunas | migration |
 | `position_task_templates` | _(sem COMMENT ON TABLE — significado não documentado)_ | 16 colunas | migration |
@@ -198,13 +198,13 @@
 | `scratch_cards` | _(sem COMMENT ON TABLE — significado não documentado)_ | 14 colunas | migration |
 | `seasonal_challenges` | _(sem COMMENT ON TABLE — significado não documentado)_ | 13 colunas | migration |
 | `seasonal_events` | _(sem COMMENT ON TABLE — significado não documentado)_ | 12 colunas | migration |
-| `security_alerts` | _(sem COMMENT ON TABLE — significado não documentado)_ | 17 colunas | migration |
+| `security_alerts` | _(sem COMMENT ON TABLE — significado não documentado)_ | 18 colunas | migration |
 | `sequence_attempts` | _(sem COMMENT ON TABLE — significado não documentado)_ | 12 colunas | migration |
 | `sequence_procedures` | _(sem COMMENT ON TABLE — significado não documentado)_ | 8 colunas | migration |
 | `sequence_steps` | _(sem COMMENT ON TABLE — significado não documentado)_ | 7 colunas | migration |
 | `session_logs` | _(sem COMMENT ON TABLE — significado não documentado)_ | 15 colunas | migration |
 | `shop_promotions` | _(sem COMMENT ON TABLE — significado não documentado)_ | 13 colunas | migration |
-| `shop_purchases` | _(sem COMMENT ON TABLE — significado não documentado)_ | 17 colunas | migration |
+| `shop_purchases` | _(sem COMMENT ON TABLE — significado não documentado)_ | 18 colunas | migration |
 | `shop_rewards` | _(sem COMMENT ON TABLE — significado não documentado)_ | 11 colunas | migration |
 | `sla_targets` | _(sem COMMENT ON TABLE — significado não documentado)_ | 7 colunas | migration |
 | `task_penalties` | _(sem COMMENT ON TABLE — significado não documentado)_ | 9 colunas | migration |
@@ -224,11 +224,11 @@
 | `user_challenges` | _(sem COMMENT ON TABLE — significado não documentado)_ | 16 colunas | migration |
 | `user_combos` | _(sem COMMENT ON TABLE — significado não documentado)_ | 10 colunas | migration |
 | `user_competency_assessments` | _(sem COMMENT ON TABLE — significado não documentado)_ | 11 colunas | migration |
-| `user_demographic_values` | _(sem COMMENT ON TABLE — significado não documentado)_ | 9 colunas | types.ts |
+| `user_demographic_values` | _(sem COMMENT ON TABLE — significado não documentado)_ | 9 colunas | migration |
 | `user_devices` | _(sem COMMENT ON TABLE — significado não documentado)_ | 16 colunas | migration |
 | `user_leagues` | _(sem COMMENT ON TABLE — significado não documentado)_ | 10 colunas | migration |
 | `user_mission_progress` | _(sem COMMENT ON TABLE — significado não documentado)_ | 9 colunas | migration |
-| `user_permission_groups` | _(sem COMMENT ON TABLE — significado não documentado)_ | 4 colunas | types.ts |
+| `user_permission_groups` | _(sem COMMENT ON TABLE — significado não documentado)_ | 4 colunas | migration |
 | `user_positions` | _(sem COMMENT ON TABLE — significado não documentado)_ | 7 colunas | migration |
 | `user_roles` | _(sem COMMENT ON TABLE — significado não documentado)_ | 4 colunas | migration |
 | `user_seasonal_progress` | _(sem COMMENT ON TABLE — significado não documentado)_ | 8 colunas | migration |
@@ -369,8 +369,6 @@ _nenhum item encontrado_
 | rls | `development_plans`: front faz DELETE mas nenhuma política RLS permite DELETE → vai falhar/retornar vazio para usuários | `src/services/developmentPlanService.ts` |
 | rls | `lucky_wheel_prizes`: acessada do front (1 arquivo(s)) sem RLS (não encontrado) | `src/services/luckyWheelService.ts` |
 | rls | `lucky_wheel_spins`: acessada do front (1 arquivo(s)) sem RLS (não encontrado) | `src/services/luckyWheelService.ts` |
-| rls | `notification_preferences`: acessada do front (3 arquivo(s)) sem RLS (não encontrado) | `src/components/InAppNotificationToggle.tsx`<br>`src/hooks/useTypePreferences.ts`<br>`src/services/salesCampaignsService.ts` |
-| rls | `profiles`: front faz SELECT mas nenhuma política RLS permite SELECT → vai falhar/retornar vazio para usuários | `src/hooks/usePDIAlerts.ts`<br>`src/hooks/useUserRank.ts`<br>`src/hooks/useWeeklyChallenge.ts`<br>`src/pages/Profile.tsx` |
 | rls | `profiles_public`: acessada do front (5 arquivo(s)) sem RLS (não encontrado) | `src/services/campaignTeamsService.ts`<br>`src/services/luckyWheelService.ts`<br>`src/services/profilesService.ts`<br>`src/services/salesCampaignsService.ts` |
 | rls | `roles`: front faz INSERT mas nenhuma política RLS permite INSERT → vai falhar/retornar vazio para usuários | `src/services/rbacService.ts` |
 | rls | `roles`: front faz UPDATE mas nenhuma política RLS permite UPDATE → vai falhar/retornar vazio para usuários | `src/services/rbacService.ts` |
@@ -405,6 +403,7 @@ _nenhum item encontrado_
 - Nenhuma regra manual em `manual/`: prazos, limites, exceções comerciais, quem aprova o quê — só o negócio sabe.
 - `profiles.status` é uma coluna de status sem enum/CHECK — os valores válidos e as transições permitidas não estão no banco.
 - `quest_assignments.current_step` é uma coluna de status sem enum/CHECK — os valores válidos e as transições permitidas não estão no banco.
+- `shop_purchases.approval_status` é uma coluna de status sem enum/CHECK — os valores válidos e as transições permitidas não estão no banco.
 - `onboarding_progress.current_step` é uma coluna de status sem enum/CHECK — os valores válidos e as transições permitidas não estão no banco.
 - `user_certifications.status` é uma coluna de status sem enum/CHECK — os valores válidos e as transições permitidas não estão no banco.
 - `bitrix24_sync_mappings.sync_status` é uma coluna de status sem enum/CHECK — os valores válidos e as transições permitidas não estão no banco.

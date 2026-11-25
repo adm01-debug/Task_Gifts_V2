@@ -1,6 +1,6 @@
 # 07 · REGRAS DE NEGÓCIO
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `556ec21ce4` · branch `main` · 2026-11-25 21:25 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `324e51a9c4` · branch `main` · 2026-11-25 22:11 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## A. Regras escritas por humanos (`manual/` — prioridade máxima, nunca sobrescrito)
@@ -11,307 +11,307 @@ _Nenhum arquivo em `manual/`. Copie `manual/TEMPLATE-regras-de-negocio.md` para 
 
 | Tabela | Política | Comando | Roles | Modo | USING | WITH CHECK |
 |---|---|---|---|---|---|---|
-| `saved_filters` | Users can view own filters | SELECT | public | permissive | `auth.uid() = user_id` |  |
-| `saved_filters` | Users can insert own filters | INSERT | public | permissive |  | `auth.uid() = user_id` |
-| `saved_filters` | Users can update own filters | UPDATE | public | permissive | `auth.uid() = user_id` | `auth.uid() = user_id` |
-| `saved_filters` | Users can delete own filters | DELETE | public | permissive | `auth.uid() = user_id` |  |
-| `entity_versions` | Users can insert versions | INSERT | public | permissive |  | `auth.uid() = changed_by OR changed_by IS NULL` |
-| `profiles` | Users can insert their own profile | INSERT | authenticated | permissive |  | `auth.uid() = id` |
-| `user_roles` | Users can view their own roles | SELECT | public | permissive | `auth.uid() = user_id` |  |
-| `user_roles` | Admins can manage all roles | ALL | public | permissive | `public.has_role(auth.uid(), 'admin')` |  |
-| `departments` | Everyone can view departments | SELECT | public | permissive | `true` |  |
-| `departments` | Admins can manage departments | ALL | public | permissive | `public.has_role(auth.uid(), 'admin')` |  |
-| `team_members` | Users can view their own team membership | SELECT | public | permissive | `auth.uid() = user_id` |  |
-| `team_members` | Admins can manage team members | ALL | public | permissive | `public.has_role(auth.uid(), 'admin')` |  |
-| `custom_quests` | Managers and admins can create quests | INSERT | public | permissive |  | `has_role(auth.uid(), 'admin') OR has_role(auth.uid(), 'manager')` |
-| `custom_quests` | Managers and admins can update their quests | UPDATE | public | permissive | `created_by = auth.uid() OR has_role(auth.uid(), 'admin')` |  |
-| `custom_quests` | Managers and admins can delete their quests | DELETE | public | permissive | `created_by = auth.uid() OR has_role(auth.uid(), 'admin')` |  |
-| `custom_quests` | Everyone can view active quests | SELECT | public | permissive | `status = 'active' OR created_by = auth.uid() OR has_role(auth.uid(), 'admin')` |  |
-| `quest_steps` | Quest creators can manage steps | ALL | public | permissive | `EXISTS ( SELECT 1 FROM public.custom_quests q WHERE q.id = quest_id AND (q.created_by = auth.uid() OR has_role(auth.uid(), 'admin')) )` |  |
-| `quest_steps` | Everyone can view steps of active quests | SELECT | public | permissive | `EXISTS ( SELECT 1 FROM public.custom_quests q WHERE q.id = quest_id AND q.status = 'active' )` |  |
-| `quest_assignments` | Users can view their own assignments | SELECT | public | permissive | `user_id = auth.uid()` |  |
-| `quest_assignments` | Managers can view team assignments | SELECT | public | permissive | `has_role(auth.uid(), 'admin') OR has_role(auth.uid(), 'manager')` |  |
-| `quest_assignments` | Managers can create assignments | INSERT | public | permissive |  | `has_role(auth.uid(), 'admin') OR has_role(auth.uid(), 'manager')` |
-| `quest_assignments` | Users can update their own progress | UPDATE | public | permissive | `user_id = auth.uid()` |  |
-| `kudos_badges` | Everyone can view badges | SELECT | public | permissive | `true` |  |
-| `kudos_badges` | Admins can manage badges | ALL | public | permissive | `has_role(auth.uid(), 'admin')` |  |
-| `kudos` | Public kudos are viewable by all | SELECT | public | permissive | `is_public = true OR from_user_id = auth.uid() OR to_user_id = auth.uid()` |  |
-| `kudos` | Authenticated users can give kudos | INSERT | public | permissive |  | `auth.uid() = from_user_id` |
-| `kudos` | Users can delete kudos they gave | DELETE | public | permissive | `auth.uid() = from_user_id` |  |
-| `audit_logs` | Admins can view all audit logs | SELECT | public | permissive | `has_role(auth.uid(), 'admin'::app_role)` |  |
-| `audit_logs` | Managers can view team audit logs | SELECT | public | permissive | `has_role(auth.uid(), 'manager'::app_role) AND EXISTS ( SELECT 1 FROM public.team_members tm1 JOIN public.team_members tm2 ON tm1.department_id = tm2.department_id WHERE tm1.user_id = auth.uid() AND tm1.is_manager = true AND tm2.user_id = audit_logs.user_id )` |  |
-| `audit_logs` | Users can view own audit logs | SELECT | public | permissive | `auth.uid() = user_id` |  |
-| `learning_trails` | Everyone can view published trails | SELECT | public | permissive | `status = 'published' OR created_by = auth.uid() OR has_role(auth.uid(), 'admin')` |  |
-| `learning_trails` | Managers and admins can create trails | INSERT | public | permissive |  | `has_role(auth.uid(), 'admin') OR has_role(auth.uid(), 'manager')` |
-| `learning_trails` | Creators and admins can update trails | UPDATE | public | permissive | `created_by = auth.uid() OR has_role(auth.uid(), 'admin')` |  |
-| `learning_trails` | Creators and admins can delete trails | DELETE | public | permissive | `created_by = auth.uid() OR has_role(auth.uid(), 'admin')` |  |
-| `trail_modules` | Everyone can view modules of published trails | SELECT | public | permissive | `EXISTS ( SELECT 1 FROM public.learning_trails t WHERE t.id = trail_modules.trail_id AND (t.status = 'published' OR t.created_by = auth.uid() OR has_role(auth.uid(), 'admin')) )` |  |
-| `trail_modules` | Trail creators can manage modules | ALL | public | permissive | `EXISTS ( SELECT 1 FROM public.learning_trails t WHERE t.id = trail_modules.trail_id AND (t.created_by = auth.uid() OR has_role(auth.uid(), 'admin')) )` |  |
-| `trail_enrollments` | Users can view own enrollments | SELECT | public | permissive | `user_id = auth.uid() OR has_role(auth.uid(), 'admin') OR has_role(auth.uid(), 'manager')` |  |
-| `trail_enrollments` | Users can enroll themselves | INSERT | public | permissive |  | `user_id = auth.uid()` |
-| `trail_enrollments` | Users can update own enrollments | UPDATE | public | permissive | `user_id = auth.uid()` |  |
-| `module_progress` | Users can view own progress | SELECT | public | permissive | `user_id = auth.uid() OR has_role(auth.uid(), 'admin') OR has_role(auth.uid(), 'manager')` |  |
-| `module_progress` | Users can insert own progress | INSERT | public | permissive |  | `user_id = auth.uid()` |
-| `module_progress` | Users can update own progress | UPDATE | public | permissive | `user_id = auth.uid()` |  |
-| `department_missions` | Everyone can view active missions | SELECT | public | permissive | `is_active = true OR has_role(auth.uid(), 'admin')` |  |
-| `department_missions` | Admins can manage missions | ALL | public | permissive | `has_role(auth.uid(), 'admin')` |  |
-| `user_mission_progress` | Users can view own progress | SELECT | public | permissive | `user_id = auth.uid() OR has_role(auth.uid(), 'admin') OR has_role(auth.uid(), 'manager')` |  |
-| `user_mission_progress` | Users can insert own progress | INSERT | public | permissive |  | `user_id = auth.uid()` |
-| `user_mission_progress` | Users can update own progress | UPDATE | public | permissive | `user_id = auth.uid()` |  |
-| `department_rankings` | Everyone can view rankings | SELECT | public | permissive | `true` |  |
-| `department_rankings` | System can manage rankings | ALL | public | permissive | `has_role(auth.uid(), 'admin')` |  |
-| `attendance_records` | Users can view own attendance | SELECT | public | permissive | `auth.uid() = user_id` |  |
-| `attendance_records` | Users can insert own attendance | INSERT | public | permissive |  | `auth.uid() = user_id` |
-| `attendance_records` | Managers can view team attendance | SELECT | public | permissive | `has_role(auth.uid(), 'admin'::app_role) OR has_role(auth.uid(), 'manager'::app_role)` |  |
-| `attendance_settings` | Everyone can view settings | SELECT | public | permissive | `true` |  |
-| `attendance_settings` | Admins can manage settings | ALL | public | permissive | `has_role(auth.uid(), 'admin'::app_role)` |  |
-| `attendance_streaks` | Users can view own streaks | SELECT | public | permissive | `auth.uid() = user_id` |  |
-| `attendance_streaks` | Users can manage own streaks | ALL | public | permissive | `auth.uid() = user_id` |  |
-| `attendance_streaks` | Managers can view all streaks | SELECT | public | permissive | `has_role(auth.uid(), 'admin'::app_role) OR has_role(auth.uid(), 'manager'::app_role)` |  |
-| `shop_rewards` | Everyone can view active rewards | SELECT | public | permissive | `is_active = true OR has_role(auth.uid(), 'admin')` |  |
-| `shop_rewards` | Admins can manage rewards | ALL | public | permissive | `has_role(auth.uid(), 'admin')` |  |
-| `shop_purchases` | Users can view own purchases | SELECT | public | permissive | `auth.uid() = user_id` |  |
-| `shop_purchases` | Users can create purchases | INSERT | public | permissive |  | `auth.uid() = user_id` |
-| `shop_purchases` | Admins can view all purchases | SELECT | public | permissive | `has_role(auth.uid(), 'admin') OR has_role(auth.uid(), 'manager')` |  |
-| `shop_purchases` | Admins can update purchases | UPDATE | public | permissive | `has_role(auth.uid(), 'admin') OR has_role(auth.uid(), 'manager')` |  |
-| `shop_promotions` | Everyone can view active promotions | SELECT | public | permissive | `is_active = true AND starts_at <= now() AND ends_at > now()` |  |
-| `shop_promotions` | Admins can view all promotions | SELECT | public | permissive | `has_role(auth.uid(), 'admin')` |  |
-| `shop_promotions` | Admins can manage promotions | ALL | public | permissive | `has_role(auth.uid(), 'admin')` |  |
-| `onboarding_progress` | Users can view own onboarding | SELECT | public | permissive | `auth.uid() = user_id` |  |
-| `onboarding_progress` | Users can insert own onboarding | INSERT | public | permissive |  | `auth.uid() = user_id` |
-| `onboarding_progress` | Users can update own onboarding | UPDATE | public | permissive | `auth.uid() = user_id` |  |
-| `user_combos` | Users can view own combos | SELECT | public | permissive | `auth.uid() = user_id` |  |
-| `user_combos` | Users can insert own combos | INSERT | public | permissive |  | `auth.uid() = user_id` |
-| `user_combos` | Users can update own combos | UPDATE | public | permissive | `auth.uid() = user_id` |  |
-| `user_combos` | Managers can view team combos | SELECT | public | permissive | `has_role(auth.uid(), 'admin') OR has_role(auth.uid(), 'manager')` |  |
-| `achievements` | Everyone can view achievements | SELECT | public | permissive | `true` |  |
+| `webhook_idempotency` | Service role can do everything on idempotency | ALL | service_role | permissive | `true` |  |
+| `storage.objects` | Users upload to own folder in course-uploads | INSERT | authenticated | permissive |  | `bucket_id = 'course-uploads' AND (storage.foldername(name))[1] = auth.uid()::text` |
+| `storage.objects` | Users read own files in course-uploads | SELECT | authenticated | permissive | `bucket_id = 'course-uploads' AND (storage.foldername(name))[1] = auth.uid()::text` |  |
+| `storage.objects` | Users delete own files in course-uploads | DELETE | authenticated | permissive | `bucket_id = 'course-uploads' AND (storage.foldername(name))[1] = auth.uid()::text` |  |
+| `storage.objects` | Auth users read org assets | SELECT | authenticated | permissive | `bucket_id = 'org-assets'` |  |
+| `storage.objects` | Org admins upload assets | INSERT | authenticated | permissive |  | `bucket_id = 'org-assets' AND public.is_org_admin(auth.uid(), (storage.foldername(name))[1]::uuid)` |
+| `storage.objects` | Org admins update assets | UPDATE | authenticated | permissive | `bucket_id = 'org-assets' AND public.is_org_admin(auth.uid(), (storage.foldername(name))[1]::uuid)` |  |
+| `storage.objects` | Org admins delete assets | DELETE | authenticated | permissive | `bucket_id = 'org-assets' AND public.is_org_admin(auth.uid(), (storage.foldername(name))[1]::uuid)` |  |
 | `achievements` | Admins can manage achievements | ALL | public | permissive | `has_role(auth.uid(), 'admin'::app_role)` |  |
-| `user_achievements` | Users can view own achievements | SELECT | public | permissive | `auth.uid() = user_id` |  |
-| `user_achievements` | System can insert achievements | INSERT | public | permissive |  | `auth.uid() = user_id` |
-| `user_achievements` | Managers can view team achievements | SELECT | public | permissive | `has_role(auth.uid(), 'admin'::app_role) OR has_role(auth.uid(), 'manager'::app_role)` |  |
+| `achievements` | Everyone can view achievements | SELECT | public | permissive | `true` |  |
+| `action_plan_items` | Manage action plan items | ALL | public | permissive | `(EXISTS ( SELECT 1 FROM action_plans ap WHERE ((ap.id = action_plan_items.plan_id) AND ((ap.owner_id = auth.uid()) OR has_role(auth.uid(), 'admin'::app_role)))))` |  |
+| `action_plan_items` | View action plan items | SELECT | public | permissive | `(EXISTS ( SELECT 1 FROM action_plans ap WHERE ((ap.id = action_plan_items.plan_id) AND ((ap.owner_id = auth.uid()) OR (ap.reviewer_id = auth.uid()) OR has_role(auth.uid(), 'admin'::app_role) OR has_role(auth.uid(), 'manager'::app_role)))))` |  |
+| `action_plan_updates` | Create action plan updates | INSERT | public | permissive |  | `(auth.uid() = user_id)` |
+| `action_plan_updates` | View action plan updates | SELECT | public | permissive | `(EXISTS ( SELECT 1 FROM action_plans ap WHERE ((ap.id = action_plan_updates.plan_id) AND ((ap.owner_id = auth.uid()) OR (ap.reviewer_id = auth.uid()) OR has_role(auth.uid(), 'admin'::app_role) OR has_role(auth.uid(), 'manager'::app_role)))))` |  |
+| `action_plans` | Admins delete action plans | DELETE | public | permissive | `(has_role(auth.uid(), 'admin'::app_role) OR (owner_id = auth.uid()))` |  |
+| `action_plans` | Managers create action plans | INSERT | public | permissive |  | `(has_role(auth.uid(), 'admin'::app_role) OR has_role(auth.uid(), 'manager'::app_role))` |
+| `action_plans` | Owners update action plans | UPDATE | public | permissive | `((owner_id = auth.uid()) OR (reviewer_id = auth.uid()) OR has_role(auth.uid(), 'admin'::app_role))` |  |
+| `action_plans` | View action plans | SELECT | public | permissive | `((owner_id = auth.uid()) OR (reviewer_id = auth.uid()) OR has_role(auth.uid(), 'admin'::app_role) OR has_role(auth.uid(), 'manager'::app_role))` |  |
+| `activity_comments` | Authenticated users can create comments | INSERT | public | permissive |  | `(auth.uid() = user_id)` |
 | `activity_comments` | Everyone can view comments | SELECT | public | permissive | `true` |  |
-| `activity_comments` | Authenticated users can create comments | INSERT | public | permissive |  | `auth.uid() = user_id` |
-| `activity_comments` | Users can update their own comments | UPDATE | public | permissive | `auth.uid() = user_id` |  |
-| `activity_comments` | Users can delete their own comments | DELETE | public | permissive | `auth.uid() = user_id` |  |
+| `activity_comments` | Users can delete their own comments | DELETE | public | permissive | `(auth.uid() = user_id)` |  |
+| `activity_comments` | Users can update their own comments | UPDATE | public | permissive | `(auth.uid() = user_id)` |  |
+| `activity_reactions` | Authenticated users can add reactions | INSERT | public | permissive |  | `(auth.uid() = user_id)` |
 | `activity_reactions` | Everyone can view reactions | SELECT | public | permissive | `true` |  |
-| `activity_reactions` | Authenticated users can add reactions | INSERT | public | permissive |  | `auth.uid() = user_id` |
-| `activity_reactions` | Users can remove their own reactions | DELETE | public | permissive | `auth.uid() = user_id` |  |
-| `seasonal_events` | Everyone can view active events | SELECT | public | permissive | `is_active = true OR has_role(auth.uid(), 'admin'::app_role)` |  |
-| `seasonal_events` | Admins can manage events | ALL | public | permissive | `has_role(auth.uid(), 'admin'::app_role)` |  |
-| `seasonal_challenges` | Everyone can view challenges | SELECT | public | permissive | `EXISTS ( SELECT 1 FROM public.seasonal_events e WHERE e.id = event_id AND (e.is_active = true OR has_role(auth.uid(), 'admin'::app_role)) )` |  |
-| `seasonal_challenges` | Admins can manage challenges | ALL | public | permissive | `has_role(auth.uid(), 'admin'::app_role)` |  |
-| `user_seasonal_progress` | Users can view own progress | SELECT | public | permissive | `auth.uid() = user_id` |  |
-| `user_seasonal_progress` | Users can insert own progress | INSERT | public | permissive |  | `auth.uid() = user_id` |
-| `user_seasonal_progress` | Users can update own progress | UPDATE | public | permissive | `auth.uid() = user_id` |  |
-| `user_seasonal_progress` | Managers can view all progress | SELECT | public | permissive | `has_role(auth.uid(), 'admin'::app_role) OR has_role(auth.uid(), 'manager'::app_role)` |  |
-| `mentorship_pairs` | Users can view their own mentorship pairs | SELECT | public | permissive | `auth.uid() = mentor_id OR auth.uid() = apprentice_id` |  |
-| `mentorship_pairs` | Users can create mentorship pairs | INSERT | public | permissive |  | `auth.uid() = mentor_id OR auth.uid() = apprentice_id` |
-| `mentorship_pairs` | Users can update their own pairs | UPDATE | public | permissive | `auth.uid() = mentor_id OR auth.uid() = apprentice_id` |  |
-| `mentorship_missions` | Everyone can view active missions | SELECT | public | permissive | `is_active = true OR has_role(auth.uid(), 'admin')` |  |
-| `mentorship_missions` | Admins can manage missions | ALL | public | permissive | `has_role(auth.uid(), 'admin')` |  |
-| `mentorship_mission_progress` | Users can view their pair progress | SELECT | public | permissive | `EXISTS ( SELECT 1 FROM mentorship_pairs mp WHERE mp.id = pair_id AND (mp.mentor_id = auth.uid() OR mp.apprentice_id = auth.uid()) )` |  |
-| `mentorship_mission_progress` | Users can insert progress for their pairs | INSERT | public | permissive |  | `EXISTS ( SELECT 1 FROM mentorship_pairs mp WHERE mp.id = pair_id AND (mp.mentor_id = auth.uid() OR mp.apprentice_id = auth.uid()) )` |
-| `mentorship_mission_progress` | Users can update their pair progress | UPDATE | public | permissive | `EXISTS ( SELECT 1 FROM mentorship_pairs mp WHERE mp.id = pair_id AND (mp.mentor_id = auth.uid() OR mp.apprentice_id = auth.uid()) )` |  |
-| `mentorship_requests` | Users can view their requests | SELECT | public | permissive | `auth.uid() = requester_id OR auth.uid() = target_id` |  |
-| `mentorship_requests` | Users can create requests | INSERT | public | permissive |  | `auth.uid() = requester_id` |
-| `mentorship_requests` | Users can update requests targeting them | UPDATE | public | permissive | `auth.uid() = target_id OR auth.uid() = requester_id` |  |
-| `direct_duels` | Users can view their duels | SELECT | public | permissive | `auth.uid() = challenger_id OR auth.uid() = opponent_id` |  |
-| `direct_duels` | Users can create duels | INSERT | public | permissive |  | `auth.uid() = challenger_id` |
-| `direct_duels` | Users can update their duels | UPDATE | public | permissive | `auth.uid() = challenger_id OR auth.uid() = opponent_id` |  |
-| `avatar_items` | Everyone can view active avatar items | SELECT | public | permissive | `is_active = true OR has_role(auth.uid(), 'admin')` |  |
-| `avatar_items` | Admins can manage avatar items | ALL | public | permissive | `has_role(auth.uid(), 'admin')` |  |
-| `user_avatar_items` | Users can view own avatar items | SELECT | public | permissive | `auth.uid() = user_id` |  |
-| `user_avatar_items` | Users can view others avatar items for display | SELECT | public | permissive | `true` |  |
-| `user_avatar_items` | Users can insert own avatar items | INSERT | public | permissive |  | `auth.uid() = user_id` |
-| `user_avatar_config` | Users can view any avatar config | SELECT | public | permissive | `true` |  |
-| `user_avatar_config` | Users can insert own avatar config | INSERT | public | permissive |  | `auth.uid() = user_id` |
-| `user_avatar_config` | Users can update own avatar config | UPDATE | public | permissive | `auth.uid() = user_id` |  |
-| `team_members` | Managers can view their team members | SELECT | public | permissive | `auth.uid() = user_id OR is_department_manager(auth.uid(), department_id) OR has_role(auth.uid(), 'admin'::app_role)` |  |
-| `certifications` | Everyone can view certifications | SELECT | public | permissive | `true` |  |
-| `certifications` | Admins can manage certifications | ALL | public | permissive | `has_role(auth.uid(), 'admin'::app_role)` |  |
-| `user_certifications` | Users can view own certifications | SELECT | public | permissive | `auth.uid() = user_id` |  |
-| `user_certifications` | Managers can view team certifications | SELECT | public | permissive | `has_role(auth.uid(), 'admin'::app_role) OR has_role(auth.uid(), 'manager'::app_role)` |  |
-| `user_certifications` | Managers can update certifications | UPDATE | public | permissive | `has_role(auth.uid(), 'admin'::app_role) OR has_role(auth.uid(), 'manager'::app_role)` |  |
-| `trail_prerequisites` | Everyone can view prerequisites | SELECT | public | permissive | `true` |  |
-| `trail_prerequisites` | Admins and managers can manage prerequisites | ALL | public | permissive | `has_role(auth.uid(), 'admin'::app_role) OR has_role(auth.uid(), 'manager'::app_role)` |  |
-| `quiz_scores` | Users can insert their own scores | INSERT | public | permissive |  | `auth.uid() = user_id` |
-| `quiz_scores` | Everyone can view scores | SELECT | public | permissive | `true` |  |
-| `quiz_questions` | Admins and managers can manage questions | ALL | public | permissive | `has_role(auth.uid(), 'admin') OR has_role(auth.uid(), 'manager')` |  |
-| `quiz_questions` | Everyone can view active questions | SELECT | public | permissive | `is_active = true OR has_role(auth.uid(), 'admin') OR has_role(auth.uid(), 'manager')` |  |
-| `quiz_options` | Admins and managers can manage options | ALL | public | permissive | `EXISTS ( SELECT 1 FROM quiz_questions q WHERE q.id = quiz_options.question_id AND (has_role(auth.uid(), 'admin') OR has_role(auth.uid(), 'manager')) )` |  |
-| `quiz_answers` | Users can insert own answers | INSERT | public | permissive |  | `auth.uid() = user_id` |
-| `ai_coach_messages` | Users can view their own messages | SELECT | public | permissive | `auth.uid() = user_id` |  |
-| `ai_coach_messages` | Users can insert their own messages | INSERT | public | permissive |  | `auth.uid() = user_id` |
-| `ai_coach_messages` | Users can delete their own messages | DELETE | public | permissive | `auth.uid() = user_id` |  |
-| `bitrix24_tokens` | Admins can manage bitrix tokens | ALL | public | permissive | `EXISTS (SELECT 1 FROM user_roles WHERE user_id = auth.uid() AND role = 'admin')` |  |
-| `bitrix24_sync_mappings` | Admins and managers can view sync mappings | SELECT | public | permissive | `EXISTS (SELECT 1 FROM user_roles WHERE user_id = auth.uid() AND role IN ('admin', 'manager'))` |  |
-| `bitrix24_sync_mappings` | Admins can manage sync mappings | ALL | public | permissive | `EXISTS (SELECT 1 FROM user_roles WHERE user_id = auth.uid() AND role = 'admin')` |  |
-| `bitrix24_webhook_logs` | Admins can view webhook logs | SELECT | public | permissive | `EXISTS (SELECT 1 FROM user_roles WHERE user_id = auth.uid() AND role = 'admin')` |  |
-| `goals` | Users can view own goals | SELECT | public | permissive | `user_id = auth.uid()` |  |
-| `goals` | Users can view team goals | SELECT | public | permissive | `goal_type = 'team' AND department_id IN ( SELECT department_id FROM public.team_members WHERE user_id = auth.uid() )` |  |
-| `goals` | Users can view company goals | SELECT | public | permissive | `goal_type = 'company'` |  |
-| `goals` | Users can create own goals | INSERT | public | permissive |  | `user_id = auth.uid()` |
-| `goals` | Users can update own goals | UPDATE | public | permissive | `user_id = auth.uid()` |  |
-| `goals` | Users can delete own draft goals | DELETE | public | permissive | `user_id = auth.uid() AND status = 'draft'` |  |
-| `goals` | Managers can manage team goals | ALL | public | permissive | `has_role(auth.uid(), 'admin') OR has_role(auth.uid(), 'manager')` |  |
-| `key_results` | Goal owners can manage key results | ALL | public | permissive | `EXISTS ( SELECT 1 FROM public.goals g WHERE g.id = goal_id AND (g.user_id = auth.uid() OR has_role(auth.uid(), 'admin')) )` |  |
-| `goal_updates` | Goal owners can insert updates | INSERT | public | permissive |  | `EXISTS ( SELECT 1 FROM public.goals g WHERE g.id = goal_id AND (g.user_id = auth.uid() OR has_role(auth.uid(), 'admin')) )` |
-| `leagues` | Everyone can view leagues | SELECT | public | permissive | `true` |  |
-| `leagues` | Admins can manage leagues | ALL | public | permissive | `has_role(auth.uid(), 'admin')` |  |
-| `user_leagues` | Everyone can view user leagues | SELECT | public | permissive | `true` |  |
-| `user_leagues` | System can manage user leagues | ALL | public | permissive | `has_role(auth.uid(), 'admin')` |  |
-| `user_leagues` | Users can insert own league | INSERT | public | permissive |  | `user_id = auth.uid()` |
-| `checkin_templates` | Everyone can view templates | SELECT | public | permissive | `true` |  |
-| `checkin_templates` | Managers can create templates | INSERT | public | permissive |  | `has_role(auth.uid(), 'admin') OR has_role(auth.uid(), 'manager')` |
-| `checkin_templates` | Template owners can manage | ALL | public | permissive | `created_by = auth.uid() OR has_role(auth.uid(), 'admin')` |  |
-| `checkins` | Participants can view their checkins | SELECT | public | permissive | `manager_id = auth.uid() OR employee_id = auth.uid()` |  |
-| `checkins` | Managers can create checkins | INSERT | public | permissive |  | `manager_id = auth.uid()` |
-| `checkins` | Participants can update checkins | UPDATE | public | permissive | `manager_id = auth.uid() OR employee_id = auth.uid()` |  |
-| `checkins` | Admins can view all checkins | SELECT | public | permissive | `has_role(auth.uid(), 'admin')` |  |
-| `pulse_surveys` | Users can view active surveys for their department | SELECT | public | permissive | `status = 'active' AND ( department_id IS NULL OR department_id IN (SELECT department_id FROM public.team_members WHERE user_id = auth.uid()) )` |  |
-| `pulse_surveys` | Managers can manage surveys | ALL | public | permissive | `has_role(auth.uid(), 'admin') OR has_role(auth.uid(), 'manager')` |  |
-| `pulse_responses` | Users can submit responses | INSERT | public | permissive |  | `user_id = auth.uid()` |
-| `pulse_responses` | Users can view own responses | SELECT | public | permissive | `user_id = auth.uid()` |  |
-| `pulse_responses` | Managers can view anonymous aggregated responses | SELECT | public | permissive | `has_role(auth.uid(), 'admin') OR has_role(auth.uid(), 'manager')` |  |
-| `celebrations` | Users can view public celebrations | SELECT | public | permissive | `is_public = true OR user_id = auth.uid()` |  |
-| `celebrations` | Users can manage own celebrations | ALL | public | permissive | `user_id = auth.uid()` |  |
-| `mood_entries` | Users can manage own mood entries | ALL | public | permissive | `user_id = auth.uid()` |  |
-| `announcements` | Everyone can view published announcements | SELECT | public | permissive | `published_at IS NOT NULL AND published_at <= now() AND (expires_at IS NULL OR expires_at > now()) AND (department_id IS NULL OR department_id IN (SELECT department_id FROM public.team_members WHERE user_id = auth.uid()))` |  |
-| `announcements` | Managers can create announcements | INSERT | public | permissive |  | `has_role(auth.uid(), 'admin') OR has_role(auth.uid(), 'manager')` |
-| `announcements` | Authors can manage own announcements | UPDATE | public | permissive | `author_id = auth.uid() OR has_role(auth.uid(), 'admin')` |  |
-| `announcements` | Admins can delete announcements | DELETE | public | permissive | `author_id = auth.uid() OR has_role(auth.uid(), 'admin')` |  |
-| `announcement_reactions` | Users can react to announcements | ALL | public | permissive | `user_id = auth.uid()` |  |
+| `activity_reactions` | Users can remove their own reactions | DELETE | public | permissive | `(auth.uid() = user_id)` |  |
+| `ai_coach_messages` | Users can delete their own messages | DELETE | public | permissive | `(auth.uid() = user_id)` |  |
+| `ai_coach_messages` | Users can insert their own messages | INSERT | public | permissive |  | `(auth.uid() = user_id)` |
+| `ai_coach_messages` | Users can view their own messages | SELECT | public | permissive | `(auth.uid() = user_id)` |  |
+| `ai_course_jobs` | Users create own ai course jobs | INSERT | authenticated | permissive |  | `(auth.uid() = user_id)` |
+| `ai_course_jobs` | Users update own ai course jobs | UPDATE | authenticated | permissive | `((auth.uid() = user_id) OR has_role(auth.uid(), 'admin'::app_role))` | `((auth.uid() = user_id) OR has_role(auth.uid(), 'admin'::app_role))` |
+| `ai_course_jobs` | Users view own ai course jobs | SELECT | authenticated | permissive | `((auth.uid() = user_id) OR has_role(auth.uid(), 'admin'::app_role))` |  |
 | `announcement_reactions` | Everyone can view reactions | SELECT | public | permissive | `true` |  |
-| `announcement_reads` | Users can mark as read | INSERT | public | permissive |  | `user_id = auth.uid()` |
-| `announcement_reads` | Users can view own reads | SELECT | public | permissive | `user_id = auth.uid() OR has_role(auth.uid(), 'admin')` |  |
-| `feedback_cycles` | Everyone can view active cycles | SELECT | public | permissive | `status IN ('active', 'review', 'completed') OR created_by = auth.uid() OR has_role(auth.uid(), 'admin')` |  |
-| `feedback_cycles` | Managers can manage cycles | ALL | public | permissive | `has_role(auth.uid(), 'admin') OR has_role(auth.uid(), 'manager')` |  |
-| `feedback_requests` | Users can view their feedback requests | SELECT | public | permissive | `from_user_id = auth.uid() OR to_user_id = auth.uid()` |  |
-| `feedback_requests` | Managers can create requests | INSERT | public | permissive |  | `has_role(auth.uid(), 'admin') OR has_role(auth.uid(), 'manager')` |
-| `feedback_requests` | Users can update their requests | UPDATE | public | permissive | `from_user_id = auth.uid()` |  |
-| `feedback_requests` | Admins can view all requests | SELECT | public | permissive | `has_role(auth.uid(), 'admin')` |  |
-| `feedback_responses` | Submitters can create responses | INSERT | public | permissive |  | `EXISTS ( SELECT 1 FROM public.feedback_requests r WHERE r.id = request_id AND r.from_user_id = auth.uid() )` |
-| `feedback_responses` | Submitters can view own responses | SELECT | public | permissive | `EXISTS ( SELECT 1 FROM public.feedback_requests r WHERE r.id = request_id AND r.from_user_id = auth.uid() )` |  |
-| `feedback_responses` | Receivers can view non-anonymous feedback | SELECT | public | permissive | `is_anonymous = false AND EXISTS ( SELECT 1 FROM public.feedback_requests r WHERE r.id = request_id AND r.to_user_id = auth.uid() )` |  |
-| `feedback_responses` | Admins can view all responses | SELECT | public | permissive | `has_role(auth.uid(), 'admin')` |  |
-| `positions` | Everyone can view positions | SELECT | public | permissive | `true` |  |
-| `positions` | Admins can manage positions | ALL | public | permissive | `has_role(auth.uid(), 'admin')` |  |
-| `position_task_templates` | Everyone can view active templates | SELECT | public | permissive | `is_active = true OR has_role(auth.uid(), 'admin')` |  |
-| `position_task_templates` | Admins and managers can manage templates | ALL | public | permissive | `has_role(auth.uid(), 'admin') OR has_role(auth.uid(), 'manager')` |  |
-| `user_positions` | Users can view own positions | SELECT | public | permissive | `auth.uid() = user_id` |  |
-| `user_positions` | Managers can view team positions | SELECT | public | permissive | `has_role(auth.uid(), 'admin') OR has_role(auth.uid(), 'manager')` |  |
-| `user_positions` | Admins can manage user positions | ALL | public | permissive | `has_role(auth.uid(), 'admin')` |  |
-| `task_scores` | Managers can view all task scores | SELECT | public | permissive | `has_role(auth.uid(), 'admin') OR has_role(auth.uid(), 'manager')` |  |
-| `task_penalties` | Users can view own penalties | SELECT | public | permissive | `auth.uid() = user_id` |  |
-| `task_penalties` | Managers can view all penalties | SELECT | public | permissive | `has_role(auth.uid(), 'admin') OR has_role(auth.uid(), 'manager')` |  |
-| `task_penalties` | Admins can manage penalties | ALL | public | permissive | `has_role(auth.uid(), 'admin') OR has_role(auth.uid(), 'manager')` |  |
-| `penalty_rules` | Everyone can view active rules | SELECT | public | permissive | `is_active = true OR has_role(auth.uid(), 'admin')` |  |
-| `penalty_rules` | Admins can manage penalty rules | ALL | public | permissive | `has_role(auth.uid(), 'admin')` |  |
-| `external_api_keys` | Admins can manage API keys | ALL | public | permissive | `has_role(auth.uid(), 'admin')` |  |
-| `api_request_logs` | Admins can view API logs | SELECT | public | permissive | `has_role(auth.uid(), 'admin')` |  |
-| `webhook_subscriptions` | Admins can manage webhooks | ALL | public | permissive | `has_role(auth.uid(), 'admin')` |  |
-| `webhook_delivery_logs` | Admins can view webhook logs | SELECT | public | permissive | `has_role(auth.uid(), 'admin')` |  |
-| `external_tasks` | Users can view own external tasks | SELECT | public | permissive | `user_id = auth.uid()` |  |
-| `gamification_themes` | Everyone can view active themes | SELECT | public | permissive | `is_active = true OR has_role(auth.uid(), 'admin')` |  |
-| `gamification_themes` | Admins can manage themes | ALL | public | permissive | `has_role(auth.uid(), 'admin')` |  |
-| `custom_ranks` | Everyone can view ranks | SELECT | public | permissive | `true` |  |
-| `custom_ranks` | Admins can manage ranks | ALL | public | permissive | `has_role(auth.uid(), 'admin')` |  |
-| `custom_badges` | Everyone can view active badges | SELECT | public | permissive | `is_active = true OR has_role(auth.uid(), 'admin')` |  |
-| `custom_badges` | Admins can manage badges | ALL | public | permissive | `has_role(auth.uid(), 'admin')` |  |
-| `custom_titles` | Everyone can view active titles | SELECT | public | permissive | `is_active = true OR has_role(auth.uid(), 'admin')` |  |
-| `custom_titles` | Admins can manage titles | ALL | public | permissive | `has_role(auth.uid(), 'admin')` |  |
-| `user_titles` | Users can view own titles | SELECT | public | permissive | `user_id = auth.uid() OR has_role(auth.uid(), 'admin')` |  |
-| `user_titles` | Admins can manage user titles | ALL | public | permissive | `has_role(auth.uid(), 'admin')` |  |
-| `level_configs` | Everyone can view level configs | SELECT | public | permissive | `true` |  |
-| `level_configs` | Admins can manage level configs | ALL | public | permissive | `has_role(auth.uid(), 'admin')` |  |
-| `competencies` | Everyone can view competencies | SELECT | public | permissive | `true` |  |
-| `competencies` | Admins can manage competencies | ALL | public | permissive | `public.has_role(auth.uid(), 'admin')` |  |
-| `nine_box_evaluations` | Users can view their own evaluations | SELECT | public | permissive | `auth.uid() = user_id` |  |
-| `nine_box_evaluations` | Admins can view all evaluations | SELECT | public | permissive | `public.has_role(auth.uid(), 'admin')` |  |
-| `nine_box_evaluations` | Managers can view their team evaluations | SELECT | public | permissive | `EXISTS ( SELECT 1 FROM team_members tm1 JOIN team_members tm2 ON tm1.department_id = tm2.department_id WHERE tm1.user_id = auth.uid() AND tm1.is_manager = true AND tm2.user_id = nine_box_evaluations.user_id )` |  |
-| `nine_box_evaluations` | Admins and managers can create evaluations | INSERT | public | permissive |  | `public.has_role(auth.uid(), 'admin') OR EXISTS ( SELECT 1 FROM team_members tm1 JOIN team_members tm2 ON tm1.department_id = tm2.department_id WHERE tm1.user_id = auth.uid() AND tm1.is_manager = true AND tm2.user_id = nine_box_evaluations.user_id )` |
-| `nine_box_evaluations` | Admins and managers can update evaluations | UPDATE | public | permissive | `public.has_role(auth.uid(), 'admin') OR evaluator_id = auth.uid()` |  |
-| `development_plans` | Users can view their own development plans | SELECT | public | permissive | `auth.uid() = user_id` |  |
-| `development_plans` | Admins can view all development plans | SELECT | public | permissive | `public.has_role(auth.uid(), 'admin')` |  |
-| `development_plans` | Managers can view team development plans | SELECT | public | permissive | `EXISTS ( SELECT 1 FROM team_members tm1 JOIN team_members tm2 ON tm1.department_id = tm2.department_id WHERE tm1.user_id = auth.uid() AND tm1.is_manager = true AND tm2.user_id = development_plans.user_id )` |  |
-| `development_plans` | Users can create their own development plans | INSERT | public | permissive |  | `auth.uid() = user_id OR auth.uid() = created_by` |
-| `development_plans` | Users and managers can update development plans | UPDATE | public | permissive | `auth.uid() = user_id OR auth.uid() = created_by OR public.has_role(auth.uid(), 'admin')` |  |
-| `development_plan_actions` | Users can view their plan actions | SELECT | public | permissive | `EXISTS ( SELECT 1 FROM development_plans dp WHERE dp.id = development_plan_actions.plan_id AND (dp.user_id = auth.uid() OR dp.created_by = auth.uid()) )` |  |
-| `development_plan_actions` | Admins can view all plan actions | SELECT | public | permissive | `public.has_role(auth.uid(), 'admin')` |  |
-| `development_plan_actions` | Users can create plan actions | INSERT | public | permissive |  | `EXISTS ( SELECT 1 FROM development_plans dp WHERE dp.id = development_plan_actions.plan_id AND (dp.user_id = auth.uid() OR dp.created_by = auth.uid()) )` |
-| `development_plan_actions` | Users can update plan actions | UPDATE | public | permissive | `EXISTS ( SELECT 1 FROM development_plans dp WHERE dp.id = development_plan_actions.plan_id AND (dp.user_id = auth.uid() OR dp.created_by = auth.uid()) ) OR public.has_role(auth.uid(), 'admin')` |  |
-| `development_plan_actions` | Users can delete plan actions | DELETE | public | permissive | `EXISTS ( SELECT 1 FROM development_plans dp WHERE dp.id = development_plan_actions.plan_id AND (dp.user_id = auth.uid() OR dp.created_by = auth.uid()) ) OR public.has_role(auth.uid(), 'admin')` |  |
-| `enps_surveys` | Everyone can view active surveys | SELECT | public | permissive | `status = 'active' OR public.has_role(auth.uid(), 'admin')` |  |
-| `enps_surveys` | Admins can manage surveys | ALL | public | permissive | `public.has_role(auth.uid(), 'admin')` |  |
-| `enps_responses` | Users can submit their responses | INSERT | public | permissive |  | `auth.uid() = user_id` |
-| `enps_responses` | Users can view their own responses | SELECT | public | permissive | `auth.uid() = user_id` |  |
-| `enps_responses` | Admins can view all responses | SELECT | public | permissive | `public.has_role(auth.uid(), 'admin')` |  |
-| `engagement_snapshots` | Admins can manage snapshots | ALL | public | permissive | `public.has_role(auth.uid(), 'admin')` |  |
-| `engagement_snapshots` | Managers can view department snapshots | SELECT | public | permissive | `EXISTS ( SELECT 1 FROM team_members tm WHERE tm.user_id = auth.uid() AND tm.is_manager = true AND (engagement_snapshots.department_id IS NULL OR tm.department_id = engagement_snapshots.department_id) )` |  |
-| `ip_whitelist` | Admins can view IP whitelist | SELECT | authenticated | permissive | `public.has_role(auth.uid(), 'admin')` |  |
-| `ip_whitelist` | Admins can insert IP whitelist | INSERT | authenticated | permissive |  | `public.has_role(auth.uid(), 'admin')` |
-| `ip_whitelist` | Admins can update IP whitelist | UPDATE | authenticated | permissive | `public.has_role(auth.uid(), 'admin')` |  |
-| `ip_whitelist` | Admins can delete IP whitelist | DELETE | authenticated | permissive | `public.has_role(auth.uid(), 'admin')` |  |
-| `ip_access_logs` | Admins can view IP access logs | SELECT | authenticated | permissive | `public.has_role(auth.uid(), 'admin')` |  |
+| `announcement_reactions` | Users can react to announcements | ALL | public | permissive | `(user_id = auth.uid())` |  |
+| `announcement_reads` | Users can mark as read | INSERT | public | permissive |  | `(user_id = auth.uid())` |
+| `announcement_reads` | Users can view own reads | SELECT | public | permissive | `((user_id = auth.uid()) OR has_role(auth.uid(), 'admin'::app_role))` |  |
+| `announcements` | Admins can delete announcements | DELETE | public | permissive | `((author_id = auth.uid()) OR has_role(auth.uid(), 'admin'::app_role))` |  |
+| `announcements` | Authors can manage own announcements | UPDATE | public | permissive | `((author_id = auth.uid()) OR has_role(auth.uid(), 'admin'::app_role))` |  |
+| `announcements` | Everyone can view published announcements | SELECT | public | permissive | `((published_at IS NOT NULL) AND (published_at <= now()) AND ((expires_at IS NULL) OR (expires_at > now())) AND ((department_id IS NULL) OR (department_id IN ( SELECT team_members.department_id FROM team_members WHERE (team_members.user_id = auth.uid())))))` |  |
+| `announcements` | Managers can create announcements | INSERT | public | permissive |  | `(has_role(auth.uid(), 'admin'::app_role) OR has_role(auth.uid(), 'manager'::app_role))` |
+| `api_request_logs` | Admins can view API logs | SELECT | public | permissive | `has_role(auth.uid(), 'admin'::app_role)` |  |
+| `attendance_records` | Managers can view team attendance | SELECT | public | permissive | `(has_role(auth.uid(), 'admin'::app_role) OR has_role(auth.uid(), 'manager'::app_role))` |  |
+| `attendance_records` | Users can insert own attendance | INSERT | public | permissive |  | `(auth.uid() = user_id)` |
+| `attendance_records` | Users can view own attendance | SELECT | public | permissive | `(auth.uid() = user_id)` |  |
+| `attendance_settings` | Admins can manage settings | ALL | public | permissive | `has_role(auth.uid(), 'admin'::app_role)` |  |
+| `attendance_settings` | Everyone can view settings | SELECT | public | permissive | `true` |  |
+| `attendance_streaks` | Managers can view all streaks | SELECT | public | permissive | `(has_role(auth.uid(), 'admin'::app_role) OR has_role(auth.uid(), 'manager'::app_role))` |  |
+| `attendance_streaks` | Users can manage own streaks | ALL | public | permissive | `(auth.uid() = user_id)` |  |
+| `attendance_streaks` | Users can view own streaks | SELECT | public | permissive | `(auth.uid() = user_id)` |  |
+| `auction_admin_events` | auction_admin_events_admin_all | ALL | authenticated | permissive | `has_role(auth.uid(), 'admin'::app_role)` | `has_role(auth.uid(), 'admin'::app_role)` |
+| `auction_bids` | auction_bids_admin_all | ALL | authenticated | permissive | `has_role(auth.uid(), 'admin'::app_role)` | `has_role(auth.uid(), 'admin'::app_role)` |
+| `auction_bids` | auction_bids_user_own | ALL | authenticated | permissive | `(user_id = auth.uid())` | `(user_id = auth.uid())` |
+| `auctions` | auctions_admin_all | ALL | authenticated | permissive | `has_role(auth.uid(), 'admin'::app_role)` | `has_role(auth.uid(), 'admin'::app_role)` |
+| `auctions` | auctions_user_select | SELECT | authenticated | permissive | `((status <> 'draft'::text) OR has_role(auth.uid(), 'admin'::app_role))` |  |
+| `audit_logs` | Admins can view all audit logs | SELECT | public | permissive | `has_role(auth.uid(), 'admin'::app_role)` |  |
+| `audit_logs` | Authenticated insert audit logs | INSERT | authenticated | permissive |  | `(user_id = auth.uid())` |
+| `audit_logs` | Managers can view team audit logs | SELECT | public | permissive | `(has_role(auth.uid(), 'manager'::app_role) AND (EXISTS ( SELECT 1 FROM (team_members tm1 JOIN team_members tm2 ON ((tm1.department_id = tm2.department_id))) WHERE ((tm1.user_id = auth.uid()) AND (tm1.is_manager = true) AND (tm2.user_id = audit_logs.user_id)))))` |  |
+| `audit_logs` | Users can view own audit logs | SELECT | public | permissive | `(auth.uid() = user_id)` |  |
+| `avatar_items` | Admins can manage avatar items | ALL | public | permissive | `has_role(auth.uid(), 'admin'::app_role)` |  |
+| `avatar_items` | Everyone can view active avatar items | SELECT | public | permissive | `((is_active = true) OR has_role(auth.uid(), 'admin'::app_role))` |  |
+| `bingo_board_tasks` | bingo_board_tasks_admin_all | ALL | authenticated | permissive | `has_role(auth.uid(), 'admin'::app_role)` | `has_role(auth.uid(), 'admin'::app_role)` |
+| `bingo_board_tasks` | bingo_board_tasks_user_select | SELECT | authenticated | permissive | `true` |  |
+| `bingo_boards` | bingo_boards_admin_all | ALL | authenticated | permissive | `has_role(auth.uid(), 'admin'::app_role)` | `has_role(auth.uid(), 'admin'::app_role)` |
+| `bingo_boards` | bingo_boards_user_select | SELECT | authenticated | permissive | `(is_active OR has_role(auth.uid(), 'admin'::app_role))` |  |
+| `bingo_cards` | bingo_cards_admin_all | ALL | authenticated | permissive | `has_role(auth.uid(), 'admin'::app_role)` | `has_role(auth.uid(), 'admin'::app_role)` |
+| `bingo_cards` | bingo_cards_user_own | ALL | authenticated | permissive | `(user_id = auth.uid())` | `(user_id = auth.uid())` |
+| `bingo_marks` | bingo_marks_admin_select | SELECT | authenticated | permissive | `has_role(auth.uid(), 'admin'::app_role)` |  |
+| `bingo_marks` | bingo_marks_user_own | ALL | authenticated | permissive | `(user_id = auth.uid())` | `(user_id = auth.uid())` |
+| `bitrix24_sync_mappings` | Admins and managers can view sync mappings | SELECT | public | permissive | `(EXISTS ( SELECT 1 FROM user_roles WHERE ((user_roles.user_id = auth.uid()) AND (user_roles.role = ANY (ARRAY['admin'::app_role, 'manager'::app_role])))))` |  |
+| `bitrix24_sync_mappings` | Admins can manage sync mappings | ALL | public | permissive | `(EXISTS ( SELECT 1 FROM user_roles WHERE ((user_roles.user_id = auth.uid()) AND (user_roles.role = 'admin'::app_role))))` |  |
+| `bitrix24_tokens` | Admins can manage bitrix tokens | ALL | public | permissive | `(EXISTS ( SELECT 1 FROM user_roles WHERE ((user_roles.user_id = auth.uid()) AND (user_roles.role = 'admin'::app_role))))` |  |
+| `bitrix24_webhook_logs` | Admins can view webhook logs | SELECT | public | permissive | `(EXISTS ( SELECT 1 FROM user_roles WHERE ((user_roles.user_id = auth.uid()) AND (user_roles.role = 'admin'::app_role))))` |  |
+| `bitrix24_webhook_logs` | Authenticated insert webhook logs | INSERT | authenticated | permissive |  | `(auth.uid() IS NOT NULL)` |
+| `blocked_ips` | Admins can manage blocked_ips | ALL | authenticated | permissive | `has_role(auth.uid(), 'admin'::app_role)` | `has_role(auth.uid(), 'admin'::app_role)` |
+| `board_moves` | board_moves_admin_all | ALL | authenticated | permissive | `has_role(auth.uid(), 'admin'::app_role)` | `has_role(auth.uid(), 'admin'::app_role)` |
+| `board_moves` | board_moves_user_select | SELECT | authenticated | permissive | `((user_id = auth.uid()) OR has_role(auth.uid(), 'admin'::app_role))` |  |
+| `board_player_states` | board_player_states_admin_all | ALL | authenticated | permissive | `has_role(auth.uid(), 'admin'::app_role)` | `has_role(auth.uid(), 'admin'::app_role)` |
+| `board_player_states` | board_player_states_manager_select | SELECT | authenticated | permissive | `has_role(auth.uid(), 'manager'::app_role)` |  |
+| `board_player_states` | board_player_states_user_own | ALL | authenticated | permissive | `(user_id = auth.uid())` | `(user_id = auth.uid())` |
+| `board_tiles` | board_tiles_admin_all | ALL | authenticated | permissive | `has_role(auth.uid(), 'admin'::app_role)` | `has_role(auth.uid(), 'admin'::app_role)` |
+| `board_tiles` | board_tiles_user_select | SELECT | authenticated | permissive | `true` |  |
+| `board_trails` | board_trails_admin_all | ALL | authenticated | permissive | `has_role(auth.uid(), 'admin'::app_role)` | `has_role(auth.uid(), 'admin'::app_role)` |
+| `board_trails` | board_trails_user_select | SELECT | authenticated | permissive | `((status <> 'draft'::text) OR has_role(auth.uid(), 'admin'::app_role))` |  |
+| `boss_battle_damage` | boss_battle_damage_admin_all | ALL | authenticated | permissive | `has_role(auth.uid(), 'admin'::app_role)` | `has_role(auth.uid(), 'admin'::app_role)` |
+| `boss_battle_damage` | boss_battle_damage_user_select | SELECT | authenticated | permissive | `((user_id = auth.uid()) OR has_role(auth.uid(), 'admin'::app_role) OR has_role(auth.uid(), 'manager'::app_role))` |  |
+| `boss_battle_rewards` | boss_battle_rewards_admin_all | ALL | authenticated | permissive | `has_role(auth.uid(), 'admin'::app_role)` | `has_role(auth.uid(), 'admin'::app_role)` |
+| `boss_battle_rewards` | boss_battle_rewards_user_select | SELECT | authenticated | permissive | `((user_id = auth.uid()) OR has_role(auth.uid(), 'admin'::app_role))` |  |
+| `boss_battles` | boss_battles_admin_all | ALL | authenticated | permissive | `has_role(auth.uid(), 'admin'::app_role)` | `has_role(auth.uid(), 'admin'::app_role)` |
+| `boss_battles` | boss_battles_user_select | SELECT | authenticated | permissive | `((status <> 'draft'::text) OR has_role(auth.uid(), 'admin'::app_role))` |  |
+| `boss_win_rate_goals` | boss_win_rate_goals_admin_all | ALL | authenticated | permissive | `(has_role(auth.uid(), 'admin'::app_role) OR has_role(auth.uid(), 'manager'::app_role))` | `(has_role(auth.uid(), 'admin'::app_role) OR has_role(auth.uid(), 'manager'::app_role))` |
+| `boss_win_rate_goals` | boss_win_rate_goals_select | SELECT | authenticated | permissive | `true` |  |
+| `campaign_participants` | participants_delete_admin | DELETE | authenticated | permissive | `has_role(auth.uid(), 'admin'::app_role)` |  |
+| `campaign_participants` | participants_insert_self_or_admin | INSERT | authenticated | permissive |  | `((auth.uid() = user_id) OR has_role(auth.uid(), 'admin'::app_role) OR has_role(auth.uid(), 'manager'::app_role))` |
+| `campaign_participants` | participants_select_authenticated | SELECT | authenticated | permissive | `true` |  |
+| `campaign_participants` | participants_update_self_or_admin | UPDATE | authenticated | permissive | `((auth.uid() = user_id) OR has_role(auth.uid(), 'admin'::app_role) OR has_role(auth.uid(), 'manager'::app_role))` | `((auth.uid() = user_id) OR has_role(auth.uid(), 'admin'::app_role) OR has_role(auth.uid(), 'manager'::app_role))` |
+| `campaign_progress_events` | campaign_events_insert_self_or_admin | INSERT | authenticated | permissive |  | `((auth.uid() = user_id) OR has_role(auth.uid(), 'admin'::app_role) OR has_role(auth.uid(), 'manager'::app_role))` |
+| `campaign_progress_events` | campaign_events_select_authenticated | SELECT | authenticated | permissive | `true` |  |
+| `campaign_result_imports` | campaign_imports_admin_all | ALL | authenticated | permissive | `(has_role(auth.uid(), 'admin'::app_role) OR has_role(auth.uid(), 'manager'::app_role))` | `(has_role(auth.uid(), 'admin'::app_role) OR has_role(auth.uid(), 'manager'::app_role))` |
+| `campaign_result_imports` | campaign_imports_creator_select | SELECT | authenticated | permissive | `(created_by = auth.uid())` |  |
+| `campaign_result_rows` | campaign_result_rows_admin_all | ALL | authenticated | permissive | `(has_role(auth.uid(), 'admin'::app_role) OR has_role(auth.uid(), 'manager'::app_role))` | `(has_role(auth.uid(), 'admin'::app_role) OR has_role(auth.uid(), 'manager'::app_role))` |
+| `campaign_team_members` | campaign_team_members_admin_all | ALL | authenticated | permissive | `has_role(auth.uid(), 'admin'::app_role)` | `has_role(auth.uid(), 'admin'::app_role)` |
+| `campaign_team_members` | campaign_team_members_select | SELECT | authenticated | permissive | `true` |  |
+| `campaign_team_split_batches` | campaign_team_split_batches_admin_all | ALL | authenticated | permissive | `has_role(auth.uid(), 'admin'::app_role)` | `has_role(auth.uid(), 'admin'::app_role)` |
+| `campaign_team_split_entries` | campaign_team_split_entries_admin_all | ALL | authenticated | permissive | `has_role(auth.uid(), 'admin'::app_role)` | `has_role(auth.uid(), 'admin'::app_role)` |
+| `campaign_teams` | campaign_teams_admin_all | ALL | authenticated | permissive | `(has_role(auth.uid(), 'admin'::app_role) OR has_role(auth.uid(), 'manager'::app_role))` | `(has_role(auth.uid(), 'admin'::app_role) OR has_role(auth.uid(), 'manager'::app_role))` |
+| `campaign_teams` | campaign_teams_user_select | SELECT | authenticated | permissive | `true` |  |
+| `card_definitions` | card_definitions_admin_all | ALL | authenticated | permissive | `has_role(auth.uid(), 'admin'::app_role)` | `has_role(auth.uid(), 'admin'::app_role)` |
+| `card_definitions` | card_definitions_user_select | SELECT | authenticated | permissive | `((is_active = true) OR has_role(auth.uid(), 'admin'::app_role))` |  |
+| `card_packs` | card_packs_admin_all | ALL | authenticated | permissive | `has_role(auth.uid(), 'admin'::app_role)` | `has_role(auth.uid(), 'admin'::app_role)` |
+| `card_packs` | card_packs_user_select | SELECT | authenticated | permissive | `(user_id = auth.uid())` |  |
+| `card_set_claims` | card_set_claims_admin_all | ALL | authenticated | permissive | `has_role(auth.uid(), 'admin'::app_role)` | `has_role(auth.uid(), 'admin'::app_role)` |
+| `card_set_claims` | card_set_claims_user_own | ALL | authenticated | permissive | `(user_id = auth.uid())` | `(user_id = auth.uid())` |
+| `card_trades` | card_trades_admin_all | ALL | authenticated | permissive | `has_role(auth.uid(), 'admin'::app_role)` | `has_role(auth.uid(), 'admin'::app_role)` |
+| `card_trades` | card_trades_participants_select | SELECT | authenticated | permissive | `((proposer_id = auth.uid()) OR (responder_id = auth.uid()))` |  |
+| `card_trades` | card_trades_participants_update | UPDATE | authenticated | permissive | `((proposer_id = auth.uid()) OR (responder_id = auth.uid()))` |  |
+| `card_trades` | card_trades_proposer_insert | INSERT | authenticated | permissive |  | `(proposer_id = auth.uid())` |
+| `celebrations` | Authenticated create celebrations | INSERT | authenticated | permissive |  | `((user_id = auth.uid()) OR has_role(auth.uid(), 'admin'::app_role))` |
+| `celebrations` | Users can manage own celebrations | ALL | public | permissive | `(user_id = auth.uid())` |  |
+| `celebrations` | Users can view public celebrations | SELECT | public | permissive | `((is_public = true) OR (user_id = auth.uid()))` |  |
+| `certifications` | Admins can manage certifications | ALL | public | permissive | `has_role(auth.uid(), 'admin'::app_role)` |  |
+| `certifications` | Everyone can view certifications | SELECT | public | permissive | `true` |  |
+| `checkin_templates` | Everyone can view templates | SELECT | public | permissive | `true` |  |
+| `checkin_templates` | Managers can create templates | INSERT | public | permissive |  | `(has_role(auth.uid(), 'admin'::app_role) OR has_role(auth.uid(), 'manager'::app_role))` |
+| `checkin_templates` | Template owners can manage | ALL | public | permissive | `((created_by = auth.uid()) OR has_role(auth.uid(), 'admin'::app_role))` |  |
+| `checkins` | Admins can view all checkins | SELECT | public | permissive | `has_role(auth.uid(), 'admin'::app_role)` |  |
+| `checkins` | Managers can create checkins | INSERT | public | permissive |  | `(manager_id = auth.uid())` |
+| `checkins` | Participants can update checkins | UPDATE | public | permissive | `((manager_id = auth.uid()) OR (employee_id = auth.uid()))` |  |
+| `checkins` | Participants can view their checkins | SELECT | public | permissive | `((manager_id = auth.uid()) OR (employee_id = auth.uid()))` |  |
+| `climate_benchmarks` | Admins manage benchmarks | ALL | public | permissive | `has_role(auth.uid(), 'admin'::app_role)` |  |
 | `climate_benchmarks` | Everyone can view benchmarks | SELECT | public | permissive | `true` |  |
-| `climate_benchmarks` | Admins manage benchmarks | ALL | public | permissive | `has_role(auth.uid(), 'admin')` |  |
-| `opinions` | Users can create opinions | INSERT | public | permissive |  | `auth.uid() = sender_id` |
-| `opinions` | Recipients can update opinions | UPDATE | public | permissive | `recipient_id = auth.uid() OR (recipient_type = 'hr' AND has_role(auth.uid(), 'admin')) OR (recipient_type = 'manager' AND has_role(auth.uid(), 'manager')) OR has_role(auth.uid(), 'admin')` |  |
-| `action_plans` | View action plans | SELECT | public | permissive | `owner_id = auth.uid() OR reviewer_id = auth.uid() OR has_role(auth.uid(), 'admin') OR has_role(auth.uid(), 'manager')` |  |
-| `action_plans` | Managers create action plans | INSERT | public | permissive |  | `has_role(auth.uid(), 'admin') OR has_role(auth.uid(), 'manager')` |
-| `action_plans` | Owners update action plans | UPDATE | public | permissive | `owner_id = auth.uid() OR reviewer_id = auth.uid() OR has_role(auth.uid(), 'admin')` |  |
-| `action_plans` | Admins delete action plans | DELETE | public | permissive | `has_role(auth.uid(), 'admin') OR owner_id = auth.uid()` |  |
-| `action_plan_items` | View action plan items | SELECT | public | permissive | `EXISTS ( SELECT 1 FROM action_plans ap WHERE ap.id = plan_id AND (ap.owner_id = auth.uid() OR ap.reviewer_id = auth.uid() OR has_role(auth.uid(), 'admin') OR has_role(auth.uid(), 'manager')) )` |  |
-| `action_plan_items` | Manage action plan items | ALL | public | permissive | `EXISTS ( SELECT 1 FROM action_plans ap WHERE ap.id = plan_id AND (ap.owner_id = auth.uid() OR has_role(auth.uid(), 'admin')) )` |  |
-| `action_plan_updates` | View action plan updates | SELECT | public | permissive | `EXISTS ( SELECT 1 FROM action_plans ap WHERE ap.id = plan_id AND (ap.owner_id = auth.uid() OR ap.reviewer_id = auth.uid() OR has_role(auth.uid(), 'admin') OR has_role(auth.uid(), 'manager')) )` |  |
-| `action_plan_updates` | Create action plan updates | INSERT | public | permissive |  | `auth.uid() = user_id` |
-| `feedback_questions` | feedback_questions_select | SELECT | public | permissive | `true` |  |
-| `feedback_evaluations` | feedback_evaluations_select | SELECT | public | permissive | `auth.uid() = evaluator_id OR auth.uid() = evaluatee_id` |  |
-| `feedback_evaluations` | feedback_evaluations_update | UPDATE | public | permissive | `auth.uid() = evaluator_id` |  |
-| `feedback_results` | feedback_results_select | SELECT | public | permissive | `auth.uid() = user_id` |  |
-| `pdi_mentors` | pdi_mentors_select | SELECT | public | permissive | `auth.uid() = mentor_id OR EXISTS (SELECT 1 FROM public.development_plans dp WHERE dp.id = plan_id AND dp.user_id = auth.uid())` |  |
-| `pdi_checkins` | pdi_checkins_select | SELECT | public | permissive | `EXISTS (SELECT 1 FROM public.development_plans dp WHERE dp.id = plan_id AND dp.user_id = auth.uid())` |  |
-| `pdi_checkins` | pdi_checkins_insert | INSERT | public | permissive |  | `auth.uid() = created_by` |
-| `position_competencies` | position_competencies_select | SELECT | public | permissive | `true` |  |
-| `user_competency_assessments` | user_competency_assessments_select | SELECT | public | permissive | `auth.uid() = user_id OR auth.uid() = assessor_id` |  |
-| `permissions` | permissions_select | SELECT | public | permissive | `true` |  |
-| `roles` | roles_select | SELECT | public | permissive | `true` |  |
-| `role_permissions` | role_permissions_select | SELECT | public | permissive | `true` |  |
-| `notification_templates` | notification_templates_select | SELECT | public | permissive | `is_active = true` |  |
-| `password_reset_requests` | Users can view own password reset requests | SELECT | public | permissive | `auth.uid() = user_id` |  |
-| `password_reset_requests` | Managers can view team password reset requests | SELECT | public | permissive | `EXISTS ( SELECT 1 FROM public.team_members tm1 JOIN public.team_members tm2 ON tm1.department_id = tm2.department_id WHERE tm1.user_id = auth.uid() AND tm1.is_manager = true AND tm2.user_id = password_reset_requests.user_id ) OR public.has_role(auth.uid(), 'admin')` |  |
-| `password_reset_requests` | Users can create own password reset requests | INSERT | public | permissive |  | `auth.uid() = user_id` |
-| `password_reset_requests` | Managers can update team password reset requests | UPDATE | public | permissive | `EXISTS ( SELECT 1 FROM public.team_members tm1 JOIN public.team_members tm2 ON tm1.department_id = tm2.department_id WHERE tm1.user_id = auth.uid() AND tm1.is_manager = true AND tm2.user_id = password_reset_requests.user_id ) OR public.has_role(auth.uid(), 'admin')` |  |
-| `user_two_factor` | Users can view their own 2FA settings | SELECT | authenticated | permissive | `auth.uid() = user_id` |  |
-| `user_two_factor` | Users can insert their own 2FA settings | INSERT | authenticated | permissive |  | `auth.uid() = user_id` |
-| `user_two_factor` | Users can update their own 2FA settings | UPDATE | authenticated | permissive | `auth.uid() = user_id` |  |
-| `rate_limit_logs` | Admins can view rate limit logs | SELECT | authenticated | permissive | `public.has_role(auth.uid(), 'admin')` |  |
-| `blocked_ips` | Admins can manage blocked IPs | ALL | authenticated | permissive | `public.has_role(auth.uid(), 'admin')` | `public.has_role(auth.uid(), 'admin')` |
-| `session_logs` | Users can view own sessions | SELECT | authenticated | permissive | `user_id = auth.uid() OR public.has_role(auth.uid(), 'admin')` |  |
-| `session_logs` | Users can update own sessions | UPDATE | authenticated | permissive | `user_id = auth.uid()` |  |
-| `login_attempts` | Admins can view login attempts | SELECT | authenticated | permissive | `public.has_role(auth.uid(), 'admin')` |  |
-| `security_alerts` | Admins can manage security alerts | ALL | authenticated | permissive | `public.has_role(auth.uid(), 'admin')` | `public.has_role(auth.uid(), 'admin')` |
-| `rate_limit_rules` | Admins can manage rate limit rules | ALL | authenticated | permissive | `public.has_role(auth.uid(), 'admin')` | `public.has_role(auth.uid(), 'admin')` |
-| `user_devices` | Users can view their own devices | SELECT | public | permissive | `auth.uid() = user_id` |  |
-| `user_devices` | Users can update their own devices | UPDATE | public | permissive | `auth.uid() = user_id` |  |
-| `new_device_alerts` | Users can view their own alerts | SELECT | public | permissive | `auth.uid() = user_id` |  |
-| `new_device_alerts` | Users can update their own alerts | UPDATE | public | permissive | `auth.uid() = user_id` |  |
-| `webauthn_credentials` | Users can view their own credentials | SELECT | public | permissive | `auth.uid() = user_id` |  |
-| `webauthn_credentials` | Users can insert their own credentials | INSERT | public | permissive |  | `auth.uid() = user_id` |
-| `webauthn_credentials` | Users can update their own credentials | UPDATE | public | permissive | `auth.uid() = user_id` |  |
-| `webauthn_credentials` | Users can delete their own credentials | DELETE | public | permissive | `auth.uid() = user_id` |  |
-| `permissions` | Admins can manage permissions | ALL | public | permissive | `has_role(auth.uid(), 'admin'::app_role)` |  |
-| `role_permissions` | Admins can manage role permissions | ALL | public | permissive | `has_role(auth.uid(), 'admin'::app_role)` |  |
-| `geo_allowed_countries` | Admins can manage allowed countries | ALL | public | permissive | `EXISTS ( SELECT 1 FROM public.user_roles ur WHERE ur.user_id = auth.uid() AND ur.role = 'admin'::app_role )` |  |
-| `geo_settings` | Admins can manage geo settings | ALL | public | permissive | `EXISTS ( SELECT 1 FROM public.user_roles ur WHERE ur.user_id = auth.uid() AND ur.role = 'admin'::app_role )` |  |
-| `task_scores` | Users can view own task scores | SELECT | authenticated | permissive | `user_id = auth.uid() OR has_role(auth.uid(), 'manager'::app_role) OR has_role(auth.uid(), 'admin'::app_role)` |  |
-| `task_scores` | Admins can manage task scores | ALL | authenticated | permissive | `has_role(auth.uid(), 'admin'::app_role) OR has_role(auth.uid(), 'manager'::app_role)` | `has_role(auth.uid(), 'admin'::app_role) OR has_role(auth.uid(), 'manager'::app_role)` |
+| `climate_survey_questions` | Managers can add survey questions | INSERT | public | permissive |  | `(EXISTS ( SELECT 1 FROM climate_surveys s WHERE ((s.id = climate_survey_questions.survey_id) AND ((s.created_by = auth.uid()) OR has_role(auth.uid(), 'admin'::app_role)))))` |
+| `climate_survey_questions` | Managers can delete draft survey questions | DELETE | public | permissive | `(EXISTS ( SELECT 1 FROM climate_surveys s WHERE ((s.id = climate_survey_questions.survey_id) AND (s.status = 'draft'::text) AND ((s.created_by = auth.uid()) OR has_role(auth.uid(), 'admin'::app_role)))))` |  |
+| `climate_survey_questions` | Managers can update survey questions | UPDATE | public | permissive | `(EXISTS ( SELECT 1 FROM climate_surveys s WHERE ((s.id = climate_survey_questions.survey_id) AND ((s.created_by = auth.uid()) OR has_role(auth.uid(), 'admin'::app_role)))))` |  |
+| `competencies` | Admins can manage competencies | ALL | public | permissive | `has_role(auth.uid(), 'admin'::app_role)` |  |
+| `competencies` | Everyone can view competencies | SELECT | public | permissive | `true` |  |
+| `custom_badges` | Admins can manage badges | ALL | public | permissive | `has_role(auth.uid(), 'admin'::app_role)` |  |
+| `custom_badges` | Everyone can view active badges | SELECT | public | permissive | `((is_active = true) OR has_role(auth.uid(), 'admin'::app_role))` |  |
+| `custom_quests` | Everyone can view active quests | SELECT | public | permissive | `((status = 'active'::quest_status) OR (created_by = auth.uid()) OR has_role(auth.uid(), 'admin'::app_role))` |  |
+| `custom_quests` | Managers and admins can create quests | INSERT | public | permissive |  | `(has_role(auth.uid(), 'admin'::app_role) OR has_role(auth.uid(), 'manager'::app_role))` |
+| `custom_quests` | Managers and admins can delete their quests | DELETE | public | permissive | `((created_by = auth.uid()) OR has_role(auth.uid(), 'admin'::app_role))` |  |
+| `custom_quests` | Managers and admins can update their quests | UPDATE | public | permissive | `((created_by = auth.uid()) OR has_role(auth.uid(), 'admin'::app_role))` |  |
+| `custom_ranks` | Admins can manage ranks | ALL | public | permissive | `has_role(auth.uid(), 'admin'::app_role)` |  |
+| `custom_ranks` | Everyone can view ranks | SELECT | public | permissive | `true` |  |
+| `custom_titles` | Admins can manage titles | ALL | public | permissive | `has_role(auth.uid(), 'admin'::app_role)` |  |
+| `custom_titles` | Everyone can view active titles | SELECT | public | permissive | `((is_active = true) OR has_role(auth.uid(), 'admin'::app_role))` |  |
+| `demographic_attributes` | Admins can manage demographic attributes | ALL | public | permissive | `has_role(auth.uid(), 'admin'::app_role)` |  |
+| `demographic_attributes` | Everyone can view active demographic attributes | SELECT | public | permissive | `((is_active = true) OR has_role(auth.uid(), 'admin'::app_role))` |  |
+| `department_missions` | Admins can manage missions | ALL | public | permissive | `has_role(auth.uid(), 'admin'::app_role)` |  |
+| `department_missions` | Everyone can view active missions | SELECT | public | permissive | `((is_active = true) OR has_role(auth.uid(), 'admin'::app_role))` |  |
+| `department_rankings` | Everyone can view rankings | SELECT | public | permissive | `true` |  |
+| `department_rankings` | System can manage rankings | ALL | public | permissive | `has_role(auth.uid(), 'admin'::app_role)` |  |
+| `department_war_contributions` | department_war_contributions_admin_all | ALL | authenticated | permissive | `has_role(auth.uid(), 'admin'::app_role)` | `has_role(auth.uid(), 'admin'::app_role)` |
+| `department_war_contributions` | department_war_contributions_user_select | SELECT | authenticated | permissive | `((user_id = auth.uid()) OR has_role(auth.uid(), 'admin'::app_role) OR has_role(auth.uid(), 'manager'::app_role))` |  |
+| `department_war_departments` | dept_war_departments_admin_all | ALL | authenticated | permissive | `has_role(auth.uid(), 'admin'::app_role)` | `has_role(auth.uid(), 'admin'::app_role)` |
+| `department_war_departments` | dept_war_departments_select | SELECT | authenticated | permissive | `true` |  |
+| `department_war_metrics` | department_war_metrics_admin_all | ALL | authenticated | permissive | `has_role(auth.uid(), 'admin'::app_role)` | `has_role(auth.uid(), 'admin'::app_role)` |
+| `department_war_metrics` | department_war_metrics_user_select | SELECT | authenticated | permissive | `true` |  |
+| `department_war_results` | dept_war_results_admin_all | ALL | authenticated | permissive | `has_role(auth.uid(), 'admin'::app_role)` | `has_role(auth.uid(), 'admin'::app_role)` |
+| `department_war_results` | dept_war_results_select | SELECT | authenticated | permissive | `(EXISTS ( SELECT 1 FROM department_wars dw WHERE ((dw.id = department_war_results.war_id) AND (dw.status <> 'draft'::text))))` |  |
+| `department_wars` | department_wars_admin_all | ALL | authenticated | permissive | `has_role(auth.uid(), 'admin'::app_role)` | `has_role(auth.uid(), 'admin'::app_role)` |
+| `department_wars` | department_wars_user_select | SELECT | authenticated | permissive | `((status <> 'draft'::text) OR has_role(auth.uid(), 'admin'::app_role))` |  |
+| `departments` | Admins can manage departments | ALL | public | permissive | `has_role(auth.uid(), 'admin'::app_role)` |  |
+| `departments` | Everyone can view departments | SELECT | public | permissive | `true` |  |
+| `development_plan_actions` | Admins can view all plan actions | SELECT | public | permissive | `has_role(auth.uid(), 'admin'::app_role)` |  |
+| `development_plan_actions` | Users can create plan actions | INSERT | public | permissive |  | `(EXISTS ( SELECT 1 FROM development_plans dp WHERE ((dp.id = development_plan_actions.plan_id) AND ((dp.user_id = auth.uid()) OR (dp.created_by = auth.uid())))))` |
+| `development_plan_actions` | Users can delete plan actions | DELETE | public | permissive | `((EXISTS ( SELECT 1 FROM development_plans dp WHERE ((dp.id = development_plan_actions.plan_id) AND ((dp.user_id = auth.uid()) OR (dp.created_by = auth.uid()))))) OR has_role(auth.uid(), 'admin'::app_role))` |  |
+| `development_plan_actions` | Users can update plan actions | UPDATE | public | permissive | `((EXISTS ( SELECT 1 FROM development_plans dp WHERE ((dp.id = development_plan_actions.plan_id) AND ((dp.user_id = auth.uid()) OR (dp.created_by = auth.uid()))))) OR has_role(auth.uid(), 'admin'::app_role))` |  |
+| `development_plan_actions` | Users can view their plan actions | SELECT | public | permissive | `(EXISTS ( SELECT 1 FROM development_plans dp WHERE ((dp.id = development_plan_actions.plan_id) AND ((dp.user_id = auth.uid()) OR (dp.created_by = auth.uid())))))` |  |
+| `development_plans` | Admins can view all development plans | SELECT | public | permissive | `has_role(auth.uid(), 'admin'::app_role)` |  |
+| `development_plans` | Managers can view team development plans | SELECT | public | permissive | `(EXISTS ( SELECT 1 FROM (team_members tm1 JOIN team_members tm2 ON ((tm1.department_id = tm2.department_id))) WHERE ((tm1.user_id = auth.uid()) AND (tm1.is_manager = true) AND (tm2.user_id = development_plans.user_id))))` |  |
+| `development_plans` | Users and managers can update development plans | UPDATE | public | permissive | `((auth.uid() = user_id) OR (auth.uid() = created_by) OR has_role(auth.uid(), 'admin'::app_role))` |  |
+| `development_plans` | Users can create their own development plans | INSERT | public | permissive |  | `((auth.uid() = user_id) OR (auth.uid() = created_by))` |
+| `development_plans` | Users can view their own development plans | SELECT | public | permissive | `(auth.uid() = user_id)` |  |
+| `direct_duels` | Users can create duels | INSERT | public | permissive |  | `(auth.uid() = challenger_id)` |
+| `direct_duels` | Users can update their duels | UPDATE | public | permissive | `((auth.uid() = challenger_id) OR (auth.uid() = opponent_id))` |  |
+| `direct_duels` | Users can view their duels | SELECT | public | permissive | `((auth.uid() = challenger_id) OR (auth.uid() = opponent_id))` |  |
+| `engagement_action_playbooks` | engagement_action_playbooks_admin_all | ALL | authenticated | permissive | `has_role(auth.uid(), 'admin'::app_role)` | `has_role(auth.uid(), 'admin'::app_role)` |
+| `engagement_action_playbooks` | engagement_action_playbooks_manager_select | SELECT | authenticated | permissive | `(is_active OR has_role(auth.uid(), 'admin'::app_role))` |  |
+| `engagement_answers` | engagement_answers_admin_all | ALL | authenticated | permissive | `has_role(auth.uid(), 'admin'::app_role)` | `has_role(auth.uid(), 'admin'::app_role)` |
+| `engagement_answers` | engagement_answers_manager_select | SELECT | authenticated | permissive | `has_role(auth.uid(), 'manager'::app_role)` |  |
+| `engagement_answers` | engagement_answers_user_insert | INSERT | authenticated | permissive |  | `(user_id = auth.uid())` |
+| `engagement_answers` | engagement_answers_user_select_own | SELECT | authenticated | permissive | `((user_id = auth.uid()) AND (NOT is_anonymous))` |  |
+| `engagement_cycles` | engagement_cycles_admin_all | ALL | authenticated | permissive | `has_role(auth.uid(), 'admin'::app_role)` | `has_role(auth.uid(), 'admin'::app_role)` |
+| `engagement_cycles` | engagement_cycles_user_select | SELECT | authenticated | permissive | `((status = 'active'::engagement_cycle_status) OR has_role(auth.uid(), 'admin'::app_role) OR has_role(auth.uid(), 'manager'::app_role))` |  |
+| `engagement_factors` | engagement_factors_admin_all | ALL | authenticated | permissive | `has_role(auth.uid(), 'admin'::app_role)` | `has_role(auth.uid(), 'admin'::app_role)` |
+| `engagement_factors` | engagement_factors_user_select | SELECT | authenticated | permissive | `true` |  |
+| `engagement_question_assignments` | engagement_question_assignments_admin_all | ALL | authenticated | permissive | `has_role(auth.uid(), 'admin'::app_role)` | `has_role(auth.uid(), 'admin'::app_role)` |
+| `engagement_question_assignments` | engagement_question_assignments_user_own | SELECT | authenticated | permissive | `(user_id = auth.uid())` |  |
+| `engagement_question_pool` | engagement_question_pool_admin_all | ALL | authenticated | permissive | `has_role(auth.uid(), 'admin'::app_role)` | `has_role(auth.uid(), 'admin'::app_role)` |
+| `engagement_question_pool` | engagement_question_pool_user_select | SELECT | authenticated | permissive | `true` |  |
+| `engagement_snapshots` | Admins can manage snapshots | ALL | public | permissive | `has_role(auth.uid(), 'admin'::app_role)` |  |
+| `engagement_snapshots` | Managers can view department snapshots | SELECT | public | permissive | `(EXISTS ( SELECT 1 FROM team_members tm WHERE ((tm.user_id = auth.uid()) AND (tm.is_manager = true) AND ((engagement_snapshots.department_id IS NULL) OR (tm.department_id = engagement_snapshots.department_id)))))` |  |
+| `enps_responses` | Admins can view all responses | SELECT | public | permissive | `has_role(auth.uid(), 'admin'::app_role)` |  |
+| `enps_responses` | Users can submit their responses | INSERT | public | permissive |  | `(auth.uid() = user_id)` |
+| `enps_responses` | Users can view their own responses | SELECT | public | permissive | `(auth.uid() = user_id)` |  |
+| `enps_surveys` | Admins can manage surveys | ALL | public | permissive | `has_role(auth.uid(), 'admin'::app_role)` |  |
+| `enps_surveys` | Everyone can view active surveys | SELECT | public | permissive | `((status = 'active'::text) OR has_role(auth.uid(), 'admin'::app_role))` |  |
+| `entity_versions` | Users can insert versions | INSERT | public | permissive |  | `((auth.uid() = changed_by) OR (changed_by IS NULL))` |
+| `entity_versions` | Users can view versions | SELECT | authenticated | permissive | `((changed_by = auth.uid()) OR has_role(auth.uid(), 'admin'::app_role))` |  |
+| `executive_monthly_reports` | Admins manage monthly reports | ALL | authenticated | permissive | `has_role(auth.uid(), 'admin'::app_role)` | `has_role(auth.uid(), 'admin'::app_role)` |
+| `executive_monthly_reports` | Admins read monthly reports | SELECT | authenticated | permissive | `has_role(auth.uid(), 'admin'::app_role)` |  |
+| `external_api_keys` | Admins can manage API keys | ALL | public | permissive | `has_role(auth.uid(), 'admin'::app_role)` |  |
 | `external_tasks` | Admins manage external tasks | ALL | authenticated | permissive | `has_role(auth.uid(), 'admin'::app_role)` | `has_role(auth.uid(), 'admin'::app_role)` |
-| `position_competencies` | Admins manage position competencies | ALL | authenticated | permissive | `has_role(auth.uid(), 'admin'::app_role)` | `has_role(auth.uid(), 'admin'::app_role)` |
-| `feedback_evaluations` | Users insert own evaluations | INSERT | authenticated | permissive |  | `evaluator_id = auth.uid()` |
-| `feedback_results` | Managers insert feedback results | INSERT | authenticated | permissive |  | `has_role(auth.uid(), 'manager'::app_role) OR has_role(auth.uid(), 'admin'::app_role)` |
-| `pdi_mentors` | Managers assign PDI mentors | INSERT | authenticated | permissive |  | `has_role(auth.uid(), 'manager'::app_role) OR has_role(auth.uid(), 'admin'::app_role)` |
-| … +229 linhas — lista completa em `context.json` | | | | | | |
+| `external_tasks` | Users can view own external tasks | SELECT | public | permissive | `(user_id = auth.uid())` |  |
+| `feedback_cycles` | Everyone can view active cycles | SELECT | public | permissive | `((status = ANY (ARRAY['active'::text, 'review'::text, 'completed'::text])) OR (created_by = auth.uid()) OR has_role(auth.uid(), 'admin'::app_role))` |  |
+| `feedback_cycles` | Managers can manage cycles | ALL | public | permissive | `(has_role(auth.uid(), 'admin'::app_role) OR has_role(auth.uid(), 'manager'::app_role))` |  |
+| `feedback_evaluations` | Users insert own evaluations | INSERT | authenticated | permissive |  | `(evaluator_id = auth.uid())` |
+| `feedback_evaluations` | feedback_evaluations_select | SELECT | public | permissive | `((auth.uid() = evaluator_id) OR (auth.uid() = evaluatee_id))` |  |
+| `feedback_evaluations` | feedback_evaluations_update | UPDATE | public | permissive | `(auth.uid() = evaluator_id)` |  |
+| `feedback_questions` | feedback_questions_select | SELECT | public | permissive | `true` |  |
+| `feedback_requests` | Admins can view all requests | SELECT | public | permissive | `has_role(auth.uid(), 'admin'::app_role)` |  |
+| `feedback_requests` | Managers can create requests | INSERT | public | permissive |  | `(has_role(auth.uid(), 'admin'::app_role) OR has_role(auth.uid(), 'manager'::app_role))` |
+| `feedback_requests` | Users can update their requests | UPDATE | public | permissive | `(from_user_id = auth.uid())` |  |
+| `feedback_requests` | Users can view their feedback requests | SELECT | public | permissive | `((from_user_id = auth.uid()) OR (to_user_id = auth.uid()))` |  |
+| `feedback_responses` | Admins can view all responses | SELECT | public | permissive | `has_role(auth.uid(), 'admin'::app_role)` |  |
+| `feedback_responses` | Receivers can view non-anonymous feedback | SELECT | public | permissive | `((is_anonymous = false) AND (EXISTS ( SELECT 1 FROM feedback_requests r WHERE ((r.id = feedback_responses.request_id) AND (r.to_user_id = auth.uid())))))` |  |
+| `feedback_responses` | Submitters can create responses | INSERT | public | permissive |  | `(EXISTS ( SELECT 1 FROM feedback_requests r WHERE ((r.id = feedback_responses.request_id) AND (r.from_user_id = auth.uid()))))` |
+| `feedback_responses` | Submitters can view own responses | SELECT | public | permissive | `(EXISTS ( SELECT 1 FROM feedback_requests r WHERE ((r.id = feedback_responses.request_id) AND (r.from_user_id = auth.uid()))))` |  |
+| `feedback_results` | Managers insert feedback results | INSERT | authenticated | permissive |  | `(has_role(auth.uid(), 'manager'::app_role) OR has_role(auth.uid(), 'admin'::app_role))` |
+| `feedback_results` | feedback_results_select | SELECT | public | permissive | `(auth.uid() = user_id)` |  |
+| `gamification_themes` | Admins can manage themes | ALL | public | permissive | `has_role(auth.uid(), 'admin'::app_role)` |  |
+| `gamification_themes` | Everyone can view active themes | SELECT | public | permissive | `((is_active = true) OR has_role(auth.uid(), 'admin'::app_role))` |  |
+| `geo_access_logs` | Admins podem ver logs de acesso geográfico | SELECT | public | permissive | `has_role(auth.uid(), 'admin'::app_role)` |  |
+| `geo_access_logs` | Authenticated insert geo logs | INSERT | authenticated | permissive |  | `(auth.uid() IS NOT NULL)` |
+| `geo_allowed_countries` | Admins can manage allowed countries | ALL | public | permissive | `(EXISTS ( SELECT 1 FROM user_roles ur WHERE ((ur.user_id = auth.uid()) AND (ur.role = 'admin'::app_role))))` |  |
+| `geo_allowed_countries` | Everyone can view allowed countries | SELECT | public | permissive | `true` |  |
+| `geo_blocking_rules` | Admins podem gerenciar regras de geo blocking | ALL | public | permissive | `has_role(auth.uid(), 'admin'::app_role)` |  |
+| `geo_blocking_rules` | Todos podem ver regras de geo blocking | SELECT | public | permissive | `true` |  |
+| `geo_settings` | Admins can manage geo settings | ALL | public | permissive | `(EXISTS ( SELECT 1 FROM user_roles ur WHERE ((ur.user_id = auth.uid()) AND (ur.role = 'admin'::app_role))))` |  |
+| `geo_settings` | Everyone can view geo settings | SELECT | public | permissive | `true` |  |
+| `goal_templates` | goal_templates_delete | DELETE | authenticated | permissive | `(EXISTS ( SELECT 1 FROM user_roles ur WHERE ((ur.user_id = auth.uid()) AND (ur.role = 'admin'::app_role))))` |  |
+| `goal_templates` | goal_templates_insert | INSERT | authenticated | permissive |  | `(EXISTS ( SELECT 1 FROM user_roles ur WHERE ((ur.user_id = auth.uid()) AND (ur.role = 'admin'::app_role))))` |
+| `goal_templates` | goal_templates_select | SELECT | authenticated | permissive | `true` |  |
+| `goal_templates` | goal_templates_update | UPDATE | authenticated | permissive | `(EXISTS ( SELECT 1 FROM user_roles ur WHERE ((ur.user_id = auth.uid()) AND (ur.role = 'admin'::app_role))))` | `(EXISTS ( SELECT 1 FROM user_roles ur WHERE ((ur.user_id = auth.uid()) AND (ur.role = 'admin'::app_role))))` |
+| `goal_updates` | Goal owners and admins can view goal updates | SELECT | authenticated | permissive | `(EXISTS ( SELECT 1 FROM goals g WHERE ((g.id = goal_updates.goal_id) AND ((g.user_id = auth.uid()) OR has_role(auth.uid(), 'admin'::app_role)))))` |  |
+| `goal_updates` | Goal owners can insert updates | INSERT | public | permissive |  | `(EXISTS ( SELECT 1 FROM goals g WHERE ((g.id = goal_updates.goal_id) AND ((g.user_id = auth.uid()) OR has_role(auth.uid(), 'admin'::app_role)))))` |
+| `goals` | Managers can manage team goals | ALL | public | permissive | `(has_role(auth.uid(), 'admin'::app_role) OR has_role(auth.uid(), 'manager'::app_role))` |  |
+| `goals` | Users can create own goals | INSERT | public | permissive |  | `(user_id = auth.uid())` |
+| `goals` | Users can delete own draft goals | DELETE | public | permissive | `((user_id = auth.uid()) AND (status = 'draft'::text))` |  |
+| `goals` | Users can update own goals | UPDATE | public | permissive | `(user_id = auth.uid())` |  |
+| `goals` | Users can view company goals | SELECT | public | permissive | `(goal_type = 'company'::text)` |  |
+| `goals` | Users can view own goals | SELECT | public | permissive | `(user_id = auth.uid())` |  |
+| `goals` | Users can view team goals | SELECT | public | permissive | `((goal_type = 'team'::text) AND (department_id IN ( SELECT team_members.department_id FROM team_members WHERE (team_members.user_id = auth.uid()))))` |  |
+| `ip_access_logs` | Admins can view IP access logs | SELECT | authenticated | permissive | `has_role(auth.uid(), 'admin'::app_role)` |  |
+| `ip_whitelist` | Admins can delete IP whitelist | DELETE | authenticated | permissive | `has_role(auth.uid(), 'admin'::app_role)` |  |
+| `ip_whitelist` | Admins can insert IP whitelist | INSERT | authenticated | permissive |  | `has_role(auth.uid(), 'admin'::app_role)` |
+| `ip_whitelist` | Admins can update IP whitelist | UPDATE | authenticated | permissive | `has_role(auth.uid(), 'admin'::app_role)` |  |
+| `ip_whitelist` | Admins can view IP whitelist | SELECT | authenticated | permissive | `has_role(auth.uid(), 'admin'::app_role)` |  |
+| `key_results` | Goal owners and admins can view key results | SELECT | authenticated | permissive | `(EXISTS ( SELECT 1 FROM goals g WHERE ((g.id = key_results.goal_id) AND ((g.user_id = auth.uid()) OR has_role(auth.uid(), 'admin'::app_role)))))` |  |
+| `key_results` | Goal owners can manage key results | ALL | public | permissive | `(EXISTS ( SELECT 1 FROM goals g WHERE ((g.id = key_results.goal_id) AND ((g.user_id = auth.uid()) OR has_role(auth.uid(), 'admin'::app_role)))))` |  |
+| `kudos` | Authenticated users can give kudos | INSERT | public | permissive |  | `(auth.uid() = from_user_id)` |
+| `kudos` | Public kudos are viewable by all | SELECT | public | permissive | `((is_public = true) OR (from_user_id = auth.uid()) OR (to_user_id = auth.uid()))` |  |
+| `kudos` | Users can delete kudos they gave | DELETE | public | permissive | `(auth.uid() = from_user_id)` |  |
+| `kudos_badges` | Admins can manage badges | ALL | public | permissive | `has_role(auth.uid(), 'admin'::app_role)` |  |
+| `kudos_badges` | Everyone can view badges | SELECT | public | permissive | `true` |  |
+| `league_history` | Authenticated insert league history | INSERT | authenticated | permissive |  | `has_role(auth.uid(), 'admin'::app_role)` |
+| `league_history` | Everyone can view league history | SELECT | authenticated | permissive | `true` |  |
+| `leagues` | Admins can manage leagues | ALL | public | permissive | `has_role(auth.uid(), 'admin'::app_role)` |  |
+| `leagues` | Everyone can view leagues | SELECT | public | permissive | `true` |  |
+| `learning_trails` | Creators and admins can delete trails | DELETE | public | permissive | `((created_by = auth.uid()) OR has_role(auth.uid(), 'admin'::app_role))` |  |
+| `learning_trails` | Creators and admins can update trails | UPDATE | public | permissive | `((created_by = auth.uid()) OR has_role(auth.uid(), 'admin'::app_role))` |  |
+| `learning_trails` | Everyone can view published trails | SELECT | public | permissive | `((status = 'published'::trail_status) OR (created_by = auth.uid()) OR has_role(auth.uid(), 'admin'::app_role))` |  |
+| `learning_trails` | Managers and admins can create trails | INSERT | public | permissive |  | `(has_role(auth.uid(), 'admin'::app_role) OR has_role(auth.uid(), 'manager'::app_role))` |
+| `level_configs` | Admins can manage level configs | ALL | public | permissive | `has_role(auth.uid(), 'admin'::app_role)` |  |
+| `level_configs` | Everyone can view level configs | SELECT | public | permissive | `true` |  |
+| `lightning_quiz_answers` | lightning_quiz_answers_admin_all | ALL | authenticated | permissive | `has_role(auth.uid(), 'admin'::app_role)` | `has_role(auth.uid(), 'admin'::app_role)` |
+| `lightning_quiz_answers` | lightning_quiz_answers_admin_select | SELECT | authenticated | permissive | `has_role(auth.uid(), 'admin'::app_role)` |  |
+| `lightning_quiz_answers` | lightning_quiz_answers_user_select | SELECT | authenticated | permissive | `(user_id = auth.uid())` |  |
+| `lightning_quiz_questions` | lightning_quiz_questions_admin_all | ALL | authenticated | permissive | `has_role(auth.uid(), 'admin'::app_role)` | `has_role(auth.uid(), 'admin'::app_role)` |
+| `lightning_quiz_questions` | lightning_quiz_questions_user_select | SELECT | authenticated | permissive | `(is_active OR has_role(auth.uid(), 'admin'::app_role))` |  |
+| `lightning_quiz_sessions` | lightning_quiz_sessions_admin_all | ALL | authenticated | permissive | `has_role(auth.uid(), 'admin'::app_role)` | `has_role(auth.uid(), 'admin'::app_role)` |
+| `lightning_quiz_sessions` | lightning_quiz_sessions_user_own | ALL | authenticated | permissive | `(user_id = auth.uid())` | `(user_id = auth.uid())` |
+| `login_attempts` | Admins can view login attempts | SELECT | authenticated | permissive | `has_role(auth.uid(), 'admin'::app_role)` |  |
+| `lucky_wheel_payout_snapshots` | lucky_wheel_payout_snapshots_admin_all | ALL | authenticated | permissive | `has_role(auth.uid(), 'admin'::app_role)` | `has_role(auth.uid(), 'admin'::app_role)` |
+| `lucky_wheel_prize_audit` | lucky_wheel_prize_audit_admin_select | SELECT | authenticated | permissive | `has_role(auth.uid(), 'admin'::app_role)` |  |
+| `lucky_wheel_prizes` | lucky_wheel_prizes_admin_all | ALL | authenticated | permissive | `has_role(auth.uid(), 'admin'::app_role)` | `has_role(auth.uid(), 'admin'::app_role)` |
+| `lucky_wheel_prizes` | lucky_wheel_prizes_user_select | SELECT | authenticated | permissive | `((is_active = true) OR has_role(auth.uid(), 'admin'::app_role))` |  |
+| `lucky_wheel_settings` | lucky_wheel_settings_admin_all | ALL | authenticated | permissive | `has_role(auth.uid(), 'admin'::app_role)` | `has_role(auth.uid(), 'admin'::app_role)` |
+| `lucky_wheel_settings_audit` | lucky_wheel_settings_audit_admin_all | ALL | authenticated | permissive | `has_role(auth.uid(), 'admin'::app_role)` | `has_role(auth.uid(), 'admin'::app_role)` |
+| `lucky_wheel_spins` | lucky_wheel_spins_admin_all | ALL | authenticated | permissive | `has_role(auth.uid(), 'admin'::app_role)` | `has_role(auth.uid(), 'admin'::app_role)` |
+| `lucky_wheel_spins` | lucky_wheel_spins_user_select | SELECT | authenticated | permissive | `((user_id = auth.uid()) OR has_role(auth.uid(), 'admin'::app_role))` |  |
+| `lucky_wheel_whatif_snapshots` | lucky_wheel_whatif_snapshots_admin_all | ALL | authenticated | permissive | `has_role(auth.uid(), 'admin'::app_role)` | `has_role(auth.uid(), 'admin'::app_role)` |
+| `memory_decks` | memory_decks_admin_all | ALL | authenticated | permissive | `has_role(auth.uid(), 'admin'::app_role)` | `has_role(auth.uid(), 'admin'::app_role)` |
+| `memory_decks` | memory_decks_user_select | SELECT | authenticated | permissive | `(is_active OR has_role(auth.uid(), 'admin'::app_role))` |  |
+| `memory_pairs` | memory_pairs_admin_all | ALL | authenticated | permissive | `has_role(auth.uid(), 'admin'::app_role)` | `has_role(auth.uid(), 'admin'::app_role)` |
+| `memory_pairs` | memory_pairs_user_select | SELECT | authenticated | permissive | `true` |  |
+| `memory_sessions` | memory_sessions_admin_all | ALL | authenticated | permissive | `has_role(auth.uid(), 'admin'::app_role)` | `has_role(auth.uid(), 'admin'::app_role)` |
+| `memory_sessions` | memory_sessions_user_own | ALL | authenticated | permissive | `(user_id = auth.uid())` | `(user_id = auth.uid())` |
+| `mentorship_mission_progress` | Users can insert progress for their pairs | INSERT | public | permissive |  | `(EXISTS ( SELECT 1 FROM mentorship_pairs mp WHERE ((mp.id = mentorship_mission_progress.pair_id) AND ((mp.mentor_id = auth.uid()) OR (mp.apprentice_id = auth.uid())))))` |
+| `mentorship_mission_progress` | Users can update their pair progress | UPDATE | public | permissive | `(EXISTS ( SELECT 1 FROM mentorship_pairs mp WHERE ((mp.id = mentorship_mission_progress.pair_id) AND ((mp.mentor_id = auth.uid()) OR (mp.apprentice_id = auth.uid())))))` |  |
+| `mentorship_mission_progress` | Users can view their pair progress | SELECT | public | permissive | `(EXISTS ( SELECT 1 FROM mentorship_pairs mp WHERE ((mp.id = mentorship_mission_progress.pair_id) AND ((mp.mentor_id = auth.uid()) OR (mp.apprentice_id = auth.uid())))))` |  |
+| `mentorship_missions` | Admins can manage missions | ALL | public | permissive | `has_role(auth.uid(), 'admin'::app_role)` |  |
+| `mentorship_missions` | Everyone can view active missions | SELECT | public | permissive | `((is_active = true) OR has_role(auth.uid(), 'admin'::app_role))` |  |
+| `mentorship_pairs` | Users can create mentorship pairs | INSERT | public | permissive |  | `((auth.uid() = mentor_id) OR (auth.uid() = apprentice_id))` |
+| `mentorship_pairs` | Users can update their own pairs | UPDATE | public | permissive | `((auth.uid() = mentor_id) OR (auth.uid() = apprentice_id))` |  |
+| `mentorship_pairs` | Users can view their own mentorship pairs | SELECT | public | permissive | `((auth.uid() = mentor_id) OR (auth.uid() = apprentice_id))` |  |
+| `mentorship_requests` | Users can create requests | INSERT | public | permissive |  | `(auth.uid() = requester_id)` |
+| `mentorship_requests` | Users can update requests targeting them | UPDATE | public | permissive | `((auth.uid() = target_id) OR (auth.uid() = requester_id))` |  |
+| `mentorship_requests` | Users can view their requests | SELECT | public | permissive | `((auth.uid() = requester_id) OR (auth.uid() = target_id))` |  |
+| `module_progress` | Users can insert own progress | INSERT | public | permissive |  | `(user_id = auth.uid())` |
+| `module_progress` | Users can update own progress | UPDATE | public | permissive | `(user_id = auth.uid())` |  |
+| … +261 linhas — lista completa em `context.json` | | | | | | |
 
 ## C. Restrições de dados (obrigatório / único / default / CHECK / FK / calculada)
 
@@ -515,6 +515,7 @@ _Nenhum arquivo em `manual/`. Copie `manual/TEMPLATE-regras-de-negocio.md` para 
 | `shop_purchases` | `quantity` | default 1 |
 | `shop_purchases` | `total_coins` | obrigatório |
 | `shop_purchases` | `created_at` | default now() |
+| `shop_purchases` | `approval_status` | default 'pending' |
 | `shop_purchases` | `requires_dual_approval` | obrigatório |
 | `shop_purchases` | `risk_factors` | obrigatório |
 | `shop_purchases` | `(tabela)` | constraint shop_purchases_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.profiles(id) ON DELETE CASCADE |
@@ -616,8 +617,7 @@ _Nenhum arquivo em `manual/`. Copie `manual/TEMPLATE-regras-de-negocio.md` para 
 | `user_seasonal_progress` | `claimed` | default false |
 | `user_seasonal_progress` | `created_at` | default now() |
 | `user_seasonal_progress` | `updated_at` | default now() |
-| `user_seasonal_progress` | `(tabela)` | UNIQUE(user_id, challenge_id) |
-| … +1809 linhas — lista completa em `context.json` | | |
+| … +1836 linhas — lista completa em `context.json` | | |
 
 ## D. Automações no banco (triggers e funções — regras que rodam sozinhas)
 
@@ -654,6 +654,11 @@ _Nenhum arquivo em `manual/`. Copie `manual/TEMPLATE-regras-de-negocio.md` para 
 | update_announcements_updated_at | BEFORE UPDATE | `announcements` | `update_updated_at_column` |  |
 | update_feedback_cycles_updated_at | BEFORE UPDATE | `feedback_cycles` | `update_updated_at_column` |  |
 | update_feedback_requests_updated_at | BEFORE UPDATE | `feedback_requests` | `update_updated_at_column` |  |
+| update_demographic_attributes_updated_at | BEFORE UPDATE | `demographic_attributes` | `update_updated_at_column` |  |
+| update_geo_blocking_rules_updated_at | BEFORE UPDATE | `geo_blocking_rules` | `update_updated_at_column` |  |
+| update_notification_preferences_updated_at | BEFORE UPDATE | `notification_preferences` | `update_notification_prefs_updated_at` |  |
+| update_permission_groups_updated_at | BEFORE UPDATE | `permission_groups` | `update_updated_at_column` |  |
+| update_user_demographic_values_updated_at | BEFORE UPDATE | `user_demographic_values` | `update_updated_at_column` |  |
 | update_positions_updated_at | BEFORE UPDATE | `positions` | `update_updated_at_column` |  |
 | update_position_task_templates_updated_at | BEFORE UPDATE | `position_task_templates` | `update_updated_at_column` |  |
 | update_task_scores_updated_at | BEFORE UPDATE | `task_scores` | `update_updated_at_column` |  |
@@ -790,12 +795,6 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `set_opinion_status` | Sem permissao para tratar esta manifestacao | `supabase/migrations/20260726182807_60e2ae2c-7399-42d5-80ca-722803ff15c9.sql` |
 | `generate_action_plan_from_opinion` | Sem permissao para tratar esta manifestacao | `supabase/migrations/20260726183048_19ef339e-010a-4695-80e5-3e0448a5bf44.sql` |
 | `generate_action_plan_from_opinion` | Manifestacao inexistente | `supabase/migrations/20260726183048_19ef339e-010a-4695-80e5-3e0448a5bf44.sql` |
-| `revoke_push_device` | not_authenticated | `supabase/migrations/20260726183456_991e0996-06a9-4aeb-995c-65460c007e0c.sql` |
-| `revoke_push_device` | device_not_found | `supabase/migrations/20260726183456_991e0996-06a9-4aeb-995c-65460c007e0c.sql` |
-| `revoke_device_by_fingerprint` | not_authenticated | `supabase/migrations/20260726183456_991e0996-06a9-4aeb-995c-65460c007e0c.sql` |
-| `revoke_device_by_fingerprint` | device_not_found | `supabase/migrations/20260726183456_991e0996-06a9-4aeb-995c-65460c007e0c.sql` |
-| `revoke_device_by_fingerprint` | device_not_found | `supabase/migrations/20260726183456_991e0996-06a9-4aeb-995c-65460c007e0c.sql` |
-| `generate_certificate_code` | Não foi possível gerar um código de certificado único | `supabase/migrations/20260726185840_57bbd481-d667-4468-9244-bd32ae41da59.sql` |
 | `apply_campaign_import` | forbidden: apenas administradores ou gestores podem aplicar importações | `supabase/migrations/20260727100045_69d56c43-b506-405f-8469-2c59a6bf1cdf.sql` |
 | `apply_campaign_import` | import_not_found | `supabase/migrations/20260727100045_69d56c43-b506-405f-8469-2c59a6bf1cdf.sql` |
 | `apply_campaign_import` | invalid_state: lote já processado (%) | `supabase/migrations/20260727100045_69d56c43-b506-405f-8469-2c59a6bf1cdf.sql` |
@@ -837,10 +836,7 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `create_auction_draft` | forbidden | `supabase/migrations/20260728111343_cf6a1baa-1658-4bb8-a8ef-0e51e0d8241b.sql` |
 | `publish_auction` | forbidden | `supabase/migrations/20260728111343_cf6a1baa-1658-4bb8-a8ef-0e51e0d8241b.sql` |
 | `cancel_auction` | forbidden | `supabase/migrations/20260728111343_cf6a1baa-1658-4bb8-a8ef-0e51e0d8241b.sql` |
-| `get_push_outbox_health` | forbidden | `supabase/migrations/20260728112548_6cc50017-79db-4fda-a384-b5af19cb4406.sql` |
 | `requeue_push_outbox` | forbidden | `supabase/migrations/20260728112548_6cc50017-79db-4fda-a384-b5af19cb4406.sql` |
-| `get_push_outbox_health_trend` | forbidden | `supabase/migrations/20260728112815_fd49db87-3ae3-448d-b394-dfe7f248adae.sql` |
-| `settle_prediction_market` | forbidden | `supabase/migrations/20260728113255_b0c9ae8e-e19d-44ea-ad4d-a0366d453980.sql` |
 | `create_prediction_market` | forbidden | `supabase/migrations/20260728114514_7f6f6bd8-8c0c-4762-9f48-2e4474ed0b2b.sql` |
 | `transition_prediction_market` | forbidden | `supabase/migrations/20260728115236_b71afe23-9d0e-456d-8982-bd4240eb5fd1.sql` |
 | `get_prediction_odds_history` | unauthenticated | `supabase/migrations/20260728120114_2767df2e-5207-43d1-9737-68c2835352c3.sql` |
@@ -860,18 +856,9 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `deal_boss_damage` | battle not found | `supabase/migrations/20260728125833_b6b2c15a-1960-4e13-9c2a-0cdff052ea01.sql` |
 | `deal_boss_damage` | manual damage requires elevated role | `supabase/migrations/20260728125833_b6b2c15a-1960-4e13-9c2a-0cdff052ea01.sql` |
 | `settle_boss_battle` | battle not found | `supabase/migrations/20260728125833_b6b2c15a-1960-4e13-9c2a-0cdff052ea01.sql` |
-| `get_boss_battle_leaderboard` | not authenticated | `supabase/migrations/20260728132145_81805410-2e42-4536-bd00-1c8a66290df8.sql` |
 | `save_sequence_procedure` | hint_too_long | `supabase/migrations/20260728161526_6f32f879-b9a2-4792-bbb5-9ddea5f271ba.sql` |
 | `delete_board_trail` | Permissao negada | `supabase/migrations/20260728173213_69cdcc82-666c-4eac-b349-ee744ff418b2.sql` |
 | `unblock_board_players` | Apenas administradores podem executar o desbloqueio | `supabase/migrations/20260728180133_93c53b2d-f159-4f4c-8fad-deb269e6a600.sql` |
-| `cleanup_old_security_logs` | p_days_to_keep deve ser >= 1 | `supabase/migrations/20260728180730_1d09218b-0f91-4b02-9127-2009c4de7589.sql` |
-| `complete_task_score` | Acesso negado: apenas gestores podem concluir tarefas de outros usuários | `supabase/migrations/20260728183016_7700507e-bccb-4244-9fa4-6c9e79440974.sql` |
-| `complete_task_score` | Acesso negado: apenas gestores podem rejeitar ou devolver tarefas | `supabase/migrations/20260728183016_7700507e-bccb-4244-9fa4-6c9e79440974.sql` |
-| `complete_task_score` | Tarefa já finalizada | `supabase/migrations/20260728183016_7700507e-bccb-4244-9fa4-6c9e79440974.sql` |
-| `register_device` | Acesso negado: dispositivo só pode ser registrado para a própria conta | `supabase/migrations/20260728183016_7700507e-bccb-4244-9fa4-6c9e79440974.sql` |
-| `reset_login_attempts` | Acesso negado: só é possível limpar tentativas da própria conta | `supabase/migrations/20260728183016_7700507e-bccb-4244-9fa4-6c9e79440974.sql` |
-| `request_password_reset` | Acesso negado: solicitação permitida apenas para a própria conta | `supabase/migrations/20260728183016_7700507e-bccb-4244-9fa4-6c9e79440974.sql` |
-| `request_password_reset` | Já existe uma solicitação de reset pendente | `supabase/migrations/20260728183016_7700507e-bccb-4244-9fa4-6c9e79440974.sql` |
 | `grade_quiz_answer` | Não autenticado | `supabase/migrations/20260728185015_9aac76f7-fb94-4e9b-848e-5d496293c112.sql` |
 | `grade_quiz_answer` | Pergunta inválida | `supabase/migrations/20260728185015_9aac76f7-fb94-4e9b-848e-5d496293c112.sql` |
 | `get_quiz_lifeline` | Não autenticado | `supabase/migrations/20260728185119_d97a70b6-1771-41be-8175-29a5be5acd17.sql` |
@@ -948,6 +935,25 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `submit_engagement_answer` | not authenticated | `supabase/migrations/20261227120000_engagement_integridade_e_anon.sql` |
 | `submit_engagement_answer` | pergunta nao atribuida ao usuario neste ciclo | `supabase/migrations/20261227120000_engagement_integridade_e_anon.sql` |
 | `guard_engagement_answer_assignment` | resposta sem atribuicao no ciclo | `supabase/migrations/20261227120000_engagement_integridade_e_anon.sql` |
+| `cleanup_old_security_logs` | p_days_to_keep deve ser >= 1 | `supabase/migrations/20261228170000_reaplica_funcoes_desatualizadas_em_producao.sql` |
+| `complete_task_score` | Acesso negado: apenas gestores podem concluir tarefas de outros usuários | `supabase/migrations/20261228170000_reaplica_funcoes_desatualizadas_em_producao.sql` |
+| `complete_task_score` | Acesso negado: apenas gestores podem rejeitar ou devolver tarefas | `supabase/migrations/20261228170000_reaplica_funcoes_desatualizadas_em_producao.sql` |
+| `complete_task_score` | Tarefa já finalizada | `supabase/migrations/20261228170000_reaplica_funcoes_desatualizadas_em_producao.sql` |
+| `generate_certificate_code` | Não foi possível gerar um código de certificado único | `supabase/migrations/20261228170000_reaplica_funcoes_desatualizadas_em_producao.sql` |
+| `get_boss_battle_leaderboard` | not authenticated | `supabase/migrations/20261228170000_reaplica_funcoes_desatualizadas_em_producao.sql` |
+| `get_lucky_wheel_status` | Não autenticado | `supabase/migrations/20261228170000_reaplica_funcoes_desatualizadas_em_producao.sql` |
+| `get_push_outbox_health` | forbidden | `supabase/migrations/20261228170000_reaplica_funcoes_desatualizadas_em_producao.sql` |
+| `get_push_outbox_health_trend` | forbidden | `supabase/migrations/20261228170000_reaplica_funcoes_desatualizadas_em_producao.sql` |
+| `register_device` | Acesso negado: dispositivo só pode ser registrado para a própria conta | `supabase/migrations/20261228170000_reaplica_funcoes_desatualizadas_em_producao.sql` |
+| `request_password_reset` | Acesso negado: solicitação permitida apenas para a própria conta | `supabase/migrations/20261228170000_reaplica_funcoes_desatualizadas_em_producao.sql` |
+| `request_password_reset` | Já existe uma solicitação de reset pendente | `supabase/migrations/20261228170000_reaplica_funcoes_desatualizadas_em_producao.sql` |
+| `reset_login_attempts` | Acesso negado: só é possível limpar tentativas da própria conta | `supabase/migrations/20261228170000_reaplica_funcoes_desatualizadas_em_producao.sql` |
+| `revoke_device_by_fingerprint` | not_authenticated | `supabase/migrations/20261228170000_reaplica_funcoes_desatualizadas_em_producao.sql` |
+| `revoke_device_by_fingerprint` | device_not_found | `supabase/migrations/20261228170000_reaplica_funcoes_desatualizadas_em_producao.sql` |
+| `revoke_device_by_fingerprint` | device_not_found | `supabase/migrations/20261228170000_reaplica_funcoes_desatualizadas_em_producao.sql` |
+| `revoke_push_device` | not_authenticated | `supabase/migrations/20261228170000_reaplica_funcoes_desatualizadas_em_producao.sql` |
+| `revoke_push_device` | device_not_found | `supabase/migrations/20261228170000_reaplica_funcoes_desatualizadas_em_producao.sql` |
+| `settle_prediction_market` | forbidden | `supabase/migrations/20261228170000_reaplica_funcoes_desatualizadas_em_producao.sql` |
 
 ## E. Estados, máquinas de estado e transições
 
@@ -960,6 +966,7 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `quest_assignments` | `current_step` | **livre (sem enum/CHECK)** | `0` |
 | `learning_trails` | `status` | `draft`, `published`, `archived` | `draft` |
 | `shop_purchases` | `status` | `pending`, `approved`, `delivered`, `cancelled` | `pending` |
+| `shop_purchases` | `approval_status` | **livre (sem enum/CHECK)** | `pending` |
 | `onboarding_progress` | `current_step` | **livre (sem enum/CHECK)** | `0` |
 | `weekly_challenges` | `status` | `active`, `completed`, `expired` | `active` |
 | `mentorship_pairs` | `status` | `active`, `cancelled`, `completed`, `pending` | `active` |
@@ -1950,6 +1957,7 @@ _nenhum item encontrado_
 | Tabela | Coluna | Expressão |
 |---|---|---|
 | `enps_responses` | `category` | `CASE WHEN score >= 9 THEN 'promoter' WHEN score >= 7 THEN 'passive' ELSE 'detractor' END` |
+| `security_alerts` | `resolved` | `is_resolved` |
 
 ### G.2 Views (consultas derivadas)
 
@@ -1957,6 +1965,9 @@ _nenhum item encontrado_
 |---|---|
 | `profiles_public` | `SELECT id, display_name, avatar_url, level, xp, coins, streak, best_streak, quests_completed, status, created_at, updated_at, last_access_at FROM public.profiles` |
 | `webhook_delivery_stats_24h` | `SELECT wdl.subscription_id, ws.name AS subscription_name, ws.url AS subscription_url, COUNT(*)::bigint AS total_deliveries, COUNT(*) FILTER (WHERE wdl.success)::bigint AS successful_deliveries, COUNT(*) FILTER (WHERE NOT wdl.success)::bigint AS failed_deliveries, ROUND( (COUNT(*) FILTER (WHERE wdl.s …` |
+| `connection_monitor` | `SELECT state, wait_event_type, wait_event, count(*) AS total_connections, count(*) FILTER (WHERE state = 'active'::text) AS active_queries, count(*) FILTER (WHERE state = 'idle'::text) AS idle_connections, count(*) FILTER (WHERE state = 'idle in transaction'::text) AS idle_in_txn, round(count(*)::nu …` |
+| `index_health_report` | `SELECT n.nspname AS schema, t.relname AS table_name, i.relname AS index_name, ix.indisunique AS is_unique, ix.indisprimary AS is_primary, s.idx_scan AS scans_since_reset, s.idx_tup_read AS tuples_read, s.idx_tup_fetch AS tuples_fetched, pg_size_pretty(pg_relation_size(i.oid::regclass)) AS index_size …` |
+| `query_performance_summary` | `SELECT "left"(query, 200) AS query_snippet, calls, round(total_exec_time::numeric, 2) AS total_ms, round(mean_exec_time::numeric, 2) AS mean_ms, round(stddev_exec_time::numeric, 2) AS stddev_ms, round(min_exec_time::numeric, 2) AS min_ms, round(max_exec_time::numeric, 2) AS max_ms, rows, round(100.0 …` |
 
 ### G.3 Funções de cálculo/decisão no código
 
@@ -3225,6 +3236,7 @@ _nenhum item encontrado_
 | `date_trunc('day', now() - interval '29 days'),` | `supabase/migrations/20261220000000_fix_sre_rpcs_and_dispatch_trigger.sql` |
 | `interval '1 day'` | `supabase/migrations/20261220000000_fix_sre_rpcs_and_dispatch_trigger.sql` |
 | `-- por `now() + interval '7 days'` empurrava o primeiro lembrete para o dia` | `supabase/migrations/20261224100000_climate_survey_cycle_jobs.sql` |
+| `v_stuck_cutoff := now() - interval '5 minutes';` | `supabase/migrations/20261228170000_reaplica_funcoes_desatualizadas_em_producao.sql` |
 
 ### H.3 Limites de paginação
 
@@ -3643,6 +3655,8 @@ _nenhum item encontrado_
 | `admin` | `supabase/migrations/20261123180000_climate_survey_engine.sql` |
 | `manager` | `supabase/migrations/20261123180000_climate_survey_engine.sql` |
 | `admin` | `supabase/migrations/20261226195000_reset_senha_consistencia.sql` |
+| `admin` | `supabase/migrations/20261228170000_reaplica_funcoes_desatualizadas_em_producao.sql` |
+| `manager` | `supabase/migrations/20261228170000_reaplica_funcoes_desatualizadas_em_producao.sql` |
 
 ## K. Testes como especificação (2126 testes em 163 arquivos — nomes completos em `context.json`)
 

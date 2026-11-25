@@ -6,14 +6,16 @@
   "src/integrations/supabase/types.ts",
   "supabase/migrations"
  ],
- "migrations": 296,
+ "migrations": 301,
  "seeds": [],
  "avisos": [
-  "14 bloco(s) com DDL dinâmico (EXECUTE format/...) não modelado — policies/colunas criadas dinamicamente podem faltar; confira no banco vivo"
+  "15 bloco(s) com DDL dinâmico (EXECUTE format/...) não modelado — policies/colunas criadas dinamicamente podem faltar; confira no banco vivo"
  ],
  "extensoes": [
   "pg_cron",
-  "pg_net"
+  "pg_net",
+  "pg_trgm",
+  "unaccent"
  ],
  "enums": {
   "app_role": [
@@ -167,7 +169,10 @@
  },
  "views": [
   "IF",
+  "connection_monitor",
+  "index_health_report",
   "profiles_public",
+  "query_performance_summary",
   "webhook_delivery_stats_24h"
  ],
  "funcoes": [
@@ -190,6 +195,7 @@
   "apply_task_penalty",
   "approve_password_reset",
   "assign_engagement_questions",
+  "audit_lucky_wheel_prize",
   "auto_block_ip",
   "auto_create_postmortem_on_resolve",
   "auto_lock_prediction_markets",
@@ -212,6 +218,7 @@
   "card_pack_notify",
   "check_api_key_rotation_overdue",
   "check_boss_win_rate_alerts",
+  "check_boss_win_rate_alerts_impl",
   "check_login_lockout",
   "check_overdue_postmortem_actions",
   "check_prediction_markets_health",
@@ -234,9 +241,11 @@
   "create_auction_draft",
   "create_external_api_key",
   "create_prediction_market",
+  "db_health_check",
   "deal_boss_damage",
   "delete_board_trail",
   "delete_external_api_key",
+  "detect_long_running_queries",
   "enforce_campaign_team_consistency",
   "engagement_min_respondents",
   "enqueue_push",
@@ -280,6 +289,7 @@
   "get_incident_metrics",
   "get_leaderboard_api",
   "get_lucky_wheel_prizes_display",
+  "get_lucky_wheel_status",
   "get_memory_leaderboard",
   "get_monthly_trends",
   "get_my_profile_private",
@@ -319,10 +329,12 @@
   "handle_new_user",
   "handle_updated_at",
   "has_role",
+  "immutable_unaccent",
   "increment_announcement_views",
   "increment_push_failures",
   "increment_quests_completed",
   "increment_streak",
+  "increment_user_xp_coins",
   "ingest_war_event",
   "is_country_allowed",
   "is_department_manager",
@@ -336,6 +348,7 @@
   "list_tournaments",
   "list_wager_questions",
   "log_auction_admin_event",
+  "log_geo_access",
   "log_ip_access",
   "log_login_attempt",
   "log_lucky_wheel_budget_change",
@@ -375,12 +388,14 @@
   "review_purchase",
   "revoke_device_by_fingerprint",
   "revoke_push_device",
+  "rls_auto_enable",
   "rotate_external_api_secret",
   "rotate_webhook_secret",
   "run_boss_win_rate_alerts",
   "save_board_trail",
   "save_sequence_procedure",
   "save_wager_question",
+  "search_all",
   "send_climate_survey_reminders",
   "send_engagement_reminders",
   "set_certificate_identity",
@@ -415,6 +430,7 @@
   "trim_push_sync_events",
   "unblock_board_players",
   "update_certification_statuses",
+  "update_notification_prefs_updated_at",
   "update_saved_filters_updated_at",
   "update_updated_at_column",
   "user_has_passkeys",
@@ -659,6 +675,13 @@
    "funcao": "update_updated_at_column"
   },
   {
+   "nome": "update_demographic_attributes_updated_at",
+   "quando": "before",
+   "evento": "update",
+   "tabela": "demographic_attributes",
+   "funcao": "update_updated_at_column"
+  },
+  {
    "nome": "update_department_missions_updated_at",
    "quando": "before",
    "evento": "update",
@@ -761,6 +784,13 @@
    "quando": "before",
    "evento": "update",
    "tabela": "feedback_requests",
+   "funcao": "update_updated_at_column"
+  },
+  {
+   "nome": "update_geo_blocking_rules_updated_at",
+   "quando": "before",
+   "evento": "update",
+   "tabela": "geo_blocking_rules",
    "funcao": "update_updated_at_column"
   },
   {
@@ -897,6 +927,13 @@
    "funcao": "war_hook_module_progress"
   },
   {
+   "nome": "update_notification_preferences_updated_at",
+   "quando": "before",
+   "evento": "update",
+   "tabela": "notification_preferences",
+   "funcao": "update_notification_prefs_updated_at"
+  },
+  {
    "nome": "update_notification_templates_updated_at",
    "quando": "before",
    "evento": "update",
@@ -943,6 +980,13 @@
    "quando": "before",
    "evento": "update",
    "tabela": "penalty_rules",
+   "funcao": "update_updated_at_column"
+  },
+  {
+   "nome": "update_permission_groups_updated_at",
+   "quando": "before",
+   "evento": "update",
+   "tabela": "permission_groups",
    "funcao": "update_updated_at_column"
   },
   {
@@ -1230,6 +1274,13 @@
    "quando": "before",
    "evento": "update",
    "tabela": "user_combos",
+   "funcao": "update_updated_at_column"
+  },
+  {
+   "nome": "update_user_demographic_values_updated_at",
+   "quando": "before",
+   "evento": "update",
+   "tabela": "user_demographic_values",
    "funcao": "update_updated_at_column"
   },
   {
@@ -3462,8 +3513,8 @@
    "rls": true,
    "policies": [
     {
-     "nome": "auction_admin_events_admin_read",
-     "comando": "select",
+     "nome": "auction_admin_events_admin_all",
+     "comando": "all",
      "para": "authenticated",
      "tipo": "permissive"
     }
@@ -3571,8 +3622,14 @@
    "rls": true,
    "policies": [
     {
-     "nome": "auction_bids_select_own",
-     "comando": "select",
+     "nome": "auction_bids_admin_all",
+     "comando": "all",
+     "para": "authenticated",
+     "tipo": "permissive"
+    },
+    {
+     "nome": "auction_bids_user_own",
+     "comando": "all",
      "para": "authenticated",
      "tipo": "permissive"
     }
@@ -3741,13 +3798,13 @@
    "rls": true,
    "policies": [
     {
-     "nome": "auctions_admin_write",
+     "nome": "auctions_admin_all",
      "comando": "all",
      "para": "authenticated",
      "tipo": "permissive"
     },
     {
-     "nome": "auctions_select_published",
+     "nome": "auctions_user_select",
      "comando": "select",
      "para": "authenticated",
      "tipo": "permissive"
@@ -4151,13 +4208,13 @@
    "rls": true,
    "policies": [
     {
-     "nome": "Admins gerenciam desafios",
+     "nome": "bingo_board_tasks_admin_all",
      "comando": "all",
      "para": "authenticated",
      "tipo": "permissive"
     },
     {
-     "nome": "Desafios visiveis para autenticados",
+     "nome": "bingo_board_tasks_user_select",
      "comando": "select",
      "para": "authenticated",
      "tipo": "permissive"
@@ -4283,13 +4340,13 @@
    "rls": true,
    "policies": [
     {
-     "nome": "Admins gerenciam rodadas",
+     "nome": "bingo_boards_admin_all",
      "comando": "all",
      "para": "authenticated",
      "tipo": "permissive"
     },
     {
-     "nome": "Rodadas visiveis para autenticados",
+     "nome": "bingo_boards_user_select",
      "comando": "select",
      "para": "authenticated",
      "tipo": "permissive"
@@ -4407,8 +4464,14 @@
    "rls": true,
    "policies": [
     {
-     "nome": "Usuario ve a propria cartela",
-     "comando": "select",
+     "nome": "bingo_cards_admin_all",
+     "comando": "all",
+     "para": "authenticated",
+     "tipo": "permissive"
+    },
+    {
+     "nome": "bingo_cards_user_own",
+     "comando": "all",
      "para": "authenticated",
      "tipo": "permissive"
     }
@@ -4504,8 +4567,14 @@
    "rls": true,
    "policies": [
     {
-     "nome": "Usuario ve as proprias marcacoes",
+     "nome": "bingo_marks_admin_select",
      "comando": "select",
+     "para": "authenticated",
+     "tipo": "permissive"
+    },
+    {
+     "nome": "bingo_marks_user_own",
+     "comando": "all",
      "para": "authenticated",
      "tipo": "permissive"
     }
@@ -4933,12 +5002,6 @@
    "rls": true,
    "policies": [
     {
-     "nome": "Admins can manage blocked IPs",
-     "comando": "all",
-     "para": "authenticated",
-     "tipo": "permissive"
-    },
-    {
      "nome": "Admins can manage blocked_ips",
      "comando": "all",
      "para": "authenticated",
@@ -5089,7 +5152,13 @@
    "rls": true,
    "policies": [
     {
-     "nome": "board_moves_select_own",
+     "nome": "board_moves_admin_all",
+     "comando": "all",
+     "para": "authenticated",
+     "tipo": "permissive"
+    },
+    {
+     "nome": "board_moves_user_select",
      "comando": "select",
      "para": "authenticated",
      "tipo": "permissive"
@@ -5241,8 +5310,20 @@
    "rls": true,
    "policies": [
     {
-     "nome": "board_states_select_own",
+     "nome": "board_player_states_admin_all",
+     "comando": "all",
+     "para": "authenticated",
+     "tipo": "permissive"
+    },
+    {
+     "nome": "board_player_states_manager_select",
      "comando": "select",
+     "para": "authenticated",
+     "tipo": "permissive"
+    },
+    {
+     "nome": "board_player_states_user_own",
+     "comando": "all",
      "para": "authenticated",
      "tipo": "permissive"
     }
@@ -5380,13 +5461,13 @@
    "rls": true,
    "policies": [
     {
-     "nome": "board_tiles_manage",
+     "nome": "board_tiles_admin_all",
      "comando": "all",
      "para": "authenticated",
      "tipo": "permissive"
     },
     {
-     "nome": "board_tiles_select",
+     "nome": "board_tiles_user_select",
      "comando": "select",
      "para": "authenticated",
      "tipo": "permissive"
@@ -5497,13 +5578,13 @@
    "rls": true,
    "policies": [
     {
-     "nome": "board_trails_manage",
+     "nome": "board_trails_admin_all",
      "comando": "all",
      "para": "authenticated",
      "tipo": "permissive"
     },
     {
-     "nome": "board_trails_select_active",
+     "nome": "board_trails_user_select",
      "comando": "select",
      "para": "authenticated",
      "tipo": "permissive"
@@ -5613,7 +5694,13 @@
    "rls": true,
    "policies": [
     {
-     "nome": "boss_damage_select",
+     "nome": "boss_battle_damage_admin_all",
+     "comando": "all",
+     "para": "authenticated",
+     "tipo": "permissive"
+    },
+    {
+     "nome": "boss_battle_damage_user_select",
      "comando": "select",
      "para": "authenticated",
      "tipo": "permissive"
@@ -5725,7 +5812,13 @@
    "rls": true,
    "policies": [
     {
-     "nome": "boss_rewards_select",
+     "nome": "boss_battle_rewards_admin_all",
+     "comando": "all",
+     "para": "authenticated",
+     "tipo": "permissive"
+    },
+    {
+     "nome": "boss_battle_rewards_user_select",
      "comando": "select",
      "para": "authenticated",
      "tipo": "permissive"
@@ -5902,13 +5995,13 @@
    "rls": true,
    "policies": [
     {
-     "nome": "boss_battles_manage_admin",
+     "nome": "boss_battles_admin_all",
      "comando": "all",
      "para": "authenticated",
      "tipo": "permissive"
     },
     {
-     "nome": "boss_battles_select_authenticated",
+     "nome": "boss_battles_user_select",
      "comando": "select",
      "para": "authenticated",
      "tipo": "permissive"
@@ -6034,26 +6127,14 @@
    "rls": true,
    "policies": [
     {
-     "nome": "Authenticated can read boss win rate goals",
+     "nome": "boss_win_rate_goals_admin_all",
+     "comando": "all",
+     "para": "authenticated",
+     "tipo": "permissive"
+    },
+    {
+     "nome": "boss_win_rate_goals_select",
      "comando": "select",
-     "para": "authenticated",
-     "tipo": "permissive"
-    },
-    {
-     "nome": "Managers and admins can delete boss win rate goals",
-     "comando": "delete",
-     "para": "authenticated",
-     "tipo": "permissive"
-    },
-    {
-     "nome": "Managers and admins can insert boss win rate goals",
-     "comando": "insert",
-     "para": "authenticated",
-     "tipo": "permissive"
-    },
-    {
-     "nome": "Managers and admins can update boss win rate goals",
-     "comando": "update",
      "para": "authenticated",
      "tipo": "permissive"
     }
@@ -6529,26 +6610,14 @@
    "rls": true,
    "policies": [
     {
-     "nome": "campaign_imports_delete_admin",
-     "comando": "delete",
+     "nome": "campaign_imports_admin_all",
+     "comando": "all",
      "para": "authenticated",
      "tipo": "permissive"
     },
     {
-     "nome": "campaign_imports_insert_staff",
-     "comando": "insert",
-     "para": "authenticated",
-     "tipo": "permissive"
-    },
-    {
-     "nome": "campaign_imports_select_staff",
+     "nome": "campaign_imports_creator_select",
      "comando": "select",
-     "para": "authenticated",
-     "tipo": "permissive"
-    },
-    {
-     "nome": "campaign_imports_update_staff",
-     "comando": "update",
      "para": "authenticated",
      "tipo": "permissive"
     }
@@ -6708,26 +6777,8 @@
    "rls": true,
    "policies": [
     {
-     "nome": "campaign_rows_delete_admin",
-     "comando": "delete",
-     "para": "authenticated",
-     "tipo": "permissive"
-    },
-    {
-     "nome": "campaign_rows_insert_staff",
-     "comando": "insert",
-     "para": "authenticated",
-     "tipo": "permissive"
-    },
-    {
-     "nome": "campaign_rows_select_staff",
-     "comando": "select",
-     "para": "authenticated",
-     "tipo": "permissive"
-    },
-    {
-     "nome": "campaign_rows_update_staff",
-     "comando": "update",
+     "nome": "campaign_result_rows_admin_all",
+     "comando": "all",
      "para": "authenticated",
      "tipo": "permissive"
     }
@@ -6820,13 +6871,13 @@
    "rls": true,
    "policies": [
     {
-     "nome": "campaign_team_members_manage_staff",
+     "nome": "campaign_team_members_admin_all",
      "comando": "all",
      "para": "authenticated",
      "tipo": "permissive"
     },
     {
-     "nome": "campaign_team_members_select_authenticated",
+     "nome": "campaign_team_members_select",
      "comando": "select",
      "para": "authenticated",
      "tipo": "permissive"
@@ -6986,8 +7037,8 @@
    "rls": true,
    "policies": [
     {
-     "nome": "team_split_batches_select_staff",
-     "comando": "select",
+     "nome": "campaign_team_split_batches_admin_all",
+     "comando": "all",
      "para": "authenticated",
      "tipo": "permissive"
     }
@@ -7149,8 +7200,8 @@
    "rls": true,
    "policies": [
     {
-     "nome": "team_split_entries_select_staff",
-     "comando": "select",
+     "nome": "campaign_team_split_entries_admin_all",
+     "comando": "all",
      "para": "authenticated",
      "tipo": "permissive"
     }
@@ -7322,13 +7373,13 @@
    "rls": true,
    "policies": [
     {
-     "nome": "campaign_teams_manage_staff",
+     "nome": "campaign_teams_admin_all",
      "comando": "all",
      "para": "authenticated",
      "tipo": "permissive"
     },
     {
-     "nome": "campaign_teams_select_authenticated",
+     "nome": "campaign_teams_user_select",
      "comando": "select",
      "para": "authenticated",
      "tipo": "permissive"
@@ -7463,7 +7514,7 @@
      "tipo": "permissive"
     },
     {
-     "nome": "card_definitions_select_auth",
+     "nome": "card_definitions_user_select",
      "comando": "select",
      "para": "authenticated",
      "tipo": "permissive"
@@ -7585,13 +7636,13 @@
    "rls": true,
    "policies": [
     {
-     "nome": "card_packs_admin_select",
-     "comando": "select",
+     "nome": "card_packs_admin_all",
+     "comando": "all",
      "para": "authenticated",
      "tipo": "permissive"
     },
     {
-     "nome": "card_packs_select_own",
+     "nome": "card_packs_user_select",
      "comando": "select",
      "para": "authenticated",
      "tipo": "permissive"
@@ -7715,8 +7766,14 @@
    "rls": true,
    "policies": [
     {
-     "nome": "own_card_set_claims_select",
-     "comando": "select",
+     "nome": "card_set_claims_admin_all",
+     "comando": "all",
+     "para": "authenticated",
+     "tipo": "permissive"
+    },
+    {
+     "nome": "card_set_claims_user_own",
+     "comando": "all",
      "para": "authenticated",
      "tipo": "permissive"
     }
@@ -7840,8 +7897,26 @@
    "rls": true,
    "policies": [
     {
-     "nome": "card_trades_select_involved",
+     "nome": "card_trades_admin_all",
+     "comando": "all",
+     "para": "authenticated",
+     "tipo": "permissive"
+    },
+    {
+     "nome": "card_trades_participants_select",
      "comando": "select",
+     "para": "authenticated",
+     "tipo": "permissive"
+    },
+    {
+     "nome": "card_trades_participants_update",
+     "comando": "update",
+     "para": "authenticated",
+     "tipo": "permissive"
+    },
+    {
+     "nome": "card_trades_proposer_insert",
+     "comando": "insert",
      "para": "authenticated",
      "tipo": "permissive"
     }
@@ -10013,12 +10088,124 @@
    "nao_usada": true
   },
   "demographic_attributes": {
-   "colunas": {},
-   "rls": false,
-   "policies": [],
+   "colunas": {
+    "allow_prefer_not_answer": {
+     "tipo": "boolean",
+     "nn": true,
+     "pk": false,
+     "default": "true",
+     "ref": null
+    },
+    "attribute_type": {
+     "tipo": "text",
+     "nn": true,
+     "pk": false,
+     "default": "'single_select'::text",
+     "ref": null
+    },
+    "created_at": {
+     "tipo": "timestamp with time zone",
+     "nn": true,
+     "pk": false,
+     "default": "now()",
+     "ref": null
+    },
+    "id": {
+     "tipo": "uuid",
+     "nn": true,
+     "pk": false,
+     "default": "gen_random_uuid()",
+     "ref": null
+    },
+    "is_active": {
+     "tipo": "boolean",
+     "nn": true,
+     "pk": false,
+     "default": "true",
+     "ref": null
+    },
+    "is_required": {
+     "tipo": "boolean",
+     "nn": true,
+     "pk": false,
+     "default": "false",
+     "ref": null
+    },
+    "is_restricted": {
+     "tipo": "boolean",
+     "nn": true,
+     "pk": false,
+     "default": "false",
+     "ref": null
+    },
+    "is_visible_in_reports": {
+     "tipo": "boolean",
+     "nn": true,
+     "pk": false,
+     "default": "true",
+     "ref": null
+    },
+    "name": {
+     "tipo": "text",
+     "nn": true,
+     "pk": false,
+     "default": null,
+     "ref": null
+    },
+    "name_en": {
+     "tipo": "text",
+     "nn": false,
+     "pk": false,
+     "default": null,
+     "ref": null
+    },
+    "name_es": {
+     "tipo": "text",
+     "nn": false,
+     "pk": false,
+     "default": null,
+     "ref": null
+    },
+    "options": {
+     "tipo": "jsonb",
+     "nn": false,
+     "pk": false,
+     "default": "'[]'::jsonb",
+     "ref": null
+    },
+    "order_index": {
+     "tipo": "integer",
+     "nn": true,
+     "pk": false,
+     "default": "0",
+     "ref": null
+    },
+    "updated_at": {
+     "tipo": "timestamp with time zone",
+     "nn": true,
+     "pk": false,
+     "default": "now()",
+     "ref": null
+    }
+   },
+   "rls": true,
+   "policies": [
+    {
+     "nome": "Admins can manage demographic attributes",
+     "comando": "all",
+     "para": "public",
+     "tipo": "permissive"
+    },
+    {
+     "nome": "Everyone can view active demographic attributes",
+     "comando": "select",
+     "para": "public",
+     "tipo": "permissive"
+    }
+   ],
    "indices": [],
    "fks": [],
-   "criada_em": null,
+   "criada_em": "20251220144518_06856092-4043-44fe-8da4-8f9501335d42.sql",
    "colunas_types": {
     "allow_prefer_not_answer": "boolean",
     "attribute_type": "string",
@@ -10035,9 +10222,15 @@
     "order_index": "number",
     "updated_at": "string"
    },
+   "drift": {
+    "so_na_migration": [],
+    "so_no_types": []
+   },
    "usada_no_front": 0,
    "usada_em_edges": [],
-   "triggers": [],
+   "triggers": [
+    "update_demographic_attributes_updated_at"
+   ],
    "sem_rls": false,
    "nao_usada": true
   },
@@ -10377,7 +10570,13 @@
    "rls": true,
    "policies": [
     {
-     "nome": "Usuario ve as proprias contribuicoes",
+     "nome": "department_war_contributions_admin_all",
+     "comando": "all",
+     "para": "authenticated",
+     "tipo": "permissive"
+    },
+    {
+     "nome": "department_war_contributions_user_select",
      "comando": "select",
      "para": "authenticated",
      "tipo": "permissive"
@@ -10473,13 +10672,13 @@
    "rls": true,
    "policies": [
     {
-     "nome": "Admins gerenciam participantes da guerra",
+     "nome": "dept_war_departments_admin_all",
      "comando": "all",
      "para": "authenticated",
      "tipo": "permissive"
     },
     {
-     "nome": "Autenticados veem participantes da guerra",
+     "nome": "dept_war_departments_select",
      "comando": "select",
      "para": "authenticated",
      "tipo": "permissive"
@@ -10570,13 +10769,13 @@
    "rls": true,
    "policies": [
     {
-     "nome": "Admins gerenciam metricas da guerra",
+     "nome": "department_war_metrics_admin_all",
      "comando": "all",
      "para": "authenticated",
      "tipo": "permissive"
     },
     {
-     "nome": "Autenticados veem metricas da guerra",
+     "nome": "department_war_metrics_user_select",
      "comando": "select",
      "para": "authenticated",
      "tipo": "permissive"
@@ -10709,7 +10908,13 @@
    "rls": true,
    "policies": [
     {
-     "nome": "Autenticados veem resultados da guerra",
+     "nome": "dept_war_results_admin_all",
+     "comando": "all",
+     "para": "authenticated",
+     "tipo": "permissive"
+    },
+    {
+     "nome": "dept_war_results_select",
      "comando": "select",
      "para": "authenticated",
      "tipo": "permissive"
@@ -10877,13 +11082,13 @@
    "rls": true,
    "policies": [
     {
-     "nome": "Admins gerenciam guerras",
+     "nome": "department_wars_admin_all",
      "comando": "all",
      "para": "authenticated",
      "tipo": "permissive"
     },
     {
-     "nome": "Autenticados veem guerras publicadas",
+     "nome": "department_wars_user_select",
      "comando": "select",
      "para": "authenticated",
      "tipo": "permissive"
@@ -11646,13 +11851,13 @@
    "rls": true,
    "policies": [
     {
-     "nome": "playbooks_admin_write",
+     "nome": "engagement_action_playbooks_admin_all",
      "comando": "all",
      "para": "authenticated",
      "tipo": "permissive"
     },
     {
-     "nome": "playbooks_select",
+     "nome": "engagement_action_playbooks_manager_select",
      "comando": "select",
      "para": "authenticated",
      "tipo": "permissive"
@@ -11780,13 +11985,25 @@
    "rls": true,
    "policies": [
     {
-     "nome": "eanswers_own_insert",
+     "nome": "engagement_answers_admin_all",
+     "comando": "all",
+     "para": "authenticated",
+     "tipo": "permissive"
+    },
+    {
+     "nome": "engagement_answers_manager_select",
+     "comando": "select",
+     "para": "authenticated",
+     "tipo": "permissive"
+    },
+    {
+     "nome": "engagement_answers_user_insert",
      "comando": "insert",
      "para": "authenticated",
      "tipo": "permissive"
     },
     {
-     "nome": "eanswers_own_select",
+     "nome": "engagement_answers_user_select_own",
      "comando": "select",
      "para": "authenticated",
      "tipo": "permissive"
@@ -11926,13 +12143,13 @@
    "rls": true,
    "policies": [
     {
-     "nome": "ecycles_admin_write",
+     "nome": "engagement_cycles_admin_all",
      "comando": "all",
      "para": "authenticated",
      "tipo": "permissive"
     },
     {
-     "nome": "ecycles_select",
+     "nome": "engagement_cycles_user_select",
      "comando": "select",
      "para": "authenticated",
      "tipo": "permissive"
@@ -12035,13 +12252,13 @@
    "rls": true,
    "policies": [
     {
-     "nome": "engagement_factors_admin_write",
+     "nome": "engagement_factors_admin_all",
      "comando": "all",
      "para": "authenticated",
      "tipo": "permissive"
     },
     {
-     "nome": "engagement_factors_select",
+     "nome": "engagement_factors_user_select",
      "comando": "select",
      "para": "authenticated",
      "tipo": "permissive"
@@ -12136,32 +12353,14 @@
    "rls": true,
    "policies": [
     {
+     "nome": "engagement_question_assignments_admin_all",
+     "comando": "all",
+     "para": "authenticated",
+     "tipo": "permissive"
+    },
+    {
      "nome": "engagement_question_assignments_user_own",
      "comando": "select",
-     "para": "authenticated",
-     "tipo": "permissive"
-    },
-    {
-     "nome": "eqa_admin_delete",
-     "comando": "delete",
-     "para": "authenticated",
-     "tipo": "permissive"
-    },
-    {
-     "nome": "eqa_own_insert",
-     "comando": "insert",
-     "para": "authenticated",
-     "tipo": "permissive"
-    },
-    {
-     "nome": "eqa_own_select",
-     "comando": "select",
-     "para": "authenticated",
-     "tipo": "permissive"
-    },
-    {
-     "nome": "eqa_own_update",
-     "comando": "update",
      "para": "authenticated",
      "tipo": "permissive"
     }
@@ -12313,13 +12512,13 @@
    "rls": true,
    "policies": [
     {
-     "nome": "eqp_admin_write",
+     "nome": "engagement_question_pool_admin_all",
      "comando": "all",
      "para": "authenticated",
      "tipo": "permissive"
     },
     {
-     "nome": "eqp_select",
+     "nome": "engagement_question_pool_user_select",
      "comando": "select",
      "para": "authenticated",
      "tipo": "permissive"
@@ -13100,6 +13299,13 @@
      "default": null,
      "ref": null
     },
+    "api_secret": {
+     "tipo": "text",
+     "nn": false,
+     "pk": false,
+     "default": null,
+     "ref": null
+    },
     "created_at": {
      "tipo": "timestamp with time zone",
      "nn": true,
@@ -13229,7 +13435,9 @@
     "updated_at": "string"
    },
    "drift": {
-    "so_na_migration": [],
+    "so_na_migration": [
+     "api_secret"
+    ],
     "so_no_types": []
    },
    "usada_no_front": 0,
@@ -14417,9 +14625,86 @@
    "nao_usada": true
   },
   "geo_access_logs": {
-   "colunas": {},
-   "rls": false,
+   "colunas": {
+    "country_code": {
+     "tipo": "character varying(2)",
+     "nn": false,
+     "pk": false,
+     "default": null,
+     "ref": null
+    },
+    "country_name": {
+     "tipo": "character varying(100)",
+     "nn": false,
+     "pk": false,
+     "default": null,
+     "ref": null
+    },
+    "created_at": {
+     "tipo": "timestamp with time zone",
+     "nn": true,
+     "pk": false,
+     "default": "now()",
+     "ref": null
+    },
+    "endpoint": {
+     "tipo": "text",
+     "nn": false,
+     "pk": false,
+     "default": null,
+     "ref": null
+    },
+    "id": {
+     "tipo": "uuid",
+     "nn": true,
+     "pk": false,
+     "default": "gen_random_uuid()",
+     "ref": null
+    },
+    "ip_address": {
+     "tipo": "inet",
+     "nn": true,
+     "pk": false,
+     "default": null,
+     "ref": null
+    },
+    "reason": {
+     "tipo": "text",
+     "nn": false,
+     "pk": false,
+     "default": null,
+     "ref": null
+    },
+    "user_agent": {
+     "tipo": "text",
+     "nn": false,
+     "pk": false,
+     "default": null,
+     "ref": null
+    },
+    "user_id": {
+     "tipo": "uuid",
+     "nn": false,
+     "pk": false,
+     "default": null,
+     "ref": null
+    },
+    "was_allowed": {
+     "tipo": "boolean",
+     "nn": true,
+     "pk": false,
+     "default": null,
+     "ref": null
+    }
+   },
+   "rls": true,
    "policies": [
+    {
+     "nome": "Admins podem ver logs de acesso geográfico",
+     "comando": "select",
+     "para": "public",
+     "tipo": "permissive"
+    },
     {
      "nome": "Authenticated insert geo logs",
      "comando": "insert",
@@ -14427,9 +14712,32 @@
      "tipo": "permissive"
     }
    ],
-   "indices": [],
-   "fks": [],
-   "criada_em": null,
+   "indices": [
+    {
+     "nome": "idx_geo_access_logs_allowed",
+     "colunas": "was_allowed",
+     "unico": false
+    },
+    {
+     "nome": "idx_geo_access_logs_country",
+     "colunas": "country_code",
+     "unico": false
+    },
+    {
+     "nome": "idx_geo_access_logs_created",
+     "colunas": "created_at DESC",
+     "unico": false
+    },
+    {
+     "nome": "idx_geo_access_logs_user_id",
+     "colunas": "user_id",
+     "unico": false
+    }
+   ],
+   "fks": [
+    "user_id->auth"
+   ],
+   "criada_em": "20251220144518_06856092-4043-44fe-8da4-8f9501335d42.sql",
    "colunas_types": {
     "country_code": "string | null",
     "country_name": "string | null",
@@ -14441,6 +14749,10 @@
     "user_agent": "string | null",
     "user_id": "string | null",
     "was_allowed": "boolean"
+   },
+   "drift": {
+    "so_na_migration": [],
+    "so_no_types": []
    },
    "usada_no_front": 0,
    "usada_em_edges": [],
@@ -14509,9 +14821,9 @@
      "tipo": "permissive"
     },
     {
-     "nome": "Admins can view allowed countries",
+     "nome": "Everyone can view allowed countries",
      "comando": "select",
-     "para": "authenticated",
+     "para": "public",
      "tipo": "permissive"
     }
    ],
@@ -14546,19 +14858,88 @@
    "nao_usada": true
   },
   "geo_blocking_rules": {
-   "colunas": {},
-   "rls": false,
+   "colunas": {
+    "country_code": {
+     "tipo": "character varying(2)",
+     "nn": true,
+     "pk": false,
+     "default": null,
+     "ref": null
+    },
+    "country_name": {
+     "tipo": "character varying(100)",
+     "nn": true,
+     "pk": false,
+     "default": null,
+     "ref": null
+    },
+    "created_at": {
+     "tipo": "timestamp with time zone",
+     "nn": true,
+     "pk": false,
+     "default": "now()",
+     "ref": null
+    },
+    "created_by": {
+     "tipo": "uuid",
+     "nn": false,
+     "pk": false,
+     "default": null,
+     "ref": null
+    },
+    "id": {
+     "tipo": "uuid",
+     "nn": true,
+     "pk": false,
+     "default": "gen_random_uuid()",
+     "ref": null
+    },
+    "is_allowed": {
+     "tipo": "boolean",
+     "nn": true,
+     "pk": false,
+     "default": "true",
+     "ref": null
+    },
+    "updated_at": {
+     "tipo": "timestamp with time zone",
+     "nn": true,
+     "pk": false,
+     "default": "now()",
+     "ref": null
+    }
+   },
+   "rls": true,
    "policies": [
     {
-     "nome": "Admins can view geo blocking rules",
+     "nome": "Admins podem gerenciar regras de geo blocking",
+     "comando": "all",
+     "para": "public",
+     "tipo": "permissive"
+    },
+    {
+     "nome": "Todos podem ver regras de geo blocking",
      "comando": "select",
-     "para": "authenticated",
+     "para": "public",
      "tipo": "permissive"
     }
    ],
-   "indices": [],
-   "fks": [],
-   "criada_em": null,
+   "indices": [
+    {
+     "nome": "idx_geo_blocking_rules_allowed",
+     "colunas": "is_allowed",
+     "unico": false
+    },
+    {
+     "nome": "idx_geo_blocking_rules_created_by",
+     "colunas": "created_by",
+     "unico": false
+    }
+   ],
+   "fks": [
+    "created_by->auth"
+   ],
+   "criada_em": "20251220144518_06856092-4043-44fe-8da4-8f9501335d42.sql",
    "colunas_types": {
     "country_code": "string",
     "country_name": "string",
@@ -14568,9 +14949,15 @@
     "is_allowed": "boolean",
     "updated_at": "string"
    },
+   "drift": {
+    "so_na_migration": [],
+    "so_no_types": []
+   },
    "usada_no_front": 0,
    "usada_em_edges": [],
-   "triggers": [],
+   "triggers": [
+    "update_geo_blocking_rules_updated_at"
+   ],
    "sem_rls": false,
    "nao_usada": true
   },
@@ -14628,9 +15015,9 @@
      "tipo": "permissive"
     },
     {
-     "nome": "Admins can view geo settings",
+     "nome": "Everyone can view geo settings",
      "comando": "select",
-     "para": "authenticated",
+     "para": "public",
      "tipo": "permissive"
     }
    ],
@@ -16280,7 +16667,19 @@
    "rls": true,
    "policies": [
     {
-     "nome": "lightning_answers_select_own",
+     "nome": "lightning_quiz_answers_admin_all",
+     "comando": "all",
+     "para": "authenticated",
+     "tipo": "permissive"
+    },
+    {
+     "nome": "lightning_quiz_answers_admin_select",
+     "comando": "select",
+     "para": "authenticated",
+     "tipo": "permissive"
+    },
+    {
+     "nome": "lightning_quiz_answers_user_select",
      "comando": "select",
      "para": "authenticated",
      "tipo": "permissive"
@@ -16394,8 +16793,14 @@
    "rls": true,
    "policies": [
     {
-     "nome": "lightning_questions_admin_manage",
+     "nome": "lightning_quiz_questions_admin_all",
      "comando": "all",
+     "para": "authenticated",
+     "tipo": "permissive"
+    },
+    {
+     "nome": "lightning_quiz_questions_user_select",
+     "comando": "select",
      "para": "authenticated",
      "tipo": "permissive"
     }
@@ -16557,8 +16962,14 @@
    "rls": true,
    "policies": [
     {
-     "nome": "lightning_sessions_select_own",
-     "comando": "select",
+     "nome": "lightning_quiz_sessions_admin_all",
+     "comando": "all",
+     "para": "authenticated",
+     "tipo": "permissive"
+    },
+    {
+     "nome": "lightning_quiz_sessions_user_own",
+     "comando": "all",
      "para": "authenticated",
      "tipo": "permissive"
     }
@@ -16823,8 +17234,8 @@
    "rls": true,
    "policies": [
     {
-     "nome": "Admins leem snapshots de payout",
-     "comando": "select",
+     "nome": "lucky_wheel_payout_snapshots_admin_all",
+     "comando": "all",
      "para": "authenticated",
      "tipo": "permissive"
     }
@@ -16915,7 +17326,7 @@
    "rls": true,
    "policies": [
     {
-     "nome": "Admins read wheel prize audit",
+     "nome": "lucky_wheel_prize_audit_admin_select",
      "comando": "select",
      "para": "authenticated",
      "tipo": "permissive"
@@ -17009,7 +17420,13 @@
    "rls": false,
    "policies": [
     {
-     "nome": "Admins can view lucky wheel prizes",
+     "nome": "lucky_wheel_prizes_admin_all",
+     "comando": "all",
+     "para": "authenticated",
+     "tipo": "permissive"
+    },
+    {
+     "nome": "lucky_wheel_prizes_user_select",
      "comando": "select",
      "para": "authenticated",
      "tipo": "permissive"
@@ -17094,7 +17511,7 @@
    "rls": true,
    "policies": [
     {
-     "nome": "Admins manage lucky wheel settings",
+     "nome": "lucky_wheel_settings_admin_all",
      "comando": "all",
      "para": "authenticated",
      "tipo": "permissive"
@@ -17164,8 +17581,8 @@
    "rls": true,
    "policies": [
     {
-     "nome": "Admins read lucky wheel settings audit",
-     "comando": "select",
+     "nome": "lucky_wheel_settings_audit_admin_all",
+     "comando": "all",
      "para": "authenticated",
      "tipo": "permissive"
     }
@@ -17207,7 +17624,20 @@
     }
    },
    "rls": false,
-   "policies": [],
+   "policies": [
+    {
+     "nome": "lucky_wheel_spins_admin_all",
+     "comando": "all",
+     "para": "authenticated",
+     "tipo": "permissive"
+    },
+    {
+     "nome": "lucky_wheel_spins_user_select",
+     "comando": "select",
+     "para": "authenticated",
+     "tipo": "permissive"
+    }
+   ],
    "indices": [
     {
      "nome": "lucky_wheel_spins_dedupe_key_idx",
@@ -17351,20 +17781,8 @@
    "rls": true,
    "policies": [
     {
-     "nome": "Admins atualizam simulacoes what-if",
-     "comando": "update",
-     "para": "authenticated",
-     "tipo": "permissive"
-    },
-    {
-     "nome": "Admins leem simulacoes what-if",
-     "comando": "select",
-     "para": "authenticated",
-     "tipo": "permissive"
-    },
-    {
-     "nome": "Admins registram simulacoes what-if",
-     "comando": "insert",
+     "nome": "lucky_wheel_whatif_snapshots_admin_all",
+     "comando": "all",
      "para": "authenticated",
      "tipo": "permissive"
     }
@@ -17468,13 +17886,13 @@
    "rls": true,
    "policies": [
     {
-     "nome": "memory_decks_admin_write",
+     "nome": "memory_decks_admin_all",
      "comando": "all",
      "para": "authenticated",
      "tipo": "permissive"
     },
     {
-     "nome": "memory_decks_select",
+     "nome": "memory_decks_user_select",
      "comando": "select",
      "para": "authenticated",
      "tipo": "permissive"
@@ -17555,13 +17973,13 @@
    "rls": true,
    "policies": [
     {
-     "nome": "memory_pairs_admin_write",
+     "nome": "memory_pairs_admin_all",
      "comando": "all",
      "para": "authenticated",
      "tipo": "permissive"
     },
     {
-     "nome": "memory_pairs_select",
+     "nome": "memory_pairs_user_select",
      "comando": "select",
      "para": "authenticated",
      "tipo": "permissive"
@@ -17709,8 +18127,14 @@
    "rls": true,
    "policies": [
     {
-     "nome": "memory_sessions_select_own",
-     "comando": "select",
+     "nome": "memory_sessions_admin_all",
+     "comando": "all",
+     "para": "authenticated",
+     "tipo": "permissive"
+    },
+    {
+     "nome": "memory_sessions_user_own",
+     "comando": "all",
      "para": "authenticated",
      "tipo": "permissive"
     }
@@ -18757,11 +19181,102 @@
      "default": "true",
      "ref": null
     },
+    "created_at": {
+     "tipo": "timestamp with time zone",
+     "nn": true,
+     "pk": false,
+     "default": "now()",
+     "ref": null
+    },
+    "digest_enabled": {
+     "tipo": "boolean",
+     "nn": true,
+     "pk": false,
+     "default": "true",
+     "ref": null
+    },
+    "digest_frequency": {
+     "tipo": "text",
+     "nn": true,
+     "pk": false,
+     "default": "'daily'::text",
+     "ref": null
+    },
+    "digest_time": {
+     "tipo": "time without time zone",
+     "nn": false,
+     "pk": false,
+     "default": "'09:00:00'::time without time zone",
+     "ref": null
+    },
+    "do_not_disturb_enabled": {
+     "tipo": "boolean",
+     "nn": true,
+     "pk": false,
+     "default": "false",
+     "ref": null
+    },
+    "do_not_disturb_end": {
+     "tipo": "time without time zone",
+     "nn": false,
+     "pk": false,
+     "default": "'08:00:00'::time without time zone",
+     "ref": null
+    },
+    "do_not_disturb_start": {
+     "tipo": "time without time zone",
+     "nn": false,
+     "pk": false,
+     "default": "'22:00:00'::time without time zone",
+     "ref": null
+    },
+    "do_not_disturb_weekends": {
+     "tipo": "boolean",
+     "nn": true,
+     "pk": false,
+     "default": "true",
+     "ref": null
+    },
+    "email_enabled": {
+     "tipo": "boolean",
+     "nn": true,
+     "pk": false,
+     "default": "true",
+     "ref": null
+    },
     "frequency": {
      "tipo": "text",
      "nn": false,
      "pk": false,
      "default": "'instant'",
+     "ref": null
+    },
+    "id": {
+     "tipo": "uuid",
+     "nn": true,
+     "pk": false,
+     "default": "gen_random_uuid()",
+     "ref": null
+    },
+    "in_app_enabled": {
+     "tipo": "boolean",
+     "nn": true,
+     "pk": false,
+     "default": "true",
+     "ref": null
+    },
+    "language": {
+     "tipo": "text",
+     "nn": true,
+     "pk": false,
+     "default": "'pt-BR'::text",
+     "ref": null
+    },
+    "push_enabled": {
+     "tipo": "boolean",
+     "nn": true,
+     "pk": false,
+     "default": "true",
      "ref": null
     },
     "quiet_hours_end": {
@@ -18777,13 +19292,41 @@
      "pk": false,
      "default": null,
      "ref": null
+    },
+    "type_preferences": {
+     "tipo": "jsonb",
+     "nn": false,
+     "pk": false,
+     "default": "CAST('{\"xp\":{\"push\":false,\"email\":false,\"in_app\":true,\"priority\":\"low\"},\"goal\":{\"push\":true,\"email\":true,\"in_app\":true,\"priority\":\"high\"},\"quest\":{\"push\":true,\"email\":true,\"in_app\":true,\"priority\":\"normal\"},\"survey\":{\"push\":true,\"email\":true,\"in_app\":true,\"priority\":\"high\"},\"checkin\":{\"push\":false,\"email\":true,\"in_app\":true,\"priority\":\"normal\"},\"feedback\":{\"push\":true,\"email\":true,\"in_app\":true,\"priority\":\"high\"},\"level_up\":{\"push\":true,\"email\":true,\"in_app\":true,\"priority\":\"high\"},\"achievement\":{\"push\":true,\"email\":true,\"in_app\":true,\"priority\":\"normal\"},\"leaderboard\":{\"push\":true,\"email\":false,\"in_app\":true,\"priority\":\"normal\"},\"announcement\":{\"push\":true,\"email\":true,\"in_app\":true,\"priority\":\"normal\"},\"competency_gap\":{\"push\":true,\"email\":true,\"in_app\":true,\"priority\":\"high\"},\"development_tip\":{\"push\":false,\"email\":true,\"in_app\":true,\"priority\":\"low\"},\"campaign_enrolled\":{\"push\":true,\"email\":false,\"in_app\":true,\"priority\":\"normal\"},\"campaign_progress\":{\"push\":false,\"email\":false,\"in_app\":true,\"priority\":\"low\"},\"campaign_milestone\":{\"push\":true,\"email\":false,\"in_app\":true,\"priority\":\"normal\"},\"campaign_completed\":{\"push\":true,\"email\":true,\"in_app\":true,\"priority\":\"high\"},\"campaign_closed\":{\"push\":true,\"email\":true,\"in_app\":true,\"priority\":\"normal\"}}' AS jsonb)",
+     "ref": null
+    },
+    "updated_at": {
+     "tipo": "timestamp with time zone",
+     "nn": true,
+     "pk": false,
+     "default": "now()",
+     "ref": null
+    },
+    "user_id": {
+     "tipo": "uuid",
+     "nn": true,
+     "pk": false,
+     "default": null,
+     "ref": null
     }
    },
-   "rls": false,
-   "policies": [],
+   "rls": true,
+   "policies": [
+    {
+     "nome": "Users can manage own notification preferences",
+     "comando": "all",
+     "para": "public",
+     "tipo": "permissive"
+    }
+   ],
    "indices": [],
    "fks": [],
-   "criada_em": null,
+   "criada_em": "20251220144518_06856092-4043-44fe-8da4-8f9501335d42.sql",
    "colunas_types": {
     "channel_email": "boolean | null",
     "channel_in_app": "boolean | null",
@@ -18810,28 +19353,13 @@
    },
    "drift": {
     "so_na_migration": [],
-    "so_no_types": [
-     "created_at",
-     "digest_enabled",
-     "digest_frequency",
-     "digest_time",
-     "do_not_disturb_enabled",
-     "do_not_disturb_end",
-     "do_not_disturb_start",
-     "do_not_disturb_weekends",
-     "email_enabled",
-     "id",
-     "in_app_enabled",
-     "language",
-     "push_enabled",
-     "type_preferences",
-     "updated_at",
-     "user_id"
-    ]
+    "so_no_types": []
    },
    "usada_no_front": 3,
    "usada_em_edges": [],
-   "triggers": [],
+   "triggers": [
+    "update_notification_preferences_updated_at"
+   ],
    "sem_rls": false,
    "nao_usada": false
   },
@@ -19138,13 +19666,13 @@
    "rls": true,
    "policies": [
     {
-     "nome": "nr1_mappings_admin_write",
+     "nome": "nr1_factor_mappings_admin_all",
      "comando": "all",
      "para": "authenticated",
      "tipo": "permissive"
     },
     {
-     "nome": "nr1_mappings_select",
+     "nome": "nr1_factor_mappings_select",
      "comando": "select",
      "para": "authenticated",
      "tipo": "permissive"
@@ -19253,13 +19781,13 @@
    "rls": true,
    "policies": [
     {
-     "nome": "nr1_categories_admin_write",
+     "nome": "nr1_risk_categories_admin_all",
      "comando": "all",
      "para": "authenticated",
      "tipo": "permissive"
     },
     {
-     "nome": "nr1_categories_select",
+     "nome": "nr1_risk_categories_select",
      "comando": "select",
      "para": "authenticated",
      "tipo": "permissive"
@@ -19457,13 +19985,13 @@
     {
      "nome": "Responders can create responses",
      "comando": "insert",
-     "para": "authenticated",
+     "para": "public",
      "tipo": "permissive"
     },
     {
      "nome": "View opinion responses",
      "comando": "select",
-     "para": "authenticated",
+     "para": "public",
      "tipo": "permissive"
     }
    ],
@@ -19524,7 +20052,13 @@
    "rls": true,
    "policies": [
     {
-     "nome": "Users manage their own opinion supports",
+     "nome": "opinion_supports_select",
+     "comando": "select",
+     "para": "authenticated",
+     "tipo": "permissive"
+    },
+    {
+     "nome": "opinion_supports_user_own",
      "comando": "all",
      "para": "authenticated",
      "tipo": "permissive"
@@ -19593,7 +20127,7 @@
     {
      "nome": "Manage opinion tags",
      "comando": "all",
-     "para": "authenticated",
+     "para": "public",
      "tipo": "permissive"
     }
    ],
@@ -19722,12 +20256,6 @@
    "rls": true,
    "policies": [
     {
-     "nome": "Authors read their own opinions",
-     "comando": "select",
-     "para": "authenticated",
-     "tipo": "permissive"
-    },
-    {
      "nome": "Recipients can update opinions",
      "comando": "update",
      "para": "public",
@@ -19736,6 +20264,12 @@
     {
      "nome": "Users can create opinions",
      "comando": "insert",
+     "para": "public",
+     "tipo": "permissive"
+    },
+    {
+     "nome": "View opinions",
+     "comando": "select",
      "para": "public",
      "tipo": "permissive"
     }
@@ -20766,12 +21300,75 @@
    "nao_usada": false
   },
   "permission_groups": {
-   "colunas": {},
-   "rls": false,
-   "policies": [],
+   "colunas": {
+    "created_at": {
+     "tipo": "timestamp with time zone",
+     "nn": true,
+     "pk": false,
+     "default": "now()",
+     "ref": null
+    },
+    "description": {
+     "tipo": "text",
+     "nn": false,
+     "pk": false,
+     "default": null,
+     "ref": null
+    },
+    "id": {
+     "tipo": "uuid",
+     "nn": true,
+     "pk": false,
+     "default": "gen_random_uuid()",
+     "ref": null
+    },
+    "is_system": {
+     "tipo": "boolean",
+     "nn": true,
+     "pk": false,
+     "default": "false",
+     "ref": null
+    },
+    "name": {
+     "tipo": "text",
+     "nn": true,
+     "pk": false,
+     "default": null,
+     "ref": null
+    },
+    "permissions": {
+     "tipo": "jsonb",
+     "nn": true,
+     "pk": false,
+     "default": "'{}'::jsonb",
+     "ref": null
+    },
+    "updated_at": {
+     "tipo": "timestamp with time zone",
+     "nn": true,
+     "pk": false,
+     "default": "now()",
+     "ref": null
+    }
+   },
+   "rls": true,
+   "policies": [
+    {
+     "nome": "Admins can manage permission groups",
+     "comando": "all",
+     "para": "public",
+     "tipo": "permissive"
+    },
+    {
+     "nome": "Everyone can view permission groups",
+     "comando": "select",
+     "para": "public",
+     "tipo": "permissive"
+    }
+   ],
    "indices": [],
    "fks": [],
-   "criada_em": null,
+   "criada_em": "20251220144518_06856092-4043-44fe-8da4-8f9501335d42.sql",
    "colunas_types": {
     "created_at": "string",
     "description": "string | null",
@@ -20781,9 +21378,15 @@
     "permissions": "Json",
     "updated_at": "string"
    },
+   "drift": {
+    "so_na_migration": [],
+    "so_no_types": []
+   },
    "usada_no_front": 0,
    "usada_em_edges": [],
-   "triggers": [],
+   "triggers": [
+    "update_permission_groups_updated_at"
+   ],
    "sem_rls": false,
    "nao_usada": true
   },
@@ -20855,7 +21458,7 @@
      "tipo": "permissive"
     },
     {
-     "nome": "permissions_select",
+     "nome": "Everyone can view permissions",
      "comando": "select",
      "para": "public",
      "tipo": "permissive"
@@ -21643,8 +22246,8 @@
    "rls": true,
    "policies": [
     {
-     "nome": "Admins leem trilha de previsões",
-     "comando": "select",
+     "nome": "prediction_admin_events_admin_all",
+     "comando": "all",
      "para": "authenticated",
      "tipo": "permissive"
     }
@@ -21803,13 +22406,13 @@
    "rls": true,
    "policies": [
     {
-     "nome": "Admins gerenciam mercados",
+     "nome": "prediction_markets_admin_all",
      "comando": "all",
      "para": "authenticated",
      "tipo": "permissive"
     },
     {
-     "nome": "Mercados publicados são visíveis",
+     "nome": "prediction_markets_user_select",
      "comando": "select",
      "para": "authenticated",
      "tipo": "permissive"
@@ -21904,13 +22507,13 @@
    "rls": true,
    "policies": [
     {
-     "nome": "Admins gerenciam opções",
+     "nome": "prediction_options_admin_all",
      "comando": "all",
      "para": "authenticated",
      "tipo": "permissive"
     },
     {
-     "nome": "Opções de mercados visíveis",
+     "nome": "prediction_options_user_select",
      "comando": "select",
      "para": "authenticated",
      "tipo": "permissive"
@@ -22007,8 +22610,14 @@
    "rls": true,
    "policies": [
     {
-     "nome": "Usuário vê os próprios aportes",
-     "comando": "select",
+     "nome": "prediction_stakes_admin_all",
+     "comando": "all",
+     "para": "authenticated",
+     "tipo": "permissive"
+    },
+    {
+     "nome": "prediction_stakes_user_own",
+     "comando": "all",
      "para": "authenticated",
      "tipo": "permissive"
     }
@@ -22213,7 +22822,7 @@
    "rls": true,
    "policies": [
     {
-     "nome": "Profiles are viewable by authenticated users",
+     "nome": "Authenticated users can view profiles",
      "comando": "select",
      "para": "authenticated",
      "tipo": "permissive"
@@ -22562,13 +23171,13 @@
    "rls": true,
    "policies": [
     {
-     "nome": "Staff can view all approval trail",
-     "comando": "select",
+     "nome": "purchase_approvals_admin_all",
+     "comando": "all",
      "para": "authenticated",
      "tipo": "permissive"
     },
     {
-     "nome": "Users can view own approval trail",
+     "nome": "purchase_approvals_user_select",
      "comando": "select",
      "para": "authenticated",
      "tipo": "permissive"
@@ -22889,7 +23498,13 @@
    "rls": true,
    "policies": [
     {
-     "nome": "Admins can view push outbox",
+     "nome": "push_outbox_admin_all",
+     "comando": "all",
+     "para": "authenticated",
+     "tipo": "permissive"
+    },
+    {
+     "nome": "push_outbox_user_select",
      "comando": "select",
      "para": "authenticated",
      "tipo": "permissive"
@@ -23031,8 +23646,8 @@
    "rls": true,
    "policies": [
     {
-     "nome": "Admins can view push outbox health snapshots",
-     "comando": "select",
+     "nome": "push_outbox_health_admin_all",
+     "comando": "all",
      "para": "authenticated",
      "tipo": "permissive"
     }
@@ -23296,13 +23911,19 @@
    "rls": true,
    "policies": [
     {
-     "nome": "Users insert own push sync events",
+     "nome": "push_sync_events_admin_select",
+     "comando": "select",
+     "para": "authenticated",
+     "tipo": "permissive"
+    },
+    {
+     "nome": "push_sync_events_authenticated_insert",
      "comando": "insert",
      "para": "authenticated",
      "tipo": "permissive"
     },
     {
-     "nome": "Users read own push sync events",
+     "nome": "push_sync_events_user_select",
      "comando": "select",
      "para": "authenticated",
      "tipo": "permissive"
@@ -23874,9 +24495,9 @@
      "tipo": "permissive"
     },
     {
-     "nome": "Staff can view quiz options",
+     "nome": "Everyone can view options of active questions",
      "comando": "select",
-     "para": "authenticated",
+     "para": "public",
      "tipo": "permissive"
     }
    ],
@@ -24412,12 +25033,6 @@
    "rls": true,
    "policies": [
     {
-     "nome": "Admins can manage rate limit rules",
-     "comando": "all",
-     "para": "authenticated",
-     "tipo": "permissive"
-    },
-    {
      "nome": "Admins can manage rate_limit_rules",
      "comando": "all",
      "para": "authenticated",
@@ -24490,7 +25105,7 @@
      "tipo": "permissive"
     },
     {
-     "nome": "role_permissions_select",
+     "nome": "Everyone can view role permissions",
      "comando": "select",
      "para": "public",
      "tipo": "permissive"
@@ -25177,13 +25792,13 @@
    "rls": true,
    "policies": [
     {
-     "nome": "scratch_prizes_admin_manage",
+     "nome": "scratch_card_prizes_admin_all",
      "comando": "all",
      "para": "authenticated",
      "tipo": "permissive"
     },
     {
-     "nome": "scratch_prizes_select_admin",
+     "nome": "scratch_card_prizes_user_select",
      "comando": "select",
      "para": "authenticated",
      "tipo": "permissive"
@@ -25319,8 +25934,26 @@
    "rls": true,
    "policies": [
     {
-     "nome": "scratch_cards_select_own",
+     "nome": "scratch_cards_admin_all",
+     "comando": "all",
+     "para": "authenticated",
+     "tipo": "permissive"
+    },
+    {
+     "nome": "scratch_cards_user_insert",
+     "comando": "insert",
+     "para": "authenticated",
+     "tipo": "permissive"
+    },
+    {
+     "nome": "scratch_cards_user_select",
      "comando": "select",
+     "para": "authenticated",
+     "tipo": "permissive"
+    },
+    {
+     "nome": "scratch_cards_user_update",
+     "comando": "update",
      "para": "authenticated",
      "tipo": "permissive"
     }
@@ -25716,6 +26349,13 @@
      "default": null,
      "ref": null
     },
+    "resolved": {
+     "tipo": "boolean",
+     "nn": false,
+     "pk": false,
+     "default": null,
+     "ref": null
+    },
     "resolved_at": {
      "tipo": "timestamptz",
      "nn": false,
@@ -25826,7 +26466,9 @@
     "user_id": "string | null"
    },
    "drift": {
-    "so_na_migration": [],
+    "so_na_migration": [
+     "resolved"
+    ],
     "so_no_types": []
    },
    "usada_no_front": 3,
@@ -25933,8 +26575,14 @@
    "rls": true,
    "policies": [
     {
-     "nome": "sequence_attempts_select_own",
-     "comando": "select",
+     "nome": "sequence_attempts_admin_all",
+     "comando": "all",
+     "para": "authenticated",
+     "tipo": "permissive"
+    },
+    {
+     "nome": "sequence_attempts_user_own",
+     "comando": "all",
      "para": "authenticated",
      "tipo": "permissive"
     }
@@ -26046,13 +26694,13 @@
    "rls": true,
    "policies": [
     {
-     "nome": "sequence_procedures_admin_write",
+     "nome": "sequence_procedures_admin_all",
      "comando": "all",
      "para": "authenticated",
      "tipo": "permissive"
     },
     {
-     "nome": "sequence_procedures_select",
+     "nome": "sequence_procedures_user_select",
      "comando": "select",
      "para": "authenticated",
      "tipo": "permissive"
@@ -26140,13 +26788,13 @@
    "rls": true,
    "policies": [
     {
-     "nome": "sequence_steps_admin_write",
+     "nome": "sequence_steps_admin_all",
      "comando": "all",
      "para": "authenticated",
      "tipo": "permissive"
     },
     {
-     "nome": "sequence_steps_select_staff",
+     "nome": "sequence_steps_user_select",
      "comando": "select",
      "para": "authenticated",
      "tipo": "permissive"
@@ -26517,6 +27165,27 @@
      "default": null,
      "ref": null
     },
+    "approval_reason": {
+     "tipo": "text",
+     "nn": false,
+     "pk": false,
+     "default": null,
+     "ref": null
+    },
+    "approval_status": {
+     "tipo": "text",
+     "nn": true,
+     "pk": false,
+     "default": "'pending'",
+     "ref": null
+    },
+    "approved_by": {
+     "tipo": "uuid",
+     "nn": false,
+     "pk": false,
+     "default": null,
+     "ref": null
+    },
     "created_at": {
      "tipo": "timestamp with time zone",
      "nn": true,
@@ -26594,6 +27263,13 @@
      "default": "'[]'::jsonb",
      "ref": null
     },
+    "risk_flags": {
+     "tipo": "jsonb",
+     "nn": false,
+     "pk": false,
+     "default": "'[]'::jsonb",
+     "ref": null
+    },
     "risk_level": {
      "tipo": "text",
      "nn": false,
@@ -26602,7 +27278,7 @@
      "ref": null
     },
     "risk_score": {
-     "tipo": "integer",
+     "tipo": "numeric",
      "nn": false,
      "pk": false,
      "default": null,
@@ -26665,6 +27341,7 @@
     }
    ],
    "fks": [
+    "approved_by->auth",
     "reward_id->shop_rewards",
     "user_id->profiles"
    ],
@@ -26689,7 +27366,12 @@
     "user_id": "string"
    },
    "drift": {
-    "so_na_migration": [],
+    "so_na_migration": [
+     "approval_status",
+     "approved_by",
+     "approval_reason",
+     "risk_flags"
+    ],
     "so_no_types": []
    },
    "usada_no_front": 1,
@@ -27485,7 +28167,13 @@
    "rls": true,
    "policies": [
     {
-     "nome": "Partidas visiveis para autenticados",
+     "nome": "tournament_matches_admin_all",
+     "comando": "all",
+     "para": "authenticated",
+     "tipo": "permissive"
+    },
+    {
+     "nome": "tournament_matches_user_select",
      "comando": "select",
      "para": "authenticated",
      "tipo": "permissive"
@@ -27622,7 +28310,13 @@
    "rls": true,
    "policies": [
     {
-     "nome": "Participantes de torneios visiveis para autenticados",
+     "nome": "tournament_participants_admin_all",
+     "comando": "all",
+     "para": "authenticated",
+     "tipo": "permissive"
+    },
+    {
+     "nome": "tournament_participants_user_select",
      "comando": "select",
      "para": "authenticated",
      "tipo": "permissive"
@@ -27830,13 +28524,13 @@
    "rls": true,
    "policies": [
     {
-     "nome": "Admins gerenciam torneios",
+     "nome": "tournaments_admin_all",
      "comando": "all",
      "para": "authenticated",
      "tipo": "permissive"
     },
     {
-     "nome": "Torneios publicados sao visiveis para autenticados",
+     "nome": "tournaments_user_select",
      "comando": "select",
      "para": "authenticated",
      "tipo": "permissive"
@@ -28513,8 +29207,14 @@
    "rls": true,
    "policies": [
     {
-     "nome": "user_cards_select_own",
+     "nome": "user_cards_admin_select",
      "comando": "select",
+     "para": "authenticated",
+     "tipo": "permissive"
+    },
+    {
+     "nome": "user_cards_user_all",
+     "comando": "all",
      "para": "authenticated",
      "tipo": "permissive"
     }
@@ -29151,12 +29851,97 @@
    "nao_usada": true
   },
   "user_demographic_values": {
-   "colunas": {},
-   "rls": false,
-   "policies": [],
-   "indices": [],
-   "fks": [],
-   "criada_em": null,
+   "colunas": {
+    "attribute_id": {
+     "tipo": "uuid",
+     "nn": true,
+     "pk": false,
+     "default": null,
+     "ref": null
+    },
+    "created_at": {
+     "tipo": "timestamp with time zone",
+     "nn": true,
+     "pk": false,
+     "default": "now()",
+     "ref": null
+    },
+    "date_value": {
+     "tipo": "date",
+     "nn": false,
+     "pk": false,
+     "default": null,
+     "ref": null
+    },
+    "id": {
+     "tipo": "uuid",
+     "nn": true,
+     "pk": false,
+     "default": "gen_random_uuid()",
+     "ref": null
+    },
+    "number_value": {
+     "tipo": "numeric",
+     "nn": false,
+     "pk": false,
+     "default": null,
+     "ref": null
+    },
+    "updated_at": {
+     "tipo": "timestamp with time zone",
+     "nn": true,
+     "pk": false,
+     "default": "now()",
+     "ref": null
+    },
+    "user_id": {
+     "tipo": "uuid",
+     "nn": true,
+     "pk": false,
+     "default": null,
+     "ref": null
+    },
+    "value": {
+     "tipo": "text",
+     "nn": false,
+     "pk": false,
+     "default": null,
+     "ref": null
+    },
+    "values_array": {
+     "tipo": "jsonb",
+     "nn": false,
+     "pk": false,
+     "default": "'[]'::jsonb",
+     "ref": null
+    }
+   },
+   "rls": true,
+   "policies": [
+    {
+     "nome": "Admins and managers can view demographic values",
+     "comando": "select",
+     "para": "public",
+     "tipo": "permissive"
+    },
+    {
+     "nome": "Users can manage own demographic values",
+     "comando": "all",
+     "para": "public",
+     "tipo": "permissive"
+    }
+   ],
+   "indices": [
+    {
+     "nome": "idx_user_demographic_values_attribute_id",
+     "colunas": "attribute_id",
+     "unico": false
+    }
+   ],
+   "fks": [
+    "attribute_id->demographic_attributes"
+   ],
+   "criada_em": "20251220144518_06856092-4043-44fe-8da4-8f9501335d42.sql",
    "colunas_types": {
     "attribute_id": "string",
     "created_at": "string",
@@ -29168,9 +29953,15 @@
     "value": "string | null",
     "values_array": "Json | null"
    },
+   "drift": {
+    "so_na_migration": [],
+    "so_no_types": []
+   },
    "usada_no_front": 0,
    "usada_em_edges": [],
-   "triggers": [],
+   "triggers": [
+    "update_user_demographic_values_updated_at"
+   ],
    "sem_rls": false,
    "nao_usada": true
   },
@@ -29590,17 +30381,71 @@
    "nao_usada": false
   },
   "user_permission_groups": {
-   "colunas": {},
-   "rls": false,
-   "policies": [],
-   "indices": [],
-   "fks": [],
-   "criada_em": null,
+   "colunas": {
+    "created_at": {
+     "tipo": "timestamp with time zone",
+     "nn": true,
+     "pk": false,
+     "default": "now()",
+     "ref": null
+    },
+    "id": {
+     "tipo": "uuid",
+     "nn": true,
+     "pk": false,
+     "default": "gen_random_uuid()",
+     "ref": null
+    },
+    "permission_group_id": {
+     "tipo": "uuid",
+     "nn": true,
+     "pk": false,
+     "default": null,
+     "ref": null
+    },
+    "user_id": {
+     "tipo": "uuid",
+     "nn": true,
+     "pk": false,
+     "default": null,
+     "ref": null
+    }
+   },
+   "rls": true,
+   "policies": [
+    {
+     "nome": "Admins can manage user permission groups",
+     "comando": "all",
+     "para": "public",
+     "tipo": "permissive"
+    },
+    {
+     "nome": "Users can view own permission groups",
+     "comando": "select",
+     "para": "public",
+     "tipo": "permissive"
+    }
+   ],
+   "indices": [
+    {
+     "nome": "idx_user_permission_groups_permission_group_id",
+     "colunas": "permission_group_id",
+     "unico": false
+    }
+   ],
+   "fks": [
+    "permission_group_id->permission_groups"
+   ],
+   "criada_em": "20251220144518_06856092-4043-44fe-8da4-8f9501335d42.sql",
    "colunas_types": {
     "created_at": "string",
     "id": "string",
     "permission_group_id": "string",
     "user_id": "string"
+   },
+   "drift": {
+    "so_na_migration": [],
+    "so_no_types": []
    },
    "usada_no_front": 0,
    "usada_em_edges": [],
@@ -30135,20 +30980,14 @@
    "rls": true,
    "policies": [
     {
-     "nome": "Admins and managers read wager budget",
+     "nome": "wager_budget_settings_admin_all",
+     "comando": "all",
+     "para": "authenticated",
+     "tipo": "permissive"
+    },
+    {
+     "nome": "wager_budget_settings_manager_select",
      "comando": "select",
-     "para": "authenticated",
-     "tipo": "permissive"
-    },
-    {
-     "nome": "Admins insert wager budget",
-     "comando": "insert",
-     "para": "authenticated",
-     "tipo": "permissive"
-    },
-    {
-     "nome": "Admins update wager budget",
-     "comando": "update",
      "para": "authenticated",
      "tipo": "permissive"
     }
@@ -30252,7 +31091,19 @@
    "rls": true,
    "policies": [
     {
-     "nome": "wager_entries_read_own",
+     "nome": "wager_entries_admin_manage",
+     "comando": "all",
+     "para": "authenticated",
+     "tipo": "permissive"
+    },
+    {
+     "nome": "wager_entries_admin_select",
+     "comando": "select",
+     "para": "authenticated",
+     "tipo": "permissive"
+    },
+    {
+     "nome": "wager_entries_user_select",
      "comando": "select",
      "para": "authenticated",
      "tipo": "permissive"
@@ -30384,8 +31235,8 @@
    "rls": true,
    "policies": [
     {
-     "nome": "Gestores e admins leem historico de apuracoes",
-     "comando": "select",
+     "nome": "wager_integrity_review_events_admin_all",
+     "comando": "all",
      "para": "authenticated",
      "tipo": "permissive"
     }
@@ -30500,26 +31351,14 @@
    "rls": true,
    "policies": [
     {
-     "nome": "Admins can delete integrity reviews",
-     "comando": "delete",
-     "para": "authenticated",
-     "tipo": "permissive"
-    },
-    {
-     "nome": "Admins can insert integrity reviews",
-     "comando": "insert",
-     "para": "authenticated",
-     "tipo": "permissive"
-    },
-    {
-     "nome": "Admins can update integrity reviews",
-     "comando": "update",
-     "para": "authenticated",
-     "tipo": "permissive"
-    },
-    {
      "nome": "Managers and admins can read integrity reviews",
      "comando": "select",
+     "para": "authenticated",
+     "tipo": "permissive"
+    },
+    {
+     "nome": "wager_integrity_reviews_admin_all",
+     "comando": "all",
      "para": "authenticated",
      "tipo": "permissive"
     }
@@ -30655,13 +31494,13 @@
    "rls": true,
    "policies": [
     {
-     "nome": "wager_questions_manage",
+     "nome": "wager_questions_admin_all",
      "comando": "all",
      "para": "authenticated",
      "tipo": "permissive"
     },
     {
-     "nome": "wager_questions_read_active",
+     "nome": "wager_questions_user_select",
      "comando": "select",
      "para": "authenticated",
      "tipo": "permissive"
@@ -31814,7 +32653,7 @@
   },
   {
    "nome": "get_lucky_wheel_status",
-   "definida": false,
+   "definida": true,
    "usada_em": 1
   },
   {

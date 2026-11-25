@@ -59,11 +59,11 @@
  "commits": {
   "convencao": "conventional commits (observado)",
   "exemplos": [
+   "fix(banco): fecha o rebuild - tabelas, colunas, funcoes, views, RLS e grants de producao (#172)",
    "chore(banco): paridade de jobs do cron, matview leaderboard_cache e colunas de profiles (#171)",
    "fix: destino dos avisos de notificação (51 avisos sem rota)",
    "feat: interruptor proprio para os avisos de pesquisa no perfil (#169)",
-   "feat: lembrete semanal de pesquisa de engajamento pendente (#168)",
-   "feat: mostra a foto do premio na loja quando o admin cadastra (#167)"
+   "feat: lembrete semanal de pesquisa de engajamento pendente (#168)"
   ]
  },
  "pr_template": ".github/PULL_REQUEST_TEMPLATE.md",
