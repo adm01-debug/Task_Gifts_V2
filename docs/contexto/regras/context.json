@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "8430c1bcf9b2a9d400a6a7ea5a91624402ce92e6",
+  "sha": "0c592ca286b6cbbd35a1a0a5b5bbe3c677553e19",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
-  "generated_at": "2026-11-25 12:16 UTC",
+  "generated_at": "2026-11-25 12:20 UTC",
   "files_total": 1587,
   "code_files": 1480,
-  "code_lines": 269324
+  "code_lines": 269350
  },
  "version": "1.3.2",
- "facts_hash": "2f4a1b38bc50aa8b",
+ "facts_hash": "43df71c3a2f8820e",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -43127,6 +43127,7 @@
     "tables_transitive": [
      "certifications",
      "notifications",
+     "profiles",
      "team_members",
      "user_certifications"
     ],
@@ -49627,7 +49628,7 @@
   {
    "module": "src/services",
    "files": 99,
-   "lines": 22406,
+   "lines": 22432,
    "tables": [
     "achievements",
     "action_plan_items",
@@ -51678,7 +51679,9 @@
      "src/services/achievementsService.ts",
      "src/services/activityCommentsService.ts",
      "src/services/adminService.ts",
+     "src/services/attendanceService.ts",
      "src/services/celebrationsService.ts",
+     "src/services/certificationsService.ts",
      "src/services/duelsService.ts",
      "src/services/engagementReportsService.ts",
      "src/services/feedbackService.ts",
@@ -107489,7 +107492,9 @@
      "src/services/achievementsService.ts",
      "src/services/activityCommentsService.ts",
      "src/services/adminService.ts",
+     "src/services/attendanceService.ts",
      "src/services/celebrationsService.ts",
+     "src/services/certificationsService.ts",
      "src/services/duelsService.ts",
      "src/services/engagementReportsService.ts",
      "src/services/feedbackService.ts",
@@ -139051,7 +139056,7 @@
   },
   "src/services/attendanceService.ts": {
    "path": "src/services/attendanceService.ts",
-   "lines": 357,
+   "lines": 374,
    "exports": [
     "interface AttendanceRecord",
     "interface AttendanceSettings",
@@ -139101,6 +139106,10 @@
      "op": "select"
     },
     {
+     "table": "profiles",
+     "op": "select"
+    },
+    {
      "table": "attendance_streaks",
      "op": "select"
     }
@@ -139113,6 +139122,11 @@
      "check_in",
      "id",
      "user_id"
+    ],
+    "profiles": [
+     "avatar_url",
+     "display_name",
+     "id"
     ]
    },
    "status_values": [
@@ -140033,7 +140047,7 @@
   },
   "src/services/certificationsService.ts": {
    "path": "src/services/certificationsService.ts",
-   "lines": 364,
+   "lines": 373,
    "exports": [
     "interface Certification",
     "interface UserCertification",
@@ -140098,6 +140112,10 @@
      "op": "select"
     },
     {
+     "table": "profiles",
+     "op": "select"
+    },
+    {
      "table": "certifications",
      "op": "select"
     },
@@ -140126,6 +140144,10 @@
      "department_id",
      "is_manager",
      "user_id"
+    ],
+    "profiles": [
+     "display_name",
+     "id"
     ]
    },
    "rpc": [
@@ -155177,10 +155199,20 @@
   }
  },
  "git": {
-  "sha": "8430c1bcf9b2a9d400a6a7ea5a91624402ce92e6",
+  "sha": "0c592ca286b6cbbd35a1a0a5b5bbe3c677553e19",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "commits": [
+   {
+    "sha": "0c592ca",
+    "date": "2026-11-25",
+    "author": "adm01-debug",
+    "subject": "fix: painel de certificacoes e entrega do time voltam a carregar (#163)",
+    "files": [
+     "src/services/attendanceService.ts",
+     "src/services/certificationsService.ts"
+    ]
+   },
    {
     "sha": "8430c1b",
     "date": "2026-11-25",
@@ -155538,17 +155570,6 @@
      "docs/estado/03-hooks-services-lib.md",
      "src/services/feedback360Service.ts"
     ]
-   },
-   {
-    "sha": "c0090e3",
-    "date": "2026-11-24",
-    "author": "adm01-debug",
-    "subject": "feat(mentoria): monta o guard de alteracoes nao salvas no formulario de missoes (#130)",
-    "files": [
-     "docs/estado/03-hooks-services-lib.md",
-     "src/pages/Mentoria.tsx",
-     "src/test/useUnsavedChanges.test.tsx"
-    ]
    }
   ],
   "hot_files": [
@@ -155578,7 +155599,7 @@
    ],
    [
     "docs/estado/03-hooks-services-lib.md",
-    5
+    4
    ],
    [
     "docs/estado/02-componentes.md",
@@ -155605,6 +155626,14 @@
     2
    ],
    [
+    "src/services/attendanceService.ts",
+    1
+   ],
+   [
+    "src/services/certificationsService.ts",
+    1
+   ],
+   [
     "src/services/highPotentialService.ts",
     1
    ],
@@ -155622,14 +155651,6 @@
    ],
    [
     "docs/estado/06-integracoes.md",
-    1
-   ],
-   [
-    "supabase/migrations/20261224140000_climate_reminder_push.sql",
-    1
-   ],
-   [
-    "supabase/migrations/20261224130000_climate_antecipa_fim_pesquisa.sql",
     1
    ]
   ]

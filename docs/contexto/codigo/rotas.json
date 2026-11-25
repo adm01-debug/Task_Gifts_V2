@@ -18229,6 +18229,7 @@
    "tabelas": [
     "certifications",
     "notifications",
+    "profiles",
     "team_members",
     "user_certifications"
    ],
@@ -18273,6 +18274,7 @@
    "tabelas": [
     "certifications",
     "notifications",
+    "profiles",
     "team_members",
     "user_certifications"
    ],

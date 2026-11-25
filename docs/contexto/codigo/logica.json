@@ -4293,11 +4293,12 @@
     "attendanceService"
    ],
    "export_default": null,
-   "linhas": 357,
+   "linhas": 374,
    "tabelas": [
     "attendance_records",
     "attendance_settings",
-    "attendance_streaks"
+    "attendance_streaks",
+    "profiles"
    ],
    "rpcs": [],
    "edges": [],
@@ -4819,9 +4820,10 @@
     "certificationsService"
    ],
    "export_default": null,
-   "linhas": 364,
+   "linhas": 373,
    "tabelas": [
     "certifications",
+    "profiles",
     "team_members",
     "user_certifications"
    ],

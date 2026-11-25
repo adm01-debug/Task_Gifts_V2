@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "8430c1bcf9b2a9d400a6a7ea5a91624402ce92e6",
+  "commit": "0c592ca286b6cbbd35a1a0a5b5bbe3c677553e19",
   "branch": "main",
-  "data_commit": "2026-11-25T09:13:58-03:00",
+  "data_commit": "2026-11-25T09:16:55-03:00",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "ultimos_commits": [
+   {
+    "sha": "0c592ca",
+    "data": "2026-11-25",
+    "assunto": "fix: painel de certificacoes e entrega do time voltam a carregar (#163)"
+   },
    {
     "sha": "8430c1b",
     "data": "2026-11-25",
@@ -126,14 +131,9 @@
     "sha": "943fe9e",
     "data": "2026-11-24",
     "assunto": "chore(docs): corrige estado do ledger de migrations e documenta divergencia do dispatch trigger (#133)"
-   },
-   {
-    "sha": "d727dcc",
-    "data": "2026-11-24",
-    "assunto": "feat(pdi): tela de PDI com templates, mentores e check-ins (#128)"
    }
   ],
-  "arquivos_mudados_7d": 212,
+  "arquivos_mudados_7d": 214,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "supabase/functions/_shared",
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 125
+    "commits": 126
    },
    {
     "autor": "dependabot[bot]",
@@ -312,7 +312,7 @@
  "contagens": {
   "arquivos_total": 1576,
   "arquivos_codigo": 1190,
-  "linhas_codigo": 236159,
+  "linhas_codigo": 236185,
   "rotas": 87,
   "rotas_http_backend": 0,
   "vistas_por_id": 0,
@@ -436,7 +436,7 @@
   },
   "src/services": {
    "arquivos": 99,
-   "linhas": 22406
+   "linhas": 22432
   },
   "src/stories": {
    "arquivos": 29,
