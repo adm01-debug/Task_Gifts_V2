@@ -5,7 +5,9 @@
 -- ============================================================
 
 -- ── lightning_quiz_sessions ──────────────────────────────────
-CREATE TABLE public.lightning_quiz_sessions (
+-- Recorte de 20260727221909, que roda antes. Tudo aqui e idempotente para o
+-- rebuild nao morrer em "relation already exists" nem duplicar policies/triggers.
+CREATE TABLE IF NOT EXISTS public.lightning_quiz_sessions (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id UUID NOT NULL REFERENCES public.profiles(id) ON DELETE CASCADE,
   dedupe_key TEXT NOT NULL CHECK (length(dedupe_key) <= 120),
@@ -25,21 +27,22 @@ CREATE TABLE public.lightning_quiz_sessions (
   updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
-CREATE UNIQUE INDEX lightning_sessions_user_dedupe_uidx
+CREATE UNIQUE INDEX IF NOT EXISTS lightning_sessions_user_dedupe_uidx
   ON public.lightning_quiz_sessions (user_id, dedupe_key);
-CREATE INDEX lightning_sessions_user_created_idx
+CREATE INDEX IF NOT EXISTS lightning_sessions_user_created_idx
   ON public.lightning_quiz_sessions (user_id, created_at DESC);
 
 GRANT SELECT ON public.lightning_quiz_sessions TO authenticated;
 GRANT ALL ON public.lightning_quiz_sessions TO service_role;
 ALTER TABLE public.lightning_quiz_sessions ENABLE ROW LEVEL SECURITY;
 
+DROP POLICY IF EXISTS lightning_sessions_select_own ON public.lightning_quiz_sessions;
 CREATE POLICY lightning_sessions_select_own ON public.lightning_quiz_sessions
   FOR SELECT TO authenticated
   USING (user_id = auth.uid() OR public.has_role(auth.uid(), 'admin'));
 
 -- ── lightning_quiz_answers ───────────────────────────────────
-CREATE TABLE public.lightning_quiz_answers (
+CREATE TABLE IF NOT EXISTS public.lightning_quiz_answers (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   session_id UUID NOT NULL REFERENCES public.lightning_quiz_sessions(id) ON DELETE CASCADE,
   user_id UUID NOT NULL REFERENCES public.profiles(id) ON DELETE CASCADE,
@@ -51,20 +54,23 @@ CREATE TABLE public.lightning_quiz_answers (
   created_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
-CREATE UNIQUE INDEX lightning_answers_session_idx_uidx
+CREATE UNIQUE INDEX IF NOT EXISTS lightning_answers_session_idx_uidx
   ON public.lightning_quiz_answers (session_id, idx);
-CREATE INDEX lightning_answers_user_idx
+CREATE INDEX IF NOT EXISTS lightning_answers_user_idx
   ON public.lightning_quiz_answers (user_id, created_at DESC);
 
 GRANT SELECT ON public.lightning_quiz_answers TO authenticated;
 GRANT ALL ON public.lightning_quiz_answers TO service_role;
 ALTER TABLE public.lightning_quiz_answers ENABLE ROW LEVEL SECURITY;
 
+DROP POLICY IF EXISTS lightning_answers_select_own ON public.lightning_quiz_answers;
 CREATE POLICY lightning_answers_select_own ON public.lightning_quiz_answers
   FOR SELECT TO authenticated
   USING (user_id = auth.uid() OR public.has_role(auth.uid(), 'admin'));
 
 -- ── updated_at triggers ──────────────────────────────────────
+DROP TRIGGER IF EXISTS lightning_questions_updated_at ON public.lightning_quiz_questions;
+DROP TRIGGER IF EXISTS lightning_sessions_updated_at ON public.lightning_quiz_sessions;
 CREATE TRIGGER lightning_questions_updated_at BEFORE UPDATE ON public.lightning_quiz_questions
   FOR EACH ROW EXECUTE FUNCTION public.handle_updated_at();
 CREATE TRIGGER lightning_sessions_updated_at BEFORE UPDATE ON public.lightning_quiz_sessions

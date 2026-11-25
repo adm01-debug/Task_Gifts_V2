@@ -1,11 +1,11 @@
 {
   "aviso": "GERADO por scripts/db-audit/check-migration-drift.mjs --atualizar-baseline. Contagem por chave; deve apenas CAIR.",
-  "gerado_de": "294 arquivos",
+  "gerado_de": "298 arquivos",
   "contagem": {
     "nome_invalido": 0,
     "versao_duplicada": 0,
     "codificacao": 0,
-    "nao_idempotente": 1062,
+    "nao_idempotente": 1052,
     "ddl_destrutivo": 42
   },
   "achados": {
@@ -245,10 +245,6 @@
       "20260727221909_f26719a2-a70b-4f38-ab93-5bda56de8d26.sql :: create index sem IF NOT EXISTS": 5,
       "20260727221909_f26719a2-a70b-4f38-ab93-5bda56de8d26.sql :: create policy sem DROP POLICY IF EXISTS da mesma policy": 3,
       "20260727221909_f26719a2-a70b-4f38-ab93-5bda56de8d26.sql :: create trigger sem CREATE OR REPLACE TRIGGER ou DROP TRIGGER IF EXISTS do mesmo trigger": 2,
-      "20260727221910_f26719a2_lightning_relampago_schema.sql :: create table sem IF NOT EXISTS": 2,
-      "20260727221910_f26719a2_lightning_relampago_schema.sql :: create index sem IF NOT EXISTS": 4,
-      "20260727221910_f26719a2_lightning_relampago_schema.sql :: create policy sem DROP POLICY IF EXISTS da mesma policy": 2,
-      "20260727221910_f26719a2_lightning_relampago_schema.sql :: create trigger sem CREATE OR REPLACE TRIGGER ou DROP TRIGGER IF EXISTS do mesmo trigger": 2,
       "20260727222655_16b4a067-5707-4794-9cba-be5694907056.sql :: create table sem IF NOT EXISTS": 4,
       "20260727222655_16b4a067-5707-4794-9cba-be5694907056.sql :: create index sem IF NOT EXISTS": 3,
       "20260727222655_16b4a067-5707-4794-9cba-be5694907056.sql :: create policy sem DROP POLICY IF EXISTS da mesma policy": 6,

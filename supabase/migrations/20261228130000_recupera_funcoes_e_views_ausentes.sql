@@ -12,6 +12,14 @@
 -- CREATE OR REPLACE + GRANT.
 -- ============================================================================
 
+-- 0) Extensoes que existem em producao e nenhuma migration cria. Sem unaccent
+-- o rebuild quebra aqui ("function extensions.unaccent(text) does not exist").
+-- pg_trgm ja esta instalada em producao (schema extensions) desde a criacao do
+-- projeto; fica registrada para o banco reconstruido nascer igual.
+CREATE SCHEMA IF NOT EXISTS extensions;
+CREATE EXTENSION IF NOT EXISTS unaccent WITH SCHEMA extensions;
+CREATE EXTENSION IF NOT EXISTS pg_trgm WITH SCHEMA extensions;
+
 -- 1) immutable_unaccent: indice/filtro sem depender do search_path do chamador.
 CREATE OR REPLACE FUNCTION public.immutable_unaccent(text)
  RETURNS text
@@ -343,3 +351,42 @@ GRANT ALL ON public.query_performance_summary TO service_role;
 COMMENT ON VIEW public.connection_monitor IS 'Conexoes por estado/espera do banco (operacao)';
 COMMENT ON VIEW public.index_health_report IS 'Saude dos indices: candidatos a remocao e uso (operacao)';
 COMMENT ON VIEW public.query_performance_summary IS 'Top consultas por tempo total (pg_stat_statements)';
+
+-- Colunas que existem no banco vivo e nunca foram versionadas. As duas sao
+-- idempotentes de reaplicar e deixam o esquema local igual ao de producao.
+--   api_secret: derrubado por 20260728205541, mas o DDL nunca foi efetivado em
+--     producao, entao a coluna continua la (tabela com 0 linhas);
+--   resolved: espelho gerado de is_resolved, lido por 20251231115905 e pela
+--     tela de seguranca.
+ALTER TABLE public.external_api_keys ADD COLUMN IF NOT EXISTS api_secret text;
+
+DO $do$
+BEGIN
+  IF NOT EXISTS (SELECT 1 FROM public.external_api_keys WHERE api_secret IS NULL) THEN
+    ALTER TABLE public.external_api_keys ALTER COLUMN api_secret SET NOT NULL;
+  END IF;
+END
+$do$;
+
+ALTER TABLE public.security_alerts
+  ADD COLUMN IF NOT EXISTS resolved boolean GENERATED ALWAYS AS (is_resolved) STORED;
+
+-- Tipo divergente: a migration 20260727183427 criou shop_purchases.risk_score
+-- como integer, mas em producao a coluna e numeric (ajuste manual). Um banco
+-- reconstruido nasceria integer, truncando score fracionario que hoje e aceito.
+-- numeric e superconjunto de integer, entao a conversao preserva todo valor
+-- existente e e no-op em producao (la ja e numeric).
+DO $do$
+BEGIN
+  IF EXISTS (
+    SELECT 1 FROM information_schema.columns
+    WHERE table_schema = 'public'
+      AND table_name = 'shop_purchases'
+      AND column_name = 'risk_score'
+      AND data_type = 'integer'
+  ) THEN
+    ALTER TABLE public.shop_purchases
+      ALTER COLUMN risk_score TYPE numeric USING risk_score::numeric;
+  END IF;
+END
+$do$;
