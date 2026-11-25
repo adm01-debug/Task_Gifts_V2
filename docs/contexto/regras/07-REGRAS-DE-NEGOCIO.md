@@ -1,6 +1,6 @@
 # 07 · REGRAS DE NEGÓCIO
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `324e51a9c4` · branch `main` · 2026-11-25 22:11 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `29b5a15e3f` · branch `main` · 2026-11-25 22:31 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## A. Regras escritas por humanos (`manual/` — prioridade máxima, nunca sobrescrito)
@@ -617,7 +617,7 @@ _Nenhum arquivo em `manual/`. Copie `manual/TEMPLATE-regras-de-negocio.md` para 
 | `user_seasonal_progress` | `claimed` | default false |
 | `user_seasonal_progress` | `created_at` | default now() |
 | `user_seasonal_progress` | `updated_at` | default now() |
-| … +1836 linhas — lista completa em `context.json` | | |
+| … +1835 linhas — lista completa em `context.json` | | |
 
 ## D. Automações no banco (triggers e funções — regras que rodam sozinhas)
 
@@ -695,7 +695,6 @@ _Nenhum arquivo em `manual/`. Copie `manual/TEMPLATE-regras-de-negocio.md` para 
 | trg_campaign_teams_updated_at | BEFORE UPDATE | `campaign_teams` | `handle_updated_at` |  |
 | trg_campaign_team_members_consistency | BEFORE INSERT OR UPDATE | `campaign_team_members` | `enforce_campaign_team_consistency` |  |
 | trg_log_purchase_requested | AFTER INSERT | `shop_purchases` | `log_purchase_requested` |  |
-| lucky_wheel_prizes_audit | AFTER INSERT OR UPDATE OR DELETE | `lucky_wheel_prizes` | `log_lucky_wheel_prize_change` |  |
 | trg_lucky_wheel_payout_snapshots_updated_at | BEFORE UPDATE | `lucky_wheel_payout_snapshots` | `update_updated_at_column` |  |
 | trg_lucky_wheel_settings_updated | BEFORE UPDATE | `lucky_wheel_settings` | `update_updated_at_column` |  |
 | trg_lucky_wheel_budget_audit | AFTER INSERT OR UPDATE | `lucky_wheel_settings` | `log_lucky_wheel_budget_change` |  |
@@ -747,9 +746,13 @@ _Nenhum arquivo em `manual/`. Copie `manual/TEMPLATE-regras-de-negocio.md` para 
 | update_board_tiles_updated_at | BEFORE UPDATE | `board_tiles` | `update_updated_at_column` |  |
 | update_board_player_states_updated_at | BEFORE UPDATE | `board_player_states` | `update_updated_at_column` |  |
 | trg_sync_board_blocked_at | BEFORE INSERT OR UPDATE OF BLOCKED_CHALLENGE_ID | `board_player_states` | `sync_board_blocked_at` |  |
-| on_auth_user_created | AFTER INSERT | `auth.users` | `handle_new_user` |  |
 | trg_goal_templates_updated_at | BEFORE UPDATE | `goal_templates` | `set_goal_templates_updated_at` |  |
 | trg_guard_engagement_answer_assignment | BEFORE INSERT OR UPDATE | `engagement_answers` | `guard_engagement_answer_assignment` |  |
+| on_auth_user_created | AFTER INSERT | `auth.users` | `handle_new_user` |  |
+| department_wars_updated_at | BEFORE UPDATE | `department_wars` | `update_updated_at_column` |  |
+| department_war_metrics_updated_at | BEFORE UPDATE | `department_war_metrics` | `update_updated_at_column` |  |
+| dept_war_departments_updated_at | BEFORE UPDATE | `department_war_departments` | `update_updated_at_column` |  |
+| lucky_wheel_prizes_audit | AFTER INSERT OR UPDATE OR DELETE | `lucky_wheel_prizes` | `log_lucky_wheel_prize_change` |  |
 
 Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banco):
 
@@ -858,7 +861,6 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `settle_boss_battle` | battle not found | `supabase/migrations/20260728125833_b6b2c15a-1960-4e13-9c2a-0cdff052ea01.sql` |
 | `save_sequence_procedure` | hint_too_long | `supabase/migrations/20260728161526_6f32f879-b9a2-4792-bbb5-9ddea5f271ba.sql` |
 | `delete_board_trail` | Permissao negada | `supabase/migrations/20260728173213_69cdcc82-666c-4eac-b349-ee744ff418b2.sql` |
-| `unblock_board_players` | Apenas administradores podem executar o desbloqueio | `supabase/migrations/20260728180133_93c53b2d-f159-4f4c-8fad-deb269e6a600.sql` |
 | `grade_quiz_answer` | Não autenticado | `supabase/migrations/20260728185015_9aac76f7-fb94-4e9b-848e-5d496293c112.sql` |
 | `grade_quiz_answer` | Pergunta inválida | `supabase/migrations/20260728185015_9aac76f7-fb94-4e9b-848e-5d496293c112.sql` |
 | `get_quiz_lifeline` | Não autenticado | `supabase/migrations/20260728185119_d97a70b6-1771-41be-8175-29a5be5acd17.sql` |
@@ -954,6 +956,7 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `revoke_push_device` | not_authenticated | `supabase/migrations/20261228170000_reaplica_funcoes_desatualizadas_em_producao.sql` |
 | `revoke_push_device` | device_not_found | `supabase/migrations/20261228170000_reaplica_funcoes_desatualizadas_em_producao.sql` |
 | `settle_prediction_market` | forbidden | `supabase/migrations/20261228170000_reaplica_funcoes_desatualizadas_em_producao.sql` |
+| `unblock_board_players` | Apenas administradores podem executar o desbloqueio | `supabase/migrations/20261228210000_reaplica_mensagens_funcoes_divergentes.sql` |
 
 ## E. Estados, máquinas de estado e transições
 
@@ -3237,6 +3240,12 @@ _nenhum item encontrado_
 | `interval '1 day'` | `supabase/migrations/20261220000000_fix_sre_rpcs_and_dispatch_trigger.sql` |
 | `-- por `now() + interval '7 days'` empurrava o primeiro lembrete para o dia` | `supabase/migrations/20261224100000_climate_survey_cycle_jobs.sql` |
 | `v_stuck_cutoff := now() - interval '5 minutes';` | `supabase/migrations/20261228170000_reaplica_funcoes_desatualizadas_em_producao.sql` |
+| `AND COALESCE(eak.secret_last_rotated_at, eak.created_at) < now() - interval '90 days'` | `supabase/migrations/20261228210000_reaplica_mensagens_funcoes_divergentes.sql` |
+| `AND created_at > now() - interval '1 hour'` | `supabase/migrations/20261228210000_reaplica_mensagens_funcoes_divergentes.sql` |
+| `AND sa.created_at > now() - interval '7 days'` | `supabase/migrations/20261228210000_reaplica_mensagens_funcoes_divergentes.sql` |
+| `DELETE FROM public.push_outbox_health_snapshots WHERE created_at < now() - interval '30 days';` | `supabase/migrations/20261228210000_reaplica_mensagens_funcoes_divergentes.sql` |
+| `v_since timestamptz := now() - interval '24 hours';` | `supabase/migrations/20261228210000_reaplica_mensagens_funcoes_divergentes.sql` |
+| `v_stuck_cutoff timestamptz := now() - interval '5 minutes';` | `supabase/migrations/20261228210000_reaplica_mensagens_funcoes_divergentes.sql` |
 
 ### H.3 Limites de paginação
 
@@ -3880,6 +3889,7 @@ _nenhum item encontrado_
 | `sendNotification` | `supabase/functions/send-campaign-push/index.ts` |
 | `notify_admins_of_monthly_report` | `supabase/migrations/20260712222653_8d3916b2-c16d-4d4e-9a18-7fde8939b0fe.sql` |
 | `notify_admins_of_monthly_report` | `supabase/migrations/20260712222801_f2380764-d126-47be-b005-692d6449061f.sql` |
+| `notify_admins_of_monthly_report` | `supabase/migrations/20261228190000_revoga_execute_publico_anon_funcoes.sql` |
 
 ## N. Regras citadas em comentários do código
 

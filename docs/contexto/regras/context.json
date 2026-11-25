@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "324e51a9c4b21f9078658cbb3809b4846d9cc816",
+  "sha": "29b5a15e3fb6554d5b0c367b16d723e9d31b4dab",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
-  "generated_at": "2026-11-25 22:11 UTC",
-  "files_total": 1612,
-  "code_files": 1505,
-  "code_lines": 275746
+  "generated_at": "2026-11-25 22:31 UTC",
+  "files_total": 1617,
+  "code_files": 1510,
+  "code_lines": 276182
  },
  "version": "1.3.2",
- "facts_hash": "644354a406b04d0d",
+ "facts_hash": "dbd3881360212a88",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -196,7 +196,7 @@
   "languages": {
    ".ts": 587,
    ".tsx": 583,
-   ".sql": 303,
+   ".sql": 308,
    ".mjs": 21,
    ".js": 5,
    ".py": 5,
@@ -7086,7 +7086,7 @@
      },
      {
       "name": "secret_salt",
-      "type": "text not null",
+      "type": "text",
       "fk": "",
       "generated": "",
       "src": "supabase/migrations/20260728205541_a9eda956-7c86-4797-a55a-f6b543975fc2.sql"
@@ -26624,15 +26624,6 @@
     "src": "supabase/migrations/20260727183952_41486a3b-9a2a-41dc-b805-38392ee32096.sql"
    },
    {
-    "name": "lucky_wheel_prizes_audit",
-    "when": "AFTER INSERT OR UPDATE OR DELETE",
-    "table": "lucky_wheel_prizes",
-    "function": "log_lucky_wheel_prize_change",
-    "condition": "",
-    "each": "row",
-    "src": "supabase/migrations/20260727205544_b7279835-115a-4407-9e02-6fed78ac0f63.sql"
-   },
-   {
     "name": "trg_lucky_wheel_payout_snapshots_updated_at",
     "when": "BEFORE UPDATE",
     "table": "lucky_wheel_payout_snapshots",
@@ -27092,15 +27083,6 @@
     "src": "supabase/migrations/20260728175346_9062e6fd-34a2-4490-82cd-d4877f2beafd.sql"
    },
    {
-    "name": "on_auth_user_created",
-    "when": "AFTER INSERT",
-    "table": "auth.users",
-    "function": "handle_new_user",
-    "condition": "",
-    "each": "row",
-    "src": "supabase/migrations/20260806191000_recreate_handle_new_user_trigger.sql"
-   },
-   {
     "name": "trg_goal_templates_updated_at",
     "when": "BEFORE UPDATE",
     "table": "goal_templates",
@@ -27117,6 +27099,51 @@
     "condition": "",
     "each": "row",
     "src": "supabase/migrations/20261227120000_engagement_integridade_e_anon.sql"
+   },
+   {
+    "name": "on_auth_user_created",
+    "when": "AFTER INSERT",
+    "table": "auth.users",
+    "function": "handle_new_user",
+    "condition": "",
+    "each": "row",
+    "src": "supabase/migrations/20261228180000_restaura_trigger_novo_usuario.sql"
+   },
+   {
+    "name": "department_wars_updated_at",
+    "when": "BEFORE UPDATE",
+    "table": "department_wars",
+    "function": "update_updated_at_column",
+    "condition": "",
+    "each": "row",
+    "src": "supabase/migrations/20261228200000_alinha_triggers_department_war_e_auditoria.sql"
+   },
+   {
+    "name": "department_war_metrics_updated_at",
+    "when": "BEFORE UPDATE",
+    "table": "department_war_metrics",
+    "function": "update_updated_at_column",
+    "condition": "",
+    "each": "row",
+    "src": "supabase/migrations/20261228200000_alinha_triggers_department_war_e_auditoria.sql"
+   },
+   {
+    "name": "dept_war_departments_updated_at",
+    "when": "BEFORE UPDATE",
+    "table": "department_war_departments",
+    "function": "update_updated_at_column",
+    "condition": "",
+    "each": "row",
+    "src": "supabase/migrations/20261228200000_alinha_triggers_department_war_e_auditoria.sql"
+   },
+   {
+    "name": "lucky_wheel_prizes_audit",
+    "when": "AFTER INSERT OR UPDATE OR DELETE",
+    "table": "lucky_wheel_prizes",
+    "function": "log_lucky_wheel_prize_change",
+    "condition": "",
+    "each": "row",
+    "src": "supabase/migrations/20261228200000_alinha_triggers_department_war_e_auditoria.sql"
    }
   ],
   "functions": {
@@ -27146,9 +27173,9 @@
    },
    "handle_new_user": {
     "args": "",
-    "returns": "trigger",
+    "returns": "TRIGGER",
     "lang": "plpgsql",
-    "src": "supabase/migrations/20261228170000_reaplica_funcoes_desatualizadas_em_producao.sql",
+    "src": "supabase/migrations/20261228180000_restaura_trigger_novo_usuario.sql",
     "security_definer": true,
     "search_path": true,
     "body": "BEGIN INSERT INTO public.profiles (id, email, display_name) VALUES ( NEW.id, NEW.email, COALESCE(NEW.raw_user_meta_data ->> 'display_name', SPLIT_PART(NEW.email, '@', 1)) ) ON CONFLICT (id) DO NOTHING; RETURN NEW; END;",
@@ -29875,7 +29902,7 @@
     "args": "",
     "returns": "uuid",
     "lang": "plpgsql",
-    "src": "supabase/migrations/20260728112815_fd49db87-3ae3-448d-b394-dfe7f248adae.sql",
+    "src": "supabase/migrations/20261228210000_reaplica_mensagens_funcoes_divergentes.sql",
     "security_definer": true,
     "search_path": true,
     "body": "DECLARE v_since timestamptz := now() - interval '24 hours'; v_stuck_cutoff timestamptz := now() - interval '5 minutes'; v_pending integer; v_processing integer; v_stuck integer; v_sent integer; v_failed integer; v_skipped integer; v_oldest integer; v_idle integer; v_total integer; v_failure_rate numeric; v_penalty integer := 0; v_alerts jsonb := '[]'::jsonb; v_has_critical boolean := false; v_score integer; v_severity text; v_id uuid; BEGIN SELECT COALESCE(SUM(CASE WHEN status = 'pending' THEN 1 ELSE 0 END), 0), COALESCE(SUM(CASE WHEN status = 'processing' THEN 1 ELSE 0 END), 0), COALESCE(SUM(CASE WHEN status = 'processing' AND updated_at < v_stuck_cutoff THEN 1 ELSE 0 END), 0), COALESCE(SUM …",
@@ -30817,10 +30844,10 @@
     ]
    },
    "unblock_board_players": {
-    "args": "p_max_hours integer DEFAULT 48, p_trail_id uuid DEFAULT NULL",
-    "returns": "TABLE (\n  trail_id uuid,\n  trail_title text,\n  user_id uuid,\n  display_name text,\n  \"position\" integer,\n  blocked_hours numeric\n)",
+    "args": "p_max_hours integer DEFAULT 48, p_trail_id uuid DEFAULT NULL::uuid",
+    "returns": "TABLE(trail_id uuid, trail_title text, user_id uuid, display_name text, \"position\" integer, blocked_hours numeric)",
     "lang": "plpgsql",
-    "src": "supabase/migrations/20260728180133_93c53b2d-f159-4f4c-8fad-deb269e6a600.sql",
+    "src": "supabase/migrations/20261228210000_reaplica_mensagens_funcoes_divergentes.sql",
     "security_definer": true,
     "search_path": true,
     "body": "DECLARE v_hours integer := GREATEST(1, LEAST(COALESCE(p_max_hours, 48), 720)); v_rec record; BEGIN IF auth.uid() IS NOT NULL AND NOT public.has_role(auth.uid(), 'admin') THEN RAISE EXCEPTION 'Apenas administradores podem executar o desbloqueio'; END IF; CREATE TEMP TABLE IF NOT EXISTS _unblocked_board_players ( state_id uuid, trail_id uuid, trail_title text, user_id uuid, display_name text, \"position\" integer, blocked_hours numeric, challenge_id uuid ) ON COMMIT DROP; DELETE FROM _unblocked_board_players; INSERT INTO _unblocked_board_players SELECT s.id, s.trail_id, t.title, s.user_id, COALESCE(p.display_name, 'Colaborador'), s.position, ROUND((EXTRACT(EPOCH FROM (now() - s.blocked_at)) / 36 …",
@@ -31093,7 +31120,7 @@
     "args": "",
     "returns": "integer",
     "lang": "plpgsql",
-    "src": "supabase/migrations/20260728210216_01d79f58-57ea-48d9-a859-ef3ddf891190.sql",
+    "src": "supabase/migrations/20261228210000_reaplica_mensagens_funcoes_divergentes.sql",
     "security_definer": true,
     "search_path": true,
     "body": "DECLARE v_count integer := 0; r record; BEGIN FOR r IN SELECT eak.id, eak.name, eak.api_key, GREATEST(0, EXTRACT(DAY FROM now() - COALESCE(eak.secret_last_rotated_at, eak.created_at))::int) AS days FROM public.external_api_keys eak WHERE eak.is_active = true AND COALESCE(eak.secret_last_rotated_at, eak.created_at) < now() - interval '90 days' LOOP IF NOT EXISTS ( SELECT 1 FROM public.security_alerts sa WHERE sa.alert_type = 'api_key_rotation_overdue' AND sa.metadata->>'key_id' = r.id::text AND sa.is_resolved = false AND sa.created_at > now() - interval '7 days' ) THEN INSERT INTO public.security_alerts (alert_type, severity, title, description, metadata) VALUES ( 'api_key_rotation_overdue', …",
@@ -34712,6 +34739,11 @@
    "supabase/migrations/20261228150000_revoga_privilegios_inertes.sql",
    "supabase/migrations/20261228160000_habilita_criacao_de_chave_de_api.sql",
    "supabase/migrations/20261228170000_reaplica_funcoes_desatualizadas_em_producao.sql",
+   "supabase/migrations/20261228180000_restaura_trigger_novo_usuario.sql",
+   "supabase/migrations/20261228190000_revoga_execute_publico_anon_funcoes.sql",
+   "supabase/migrations/20261228200000_alinha_triggers_department_war_e_auditoria.sql",
+   "supabase/migrations/20261228210000_reaplica_mensagens_funcoes_divergentes.sql",
+   "supabase/migrations/20261228220000_alinha_nulabilidade_external_api_keys.sql",
    "supabase/tests/climate/assertions.sql",
    "supabase/tests/climate/stubs.sql",
    "src/integrations/supabase/types.ts"
@@ -44043,6 +44075,294 @@
     "src": "supabase/migrations/20261228170000_reaplica_funcoes_desatualizadas_em_producao.sql"
    },
    {
+    "kind": "revoke",
+    "privs": "execute",
+    "object": "_card_rarity_value",
+    "objkind": "function",
+    "roles": "PUBLIC, anon",
+    "src": "supabase/migrations/20261228190000_revoga_execute_publico_anon_funcoes.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "execute",
+    "object": "_card_set_milestone_split",
+    "objkind": "function",
+    "roles": "PUBLIC, anon",
+    "src": "supabase/migrations/20261228190000_revoga_execute_publico_anon_funcoes.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "execute",
+    "object": "audit_lucky_wheel_prize",
+    "objkind": "function",
+    "roles": "PUBLIC, anon",
+    "src": "supabase/migrations/20261228190000_revoga_execute_publico_anon_funcoes.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "execute",
+    "object": "auto_create_postmortem_on_resolve",
+    "objkind": "function",
+    "roles": "PUBLIC, anon, authenticated",
+    "src": "supabase/migrations/20261228190000_revoga_execute_publico_anon_funcoes.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "execute",
+    "object": "boss_hook_attendance_streaks",
+    "objkind": "function",
+    "roles": "PUBLIC, anon, authenticated",
+    "src": "supabase/migrations/20261228190000_revoga_execute_publico_anon_funcoes.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "execute",
+    "object": "boss_hook_task_scores",
+    "objkind": "function",
+    "roles": "PUBLIC, anon, authenticated",
+    "src": "supabase/migrations/20261228190000_revoga_execute_publico_anon_funcoes.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "execute",
+    "object": "boss_hook_trail_enrollments",
+    "objkind": "function",
+    "roles": "PUBLIC, anon, authenticated",
+    "src": "supabase/migrations/20261228190000_revoga_execute_publico_anon_funcoes.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "execute",
+    "object": "boss_phase_alert_hook",
+    "objkind": "function",
+    "roles": "PUBLIC, anon, authenticated",
+    "src": "supabase/migrations/20261228190000_revoga_execute_publico_anon_funcoes.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "execute",
+    "object": "card_pack_hook_attendance_streaks",
+    "objkind": "function",
+    "roles": "PUBLIC, anon, authenticated",
+    "src": "supabase/migrations/20261228190000_revoga_execute_publico_anon_funcoes.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "execute",
+    "object": "card_pack_hook_task_scores",
+    "objkind": "function",
+    "roles": "PUBLIC, anon, authenticated",
+    "src": "supabase/migrations/20261228190000_revoga_execute_publico_anon_funcoes.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "execute",
+    "object": "card_pack_hook_trail_enrollments",
+    "objkind": "function",
+    "roles": "PUBLIC, anon, authenticated",
+    "src": "supabase/migrations/20261228190000_revoga_execute_publico_anon_funcoes.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "execute",
+    "object": "card_pack_notify",
+    "objkind": "function",
+    "roles": "PUBLIC, anon, authenticated",
+    "src": "supabase/migrations/20261228190000_revoga_execute_publico_anon_funcoes.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "execute",
+    "object": "chi_square_critical",
+    "objkind": "function",
+    "roles": "PUBLIC, anon, authenticated",
+    "src": "supabase/migrations/20261228190000_revoga_execute_publico_anon_funcoes.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "execute",
+    "object": "enforce_campaign_team_consistency",
+    "objkind": "function",
+    "roles": "PUBLIC, anon, authenticated",
+    "src": "supabase/migrations/20261228190000_revoga_execute_publico_anon_funcoes.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "execute",
+    "object": "engagement_min_respondents",
+    "objkind": "function",
+    "roles": "PUBLIC, anon",
+    "src": "supabase/migrations/20261228190000_revoga_execute_publico_anon_funcoes.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "execute",
+    "object": "ensure_single_default_filter",
+    "objkind": "function",
+    "roles": "PUBLIC",
+    "src": "supabase/migrations/20261228190000_revoga_execute_publico_anon_funcoes.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "execute",
+    "object": "erf_inverse",
+    "objkind": "function",
+    "roles": "PUBLIC, anon, authenticated",
+    "src": "supabase/migrations/20261228190000_revoga_execute_publico_anon_funcoes.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "execute",
+    "object": "handle_new_user",
+    "objkind": "function",
+    "roles": "PUBLIC, anon, authenticated",
+    "src": "supabase/migrations/20261228190000_revoga_execute_publico_anon_funcoes.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "execute",
+    "object": "handle_updated_at",
+    "objkind": "function",
+    "roles": "PUBLIC, anon, authenticated",
+    "src": "supabase/migrations/20261228190000_revoga_execute_publico_anon_funcoes.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "execute",
+    "object": "log_lucky_wheel_budget_change",
+    "objkind": "function",
+    "roles": "PUBLIC, anon, authenticated",
+    "src": "supabase/migrations/20261228190000_revoga_execute_publico_anon_funcoes.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "execute",
+    "object": "log_lucky_wheel_prize_change",
+    "objkind": "function",
+    "roles": "PUBLIC, anon, authenticated",
+    "src": "supabase/migrations/20261228190000_revoga_execute_publico_anon_funcoes.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "execute",
+    "object": "log_prediction_settlement",
+    "objkind": "function",
+    "roles": "PUBLIC, anon, authenticated",
+    "src": "supabase/migrations/20261228190000_revoga_execute_publico_anon_funcoes.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "execute",
+    "object": "log_purchase_requested",
+    "objkind": "function",
+    "roles": "PUBLIC, anon, authenticated",
+    "src": "supabase/migrations/20261228190000_revoga_execute_publico_anon_funcoes.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "execute",
+    "object": "log_wager_integrity_review_event",
+    "objkind": "function",
+    "roles": "PUBLIC, anon, authenticated",
+    "src": "supabase/migrations/20261228190000_revoga_execute_publico_anon_funcoes.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "execute",
+    "object": "notify_admins_of_monthly_report",
+    "objkind": "function",
+    "roles": "PUBLIC, anon, authenticated",
+    "src": "supabase/migrations/20261228190000_revoga_execute_publico_anon_funcoes.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "execute",
+    "object": "trigger_dispatch_critical_alert",
+    "objkind": "function",
+    "roles": "anon, authenticated",
+    "src": "supabase/migrations/20261228190000_revoga_execute_publico_anon_funcoes.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "execute",
+    "object": "trim_push_sync_events",
+    "objkind": "function",
+    "roles": "PUBLIC, anon",
+    "src": "supabase/migrations/20261228190000_revoga_execute_publico_anon_funcoes.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "execute",
+    "object": "update_notification_prefs_updated_at",
+    "objkind": "function",
+    "roles": "PUBLIC, anon, authenticated",
+    "src": "supabase/migrations/20261228190000_revoga_execute_publico_anon_funcoes.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "execute",
+    "object": "update_saved_filters_updated_at",
+    "objkind": "function",
+    "roles": "PUBLIC",
+    "src": "supabase/migrations/20261228190000_revoga_execute_publico_anon_funcoes.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "execute",
+    "object": "update_updated_at_column",
+    "objkind": "function",
+    "roles": "PUBLIC, anon, authenticated",
+    "src": "supabase/migrations/20261228190000_revoga_execute_publico_anon_funcoes.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "execute",
+    "object": "war_hook_attendance",
+    "objkind": "function",
+    "roles": "PUBLIC, anon, authenticated",
+    "src": "supabase/migrations/20261228190000_revoga_execute_publico_anon_funcoes.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "execute",
+    "object": "war_hook_kudos",
+    "objkind": "function",
+    "roles": "PUBLIC, anon, authenticated",
+    "src": "supabase/migrations/20261228190000_revoga_execute_publico_anon_funcoes.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "execute",
+    "object": "war_hook_module_progress",
+    "objkind": "function",
+    "roles": "PUBLIC, anon, authenticated",
+    "src": "supabase/migrations/20261228190000_revoga_execute_publico_anon_funcoes.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "execute",
+    "object": "war_hook_quiz_scores",
+    "objkind": "function",
+    "roles": "PUBLIC, anon, authenticated",
+    "src": "supabase/migrations/20261228190000_revoga_execute_publico_anon_funcoes.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "execute",
+    "object": "war_hook_task_scores",
+    "objkind": "function",
+    "roles": "PUBLIC, anon, authenticated",
+    "src": "supabase/migrations/20261228190000_revoga_execute_publico_anon_funcoes.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "execute",
+    "object": "war_hook_trail_enrollments",
+    "objkind": "function",
+    "roles": "PUBLIC, anon, authenticated",
+    "src": "supabase/migrations/20261228190000_revoga_execute_publico_anon_funcoes.sql"
+   },
+   {
     "kind": "grant",
     "privs": "select, insert, update, delete",
     "object": "public",
@@ -44568,11 +44888,6 @@
     "src": "supabase/migrations/20260728173213_69cdcc82-666c-4eac-b349-ee744ff418b2.sql"
    },
    {
-    "function": "unblock_board_players",
-    "msg": "Apenas administradores podem executar o desbloqueio",
-    "src": "supabase/migrations/20260728180133_93c53b2d-f159-4f4c-8fad-deb269e6a600.sql"
-   },
-   {
     "function": "grade_quiz_answer",
     "msg": "Não autenticado",
     "src": "supabase/migrations/20260728185015_9aac76f7-fb94-4e9b-848e-5d496293c112.sql"
@@ -45046,6 +45361,11 @@
     "function": "settle_prediction_market",
     "msg": "forbidden",
     "src": "supabase/migrations/20261228170000_reaplica_funcoes_desatualizadas_em_producao.sql"
+   },
+   {
+    "function": "unblock_board_players",
+    "msg": "Apenas administradores podem executar o desbloqueio",
+    "src": "supabase/migrations/20261228210000_reaplica_mensagens_funcoes_divergentes.sql"
    }
   ],
   "seed": [],
@@ -52907,8 +53227,8 @@
   },
   {
    "module": "supabase/migrations",
-   "files": 301,
-   "lines": 36779,
+   "files": 306,
+   "lines": 37215,
    "tables": [],
    "exports": [],
    "docs": [],
@@ -66662,11 +66982,6 @@
     "table": "external_api_keys",
     "column": "updated_at",
     "rule": "default now()"
-   },
-   {
-    "table": "external_api_keys",
-    "column": "secret_salt",
-    "rule": "obrigatório"
    },
    {
     "table": "external_api_keys",
@@ -83244,6 +83559,30 @@
    {
     "file": "supabase/migrations/20261228170000_reaplica_funcoes_desatualizadas_em_producao.sql",
     "line": "v_stuck_cutoff := now() - interval '5 minutes';"
+   },
+   {
+    "file": "supabase/migrations/20261228210000_reaplica_mensagens_funcoes_divergentes.sql",
+    "line": "AND COALESCE(eak.secret_last_rotated_at, eak.created_at) < now() - interval '90 days'"
+   },
+   {
+    "file": "supabase/migrations/20261228210000_reaplica_mensagens_funcoes_divergentes.sql",
+    "line": "AND created_at > now() - interval '1 hour'"
+   },
+   {
+    "file": "supabase/migrations/20261228210000_reaplica_mensagens_funcoes_divergentes.sql",
+    "line": "AND sa.created_at > now() - interval '7 days'"
+   },
+   {
+    "file": "supabase/migrations/20261228210000_reaplica_mensagens_funcoes_divergentes.sql",
+    "line": "DELETE FROM public.push_outbox_health_snapshots WHERE created_at < now() - interval '30 days';"
+   },
+   {
+    "file": "supabase/migrations/20261228210000_reaplica_mensagens_funcoes_divergentes.sql",
+    "line": "v_since timestamptz := now() - interval '24 hours';"
+   },
+   {
+    "file": "supabase/migrations/20261228210000_reaplica_mensagens_funcoes_divergentes.sql",
+    "line": "v_stuck_cutoff timestamptz := now() - interval '5 minutes';"
    }
   ],
   "percents": [
@@ -92848,6 +93187,10 @@
    {
     "file": "supabase/migrations/20260712222801_f2380764-d126-47be-b005-692d6449061f.sql",
     "call": "notify_admins_of_monthly_report"
+   },
+   {
+    "file": "supabase/migrations/20261228190000_revoga_execute_publico_anon_funcoes.sql",
+    "call": "notify_admins_of_monthly_report"
    }
   ],
   "db_policies": [
@@ -99112,15 +99455,6 @@
     "src": "supabase/migrations/20260727183952_41486a3b-9a2a-41dc-b805-38392ee32096.sql"
    },
    {
-    "name": "lucky_wheel_prizes_audit",
-    "when": "AFTER INSERT OR UPDATE OR DELETE",
-    "table": "lucky_wheel_prizes",
-    "function": "log_lucky_wheel_prize_change",
-    "condition": "",
-    "each": "row",
-    "src": "supabase/migrations/20260727205544_b7279835-115a-4407-9e02-6fed78ac0f63.sql"
-   },
-   {
     "name": "trg_lucky_wheel_payout_snapshots_updated_at",
     "when": "BEFORE UPDATE",
     "table": "lucky_wheel_payout_snapshots",
@@ -99580,15 +99914,6 @@
     "src": "supabase/migrations/20260728175346_9062e6fd-34a2-4490-82cd-d4877f2beafd.sql"
    },
    {
-    "name": "on_auth_user_created",
-    "when": "AFTER INSERT",
-    "table": "auth.users",
-    "function": "handle_new_user",
-    "condition": "",
-    "each": "row",
-    "src": "supabase/migrations/20260806191000_recreate_handle_new_user_trigger.sql"
-   },
-   {
     "name": "trg_goal_templates_updated_at",
     "when": "BEFORE UPDATE",
     "table": "goal_templates",
@@ -99605,6 +99930,51 @@
     "condition": "",
     "each": "row",
     "src": "supabase/migrations/20261227120000_engagement_integridade_e_anon.sql"
+   },
+   {
+    "name": "on_auth_user_created",
+    "when": "AFTER INSERT",
+    "table": "auth.users",
+    "function": "handle_new_user",
+    "condition": "",
+    "each": "row",
+    "src": "supabase/migrations/20261228180000_restaura_trigger_novo_usuario.sql"
+   },
+   {
+    "name": "department_wars_updated_at",
+    "when": "BEFORE UPDATE",
+    "table": "department_wars",
+    "function": "update_updated_at_column",
+    "condition": "",
+    "each": "row",
+    "src": "supabase/migrations/20261228200000_alinha_triggers_department_war_e_auditoria.sql"
+   },
+   {
+    "name": "department_war_metrics_updated_at",
+    "when": "BEFORE UPDATE",
+    "table": "department_war_metrics",
+    "function": "update_updated_at_column",
+    "condition": "",
+    "each": "row",
+    "src": "supabase/migrations/20261228200000_alinha_triggers_department_war_e_auditoria.sql"
+   },
+   {
+    "name": "dept_war_departments_updated_at",
+    "when": "BEFORE UPDATE",
+    "table": "department_war_departments",
+    "function": "update_updated_at_column",
+    "condition": "",
+    "each": "row",
+    "src": "supabase/migrations/20261228200000_alinha_triggers_department_war_e_auditoria.sql"
+   },
+   {
+    "name": "lucky_wheel_prizes_audit",
+    "when": "AFTER INSERT OR UPDATE OR DELETE",
+    "table": "lucky_wheel_prizes",
+    "function": "log_lucky_wheel_prize_change",
+    "condition": "",
+    "each": "row",
+    "src": "supabase/migrations/20261228200000_alinha_triggers_department_war_e_auditoria.sql"
    }
   ],
   "db_functions": {
@@ -99634,9 +100004,9 @@
    },
    "handle_new_user": {
     "args": "",
-    "returns": "trigger",
+    "returns": "TRIGGER",
     "lang": "plpgsql",
-    "src": "supabase/migrations/20261228170000_reaplica_funcoes_desatualizadas_em_producao.sql",
+    "src": "supabase/migrations/20261228180000_restaura_trigger_novo_usuario.sql",
     "security_definer": true,
     "search_path": true,
     "body": "BEGIN INSERT INTO public.profiles (id, email, display_name) VALUES ( NEW.id, NEW.email, COALESCE(NEW.raw_user_meta_data ->> 'display_name', SPLIT_PART(NEW.email, '@', 1)) ) ON CONFLICT (id) DO NOTHING; RETURN NEW; END;",
@@ -102363,7 +102733,7 @@
     "args": "",
     "returns": "uuid",
     "lang": "plpgsql",
-    "src": "supabase/migrations/20260728112815_fd49db87-3ae3-448d-b394-dfe7f248adae.sql",
+    "src": "supabase/migrations/20261228210000_reaplica_mensagens_funcoes_divergentes.sql",
     "security_definer": true,
     "search_path": true,
     "body": "DECLARE v_since timestamptz := now() - interval '24 hours'; v_stuck_cutoff timestamptz := now() - interval '5 minutes'; v_pending integer; v_processing integer; v_stuck integer; v_sent integer; v_failed integer; v_skipped integer; v_oldest integer; v_idle integer; v_total integer; v_failure_rate numeric; v_penalty integer := 0; v_alerts jsonb := '[]'::jsonb; v_has_critical boolean := false; v_score integer; v_severity text; v_id uuid; BEGIN SELECT COALESCE(SUM(CASE WHEN status = 'pending' THEN 1 ELSE 0 END), 0), COALESCE(SUM(CASE WHEN status = 'processing' THEN 1 ELSE 0 END), 0), COALESCE(SUM(CASE WHEN status = 'processing' AND updated_at < v_stuck_cutoff THEN 1 ELSE 0 END), 0), COALESCE(SUM …",
@@ -103305,10 +103675,10 @@
     ]
    },
    "unblock_board_players": {
-    "args": "p_max_hours integer DEFAULT 48, p_trail_id uuid DEFAULT NULL",
-    "returns": "TABLE (\n  trail_id uuid,\n  trail_title text,\n  user_id uuid,\n  display_name text,\n  \"position\" integer,\n  blocked_hours numeric\n)",
+    "args": "p_max_hours integer DEFAULT 48, p_trail_id uuid DEFAULT NULL::uuid",
+    "returns": "TABLE(trail_id uuid, trail_title text, user_id uuid, display_name text, \"position\" integer, blocked_hours numeric)",
     "lang": "plpgsql",
-    "src": "supabase/migrations/20260728180133_93c53b2d-f159-4f4c-8fad-deb269e6a600.sql",
+    "src": "supabase/migrations/20261228210000_reaplica_mensagens_funcoes_divergentes.sql",
     "security_definer": true,
     "search_path": true,
     "body": "DECLARE v_hours integer := GREATEST(1, LEAST(COALESCE(p_max_hours, 48), 720)); v_rec record; BEGIN IF auth.uid() IS NOT NULL AND NOT public.has_role(auth.uid(), 'admin') THEN RAISE EXCEPTION 'Apenas administradores podem executar o desbloqueio'; END IF; CREATE TEMP TABLE IF NOT EXISTS _unblocked_board_players ( state_id uuid, trail_id uuid, trail_title text, user_id uuid, display_name text, \"position\" integer, blocked_hours numeric, challenge_id uuid ) ON COMMIT DROP; DELETE FROM _unblocked_board_players; INSERT INTO _unblocked_board_players SELECT s.id, s.trail_id, t.title, s.user_id, COALESCE(p.display_name, 'Colaborador'), s.position, ROUND((EXTRACT(EPOCH FROM (now() - s.blocked_at)) / 36 …",
@@ -103581,7 +103951,7 @@
     "args": "",
     "returns": "integer",
     "lang": "plpgsql",
-    "src": "supabase/migrations/20260728210216_01d79f58-57ea-48d9-a859-ef3ddf891190.sql",
+    "src": "supabase/migrations/20261228210000_reaplica_mensagens_funcoes_divergentes.sql",
     "security_definer": true,
     "search_path": true,
     "body": "DECLARE v_count integer := 0; r record; BEGIN FOR r IN SELECT eak.id, eak.name, eak.api_key, GREATEST(0, EXTRACT(DAY FROM now() - COALESCE(eak.secret_last_rotated_at, eak.created_at))::int) AS days FROM public.external_api_keys eak WHERE eak.is_active = true AND COALESCE(eak.secret_last_rotated_at, eak.created_at) < now() - interval '90 days' LOOP IF NOT EXISTS ( SELECT 1 FROM public.security_alerts sa WHERE sa.alert_type = 'api_key_rotation_overdue' AND sa.metadata->>'key_id' = r.id::text AND sa.is_resolved = false AND sa.created_at > now() - interval '7 days' ) THEN INSERT INTO public.security_alerts (alert_type, severity, title, description, metadata) VALUES ( 'api_key_rotation_overdue', …",
@@ -104957,11 +105327,6 @@
     "src": "supabase/migrations/20260728173213_69cdcc82-666c-4eac-b349-ee744ff418b2.sql"
    },
    {
-    "function": "unblock_board_players",
-    "msg": "Apenas administradores podem executar o desbloqueio",
-    "src": "supabase/migrations/20260728180133_93c53b2d-f159-4f4c-8fad-deb269e6a600.sql"
-   },
-   {
     "function": "grade_quiz_answer",
     "msg": "Não autenticado",
     "src": "supabase/migrations/20260728185015_9aac76f7-fb94-4e9b-848e-5d496293c112.sql"
@@ -105435,6 +105800,11 @@
     "function": "settle_prediction_market",
     "msg": "forbidden",
     "src": "supabase/migrations/20261228170000_reaplica_funcoes_desatualizadas_em_producao.sql"
+   },
+   {
+    "function": "unblock_board_players",
+    "msg": "Apenas administradores podem executar o desbloqueio",
+    "src": "supabase/migrations/20261228210000_reaplica_mensagens_funcoes_divergentes.sql"
    }
   ],
   "db_generated": [
@@ -111503,7 +111873,8 @@
    "supabase/migrations/20261228120000_cron_jobs_e_leaderboard_cache.sql",
    "supabase/migrations/20261228130000_recupera_funcoes_e_views_ausentes.sql",
    "supabase/migrations/20261228140000_congela_rls_e_grants_producao.sql",
-   "supabase/migrations/20261228170000_reaplica_funcoes_desatualizadas_em_producao.sql"
+   "supabase/migrations/20261228170000_reaplica_funcoes_desatualizadas_em_producao.sql",
+   "supabase/migrations/20261228190000_revoga_execute_publico_anon_funcoes.sql"
   ],
   "security_definer_fns": [
    "_climate_recompute_pillar_scores",
@@ -120861,6 +121232,294 @@
     "objkind": "function",
     "roles": "service_role",
     "src": "supabase/migrations/20261228170000_reaplica_funcoes_desatualizadas_em_producao.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "execute",
+    "object": "_card_rarity_value",
+    "objkind": "function",
+    "roles": "PUBLIC, anon",
+    "src": "supabase/migrations/20261228190000_revoga_execute_publico_anon_funcoes.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "execute",
+    "object": "_card_set_milestone_split",
+    "objkind": "function",
+    "roles": "PUBLIC, anon",
+    "src": "supabase/migrations/20261228190000_revoga_execute_publico_anon_funcoes.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "execute",
+    "object": "audit_lucky_wheel_prize",
+    "objkind": "function",
+    "roles": "PUBLIC, anon",
+    "src": "supabase/migrations/20261228190000_revoga_execute_publico_anon_funcoes.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "execute",
+    "object": "auto_create_postmortem_on_resolve",
+    "objkind": "function",
+    "roles": "PUBLIC, anon, authenticated",
+    "src": "supabase/migrations/20261228190000_revoga_execute_publico_anon_funcoes.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "execute",
+    "object": "boss_hook_attendance_streaks",
+    "objkind": "function",
+    "roles": "PUBLIC, anon, authenticated",
+    "src": "supabase/migrations/20261228190000_revoga_execute_publico_anon_funcoes.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "execute",
+    "object": "boss_hook_task_scores",
+    "objkind": "function",
+    "roles": "PUBLIC, anon, authenticated",
+    "src": "supabase/migrations/20261228190000_revoga_execute_publico_anon_funcoes.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "execute",
+    "object": "boss_hook_trail_enrollments",
+    "objkind": "function",
+    "roles": "PUBLIC, anon, authenticated",
+    "src": "supabase/migrations/20261228190000_revoga_execute_publico_anon_funcoes.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "execute",
+    "object": "boss_phase_alert_hook",
+    "objkind": "function",
+    "roles": "PUBLIC, anon, authenticated",
+    "src": "supabase/migrations/20261228190000_revoga_execute_publico_anon_funcoes.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "execute",
+    "object": "card_pack_hook_attendance_streaks",
+    "objkind": "function",
+    "roles": "PUBLIC, anon, authenticated",
+    "src": "supabase/migrations/20261228190000_revoga_execute_publico_anon_funcoes.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "execute",
+    "object": "card_pack_hook_task_scores",
+    "objkind": "function",
+    "roles": "PUBLIC, anon, authenticated",
+    "src": "supabase/migrations/20261228190000_revoga_execute_publico_anon_funcoes.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "execute",
+    "object": "card_pack_hook_trail_enrollments",
+    "objkind": "function",
+    "roles": "PUBLIC, anon, authenticated",
+    "src": "supabase/migrations/20261228190000_revoga_execute_publico_anon_funcoes.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "execute",
+    "object": "card_pack_notify",
+    "objkind": "function",
+    "roles": "PUBLIC, anon, authenticated",
+    "src": "supabase/migrations/20261228190000_revoga_execute_publico_anon_funcoes.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "execute",
+    "object": "chi_square_critical",
+    "objkind": "function",
+    "roles": "PUBLIC, anon, authenticated",
+    "src": "supabase/migrations/20261228190000_revoga_execute_publico_anon_funcoes.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "execute",
+    "object": "enforce_campaign_team_consistency",
+    "objkind": "function",
+    "roles": "PUBLIC, anon, authenticated",
+    "src": "supabase/migrations/20261228190000_revoga_execute_publico_anon_funcoes.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "execute",
+    "object": "engagement_min_respondents",
+    "objkind": "function",
+    "roles": "PUBLIC, anon",
+    "src": "supabase/migrations/20261228190000_revoga_execute_publico_anon_funcoes.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "execute",
+    "object": "ensure_single_default_filter",
+    "objkind": "function",
+    "roles": "PUBLIC",
+    "src": "supabase/migrations/20261228190000_revoga_execute_publico_anon_funcoes.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "execute",
+    "object": "erf_inverse",
+    "objkind": "function",
+    "roles": "PUBLIC, anon, authenticated",
+    "src": "supabase/migrations/20261228190000_revoga_execute_publico_anon_funcoes.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "execute",
+    "object": "handle_new_user",
+    "objkind": "function",
+    "roles": "PUBLIC, anon, authenticated",
+    "src": "supabase/migrations/20261228190000_revoga_execute_publico_anon_funcoes.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "execute",
+    "object": "handle_updated_at",
+    "objkind": "function",
+    "roles": "PUBLIC, anon, authenticated",
+    "src": "supabase/migrations/20261228190000_revoga_execute_publico_anon_funcoes.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "execute",
+    "object": "log_lucky_wheel_budget_change",
+    "objkind": "function",
+    "roles": "PUBLIC, anon, authenticated",
+    "src": "supabase/migrations/20261228190000_revoga_execute_publico_anon_funcoes.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "execute",
+    "object": "log_lucky_wheel_prize_change",
+    "objkind": "function",
+    "roles": "PUBLIC, anon, authenticated",
+    "src": "supabase/migrations/20261228190000_revoga_execute_publico_anon_funcoes.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "execute",
+    "object": "log_prediction_settlement",
+    "objkind": "function",
+    "roles": "PUBLIC, anon, authenticated",
+    "src": "supabase/migrations/20261228190000_revoga_execute_publico_anon_funcoes.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "execute",
+    "object": "log_purchase_requested",
+    "objkind": "function",
+    "roles": "PUBLIC, anon, authenticated",
+    "src": "supabase/migrations/20261228190000_revoga_execute_publico_anon_funcoes.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "execute",
+    "object": "log_wager_integrity_review_event",
+    "objkind": "function",
+    "roles": "PUBLIC, anon, authenticated",
+    "src": "supabase/migrations/20261228190000_revoga_execute_publico_anon_funcoes.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "execute",
+    "object": "notify_admins_of_monthly_report",
+    "objkind": "function",
+    "roles": "PUBLIC, anon, authenticated",
+    "src": "supabase/migrations/20261228190000_revoga_execute_publico_anon_funcoes.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "execute",
+    "object": "trigger_dispatch_critical_alert",
+    "objkind": "function",
+    "roles": "anon, authenticated",
+    "src": "supabase/migrations/20261228190000_revoga_execute_publico_anon_funcoes.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "execute",
+    "object": "trim_push_sync_events",
+    "objkind": "function",
+    "roles": "PUBLIC, anon",
+    "src": "supabase/migrations/20261228190000_revoga_execute_publico_anon_funcoes.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "execute",
+    "object": "update_notification_prefs_updated_at",
+    "objkind": "function",
+    "roles": "PUBLIC, anon, authenticated",
+    "src": "supabase/migrations/20261228190000_revoga_execute_publico_anon_funcoes.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "execute",
+    "object": "update_saved_filters_updated_at",
+    "objkind": "function",
+    "roles": "PUBLIC",
+    "src": "supabase/migrations/20261228190000_revoga_execute_publico_anon_funcoes.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "execute",
+    "object": "update_updated_at_column",
+    "objkind": "function",
+    "roles": "PUBLIC, anon, authenticated",
+    "src": "supabase/migrations/20261228190000_revoga_execute_publico_anon_funcoes.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "execute",
+    "object": "war_hook_attendance",
+    "objkind": "function",
+    "roles": "PUBLIC, anon, authenticated",
+    "src": "supabase/migrations/20261228190000_revoga_execute_publico_anon_funcoes.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "execute",
+    "object": "war_hook_kudos",
+    "objkind": "function",
+    "roles": "PUBLIC, anon, authenticated",
+    "src": "supabase/migrations/20261228190000_revoga_execute_publico_anon_funcoes.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "execute",
+    "object": "war_hook_module_progress",
+    "objkind": "function",
+    "roles": "PUBLIC, anon, authenticated",
+    "src": "supabase/migrations/20261228190000_revoga_execute_publico_anon_funcoes.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "execute",
+    "object": "war_hook_quiz_scores",
+    "objkind": "function",
+    "roles": "PUBLIC, anon, authenticated",
+    "src": "supabase/migrations/20261228190000_revoga_execute_publico_anon_funcoes.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "execute",
+    "object": "war_hook_task_scores",
+    "objkind": "function",
+    "roles": "PUBLIC, anon, authenticated",
+    "src": "supabase/migrations/20261228190000_revoga_execute_publico_anon_funcoes.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "execute",
+    "object": "war_hook_trail_enrollments",
+    "objkind": "function",
+    "roles": "PUBLIC, anon, authenticated",
+    "src": "supabase/migrations/20261228190000_revoga_execute_publico_anon_funcoes.sql"
    },
    {
     "kind": "grant",
@@ -160658,6 +161317,38 @@
    ],
    "uses_service_role": true
   },
+  "supabase/migrations/20261228180000_restaura_trigger_novo_usuario.sql": {
+   "path": "supabase/migrations/20261228180000_restaura_trigger_novo_usuario.sql",
+   "lines": 50
+  },
+  "supabase/migrations/20261228190000_revoga_execute_publico_anon_funcoes.sql": {
+   "path": "supabase/migrations/20261228190000_revoga_execute_publico_anon_funcoes.sql",
+   "lines": 56,
+   "side_effects": [
+    "notify_admins_of_monthly_report"
+   ],
+   "uses_service_role": true
+  },
+  "supabase/migrations/20261228200000_alinha_triggers_department_war_e_auditoria.sql": {
+   "path": "supabase/migrations/20261228200000_alinha_triggers_department_war_e_auditoria.sql",
+   "lines": 38
+  },
+  "supabase/migrations/20261228210000_reaplica_mensagens_funcoes_divergentes.sql": {
+   "path": "supabase/migrations/20261228210000_reaplica_mensagens_funcoes_divergentes.sql",
+   "lines": 274,
+   "temporal": [
+    "AND COALESCE(eak.secret_last_rotated_at, eak.created_at) < now() - interval '90 days'",
+    "AND created_at > now() - interval '1 hour'",
+    "AND sa.created_at > now() - interval '7 days'",
+    "DELETE FROM public.push_outbox_health_snapshots WHERE created_at < now() - interval '30 days';",
+    "v_since timestamptz := now() - interval '24 hours';",
+    "v_stuck_cutoff timestamptz := now() - interval '5 minutes';"
+   ]
+  },
+  "supabase/migrations/20261228220000_alinha_nulabilidade_external_api_keys.sql": {
+   "path": "supabase/migrations/20261228220000_alinha_nulabilidade_external_api_keys.sql",
+   "lines": 18
+  },
   "supabase/tests/climate/assertions.sql": {
    "path": "supabase/tests/climate/assertions.sql",
    "lines": 404,
@@ -160753,10 +161444,26 @@
   }
  },
  "git": {
-  "sha": "324e51a9c4b21f9078658cbb3809b4846d9cc816",
+  "sha": "29b5a15e3fb6554d5b0c367b16d723e9d31b4dab",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "commits": [
+   {
+    "sha": "29b5a15",
+    "date": "2026-11-25",
+    "author": "adm01-debug",
+    "subject": "fix: restaura trigger de cadastro, revoga execute publico e alinha triggers e mensagens (#173)",
+    "files": [
+     "docs/agentes/banco.md",
+     "docs/agentes/mapa-repo.md",
+     "scripts/db-audit/migration-baseline.json",
+     "supabase/migrations/20261228180000_restaura_trigger_novo_usuario.sql",
+     "supabase/migrations/20261228190000_revoga_execute_publico_anon_funcoes.sql",
+     "supabase/migrations/20261228200000_alinha_triggers_department_war_e_auditoria.sql",
+     "supabase/migrations/20261228210000_reaplica_mensagens_funcoes_divergentes.sql",
+     "supabase/migrations/20261228220000_alinha_nulabilidade_external_api_keys.sql"
+    ]
+   },
    {
     "sha": "324e51a",
     "date": "2026-11-25",
@@ -161101,25 +161808,16 @@
     "files": [
      "supabase/migrations/20261224100000_climate_survey_cycle_jobs.sql"
     ]
-   },
-   {
-    "sha": "85ba135",
-    "date": "2026-11-24",
-    "author": "adm01-debug",
-    "subject": "fix(cron): reproduz os jobs internos sem credencial no repositorio (#142)",
-    "files": [
-     "supabase/migrations/20261224110000_cron_internal_jobs_drift.sql"
-    ]
    }
   ],
   "hot_files": [
    [
     "docs/agentes/banco.md",
-    7
+    8
    ],
    [
     "docs/agentes/mapa-repo.md",
-    7
+    8
    ],
    [
     "docs/estado/05-edge-functions.md",
@@ -161130,12 +161828,12 @@
     6
    ],
    [
-    "AGENTS.md",
+    "scripts/db-audit/migration-baseline.json",
     4
    ],
    [
-    "scripts/db-audit/migration-baseline.json",
-    3
+    "AGENTS.md",
+    4
    ],
    [
     "scripts/db-audit/check-migration-drift.mjs",
@@ -161178,19 +161876,19 @@
     2
    ],
    [
-    "supabase/config.toml",
+    "supabase/migrations/20261228180000_restaura_trigger_novo_usuario.sql",
     1
    ],
    [
-    "supabase/migrations/20260306012145_1621918a-fb50-4f2d-8af2-799429f5c8ea.sql",
+    "supabase/migrations/20261228190000_revoga_execute_publico_anon_funcoes.sql",
     1
    ],
    [
-    "supabase/migrations/20260727221910_f26719a2_lightning_relampago_schema.sql",
+    "supabase/migrations/20261228200000_alinha_triggers_department_war_e_auditoria.sql",
     1
    ],
    [
-    "supabase/migrations/20261228130000_recupera_funcoes_e_views_ausentes.sql",
+    "supabase/migrations/20261228210000_reaplica_mensagens_funcoes_divergentes.sql",
     1
    ]
   ]

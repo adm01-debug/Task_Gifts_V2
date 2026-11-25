@@ -6,7 +6,7 @@
   "src/integrations/supabase/types.ts",
   "supabase/migrations"
  ],
- "migrations": 301,
+ "migrations": 306,
  "seeds": [],
  "avisos": [
   "15 bloco(s) com DDL dinâmico (EXECUTE format/...) não modelado — policies/colunas criadas dinamicamente podem faltar; confira no banco vivo"
@@ -693,6 +693,27 @@
    "quando": "before",
    "evento": "update",
    "tabela": "department_rankings",
+   "funcao": "update_updated_at_column"
+  },
+  {
+   "nome": "dept_war_departments_updated_at",
+   "quando": "before",
+   "evento": "update",
+   "tabela": "department_war_departments",
+   "funcao": "update_updated_at_column"
+  },
+  {
+   "nome": "department_war_metrics_updated_at",
+   "quando": "before",
+   "evento": "update",
+   "tabela": "department_war_metrics",
+   "funcao": "update_updated_at_column"
+  },
+  {
+   "nome": "department_wars_updated_at",
+   "quando": "before",
+   "evento": "update",
+   "tabela": "department_wars",
    "funcao": "update_updated_at_column"
   },
   {
@@ -10710,7 +10731,9 @@
    },
    "usada_no_front": 1,
    "usada_em_edges": [],
-   "triggers": [],
+   "triggers": [
+    "dept_war_departments_updated_at"
+   ],
    "sem_rls": false,
    "nao_usada": false
   },
@@ -10807,7 +10830,9 @@
    },
    "usada_no_front": 2,
    "usada_em_edges": [],
-   "triggers": [],
+   "triggers": [
+    "department_war_metrics_updated_at"
+   ],
    "sem_rls": false,
    "nao_usada": false
   },
@@ -11139,6 +11164,7 @@
    "usada_no_front": 2,
    "usada_em_edges": [],
    "triggers": [
+    "department_wars_updated_at",
     "trg_validate_department_war"
    ],
    "sem_rls": false,
@@ -13371,7 +13397,7 @@
     },
     "secret_hash": {
      "tipo": "text",
-     "nn": true,
+     "nn": false,
      "pk": false,
      "default": null,
      "ref": null
@@ -13385,7 +13411,7 @@
     },
     "secret_salt": {
      "tipo": "text",
-     "nn": true,
+     "nn": false,
      "pk": false,
      "default": null,
      "ref": null

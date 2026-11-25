@@ -1,6 +1,6 @@
 # 10 · ACESSO E SEGURANÇA — quem pode o quê
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `324e51a9c4` · branch `main` · 2026-11-25 22:11 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `29b5a15e3f` · branch `main` · 2026-11-25 22:31 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## Perfis / roles identificados
@@ -258,7 +258,7 @@
 
 > `—` com RLS ligado = ninguém além de service_role. `sem RLS` = qualquer chave anon lê/escreve tudo.
 
-## Onde o RLS é IGNORADO (service_role) — 153 arquivo(s)
+## Onde o RLS é IGNORADO (service_role) — 154 arquivo(s)
 
 - `scripts/ai-context/cenarios.mjs`
 - `scripts/ai-context/gerar.unit.mjs`
@@ -410,7 +410,7 @@
 - `supabase/migrations/20261226195000_reset_senha_consistencia.sql`
 - `supabase/migrations/20261227120000_engagement_integridade_e_anon.sql`
 - `supabase/migrations/20261228120000_cron_jobs_e_leaderboard_cache.sql`
-- … +3 (lista completa em `context.json`)
+- … +4 (lista completa em `context.json`)
 
 ## Funções SQL `SECURITY DEFINER` (rodam com privilégio do dono, ignoram RLS)
 
@@ -801,15 +801,15 @@ Middleware matcher (Next.js): nenhum
 | grant | service_role | select, insert, update, delete | `webhook_idempotency` |
 | grant | service_role, authenticated | execute | `get_security_stats`, `log_login_attempt`, `get_nine_box_distribution`, `get_department_metrics`, `get_monthly_trends`, `get_executive_metrics` |
 | revoke | PUBLIC | all | `get_security_digest_history`, `get_reliability_slo`, `get_reliability_timeline`, `acknowledge_security_alert`, `log_runbook_step`, `get_incident_metrics`, `get_incident_metrics`, `recalc_campaign_progress`, `close_expired_sales_campaigns`, `user_wants_in_app_notification`, `close_expired_sales_campaigns`, `user_wants_push_notification`, `user_wants_email_notification`, `enqueue_push`, `claim_push_outbox` … +22 |
-| revoke | PUBLIC | execute | `cleanup_old_security_logs`, `public`, `approve_password_reset`, `reject_password_reset`, `auto_block_ip`, `cleanup_old_security_logs`, `cleanup_old_security_logs`, `cleanup_expired_idempotency_keys`, `cleanup_expired_challenges`, `get_security_stats`, `update_certification_statuses`, `log_ip_access`, `log_geo_access`, `validate_api_key`, `process_external_task` … +27 |
+| revoke | PUBLIC | execute | `cleanup_old_security_logs`, `public`, `approve_password_reset`, `reject_password_reset`, `auto_block_ip`, `cleanup_old_security_logs`, `cleanup_old_security_logs`, `cleanup_expired_idempotency_keys`, `cleanup_expired_challenges`, `get_security_stats`, `update_certification_statuses`, `log_ip_access`, `log_geo_access`, `validate_api_key`, `process_external_task` … +29 |
 | revoke | PUBLIC, anon | all | `generate_executive_monthly_report`, `generate_action_plan_from_factor`, `generate_action_plan_from_nr1_category`, `get_engagement_nps_history`, `get_engagement_pillar_benchmark`, `get_engagement_pillar_benchmark`, `trim_push_sync_events`, `revoke_push_device`, `can_handle_opinion`, `get_opinion_feed`, `toggle_opinion_support`, `respond_to_opinion`, `set_opinion_status`, `generate_action_plan_from_opinion`, `revoke_push_device` … +89 |
-| revoke | PUBLIC, anon | execute | `get_webhook_delivery_stats_24h`, `get_webhook_delivery_hourly_24h`, `get_webhook_delivery_stats_1h`, `get_webhook_delivery_logs`, `get_error_budget_30d`, `get_burn_rate`, `get_burn_rate`, `is_org_admin`, `is_org_member`, `get_active_engagement_cycle`, `assign_engagement_questions`, `submit_engagement_answer`, `get_engagement_cycle_progress`, `engagement_min_respondents`, `get_engagement_pillar_scores` … +15 |
+| revoke | PUBLIC, anon | execute | `get_webhook_delivery_stats_24h`, `get_webhook_delivery_hourly_24h`, `get_webhook_delivery_stats_1h`, `get_webhook_delivery_logs`, `get_error_budget_30d`, `get_burn_rate`, `get_burn_rate`, `is_org_admin`, `is_org_member`, `get_active_engagement_cycle`, `assign_engagement_questions`, `submit_engagement_answer`, `get_engagement_cycle_progress`, `engagement_min_respondents`, `get_engagement_pillar_scores` … +20 |
 | revoke | PUBLIC, anon, authenticated | all | `webhook_delivery_stats_24h`, `check_sla_breaches_and_alert`, `auto_create_postmortem_on_resolve`, `check_overdue_postmortem_actions`, `notify_admins_of_monthly_report`, `close_expired_sales_campaigns`, `increment_push_failures`, `reset_push_failures`, `log_lucky_wheel_prize_change`, `chi_square_critical`, `erf_inverse`, `snapshot_lucky_wheel_payout`, `raise_lucky_wheel_window_alerts`, `raise_lucky_wheel_window_alerts`, `log_lucky_wheel_budget_change` … +32 |
-| revoke | PUBLIC, anon, authenticated | execute | `validate_reset_token`, `generate_certificate_code`, `ingest_war_event`, `war_hook_task_scores`, `war_hook_attendance`, `war_hook_trail_enrollments`, `war_hook_module_progress`, `war_hook_quiz_scores`, `war_hook_kudos`, `validate_reset_token`, `claim_push_outbox`, `increment_push_failures`, `reset_push_failures`, `user_wants_push_notification`, `get_passkeys_by_email` … +1 |
+| revoke | PUBLIC, anon, authenticated | execute | `validate_reset_token`, `generate_certificate_code`, `ingest_war_event`, `war_hook_task_scores`, `war_hook_attendance`, `war_hook_trail_enrollments`, `war_hook_module_progress`, `war_hook_quiz_scores`, `war_hook_kudos`, `validate_reset_token`, `claim_push_outbox`, `increment_push_failures`, `reset_push_failures`, `user_wants_push_notification`, `get_passkeys_by_email` … +29 |
 | revoke | anon | all | `demographic_attributes`, `geo_access_logs`, `geo_blocking_rules`, `notification_preferences`, `permission_groups`, `user_demographic_values`, `user_permission_groups`, `public`, `public`, `profiles_public`, `_climate_recompute_pillar_scores`, `climate_recalculate_pillar_scores`, `climate_survey_enps`, `climate_submit_response`, `approve_password_reset` … +5 |
 | revoke | anon | execute | `get_lucky_wheel_prizes_display`, `reset_login_attempts`, `is_org_admin`, `is_org_member`, `can_handle_opinion`, `generate_certificate_code` |
 | revoke | anon | insert, update, delete | `push_outbox`, `user_devices` |
-| revoke | anon, authenticated | execute | `cleanup_old_security_logs` |
+| revoke | anon, authenticated | execute | `cleanup_old_security_logs`, `trigger_dispatch_critical_alert` |
 | revoke | anon, authenticated | select | `webhook_delivery_stats_24h` |
 | revoke | authenticated | all | `profiles_public`, `_climate_recompute_pillar_scores` |
 | revoke | authenticated | delete | `action_plan_updates`, `ai_course_jobs`, `announcement_reads`, `api_request_logs`, `attendance_records`, `auction_admin_events`, `auction_bids`, `audit_logs`, `bingo_cards`, `bingo_marks`, `bitrix24_webhook_logs`, `board_moves`, `board_player_states`, `boss_battle_damage`, `boss_battle_rewards` … +86 |

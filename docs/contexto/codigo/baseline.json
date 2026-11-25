@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "324e51a9c4b21f9078658cbb3809b4846d9cc816",
+  "commit": "29b5a15e3fb6554d5b0c367b16d723e9d31b4dab",
   "branch": "main",
-  "data_commit": "2026-11-25T19:08:10-03:00",
+  "data_commit": "2026-11-25T19:28:43-03:00",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "ultimos_commits": [
+   {
+    "sha": "29b5a15",
+    "data": "2026-11-25",
+    "assunto": "fix: restaura trigger de cadastro, revoga execute publico e alinha triggers e mensagens (#173)"
+   },
    {
     "sha": "324e51a",
     "data": "2026-11-25",
@@ -126,14 +131,9 @@
     "sha": "c567ffe",
     "data": "2026-11-24",
     "assunto": "docs(edge-functions): corrige o drift do agendamento dos jobs internos e a semeadura de cron_secret (#149)"
-   },
-   {
-    "sha": "59b21b4",
-    "data": "2026-11-24",
-    "assunto": "fix(desafio): notificacao do desafio semanal leva o id do desafio no payload (#145)"
    }
   ],
-  "arquivos_mudados_7d": 254,
+  "arquivos_mudados_7d": 259,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "supabase/functions/_shared",
@@ -145,18 +145,18 @@
    },
    {
     "pasta": "docs/agentes/banco.md",
-    "mudancas": 16
+    "mudancas": 17
    },
    {
     "pasta": "docs/estado/05-edge-functions.md",
     "mudancas": 15
    },
    {
-    "pasta": "bun.lock",
-    "mudancas": 13
+    "pasta": "docs/agentes/mapa-repo.md",
+    "mudancas": 14
    },
    {
-    "pasta": "docs/agentes/mapa-repo.md",
+    "pasta": "bun.lock",
     "mudancas": 13
    },
    {
@@ -203,7 +203,7 @@
    },
    {
     "arquivo": "docs/agentes/banco.md",
-    "mudancas": 16
+    "mudancas": 17
    },
    {
     "arquivo": "docs/estado/05-edge-functions.md",
@@ -215,7 +215,7 @@
    },
    {
     "arquivo": "docs/agentes/mapa-repo.md",
-    "mudancas": 13
+    "mudancas": 14
    },
    {
     "arquivo": ".github/workflows/ci.yml",
@@ -258,6 +258,10 @@
     "mudancas": 5
    },
    {
+    "arquivo": "scripts/db-audit/migration-baseline.json",
+    "mudancas": 5
+   },
+   {
     "arquivo": "supabase/functions/_shared/contracts/_fixtures/responses.ts",
     "mudancas": 5
    },
@@ -292,16 +296,12 @@
    {
     "arquivo": "scripts/automation.mjs",
     "mudancas": 4
-   },
-   {
-    "arquivo": "scripts/db-audit/migration-baseline.json",
-    "mudancas": 4
    }
   ],
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 139
+    "commits": 140
    },
    {
     "autor": "dependabot[bot]",
@@ -310,7 +310,7 @@
   ]
  },
  "contagens": {
-  "arquivos_total": 1601,
+  "arquivos_total": 1606,
   "arquivos_codigo": 1196,
   "linhas_codigo": 236866,
   "rotas": 87,
@@ -322,7 +322,7 @@
   "hooks": 155,
   "edge_functions": 23,
   "tabelas": 239,
-  "migrations": 301,
+  "migrations": 306,
   "cron_jobs": 40,
   "testes": 177,
   "workflows": 6,
