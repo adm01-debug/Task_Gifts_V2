@@ -1,6 +1,6 @@
 # 07 · REGRAS DE NEGÓCIO
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `84e8ba2832` · branch `main` · 2026-11-25 15:56 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `a3fb38b6f5` · branch `main` · 2026-11-25 16:46 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## A. Regras escritas por humanos (`manual/` — prioridade máxima, nunca sobrescrito)
@@ -1056,7 +1056,7 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `type` | `SKIP_WAITING` | compara | `public/sw.js` |
 | `type` | `UPDATE_TOAST` | compara, escreve | `src/hooks/use-toast.ts` |
 | `type` | `accept` | compara, escreve | `src/components/duels/DuelCard.tsx`<br>`src/pages/Duels.tsx` |
-| `type` | `achievement` | compara, escreve | `public/sw.js`<br>`src/hooks/useFeedback.ts`<br>`src/lib/luckyWheelPayout.ts`<br>`src/services/attendanceService.ts`<br>`src/services/certificationsService.ts`<br>… +2 |
+| `type` | `achievement` | compara, escreve | `public/sw.js`<br>`src/hooks/useFeedback.ts`<br>`src/lib/luckyWheelPayout.ts`<br>`src/lib/notificationUrl.ts`<br>`src/services/attendanceService.ts`<br>… +3 |
 | `type` | `achievement_unlocked` | escreve | `src/services/achievementsService.ts` |
 | `type` | `action` | compara, escreve | `src/components/GlobalSearch.tsx`<br>`src/components/search/SearchResultsList.tsx` |
 | `type` | `activity_spike` | escreve | `supabase/functions/admin-alerts/index.ts` |
@@ -1093,6 +1093,7 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `type` | `duel-challenge` | compara | `public/sw.js` |
 | `type` | `epic` | escreve | `src/components/CelebrationEffect.tsx`<br>`src/pages/Shop.tsx` |
 | `type` | `error` | compara | `src/components/GlobalMessageProvider.tsx`<br>`src/components/mobile/HapticWrapper.tsx`<br>`src/hooks/useFeedback.ts` |
+| `type` | `executive_report` | compara | `src/lib/notificationUrl.ts` |
 | `type` | `expiring_certifications` | escreve | `supabase/functions/admin-alerts/index.ts` |
 | `type` | `failed_login` | compara, escreve | `public/sw.js`<br>`src/hooks/useSecurityPushNotifications.ts` |
 | `type` | `feedback` | escreve | `src/services/autoChallengesService.ts` |
@@ -3643,7 +3644,7 @@ _nenhum item encontrado_
 | `manager` | `supabase/migrations/20261123180000_climate_survey_engine.sql` |
 | `admin` | `supabase/migrations/20261226195000_reset_senha_consistencia.sql` |
 
-## K. Testes como especificação (2114 testes em 161 arquivos — nomes completos em `context.json`)
+## K. Testes como especificação (2126 testes em 163 arquivos — nomes completos em `context.json`)
 
 | Arquivo | Testes | Exemplos do que o sistema DEVE fazer |
 |---|---|---|
@@ -3749,6 +3750,7 @@ _nenhum item encontrado_
 | `src/test/sequenceProcedureStatsExport.test.ts` | 9 | buildSequenceStatsCsv · emite todas as seções na ordem esperada · usa CRLF e aspas em todas as células (RFC 4180) · neutraliza fórmulas e escapa aspas/vírgulas … |
 | `src/test/useTypePreferences.test.tsx` | 9 | useTypePreferences · aplica defaults quando o banco esta vazio · hidrata valores existentes do banco · escreve de forma aditiva, preservando tipos de outros modulos … |
 | `src/test/luckyWheelPayoutTrendCsv.simulation.test.ts` | 8 | buildPayoutTrendCsv — simulação massiva · mantém uma linha por dia da janela em 200 cenários aleatórios · nunca emite quebras de linha extras dentro das células · neutraliza tentativas de CSV injection no rótulo do período … |
+| `src/test/notificationUrl.test.ts` | 8 | resolveNotificationUrl · respeita a rota que a fonte gravou · navega o aviso antigo que so gravou o payload de negocio · leva o aviso ao lugar do assunto, nao a uma pagina vizinha … |
 | `src/test/pushOutbox.simulation.test.ts` | 8 | fila de push — máquina de estados · entrega no primeiro sucesso · erro permanente não consome retries extras · erro transitório volta para a fila até esgotar tentativas … |
 | `src/test/boardStatsExport.simulation.test.ts` | 7 | boardStatsExport — invariantes · mantém cabeçalho estável e uma linha por desafio · neutraliza CSV injection e escapa aspas/vírgulas/quebras · não quebra com payload vazio, nulo ou corrompido … |
 | `src/test/bossDepartmentComparison.simulation.test.ts` | 7 | compareDepartments — simulação massiva · mantém invariantes em 800 cenários · normaliza janela invertida · agrupa batalhas sem departamento em bucket explícito … |
@@ -3788,6 +3790,7 @@ _nenhum item encontrado_
 | `src/tests/unit/weeklyChallenge.test.tsx` | 5 | useWeeklyChallenge - notificacao do desafio · inclui o id do desafio no payload das notificacoes · mantem o desafio quando o aviso ao oponente e recusado pela RLS · gera payloads distintos em desafios de semanas diferentes (nao colide no indice unico) … |
 | `src/components/shop/__tests__/ProductGridLoading.test.tsx` | 4 | Shop Skeleton and Loading State · should display skeletons while rewards are loading · should transition from skeletons to content smoothly · should maintain layout stability during search/filtering loading |
 | `src/test/edgeAvailability.test.ts` | 4 | isFunctionDeployed — allowlist compilada · allowlist vazia bloqueia todas as funções (kill switch documentado) · passkey-auth é reconhecida mesmo quando a env do Vercel não a lista · função fora da lista continua bloqueada |
+| `src/test/notificationCenterKeyboard.test.tsx` | 4 | NotificationCenter com aviso sem data.url · navega para o leilao ao acionar o aviso · Enter no botao Excluir exclui, nao navega · Enter no proprio aviso navega |
 | `src/test/nr1Export.simulation.test.ts` | 4 | Exportação NR-1 (simulação combinatória) · nunca emite célula vazia ou  · marca plano obrigatório exatamente para riscos alto e crítico · gera nome de arquivo seguro para recortes com acentos e símbolos |
 | `src/test/passkeysPanel.test.tsx` | 4 | PasskeysPanel — cadastro so quando o login por passkey funciona · libera o cadastro quando a funcao esta publicada e a conta nao exige segundo fator · bloqueia o cadastro e explica quando a conta exige verificacao em duas etapas · bloqueia o cadastro quando a funcao nao esta liberada no ambiente |
 | `src/test/surveyNotificationPreferences.test.tsx` | 4 | SurveyNotificationPreferences · mostra in-app e push dos dois lembretes, ligados por padrao · hidrata o que ja esta salvo sem alterar o outro lembrete · desligar um canal grava so aquele tipo e preserva os demais modulos |
@@ -4008,6 +4011,8 @@ _nenhum item encontrado_
 | * Diff mínimo entre o estado persistido e o rascunho — evita reescrever a | `src/lib/memoryDeckAuthoring.ts` |
 | (SECURITY DEFINER). Este módulo apenas (a) monta o tabuleiro embaralhado de | `src/lib/memoryGame.ts` |
 | * Tempo máximo por par para o bônus de velocidade. */ | `src/lib/memoryGame.ts` |
+| RPC do relatorio executivo usa). Varios tipos antigos gravaram apenas o | `src/lib/notificationUrl.ts` |
+| payload de negocio, entao o clique no painel nao fazia nada; o mapa abaixo | `src/lib/notificationUrl.ts` |
 | limite de tamanho) antes de qualquer renderização. | `src/lib/opinionChannel.ts` |
 | do RH tenha prazo auditável. | `src/lib/opinionChannel.ts` |
 | * Prazo de tratativa (em horas) por urgência declarada pelo colaborador. */ | `src/lib/opinionChannel.ts` |
@@ -4166,5 +4171,4 @@ _nenhum item encontrado_
 | forjado com type=security_weekly_digest não pode ser usado como prova (nem bloquear | `supabase/functions/security-weekly-digest/index.ts` |
 | Máximo de 3 tentativas totais. Backoff base: 500ms, cap 8s. | `supabase/functions/send-campaign-push/index.ts` |
 | Limit response body size | `supabase/functions/webhook-dispatcher/index.ts` |
-| INTO v_settings FROM geo_settings LIMIT 1; | `supabase/migrations/20251231131217_c2ec197f-c709-4fd4-8202-2738c37dddf7.sql` |
-| # O que precisa ser preenchido\n\n1. Descreva o cenário em uma frase (o quê, quando, quem foi afetado).\n2. Confirme se o impacto foi apenas SLA ou também usuário final.'; | `supabase/migrations/20260712222124_0a235aa5-fd55-4549-b78b-f1de5dff2dbd.sql` |
+| … +2 linhas — lista completa em `context.json` | |

@@ -17,12 +17,12 @@
    "src/contexts (4)"
   ],
   "servicos_logica": [
-   "src/lib (106)",
+   "src/lib (107)",
    "src/services (99)",
    "src/integrations (3)"
   ],
   "testes": [
-   "co-localizado (*.test) (156)",
+   "co-localizado (*.test) (158)",
    "outro (12)",
    "tests/ (3)"
   ],
@@ -59,11 +59,11 @@
  "commits": {
   "convencao": "conventional commits (observado)",
   "exemplos": [
+   "fix: destino dos avisos de notificação (51 avisos sem rota)",
    "feat: interruptor proprio para os avisos de pesquisa no perfil (#169)",
    "feat: lembrete semanal de pesquisa de engajamento pendente (#168)",
    "feat: mostra a foto do premio na loja quando o admin cadastra (#167)",
-   "security: engajamento com score validado e anon fora das tabelas de escrita (#166)",
-   "chore: alinha a documentacao do ledger com os 293 arquivos da main (#165)"
+   "security: engajamento com score validado e anon fora das tabelas de escrita (#166)"
   ]
  },
  "pr_template": ".github/PULL_REQUEST_TEMPLATE.md",

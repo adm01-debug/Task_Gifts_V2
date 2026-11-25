@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "84e8ba28320d82e631b5da35d410d28d8108b0c1",
+  "sha": "a3fb38b6f50e36b2d8f48c13fb2b2a3d0fd680eb",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
-  "generated_at": "2026-11-25 15:56 UTC",
-  "files_total": 1603,
-  "code_files": 1496,
-  "code_lines": 271074
+  "generated_at": "2026-11-25 16:46 UTC",
+  "files_total": 1606,
+  "code_files": 1499,
+  "code_lines": 271295
  },
  "version": "1.3.2",
- "facts_hash": "49fc8a7645c53f5e",
+ "facts_hash": "94b39d2b5ef175b8",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -194,8 +194,8 @@
   ],
   "package_manager": "bun",
   "languages": {
-   ".ts": 585,
-   ".tsx": 582,
+   ".ts": 587,
+   ".tsx": 583,
    ".sql": 297,
    ".mjs": 21,
    ".js": 5,
@@ -44136,7 +44136,7 @@
      "increment_quests_completed",
      "increment_streak"
     ],
-    "deps_count": 208
+    "deps_count": 209
    },
    {
     "path": "",
@@ -49465,7 +49465,7 @@
   {
    "module": "src/components",
    "files": 468,
-   "lines": 79293,
+   "lines": 79297,
    "tables": [
     "attendance_records",
     "audit_logs",
@@ -49904,8 +49904,8 @@
   },
   {
    "module": "src/lib",
-   "files": 106,
-   "lines": 22094,
+   "files": 107,
+   "lines": 22156,
    "tables": [
     "lucky_wheel_settings",
     "lucky_wheel_settings_audit",
@@ -50046,6 +50046,7 @@
     "src/lib/memoryDeckAuthoring.ts",
     "src/lib/memoryGame.ts",
     "src/lib/notificationTypePrefs.ts",
+    "src/lib/notificationUrl.ts",
     "src/lib/npsHistory.ts",
     "src/lib/nr1Export.ts",
     "src/lib/opinionChannel.ts",
@@ -50053,8 +50054,7 @@
     "src/lib/predictionAdmin.ts",
     "src/lib/predictionMarket.ts",
     "src/lib/predictionOddsHistory.ts",
-    "src/lib/predictionOracle.ts",
-    "src/lib/predictionWatchdog.ts"
+    "src/lib/predictionOracle.ts"
    ]
   },
   {
@@ -50618,8 +50618,8 @@
   },
   {
    "module": "src/test",
-   "files": 137,
-   "lines": 24202,
+   "files": 139,
+   "lines": 24357,
    "tables": [
     "kudos",
     "profiles"
@@ -50640,6 +50640,8 @@
     "@testing-library/react",
     "@testing-library/user-event",
     "date-fns",
+    "node:fs",
+    "node:path",
     "react",
     "react-router-dom",
     "vitest"
@@ -60254,6 +60256,14 @@
    {
     "file": "src/lib/memoryGame.ts",
     "text": "* Tempo máximo por par para o bônus de velocidade. */"
+   },
+   {
+    "file": "src/lib/notificationUrl.ts",
+    "text": "RPC do relatorio executivo usa). Varios tipos antigos gravaram apenas o"
+   },
+   {
+    "file": "src/lib/notificationUrl.ts",
+    "text": "payload de negocio, entao o clique no painel nao fazia nada; o mapa abaixo"
    },
    {
     "file": "src/lib/opinionChannel.ts",
@@ -76200,6 +76210,18 @@
     "kind": "compara"
    },
    {
+    "file": "src/lib/notificationUrl.ts",
+    "field": "type",
+    "value": "achievement",
+    "kind": "compara"
+   },
+   {
+    "file": "src/lib/notificationUrl.ts",
+    "field": "type",
+    "value": "executive_report",
+    "kind": "compara"
+   },
+   {
     "file": "src/lib/opinionChannel.ts",
     "field": "state",
     "value": "closed",
@@ -86808,6 +86830,22 @@
     "name": "busca somente pedidos direcionados ao usuário e descarta os próprios"
    },
    {
+    "file": "src/test/notificationCenterKeyboard.test.tsx",
+    "name": "NotificationCenter com aviso sem data.url"
+   },
+   {
+    "file": "src/test/notificationCenterKeyboard.test.tsx",
+    "name": "navega para o leilao ao acionar o aviso"
+   },
+   {
+    "file": "src/test/notificationCenterKeyboard.test.tsx",
+    "name": "Enter no botao Excluir exclui, nao navega"
+   },
+   {
+    "file": "src/test/notificationCenterKeyboard.test.tsx",
+    "name": "Enter no proprio aviso navega"
+   },
+   {
     "file": "src/test/notificationPrefsCrossModule.simulation.test.ts",
     "name": "preferencias compartilhadas entre modulos"
    },
@@ -86898,6 +86936,38 @@
    {
     "file": "src/test/notificationTypePrefs.simulation.test.ts",
     "name": "aceita lista vazia"
+   },
+   {
+    "file": "src/test/notificationUrl.test.ts",
+    "name": "resolveNotificationUrl"
+   },
+   {
+    "file": "src/test/notificationUrl.test.ts",
+    "name": "respeita a rota que a fonte gravou"
+   },
+   {
+    "file": "src/test/notificationUrl.test.ts",
+    "name": "navega o aviso antigo que so gravou o payload de negocio"
+   },
+   {
+    "file": "src/test/notificationUrl.test.ts",
+    "name": "leva o aviso ao lugar do assunto, nao a uma pagina vizinha"
+   },
+   {
+    "file": "src/test/notificationUrl.test.ts",
+    "name": "abre o mes do relatorio executivo anunciado, nao o mais recente"
+   },
+   {
+    "file": "src/test/notificationUrl.test.ts",
+    "name": "ignora url vazia ou sem tipo string"
+   },
+   {
+    "file": "src/test/notificationUrl.test.ts",
+    "name": "nao inventa destino para tipo desconhecido"
+   },
+   {
+    "file": "src/test/notificationUrl.test.ts",
+    "name": "so aponta para rotas que existem em App.tsx"
    },
    {
     "file": "src/test/npsHistory.simulation.test.ts",
@@ -103780,6 +103850,7 @@
       "compara:public/sw.js",
       "compara:src/hooks/useFeedback.ts",
       "compara:src/lib/luckyWheelPayout.ts",
+      "compara:src/lib/notificationUrl.ts",
       "escreve:src/services/attendanceService.ts",
       "escreve:src/services/certificationsService.ts",
       "escreve:src/services/notificationsService.ts",
@@ -104158,6 +104229,9 @@
       "escreve:src/lib/exportReports.ts",
       "escreve:src/pages/EngagementReports.tsx",
       "escreve:src/pages/ManagerDashboard.tsx"
+     ],
+     "executive_report": [
+      "compara:src/lib/notificationUrl.ts"
      ],
      "prediction_lock_overdue": [
       "escreve:src/lib/predictionWatchdog.ts"
@@ -122679,7 +122753,7 @@
   },
   "src/components/NotificationCenter.tsx": {
    "path": "src/components/NotificationCenter.tsx",
-   "lines": 324,
+   "lines": 328,
    "exports": [
     "const NotificationCenter"
    ]
@@ -135570,6 +135644,31 @@
      "values": "in_app | push | email"
     }
    ]
+  },
+  "src/lib/notificationUrl.ts": {
+   "path": "src/lib/notificationUrl.ts",
+   "lines": 62,
+   "exports": [
+    "const ROTA_POR_TIPO",
+    "function resolveNotificationUrl"
+   ],
+   "status_values": [
+    {
+     "field": "type",
+     "value": "achievement",
+     "kind": "compara"
+    },
+    {
+     "field": "type",
+     "value": "executive_report",
+     "kind": "compara"
+    }
+   ],
+   "rule_comments": [
+    "RPC do relatorio executivo usa). Varios tipos antigos gravaram apenas o",
+    "payload de negocio, entao o clique no painel nao fazia nada; o mapa abaixo"
+   ],
+   "doc": "Destino de navegacao de uma notificacao. A fonte da rota e' `data.url` (ou `data.deep_link`, o nome antigo que a RPC do relatorio executivo usa). Varios tipos antigos gravaram apenas o payload de negocio, entao o clique no painel nao fazia nada; o mapa abaixo cobre esses tipos com a pagina que exibe …"
   },
   "src/lib/npsHistory.ts": {
    "path": "src/lib/npsHistory.ts",
@@ -150016,6 +150115,20 @@
     "enqueue("
    ]
   },
+  "src/test/notificationCenterKeyboard.test.tsx": {
+   "path": "src/test/notificationCenterKeyboard.test.tsx",
+   "lines": 87,
+   "is_test": true,
+   "rule_comments": [
+    "Aviso antigo: so o payload de negocio, sem `url`."
+   ],
+   "tests": [
+    "NotificationCenter com aviso sem data.url",
+    "navega para o leilao ao acionar o aviso",
+    "Enter no botao Excluir exclui, nao navega",
+    "Enter no proprio aviso navega"
+   ]
+  },
   "src/test/notificationPrefsCrossModule.simulation.test.ts": {
    "path": "src/test/notificationPrefsCrossModule.simulation.test.ts",
    "lines": 193,
@@ -150058,6 +150171,21 @@
     "liga e desliga push em lote sem tocar outros canais",
     "e idempotente em lote",
     "aceita lista vazia"
+   ]
+  },
+  "src/test/notificationUrl.test.ts": {
+   "path": "src/test/notificationUrl.test.ts",
+   "lines": 68,
+   "is_test": true,
+   "tests": [
+    "resolveNotificationUrl",
+    "respeita a rota que a fonte gravou",
+    "navega o aviso antigo que so gravou o payload de negocio",
+    "leva o aviso ao lugar do assunto, nao a uma pagina vizinha",
+    "abre o mes do relatorio executivo anunciado, nao o mais recente",
+    "ignora url vazia ou sem tipo string",
+    "nao inventa destino para tipo desconhecido",
+    "so aponta para rotas que existem em App.tsx"
    ]
   },
   "src/test/npsHistory.simulation.test.ts": {
@@ -156566,10 +156694,22 @@
   }
  },
  "git": {
-  "sha": "84e8ba28320d82e631b5da35d410d28d8108b0c1",
+  "sha": "a3fb38b6f50e36b2d8f48c13fb2b2a3d0fd680eb",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "commits": [
+   {
+    "sha": "a3fb38b",
+    "date": "2026-11-25",
+    "author": "adm01-debug",
+    "subject": "fix: destino dos avisos de notificação (51 avisos sem rota)",
+    "files": [
+     "src/components/NotificationCenter.tsx",
+     "src/lib/notificationUrl.ts",
+     "src/test/notificationCenterKeyboard.test.tsx",
+     "src/test/notificationUrl.test.ts"
+    ]
+   },
    {
     "sha": "84e8ba2",
     "date": "2026-11-25",
@@ -156900,35 +157040,11 @@
      "scripts/db-audit/README.md",
      "scripts/db-audit/check-migration-drift.mjs"
     ]
-   },
-   {
-    "sha": "96c3382",
-    "date": "2026-11-24",
-    "author": "adm01-debug",
-    "subject": "fix: tira BOM das migrations pendentes e remove rascunho obsoleto do digest (Supabase Preview 42601) (#138)",
-    "files": [
-     "AGENTS.md",
-     "docs/agentes/banco.md",
-     "docs/agentes/mapa-repo.md",
-     "scripts/ci/check-migration-drift.unit.mjs",
-     "scripts/db-audit/README.md",
-     "scripts/db-audit/check-migration-drift.mjs",
-     "supabase/migrations/20261123000001_create_acknowledge_security_digest.sql",
-     "supabase/migrations/20261218000000_profiles_economia_rpcs.sql"
-    ]
    }
   ],
   "hot_files": [
    [
     "docs/agentes/banco.md",
-    9
-   ],
-   [
-    "docs/agentes/mapa-repo.md",
-    8
-   ],
-   [
-    "scripts/db-audit/README.md",
     8
    ],
    [
@@ -156936,12 +157052,20 @@
     8
    ],
    [
+    "docs/agentes/mapa-repo.md",
+    7
+   ],
+   [
+    "scripts/db-audit/README.md",
+    7
+   ],
+   [
     "AGENTS.md",
-    5
+    4
    ],
    [
     "scripts/db-audit/check-migration-drift.mjs",
-    5
+    4
    ],
    [
     "src/pages/Profile.tsx",
@@ -156976,27 +157100,27 @@
     2
    ],
    [
+    "src/components/NotificationCenter.tsx",
+    1
+   ],
+   [
+    "src/lib/notificationUrl.ts",
+    1
+   ],
+   [
+    "src/test/notificationCenterKeyboard.test.tsx",
+    1
+   ],
+   [
+    "src/test/notificationUrl.test.ts",
+    1
+   ],
+   [
     "src/components/SurveyNotificationPreferences.tsx",
     1
    ],
    [
     "src/test/surveyNotificationPreferences.test.tsx",
-    1
-   ],
-   [
-    "supabase/migrations/20261227140000_engagement_reminder.sql",
-    1
-   ],
-   [
-    "src/components/shop/RewardCard.tsx",
-    1
-   ],
-   [
-    "src/components/shop/__tests__/RewardCardImage.test.tsx",
-    1
-   ],
-   [
-    "supabase/migrations/20261227120000_engagement_integridade_e_anon.sql",
     1
    ]
   ]

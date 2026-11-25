@@ -1,7 +1,7 @@
 # Contexto do projeto para agentes de IA
 
 GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.
-Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `84e8ba28320d82e631b5da35d410d28d8108b0c1` (2026-11-25T12:55:48-03:00).
+Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `a3fb38b6f50e36b2d8f48c13fb2b2a3d0fd680eb` (2026-11-25T13:45:28-03:00).
 
 ## Como usar (leia antes de planejar ou executar qualquer tarefa)
 1. **Tela/rota/menu** → `rotas.json` (url/vista/menu → arquivo → hooks → tabelas → edges; `rotas_http_backend` para APIs) e `modulos.json` (módulo inteiro + dependências entre módulos).
@@ -14,7 +14,7 @@ Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR
 Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua tarefa; não carregue tudo.
 
 ## Stack
-- linguagens: TypeScript (1165), SQL (297), Markdown (56), JavaScript (24), JSON (14), YAML (9), Python (5), Shell (5)
+- linguagens: TypeScript (1168), SQL (297), Markdown (56), JavaScript (24), JSON (14), YAML (9), Python (5), Shell (5)
 - linguagem_principal: TypeScript
 - framework: React
 - backend_http: n/d
@@ -34,9 +34,9 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 ## Números
 | item | qtd |
 |---|---|
-| arquivos_total | 1592 |
-| arquivos_codigo | 1193 |
-| linhas_codigo | 236645 |
+| arquivos_total | 1595 |
+| arquivos_codigo | 1196 |
+| linhas_codigo | 236866 |
 | rotas | 87 |
 | rotas_http_backend | 0 |
 | vistas_por_id | 0 |
@@ -48,7 +48,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 | tabelas | 238 |
 | migrations | 295 |
 | cron_jobs | 25 |
-| testes | 175 |
+| testes | 177 |
 | workflows | 6 |
 | scripts | 17 |
 | docs_md | 56 |
@@ -57,8 +57,8 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - telas: src/pages (85), src/components (1)
 - componentes: src/components (438), src/pages (86), src/contexts (4)
 - hooks: src/hooks (129), src/components (22), src/contexts (4)
-- servicos_logica: src/lib (106), src/services (99), src/integrations (3)
-- testes: co-localizado (*.test) (156), outro (12), tests/ (3)
+- servicos_logica: src/lib (107), src/services (99), src/integrations (3)
+- testes: co-localizado (*.test) (158), outro (12), tests/ (3)
 - edge_functions: supabase/functions
 - migrations: supabase/migrations
 - scripts: scripts/maintenance (4), scripts/ci (3), scripts/regras_negocio (3)
@@ -97,7 +97,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 | components/trails | 0 | 0 | 5 | 25 | 3 | 22 |
 | components/ui | 0 | 0 | 67 | 12 | 0 | 0 |
 | hooks | 0 | 0 | 129 | 492 | 10 | 157 |
-| lib | 0 | 0 | 106 | 0 | 0 | 15 |
+| lib | 0 | 0 | 107 | 0 | 0 | 15 |
 | pages | 48 | 86 | 86 | 503 | 15 | 175 |
 | services | 0 | 0 | 96 | 7 | 9 | 161 |
 | stories | 0 | 0 | 29 | 5 | 0 | 0 |
@@ -251,12 +251,12 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 
 ## Integrações externas
 - SDKs: Sentry, Supabase, react-query, zod
-- hosts mais citados: openrouter.ai, edge.local, app.exemplo.com, fcm.googleapis.com, i.pravatar.cc, taskgifts.app, www.youtube.com, a.b.exemplo.com, a.com, api.pwnedpasswords.com, api.resend.com, eidsaqymojyuhprobfpn.supabase.co, example.test, exemplo.com, linkedin.com
+- hosts mais citados: openrouter.ai, edge.local, app.exemplo.com, fcm.googleapis.com, i.pravatar.cc, taskgifts.app, www.youtube.com, a.b.exemplo.com, a.com, api.pwnedpasswords.com, api.resend.com, eidsaqymojyuhprobfpn.supabase.co, example.test, exemplo.com, exemplo.test
 - webhooks recebidos: burn-rate-monitor, dispatch-critical-alert, error-budget-monitor, migrate-helper, passkey-auth, push-outbox-dispatcher, push-public-key, security-weekly-digest, webhook-health-monitor
 - env de integração (só nomes): CRON_SECRET, INTERNAL_FUNCTION_SECRET, OPENROUTER_API_KEY, RESEND_API_KEY, SENTRY_DSN, SENTRY_ENV, SLACK_ALERT_WEBHOOK_URL, UPSTASH_REDIS_REST_TOKEN, UPSTASH_REDIS_REST_URL, VITE_BITRIX_WEBHOOK_URL, VITE_SENTRY_DSN, WEBHOOK_HEALTH_MIN_SAMPLE, WEBHOOK_HEALTH_THRESHOLD
 
 ## Permissões / papéis
-- papéis no código: admin (13), alert (12), user (9), manager (8), system (6), button (5), status (5), assistant (3), group (3), grid (2), mentor (2), navigation (2), radio (2), radiogroup (2), Cargos (1), banner (1), contentinfo (1), dialog (1), gridcell (1), img (1), link (1), list (1), listitem (1), long (1), menu (1), menuitem (1), presentation (1), region (1), robot (1), role_assigned (1), separator (1), short (1), tab (1)
+- papéis no código: admin (13), alert (12), user (9), manager (8), button (6), system (6), status (5), assistant (3), group (3), grid (2), mentor (2), navigation (2), radio (2), radiogroup (2), Cargos (1), banner (1), contentinfo (1), dialog (1), gridcell (1), img (1), link (1), list (1), listitem (1), long (1), menu (1), menuitem (1), presentation (1), region (1), robot (1), role_assigned (1), separator (1), short (1), tab (1)
 - enums de papel: app_role: admin|manager|employee
 - guards: src/components/IpAccessGuard.tsx, src/components/engagement/diagnostics/AnonymityGuardNotice.tsx, src/components/rbac/AccessControl.tsx, src/components/rbac/ProtectedRoute.tsx · rotas protegidas: 82 · públicas: /*, /forgot-password, /reset-password, /verificar, /verificar/:code
 - feature flags: nenhuma
@@ -279,8 +279,8 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - possiveis_segredos_no_codigo: 0
 
 ## Grafo de código (graphify)
-- 10406 nós · 28994 arestas · 665 comunidades · grafo do commit `84e8ba28`
-- comunidades maiores: react (224), lucide-react (200), Button (150), client.ts (145), cn (141), badge.tsx (111), profilesService.ts (105), framer-motion (96), requestId.ts (93), button.tsx (92), useToast (91), contracts/index.ts (91)
+- 10420 nós · 29021 arestas · 660 comunidades · grafo do commit `a3fb38b6`
+- comunidades maiores: card.tsx (287), lucide-react (259), react (255), AdminPanel.tsx (174), Mentoria.tsx (136), cn (132), contracts/index.ts (103), useToast (94), useProfiles.ts (89), gerar.mjs (79), useAuth (77), vitest (76)
 - símbolos mais chamados: cn() (src/lib/utils.ts), useAuth() (src/hooks/useAuth.tsx), useIsMobile() (src/hooks/use-mobile.tsx), q() (scripts/supabase_snapshot/snapshot.py), useDepartments() (src/hooks/useDepartments.ts), useRBAC() (src/hooks/useRBAC.ts), useProfiles() (src/hooks/useProfiles.ts), useToast() (src/hooks/use-toast.ts), useSEO() (src/hooks/useSEO.ts), useSoundEffects() (src/hooks/useSoundEffects.tsx), .collect() (scripts/supabase_snapshot/test_snapshot.py), excluded_sql() (scripts/supabase_snapshot/snapshot.py)
 - consulta local: `graphify query "<pergunta>"`, `graphify path "<A>" "<B>"`, `graphify explain "<X>"`
 
@@ -366,6 +366,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 
 
 ## Últimos commits
+- 2026-11-25 `a3fb38b` fix: destino dos avisos de notificação (51 avisos sem rota)
 - 2026-11-25 `84e8ba2` feat: interruptor proprio para os avisos de pesquisa no perfil (#169)
 - 2026-11-25 `cc240b7` feat: lembrete semanal de pesquisa de engajamento pendente (#168)
 - 2026-11-25 `ebbb9a0` feat: mostra a foto do premio na loja quando o admin cadastra (#167)
@@ -380,7 +381,6 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - 2026-11-25 `8430c1b` fix: lista de usuarios por papel e painel de alto potencial voltam a carregar (#162)
 - 2026-11-24 `c941b10` docs: corrige o nome da migration que reagenda o job 33 (#157)
 - 2026-11-24 `52db204` fix: libera cadastro e login por passkey na allowlist de producao (#156)
-- 2026-11-24 `ac84238` docs: corrige o drift do cron de push e do digest semanal (401 que nao existe) (#155)
 
 ## Arquivos deste diretório
 - `docs/contexto/codigo/rotas.json`

@@ -3,7 +3,7 @@
  "format_version": 2,
  "stack": {
   "linguagens": [
-   "TypeScript (1165)",
+   "TypeScript (1168)",
    "SQL (297)",
    "Markdown (56)",
    "JavaScript (24)",
@@ -621,6 +621,10 @@
     "arquivos": 1
    },
    {
+    "host": "exemplo.test",
+    "arquivos": 1
+   },
+   {
     "host": "linkedin.com",
     "arquivos": 1
    },
@@ -745,12 +749,12 @@
     "ocorrencias": 8
    },
    {
-    "papel": "system",
+    "papel": "button",
     "ocorrencias": 6
    },
    {
-    "papel": "button",
-    "ocorrencias": 5
+    "papel": "system",
+    "ocorrencias": 6
    },
    {
     "papel": "status",

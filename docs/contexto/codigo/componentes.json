@@ -4043,7 +4043,7 @@
     "NotificationCenter"
    ],
    "export_default": null,
-   "linhas": 324,
+   "linhas": 328,
    "dominio": "components",
    "hooks_locais": [
     "useClearAllNotifications",

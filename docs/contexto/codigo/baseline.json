@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "84e8ba28320d82e631b5da35d410d28d8108b0c1",
+  "commit": "a3fb38b6f50e36b2d8f48c13fb2b2a3d0fd680eb",
   "branch": "main",
-  "data_commit": "2026-11-25T12:55:48-03:00",
+  "data_commit": "2026-11-25T13:45:28-03:00",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "ultimos_commits": [
+   {
+    "sha": "a3fb38b",
+    "data": "2026-11-25",
+    "assunto": "fix: destino dos avisos de notificação (51 avisos sem rota)"
+   },
    {
     "sha": "84e8ba2",
     "data": "2026-11-25",
@@ -126,14 +131,9 @@
     "sha": "373deda",
     "data": "2026-11-24",
     "assunto": "fix(loja): notificacao de compra nao colide mais no indice unico de notificacoes (#144)"
-   },
-   {
-    "sha": "82066d7",
-    "data": "2026-11-24",
-    "assunto": "fix: provisiona segredo do alerta critico e tira URL fixa do trigger (#143)"
    }
   ],
-  "arquivos_mudados_7d": 239,
+  "arquivos_mudados_7d": 243,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "supabase/functions/_shared",
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 136
+    "commits": 137
    },
    {
     "autor": "dependabot[bot]",
@@ -310,9 +310,9 @@
   ]
  },
  "contagens": {
-  "arquivos_total": 1592,
-  "arquivos_codigo": 1193,
-  "linhas_codigo": 236645,
+  "arquivos_total": 1595,
+  "arquivos_codigo": 1196,
+  "linhas_codigo": 236866,
   "rotas": 87,
   "rotas_http_backend": 0,
   "vistas_por_id": 0,
@@ -324,7 +324,7 @@
   "tabelas": 238,
   "migrations": 295,
   "cron_jobs": 25,
-  "testes": 175,
+  "testes": 177,
   "workflows": 6,
   "scripts": 17,
   "docs_md": 56
@@ -400,7 +400,7 @@
   },
   "src/components": {
    "arquivos": 468,
-   "linhas": 79293
+   "linhas": 79297
   },
   "src/constants": {
    "arquivos": 1,
@@ -423,8 +423,8 @@
    "linhas": 13060
   },
   "src/lib": {
-   "arquivos": 106,
-   "linhas": 22094
+   "arquivos": 107,
+   "linhas": 22156
   },
   "src/main.tsx": {
    "arquivos": 1,
@@ -443,8 +443,8 @@
    "linhas": 7136
   },
   "src/test": {
-   "arquivos": 137,
-   "linhas": 24202
+   "arquivos": 139,
+   "linhas": 24357
   },
   "src/tests": {
    "arquivos": 17,
