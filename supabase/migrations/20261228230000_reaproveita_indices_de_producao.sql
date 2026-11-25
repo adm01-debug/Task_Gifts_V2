@@ -1,0 +1,187 @@
+-- Traz para o repositorio os indices que so existem no banco vivo
+--
+-- Medicao em 2026-11-25 (pg_indexes dos dois lados, excluindo indices que pertencem a
+-- constraint): 168 indices existem em producao e nao aparecem em nenhuma migration, ou seja,
+-- um `db reset` recria o banco sem eles e perde performance em consultas que hoje usam indice.
+-- Todos foram criados direto no banco vivo (provavelmente por ajuste de performance) e nunca
+-- voltaram para o repositorio. Reaproveitar aqui garante que ambiente novo nasce igual.
+--
+-- CREATE INDEX IF NOT EXISTS: rodar de novo nao falha e nao recria o que ja existe. Em
+-- producao este arquivo e quase todo no-op; serve para o rebuild.
+--
+-- O ultimo bloco alinha `idx_prediction_stakes_market`, onde producao tem a definicao mais
+-- completa (market_id, option_id) e o repositorio tinha so (market_id).
+
+CREATE INDEX IF NOT EXISTS idx_achievements_fts ON public.achievements USING gin (to_tsvector('portuguese'::regconfig, ((COALESCE(name, ''::text) || ' '::text) || COALESCE(description, ''::text))));
+CREATE INDEX IF NOT EXISTS idx_achievements_name_trgm ON public.achievements USING gin (name extensions.gin_trgm_ops);
+CREATE INDEX IF NOT EXISTS idx_action_plan_updates_plan_id ON public.action_plan_updates USING btree (plan_id);
+CREATE INDEX IF NOT EXISTS idx_action_plans_department_id ON public.action_plans USING btree (department_id);
+CREATE INDEX IF NOT EXISTS idx_action_plans_related_survey_id ON public.action_plans USING btree (related_survey_id);
+CREATE INDEX IF NOT EXISTS idx_ai_course_jobs_generated_trail_id ON public.ai_course_jobs USING btree (generated_trail_id);
+CREATE INDEX IF NOT EXISTS idx_announcements_author_id ON public.announcements USING btree (author_id);
+CREATE INDEX IF NOT EXISTS idx_announcements_department_id ON public.announcements USING btree (department_id);
+CREATE INDEX IF NOT EXISTS idx_announcements_fts ON public.announcements USING gin (to_tsvector('portuguese'::regconfig, ((COALESCE(title, ''::text) || ' '::text) || COALESCE(content, ''::text))));
+CREATE INDEX IF NOT EXISTS idx_announcements_title_trgm ON public.announcements USING gin (title extensions.gin_trgm_ops);
+CREATE INDEX IF NOT EXISTS idx_api_request_logs_api_key_id ON public.api_request_logs USING btree (api_key_id);
+CREATE INDEX IF NOT EXISTS idx_attendance_settings_department_id ON public.attendance_settings USING btree (department_id);
+CREATE INDEX IF NOT EXISTS idx_auction_bids_auction ON public.auction_bids USING btree (auction_id, created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_bingo_board_tasks ON public.bingo_board_tasks USING btree (board_id, order_index);
+CREATE INDEX IF NOT EXISTS idx_bitrix24_sync_bitrix_id ON public.bitrix24_sync_mappings USING btree (bitrix_id);
+CREATE INDEX IF NOT EXISTS idx_bitrix24_sync_status ON public.bitrix24_sync_mappings USING btree (sync_status);
+CREATE INDEX IF NOT EXISTS idx_blocked_ips_blocked_by ON public.blocked_ips USING btree (blocked_by);
+CREATE INDEX IF NOT EXISTS idx_board_moves_trail_user ON public.board_moves USING btree (trail_id, user_id, created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_board_player_states ON public.board_player_states USING btree (trail_id, "position" DESC);
+CREATE INDEX IF NOT EXISTS idx_board_tiles ON public.board_tiles USING btree (trail_id, "position");
+CREATE INDEX IF NOT EXISTS idx_boss_battle_damage_battle ON public.boss_battle_damage USING btree (battle_id, created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_boss_battle_damage_user ON public.boss_battle_damage USING btree (user_id, battle_id);
+CREATE INDEX IF NOT EXISTS idx_boss_battle_rewards ON public.boss_battle_rewards USING btree (battle_id);
+CREATE INDEX IF NOT EXISTS idx_campaign_result_rows_campaign_status ON public.campaign_result_rows USING btree (campaign_id, status);
+CREATE INDEX IF NOT EXISTS idx_campaign_team_members ON public.campaign_team_members USING btree (team_id);
+CREATE INDEX IF NOT EXISTS idx_campaign_team_split_batches ON public.campaign_team_split_batches USING btree (campaign_id, created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_campaign_team_split_entries ON public.campaign_team_split_entries USING btree (batch_id, user_id);
+CREATE INDEX IF NOT EXISTS idx_campaign_teams ON public.campaign_teams USING btree (campaign_id, rank_position);
+CREATE INDEX IF NOT EXISTS idx_card_definitions_set_code ON public.card_definitions USING btree (set_code, rarity);
+CREATE INDEX IF NOT EXISTS idx_celebrations_user_id ON public.celebrations USING btree (user_id);
+CREATE INDEX IF NOT EXISTS idx_certifications_department_id ON public.certifications USING btree (department_id);
+CREATE INDEX IF NOT EXISTS idx_certifications_trail_id ON public.certifications USING btree (trail_id);
+CREATE INDEX IF NOT EXISTS idx_checkins_template_id ON public.checkins USING btree (template_id);
+CREATE INDEX IF NOT EXISTS idx_climate_pillar_scores_department_id ON public.climate_pillar_scores USING btree (department_id);
+CREATE INDEX IF NOT EXISTS idx_climate_question_answers_question_id ON public.climate_question_answers USING btree (question_id);
+CREATE INDEX IF NOT EXISTS idx_climate_question_answers_response_id ON public.climate_question_answers USING btree (response_id);
+CREATE INDEX IF NOT EXISTS idx_climate_surveys_department_id ON public.climate_surveys USING btree (department_id);
+CREATE INDEX IF NOT EXISTS idx_department_missions_department_id ON public.department_missions USING btree (department_id);
+CREATE INDEX IF NOT EXISTS idx_dept_war_contributions_war ON public.department_war_contributions USING btree (war_id, department_id);
+CREATE INDEX IF NOT EXISTS idx_dept_war_results ON public.department_war_results USING btree (war_id, "position");
+CREATE INDEX IF NOT EXISTS idx_departments_fts ON public.departments USING gin (to_tsvector('portuguese'::regconfig, ((COALESCE(name, ''::text) || ' '::text) || COALESCE(description, ''::text))));
+CREATE INDEX IF NOT EXISTS idx_departments_name_btree ON public.departments USING btree (name);
+CREATE INDEX IF NOT EXISTS idx_departments_name_trgm ON public.departments USING gin (name extensions.gin_trgm_ops);
+CREATE INDEX IF NOT EXISTS idx_development_plan_actions_competency_id ON public.development_plan_actions USING btree (competency_id);
+CREATE INDEX IF NOT EXISTS idx_development_plans_created_by ON public.development_plans USING btree (created_by);
+CREATE INDEX IF NOT EXISTS idx_development_plans_linked_feedback_id ON public.development_plans USING btree (linked_feedback_id);
+CREATE INDEX IF NOT EXISTS idx_development_plans_linked_nine_box_id ON public.development_plans USING btree (linked_nine_box_id);
+CREATE INDEX IF NOT EXISTS idx_engagement_action_playbooks_pillar ON public.engagement_action_playbooks USING btree (pillar, is_active);
+CREATE INDEX IF NOT EXISTS idx_engagement_answers_cycle ON public.engagement_answers USING btree (cycle_id, department_id);
+CREATE INDEX IF NOT EXISTS idx_engagement_cycles_status ON public.engagement_cycles USING btree (status, ends_at);
+CREATE INDEX IF NOT EXISTS idx_engagement_question_assignments_cycle_user ON public.engagement_question_assignments USING btree (cycle_id, user_id);
+CREATE INDEX IF NOT EXISTS idx_engagement_question_pool_pillar ON public.engagement_question_pool USING btree (pillar, is_active);
+CREATE INDEX IF NOT EXISTS idx_enps_responses_user_id ON public.enps_responses USING btree (user_id);
+CREATE INDEX IF NOT EXISTS idx_enps_surveys_created_by ON public.enps_surveys USING btree (created_by);
+CREATE INDEX IF NOT EXISTS idx_enps_surveys_department_id ON public.enps_surveys USING btree (department_id);
+CREATE INDEX IF NOT EXISTS idx_external_tasks_api_key_id ON public.external_tasks USING btree (api_key_id);
+CREATE INDEX IF NOT EXISTS idx_external_tasks_status ON public.external_tasks USING btree (status);
+CREATE INDEX IF NOT EXISTS idx_feedback_cycles_department_id ON public.feedback_cycles USING btree (department_id);
+CREATE INDEX IF NOT EXISTS idx_feedback_evaluations_cycle_id ON public.feedback_evaluations USING btree (cycle_id);
+CREATE INDEX IF NOT EXISTS idx_feedback_questions_competency_id ON public.feedback_questions USING btree (competency_id);
+CREATE INDEX IF NOT EXISTS idx_feedback_questions_cycle_id ON public.feedback_questions USING btree (cycle_id);
+CREATE INDEX IF NOT EXISTS idx_feedback_requests_cycle_id ON public.feedback_requests USING btree (cycle_id);
+CREATE INDEX IF NOT EXISTS idx_feedback_responses_request_id ON public.feedback_responses USING btree (request_id);
+CREATE INDEX IF NOT EXISTS idx_feedback_results_competency_id ON public.feedback_results USING btree (competency_id);
+CREATE INDEX IF NOT EXISTS idx_feedback_results_cycle_id ON public.feedback_results USING btree (cycle_id);
+CREATE INDEX IF NOT EXISTS idx_geo_allowed_countries_created_by ON public.geo_allowed_countries USING btree (created_by);
+CREATE INDEX IF NOT EXISTS idx_geo_settings_updated_by ON public.geo_settings USING btree (updated_by);
+CREATE INDEX IF NOT EXISTS idx_goal_updates_goal_id ON public.goal_updates USING btree (goal_id);
+CREATE INDEX IF NOT EXISTS idx_goal_updates_key_result_id ON public.goal_updates USING btree (key_result_id);
+CREATE INDEX IF NOT EXISTS idx_goals_department_id ON public.goals USING btree (department_id);
+CREATE INDEX IF NOT EXISTS idx_ip_access_logs_user_id ON public.ip_access_logs USING btree (user_id);
+CREATE INDEX IF NOT EXISTS idx_ip_whitelist_created_by ON public.ip_whitelist USING btree (created_by);
+CREATE INDEX IF NOT EXISTS idx_key_results_goal_id ON public.key_results USING btree (goal_id);
+CREATE INDEX IF NOT EXISTS idx_kudos_badge_id ON public.kudos USING btree (badge_id);
+CREATE INDEX IF NOT EXISTS idx_league_history_from_league_id ON public.league_history USING btree (from_league_id);
+CREATE INDEX IF NOT EXISTS idx_league_history_to_league_id ON public.league_history USING btree (to_league_id);
+CREATE INDEX IF NOT EXISTS idx_leagues_theme_id ON public.leagues USING btree (theme_id);
+CREATE INDEX IF NOT EXISTS idx_learning_trails_department_id ON public.learning_trails USING btree (department_id);
+CREATE INDEX IF NOT EXISTS idx_learning_trails_fts ON public.learning_trails USING gin (to_tsvector('portuguese'::regconfig, ((COALESCE(title, ''::text) || ' '::text) || COALESCE(description, ''::text))));
+CREATE INDEX IF NOT EXISTS idx_learning_trails_title_trgm ON public.learning_trails USING gin (title extensions.gin_trgm_ops);
+CREATE INDEX IF NOT EXISTS idx_level_configs_rank_id ON public.level_configs USING btree (rank_id);
+CREATE INDEX IF NOT EXISTS idx_lightning_quiz_answers_session ON public.lightning_quiz_answers USING btree (session_id);
+CREATE INDEX IF NOT EXISTS idx_lightning_quiz_questions_active ON public.lightning_quiz_questions USING btree (is_active, difficulty);
+CREATE INDEX IF NOT EXISTS idx_lightning_quiz_sessions_user ON public.lightning_quiz_sessions USING btree (user_id, created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_lucky_wheel_prize_audit_prize ON public.lucky_wheel_prize_audit USING btree (prize_id, changed_at DESC);
+CREATE INDEX IF NOT EXISTS idx_lucky_wheel_spins_user ON public.lucky_wheel_spins USING btree (user_id, spin_date DESC);
+CREATE INDEX IF NOT EXISTS idx_lucky_wheel_whatif_snapshots ON public.lucky_wheel_whatif_snapshots USING btree (current_window_start DESC);
+CREATE INDEX IF NOT EXISTS idx_memory_sessions_user ON public.memory_sessions USING btree (user_id, session_date DESC);
+CREATE INDEX IF NOT EXISTS idx_mentorship_mission_progress_mission_id ON public.mentorship_mission_progress USING btree (mission_id);
+CREATE INDEX IF NOT EXISTS idx_module_progress_module_id ON public.module_progress USING btree (module_id);
+CREATE INDEX IF NOT EXISTS idx_new_device_alerts_device_id ON public.new_device_alerts USING btree (device_id);
+CREATE INDEX IF NOT EXISTS idx_notifications_user_timeline ON public.notifications USING btree (user_id, created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_nr1_factor_mappings ON public.nr1_factor_mappings USING btree (category_id);
+CREATE INDEX IF NOT EXISTS idx_opinion_responses_opinion_id ON public.opinion_responses USING btree (opinion_id);
+CREATE INDEX IF NOT EXISTS idx_opinion_supports ON public.opinion_supports USING btree (opinion_id);
+CREATE INDEX IF NOT EXISTS idx_opinion_tags_opinion_id ON public.opinion_tags USING btree (opinion_id);
+CREATE INDEX IF NOT EXISTS idx_org_members_org_id ON public.org_members USING btree (org_id);
+CREATE UNIQUE INDEX IF NOT EXISTS idx_org_members_org_user ON public.org_members USING btree (org_id, user_id);
+CREATE INDEX IF NOT EXISTS idx_org_members_user_id ON public.org_members USING btree (user_id);
+CREATE INDEX IF NOT EXISTS idx_org_theme_history_org_id ON public.org_theme_history USING btree (org_id);
+CREATE UNIQUE INDEX IF NOT EXISTS idx_organizations_slug ON public.organizations USING btree (slug);
+CREATE INDEX IF NOT EXISTS idx_pdi_checkins_plan_id ON public.pdi_checkins USING btree (plan_id);
+CREATE INDEX IF NOT EXISTS idx_pdi_mentors_plan_id ON public.pdi_mentors USING btree (plan_id);
+CREATE INDEX IF NOT EXISTS idx_position_competencies_competency_id ON public.position_competencies USING btree (competency_id);
+CREATE INDEX IF NOT EXISTS idx_position_competencies_position_id ON public.position_competencies USING btree (position_id);
+CREATE INDEX IF NOT EXISTS idx_position_task_templates_position_id ON public.position_task_templates USING btree (position_id);
+CREATE INDEX IF NOT EXISTS idx_positions_department_id ON public.positions USING btree (department_id);
+CREATE INDEX IF NOT EXISTS idx_postmortem_actions_owner_user_id ON public.postmortem_actions USING btree (owner_user_id);
+CREATE INDEX IF NOT EXISTS idx_postmortems_created_by ON public.postmortems USING btree (created_by);
+CREATE INDEX IF NOT EXISTS idx_profiles_confirmed ON public.profiles USING btree (id) WHERE (status = ANY (ARRAY['confirmed'::text, 'invited'::text]));
+CREATE INDEX IF NOT EXISTS idx_profiles_display_name_trgm ON public.profiles USING gin (display_name extensions.gin_trgm_ops);
+CREATE INDEX IF NOT EXISTS idx_profiles_display_name_unaccent ON public.profiles USING gin (to_tsvector('portuguese'::regconfig, COALESCE(display_name, ''::text)));
+CREATE INDEX IF NOT EXISTS idx_profiles_email_trgm ON public.profiles USING gin (email extensions.gin_trgm_ops);
+CREATE INDEX IF NOT EXISTS idx_profiles_employee_id ON public.profiles USING btree (employee_id) WHERE (employee_id IS NOT NULL);
+CREATE INDEX IF NOT EXISTS idx_profiles_level ON public.profiles USING btree (level DESC, xp DESC);
+CREATE INDEX IF NOT EXISTS idx_pulse_responses_survey_id ON public.pulse_responses USING btree (survey_id);
+CREATE INDEX IF NOT EXISTS idx_pulse_surveys_department_id ON public.pulse_surveys USING btree (department_id);
+CREATE INDEX IF NOT EXISTS idx_push_outbox_health_snapshots ON public.push_outbox_health_snapshots USING btree (created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_push_outbox_status ON public.push_outbox USING btree (status, created_at) WHERE (status = ANY (ARRAY['pending'::text, 'processing'::text]));
+CREATE INDEX IF NOT EXISTS idx_push_outbox_user ON public.push_outbox USING btree (user_id);
+CREATE INDEX IF NOT EXISTS idx_push_sync_events_user ON public.push_sync_events USING btree (user_id, created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_quest_assignments_user_id ON public.quest_assignments USING btree (user_id);
+CREATE INDEX IF NOT EXISTS idx_quiz_answers_selected_option_id ON public.quiz_answers USING btree (selected_option_id);
+CREATE INDEX IF NOT EXISTS idx_rate_limit_logs_user_id ON public.rate_limit_logs USING btree (user_id);
+CREATE INDEX IF NOT EXISTS idx_runbook_executions_performed_by ON public.runbook_executions USING btree (performed_by);
+CREATE INDEX IF NOT EXISTS idx_sales_campaigns_created_by ON public.sales_campaigns USING btree (created_by);
+CREATE INDEX IF NOT EXISTS idx_sales_campaigns_department_id ON public.sales_campaigns USING btree (department_id);
+CREATE INDEX IF NOT EXISTS idx_sales_campaigns_org_id ON public.sales_campaigns USING btree (org_id);
+CREATE INDEX IF NOT EXISTS idx_scratch_cards_user_status ON public.scratch_cards USING btree (user_id, status);
+CREATE INDEX IF NOT EXISTS idx_seasonal_challenges_event_id ON public.seasonal_challenges USING btree (event_id);
+CREATE INDEX IF NOT EXISTS idx_security_alerts_acknowledged_by ON public.security_alerts USING btree (acknowledged_by);
+CREATE INDEX IF NOT EXISTS idx_security_alerts_resolved_by ON public.security_alerts USING btree (resolved_by);
+CREATE INDEX IF NOT EXISTS idx_security_alerts_type_date ON public.security_alerts USING btree (alert_type, created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_security_alerts_user_id ON public.security_alerts USING btree (user_id);
+CREATE INDEX IF NOT EXISTS idx_sequence_attempts_user ON public.sequence_attempts USING btree (user_id, attempt_date DESC);
+CREATE INDEX IF NOT EXISTS idx_shop_purchases_reward_id ON public.shop_purchases USING btree (reward_id);
+CREATE INDEX IF NOT EXISTS idx_shop_purchases_user_id ON public.shop_purchases USING btree (user_id);
+CREATE INDEX IF NOT EXISTS idx_task_penalties_task_score_id ON public.task_penalties USING btree (task_score_id);
+CREATE INDEX IF NOT EXISTS idx_task_scores_status_date ON public.task_scores USING btree (status, assigned_at DESC);
+CREATE INDEX IF NOT EXISTS idx_task_scores_task_template_id ON public.task_scores USING btree (task_template_id);
+CREATE INDEX IF NOT EXISTS idx_task_scores_user_deadline ON public.task_scores USING btree (user_id, deadline_at) WHERE (deadline_at IS NOT NULL);
+CREATE INDEX IF NOT EXISTS idx_task_scores_user_status ON public.task_scores USING btree (user_id, status);
+CREATE INDEX IF NOT EXISTS idx_team_members_department_id ON public.team_members USING btree (department_id);
+CREATE INDEX IF NOT EXISTS idx_tournament_matches ON public.tournament_matches USING btree (tournament_id, round);
+CREATE INDEX IF NOT EXISTS idx_tournament_participants ON public.tournament_participants USING btree (tournament_id, seed);
+CREATE INDEX IF NOT EXISTS idx_trail_enrollments_trail_id ON public.trail_enrollments USING btree (trail_id);
+CREATE INDEX IF NOT EXISTS idx_trail_modules_trail_id ON public.trail_modules USING btree (trail_id);
+CREATE INDEX IF NOT EXISTS idx_user_achievements_achievement_id ON public.user_achievements USING btree (achievement_id);
+CREATE INDEX IF NOT EXISTS idx_user_avatar_config_selected_accessory ON public.user_avatar_config USING btree (selected_accessory);
+CREATE INDEX IF NOT EXISTS idx_user_avatar_config_selected_background ON public.user_avatar_config USING btree (selected_background);
+CREATE INDEX IF NOT EXISTS idx_user_avatar_config_selected_badge_style ON public.user_avatar_config USING btree (selected_badge_style);
+CREATE INDEX IF NOT EXISTS idx_user_avatar_config_selected_effect ON public.user_avatar_config USING btree (selected_effect);
+CREATE INDEX IF NOT EXISTS idx_user_avatar_config_selected_frame ON public.user_avatar_config USING btree (selected_frame);
+CREATE INDEX IF NOT EXISTS idx_user_avatar_items_item_id ON public.user_avatar_items USING btree (item_id);
+CREATE INDEX IF NOT EXISTS idx_user_certifications_certification_id ON public.user_certifications USING btree (certification_id);
+CREATE INDEX IF NOT EXISTS idx_user_competency_assessments_competency_id ON public.user_competency_assessments USING btree (competency_id);
+CREATE INDEX IF NOT EXISTS idx_user_competency_assessments_feedback_cycle_id ON public.user_competency_assessments USING btree (feedback_cycle_id);
+CREATE INDEX IF NOT EXISTS idx_user_leagues_league_id ON public.user_leagues USING btree (league_id);
+CREATE INDEX IF NOT EXISTS idx_user_mission_progress_mission_id ON public.user_mission_progress USING btree (mission_id);
+CREATE INDEX IF NOT EXISTS idx_user_positions_position_id ON public.user_positions USING btree (position_id);
+CREATE INDEX IF NOT EXISTS idx_user_seasonal_progress_challenge_id ON public.user_seasonal_progress USING btree (challenge_id);
+CREATE INDEX IF NOT EXISTS idx_user_titles_title_id ON public.user_titles USING btree (title_id);
+CREATE INDEX IF NOT EXISTS idx_wager_entries_user ON public.wager_entries USING btree (user_id, created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_wager_integrity_review_events ON public.wager_integrity_review_events USING btree (review_id, created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_wager_integrity_reviews_user ON public.wager_integrity_reviews USING btree (target_user_id, status);
+CREATE INDEX IF NOT EXISTS idx_wager_questions_date ON public.wager_questions USING btree (scheduled_date DESC);
+CREATE INDEX IF NOT EXISTS idx_webhook_subs_active ON public.webhook_subscriptions USING btree (is_active) WHERE (is_active = true);
+CREATE INDEX IF NOT EXISTS idx_webhook_subscriptions_api_key_id ON public.webhook_subscriptions USING btree (api_key_id);
+
+-- idx_prediction_stakes_market: producao cobre (market_id, option_id); o repositorio
+-- reproduzia apenas (market_id). Recria para igualar.
+DROP INDEX IF EXISTS public.idx_prediction_stakes_market;
+CREATE INDEX IF NOT EXISTS idx_prediction_stakes_market ON public.prediction_stakes USING btree (market_id, option_id);
