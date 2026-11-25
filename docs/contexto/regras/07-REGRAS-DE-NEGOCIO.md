@@ -1,6 +1,6 @@
 # 07 · REGRAS DE NEGÓCIO
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `b5c751fe29` · branch `main` · 2026-11-25 14:15 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `f61144b60a` · branch `main` · 2026-11-25 14:20 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## A. Regras escritas por humanos (`manual/` — prioridade máxima, nunca sobrescrito)
@@ -311,7 +311,7 @@ _Nenhum arquivo em `manual/`. Copie `manual/TEMPLATE-regras-de-negocio.md` para 
 | `feedback_evaluations` | Users insert own evaluations | INSERT | authenticated | permissive |  | `evaluator_id = auth.uid()` |
 | `feedback_results` | Managers insert feedback results | INSERT | authenticated | permissive |  | `has_role(auth.uid(), 'manager'::app_role) OR has_role(auth.uid(), 'admin'::app_role)` |
 | `pdi_mentors` | Managers assign PDI mentors | INSERT | authenticated | permissive |  | `has_role(auth.uid(), 'manager'::app_role) OR has_role(auth.uid(), 'admin'::app_role)` |
-| … +228 linhas — lista completa em `context.json` | | | | | | |
+| … +229 linhas — lista completa em `context.json` | | | | | | |
 
 ## C. Restrições de dados (obrigatório / único / default / CHECK / FK / calculada)
 
@@ -744,6 +744,7 @@ _Nenhum arquivo em `manual/`. Copie `manual/TEMPLATE-regras-de-negocio.md` para 
 | trg_sync_board_blocked_at | BEFORE INSERT OR UPDATE OF BLOCKED_CHALLENGE_ID | `board_player_states` | `sync_board_blocked_at` |  |
 | on_auth_user_created | AFTER INSERT | `auth.users` | `handle_new_user` |  |
 | trg_goal_templates_updated_at | BEFORE UPDATE | `goal_templates` | `set_goal_templates_updated_at` |  |
+| trg_guard_engagement_answer_assignment | BEFORE INSERT OR UPDATE | `engagement_answers` | `guard_engagement_answer_assignment` |  |
 
 Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banco):
 
@@ -774,7 +775,6 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `generate_executive_monthly_report` | insufficient_privilege | `supabase/migrations/20260712222455_cdcbc232-1f35-4c6c-9c2c-0e4bf903e241.sql` |
 | `get_burn_rate` | access denied | `supabase/migrations/20260712223931_ecd3fd87-8d7c-4758-ae38-4dcead1b95bd.sql` |
 | `assign_engagement_questions` | not authenticated | `supabase/migrations/20260726155435_b82d6b05-57d8-4571-9bb7-61b8d28b8c2f.sql` |
-| `submit_engagement_answer` | not authenticated | `supabase/migrations/20260726160248_bfb5652a-bbaa-44cf-9e3d-270014e00449.sql` |
 | `generate_action_plan_from_factor` | Autenticacao obrigatoria | `supabase/migrations/20260726160940_73598534-820c-416f-8663-cb0272ff160a.sql` |
 | `generate_action_plan_from_factor` | Apenas gestores e administradores podem gerar planos de acao | `supabase/migrations/20260726160940_73598534-820c-416f-8663-cb0272ff160a.sql` |
 | `generate_action_plan_from_factor` | Fator de engajamento nao encontrado: % | `supabase/migrations/20260726160940_73598534-820c-416f-8663-cb0272ff160a.sql` |
@@ -945,6 +945,9 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `increment_quests_completed` | perfil não encontrado | `supabase/migrations/20261218000000_profiles_economia_rpcs.sql` |
 | `get_error_budget_30d` | insufficient_privilege | `supabase/migrations/20261220000000_fix_sre_rpcs_and_dispatch_trigger.sql` |
 | `get_leaderboard_api` | insufficient_privilege | `supabase/migrations/20261226180000_escopo_gestor_rpcs_relatorio.sql` |
+| `submit_engagement_answer` | not authenticated | `supabase/migrations/20261227120000_engagement_integridade_e_anon.sql` |
+| `submit_engagement_answer` | pergunta nao atribuida ao usuario neste ciclo | `supabase/migrations/20261227120000_engagement_integridade_e_anon.sql` |
+| `guard_engagement_answer_assignment` | resposta sem atribuicao no ciclo | `supabase/migrations/20261227120000_engagement_integridade_e_anon.sql` |
 
 ## E. Estados, máquinas de estado e transições
 

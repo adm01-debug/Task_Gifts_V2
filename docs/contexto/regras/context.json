@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "b5c751fe29145d8b829d2d23b57d06f3a017a049",
+  "sha": "f61144b60aac4987b9317ae3e2046255f5502480",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
-  "generated_at": "2026-11-25 14:15 UTC",
-  "files_total": 1598,
-  "code_files": 1491,
-  "code_lines": 270597
+  "generated_at": "2026-11-25 14:20 UTC",
+  "files_total": 1599,
+  "code_files": 1492,
+  "code_lines": 270703
  },
  "version": "1.3.2",
- "facts_hash": "b25a5234bf26f3ee",
+ "facts_hash": "31e719a82ad73686",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -196,7 +196,7 @@
   "languages": {
    ".ts": 585,
    ".tsx": 579,
-   ".sql": 295,
+   ".sql": 296,
    ".mjs": 21,
    ".js": 5,
    ".py": 5,
@@ -25459,6 +25459,16 @@
     "src": "supabase/migrations/20261226190000_pdi_templates_escrita_admin.sql"
    },
    {
+    "name": "engagement_question_assignments_user_own",
+    "table": "engagement_question_assignments",
+    "cmd": "SELECT",
+    "roles": "authenticated",
+    "mode": "permissive",
+    "using": "user_id = auth.uid()",
+    "check": "",
+    "src": "supabase/migrations/20261227120000_engagement_integridade_e_anon.sql"
+   },
+   {
     "name": "Managers can create climate surveys",
     "table": "climate_surveys",
     "cmd": "INSERT",
@@ -26688,6 +26698,15 @@
     "condition": "",
     "each": "row",
     "src": "supabase/migrations/20261123000000_create_goal_templates.sql"
+   },
+   {
+    "name": "trg_guard_engagement_answer_assignment",
+    "when": "BEFORE INSERT OR UPDATE",
+    "table": "engagement_answers",
+    "function": "guard_engagement_answer_assignment",
+    "condition": "",
+    "each": "row",
+    "src": "supabase/migrations/20261227120000_engagement_integridade_e_anon.sql"
    }
   ],
   "functions": {
@@ -27993,15 +28012,16 @@
     ]
    },
    "submit_engagement_answer": {
-    "args": "p_cycle_id UUID, p_question_id UUID, p_raw_value JSONB, p_normalized_score NUMERIC DEFAULT NULL, p_text_answer TEXT DEFAULT NULL",
-    "returns": "UUID",
+    "args": "p_cycle_id uuid, p_question_id uuid, p_raw_value jsonb, p_normalized_score numeric DEFAULT NULL::numeric, p_text_answer text DEFAULT NULL::text",
+    "returns": "uuid",
     "lang": "plpgsql",
-    "src": "supabase/migrations/20260726160248_bfb5652a-bbaa-44cf-9e3d-270014e00449.sql",
+    "src": "supabase/migrations/20261227120000_engagement_integridade_e_anon.sql",
     "security_definer": true,
     "search_path": true,
-    "body": "DECLARE v_user UUID := auth.uid(); v_dept UUID; v_id UUID; BEGIN IF v_user IS NULL THEN RAISE EXCEPTION 'not authenticated'; END IF; SELECT tm.department_id INTO v_dept FROM public.team_members tm WHERE tm.user_id = v_user ORDER BY tm.joined_at DESC LIMIT 1; INSERT INTO public.engagement_answers (cycle_id, question_id, user_id, department_id, raw_value, normalized_score, text_answer) VALUES (p_cycle_id, p_question_id, v_user, v_dept, p_raw_value, LEAST(GREATEST(p_normalized_score, 0), 10), p_text_answer) ON CONFLICT (cycle_id, question_id, user_id) DO UPDATE SET raw_value = EXCLUDED.raw_value, normalized_score = EXCLUDED.normalized_score, text_answer = EXCLUDED.text_answer, answered_at = now …",
+    "body": "DECLARE v_user UUID := auth.uid(); v_dept UUID; v_id UUID; BEGIN IF v_user IS NULL THEN RAISE EXCEPTION 'not authenticated'; END IF; IF NOT EXISTS (SELECT 1 FROM public.engagement_question_assignments a WHERE a.cycle_id = p_cycle_id AND a.question_id = p_question_id AND a.user_id = v_user) THEN RAISE EXCEPTION 'pergunta nao atribuida ao usuario neste ciclo' USING ERRCODE = '42501'; END IF; SELECT tm.department_id INTO v_dept FROM public.team_members tm WHERE tm.user_id = v_user ORDER BY tm.joined_at DESC LIMIT 1; INSERT INTO public.engagement_answers (cycle_id, question_id, user_id, department_id, raw_value, normalized_score, text_answer) VALUES (p_cycle_id, p_question_id, v_user, v_dept, p_ …",
     "raises": [
-     "not authenticated"
+     "not authenticated",
+     "pergunta nao atribuida ao usuario neste ciclo"
     ],
     "tables": [
      "SET",
@@ -30990,6 +31010,21 @@
      "team_members"
     ]
    },
+   "guard_engagement_answer_assignment": {
+    "args": "",
+    "returns": "trigger",
+    "lang": "plpgsql",
+    "src": "supabase/migrations/20261227120000_engagement_integridade_e_anon.sql",
+    "security_definer": true,
+    "search_path": true,
+    "body": "BEGIN IF auth.uid() IS NULL OR public.has_role(auth.uid(), 'admin'::public.app_role) THEN RETURN NEW; END IF; IF NOT EXISTS ( SELECT 1 FROM public.engagement_question_assignments a WHERE a.cycle_id = NEW.cycle_id AND a.question_id = NEW.question_id AND a.user_id = NEW.user_id ) THEN RAISE EXCEPTION 'resposta sem atribuicao no ciclo' USING ERRCODE = '42501'; END IF; RETURN NEW; END;",
+    "raises": [
+     "resposta sem atribuicao no ciclo"
+    ],
+    "tables": [
+     "engagement_question_assignments"
+    ]
+   },
    "Args": {
     "args": "",
     "returns": "?",
@@ -33887,6 +33922,7 @@
    "supabase/migrations/20261226195000_reset_senha_consistencia.sql",
    "supabase/migrations/20261226200000_profiles_select_colunas_sensiveis.sql",
    "supabase/migrations/20261226210000_profiles_email_fora_do_allowlist.sql",
+   "supabase/migrations/20261227120000_engagement_integridade_e_anon.sql",
    "supabase/tests/climate/assertions.sql",
    "supabase/tests/climate/stubs.sql",
    "src/integrations/supabase/types.ts"
@@ -42059,6 +42095,14 @@
     "src": "supabase/migrations/20261226200000_profiles_select_colunas_sensiveis.sql"
    },
    {
+    "kind": "revoke",
+    "privs": "all",
+    "object": "public",
+    "objkind": "tables",
+    "roles": "anon",
+    "src": "supabase/migrations/20261227120000_engagement_integridade_e_anon.sql"
+   },
+   {
     "kind": "grant",
     "privs": "select, insert, update, delete",
     "object": "public",
@@ -42192,11 +42236,6 @@
     "function": "assign_engagement_questions",
     "msg": "not authenticated",
     "src": "supabase/migrations/20260726155435_b82d6b05-57d8-4571-9bb7-61b8d28b8c2f.sql"
-   },
-   {
-    "function": "submit_engagement_answer",
-    "msg": "not authenticated",
-    "src": "supabase/migrations/20260726160248_bfb5652a-bbaa-44cf-9e3d-270014e00449.sql"
    },
    {
     "function": "generate_action_plan_from_factor",
@@ -43047,6 +43086,21 @@
     "function": "get_leaderboard_api",
     "msg": "insufficient_privilege",
     "src": "supabase/migrations/20261226180000_escopo_gestor_rpcs_relatorio.sql"
+   },
+   {
+    "function": "submit_engagement_answer",
+    "msg": "not authenticated",
+    "src": "supabase/migrations/20261227120000_engagement_integridade_e_anon.sql"
+   },
+   {
+    "function": "submit_engagement_answer",
+    "msg": "pergunta nao atribuida ao usuario neste ciclo",
+    "src": "supabase/migrations/20261227120000_engagement_integridade_e_anon.sql"
+   },
+   {
+    "function": "guard_engagement_answer_assignment",
+    "msg": "resposta sem atribuicao no ciclo",
+    "src": "supabase/migrations/20261227120000_engagement_integridade_e_anon.sql"
    }
   ],
   "seed": [],
@@ -50905,8 +50959,8 @@
   },
   {
    "module": "supabase/migrations",
-   "files": 293,
-   "lines": 32105,
+   "files": 294,
+   "lines": 32211,
    "tables": [],
    "exports": [],
    "docs": [],
@@ -95743,6 +95797,16 @@
     "src": "supabase/migrations/20261226190000_pdi_templates_escrita_admin.sql"
    },
    {
+    "name": "engagement_question_assignments_user_own",
+    "table": "engagement_question_assignments",
+    "cmd": "SELECT",
+    "roles": "authenticated",
+    "mode": "permissive",
+    "using": "user_id = auth.uid()",
+    "check": "",
+    "src": "supabase/migrations/20261227120000_engagement_integridade_e_anon.sql"
+   },
+   {
     "name": "Managers can create climate surveys",
     "table": "climate_surveys",
     "cmd": "INSERT",
@@ -96972,6 +97036,15 @@
     "condition": "",
     "each": "row",
     "src": "supabase/migrations/20261123000000_create_goal_templates.sql"
+   },
+   {
+    "name": "trg_guard_engagement_answer_assignment",
+    "when": "BEFORE INSERT OR UPDATE",
+    "table": "engagement_answers",
+    "function": "guard_engagement_answer_assignment",
+    "condition": "",
+    "each": "row",
+    "src": "supabase/migrations/20261227120000_engagement_integridade_e_anon.sql"
    }
   ],
   "db_functions": {
@@ -98277,15 +98350,16 @@
     ]
    },
    "submit_engagement_answer": {
-    "args": "p_cycle_id UUID, p_question_id UUID, p_raw_value JSONB, p_normalized_score NUMERIC DEFAULT NULL, p_text_answer TEXT DEFAULT NULL",
-    "returns": "UUID",
+    "args": "p_cycle_id uuid, p_question_id uuid, p_raw_value jsonb, p_normalized_score numeric DEFAULT NULL::numeric, p_text_answer text DEFAULT NULL::text",
+    "returns": "uuid",
     "lang": "plpgsql",
-    "src": "supabase/migrations/20260726160248_bfb5652a-bbaa-44cf-9e3d-270014e00449.sql",
+    "src": "supabase/migrations/20261227120000_engagement_integridade_e_anon.sql",
     "security_definer": true,
     "search_path": true,
-    "body": "DECLARE v_user UUID := auth.uid(); v_dept UUID; v_id UUID; BEGIN IF v_user IS NULL THEN RAISE EXCEPTION 'not authenticated'; END IF; SELECT tm.department_id INTO v_dept FROM public.team_members tm WHERE tm.user_id = v_user ORDER BY tm.joined_at DESC LIMIT 1; INSERT INTO public.engagement_answers (cycle_id, question_id, user_id, department_id, raw_value, normalized_score, text_answer) VALUES (p_cycle_id, p_question_id, v_user, v_dept, p_raw_value, LEAST(GREATEST(p_normalized_score, 0), 10), p_text_answer) ON CONFLICT (cycle_id, question_id, user_id) DO UPDATE SET raw_value = EXCLUDED.raw_value, normalized_score = EXCLUDED.normalized_score, text_answer = EXCLUDED.text_answer, answered_at = now …",
+    "body": "DECLARE v_user UUID := auth.uid(); v_dept UUID; v_id UUID; BEGIN IF v_user IS NULL THEN RAISE EXCEPTION 'not authenticated'; END IF; IF NOT EXISTS (SELECT 1 FROM public.engagement_question_assignments a WHERE a.cycle_id = p_cycle_id AND a.question_id = p_question_id AND a.user_id = v_user) THEN RAISE EXCEPTION 'pergunta nao atribuida ao usuario neste ciclo' USING ERRCODE = '42501'; END IF; SELECT tm.department_id INTO v_dept FROM public.team_members tm WHERE tm.user_id = v_user ORDER BY tm.joined_at DESC LIMIT 1; INSERT INTO public.engagement_answers (cycle_id, question_id, user_id, department_id, raw_value, normalized_score, text_answer) VALUES (p_cycle_id, p_question_id, v_user, v_dept, p_ …",
     "raises": [
-     "not authenticated"
+     "not authenticated",
+     "pergunta nao atribuida ao usuario neste ciclo"
     ],
     "tables": [
      "SET",
@@ -101274,6 +101348,21 @@
      "team_members"
     ]
    },
+   "guard_engagement_answer_assignment": {
+    "args": "",
+    "returns": "trigger",
+    "lang": "plpgsql",
+    "src": "supabase/migrations/20261227120000_engagement_integridade_e_anon.sql",
+    "security_definer": true,
+    "search_path": true,
+    "body": "BEGIN IF auth.uid() IS NULL OR public.has_role(auth.uid(), 'admin'::public.app_role) THEN RETURN NEW; END IF; IF NOT EXISTS ( SELECT 1 FROM public.engagement_question_assignments a WHERE a.cycle_id = NEW.cycle_id AND a.question_id = NEW.question_id AND a.user_id = NEW.user_id ) THEN RAISE EXCEPTION 'resposta sem atribuicao no ciclo' USING ERRCODE = '42501'; END IF; RETURN NEW; END;",
+    "raises": [
+     "resposta sem atribuicao no ciclo"
+    ],
+    "tables": [
+     "engagement_question_assignments"
+    ]
+   },
    "Args": {
     "args": "",
     "returns": "?",
@@ -101748,11 +101837,6 @@
     "function": "assign_engagement_questions",
     "msg": "not authenticated",
     "src": "supabase/migrations/20260726155435_b82d6b05-57d8-4571-9bb7-61b8d28b8c2f.sql"
-   },
-   {
-    "function": "submit_engagement_answer",
-    "msg": "not authenticated",
-    "src": "supabase/migrations/20260726160248_bfb5652a-bbaa-44cf-9e3d-270014e00449.sql"
    },
    {
     "function": "generate_action_plan_from_factor",
@@ -102603,6 +102687,21 @@
     "function": "get_leaderboard_api",
     "msg": "insufficient_privilege",
     "src": "supabase/migrations/20261226180000_escopo_gestor_rpcs_relatorio.sql"
+   },
+   {
+    "function": "submit_engagement_answer",
+    "msg": "not authenticated",
+    "src": "supabase/migrations/20261227120000_engagement_integridade_e_anon.sql"
+   },
+   {
+    "function": "submit_engagement_answer",
+    "msg": "pergunta nao atribuida ao usuario neste ciclo",
+    "src": "supabase/migrations/20261227120000_engagement_integridade_e_anon.sql"
+   },
+   {
+    "function": "guard_engagement_answer_assignment",
+    "msg": "resposta sem atribuicao no ciclo",
+    "src": "supabase/migrations/20261227120000_engagement_integridade_e_anon.sql"
    }
   ],
   "db_generated": [
@@ -105983,7 +106082,8 @@
    "engagement_question_assignments": {
     "rls": "enabled",
     "SELECT": [
-     "authenticated: user_id = auth.uid() OR public.has_role(auth.uid(), 'admin')"
+     "authenticated: user_id = auth.uid() OR public.has_role(auth.uid(), 'admin')",
+     "authenticated: user_id = auth.uid()"
     ],
     "INSERT": [
      "authenticated: user_id = auth.uid()"
@@ -108350,7 +108450,8 @@
    "supabase/migrations/20261226160000_reset_senha_guardas_aprovacao.sql",
    "supabase/migrations/20261226170000_reset_senha_busca_auth_users.sql",
    "supabase/migrations/20261226180000_escopo_gestor_rpcs_relatorio.sql",
-   "supabase/migrations/20261226195000_reset_senha_consistencia.sql"
+   "supabase/migrations/20261226195000_reset_senha_consistencia.sql",
+   "supabase/migrations/20261227120000_engagement_integridade_e_anon.sql"
   ],
   "security_definer_fns": [
    "_climate_recompute_pillar_scores",
@@ -108491,6 +108592,7 @@
    "grade_quiz_answer",
    "grant_card_pack",
    "grant_scratch_card",
+   "guard_engagement_answer_assignment",
    "handle_new_user",
    "has_role",
    "increment_announcement_views",
@@ -116545,6 +116647,14 @@
     "objkind": "table",
     "roles": "anon",
     "src": "supabase/migrations/20261226200000_profiles_select_colunas_sensiveis.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "all",
+    "object": "public",
+    "objkind": "tables",
+    "roles": "anon",
+    "src": "supabase/migrations/20261227120000_engagement_integridade_e_anon.sql"
    },
    {
     "kind": "grant",
@@ -156230,6 +156340,11 @@
    "path": "supabase/migrations/20261226210000_profiles_email_fora_do_allowlist.sql",
    "lines": 20
   },
+  "supabase/migrations/20261227120000_engagement_integridade_e_anon.sql": {
+   "path": "supabase/migrations/20261227120000_engagement_integridade_e_anon.sql",
+   "lines": 106,
+   "uses_service_role": true
+  },
   "supabase/tests/climate/assertions.sql": {
    "path": "supabase/tests/climate/assertions.sql",
    "lines": 404,
@@ -156325,10 +156440,23 @@
   }
  },
  "git": {
-  "sha": "b5c751fe29145d8b829d2d23b57d06f3a017a049",
+  "sha": "f61144b60aac4987b9317ae3e2046255f5502480",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "commits": [
+   {
+    "sha": "f61144b",
+    "date": "2026-11-25",
+    "author": "adm01-debug",
+    "subject": "security: engajamento com score validado e anon fora das tabelas de escrita (#166)",
+    "files": [
+     "docs/agentes/banco.md",
+     "docs/agentes/mapa-repo.md",
+     "scripts/db-audit/README.md",
+     "scripts/db-audit/migration-baseline.json",
+     "supabase/migrations/20261227120000_engagement_integridade_e_anon.sql"
+    ]
+   },
    {
     "sha": "b5c751f",
     "date": "2026-11-25",
@@ -156659,33 +156787,24 @@
      "docs/agentes/banco.md",
      "supabase/migrations/20261220000000_fix_sre_rpcs_and_dispatch_trigger.sql"
     ]
-   },
-   {
-    "sha": "50530f8",
-    "date": "2026-11-24",
-    "author": "adm01-debug",
-    "subject": "fix: remove BOM UTF-8 do supabase/config.toml que quebra o Supabase Preview (#134)",
-    "files": [
-     "supabase/config.toml"
-    ]
    }
   ],
   "hot_files": [
    [
     "docs/agentes/banco.md",
-    10
+    11
+   ],
+   [
+    "scripts/db-audit/README.md",
+    8
    ],
    [
     "docs/estado/05-edge-functions.md",
     8
    ],
    [
-    "scripts/db-audit/README.md",
-    7
-   ],
-   [
     "docs/agentes/mapa-repo.md",
-    6
+    7
    ],
    [
     "AGENTS.md",
@@ -156694,6 +156813,10 @@
    [
     "scripts/db-audit/check-migration-drift.mjs",
     5
+   ],
+   [
+    "scripts/db-audit/migration-baseline.json",
+    2
    ],
    [
     "docs/pendencias/02-profiles-update-sem-restricao-de-coluna.md",
@@ -156724,6 +156847,10 @@
     2
    ],
    [
+    "supabase/migrations/20261227120000_engagement_integridade_e_anon.sql",
+    1
+   ],
+   [
     "src/components/manager/TeamCompetencyDashboard.tsx",
     1
    ],
@@ -156741,14 +156868,6 @@
    ],
    [
     "src/pages/Pdi.tsx",
-    1
-   ],
-   [
-    "supabase/migrations/20261226190000_pdi_templates_escrita_admin.sql",
-    1
-   ],
-   [
-    "docs/estado/01-paginas-e-rotas.md",
     1
    ]
   ]

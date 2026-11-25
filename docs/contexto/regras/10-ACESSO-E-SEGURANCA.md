@@ -1,6 +1,6 @@
 # 10 · ACESSO E SEGURANÇA — quem pode o quê
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `b5c751fe29` · branch `main` · 2026-11-25 14:15 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `f61144b60a` · branch `main` · 2026-11-25 14:20 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## Perfis / roles identificados
@@ -96,7 +96,7 @@
 | `engagement_answers` | enabled | authenticated: user_id = auth.uid() OR public.has_role(auth.uid(), 'admin') OR public.has_role(auth.uid(), 'manager') | authenticated: user_id = auth.uid() | — | — |
 | `engagement_cycles` | enabled | authenticated: true<br>authenticated: public.has_role(auth.uid(), 'admin') | authenticated: public.has_role(auth.uid(), 'admin') | authenticated: public.has_role(auth.uid(), 'admin') | authenticated: public.has_role(auth.uid(), 'admin') |
 | `engagement_factors` | enabled | authenticated: true<br>authenticated: public.has_role(auth.uid(), 'admin') | authenticated: public.has_role(auth.uid(), 'admin') | authenticated: public.has_role(auth.uid(), 'admin') | authenticated: public.has_role(auth.uid(), 'admin') |
-| `engagement_question_assignments` | enabled | authenticated: user_id = auth.uid() OR public.has_role(auth.uid(), 'admin') | authenticated: user_id = auth.uid() | authenticated: user_id = auth.uid() | authenticated: public.has_role(auth.uid(), 'admin') |
+| `engagement_question_assignments` | enabled | authenticated: user_id = auth.uid() OR public.has_role(auth.uid(), 'admin')<br>authenticated: user_id = auth.uid() | authenticated: user_id = auth.uid() | authenticated: user_id = auth.uid() | authenticated: public.has_role(auth.uid(), 'admin') |
 | `engagement_question_pool` | enabled | authenticated: true<br>authenticated: public.has_role(auth.uid(), 'admin') | authenticated: public.has_role(auth.uid(), 'admin') | authenticated: public.has_role(auth.uid(), 'admin') | authenticated: public.has_role(auth.uid(), 'admin') |
 | `engagement_snapshots` | enabled | public: public.has_role(auth.uid(), 'admin')<br>public: EXISTS ( SELECT 1 FROM team_members tm WHERE tm.user_id = auth.uid() AND tm.is_manager = true AND (engagement_snapshots.department_i | public: public.has_role(auth.uid(), 'admin') | public: public.has_role(auth.uid(), 'admin') | public: public.has_role(auth.uid(), 'admin') |
 | `enps_responses` | enabled | public: auth.uid() = user_id<br>public: public.has_role(auth.uid(), 'admin') | public: auth.uid() = user_id | — | — |
@@ -258,7 +258,7 @@
 
 > `—` com RLS ligado = ninguém além de service_role. `sem RLS` = qualquer chave anon lê/escreve tudo.
 
-## Onde o RLS é IGNORADO (service_role) — 147 arquivo(s)
+## Onde o RLS é IGNORADO (service_role) — 148 arquivo(s)
 
 - `scripts/ai-context/cenarios.mjs`
 - `scripts/ai-context/gerar.unit.mjs`
@@ -407,6 +407,7 @@
 - `supabase/migrations/20261226170000_reset_senha_busca_auth_users.sql`
 - `supabase/migrations/20261226180000_escopo_gestor_rpcs_relatorio.sql`
 - `supabase/migrations/20261226195000_reset_senha_consistencia.sql`
+- `supabase/migrations/20261227120000_engagement_integridade_e_anon.sql`
 
 ## Funções SQL `SECURITY DEFINER` (rodam com privilégio do dono, ignoram RLS)
 
@@ -548,6 +549,7 @@
 - `grade_quiz_answer`
 - `grant_card_pack`
 - `grant_scratch_card`
+- `guard_engagement_answer_assignment`
 - `handle_new_user`
 - `has_role`
 - `increment_announcement_views`
@@ -787,7 +789,7 @@ Middleware matcher (Next.js): nenhum
 | revoke | PUBLIC, anon | execute | `get_webhook_delivery_stats_24h`, `get_webhook_delivery_hourly_24h`, `get_webhook_delivery_stats_1h`, `get_webhook_delivery_logs`, `get_error_budget_30d`, `get_burn_rate`, `get_burn_rate`, `is_org_admin`, `is_org_member`, `get_active_engagement_cycle`, `assign_engagement_questions`, `submit_engagement_answer`, `get_engagement_cycle_progress`, `engagement_min_respondents`, `get_engagement_pillar_scores` … +15 |
 | revoke | PUBLIC, anon, authenticated | all | `webhook_delivery_stats_24h`, `check_sla_breaches_and_alert`, `auto_create_postmortem_on_resolve`, `check_overdue_postmortem_actions`, `notify_admins_of_monthly_report`, `close_expired_sales_campaigns`, `increment_push_failures`, `reset_push_failures`, `log_lucky_wheel_prize_change`, `chi_square_critical`, `erf_inverse`, `snapshot_lucky_wheel_payout`, `raise_lucky_wheel_window_alerts`, `raise_lucky_wheel_window_alerts`, `log_lucky_wheel_budget_change` … +23 |
 | revoke | PUBLIC, anon, authenticated | execute | `validate_reset_token`, `generate_certificate_code`, `ingest_war_event`, `war_hook_task_scores`, `war_hook_attendance`, `war_hook_trail_enrollments`, `war_hook_module_progress`, `war_hook_quiz_scores`, `war_hook_kudos`, `validate_reset_token`, `claim_push_outbox`, `increment_push_failures`, `reset_push_failures`, `user_wants_push_notification`, `get_passkeys_by_email` … +1 |
-| revoke | anon | all | `public`, `public`, `profiles_public`, `_climate_recompute_pillar_scores`, `climate_recalculate_pillar_scores`, `climate_survey_enps`, `climate_submit_response`, `approve_password_reset`, `reject_password_reset`, `approve_password_reset`, `reject_password_reset`, `profiles` |
+| revoke | anon | all | `public`, `public`, `profiles_public`, `_climate_recompute_pillar_scores`, `climate_recalculate_pillar_scores`, `climate_survey_enps`, `climate_submit_response`, `approve_password_reset`, `reject_password_reset`, `approve_password_reset`, `reject_password_reset`, `profiles`, `public` |
 | revoke | anon | execute | `get_lucky_wheel_prizes_display`, `reset_login_attempts`, `is_org_admin`, `is_org_member`, `can_handle_opinion`, `generate_certificate_code` |
 | revoke | anon | insert, update, delete | `push_outbox`, `user_devices` |
 | revoke | anon, authenticated | execute | `cleanup_old_security_logs` |

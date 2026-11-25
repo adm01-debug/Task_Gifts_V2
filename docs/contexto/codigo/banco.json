@@ -6,10 +6,10 @@
   "src/integrations/supabase/types.ts",
   "supabase/migrations"
  ],
- "migrations": 293,
+ "migrations": 294,
  "seeds": [],
  "avisos": [
-  "13 bloco(s) com DDL dinâmico (EXECUTE format/...) não modelado — policies/colunas criadas dinamicamente podem faltar; confira no banco vivo"
+  "14 bloco(s) com DDL dinâmico (EXECUTE format/...) não modelado — policies/colunas criadas dinamicamente podem faltar; confira no banco vivo"
  ],
  "extensoes": [
   "pg_cron",
@@ -314,6 +314,7 @@
   "grade_quiz_answer",
   "grant_card_pack",
   "grant_scratch_card",
+  "guard_engagement_answer_assignment",
   "handle_new_user",
   "handle_updated_at",
   "has_role",
@@ -696,6 +697,13 @@
    "evento": "update",
    "tabela": "engagement_action_playbooks",
    "funcao": "update_updated_at_column"
+  },
+  {
+   "nome": "trg_guard_engagement_answer_assignment",
+   "quando": "before",
+   "evento": "insert or update",
+   "tabela": "engagement_answers",
+   "funcao": "guard_engagement_answer_assignment"
   },
   {
    "nome": "trg_ecycles_updated",
@@ -11754,7 +11762,9 @@
    },
    "usada_no_front": 0,
    "usada_em_edges": [],
-   "triggers": [],
+   "triggers": [
+    "trg_guard_engagement_answer_assignment"
+   ],
    "sem_rls": false,
    "nao_usada": true
   },
@@ -12043,6 +12053,12 @@
    },
    "rls": true,
    "policies": [
+    {
+     "nome": "engagement_question_assignments_user_own",
+     "comando": "select",
+     "para": "authenticated",
+     "tipo": "permissive"
+    },
     {
      "nome": "eqa_admin_delete",
      "comando": "delete",

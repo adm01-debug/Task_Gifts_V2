@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "b5c751fe29145d8b829d2d23b57d06f3a017a049",
+  "commit": "f61144b60aac4987b9317ae3e2046255f5502480",
   "branch": "main",
-  "data_commit": "2026-11-25T10:19:31-03:00",
+  "data_commit": "2026-11-25T11:19:44-03:00",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "ultimos_commits": [
+   {
+    "sha": "f61144b",
+    "data": "2026-11-25",
+    "assunto": "security: engajamento com score validado e anon fora das tabelas de escrita (#166)"
+   },
    {
     "sha": "b5c751f",
     "data": "2026-11-25",
@@ -126,14 +131,9 @@
     "sha": "57326cf",
     "data": "2026-11-24",
     "assunto": "chore: alinha doc de edge functions com o estado real (cron 200, trigger corrigido) (#139)"
-   },
-   {
-    "sha": "240770f",
-    "data": "2026-11-24",
-    "assunto": "chore(db-audit): corrige o texto do ledger e faz o guard rodar fora do Linux (#140)"
    }
   ],
-  "arquivos_mudados_7d": 233,
+  "arquivos_mudados_7d": 234,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "supabase/functions/_shared",
@@ -144,16 +144,20 @@
     "mudancas": 21
    },
    {
+    "pasta": "docs/agentes/banco.md",
+    "mudancas": 15
+   },
+   {
     "pasta": "docs/estado/05-edge-functions.md",
     "mudancas": 15
    },
    {
-    "pasta": "docs/agentes/banco.md",
-    "mudancas": 14
-   },
-   {
     "pasta": "bun.lock",
     "mudancas": 13
+   },
+   {
+    "pasta": "docs/agentes/mapa-repo.md",
+    "mudancas": 12
    },
    {
     "pasta": ".github/workflows/ci.yml",
@@ -164,19 +168,15 @@
     "mudancas": 11
    },
    {
-    "pasta": "docs/agentes/mapa-repo.md",
-    "mudancas": 11
-   },
-   {
     "pasta": "src/components/admin",
     "mudancas": 11
    },
    {
-    "pasta": "docs/estado/03-hooks-services-lib.md",
-    "mudancas": 8
+    "pasta": "scripts/db-audit/README.md",
+    "mudancas": 9
    },
    {
-    "pasta": "scripts/db-audit/README.md",
+    "pasta": "docs/estado/03-hooks-services-lib.md",
     "mudancas": 8
    },
    {
@@ -206,15 +206,19 @@
     "mudancas": 15
    },
    {
+    "arquivo": "docs/agentes/banco.md",
+    "mudancas": 15
+   },
+   {
     "arquivo": "docs/estado/05-edge-functions.md",
     "mudancas": 15
    },
    {
-    "arquivo": "docs/agentes/banco.md",
-    "mudancas": 14
+    "arquivo": ".github/workflows/ci.yml",
+    "mudancas": 12
    },
    {
-    "arquivo": ".github/workflows/ci.yml",
+    "arquivo": "docs/agentes/mapa-repo.md",
     "mudancas": 12
    },
    {
@@ -222,15 +226,11 @@
     "mudancas": 11
    },
    {
-    "arquivo": "docs/agentes/mapa-repo.md",
-    "mudancas": 11
+    "arquivo": "scripts/db-audit/README.md",
+    "mudancas": 9
    },
    {
     "arquivo": "docs/estado/03-hooks-services-lib.md",
-    "mudancas": 8
-   },
-   {
-    "arquivo": "scripts/db-audit/README.md",
     "mudancas": 8
    },
    {
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 132
+    "commits": 133
    },
    {
     "autor": "dependabot[bot]",
@@ -310,7 +310,7 @@
   ]
  },
  "contagens": {
-  "arquivos_total": 1587,
+  "arquivos_total": 1588,
   "arquivos_codigo": 1190,
   "linhas_codigo": 236391,
   "rotas": 87,
@@ -322,7 +322,7 @@
   "hooks": 155,
   "edge_functions": 23,
   "tabelas": 238,
-  "migrations": 293,
+  "migrations": 294,
   "cron_jobs": 24,
   "testes": 173,
   "workflows": 6,
