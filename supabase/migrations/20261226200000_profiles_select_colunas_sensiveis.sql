@@ -34,6 +34,13 @@
 REVOKE SELECT ON public.profiles FROM authenticated;
 REVOKE ALL ON public.profiles FROM anon;
 
+-- `anon` mantém apenas as colunas usadas por telas publicas
+-- (author:profiles(display_name, avatar_url) em announcements/celebrations).
+-- Nao ha policy de RLS para `anon`, entao nenhuma linha e devolvida; o grant
+-- existe para preservar 200 com embed nulo em vez de 401 na consulta inteira.
+GRANT SELECT (id, display_name, avatar_url, level, status)
+  ON public.profiles TO anon;
+
 GRANT SELECT (
   id,
   display_name,
