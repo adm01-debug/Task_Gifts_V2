@@ -769,12 +769,21 @@ nomes substituídos (`daily-cleanup-idempotency`, `daily-cleanup-security-logs-9
 `20261224110000_cron_internal_jobs_drift.sql`, que os reagenda lendo o `x-internal-secret` de
 `_internal.dispatch_config`.
 
-Num **rebuild limpo** o `cron.job` termina com **32** jobs, não 34: os dois monitores internos são
-recusados de propósito (`20261224110000`, linhas 50-52 e 104-111) porque num banco vazio não existe job
-de onde copiar a chave, e agendar sem credencial geraria 401 silencioso para sempre. Eles entram
-normalmente ao aplicar sobre o banco vivo, que já tem a chave. Medido no replay de 25/11/2026
-(`select count(*) from cron.job` = 32; ausentes apenas `burn-rate-monitor-5min` e
-`error-budget-monitor-daily`).
+Num **rebuild limpo** o `cron.job` termina com **32** jobs, não 34, e os três jobs internos que sobram
+seguem com a autenticação antiga: o passo 2 de `20261224110000` (linhas 50-72) semeia `cron_secret`
+copiando o `x-internal-secret` de um dos cinco jobs já agendados, e num banco vazio **nenhum** deles tem
+esse header — as migrations originais (`20260712194718`, `20260712203400`) gravam a anon key de um
+projeto morto. Sem `cron_secret`, o passo 3 (linhas 104-111) emite `RAISE WARNING` e faz `RETURN`:
+**nenhum** dos cinco é reagendado. Por isso faltam `burn-rate-monitor-5min` e
+`error-budget-monitor-daily` (as duas que nunca tiveram migration) e `push-outbox-dispatcher`,
+`security-weekly-digest` e `webhook-health-monitor-every-15min` continuam com a anon key velha. Medido
+no replay de 25/11/2026: `select count(*) from cron.job` = 32.
+
+No banco vivo os cinco jobs já carregam `x-internal-secret`, então o passo 2 encontra a chave, os cinco
+são reagendados e o total fica em **34**. Para um banco novo ficar idêntico, grave `project_url` e
+`cron_secret` (≥32 chars) em `_internal.dispatch_config` e reaplique `20261224110000`; a migration não
+tem como inventar a credencial, e o guard existe justamente para não agendar job que tomaria 401 para
+sempre.
 
 **22 jobs ativos** (nome = 1º argumento de `cron.schedule`), ordenados alfabeticamente:
 
