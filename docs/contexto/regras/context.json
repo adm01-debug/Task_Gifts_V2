@@ -1,9 +1,9 @@
 {
  "meta": {
-  "sha": "220d1d636215da238598d236a61c4d9d1017255e",
+  "sha": "b5c751fe29145d8b829d2d23b57d06f3a017a049",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
-  "generated_at": "2026-11-25 13:09 UTC",
+  "generated_at": "2026-11-25 14:15 UTC",
   "files_total": 1598,
   "code_files": 1491,
   "code_lines": 270597
@@ -156325,10 +156325,21 @@
   }
  },
  "git": {
-  "sha": "220d1d636215da238598d236a61c4d9d1017255e",
+  "sha": "b5c751fe29145d8b829d2d23b57d06f3a017a049",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "commits": [
+   {
+    "sha": "b5c751f",
+    "date": "2026-11-25",
+    "author": "adm01-debug",
+    "subject": "chore: alinha a documentacao do ledger com os 293 arquivos da main (#165)",
+    "files": [
+     "docs/agentes/banco.md",
+     "docs/agentes/mapa-repo.md",
+     "scripts/db-audit/README.md"
+    ]
+   },
    {
     "sha": "220d1d6",
     "date": "2026-11-25",
@@ -156657,17 +156668,6 @@
     "files": [
      "supabase/config.toml"
     ]
-   },
-   {
-    "sha": "943fe9e",
-    "date": "2026-11-24",
-    "author": "adm01-debug",
-    "subject": "chore(docs): corrige estado do ledger de migrations e documenta divergencia do dispatch trigger (#133)",
-    "files": [
-     "AGENTS.md",
-     "docs/agentes/banco.md",
-     "docs/agentes/mapa-repo.md"
-    ]
    }
   ],
   "hot_files": [
@@ -156680,16 +156680,16 @@
     8
    ],
    [
-    "AGENTS.md",
-    6
+    "scripts/db-audit/README.md",
+    7
    ],
    [
     "docs/agentes/mapa-repo.md",
     6
    ],
    [
-    "scripts/db-audit/README.md",
-    6
+    "AGENTS.md",
+    5
    ],
    [
     "scripts/db-audit/check-migration-drift.mjs",

@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "220d1d636215da238598d236a61c4d9d1017255e",
+  "commit": "b5c751fe29145d8b829d2d23b57d06f3a017a049",
   "branch": "main",
-  "data_commit": "2026-11-25T10:08:42-03:00",
+  "data_commit": "2026-11-25T10:19:31-03:00",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "ultimos_commits": [
+   {
+    "sha": "b5c751f",
+    "data": "2026-11-25",
+    "assunto": "chore: alinha a documentacao do ledger com os 293 arquivos da main (#165)"
+   },
    {
     "sha": "220d1d6",
     "data": "2026-11-25",
@@ -126,11 +131,6 @@
     "sha": "240770f",
     "data": "2026-11-24",
     "assunto": "chore(db-audit): corrige o texto do ledger e faz o guard rodar fora do Linux (#140)"
-   },
-   {
-    "sha": "96c3382",
-    "data": "2026-11-24",
-    "assunto": "fix: tira BOM das migrations pendentes e remove rascunho obsoleto do digest (Supabase Preview 42601) (#138)"
    }
   ],
   "arquivos_mudados_7d": 233,
@@ -148,11 +148,11 @@
     "mudancas": 15
    },
    {
-    "pasta": "bun.lock",
-    "mudancas": 13
+    "pasta": "docs/agentes/banco.md",
+    "mudancas": 14
    },
    {
-    "pasta": "docs/agentes/banco.md",
+    "pasta": "bun.lock",
     "mudancas": 13
    },
    {
@@ -164,12 +164,12 @@
     "mudancas": 11
    },
    {
-    "pasta": "src/components/admin",
+    "pasta": "docs/agentes/mapa-repo.md",
     "mudancas": 11
    },
    {
-    "pasta": "docs/agentes/mapa-repo.md",
-    "mudancas": 10
+    "pasta": "src/components/admin",
+    "mudancas": 11
    },
    {
     "pasta": "docs/estado/03-hooks-services-lib.md",
@@ -177,7 +177,7 @@
    },
    {
     "pasta": "scripts/db-audit/README.md",
-    "mudancas": 7
+    "mudancas": 8
    },
    {
     "pasta": "src/App.tsx",
@@ -211,7 +211,7 @@
    },
    {
     "arquivo": "docs/agentes/banco.md",
-    "mudancas": 13
+    "mudancas": 14
    },
    {
     "arquivo": ".github/workflows/ci.yml",
@@ -223,7 +223,7 @@
    },
    {
     "arquivo": "docs/agentes/mapa-repo.md",
-    "mudancas": 10
+    "mudancas": 11
    },
    {
     "arquivo": "docs/estado/03-hooks-services-lib.md",
@@ -231,7 +231,7 @@
    },
    {
     "arquivo": "scripts/db-audit/README.md",
-    "mudancas": 7
+    "mudancas": 8
    },
    {
     "arquivo": "src/App.tsx",
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 131
+    "commits": 132
    },
    {
     "autor": "dependabot[bot]",

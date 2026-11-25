@@ -1,7 +1,7 @@
 # Contexto do projeto para agentes de IA
 
 GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.
-Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `220d1d636215da238598d236a61c4d9d1017255e` (2026-11-25T10:08:42-03:00).
+Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `b5c751fe29145d8b829d2d23b57d06f3a017a049` (2026-11-25T10:19:31-03:00).
 
 ## Como usar (leia antes de planejar ou executar qualquer tarefa)
 1. **Tela/rota/menu** → `rotas.json` (url/vista/menu → arquivo → hooks → tabelas → edges; `rotas_http_backend` para APIs) e `modulos.json` (módulo inteiro + dependências entre módulos).
@@ -278,7 +278,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - possiveis_segredos_no_codigo: 0
 
 ## Grafo de código (graphify)
-- 10381 nós · 28939 arestas · 658 comunidades · grafo do commit `220d1d63`
+- 10381 nós · 28939 arestas · 658 comunidades · grafo do commit `b5c751fe`
 - comunidades maiores: react (260), lucide-react (240), badge.tsx (213), Mentoria.tsx (134), AdminPanel.tsx (132), client.ts (127), cn (110), SecurityDashboard.tsx (105), tradingCards.ts (92), contracts/index.ts (87), Shop.tsx (86), loggingService.ts (83)
 - símbolos mais chamados: cn() (src/lib/utils.ts), useAuth() (src/hooks/useAuth.tsx), useIsMobile() (src/hooks/use-mobile.tsx), q() (scripts/supabase_snapshot/snapshot.py), useDepartments() (src/hooks/useDepartments.ts), useRBAC() (src/hooks/useRBAC.ts), useProfiles() (src/hooks/useProfiles.ts), useToast() (src/hooks/use-toast.ts), useSEO() (src/hooks/useSEO.ts), useSoundEffects() (src/hooks/useSoundEffects.tsx), .collect() (scripts/supabase_snapshot/test_snapshot.py), excluded_sql() (scripts/supabase_snapshot/snapshot.py)
 - consulta local: `graphify query "<pergunta>"`, `graphify path "<A>" "<B>"`, `graphify explain "<X>"`
@@ -287,12 +287,12 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - package.json (23)
 - bun.lock (15)
 - docs/estado/05-edge-functions.md (15)
-- docs/agentes/banco.md (13)
+- docs/agentes/banco.md (14)
 - .github/workflows/ci.yml (12)
 - AGENTS.md (11)
-- docs/agentes/mapa-repo.md (10)
+- docs/agentes/mapa-repo.md (11)
 - docs/estado/03-hooks-services-lib.md (8)
-- scripts/db-audit/README.md (7)
+- scripts/db-audit/README.md (8)
 - src/App.tsx (7)
 - supabase/config.toml (7)
 - scripts/db-audit/check-migration-drift.mjs (6)
@@ -365,6 +365,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 
 
 ## Últimos commits
+- 2026-11-25 `b5c751f` chore: alinha a documentacao do ledger com os 293 arquivos da main (#165)
 - 2026-11-25 `220d1d6` fix: e-mail corporativo sai do SELECT aberto de profiles (LGPD) (#164)
 - 2026-11-25 `bef27bd` feat: cadastro de templates de PDI com policy de escrita para admin (#160)
 - 2026-11-25 `f41bdee` fix: conserta pedido de reset de senha do usuario deslogado (#159)
@@ -379,7 +380,6 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - 2026-11-24 `d9f0718` feat: envia lembrete de clima por push alem do in-app (#153)
 - 2026-11-24 `a2a5bc3` fix(supabase): alinha 20261220000000 ao trigger vivo do alerta critico (#152)
 - 2026-11-24 `88e4b45` fix(clima): antecipa o fim da pesquisa ativa para 30/11 e destrava o lembrete (#148)
-- 2026-11-24 `fc6ade9` chore(docs): ledger 280x280 e jobs internos medidos (preserva o trabalho da #150) (#151)
 
 ## Arquivos deste diretório
 - `docs/contexto/codigo/rotas.json`
