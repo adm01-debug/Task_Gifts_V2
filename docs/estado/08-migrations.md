@@ -32,9 +32,9 @@ Método: extração por `grep`/`perl` sobre o texto das migrations. Tudo abaixo 
 | Objetos distintos com política RLS | **231** | 230 tabelas `public.*` + `storage.objects` |
 | Ocorrências `CREATE [UNIQUE] INDEX` | 276 | grep |
 | **Índices distintos declarados** | **259** | nomes únicos |
-| Ocorrências `cron.schedule` | 23 | grep |
-| **Jobs cron distintos declarados (ativos)** | **22** | 1 das 23 está comentada |
-| Ocorrências `cron.unschedule` | 13 | grep |
+| Ocorrências `cron.schedule` | 44 | grep (3 comentadas) |
+| **Jobs cron distintos declarados** | **40 nomes** | 8 nomes antigos são desagendados por `20261228120000`; 32 ativos em rebuild |
+| Ocorrências `cron.unschedule` | 14 | grep (1 dinâmica, dentro de loop) |
 | Statements `DROP` | 137 | 81 POLICY, 31 TRIGGER, 13 FUNCTION, 13 CONSTRAINT, 9 INDEX, 3 TABLE, 1 VIEW, 1 COLUMN |
 
 Distribuição de migrations por mês (timestamp do nome):
@@ -50,6 +50,35 @@ Distribuição de migrations por mês (timestamp do nome):
 | 2026-08 | 11 |
 
 > 66% de todas as migrations do projeto (172/262) foram criadas em julho/2026 — sinal de um ciclo de retrabalho intenso e concentrado.
+
+**Nota (2026-11-25) — drift de schema fechado:** `20251220144518:355-393` (arquivo já aplicado, alinhado
+ao banco como já se fez com `20261220000000`) passa a versionar as **7** colunas de `public.profiles` que
+só existiam em produção (`status`, `phone`, `personal_email`, `cpf`, `employee_id`, `contract_type`,
+`last_access_at`) mais as CHECKs `profiles_status_check` e `profiles_contract_type_check` — definições
+medidas em `pg_constraint` e tipos/defaults em `information_schema.columns`, na ordem ordinal 15..21 de
+produção (`hire_date`, ordinal 14, já era versionado na mesma migration). Objetos já versionados
+dependiam dessas colunas e quebravam num banco limpo: `20260728184034:2-12` (RPC
+`get_my_profile_private`, `LANGUAGE sql`, validada na criação), `20260728184034:39-43`,
+`20261218000000:211,214` e `20261226200000:41,44-61` (GRANT por coluna em
+`hire_date`/`status`/`last_access_at`) e a matview de `20261228120000`. `sync_department_war_headcount`
+(`20260727230544:549`) só quebrava em runtime — mesmo sintoma, invisível no rebuild. **Não** virou
+arquivo novo com versão retroativa de propósito: o `supabase db push` padrão não aplica migration mais
+antiga que a última do ledger (só com `--include-all`), então um `2025122…` novo travaria todo apply
+seguinte e deixaria o ledger sem a versão. Folding no arquivo aplicado não cria versão, não cria
+pendência e o efeito em produção é nenhum (`ADD COLUMN IF NOT EXISTS` + guarda em `pg_constraint`).
+
+**Nota (2026-11-25) — dois arquivos `.sql` não eram SQL válido:** `20260806141640_user_challenges_insert_policy.sql`
+terminava com `</content>` e `</invoke>` (restos de uma chamada de ferramenta colada dentro do arquivo):
+um rebuild morria no statement 3 com `syntax error at or near "</"`. As duas linhas foram removidas
+(787 → 766 bytes); o SQL de fato era só a policy. Com isso os **296** arquivos de migration passam no
+parser oficial do PostgreSQL (`libpg-query`) sem um único erro de sintaxe.
+
+**O que isso prova e o que não prova:** prova que nenhum arquivo tem SQL inválido. **Não** prova a ordem
+das dependências nem que um banco limpo chega ao fim — `supabase db reset` não roda nesta máquina (sem
+Docker/CLI) e um rebuild ainda falharia por drift fora do escopo desta nota: `20251225230238:59` faz
+`ALTER TABLE public.notification_preferences`, tabela que nenhuma migration cria, e há mais 5 tabelas
+(`CREATE TABLE` inexistente no repo) e 22 colunas ausentes — lista medida na PR #171, seção "Fora do
+escopo". Reconstrução só é considerada provada quando esse drift zerar e houver um `db reset` verde.
 
 Primeira/última migration:
 - `supabase/migrations/20241231000000_saved_filters.sql`
@@ -719,6 +748,29 @@ Nota: `profiles_public` foi criada e imediatamente recriada com 29 segundos de d
 ---
 
 ## Jobs cron declarados no repo
+
+**Nota (2026-11-25):** a tabela abaixo é o retrato da maior migration da época. A paridade com
+produção — 34 jobs ativos medidos em `cron.job` — foi fechada por
+`20261228120000_cron_jobs_e_leaderboard_cache.sql`, que declara os 15 jobs que faltavam
+(`auto-promote-webhook-secrets`, `boss-win-rate-critical-alerts`, `check-overdue-postmortems`,
+`cleanup-expired-challenges`, `cleanup-idempotency-keys`, `cleanup-job-run-details-7d`,
+`cleanup-old-security-logs`, `cleanup-query-telemetry`, `cleanup-webhook-logs`,
+`close-expired-campaigns`, `exec-monthly-report-generation`, `refresh-leaderboard-cache`,
+`sla-breach-weekly-check`, `update-certification-statuses`, `weekly-analyze`) e desagenda os 8
+nomes substituídos (`daily-cleanup-idempotency`, `daily-cleanup-security-logs-90d`,
+`weekly-cleanup-expired-challenges`, `close-expired-sales-campaigns`,
+`postmortem_overdue_daily_check`, `auto-promote-expired-webhook-secrets`,
+`exec_monthly_report_generation`, `sla_breach_weekly_check`). Os jobs internos
+`burn-rate-monitor-5min` e `error-budget-monitor-daily` continuam vindo de
+`20261224110000_cron_internal_jobs_drift.sql`, que os reagenda lendo o `x-internal-secret` de
+`_internal.dispatch_config`.
+
+Num **rebuild limpo** o `cron.job` termina com **32** jobs, não 34: os dois monitores internos são
+recusados de propósito (`20261224110000`, linhas 50-52 e 104-111) porque num banco vazio não existe job
+de onde copiar a chave, e agendar sem credencial geraria 401 silencioso para sempre. Eles entram
+normalmente ao aplicar sobre o banco vivo, que já tem a chave. Medido no replay de 25/11/2026
+(`select count(*) from cron.job` = 32; ausentes apenas `burn-rate-monitor-5min` e
+`error-budget-monitor-daily`).
 
 **22 jobs ativos** (nome = 1º argumento de `cron.schedule`), ordenados alfabeticamente:
 

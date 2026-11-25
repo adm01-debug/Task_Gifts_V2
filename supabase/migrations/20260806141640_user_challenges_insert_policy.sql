@@ -13,5 +13,3 @@ CREATE POLICY "Users can insert their own challenges"
 ON public.user_challenges FOR INSERT
 TO authenticated
 WITH CHECK (auth.uid() = user_id);
-</content>
-</invoke>
