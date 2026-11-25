@@ -1,6 +1,6 @@
 {
   "aviso": "GERADO por scripts/db-audit/check-migration-drift.mjs --atualizar-baseline. Contagem por chave; deve apenas CAIR.",
-  "gerado_de": "305 arquivos",
+  "gerado_de": "306 arquivos",
   "contagem": {
     "nome_invalido": 0,
     "versao_duplicada": 0,
