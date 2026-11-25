@@ -321,19 +321,36 @@ export const attendanceService = {
   }> {
     const targetDate = date || new Date().toISOString().split('T')[0];
 
-    const { data, error } = await supabase
+    // `attendance_records.user_id` referencia `auth.users`, nao `profiles`:
+        // o embed `profiles:user_id(...)` falha com PGRST200.
+        const { data, error } = await supabase
       .from('attendance_records')
-      .select(`
-        *,
-        profiles:user_id (display_name, avatar_url)
-      `)
+          .select('*')
       .gte('check_in', `${targetDate}T00:00:00`)
       .lte('check_in', `${targetDate}T23:59:59`)
       .order('check_in', { ascending: true });
 
     if (error) throw error;
 
-    const records = (data || []) as (AttendanceRecord & { profile?: { display_name: string; avatar_url: string | null } })[];
+        const baseRecords = (data || []) as AttendanceRecord[];
+        const userIds = [...new Set(baseRecords.map(r => r.user_id))];
+        const { data: profiles } = userIds.length
+          ? await supabase
+              .from('profiles')
+              .select('id, display_name, avatar_url')
+              .in('id', userIds)
+          : { data: [] as { id: string; display_name: string | null; avatar_url: string | null }[] };
+        const profileById = new Map(
+      (profiles || []).map(p => [
+        p.id,
+        { display_name: p.display_name ?? '', avatar_url: p.avatar_url },
+      ] as const),
+    );
+
+        const records = baseRecords.map(r => ({
+          ...r,
+          profile: profileById.get(r.user_id) ?? undefined,
+        }));
     const punctualCount = records.filter(r => r.is_punctual).length;
     
     return {
