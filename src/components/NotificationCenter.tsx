@@ -87,6 +87,9 @@ const NotificationItem = memo(({ notification, onMarkRead, onDelete, onNavigate 
       onKeyDown={
         url
           ? (e) => {
+              // O evento sobe dos botoes filhos (Excluir, marcar lida); sem esta
+              // guarda, Enter no botao Excluir navegava em vez de excluir.
+              if (e.target !== e.currentTarget) return;
               if (e.key === "Enter" || e.key === " ") {
                 e.preventDefault();
                 onNavigate(notification);
