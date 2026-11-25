@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "c941b100320cda426bd575ca6e4fd21ca5253d45",
+  "commit": "8430c1bcf9b2a9d400a6a7ea5a91624402ce92e6",
   "branch": "main",
-  "data_commit": "2026-11-24T18:53:28-03:00",
+  "data_commit": "2026-11-25T09:13:58-03:00",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "ultimos_commits": [
+   {
+    "sha": "8430c1b",
+    "data": "2026-11-25",
+    "assunto": "fix: lista de usuarios por papel e painel de alto potencial voltam a carregar (#162)"
+   },
    {
     "sha": "c941b10",
     "data": "2026-11-24",
@@ -126,14 +131,9 @@
     "sha": "d727dcc",
     "data": "2026-11-24",
     "assunto": "feat(pdi): tela de PDI com templates, mentores e check-ins (#128)"
-   },
-   {
-    "sha": "7ef5af2",
-    "data": "2026-11-24",
-    "assunto": "feat: liga login por passkey/biometria com verificação real de assinatura (#126)"
    }
   ],
-  "arquivos_mudados_7d": 211,
+  "arquivos_mudados_7d": 212,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "supabase/functions/_shared",
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 124
+    "commits": 125
    },
    {
     "autor": "dependabot[bot]",
@@ -312,7 +312,7 @@
  "contagens": {
   "arquivos_total": 1576,
   "arquivos_codigo": 1190,
-  "linhas_codigo": 236116,
+  "linhas_codigo": 236159,
   "rotas": 87,
   "rotas_http_backend": 0,
   "vistas_por_id": 0,
@@ -436,7 +436,7 @@
   },
   "src/services": {
    "arquivos": 99,
-   "linhas": 22363
+   "linhas": 22406
   },
   "src/stories": {
    "arquivos": 29,

@@ -5476,7 +5476,7 @@
     "highPotentialService"
    ],
    "export_default": null,
-   "linhas": 457,
+   "linhas": 484,
    "tabelas": [
     "attendance_records",
     "checkins",
@@ -5488,8 +5488,10 @@
     "mood_entries",
     "nine_box_evaluations",
     "profiles",
+    "team_members",
     "trail_enrollments",
-    "user_certifications"
+    "user_certifications",
+    "user_positions"
    ],
    "rpcs": [],
    "edges": [],
@@ -6678,7 +6680,7 @@
     "rbacService"
    ],
    "export_default": null,
-   "linhas": 380,
+   "linhas": 396,
    "tabelas": [
     "permissions",
     "profiles",

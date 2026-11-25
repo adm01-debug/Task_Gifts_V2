@@ -27181,7 +27181,7 @@
     "so_na_migration": [],
     "so_no_types": []
    },
-   "usada_no_front": 6,
+   "usada_no_front": 7,
    "usada_em_edges": [
     "trail-recommendations"
    ],
@@ -29500,7 +29500,7 @@
     "so_na_migration": [],
     "so_no_types": []
    },
-   "usada_no_front": 2,
+   "usada_no_front": 3,
    "usada_em_edges": [],
    "triggers": [],
    "sem_rls": false,
