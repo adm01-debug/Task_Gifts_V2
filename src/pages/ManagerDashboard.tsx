@@ -1,6 +1,6 @@
 import { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Users, Target, Award, AlertTriangle, BarChart3, BookOpen, Flame, Filter, Brain, Crown, TrendingUp } from "lucide-react";
+import { Users, Target, Award, AlertTriangle, BarChart3, BookOpen, Flame, Filter, Brain, Crown, TrendingUp, KeyRound } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -23,6 +23,7 @@ import { QuestsList } from "@/components/manager/QuestsList";
 import { ChurnPredictionPanel } from "@/components/ChurnPredictionPanel";
 import { TeamCompetencyDashboard } from "@/components/manager/TeamCompetencyDashboard";
 import { PDIAlertsPanel } from "@/components/admin/PDIAlertsPanel";
+import { PasswordResetApprovalPanel } from "@/components/admin/PasswordResetApprovalPanel";
 import { ManagerConsolidatedDashboard } from "@/components/manager/ManagerConsolidatedDashboard";
 import { AICopilotDashboard } from "@/components/manager/AICopilotDashboard";
 import { HighPotentialsPanel } from "@/components/manager/HighPotentialsPanel";
@@ -192,6 +193,7 @@ export default function ManagerDashboard() {
               <TabsTrigger value="hipotentials" className="gap-2"><TrendingUp className="h-4 w-4" />High Potentials</TabsTrigger>
               <TabsTrigger value="succession" className="gap-2"><Crown className="h-4 w-4" />Sucessão</TabsTrigger>
               <TabsTrigger value="quests" className="gap-2"><Target className="h-4 w-4" />Quests</TabsTrigger>
+              <TabsTrigger value="password-reset" className="gap-2"><KeyRound className="h-4 w-4" />Senhas</TabsTrigger>
             </TabsList>
             <TabsContent value="copilot"><SectionErrorBoundary sectionName="IA Copilot"><AICopilotDashboard /></SectionErrorBoundary></TabsContent>
             <TabsContent value="consolidated"><ManagerConsolidatedDashboard /></TabsContent>
@@ -263,6 +265,7 @@ export default function ManagerDashboard() {
             <TabsContent value="hipotentials"><SectionErrorBoundary sectionName="High Potentials"><HighPotentialsPanel /></SectionErrorBoundary></TabsContent>
             <TabsContent value="succession"><SectionErrorBoundary sectionName="Sucessão Inteligente"><SuccessionPanel /></SectionErrorBoundary></TabsContent>
             <TabsContent value="quests"><SectionErrorBoundary sectionName="Quests"><QuestsList /></SectionErrorBoundary></TabsContent>
+            <TabsContent value="password-reset"><SectionErrorBoundary sectionName="Redefinição de senha"><PasswordResetApprovalPanel /></SectionErrorBoundary></TabsContent>
           </Tabs>
          </main>
        </div>

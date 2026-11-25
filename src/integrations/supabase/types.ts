@@ -12047,6 +12047,17 @@ export type Database = {
           credential_id: string
         }[]
       }
+      get_pending_password_reset_requests: {
+        Args: never
+        Returns: {
+          display_name: string
+          email: string
+          expires_at: string
+          id: string
+          requested_at: string
+          user_id: string
+        }[]
+      }
       get_prediction_odds_history: {
         Args: { p_buckets?: number; p_market_id: string }
         Returns: {

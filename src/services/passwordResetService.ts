@@ -74,30 +74,37 @@ export const passwordResetService = {
 
   /**
    * Buscar solicitações pendentes da equipe (gestor)
+   *
+   * A lista vem da RPC `get_pending_password_reset_requests` (SECURITY DEFINER):
+   * ela aplica a mesma autorização do approve/reject e devolve o e-mail de
+   * `auth.users`, então pedidos de contas sem profile deixam de chegar ao painel
+   * sem destinatário.
    */
   async getPendingTeamRequests(): Promise<PasswordResetRequest[]> {
-    const { data, error } = await supabase
-      .from("password_reset_requests")
-      .select("*")
-      .eq("status", "pending")
-      .gt("expires_at", new Date().toISOString())
-      .order("created_at", { ascending: true });
+    const { data, error } = await supabase.rpc("get_pending_password_reset_requests");
 
     if (error) throw error;
-    
-    // Fetch user profiles separately
-    const requests = data || [];
-    for (const req of requests) {
-      const { data: profile } = await supabase
-        .from("profiles")
-        .select("display_name, email")
-        .eq("id", req.user_id)
-        .maybeSingle();
-      // Extend request with profile data dynamically
-      Object.assign(req, { profiles: profile });
-    }
-    
-    return requests as unknown as PasswordResetRequest[];
+
+    return (data || []).map(
+      (row: {
+        id: string;
+        user_id: string;
+        email: string | null;
+        display_name: string | null;
+        requested_at: string;
+        expires_at: string;
+      }) => ({
+        id: row.id,
+        user_id: row.user_id,
+        requested_at: row.requested_at,
+        expires_at: row.expires_at,
+        status: "pending",
+        profiles: {
+          display_name: row.display_name || "Usuário",
+          email: row.email || "",
+        },
+      }),
+    ) as unknown as PasswordResetRequest[];
   },
 
   /**

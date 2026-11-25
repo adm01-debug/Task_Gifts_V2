@@ -106,7 +106,9 @@ Valores em reais e percentual de ROI apresentados a diretoria sem qualquer input
 - `src/pages/ForgotPassword.tsx` chama `rpc("request_password_reset_by_email")`: o pedido entra em `password_reset_requests` e aguarda aprovação de gestor/admin; a resposta é sempre a mesma, sem revelar se o e-mail tem conta.
 - `src/components/admin/PasswordResetApprovalPanel.tsx` aprova/rejeita e exibe o link `?token=` (válido 1h) para entregar ao colaborador.
 - `src/pages/ResetPassword.tsx` aceita `?token=` e chama `rpc("reset_password_with_token")`, que grava a senha em `auth.users` e conclui o pedido.
-- O caminho por e-mail (`supabase.auth.resetPasswordForEmail`) e a aba interna `forgot-password` de `/auth` foram removidos — eram o artefato do fluxo antigo, sem entrega.### 8. Trava diária do Quiz existe só na memória do browser
+- O caminho por e-mail (`supabase.auth.resetPasswordForEmail`) e a aba interna `forgot-password` de `/auth` foram removidos — eram o artefato do fluxo antigo, sem entrega.
+
+### 8. Trava diária do Quiz existe só na memória do browser
 `src/pages/DailyQuiz.tsx:71,102,116` — `completedToday` é `useState` local. O selo "✓ Concluído hoje" desaparece a cada reload e a página não consulta o servidor para saber se o quiz do dia já foi jogado.
 
 ### 9. Classes Tailwind dinâmicas que nunca são geradas

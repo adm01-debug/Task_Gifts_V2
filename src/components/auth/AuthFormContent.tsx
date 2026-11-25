@@ -87,7 +87,7 @@ export function AuthFormContent({
     >
       {view === "signup" && (
         <InputField
-          label="Nome de exibiÃ§Ã£o"
+          label="Nome de exibição"
           type="text"
           icon={<User className="w-5 h-5" />}
           value={displayName}
@@ -114,7 +114,7 @@ export function AuthFormContent({
             type={showPassword ? "text" : "password"}
             value={password}
             onChange={(e) => { setPassword(e.target.value); setErrors({ ...errors, password: undefined }); }}
-            placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢"
+            placeholder="••••••••"
             className={`w-full pl-12 pr-12 py-3 rounded-xl bg-muted/50 border outline-none transition-all ${
               errors.password
                 ? "border-destructive focus:border-destructive focus:ring-destructive/20"
@@ -147,7 +147,7 @@ export function AuthFormContent({
           <Alert variant="destructive" className="border-destructive/50 bg-destructive/10">
             <Timer className="h-4 w-4" />
             <AlertDescription className="flex items-center justify-between">
-              <span>Conta bloqueada apÃ³s {failedAttempts} tentativas.</span>
+              <span>Conta bloqueada após {failedAttempts} tentativas.</span>
               <span className="font-mono font-bold text-lg">{formatRemainingTime()}</span>
             </AlertDescription>
           </Alert>
@@ -159,7 +159,7 @@ export function AuthFormContent({
           <Alert className="border-amber-500/50 bg-amber-500/10">
             <AlertTriangle className="h-4 w-4 text-amber-500" />
             <AlertDescription className="text-amber-600 dark:text-amber-400">
-              AtenÃ§Ã£o: {5 - failedAttempts} tentativa(s) restante(s) antes do bloqueio temporÃ¡rio.
+              Atenção: {5 - failedAttempts} tentativa(s) restante(s) antes do bloqueio temporário.
             </AlertDescription>
           </Alert>
         </motion.div>

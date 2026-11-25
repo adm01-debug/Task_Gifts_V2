@@ -56,6 +56,7 @@ export function PasswordResetApprovalPanel() {
   const [notes, setNotes] = useState("");
   const [dialogAction, setDialogAction] = useState<"approve" | "reject" | null>(null);
   const [approvedLink, setApprovedLink] = useState<string | null>(null);
+  const [linkDialog, setLinkDialog] = useState<string | null>(null);
   const queryClient = useQueryClient();
 
   const { data: pendingRequests = [], isLoading: pendingLoading } = useQuery({
@@ -190,7 +191,23 @@ export function PasswordResetApprovalPanel() {
               </TableCell>
               {!showActions && (
                 <TableCell>
-                  {request.reviewer?.display_name || "-"}
+                  <div className="flex items-center justify-between gap-2">
+                    <span>{request.reviewer?.display_name || "-"}</span>
+                    {request.status === "approved" && request.reset_token && (
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() =>
+                          setLinkDialog(
+                            `${window.location.origin}/reset-password?token=${request.reset_token}`,
+                          )
+                        }
+                      >
+                        <Link2 className="h-4 w-4 mr-1" />
+                        Link
+                      </Button>
+                    )}
+                  </div>
                 </TableCell>
               )}
               {showActions && (
@@ -358,6 +375,31 @@ export function PasswordResetApprovalPanel() {
               {dialogAction === "approve" ? "Aprovar" : "Rejeitar"}
             </Button>
           </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={!!linkDialog} onOpenChange={() => setLinkDialog(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Link de redefinição</DialogTitle>
+            <DialogDescription>
+              Link aprovado para este pedido. Ele continua válido até uma hora depois
+              da aprovação — reenvie ao colaborador que ainda não definiu a nova senha.
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="flex gap-2">
+            <Input readOnly value={linkDialog || ""} className="text-xs" />
+            <Button
+              variant="outline"
+              onClick={() => {
+                navigator.clipboard.writeText(linkDialog || "");
+                toast.success("Link copiado!");
+              }}
+            >
+              <Copy className="h-4 w-4" />
+            </Button>
+          </div>
         </DialogContent>
       </Dialog>
     </>
