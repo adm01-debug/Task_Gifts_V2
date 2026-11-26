@@ -1,14 +1,13 @@
-import { defineContract, destinoUrl, jsonRecord, texto, uuid, z } from "./common.ts";
+import { defineContract, destinoUrl, texto, uuid, z } from "./common.ts";
 
 /**
- * `data` continua livre (o chamador manda `campaign_id`, `url` e outros metadados), mas o
- * `milestone` tem formato declarado porque vira parte da chave de deduplicação da fila:
- * objeto, array ou fração aqui gerariam chave lixo ("[object Object]") em vez de erro.
+ * `data` continua livre (o chamador manda `campaign_id`, `url` e outros metadados: `passthrough`
+ * preserva tudo), mas o `milestone` tem formato declarado porque vira parte da chave de
+ * deduplicacao da fila: objeto, array ou fracao aqui gerariam chave lixo ("[object Object]").
  */
-const campaignPushData = z.intersection(
-  jsonRecord,
-  z.object({ milestone: z.union([z.number().int(), texto(32)]).optional() }),
-);
+const campaignPushData = z
+  .object({ milestone: z.union([z.number().int(), texto(32)]).optional() })
+  .passthrough();
 
 /** Chamador: src/services/salesCampaignsService.ts. */
 export const SendCampaignPushRequestSchema = z.object({
