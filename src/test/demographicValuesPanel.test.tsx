@@ -100,6 +100,16 @@ describe("DemographicValuesPanel", () => {
     // Fechada por padrao: nem a linha nem a contagem aparecem.
     expect(screen.queryByText("Atributo indisponível")).not.toBeInTheDocument();
     expect(screen.getByText("Nenhuma resposta registrada")).toBeInTheDocument();
+    // O resumo separa o que esta' visivel do que ficou oculto.
+    const resumo = screen.getByText((_, el) => {
+      const texto = el?.textContent ?? "";
+      return (
+        el?.tagName === "P" &&
+        texto.includes("0 resposta(s) de 0 colaborador(es).") &&
+        texto.includes("1 de uso interno oculta(s).")
+      );
+    });
+    expect(resumo).toBeInTheDocument();
 
     fireEvent.click(screen.getByRole("switch", { name: /Incluir atributos de uso interno/i }));
 
