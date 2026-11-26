@@ -5,6 +5,7 @@ import {
   type DemographicAttributeUpdate,
 } from "@/services/demographicsService";
 import type { Json } from "@/integrations/supabase/types";
+import { useAuth } from "@/hooks/useAuth";
 
 export const demographicKeys = {
   all: ["demographic_attributes"] as const,
@@ -12,7 +13,9 @@ export const demographicKeys = {
   list: (onlyActive: boolean) => [...demographicKeys.lists(), { onlyActive }] as const,
   values: () => [...demographicKeys.all, "values"] as const,
   myValues: () => [...demographicKeys.values(), "mine"] as const,
-  allValues: () => [...demographicKeys.values(), "all"] as const,
+  allValuesRoot: () => [...demographicKeys.values(), "all"] as const,
+  allValues: (userId: string | null) =>
+    [...demographicKeys.allValuesRoot(), { userId }] as const,
 };
 
 export function useDemographicAttributes(options?: { onlyActive?: boolean }) {
@@ -31,9 +34,14 @@ export function useMyDemographicValues() {
 }
 
 export function useAllDemographicValues() {
+  // A chave carrega o usuario logado: se outra pessoa entrar na mesma aba, o
+  // cache da consulta anterior (que pode ter vindo de um admin) nao e' reusado.
+  const { user } = useAuth();
+  const userId = user?.id ?? null;
   return useQuery({
-    queryKey: demographicKeys.allValues(),
+    queryKey: demographicKeys.allValues(userId),
     queryFn: () => demographicsService.listAllValues(),
+    enabled: !!userId,
   });
 }
 
@@ -91,7 +99,7 @@ export function useSaveDemographicValue() {
     }) => demographicsService.saveValue(input),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: demographicKeys.myValues() });
-      queryClient.invalidateQueries({ queryKey: demographicKeys.allValues() });
+      queryClient.invalidateQueries({ queryKey: demographicKeys.allValuesRoot() });
     },
   });
 }
@@ -102,7 +110,7 @@ export function useSetPreferNotAnswer() {
     mutationFn: (attributeId: string) => demographicsService.setPreferNotAnswer(attributeId),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: demographicKeys.myValues() });
-      queryClient.invalidateQueries({ queryKey: demographicKeys.allValues() });
+      queryClient.invalidateQueries({ queryKey: demographicKeys.allValuesRoot() });
     },
   });
 }
@@ -113,7 +121,7 @@ export function useClearDemographicValue() {
     mutationFn: (attributeId: string) => demographicsService.clearValue(attributeId),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: demographicKeys.myValues() });
-      queryClient.invalidateQueries({ queryKey: demographicKeys.allValues() });
+      queryClient.invalidateQueries({ queryKey: demographicKeys.allValuesRoot() });
     },
   });
 }
