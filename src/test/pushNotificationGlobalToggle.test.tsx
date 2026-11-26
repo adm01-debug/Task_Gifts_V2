@@ -20,6 +20,8 @@ let existingRow = false;
 let stored: Record<string, unknown> = {};
 let queryError = false;
 let failNextWrite = false;
+let failInsert = false;
+let raceOnInsert = false;
 const writes: Array<Record<string, unknown>> = [];
 
 vi.mock("@/hooks/useAuth", () => ({ useAuth: () => ({ user: { id: "u1" } }) }));
@@ -63,6 +65,16 @@ vi.mock("@/integrations/supabase/client", () => ({
         },
       }),
       insert: async (row: Record<string, unknown>) => {
+        if (failInsert) {
+          failInsert = false;
+          return { error: Object.assign(new Error("falha simulada"), { code: "500" }) };
+        }
+        if (raceOnInsert) {
+          raceOnInsert = false;
+          existingRow = true;
+          stored = { ...stored, user_id: "u1" };
+          return { error: Object.assign(new Error("duplicate key"), { code: "23505" }) };
+        }
         if (existingRow) {
           return { error: Object.assign(new Error("duplicate key"), { code: "23505" }) };
         }
@@ -83,6 +95,8 @@ beforeEach(() => {
   stored = {};
   queryError = false;
   failNextWrite = false;
+  failInsert = false;
+  raceOnInsert = false;
   writes.length = 0;
 });
 
@@ -146,6 +160,25 @@ describe("PushNotificationGlobalToggle", () => {
     await userEvent.click(screen.getByRole("button", { name: /tentar de novo/i }));
     await waitFor(() => expect(toggle()).toBeChecked());
     expect(screen.queryByRole("alert")).not.toBeInTheDocument();
+  });
+
+  it("nao confirma a pausa quando nada foi gravado", async () => {
+    failInsert = true;
+    render(<PushNotificationGlobalToggle />);
+    await waitFor(() => expect(toggle()).toBeEnabled());
+    await userEvent.click(toggle());
+    await waitFor(() => expect(toggle()).toBeChecked());
+    expect(writes).toHaveLength(0);
+  });
+
+  it("confirma a pausa quando outra tela cria a linha no meio do caminho", async () => {
+    raceOnInsert = true;
+    render(<PushNotificationGlobalToggle />);
+    await waitFor(() => expect(toggle()).toBeEnabled());
+    await userEvent.click(toggle());
+    await waitFor(() => expect(stored.push_enabled).toBe(false));
+    expect(toggle()).not.toBeChecked();
+    expect(writes).toEqual([{ push_enabled: false }]);
   });
 
   it("volta o interruptor para o valor anterior quando a gravacao falha", async () => {

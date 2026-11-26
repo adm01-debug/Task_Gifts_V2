@@ -53,37 +53,37 @@ export function PushNotificationGlobalToggle() {
     return () => { alive = false; };
   }, [user?.id, reloadKey]);
 
+  const updatePushEnabled = async (userId: string, next: boolean) => {
+    const { data, error } = await supabase
+      .from("notification_preferences")
+      .update({ push_enabled: next })
+      .eq("user_id", userId)
+      .select("user_id");
+    if (error) throw error;
+    return (data?.length ?? 0) > 0;
+  };
+
   const persist = async (next: boolean) => {
     if (!user?.id) return;
     const previous = enabled;
     setEnabled(next);
     setSaving(true);
     try {
-          // Atualiza só `push_enabled`. Quem já salvou escolhas por tipo — inclusive em outra
-          // aba, criando a linha depois que este card carregou — não pode perder nada.
-          const { data: updated, error: updateError } = await supabase
-        .from("notification_preferences")
-            .update({ push_enabled: next })
-            .eq("user_id", user.id)
-            .select("user_id");
-          if (updateError) throw updateError;
-
-          if (!updated || updated.length === 0) {
-            // Sem linha ainda: cria com `type_preferences` vazio, porque o DEFAULT do banco
-            // já vem com xp/checkin/campaign_progress/development_tip em push=false.
-            const { error: insertError } = await supabase
-              .from("notification_preferences")
-              .insert({ user_id: user.id, push_enabled: next, type_preferences: {} });
-            if (insertError) {
-              // Corrida: outra tela criou a linha entre o update e o insert.
-              const { error: retryError } = await supabase
-                .from("notification_preferences")
-                .update({ push_enabled: next })
-                .eq("user_id", user.id);
-              if (retryError) throw retryError;
-            }
-          }
-      toast.success(next ? "Push reativado em todos os dispositivos" : "Push pausado em todos os dispositivos");
+      // Atualiza só `push_enabled`: quem já salvou escolhas por tipo — inclusive em
+      // outra aba, criando a linha depois que este card carregou — não pode perder nada.
+      if (!(await updatePushEnabled(user.id, next))) {
+        // Sem linha ainda: cria com `type_preferences` vazio, porque o DEFAULT do banco
+        // já vem com xp/checkin/campaign_progress/development_tip em push=false.
+        const { error: insertError } = await supabase
+          .from("notification_preferences")
+          .insert({ user_id: user.id, push_enabled: next, type_preferences: {} });
+        // Insert pode ter falhado por corrida (outra tela criou a linha) ou por outro
+        // motivo; só confirmamos a pausa se a linha existir de fato e aceitar o valor.
+        if (insertError && !(await updatePushEnabled(user.id, next))) throw insertError;
+      }
+            toast.success(
+              next ? "Push reativado em todos os dispositivos" : "Push pausado em todos os dispositivos",
+            );
     } catch (err: unknown) {
       logger.error("Falha ao salvar toggle global de push", String(err));
       toast.error("Nao foi possivel salvar a preferencia");
