@@ -67,6 +67,8 @@ export const departmentsService = {
   },
 
   async delete(id: string): Promise<void> {
+      // A meta departamental sai junto pelo ON DELETE CASCADE da FK
+      // (20261228300000): um unico DELETE mantem as duas operacoes na mesma transacao.
     const { error } = await supabase
       .from("departments")
       .delete()
