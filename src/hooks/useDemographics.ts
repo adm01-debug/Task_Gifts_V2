@@ -30,10 +30,10 @@ export function useMyDemographicValues() {
   });
 }
 
-export function useAllDemographicValues(ehAdmin = false) {
+export function useAllDemographicValues() {
   return useQuery({
-    queryKey: [...demographicKeys.allValues(), { ehAdmin }],
-    queryFn: () => demographicsService.listAllValues({ ehAdmin }),
+    queryKey: demographicKeys.allValues(),
+    queryFn: () => demographicsService.listAllValues(),
   });
 }
 

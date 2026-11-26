@@ -221,88 +221,108 @@ describe("demographicsService", () => {
     expect(db.records).toHaveLength(0);
   });
 
-  it("administrador recebe o valor das respostas restritas", async () => {
-    db.enqueue("user_demographic_values", "select", ok([{ ...valor(), demographic_attributes: null }]));
+  it("le o painel pela view, em uma consulta so', sem filtro por papel", async () => {
+    db.enqueue("demographic_values_panel", "select", ok([]));
 
-    await demographicsService.listAllValues({ ehAdmin: true });
+    await demographicsService.listAllValues();
 
     expect(db.records).toHaveLength(1);
+    expect(db.records[0].table).toBe("demographic_values_panel");
     expect(db.records[0].filters).toEqual([]);
   });
 
-  it("gestor nao pede as colunas de valor das respostas restritas", async () => {
-    db.enqueue("user_demographic_values", "select", ok([]), ok([]));
-
-    await demographicsService.listAllValues({ ehAdmin: false });
-
-    expect(db.records).toHaveLength(2);
-    const [permitidos, metadados] = db.records;
-    expect(permitidos.filters).toEqual([["demographic_attributes.is_restricted", false]]);
-    expect(permitidos.columns).toContain("*");
-    expect(metadados.filters).toEqual([]);
-    // A consulta de metadados nao pede nenhuma coluna de valor.
-    expect(metadados.columns).not.toContain("values_array");
-    expect(metadados.columns).not.toContain("number_value");
-    expect(metadados.columns).not.toContain("date_value");
-    expect(metadados.columns).not.toContain("value,");
-  });
-
-  it("gestor mantem na lista a resposta de atributo que nao consegue enxergar", async () => {
-    const restrito = {
-      id: "v-restrito",
-      user_id: "user-1",
-      attribute_id: "a-restrito",
-      created_at: "2026-01-01T00:00:00Z",
-      updated_at: "2026-01-01T00:00:00Z",
-      demographic_attributes: {
-        name: "Salario",
-        attribute_type: "number",
-        is_visible_in_reports: true,
-        is_restricted: true,
-      },
-    };
-    const desativado = {
-      id: "v-desativado",
-      user_id: "user-1",
-      attribute_id: "a-desativado",
-      created_at: "2026-01-02T00:00:00Z",
-      updated_at: "2026-01-02T00:00:00Z",
-      demographic_attributes: null,
-    };
-    const liberado = {
-      id: "v-liberado",
-      user_id: "user-1",
-      attribute_id: "a-liberado",
-      created_at: "2026-01-03T00:00:00Z",
-      updated_at: "2026-01-03T00:00:00Z",
-      value: "Resposta aberta",
-      demographic_attributes: {
-        name: "Cidade",
-        attribute_type: "text",
-        is_visible_in_reports: true,
-        is_restricted: false,
-      },
-    };
-
+  it("entrega o valor que a view liberou para o administrador", async () => {
     db.enqueue(
-      "user_demographic_values",
+      "demographic_values_panel",
       "select",
-      ok([liberado]),
-      // A mesma resposta tambem vem na consulta de metadados, sem o valor: o
-      // merge tem que manter uma unica linha, com o valor.
-      ok([restrito, desativado, { ...liberado, value: undefined }]),
+      ok([
+        {
+          id: "v1",
+          user_id: "user-1",
+          attribute_id: "a1",
+          created_at: "2026-01-01T00:00:00Z",
+          updated_at: "2026-01-01T00:00:00Z",
+          value: "Resposta aberta",
+          values_array: null,
+          number_value: null,
+          date_value: null,
+          attribute_name: "Cidade",
+          attribute_type: "text",
+          attribute_is_visible_in_reports: true,
+          attribute_is_restricted: false,
+        },
+      ]),
     );
 
-    const linhas = await demographicsService.listAllValues({ ehAdmin: false });
+    const [linha] = await demographicsService.listAllValues();
 
-    expect(linhas.map((l) => l.id).sort()).toEqual(["v-desativado", "v-liberado", "v-restrito"]);
+    expect(linha.value).toBe("Resposta aberta");
+    expect(linha.demographic_attributes).toEqual({
+      name: "Cidade",
+      attribute_type: "text",
+      is_visible_in_reports: true,
+      is_restricted: false,
+    });
+  });
+
+  it("linha mascarada pela view chega sem valor e sem metadado sem virar erro", async () => {
+    db.enqueue(
+      "demographic_values_panel",
+      "select",
+      ok([
+        {
+          id: "v-restrito",
+          user_id: "user-1",
+          attribute_id: "a-restrito",
+          created_at: "2026-01-01T00:00:00Z",
+          updated_at: "2026-01-01T00:00:00Z",
+          value: null,
+          values_array: null,
+          number_value: null,
+          date_value: null,
+          attribute_name: "Salario",
+          attribute_type: "number",
+          attribute_is_visible_in_reports: true,
+          attribute_is_restricted: true,
+        },
+        {
+          id: "v-desativado",
+          user_id: "user-1",
+          attribute_id: "a-desativado",
+          created_at: "2026-01-02T00:00:00Z",
+          updated_at: "2026-01-02T00:00:00Z",
+          value: null,
+          values_array: null,
+          number_value: null,
+          date_value: null,
+          attribute_name: null,
+          attribute_type: null,
+          attribute_is_visible_in_reports: null,
+          attribute_is_restricted: null,
+        },
+      ]),
+    );
+
+    const linhas = await demographicsService.listAllValues();
     const porId = new Map(linhas.map((l) => [l.id, l]));
-    // A linha liberada vem da consulta completa, com o valor.
-    expect(porId.get("v-liberado")?.value).toBe("Resposta aberta");
-    // As demais nunca trazem colunas de valor e servem para o rotulo/fail-closed.
-    expect(porId.get("v-restrito")?.value).toBeUndefined();
+
+    // Valor restrito: a view devolve null, a linha continua na lista e o
+    // metadado diz que e' restrito — a tela usa isso para esconder.
+    expect(porId.get("v-restrito")?.value).toBeNull();
     expect(porId.get("v-restrito")?.demographic_attributes?.is_restricted).toBe(true);
-    expect(porId.get("v-desativado")?.value).toBeUndefined();
+    // Atributo desativado: sem metadado nenhum, o que a tela trata como
+    // restrito e de uso interno.
     expect(porId.get("v-desativado")?.demographic_attributes).toBeNull();
+  });
+
+  it("erro da view sobe para a tela", async () => {
+    db.enqueue("demographic_values_panel", "select", {
+      data: null,
+      error: { message: "permission denied" },
+    });
+
+    await expect(demographicsService.listAllValues()).rejects.toEqual({
+      message: "permission denied",
+    });
   });
 });
