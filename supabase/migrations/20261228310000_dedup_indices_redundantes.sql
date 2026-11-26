@@ -36,11 +36,12 @@
 -- arquivo de dedup novo (a guarda os anota como pulados). Neste repositorio a ordem e garantida
 -- pela versao: `20261228300000` < `20261228310000`.
 
-SET lock_timeout = '5s';
-
 DO $dedup$
 DECLARE
   r record;
+  v_inicio timestamptz := clock_timestamp();
+  v_orcamento constant interval := interval '60 seconds';
+  v_sem_tempo int := 0;
   v_removidos int := 0;
   v_pulados int := 0;
   v_divergentes int := 0;
@@ -50,6 +51,10 @@ DECLARE
   v_fica_uniq boolean;
   v_sai_uniq boolean;
 BEGIN
+  -- lock_timeout e local a transacao (is_local=true), entao nao vaza para as migrations
+  -- seguintes na mesma sessao. Ele vale POR AQUISICAO de lock, nao como prazo total do
+  -- bloco: quem limita o conjunto e o orcamento de 60s conferido a cada par no loop.
+  PERFORM set_config('lock_timeout', '5s', true);
   FOR r IN
     SELECT * FROM (VALUES
       ('bingo_board_tasks', 'idx_bingo_board_tasks', 'idx_bingo_board_tasks_board', false),
@@ -100,6 +105,12 @@ BEGIN
       ('wager_entries', 'wager_entries_question_id_user_id_key', 'wager_entries_one_per_question', true)
     ) AS t(tabela, fica, sai, sai_e_constraint)
   LOOP
+    IF clock_timestamp() - v_inicio > v_orcamento THEN
+      RAISE NOTICE 'dedup: orcamento de 60s esgotado antes de %, interrompendo (reaplicar o arquivo completa)', r.sai;
+      v_sem_tempo := v_sem_tempo + 1;
+      EXIT;
+    END IF;
+
     SELECT regexp_replace(regexp_replace(regexp_replace(pg_get_indexdef(i.indexrelid), 'INDEX \S+ ON', 'INDEX ON'), 'extensions\.', ''), '[[:space:]]+', '', 'g'),
            i.indisvalid AND i.indisready,
            i.indisunique
@@ -152,6 +163,9 @@ BEGIN
       v_divergentes := v_divergentes + 1;
     END IF;
   END LOOP;
-  RAISE NOTICE 'dedup de indices: % removido(s), % pulado(s), % divergente(s)', v_removidos, v_pulados, v_divergentes;
+  RAISE NOTICE 'dedup de indices: % removido(s), % pulado(s), % divergente(s), % interrompido(s) por tempo', v_removidos, v_pulados, v_divergentes, v_sem_tempo;
+  IF v_sem_tempo > 0 THEN
+    RAISE NOTICE 'dedup: limpeza incompleta por orcamento de tempo; reaplique o arquivo (idempotente) para terminar.';
+  END IF;
 END
 $dedup$;
