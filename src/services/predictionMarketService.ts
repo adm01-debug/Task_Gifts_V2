@@ -93,7 +93,7 @@ export interface AdminActionResult {
 }
 
 const MARKET_COLUMNS =
-  "id, title, description, status, min_stake, max_stake_per_user, rake_bps, locks_at, resolves_at, winning_option_id, total_pool, rake_collected, settled_at, created_at, options:prediction_options(id, market_id, label, sort_order, pool)";
+  "id, title, description, status, min_stake, max_stake_per_user, rake_bps, locks_at, resolves_at, winning_option_id, total_pool, rake_collected, settled_at, created_at, options:prediction_options!prediction_options_market_id_fkey(id, market_id, label, sort_order, pool)";
 
 function sortOptions(rows: PredictionMarketRow[]): PredictionMarketRow[] {
   return rows.map((row) => ({
