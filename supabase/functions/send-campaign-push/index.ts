@@ -39,6 +39,11 @@ Deno.serve(async (req) => {
   const campaignId = (data && typeof data === "object" && "campaign_id" in (data as Record<string, unknown>))
     ? String((data as Record<string, unknown>).campaign_id)
     : null;
+  // Identidade do aviso: o marco vem do chamador, entao a chave da fila nao muda
+  // quando o texto muda (ajuste de progresso que recrossa o mesmo marco).
+  const marker = (data && typeof data === "object" && "milestone" in (data as Record<string, unknown>))
+    ? ((data as Record<string, unknown>).milestone as string | number | null)
+    : null;
 
   // Filtra usuários pela preferência push.
   const allowed: string[] = [];
@@ -73,7 +78,8 @@ Deno.serve(async (req) => {
   if (queued.length > 0) {
     // Uma chave por conteudo: 25/50/75% e conclusao saem na mesma campanha e com
     // o mesmo tipo, entao a chave antiga (`campanha:uid`) engolia o 2o aviso.
-    const dedupe = (uid: string) => campaignPushDedupeKey({ campaignId, type, title, message, url }, uid);
+    const dedupe = (uid: string) =>
+      campaignPushDedupeKey({ campaignId, type, title, message, url, marker }, uid);
     for (const uid of queued) {
       const { data: stored, error: queueErr } = await supabase.rpc("enqueue_push", {
         p_user_id: uid,

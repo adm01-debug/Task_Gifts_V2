@@ -4,8 +4,9 @@ import {
   assert,
   assertEquals,
   assertNotEquals,
+  assertStringIncludes,
 } from "https://deno.land/std@0.168.0/testing/asserts.ts";
-import { campaignPushDedupeKey } from "./campaignPush.ts";
+import { campaignPushDedupeKey, truncateCodePoints } from "./campaignPush.ts";
 
 const USER = "11111111-1111-4111-8111-111111111111";
 const OUTRO = "33333333-3333-4333-8333-333333333333";
@@ -17,6 +18,9 @@ const base = {
   message: "Equipe A chegou a 25% da meta",
   url: "/campanhas/22222222",
 };
+
+/** Surrogate solto (metade de um par UTF-16): o Postgres recusa esse texto. */
+const SURROGATE_SOLTO = /[\uD800-\uDBFF](?![\uDC00-\uDFFF])|(?<![\uD800-\uDBFF])[\uDC00-\uDFFF]/;
 
 Deno.test("os quatro avisos da mesma campanha geram quatro chaves distintas", () => {
   const chaves = [
@@ -62,5 +66,49 @@ Deno.test("titulo gigante e' cortado, mas o uuid do usuario nunca", () => {
   assertNotEquals(
     chave,
     campaignPushDedupeKey({ ...gigante, campaignId: "44444444-4444-4444-8444-444444444444" }, USER),
+  );
+});
+
+Deno.test("emoji na posicao do corte nao deixa surrogate solto na chave", () => {
+  // O corte cai no meio de uma sequencia de emojis; a variacao em `extra` desloca
+  // o corte para dentro de um par (o defeito antigo) e para fora dele.
+  for (let extra = 0; extra < 12; extra++) {
+    const titulo = `${"A".repeat(extra)}${"🏆".repeat(200)}`;
+    const chave = campaignPushDedupeKey({ ...base, title: titulo, message: "" }, USER);
+    assert(
+      !SURROGATE_SOLTO.test(chave),
+      `surrogate solto na chave (extra=${extra}): ${JSON.stringify(chave)}`,
+    );
+    assert(chave.endsWith(`:${USER}`));
+    // A base foi mesmo cortada no teto (senao o caso nao testa nada).
+    assertEquals(Array.from(chave).length, 150 + 1 + USER.length);
+  }
+});
+
+Deno.test("corte por ponto de codigo preserva o texto quando cabe", () => {
+  assertEquals(truncateCodePoints("🏆 meta", 10), "🏆 meta");
+  assertEquals(truncateCodePoints("🏆🏆🏆", 2), "🏆🏆");
+  assert(!SURROGATE_SOLTO.test(truncateCodePoints("🏆🏆🏆", 2)));
+});
+
+Deno.test("mesmo marco com outro texto nao duplica o aviso", () => {
+  const comMarco = { ...base, marker: 50 };
+  const primeiro = campaignPushDedupeKey(comMarco, USER);
+  const depoisDoAjuste = campaignPushDedupeKey(
+    { ...comMarco, title: "Marco de 50% em outra equipe", message: "Agora 12/20", url: "/outro" },
+    USER,
+  );
+  assertEquals(primeiro, depoisDoAjuste);
+  assertStringIncludes(primeiro, "|50:");
+  // Marcos diferentes continuam distintos, e o uuid segue no fim.
+  assertNotEquals(primeiro, campaignPushDedupeKey({ ...comMarco, marker: 75 }, USER));
+  assertEquals(primeiro, campaignPushDedupeKey(comMarco, USER));
+  assert(!primeiro.includes("Outra equipe"));
+});
+
+Deno.test("sem marco a chave volta a depender do conteudo", () => {
+  assertNotEquals(
+    campaignPushDedupeKey(base, USER),
+    campaignPushDedupeKey({ ...base, message: "outro total" }, USER),
   );
 });
