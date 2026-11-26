@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Users, Building2, HelpCircle, ShoppingBag, BookOpen, Settings, Shield, LayoutDashboard, Key, Award, ChevronRight, Search, Activity, BarChart3, Lock, KeyRound, Gavel, ListOrdered, CalendarDays, FileWarning } from "lucide-react";
+import { Users, Building2, HelpCircle, ShoppingBag, BookOpen, Settings, Shield, LayoutDashboard, Key, Award, ChevronRight, Search, Activity, BarChart3, Lock, KeyRound, Gavel, ListOrdered, CalendarDays, FileWarning, ClipboardList } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -103,6 +103,7 @@ function AdminPanelContent() {
     { icon: ListOrdered, title: "Sequência de Procedimentos", description: "Gerar e revisar sequências de procedimentos", href: "/sequencia/admin", color: "#22c55e" },
     { icon: CalendarDays, title: "Pergunta do Dia", description: "Banco de perguntas e apostas diárias", href: "/pergunta-do-dia/admin", color: "#eab308" },
     { icon: FileWarning, title: "Postmortems de Incidentes", description: "Análise pós-incidente e ações corretivas", href: "/admin/postmortems", color: "#ef4444" },
+        { icon: ClipboardList, title: "Perfil Demográfico", description: "Atributos dos colaboradores e respostas coletadas", href: "/admin/atributos-demograficos", color: "#06b6d4" },
   ];
 
   const searchResults = useFuseSearch(quickLinks, ['title', 'description'], searchQuery, { ...SEARCH_PRESETS.commands, limit: 20 });

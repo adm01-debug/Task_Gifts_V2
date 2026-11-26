@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useCallback } from "react";
 import { motion } from "framer-motion";
 import { Shield, User, Activity, Clock, FileText, Settings } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
@@ -7,7 +7,16 @@ import { useProfiles } from "@/hooks/useProfiles";
 import { PageShell } from "@/components/navigation";
 import { AuditFilters, actionLabels } from "@/components/audit/AuditFilters";
 import { AuditTable } from "@/components/audit/AuditTable";
+import { SavedFiltersBar } from "@/components/filters/SavedFiltersBar";
+import type { SavedFilterPayload } from "@/services/savedFiltersService";
 import { format, startOfDay } from "date-fns";
+
+/** Entidade dos filtros salvos desta pagina (`saved_filters.entity_type`). */
+const ENTITY_TYPE = "audit_logs";
+
+/** "yyyy-MM-dd" do banco -> Date local, sem o deslocamento de `new Date("2026-01-01")`. */
+const paraData = (valor: unknown): Date | undefined =>
+  typeof valor === "string" && valor ? new Date(`${valor}T00:00:00`) : undefined;
 
 export default function AuditLogs() {
   const [selectedAction, setSelectedAction] = useState<string>("all");
@@ -43,6 +52,22 @@ export default function AuditLogs() {
   const clearFilters = () => { setSelectedAction("all"); setSelectedUserId("all"); setSearchQuery(""); setStartDate(undefined); setEndDate(undefined); };
   const hasActiveFilters = selectedAction !== "all" || selectedUserId !== "all" || !!searchQuery || !!startDate || !!endDate;
 
+  const filtrosAtuais: SavedFilterPayload = useMemo(() => ({
+    selectedAction,
+    selectedUserId,
+    searchQuery,
+    startDate: startDate ? format(startDate, "yyyy-MM-dd") : null,
+    endDate: endDate ? format(endDate, "yyyy-MM-dd") : null,
+  }), [selectedAction, selectedUserId, searchQuery, startDate, endDate]);
+
+  const aplicarFiltroSalvo = useCallback((f: SavedFilterPayload) => {
+    setSelectedAction(typeof f.selectedAction === "string" && f.selectedAction ? f.selectedAction : "all");
+    setSelectedUserId(typeof f.selectedUserId === "string" && f.selectedUserId ? f.selectedUserId : "all");
+    setSearchQuery(typeof f.searchQuery === "string" ? f.searchQuery : "");
+    setStartDate(paraData(f.startDate));
+    setEndDate(paraData(f.endDate));
+  }, []);
+
   return (
     <PageShell title="Logs de Auditoria" backFallback="/admin">
       <div className="max-w-7xl mx-auto space-y-6 p-4 md:p-6 lg:p-8 pb-24">
@@ -74,6 +99,15 @@ export default function AuditLogs() {
               </CardContent>
             </Card>
           ))}
+        </motion.div>
+
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }}>
+          <SavedFiltersBar
+            entityType={ENTITY_TYPE}
+            entityLabel="os logs de auditoria"
+            currentFilters={filtrosAtuais}
+            onApply={aplicarFiltroSalvo}
+          />
         </motion.div>
 
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
