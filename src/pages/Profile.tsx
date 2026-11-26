@@ -16,6 +16,7 @@ import { CertificationsPanel } from "@/components/CertificationsPanel";
 import { SoundSettingsCard } from "@/components/SoundSettingsCard";
 import { PushNotificationToggle } from "@/components/PushNotificationToggle";
 import { PushNotificationGlobalToggle } from "@/components/PushNotificationGlobalToggle";
+import { NotificationQuietHoursCard } from "@/components/NotificationQuietHoursCard";
 import { PushNotificationHistory } from "@/components/PushNotificationHistory";
 import { PushSyncHistory } from "@/components/push/PushSyncHistory";
 import { PushDeviceList } from "@/components/push/PushDeviceList";
@@ -232,6 +233,7 @@ const Profile = () => {
         <SoundSettingsCard />
         <PushNotificationToggle />
                 <SectionErrorBoundary sectionName="Push global"><PushNotificationGlobalToggle /></SectionErrorBoundary>
+        <SectionErrorBoundary sectionName="Horario de silencio"><NotificationQuietHoursCard /></SectionErrorBoundary>
         <SectionErrorBoundary sectionName="Dispositivos"><PushDeviceList /></SectionErrorBoundary>
         <SectionErrorBoundary sectionName="Sincronizações"><PushSyncHistory /></SectionErrorBoundary>
         <SectionErrorBoundary sectionName="Histórico de Push"><PushNotificationHistory /></SectionErrorBoundary>

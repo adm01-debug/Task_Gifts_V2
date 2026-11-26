@@ -53,6 +53,7 @@ Deno.serve(async (req) => {
   let sent = 0;
   let failed = 0;
   let skipped = 0;
+  let deferred = 0;
 
   for (const row of claimed) {
     // A pausa global pode ter sido ligada depois do enfileiramento: enqueue_push já
@@ -68,6 +69,21 @@ Deno.serve(async (req) => {
     if (!wantsErr && wantsPush === false) {
       await finish(admin, row.id, "skipped", row.attempts + 1, "push_paused_by_user");
       skipped++;
+      continue;
+    }
+
+    // Janela de silencio (`notification_preferences.do_not_disturb_*`): o aviso
+    // nao e' descartado nem gasta tentativa, so' sai depois da janela. A linha
+    // fica em `deferred` (fora de `pending`, portanto sem alerta de fila parada)
+    // e `claim_push_outbox` a devolve para `pending` quando `deferred_until`
+    // vence. Se a RPC falhar, seguimos com o envio: silencio e' preferencia, nao
+    // pode virar perda de aviso.
+    const { data: quietUntil, error: quietErr } = await admin.rpc("push_quiet_hours_until", {
+      _user_id: row.user_id,
+    });
+    if (!quietErr && typeof quietUntil === "string" && quietUntil.length > 0) {
+      await defer(admin, row.id, quietUntil);
+      deferred++;
       continue;
     }
 
@@ -143,7 +159,7 @@ Deno.serve(async (req) => {
     }
   }
 
-  return json({ processed: claimed.length, sent, failed, skipped });
+  return json({ processed: claimed.length, sent, failed, skipped, deferred });
 });
 
 async function finish(
@@ -160,6 +176,22 @@ async function finish(
       attempts,
       last_error: error,
       processed_at: status === "pending" ? null : new Date().toISOString(),
+    })
+    .eq("id", id);
+}
+
+/**
+ * Adia a linha ate' o fim da janela de silencio. Nao toca em `attempts`:
+ * esperar a janela nao e' falha de entrega.
+ */
+async function defer(admin: SupabaseClient, id: string, until: string) {
+  await admin
+    .from("push_outbox")
+    .update({
+      status: "deferred",
+      deferred_until: until,
+      last_error: "deferred_by_quiet_hours",
+      processed_at: null,
     })
     .eq("id", id);
 }

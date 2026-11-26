@@ -62,6 +62,22 @@ export function PushOutboxHealthPanel() {
 
   const report = useMemo(() => (data ? evaluateOutboxHealth(toSnapshot(data)) : null), [data]);
 
+  // Adiados pela janela de silencio ficam fora de `get_push_outbox_health` (que
+  // conta `pending`/`processing`), entao o numero vem de contagem direta. E' o
+  // que explica uma fila "vazia" com aviso guardado esperando a hora.
+  const { data: deferredCount = 0 } = useQuery({
+    queryKey: ["push-outbox-deferred-count"],
+    queryFn: async () => {
+      const { count, error } = await supabase
+        .from("push_outbox")
+        .select("id", { count: "exact", head: true })
+        .eq("status", "deferred");
+      if (error) throw error;
+      return count ?? 0;
+    },
+    refetchInterval: 60000,
+  });
+
   const requeueMutation = useMutation({
     mutationFn: async (ids?: string[]) => {
       const { data, error } = await supabase.rpc("requeue_push_outbox", {
@@ -88,8 +104,8 @@ export function PushOutboxHealthPanel() {
         <CardHeader><Skeleton className="h-6 w-56" /></CardHeader>
         <CardContent className="space-y-3">
           <Skeleton className="h-3 w-full" />
-          <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
-            {Array.from({ length: 4 }).map((_, i) => <Skeleton key={i} className="h-20 w-full" />)}
+          <div className="grid grid-cols-2 gap-3 md:grid-cols-5">
+            {Array.from({ length: 5 }).map((_, i) => <Skeleton key={i} className="h-20 w-full" />)}
           </div>
         </CardContent>
       </Card>
@@ -114,6 +130,7 @@ export function PushOutboxHealthPanel() {
   const metrics = [
     { label: "Pendentes", value: data.pending },
     { label: "Processando", value: data.processing },
+    { label: "Adiados (silencio)", value: deferredCount },
     { label: "Entregues (24h)", value: data.sent },
     { label: "Falhas (24h)", value: data.failed },
   ];
