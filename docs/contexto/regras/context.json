@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "abe31689e830608e7610d82d3a562da77a722a70",
+  "sha": "e634962506e30061c523275b9d40a889fd5ca0b7",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
-  "generated_at": "2026-11-26 12:14 UTC",
-  "files_total": 1629,
-  "code_files": 1522,
-  "code_lines": 281511
+  "generated_at": "2026-11-26 15:29 UTC",
+  "files_total": 1634,
+  "code_files": 1527,
+  "code_lines": 282806
  },
  "version": "1.3.2",
- "facts_hash": "52a5d191578e9f98",
+ "facts_hash": "0046c75008e85cf9",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -194,9 +194,9 @@
   ],
   "package_manager": "bun",
   "languages": {
-   ".ts": 587,
-   ".tsx": 585,
-   ".sql": 318,
+   ".ts": 589,
+   ".tsx": 587,
+   ".sql": 319,
    ".mjs": 21,
    ".js": 5,
    ".py": 5,
@@ -17591,9 +17591,18 @@
       "fk": "",
       "generated": "",
       "src": "supabase/migrations/20260728112123_ea25bb13-aa3c-4f75-9892-c58e2785e70b.sql"
+     },
+     {
+      "name": "deferred_until",
+      "type": "TIMESTAMPTZ",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20261229000000_janela_de_silencio_dos_avisos.sql"
      }
     ],
-    "constraints": [],
+    "constraints": [
+     "constraint push_outbox_status_check CHECK (status IN ('pending','processing','deferred','sent','failed','skipped'))"
+    ],
     "src": "supabase/migrations/20260728112123_ea25bb13-aa3c-4f75-9892-c58e2785e70b.sql",
     "comment": "",
     "origin": "migration"
@@ -29864,13 +29873,14 @@
     "args": "p_limit INTEGER DEFAULT 100",
     "returns": "TABLE (\n  id UUID,\n  user_id UUID,\n  type TEXT,\n  title TEXT,\n  message TEXT,\n  url TEXT,\n  data JSONB,\n  attempts INTEGER\n)",
     "lang": "plpgsql",
-    "src": "supabase/migrations/20260728112223_9f86e736-fd1e-4ab5-a812-9fc5f1f6f009.sql",
+    "src": "supabase/migrations/20261229000000_janela_de_silencio_dos_avisos.sql",
     "security_definer": true,
     "search_path": true,
-    "body": "BEGIN UPDATE public.push_outbox SET status = 'pending' WHERE status = 'processing' AND updated_at < now() - interval '10 minutes'; RETURN QUERY WITH claimed AS ( SELECT o.id FROM public.push_outbox o WHERE o.status = 'pending' ORDER BY o.created_at LIMIT greatest(1, least(coalesce(p_limit, 100), 500)) FOR UPDATE SKIP LOCKED ) UPDATE public.push_outbox o SET status = 'processing' FROM claimed c WHERE o.id = c.id RETURNING o.id, o.user_id, o.type, o.title, o.message, o.url, o.data, o.attempts; END;",
+    "body": "BEGIN UPDATE public.push_outbox SET status = 'pending' WHERE status = 'processing' AND updated_at < now() - interval '10 minutes'; UPDATE public.push_outbox o SET deferred_until = atual.novo FROM ( SELECT x.id, x.deferred_until, public.push_quiet_hours_until(x.user_id) AS novo FROM public.push_outbox x WHERE x.status = 'deferred' ) atual WHERE o.id = atual.id AND o.status = 'deferred' AND atual.novo IS NOT NULL AND atual.novo IS DISTINCT FROM atual.deferred_until; UPDATE public.push_outbox o SET status = 'pending', deferred_until = NULL FROM ( SELECT x.id, public.push_quiet_hours_until(x.user_id) AS novo FROM public.push_outbox x WHERE x.status = 'deferred' ) atual WHERE o.id = atual.id AND …",
     "raises": [],
     "tables": [
      "SKIP",
+     "atual",
      "claimed",
      "push_outbox"
     ]
@@ -31673,6 +31683,21 @@
     "tables": [
      "profiles",
      "webauthn_credentials"
+    ]
+   },
+   "push_quiet_hours_until": {
+    "args": "_user_id uuid",
+    "returns": "TIMESTAMPTZ",
+    "lang": "plpgsql",
+    "src": "supabase/migrations/20261229000000_janela_de_silencio_dos_avisos.sql",
+    "security_definer": true,
+    "search_path": true,
+    "body": "DECLARE v_enabled boolean; v_start time; v_end time; v_weekends boolean; v_local timestamp; v_dow integer; BEGIN SELECT COALESCE(p.do_not_disturb_enabled, false), COALESCE(p.do_not_disturb_start, p.quiet_hours_start), COALESCE(p.do_not_disturb_end, p.quiet_hours_end), COALESCE(p.do_not_disturb_weekends, true) INTO v_enabled, v_start, v_end, v_weekends FROM public.notification_preferences p WHERE p.user_id = _user_id; IF NOT FOUND OR NOT COALESCE(v_enabled, false) OR v_start IS NULL OR v_end IS NULL OR v_start = v_end THEN RETURN NULL; END IF; v_local := now() AT TIME ZONE 'America/Sao_Paulo'; IF v_start < v_end THEN v_dow := EXTRACT(ISODOW FROM v_local)::integer; IF NOT v_weekends AND v_dow …",
+    "raises": [],
+    "tables": [
+     "notification_preferences",
+     "v_enabled",
+     "v_local"
     ]
    },
    "Args": {
@@ -36950,6 +36975,7 @@
    "supabase/migrations/20261228290000_paridade_de_triggers_e_retextos_funcionais.sql",
    "supabase/migrations/20261228300000_fecha_corridas_da_exclusao_de_departamento_e_da_aposta_diaria.sql",
    "supabase/migrations/20261228310000_dedup_indices_redundantes.sql",
+   "supabase/migrations/20261229000000_janela_de_silencio_dos_avisos.sql",
    "supabase/tests/climate/assertions.sql",
    "supabase/tests/climate/stubs.sql",
    "src/integrations/supabase/types.ts"
@@ -46649,6 +46675,54 @@
     "src": "supabase/migrations/20261228300000_fecha_corridas_da_exclusao_de_departamento_e_da_aposta_diaria.sql"
    },
    {
+    "kind": "revoke",
+    "privs": "all",
+    "object": "push_quiet_hours_until",
+    "objkind": "function",
+    "roles": "PUBLIC",
+    "src": "supabase/migrations/20261229000000_janela_de_silencio_dos_avisos.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "all",
+    "object": "push_quiet_hours_until",
+    "objkind": "function",
+    "roles": "anon, authenticated",
+    "src": "supabase/migrations/20261229000000_janela_de_silencio_dos_avisos.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "push_quiet_hours_until",
+    "objkind": "function",
+    "roles": "service_role",
+    "src": "supabase/migrations/20261229000000_janela_de_silencio_dos_avisos.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "all",
+    "object": "claim_push_outbox",
+    "objkind": "function",
+    "roles": "PUBLIC",
+    "src": "supabase/migrations/20261229000000_janela_de_silencio_dos_avisos.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "all",
+    "object": "claim_push_outbox",
+    "objkind": "function",
+    "roles": "anon, authenticated",
+    "src": "supabase/migrations/20261229000000_janela_de_silencio_dos_avisos.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "claim_push_outbox",
+    "objkind": "function",
+    "roles": "service_role",
+    "src": "supabase/migrations/20261229000000_janela_de_silencio_dos_avisos.sql"
+   },
+   {
     "kind": "grant",
     "privs": "select, insert, update, delete",
     "object": "public",
@@ -47661,7 +47735,8 @@
    "column:saved_filters.filters": "Configuração do filtro em JSON",
    "column:saved_filters.is_default": "Se true, este filtro é aplicado automaticamente ao abrir a página",
    "table:lucky_wheel_prize_audit": "Trilha imutavel de calibracao da Roleta da Sorte. Escrita apenas por trigger SECURITY DEFINER.",
-   "column:board_moves.challenge_correct": "TRUE/FALSE apenas para jogadas de resolução de desafio; NULL para jogadas normais de dado."
+   "column:board_moves.challenge_correct": "TRUE/FALSE apenas para jogadas de resolução de desafio; NULL para jogadas normais de dado.",
+   "column:push_outbox.deferred_until": "Fim da janela de silencio do usuario (notification_preferences.do_not_disturb_*). Preenchido apenas com status = deferred; claim_push_outbox devolve a linha para pending quando vence."
   },
   "types_file": "src/integrations/supabase/types.ts"
  },
@@ -49184,7 +49259,7 @@
      "user_has_passkeys",
      "verify_certificate"
     ],
-    "deps_count": 126
+    "deps_count": 127
    },
    {
     "path": "",
@@ -49448,6 +49523,7 @@
      "blocked_ips",
      "login_attempts",
      "notifications",
+     "push_outbox",
      "push_subscriptions",
      "push_sync_events",
      "rate_limit_rules",
@@ -50240,7 +50316,7 @@
      "sendNotification"
     ],
     "webhook_events": [],
-    "idempotency": false
+    "idempotency": true
    },
    {
     "name": "trail-recommendations",
@@ -51308,7 +51384,7 @@
     "file": ".github/workflows/contexto.yml"
    }
   ],
-  "components_count": 474,
+  "components_count": 475,
   "hooks": [
    {
     "name": "useContacts",
@@ -53983,8 +54059,8 @@
   },
   {
    "module": "src/components",
-   "files": 469,
-   "lines": 79461,
+   "files": 470,
+   "lines": 79774,
    "tables": [
     "attendance_records",
     "audit_logs",
@@ -53993,6 +54069,7 @@
     "kudos",
     "login_attempts",
     "notification_preferences",
+    "push_outbox",
     "security_alerts",
     "session_logs",
     "user_combos",
@@ -54139,6 +54216,7 @@
     "src/components/MyDevelopmentPlanWidget.tsx",
     "src/components/MyNineBoxWidget.tsx",
     "src/components/NotificationCenter.tsx",
+    "src/components/NotificationQuietHoursCard.tsx",
     "src/components/OfflineIndicator.tsx",
     "src/components/PWAInstallPrompt.tsx",
     "src/components/PageTransition.tsx",
@@ -54165,8 +54243,7 @@
     "src/components/TeamCertificationsPanel.tsx",
     "src/components/TeamChallenges.tsx",
     "src/components/ThemeToggle.tsx",
-    "src/components/TrailDependencyTree.tsx",
-    "src/components/TrailRecommendations.tsx"
+    "src/components/TrailDependencyTree.tsx"
    ]
   },
   {
@@ -54424,7 +54501,7 @@
   {
    "module": "src/lib",
    "files": 107,
-   "lines": 22156,
+   "lines": 22290,
    "tables": [
     "lucky_wheel_settings",
     "lucky_wheel_settings_audit",
@@ -54579,7 +54656,7 @@
   {
    "module": "src/pages",
    "files": 86,
-   "lines": 24962,
+   "lines": 24964,
    "tables": [
     "audit_logs",
     "campaign_participants",
@@ -55137,8 +55214,8 @@
   },
   {
    "module": "src/test",
-   "files": 140,
-   "lines": 24556,
+   "files": 141,
+   "lines": 24943,
    "tables": [
     "kudos",
     "profiles"
@@ -55344,8 +55421,8 @@
   },
   {
    "module": "supabase/functions",
-   "files": 70,
-   "lines": 9295,
+   "files": 72,
+   "lines": 9575,
    "tables": [
     "ai_course_jobs",
     "attendance_records",
@@ -55383,6 +55460,7 @@
    ],
    "exports": [
     "cache.ts: getCache, setCache",
+    "campaignPush.ts: CampaignPushDedupeInput, MAX_CAMPAIGN_DEDUPE_BASE, truncateCodePoints, campaignPushDedupeKey",
     "clientIp.ts: ResolvedClientIp, isValidIp, resolveClientIp, clientIpForLogging",
     "rate-limit.ts: checkRateLimit",
     "rate-limiter.ts: checkRateLimit, getRateLimitIdentifier, createRateLimitResponse, RATE_LIMITS",
@@ -55424,11 +55502,11 @@
    ],
    "docs": [
     "cache.ts: Shared Cache Utility using Upstash Redis Essential for high-performance rankings and dashboards.",
+    "campaignPush.ts: Chave de dedupe dos avisos de campanha de vendas. O `campaign_id` sozinho nao identifica o aviso: os marcos de 25/50/75% e a conclusao saem na mesma campanha, com o mesmo tipo, e `push_outbox.dedupe_key` e' unica — o segundo aviso seria descartado em silencio. Por isso a chave usa a identidade do av …",
+    "campaignPush_test.ts: Testes Deno da chave de dedupe dos avisos de campanha. Rodam no CI pelo workflow deno.yml (job \"Tipos e testes das Edge Functions\"); local: `bun run test:edge`.",
     "rate-limit.ts: Shared Rate Limiting Utility using Upstash Redis Recommended for high-traffic or sensitive Edge Functions.",
     "rate-limit_test.ts: Testes Deno do limitador compartilhado. Rodam no CI pelo workflow deno.yml (job \"Tipos e testes das Edge Functions\"); local: `bun run test:edge`.",
-    "rate-limiter.ts: Hybrid Rate Limiter for Supabase Edge Functions Uses Upstash Redis for global consistency, falls back to in-memory for performance/offline. ATENÇÃO: `checkRateLimit` é assíncrona. Chamar sem `await` faz `result.allowed` ser `undefined`, o que bloqueia 100% do tráfego com 429.",
-    "sentry.ts: Dynamic import keeps Sentry optional and avoids type-check pulling the module. deno-lint-ignore no-explicit-any",
-    "validation.ts: Versão FIXADA: sem versão, cada execução baixava o zod mais novo (comportamento imprevisível e risco de cadeia de suprimentos). v3.25 é a que já resolvia em 12/11/2026 — comportamento inalterado. No vitest, esta URL é resolvida para `zod/v3` (alias em vitest.config.ts), então os testes de contrato r …"
+    "rate-limiter.ts: Hybrid Rate Limiter for Supabase Edge Functions Uses Upstash Redis for global consistency, falls back to in-memory for performance/offline. ATENÇÃO: `checkRateLimit` é assíncrona. Chamar sem `await` faz `result.allowed` ser `undefined`, o que bloqueia 100% do tráfego com 429."
    ],
    "deps": [
     "https:",
@@ -55441,6 +55519,8 @@
    "imports_modules": [],
    "file_list": [
     "supabase/functions/_shared/cache.ts",
+    "supabase/functions/_shared/campaignPush.ts",
+    "supabase/functions/_shared/campaignPush_test.ts",
     "supabase/functions/_shared/clientIp.ts",
     "supabase/functions/_shared/rate-limit.ts",
     "supabase/functions/_shared/rate-limit_test.ts",
@@ -55514,8 +55594,8 @@
   },
   {
    "module": "supabase/migrations",
-   "files": 316,
-   "lines": 42161,
+   "files": 317,
+   "lines": 42340,
    "tables": [],
    "exports": [],
    "docs": [],
@@ -56590,6 +56670,7 @@
    "notification_preferences": {
     "select": [
      "src/components/InAppNotificationToggle.tsx",
+     "src/components/NotificationQuietHoursCard.tsx",
      "src/components/PushNotificationGlobalToggle.tsx",
      "src/hooks/useTypePreferences.ts",
      "src/services/salesCampaignsService.ts"
@@ -56599,9 +56680,11 @@
      "src/hooks/useTypePreferences.ts"
     ],
     "update": [
+     "src/components/NotificationQuietHoursCard.tsx",
      "src/components/PushNotificationGlobalToggle.tsx"
     ],
     "insert": [
+     "src/components/NotificationQuietHoursCard.tsx",
      "src/components/PushNotificationGlobalToggle.tsx"
     ]
    },
@@ -56906,6 +56989,9 @@
     ]
    },
    "push_outbox": {
+    "select": [
+     "src/components/security/PushOutboxHealthPanel.tsx"
+    ],
     "update": [
      "supabase/functions/push-outbox-dispatcher/index.ts"
     ]
@@ -58139,8 +58225,14 @@
     "user_id"
    ],
    "notification_preferences": [
+    "do_not_disturb_enabled",
+    "do_not_disturb_end",
+    "do_not_disturb_start",
+    "do_not_disturb_weekends",
     "in_app_enabled",
     "push_enabled",
+    "quiet_hours_end",
+    "quiet_hours_start",
     "type_preferences",
     "user_id"
    ],
@@ -58278,7 +58370,8 @@
     "user_id"
    ],
    "push_outbox": [
-    "id"
+    "id",
+    "status"
    ],
    "push_subscriptions": [
     "auth",
@@ -59063,6 +59156,9 @@
    "demo": [
     "scripts/supabase_snapshot/test_snapshot.py"
    ],
+   "enqueue_push": [
+    "supabase/functions/send-campaign-push/index.ts"
+   ],
    "finish_lightning_round": [
     "src/services/lightningQuizService.ts"
    ],
@@ -59343,6 +59439,10 @@
    ],
    "publish_auction": [
     "src/services/auctionService.ts"
+   ],
+   "push_quiet_hours_until": [
+    "supabase/functions/push-outbox-dispatcher/index.ts",
+    "supabase/functions/send-campaign-push/index.ts"
    ],
    "quiz_fifty_fifty": [
     "src/services/quizQuestionsService.ts"
@@ -60674,9 +60774,17 @@
    },
    {
     "file": "supabase/functions/_shared/contracts/send-campaign-push.ts",
+    "name": "campaignPushData",
+    "kind": "object",
+    "body": "{ milestone: z.union([z.number().int(), texto(32)]).optional() }",
+    "refines": [],
+    "chain": []
+   },
+   {
+    "file": "supabase/functions/_shared/contracts/send-campaign-push.ts",
     "name": "SendCampaignPushRequestSchema",
     "kind": "object",
-    "body": "{ user_ids: z.array(uuid).min(1).max(500), type: texto(64), title: texto(120), message: texto(400), // Caminho relativo é o caso real (salesCampaignsService.ts envia \"/campanhas/<id>\"): // com z.string().url() a função devolvia 422 e o push de campanha era descartado em silêncio. url: destinoUrl().optional(), data: jsonRecord.optional(), }",
+    "body": "{ user_ids: z.array(uuid).min(1).max(500), type: texto(64), title: texto(120), message: texto(400), // Caminho relativo é o caso real (salesCampaignsService.ts envia \"/campanhas/<id>\"): // com z.string().url() a função devolvia 422 e o push de campanha era descartado em silêncio. url: destinoUrl().optional(), data: campaignPushData.optional(), }",
     "refines": [],
     "chain": []
    },
@@ -60771,6 +60879,16 @@
   ],
   "rhf": [],
   "html_constraints": [
+   {
+    "file": "src/components/NotificationQuietHoursCard.tsx",
+    "field": "quiet-hours-start",
+    "rules": "disabled=saving || !enabled"
+   },
+   {
+    "file": "src/components/NotificationQuietHoursCard.tsx",
+    "field": "quiet-hours-end",
+    "rules": "disabled=saving || !enabled"
+   },
    {
     "file": "src/components/PushNotificationToggle.tsx",
     "field": "device-nickname",
@@ -61746,7 +61864,7 @@
    {
     "file": "src/lib/pushOutbox.ts",
     "name": "OutboxStatus",
-    "values": "pending | processing | sent | failed | skipped"
+    "values": "pending | processing | deferred | sent | failed | skipped"
    },
    {
     "file": "src/lib/pushOutboxHealth.ts",
@@ -62145,6 +62263,14 @@
    {
     "file": "src/components/InAppNotificationToggle.tsx",
     "msg": "Não foi possível salvar a preferência"
+   },
+   {
+    "file": "src/components/NotificationQuietHoursCard.tsx",
+    "msg": "\n            className="
+   },
+   {
+    "file": "src/components/NotificationQuietHoursCard.tsx",
+    "msg": "Nao foi possivel salvar a janela de silencio"
    },
    {
     "file": "src/components/OfflineIndicator.tsx",
@@ -64283,6 +64409,10 @@
     "text": "Fail open: indisponibilidade do verificador não pode travar o acesso."
    },
    {
+    "file": "src/components/NotificationQuietHoursCard.tsx",
+    "text": "Campo de hora vazio nao pode virar `:00` no banco: o tipo `time` recusa e o"
+   },
+   {
     "file": "src/components/PushNotificationGlobalToggle.tsx",
     "text": "outra aba, criando a linha depois que este card carregou — não pode perder nada."
    },
@@ -64397,6 +64527,14 @@
    {
     "file": "src/components/rbac/ProtectedRoute.tsx",
     "text": "Check if user has required access"
+   },
+   {
+    "file": "src/components/security/PushOutboxHealthPanel.tsx",
+    "text": "contagem e' o sinal de alerta: adiado com prazo vencido quer dizer que o"
+   },
+   {
+    "file": "src/components/security/PushOutboxHealthPanel.tsx",
+    "text": "Sem dado (consulta falhou) nao pode aparecer como zero."
    },
    {
     "file": "src/components/security/SlaTargetEditor.tsx",
@@ -64912,7 +65050,27 @@
    },
    {
     "file": "src/lib/pushOutbox.ts",
+    "text": "* Fim da janela de silencio; preenchido apenas com status `deferred`. */"
+   },
+   {
+    "file": "src/lib/pushOutbox.ts",
     "text": "* Reivindicação em lote: apenas itens pendentes entram, respeitando o teto."
+   },
+   {
+    "file": "src/lib/pushOutbox.ts",
+    "text": "* Preferencia atual do dono do item; `undefined` = nao modelada (usa o prazo"
+   },
+   {
+    "file": "src/lib/pushOutbox.ts",
+    "text": "volta: linha adiada sem prazo ficaria presa para sempre."
+   },
+   {
+    "file": "src/lib/pushOutbox.ts",
+    "text": "* Com `quietHours`, o prazo e' recalculado a partir da preferencia ATUAL antes de"
+   },
+   {
+    "file": "src/lib/pushOutbox.ts",
+    "text": "solta o aviso na hora, e estender a janela empurra o prazo em vez de entregar no"
    },
    {
     "file": "src/lib/requestId.ts",
@@ -65291,6 +65449,10 @@
     "text": "* Cria ou atualiza a apuração de uma anomalia (somente administradores). */"
    },
    {
+    "file": "supabase/functions/_shared/campaignPush.ts",
+    "text": "* Limite da base antes do sufixo: 150 + ':' + uuid (36) = 187 caracteres. */"
+   },
+   {
     "file": "supabase/functions/_shared/clientIp.ts",
     "text": "(o proxy apenas ANEXA à cadeia existente, não a substitui). Usar o primeiro"
    },
@@ -65464,6 +65626,10 @@
    },
    {
     "file": "supabase/functions/send-campaign-push/index.ts",
+    "text": "Falha ao enfileirar nao pode virar aviso perdido: cai para o envio na hora."
+   },
+   {
+    "file": "supabase/functions/send-campaign-push/index.ts",
     "text": "Máximo de 3 tentativas totais. Backoff base: 500ms, cap 8s."
    },
    {
@@ -65477,6 +65643,10 @@
    {
     "file": "supabase/migrations/20260712222124_0a235aa5-fd55-4549-b78b-f1de5dff2dbd.sql",
     "text": "# O que precisa ser preenchido\\n\\n1. Descreva o cenário em uma frase (o quê, quando, quem foi afetado).\\n2. Confirme se o impacto foi apenas SLA ou também usuário final.';"
+   },
+   {
+    "file": "supabase/migrations/20261229000000_janela_de_silencio_dos_avisos.sql",
+    "text": "). Preenchido apenas com status = deferred; claim_push_outbox devolve a linha para pending quando vence.';"
    }
   ],
   "db_constraints": [
@@ -74691,6 +74861,11 @@
     "rule": "default now()"
    },
    {
+    "table": "push_outbox",
+    "column": "(tabela)",
+    "rule": "constraint push_outbox_status_check CHECK (status IN ('pending','processing','deferred','sent','failed','skipped'))"
+   },
+   {
     "table": "push_outbox_health_snapshots",
     "column": "id",
     "rule": "PK; default gen_random_uuid()"
@@ -76173,6 +76348,16 @@
     "value": "\"executive_report\""
    },
    {
+    "file": "src/components/NotificationQuietHoursCard.tsx",
+    "name": "PADRAO_INICIO",
+    "value": "\"22:00\""
+   },
+   {
+    "file": "src/components/NotificationQuietHoursCard.tsx",
+    "name": "PADRAO_FIM",
+    "value": "\"08:00\""
+   },
+   {
     "file": "src/components/SEOHead.tsx",
     "name": "DEFAULT_TITLE",
     "value": "'Task Gifts - Gamificação Corporativa'"
@@ -76933,6 +77118,16 @@
     "value": "3"
    },
    {
+    "file": "src/lib/pushOutbox.ts",
+    "name": "SAO_PAULO_OFFSET_MS",
+    "value": "-3"
+   },
+   {
+    "file": "src/lib/pushOutbox.ts",
+    "name": "DAY_MS",
+    "value": "24"
+   },
+   {
     "file": "src/lib/sequenceGame.ts",
     "name": "SEQUENCE_COINS_PER_CORRECT",
     "value": "8"
@@ -77226,6 +77421,21 @@
     "file": "src/services/wagerBudgetService.ts",
     "name": "MAX_PLAYERS",
     "value": "100"
+   },
+   {
+    "file": "supabase/functions/_shared/campaignPush.ts",
+    "name": "MAX_CAMPAIGN_DEDUPE_BASE",
+    "value": "150"
+   },
+   {
+    "file": "supabase/functions/_shared/campaignPush_test.ts",
+    "name": "USER",
+    "value": "\"11111111-1111-4111-8111-111111111111\""
+   },
+   {
+    "file": "supabase/functions/_shared/campaignPush_test.ts",
+    "name": "OUTRO",
+    "value": "\"33333333-3333-4333-8333-333333333333\""
    },
    {
     "file": "supabase/functions/_shared/validation.ts",
@@ -79466,6 +79676,12 @@
     "kind": "compara"
    },
    {
+    "file": "src/components/security/PushOutboxHealthPanel.tsx",
+    "field": "status",
+    "value": "deferred",
+    "kind": "filtra"
+   },
+   {
     "file": "src/components/security/ReauthProvider.tsx",
     "field": "step",
     "value": "password",
@@ -81136,6 +81352,24 @@
    {
     "file": "src/lib/pushOutbox.ts",
     "field": "status",
+    "value": "deferred",
+    "kind": "escreve"
+   },
+   {
+    "file": "src/lib/pushOutbox.ts",
+    "field": "status",
+    "value": "pending",
+    "kind": "escreve"
+   },
+   {
+    "file": "src/lib/pushOutbox.ts",
+    "field": "status",
+    "value": "pending",
+    "kind": "escreve"
+   },
+   {
+    "file": "src/lib/pushOutbox.ts",
+    "field": "status",
     "value": "pending",
     "kind": "escreve"
    },
@@ -81161,6 +81395,12 @@
     "file": "src/lib/pushOutbox.ts",
     "field": "status",
     "value": "skipped",
+    "kind": "compara"
+   },
+   {
+    "file": "src/lib/pushOutbox.ts",
+    "field": "status",
+    "value": "deferred",
     "kind": "compara"
    },
    {
@@ -83252,6 +83492,18 @@
     "kind": "escreve"
    },
    {
+    "file": "supabase/functions/_shared/campaignPush_test.ts",
+    "field": "type",
+    "value": "campaign_milestone",
+    "kind": "escreve"
+   },
+   {
+    "file": "supabase/functions/_shared/campaignPush_test.ts",
+    "field": "type",
+    "value": "campaign_completed",
+    "kind": "escreve"
+   },
+   {
     "file": "supabase/functions/_shared/sentry.ts",
     "field": "status",
     "value": "ok",
@@ -83363,6 +83615,12 @@
     "file": "supabase/functions/_shared/contracts/contracts_test.ts",
     "field": "type",
     "value": "campaign_completed",
+    "kind": "escreve"
+   },
+   {
+    "file": "supabase/functions/_shared/contracts/contracts_test.ts",
+    "field": "type",
+    "value": "campaign_milestone",
     "kind": "escreve"
    },
    {
@@ -83957,6 +84215,12 @@
     "file": "supabase/functions/push-device-revoked/index.ts",
     "field": "status",
     "value": "failed",
+    "kind": "escreve"
+   },
+   {
+    "file": "supabase/functions/push-outbox-dispatcher/index.ts",
+    "field": "status",
+    "value": "deferred",
     "kind": "escreve"
    },
    {
@@ -85286,6 +85550,10 @@
     "line": "staleTime: 10 * 60 * 1000,"
    },
    {
+    "file": "src/components/security/PushOutboxHealthPanel.tsx",
+    "line": "const limite = new Date(Date.now() - 5 * 60 * 1000).toISOString();"
+   },
+   {
     "file": "src/components/shop-admin/PromotionFormDialog.tsx",
     "line": "ends_at: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().slice(0, 16),"
    },
@@ -85512,6 +85780,14 @@
    {
     "file": "src/lib/pushDevices.ts",
     "line": "const staleBefore = nowTs - STALE_DEVICE_DAYS * 24 * 60 * 60 * 1000;"
+   },
+   {
+    "file": "src/lib/pushOutbox.ts",
+    "line": "const DAY_MS = 24 * 60 * 60 * 1000;"
+   },
+   {
+    "file": "src/lib/pushOutbox.ts",
+    "line": "const SAO_PAULO_OFFSET_MS = -3 * 60 * 60 * 1000;"
    },
    {
     "file": "src/pages/AdminTelemetria.tsx",
@@ -85924,6 +86200,14 @@
    {
     "file": "supabase/migrations/20261228310000_dedup_indices_redundantes.sql",
     "line": "v_orcamento constant interval := interval '60 seconds';"
+   },
+   {
+    "file": "supabase/migrations/20261229000000_janela_de_silencio_dos_avisos.sql",
+    "line": "AND updated_at < now() - interval '10 minutes';"
+   },
+   {
+    "file": "supabase/migrations/20261229000000_janela_de_silencio_dos_avisos.sql",
+    "line": "v_dow := EXTRACT(ISODOW FROM (v_local - interval '1 day'))::integer;"
    }
   ],
   "percents": [
@@ -86816,6 +87100,10 @@
     "line": "<span>45%</span>"
    },
    {
+    "file": "supabase/functions/_shared/campaignPush.ts",
+    "line": "* O `campaign_id` sozinho nao identifica o aviso: os marcos de 25/50/75% e a"
+   },
+   {
     "file": "supabase/functions/_shared/rate-limiter.ts",
     "line": "* `result.allowed` ser `undefined`, o que bloqueia 100% do tráfego com 429."
    },
@@ -86838,6 +87126,10 @@
    {
     "file": "supabase/functions/error-budget-monitor/index.ts",
     "line": "// e API externa. Ao cruzar 75% ou 90%, cria um security_alert e dispara o"
+   },
+   {
+    "file": "supabase/functions/send-campaign-push/index.ts",
+    "line": "// Uma chave por conteudo: 25/50/75% e conclusao saem na mesma campanha e com"
    }
   ],
   "tests": [
@@ -91610,6 +91902,42 @@
     "name": "sobrevive a documentos corrompidos vindos do banco"
    },
    {
+    "file": "src/test/notificationQuietHoursCard.test.tsx",
+    "name": "janela de silencio"
+   },
+   {
+    "file": "src/test/notificationQuietHoursCard.test.tsx",
+    "name": "comeca desligada, sugerindo 22:00-08:00"
+   },
+   {
+    "file": "src/test/notificationQuietHoursCard.test.tsx",
+    "name": "usa o nome legado quiet_hours quando do_not_disturb esta nulo"
+   },
+   {
+    "file": "src/test/notificationQuietHoursCard.test.tsx",
+    "name": "ligar grava as quatro colunas sem apagar type_preferences"
+   },
+   {
+    "file": "src/test/notificationQuietHoursCard.test.tsx",
+    "name": "alterar o inicio persiste ao sair do campo"
+   },
+   {
+    "file": "src/test/notificationQuietHoursCard.test.tsx",
+    "name": "falha de leitura aparece como erro, nao como ligado"
+   },
+   {
+    "file": "src/test/notificationQuietHoursCard.test.tsx",
+    "name": "falha ao gravar desfaz o que a tela mostrou"
+   },
+   {
+    "file": "src/test/notificationQuietHoursCard.test.tsx",
+    "name": "sem linha ainda, cria com type_preferences vazio"
+   },
+   {
+    "file": "src/test/notificationQuietHoursCard.test.tsx",
+    "name": "campo de hora vazio volta ao horario salvo e o desligamento grava"
+   },
+   {
     "file": "src/test/notificationTypePrefs.simulation.test.ts",
     "name": "normalizeTypePrefs"
    },
@@ -92688,6 +93016,58 @@
    {
     "file": "src/test/pushOutbox.simulation.test.ts",
     "name": "converge sem perdas nem duplicidade em 400 filas aleatórias"
+   },
+   {
+    "file": "src/test/pushOutbox.simulation.test.ts",
+    "name": "janela de silêncio (quiet hours)"
+   },
+   {
+    "file": "src/test/pushOutbox.simulation.test.ts",
+    "name": "22:00-08:00 devolve 08:00 de Brasília quando o aviso chega de madrugada"
+   },
+   {
+    "file": "src/test/pushOutbox.simulation.test.ts",
+    "name": "aviso fora da janela sai na hora"
+   },
+   {
+    "file": "src/test/pushOutbox.simulation.test.ts",
+    "name": "janela que cruza a meia-noite vence no dia seguinte"
+   },
+   {
+    "file": "src/test/pushOutbox.simulation.test.ts",
+    "name": "janela dentro do mesmo dia (13:00-14:00)"
+   },
+   {
+    "file": "src/test/pushOutbox.simulation.test.ts",
+    "name": "janela desligada, sem horário ou com início igual ao fim não silencia"
+   },
+   {
+    "file": "src/test/pushOutbox.simulation.test.ts",
+    "name": "weekends false: vale o dia em que a janela começou, não o do envio"
+   },
+   {
+    "file": "src/test/pushOutbox.simulation.test.ts",
+    "name": "adiar não consome tentativa e a linha volta no fim da janela"
+   },
+   {
+    "file": "src/test/pushOutbox.simulation.test.ts",
+    "name": "linha adiada sem prazo é devolvida à fila em vez de ficar presa"
+   },
+   {
+    "file": "src/test/pushOutbox.simulation.test.ts",
+    "name": "desligar ou encurtar a janela solta o aviso sem esperar o prazo antigo"
+   },
+   {
+    "file": "src/test/pushOutbox.simulation.test.ts",
+    "name": "estender a janela empurra o prazo em vez de entregar no silencio"
+   },
+   {
+    "file": "src/test/pushOutbox.simulation.test.ts",
+    "name": "sem preferencia modelada o prazo salvo continua mandando"
+   },
+   {
+    "file": "src/test/pushOutbox.simulation.test.ts",
+    "name": "a fila não perde nem duplica avisos que entram e saem da janela"
    },
    {
     "file": "src/test/pushOutboxHealth.simulation.test.ts",
@@ -105074,13 +105454,14 @@
     "args": "p_limit INTEGER DEFAULT 100",
     "returns": "TABLE (\n  id UUID,\n  user_id UUID,\n  type TEXT,\n  title TEXT,\n  message TEXT,\n  url TEXT,\n  data JSONB,\n  attempts INTEGER\n)",
     "lang": "plpgsql",
-    "src": "supabase/migrations/20260728112223_9f86e736-fd1e-4ab5-a812-9fc5f1f6f009.sql",
+    "src": "supabase/migrations/20261229000000_janela_de_silencio_dos_avisos.sql",
     "security_definer": true,
     "search_path": true,
-    "body": "BEGIN UPDATE public.push_outbox SET status = 'pending' WHERE status = 'processing' AND updated_at < now() - interval '10 minutes'; RETURN QUERY WITH claimed AS ( SELECT o.id FROM public.push_outbox o WHERE o.status = 'pending' ORDER BY o.created_at LIMIT greatest(1, least(coalesce(p_limit, 100), 500)) FOR UPDATE SKIP LOCKED ) UPDATE public.push_outbox o SET status = 'processing' FROM claimed c WHERE o.id = c.id RETURNING o.id, o.user_id, o.type, o.title, o.message, o.url, o.data, o.attempts; END;",
+    "body": "BEGIN UPDATE public.push_outbox SET status = 'pending' WHERE status = 'processing' AND updated_at < now() - interval '10 minutes'; UPDATE public.push_outbox o SET deferred_until = atual.novo FROM ( SELECT x.id, x.deferred_until, public.push_quiet_hours_until(x.user_id) AS novo FROM public.push_outbox x WHERE x.status = 'deferred' ) atual WHERE o.id = atual.id AND o.status = 'deferred' AND atual.novo IS NOT NULL AND atual.novo IS DISTINCT FROM atual.deferred_until; UPDATE public.push_outbox o SET status = 'pending', deferred_until = NULL FROM ( SELECT x.id, public.push_quiet_hours_until(x.user_id) AS novo FROM public.push_outbox x WHERE x.status = 'deferred' ) atual WHERE o.id = atual.id AND …",
     "raises": [],
     "tables": [
      "SKIP",
+     "atual",
      "claimed",
      "push_outbox"
     ]
@@ -106883,6 +107264,21 @@
     "tables": [
      "profiles",
      "webauthn_credentials"
+    ]
+   },
+   "push_quiet_hours_until": {
+    "args": "_user_id uuid",
+    "returns": "TIMESTAMPTZ",
+    "lang": "plpgsql",
+    "src": "supabase/migrations/20261229000000_janela_de_silencio_dos_avisos.sql",
+    "security_definer": true,
+    "search_path": true,
+    "body": "DECLARE v_enabled boolean; v_start time; v_end time; v_weekends boolean; v_local timestamp; v_dow integer; BEGIN SELECT COALESCE(p.do_not_disturb_enabled, false), COALESCE(p.do_not_disturb_start, p.quiet_hours_start), COALESCE(p.do_not_disturb_end, p.quiet_hours_end), COALESCE(p.do_not_disturb_weekends, true) INTO v_enabled, v_start, v_end, v_weekends FROM public.notification_preferences p WHERE p.user_id = _user_id; IF NOT FOUND OR NOT COALESCE(v_enabled, false) OR v_start IS NULL OR v_end IS NULL OR v_start = v_end THEN RETURN NULL; END IF; v_local := now() AT TIME ZONE 'America/Sao_Paulo'; IF v_start < v_end THEN v_dow := EXTRACT(ISODOW FROM v_local)::integer; IF NOT v_weekends AND v_dow …",
+    "raises": [],
+    "tables": [
+     "notification_preferences",
+     "v_enabled",
+     "v_local"
     ]
    },
    "Args": {
@@ -109063,6 +109459,7 @@
      "column": "status",
      "enum": "",
      "allowed": [
+      "deferred",
       "failed",
       "pending",
       "processing",
@@ -109326,6 +109723,7 @@
      "campaign_completed": [
       "compara:src/components/CampaignNotificationPreferences.tsx",
       "escreve:src/services/salesCampaignsService.ts",
+      "escreve:supabase/functions/_shared/campaignPush_test.ts",
       "escreve:supabase/functions/_shared/contracts/_fixtures/index.ts",
       "escreve:supabase/functions/_shared/contracts/contracts_test.ts"
      ],
@@ -109680,7 +110078,9 @@
       "escreve:src/services/salesCampaignsService.ts"
      ],
      "campaign_milestone": [
-      "escreve:src/services/salesCampaignsService.ts"
+      "escreve:src/services/salesCampaignsService.ts",
+      "escreve:supabase/functions/_shared/campaignPush_test.ts",
+      "escreve:supabase/functions/_shared/contracts/contracts_test.ts"
      ],
      "learning_trail": [
       "escreve:src/services/trailsService.ts"
@@ -110129,6 +110529,12 @@
       "compara:src/components/push/PushDeviceList.tsx",
       "compara:src/lib/pushDevices.ts",
       "compara:supabase/migrations/20251213164818_77e12a61-a727-4556-b33b-03828d080ab1.sql"
+     ],
+     "deferred": [
+      "compara:src/lib/pushOutbox.ts",
+      "escreve:src/lib/pushOutbox.ts",
+      "escreve:supabase/functions/push-outbox-dispatcher/index.ts",
+      "filtra:src/components/security/PushOutboxHealthPanel.tsx"
      ],
      "delivered": [
       "compara:src/components/shop-admin/PurchaseGovernanceDialog.tsx"
@@ -114268,7 +114674,8 @@
    "supabase/migrations/20261228170000_reaplica_funcoes_desatualizadas_em_producao.sql",
    "supabase/migrations/20261228190000_revoga_execute_publico_anon_funcoes.sql",
    "supabase/migrations/20261228280000_uma_aposta_por_dia_e_reabertura_da_pergunta.sql",
-   "supabase/migrations/20261228300000_fecha_corridas_da_exclusao_de_departamento_e_da_aposta_diaria.sql"
+   "supabase/migrations/20261228300000_fecha_corridas_da_exclusao_de_departamento_e_da_aposta_diaria.sql",
+   "supabase/migrations/20261229000000_janela_de_silencio_dos_avisos.sql"
   ],
   "security_definer_fns": [
    "_climate_recompute_pillar_scores",
@@ -114452,6 +114859,7 @@
    "promote_webhook_secret",
    "propose_card_trade",
    "publish_auction",
+   "push_quiet_hours_until",
    "quiz_fifty_fifty",
    "raise_lucky_wheel_window_alerts",
    "recalc_campaign_progress",
@@ -123996,6 +124404,54 @@
     "src": "supabase/migrations/20261228300000_fecha_corridas_da_exclusao_de_departamento_e_da_aposta_diaria.sql"
    },
    {
+    "kind": "revoke",
+    "privs": "all",
+    "object": "push_quiet_hours_until",
+    "objkind": "function",
+    "roles": "PUBLIC",
+    "src": "supabase/migrations/20261229000000_janela_de_silencio_dos_avisos.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "all",
+    "object": "push_quiet_hours_until",
+    "objkind": "function",
+    "roles": "anon, authenticated",
+    "src": "supabase/migrations/20261229000000_janela_de_silencio_dos_avisos.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "push_quiet_hours_until",
+    "objkind": "function",
+    "roles": "service_role",
+    "src": "supabase/migrations/20261229000000_janela_de_silencio_dos_avisos.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "all",
+    "object": "claim_push_outbox",
+    "objkind": "function",
+    "roles": "PUBLIC",
+    "src": "supabase/migrations/20261229000000_janela_de_silencio_dos_avisos.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "all",
+    "object": "claim_push_outbox",
+    "objkind": "function",
+    "roles": "anon, authenticated",
+    "src": "supabase/migrations/20261229000000_janela_de_silencio_dos_avisos.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "claim_push_outbox",
+    "objkind": "function",
+    "roles": "service_role",
+    "src": "supabase/migrations/20261229000000_janela_de_silencio_dos_avisos.sql"
+   },
+   {
     "kind": "grant",
     "privs": "select, insert, update, delete",
     "object": "public",
@@ -129914,6 +130370,65 @@
     "const NotificationCenter"
    ]
   },
+  "src/components/NotificationQuietHoursCard.tsx": {
+   "path": "src/components/NotificationQuietHoursCard.tsx",
+   "lines": 272,
+   "exports": [
+    "function NotificationQuietHoursCard"
+   ],
+   "tables": [
+    {
+     "table": "notification_preferences",
+     "op": "select"
+    },
+    {
+     "table": "notification_preferences",
+     "op": "select,update"
+    },
+    {
+     "table": "notification_preferences",
+     "op": "insert"
+    }
+   ],
+   "table_cols": {
+    "notification_preferences": [
+     "do_not_disturb_enabled",
+     "do_not_disturb_end",
+     "do_not_disturb_start",
+     "do_not_disturb_weekends",
+     "quiet_hours_end",
+     "quiet_hours_start",
+     "user_id"
+    ]
+   },
+   "errors": [
+    "\n            className=",
+    "Nao foi possivel salvar a janela de silencio"
+   ],
+   "html_constraints": [
+    {
+     "field": "quiet-hours-start",
+     "rules": "disabled=saving || !enabled"
+    },
+    {
+     "field": "quiet-hours-end",
+     "rules": "disabled=saving || !enabled"
+    }
+   ],
+   "params": [
+    {
+     "name": "PADRAO_INICIO",
+     "value": "\"22:00\""
+    },
+    {
+     "name": "PADRAO_FIM",
+     "value": "\"08:00\""
+    }
+   ],
+   "rule_comments": [
+    "Campo de hora vazio nao pode virar `:00` no banco: o tipo `time` recusa e o"
+   ]
+  },
   "src/components/OfflineIndicator.tsx": {
    "path": "src/components/OfflineIndicator.tsx",
    "lines": 116,
@@ -134734,10 +135249,22 @@
   },
   "src/components/security/PushOutboxHealthPanel.tsx": {
    "path": "src/components/security/PushOutboxHealthPanel.tsx",
-   "lines": 232,
+   "lines": 273,
    "exports": [
     "function PushOutboxHealthPanel"
    ],
+   "tables": [
+    {
+     "table": "push_outbox",
+     "op": "select"
+    }
+   ],
+   "table_cols": {
+    "push_outbox": [
+     "id",
+     "status"
+    ]
+   },
    "rpc": [
     "get_push_outbox_health",
     "requeue_push_outbox"
@@ -134745,6 +135272,20 @@
    "errors": [
     ";\nimport { AlertTriangle, BellRing, CheckCircle2, Loader2, RefreshCw, RotateCcw } from ",
     "Não foi possível reenfileirar as notificações."
+   ],
+   "status_values": [
+    {
+     "field": "status",
+     "value": "deferred",
+     "kind": "filtra"
+    }
+   ],
+   "rule_comments": [
+    "contagem e' o sinal de alerta: adiado com prazo vencido quer dizer que o",
+    "Sem dado (consulta falhou) nao pode aparecer como zero."
+   ],
+   "temporal": [
+    "const limite = new Date(Date.now() - 5 * 60 * 1000).toISOString();"
    ]
   },
   "src/components/security/PushOutboxHealthTrend.tsx": {
@@ -143589,7 +144130,7 @@
   },
   "src/lib/pushOutbox.ts": {
    "path": "src/lib/pushOutbox.ts",
-   "lines": 84,
+   "lines": 218,
    "exports": [
     "type OutboxStatus",
     "type DispatchResult",
@@ -143597,18 +144138,31 @@
     "const MAX_PUSH_ATTEMPTS",
     "function isTerminal",
     "function applyDispatch",
+    "interface QuietHoursPreference",
+    "function quietHoursUntil",
+    "function deferForQuietHours",
+    "type QuietHoursLookup",
+    "function releaseDeferred",
     "function claimBatch"
    ],
    "enums": [
     {
      "name": "OutboxStatus",
-     "values": "pending | processing | sent | failed | skipped"
+     "values": "pending | processing | deferred | sent | failed | skipped"
     }
    ],
    "params": [
     {
      "name": "MAX_PUSH_ATTEMPTS",
      "value": "3"
+    },
+    {
+     "name": "SAO_PAULO_OFFSET_MS",
+     "value": "-3"
+    },
+    {
+     "name": "DAY_MS",
+     "value": "24"
     }
    ],
    "status_values": [
@@ -143639,6 +144193,21 @@
     },
     {
      "field": "status",
+     "value": "deferred",
+     "kind": "escreve"
+    },
+    {
+     "field": "status",
+     "value": "pending",
+     "kind": "escreve"
+    },
+    {
+     "field": "status",
+     "value": "pending",
+     "kind": "escreve"
+    },
+    {
+     "field": "status",
      "value": "pending",
      "kind": "escreve"
     },
@@ -143664,6 +144233,11 @@
     },
     {
      "field": "status",
+     "value": "deferred",
+     "kind": "compara"
+    },
+    {
+     "field": "status",
      "value": "processing",
      "kind": "compara"
     },
@@ -143674,7 +144248,12 @@
     }
    ],
    "rule_comments": [
-    "* Reivindicação em lote: apenas itens pendentes entram, respeitando o teto."
+    "* Fim da janela de silencio; preenchido apenas com status `deferred`. */",
+    "* Reivindicação em lote: apenas itens pendentes entram, respeitando o teto.",
+    "* Preferencia atual do dono do item; `undefined` = nao modelada (usa o prazo",
+    "volta: linha adiada sem prazo ficaria presa para sempre.",
+    "* Com `quietHours`, o prazo e' recalculado a partir da preferencia ATUAL antes de",
+    "solta o aviso na hora, e estender a janela empurra o prazo em vez de entregar no"
    ],
    "doc": "Motor determinístico da fila de push (`push_outbox`). Espelha, em TypeScript puro, a máquina de estados executada por `claim_push_outbox` + a Edge Function `push-outbox-dispatcher`. Serve para simulação: qualquer divergência entre este motor e o runtime é um bug de entrega (duplicidade, perda ou loo …",
    "calc_fns": [
@@ -143683,6 +144262,10 @@
      "params": "item: OutboxItem, result: DispatchResult",
      "body": "if (isTerminal(item.status)) return item; const attempts = item.attempts + 1; switch (result.kind) { case \"delivered\": return { ...item, status: \"sent\", attempts, lastError: null }; case \"no_subscription\": return { ...item, status: \"skipped\", attempts, lastError: \"no_active_subscription\" }; case \"permanent_error\": return { ...item, status: \"failed\", attempts, lastError: result.error }; case \"transient_error\": return attempts >= MAX_PUSH_ATTEMPTS ? { ...item, status: \"failed\", attempts, lastError …"
     }
+   ],
+   "temporal": [
+    "const DAY_MS = 24 * 60 * 60 * 1000;",
+    "const SAO_PAULO_OFFSET_MS = -3 * 60 * 60 * 1000;"
    ]
   },
   "src/lib/pushOutboxHealth.ts": {
@@ -146373,7 +146956,7 @@
   },
   "src/pages/Profile.tsx": {
    "path": "src/pages/Profile.tsx",
-   "lines": 250,
+   "lines": 252,
    "exports": [
     "default Profile"
    ],
@@ -157339,6 +157922,29 @@
     "sobrevive a documentos corrompidos vindos do banco"
    ]
   },
+  "src/test/notificationQuietHoursCard.test.tsx": {
+   "path": "src/test/notificationQuietHoursCard.test.tsx",
+   "lines": 189,
+   "is_test": true,
+   "errors": [
+    ")).toHaveTextContent(/nao reflete o que/i);\n    expect(screen.getByRole("
+   ],
+   "rule_comments": [
+    "- falha de leitura nao pode aparecer como \"ligado\";",
+    "Limpar o campo e desligar nao pode mandar \":00\" (o tipo `time` recusaria)."
+   ],
+   "tests": [
+    "janela de silencio",
+    "comeca desligada, sugerindo 22:00-08:00",
+    "usa o nome legado quiet_hours quando do_not_disturb esta nulo",
+    "ligar grava as quatro colunas sem apagar type_preferences",
+    "alterar o inicio persiste ao sair do campo",
+    "falha de leitura aparece como erro, nao como ligado",
+    "falha ao gravar desfaz o que a tela mostrou",
+    "sem linha ainda, cria com type_preferences vazio",
+    "campo de hora vazio volta ao horario salvo e o desligamento grava"
+   ]
+  },
   "src/test/notificationTypePrefs.simulation.test.ts": {
    "path": "src/test/notificationTypePrefs.simulation.test.ts",
    "lines": 150,
@@ -157823,8 +158429,17 @@
   },
   "src/test/pushOutbox.simulation.test.ts": {
    "path": "src/test/pushOutbox.simulation.test.ts",
-   "lines": 110,
+   "lines": 308,
    "is_test": true,
+   "rule_comments": [
+    "Janela encurtada para terminar 06:00: o prazo segue a preferencia atual.",
+    "Passado o prazo antigo (08:00 BRT), mas a janela agora fecha as 09:00."
+   ],
+   "temporal": [
+    "clock += 90 * 60 * 1000;",
+    "const adiado = deferForQuietHours(c, new Date(clock + 60 * 60 * 1000));",
+    "const fim = claimBatch(items, 500, new Set(), new Date(clock + 48 * 60 * 60 * 1000));"
+   ],
    "tests": [
     "fila de push — máquina de estados",
     "entrega no primeiro sucesso",
@@ -157833,7 +158448,20 @@
     "não reprocessa item terminal",
     "recicla itens presos em processamento",
     "respeita o teto do lote e nunca reivindica duas vezes",
-    "converge sem perdas nem duplicidade em 400 filas aleatórias"
+    "converge sem perdas nem duplicidade em 400 filas aleatórias",
+    "janela de silêncio (quiet hours)",
+    "22:00-08:00 devolve 08:00 de Brasília quando o aviso chega de madrugada",
+    "aviso fora da janela sai na hora",
+    "janela que cruza a meia-noite vence no dia seguinte",
+    "janela dentro do mesmo dia (13:00-14:00)",
+    "janela desligada, sem horário ou com início igual ao fim não silencia",
+    "weekends false: vale o dia em que a janela começou, não o do envio",
+    "adiar não consome tentativa e a linha volta no fim da janela",
+    "linha adiada sem prazo é devolvida à fila em vez de ficar presa",
+    "desligar ou encurtar a janela solta o aviso sem esperar o prazo antigo",
+    "estender a janela empurra o prazo em vez de entregar no silencio",
+    "sem preferencia modelada o prazo salvo continua mandando",
+    "a fila não perde nem duplica avisos que entram e saem da janela"
    ]
   },
   "src/test/pushOutboxHealth.simulation.test.ts": {
@@ -158985,6 +159613,56 @@
    ],
    "doc": "Shared Cache Utility using Upstash Redis Essential for high-performance rankings and dashboards."
   },
+  "supabase/functions/_shared/campaignPush.ts": {
+   "path": "supabase/functions/_shared/campaignPush.ts",
+   "lines": 51,
+   "exports": [
+    "interface CampaignPushDedupeInput",
+    "const MAX_CAMPAIGN_DEDUPE_BASE",
+    "function truncateCodePoints",
+    "function campaignPushDedupeKey"
+   ],
+   "params": [
+    {
+     "name": "MAX_CAMPAIGN_DEDUPE_BASE",
+     "value": "150"
+    }
+   ],
+   "rule_comments": [
+    "* Limite da base antes do sufixo: 150 + ':' + uuid (36) = 187 caracteres. */"
+   ],
+   "doc": "Chave de dedupe dos avisos de campanha de vendas. O `campaign_id` sozinho nao identifica o aviso: os marcos de 25/50/75% e a conclusao saem na mesma campanha, com o mesmo tipo, e `push_outbox.dedupe_key` e' unica — o segundo aviso seria descartado em silencio. Por isso a chave usa a identidade do av …",
+   "percents": [
+    "* O `campaign_id` sozinho nao identifica o aviso: os marcos de 25/50/75% e a"
+   ]
+  },
+  "supabase/functions/_shared/campaignPush_test.ts": {
+   "path": "supabase/functions/_shared/campaignPush_test.ts",
+   "lines": 114,
+   "params": [
+    {
+     "name": "USER",
+     "value": "\"11111111-1111-4111-8111-111111111111\""
+    },
+    {
+     "name": "OUTRO",
+     "value": "\"33333333-3333-4333-8333-333333333333\""
+    }
+   ],
+   "status_values": [
+    {
+     "field": "type",
+     "value": "campaign_milestone",
+     "kind": "escreve"
+    },
+    {
+     "field": "type",
+     "value": "campaign_completed",
+     "kind": "escreve"
+    }
+   ],
+   "doc": "Testes Deno da chave de dedupe dos avisos de campanha. Rodam no CI pelo workflow deno.yml (job \"Tipos e testes das Edge Functions\"); local: `bun run test:edge`."
+  },
   "supabase/functions/_shared/clientIp.ts": {
    "path": "supabase/functions/_shared/clientIp.ts",
    "lines": 62,
@@ -159654,11 +160332,16 @@
   },
   "supabase/functions/_shared/contracts/contracts_test.ts": {
    "path": "supabase/functions/_shared/contracts/contracts_test.ts",
-   "lines": 73,
+   "lines": 95,
    "status_values": [
     {
      "field": "type",
      "value": "campaign_completed",
+     "kind": "escreve"
+    },
+    {
+     "field": "type",
+     "value": "campaign_milestone",
      "kind": "escreve"
     }
    ],
@@ -159966,7 +160649,7 @@
   },
   "supabase/functions/_shared/contracts/send-campaign-push.ts": {
    "path": "supabase/functions/_shared/contracts/send-campaign-push.ts",
-   "lines": 36,
+   "lines": 45,
    "exports": [
     "const SendCampaignPushRequestSchema",
     "const SendCampaignPushResponseSchema",
@@ -159974,9 +160657,16 @@
    ],
    "zod": [
     {
+     "name": "campaignPushData",
+     "kind": "object",
+     "body": "{ milestone: z.union([z.number().int(), texto(32)]).optional() }",
+     "refines": [],
+     "chain": []
+    },
+    {
      "name": "SendCampaignPushRequestSchema",
      "kind": "object",
-     "body": "{ user_ids: z.array(uuid).min(1).max(500), type: texto(64), title: texto(120), message: texto(400), // Caminho relativo é o caso real (salesCampaignsService.ts envia \"/campanhas/<id>\"): // com z.string().url() a função devolvia 422 e o push de campanha era descartado em silêncio. url: destinoUrl().optional(), data: jsonRecord.optional(), }",
+     "body": "{ user_ids: z.array(uuid).min(1).max(500), type: texto(64), title: texto(120), message: texto(400), // Caminho relativo é o caso real (salesCampaignsService.ts envia \"/campanhas/<id>\"): // com z.string().url() a função devolvia 422 e o push de campanha era descartado em silêncio. url: destinoUrl().optional(), data: campaignPushData.optional(), }",
      "refines": [],
      "chain": []
     },
@@ -161554,7 +162244,7 @@
   },
   "supabase/functions/push-outbox-dispatcher/index.ts": {
    "path": "supabase/functions/push-outbox-dispatcher/index.ts",
-   "lines": 215,
+   "lines": 247,
    "tables": [
     {
      "table": "push_subscriptions",
@@ -161567,6 +162257,10 @@
     {
      "table": "push_notification_logs",
      "op": "insert"
+    },
+    {
+     "table": "push_outbox",
+     "op": "update"
     },
     {
      "table": "push_outbox",
@@ -161589,6 +162283,7 @@
    },
    "rpc": [
     "claim_push_outbox",
+    "push_quiet_hours_until",
     "user_wants_push_notification"
    ],
    "env": [
@@ -161617,6 +162312,11 @@
     }
    ],
    "status_values": [
+    {
+     "field": "status",
+     "value": "deferred",
+     "kind": "escreve"
+    },
     {
      "field": "status",
      "value": "sent",
@@ -161958,7 +162658,7 @@
   },
   "supabase/functions/send-campaign-push/index.ts": {
    "path": "supabase/functions/send-campaign-push/index.ts",
-   "lines": 223,
+   "lines": 275,
    "tables": [
     {
      "table": "push_subscriptions",
@@ -161985,7 +162685,9 @@
     ]
    },
    "rpc": [
+    "enqueue_push",
     "increment_push_failures",
+    "push_quiet_hours_until",
     "reset_push_failures",
     "user_wants_push_notification"
    ],
@@ -162063,6 +162765,7 @@
     }
    ],
    "rule_comments": [
+    "Falha ao enfileirar nao pode virar aviso perdido: cai para o envio na hora.",
     "Máximo de 3 tentativas totais. Backoff base: 500ms, cap 8s."
    ],
    "doc": "Edge Function: send-campaign-push Envia notificações Web Push com retry+backoff, invalidação automática de endpoints expirados e reset de contador de falhas em sucesso.",
@@ -162072,6 +162775,9 @@
      "params": "attempt: number",
      "body": "const exp = Math.min(MAX_BACKOFF_MS, BASE_BACKOFF_MS * Math.pow(2, attempt - 1)); const jitter = Math.floor(Math.random() * (exp / 2)); return exp + jitter;"
     }
+   ],
+   "percents": [
+    "// Uma chave por conteudo: 25/50/75% e conclusao saem na mesma campanha e com"
    ],
    "side_effects": [
     "sendNotification"
@@ -163947,6 +164653,18 @@
     "v_orcamento constant interval := interval '60 seconds';"
    ]
   },
+  "supabase/migrations/20261229000000_janela_de_silencio_dos_avisos.sql": {
+   "path": "supabase/migrations/20261229000000_janela_de_silencio_dos_avisos.sql",
+   "lines": 179,
+   "rule_comments": [
+    "). Preenchido apenas com status = deferred; claim_push_outbox devolve a linha para pending quando vence.';"
+   ],
+   "temporal": [
+    "AND updated_at < now() - interval '10 minutes';",
+    "v_dow := EXTRACT(ISODOW FROM (v_local - interval '1 day'))::integer;"
+   ],
+   "uses_service_role": true
+  },
   "supabase/tests/climate/assertions.sql": {
    "path": "supabase/tests/climate/assertions.sql",
    "lines": 404,
@@ -164042,10 +164760,33 @@
   }
  },
  "git": {
-  "sha": "abe31689e830608e7610d82d3a562da77a722a70",
+  "sha": "e634962506e30061c523275b9d40a889fd5ca0b7",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "commits": [
+   {
+    "sha": "e634962",
+    "date": "2026-11-26",
+    "author": "adm01-debug",
+    "subject": "feat(avisos): respeita a janela de silencio do usuario no push (#177)",
+    "files": [
+     "docs/agentes/banco.md",
+     "docs/agentes/mapa-repo.md",
+     "src/components/NotificationQuietHoursCard.tsx",
+     "src/components/security/PushOutboxHealthPanel.tsx",
+     "src/lib/pushOutbox.ts",
+     "src/pages/Profile.tsx",
+     "src/test/notificationQuietHoursCard.test.tsx",
+     "src/test/pushOutbox.simulation.test.ts",
+     "supabase/functions/_shared/campaignPush.ts",
+     "supabase/functions/_shared/campaignPush_test.ts",
+     "supabase/functions/_shared/contracts/contracts_test.ts",
+     "supabase/functions/_shared/contracts/send-campaign-push.ts",
+     "supabase/functions/push-outbox-dispatcher/index.ts",
+     "supabase/functions/send-campaign-push/index.ts",
+     "supabase/migrations/20261229000000_janela_de_silencio_dos_avisos.sql"
+    ]
+   },
    {
     "sha": "abe3168",
     "date": "2026-11-26",
@@ -164414,33 +165155,28 @@
      "src/hooks/useWeeklyChallenge.ts",
      "src/tests/unit/weeklyChallenge.test.tsx"
     ]
-   },
-   {
-    "sha": "de4eaad",
-    "date": "2026-11-24",
-    "author": "adm01-debug",
-    "subject": "docs(estado): alinha o trigger do alerta critico com o estado real (URL e segredo) (#146)",
-    "files": [
-     "docs/estado/05-edge-functions.md"
-    ]
    }
   ],
   "hot_files": [
    [
     "docs/agentes/banco.md",
-    10
+    11
    ],
    [
     "docs/agentes/mapa-repo.md",
-    10
-   ],
-   [
-    "docs/estado/05-edge-functions.md",
-    7
+    11
    ],
    [
     "scripts/db-audit/README.md",
     6
+   ],
+   [
+    "docs/estado/05-edge-functions.md",
+    6
+   ],
+   [
+    "src/pages/Profile.tsx",
+    4
    ],
    [
     "scripts/db-audit/migration-baseline.json",
@@ -164451,12 +165187,12 @@
     4
    ],
    [
-    "src/pages/Profile.tsx",
+    "scripts/db-audit/check-migration-drift.mjs",
     3
    ],
    [
-    "scripts/db-audit/check-migration-drift.mjs",
-    3
+    "supabase/functions/push-outbox-dispatcher/index.ts",
+    2
    ],
    [
     "docs/estado/08-migrations.md",
@@ -164487,23 +165223,19 @@
     2
    ],
    [
-    "supabase/migrations/20261228310000_dedup_indices_redundantes.sql",
+    "src/components/NotificationQuietHoursCard.tsx",
     1
    ],
    [
-    "src/services/departmentsService.ts",
+    "src/components/security/PushOutboxHealthPanel.tsx",
     1
    ],
    [
-    "src/services/predictionMarketService.ts",
+    "src/lib/pushOutbox.ts",
     1
    ],
    [
-    "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql",
-    1
-   ],
-   [
-    "supabase/migrations/20261228231000_reaplica_indices_do_repositorio_em_producao.sql",
+    "src/test/notificationQuietHoursCard.test.tsx",
     1
    ]
   ]

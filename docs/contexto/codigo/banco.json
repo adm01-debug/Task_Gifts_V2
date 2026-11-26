@@ -6,7 +6,7 @@
   "src/integrations/supabase/types.ts",
   "supabase/migrations"
  ],
- "migrations": 316,
+ "migrations": 317,
  "seeds": [],
  "avisos": [
   "17 bloco(s) com DDL dinâmico (EXECUTE format/...) não modelado — policies/colunas criadas dinamicamente podem faltar; confira no banco vivo"
@@ -365,6 +365,7 @@
   "promote_webhook_secret",
   "propose_card_trade",
   "publish_auction",
+  "push_quiet_hours_until",
   "quiz_fifty_fifty",
   "raise_lucky_wheel_window_alerts",
   "recalc_campaign_progress",
@@ -19918,7 +19919,7 @@
     "so_na_migration": [],
     "so_no_types": []
    },
-   "usada_no_front": 4,
+   "usada_no_front": 5,
    "usada_em_edges": [],
    "triggers": [
     "update_notification_preferences_updated_at"
@@ -24136,6 +24137,13 @@
      "default": null,
      "ref": null
     },
+    "deferred_until": {
+     "tipo": "timestamptz",
+     "nn": false,
+     "pk": false,
+     "default": null,
+     "ref": null
+    },
     "id": {
      "tipo": "uuid",
      "nn": true,
@@ -24260,10 +24268,12 @@
     "user_id": "string"
    },
    "drift": {
-    "so_na_migration": [],
+    "so_na_migration": [
+     "deferred_until"
+    ],
     "so_no_types": []
    },
-   "usada_no_front": 0,
+   "usada_no_front": 1,
    "usada_em_edges": [
     "push-outbox-dispatcher"
    ],
@@ -33497,6 +33507,11 @@
    "usada_em": 1
   },
   {
+   "nome": "enqueue_push",
+   "definida": true,
+   "usada_em": 1
+  },
+  {
    "nome": "finish_lightning_round",
    "definida": true,
    "usada_em": 1
@@ -33915,6 +33930,11 @@
    "nome": "publish_auction",
    "definida": true,
    "usada_em": 1
+  },
+  {
+   "nome": "push_quiet_hours_until",
+   "definida": true,
+   "usada_em": 2
   },
   {
    "nome": "quiz_fifty_fifty",

@@ -13703,7 +13703,7 @@
     "presentation",
     "user"
    ],
-   "arquivos_puxados": 150
+   "arquivos_puxados": 151
   },
   {
    "protegida": true,
@@ -16107,6 +16107,7 @@
     "login_attempts",
     "new_device_alerts",
     "notifications",
+    "push_outbox",
     "push_subscriptions",
     "push_sync_events",
     "rate_limit_rules",

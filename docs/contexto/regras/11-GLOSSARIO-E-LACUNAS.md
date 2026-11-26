@@ -1,6 +1,6 @@
 # 11 · GLOSSÁRIO, DADOS DE REFERÊNCIA E LACUNAS
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `abe31689e8` · branch `main` · 2026-11-26 12:14 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `e634962506` · branch `main` · 2026-11-26 15:29 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## Glossário do domínio (entidades do sistema)
@@ -176,7 +176,7 @@
 | `pulse_surveys` | _(sem COMMENT ON TABLE — significado não documentado)_ | 12 colunas | migration |
 | `purchase_approvals` | _(sem COMMENT ON TABLE — significado não documentado)_ | 9 colunas | migration |
 | `push_notification_logs` | _(sem COMMENT ON TABLE — significado não documentado)_ | 16 colunas | migration |
-| `push_outbox` | _(sem COMMENT ON TABLE — significado não documentado)_ | 14 colunas | migration |
+| `push_outbox` | _(sem COMMENT ON TABLE — significado não documentado)_ | 15 colunas | migration |
 | `push_outbox_health_snapshots` | _(sem COMMENT ON TABLE — significado não documentado)_ | 13 colunas | migration |
 | `push_subscriptions` | _(sem COMMENT ON TABLE — significado não documentado)_ | 14 colunas | migration |
 | `push_sync_events` | _(sem COMMENT ON TABLE — significado não documentado)_ | 8 colunas | migration |

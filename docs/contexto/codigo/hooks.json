@@ -1062,7 +1062,7 @@
     "useState"
    ],
    "canais_realtime": [],
-   "usado_por": 107,
+   "usado_por": 108,
    "usado_por_arquivos": [
     "src/App.tsx",
     "src/components/ActivityComments.tsx",
@@ -1074,6 +1074,7 @@
     "src/components/LiveLeaderboard.tsx",
     "src/components/MobileDrawer.tsx",
     "src/components/MyNineBoxWidget.tsx",
+    "src/components/NotificationQuietHoursCard.tsx",
     "src/components/PeerRecognition.tsx",
     "src/components/Providers.tsx",
     "src/components/PushNotificationGlobalToggle.tsx",
@@ -1092,8 +1093,7 @@
     "src/components/feedback/FeedbackSummaryCard.tsx",
     "src/components/lms/ModuleViewer.tsx",
     "src/components/manager/QuestsList.tsx",
-    "src/components/manager/TeamCompetencyDashboard.tsx",
-    "src/components/quiz/QuizDailyRanking.tsx"
+    "src/components/manager/TeamCompetencyDashboard.tsx"
    ],
    "coberto_por_testes": 2
   },

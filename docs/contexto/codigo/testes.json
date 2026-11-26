@@ -5,17 +5,17 @@
   "vitest",
   "playwright"
  ],
- "total": 178,
+ "total": 179,
  "por_tipo": {
   "contrato": 3,
   "e2e": 2,
   "pytest": 2,
-  "unit": 169
+  "unit": 170
  },
  "onde_ficam": [
   {
    "padrao": "co-localizado (*.test)",
-   "arquivos": 159
+   "arquivos": 160
   },
   {
    "padrao": "outro",
@@ -952,6 +952,15 @@
    "casos": 5
   },
   {
+   "arquivo": "src/test/notificationQuietHoursCard.test.tsx",
+   "tipo": "unit",
+   "linhas": 189,
+   "testa": [
+    "src/components/NotificationQuietHoursCard.tsx"
+   ],
+   "casos": 8
+  },
+  {
    "arquivo": "src/test/notificationTypePrefs.simulation.test.ts",
    "tipo": "unit",
    "linhas": 150,
@@ -1135,11 +1144,11 @@
   {
    "arquivo": "src/test/pushOutbox.simulation.test.ts",
    "tipo": "unit",
-   "linhas": 110,
+   "linhas": 308,
    "testa": [
     "src/lib/pushOutbox.ts"
    ],
-   "casos": 7
+   "casos": 19
   },
   {
    "arquivo": "src/test/pushOutboxHealth.simulation.test.ts",
@@ -1704,6 +1713,7 @@
   "scripts/maintenance/lib.mjs": 1,
   "scripts/maintenance/run.mjs": 1,
   "src/components/NotificationCenter.tsx": 1,
+  "src/components/NotificationQuietHoursCard.tsx": 1,
   "src/components/PushNotificationGlobalToggle.tsx": 1,
   "src/components/SurveyNotificationPreferences.tsx": 1,
   "src/components/accessibility/index.ts": 1,

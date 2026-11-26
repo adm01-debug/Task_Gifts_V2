@@ -1,6 +1,6 @@
 # 07 · REGRAS DE NEGÓCIO
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `abe31689e8` · branch `main` · 2026-11-26 12:14 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `e634962506` · branch `main` · 2026-11-26 15:29 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## A. Regras escritas por humanos (`manual/` — prioridade máxima, nunca sobrescrito)
@@ -617,7 +617,7 @@ _Nenhum arquivo em `manual/`. Copie `manual/TEMPLATE-regras-de-negocio.md` para 
 | `user_seasonal_progress` | `claimed` | default false |
 | `user_seasonal_progress` | `created_at` | default now() |
 | `user_seasonal_progress` | `updated_at` | default now() |
-| … +1836 linhas — lista completa em `context.json` | | |
+| … +1837 linhas — lista completa em `context.json` | | |
 
 ## D. Automações no banco (triggers e funções — regras que rodam sozinhas)
 
@@ -1019,7 +1019,7 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `department_wars` | `status` | `cancelled`, `draft`, `finished`, `running` | `draft` |
 | `auctions` | `status` | `active`, `cancelled`, `closed`, `draft` | `draft` |
 | `auction_bids` | `status` | `active`, `refunded`, `won` | `active` |
-| `push_outbox` | `status` | `failed`, `pending`, `processing`, `sent`, `skipped` | `pending` |
+| `push_outbox` | `status` | `deferred`, `failed`, `pending`, `processing`, `sent`, `skipped` | `pending` |
 | `prediction_markets` | `status` | `draft`, `locked`, `open`, `settled`, `voided` | `draft` |
 | `card_packs` | `status` | `opened`, `sealed` | `sealed` |
 | `card_trades` | `status` | `accepted`, `cancelled`, `declined`, `expired`, `pending` | `pending` |
@@ -1082,9 +1082,9 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `type` | `broken_streaks` | escreve | `supabase/functions/admin-alerts/index.ts` |
 | `type` | `brute_force` | compara | `src/components/security/SecurityAlertsPanel.tsx` |
 | `type` | `button` | escreve | `src/components/mobile/HapticWrapper.tsx` |
-| `type` | `campaign_completed` | compara, escreve | `src/components/CampaignNotificationPreferences.tsx`<br>`src/services/salesCampaignsService.ts`<br>`supabase/functions/_shared/contracts/_fixtures/index.ts`<br>`supabase/functions/_shared/contracts/contracts_test.ts` |
+| `type` | `campaign_completed` | compara, escreve | `src/components/CampaignNotificationPreferences.tsx`<br>`src/services/salesCampaignsService.ts`<br>`supabase/functions/_shared/campaignPush_test.ts`<br>`supabase/functions/_shared/contracts/_fixtures/index.ts`<br>`supabase/functions/_shared/contracts/contracts_test.ts` |
 | `type` | `campaign_enrolled` | escreve | `src/services/salesCampaignsService.ts` |
-| `type` | `campaign_milestone` | escreve | `src/services/salesCampaignsService.ts` |
+| `type` | `campaign_milestone` | escreve | `src/services/salesCampaignsService.ts`<br>`supabase/functions/_shared/campaignPush_test.ts`<br>`supabase/functions/_shared/contracts/contracts_test.ts` |
 | `type` | `cancel` | compara, escreve | `src/components/duels/DuelCard.tsx`<br>`src/pages/Duels.tsx` |
 | `type` | `certification_expiring` | escreve | `src/hooks/usePDIAlerts.ts` |
 | `type` | `challenge` | compara, escreve | `src/hooks/useWeeklyChallenge.ts`<br>`src/lib/boardTrail.ts`<br>`src/lib/boardTrailAuthoring.ts` |
@@ -1223,6 +1223,7 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `status` | `critical` | compara | `src/lib/luckyWheelPayoutHistory.ts`<br>`src/pages/ErrorBudget.tsx` |
 | `status` | `decided` | compara | `src/components/tournament/TournamentBracketView.tsx`<br>`src/pages/TournamentsPage.tsx` |
 | `status` | `declined` | compara, escreve | `src/components/duels/DuelCard.tsx`<br>`src/services/duelsService.ts` |
+| `status` | `deferred` | compara, escreve, filtra | `src/components/security/PushOutboxHealthPanel.tsx`<br>`src/lib/pushOutbox.ts`<br>`supabase/functions/push-outbox-dispatcher/index.ts` |
 | `status` | `delivered` | compara | `src/components/shop-admin/PurchaseGovernanceDialog.tsx` |
 | `status` | `draft` | compara, escreve, filtra | `src/components/admin/FeedbackCycleManager.tsx`<br>`src/components/admin/SurveyCreator.tsx`<br>`src/components/auction/AuctionAdminForm.tsx`<br>`src/components/boss/BossBattleAdminDialog.tsx`<br>`src/components/campaigns/CampaignGoalBetPanel.tsx`<br>… +29 |
 | `status` | `error` | escreve | `supabase/functions/_shared/sentry.ts` |
@@ -1424,7 +1425,7 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | RiskLevel | low \| medium \| high \| critical | `src/lib/purchaseRisk.ts` |
 | PushDeviceStatus | current \| active \| idle \| revoked | `src/lib/pushDevices.ts` |
 | PushDeviceKind | mobile \| tablet \| desktop \| unknown | `src/lib/pushDevices.ts` |
-| OutboxStatus | pending \| processing \| sent \| failed \| skipped | `src/lib/pushOutbox.ts` |
+| OutboxStatus | pending \| processing \| deferred \| sent \| failed \| skipped | `src/lib/pushOutbox.ts` |
 | HealthSeverity | ok \| warning \| critical | `src/lib/pushOutboxHealth.ts` |
 | SEQUENCE_REPORT_SECTIONS | "PARAMETROS", "RESUMO", "ETAPAS", "RANKING", "SERIE_DIARIA", "TENTATIVAS", | `src/lib/sequenceProcedureStatsExport.ts` |
 | CardRarity | common \| rare \| epic \| legendary | `src/lib/tradingCards.ts` |
@@ -1789,9 +1790,13 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
   ```ts
   { ok: z.literal(true), week: z.string(), total: z.number().int().nonnegative(), resolved: z.number().int().nonnegative(), pending: z.number().int().nonnegative(), critical: z.number().int().nonnegative(), high: z.number().int().nonnegative(), sla_pct: z.number().nonnegative(), avg_mttr_min: z.number().nullable(), top: z.array(z.object({ type: z.string(), count: z.number().int().nonnegative() })), slack_status: z.number().int().nullable(), notified_admins: z.number().int().nonnegative(), }
   ```
+- **campaignPushData** (`supabase/functions/_shared/contracts/send-campaign-push.ts`, z.object):
+  ```ts
+  { milestone: z.union([z.number().int(), texto(32)]).optional() }
+  ```
 - **SendCampaignPushRequestSchema** (`supabase/functions/_shared/contracts/send-campaign-push.ts`, z.object):
   ```ts
-  { user_ids: z.array(uuid).min(1).max(500), type: texto(64), title: texto(120), message: texto(400), // Caminho relativo é o caso real (salesCampaignsService.ts envia "/campanhas/<id>"): // com z.string().url() a função devolvia 422 e o push de campanha era descartado em silêncio. url: destinoUrl().optional(), data: jsonRecord.optional(), }
+  { user_ids: z.array(uuid).min(1).max(500), type: texto(64), title: texto(120), message: texto(400), // Caminho relativo é o caso real (salesCampaignsService.ts envia "/campanhas/<id>"): // com z.string().url() a função devolvia 422 e o push de campanha era descartado em silêncio. url: destinoUrl().optional(), data: campaignPushData.optional(), }
   ```
 - **SendCampaignPushResponseSchema** (`supabase/functions/_shared/contracts/send-campaign-push.ts`, z.union):
   ```ts
@@ -1846,6 +1851,8 @@ _nenhum item encontrado_
 
 | Campo | Restrições | Arquivo |
 |---|---|---|
+| `quiet-hours-start` | disabled=saving \|\| !enabled | `src/components/NotificationQuietHoursCard.tsx` |
+| `quiet-hours-end` | disabled=saving \|\| !enabled | `src/components/NotificationQuietHoursCard.tsx` |
 | `device-nickname` | max, disabled=!device \|\| isSaving | `src/components/PushNotificationToggle.tsx` |
 | `expires_at` | type=date | `src/components/admin/AnnouncementPublisher.tsx` |
 | `date` | type=date | `src/components/admin/CelebrationManager.tsx` |
@@ -2789,12 +2796,14 @@ _nenhum item encontrado_
 | `↑ 12% este mês` | `src/stories/components/Card.stories.tsx` |
 | `<span>67% concluído</span>` | `src/stories/components/Progress.stories.tsx` |
 | `<span>45%</span>` | `src/stories/feedback/LoadingStates.stories.tsx` |
+| `* O `campaign_id` sozinho nao identifica o aviso: os marcos de 25/50/75% e a` | `supabase/functions/_shared/campaignPush.ts` |
 | `* `result.allowed` ser `undefined`, o que bloqueia 100% do tráfego com 429.` | `supabase/functions/_shared/rate-limiter.ts` |
 | `// - Lenta: 6h E 30min burn >= 6x -> high (5% do budget em 6h)` | `supabase/functions/burn-rate-monitor/index.ts` |
 | `// - Rápida: 1h E 5min burn >= 14.4x -> critical (2% do budget em 1h)` | `supabase/functions/burn-rate-monitor/index.ts` |
 | `// Celebrate strengths if all competencies are above 70%` | `supabase/functions/competency-alerts/index.ts` |
 | `const technicalValue = Math.min(100, (moduleProgress?.length \|\| 0) * 10 + avgScore * 0.5);` | `supabase/functions/competency-alerts/index.ts` |
 | `// e API externa. Ao cruzar 75% ou 90%, cria um security_alert e dispara o` | `supabase/functions/error-budget-monitor/index.ts` |
+| `// Uma chave por conteudo: 25/50/75% e conclusao saem na mesma campanha e com` | `supabase/functions/send-campaign-push/index.ts` |
 
 ## H. Parâmetros de negócio (constantes, prazos, limites)
 
@@ -2804,6 +2813,8 @@ _nenhum item encontrado_
 |---|---|---|
 | `DAYS_TO_SHOW` | `365` | `src/components/ActivityHeatmap.tsx` |
 | `EXECUTIVE_REPORT_TYPE` | `"executive_report"` | `src/components/ExecutiveReportPreferenceToggle.tsx` |
+| `PADRAO_INICIO` | `"22:00"` | `src/components/NotificationQuietHoursCard.tsx` |
+| `PADRAO_FIM` | `"08:00"` | `src/components/NotificationQuietHoursCard.tsx` |
 | `DEFAULT_TITLE` | `'Task Gifts - Gamificação Corporativa'` | `src/components/SEOHead.tsx` |
 | `ITEMS_PER_PAGE` | `10` | `src/components/admin/UsersManager.tsx` |
 | `NO_REWARD` | `"none"` | `src/components/auction/AuctionAdminForm.tsx` |
@@ -2956,6 +2967,8 @@ _nenhum item encontrado_
 | `DUAL_APPROVAL_THRESHOLD` | `70` | `src/lib/purchaseRisk.ts` |
 | `STALE_DEVICE_DAYS` | `30` | `src/lib/pushDevices.ts` |
 | `MAX_PUSH_ATTEMPTS` | `3` | `src/lib/pushOutbox.ts` |
+| `SAO_PAULO_OFFSET_MS` | `-3` | `src/lib/pushOutbox.ts` |
+| `DAY_MS` | `24` | `src/lib/pushOutbox.ts` |
 | `SEQUENCE_COINS_PER_CORRECT` | `8` | `src/lib/sequenceGame.ts` |
 | `SEQUENCE_XP_PER_CORRECT` | `12` | `src/lib/sequenceGame.ts` |
 | `SEQUENCE_PERFECT_COIN_BONUS` | `40` | `src/lib/sequenceGame.ts` |
@@ -3015,6 +3028,9 @@ _nenhum item encontrado_
 | `CANDIDATE_COLUMNS` | `"id, display_name, avatar_url, level, xp"` | `src/services/mentorshipService.ts` |
 | `MAX_BUDGET` | `10` | `src/services/wagerBudgetService.ts` |
 | `MAX_PLAYERS` | `100` | `src/services/wagerBudgetService.ts` |
+| `MAX_CAMPAIGN_DEDUPE_BASE` | `150` | `supabase/functions/_shared/campaignPush.ts` |
+| `USER` | `"11111111-1111-4111-8111-111111111111"` | `supabase/functions/_shared/campaignPush_test.ts` |
+| `OUTRO` | `"33333333-3333-4333-8333-333333333333"` | `supabase/functions/_shared/campaignPush_test.ts` |
 | `VALIDATION_ERROR_STATUS` | `422` | `supabase/functions/_shared/validation.ts` |
 | `CHALLENGE` | `"Y2hhbGxlbmdlLWRlLXRlc3RlLTEyMzQ1Njc4OTA"` | `supabase/functions/_shared/webauthn_test.ts` |
 | `REPLAY_WINDOW_SECONDS` | `300` | `supabase/functions/_shared/webhookSecurity.ts` |
@@ -3087,6 +3103,7 @@ _nenhum item encontrado_
 | `const daysSinceActive = Math.floor((Date.now() - new Date(updatedAt).getTime()) / (1000 * 60 * 60 * 24));` | `src/components/manager/ManagerComponents.tsx` |
 | `const timer = setTimeout(() => setTimeLeft(t => t - 1), 1000);` | `src/components/quiz/MillionaireQuiz.tsx` |
 | `staleTime: 10 * 60 * 1000,` | `src/components/security/AlertHeatmap.tsx` |
+| `const limite = new Date(Date.now() - 5 * 60 * 1000).toISOString();` | `src/components/security/PushOutboxHealthPanel.tsx` |
 | `ends_at: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().slice(0, 16),` | `src/components/shop-admin/PromotionFormDialog.tsx` |
 | `const timer = setTimeout(() => setXpDiff(null), 2000);` | `src/components/sidebar/SidebarUserStats.tsx` |
 | `const hideTimer = setTimeout(() => setVisible(false), 5000);` | `src/components/ui/command-trigger.tsx` |
@@ -3144,6 +3161,8 @@ _nenhum item encontrado_
 | `export const LOCK_GRACE_MS = 15 * 60 * 1000;` | `src/lib/predictionWatchdog.ts` |
 | `export const SETTLEMENT_GRACE_MS = 24 * 60 * 60 * 1000;` | `src/lib/predictionWatchdog.ts` |
 | `const staleBefore = nowTs - STALE_DEVICE_DAYS * 24 * 60 * 60 * 1000;` | `src/lib/pushDevices.ts` |
+| `const DAY_MS = 24 * 60 * 60 * 1000;` | `src/lib/pushOutbox.ts` |
+| `const SAO_PAULO_OFFSET_MS = -3 * 60 * 60 * 1000;` | `src/lib/pushOutbox.ts` |
 | `case "1h": return new Date(now.getTime() - 60 * 60 * 1000).toISOString();` | `src/pages/AdminTelemetria.tsx` |
 | `case "24h": return new Date(now.getTime() - 24 * 60 * 60 * 1000).toISOString();` | `src/pages/AdminTelemetria.tsx` |
 | `case "6h": return new Date(now.getTime() - 6 * 60 * 60 * 1000).toISOString();` | `src/pages/AdminTelemetria.tsx` |
@@ -3247,6 +3266,8 @@ _nenhum item encontrado_
 | `v_since timestamptz := now() - interval '24 hours';` | `supabase/migrations/20261228210000_reaplica_mensagens_funcoes_divergentes.sql` |
 | `v_stuck_cutoff timestamptz := now() - interval '5 minutes';` | `supabase/migrations/20261228210000_reaplica_mensagens_funcoes_divergentes.sql` |
 | `v_orcamento constant interval := interval '60 seconds';` | `supabase/migrations/20261228310000_dedup_indices_redundantes.sql` |
+| `AND updated_at < now() - interval '10 minutes';` | `supabase/migrations/20261229000000_janela_de_silencio_dos_avisos.sql` |
+| `v_dow := EXTRACT(ISODOW FROM (v_local - interval '1 day'))::integer;` | `supabase/migrations/20261229000000_janela_de_silencio_dos_avisos.sql` |
 
 ### H.3 Limites de paginação
 
@@ -3329,6 +3350,8 @@ _nenhum item encontrado_
 | Erro ao copiar | `src/components/AICoachDialog.tsx` |
 | useGlobalMessage must be used within GlobalMessageProvider | `src/components/GlobalMessageProvider.tsx` |
 | Não foi possível salvar a preferência | `src/components/InAppNotificationToggle.tsx` |
+|              className= | `src/components/NotificationQuietHoursCard.tsx` |
+| Nao foi possivel salvar a janela de silencio | `src/components/NotificationQuietHoursCard.tsx` |
 | Ainda sem conexão. Tente novamente. | `src/components/OfflineIndicator.tsx` |
 | Você está offline. Alguns recursos podem estar limitados. | `src/components/OfflineIndicator.tsx` |
 |              className= | `src/components/PushNotificationGlobalToggle.tsx` |
@@ -3603,9 +3626,7 @@ _nenhum item encontrado_
 | Falha ao encerrar a guerra. | `src/pages/DepartmentWarPage.tsx` |
 | Falha ao sincronizar o efetivo. | `src/pages/DepartmentWarPage.tsx` |
 | Nenhum dado disponível para exportar. | `src/pages/EngagementReports.tsx` |
-|  aria-live= | `src/pages/ExecutiveMonthlyReport.tsx` |
-| Nada para investigar neste período. | `src/pages/ExecutiveMonthlyReport.tsx` |
-| … +191 linhas — lista completa em `context.json` | |
+| … +193 linhas — lista completa em `context.json` | |
 
 ## J. Controle de acesso no código (checagens de perfil/permissão)
 
@@ -3674,7 +3695,7 @@ _nenhum item encontrado_
 | `admin` | `supabase/migrations/20261228300000_fecha_corridas_da_exclusao_de_departamento_e_da_aposta_diaria.sql` |
 | `manager` | `supabase/migrations/20261228300000_fecha_corridas_da_exclusao_de_departamento_e_da_aposta_diaria.sql` |
 
-## K. Testes como especificação (2136 testes em 164 arquivos — nomes completos em `context.json`)
+## K. Testes como especificação (2158 testes em 165 arquivos — nomes completos em `context.json`)
 
 | Arquivo | Testes | Exemplos do que o sistema DEVE fazer |
 |---|---|---|
@@ -3699,6 +3720,7 @@ _nenhum item encontrado_
 | `src/test/luckyWheelOdds.simulation.test.ts` | 21 | resolvePrizeIndex — paridade com o laço da RPC · cobre exaustivamente todas as faixas de roll do baseline · nunca sorteia prêmio inativo em 200 mil giros · frequência empírica converge para o peso configurado (tolerância 1,5%) … |
 | `src/test/luckyWheelPayoutAlerts.simulation.test.ts` | 21 | chiSquareCritical · df=%s p=%s aproxima o valor tabelado %s · é monótona crescente em df e decrescente em p · devolve Infinity para entrada inválida df=%s p=%s … |
 | `src/test/npsHistory.simulation.test.ts` | 21 | computeNpsScore — simulação combinatória · cobre centenas de combinações de promotores × neutros × detratores · é monotônico ao trocar detratores por promotores · sanitiza entradas corrompidas … |
+| `src/test/pushOutbox.simulation.test.ts` | 21 | fila de push — máquina de estados · entrega no primeiro sucesso · erro permanente não consome retries extras · erro transitório volta para a fila até esgotar tentativas … |
 | `src/test/wagerScheduleExport.test.ts` | 21 | buildWagerScheduleCsv · gera cabeçalho e uma linha por pergunta · ordena por data agendada · exporta o gabarito como letra posicional … |
 | `src/test/bingoRpc.simulation.test.ts` | 20 | get_or_create_bingo_card — idempotência · retorna sempre a MESMA cartela em chamadas repetidas · id explícito e id implícito convergem para a mesma cartela · isola cartelas por usuário e por tabuleiro … |
 | `src/test/cardPackTriggers.simulation.test.ts` | 20 | gatilho de tarefa no prazo · cobre todas as transições de status (25 cenários) · insert já concluído paga uma única vez · rejeita entrega com atraso ou retrabalho (200 cenários) … |
@@ -3776,13 +3798,13 @@ _nenhum item encontrado_
 | `src/test/auctionDelivery.simulation.test.ts` | 9 | resolveAuctionDelivery — casos determinísticos · não entrega nada quando ninguém deu lance · leilão simbólico não mexe em estoque · estoque ilimitado sempre reserva … |
 | `src/test/goalBetExposure.test.ts` | 9 | computeGoalBetExposure · sem aportes não há exposição · ignora mercados já apurados ou anulados · classifica exposição segura … |
 | `src/test/goalBetHistory.test.ts` | 9 | computeGoalBetHistory · retorna vazio sem dados · ignora mercados ainda abertos ou travados · computa acerto, lucro e ROI … |
+| `src/test/notificationQuietHoursCard.test.tsx` | 9 | janela de silencio · comeca desligada, sugerindo 22:00-08:00 · usa o nome legado quiet_hours quando do_not_disturb esta nulo · ligar grava as quatro colunas sem apagar type_preferences … |
 | `src/test/predictionWatchdog.simulation.test.ts` | 9 | predictionWatchdog — regras individuais · ignora rascunhos e estados terminais · respeita a carência antes de acusar falha do cron · cobra a apuração só depois de 24h travado … |
 | `src/test/sequenceProcedureStats.test.ts` | 9 | parseSequenceProcedureStats · devolve estrutura vazia para payloads inválidos · sanea números negativos, NaN e acertos maiores que a amostra · ordena a série diária e descarta linhas sem chave … |
 | `src/test/sequenceProcedureStatsExport.test.ts` | 9 | buildSequenceStatsCsv · emite todas as seções na ordem esperada · usa CRLF e aspas em todas as células (RFC 4180) · neutraliza fórmulas e escapa aspas/vírgulas … |
 | `src/test/useTypePreferences.test.tsx` | 9 | useTypePreferences · aplica defaults quando o banco esta vazio · hidrata valores existentes do banco · escreve de forma aditiva, preservando tipos de outros modulos … |
 | `src/test/luckyWheelPayoutTrendCsv.simulation.test.ts` | 8 | buildPayoutTrendCsv — simulação massiva · mantém uma linha por dia da janela em 200 cenários aleatórios · nunca emite quebras de linha extras dentro das células · neutraliza tentativas de CSV injection no rótulo do período … |
 | `src/test/notificationUrl.test.ts` | 8 | resolveNotificationUrl · respeita a rota que a fonte gravou · navega o aviso antigo que so gravou o payload de negocio · leva o aviso ao lugar do assunto, nao a uma pagina vizinha … |
-| `src/test/pushOutbox.simulation.test.ts` | 8 | fila de push — máquina de estados · entrega no primeiro sucesso · erro permanente não consome retries extras · erro transitório volta para a fila até esgotar tentativas … |
 | `src/test/boardStatsExport.simulation.test.ts` | 7 | boardStatsExport — invariantes · mantém cabeçalho estável e uma linha por desafio · neutraliza CSV injection e escapa aspas/vírgulas/quebras · não quebra com payload vazio, nulo ou corrompido … |
 | `src/test/bossDepartmentComparison.simulation.test.ts` | 7 | compareDepartments — simulação massiva · mantém invariantes em 800 cenários · normaliza janela invertida · agrupa batalhas sem departamento em bucket explícito … |
 | `src/test/cardPackNotifications.simulation.test.ts` | 7 | notificação de pacote de cartas · gera payload válido para toda origem e tamanho 1..20 (120 cenários) · chave de dedupe é única por pacote (1000 cenários) · mesmo pacote sempre produz a mesma chave (determinismo) … |
@@ -3907,6 +3929,7 @@ _nenhum item encontrado_
 | Limit to 5 trails | `src/components/AICoachDialog.tsx` |
 | CustomTooltip must be a simple function (not a component receiving refs) | `src/components/CompetencyRadar.tsx` |
 | Fail open: indisponibilidade do verificador não pode travar o acesso. | `src/components/IpAccessGuard.tsx` |
+| Campo de hora vazio nao pode virar `:00` no banco: o tipo `time` recusa e o | `src/components/NotificationQuietHoursCard.tsx` |
 | outra aba, criando a linha depois que este card carregou — não pode perder nada. | `src/components/PushNotificationGlobalToggle.tsx` |
 | Somente os canais que estes lembretes realmente usam. Os dois tipos chamam | `src/components/SurveyNotificationPreferences.tsx` |
 | Evita disparos concorrentes que estouram o rate limit da edge function. | `src/components/TrailRecommendations.tsx` |
@@ -3936,6 +3959,8 @@ _nenhum item encontrado_
 | // Requer nível mínimo 60 | `src/components/rbac/ProtectedRoute.tsx` |
 | Se não precisa de verificação RBAC, apenas autenticação | `src/components/rbac/ProtectedRoute.tsx` |
 | Check if user has required access | `src/components/rbac/ProtectedRoute.tsx` |
+| contagem e' o sinal de alerta: adiado com prazo vencido quer dizer que o | `src/components/security/PushOutboxHealthPanel.tsx` |
+| Sem dado (consulta falhou) nao pode aparecer como zero. | `src/components/security/PushOutboxHealthPanel.tsx` |
 | A validação usa exclusivamente o motor puro `validateSlaDraft`, já coberto por simulação. | `src/components/security/SlaTargetEditor.tsx` |
 | * Quando verdadeiro, a lista fica somente leitura (após enviar). */ | `src/components/sequence/SequenceStepList.tsx` |
 | Triagem: o filtro afeta apenas a exibição; a exportação segue completa | `src/components/wager/WagerIntegrityCard.tsx` |
@@ -4064,7 +4089,12 @@ _nenhum item encontrado_
 | W1. Cada mercado gera no máximo um alerta (nunca duplica o mesmo problema). | `src/lib/predictionWatchdog.ts` |
 | * A IA nunca decide sozinha: ela apenas ajusta a pontuação heurística dentro | `src/lib/purchaseRisk.ts` |
 | - nunca expõe o endpoint (URL sensível), apenas o apelido/plataforma; | `src/lib/pushDevices.ts` |
+| * Fim da janela de silencio; preenchido apenas com status `deferred`. */ | `src/lib/pushOutbox.ts` |
 | * Reivindicação em lote: apenas itens pendentes entram, respeitando o teto. | `src/lib/pushOutbox.ts` |
+| * Preferencia atual do dono do item; `undefined` = nao modelada (usa o prazo | `src/lib/pushOutbox.ts` |
+| volta: linha adiada sem prazo ficaria presa para sempre. | `src/lib/pushOutbox.ts` |
+| * Com `quietHours`, o prazo e' recalculado a partir da preferencia ATUAL antes de | `src/lib/pushOutbox.ts` |
+| solta o aviso na hora, e estender a janela empurra o prazo em vez de entregar no | `src/lib/pushOutbox.ts` |
 | Erros de rate limit/permissão são esperados: registramos como mensagem, | `src/lib/requestId.ts` |
 | * `invokeEdge` + tratamento canônico de erro + retry apenas em falhas | `src/lib/requestId.ts` |
 | limit só piora o problema que o originou. | `src/lib/requestId.ts` |
@@ -4159,6 +4189,7 @@ _nenhum item encontrado_
 | * Persiste o rascunho. A validação final continua sendo do banco. */ | `src/services/wagerAdminService.ts` |
 | * Importação em lote: salva sequencialmente para não estourar o rate limit | `src/services/wagerAdminService.ts` |
 | * Cria ou atualiza a apuração de uma anomalia (somente administradores). */ | `src/services/wagerIntegrityReviewService.ts` |
+| * Limite da base antes do sufixo: 150 + ':' + uuid (36) = 187 caracteres. */ | `supabase/functions/_shared/campaignPush.ts` |
 | (o proxy apenas ANEXA à cadeia existente, não a substitui). Usar o primeiro | `supabase/functions/_shared/clientIp.ts` |
 | resultado é marcado como não confiável e a decisão de segurança deve | `supabase/functions/_shared/clientIp.ts` |
 | * true somente quando veio de um header sobrescrito pelo proxy. */ | `supabase/functions/_shared/clientIp.ts` |
@@ -4194,13 +4225,4 @@ _nenhum item encontrado_
 | E-mail desconhecido apenas não restringe credenciais; não revelamos | `supabase/functions/passkey-auth/index.ts` |
 | e-mail com curinga não pode "pescar" o dono de outra conta. | `supabase/functions/passkey-auth/index.ts` |
 | Limite por (credencial + cliente) além do limite por IP: o balde global | `supabase/functions/passkey-auth/index.ts` |
-| caminho não pode emitir sessão. | `supabase/functions/passkey-auth/index.ts` |
-| A IA é um complemento: falha nela não pode travar a governança. | `supabase/functions/reward-approval-review/index.ts` |
-| Apenas gestores/administradores podem disparar a análise. | `supabase/functions/reward-approval-review/index.ts` |
-| * A IA nunca decide sozinha: ela apenas ajusta a pontuação heurística dentro | `supabase/functions/reward-approval-review/risk.ts` |
-| A função publica com efeito colateral (notificações) e é chamada apenas por cron (POST), | `supabase/functions/security-weekly-digest/index.ts` |
-| SLA é a fração resolvidos/total (métrica de resolução, não de prazo): o repo não | `supabase/functions/security-weekly-digest/index.ts` |
-| persiste se um alerta estourou o prazo, então % de resolvidos é o indicador | `supabase/functions/security-weekly-digest/index.ts` |
-| forjado com type=security_weekly_digest não pode ser usado como prova (nem bloquear | `supabase/functions/security-weekly-digest/index.ts` |
-| Máximo de 3 tentativas totais. Backoff base: 500ms, cap 8s. | `supabase/functions/send-campaign-push/index.ts` |
-| … +3 linhas — lista completa em `context.json` | |
+| … +14 linhas — lista completa em `context.json` | |

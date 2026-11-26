@@ -5,13 +5,13 @@
  "modulos": [
   {
    "modulo": "components",
-   "arquivos": 83,
+   "arquivos": 84,
    "testes": 0,
-   "linhas": 18413,
+   "linhas": 18685,
    "itens_menu": [],
    "telas": [],
    "rotas_http": [],
-   "componentes": 81,
+   "componentes": 82,
    "hooks_locais": [
     "useAICoach",
     "useAcceptDuel",
@@ -3785,7 +3785,7 @@
    "modulo": "components/security",
    "arquivos": 16,
    "testes": 0,
-   "linhas": 3323,
+   "linhas": 3364,
    "itens_menu": [],
    "telas": [],
    "rotas_http": [],
@@ -3821,6 +3821,7 @@
     "login_attempts",
     "new_device_alerts",
     "notifications",
+    "push_outbox",
     "push_subscriptions",
     "push_sync_events",
     "rate_limit_rules",
@@ -3864,6 +3865,7 @@
     "edges": [],
     "tabelas": [
      "login_attempts",
+     "push_outbox",
      "security_alerts",
      "session_logs"
     ],
@@ -6619,7 +6621,7 @@
    "modulo": "lib",
    "arquivos": 107,
    "testes": 0,
-   "linhas": 22156,
+   "linhas": 22290,
    "itens_menu": [],
    "telas": [],
    "rotas_http": [],
@@ -6752,7 +6754,7 @@
    "modulo": "pages",
    "arquivos": 86,
    "testes": 0,
-   "linhas": 24962,
+   "linhas": 24964,
    "itens_menu": [
     "Admin Loja",
     "Admin Quiz",
@@ -7538,6 +7540,7 @@
     "pulse_surveys",
     "purchase_approvals",
     "push_notification_logs",
+    "push_outbox",
     "push_subscriptions",
     "push_sync_events",
     "query_telemetry",
@@ -8742,7 +8745,7 @@
   {
    "modulo": "test",
    "arquivos": 0,
-   "testes": 140,
+   "testes": 141,
    "linhas": 0,
    "itens_menu": [],
    "telas": [],

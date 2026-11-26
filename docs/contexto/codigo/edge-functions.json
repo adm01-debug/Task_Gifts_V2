@@ -16,6 +16,8 @@
  ],
  "shared": [
   "supabase/functions/_shared/cache.ts",
+  "supabase/functions/_shared/campaignPush.ts",
+  "supabase/functions/_shared/campaignPush_test.ts",
   "supabase/functions/_shared/clientIp.ts",
   "supabase/functions/_shared/contracts/README.md",
   "supabase/functions/_shared/contracts/_fixtures/index.ts",
@@ -555,7 +557,7 @@
    "nome": "push-outbox-dispatcher",
    "entrada": "supabase/functions/push-outbox-dispatcher/index.ts",
    "arquivos": 1,
-   "linhas": 215,
+   "linhas": 247,
    "verify_jwt": false,
    "metodos": [
     "OPTIONS"
@@ -567,6 +569,7 @@
    ],
    "rpcs": [
     "claim_push_outbox",
+    "push_quiet_hours_until",
     "user_wants_push_notification"
    ],
    "env": [
@@ -691,7 +694,7 @@
    "nome": "send-campaign-push",
    "entrada": "supabase/functions/send-campaign-push/index.ts",
    "arquivos": 1,
-   "linhas": 223,
+   "linhas": 275,
    "verify_jwt": true,
    "metodos": [
     "OPTIONS",
@@ -702,7 +705,9 @@
     "push_subscriptions"
    ],
    "rpcs": [
+    "enqueue_push",
     "increment_push_failures",
+    "push_quiet_hours_until",
     "reset_push_failures",
     "user_wants_push_notification"
    ],
@@ -717,6 +722,7 @@
    "chama_edges": [],
    "hosts_externos": [],
    "usa_shared": [
+    "campaignPush.ts",
     "send-campaign-push.ts",
     "validation.ts"
    ],

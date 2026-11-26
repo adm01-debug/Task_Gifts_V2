@@ -3,8 +3,8 @@
  "format_version": 2,
  "stack": {
   "linguagens": [
-   "TypeScript (1170)",
-   "SQL (318)",
+   "TypeScript (1174)",
+   "SQL (319)",
    "Markdown (56)",
    "JavaScript (24)",
    "JSON (14)",
@@ -733,11 +733,11 @@
  "permissoes": {
   "papeis_no_codigo": [
    {
-    "papel": "admin",
-    "ocorrencias": 13
+    "papel": "alert",
+    "ocorrencias": 14
    },
    {
-    "papel": "alert",
+    "papel": "admin",
     "ocorrencias": 13
    },
    {

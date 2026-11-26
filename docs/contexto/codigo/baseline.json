@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "abe31689e830608e7610d82d3a562da77a722a70",
+  "commit": "e634962506e30061c523275b9d40a889fd5ca0b7",
   "branch": "main",
-  "data_commit": "2026-11-26T09:12:41-03:00",
+  "data_commit": "2026-11-26T12:28:50-03:00",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "ultimos_commits": [
+   {
+    "sha": "e634962",
+    "data": "2026-11-26",
+    "assunto": "feat(avisos): respeita a janela de silencio do usuario no push (#177)"
+   },
    {
     "sha": "abe3168",
     "data": "2026-11-26",
@@ -126,18 +131,13 @@
     "sha": "d9f0718",
     "data": "2026-11-24",
     "assunto": "feat: envia lembrete de clima por push alem do in-app (#153)"
-   },
-   {
-    "sha": "a2a5bc3",
-    "data": "2026-11-24",
-    "assunto": "fix(supabase): alinha 20261220000000 ao trigger vivo do alerta critico (#152)"
    }
   ],
-  "arquivos_mudados_7d": 273,
+  "arquivos_mudados_7d": 281,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "supabase/functions/_shared",
-    "mudancas": 69
+    "mudancas": 73
    },
    {
     "pasta": "package.json",
@@ -145,11 +145,11 @@
    },
    {
     "pasta": "docs/agentes/banco.md",
-    "mudancas": 19
+    "mudancas": 20
    },
    {
     "pasta": "docs/agentes/mapa-repo.md",
-    "mudancas": 16
+    "mudancas": 17
    },
    {
     "pasta": "docs/estado/05-edge-functions.md",
@@ -203,11 +203,11 @@
    },
    {
     "arquivo": "docs/agentes/banco.md",
-    "mudancas": 19
+    "mudancas": 20
    },
    {
     "arquivo": "docs/agentes/mapa-repo.md",
-    "mudancas": 16
+    "mudancas": 17
    },
    {
     "arquivo": "docs/estado/05-edge-functions.md",
@@ -246,6 +246,10 @@
     "mudancas": 6
    },
    {
+    "arquivo": "src/pages/Profile.tsx",
+    "mudancas": 6
+   },
+   {
     "arquivo": "supabase/functions/_shared/contracts/_fixtures/index.ts",
     "mudancas": 6
    },
@@ -263,10 +267,6 @@
    },
    {
     "arquivo": "scripts/db-audit/migration-baseline.json",
-    "mudancas": 5
-   },
-   {
-    "arquivo": "src/pages/Profile.tsx",
     "mudancas": 5
    },
    {
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 143
+    "commits": 144
    },
    {
     "autor": "dependabot[bot]",
@@ -310,21 +310,21 @@
   ]
  },
  "contagens": {
-  "arquivos_total": 1618,
-  "arquivos_codigo": 1198,
-  "linhas_codigo": 237249,
+  "arquivos_total": 1623,
+  "arquivos_codigo": 1202,
+  "linhas_codigo": 238365,
   "rotas": 87,
   "rotas_http_backend": 0,
   "vistas_por_id": 0,
   "itens_menu": 65,
   "modulos": 73,
-  "componentes": 532,
+  "componentes": 533,
   "hooks": 155,
   "edge_functions": 23,
   "tabelas": 239,
-  "migrations": 316,
+  "migrations": 317,
   "cron_jobs": 40,
-  "testes": 178,
+  "testes": 179,
   "workflows": 6,
   "scripts": 17,
   "docs_md": 56
@@ -399,8 +399,8 @@
    "linhas": 342
   },
   "src/components": {
-   "arquivos": 469,
-   "linhas": 79461
+   "arquivos": 470,
+   "linhas": 79774
   },
   "src/constants": {
    "arquivos": 1,
@@ -424,7 +424,7 @@
   },
   "src/lib": {
    "arquivos": 107,
-   "linhas": 22156
+   "linhas": 22290
   },
   "src/main.tsx": {
    "arquivos": 1,
@@ -432,7 +432,7 @@
   },
   "src/pages": {
    "arquivos": 86,
-   "linhas": 24962
+   "linhas": 24964
   },
   "src/services": {
    "arquivos": 99,
@@ -443,8 +443,8 @@
    "linhas": 7136
   },
   "src/test": {
-   "arquivos": 140,
-   "linhas": 24556
+   "arquivos": 141,
+   "linhas": 24943
   },
   "src/tests": {
    "arquivos": 17,
@@ -459,8 +459,8 @@
    "linhas": 152
   },
   "supabase/functions": {
-   "arquivos": 70,
-   "linhas": 9295
+   "arquivos": 72,
+   "linhas": 9575
   },
   "tailwind.config.ts": {
    "arquivos": 1,
@@ -587,7 +587,7 @@
  ],
  "qualidade": {
   "any": 81,
-  "console_log": 76,
+  "console_log": 77,
   "ts_ignore": 0,
   "eslint_disable": 0,
   "todos": 1,
@@ -638,6 +638,7 @@
    "notification_templates",
    "nr1_risk_categories",
    "permissions",
+   "push_outbox",
    "roles",
    "security_alerts",
    "shop_purchases",

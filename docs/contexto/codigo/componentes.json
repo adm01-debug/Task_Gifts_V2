@@ -1,7 +1,7 @@
 {
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
- "total": 532,
+ "total": 533,
  "orfaos": 22,
  "nomes_duplicados": {
   "CopilotAlert": [
@@ -4058,6 +4058,24 @@
    "orfao": false
   },
   {
+   "arquivo": "src/components/NotificationQuietHoursCard.tsx",
+   "exports": [
+    "NotificationQuietHoursCard"
+   ],
+   "export_default": "NotificationQuietHoursCard",
+   "linhas": 272,
+   "dominio": "components",
+   "hooks_locais": [
+    "useAuth"
+   ],
+   "tabelas": [
+    "notification_preferences"
+   ],
+   "edges": [],
+   "usado_por": 1,
+   "orfao": false
+  },
+  {
    "arquivo": "src/components/notifications/BulkChannelActions.tsx",
    "exports": [
     "BulkChannelActions",
@@ -5243,10 +5261,12 @@
     "PushOutboxHealthPanel"
    ],
    "export_default": null,
-   "linhas": 232,
+   "linhas": 273,
    "dominio": "components/security",
    "hooks_locais": [],
-   "tabelas": [],
+   "tabelas": [
+    "push_outbox"
+   ],
    "edges": [],
    "usado_por": 2,
    "orfao": false
@@ -6106,7 +6126,7 @@
    ],
    "tabelas": [],
    "edges": [],
-   "usado_por": 296,
+   "usado_por": 297,
    "orfao": false
   },
   {
@@ -6141,7 +6161,7 @@
    "hooks_locais": [],
    "tabelas": [],
    "edges": [],
-   "usado_por": 299,
+   "usado_por": 300,
    "orfao": false
   },
   {
@@ -6446,7 +6466,7 @@
    "hooks_locais": [],
    "tabelas": [],
    "edges": [],
-   "usado_por": 96,
+   "usado_por": 97,
    "orfao": false
   },
   {
@@ -6460,7 +6480,7 @@
    "hooks_locais": [],
    "tabelas": [],
    "edges": [],
-   "usado_por": 87,
+   "usado_por": 88,
    "orfao": false
   },
   {
@@ -6900,7 +6920,7 @@
    "hooks_locais": [],
    "tabelas": [],
    "edges": [],
-   "usado_por": 160,
+   "usado_por": 161,
    "orfao": false
   },
   {
@@ -6974,7 +6994,7 @@
    "hooks_locais": [],
    "tabelas": [],
    "edges": [],
-   "usado_por": 45,
+   "usado_por": 46,
    "orfao": false
   },
   {
@@ -7427,7 +7447,7 @@
    ],
    "tabelas": [],
    "edges": [],
-   "usado_por": 107,
+   "usado_por": 108,
    "orfao": false
   },
   {
@@ -8590,7 +8610,7 @@
     "Profile"
    ],
    "export_default": "Profile",
-   "linhas": 250,
+   "linhas": 252,
    "dominio": "pages",
    "hooks_locais": [
     "useAuth",

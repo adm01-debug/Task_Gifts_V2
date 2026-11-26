@@ -514,6 +514,17 @@
    "src/lib/utils.ts",
    "src/services/notificationsService.ts"
   ],
+  "src/components/NotificationQuietHoursCard.tsx": [
+   "src/components/ui/button.tsx",
+   "src/components/ui/card.tsx",
+   "src/components/ui/input.tsx",
+   "src/components/ui/label.tsx",
+   "src/components/ui/skeleton.tsx",
+   "src/components/ui/switch.tsx",
+   "src/hooks/useAuth.tsx",
+   "src/integrations/supabase/client.ts",
+   "src/services/loggingService.ts"
+  ],
   "src/components/OfflineIndicator.tsx": [
    "src/components/ui/button.tsx",
    "src/hooks/useOnlineStatus.ts"
@@ -5023,6 +5034,7 @@
    "src/components/InAppNotificationToggle.tsx",
    "src/components/MyDevelopmentPlanWidget.tsx",
    "src/components/MyNineBoxWidget.tsx",
+   "src/components/NotificationQuietHoursCard.tsx",
    "src/components/ProfileAvatarSection.tsx",
    "src/components/ProfileKudosSection.tsx",
    "src/components/PushNotificationGlobalToggle.tsx",
@@ -6023,6 +6035,9 @@
    "src/components/ui/card.tsx",
    "src/components/ui/progress.tsx"
   ],
+  "supabase/functions/_shared/campaignPush_test.ts": [
+   "supabase/functions/_shared/campaignPush.ts"
+  ],
   "supabase/functions/_shared/contracts/_fixtures/index.ts": [
    "supabase/functions/_shared/contracts/_fixtures/types.ts"
   ],
@@ -6227,6 +6242,7 @@
    "supabase/functions/reward-approval-review/risk.ts"
   ],
   "supabase/functions/send-campaign-push/index.ts": [
+   "supabase/functions/_shared/campaignPush.ts",
    "supabase/functions/_shared/contracts/send-campaign-push.ts",
    "supabase/functions/_shared/validation.ts"
   ],
