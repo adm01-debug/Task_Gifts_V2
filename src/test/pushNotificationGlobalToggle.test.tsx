@@ -2,6 +2,7 @@ import "@testing-library/jest-dom/vitest";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { cleanup, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { toast } from "sonner";
 
 /**
  * Contrato do kill-switch global de push: `notification_preferences.push_enabled`
@@ -98,6 +99,8 @@ beforeEach(() => {
   failInsert = false;
   raceOnInsert = false;
   writes.length = 0;
+  vi.mocked(toast.success).mockClear();
+  vi.mocked(toast.error).mockClear();
 });
 
 afterEach(() => cleanup());
@@ -134,6 +137,7 @@ describe("PushNotificationGlobalToggle", () => {
     await userEvent.click(toggle());
     await waitFor(() => expect(writes).toHaveLength(1));
     expect(writes[0]).toEqual({ push_enabled: false });
+    expect(toast.success).toHaveBeenCalledWith("Push pausado em todos os dispositivos");
   });
 
   it("nao apaga escolhas por tipo salvas por outro controle depois do carregamento", async () => {
@@ -169,6 +173,8 @@ describe("PushNotificationGlobalToggle", () => {
     await userEvent.click(toggle());
     await waitFor(() => expect(toggle()).toBeChecked());
     expect(writes).toHaveLength(0);
+    expect(toast.error).toHaveBeenCalledTimes(1);
+    expect(toast.success).not.toHaveBeenCalled();
   });
 
   it("confirma a pausa quando outra tela cria a linha no meio do caminho", async () => {
