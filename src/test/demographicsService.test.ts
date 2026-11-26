@@ -13,6 +13,7 @@ const db = vi.hoisted(() => {
       op: string;
       payload: unknown;
       onConflict?: string;
+      columns?: string;
       filters: Array<[string, unknown]>;
     }>,
     user: { id: "user-1" } as { id: string } | null,
@@ -38,7 +39,7 @@ const db = vi.hoisted(() => {
     };
 
     const builder = {
-      select: () => builder,
+      select: (columns?: string) => { record.columns = columns ?? "*"; return builder; },
       insert: (payload: unknown) => { record.op = "insert"; record.payload = payload; return builder; },
       update: (payload: unknown) => { record.op = "update"; record.payload = payload; return builder; },
       delete: () => { record.op = "delete"; return builder; },
@@ -203,5 +204,46 @@ describe("demographicsService", () => {
       message: "foreign key",
     });
     expect(db.records[0].filters).toEqual([["id", "a1"]]);
+  });
+
+  it("le as respostas do proprio usuario, nunca as de terceiros", async () => {
+    db.enqueue("user_demographic_values", "select", ok([valor()]));
+
+    await demographicsService.listMyValues();
+
+    expect(db.records[0].filters).toEqual([["user_id", "user-1"]]);
+  });
+
+  it("sem sessao nao consulta o proprio perfil", async () => {
+    db.state.user = null;
+
+    await expect(demographicsService.listMyValues()).resolves.toEqual([]);
+    expect(db.records).toHaveLength(0);
+  });
+
+  it("administrador recebe o valor das respostas restritas", async () => {
+    db.enqueue("user_demographic_values", "select", ok([{ ...valor(), demographic_attributes: null }]));
+
+    await demographicsService.listAllValues({ ehAdmin: true });
+
+    expect(db.records).toHaveLength(1);
+    expect(db.records[0].filters).toEqual([]);
+  });
+
+  it("gestor nao pede as colunas de valor das respostas restritas", async () => {
+    db.enqueue("user_demographic_values", "select", ok([]), ok([]));
+
+    await demographicsService.listAllValues({ ehAdmin: false });
+
+    expect(db.records).toHaveLength(2);
+    const [permitidos, restritos] = db.records;
+    expect(permitidos.filters).toEqual([["demographic_attributes.is_restricted", false]]);
+    expect(restritos.filters).toEqual([["demographic_attributes.is_restricted", true]]);
+    expect(permitidos.columns).toContain("*");
+    // O select das restritas nao pede nenhuma coluna de valor.
+    expect(restritos.columns).not.toContain("values_array");
+    expect(restritos.columns).not.toContain("number_value");
+    expect(restritos.columns).not.toContain("date_value");
+    expect(restritos.columns).toContain("demographic_attributes!inner");
   });
 });

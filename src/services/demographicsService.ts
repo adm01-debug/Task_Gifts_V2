@@ -6,6 +6,26 @@ export type DemographicAttributeInsert = TablesInsert<"demographic_attributes">;
 export type DemographicAttributeUpdate = TablesUpdate<"demographic_attributes">;
 export type DemographicValue = Tables<"user_demographic_values">;
 
+/**
+ * Linha do painel de respostas. Quem nao e' administrador recebe a linha de um
+ * atributo restrito **sem as colunas de valor**: a projecao da consulta nao as
+ * pede, entao o conteudo nunca chega ao navegador (a policy de SELECT libera a
+ * linha para gestor, mas nao obriga a entregar o valor).
+ */
+export type DemographicValueRow = Omit<
+  DemographicValue,
+  "value" | "values_array" | "number_value" | "date_value"
+> & {
+  value?: string | null;
+  values_array?: Json;
+  number_value?: number | null;
+  date_value?: string | null;
+  demographic_attributes: Pick<
+    DemographicAttribute,
+    "name" | "attribute_type" | "is_visible_in_reports" | "is_restricted"
+  > | null;
+};
+
 export type DemographicAttributeType =
   | "text"
   | "single_select"
@@ -60,8 +80,8 @@ export const lerOpcoes = (options: Json | null): string[] => {
 };
 
 /** Valor exibivel de uma linha de `user_demographic_values`, conforme o tipo. */
-export const valorExibivel = (valor: DemographicValue): string => {
-  if (ehPreferNotAnswer(valor.values_array)) return "Prefiro não responder";
+export const valorExibivel = (valor: DemographicValueRow | DemographicValue): string => {
+  if (ehPreferNotAnswer(valor.values_array ?? null)) return "Prefiro não responder";
   if (Array.isArray(valor.values_array) && valor.values_array.length > 0) {
     return valor.values_array.filter((v) => typeof v === "string").join(", ");
   }
@@ -132,21 +152,58 @@ export const demographicsService = {
     if (error) throw error;
   },
 
+  /**
+   * Respostas do proprio usuario. O filtro por `user_id` e' obrigatorio: a
+   * policy de SELECT de `user_demographic_values` libera a linha inteira para
+   * gestor e administrador, entao sem ele o gestor leria a resposta alheia no
+   * proprio perfil e gravaria em cima dela.
+   */
   async listMyValues(): Promise<DemographicValue[]> {
-    const { data, error } = await supabase.from("user_demographic_values").select("*");
+    const { data: auth } = await supabase.auth.getUser();
+    const userId = auth.user?.id;
+    if (!userId) return [];
+
+    const { data, error } = await supabase
+      .from("user_demographic_values")
+      .select("*")
+      .eq("user_id", userId);
     if (error) throw error;
     return data ?? [];
   },
 
-  /** Leitura de administrador/gestor, com o nome do atributo embutido. */
-  async listAllValues(): Promise<Array<DemographicValue & { demographic_attributes: Pick<DemographicAttribute, "name" | "attribute_type" | "is_visible_in_reports" | "is_restricted"> | null }>> {
-    const { data, error } = await supabase
-      .from("user_demographic_values")
-      .select(
-        "*, demographic_attributes(name, attribute_type, is_visible_in_reports, is_restricted)",
-      );
-    if (error) throw error;
-    return data ?? [];
+  /**
+   * Leitura do painel de respostas. Administrador ve tudo; gestor recebe as
+   * linhas de atributo restrito sem as colunas de valor.
+   */
+  async listAllValues(options?: { ehAdmin?: boolean }): Promise<DemographicValueRow[]> {
+    const embed = "name, attribute_type, is_visible_in_reports, is_restricted";
+
+    if (options?.ehAdmin) {
+      const { data, error } = await supabase
+        .from("user_demographic_values")
+        .select(`*, demographic_attributes(${embed})`);
+      if (error) throw error;
+      return (data ?? []) as unknown as DemographicValueRow[];
+    }
+
+    const [permitidos, restritos] = await Promise.all([
+      supabase
+        .from("user_demographic_values")
+        .select(`*, demographic_attributes!inner(${embed})`)
+        .eq("demographic_attributes.is_restricted", false),
+      supabase
+        .from("user_demographic_values")
+        .select(`id, user_id, attribute_id, created_at, updated_at, demographic_attributes!inner(${embed})`)
+        .eq("demographic_attributes.is_restricted", true),
+    ]);
+
+    if (permitidos.error) throw permitidos.error;
+    if (restritos.error) throw restritos.error;
+
+    return [
+      ...(permitidos.data ?? []),
+      ...(restritos.data ?? []),
+    ] as unknown as DemographicValueRow[];
   },
 
   async saveValue(input: {

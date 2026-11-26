@@ -40,7 +40,7 @@ export function useSetDefaultSavedFilter(entityType: string) {
   return useMutation({
     mutationFn: ({ id, isDefault }: { id: string; isDefault: boolean }) =>
       isDefault
-        ? savedFiltersService.setDefault(id, entityType)
+        ? savedFiltersService.setDefault(id)
         : savedFiltersService.clearDefault(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: savedFilterKeys.list(entityType) });

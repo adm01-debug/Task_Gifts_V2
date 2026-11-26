@@ -124,19 +124,11 @@ describe("savedFiltersService", () => {
     expect(db.records).toHaveLength(0);
   });
 
-  it("ao tornar padrao, desmarca o padrao anterior da mesma entidade antes de marcar o novo", async () => {
-    await savedFiltersService.setDefault("f2", "audit_logs");
+  it("ao tornar padrao, faz uma unica escrita — o gatilho do banco desmarca o anterior", async () => {
+    await savedFiltersService.setDefault("f2");
 
-    expect(db.records).toHaveLength(2);
-
-    const [limpeza, marcacao] = db.records;
-    expect(limpeza.op).toBe("update");
-    expect(limpeza.payload).toEqual({ is_default: false });
-    expect(limpeza.filters).toEqual([
-      ["entity_type", "audit_logs"],
-      ["is_default", true],
-    ]);
-
+    expect(db.records).toHaveLength(1);
+    const [marcacao] = db.records;
     expect(marcacao.op).toBe("update");
     expect(marcacao.payload).toEqual({ is_default: true });
     expect(marcacao.filters).toEqual([["id", "f2"]]);

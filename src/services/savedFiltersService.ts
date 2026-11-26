@@ -59,16 +59,13 @@ export const savedFiltersService = {
     return data;
   },
 
-  async setDefault(id: string, entityType: string): Promise<void> {
-    // Desmarca o padrao anterior antes de marcar o novo: o gatilho do banco ja'
-    // faz isso, mas assim a tela nao mostra dois padroes no meio do caminho.
-    const { error: clearError } = await supabase
-      .from("saved_filters")
-      .update({ is_default: false })
-      .eq("entity_type", entityType)
-      .eq("is_default", true);
-    if (clearError) throw clearError;
-
+  /**
+   * Marca o filtro como padrao. O gatilho `trigger_single_default_filter` ja'
+   * desmarca o padrao anterior da mesma entidade na mesma transacao, entao uma
+   * unica escrita basta — desmarcar antes deixaria a entidade sem padrao se a
+   * segunda escrita falhasse.
+   */
+  async setDefault(id: string): Promise<void> {
     const { error } = await supabase
       .from("saved_filters")
       .update({ is_default: true })

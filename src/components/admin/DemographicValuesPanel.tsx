@@ -24,10 +24,11 @@ import { format } from "date-fns";
  *
  * `is_visible_in_reports = false` separa o que e' uso interno: essas linhas
  * ficam escondidas ate' ligar "Incluir uso interno". Atributo `is_restricted`
- * tem o valor escondido de quem nao e' administrador.
+ * tem o valor escondido de quem nao e' administrador — e o valor nem chega ao
+ * navegador do gestor, porque a consulta nao pede as colunas.
  */
 export function DemographicValuesPanel({ ehAdmin }: { ehAdmin: boolean }) {
-  const { data: valores = [], isLoading, isError, refetch } = useAllDemographicValues();
+  const { data: valores = [], isLoading, isError, refetch } = useAllDemographicValues(ehAdmin);
   const [incluirInternos, setIncluirInternos] = useState(false);
 
   const visiveis = useMemo(
@@ -119,7 +120,9 @@ export function DemographicValuesPanel({ ehAdmin }: { ehAdmin: boolean }) {
             </TableHeader>
             <TableBody>
               {visiveis.map((valor) => {
-                const restrito = valor.demographic_attributes?.is_restricted === true;
+                // Fecha por padrao: sem metadado do atributo nao da' para saber
+                // se o valor e' restrito, entao ele nao aparece.
+                const restrito = valor.demographic_attributes?.is_restricted !== false;
                 const escondido = restrito && !ehAdmin;
                 return (
                   <TableRow key={valor.id}>

@@ -85,7 +85,6 @@ export function SavedFiltersBar({
   const [makeDefault, setMakeDefault] = useState(false);
 
   const selected = filters.find((f) => f.id === selectedId);
-  const appliedDefault = useRef<string | null>(null);
 
   // `onApply` e' recriado pela pagina a cada render; guardar em ref evita
   // reaplicar o padrao em loop.
@@ -97,14 +96,18 @@ export function SavedFiltersBar({
     currentRef.current = currentFilters;
   }, [onApply, currentFilters]);
 
+  // So' na primeira lista carregada o padrao e' aplicado. Depois disso a
+  // pagina nao e' mais sobrescrita: marcar outro filtro como padrao, por
+  // exemplo, nao muda a busca que o usuario esta vendo.
+  const primeiraCarga = useRef(false);
   useEffect(() => {
+    if (primeiraCarga.current || isLoading) return;
+    primeiraCarga.current = true;
     const padrao = filters.find((f) => f.is_default);
     if (!padrao) return;
-    if (appliedDefault.current === padrao.id) return;
-    appliedDefault.current = padrao.id;
     setSelectedId(padrao.id);
     applyRef.current((padrao.filters ?? {}) as SavedFilterPayload);
-  }, [filters]);
+  }, [filters, isLoading]);
 
   const aplicar = (id: string) => {
     const alvo = filters.find((f) => f.id === id);

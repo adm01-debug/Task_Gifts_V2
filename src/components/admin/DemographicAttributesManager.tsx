@@ -206,14 +206,37 @@ export function DemographicAttributesManager({ podeEditar }: { podeEditar: boole
     }
   };
 
+  /**
+   * Move o atributo uma posicao. A ordem exibida e' (order_index, name), entao
+   * trocar apenas os numeros deixaria dois atributos empatados parados — o que
+   * a edicao permite acontecer. Aqui a lista exibida e' reindexada e so' as
+   * linhas cuja posicao mudou sao gravadas, com indices distintos.
+   */
   const mover = async (atributo: DemographicAttribute, direcao: -1 | 1) => {
-    const ordenados = [...atributos].sort((a, b) => a.order_index - b.order_index || a.name.localeCompare(b.name));
+    const ordenados = [...atributos].sort(
+      (a, b) => a.order_index - b.order_index || a.name.localeCompare(b.name),
+    );
     const posicao = ordenados.findIndex((a) => a.id === atributo.id);
-    const vizinho = ordenados[posicao + direcao];
-    if (!vizinho) return;
+    const destino = posicao + direcao;
+    if (posicao < 0 || destino < 0 || destino >= ordenados.length) return;
+
+    const reordenados = [...ordenados];
+    [reordenados[posicao], reordenados[destino]] = [
+      reordenados[destino],
+      reordenados[posicao],
+    ];
+
+    const mudancas = reordenados
+      .map((a, indice) => ({ id: a.id, orderIndex: indice }))
+      .filter(({ id, orderIndex }) => {
+        const atual = ordenados.findIndex((a) => a.id === id);
+        return atual !== orderIndex;
+      });
+
     try {
-      await setOrder.mutateAsync({ id: atributo.id, orderIndex: vizinho.order_index });
-      await setOrder.mutateAsync({ id: vizinho.id, orderIndex: atributo.order_index });
+      for (const mudanca of mudancas) {
+        await setOrder.mutateAsync(mudanca);
+      }
     } catch (err: unknown) {
       logger.error("Falha ao reordenar atributo", String(err));
       toast.error("Não foi possível reordenar");

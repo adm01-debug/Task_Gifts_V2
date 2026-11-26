@@ -48,6 +48,28 @@ const RASCUNHO_VAZIO: Rascunho = {
   preferNotAnswer: false,
 };
 
+// Referencias estaveis: `?? []` dentro do componente cria um array novo a cada
+// render e o efeito de inicializacao entraria em loop quando a consulta falha.
+const SEM_ATRIBUTOS: DemographicAttribute[] = [];
+
+/**
+ * Descarta respostas que nao existem mais na lista de opcoes (administrador
+ * pode remover uma opcao depois de alguem ja ter respondido). Sem isso a
+ * marcacao antiga continuaria no array e voltaria a ser gravada na proxima
+ * edicao. O valor historico so' muda quando o colaborador edita o atributo.
+ */
+const normalizarRascunho = (rascunho: Rascunho, atributo: DemographicAttribute): Rascunho => {
+  if (!ehTipoComOpcoes(atributo.attribute_type)) return rascunho;
+  const opcoes = lerOpcoes(atributo.options);
+  if (atributo.attribute_type === "multi_select") {
+    const mantidas = rascunho.valuesArray.filter((v) => opcoes.includes(v));
+    return mantidas.length === rascunho.valuesArray.length
+      ? rascunho
+      : { ...rascunho, valuesArray: mantidas };
+  }
+  return opcoes.includes(rascunho.value) ? rascunho : { ...rascunho, value: "" };
+};
+
 const doValorSalvo = (valor: DemographicValue | undefined): Rascunho => {
   if (!valor) return { ...RASCUNHO_VAZIO };
   const preferNotAnswer = ehPreferNotAnswer(valor.values_array);
@@ -180,10 +202,18 @@ const AtributoCampo = ({
  * formulario salve.
  */
 export function MyDemographicValuesCard() {
-  const { data: atributos = [], isLoading: carregandoAtributos, isError: erroAtributos, refetch: refetchAtributos } =
-    useDemographicAttributes({ onlyActive: true });
-  const { data: valores = [], isLoading: carregandoValores, isError: erroValores, refetch: refetchValores } =
-    useMyDemographicValues();
+  const {
+    data: atributos,
+    isLoading: carregandoAtributos,
+    isError: erroAtributos,
+    refetch: refetchAtributos,
+  } = useDemographicAttributes({ onlyActive: true });
+  const {
+    data: valores,
+    isLoading: carregandoValores,
+    isError: erroValores,
+    refetch: refetchValores,
+  } = useMyDemographicValues();
   const salvar = useSaveDemographicValue();
   const limpar = useClearDemographicValue();
 
@@ -194,20 +224,25 @@ export function MyDemographicValuesCard() {
   const erro = erroAtributos || erroValores;
 
   useEffect(() => {
-    if (carregando) return;
+    // Sem as duas consultas nao ha' o que inicializar: evita gravar estado a
+    // cada render quando a consulta esta em erro.
+    if (carregando || !atributos || !valores) return;
     const porAtributo = new Map<string, DemographicValue>();
     valores.forEach((v) => porAtributo.set(v.attribute_id, v));
     const inicial: Record<string, Rascunho> = {};
     atributos.forEach((a) => {
-      inicial[a.id] = doValorSalvo(porAtributo.get(a.id));
+      inicial[a.id] = normalizarRascunho(doValorSalvo(porAtributo.get(a.id)), a);
     });
     setRascunhos(inicial);
     setOriginais(inicial);
   }, [atributos, valores, carregando]);
 
+  // Atributos calculados aparecem so' para leitura; o resto e' editavel.
+  const visiveis = atributos ?? SEM_ATRIBUTOS;
+
   const editaveis = useMemo(
-    () => atributos.filter((a) => a.attribute_type !== "calculated"),
-    [atributos],
+    () => visiveis.filter((a) => a.attribute_type !== "calculated"),
+    [visiveis],
   );
 
   const alterados = useMemo(
@@ -239,7 +274,7 @@ export function MyDemographicValuesCard() {
           valuesArray: r.preferNotAnswer
             ? [PREFER_NOT_ANSWER]
             : atributo.attribute_type === "multi_select"
-              ? r.valuesArray
+              ? r.valuesArray.filter((v) => lerOpcoes(atributo.options).includes(v))
               : [],
           numberValue:
             !r.preferNotAnswer && atributo.attribute_type === "number" && r.numberValue.trim()
@@ -313,23 +348,25 @@ export function MyDemographicValuesCard() {
               Tentar de novo
             </Button>
           </div>
-        ) : editaveis.length === 0 ? (
+        ) : visiveis.length === 0 ? (
           <p className="text-sm text-muted-foreground">
             Nenhum atributo demográfico está ativo no momento.
           </p>
         ) : (
           <div className="space-y-4">
-            {editaveis.map((atributo) => {
+            {visiveis.map((atributo) => {
               const r = rascunhos[atributo.id] ?? RASCUNHO_VAZIO;
               const jaRespondeu = temResposta(originais[atributo.id] ?? RASCUNHO_VAZIO);
+              const calculado = atributo.attribute_type === "calculated";
               return (
                 <div key={atributo.id} className="space-y-2 rounded-lg border border-border/40 p-3">
                   <div className="flex flex-wrap items-center justify-between gap-2">
                     <div className="flex flex-wrap items-center gap-2">
                       <Label className="text-sm font-medium">{atributo.name}</Label>
-                      {atributo.is_required && <Badge variant="outline">Obrigatório</Badge>}
+                      {atributo.is_required && !calculado && <Badge variant="outline">Obrigatório</Badge>}
+                      {calculado && <Badge variant="outline">Sistema</Badge>}
                     </div>
-                    {jaRespondeu && (
+                    {jaRespondeu && !calculado && (
                       <Button
                         type="button"
                         variant="ghost"
@@ -349,7 +386,7 @@ export function MyDemographicValuesCard() {
                     onChange={(novo) => setRascunhos((atual) => ({ ...atual, [atributo.id]: novo }))}
                   />
 
-                  {atributo.allow_prefer_not_answer && (
+                  {atributo.allow_prefer_not_answer && !calculado && (
                     <div className="flex items-center justify-between gap-4 rounded-md border border-border/40 bg-muted/20 px-3 py-2">
                       <div>
                         <Label
