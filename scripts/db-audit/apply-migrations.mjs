@@ -1,0 +1,179 @@
+#!/usr/bin/env node
+/**
+ * Aplica em producao as migrations de `supabase/migrations/` que ainda nao
+ * estao no ledger `supabase_migrations.schema_migrations`.
+ *
+ * Por que existe: nenhum workflow deste repositorio aplicava migration. A
+ * 20261229000000 (janela de silencio) entrou em producao por uma branch
+ * descartavel com um workflow de uma vez; sem isso, um rebuild/reset reconstroi
+ * o schema sem o que ficou fora do ledger e o buraco so' aparece em producao.
+ *
+ * Como acessa: Management API (`POST /v1/projects/{ref}/database/query`), a
+ * mesma porta do `supabase db push`. O repositorio ja tem SUPABASE_ACCESS_TOKEN
+ * como secret; nao existe SUPABASE_DB_URL nem senha do banco para o CLI.
+ *
+ * Uso:
+ *   node scripts/db-audit/apply-migrations.mjs            # check: so relata
+ *   node scripts/db-audit/apply-migrations.mjs --apply     # aplica as faltantes
+ *   node scripts/db-audit/apply-migrations.mjs --dir outro/diretorio
+ *
+ * Variaveis: SUPABASE_ACCESS_TOKEN, SUPABASE_PROJECT_ID, MIGRATIONS_DIR
+ *            (MIGRATIONS_DIR padrao: supabase/migrations)
+ *
+ * Politica: migration no ledger sem arquivo no repo e' erro (alguem aplicou fora do
+ * repo); nome do ledger fora do padrao e' aviso, corrigido no --apply.
+ *
+ * Exit: 0 = nada pendente e nada divergente; 1 = pendencia ou divergencia;
+ *       2 = erro de uso/ambiente. Nunca sai 0 sem ter consultado o ledger.
+ */
+import { readdirSync, readFileSync } from "node:fs";
+import path from "node:path";
+
+const USO = "uso: node scripts/db-audit/apply-migrations.mjs [--apply] [--dir <dir>]";
+
+function lerArgs(argv) {
+  const opts = { apply: false, dir: process.env.MIGRATIONS_DIR || "supabase/migrations" };
+  for (let i = 0; i < argv.length; i += 1) {
+    const arg = argv[i];
+    if (arg === "--apply") {
+      opts.apply = true;
+    } else if (arg === "--dir") {
+      i += 1;
+      if (!argv[i]) throw new Error(`--dir exige um caminho\n${USO}`);
+      opts.dir = argv[i];
+    } else if (arg === "--help" || arg === "-h") {
+      console.log(USO);
+      process.exit(0);
+    } else {
+      throw new Error(`argumento desconhecido: ${arg}\n${USO}`);
+    }
+  }
+  return opts;
+}
+
+function listarLocais(dir) {
+  let nomes;
+  try {
+    nomes = readdirSync(dir);
+  } catch {
+    throw new Error(`diretorio de migrations ilegivel: ${dir}`);
+  }
+  const sql = nomes.filter((n) => n.endsWith(".sql")).sort();
+  if (sql.length === 0) throw new Error(`nenhuma migration em ${dir}`);
+  return sql.map((nome) => {
+    const m = /^(\d{14})_(.+)\.sql$/.exec(nome);
+    if (!m) throw new Error(`nome fora do padrao AAAAAMMDDHHMMSS_slug.sql: ${nome}`);
+    return { version: m[1], name: m[2], arquivo: path.join(dir, nome), nome };
+  });
+}
+
+const ref = process.env.SUPABASE_PROJECT_ID;
+const token = process.env.SUPABASE_ACCESS_TOKEN;
+
+async function consultar(sql) {
+  const resposta = await fetch(
+    `https://api.supabase.com/v1/projects/${ref}/database/query`,
+    {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ query: sql }),
+    },
+  );
+  const texto = await resposta.text();
+  if (!resposta.ok) {
+    throw new Error(`Management API ${resposta.status}: ${texto.slice(0, 500)}`);
+  }
+  try {
+    return JSON.parse(texto);
+  } catch {
+    return texto;
+  }
+}
+
+function aspas(texto) {
+  return `'${String(texto).replace(/'/g, "''")}'`;
+}
+
+async function main() {
+  if (!token) throw new Error("SUPABASE_ACCESS_TOKEN ausente no ambiente");
+  if (!ref) throw new Error("SUPABASE_PROJECT_ID ausente no ambiente");
+  const opts = lerArgs(process.argv.slice(2));
+  const local = listarLocais(opts.dir);
+
+  const ledger = await consultar(
+    "select version, name from supabase_migrations.schema_migrations order by version;",
+  );
+  const porVersao = new Map(ledger.map((l) => [l.version, l.name]));
+  const pendentes = local.filter((m) => !porVersao.has(m.version));
+  // O nome no ledger e' metadado: o que importa e' a versao aplicada. O CLI grava
+  // ora o slug, ora o nome do arquivo, e registro antigo ficou com name nulo -
+  // por isso nome fora do padrao e' aviso (corrigido no --apply), nao bloqueio.
+  const nomesDivergentes = local.filter(
+    (m) => porVersao.has(m.version) && porVersao.get(m.version) !== m.name,
+  );
+  const orfaos = ledger.filter((l) => !local.some((m) => m.version === l.version));
+
+  console.log(
+    `banco: ${ledger.length} registros no ledger | repo: ${local.length} arquivos ` +
+      `| pendentes: ${pendentes.length} | nome fora do padrao: ${nomesDivergentes.length} ` +
+      `| no banco sem arquivo: ${orfaos.length}`,
+  );
+  for (const m of pendentes) console.log(`  PENDENTE    ${m.version} ${m.name} (${m.nome})`);
+  for (const m of nomesDivergentes) {
+    console.log(`  NOME        ${m.version}: repo="${m.name}" banco="${porVersao.get(m.version)}"`);
+  }
+  for (const l of orfaos) console.log(`  SEM ARQUIVO ${l.version} ${l.name} (aplicada direto no banco)`);
+
+  if (orfaos.length > 0) {
+    console.log("::error::migration aplicada no banco sem arquivo no repo - traga o arquivo antes de aplicar.");
+    process.exit(1);
+  }
+  if (pendentes.length === 0 && nomesDivergentes.length === 0) {
+    console.log("nada a aplicar: repo e banco alinhados.");
+    process.exit(0);
+  }
+  if (!opts.apply) {
+    console.log("modo check: nada foi escrito. Rode com --apply para aplicar as pendentes.");
+    process.exit(1);
+  }
+
+  for (const m of nomesDivergentes) {
+    await consultar(
+      "update supabase_migrations.schema_migrations "
+        + `set name = ${aspas(m.name)} where version = ${aspas(m.version)};`,
+    );
+    console.log(`  nome do ledger corrigido: ${m.version} -> ${m.name}`);
+  }
+
+  for (const m of pendentes) {
+    console.log(`> aplicando ${m.nome}`);
+    await consultar(readFileSync(m.arquivo, "utf8"));
+    await consultar(
+      "insert into supabase_migrations.schema_migrations (version, name) "
+        + `values (${aspas(m.version)}, ${aspas(m.name)}) `
+        + "on conflict (version) do update set name = excluded.name;",
+    );
+    console.log(`  ok ${m.version} registrada no ledger`);
+  }
+
+  const depois = await consultar(
+    "select version from supabase_migrations.schema_migrations order by version;",
+  );
+  const faltam = local
+    .filter((m) => !depois.some((l) => l.version === m.version))
+    .map((m) => m.version);
+  if (faltam.length > 0) {
+    console.log(`::error::ainda faltam no ledger: ${faltam.join(", ")}`);
+    process.exit(1);
+  }
+  console.log(`aplicadas ${pendentes.length} migration(s); ledger com ${depois.length} registros.`);
+  process.exit(0);
+}
+
+main().catch((erro) => {
+  console.error(`erro: ${erro.message}`);
+  process.exit(2);
+});
