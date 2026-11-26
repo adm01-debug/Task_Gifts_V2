@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "e634962506e30061c523275b9d40a889fd5ca0b7",
+  "commit": "613009c549ef6118e9ea55da27388ab88b3a74a7",
   "branch": "main",
-  "data_commit": "2026-11-26T12:28:50-03:00",
+  "data_commit": "2026-11-26T17:40:36-03:00",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "ultimos_commits": [
+   {
+    "sha": "613009c",
+    "data": "2026-11-26",
+    "assunto": "feat: telas para filtros salvos e perfil demografico (#181)"
+   },
    {
     "sha": "e634962",
     "data": "2026-11-26",
@@ -126,14 +131,9 @@
     "sha": "e681a89",
     "data": "2026-11-24",
     "assunto": "chore: sobe o ledger para 282 nas docs (#154)"
-   },
-   {
-    "sha": "d9f0718",
-    "data": "2026-11-24",
-    "assunto": "feat: envia lembrete de clima por push alem do in-app (#153)"
    }
   ],
-  "arquivos_mudados_7d": 281,
+  "arquivos_mudados_7d": 293,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "supabase/functions/_shared",
@@ -160,15 +160,15 @@
     "mudancas": 13
    },
    {
+    "pasta": "src/components/admin",
+    "mudancas": 13
+   },
+   {
     "pasta": ".github/workflows/ci.yml",
     "mudancas": 11
    },
    {
     "pasta": "AGENTS.md",
-    "mudancas": 11
-   },
-   {
-    "pasta": "src/components/admin",
     "mudancas": 11
    },
    {
@@ -181,6 +181,10 @@
    },
    {
     "pasta": "src/App.tsx",
+    "mudancas": 8
+   },
+   {
+    "pasta": "src/pages/Profile.tsx",
     "mudancas": 7
    },
    {
@@ -190,10 +194,6 @@
    {
     "pasta": "supabase/config.toml",
     "mudancas": 7
-   },
-   {
-    "pasta": ".gitignore",
-    "mudancas": 6
    }
   ],
   "arquivos_mais_mudados_90d": [
@@ -235,6 +235,10 @@
    },
    {
     "arquivo": "src/App.tsx",
+    "mudancas": 8
+   },
+   {
+    "arquivo": "src/pages/Profile.tsx",
     "mudancas": 7
    },
    {
@@ -243,10 +247,6 @@
    },
    {
     "arquivo": "scripts/db-audit/check-migration-drift.mjs",
-    "mudancas": 6
-   },
-   {
-    "arquivo": "src/pages/Profile.tsx",
     "mudancas": 6
    },
    {
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 144
+    "commits": 145
    },
    {
     "autor": "dependabot[bot]",
@@ -310,21 +310,21 @@
   ]
  },
  "contagens": {
-  "arquivos_total": 1623,
-  "arquivos_codigo": 1202,
-  "linhas_codigo": 238365,
-  "rotas": 87,
+  "arquivos_total": 1635,
+  "arquivos_codigo": 1214,
+  "linhas_codigo": 241190,
+  "rotas": 88,
   "rotas_http_backend": 0,
   "vistas_por_id": 0,
   "itens_menu": 65,
-  "modulos": 73,
-  "componentes": 533,
-  "hooks": 155,
+  "modulos": 74,
+  "componentes": 538,
+  "hooks": 157,
   "edge_functions": 23,
   "tabelas": 239,
   "migrations": 317,
   "cron_jobs": 40,
-  "testes": 179,
+  "testes": 182,
   "workflows": 6,
   "scripts": 17,
   "docs_md": 56
@@ -396,11 +396,11 @@
   },
   "src/App.tsx": {
    "arquivos": 1,
-   "linhas": 342
+   "linhas": 344
   },
   "src/components": {
-   "arquivos": 470,
-   "linhas": 79774
+   "arquivos": 474,
+   "linhas": 81347
   },
   "src/constants": {
    "arquivos": 1,
@@ -411,8 +411,8 @@
    "linhas": 520
   },
   "src/hooks": {
-   "arquivos": 129,
-   "linhas": 14808
+   "arquivos": 131,
+   "linhas": 14986
   },
   "src/i18n": {
    "arquivos": 1,
@@ -420,7 +420,7 @@
   },
   "src/integrations": {
    "arquivos": 3,
-   "linhas": 13060
+   "linhas": 13093
   },
   "src/lib": {
    "arquivos": 107,
@@ -431,20 +431,20 @@
    "linhas": 80
   },
   "src/pages": {
-   "arquivos": 86,
-   "linhas": 24964
+   "arquivos": 87,
+   "linhas": 25060
   },
   "src/services": {
-   "arquivos": 99,
-   "linhas": 22469
+   "arquivos": 101,
+   "linhas": 22830
   },
   "src/stories": {
    "arquivos": 29,
    "linhas": 7136
   },
   "src/test": {
-   "arquivos": 141,
-   "linhas": 24943
+   "arquivos": 144,
+   "linhas": 25525
   },
   "src/tests": {
    "arquivos": 17,
@@ -486,7 +486,7 @@
  "maiores_arquivos": [
   {
    "arquivo": "src/integrations/supabase/types.ts",
-   "linhas": 13004
+   "linhas": 13037
   },
   {
    "arquivo": "scripts/regras_negocio/generate.py",
@@ -561,6 +561,10 @@
    "linhas": 624
   },
   {
+   "arquivo": "src/components/admin/DemographicAttributesManager.tsx",
+   "linhas": 592
+  },
+  {
    "arquivo": "src/pages/WagerQuestionAdminPage.tsx",
    "linhas": 578
   },
@@ -579,10 +583,6 @@
   {
    "arquivo": "src/lib/luckyWheelPayout.ts",
    "linhas": 540
-  },
-  {
-   "arquivo": "src/lib/exportReports.ts",
-   "linhas": 537
   }
  ],
  "qualidade": {
@@ -591,7 +591,7 @@
   "ts_ignore": 0,
   "eslint_disable": 0,
   "todos": 1,
-  "arquivos_acima_500_linhas": 28
+  "arquivos_acima_500_linhas": 29
  },
  "todos": [
   {

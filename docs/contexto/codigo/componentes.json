@@ -1,7 +1,7 @@
 {
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
- "total": 533,
+ "total": 538,
  "orfaos": 22,
  "nomes_duplicados": {
   "CopilotAlert": [
@@ -44,7 +44,7 @@
     "App"
    ],
    "export_default": "App",
-   "linhas": 342,
+   "linhas": 344,
    "dominio": null,
    "hooks_locais": [
     "useAuth",
@@ -313,6 +313,43 @@
    "linhas": 160,
    "dominio": "components/admin",
    "hooks_locais": [],
+   "tabelas": [],
+   "edges": [],
+   "usado_por": 1,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/components/admin/DemographicAttributesManager.tsx",
+   "exports": [
+    "DemographicAttributesManager"
+   ],
+   "export_default": "DemographicAttributesManager",
+   "linhas": 592,
+   "dominio": "components/admin",
+   "hooks_locais": [
+    "useCreateDemographicAttribute",
+    "useDeleteDemographicAttribute",
+    "useDemographicAttributes",
+    "useSetDemographicOrder",
+    "useUpdateDemographicAttribute"
+   ],
+   "tabelas": [],
+   "edges": [],
+   "usado_por": 1,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/components/admin/DemographicValuesPanel.tsx",
+   "exports": [
+    "DemographicValuesPanel"
+   ],
+   "export_default": "DemographicValuesPanel",
+   "linhas": 171,
+   "dominio": "components/admin",
+   "hooks_locais": [
+    "useAllDemographicValues",
+    "useProfilesPublic"
+   ],
    "tabelas": [],
    "edges": [],
    "usado_por": 1,
@@ -3052,6 +3089,25 @@
    "orfao": false
   },
   {
+   "arquivo": "src/components/filters/SavedFiltersBar.tsx",
+   "exports": [
+    "SavedFiltersBar"
+   ],
+   "export_default": "SavedFiltersBar",
+   "linhas": 350,
+   "dominio": "components/filters",
+   "hooks_locais": [
+    "useDeleteSavedFilter",
+    "useSaveSavedFilter",
+    "useSavedFilters",
+    "useSetDefaultSavedFilter"
+   ],
+   "tabelas": [],
+   "edges": [],
+   "usado_por": 1,
+   "orfao": false
+  },
+  {
    "arquivo": "src/components/FlashSalesBanner.tsx",
    "exports": [
     "FlashSalesBanner"
@@ -4522,6 +4578,25 @@
    "dominio": "components/prediction",
    "hooks_locais": [
     "usePlacePredictionStake"
+   ],
+   "tabelas": [],
+   "edges": [],
+   "usado_por": 1,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/components/profile/MyDemographicValuesCard.tsx",
+   "exports": [
+    "MyDemographicValuesCard"
+   ],
+   "export_default": "MyDemographicValuesCard",
+   "linhas": 460,
+   "dominio": "components/profile",
+   "hooks_locais": [
+    "useClearDemographicValue",
+    "useDemographicAttributes",
+    "useMyDemographicValues",
+    "useSaveDemographicValue"
    ],
    "tabelas": [],
    "edges": [],
@@ -6028,7 +6103,7 @@
    "hooks_locais": [],
    "tabelas": [],
    "edges": [],
-   "usado_por": 13,
+   "usado_por": 15,
    "orfao": false
   },
   {
@@ -6089,7 +6164,7 @@
    "hooks_locais": [],
    "tabelas": [],
    "edges": [],
-   "usado_por": 250,
+   "usado_por": 253,
    "orfao": false
   },
   {
@@ -6126,7 +6201,7 @@
    ],
    "tabelas": [],
    "edges": [],
-   "usado_por": 297,
+   "usado_por": 301,
    "orfao": false
   },
   {
@@ -6161,7 +6236,7 @@
    "hooks_locais": [],
    "tabelas": [],
    "edges": [],
-   "usado_por": 300,
+   "usado_por": 303,
    "orfao": false
   },
   {
@@ -6213,7 +6288,7 @@
    "hooks_locais": [],
    "tabelas": [],
    "edges": [],
-   "usado_por": 10,
+   "usado_por": 11,
    "orfao": false
   },
   {
@@ -6331,7 +6406,7 @@
    "hooks_locais": [],
    "tabelas": [],
    "edges": [],
-   "usado_por": 78,
+   "usado_por": 80,
    "orfao": false
   },
   {
@@ -6466,7 +6541,7 @@
    "hooks_locais": [],
    "tabelas": [],
    "edges": [],
-   "usado_por": 97,
+   "usado_por": 100,
    "orfao": false
   },
   {
@@ -6480,7 +6555,7 @@
    "hooks_locais": [],
    "tabelas": [],
    "edges": [],
-   "usado_por": 88,
+   "usado_por": 91,
    "orfao": false
   },
   {
@@ -6797,7 +6872,7 @@
    "hooks_locais": [],
    "tabelas": [],
    "edges": [],
-   "usado_por": 95,
+   "usado_por": 98,
    "orfao": false
   },
   {
@@ -6920,7 +6995,7 @@
    "hooks_locais": [],
    "tabelas": [],
    "edges": [],
-   "usado_por": 161,
+   "usado_por": 165,
    "orfao": false
   },
   {
@@ -6994,7 +7069,7 @@
    "hooks_locais": [],
    "tabelas": [],
    "edges": [],
-   "usado_por": 46,
+   "usado_por": 50,
    "orfao": false
   },
   {
@@ -7015,7 +7090,7 @@
    "hooks_locais": [],
    "tabelas": [],
    "edges": [],
-   "usado_por": 21,
+   "usado_por": 22,
    "orfao": false
   },
   {
@@ -7032,7 +7107,7 @@
    "hooks_locais": [],
    "tabelas": [],
    "edges": [],
-   "usado_por": 39,
+   "usado_por": 40,
    "orfao": false
   },
   {
@@ -7511,7 +7586,7 @@
     "AdminPanel"
    ],
    "export_default": "AdminPanel",
-   "linhas": 200,
+   "linhas": 201,
    "dominio": "pages",
    "hooks_locais": [
     "useAdminRewards",
@@ -7640,7 +7715,7 @@
     "AuditLogs"
    ],
    "export_default": "AuditLogs",
-   "linhas": 97,
+   "linhas": 131,
    "dominio": "pages",
    "hooks_locais": [
     "useProfiles",
@@ -8030,6 +8105,22 @@
    "orfao": false
   },
   {
+   "arquivo": "src/pages/DemographicAttributesAdmin.tsx",
+   "exports": [
+    "DemographicAttributesAdmin"
+   ],
+   "export_default": "DemographicAttributesAdmin",
+   "linhas": 58,
+   "dominio": "pages",
+   "hooks_locais": [
+    "usePermissions"
+   ],
+   "tabelas": [],
+   "edges": [],
+   "usado_por": 1,
+   "orfao": false
+  },
+  {
    "arquivo": "src/pages/DepartmentWarPage.tsx",
    "exports": [
     "DepartmentWarPage"
@@ -8343,7 +8434,7 @@
     "ManagerDashboard"
    ],
    "export_default": "ManagerDashboard",
-   "linhas": 275,
+   "linhas": 276,
    "dominio": "pages",
    "hooks_locais": [
     "useAllTeamMembers",
@@ -8610,7 +8701,7 @@
     "Profile"
    ],
    "export_default": "Profile",
-   "linhas": 252,
+   "linhas": 254,
    "dominio": "pages",
    "hooks_locais": [
     "useAuth",

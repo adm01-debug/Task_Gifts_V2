@@ -10468,13 +10468,13 @@
     "so_na_migration": [],
     "so_no_types": []
    },
-   "usada_no_front": 0,
+   "usada_no_front": 1,
    "usada_em_edges": [],
    "triggers": [
     "update_demographic_attributes_updated_at"
    ],
    "sem_rls": false,
-   "nao_usada": true
+   "nao_usada": false
   },
   "department_missions": {
    "colunas": {
@@ -26493,14 +26493,28 @@
     "user_id->auth"
    ],
    "criada_em": "20241231000000_saved_filters.sql",
-   "usada_no_front": 0,
+   "colunas_types": {
+    "created_at": "string",
+    "entity_type": "string",
+    "filters": "Json",
+    "id": "string",
+    "is_default": "boolean",
+    "name": "string",
+    "updated_at": "string",
+    "user_id": "string"
+   },
+   "drift": {
+    "so_na_migration": [],
+    "so_no_types": []
+   },
+   "usada_no_front": 1,
    "usada_em_edges": [],
    "triggers": [
     "trigger_saved_filters_updated_at",
     "trigger_single_default_filter"
    ],
    "sem_rls": false,
-   "nao_usada": true
+   "nao_usada": false
   },
   "scratch_card_prizes": {
    "colunas": {
@@ -30901,13 +30915,13 @@
     "so_na_migration": [],
     "so_no_types": []
    },
-   "usada_no_front": 0,
+   "usada_no_front": 1,
    "usada_em_edges": [],
    "triggers": [
     "update_user_demographic_values_updated_at"
    ],
    "sem_rls": false,
-   "nao_usada": true
+   "nao_usada": false
   },
   "user_devices": {
    "colunas": {

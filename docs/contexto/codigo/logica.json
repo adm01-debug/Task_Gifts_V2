@@ -1,12 +1,12 @@
 {
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
- "total": 215,
+ "total": 217,
  "por_camada": {
   "integrations": 3,
   "lib": 107,
   "python": 3,
-  "services": 99,
+  "services": 101,
   "utils": 3
  },
  "arquivos": [
@@ -283,7 +283,7 @@
    "zod_schemas": 0,
    "flags": [],
    "papeis": [],
-   "usado_por": 168,
+   "usado_por": 170,
    "usado_por_modulos": [
     "components",
     "components/admin",
@@ -316,7 +316,7 @@
     "TablesUpdate"
    ],
    "export_default": null,
-   "linhas": 13004,
+   "linhas": 13037,
    "tabelas": [],
    "rpcs": [],
    "edges": [],
@@ -325,7 +325,7 @@
    "zod_schemas": 0,
    "flags": [],
    "papeis": [],
-   "usado_por": 18,
+   "usado_por": 21,
    "usado_por_modulos": [
     "components/admin",
     "hooks",
@@ -5109,6 +5109,47 @@
    "orfao": false
   },
   {
+   "arquivo": "src/services/demographicsService.ts",
+   "camada": "services",
+   "exports": [
+    "ATTRIBUTE_TYPES",
+    "DemographicAttribute",
+    "DemographicAttributeInsert",
+    "DemographicAttributeType",
+    "DemographicAttributeUpdate",
+    "DemographicValue",
+    "DemographicValueRow",
+    "PREFER_NOT_ANSWER",
+    "demographicsService",
+    "ehPreferNotAnswer",
+    "ehTipoComOpcoes",
+    "lerOpcoes",
+    "rotuloTipo",
+    "valorExibivel"
+   ],
+   "export_default": null,
+   "linhas": 273,
+   "tabelas": [
+    "demographic_attributes",
+    "user_demographic_values"
+   ],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 4,
+   "usado_por_modulos": [
+    "components/admin",
+    "components/profile",
+    "hooks"
+   ],
+   "coberto_por_testes": 1,
+   "orfao": false
+  },
+  {
    "arquivo": "src/services/departmentsService.ts",
    "camada": "services",
    "exports": [
@@ -5692,12 +5733,15 @@
    "zod_schemas": 0,
    "flags": [],
    "papeis": [],
-   "usado_por": 103,
+   "usado_por": 106,
    "usado_por_modulos": [
     "components",
+    "components/admin",
     "components/auth",
     "components/certifications",
+    "components/filters",
     "components/luckywheel",
+    "components/profile",
     "components/quiz",
     "components/security",
     "components/sequence",
@@ -6776,6 +6820,36 @@
     "pages"
    ],
    "coberto_por_testes": 0,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/services/savedFiltersService.ts",
+   "camada": "services",
+   "exports": [
+    "SavedFilter",
+    "SavedFilterInsert",
+    "SavedFilterPayload",
+    "savedFiltersService"
+   ],
+   "export_default": null,
+   "linhas": 88,
+   "tabelas": [
+    "saved_filters"
+   ],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 3,
+   "usado_por_modulos": [
+    "components/filters",
+    "hooks",
+    "pages"
+   ],
+   "coberto_por_testes": 1,
    "orfao": false
   },
   {

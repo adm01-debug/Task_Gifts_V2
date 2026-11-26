@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "e634962506e30061c523275b9d40a889fd5ca0b7",
+  "sha": "613009c549ef6118e9ea55da27388ab88b3a74a7",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
-  "generated_at": "2026-11-26 15:29 UTC",
-  "files_total": 1634,
-  "code_files": 1527,
-  "code_lines": 282806
+  "generated_at": "2026-11-26 20:42 UTC",
+  "files_total": 1646,
+  "code_files": 1539,
+  "code_lines": 285631
  },
  "version": "1.3.2",
- "facts_hash": "0046c75008e85cf9",
+ "facts_hash": "68050cf871fa0ef8",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -194,8 +194,8 @@
   ],
   "package_manager": "bun",
   "languages": {
-   ".ts": 589,
-   ".tsx": 587,
+   ".ts": 595,
+   ".tsx": 593,
    ".sql": 319,
    ".mjs": 21,
    ".js": 5,
@@ -48047,6 +48047,7 @@
      "notifications",
      "profiles",
      "profiles_public",
+     "saved_filters",
      "user_devices"
     ],
     "invokes_transitive": [],
@@ -48057,7 +48058,7 @@
      "increment_quests_completed",
      "increment_streak"
     ],
-    "deps_count": 47
+    "deps_count": 54
    },
    {
     "path": "",
@@ -48528,6 +48529,34 @@
      "submit_daily_wager"
     ],
     "deps_count": 38
+   },
+   {
+    "path": "",
+    "file": "src/pages/DemographicAttributesAdmin.tsx",
+    "component": "DemographicAttributesAdmin",
+    "tables_transitive": [
+     "audit_logs",
+     "demographic_attributes",
+     "new_device_alerts",
+     "notifications",
+     "permissions",
+     "profiles",
+     "profiles_public",
+     "role_permissions",
+     "roles",
+     "user_demographic_values",
+     "user_devices",
+     "user_roles"
+    ],
+    "invokes_transitive": [],
+    "rpc_transitive": [
+     "add_coins",
+     "add_xp",
+     "get_my_profile_private",
+     "increment_quests_completed",
+     "increment_streak"
+    ],
+    "deps_count": 50
    },
    {
     "path": "",
@@ -49209,6 +49238,7 @@
      "campaign_participants",
      "certifications",
      "competencies",
+     "demographic_attributes",
      "department_missions",
      "department_rankings",
      "development_plan_actions",
@@ -49237,6 +49267,7 @@
      "user_avatar_items",
      "user_certifications",
      "user_combos",
+     "user_demographic_values",
      "user_devices",
      "user_mission_progress",
      "user_roles",
@@ -49259,7 +49290,7 @@
      "user_has_passkeys",
      "verify_certificate"
     ],
-    "deps_count": 127
+    "deps_count": 131
    },
    {
     "path": "",
@@ -50604,6 +50635,15 @@
     "file": "src/App.tsx"
    },
    {
+    "path": "/admin/atributos-demograficos",
+    "component": "PageTransition",
+    "guard": "ProtectedRoute",
+    "roles": [
+     "manager"
+    ],
+    "file": "src/App.tsx"
+   },
+   {
     "path": "/admin/burn-rate",
     "component": "PageTransition",
     "guard": "ProtectedRoute",
@@ -51384,7 +51424,7 @@
     "file": ".github/workflows/contexto.yml"
    }
   ],
-  "components_count": 475,
+  "components_count": 479,
   "hooks": [
    {
     "name": "useContacts",
@@ -51997,6 +52037,46 @@
    {
     "name": "useThrottledCallback",
     "file": "src/hooks/useDebounce.ts"
+   },
+   {
+    "name": "useDemographicAttributes",
+    "file": "src/hooks/useDemographics.ts"
+   },
+   {
+    "name": "useMyDemographicValues",
+    "file": "src/hooks/useDemographics.ts"
+   },
+   {
+    "name": "useAllDemographicValues",
+    "file": "src/hooks/useDemographics.ts"
+   },
+   {
+    "name": "useCreateDemographicAttribute",
+    "file": "src/hooks/useDemographics.ts"
+   },
+   {
+    "name": "useUpdateDemographicAttribute",
+    "file": "src/hooks/useDemographics.ts"
+   },
+   {
+    "name": "useDeleteDemographicAttribute",
+    "file": "src/hooks/useDemographics.ts"
+   },
+   {
+    "name": "useSetDemographicOrder",
+    "file": "src/hooks/useDemographics.ts"
+   },
+   {
+    "name": "useSaveDemographicValue",
+    "file": "src/hooks/useDemographics.ts"
+   },
+   {
+    "name": "useSetPreferNotAnswer",
+    "file": "src/hooks/useDemographics.ts"
+   },
+   {
+    "name": "useClearDemographicValue",
+    "file": "src/hooks/useDemographics.ts"
    },
    {
     "name": "useDepartmentWars",
@@ -53083,6 +53163,26 @@
     "file": "src/hooks/useSalesCampaigns.ts"
    },
    {
+    "name": "useSavedFilters",
+    "file": "src/hooks/useSavedFilters.ts"
+   },
+   {
+    "name": "useDefaultSavedFilter",
+    "file": "src/hooks/useSavedFilters.ts"
+   },
+   {
+    "name": "useSaveSavedFilter",
+    "file": "src/hooks/useSavedFilters.ts"
+   },
+   {
+    "name": "useSetDefaultSavedFilter",
+    "file": "src/hooks/useSavedFilters.ts"
+   },
+   {
+    "name": "useDeleteSavedFilter",
+    "file": "src/hooks/useSavedFilters.ts"
+   },
+   {
     "name": "useScratchCards",
     "file": "src/hooks/useScratchCards.ts"
    },
@@ -53795,6 +53895,10 @@
    },
    {
     "guard": "ProtectedRoute",
+    "file": "src/App.tsx"
+   },
+   {
+    "guard": "ProtectedRoute",
     "file": "src/components/rbac/ProtectedRoute.tsx"
    },
    {
@@ -54027,7 +54131,7 @@
   {
    "module": "src",
    "files": 3,
-   "lines": 424,
+   "lines": 426,
    "tables": [],
    "exports": [
     "App.tsx: App"
@@ -54059,8 +54163,8 @@
   },
   {
    "module": "src/components",
-   "files": 470,
-   "lines": 79774,
+   "files": 474,
+   "lines": 81347,
    "tables": [
     "attendance_records",
     "audit_logs",
@@ -54292,8 +54396,8 @@
   },
   {
    "module": "src/hooks",
-   "files": 129,
-   "lines": 14808,
+   "files": 131,
+   "lines": 14986,
    "tables": [
     "certifications",
     "development_plan_actions",
@@ -54347,9 +54451,9 @@
     "useContinuousEngagement.ts: useActiveEngagementCycle, useMyEngagementQuestions, useEngagementProgress, useSubmitEngagementAnswer",
     "useDailyWager.ts: dailyWagerKeys, useDailyWager, useWagerHistory, useSubmitWager, useWagerLeaderboard",
     "useDebounce.ts: useDebounce, useDebouncedCallback, useThrottledCallback",
+    "useDemographics.ts: demographicKeys, useDemographicAttributes, useMyDemographicValues, useAllDemographicValues, useCreateDemographicAttribute, useUpdateDemographicAttribute",
     "useDepartmentWars.ts: departmentWarKeys, useDepartmentWars, useDepartmentWarBoard, useDepartmentWarMetrics, useMyWarContributions, useDepartmentWarFeed",
-    "useDepartments.ts: departmentKeys, useDepartments, useDepartment, useDepartmentWithMembers, useTeamMembers, useCreateDepartment",
-    "useDevelopmentPlans.ts: useDevelopmentPlans, useDevelopmentPlan, useMyDevelopmentPlans, useCreateDevelopmentPlan, useUpdateDevelopmentPlan, useDeleteDevelopmentPlan"
+    "useDepartments.ts: departmentKeys, useDepartments, useDepartment, useDepartmentWithMembers, useTeamMembers, useCreateDepartment"
    ],
    "docs": [
     "useDebounce.ts: Custom debounce hook for rate-limiting user inputs Prevents excessive API calls and improves performance",
@@ -54411,6 +54515,7 @@
     "src/hooks/useContinuousEngagement.ts",
     "src/hooks/useDailyWager.ts",
     "src/hooks/useDebounce.ts",
+    "src/hooks/useDemographics.ts",
     "src/hooks/useDepartmentWars.ts",
     "src/hooks/useDepartments.ts",
     "src/hooks/useDevelopmentPlans.ts",
@@ -54452,8 +54557,7 @@
     "src/hooks/useOneOnOnePreparation.ts",
     "src/hooks/useOnlineStatus.ts",
     "src/hooks/useOpinions.ts",
-    "src/hooks/useOrganization.ts",
-    "src/hooks/usePDI.ts"
+    "src/hooks/useOrganization.ts"
    ]
   },
   {
@@ -54476,7 +54580,7 @@
   {
    "module": "src/integrations",
    "files": 3,
-   "lines": 13060,
+   "lines": 13093,
    "tables": [],
    "exports": [
     "index.ts: lovable",
@@ -54655,8 +54759,8 @@
   },
   {
    "module": "src/pages",
-   "files": 86,
-   "lines": 24964,
+   "files": 87,
+   "lines": 25060,
    "tables": [
     "audit_logs",
     "campaign_participants",
@@ -54707,6 +54811,7 @@
     "ContinuousEngagement.tsx: ContinuousEngagement",
     "DailyQuiz.tsx: DailyQuiz",
     "DailyWagerPage.tsx: DailyWagerPage",
+    "DemographicAttributesAdmin.tsx: DemographicAttributesAdmin",
     "DepartmentWarPage.tsx: DepartmentWarPage",
     "Duels.tsx: Duels",
     "EngagementReports.tsx: EngagementReports",
@@ -54716,8 +54821,7 @@
     "Feedback.tsx: Feedback",
     "ForgotPassword.tsx: ForgotPassword",
     "Goals.tsx: Goals",
-    "IncidentMetrics.tsx: IncidentMetrics",
-    "Index.tsx: Index"
+    "IncidentMetrics.tsx: IncidentMetrics"
    ],
    "docs": [
     "Index.tsx: Core & Libs"
@@ -54777,6 +54881,7 @@
     "src/pages/ContinuousEngagement.tsx",
     "src/pages/DailyQuiz.tsx",
     "src/pages/DailyWagerPage.tsx",
+    "src/pages/DemographicAttributesAdmin.tsx",
     "src/pages/DepartmentWarPage.tsx",
     "src/pages/Duels.tsx",
     "src/pages/EngagementReports.tsx",
@@ -54826,14 +54931,13 @@
     "src/pages/Shop.tsx",
     "src/pages/ShopAdmin.tsx",
     "src/pages/SocialFeed.tsx",
-    "src/pages/Surveys.tsx",
-    "src/pages/TournamentsPage.tsx"
+    "src/pages/Surveys.tsx"
    ]
   },
   {
    "module": "src/services",
-   "files": 99,
-   "lines": 22469,
+   "files": 101,
+   "lines": 22830,
    "tables": [
     "achievements",
     "action_plan_items",
@@ -54881,6 +54985,7 @@
     "climate_surveys",
     "competencies",
     "custom_quests",
+    "demographic_attributes",
     "department_missions",
     "department_rankings",
     "department_war_contributions",
@@ -54959,6 +55064,7 @@
     "role_permissions",
     "roles",
     "sales_campaigns",
+    "saved_filters",
     "scratch_cards",
     "seasonal_challenges",
     "seasonal_events",
@@ -54980,6 +55086,7 @@
     "user_certifications",
     "user_challenges",
     "user_combos",
+    "user_demographic_values",
     "user_leagues",
     "user_mission_progress",
     "user_positions",
@@ -55026,6 +55133,7 @@
     "competencyService.ts: CompetencyData, competencyService",
     "continuousEngagementService.ts: EngagementAnswerFormat, EngagementCycle, EngagementAssignment, EngagementProgress, SubmitAnswerInput, normalizeAnswer",
     "dailyWagerService.ts: WagerSubmitResult, WagerHistoryRow, dailyWagerService",
+    "demographicsService.ts: DemographicAttribute, DemographicAttributeInsert, DemographicAttributeUpdate, DemographicValue, DemographicValueRow, DemographicAttributeType",
     "departmentWarAdminService.ts: WarDepartmentOption, CreateWarResult, departmentWarAdminService",
     "departmentWarService.ts: DepartmentWarStatus, DepartmentWar, DepartmentWarMetric, DepartmentWarBoard, WarContributionRow, departmentWarService",
     "departmentsService.ts: Department, DepartmentInsert, DepartmentUpdate, TeamMember, DepartmentWithMembers, departmentsService",
@@ -55034,8 +55142,7 @@
     "engagementDiagnosticsService.ts: MIN_RESPONDENTS, PillarScore, FactorScore, NpsMetric, PillarCorrelation, EngagementOverview",
     "engagementReportsService.ts: CompletionTrendData, DepartmentPerformanceData, QuestDifficultyData, WeeklyEngagementData, TopQuestData, StrugglingAreaData",
     "enpsService.ts: ENPSSurvey, ENPSResponse, ENPSStats, EngagementSnapshot, enpsService",
-    "executiveService.ts: ExecutiveMetrics, MonthlyTrend, DepartmentMetric, executiveService",
-    "feedbackService.ts: FeedbackCycle, FeedbackQuestion, FeedbackRequest, FeedbackResponse, CycleInsert, FeedbackSummary"
+    "executiveService.ts: ExecutiveMetrics, MonthlyTrend, DepartmentMetric, executiveService"
    ],
    "docs": [
     "loggingService.ts: Centralized Logging Service Provides consistent error handling and logging across the application"
@@ -55082,6 +55189,7 @@
     "src/services/competencyService.ts",
     "src/services/continuousEngagementService.ts",
     "src/services/dailyWagerService.ts",
+    "src/services/demographicsService.ts",
     "src/services/departmentWarAdminService.ts",
     "src/services/departmentWarService.ts",
     "src/services/departmentsService.ts",
@@ -55129,8 +55237,7 @@
     "src/services/quizStatsService.ts",
     "src/services/rbacService.ts",
     "src/services/salesCampaignsService.ts",
-    "src/services/scratchCardService.ts",
-    "src/services/seasonalEventsService.ts"
+    "src/services/savedFiltersService.ts"
    ]
   },
   {
@@ -55214,8 +55321,8 @@
   },
   {
    "module": "src/test",
-   "files": 141,
-   "lines": 24943,
+   "files": 144,
+   "lines": 25525,
    "tables": [
     "kudos",
     "profiles"
@@ -55293,6 +55400,8 @@
     "src/test/climateSurveysFlow.test.tsx",
     "src/test/continuousEngagement.simulation.test.ts",
     "src/test/dailyWager.test.ts",
+    "src/test/demographicValuesPanel.test.tsx",
+    "src/test/demographicsService.test.ts",
     "src/test/departmentWar.simulation.test.ts",
     "src/test/departmentWarConfig.simulation.test.ts",
     "src/test/deviceLabel.simulation.test.ts",
@@ -55329,9 +55438,7 @@
     "src/test/luckyWheelPayoutComparison.simulation.test.ts",
     "src/test/luckyWheelPayoutCsv.simulation.test.ts",
     "src/test/luckyWheelPayoutHistory.simulation.test.ts",
-    "src/test/luckyWheelPayoutTrendCsv.simulation.test.ts",
-    "src/test/luckyWheelWhatIfSignature.simulation.test.ts",
-    "src/test/memoryDeckAuthoring.simulation.test.ts"
+    "src/test/luckyWheelPayoutTrendCsv.simulation.test.ts"
    ]
   },
   {
@@ -56153,6 +56260,20 @@
    "dashboard_table": {
     "select": [
      "scripts/ai-context/gerar.unit.mjs"
+    ]
+   },
+   "demographic_attributes": {
+    "select": [
+     "src/services/demographicsService.ts"
+    ],
+    "insert": [
+     "src/services/demographicsService.ts"
+    ],
+    "update": [
+     "src/services/demographicsService.ts"
+    ],
+    "delete": [
+     "src/services/demographicsService.ts"
     ]
    },
    "department_missions": {
@@ -57171,6 +57292,20 @@
      "src/services/salesCampaignsService.ts"
     ]
    },
+   "saved_filters": {
+    "select": [
+     "src/services/savedFiltersService.ts"
+    ],
+    "upsert": [
+     "src/services/savedFiltersService.ts"
+    ],
+    "update": [
+     "src/services/savedFiltersService.ts"
+    ],
+    "delete": [
+     "src/services/savedFiltersService.ts"
+    ]
+   },
    "scratch_cards": {
     "select": [
      "src/services/scratchCardService.ts"
@@ -57468,6 +57603,17 @@
     ],
     "update": [
      "src/services/comboService.ts"
+    ]
+   },
+   "user_demographic_values": {
+    "select": [
+     "src/services/demographicsService.ts"
+    ],
+    "upsert": [
+     "src/services/demographicsService.ts"
+    ],
+    "delete": [
+     "src/services/demographicsService.ts"
     ]
    },
    "user_devices": {
@@ -57937,6 +58083,9 @@
     "id",
     "status",
     "title"
+   ],
+   "demographic_attributes": [
+    "id"
    ],
    "department_missions": [
     "id",
@@ -58449,6 +58598,10 @@
    "sales_campaigns": [
     "id"
    ],
+   "saved_filters": [
+    "entity_type",
+    "id"
+   ],
    "scratch_cards": [
     "amount",
     "created_at",
@@ -58609,6 +58762,13 @@
     "current_multiplier",
     "id",
     "max_multiplier_reached",
+    "user_id"
+   ],
+   "user_demographic_values": [
+    "attribute_id",
+    "created_at",
+    "id",
+    "updated_at",
     "user_id"
    ],
    "user_devices": [
@@ -60099,7 +60259,6 @@
    "custom_badges",
    "custom_ranks",
    "custom_titles",
-   "demographic_attributes",
    "department_war_results",
    "dispatch_config",
    "engagement_action_playbooks",
@@ -60134,14 +60293,12 @@
    "push_outbox_health_snapshots",
    "query_telemetry",
    "rate_limit_logs",
-   "saved_filters",
    "scratch_card_prizes",
    "sequence_steps",
    "tournament_matches",
    "tournament_participants",
    "tournaments",
    "user_competency_assessments",
-   "user_demographic_values",
    "user_permission_groups",
    "user_titles",
    "webhook_delivery_stats_24h"
@@ -60928,6 +61085,11 @@
     "file": "src/components/admin/CreateApiKeyDialog.tsx",
     "field": "api-key-rate",
     "rules": "type=number, min=1, max=10000"
+   },
+   {
+    "file": "src/components/admin/DemographicAttributesManager.tsx",
+    "field": "attr-order",
+    "rules": "type=number"
    },
    {
     "file": "src/components/admin/FeedbackCycleManager.tsx",
@@ -62002,6 +62164,11 @@
     "values": "slider | stars | emoji | cards | checkbox | percentage | text"
    },
    {
+    "file": "src/services/demographicsService.ts",
+    "name": "DemographicAttributeType",
+    "values": "text | single_select | multi_select | number | date | calculated"
+   },
+   {
     "file": "src/services/departmentWarService.ts",
     "name": "DepartmentWarStatus",
     "values": "draft | running | finished | cancelled"
@@ -62305,6 +62472,38 @@
     "msg": " className="
    },
    {
+    "file": "src/components/admin/DemographicAttributesManager.tsx",
+    "msg": "\n        className="
+   },
+   {
+    "file": "src/components/admin/DemographicAttributesManager.tsx",
+    "msg": "Dê um nome ao atributo"
+   },
+   {
+    "file": "src/components/admin/DemographicAttributesManager.tsx",
+    "msg": "Escolha única e múltipla escolha precisam de pelo menos uma opção"
+   },
+   {
+    "file": "src/components/admin/DemographicAttributesManager.tsx",
+    "msg": "Há opções repetidas na lista"
+   },
+   {
+    "file": "src/components/admin/DemographicAttributesManager.tsx",
+    "msg": "Não foi possível alterar o atributo"
+   },
+   {
+    "file": "src/components/admin/DemographicAttributesManager.tsx",
+    "msg": "Não foi possível excluir o atributo"
+   },
+   {
+    "file": "src/components/admin/DemographicAttributesManager.tsx",
+    "msg": "Não foi possível reordenar"
+   },
+   {
+    "file": "src/components/admin/DemographicValuesPanel.tsx",
+    "msg": "\n        className="
+   },
+   {
     "file": "src/components/admin/DepartmentsManager.tsx",
     "msg": "Erro ao adicionar membro"
    },
@@ -62521,6 +62720,22 @@
     "msg": ">\n              {error}\n            </p>\n          )}\n          <Button onClick={handleAdd} disabled={isAdding}>\n            <Plus className="
    },
    {
+    "file": "src/components/filters/SavedFiltersBar.tsx",
+    "msg": "\n        className="
+   },
+   {
+    "file": "src/components/filters/SavedFiltersBar.tsx",
+    "msg": "Dê um nome ao filtro"
+   },
+   {
+    "file": "src/components/filters/SavedFiltersBar.tsx",
+    "msg": "Não foi possível alterar o filtro padrão"
+   },
+   {
+    "file": "src/components/filters/SavedFiltersBar.tsx",
+    "msg": "Não foi possível excluir o filtro"
+   },
+   {
     "file": "src/components/luckywheel/LuckyWheelPayoutPanel.tsx",
     "msg": ";\nimport { Badge } from "
    },
@@ -62567,6 +62782,22 @@
    {
     "file": "src/components/prediction/StakeDialog.tsx",
     "msg": "Erro inesperado ao registrar o aporte. Tente novamente."
+   },
+   {
+    "file": "src/components/profile/MyDemographicValuesCard.tsx",
+    "msg": "\n            className="
+   },
+   {
+    "file": "src/components/profile/MyDemographicValuesCard.tsx",
+    "msg": "Não foi possível remover a resposta"
+   },
+   {
+    "file": "src/components/profile/MyDemographicValuesCard.tsx",
+    "msg": "Não foi possível salvar suas respostas"
+   },
+   {
+    "file": "src/components/profile/MyDemographicValuesCard.tsx",
+    "msg": "Responda: ${faltando.map((a) => a.name).join("
    },
    {
     "file": "src/components/quiz/AIQuestionGenerator.tsx",
@@ -63765,6 +63996,10 @@
     "msg": "Você já respondeu esta pesquisa."
    },
    {
+    "file": "src/services/demographicsService.ts",
+    "msg": "Sem usuário autenticado"
+   },
+   {
     "file": "src/services/duelsService.ts",
     "msg": "Duel not found"
    },
@@ -63959,6 +64194,10 @@
    {
     "file": "src/services/salesCampaignsService.ts",
     "msg": "Não autenticado"
+   },
+   {
+    "file": "src/services/savedFiltersService.ts",
+    "msg": "Sem usuario autenticado"
    },
    {
     "file": "src/services/seasonalEventsService.ts",
@@ -64199,6 +64438,10 @@
     "value": "long"
    },
    {
+    "file": "src/pages/DemographicAttributesAdmin.tsx",
+    "value": "admin"
+   },
+   {
     "file": "src/pages/LuckyWheelPage.tsx",
     "value": "admin"
    },
@@ -64425,6 +64668,10 @@
     "text": "Evita disparos concorrentes que estouram o rate limit da edge function."
    },
    {
+    "file": "src/components/admin/DemographicAttributesManager.tsx",
+    "text": "trocar apenas os numeros deixaria dois atributos empatados parados — o que"
+   },
+   {
     "file": "src/components/admin/IssuedCredentialDialog.tsx",
     "text": "momento — o banco guarda apenas o hash, então não há como recuperá-lo depois."
    },
@@ -64459,6 +64706,10 @@
    {
     "file": "src/components/engagement/nr1/Nr1RiskMatrix.tsx",
     "text": "* Grau máximo teórico da matriz (probabilidade 10 x severidade 3). */"
+   },
+   {
+    "file": "src/components/filters/SavedFiltersBar.tsx",
+    "text": "e' a regra documentada na coluna `is_default`. Depois disso a pagina nao e'"
    },
    {
     "file": "src/components/luckywheel/LuckyWheel.tsx",
@@ -65217,6 +65468,10 @@
     "text": "Aposta inicial sugerida: 25% do teto (ou o mínimo possível)."
    },
    {
+    "file": "src/pages/DemographicAttributesAdmin.tsx",
+    "text": "Gestor apenas consulta, e nao ve valor de atributo marcado como restrito."
+   },
+   {
     "file": "src/pages/LightningQuizPage.tsx",
     "text": "Cronômetro server-authoritative: a UI apenas espelha o prazo persistido."
    },
@@ -65407,6 +65662,10 @@
    {
     "file": "src/services/salesCampaignsService.ts",
     "text": "Milestone notifications (25/50/75%) — disparadas apenas na transição"
+   },
+   {
+    "file": "src/services/savedFiltersService.ts",
+    "text": "* A regra de negocio do `is_default` e' aplicada no banco pelo gatilho"
    },
    {
     "file": "src/services/scratchCardService.ts",
@@ -77328,6 +77587,11 @@
     "value": "\"\\uFEFF\""
    },
    {
+    "file": "src/pages/AuditLogs.tsx",
+    "name": "ENTITY_TYPE",
+    "value": "\"audit_logs\""
+   },
+   {
     "file": "src/pages/BoardTrailAdminPage.tsx",
     "name": "NEW_TRAIL",
     "value": "\"__new__\""
@@ -77396,6 +77660,11 @@
     "file": "src/services/campaignImportService.ts",
     "name": "RESULT_PAGE_SIZE",
     "value": "1000"
+   },
+   {
+    "file": "src/services/demographicsService.ts",
+    "name": "PREFER_NOT_ANSWER",
+    "value": "\"__prefer_not_answer__\""
    },
    {
     "file": "src/services/engagementDiagnosticsService.ts",
@@ -81656,6 +81925,12 @@
     "kind": "compara"
    },
    {
+    "file": "src/pages/DemographicAttributesAdmin.tsx",
+    "field": "role",
+    "value": "admin",
+    "kind": "compara"
+   },
+   {
     "file": "src/pages/DepartmentWarPage.tsx",
     "field": "status",
     "value": "running",
@@ -82590,6 +82865,18 @@
     "field": "status",
     "value": "scheduled",
     "kind": "escreve"
+   },
+   {
+    "file": "src/services/demographicsService.ts",
+    "field": "tipo",
+    "value": "single_select",
+    "kind": "compara"
+   },
+   {
+    "file": "src/services/demographicsService.ts",
+    "field": "tipo",
+    "value": "multi_select",
+    "kind": "compara"
    },
    {
     "file": "src/services/departmentWarAdminService.ts",
@@ -84568,6 +84855,12 @@
     "body": "const { user } = useAuth(); const { data, isLoading, isError, refetch } = useFeedbackSummary(user?.id); const hasContent = !!data && (data.totalResponses > 0 || data.commonStrengths.length > 0 || data.commonImprovements.length > 0); return ( <Card> <CardHeader> <CardTitle className=\"flex items-center gap-2\"> <Star className=\"h-5 w-5 text-primary\" /> Meu resumo de feedback </CardTitle> </CardHeader> <CardContent> {isLoading ? ( <LoadingState message=\"Carregando seu resumo...\" /> ) : isError ? ( < …"
    },
    {
+    "file": "src/components/filters/SavedFiltersBar.tsx",
+    "name": "aplicar",
+    "params": "id: string",
+    "body": "const alvo = filters.find((f) => f.id === id); if (!alvo) return; setSelectedId(id); applyRef.current((alvo.filters ?? {}) as SavedFilterPayload); toast.success(`Filtro \"${alvo.name}\" aplicado`);"
+   },
+   {
     "file": "src/components/lms/ModuleViewer.tsx",
     "name": "calculateScore",
     "params": "",
@@ -84590,6 +84883,12 @@
     "name": "calculateTrend",
     "params": "streak: number, questsCompleted: number",
     "body": "if (streak >= 5 && questsCompleted > 10) return \"up\"; if (streak === 0) return \"down\"; return \"same\";"
+   },
+   {
+    "file": "src/components/profile/MyDemographicValuesCard.tsx",
+    "name": "doValorSalvo",
+    "params": "valor: DemographicValue | undefined",
+    "body": "if (!valor) return { ...RASCUNHO_VAZIO }; const preferNotAnswer = ehPreferNotAnswer(valor.values_array); return { value: valor.value ?? \"\", valuesArray: !preferNotAnswer && Array.isArray(valor.values_array) ? valor.values_array.filter((v): v is string => typeof v === \"string\") : [], numberValue: valor.number_value === null || valor.number_value === undefined ? \"\" : String(valor.number_value), dateValue: valor.date_value ?? \"\", preferNotAnswer, };"
    },
    {
     "file": "src/components/social/FeedFilters.tsx",
@@ -85148,6 +85447,12 @@
     "name": "applyReverse",
     "params": "score: number | null, isReverse: boolean",
     "body": "if (score === null) return null; return isReverse ? 10 - score : score;"
+   },
+   {
+    "file": "src/services/demographicsService.ts",
+    "name": "valorExibivel",
+    "params": "valor: DemographicValueRow | DemographicValue",
+    "body": "if (ehPreferNotAnswer(valor.values_array ?? null)) return \"Prefiro não responder\"; if (Array.isArray(valor.values_array) && valor.values_array.length > 0) { return valor.values_array.filter((v) => typeof v === \"string\").join(\", \"); } if (valor.number_value !== null && valor.number_value !== undefined) { return String(valor.number_value); } if (valor.date_value) { const [ano, mes, dia] = valor.date_value.split(\"-\"); return `${dia}/${mes}/${ano}`; } if (valor.value) return valor.value; return \"Não …"
    },
    {
     "file": "src/services/duelsService.ts",
@@ -89470,6 +89775,90 @@
     "name": "traduz motivos conhecidos e usa fallback"
    },
    {
+    "file": "src/test/demographicValuesPanel.test.tsx",
+    "name": "DemographicValuesPanel"
+   },
+   {
+    "file": "src/test/demographicValuesPanel.test.tsx",
+    "name": "esconde o valor restrito do gestor e mostra o liberado"
+   },
+   {
+    "file": "src/test/demographicValuesPanel.test.tsx",
+    "name": "mostra o valor restrito para o administrador"
+   },
+   {
+    "file": "src/test/demographicValuesPanel.test.tsx",
+    "name": "trata a resposta sem metadado como uso interno e a mantem na lista"
+   },
+   {
+    "file": "src/test/demographicsService.test.ts",
+    "name": "helpers de atributo demografico"
+   },
+   {
+    "file": "src/test/demographicsService.test.ts",
+    "name": "le opcoes em lista de strings e no formato {value,label} do Studio"
+   },
+   {
+    "file": "src/test/demographicsService.test.ts",
+    "name": "reconhece a marca de preferir nao responder"
+   },
+   {
+    "file": "src/test/demographicsService.test.ts",
+    "name": "so tipos de selecao usam a lista de opcoes"
+   },
+   {
+    "file": "src/test/demographicsService.test.ts",
+    "name": "traduz o tipo e cai no valor cru quando desconhecido"
+   },
+   {
+    "file": "src/test/demographicsService.test.ts",
+    "name": "monta o texto exibivel conforme o tipo preenchido"
+   },
+   {
+    "file": "src/test/demographicsService.test.ts",
+    "name": "demographicsService"
+   },
+   {
+    "file": "src/test/demographicsService.test.ts",
+    "name": "filtra apenas atributos ativos quando pedido"
+   },
+   {
+    "file": "src/test/demographicsService.test.ts",
+    "name": "grava a resposta do usuario da sessao com conflito por usuario+atributo"
+   },
+   {
+    "file": "src/test/demographicsService.test.ts",
+    "name": "preferir nao responder grava a marca sem apagar a linha"
+   },
+   {
+    "file": "src/test/demographicsService.test.ts",
+    "name": "recusa gravar resposta sem sessao"
+   },
+   {
+    "file": "src/test/demographicsService.test.ts",
+    "name": "excluir atributo apaga pelo id e propaga erro do banco"
+   },
+   {
+    "file": "src/test/demographicsService.test.ts",
+    "name": "le as respostas do proprio usuario, nunca as de terceiros"
+   },
+   {
+    "file": "src/test/demographicsService.test.ts",
+    "name": "sem sessao nao consulta o proprio perfil"
+   },
+   {
+    "file": "src/test/demographicsService.test.ts",
+    "name": "administrador recebe o valor das respostas restritas"
+   },
+   {
+    "file": "src/test/demographicsService.test.ts",
+    "name": "gestor nao pede as colunas de valor das respostas restritas"
+   },
+   {
+    "file": "src/test/demographicsService.test.ts",
+    "name": "gestor mantem na lista a resposta de atributo que nao consegue enxergar"
+   },
+   {
     "file": "src/test/departmentWar.simulation.test.ts",
     "name": "Guerra de Departamentos - simulacao massiva"
    },
@@ -93172,6 +93561,30 @@
    {
     "file": "src/test/rpcAccess.test.ts",
     "name": "anon deve receber erro 42501/42883 ao chamar ${fn}"
+   },
+   {
+    "file": "src/test/savedFiltersService.test.ts",
+    "name": "savedFiltersService"
+   },
+   {
+    "file": "src/test/savedFiltersService.test.ts",
+    "name": "salva usando o usuario da sessao e conflito unico por usuario+entidade+nome"
+   },
+   {
+    "file": "src/test/savedFiltersService.test.ts",
+    "name": "recusa salvar sem sessao"
+   },
+   {
+    "file": "src/test/savedFiltersService.test.ts",
+    "name": "ao tornar padrao, faz uma unica escrita — o gatilho do banco desmarca o anterior"
+   },
+   {
+    "file": "src/test/savedFiltersService.test.ts",
+    "name": "lista apenas os filtros da entidade informada"
+   },
+   {
+    "file": "src/test/savedFiltersService.test.ts",
+    "name": "propaga o erro do banco em vez de engolir"
    },
    {
     "file": "src/test/scratchCardOdds.simulation.test.ts",
@@ -110191,6 +110604,7 @@
      ],
      "admin": [
       "compara:src/components/rbac/UserRolesTab.tsx",
+      "compara:src/pages/DemographicAttributesAdmin.tsx",
       "compara:supabase/functions/reward-approval-review/index.ts",
       "filtra:supabase/functions/dispatch-critical-alert/index.ts",
       "filtra:supabase/functions/security-weekly-digest/index.ts"
@@ -110848,6 +111262,14 @@
     "trail_status": {
      "draft": [
       "escreve:src/integrations/supabase/types.ts"
+     ]
+    },
+    "tipo": {
+     "single_select": [
+      "compara:src/services/demographicsService.ts"
+     ],
+     "multi_select": [
+      "compara:src/services/demographicsService.ts"
      ]
     }
    }
@@ -124795,6 +125217,10 @@
    },
    {
     "guard": "ProtectedRoute",
+    "file": "src/App.tsx"
+   },
+   {
+    "guard": "ProtectedRoute",
     "file": "src/components/rbac/ProtectedRoute.tsx"
    },
    {
@@ -124857,6 +125283,15 @@
     "guard": "ProtectedRoute",
     "roles": [
      "admin"
+    ],
+    "file": "src/App.tsx"
+   },
+   {
+    "path": "/admin/atributos-demograficos",
+    "component": "PageTransition",
+    "guard": "ProtectedRoute",
+    "roles": [
+     "manager"
     ],
     "file": "src/App.tsx"
    },
@@ -126779,13 +127214,6 @@
    },
    {
     "kind": "status",
-    "msg": "valor `number` para `status` usado no código não existe em nenhum enum do banco/TS",
-    "where": [
-     "compara:src/lib/edgeErrors.ts"
-    ]
-   },
-   {
-    "kind": "status",
     "msg": "valor `expiring_soon` para `status` usado no código não existe em nenhum enum do banco/TS",
     "where": [
      "compara:src/services/certificationsService.ts"
@@ -128610,7 +129038,7 @@
   },
   "src/App.tsx": {
    "path": "src/App.tsx",
-   "lines": 342,
+   "lines": 344,
    "exports": [
     "default App"
    ],
@@ -129150,6 +129578,14 @@
      ]
     },
     {
+     "path": "/admin/atributos-demograficos",
+     "component": "PageTransition",
+     "guard": "ProtectedRoute",
+     "roles": [
+      "manager"
+     ]
+    },
+    {
      "path": "/admin/executive-report",
      "component": "PageTransition",
      "guard": "ProtectedRoute",
@@ -129219,6 +129655,7 @@
     }
    ],
    "guards": [
+    "ProtectedRoute",
     "ProtectedRoute",
     "ProtectedRoute",
     "ProtectedRoute",
@@ -131262,6 +131699,41 @@
    ],
    "role_checks": [
     "permission"
+   ]
+  },
+  "src/components/admin/DemographicAttributesManager.tsx": {
+   "path": "src/components/admin/DemographicAttributesManager.tsx",
+   "lines": 592,
+   "exports": [
+    "function DemographicAttributesManager"
+   ],
+   "errors": [
+    "\n        className=",
+    "Dê um nome ao atributo",
+    "Escolha única e múltipla escolha precisam de pelo menos uma opção",
+    "Há opções repetidas na lista",
+    "Não foi possível alterar o atributo",
+    "Não foi possível excluir o atributo",
+    "Não foi possível reordenar"
+   ],
+   "html_constraints": [
+    {
+     "field": "attr-order",
+     "rules": "type=number"
+    }
+   ],
+   "rule_comments": [
+    "trocar apenas os numeros deixaria dois atributos empatados parados — o que"
+   ]
+  },
+  "src/components/admin/DemographicValuesPanel.tsx": {
+   "path": "src/components/admin/DemographicValuesPanel.tsx",
+   "lines": 171,
+   "exports": [
+    "function DemographicValuesPanel"
+   ],
+   "errors": [
+    "\n        className="
    ]
   },
   "src/components/admin/DepartmentsManager.tsx": {
@@ -133719,6 +134191,29 @@
     }
    ]
   },
+  "src/components/filters/SavedFiltersBar.tsx": {
+   "path": "src/components/filters/SavedFiltersBar.tsx",
+   "lines": 350,
+   "exports": [
+    "function SavedFiltersBar"
+   ],
+   "errors": [
+    "\n        className=",
+    "Dê um nome ao filtro",
+    "Não foi possível alterar o filtro padrão",
+    "Não foi possível excluir o filtro"
+   ],
+   "rule_comments": [
+    "e' a regra documentada na coluna `is_default`. Depois disso a pagina nao e'"
+   ],
+   "calc_fns": [
+    {
+     "name": "aplicar",
+     "params": "id: string",
+     "body": "const alvo = filters.find((f) => f.id === id); if (!alvo) return; setSelectedId(id); applyRef.current((alvo.filters ?? {}) as SavedFilterPayload); toast.success(`Filtro \"${alvo.name}\" aplicado`);"
+    }
+   ]
+  },
   "src/components/goals/GoalCard.tsx": {
    "path": "src/components/goals/GoalCard.tsx",
    "lines": 284,
@@ -134749,6 +135244,26 @@
   "src/components/prediction/index.ts": {
    "path": "src/components/prediction/index.ts",
    "lines": 17
+  },
+  "src/components/profile/MyDemographicValuesCard.tsx": {
+   "path": "src/components/profile/MyDemographicValuesCard.tsx",
+   "lines": 460,
+   "exports": [
+    "function MyDemographicValuesCard"
+   ],
+   "errors": [
+    "\n            className=",
+    "Não foi possível remover a resposta",
+    "Não foi possível salvar suas respostas",
+    "Responda: ${faltando.map((a) => a.name).join("
+   ],
+   "calc_fns": [
+    {
+     "name": "doValorSalvo",
+     "params": "valor: DemographicValue | undefined",
+     "body": "if (!valor) return { ...RASCUNHO_VAZIO }; const preferNotAnswer = ehPreferNotAnswer(valor.values_array); return { value: valor.value ?? \"\", valuesArray: !preferNotAnswer && Array.isArray(valor.values_array) ? valor.values_array.filter((v): v is string => typeof v === \"string\") : [], numberValue: valor.number_value === null || valor.number_value === undefined ? \"\" : String(valor.number_value), dateValue: valor.date_value ?? \"\", preferNotAnswer, };"
+    }
+   ]
   },
   "src/components/profile/ProfileAchievements.tsx": {
    "path": "src/components/profile/ProfileAchievements.tsx",
@@ -138010,6 +138525,35 @@
     "useThrottledCallback"
    ]
   },
+  "src/hooks/useDemographics.ts": {
+   "path": "src/hooks/useDemographics.ts",
+   "lines": 119,
+   "exports": [
+    "const demographicKeys",
+    "function useDemographicAttributes",
+    "function useMyDemographicValues",
+    "function useAllDemographicValues",
+    "function useCreateDemographicAttribute",
+    "function useUpdateDemographicAttribute",
+    "function useDeleteDemographicAttribute",
+    "function useSetDemographicOrder",
+    "function useSaveDemographicValue",
+    "function useSetPreferNotAnswer",
+    "function useClearDemographicValue"
+   ],
+   "hooks": [
+    "useDemographicAttributes",
+    "useMyDemographicValues",
+    "useAllDemographicValues",
+    "useCreateDemographicAttribute",
+    "useUpdateDemographicAttribute",
+    "useDeleteDemographicAttribute",
+    "useSetDemographicOrder",
+    "useSaveDemographicValue",
+    "useSetPreferNotAnswer",
+    "useClearDemographicValue"
+   ]
+  },
   "src/hooks/useDepartmentWars.ts": {
    "path": "src/hooks/useDepartmentWars.ts",
    "lines": 162,
@@ -139644,6 +140188,25 @@
     }
    ]
   },
+  "src/hooks/useSavedFilters.ts": {
+   "path": "src/hooks/useSavedFilters.ts",
+   "lines": 59,
+   "exports": [
+    "const savedFilterKeys",
+    "function useSavedFilters",
+    "function useDefaultSavedFilter",
+    "function useSaveSavedFilter",
+    "function useSetDefaultSavedFilter",
+    "function useDeleteSavedFilter"
+   ],
+   "hooks": [
+    "useSavedFilters",
+    "useDefaultSavedFilter",
+    "useSaveSavedFilter",
+    "useSetDefaultSavedFilter",
+    "useDeleteSavedFilter"
+   ]
+  },
   "src/hooks/useScratchCards.ts": {
    "path": "src/hooks/useScratchCards.ts",
    "lines": 40,
@@ -140278,7 +140841,7 @@
   },
   "src/integrations/supabase/types.ts": {
    "path": "src/integrations/supabase/types.ts",
-   "lines": 13004,
+   "lines": 13037,
    "exports": [
     "type Json",
     "type Database",
@@ -145382,7 +145945,7 @@
   },
   "src/pages/AdminPanel.tsx": {
    "path": "src/pages/AdminPanel.tsx",
-   "lines": 200,
+   "lines": 201,
    "exports": [
     "function AdminPanel"
    ],
@@ -145505,9 +146068,15 @@
   },
   "src/pages/AuditLogs.tsx": {
    "path": "src/pages/AuditLogs.tsx",
-   "lines": 97,
+   "lines": 131,
    "exports": [
     "function AuditLogs"
+   ],
+   "params": [
+    {
+     "name": "ENTITY_TYPE",
+     "value": "\"audit_logs\""
+    }
    ]
   },
   "src/pages/Auth.tsx": {
@@ -145923,6 +146492,26 @@
    "percents": [
     "// Aposta inicial sugerida: 25% do teto (ou o mínimo possível).",
     "transition={{ delay: index * 0.05 }}"
+   ]
+  },
+  "src/pages/DemographicAttributesAdmin.tsx": {
+   "path": "src/pages/DemographicAttributesAdmin.tsx",
+   "lines": 58,
+   "exports": [
+    "function DemographicAttributesAdmin"
+   ],
+   "status_values": [
+    {
+     "field": "role",
+     "value": "admin",
+     "kind": "compara"
+    }
+   ],
+   "role_checks": [
+    "admin"
+   ],
+   "rule_comments": [
+    "Gestor apenas consulta, e nao ve valor de atributo marcado como restrito."
    ]
   },
   "src/pages/DepartmentWarPage.tsx": {
@@ -146509,11 +147098,12 @@
   },
   "src/pages/ManagerDashboard.tsx": {
    "path": "src/pages/ManagerDashboard.tsx",
-   "lines": 275,
+   "lines": 276,
    "exports": [
     "function ManagerDashboard"
    ],
    "navigates": [
+    "/admin/atributos-demograficos",
     "/quest-builder"
    ],
    "errors": [
@@ -146956,7 +147546,7 @@
   },
   "src/pages/Profile.tsx": {
    "path": "src/pages/Profile.tsx",
-   "lines": 252,
+   "lines": 254,
    "exports": [
     "default Profile"
    ],
@@ -149754,6 +150344,118 @@
    ],
    "rule_comments": [
     "* Registra a aposta. Validações finais (saldo, limite, duplicidade) são do banco. */"
+   ]
+  },
+  "src/services/demographicsService.ts": {
+   "path": "src/services/demographicsService.ts",
+   "lines": 273,
+   "exports": [
+    "type DemographicAttribute",
+    "type DemographicAttributeInsert",
+    "type DemographicAttributeUpdate",
+    "type DemographicValue",
+    "type DemographicValueRow",
+    "type DemographicAttributeType",
+    "const ATTRIBUTE_TYPES",
+    "const ehTipoComOpcoes",
+    "const rotuloTipo",
+    "const PREFER_NOT_ANSWER",
+    "const ehPreferNotAnswer",
+    "const lerOpcoes",
+    "const valorExibivel",
+    "const demographicsService"
+   ],
+   "tables": [
+    {
+     "table": "demographic_attributes",
+     "op": "select"
+    },
+    {
+     "table": "demographic_attributes",
+     "op": "insert,select"
+    },
+    {
+     "table": "demographic_attributes",
+     "op": "select,update"
+    },
+    {
+     "table": "demographic_attributes",
+     "op": "delete"
+    },
+    {
+     "table": "demographic_attributes",
+     "op": "update"
+    },
+    {
+     "table": "user_demographic_values",
+     "op": "select"
+    },
+    {
+     "table": "user_demographic_values",
+     "op": "select"
+    },
+    {
+     "table": "user_demographic_values",
+     "op": "select"
+    },
+    {
+     "table": "user_demographic_values",
+     "op": "select"
+    },
+    {
+     "table": "user_demographic_values",
+     "op": "select,upsert"
+    },
+    {
+     "table": "user_demographic_values",
+     "op": "delete"
+    }
+   ],
+   "table_cols": {
+    "demographic_attributes": [
+     "id"
+    ],
+    "user_demographic_values": [
+     "attribute_id",
+     "created_at",
+     "id",
+     "updated_at",
+     "user_id"
+    ]
+   },
+   "errors": [
+    "Sem usuário autenticado"
+   ],
+   "enums": [
+    {
+     "name": "DemographicAttributeType",
+     "values": "text | single_select | multi_select | number | date | calculated"
+    }
+   ],
+   "params": [
+    {
+     "name": "PREFER_NOT_ANSWER",
+     "value": "\"__prefer_not_answer__\""
+    }
+   ],
+   "status_values": [
+    {
+     "field": "tipo",
+     "value": "single_select",
+     "kind": "compara"
+    },
+    {
+     "field": "tipo",
+     "value": "multi_select",
+     "kind": "compara"
+    }
+   ],
+   "calc_fns": [
+    {
+     "name": "valorExibivel",
+     "params": "valor: DemographicValueRow | DemographicValue",
+     "body": "if (ehPreferNotAnswer(valor.values_array ?? null)) return \"Prefiro não responder\"; if (Array.isArray(valor.values_array) && valor.values_array.length > 0) { return valor.values_array.filter((v) => typeof v === \"string\").join(\", \"); } if (valor.number_value !== null && valor.number_value !== undefined) { return String(valor.number_value); } if (valor.date_value) { const [ano, mes, dia] = valor.date_value.split(\"-\"); return `${dia}/${mes}/${ano}`; } if (valor.value) return valor.value; return \"Não …"
+    }
    ]
   },
   "src/services/departmentWarAdminService.ts": {
@@ -153926,6 +154628,50 @@
     "Milestone notifications (25/50/75%) — disparadas apenas na transição"
    ]
   },
+  "src/services/savedFiltersService.ts": {
+   "path": "src/services/savedFiltersService.ts",
+   "lines": 88,
+   "exports": [
+    "type SavedFilter",
+    "type SavedFilterInsert",
+    "type SavedFilterPayload",
+    "const savedFiltersService"
+   ],
+   "tables": [
+    {
+     "table": "saved_filters",
+     "op": "select"
+    },
+    {
+     "table": "saved_filters",
+     "op": "select,upsert"
+    },
+    {
+     "table": "saved_filters",
+     "op": "update"
+    },
+    {
+     "table": "saved_filters",
+     "op": "update"
+    },
+    {
+     "table": "saved_filters",
+     "op": "delete"
+    }
+   ],
+   "table_cols": {
+    "saved_filters": [
+     "entity_type",
+     "id"
+    ]
+   },
+   "errors": [
+    "Sem usuario autenticado"
+   ],
+   "rule_comments": [
+    "* A regra de negocio do `is_default` e' aplicada no banco pelo gatilho"
+   ]
+  },
   "src/services/scratchCardService.ts": {
    "path": "src/services/scratchCardService.ts",
    "lines": 80,
@@ -156936,6 +157682,51 @@
     "traduz motivos conhecidos e usa fallback"
    ]
   },
+  "src/test/demographicValuesPanel.test.tsx": {
+   "path": "src/test/demographicValuesPanel.test.tsx",
+   "lines": 120,
+   "is_test": true,
+   "tests": [
+    "DemographicValuesPanel",
+    "esconde o valor restrito do gestor e mostra o liberado",
+    "mostra o valor restrito para o administrador",
+    "trata a resposta sem metadado como uso interno e a mantem na lista"
+   ]
+  },
+  "src/test/demographicsService.test.ts": {
+   "path": "src/test/demographicsService.test.ts",
+   "lines": 308,
+   "is_test": true,
+   "calc_fns": [
+    {
+     "name": "valor",
+     "params": "overrides: Row = {}",
+     "body": "id: \"v1\", user_id: \"user-1\", attribute_id: \"a1\", value: null, values_array: [], number_value: null, date_value: null, created_at: \"\", updated_at: \"\", ...overrides,"
+    }
+   ],
+   "tests": [
+    "helpers de atributo demografico",
+    "le opcoes em lista de strings e no formato {value,label} do Studio",
+    "reconhece a marca de preferir nao responder",
+    "so tipos de selecao usam a lista de opcoes",
+    "traduz o tipo e cai no valor cru quando desconhecido",
+    "monta o texto exibivel conforme o tipo preenchido",
+    "demographicsService",
+    "filtra apenas atributos ativos quando pedido",
+    "grava a resposta do usuario da sessao com conflito por usuario+atributo",
+    "preferir nao responder grava a marca sem apagar a linha",
+    "recusa gravar resposta sem sessao",
+    "excluir atributo apaga pelo id e propaga erro do banco",
+    "le as respostas do proprio usuario, nunca as de terceiros",
+    "sem sessao nao consulta o proprio perfil",
+    "administrador recebe o valor das respostas restritas",
+    "gestor nao pede as colunas de valor das respostas restritas",
+    "gestor mantem na lista a resposta de atributo que nao consegue enxergar"
+   ],
+   "side_effects": [
+    "enqueue("
+   ]
+  },
   "src/test/departmentWar.simulation.test.ts": {
    "path": "src/test/departmentWar.simulation.test.ts",
    "lines": 304,
@@ -158575,6 +159366,22 @@
     "anon deve receber erro ao chamar get_2fa_status de outro usuário",
     "anon deve receber erro ao chamar validate_reset_token",
     "anon deve receber erro 42501/42883 ao chamar ${fn}"
+   ]
+  },
+  "src/test/savedFiltersService.test.ts": {
+   "path": "src/test/savedFiltersService.test.ts",
+   "lines": 154,
+   "is_test": true,
+   "tests": [
+    "savedFiltersService",
+    "salva usando o usuario da sessao e conflito unico por usuario+entidade+nome",
+    "recusa salvar sem sessao",
+    "ao tornar padrao, faz uma unica escrita — o gatilho do banco desmarca o anterior",
+    "lista apenas os filtros da entidade informada",
+    "propaga o erro do banco em vez de engolir"
+   ],
+   "side_effects": [
+    "enqueue("
    ]
   },
   "src/test/scratchCardOdds.simulation.test.ts": {
@@ -164760,10 +165567,36 @@
   }
  },
  "git": {
-  "sha": "e634962506e30061c523275b9d40a889fd5ca0b7",
+  "sha": "613009c549ef6118e9ea55da27388ab88b3a74a7",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "commits": [
+   {
+    "sha": "613009c",
+    "date": "2026-11-26",
+    "author": "adm01-debug",
+    "subject": "feat: telas para filtros salvos e perfil demografico (#181)",
+    "files": [
+     "src/App.tsx",
+     "src/components/admin/DemographicAttributesManager.tsx",
+     "src/components/admin/DemographicValuesPanel.tsx",
+     "src/components/filters/SavedFiltersBar.tsx",
+     "src/components/profile/MyDemographicValuesCard.tsx",
+     "src/hooks/useDemographics.ts",
+     "src/hooks/useSavedFilters.ts",
+     "src/integrations/supabase/types.ts",
+     "src/pages/AdminPanel.tsx",
+     "src/pages/AuditLogs.tsx",
+     "src/pages/DemographicAttributesAdmin.tsx",
+     "src/pages/ManagerDashboard.tsx",
+     "src/pages/Profile.tsx",
+     "src/services/demographicsService.ts",
+     "src/services/savedFiltersService.ts",
+     "src/test/demographicValuesPanel.test.tsx",
+     "src/test/demographicsService.test.ts",
+     "src/test/savedFiltersService.test.ts"
+    ]
+   },
    {
     "sha": "e634962",
     "date": "2026-11-26",
@@ -165145,16 +165978,6 @@
     "files": [
      "docs/estado/05-edge-functions.md"
     ]
-   },
-   {
-    "sha": "59b21b4",
-    "date": "2026-11-24",
-    "author": "adm01-debug",
-    "subject": "fix(desafio): notificacao do desafio semanal leva o id do desafio no payload (#145)",
-    "files": [
-     "src/hooks/useWeeklyChallenge.ts",
-     "src/tests/unit/weeklyChallenge.test.tsx"
-    ]
    }
   ],
   "hot_files": [
@@ -165176,7 +165999,7 @@
    ],
    [
     "src/pages/Profile.tsx",
-    4
+    5
    ],
    [
     "scripts/db-audit/migration-baseline.json",
@@ -165189,6 +166012,14 @@
    [
     "scripts/db-audit/check-migration-drift.mjs",
     3
+   ],
+   [
+    "src/integrations/supabase/types.ts",
+    2
+   ],
+   [
+    "src/pages/ManagerDashboard.tsx",
+    2
    ],
    [
     "supabase/functions/push-outbox-dispatcher/index.ts",
@@ -165223,19 +166054,11 @@
     2
    ],
    [
-    "src/components/NotificationQuietHoursCard.tsx",
+    "src/App.tsx",
     1
    ],
    [
-    "src/components/security/PushOutboxHealthPanel.tsx",
-    1
-   ],
-   [
-    "src/lib/pushOutbox.ts",
-    1
-   ],
-   [
-    "src/test/notificationQuietHoursCard.test.tsx",
+    "src/components/admin/DemographicAttributesManager.tsx",
     1
    ]
   ]

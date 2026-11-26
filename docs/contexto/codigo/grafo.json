@@ -1,20 +1,20 @@
 {
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
- "nos": 1025,
- "arestas": 4499,
+ "nos": 1034,
+ "arestas": 4560,
  "hubs": [
   {
    "arquivo": "src/components/ui/card.tsx",
-   "importado_por": 300
+   "importado_por": 303
   },
   {
    "arquivo": "src/components/ui/button.tsx",
-   "importado_por": 297
+   "importado_por": 301
   },
   {
    "arquivo": "src/components/ui/badge.tsx",
-   "importado_por": 250
+   "importado_por": 253
   },
   {
    "arquivo": "src/lib/utils.ts",
@@ -22,11 +22,11 @@
   },
   {
    "arquivo": "src/integrations/supabase/client.ts",
-   "importado_por": 179
+   "importado_por": 181
   },
   {
    "arquivo": "src/components/ui/skeleton.tsx",
-   "importado_por": 161
+   "importado_por": 165
   },
   {
    "arquivo": "src/hooks/useAuth.tsx",
@@ -34,19 +34,19 @@
   },
   {
    "arquivo": "src/services/loggingService.ts",
-   "importado_por": 104
+   "importado_por": 107
   },
   {
    "arquivo": "src/components/ui/input.tsx",
-   "importado_por": 97
+   "importado_por": 100
   },
   {
    "arquivo": "src/components/ui/select.tsx",
-   "importado_por": 95
+   "importado_por": 98
   },
   {
    "arquivo": "src/components/ui/label.tsx",
-   "importado_por": 88
+   "importado_por": 91
   },
   {
    "arquivo": "src/components/ui/progress.tsx",
@@ -54,11 +54,11 @@
   },
   {
    "arquivo": "src/components/ui/dialog.tsx",
-   "importado_por": 78
+   "importado_por": 80
   },
   {
    "arquivo": "src/components/navigation/index.ts",
-   "importado_por": 62
+   "importado_por": 63
   },
   {
    "arquivo": "src/components/ui/textarea.tsx",
@@ -66,7 +66,7 @@
   },
   {
    "arquivo": "src/components/ui/switch.tsx",
-   "importado_por": 46
+   "importado_por": 50
   },
   {
    "arquivo": "src/components/SEOHead.tsx",
@@ -78,11 +78,11 @@
   },
   {
    "arquivo": "src/components/ui/tabs.tsx",
-   "importado_por": 39
+   "importado_por": 40
   },
   {
    "arquivo": "src/hooks/useProfiles.ts",
-   "importado_por": 37
+   "importado_por": 38
   },
   {
    "arquivo": "src/components/SectionErrorBoundary.tsx",
@@ -117,6 +117,10 @@
    "importado_por": 25
   },
   {
+   "arquivo": "src/components/ui/table.tsx",
+   "importado_por": 22
+  },
+  {
    "arquivo": "src/hooks/use-toast.ts",
    "importado_por": 22
   },
@@ -129,11 +133,11 @@
    "importado_por": 22
   },
   {
-   "arquivo": "src/components/ui/table.tsx",
+   "arquivo": "src/hooks/useSEO.ts",
    "importado_por": 21
   },
   {
-   "arquivo": "src/hooks/useSEO.ts",
+   "arquivo": "src/integrations/supabase/types.ts",
    "importado_por": 21
   },
   {
@@ -142,10 +146,6 @@
   },
   {
    "arquivo": "src/components/ui/tooltip.tsx",
-   "importado_por": 18
-  },
-  {
-   "arquivo": "src/integrations/supabase/types.ts",
    "importado_por": 18
   },
   {
@@ -240,17 +240,17 @@
   {
    "modulo": "components/ui",
    "depende_de": 2,
-   "importado_por": 56
+   "importado_por": 57
   },
   {
    "modulo": "pages",
-   "depende_de": 53,
+   "depende_de": 54,
    "importado_por": 1
   },
   {
    "modulo": "hooks",
    "depende_de": 8,
-   "importado_por": 43
+   "importado_por": 44
   },
   {
    "modulo": "lib",
@@ -260,7 +260,7 @@
   {
    "modulo": "services",
    "depende_de": 4,
-   "importado_por": 31
+   "importado_por": 33
   },
   {
    "modulo": "components",

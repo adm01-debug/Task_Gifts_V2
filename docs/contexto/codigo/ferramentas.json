@@ -3,7 +3,7 @@
  "format_version": 2,
  "stack": {
   "linguagens": [
-   "TypeScript (1174)",
+   "TypeScript (1186)",
    "SQL (319)",
    "Markdown (56)",
    "JavaScript (24)",
@@ -734,11 +734,11 @@
   "papeis_no_codigo": [
    {
     "papel": "alert",
-    "ocorrencias": 14
+    "ocorrencias": 18
    },
    {
     "papel": "admin",
-    "ocorrencias": 13
+    "ocorrencias": 14
    },
    {
     "papel": "user",
@@ -887,7 +887,7 @@
    "src/components/rbac/AccessControl.tsx",
    "src/components/rbac/ProtectedRoute.tsx"
   ],
-  "rotas_protegidas": 82,
+  "rotas_protegidas": 83,
   "rotas_publicas": [
    "/*",
    "/forgot-password",

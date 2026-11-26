@@ -1,6 +1,6 @@
 # 07 · REGRAS DE NEGÓCIO
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `e634962506` · branch `main` · 2026-11-26 15:29 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `613009c549` · branch `main` · 2026-11-26 20:42 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## A. Regras escritas por humanos (`manual/` — prioridade máxima, nunca sobrescrito)
@@ -1191,7 +1191,7 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `type` | `xp` | compara, escreve | `src/components/ui/lucky-drop.tsx`<br>`src/components/ui/micro-interactions.tsx`<br>`src/lib/luckyWheelPayout.ts`<br>`src/services/notificationsService.ts` |
 | `type` | `xp_gained` | compara, escreve | `src/pages/SocialFeed.tsx`<br>`src/services/socialFeedService.ts` |
 | `type` | `zero_engagement` | escreve | `supabase/functions/admin-alerts/index.ts` |
-| `role` | `admin` | compara, filtra | `src/components/rbac/UserRolesTab.tsx`<br>`supabase/functions/dispatch-critical-alert/index.ts`<br>`supabase/functions/reward-approval-review/index.ts`<br>`supabase/functions/security-weekly-digest/index.ts` |
+| `role` | `admin` | compara, filtra | `src/components/rbac/UserRolesTab.tsx`<br>`src/pages/DemographicAttributesAdmin.tsx`<br>`supabase/functions/dispatch-critical-alert/index.ts`<br>`supabase/functions/reward-approval-review/index.ts`<br>`supabase/functions/security-weekly-digest/index.ts` |
 | `role` | `assistant` | compara, escreve | `src/components/AICoachDialog.tsx`<br>`src/hooks/useAICoach.ts`<br>`supabase/functions/_shared/contracts/_fixtures/index.ts` |
 | `role` | `long` | compara, escreve | `src/pages/BurnRate.tsx` |
 | `role` | `manager` | compara | `supabase/functions/reward-approval-review/index.ts` |
@@ -1313,6 +1313,8 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `purchase_status` | `pending` | escreve | `src/integrations/supabase/types.ts` |
 | `quest_status` | `draft` | escreve | `src/integrations/supabase/types.ts` |
 | `trail_status` | `draft` | escreve | `src/integrations/supabase/types.ts` |
+| `tipo` | `multi_select` | compara | `src/services/demographicsService.ts` |
+| `tipo` | `single_select` | compara | `src/services/demographicsService.ts` |
 
 ### E.4 Enums e listas de valores
 
@@ -1453,6 +1455,7 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | ClimatePillar | recognition \| autonomy \| growth \| leadership \| peers \| purpose \| environment \| communication \| benefits \| balance | `src/services/climateSurveyService.ts` |
 | COMBO_TIERS | { minActions: 0, multiplier: 1.0, label: "Normal", color: "text-muted-foreground", bgColor: "bg-muted" }, { minActions: 3, multiplier: 1.5, label: "Aquecendo", color: "text-blue-500", bgColor: "bg-blue-500/20" }, { minActions: 5, multiplier: 2.0, label: "Em Chamas!", color: "text-orange-500", bgColo … | `src/services/comboService.ts` |
 | EngagementAnswerFormat | slider \| stars \| emoji \| cards \| checkbox \| percentage \| text | `src/services/continuousEngagementService.ts` |
+| DemographicAttributeType | text \| single_select \| multi_select \| number \| date \| calculated | `src/services/demographicsService.ts` |
 | DepartmentWarStatus | draft \| running \| finished \| cancelled | `src/services/departmentWarService.ts` |
 | ScoreZone | critical \| attention \| neutral \| good \| excellent | `src/services/engagementDiagnosticsService.ts` |
 | LightningDifficulty | easy \| medium \| hard | `src/services/lightningQuizService.ts` |
@@ -1861,6 +1864,7 @@ _nenhum item encontrado_
 | `api-key-name` | max | `src/components/admin/CreateApiKeyDialog.tsx` |
 | `api-key-description` | max | `src/components/admin/CreateApiKeyDialog.tsx` |
 | `api-key-rate` | type=number, min=1, max=10000 | `src/components/admin/CreateApiKeyDialog.tsx` |
+| `attr-order` | type=number | `src/components/admin/DemographicAttributesManager.tsx` |
 | `starts_at` | type=date | `src/components/admin/FeedbackCycleManager.tsx` |
 | `ends_at` | type=date | `src/components/admin/FeedbackCycleManager.tsx` |
 | `xp_reward` | type=number, min=0 | `src/components/admin/GoalsManager.tsx` |
@@ -2033,6 +2037,10 @@ _nenhum item encontrado_
   ```
   const { user } = useAuth(); const { data, isLoading, isError, refetch } = useFeedbackSummary(user?.id); const hasContent = !!data && (data.totalResponses > 0 || data.commonStrengths.length > 0 || data.commonImprovements.length > 0); return ( <Card> <CardHeader> <CardTitle className="flex items-center gap-2"> <Star className="h-5 w-5 text-primary" /> Meu resumo de feedback </CardTitle> </CardHeader> <CardContent> {isLoading ? ( <LoadingState message="Carregando seu resumo..." /> ) : isError ? ( < …
   ```
+- **aplicar(id: string)** — `src/components/filters/SavedFiltersBar.tsx`
+  ```
+  const alvo = filters.find((f) => f.id === id); if (!alvo) return; setSelectedId(id); applyRef.current((alvo.filters ?? {}) as SavedFilterPayload); toast.success(`Filtro "${alvo.name}" aplicado`);
+  ```
 - **calculateScore()** — `src/components/lms/ModuleViewer.tsx`
   ```
   const correct = questions.reduce((acc, q, i) => { return acc + (answers[i] === q.correct ? 1 : 0); }, 0); return Math.round((correct / questions.length) * 100);
@@ -2048,6 +2056,10 @@ _nenhum item encontrado_
 - **calculateTrend(streak: number, questsCompleted: number)** — `src/components/manager/ManagerComponents.tsx`
   ```
   if (streak >= 5 && questsCompleted > 10) return "up"; if (streak === 0) return "down"; return "same";
+  ```
+- **doValorSalvo(valor: DemographicValue | undefined)** — `src/components/profile/MyDemographicValuesCard.tsx`
+  ```
+  if (!valor) return { ...RASCUNHO_VAZIO }; const preferNotAnswer = ehPreferNotAnswer(valor.values_array); return { value: valor.value ?? "", valuesArray: !preferNotAnswer && Array.isArray(valor.values_array) ? valor.values_array.filter((v): v is string => typeof v === "string") : [], numberValue: valor.number_value === null || valor.number_value === undefined ? "" : String(valor.number_value), dateValue: valor.date_value ?? "", preferNotAnswer, };
   ```
 - **FeedFilters({ activityType, setActivityType, period, setPeriod, customDateRange, setCustomDateRange, filteredCount }: FeedFiltersPro)** — `src/components/social/FeedFilters.tsx`
   ```
@@ -2420,6 +2432,10 @@ _nenhum item encontrado_
 - **applyReverse(score: number | null, isReverse: boolean)** — `src/services/continuousEngagementService.ts`
   ```
   if (score === null) return null; return isReverse ? 10 - score : score;
+  ```
+- **valorExibivel(valor: DemographicValueRow | DemographicValue)** — `src/services/demographicsService.ts`
+  ```
+  if (ehPreferNotAnswer(valor.values_array ?? null)) return "Prefiro não responder"; if (Array.isArray(valor.values_array) && valor.values_array.length > 0) { return valor.values_array.filter((v) => typeof v === "string").join(", "); } if (valor.number_value !== null && valor.number_value !== undefined) { return String(valor.number_value); } if (valor.date_value) { const [ano, mes, dia] = valor.date_value.split("-"); return `${dia}/${mes}/${ano}`; } if (valor.value) return valor.value; return "Não …
   ```
 - **cancelDuel(duelId: string)** — `src/services/duelsService.ts`
   ```
@@ -3009,6 +3025,7 @@ _nenhum item encontrado_
 | `THREAT_RATIO` | `0.05` | `src/lib/warLeadership.ts` |
 | `THREAT_MIN_SCORE` | `1` | `src/lib/warLeadership.ts` |
 | `BOM` | `"\uFEFF"` | `src/pages/AdminTelemetria.tsx` |
+| `ENTITY_TYPE` | `"audit_logs"` | `src/pages/AuditLogs.tsx` |
 | `NEW_TRAIL` | `"__new__"` | `src/pages/BoardTrailAdminPage.tsx` |
 | `NO_DEPARTMENT` | `"__none__"` | `src/pages/BoardTrailAdminPage.tsx` |
 | `ALL_DEPARTMENTS` | `"all"` | `src/pages/ClimateDiagnostics.tsx` |
@@ -3023,6 +3040,7 @@ _nenhum item encontrado_
 | `BUCKET` | `"course-uploads"` | `src/services/aiCourseBuilderService.ts` |
 | `ROTATION_MAX_AGE_DAYS` | `90` | `src/services/apiKeysService.ts` |
 | `RESULT_PAGE_SIZE` | `1000` | `src/services/campaignImportService.ts` |
+| `PREFER_NOT_ANSWER` | `"__prefer_not_answer__"` | `src/services/demographicsService.ts` |
 | `MIN_RESPONDENTS` | `5` | `src/services/engagementDiagnosticsService.ts` |
 | `DECK_COLUMNS` | `"id, title, description, department_id, is_active"` | `src/services/memoryGameService.ts` |
 | `CANDIDATE_COLUMNS` | `"id, display_name, avatar_url, level, xp"` | `src/services/mentorshipService.ts` |
@@ -3360,6 +3378,14 @@ _nenhum item encontrado_
 | Erro ao desfazer ação | `src/components/UndoToast.tsx` |
 | useAccessibility must be used within AccessibilityProvider | `src/components/accessibility/AccessibilityProvider.tsx` |
 |  className= | `src/components/admin/AdminAlertsPanel.tsx` |
+|          className= | `src/components/admin/DemographicAttributesManager.tsx` |
+| Dê um nome ao atributo | `src/components/admin/DemographicAttributesManager.tsx` |
+| Escolha única e múltipla escolha precisam de pelo menos uma opção | `src/components/admin/DemographicAttributesManager.tsx` |
+| Há opções repetidas na lista | `src/components/admin/DemographicAttributesManager.tsx` |
+| Não foi possível alterar o atributo | `src/components/admin/DemographicAttributesManager.tsx` |
+| Não foi possível excluir o atributo | `src/components/admin/DemographicAttributesManager.tsx` |
+| Não foi possível reordenar | `src/components/admin/DemographicAttributesManager.tsx` |
+|          className= | `src/components/admin/DemographicValuesPanel.tsx` |
 | Erro ao adicionar membro | `src/components/admin/DepartmentsManager.tsx` |
 | Erro ao atualizar gestor | `src/components/admin/DepartmentsManager.tsx` |
 | Erro ao excluir departamento | `src/components/admin/DepartmentsManager.tsx` |
@@ -3414,6 +3440,10 @@ _nenhum item encontrado_
 | >           {error}         </p>       )}        <div className= | `src/components/climate/ClimateSurveyAnswerForm.tsx` |
 | >           {error}         </p>       )}        <div className= | `src/components/climate/ClimateSurveyForm.tsx` |
 | >               {error}             </p>           )}           <Button onClick={handleAdd} disabled={isAdding}>             <Plus className= | `src/components/climate/ClimateSurveyQuestions.tsx` |
+|          className= | `src/components/filters/SavedFiltersBar.tsx` |
+| Dê um nome ao filtro | `src/components/filters/SavedFiltersBar.tsx` |
+| Não foi possível alterar o filtro padrão | `src/components/filters/SavedFiltersBar.tsx` |
+| Não foi possível excluir o filtro | `src/components/filters/SavedFiltersBar.tsx` |
 | ; import { Badge } from  | `src/components/luckywheel/LuckyWheelPayoutPanel.tsx` |
 | ; import { Badge } from  | `src/components/luckywheel/LuckyWheelPayoutTrend.tsx` |
 | ; import { Badge } from  | `src/components/luckywheel/LuckyWheelWindowComparison.tsx` |
@@ -3426,6 +3456,10 @@ _nenhum item encontrado_
 | Erro inesperado ao executar a ação. | `src/components/prediction/PredictionAdminRow.tsx` |
 | Erro inesperado ao apurar o mercado. | `src/components/prediction/SettleMarketDialog.tsx` |
 | Erro inesperado ao registrar o aporte. Tente novamente. | `src/components/prediction/StakeDialog.tsx` |
+|              className= | `src/components/profile/MyDemographicValuesCard.tsx` |
+| Não foi possível remover a resposta | `src/components/profile/MyDemographicValuesCard.tsx` |
+| Não foi possível salvar suas respostas | `src/components/profile/MyDemographicValuesCard.tsx` |
+| Responda: ${faltando.map((a) => a.name).join( | `src/components/profile/MyDemographicValuesCard.tsx` |
 |  className= | `src/components/quiz/AIQuestionGenerator.tsx` |
 | Resposta inválida do serviço de geração de perguntas. | `src/components/quiz/AIQuestionGenerator.tsx` |
 | Selecione uma trilha | `src/components/quiz/AIQuestionGenerator.tsx` |
@@ -3610,23 +3644,7 @@ _nenhum item encontrado_
 | Credenciais incorretas. ${5 - lr.failed_attempts} tentativa(s). | `src/pages/Auth.tsx` |
 | Email ou senha incorretos | `src/pages/Auth.tsx` |
 | Erro ao fazer login com Google | `src/pages/Auth.tsx` |
-| Erro ao finalizar login | `src/pages/Auth.tsx` |
-| Erro ao processar autenticação. Tente novamente. | `src/pages/Auth.tsx` |
-| Falha ao sincronizar a cartela. | `src/pages/BingoPage.tsx` |
-| Não foi possível sincronizar a cartela agora. | `src/pages/BingoPage.tsx` |
-| Corrija os erros do tabuleiro antes de salvar. | `src/pages/BoardTrailAdminPage.tsx` |
-| Você tirou ${result.roll} e caiu em uma casa de desafio. | `src/pages/BoardTrailPage.tsx` |
-| Falha ao reconhecer:  | `src/pages/BurnRate.tsx` |
-| Falha ao resgatar a recompensa. Tente novamente. | `src/pages/CardAlbumPage.tsx` |
-| Erro ao preparar 1:1 | `src/pages/Checkins.tsx` |
-| Preencha os campos obrigatórios | `src/pages/Checkins.tsx` |
-| Erro ao registrar a aposta. Tente novamente. | `src/pages/DailyWagerPage.tsx` |
-| Não foi dessa vez. ${Math.abs(result.coins_delta ?? 0)} moedas perdidas. | `src/pages/DailyWagerPage.tsx` |
-| Falha ao alterar a situação da guerra. | `src/pages/DepartmentWarPage.tsx` |
-| Falha ao encerrar a guerra. | `src/pages/DepartmentWarPage.tsx` |
-| Falha ao sincronizar o efetivo. | `src/pages/DepartmentWarPage.tsx` |
-| Nenhum dado disponível para exportar. | `src/pages/EngagementReports.tsx` |
-| … +193 linhas — lista completa em `context.json` | |
+| … +211 linhas — lista completa em `context.json` | |
 
 ## J. Controle de acesso no código (checagens de perfil/permissão)
 
@@ -3646,6 +3664,7 @@ _nenhum item encontrado_
 | `admin` | `src/pages/BoardTrailPage.tsx` |
 | `manager` | `src/pages/BoardTrailPage.tsx` |
 | `long` | `src/pages/BurnRate.tsx` |
+| `admin` | `src/pages/DemographicAttributesAdmin.tsx` |
 | `admin` | `src/pages/LuckyWheelPage.tsx` |
 | `admin` | `src/pages/MemoryGamePage.tsx` |
 | `mentor` | `src/pages/Mentoria.tsx` |
@@ -3695,7 +3714,7 @@ _nenhum item encontrado_
 | `admin` | `supabase/migrations/20261228300000_fecha_corridas_da_exclusao_de_departamento_e_da_aposta_diaria.sql` |
 | `manager` | `supabase/migrations/20261228300000_fecha_corridas_da_exclusao_de_departamento_e_da_aposta_diaria.sql` |
 
-## K. Testes como especificação (2158 testes em 165 arquivos — nomes completos em `context.json`)
+## K. Testes como especificação (2185 testes em 168 arquivos — nomes completos em `context.json`)
 
 | Arquivo | Testes | Exemplos do que o sistema DEVE fazer |
 |---|---|---|
@@ -3741,6 +3760,7 @@ _nenhum item encontrado_
 | `src/test/warFeed.simulation.test.ts` | 18 | warFeed — normalizacao defensiva · descarta qualquer entrada sem id utilizavel · nunca produz numeros invalidos ou negativos em 900 cenarios aleatorios · blinda campos hostis um a um sem quebrar … |
 | `src/test/warLeadership.simulation.test.ts` | 18 | buildLeadSnapshot — saneamento · descarta lixo e valores hostis · reindexa posicoes por score, com desempate estavel · nao quebra com entrada nao-array … |
 | `src/test/bossBattlePlanner.simulation.test.ts` | 17 | windowDays · retorna 0 para janelas invertidas ou inválidas · arredonda janelas parciais para cima · projectCapacity … |
+| `src/test/demographicsService.test.ts` | 17 | helpers de atributo demografico · le opcoes em lista de strings e no formato {value,label} do Studio · reconhece a marca de preferir nao responder · so tipos de selecao usam a lista de opcoes … |
 | `src/test/memoryDeckAuthoring.simulation.test.ts` | 17 | normalização · colapsa espaços e remove pontas · compara ignorando caixa e acento · validateDeckDraft … |
 | `src/test/mentorshipService.test.ts` | 17 | markMyPart · não concede recompensa duas vezes para a mesma parte · usa o valor da missão do banco e não fecha a missão colaborativa com um lado só · liquida a missão e soma os totais da dupla quando todos os lados exigidos concluem … |
 | `src/test/notificationTypePrefs.simulation.test.ts` | 17 | normalizeTypePrefs · trata entradas invalidas como objeto vazio · descarta canais nao booleanos e prioridade vazia · preserva prioridade valida … |
@@ -3824,6 +3844,7 @@ _nenhum item encontrado_
 | `src/test/notificationPrefsCrossModule.simulation.test.ts` | 6 | preferencias compartilhadas entre modulos · nao perde tipos de outros modulos em 400 sequencias aleatorias · preserva a prioridade do modulo executivo apos escritas de outros modulos · silenciar push em lote nos jogos nao altera campanhas nem executivo … |
 | `src/test/predictionOddsHistory.simulation.test.ts` | 6 | histórico de cotações — simulação massiva · preserva conservação do pote, normalização e coerência dos multiplicadores · é determinístico e imune à ordem de chegada das linhas · descarta linhas órfãs sem corromper a série … |
 | `src/test/rpcAccess.test.ts` | 6 | anon deve receber 42501 ao chamar ${fn} · anon deve receber erro ao chamar get_leaderboard_api · anon deve receber erro ao chamar get_user_stats_api · anon deve receber erro ao chamar get_2fa_status de outro usuário … |
+| `src/test/savedFiltersService.test.ts` | 6 | savedFiltersService · salva usando o usuario da sessao e conflito unico por usuario+entidade+nome · recusa salvar sem sessao · ao tornar padrao, faz uma unica escrita — o gatilho do banco desmarca o anterior … |
 | `src/tests/unit/shop.test.ts` | 6 | shopService · purchaseReward · should throw error if item is out of stock · should throw error if spend_coins fails (insufficient coins) … |
 | `src/test/auctionNotifications.simulation.test.ts` | 5 | notificações de apuração de leilão · não notifica ninguém quando não há lances · avisa o vencedor de item esgotado em vez de vitória · respeita a preferência desligada sem suprimir o estorno … |
 | `src/test/boardStatsPdf.simulation.test.ts` | 5 | boardStatsPdf — invariantes · gera nome .pdf coerente com o CSV e cabeçalho estável · tolera payload nulo/corrompido sem lançar nem vazar NaN · boardStatsPdf — simulação em massa … |
@@ -3842,6 +3863,7 @@ _nenhum item encontrado_
 | `src/tests/unit/onboarding.test.ts` | 5 | onboardingService · completeStep · should return true on success · isOnboardingComplete … |
 | `src/tests/unit/weeklyChallenge.test.tsx` | 5 | useWeeklyChallenge - notificacao do desafio · inclui o id do desafio no payload das notificacoes · mantem o desafio quando o aviso ao oponente e recusado pela RLS · gera payloads distintos em desafios de semanas diferentes (nao colide no indice unico) … |
 | `src/components/shop/__tests__/ProductGridLoading.test.tsx` | 4 | Shop Skeleton and Loading State · should display skeletons while rewards are loading · should transition from skeletons to content smoothly · should maintain layout stability during search/filtering loading |
+| `src/test/demographicValuesPanel.test.tsx` | 4 | DemographicValuesPanel · esconde o valor restrito do gestor e mostra o liberado · mostra o valor restrito para o administrador · trata a resposta sem metadado como uso interno e a mantem na lista |
 | `src/test/edgeAvailability.test.ts` | 4 | isFunctionDeployed — allowlist compilada · allowlist vazia bloqueia todas as funções (kill switch documentado) · passkey-auth é reconhecida mesmo quando a env do Vercel não a lista · função fora da lista continua bloqueada |
 | `src/test/notificationCenterKeyboard.test.tsx` | 4 | NotificationCenter com aviso sem data.url · navega para o leilao ao acionar o aviso · Enter no botao Excluir exclui, nao navega · Enter no proprio aviso navega |
 | `src/test/nr1Export.simulation.test.ts` | 4 | Exportação NR-1 (simulação combinatória) · nunca emite célula vazia ou  · marca plano obrigatório exatamente para riscos alto e crítico · gera nome de arquivo seguro para recortes com acentos e símbolos |
@@ -3933,6 +3955,7 @@ _nenhum item encontrado_
 | outra aba, criando a linha depois que este card carregou — não pode perder nada. | `src/components/PushNotificationGlobalToggle.tsx` |
 | Somente os canais que estes lembretes realmente usam. Os dois tipos chamam | `src/components/SurveyNotificationPreferences.tsx` |
 | Evita disparos concorrentes que estouram o rate limit da edge function. | `src/components/TrailRecommendations.tsx` |
+| trocar apenas os numeros deixaria dois atributos empatados parados — o que | `src/components/admin/DemographicAttributesManager.tsx` |
 | momento — o banco guarda apenas o hash, então não há como recuperá-lo depois. | `src/components/admin/IssuedCredentialDialog.tsx` |
 | Toggle permission | `src/components/admin/RolePermissionsManager.tsx` |
 | e direciona o comportamento (entregar no prazo vale mais que entregar). | `src/components/boss/BossDamageSourcesCard.tsx` |
@@ -3942,6 +3965,7 @@ _nenhum item encontrado_
 | e cópia do link público de validação. | `src/components/certifications/CertificateActions.tsx` |
 | * Exibido quando o recorte não atinge o mínimo de respondentes. */ | `src/components/engagement/diagnostics/AnonymityGuardNotice.tsx` |
 | * Grau máximo teórico da matriz (probabilidade 10 x severidade 3). */ | `src/components/engagement/nr1/Nr1RiskMatrix.tsx` |
+| e' a regra documentada na coluna `is_default`. Depois disso a pagina nao e' | `src/components/filters/SavedFiltersBar.tsx` |
 | A animação apenas para no setor que o servidor já sorteou. | `src/components/luckywheel/LuckyWheel.tsx` |
 | append-only escrita por trigger no banco — o frontend apenas lê. | `src/components/luckywheel/LuckyWheelAuditTrail.tsx` |
 | componente apenas apresenta. | `src/components/luckywheel/LuckyWheelPayoutTrend.tsx` |
@@ -4131,6 +4155,7 @@ _nenhum item encontrado_
 | * O placar vem do banco (fonte de verdade). Este modulo apenas compara dois | `src/lib/warLeadership.ts` |
 | * Momento da captura (ISO). Usado apenas para exibicao/debug. */ | `src/lib/warLeadership.ts` |
 | Aposta inicial sugerida: 25% do teto (ou o mínimo possível). | `src/pages/DailyWagerPage.tsx` |
+| Gestor apenas consulta, e nao ve valor de atributo marcado como restrito. | `src/pages/DemographicAttributesAdmin.tsx` |
 | Cronômetro server-authoritative: a UI apenas espelha o prazo persistido. | `src/pages/LightningQuizPage.tsx` |
 | Cronômetro apenas informativo: a duração oficial é medida no servidor. | `src/pages/MemoryGamePage.tsx` |
 | Isolado do bloco de mercados: uma falha no ranking não pode | `src/pages/PredictionMarketsPage.tsx` |
@@ -4179,6 +4204,7 @@ _nenhum item encontrado_
 | * Corrige a resposta no servidor e devolve o gabarito somente após o envio. */ | `src/services/quizQuestionsService.ts` |
 | Extract unique permission keys | `src/services/rbacService.ts` |
 | Milestone notifications (25/50/75%) — disparadas apenas na transição | `src/services/salesCampaignsService.ts` |
+| * A regra de negocio do `is_default` e' aplicada no banco pelo gatilho | `src/services/savedFiltersService.ts` |
 | o cliente apenas dispara e exibe o resultado já persistido. | `src/services/scratchCardService.ts` |
 | * Índices (base 0) incorretos — revelados apenas após o envio. */ | `src/services/sequenceGameService.ts` |
 | * Ordem correta dos ids — revelada apenas após o envio. */ | `src/services/sequenceGameService.ts` |
@@ -4221,8 +4247,4 @@ _nenhum item encontrado_
 | volume mínimo para evitar falso positivo | `supabase/functions/burn-rate-monitor/index.ts` |
 | * Falha de validação no formato único das edge functions (HTTP 422, ver | `supabase/functions/passkey-auth/index.ts` |
 | `Content-Length` declarado corta o caso comum e o leitor aborta no limite | `supabase/functions/passkey-auth/index.ts` |
-| Só `cf-connecting-ip` (sobrescrito pelo proxy) alimenta o limite por IP. | `supabase/functions/passkey-auth/index.ts` |
-| E-mail desconhecido apenas não restringe credenciais; não revelamos | `supabase/functions/passkey-auth/index.ts` |
-| e-mail com curinga não pode "pescar" o dono de outra conta. | `supabase/functions/passkey-auth/index.ts` |
-| Limite por (credencial + cliente) além do limite por IP: o balde global | `supabase/functions/passkey-auth/index.ts` |
-| … +14 linhas — lista completa em `context.json` | |
+| … +18 linhas — lista completa em `context.json` | |

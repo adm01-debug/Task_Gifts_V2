@@ -56,6 +56,7 @@
    "src/pages/ContinuousEngagement.tsx",
    "src/pages/DailyQuiz.tsx",
    "src/pages/DailyWagerPage.tsx",
+   "src/pages/DemographicAttributesAdmin.tsx",
    "src/pages/DepartmentWarPage.tsx",
    "src/pages/Duels.tsx",
    "src/pages/EngagementReports.tsx",
@@ -860,6 +861,32 @@
    "src/components/ui/input.tsx",
    "src/components/ui/label.tsx",
    "src/services/apiKeysService.ts"
+  ],
+  "src/components/admin/DemographicAttributesManager.tsx": [
+   "src/components/ui/alert-dialog.tsx",
+   "src/components/ui/badge.tsx",
+   "src/components/ui/button.tsx",
+   "src/components/ui/card.tsx",
+   "src/components/ui/dialog.tsx",
+   "src/components/ui/input.tsx",
+   "src/components/ui/label.tsx",
+   "src/components/ui/select.tsx",
+   "src/components/ui/skeleton.tsx",
+   "src/components/ui/switch.tsx",
+   "src/hooks/useDemographics.ts",
+   "src/services/demographicsService.ts",
+   "src/services/loggingService.ts"
+  ],
+  "src/components/admin/DemographicValuesPanel.tsx": [
+   "src/components/ui/badge.tsx",
+   "src/components/ui/button.tsx",
+   "src/components/ui/card.tsx",
+   "src/components/ui/skeleton.tsx",
+   "src/components/ui/switch.tsx",
+   "src/components/ui/table.tsx",
+   "src/hooks/useDemographics.ts",
+   "src/hooks/useProfiles.ts",
+   "src/services/demographicsService.ts"
   ],
   "src/components/admin/DepartmentsManager.tsx": [
    "src/components/admin/departments/DepartmentDialogs.tsx",
@@ -2027,6 +2054,19 @@
    "src/hooks/useAuth.tsx",
    "src/hooks/useFeedback360.ts"
   ],
+  "src/components/filters/SavedFiltersBar.tsx": [
+   "src/components/ui/alert-dialog.tsx",
+   "src/components/ui/button.tsx",
+   "src/components/ui/dialog.tsx",
+   "src/components/ui/input.tsx",
+   "src/components/ui/label.tsx",
+   "src/components/ui/select.tsx",
+   "src/components/ui/skeleton.tsx",
+   "src/components/ui/switch.tsx",
+   "src/hooks/useSavedFilters.ts",
+   "src/services/loggingService.ts",
+   "src/services/savedFiltersService.ts"
+  ],
   "src/components/goals/GoalCard.tsx": [
    "src/components/ui/badge.tsx",
    "src/components/ui/button.tsx",
@@ -2541,6 +2581,20 @@
    "src/components/prediction/PredictionWatchdogPanel.tsx",
    "src/components/prediction/SettleMarketDialog.tsx",
    "src/components/prediction/StakeDialog.tsx"
+  ],
+  "src/components/profile/MyDemographicValuesCard.tsx": [
+   "src/components/ui/badge.tsx",
+   "src/components/ui/button.tsx",
+   "src/components/ui/card.tsx",
+   "src/components/ui/checkbox.tsx",
+   "src/components/ui/input.tsx",
+   "src/components/ui/label.tsx",
+   "src/components/ui/select.tsx",
+   "src/components/ui/skeleton.tsx",
+   "src/components/ui/switch.tsx",
+   "src/hooks/useDemographics.ts",
+   "src/services/demographicsService.ts",
+   "src/services/loggingService.ts"
   ],
   "src/components/profile/ProfileAchievements.tsx": [
    "src/components/ui/skeleton.tsx",
@@ -3603,6 +3657,10 @@
    "src/lib/wagerLeaderboard.ts",
    "src/services/dailyWagerService.ts"
   ],
+  "src/hooks/useDemographics.ts": [
+   "src/integrations/supabase/types.ts",
+   "src/services/demographicsService.ts"
+  ],
   "src/hooks/useDepartmentWars.ts": [
    "src/hooks/useAuth.tsx",
    "src/integrations/supabase/client.ts",
@@ -3826,6 +3884,9 @@
    "src/hooks/useHaptics.ts",
    "src/hooks/useSoundEffects.tsx",
    "src/services/salesCampaignsService.ts"
+  ],
+  "src/hooks/useSavedFilters.ts": [
+   "src/services/savedFiltersService.ts"
   ],
   "src/hooks/useScratchCards.ts": [
    "src/hooks/useAuth.tsx",
@@ -4265,10 +4326,12 @@
   "src/pages/AuditLogs.tsx": [
    "src/components/audit/AuditFilters.tsx",
    "src/components/audit/AuditTable.tsx",
+   "src/components/filters/SavedFiltersBar.tsx",
    "src/components/navigation/index.ts",
    "src/components/ui/card.tsx",
    "src/hooks/useAudit.ts",
-   "src/hooks/useProfiles.ts"
+   "src/hooks/useProfiles.ts",
+   "src/services/savedFiltersService.ts"
   ],
   "src/pages/Auth.tsx": [
    "src/components/auth/AuthBranding.tsx",
@@ -4568,6 +4631,13 @@
    "src/hooks/useHaptics.ts",
    "src/lib/dailyWager.ts",
    "src/lib/utils.ts"
+  ],
+  "src/pages/DemographicAttributesAdmin.tsx": [
+   "src/components/admin/DemographicAttributesManager.tsx",
+   "src/components/admin/DemographicValuesPanel.tsx",
+   "src/components/navigation/index.ts",
+   "src/components/ui/tabs.tsx",
+   "src/hooks/usePermissions.ts"
   ],
   "src/pages/DepartmentWarPage.tsx": [
    "src/components/SEOHead.tsx",
@@ -5049,6 +5119,7 @@
    "src/components/campaigns/MyCampaignBadgeCard.tsx",
    "src/components/mobile/MobilePageLayout.tsx",
    "src/components/navigation/index.ts",
+   "src/components/profile/MyDemographicValuesCard.tsx",
    "src/components/profile/ProfileAchievements.tsx",
    "src/components/profile/ProfileActivityTimeline.tsx",
    "src/components/push/PushDeviceList.tsx",
@@ -5583,6 +5654,10 @@
    "src/lib/wagerLeaderboard.ts",
    "src/services/loggingService.ts"
   ],
+  "src/services/demographicsService.ts": [
+   "src/integrations/supabase/client.ts",
+   "src/integrations/supabase/types.ts"
+  ],
   "src/services/departmentWarAdminService.ts": [
    "src/integrations/supabase/client.ts",
    "src/lib/departmentWarConfig.ts",
@@ -5796,6 +5871,10 @@
    "src/lib/requestId.ts",
    "src/services/loggingService.ts",
    "src/services/profilesService.ts"
+  ],
+  "src/services/savedFiltersService.ts": [
+   "src/integrations/supabase/client.ts",
+   "src/integrations/supabase/types.ts"
   ],
   "src/services/scratchCardService.ts": [
    "src/integrations/supabase/client.ts",

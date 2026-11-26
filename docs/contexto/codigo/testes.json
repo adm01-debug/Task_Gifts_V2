@@ -5,17 +5,17 @@
   "vitest",
   "playwright"
  ],
- "total": 179,
+ "total": 182,
  "por_tipo": {
   "contrato": 3,
   "e2e": 2,
   "pytest": 2,
-  "unit": 170
+  "unit": 173
  },
  "onde_ficam": [
   {
    "padrao": "co-localizado (*.test)",
-   "arquivos": 160
+   "arquivos": 163
   },
   {
    "padrao": "outro",
@@ -537,6 +537,24 @@
     "src/lib/dailyWager.ts"
    ],
    "casos": 16
+  },
+  {
+   "arquivo": "src/test/demographicsService.test.ts",
+   "tipo": "unit",
+   "linhas": 308,
+   "testa": [
+    "src/services/demographicsService.ts"
+   ],
+   "casos": 15
+  },
+  {
+   "arquivo": "src/test/demographicValuesPanel.test.tsx",
+   "tipo": "unit",
+   "linhas": 120,
+   "testa": [
+    "src/components/admin/DemographicValuesPanel.tsx"
+   ],
+   "casos": 3
   },
   {
    "arquivo": "src/test/departmentWar.simulation.test.ts",
@@ -1192,6 +1210,15 @@
    "casos": 6
   },
   {
+   "arquivo": "src/test/savedFiltersService.test.ts",
+   "tipo": "unit",
+   "linhas": 154,
+   "testa": [
+    "src/services/savedFiltersService.ts"
+   ],
+   "casos": 5
+  },
+  {
    "arquivo": "src/test/scratchCardOdds.simulation.test.ts",
    "tipo": "unit",
    "linhas": 87,
@@ -1717,6 +1744,7 @@
   "src/components/PushNotificationGlobalToggle.tsx": 1,
   "src/components/SurveyNotificationPreferences.tsx": 1,
   "src/components/accessibility/index.ts": 1,
+  "src/components/admin/DemographicValuesPanel.tsx": 1,
   "src/components/admin/telemetry/TelemetryCharts.tsx": 1,
   "src/components/climate/ClimateSurveyAnswerForm.tsx": 1,
   "src/components/climate/ClimateSurveyForm.tsx": 1,
@@ -1855,6 +1883,7 @@
   "src/services/climateSurveyService.ts": 3,
   "src/services/comboService.ts": 3,
   "src/services/continuousEngagementService.ts": 1,
+  "src/services/demographicsService.ts": 1,
   "src/services/developmentPlanService.ts": 1,
   "src/services/engagementDiagnosticsService.ts": 1,
   "src/services/enpsService.ts": 1,
@@ -1872,6 +1901,7 @@
   "src/services/predictiveFeedbackService.ts": 1,
   "src/services/profilesService.ts": 3,
   "src/services/quizQuestionsService.ts": 1,
+  "src/services/savedFiltersService.ts": 1,
   "src/services/shopService.ts": 2,
   "src/services/trailsService.ts": 1,
   "src/services/wagerAdminService.ts": 2,
@@ -1920,6 +1950,7 @@
    "src/pages/ContinuousEngagement.tsx",
    "src/pages/DailyQuiz.tsx",
    "src/pages/DailyWagerPage.tsx",
+   "src/pages/DemographicAttributesAdmin.tsx",
    "src/pages/DepartmentWarPage.tsx",
    "src/pages/Duels.tsx",
    "src/pages/EngagementReports.tsx",
@@ -2039,6 +2070,7 @@
    "src/hooks/useContinuousEngagement.ts",
    "src/hooks/useDailyWager.ts",
    "src/hooks/useDebounce.ts",
+   "src/hooks/useDemographics.ts",
    "src/hooks/useDepartments.ts",
    "src/hooks/useDepartmentWars.ts",
    "src/hooks/useDevelopmentPlans.ts",
@@ -2100,6 +2132,7 @@
    "src/hooks/useQuizStats.ts",
    "src/hooks/useReducedMotion.ts",
    "src/hooks/useSalesCampaigns.ts",
+   "src/hooks/useSavedFilters.ts",
    "src/hooks/useScratchCards.ts",
    "src/hooks/useScrollDirection.ts",
    "src/hooks/useScrollHeader.ts",

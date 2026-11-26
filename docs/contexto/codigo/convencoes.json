@@ -3,26 +3,26 @@
  "format_version": 2,
  "onde_ficam": {
   "telas": [
-   "src/pages (85)",
+   "src/pages (86)",
    "src/components (1)"
   ],
   "componentes": [
-   "src/components (440)",
-   "src/pages (86)",
+   "src/components (444)",
+   "src/pages (87)",
    "src/contexts (4)"
   ],
   "hooks": [
-   "src/hooks (129)",
+   "src/hooks (131)",
    "src/components (22)",
    "src/contexts (4)"
   ],
   "servicos_logica": [
    "src/lib (107)",
-   "src/services (99)",
+   "src/services (101)",
    "src/integrations (3)"
   ],
   "testes": [
-   "co-localizado (*.test) (160)",
+   "co-localizado (*.test) (163)",
    "outro (12)",
    "tests/ (3)"
   ],
@@ -48,7 +48,7 @@
  },
  "barrels_index": 16,
  "extensao_componentes": [
-  ".tsx (533)"
+  ".tsx (538)"
  ],
  "alias_imports": {
   "(raiz)": {
@@ -59,11 +59,11 @@
  "commits": {
   "convencao": "conventional commits (observado)",
   "exemplos": [
+   "feat: telas para filtros salvos e perfil demografico (#181)",
    "feat(avisos): respeita a janela de silencio do usuario no push (#177)",
    "chore(banco): remove os 46 indices fisicamente redundantes em public (#175)",
    "fix: paridade de indices e constraints com o banco vivo e devolve os fluxos travados (#174)",
-   "feat: interruptor global de push no perfil (#176)",
-   "fix: restaura trigger de cadastro, revoga execute publico e alinha triggers e mensagens (#173)"
+   "feat: interruptor global de push no perfil (#176)"
   ]
  },
  "pr_template": ".github/PULL_REQUEST_TEMPLATE.md",

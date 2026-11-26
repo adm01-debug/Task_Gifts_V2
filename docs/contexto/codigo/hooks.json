@@ -1,7 +1,7 @@
 {
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
- "total": 155,
+ "total": 157,
  "hooks": [
   {
    "arquivo": "src/components/accessibility/AccessibilityProvider.tsx",
@@ -270,7 +270,7 @@
    "edges": [],
    "hooks_internos": [],
    "canais_realtime": [],
-   "usado_por": 62,
+   "usado_por": 63,
    "usado_por_arquivos": [
     "src/pages/Achievements.tsx",
     "src/pages/ActionPlans.tsx",
@@ -295,13 +295,13 @@
     "src/pages/ContinuousEngagement.tsx",
     "src/pages/DailyQuiz.tsx",
     "src/pages/DailyWagerPage.tsx",
+    "src/pages/DemographicAttributesAdmin.tsx",
     "src/pages/DepartmentWarPage.tsx",
     "src/pages/Duels.tsx",
     "src/pages/EngagementReports.tsx",
     "src/pages/ExecutiveDashboard.tsx",
     "src/pages/Feedback.tsx",
-    "src/pages/Goals.tsx",
-    "src/pages/Index.tsx"
+    "src/pages/Goals.tsx"
    ],
    "coberto_por_testes": 0
   },
@@ -1675,6 +1675,40 @@
    "coberto_por_testes": 0
   },
   {
+   "arquivo": "src/hooks/useDemographics.ts",
+   "hooks_exportados": [
+    "useAllDemographicValues",
+    "useClearDemographicValue",
+    "useCreateDemographicAttribute",
+    "useDeleteDemographicAttribute",
+    "useDemographicAttributes",
+    "useMyDemographicValues",
+    "useSaveDemographicValue",
+    "useSetDemographicOrder",
+    "useSetPreferNotAnswer",
+    "useUpdateDemographicAttribute"
+   ],
+   "linhas": 119,
+   "dominio": "hooks",
+   "tabelas": [],
+   "rpcs": [],
+   "edges": [],
+   "hooks_internos": [
+    "useInvalidarTudo",
+    "useMutation",
+    "useQuery",
+    "useQueryClient"
+   ],
+   "canais_realtime": [],
+   "usado_por": 3,
+   "usado_por_arquivos": [
+    "src/components/admin/DemographicAttributesManager.tsx",
+    "src/components/admin/DemographicValuesPanel.tsx",
+    "src/components/profile/MyDemographicValuesCard.tsx"
+   ],
+   "coberto_por_testes": 0
+  },
+  {
    "arquivo": "src/hooks/useDepartments.ts",
    "hooks_exportados": [
     "useAddTeamMember",
@@ -3003,10 +3037,11 @@
     "useQueryClient"
    ],
    "canais_realtime": [],
-   "usado_por": 3,
+   "usado_por": 4,
    "usado_por_arquivos": [
     "src/components/admin/PermissionsManager.tsx",
     "src/components/admin/RolePermissionsManager.tsx",
+    "src/pages/DemographicAttributesAdmin.tsx",
     "src/pages/PermissionsAdmin.tsx"
    ],
    "coberto_por_testes": 0
@@ -3121,7 +3156,7 @@
     "useSoundEffects"
    ],
    "canais_realtime": [],
-   "usado_por": 36,
+   "usado_por": 37,
    "usado_por_arquivos": [
     "src/components/AICoachDialog.tsx",
     "src/components/AnalyticsWidget.tsx",
@@ -3138,6 +3173,7 @@
     "src/components/StatsGrid.tsx",
     "src/components/admin/AdminChangeHistory.tsx",
     "src/components/admin/AdminMetricsDashboard.tsx",
+    "src/components/admin/DemographicValuesPanel.tsx",
     "src/components/admin/DepartmentsManager.tsx",
     "src/components/admin/DevelopmentPlanManager.tsx",
     "src/components/admin/NineBoxMatrix.tsx",
@@ -3151,8 +3187,7 @@
     "src/components/sidebar/SidebarUserStats.tsx",
     "src/hooks/useAICoach.ts",
     "src/pages/AdminPanel.tsx",
-    "src/pages/AuditLogs.tsx",
-    "src/pages/Checkins.tsx"
+    "src/pages/AuditLogs.tsx"
    ],
    "coberto_por_testes": 1
   },
@@ -3573,6 +3608,32 @@
     "src/pages/CampaignTeamRanking.tsx",
     "src/pages/SalesCampaignDetail.tsx",
     "src/pages/SalesCampaigns.tsx"
+   ],
+   "coberto_por_testes": 0
+  },
+  {
+   "arquivo": "src/hooks/useSavedFilters.ts",
+   "hooks_exportados": [
+    "useDefaultSavedFilter",
+    "useDeleteSavedFilter",
+    "useSaveSavedFilter",
+    "useSavedFilters",
+    "useSetDefaultSavedFilter"
+   ],
+   "linhas": 59,
+   "dominio": "hooks",
+   "tabelas": [],
+   "rpcs": [],
+   "edges": [],
+   "hooks_internos": [
+    "useMutation",
+    "useQuery",
+    "useQueryClient"
+   ],
+   "canais_realtime": [],
+   "usado_por": 1,
+   "usado_por_arquivos": [
+    "src/components/filters/SavedFiltersBar.tsx"
    ],
    "coberto_por_testes": 0
   },

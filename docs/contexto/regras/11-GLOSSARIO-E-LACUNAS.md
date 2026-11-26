@@ -1,6 +1,6 @@
 # 11 · GLOSSÁRIO, DADOS DE REFERÊNCIA E LACUNAS
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `e634962506` · branch `main` · 2026-11-26 15:29 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `613009c549` · branch `main` · 2026-11-26 20:42 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## Glossário do domínio (entidades do sistema)
@@ -307,7 +307,7 @@
 | `CardPackSource` (TS) | task \| training \| quest \| campaign \| manual \| streak |  | `src/lib/cardPackTriggers.ts` |
 | `TaskCompletionStatus` (TS) | pending \| on_time \| late \| rejected \| rework |  | `src/lib/cardPackTriggers.ts` |
 | `SetClaimRejection` (TS) | unknown_set \| empty_set \| not_reached \| already_claimed |  | `src/lib/cardSetRewards.ts` |
-| … +107 linhas — lista completa em `context.json` | | | |
+| … +108 linhas — lista completa em `context.json` | | | |
 
 ## Dados de referência (seed — planos, categorias, perfis fixos)
 
@@ -326,7 +326,6 @@ _nenhum item encontrado_
 | status | valor `punctual` para `status` usado no código não existe em nenhum enum do banco/TS | `compara:src/components/AttendanceCalendar.tsx` |
 | status | valor `fulfilled` para `status` usado no código não existe em nenhum enum do banco/TS | `compara:src/hooks/useAdminUsers.ts` |
 | status | valor `SUBSCRIBED` para `status` usado no código não existe em nenhum enum do banco/TS | `compara:src/hooks/useNotifications.ts` |
-| status | valor `number` para `status` usado no código não existe em nenhum enum do banco/TS | `compara:src/lib/edgeErrors.ts` |
 | status | valor `expiring_soon` para `status` usado no código não existe em nenhum enum do banco/TS | `compara:src/services/certificationsService.ts` |
 | status | valor `online` para `status` usado no código não existe em nenhum enum do banco/TS | `escreve:src/stories/data-display/StatsAndTables.stories.tsx` |
 | status | valor `away` para `status` usado no código não existe em nenhum enum do banco/TS | `escreve:src/stories/data-display/StatsAndTables.stories.tsx` |
