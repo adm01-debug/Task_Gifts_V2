@@ -32,7 +32,15 @@ export function DemographicValuesPanel({ ehAdmin }: { ehAdmin: boolean }) {
   const [incluirInternos, setIncluirInternos] = useState(false);
 
   const visiveis = useMemo(
-    () => valores.filter((v) => incluirInternos || v.demographic_attributes?.is_visible_in_reports !== false),
+    () =>
+      valores.filter((v) => {
+        const meta = v.demographic_attributes;
+        // Sem metadado (atributo desativado, invisivel para quem nao e' admin)
+        // nao da' para saber se e' de uso interno: fecha como interno, igual ao
+        // valor restrito.
+        const interno = !meta || meta.is_visible_in_reports === false;
+        return incluirInternos || !interno;
+      }),
     [valores, incluirInternos],
   );
 

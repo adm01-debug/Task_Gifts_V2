@@ -288,7 +288,9 @@ describe("demographicsService", () => {
       "user_demographic_values",
       "select",
       ok([liberado]),
-      ok([restrito, desativado]),
+      // A mesma resposta tambem vem na consulta de metadados, sem o valor: o
+      // merge tem que manter uma unica linha, com o valor.
+      ok([restrito, desativado, { ...liberado, value: undefined }]),
     );
 
     const linhas = await demographicsService.listAllValues({ ehAdmin: false });
