@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "f28d2f6812a48c2ae319595db5b3925917aa6df2",
+  "commit": "abe31689e830608e7610d82d3a562da77a722a70",
   "branch": "main",
-  "data_commit": "2026-11-26T08:56:16-03:00",
+  "data_commit": "2026-11-26T09:12:41-03:00",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "ultimos_commits": [
+   {
+    "sha": "abe3168",
+    "data": "2026-11-26",
+    "assunto": "chore(banco): remove os 46 indices fisicamente redundantes em public (#175)"
+   },
    {
     "sha": "f28d2f6",
     "data": "2026-11-26",
@@ -126,14 +131,9 @@
     "sha": "a2a5bc3",
     "data": "2026-11-24",
     "assunto": "fix(supabase): alinha 20261220000000 ao trigger vivo do alerta critico (#152)"
-   },
-   {
-    "sha": "88e4b45",
-    "data": "2026-11-24",
-    "assunto": "fix(clima): antecipa o fim da pesquisa ativa para 30/11 e destrava o lembrete (#148)"
    }
   ],
-  "arquivos_mudados_7d": 272,
+  "arquivos_mudados_7d": 273,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "supabase/functions/_shared",
@@ -145,11 +145,11 @@
    },
    {
     "pasta": "docs/agentes/banco.md",
-    "mudancas": 18
+    "mudancas": 19
    },
    {
     "pasta": "docs/agentes/mapa-repo.md",
-    "mudancas": 15
+    "mudancas": 16
    },
    {
     "pasta": "docs/estado/05-edge-functions.md",
@@ -203,11 +203,11 @@
    },
    {
     "arquivo": "docs/agentes/banco.md",
-    "mudancas": 18
+    "mudancas": 19
    },
    {
     "arquivo": "docs/agentes/mapa-repo.md",
-    "mudancas": 15
+    "mudancas": 16
    },
    {
     "arquivo": "docs/estado/05-edge-functions.md",
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 142
+    "commits": 143
    },
    {
     "autor": "dependabot[bot]",
@@ -310,7 +310,7 @@
   ]
  },
  "contagens": {
-  "arquivos_total": 1617,
+  "arquivos_total": 1618,
   "arquivos_codigo": 1198,
   "linhas_codigo": 237249,
   "rotas": 87,
@@ -322,7 +322,7 @@
   "hooks": 155,
   "edge_functions": 23,
   "tabelas": 239,
-  "migrations": 315,
+  "migrations": 316,
   "cron_jobs": 40,
   "testes": 178,
   "workflows": 6,

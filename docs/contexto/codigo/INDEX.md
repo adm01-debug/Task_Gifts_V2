@@ -1,7 +1,7 @@
 # Contexto do projeto para agentes de IA
 
 GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.
-Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `f28d2f6812a48c2ae319595db5b3925917aa6df2` (2026-11-26T08:56:16-03:00).
+Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `abe31689e830608e7610d82d3a562da77a722a70` (2026-11-26T09:12:41-03:00).
 
 ## Como usar (leia antes de planejar ou executar qualquer tarefa)
 1. **Tela/rota/menu** → `rotas.json` (url/vista/menu → arquivo → hooks → tabelas → edges; `rotas_http_backend` para APIs) e `modulos.json` (módulo inteiro + dependências entre módulos).
@@ -14,7 +14,7 @@ Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR
 Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua tarefa; não carregue tudo.
 
 ## Stack
-- linguagens: TypeScript (1170), SQL (317), Markdown (56), JavaScript (24), JSON (14), YAML (9), Python (5), Shell (5)
+- linguagens: TypeScript (1170), SQL (318), Markdown (56), JavaScript (24), JSON (14), YAML (9), Python (5), Shell (5)
 - linguagem_principal: TypeScript
 - framework: React
 - backend_http: n/d
@@ -34,7 +34,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 ## Números
 | item | qtd |
 |---|---|
-| arquivos_total | 1617 |
+| arquivos_total | 1618 |
 | arquivos_codigo | 1198 |
 | linhas_codigo | 237249 |
 | rotas | 87 |
@@ -46,7 +46,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 | hooks | 155 |
 | edge_functions | 23 |
 | tabelas | 239 |
-| migrations | 315 |
+| migrations | 316 |
 | cron_jobs | 40 |
 | testes | 178 |
 | workflows | 6 |
@@ -294,15 +294,15 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - possiveis_segredos_no_codigo: 0
 
 ## Grafo de código (graphify)
-- 11092 nós · 29827 arestas · 868 comunidades · grafo do commit `f28d2f68`
+- 11093 nós · 29827 arestas · 869 comunidades · grafo do commit `abe31689`
 - comunidades maiores: App.tsx (177), badge.tsx (150), cn (138), card.tsx (138), framer-motion (130), Button (129), AdminPanel.tsx (127), button.tsx (118), react (106), contracts/index.ts (99), skeleton.tsx (93), mobile/index.ts (92)
 - símbolos mais chamados: cn() (src/lib/utils.ts), useAuth() (src/hooks/useAuth.tsx), useIsMobile() (src/hooks/use-mobile.tsx), q() (scripts/supabase_snapshot/snapshot.py), useDepartments() (src/hooks/useDepartments.ts), useRBAC() (src/hooks/useRBAC.ts), useProfiles() (src/hooks/useProfiles.ts), useToast() (src/hooks/use-toast.ts), useSEO() (src/hooks/useSEO.ts), useSoundEffects() (src/hooks/useSoundEffects.tsx), .collect() (scripts/supabase_snapshot/test_snapshot.py), excluded_sql() (scripts/supabase_snapshot/snapshot.py)
 - consulta local: `graphify query "<pergunta>"`, `graphify path "<A>" "<B>"`, `graphify explain "<X>"`
 
 ## Hotspots (arquivos mais alterados, 90 dias)
 - package.json (23)
-- docs/agentes/banco.md (18)
-- docs/agentes/mapa-repo.md (15)
+- docs/agentes/banco.md (19)
+- docs/agentes/mapa-repo.md (16)
 - docs/estado/05-edge-functions.md (15)
 - bun.lock (14)
 - .github/workflows/ci.yml (12)
@@ -381,6 +381,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 
 
 ## Últimos commits
+- 2026-11-26 `abe3168` chore(banco): remove os 46 indices fisicamente redundantes em public (#175)
 - 2026-11-26 `f28d2f6` fix: paridade de indices e constraints com o banco vivo e devolve os fluxos travados (#174)
 - 2026-11-26 `c87b1c9` feat: interruptor global de push no perfil (#176)
 - 2026-11-25 `29b5a15` fix: restaura trigger de cadastro, revoga execute publico e alinha triggers e mensagens (#173)
@@ -395,7 +396,6 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - 2026-11-25 `220d1d6` fix: e-mail corporativo sai do SELECT aberto de profiles (LGPD) (#164)
 - 2026-11-25 `bef27bd` feat: cadastro de templates de PDI com policy de escrita para admin (#160)
 - 2026-11-25 `f41bdee` fix: conserta pedido de reset de senha do usuario deslogado (#159)
-- 2026-11-25 `a6a9bc6` fix: revoga execucao anonima das funcoes SECURITY DEFINER (#158)
 
 ## Arquivos deste diretório
 - `docs/contexto/codigo/rotas.json`

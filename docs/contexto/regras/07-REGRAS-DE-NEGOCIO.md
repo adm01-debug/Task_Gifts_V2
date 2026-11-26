@@ -1,6 +1,6 @@
 # 07 · REGRAS DE NEGÓCIO
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `f28d2f6812` · branch `main` · 2026-11-26 11:56 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `abe31689e8` · branch `main` · 2026-11-26 12:14 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## A. Regras escritas por humanos (`manual/` — prioridade máxima, nunca sobrescrito)
@@ -3246,6 +3246,7 @@ _nenhum item encontrado_
 | `DELETE FROM public.push_outbox_health_snapshots WHERE created_at < now() - interval '30 days';` | `supabase/migrations/20261228210000_reaplica_mensagens_funcoes_divergentes.sql` |
 | `v_since timestamptz := now() - interval '24 hours';` | `supabase/migrations/20261228210000_reaplica_mensagens_funcoes_divergentes.sql` |
 | `v_stuck_cutoff timestamptz := now() - interval '5 minutes';` | `supabase/migrations/20261228210000_reaplica_mensagens_funcoes_divergentes.sql` |
+| `v_orcamento constant interval := interval '60 seconds';` | `supabase/migrations/20261228310000_dedup_indices_redundantes.sql` |
 
 ### H.3 Limites de paginação
 
