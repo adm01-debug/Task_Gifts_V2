@@ -1,6 +1,6 @@
 import { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Users, Target, Award, AlertTriangle, BarChart3, BookOpen, Flame, Filter, Brain, Crown, TrendingUp, KeyRound } from "lucide-react";
+import { Users, Target, Award, AlertTriangle, BarChart3, BookOpen, Flame, Filter, Brain, Crown, TrendingUp, KeyRound, ClipboardList } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -210,6 +210,7 @@ export default function ManagerDashboard() {
                     <h3 className="font-semibold text-foreground mb-3">Ações Rápidas</h3>
                     <div className="space-y-2">
                       <Button variant="outline" className="w-full justify-start gap-2" size="sm" onClick={() => navigate("/quest-builder")}><BookOpen className="w-4 h-4" />Criar Nova Trilha</Button>
+                      <Button variant="outline" className="w-full justify-start gap-2" size="sm" onClick={() => navigate("/admin/atributos-demograficos")}><ClipboardList className="w-4 h-4" />Perfil Demográfico</Button>
                       <Dialog open={kudosOpen} onOpenChange={setKudosOpen}>
                         <DialogTrigger asChild>
                           <Button variant="outline" className="w-full justify-start gap-2" size="sm"><Award className="w-4 h-4" />Enviar Reconhecimento</Button>

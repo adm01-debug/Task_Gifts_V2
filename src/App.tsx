@@ -33,6 +33,7 @@ const ManagerDashboard = lazy(() => import("./pages/ManagerDashboard"));
 const QuestBuilder = lazy(() => import("./pages/QuestBuilder"));
 const EngagementReports = lazy(() => import("./pages/EngagementReports"));
 const AuditLogs = lazy(() => import("./pages/AuditLogs"));
+const DemographicAttributesAdmin = lazy(() => import("./pages/DemographicAttributesAdmin"));
 const RealTimeAnalytics = lazy(() => import("./pages/RealTimeAnalytics"));
 const LearningTrails = lazy(() => import("./pages/LearningTrails"));
 const TrailDetail = lazy(() => import("./pages/TrailDetail"));
@@ -297,6 +298,7 @@ const AnimatedRoutes = () => {
         <Route path="/admin/runbook/:type" element={<ProtectedRoute requiredRole="admin"><PageTransition><Runbook /></PageTransition></ProtectedRoute>} />
         <Route path="/admin/incident-metrics" element={<ProtectedRoute requiredRole="admin"><PageTransition><IncidentMetrics /></PageTransition></ProtectedRoute>} />
         <Route path="/admin/postmortems" element={<ProtectedRoute requiredRole="admin"><PageTransition><Postmortems /></PageTransition></ProtectedRoute>} />
+        <Route path="/admin/atributos-demograficos" element={<ProtectedRoute requiredRole="manager"><PageTransition><DemographicAttributesAdmin /></PageTransition></ProtectedRoute>} />
         <Route path="/admin/executive-report" element={<ProtectedRoute requiredRole="admin"><PageTransition><ExecutiveMonthlyReport /></PageTransition></ProtectedRoute>} />
         <Route path="/admin/webhooks/new" element={<ProtectedRoute requiredRole="admin"><PageTransition><WebhookSubscriptionNew /></PageTransition></ProtectedRoute>} />
         <Route path="/admin/webhooks/:id" element={<ProtectedRoute requiredRole="admin"><PageTransition><WebhookSubscriptionDetail /></PageTransition></ProtectedRoute>} />
