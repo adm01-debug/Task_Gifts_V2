@@ -1,6 +1,6 @@
 # 07 · REGRAS DE NEGÓCIO
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `c87b1c92a7` · branch `main` · 2026-11-26 11:19 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `f28d2f6812` · branch `main` · 2026-11-26 11:56 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## A. Regras escritas por humanos (`manual/` — prioridade máxima, nunca sobrescrito)
@@ -311,7 +311,7 @@ _Nenhum arquivo em `manual/`. Copie `manual/TEMPLATE-regras-de-negocio.md` para 
 | `mentorship_requests` | Users can view their requests | SELECT | public | permissive | `((auth.uid() = requester_id) OR (auth.uid() = target_id))` |  |
 | `module_progress` | Users can insert own progress | INSERT | public | permissive |  | `(user_id = auth.uid())` |
 | `module_progress` | Users can update own progress | UPDATE | public | permissive | `(user_id = auth.uid())` |  |
-| … +261 linhas — lista completa em `context.json` | | | | | | |
+| … +262 linhas — lista completa em `context.json` | | | | | | |
 
 ## C. Restrições de dados (obrigatório / único / default / CHECK / FK / calculada)
 
@@ -617,7 +617,7 @@ _Nenhum arquivo em `manual/`. Copie `manual/TEMPLATE-regras-de-negocio.md` para 
 | `user_seasonal_progress` | `claimed` | default false |
 | `user_seasonal_progress` | `created_at` | default now() |
 | `user_seasonal_progress` | `updated_at` | default now() |
-| … +1835 linhas — lista completa em `context.json` | | |
+| … +1836 linhas — lista completa em `context.json` | | |
 
 ## D. Automações no banco (triggers e funções — regras que rodam sozinhas)
 
@@ -709,8 +709,6 @@ _Nenhum arquivo em `manual/`. Copie `manual/TEMPLATE-regras-de-negocio.md` para 
 | trg_tournament_participants_updated_at | BEFORE UPDATE | `tournament_participants` | `handle_updated_at` |  |
 | trg_tournament_matches_updated_at | BEFORE UPDATE | `tournament_matches` | `handle_updated_at` |  |
 | trg_validate_department_war | BEFORE INSERT OR UPDATE | `department_wars` | `validate_department_war` |  |
-| trg_war_hook_trail_enrollments | AFTER INSERT OR UPDATE OF COMPLETED_AT | `trail_enrollments` | `war_hook_trail_enrollments` |  |
-| trg_war_hook_module_progress | AFTER INSERT OR UPDATE OF COMPLETED_AT | `module_progress` | `war_hook_module_progress` |  |
 | trg_war_hook_quiz_scores | AFTER INSERT | `quiz_scores` | `war_hook_quiz_scores` |  |
 | trg_war_hook_kudos | AFTER INSERT | `kudos` | `war_hook_kudos` |  |
 | trg_auctions_updated_at | BEFORE UPDATE | `auctions` | `handle_updated_at` |  |
@@ -718,20 +716,16 @@ _Nenhum arquivo em `manual/`. Copie `manual/TEMPLATE-regras-de-negocio.md` para 
 | trg_auction_bids_updated_at | BEFORE UPDATE | `auction_bids` | `handle_updated_at` |  |
 | push_outbox_updated_at | BEFORE UPDATE | `push_outbox` | `handle_updated_at` |  |
 | trg_prediction_markets_updated_at | BEFORE UPDATE | `prediction_markets` | `handle_updated_at` |  |
-| trg_log_prediction_settlement | AFTER UPDATE OF STATUS | `prediction_markets` | `log_prediction_settlement` |  |
 | trg_card_definitions_updated | BEFORE UPDATE | `card_definitions` | `handle_updated_at` |  |
 | trg_user_cards_updated | BEFORE UPDATE | `user_cards` | `handle_updated_at` |  |
 | trg_card_packs_updated | BEFORE UPDATE | `card_packs` | `handle_updated_at` |  |
 | trg_card_trades_updated | BEFORE UPDATE | `card_trades` | `handle_updated_at` |  |
 | set_card_set_claims_updated_at | BEFORE UPDATE | `card_set_claims` | `update_updated_at_column` |  |
-| trg_card_pack_trail_enrollments | AFTER INSERT OR UPDATE OF COMPLETED_AT | `trail_enrollments` | `card_pack_hook_trail_enrollments` |  |
-| trg_card_pack_attendance_streaks | AFTER INSERT OR UPDATE OF CURRENT_STREAK | `attendance_streaks` | `card_pack_hook_attendance_streaks` |  |
 | trg_card_pack_notify | AFTER INSERT | `card_packs` | `card_pack_notify` |  |
 | update_boss_battles_updated_at | BEFORE UPDATE | `boss_battles` | `update_updated_at_column` |  |
 | trg_boss_damage_task_scores | AFTER INSERT OR UPDATE | `task_scores` | `boss_hook_task_scores` |  |
 | trg_boss_damage_trail_enrollments | AFTER INSERT OR UPDATE | `trail_enrollments` | `boss_hook_trail_enrollments` |  |
 | trg_boss_damage_attendance_streaks | AFTER INSERT OR UPDATE | `attendance_streaks` | `boss_hook_attendance_streaks` |  |
-| trg_boss_phase_alert | AFTER UPDATE OF CURRENT_HP | `boss_battles` | `boss_phase_alert_hook` |  |
 | update_boss_win_rate_goals_updated_at | BEFORE UPDATE | `boss_win_rate_goals` | `update_updated_at_column` |  |
 | update_memory_decks_updated_at | BEFORE UPDATE | `memory_decks` | `update_updated_at_column` |  |
 | update_memory_pairs_updated_at | BEFORE UPDATE | `memory_pairs` | `update_updated_at_column` |  |
@@ -741,11 +735,9 @@ _Nenhum arquivo em `manual/`. Copie `manual/TEMPLATE-regras-de-negocio.md` para 
 | update_wager_questions_updated_at | BEFORE UPDATE | `wager_questions` | `update_updated_at_column` |  |
 | trg_wager_budget_settings_updated | BEFORE UPDATE | `wager_budget_settings` | `update_updated_at_column` |  |
 | update_wager_integrity_reviews_updated_at | BEFORE UPDATE | `wager_integrity_reviews` | `update_updated_at_column` |  |
-| trg_log_wager_integrity_review_event | AFTER INSERT OR UPDATE | `wager_integrity_reviews` | `log_wager_integrity_review_event` |  |
 | update_board_trails_updated_at | BEFORE UPDATE | `board_trails` | `update_updated_at_column` |  |
 | update_board_tiles_updated_at | BEFORE UPDATE | `board_tiles` | `update_updated_at_column` |  |
 | update_board_player_states_updated_at | BEFORE UPDATE | `board_player_states` | `update_updated_at_column` |  |
-| trg_sync_board_blocked_at | BEFORE INSERT OR UPDATE OF BLOCKED_CHALLENGE_ID | `board_player_states` | `sync_board_blocked_at` |  |
 | trg_goal_templates_updated_at | BEFORE UPDATE | `goal_templates` | `set_goal_templates_updated_at` |  |
 | trg_guard_engagement_answer_assignment | BEFORE INSERT OR UPDATE | `engagement_answers` | `guard_engagement_answer_assignment` |  |
 | on_auth_user_created | AFTER INSERT | `auth.users` | `handle_new_user` |  |
@@ -753,6 +745,14 @@ _Nenhum arquivo em `manual/`. Copie `manual/TEMPLATE-regras-de-negocio.md` para 
 | department_war_metrics_updated_at | BEFORE UPDATE | `department_war_metrics` | `update_updated_at_column` |  |
 | dept_war_departments_updated_at | BEFORE UPDATE | `department_war_departments` | `update_updated_at_column` |  |
 | lucky_wheel_prizes_audit | AFTER INSERT OR UPDATE OR DELETE | `lucky_wheel_prizes` | `log_lucky_wheel_prize_change` |  |
+| trg_boss_phase_alert | AFTER UPDATE OF CURRENT_HP | `boss_battles` | `boss_phase_alert_hook` |  |
+| trg_war_hook_module_progress | AFTER INSERT OR UPDATE OF COMPLETED_AT | `module_progress` | `war_hook_module_progress` |  |
+| trg_sync_board_blocked_at | BEFORE INSERT OR UPDATE OF BLOCKED_CHALLENGE_ID | `board_player_states` | `sync_board_blocked_at` |  |
+| trg_log_prediction_settlement | AFTER UPDATE OF STATUS | `prediction_markets` | `log_prediction_settlement` |  |
+| trg_war_hook_trail_enrollments | AFTER INSERT OR UPDATE OF COMPLETED_AT | `trail_enrollments` | `war_hook_trail_enrollments` |  |
+| trg_card_pack_trail_enrollments | AFTER INSERT OR UPDATE OF COMPLETED_AT | `trail_enrollments` | `card_pack_hook_trail_enrollments` |  |
+| trg_card_pack_attendance_streaks | AFTER INSERT OR UPDATE OF CURRENT_STREAK | `attendance_streaks` | `card_pack_hook_attendance_streaks` |  |
+| trg_log_wager_integrity_review_event | AFTER INSERT OR UPDATE | `wager_integrity_reviews` | `log_wager_integrity_review_event` |  |
 
 Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banco):
 
@@ -806,15 +806,6 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `revert_campaign_import` | invalid_state: apenas lotes aplicados podem ser revertidos (%) | `supabase/migrations/20260727100045_69d56c43-b506-405f-8469-2c59a6bf1cdf.sql` |
 | `enforce_campaign_team_consistency` | team_not_found | `supabase/migrations/20260727171415_85c57bb0-f886-41ab-bd07-e3a1688256ec.sql` |
 | `enforce_campaign_team_consistency` | team_campaign_mismatch | `supabase/migrations/20260727171415_85c57bb0-f886-41ab-bd07-e3a1688256ec.sql` |
-| `review_purchase` | Autenticação obrigatória | `supabase/migrations/20260727183427_72f9c05a-39cb-439b-9460-a965561e3d62.sql` |
-| `review_purchase` | Permissão negada | `supabase/migrations/20260727183427_72f9c05a-39cb-439b-9460-a965561e3d62.sql` |
-| `review_purchase` | Ação inválida: % | `supabase/migrations/20260727183427_72f9c05a-39cb-439b-9460-a965561e3d62.sql` |
-| `review_purchase` | Pedido não encontrado | `supabase/migrations/20260727183427_72f9c05a-39cb-439b-9460-a965561e3d62.sql` |
-| `review_purchase` | Pedido já finalizado (%) | `supabase/migrations/20260727183427_72f9c05a-39cb-439b-9460-a965561e3d62.sql` |
-| `review_purchase` | Somente pedidos pendentes podem ser aprovados | `supabase/migrations/20260727183427_72f9c05a-39cb-439b-9460-a965561e3d62.sql` |
-| `review_purchase` | Pedido de risco elevado exige um segundo aprovador distinto | `supabase/migrations/20260727183427_72f9c05a-39cb-439b-9460-a965561e3d62.sql` |
-| `review_purchase` | Somente pedidos aprovados podem ser entregues | `supabase/migrations/20260727183427_72f9c05a-39cb-439b-9460-a965561e3d62.sql` |
-| `award_campaign_team_split` | campaign_not_found | `supabase/migrations/20260727184545_b9620ff8-06a2-4ece-9b16-9736d339b3e0.sql` |
 | `spin_lucky_wheel` | Não autenticado | `supabase/migrations/20260727200825_a3b9b0a2-130f-4aee-a611-8b630bd0437a.sql` |
 | `spin_lucky_wheel` | dedupe_key inválida | `supabase/migrations/20260727200825_a3b9b0a2-130f-4aee-a611-8b630bd0437a.sql` |
 | `grant_scratch_card` | Não autenticado | `supabase/migrations/20260727221231_aacc3a8b-99f9-4836-85f0-f639d99184f1.sql` |
@@ -852,7 +843,6 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `respond_card_trade` | Não autenticado | `supabase/migrations/20260728121542_4ac8cbd1-0d6d-410d-8734-4fd032804ddc.sql` |
 | `respond_card_trade` | ação inválida | `supabase/migrations/20260728121542_4ac8cbd1-0d6d-410d-8734-4fd032804ddc.sql` |
 | `get_card_set_rewards` | not_authenticated | `supabase/migrations/20260728122626_32e02751-3e63-4896-adef-653b53012bbf.sql` |
-| `claim_card_set_reward` | not_authenticated | `supabase/migrations/20260728122626_32e02751-3e63-4896-adef-653b53012bbf.sql` |
 | `deal_boss_damage` | auth required | `supabase/migrations/20260728125833_b6b2c15a-1960-4e13-9c2a-0cdff052ea01.sql` |
 | `deal_boss_damage` | invalid dedupe_key | `supabase/migrations/20260728125833_b6b2c15a-1960-4e13-9c2a-0cdff052ea01.sql` |
 | `deal_boss_damage` | invalid source | `supabase/migrations/20260728125833_b6b2c15a-1960-4e13-9c2a-0cdff052ea01.sql` |
@@ -957,6 +947,16 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `revoke_push_device` | device_not_found | `supabase/migrations/20261228170000_reaplica_funcoes_desatualizadas_em_producao.sql` |
 | `settle_prediction_market` | forbidden | `supabase/migrations/20261228170000_reaplica_funcoes_desatualizadas_em_producao.sql` |
 | `unblock_board_players` | Apenas administradores podem executar o desbloqueio | `supabase/migrations/20261228210000_reaplica_mensagens_funcoes_divergentes.sql` |
+| `award_campaign_team_split` | campaign_not_found | `supabase/migrations/20261228290000_paridade_de_triggers_e_retextos_funcionais.sql` |
+| `claim_card_set_reward` | not_authenticated | `supabase/migrations/20261228290000_paridade_de_triggers_e_retextos_funcionais.sql` |
+| `review_purchase` | Autenticação obrigatória | `supabase/migrations/20261228290000_paridade_de_triggers_e_retextos_funcionais.sql` |
+| `review_purchase` | Permissão negada | `supabase/migrations/20261228290000_paridade_de_triggers_e_retextos_funcionais.sql` |
+| `review_purchase` | Ação inválida: % | `supabase/migrations/20261228290000_paridade_de_triggers_e_retextos_funcionais.sql` |
+| `review_purchase` | Pedido não encontrado | `supabase/migrations/20261228290000_paridade_de_triggers_e_retextos_funcionais.sql` |
+| `review_purchase` | Pedido já finalizado (%) | `supabase/migrations/20261228290000_paridade_de_triggers_e_retextos_funcionais.sql` |
+| `review_purchase` | Somente pedidos pendentes podem ser aprovados | `supabase/migrations/20261228290000_paridade_de_triggers_e_retextos_funcionais.sql` |
+| `review_purchase` | Pedido de risco elevado exige um segundo aprovador distinto | `supabase/migrations/20261228290000_paridade_de_triggers_e_retextos_funcionais.sql` |
+| `review_purchase` | Somente pedidos aprovados podem ser entregues | `supabase/migrations/20261228290000_paridade_de_triggers_e_retextos_funcionais.sql` |
 
 ## E. Estados, máquinas de estado e transições
 
@@ -3666,6 +3666,12 @@ _nenhum item encontrado_
 | `admin` | `supabase/migrations/20261226195000_reset_senha_consistencia.sql` |
 | `admin` | `supabase/migrations/20261228170000_reaplica_funcoes_desatualizadas_em_producao.sql` |
 | `manager` | `supabase/migrations/20261228170000_reaplica_funcoes_desatualizadas_em_producao.sql` |
+| `admin` | `supabase/migrations/20261228280000_uma_aposta_por_dia_e_reabertura_da_pergunta.sql` |
+| `manager` | `supabase/migrations/20261228280000_uma_aposta_por_dia_e_reabertura_da_pergunta.sql` |
+| `admin` | `supabase/migrations/20261228290000_paridade_de_triggers_e_retextos_funcionais.sql` |
+| `manager` | `supabase/migrations/20261228290000_paridade_de_triggers_e_retextos_funcionais.sql` |
+| `admin` | `supabase/migrations/20261228300000_fecha_corridas_da_exclusao_de_departamento_e_da_aposta_diaria.sql` |
+| `manager` | `supabase/migrations/20261228300000_fecha_corridas_da_exclusao_de_departamento_e_da_aposta_diaria.sql` |
 
 ## K. Testes como especificação (2136 testes em 164 arquivos — nomes completos em `context.json`)
 

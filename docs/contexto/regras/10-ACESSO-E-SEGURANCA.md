@@ -1,6 +1,6 @@
 # 10 · ACESSO E SEGURANÇA — quem pode o quê
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `c87b1c92a7` · branch `main` · 2026-11-26 11:19 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `f28d2f6812` · branch `main` · 2026-11-26 11:56 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## Perfis / roles identificados
@@ -247,7 +247,7 @@
 | `wager_entries` | enabled | authenticated: has_role(auth.uid(), 'admin'::app_role)<br>authenticated: has_role(auth.uid(), 'admin'::app_role)<br>authenticated: (user_id = auth.uid()) | authenticated: has_role(auth.uid(), 'admin'::app_role) | authenticated: has_role(auth.uid(), 'admin'::app_role) | authenticated: has_role(auth.uid(), 'admin'::app_role) |
 | `wager_integrity_review_events` | enabled | authenticated: has_role(auth.uid(), 'admin'::app_role) | authenticated: has_role(auth.uid(), 'admin'::app_role) | authenticated: has_role(auth.uid(), 'admin'::app_role) | authenticated: has_role(auth.uid(), 'admin'::app_role) |
 | `wager_integrity_reviews` | enabled | authenticated: (has_role(auth.uid(), 'admin'::app_role) OR has_role(auth.uid(), 'manager'::app_role))<br>authenticated: has_role(auth.uid(), 'admin'::app_role) | authenticated: has_role(auth.uid(), 'admin'::app_role) | authenticated: has_role(auth.uid(), 'admin'::app_role) | authenticated: has_role(auth.uid(), 'admin'::app_role) |
-| `wager_questions` | enabled | authenticated: has_role(auth.uid(), 'admin'::app_role)<br>authenticated: ((is_active = true) OR has_role(auth.uid(), 'admin'::app_role)) | authenticated: has_role(auth.uid(), 'admin'::app_role) | authenticated: has_role(auth.uid(), 'admin'::app_role) | authenticated: has_role(auth.uid(), 'admin'::app_role) |
+| `wager_questions` | enabled | authenticated: has_role(auth.uid(), 'admin'::app_role)<br>authenticated: ((is_active = true) OR has_role(auth.uid(), 'admin'::app_role))<br>authenticated: EXISTS ( SELECT 1 FROM public.wager_entries e WHERE e.question_id = wager_questions.id AND e.user_id = auth.uid() ) | authenticated: has_role(auth.uid(), 'admin'::app_role) | authenticated: has_role(auth.uid(), 'admin'::app_role) | authenticated: has_role(auth.uid(), 'admin'::app_role) |
 | `webauthn_challenges` | enabled | public: (auth.uid() = user_id) | public: (auth.uid() = user_id) | public: (auth.uid() = user_id) | public: (auth.uid() = user_id) |
 | `webauthn_credentials` | enabled | public: (auth.uid() = user_id) | public: (auth.uid() = user_id) | public: (auth.uid() = user_id) | public: (auth.uid() = user_id) |
 | `webhook_delivery_logs` | enabled | public: has_role(auth.uid(), 'admin'::app_role) | — | — | — |
@@ -258,7 +258,7 @@
 
 > `—` com RLS ligado = ninguém além de service_role. `sem RLS` = qualquer chave anon lê/escreve tudo.
 
-## Onde o RLS é IGNORADO (service_role) — 154 arquivo(s)
+## Onde o RLS é IGNORADO (service_role) — 156 arquivo(s)
 
 - `scripts/ai-context/cenarios.mjs`
 - `scripts/ai-context/gerar.unit.mjs`
@@ -410,7 +410,7 @@
 - `supabase/migrations/20261226195000_reset_senha_consistencia.sql`
 - `supabase/migrations/20261227120000_engagement_integridade_e_anon.sql`
 - `supabase/migrations/20261228120000_cron_jobs_e_leaderboard_cache.sql`
-- … +4 (lista completa em `context.json`)
+- … +6 (lista completa em `context.json`)
 
 ## Funções SQL `SECURITY DEFINER` (rodam com privilégio do dono, ignoram RLS)
 
@@ -781,7 +781,7 @@ Middleware matcher (Next.js): nenhum
 | grant | anon, authenticated | select | `weekly_challenges`, `organizations` |
 | grant | anon, authenticated, service_role | execute | `get_2fa_status`, `user_has_passkeys`, `request_password_reset_by_email`, `request_password_reset_by_email`, `reset_password_with_token`, `request_password_reset_by_email`, `reset_password_with_token` |
 | grant | authenticated | delete | `pdi_mentors`, `ai_course_jobs`, `checkins`, `climate_question_answers`, `climate_survey_responses`, `development_plans`, `direct_duels`, `feedback_evaluations`, `feedback_requests`, `lucky_wheel_whatif_snapshots`, `mentorship_mission_progress`, `mentorship_pairs`, `mentorship_requests`, `module_progress`, `new_device_alerts` … +17 |
-| grant | authenticated | execute | `get_executive_metrics`, `get_monthly_trends`, `get_department_metrics`, `generate_engagement_snapshot`, `get_department_metrics`, `get_executive_metrics`, `get_monthly_trends`, `get_nine_box_distribution`, `get_security_stats`, `generate_engagement_snapshot`, `get_quiz_category_stats`, `get_webhook_delivery_hourly_24h`, `get_alert_mttr_by_type_7d`, `get_alert_heatmap_30d`, `get_security_digest_history` … +110 |
+| grant | authenticated | execute | `get_executive_metrics`, `get_monthly_trends`, `get_department_metrics`, `generate_engagement_snapshot`, `get_department_metrics`, `get_executive_metrics`, `get_monthly_trends`, `get_nine_box_distribution`, `get_security_stats`, `generate_engagement_snapshot`, `get_quiz_category_stats`, `get_webhook_delivery_hourly_24h`, `get_alert_mttr_by_type_7d`, `get_alert_heatmap_30d`, `get_security_digest_history` … +112 |
 | grant | authenticated | insert | `user_challenges` |
 | grant | authenticated | insert, delete | `organizations`, `session_logs` |
 | grant | authenticated | insert, update, delete | `boss_battles`, `boss_win_rate_goals`, `memory_decks`, `memory_pairs`, `api_request_logs`, `auction_admin_events`, `auction_bids`, `bingo_cards`, `bingo_marks`, `board_moves`, `board_player_states`, `boss_battle_damage`, `boss_battle_rewards`, `campaign_team_split_batches`, `campaign_team_split_entries` … +36 |
@@ -794,7 +794,7 @@ Middleware matcher (Next.js): nenhum
 | grant | authenticated | update, delete | `action_plan_updates`, `announcement_reads`, `attendance_records`, `audit_logs`, `bitrix24_webhook_logs`, `campaign_progress_events`, `engagement_answers`, `enps_responses`, `feedback_responses`, `feedback_results`, `geo_access_logs`, `goal_updates`, `league_history`, `opinion_responses`, `org_theme_history` … +8 |
 | grant | authenticated, anon | select | `profiles_public`, `profiles_public` |
 | grant | authenticated, service_role | all | `demographic_attributes`, `geo_access_logs`, `geo_blocking_rules`, `notification_preferences`, `permission_groups`, `user_demographic_values`, `user_permission_groups` |
-| grant | authenticated, service_role | execute | `public`, `_require_admin`, `get_webhook_delivery_stats_24h`, `get_webhook_delivery_stats_1h`, `get_webhook_delivery_logs`, `rotate_webhook_secret`, `promote_webhook_secret`, `cancel_webhook_secret_rotation`, `bulk_rotate_webhook_secrets`, `get_webhook_executive_metrics_7d`, `check_webhook_sla_and_alert`, `get_error_budget_30d`, `get_burn_rate`, `generate_executive_monthly_report`, `get_burn_rate` … +64 |
+| grant | authenticated, service_role | execute | `public`, `_require_admin`, `get_webhook_delivery_stats_24h`, `get_webhook_delivery_stats_1h`, `get_webhook_delivery_logs`, `rotate_webhook_secret`, `promote_webhook_secret`, `cancel_webhook_secret_rotation`, `bulk_rotate_webhook_secrets`, `get_webhook_executive_metrics_7d`, `check_webhook_sla_and_alert`, `get_error_budget_30d`, `get_burn_rate`, `generate_executive_monthly_report`, `get_burn_rate` … +67 |
 | grant | service_role | all | `runbook_executions`, `sla_targets`, `postmortems`, `postmortem_actions`, `executive_monthly_reports`, `ai_course_jobs`, `organizations`, `org_members`, `org_theme_history`, `sales_campaigns`, `campaign_participants`, `campaign_progress_events`, `push_subscriptions`, `push_notification_logs`, `engagement_factors` … +77 |
 | grant | service_role | execute | `cleanup_old_security_logs`, `approve_password_reset`, `reject_password_reset`, `auto_block_ip`, `cleanup_old_security_logs`, `cleanup_old_security_logs`, `cleanup_expired_idempotency_keys`, `cleanup_expired_challenges`, `update_certification_statuses`, `log_ip_access`, `log_geo_access`, `validate_api_key`, `process_external_task`, `complete_external_task`, `apply_task_penalty` … +36 |
 | grant | service_role | select | `webhook_delivery_stats_24h`, `webhook_delivery_stats_24h` |
@@ -802,7 +802,7 @@ Middleware matcher (Next.js): nenhum
 | grant | service_role, authenticated | execute | `get_security_stats`, `log_login_attempt`, `get_nine_box_distribution`, `get_department_metrics`, `get_monthly_trends`, `get_executive_metrics` |
 | revoke | PUBLIC | all | `get_security_digest_history`, `get_reliability_slo`, `get_reliability_timeline`, `acknowledge_security_alert`, `log_runbook_step`, `get_incident_metrics`, `get_incident_metrics`, `recalc_campaign_progress`, `close_expired_sales_campaigns`, `user_wants_in_app_notification`, `close_expired_sales_campaigns`, `user_wants_push_notification`, `user_wants_email_notification`, `enqueue_push`, `claim_push_outbox` … +22 |
 | revoke | PUBLIC | execute | `cleanup_old_security_logs`, `public`, `approve_password_reset`, `reject_password_reset`, `auto_block_ip`, `cleanup_old_security_logs`, `cleanup_old_security_logs`, `cleanup_expired_idempotency_keys`, `cleanup_expired_challenges`, `get_security_stats`, `update_certification_statuses`, `log_ip_access`, `log_geo_access`, `validate_api_key`, `process_external_task` … +29 |
-| revoke | PUBLIC, anon | all | `generate_executive_monthly_report`, `generate_action_plan_from_factor`, `generate_action_plan_from_nr1_category`, `get_engagement_nps_history`, `get_engagement_pillar_benchmark`, `get_engagement_pillar_benchmark`, `trim_push_sync_events`, `revoke_push_device`, `can_handle_opinion`, `get_opinion_feed`, `toggle_opinion_support`, `respond_to_opinion`, `set_opinion_status`, `generate_action_plan_from_opinion`, `revoke_push_device` … +89 |
+| revoke | PUBLIC, anon | all | `generate_executive_monthly_report`, `generate_action_plan_from_factor`, `generate_action_plan_from_nr1_category`, `get_engagement_nps_history`, `get_engagement_pillar_benchmark`, `get_engagement_pillar_benchmark`, `trim_push_sync_events`, `revoke_push_device`, `can_handle_opinion`, `get_opinion_feed`, `toggle_opinion_support`, `respond_to_opinion`, `set_opinion_status`, `generate_action_plan_from_opinion`, `revoke_push_device` … +94 |
 | revoke | PUBLIC, anon | execute | `get_webhook_delivery_stats_24h`, `get_webhook_delivery_hourly_24h`, `get_webhook_delivery_stats_1h`, `get_webhook_delivery_logs`, `get_error_budget_30d`, `get_burn_rate`, `get_burn_rate`, `is_org_admin`, `is_org_member`, `get_active_engagement_cycle`, `assign_engagement_questions`, `submit_engagement_answer`, `get_engagement_cycle_progress`, `engagement_min_respondents`, `get_engagement_pillar_scores` … +20 |
 | revoke | PUBLIC, anon, authenticated | all | `webhook_delivery_stats_24h`, `check_sla_breaches_and_alert`, `auto_create_postmortem_on_resolve`, `check_overdue_postmortem_actions`, `notify_admins_of_monthly_report`, `close_expired_sales_campaigns`, `increment_push_failures`, `reset_push_failures`, `log_lucky_wheel_prize_change`, `chi_square_critical`, `erf_inverse`, `snapshot_lucky_wheel_payout`, `raise_lucky_wheel_window_alerts`, `raise_lucky_wheel_window_alerts`, `log_lucky_wheel_budget_change` … +32 |
 | revoke | PUBLIC, anon, authenticated | execute | `validate_reset_token`, `generate_certificate_code`, `ingest_war_event`, `war_hook_task_scores`, `war_hook_attendance`, `war_hook_trail_enrollments`, `war_hook_module_progress`, `war_hook_quiz_scores`, `war_hook_kudos`, `validate_reset_token`, `claim_push_outbox`, `increment_push_failures`, `reset_push_failures`, `user_wants_push_notification`, `get_passkeys_by_email` … +29 |

@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "c87b1c92a7ff481a407431b41f368e1da3340170",
+  "commit": "f28d2f6812a48c2ae319595db5b3925917aa6df2",
   "branch": "main",
-  "data_commit": "2026-11-26T08:18:47-03:00",
+  "data_commit": "2026-11-26T08:56:16-03:00",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "ultimos_commits": [
+   {
+    "sha": "f28d2f6",
+    "data": "2026-11-26",
+    "assunto": "fix: paridade de indices e constraints com o banco vivo e devolve os fluxos travados (#174)"
+   },
    {
     "sha": "c87b1c9",
     "data": "2026-11-26",
@@ -126,14 +131,9 @@
     "sha": "88e4b45",
     "data": "2026-11-24",
     "assunto": "fix(clima): antecipa o fim da pesquisa ativa para 30/11 e destrava o lembrete (#148)"
-   },
-   {
-    "sha": "fc6ade9",
-    "data": "2026-11-24",
-    "assunto": "chore(docs): ledger 280x280 e jobs internos medidos (preserva o trabalho da #150) (#151)"
    }
   ],
-  "arquivos_mudados_7d": 261,
+  "arquivos_mudados_7d": 272,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "supabase/functions/_shared",
@@ -145,15 +145,15 @@
    },
    {
     "pasta": "docs/agentes/banco.md",
-    "mudancas": 17
+    "mudancas": 18
+   },
+   {
+    "pasta": "docs/agentes/mapa-repo.md",
+    "mudancas": 15
    },
    {
     "pasta": "docs/estado/05-edge-functions.md",
     "mudancas": 15
-   },
-   {
-    "pasta": "docs/agentes/mapa-repo.md",
-    "mudancas": 14
    },
    {
     "pasta": "bun.lock",
@@ -203,7 +203,11 @@
    },
    {
     "arquivo": "docs/agentes/banco.md",
-    "mudancas": 17
+    "mudancas": 18
+   },
+   {
+    "arquivo": "docs/agentes/mapa-repo.md",
+    "mudancas": 15
    },
    {
     "arquivo": "docs/estado/05-edge-functions.md",
@@ -211,10 +215,6 @@
    },
    {
     "arquivo": "bun.lock",
-    "mudancas": 14
-   },
-   {
-    "arquivo": "docs/agentes/mapa-repo.md",
     "mudancas": 14
    },
    {
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 141
+    "commits": 142
    },
    {
     "autor": "dependabot[bot]",
@@ -310,9 +310,9 @@
   ]
  },
  "contagens": {
-  "arquivos_total": 1608,
+  "arquivos_total": 1617,
   "arquivos_codigo": 1198,
-  "linhas_codigo": 237247,
+  "linhas_codigo": 237249,
   "rotas": 87,
   "rotas_http_backend": 0,
   "vistas_por_id": 0,
@@ -322,7 +322,7 @@
   "hooks": 155,
   "edge_functions": 23,
   "tabelas": 239,
-  "migrations": 306,
+  "migrations": 315,
   "cron_jobs": 40,
   "testes": 178,
   "workflows": 6,
@@ -436,7 +436,7 @@
   },
   "src/services": {
    "arquivos": 99,
-   "linhas": 22467
+   "linhas": 22469
   },
   "src/stories": {
    "arquivos": 29,

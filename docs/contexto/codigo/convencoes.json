@@ -59,11 +59,11 @@
  "commits": {
   "convencao": "conventional commits (observado)",
   "exemplos": [
+   "fix: paridade de indices e constraints com o banco vivo e devolve os fluxos travados (#174)",
    "feat: interruptor global de push no perfil (#176)",
    "fix: restaura trigger de cadastro, revoga execute publico e alinha triggers e mensagens (#173)",
    "fix(banco): fecha o rebuild - tabelas, colunas, funcoes, views, RLS e grants de producao (#172)",
-   "chore(banco): paridade de jobs do cron, matview leaderboard_cache e colunas de profiles (#171)",
-   "fix: destino dos avisos de notificação (51 avisos sem rota)"
+   "chore(banco): paridade de jobs do cron, matview leaderboard_cache e colunas de profiles (#171)"
   ]
  },
  "pr_template": ".github/PULL_REQUEST_TEMPLATE.md",

@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "c87b1c92a7ff481a407431b41f368e1da3340170",
+  "sha": "f28d2f6812a48c2ae319595db5b3925917aa6df2",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
-  "generated_at": "2026-11-26 11:19 UTC",
-  "files_total": 1619,
-  "code_files": 1512,
-  "code_lines": 276563
+  "generated_at": "2026-11-26 11:56 UTC",
+  "files_total": 1628,
+  "code_files": 1521,
+  "code_lines": 281339
  },
  "version": "1.3.2",
- "facts_hash": "72be590fe13e420d",
+ "facts_hash": "6062789274008b6a",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -196,7 +196,7 @@
   "languages": {
    ".ts": 587,
    ".tsx": 585,
-   ".sql": 308,
+   ".sql": 317,
    ".mjs": 21,
    ".js": 5,
    ".py": 5,
@@ -18748,7 +18748,9 @@
       "src": "supabase/migrations/20260728150404_176dbae6-505f-48df-85d3-80751f60fa73.sql"
      }
     ],
-    "constraints": [],
+    "constraints": [
+     "constraint boss_win_rate_goals_department_id_fkey FOREIGN KEY (department_id) REFERENCES public.departments(id) ON DELETE CASCADE"
+    ],
     "src": "supabase/migrations/20260728150404_176dbae6-505f-48df-85d3-80751f60fa73.sql",
     "comment": "",
     "origin": "migration"
@@ -25834,6 +25836,16 @@
     "src": "supabase/migrations/20261228140000_congela_rls_e_grants_producao.sql"
    },
    {
+    "name": "wager_questions_user_select_own_entries",
+    "table": "wager_questions",
+    "cmd": "SELECT",
+    "roles": "authenticated",
+    "mode": "permissive",
+    "using": "EXISTS ( SELECT 1 FROM public.wager_entries e WHERE e.question_id = wager_questions.id AND e.user_id = auth.uid() )",
+    "check": "",
+    "src": "supabase/migrations/20261228280000_uma_aposta_por_dia_e_reabertura_da_pergunta.sql"
+   },
+   {
     "name": "Managers can create climate surveys",
     "table": "climate_surveys",
     "cmd": "INSERT",
@@ -26750,24 +26762,6 @@
     "src": "supabase/migrations/20260727230544_2dc28ece-3091-4d64-900d-c9af22c8ba3f.sql"
    },
    {
-    "name": "trg_war_hook_trail_enrollments",
-    "when": "AFTER INSERT OR UPDATE OF COMPLETED_AT",
-    "table": "trail_enrollments",
-    "function": "war_hook_trail_enrollments",
-    "condition": "",
-    "each": "row",
-    "src": "supabase/migrations/20260727231914_e85bd74f-7295-4e96-8574-5961a889ed41.sql"
-   },
-   {
-    "name": "trg_war_hook_module_progress",
-    "when": "AFTER INSERT OR UPDATE OF COMPLETED_AT",
-    "table": "module_progress",
-    "function": "war_hook_module_progress",
-    "condition": "",
-    "each": "row",
-    "src": "supabase/migrations/20260727231914_e85bd74f-7295-4e96-8574-5961a889ed41.sql"
-   },
-   {
     "name": "trg_war_hook_quiz_scores",
     "when": "AFTER INSERT",
     "table": "quiz_scores",
@@ -26831,15 +26825,6 @@
     "src": "supabase/migrations/20260728113255_b0c9ae8e-e19d-44ea-ad4d-a0366d453980.sql"
    },
    {
-    "name": "trg_log_prediction_settlement",
-    "when": "AFTER UPDATE OF STATUS",
-    "table": "prediction_markets",
-    "function": "log_prediction_settlement",
-    "condition": "",
-    "each": "row",
-    "src": "supabase/migrations/20260728115201_58fcd8a8-c7ad-4a49-863c-74e07cdbc8e5.sql"
-   },
-   {
     "name": "trg_card_definitions_updated",
     "when": "BEFORE UPDATE",
     "table": "card_definitions",
@@ -26885,24 +26870,6 @@
     "src": "supabase/migrations/20260728122626_32e02751-3e63-4896-adef-653b53012bbf.sql"
    },
    {
-    "name": "trg_card_pack_trail_enrollments",
-    "when": "AFTER INSERT OR UPDATE OF COMPLETED_AT",
-    "table": "trail_enrollments",
-    "function": "card_pack_hook_trail_enrollments",
-    "condition": "",
-    "each": "row",
-    "src": "supabase/migrations/20260728123140_f03388ee-e8bd-41ab-8096-ce007be8f3b2.sql"
-   },
-   {
-    "name": "trg_card_pack_attendance_streaks",
-    "when": "AFTER INSERT OR UPDATE OF CURRENT_STREAK",
-    "table": "attendance_streaks",
-    "function": "card_pack_hook_attendance_streaks",
-    "condition": "",
-    "each": "row",
-    "src": "supabase/migrations/20260728123140_f03388ee-e8bd-41ab-8096-ce007be8f3b2.sql"
-   },
-   {
     "name": "trg_card_pack_notify",
     "when": "AFTER INSERT",
     "table": "card_packs",
@@ -26946,15 +26913,6 @@
     "condition": "",
     "each": "row",
     "src": "supabase/migrations/20260728131056_e5e1de7c-be59-4331-a29c-61de27488ac2.sql"
-   },
-   {
-    "name": "trg_boss_phase_alert",
-    "when": "AFTER UPDATE OF CURRENT_HP",
-    "table": "boss_battles",
-    "function": "boss_phase_alert_hook",
-    "condition": "",
-    "each": "row",
-    "src": "supabase/migrations/20260728131404_48132602-9a07-41dc-895e-fb1188c93bd0.sql"
    },
    {
     "name": "update_boss_win_rate_goals_updated_at",
@@ -27038,15 +26996,6 @@
     "src": "supabase/migrations/20260728170048_6914a662-62a1-4083-8f9c-3acf7ec34b57.sql"
    },
    {
-    "name": "trg_log_wager_integrity_review_event",
-    "when": "AFTER INSERT OR UPDATE",
-    "table": "wager_integrity_reviews",
-    "function": "log_wager_integrity_review_event",
-    "condition": "",
-    "each": "row",
-    "src": "supabase/migrations/20260728171612_1d7a91fb-2bc6-4dbd-b18c-99a6b9ee7326.sql"
-   },
-   {
     "name": "update_board_trails_updated_at",
     "when": "BEFORE UPDATE",
     "table": "board_trails",
@@ -27072,15 +27021,6 @@
     "condition": "",
     "each": "row",
     "src": "supabase/migrations/20260728172534_0b59fa61-90b1-4878-be78-a0c609c9de50.sql"
-   },
-   {
-    "name": "trg_sync_board_blocked_at",
-    "when": "BEFORE INSERT OR UPDATE OF BLOCKED_CHALLENGE_ID",
-    "table": "board_player_states",
-    "function": "sync_board_blocked_at",
-    "condition": "",
-    "each": "row",
-    "src": "supabase/migrations/20260728175346_9062e6fd-34a2-4490-82cd-d4877f2beafd.sql"
    },
    {
     "name": "trg_goal_templates_updated_at",
@@ -27144,27 +27084,99 @@
     "condition": "",
     "each": "row",
     "src": "supabase/migrations/20261228200000_alinha_triggers_department_war_e_auditoria.sql"
+   },
+   {
+    "name": "trg_boss_phase_alert",
+    "when": "AFTER UPDATE OF CURRENT_HP",
+    "table": "boss_battles",
+    "function": "boss_phase_alert_hook",
+    "condition": "",
+    "each": "row",
+    "src": "supabase/migrations/20261228290000_paridade_de_triggers_e_retextos_funcionais.sql"
+   },
+   {
+    "name": "trg_war_hook_module_progress",
+    "when": "AFTER INSERT OR UPDATE OF COMPLETED_AT",
+    "table": "module_progress",
+    "function": "war_hook_module_progress",
+    "condition": "",
+    "each": "row",
+    "src": "supabase/migrations/20261228290000_paridade_de_triggers_e_retextos_funcionais.sql"
+   },
+   {
+    "name": "trg_sync_board_blocked_at",
+    "when": "BEFORE INSERT OR UPDATE OF BLOCKED_CHALLENGE_ID",
+    "table": "board_player_states",
+    "function": "sync_board_blocked_at",
+    "condition": "",
+    "each": "row",
+    "src": "supabase/migrations/20261228290000_paridade_de_triggers_e_retextos_funcionais.sql"
+   },
+   {
+    "name": "trg_log_prediction_settlement",
+    "when": "AFTER UPDATE OF STATUS",
+    "table": "prediction_markets",
+    "function": "log_prediction_settlement",
+    "condition": "",
+    "each": "row",
+    "src": "supabase/migrations/20261228290000_paridade_de_triggers_e_retextos_funcionais.sql"
+   },
+   {
+    "name": "trg_war_hook_trail_enrollments",
+    "when": "AFTER INSERT OR UPDATE OF COMPLETED_AT",
+    "table": "trail_enrollments",
+    "function": "war_hook_trail_enrollments",
+    "condition": "",
+    "each": "row",
+    "src": "supabase/migrations/20261228290000_paridade_de_triggers_e_retextos_funcionais.sql"
+   },
+   {
+    "name": "trg_card_pack_trail_enrollments",
+    "when": "AFTER INSERT OR UPDATE OF COMPLETED_AT",
+    "table": "trail_enrollments",
+    "function": "card_pack_hook_trail_enrollments",
+    "condition": "",
+    "each": "row",
+    "src": "supabase/migrations/20261228290000_paridade_de_triggers_e_retextos_funcionais.sql"
+   },
+   {
+    "name": "trg_card_pack_attendance_streaks",
+    "when": "AFTER INSERT OR UPDATE OF CURRENT_STREAK",
+    "table": "attendance_streaks",
+    "function": "card_pack_hook_attendance_streaks",
+    "condition": "",
+    "each": "row",
+    "src": "supabase/migrations/20261228290000_paridade_de_triggers_e_retextos_funcionais.sql"
+   },
+   {
+    "name": "trg_log_wager_integrity_review_event",
+    "when": "AFTER INSERT OR UPDATE",
+    "table": "wager_integrity_reviews",
+    "function": "log_wager_integrity_review_event",
+    "condition": "",
+    "each": "row",
+    "src": "supabase/migrations/20261228290000_paridade_de_triggers_e_retextos_funcionais.sql"
    }
   ],
   "functions": {
    "update_saved_filters_updated_at": {
     "args": "",
-    "returns": "TRIGGER",
+    "returns": "trigger",
     "lang": "plpgsql",
-    "src": "supabase/migrations/20241231000000_saved_filters.sql",
+    "src": "supabase/migrations/20261228290000_paridade_de_triggers_e_retextos_funcionais.sql",
     "security_definer": false,
-    "search_path": false,
+    "search_path": true,
     "body": "BEGIN NEW.updated_at = NOW(); RETURN NEW; END;",
     "raises": [],
     "tables": []
    },
    "ensure_single_default_filter": {
     "args": "",
-    "returns": "TRIGGER",
+    "returns": "trigger",
     "lang": "plpgsql",
-    "src": "supabase/migrations/20241231000000_saved_filters.sql",
+    "src": "supabase/migrations/20261228290000_paridade_de_triggers_e_retextos_funcionais.sql",
     "security_definer": false,
-    "search_path": false,
+    "search_path": true,
     "body": "BEGIN IF NEW.is_default = true THEN UPDATE public.saved_filters SET is_default = false WHERE user_id = NEW.user_id AND entity_type = NEW.entity_type AND id != NEW.id AND is_default = true; END IF; RETURN NEW; END;",
     "raises": [],
     "tables": [
@@ -28981,7 +28993,7 @@
     "args": "_campaign_id uuid",
     "returns": "jsonb",
     "lang": "plpgsql",
-    "src": "supabase/migrations/20260727184545_b9620ff8-06a2-4ece-9b16-9736d339b3e0.sql",
+    "src": "supabase/migrations/20261228290000_paridade_de_triggers_e_retextos_funcionais.sql",
     "security_definer": true,
     "search_path": true,
     "body": "DECLARE _rule JSONB; _mode TEXT; _pool_xp NUMERIC; _pool_coins NUMERIC; _team RECORD; _member RECORD; _teams_awarded INT := 0; _members_awarded INT := 0; _members_skipped INT := 0; _total_xp INT := 0; _total_coins INT := 0; _share NUMERIC; _xp INT; _coins INT; _batch_id UUID; _actor UUID := auth.uid(); _eligible_teams INT := 0; _reason TEXT; _outcome TEXT; _failure TEXT; _profile_exists BOOLEAN; BEGIN PERFORM public._require_manager_or_admin(); PERFORM public.recalc_campaign_teams(_campaign_id); SELECT COALESCE(split_rule, '{}'::jsonb) INTO _rule FROM public.sales_campaigns WHERE id = _campaign_id; IF _rule IS NULL THEN RAISE EXCEPTION 'campaign_not_found' USING ERRCODE = 'P0002'; END IF; _p …",
@@ -29002,10 +29014,10 @@
     ]
    },
    "review_purchase": {
-    "args": "p_purchase_id uuid, p_action text, p_reason text DEFAULT NULL",
+    "args": "p_purchase_id uuid, p_action text, p_reason text DEFAULT NULL::text",
     "returns": "jsonb",
     "lang": "plpgsql",
-    "src": "supabase/migrations/20260727183427_72f9c05a-39cb-439b-9460-a965561e3d62.sql",
+    "src": "supabase/migrations/20261228290000_paridade_de_triggers_e_retextos_funcionais.sql",
     "security_definer": true,
     "search_path": true,
     "body": "DECLARE v_actor uuid := auth.uid(); v_purchase public.shop_purchases%ROWTYPE; v_new_status public.purchase_status; v_logged_action text := p_action; v_stock integer; BEGIN IF v_actor IS NULL THEN RAISE EXCEPTION 'Autenticação obrigatória'; END IF; IF NOT (public.has_role(v_actor, 'admin'::app_role) OR public.has_role(v_actor, 'manager'::app_role)) THEN RAISE EXCEPTION 'Permissão negada'; END IF; IF p_action NOT IN ('approve','reject','deliver','cancel') THEN RAISE EXCEPTION 'Ação inválida: %', p_action; END IF; SELECT * INTO v_purchase FROM public.shop_purchases WHERE id = p_purchase_id FOR UPDATE; IF NOT FOUND THEN RAISE EXCEPTION 'Pedido não encontrado'; END IF; IF v_purchase.status IN ('d …",
@@ -29043,10 +29055,10 @@
     ]
    },
    "revert_campaign_team_split": {
-    "args": "_batch_id UUID, _reason TEXT DEFAULT NULL",
-    "returns": "JSONB",
+    "args": "_batch_id uuid, _reason text DEFAULT NULL::text",
+    "returns": "jsonb",
     "lang": "plpgsql",
-    "src": "supabase/migrations/20260727185702_1a321b62-8515-4c4c-a1e9-20713330fda1.sql",
+    "src": "supabase/migrations/20261228290000_paridade_de_triggers_e_retextos_funcionais.sql",
     "security_definer": true,
     "search_path": true,
     "body": "DECLARE _batch RECORD; _entry RECORD; _members INT := 0; _teams INT := 0; _xp_total INT := 0; _coins_total INT := 0; _actor UUID := auth.uid(); _xp INT; _coins INT; BEGIN PERFORM public._require_manager_or_admin(); SELECT * INTO _batch FROM public.campaign_team_split_batches WHERE id = _batch_id FOR UPDATE; IF NOT FOUND THEN RETURN jsonb_build_object('reverted', false, 'reason', 'batch_not_found'); END IF; IF _batch.reverted_at IS NOT NULL OR _batch.status = 'reverted' THEN RETURN jsonb_build_object('reverted', false, 'reason', 'already_reverted'); END IF; IF NOT EXISTS ( SELECT 1 FROM public.campaign_team_split_entries WHERE batch_id = _batch_id AND outcome = 'paid' AND user_id IS NOT NULL …",
@@ -30235,10 +30247,10 @@
     ]
    },
    "claim_card_set_reward": {
-    "args": "p_set_code TEXT, p_milestone SMALLINT",
-    "returns": "JSONB",
+    "args": "p_set_code text, p_milestone smallint",
+    "returns": "jsonb",
     "lang": "plpgsql",
-    "src": "supabase/migrations/20260728122626_32e02751-3e63-4896-adef-653b53012bbf.sql",
+    "src": "supabase/migrations/20261228290000_paridade_de_triggers_e_retextos_funcionais.sql",
     "security_definer": true,
     "search_path": true,
     "body": "DECLARE v_user UUID := auth.uid(); v_total INTEGER; v_owned INTEGER; v_value INTEGER; v_coins INTEGER; v_xp INTEGER; v_dedupe TEXT; v_existing public.card_set_claims%ROWTYPE; BEGIN IF v_user IS NULL THEN RAISE EXCEPTION 'not_authenticated' USING ERRCODE = '28000'; END IF; IF p_milestone IS NULL OR p_milestone NOT IN (25, 50, 75, 100) THEN RETURN jsonb_build_object('success', false, 'reason', 'invalid_milestone'); END IF; IF p_set_code IS NULL OR length(trim(p_set_code)) = 0 THEN RETURN jsonb_build_object('success', false, 'reason', 'unknown_set'); END IF; v_dedupe := 'card_set:' || v_user::TEXT || ':' || p_set_code || ':' || p_milestone::TEXT; PERFORM pg_advisory_xact_lock(hashtext('card_set …",
@@ -30578,10 +30590,10 @@
     "args": "",
     "returns": "jsonb",
     "lang": "plpgsql",
-    "src": "supabase/migrations/20260728162910_ce6804ee-af74-4b26-a85c-c0b3c83c0965.sql",
+    "src": "supabase/migrations/20261228280000_uma_aposta_por_dia_e_reabertura_da_pergunta.sql",
     "security_definer": true,
     "search_path": true,
-    "body": "DECLARE v_user uuid := auth.uid(); v_today date := (now() AT TIME ZONE 'America/Sao_Paulo')::date; v_q public.wager_questions%ROWTYPE; v_entry public.wager_entries%ROWTYPE; v_balance integer := 0; v_has_entry boolean := false; BEGIN IF v_user IS NULL THEN RETURN jsonb_build_object('success', false, 'reason', 'unauthenticated'); END IF; SELECT * INTO v_q FROM public.wager_questions WHERE is_active AND scheduled_date = v_today LIMIT 1; SELECT COALESCE(coins, 0) INTO v_balance FROM public.profiles WHERE id = v_user; IF v_q.id IS NULL THEN RETURN jsonb_build_object('success', true, 'question', NULL, 'balance', COALESCE(v_balance, 0)); END IF; SELECT * INTO v_entry FROM public.wager_entries WHERE …",
+    "body": "DECLARE v_user uuid := auth.uid(); v_today date := (now() AT TIME ZONE 'America/Sao_Paulo')::date; v_q public.wager_questions%ROWTYPE; v_entry public.wager_entries%ROWTYPE; v_balance integer := 0; v_has_entry boolean := false; BEGIN IF v_user IS NULL THEN RETURN jsonb_build_object('success', false, 'reason', 'unauthenticated'); END IF; SELECT * INTO v_q FROM public.wager_questions WHERE is_active AND scheduled_date = v_today LIMIT 1; SELECT COALESCE(coins, 0) INTO v_balance FROM public.profiles WHERE id = v_user; IF v_q.id IS NOT NULL THEN SELECT * INTO v_entry FROM public.wager_entries WHERE question_id = v_q.id AND user_id = v_user; END IF; IF v_entry.id IS NULL THEN SELECT e.* INTO v_entr …",
     "raises": [],
     "tables": [
      "profiles",
@@ -30596,10 +30608,10 @@
     "args": "p_question_id uuid, p_option text, p_stake integer",
     "returns": "jsonb",
     "lang": "plpgsql",
-    "src": "supabase/migrations/20260728162910_ce6804ee-af74-4b26-a85c-c0b3c83c0965.sql",
+    "src": "supabase/migrations/20261228300000_fecha_corridas_da_exclusao_de_departamento_e_da_aposta_diaria.sql",
     "security_definer": true,
     "search_path": true,
-    "body": "DECLARE v_user uuid := auth.uid(); v_today date := (now() AT TIME ZONE 'America/Sao_Paulo')::date; v_q public.wager_questions%ROWTYPE; v_stake integer; v_balance integer; v_correct boolean; v_delta integer; v_xp integer; v_entry_id uuid; BEGIN IF v_user IS NULL THEN RETURN jsonb_build_object('success', false, 'reason', 'unauthenticated'); END IF; SELECT * INTO v_q FROM public.wager_questions WHERE id = p_question_id AND is_active AND scheduled_date = v_today; IF v_q.id IS NULL THEN RETURN jsonb_build_object('success', false, 'reason', 'not_found'); END IF; IF p_option IS NULL OR NOT EXISTS ( SELECT 1 FROM jsonb_array_elements(v_q.options) o WHERE o->>'id' = p_option ) THEN RETURN jsonb_build …",
+    "body": "DECLARE v_user uuid := auth.uid(); v_today date := (now() AT TIME ZONE 'America/Sao_Paulo')::date; v_q public.wager_questions%ROWTYPE; v_stake integer; v_balance integer; v_correct boolean; v_delta integer; v_xp integer; v_entry_id uuid; BEGIN IF v_user IS NULL THEN RETURN jsonb_build_object('success', false, 'reason', 'unauthenticated'); END IF; SELECT * INTO v_q FROM public.wager_questions WHERE id = p_question_id FOR SHARE; IF v_q.id IS NULL OR NOT v_q.is_active OR v_q.scheduled_date <> v_today THEN RETURN jsonb_build_object('success', false, 'reason', 'not_found'); END IF; IF p_option IS NULL OR NOT EXISTS ( SELECT 1 FROM jsonb_array_elements(v_q.options) o WHERE o->>'id' = p_option ) TH …",
     "raises": [],
     "tables": [
      "jsonb_array_elements",
@@ -30615,7 +30627,7 @@
     "args": "p_question text, p_options jsonb, p_correct_option text, p_scheduled_date date, p_id uuid DEFAULT NULL, p_explanation text DEFAULT NULL, p_difficulty text DEFAULT 'medium', p_multiplier numeric DEFAUL …",
     "returns": "jsonb",
     "lang": "plpgsql",
-    "src": "supabase/migrations/20260728163529_7d985b3e-7991-469f-913b-f0034c9c2b38.sql",
+    "src": "supabase/migrations/20261228300000_fecha_corridas_da_exclusao_de_departamento_e_da_aposta_diaria.sql",
     "security_definer": true,
     "search_path": true,
     "body": "DECLARE v_uid uuid := auth.uid(); v_question text := btrim(coalesce(p_question, '')); v_explanation text := nullif(btrim(coalesce(p_explanation, '')), ''); v_difficulty text := lower(coalesce(p_difficulty, 'medium')); v_multiplier numeric(4,2) := round(coalesce(p_multiplier, 2.00), 2); v_max_stake integer := coalesce(p_max_stake, 100); v_ids text[]; v_count integer; v_entries integer := 0; v_id uuid; BEGIN IF v_uid IS NULL THEN RETURN jsonb_build_object('success', false, 'reason', 'unauthenticated'); END IF; IF NOT (has_role(v_uid, 'admin'::app_role) OR has_role(v_uid, 'manager'::app_role)) THEN RETURN jsonb_build_object('success', false, 'reason', 'forbidden'); END IF; IF length(v_question) …",
@@ -34219,6 +34231,2190 @@
     "unique": false,
     "where": "",
     "src": "supabase/migrations/20261228120000_cron_jobs_e_leaderboard_cache.sql"
+   },
+   {
+    "name": "idx_achievements_fts",
+    "table": "achievements",
+    "columns": "to_tsvector('portuguese'::regconfig, ((COALESCE(name, ''::text",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_achievements_name_trgm",
+    "table": "achievements",
+    "columns": "name extensions.gin_trgm_ops",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_action_plan_updates_plan_id",
+    "table": "action_plan_updates",
+    "columns": "plan_id",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_action_plans_department_id",
+    "table": "action_plans",
+    "columns": "department_id",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_action_plans_related_survey_id",
+    "table": "action_plans",
+    "columns": "related_survey_id",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_ai_course_jobs_generated_trail_id",
+    "table": "ai_course_jobs",
+    "columns": "generated_trail_id",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_announcements_author_id",
+    "table": "announcements",
+    "columns": "author_id",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_announcements_department_id",
+    "table": "announcements",
+    "columns": "department_id",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_announcements_fts",
+    "table": "announcements",
+    "columns": "to_tsvector('portuguese'::regconfig, ((COALESCE(title, ''::text",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_announcements_title_trgm",
+    "table": "announcements",
+    "columns": "title extensions.gin_trgm_ops",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_api_request_logs_api_key_id",
+    "table": "api_request_logs",
+    "columns": "api_key_id",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_attendance_settings_department_id",
+    "table": "attendance_settings",
+    "columns": "department_id",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_auction_bids_auction",
+    "table": "auction_bids",
+    "columns": "auction_id, created_at DESC",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_bingo_board_tasks",
+    "table": "bingo_board_tasks",
+    "columns": "board_id, order_index",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_bitrix24_sync_bitrix_id",
+    "table": "bitrix24_sync_mappings",
+    "columns": "bitrix_id",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_bitrix24_sync_status",
+    "table": "bitrix24_sync_mappings",
+    "columns": "sync_status",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_blocked_ips_blocked_by",
+    "table": "blocked_ips",
+    "columns": "blocked_by",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_board_moves_trail_user",
+    "table": "board_moves",
+    "columns": "trail_id, user_id, created_at DESC",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_board_player_states",
+    "table": "board_player_states",
+    "columns": "trail_id, \"position\" DESC",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_board_tiles",
+    "table": "board_tiles",
+    "columns": "trail_id, \"position\"",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_boss_battle_damage_battle",
+    "table": "boss_battle_damage",
+    "columns": "battle_id, created_at DESC",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_boss_battle_damage_user",
+    "table": "boss_battle_damage",
+    "columns": "user_id, battle_id",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_boss_battle_rewards",
+    "table": "boss_battle_rewards",
+    "columns": "battle_id",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_campaign_result_rows_campaign_status",
+    "table": "campaign_result_rows",
+    "columns": "campaign_id, status",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_campaign_team_members",
+    "table": "campaign_team_members",
+    "columns": "team_id",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_campaign_team_split_batches",
+    "table": "campaign_team_split_batches",
+    "columns": "campaign_id, created_at DESC",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_campaign_team_split_entries",
+    "table": "campaign_team_split_entries",
+    "columns": "batch_id, user_id",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_campaign_teams",
+    "table": "campaign_teams",
+    "columns": "campaign_id, rank_position",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_card_definitions_set_code",
+    "table": "card_definitions",
+    "columns": "set_code, rarity",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_celebrations_user_id",
+    "table": "celebrations",
+    "columns": "user_id",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_certifications_department_id",
+    "table": "certifications",
+    "columns": "department_id",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_certifications_trail_id",
+    "table": "certifications",
+    "columns": "trail_id",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_checkins_template_id",
+    "table": "checkins",
+    "columns": "template_id",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_climate_pillar_scores_department_id",
+    "table": "climate_pillar_scores",
+    "columns": "department_id",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_climate_question_answers_question_id",
+    "table": "climate_question_answers",
+    "columns": "question_id",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_climate_question_answers_response_id",
+    "table": "climate_question_answers",
+    "columns": "response_id",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_climate_surveys_department_id",
+    "table": "climate_surveys",
+    "columns": "department_id",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_department_missions_department_id",
+    "table": "department_missions",
+    "columns": "department_id",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_dept_war_contributions_war",
+    "table": "department_war_contributions",
+    "columns": "war_id, department_id",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_dept_war_results",
+    "table": "department_war_results",
+    "columns": "war_id, \"position\"",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_departments_fts",
+    "table": "departments",
+    "columns": "to_tsvector('portuguese'::regconfig, ((COALESCE(name, ''::text",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_departments_name_btree",
+    "table": "departments",
+    "columns": "name",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_departments_name_trgm",
+    "table": "departments",
+    "columns": "name extensions.gin_trgm_ops",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_development_plan_actions_competency_id",
+    "table": "development_plan_actions",
+    "columns": "competency_id",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_development_plans_created_by",
+    "table": "development_plans",
+    "columns": "created_by",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_development_plans_linked_feedback_id",
+    "table": "development_plans",
+    "columns": "linked_feedback_id",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_development_plans_linked_nine_box_id",
+    "table": "development_plans",
+    "columns": "linked_nine_box_id",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_engagement_action_playbooks_pillar",
+    "table": "engagement_action_playbooks",
+    "columns": "pillar, is_active",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_engagement_answers_cycle",
+    "table": "engagement_answers",
+    "columns": "cycle_id, department_id",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_engagement_cycles_status",
+    "table": "engagement_cycles",
+    "columns": "status, ends_at",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_engagement_question_assignments_cycle_user",
+    "table": "engagement_question_assignments",
+    "columns": "cycle_id, user_id",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_engagement_question_pool_pillar",
+    "table": "engagement_question_pool",
+    "columns": "pillar, is_active",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_enps_responses_user_id",
+    "table": "enps_responses",
+    "columns": "user_id",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_enps_surveys_created_by",
+    "table": "enps_surveys",
+    "columns": "created_by",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_enps_surveys_department_id",
+    "table": "enps_surveys",
+    "columns": "department_id",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_external_tasks_api_key_id",
+    "table": "external_tasks",
+    "columns": "api_key_id",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_external_tasks_status",
+    "table": "external_tasks",
+    "columns": "status",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_feedback_cycles_department_id",
+    "table": "feedback_cycles",
+    "columns": "department_id",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_feedback_evaluations_cycle_id",
+    "table": "feedback_evaluations",
+    "columns": "cycle_id",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_feedback_questions_competency_id",
+    "table": "feedback_questions",
+    "columns": "competency_id",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_feedback_questions_cycle_id",
+    "table": "feedback_questions",
+    "columns": "cycle_id",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_feedback_requests_cycle_id",
+    "table": "feedback_requests",
+    "columns": "cycle_id",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_feedback_responses_request_id",
+    "table": "feedback_responses",
+    "columns": "request_id",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_feedback_results_competency_id",
+    "table": "feedback_results",
+    "columns": "competency_id",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_feedback_results_cycle_id",
+    "table": "feedback_results",
+    "columns": "cycle_id",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_geo_allowed_countries_created_by",
+    "table": "geo_allowed_countries",
+    "columns": "created_by",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_geo_settings_updated_by",
+    "table": "geo_settings",
+    "columns": "updated_by",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_goal_updates_goal_id",
+    "table": "goal_updates",
+    "columns": "goal_id",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_goal_updates_key_result_id",
+    "table": "goal_updates",
+    "columns": "key_result_id",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_goals_department_id",
+    "table": "goals",
+    "columns": "department_id",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_ip_access_logs_user_id",
+    "table": "ip_access_logs",
+    "columns": "user_id",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_ip_whitelist_created_by",
+    "table": "ip_whitelist",
+    "columns": "created_by",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_key_results_goal_id",
+    "table": "key_results",
+    "columns": "goal_id",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_kudos_badge_id",
+    "table": "kudos",
+    "columns": "badge_id",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_league_history_from_league_id",
+    "table": "league_history",
+    "columns": "from_league_id",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_league_history_to_league_id",
+    "table": "league_history",
+    "columns": "to_league_id",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_leagues_theme_id",
+    "table": "leagues",
+    "columns": "theme_id",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_learning_trails_department_id",
+    "table": "learning_trails",
+    "columns": "department_id",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_learning_trails_fts",
+    "table": "learning_trails",
+    "columns": "to_tsvector('portuguese'::regconfig, ((COALESCE(title, ''::text",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_learning_trails_title_trgm",
+    "table": "learning_trails",
+    "columns": "title extensions.gin_trgm_ops",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_level_configs_rank_id",
+    "table": "level_configs",
+    "columns": "rank_id",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_lightning_quiz_answers_session",
+    "table": "lightning_quiz_answers",
+    "columns": "session_id",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_lightning_quiz_questions_active",
+    "table": "lightning_quiz_questions",
+    "columns": "is_active, difficulty",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_lightning_quiz_sessions_user",
+    "table": "lightning_quiz_sessions",
+    "columns": "user_id, created_at DESC",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_lucky_wheel_prize_audit_prize",
+    "table": "lucky_wheel_prize_audit",
+    "columns": "prize_id, changed_at DESC",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_lucky_wheel_spins_user",
+    "table": "lucky_wheel_spins",
+    "columns": "user_id, spin_date DESC",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_lucky_wheel_whatif_snapshots",
+    "table": "lucky_wheel_whatif_snapshots",
+    "columns": "current_window_start DESC",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_memory_sessions_user",
+    "table": "memory_sessions",
+    "columns": "user_id, session_date DESC",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_mentorship_mission_progress_mission_id",
+    "table": "mentorship_mission_progress",
+    "columns": "mission_id",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_module_progress_module_id",
+    "table": "module_progress",
+    "columns": "module_id",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_new_device_alerts_device_id",
+    "table": "new_device_alerts",
+    "columns": "device_id",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_notifications_user_timeline",
+    "table": "notifications",
+    "columns": "user_id, created_at DESC",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_nr1_factor_mappings",
+    "table": "nr1_factor_mappings",
+    "columns": "category_id",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_opinion_responses_opinion_id",
+    "table": "opinion_responses",
+    "columns": "opinion_id",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_opinion_supports",
+    "table": "opinion_supports",
+    "columns": "opinion_id",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_opinion_tags_opinion_id",
+    "table": "opinion_tags",
+    "columns": "opinion_id",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_org_members_org_id",
+    "table": "org_members",
+    "columns": "org_id",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_org_members_org_user",
+    "table": "org_members",
+    "columns": "org_id, user_id",
+    "unique": true,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_org_members_user_id",
+    "table": "org_members",
+    "columns": "user_id",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_org_theme_history_org_id",
+    "table": "org_theme_history",
+    "columns": "org_id",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_organizations_slug",
+    "table": "organizations",
+    "columns": "slug",
+    "unique": true,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_pdi_checkins_plan_id",
+    "table": "pdi_checkins",
+    "columns": "plan_id",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_pdi_mentors_plan_id",
+    "table": "pdi_mentors",
+    "columns": "plan_id",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_position_competencies_competency_id",
+    "table": "position_competencies",
+    "columns": "competency_id",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_position_competencies_position_id",
+    "table": "position_competencies",
+    "columns": "position_id",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_position_task_templates_position_id",
+    "table": "position_task_templates",
+    "columns": "position_id",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_positions_department_id",
+    "table": "positions",
+    "columns": "department_id",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_postmortem_actions_owner_user_id",
+    "table": "postmortem_actions",
+    "columns": "owner_user_id",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_postmortems_created_by",
+    "table": "postmortems",
+    "columns": "created_by",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_profiles_confirmed",
+    "table": "profiles",
+    "columns": "id",
+    "unique": false,
+    "where": "WHERE (status = ANY (ARRAY['confirmed'::text, 'invited'::text]))",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_profiles_display_name_trgm",
+    "table": "profiles",
+    "columns": "display_name extensions.gin_trgm_ops",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_profiles_display_name_unaccent",
+    "table": "profiles",
+    "columns": "to_tsvector('portuguese'::regconfig, COALESCE(display_name, ''::text",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_profiles_email_trgm",
+    "table": "profiles",
+    "columns": "email extensions.gin_trgm_ops",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_profiles_employee_id",
+    "table": "profiles",
+    "columns": "employee_id",
+    "unique": false,
+    "where": "WHERE (employee_id IS NOT NULL)",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_profiles_level",
+    "table": "profiles",
+    "columns": "level DESC, xp DESC",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_pulse_responses_survey_id",
+    "table": "pulse_responses",
+    "columns": "survey_id",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_pulse_surveys_department_id",
+    "table": "pulse_surveys",
+    "columns": "department_id",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_push_outbox_health_snapshots",
+    "table": "push_outbox_health_snapshots",
+    "columns": "created_at DESC",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_push_outbox_status",
+    "table": "push_outbox",
+    "columns": "status, created_at",
+    "unique": false,
+    "where": "WHERE (status = ANY (ARRAY['pending'::text, 'processing'::text]))",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_push_outbox_user",
+    "table": "push_outbox",
+    "columns": "user_id",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_push_sync_events_user",
+    "table": "push_sync_events",
+    "columns": "user_id, created_at DESC",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_quest_assignments_user_id",
+    "table": "quest_assignments",
+    "columns": "user_id",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_quiz_answers_selected_option_id",
+    "table": "quiz_answers",
+    "columns": "selected_option_id",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_rate_limit_logs_user_id",
+    "table": "rate_limit_logs",
+    "columns": "user_id",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_runbook_executions_performed_by",
+    "table": "runbook_executions",
+    "columns": "performed_by",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_sales_campaigns_created_by",
+    "table": "sales_campaigns",
+    "columns": "created_by",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_sales_campaigns_department_id",
+    "table": "sales_campaigns",
+    "columns": "department_id",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_sales_campaigns_org_id",
+    "table": "sales_campaigns",
+    "columns": "org_id",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_scratch_cards_user_status",
+    "table": "scratch_cards",
+    "columns": "user_id, status",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_seasonal_challenges_event_id",
+    "table": "seasonal_challenges",
+    "columns": "event_id",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_security_alerts_acknowledged_by",
+    "table": "security_alerts",
+    "columns": "acknowledged_by",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_security_alerts_resolved_by",
+    "table": "security_alerts",
+    "columns": "resolved_by",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_security_alerts_type_date",
+    "table": "security_alerts",
+    "columns": "alert_type, created_at DESC",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_security_alerts_user_id",
+    "table": "security_alerts",
+    "columns": "user_id",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_sequence_attempts_user",
+    "table": "sequence_attempts",
+    "columns": "user_id, attempt_date DESC",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_shop_purchases_reward_id",
+    "table": "shop_purchases",
+    "columns": "reward_id",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_shop_purchases_user_id",
+    "table": "shop_purchases",
+    "columns": "user_id",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_task_penalties_task_score_id",
+    "table": "task_penalties",
+    "columns": "task_score_id",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_task_scores_status_date",
+    "table": "task_scores",
+    "columns": "status, assigned_at DESC",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_task_scores_task_template_id",
+    "table": "task_scores",
+    "columns": "task_template_id",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_task_scores_user_deadline",
+    "table": "task_scores",
+    "columns": "user_id, deadline_at",
+    "unique": false,
+    "where": "WHERE (deadline_at IS NOT NULL)",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_task_scores_user_status",
+    "table": "task_scores",
+    "columns": "user_id, status",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_team_members_department_id",
+    "table": "team_members",
+    "columns": "department_id",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_tournament_matches",
+    "table": "tournament_matches",
+    "columns": "tournament_id, round",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_tournament_participants",
+    "table": "tournament_participants",
+    "columns": "tournament_id, seed",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_trail_enrollments_trail_id",
+    "table": "trail_enrollments",
+    "columns": "trail_id",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_trail_modules_trail_id",
+    "table": "trail_modules",
+    "columns": "trail_id",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_user_achievements_achievement_id",
+    "table": "user_achievements",
+    "columns": "achievement_id",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_user_avatar_config_selected_accessory",
+    "table": "user_avatar_config",
+    "columns": "selected_accessory",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_user_avatar_config_selected_background",
+    "table": "user_avatar_config",
+    "columns": "selected_background",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_user_avatar_config_selected_badge_style",
+    "table": "user_avatar_config",
+    "columns": "selected_badge_style",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_user_avatar_config_selected_effect",
+    "table": "user_avatar_config",
+    "columns": "selected_effect",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_user_avatar_config_selected_frame",
+    "table": "user_avatar_config",
+    "columns": "selected_frame",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_user_avatar_items_item_id",
+    "table": "user_avatar_items",
+    "columns": "item_id",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_user_certifications_certification_id",
+    "table": "user_certifications",
+    "columns": "certification_id",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_user_competency_assessments_competency_id",
+    "table": "user_competency_assessments",
+    "columns": "competency_id",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_user_competency_assessments_feedback_cycle_id",
+    "table": "user_competency_assessments",
+    "columns": "feedback_cycle_id",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_user_leagues_league_id",
+    "table": "user_leagues",
+    "columns": "league_id",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_user_mission_progress_mission_id",
+    "table": "user_mission_progress",
+    "columns": "mission_id",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_user_positions_position_id",
+    "table": "user_positions",
+    "columns": "position_id",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_user_seasonal_progress_challenge_id",
+    "table": "user_seasonal_progress",
+    "columns": "challenge_id",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_user_titles_title_id",
+    "table": "user_titles",
+    "columns": "title_id",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_wager_entries_user",
+    "table": "wager_entries",
+    "columns": "user_id, created_at DESC",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_wager_integrity_review_events",
+    "table": "wager_integrity_review_events",
+    "columns": "review_id, created_at DESC",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_wager_integrity_reviews_user",
+    "table": "wager_integrity_reviews",
+    "columns": "target_user_id, status",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_wager_questions_date",
+    "table": "wager_questions",
+    "columns": "scheduled_date DESC",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_webhook_subs_active",
+    "table": "webhook_subscriptions",
+    "columns": "is_active",
+    "unique": false,
+    "where": "WHERE (is_active = true)",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_webhook_subscriptions_api_key_id",
+    "table": "webhook_subscriptions",
+    "columns": "api_key_id",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_prediction_stakes_market",
+    "table": "prediction_stakes",
+    "columns": "market_id, option_id",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql"
+   },
+   {
+    "name": "idx_auction_admin_events_created",
+    "table": "auction_admin_events",
+    "columns": "created_at DESC",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228231000_reaplica_indices_do_repositorio_em_producao.sql"
+   },
+   {
+    "name": "idx_auction_bids_auction_amount",
+    "table": "auction_bids",
+    "columns": "auction_id, amount DESC, created_at",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228231000_reaplica_indices_do_repositorio_em_producao.sql"
+   },
+   {
+    "name": "idx_auction_bids_dedupe",
+    "table": "auction_bids",
+    "columns": "auction_id, user_id, dedupe_key",
+    "unique": true,
+    "where": "WHERE (dedupe_key IS NOT NULL)",
+    "src": "supabase/migrations/20261228231000_reaplica_indices_do_repositorio_em_producao.sql"
+   },
+   {
+    "name": "idx_auctions_reward",
+    "table": "auctions",
+    "columns": "reward_id",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228231000_reaplica_indices_do_repositorio_em_producao.sql"
+   },
+   {
+    "name": "idx_bingo_board_tasks_board",
+    "table": "bingo_board_tasks",
+    "columns": "board_id, order_index",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228231000_reaplica_indices_do_repositorio_em_producao.sql"
+   },
+   {
+    "name": "idx_board_moves_trail_challenge",
+    "table": "board_moves",
+    "columns": "trail_id, tile_type, created_at DESC",
+    "unique": false,
+    "where": "WHERE (tile_type = 'challenge'::text)",
+    "src": "supabase/migrations/20261228231000_reaplica_indices_do_repositorio_em_producao.sql"
+   },
+   {
+    "name": "idx_board_moves_user_trail",
+    "table": "board_moves",
+    "columns": "trail_id, user_id, created_at DESC",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228231000_reaplica_indices_do_repositorio_em_producao.sql"
+   },
+   {
+    "name": "idx_board_player_states_blocked",
+    "table": "board_player_states",
+    "columns": "blocked_at",
+    "unique": false,
+    "where": "WHERE (blocked_challenge_id IS NOT NULL)",
+    "src": "supabase/migrations/20261228231000_reaplica_indices_do_repositorio_em_producao.sql"
+   },
+   {
+    "name": "idx_board_player_states_trail_rank",
+    "table": "board_player_states",
+    "columns": "trail_id, \"position\" DESC, xp DESC, coins DESC",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228231000_reaplica_indices_do_repositorio_em_producao.sql"
+   },
+   {
+    "name": "idx_board_player_states_user",
+    "table": "board_player_states",
+    "columns": "user_id",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228231000_reaplica_indices_do_repositorio_em_producao.sql"
+   },
+   {
+    "name": "idx_board_tiles_trail",
+    "table": "board_tiles",
+    "columns": "trail_id, \"position\"",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228231000_reaplica_indices_do_repositorio_em_producao.sql"
+   },
+   {
+    "name": "idx_boss_battle_damage_battle_user",
+    "table": "boss_battle_damage",
+    "columns": "battle_id, user_id",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228231000_reaplica_indices_do_repositorio_em_producao.sql"
+   },
+   {
+    "name": "idx_boss_damage_battle_created",
+    "table": "boss_battle_damage",
+    "columns": "battle_id, created_at DESC",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228231000_reaplica_indices_do_repositorio_em_producao.sql"
+   },
+   {
+    "name": "idx_boss_damage_battle_user",
+    "table": "boss_battle_damage",
+    "columns": "battle_id, user_id",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228231000_reaplica_indices_do_repositorio_em_producao.sql"
+   },
+   {
+    "name": "idx_boss_battles_department",
+    "table": "boss_battles",
+    "columns": "department_id, status",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228231000_reaplica_indices_do_repositorio_em_producao.sql"
+   },
+   {
+    "name": "boss_win_rate_goals_department_key",
+    "table": "boss_win_rate_goals",
+    "columns": "department_id",
+    "unique": true,
+    "where": "WHERE (department_id IS NOT NULL)",
+    "src": "supabase/migrations/20261228231000_reaplica_indices_do_repositorio_em_producao.sql"
+   },
+   {
+    "name": "boss_win_rate_goals_global_key",
+    "table": "boss_win_rate_goals",
+    "columns": "((department_id IS NULL",
+    "unique": true,
+    "where": "",
+    "src": "supabase/migrations/20261228231000_reaplica_indices_do_repositorio_em_producao.sql"
+   },
+   {
+    "name": "uniq_campaign_result_rows_dedupe",
+    "table": "campaign_result_rows",
+    "columns": "campaign_id, dedupe_key",
+    "unique": true,
+    "where": "WHERE (status = ANY (ARRAY['valid'::text, 'applied'::text]))",
+    "src": "supabase/migrations/20261228231000_reaplica_indices_do_repositorio_em_producao.sql"
+   },
+   {
+    "name": "idx_campaign_team_members_team",
+    "table": "campaign_team_members",
+    "columns": "team_id",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228231000_reaplica_indices_do_repositorio_em_producao.sql"
+   },
+   {
+    "name": "idx_campaign_team_members_user",
+    "table": "campaign_team_members",
+    "columns": "campaign_id, user_id",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228231000_reaplica_indices_do_repositorio_em_producao.sql"
+   },
+   {
+    "name": "idx_team_split_batches_campaign",
+    "table": "campaign_team_split_batches",
+    "columns": "campaign_id, created_at DESC",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228231000_reaplica_indices_do_repositorio_em_producao.sql"
+   },
+   {
+    "name": "idx_team_split_entries_batch",
+    "table": "campaign_team_split_entries",
+    "columns": "batch_id",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228231000_reaplica_indices_do_repositorio_em_producao.sql"
+   },
+   {
+    "name": "idx_team_split_entries_campaign",
+    "table": "campaign_team_split_entries",
+    "columns": "campaign_id, created_at DESC",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228231000_reaplica_indices_do_repositorio_em_producao.sql"
+   },
+   {
+    "name": "idx_team_split_entries_user",
+    "table": "campaign_team_split_entries",
+    "columns": "user_id, created_at DESC",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228231000_reaplica_indices_do_repositorio_em_producao.sql"
+   },
+   {
+    "name": "idx_campaign_teams_campaign",
+    "table": "campaign_teams",
+    "columns": "campaign_id",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228231000_reaplica_indices_do_repositorio_em_producao.sql"
+   },
+   {
+    "name": "idx_campaign_teams_department",
+    "table": "campaign_teams",
+    "columns": "department_id",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228231000_reaplica_indices_do_repositorio_em_producao.sql"
+   },
+   {
+    "name": "idx_card_definitions_active",
+    "table": "card_definitions",
+    "columns": "is_active, rarity",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228231000_reaplica_indices_do_repositorio_em_producao.sql"
+   },
+   {
+    "name": "climate_benchmarks_scope_uidx",
+    "table": "climate_benchmarks",
+    "columns": "pillar, industry, company_size, region, period",
+    "unique": true,
+    "where": "",
+    "src": "supabase/migrations/20261228231000_reaplica_indices_do_repositorio_em_producao.sql"
+   },
+   {
+    "name": "idx_climate_benchmarks_segment",
+    "table": "climate_benchmarks",
+    "columns": "region, industry, company_size, pillar, period DESC",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228231000_reaplica_indices_do_repositorio_em_producao.sql"
+   },
+   {
+    "name": "idx_war_contrib_feed",
+    "table": "department_war_contributions",
+    "columns": "war_id, created_at DESC",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228231000_reaplica_indices_do_repositorio_em_producao.sql"
+   },
+   {
+    "name": "idx_war_contrib_user",
+    "table": "department_war_contributions",
+    "columns": "war_id, user_id",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228231000_reaplica_indices_do_repositorio_em_producao.sql"
+   },
+   {
+    "name": "idx_war_contrib_war_dept",
+    "table": "department_war_contributions",
+    "columns": "war_id, department_id",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228231000_reaplica_indices_do_repositorio_em_producao.sql"
+   },
+   {
+    "name": "idx_war_departments_war",
+    "table": "department_war_departments",
+    "columns": "war_id",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228231000_reaplica_indices_do_repositorio_em_producao.sql"
+   },
+   {
+    "name": "idx_war_metrics_war",
+    "table": "department_war_metrics",
+    "columns": "war_id",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228231000_reaplica_indices_do_repositorio_em_producao.sql"
+   },
+   {
+    "name": "idx_war_results_war",
+    "table": "department_war_results",
+    "columns": "war_id, \"position\"",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228231000_reaplica_indices_do_repositorio_em_producao.sql"
+   },
+   {
+    "name": "idx_department_wars_running",
+    "table": "department_wars",
+    "columns": "status, starts_at, ends_at",
+    "unique": false,
+    "where": "WHERE (status = 'running'::text)",
+    "src": "supabase/migrations/20261228231000_reaplica_indices_do_repositorio_em_producao.sql"
+   },
+   {
+    "name": "idx_department_wars_status_ends_at",
+    "table": "department_wars",
+    "columns": "status, ends_at DESC",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228231000_reaplica_indices_do_repositorio_em_producao.sql"
+   },
+   {
+    "name": "idx_playbooks_pillar",
+    "table": "engagement_action_playbooks",
+    "columns": "pillar, order_index",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228231000_reaplica_indices_do_repositorio_em_producao.sql"
+   },
+   {
+    "name": "uq_playbooks_pillar_title",
+    "table": "engagement_action_playbooks",
+    "columns": "pillar, title",
+    "unique": true,
+    "where": "",
+    "src": "supabase/migrations/20261228231000_reaplica_indices_do_repositorio_em_producao.sql"
+   },
+   {
+    "name": "idx_eanswers_answered_at",
+    "table": "engagement_answers",
+    "columns": "answered_at DESC",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228231000_reaplica_indices_do_repositorio_em_producao.sql"
+   },
+   {
+    "name": "idx_eanswers_cycle",
+    "table": "engagement_answers",
+    "columns": "cycle_id",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228231000_reaplica_indices_do_repositorio_em_producao.sql"
+   },
+   {
+    "name": "idx_eanswers_dept_date",
+    "table": "engagement_answers",
+    "columns": "department_id, answered_at DESC",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228231000_reaplica_indices_do_repositorio_em_producao.sql"
+   },
+   {
+    "name": "idx_eanswers_question",
+    "table": "engagement_answers",
+    "columns": "question_id",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228231000_reaplica_indices_do_repositorio_em_producao.sql"
+   },
+   {
+    "name": "idx_eanswers_user_question",
+    "table": "engagement_answers",
+    "columns": "user_id, question_id",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228231000_reaplica_indices_do_repositorio_em_producao.sql"
+   },
+   {
+    "name": "idx_ecycles_status",
+    "table": "engagement_cycles",
+    "columns": "status, ends_at DESC",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228231000_reaplica_indices_do_repositorio_em_producao.sql"
+   },
+   {
+    "name": "idx_engagement_factors_pillar",
+    "table": "engagement_factors",
+    "columns": "pillar",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228231000_reaplica_indices_do_repositorio_em_producao.sql"
+   },
+   {
+    "name": "idx_eqa_pending",
+    "table": "engagement_question_assignments",
+    "columns": "user_id",
+    "unique": false,
+    "where": "WHERE (answered_at IS NULL)",
+    "src": "supabase/migrations/20261228231000_reaplica_indices_do_repositorio_em_producao.sql"
+   },
+   {
+    "name": "idx_eqa_user_cycle",
+    "table": "engagement_question_assignments",
+    "columns": "user_id, cycle_id",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228231000_reaplica_indices_do_repositorio_em_producao.sql"
+   },
+   {
+    "name": "idx_eqp_active",
+    "table": "engagement_question_pool",
+    "columns": "is_active",
+    "unique": false,
+    "where": "WHERE is_active",
+    "src": "supabase/migrations/20261228231000_reaplica_indices_do_repositorio_em_producao.sql"
+   },
+   {
+    "name": "idx_eqp_factor",
+    "table": "engagement_question_pool",
+    "columns": "factor_id",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228231000_reaplica_indices_do_repositorio_em_producao.sql"
+   },
+   {
+    "name": "idx_eqp_pillar",
+    "table": "engagement_question_pool",
+    "columns": "pillar",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228231000_reaplica_indices_do_repositorio_em_producao.sql"
+   },
+   {
+    "name": "lightning_answers_session_idx_uidx",
+    "table": "lightning_quiz_answers",
+    "columns": "session_id, idx",
+    "unique": true,
+    "where": "",
+    "src": "supabase/migrations/20261228231000_reaplica_indices_do_repositorio_em_producao.sql"
+   },
+   {
+    "name": "lightning_answers_user_idx",
+    "table": "lightning_quiz_answers",
+    "columns": "user_id, created_at DESC",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228231000_reaplica_indices_do_repositorio_em_producao.sql"
+   },
+   {
+    "name": "lightning_questions_active_idx",
+    "table": "lightning_quiz_questions",
+    "columns": "is_active, difficulty",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228231000_reaplica_indices_do_repositorio_em_producao.sql"
+   },
+   {
+    "name": "lightning_sessions_user_created_idx",
+    "table": "lightning_quiz_sessions",
+    "columns": "user_id, created_at DESC",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228231000_reaplica_indices_do_repositorio_em_producao.sql"
+   },
+   {
+    "name": "lightning_sessions_user_dedupe_uidx",
+    "table": "lightning_quiz_sessions",
+    "columns": "user_id, dedupe_key",
+    "unique": true,
+    "where": "",
+    "src": "supabase/migrations/20261228231000_reaplica_indices_do_repositorio_em_producao.sql"
+   },
+   {
+    "name": "lucky_wheel_prize_audit_changed_at_idx",
+    "table": "lucky_wheel_prize_audit",
+    "columns": "changed_at DESC",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228231000_reaplica_indices_do_repositorio_em_producao.sql"
+   },
+   {
+    "name": "lucky_wheel_prize_audit_prize_idx",
+    "table": "lucky_wheel_prize_audit",
+    "columns": "prize_id, changed_at DESC",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228231000_reaplica_indices_do_repositorio_em_producao.sql"
+   },
+   {
+    "name": "lucky_wheel_prizes_active_idx",
+    "table": "lucky_wheel_prizes",
+    "columns": "is_active",
+    "unique": false,
+    "where": "WHERE is_active",
+    "src": "supabase/migrations/20261228231000_reaplica_indices_do_repositorio_em_producao.sql"
+   },
+   {
+    "name": "idx_lw_settings_audit_changed_at",
+    "table": "lucky_wheel_settings_audit",
+    "columns": "changed_at DESC",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228231000_reaplica_indices_do_repositorio_em_producao.sql"
+   },
+   {
+    "name": "lucky_wheel_spins_dedupe_key_idx",
+    "table": "lucky_wheel_spins",
+    "columns": "user_id, dedupe_key",
+    "unique": true,
+    "where": "",
+    "src": "supabase/migrations/20261228231000_reaplica_indices_do_repositorio_em_producao.sql"
+   },
+   {
+    "name": "lucky_wheel_spins_user_created_idx",
+    "table": "lucky_wheel_spins",
+    "columns": "user_id, created_at DESC",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228231000_reaplica_indices_do_repositorio_em_producao.sql"
+   },
+   {
+    "name": "idx_lucky_wheel_whatif_window",
+    "table": "lucky_wheel_whatif_snapshots",
+    "columns": "current_window_end DESC, created_at DESC",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228231000_reaplica_indices_do_repositorio_em_producao.sql"
+   },
+   {
+    "name": "idx_memory_sessions_leaderboard",
+    "table": "memory_sessions",
+    "columns": "deck_id, session_date, status",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228231000_reaplica_indices_do_repositorio_em_producao.sql"
+   },
+   {
+    "name": "idx_memory_sessions_user_date",
+    "table": "memory_sessions",
+    "columns": "user_id, session_date DESC",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228231000_reaplica_indices_do_repositorio_em_producao.sql"
+   },
+   {
+    "name": "idx_nr1_map_category",
+    "table": "nr1_factor_mappings",
+    "columns": "category_id",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228231000_reaplica_indices_do_repositorio_em_producao.sql"
+   },
+   {
+    "name": "idx_nr1_map_factor",
+    "table": "nr1_factor_mappings",
+    "columns": "factor_id",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228231000_reaplica_indices_do_repositorio_em_producao.sql"
+   },
+   {
+    "name": "idx_opinion_supports_opinion",
+    "table": "opinion_supports",
+    "columns": "opinion_id",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228231000_reaplica_indices_do_repositorio_em_producao.sql"
+   },
+   {
+    "name": "idx_opinions_status_created",
+    "table": "opinions",
+    "columns": "status, created_at DESC",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228231000_reaplica_indices_do_repositorio_em_producao.sql"
+   },
+   {
+    "name": "idx_postmortems_alert",
+    "table": "postmortems",
+    "columns": "alert_id",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228231000_reaplica_indices_do_repositorio_em_producao.sql"
+   },
+   {
+    "name": "idx_prediction_stakes_dedupe",
+    "table": "prediction_stakes",
+    "columns": "market_id, user_id, dedupe_key",
+    "unique": true,
+    "where": "WHERE (dedupe_key IS NOT NULL)",
+    "src": "supabase/migrations/20261228231000_reaplica_indices_do_repositorio_em_producao.sql"
+   },
+   {
+    "name": "idx_prediction_stakes_market_created",
+    "table": "prediction_stakes",
+    "columns": "market_id, created_at",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228231000_reaplica_indices_do_repositorio_em_producao.sql"
+   },
+   {
+    "name": "idx_prediction_stakes_user",
+    "table": "prediction_stakes",
+    "columns": "user_id, created_at DESC",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228231000_reaplica_indices_do_repositorio_em_producao.sql"
+   },
+   {
+    "name": "idx_push_outbox_health_created",
+    "table": "push_outbox_health_snapshots",
+    "columns": "created_at DESC",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228231000_reaplica_indices_do_repositorio_em_producao.sql"
+   },
+   {
+    "name": "idx_push_outbox_pending",
+    "table": "push_outbox",
+    "columns": "created_at",
+    "unique": false,
+    "where": "WHERE (status = 'pending'::text)",
+    "src": "supabase/migrations/20261228231000_reaplica_indices_do_repositorio_em_producao.sql"
+   },
+   {
+    "name": "idx_push_subscriptions_user_fingerprint",
+    "table": "push_subscriptions",
+    "columns": "user_id, device_fingerprint",
+    "unique": false,
+    "where": "WHERE (device_fingerprint IS NOT NULL)",
+    "src": "supabase/migrations/20261228231000_reaplica_indices_do_repositorio_em_producao.sql"
+   },
+   {
+    "name": "push_subscriptions_user_last_used_idx",
+    "table": "push_subscriptions",
+    "columns": "user_id, last_used_at DESC NULLS LAST",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228231000_reaplica_indices_do_repositorio_em_producao.sql"
+   },
+   {
+    "name": "push_sync_events_user_recent_idx",
+    "table": "push_sync_events",
+    "columns": "user_id, created_at DESC",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228231000_reaplica_indices_do_repositorio_em_producao.sql"
+   },
+   {
+    "name": "scratch_cards_user_dedupe_uidx",
+    "table": "scratch_cards",
+    "columns": "user_id, dedupe_key",
+    "unique": true,
+    "where": "",
+    "src": "supabase/migrations/20261228231000_reaplica_indices_do_repositorio_em_producao.sql"
+   },
+   {
+    "name": "scratch_cards_user_status_idx",
+    "table": "scratch_cards",
+    "columns": "user_id, status, created_at DESC",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228231000_reaplica_indices_do_repositorio_em_producao.sql"
+   },
+   {
+    "name": "security_alerts_lucky_wheel_dedupe_idx",
+    "table": "security_alerts",
+    "columns": "alert_type, ((metadata ->> 'ref_date'::text",
+    "unique": true,
+    "where": "",
+    "src": "supabase/migrations/20261228231000_reaplica_indices_do_repositorio_em_producao.sql"
+   },
+   {
+    "name": "idx_sequence_attempts_leaderboard",
+    "table": "sequence_attempts",
+    "columns": "procedure_id, attempt_date",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228231000_reaplica_indices_do_repositorio_em_producao.sql"
+   },
+   {
+    "name": "idx_sequence_attempts_proc_user_date",
+    "table": "sequence_attempts",
+    "columns": "procedure_id, user_id, attempt_date",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228231000_reaplica_indices_do_repositorio_em_producao.sql"
+   },
+   {
+    "name": "idx_sequence_attempts_user_day",
+    "table": "sequence_attempts",
+    "columns": "user_id, procedure_id, attempt_date",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228231000_reaplica_indices_do_repositorio_em_producao.sql"
+   },
+   {
+    "name": "idx_tournament_matches_tid",
+    "table": "tournament_matches",
+    "columns": "tournament_id, round, slot",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228231000_reaplica_indices_do_repositorio_em_producao.sql"
+   },
+   {
+    "name": "idx_tournament_participants_tid",
+    "table": "tournament_participants",
+    "columns": "tournament_id, seed",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228231000_reaplica_indices_do_repositorio_em_producao.sql"
+   },
+   {
+    "name": "idx_tournament_participants_user",
+    "table": "tournament_participants",
+    "columns": "user_id",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228231000_reaplica_indices_do_repositorio_em_producao.sql"
+   },
+   {
+    "name": "idx_tournaments_status",
+    "table": "tournaments",
+    "columns": "status, registration_opens_at DESC",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228231000_reaplica_indices_do_repositorio_em_producao.sql"
+   },
+   {
+    "name": "idx_wager_entries_user_created",
+    "table": "wager_entries",
+    "columns": "user_id, created_at",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228231000_reaplica_indices_do_repositorio_em_producao.sql"
+   },
+   {
+    "name": "idx_wager_entries_user_date",
+    "table": "wager_entries",
+    "columns": "user_id, created_at DESC",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228231000_reaplica_indices_do_repositorio_em_producao.sql"
+   },
+   {
+    "name": "idx_wager_review_events_lookup",
+    "table": "wager_integrity_review_events",
+    "columns": "window_days, target_user_id, anomaly_code, created_at DESC",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228231000_reaplica_indices_do_repositorio_em_producao.sql"
+   },
+   {
+    "name": "idx_wager_integrity_reviews_lookup",
+    "table": "wager_integrity_reviews",
+    "columns": "window_days, status, updated_at DESC",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228231000_reaplica_indices_do_repositorio_em_producao.sql"
+   },
+   {
+    "name": "uq_wager_questions_date_active",
+    "table": "wager_questions",
+    "columns": "scheduled_date",
+    "unique": true,
+    "where": "WHERE is_active",
+    "src": "supabase/migrations/20261228231000_reaplica_indices_do_repositorio_em_producao.sql"
+   },
+   {
+    "name": "webhook_idempotency_expires_at_idx",
+    "table": "webhook_idempotency",
+    "columns": "expires_at",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228231000_reaplica_indices_do_repositorio_em_producao.sql"
+   },
+   {
+    "name": "webhook_idempotency_provider_created_idx",
+    "table": "webhook_idempotency",
+    "columns": "provider, created_at DESC",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228231000_reaplica_indices_do_repositorio_em_producao.sql"
+   },
+   {
+    "name": "idx_auctions_status_ends",
+    "table": "auctions",
+    "columns": "status, ends_at DESC",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228231000_reaplica_indices_do_repositorio_em_producao.sql"
+   },
+   {
+    "name": "idx_bingo_cards_user",
+    "table": "bingo_cards",
+    "columns": "user_id, created_at DESC",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228231000_reaplica_indices_do_repositorio_em_producao.sql"
+   },
+   {
+    "name": "idx_boss_battles_status",
+    "table": "boss_battles",
+    "columns": "status, ends_at DESC",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228231000_reaplica_indices_do_repositorio_em_producao.sql"
+   },
+   {
+    "name": "idx_card_packs_user_status",
+    "table": "card_packs",
+    "columns": "user_id, status, created_at DESC",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228231000_reaplica_indices_do_repositorio_em_producao.sql"
+   },
+   {
+    "name": "idx_card_trades_proposer",
+    "table": "card_trades",
+    "columns": "proposer_id, status, created_at DESC",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228231000_reaplica_indices_do_repositorio_em_producao.sql"
+   },
+   {
+    "name": "idx_card_trades_responder",
+    "table": "card_trades",
+    "columns": "responder_id, status, created_at DESC",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228231000_reaplica_indices_do_repositorio_em_producao.sql"
+   },
+   {
+    "name": "idx_department_wars_status",
+    "table": "department_wars",
+    "columns": "status, ends_at DESC",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228231000_reaplica_indices_do_repositorio_em_producao.sql"
+   },
+   {
+    "name": "idx_prediction_markets_status",
+    "table": "prediction_markets",
+    "columns": "status, locks_at DESC",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228231000_reaplica_indices_do_repositorio_em_producao.sql"
+   },
+   {
+    "name": "idx_user_cards_user",
+    "table": "user_cards",
+    "columns": "user_id, card_id",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261228231000_reaplica_indices_do_repositorio_em_producao.sql"
    }
   ],
   "cron_jobs": [
@@ -34744,6 +36940,15 @@
    "supabase/migrations/20261228200000_alinha_triggers_department_war_e_auditoria.sql",
    "supabase/migrations/20261228210000_reaplica_mensagens_funcoes_divergentes.sql",
    "supabase/migrations/20261228220000_alinha_nulabilidade_external_api_keys.sql",
+   "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql",
+   "supabase/migrations/20261228231000_reaplica_indices_do_repositorio_em_producao.sql",
+   "supabase/migrations/20261228240000_traz_constraints_de_producao_para_o_repo.sql",
+   "supabase/migrations/20261228250000_reaplica_em_producao_constraints_do_repositorio.sql",
+   "supabase/migrations/20261228260000_unifica_definicoes_de_constraints.sql",
+   "supabase/migrations/20261228270000_remove_travas_redundantes_que_quebram_fluxos.sql",
+   "supabase/migrations/20261228280000_uma_aposta_por_dia_e_reabertura_da_pergunta.sql",
+   "supabase/migrations/20261228290000_paridade_de_triggers_e_retextos_funcionais.sql",
+   "supabase/migrations/20261228300000_fecha_corridas_da_exclusao_de_departamento_e_da_aposta_diaria.sql",
    "supabase/tests/climate/assertions.sql",
    "supabase/tests/climate/stubs.sql",
    "src/integrations/supabase/types.ts"
@@ -44363,6 +46568,86 @@
     "src": "supabase/migrations/20261228190000_revoga_execute_publico_anon_funcoes.sql"
    },
    {
+    "kind": "revoke",
+    "privs": "all",
+    "object": "save_wager_question",
+    "objkind": "function",
+    "roles": "PUBLIC, anon",
+    "src": "supabase/migrations/20261228280000_uma_aposta_por_dia_e_reabertura_da_pergunta.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "save_wager_question",
+    "objkind": "function",
+    "roles": "authenticated",
+    "src": "supabase/migrations/20261228280000_uma_aposta_por_dia_e_reabertura_da_pergunta.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "all",
+    "object": "get_daily_wager",
+    "objkind": "function",
+    "roles": "PUBLIC, anon",
+    "src": "supabase/migrations/20261228280000_uma_aposta_por_dia_e_reabertura_da_pergunta.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "get_daily_wager",
+    "objkind": "function",
+    "roles": "authenticated, service_role",
+    "src": "supabase/migrations/20261228280000_uma_aposta_por_dia_e_reabertura_da_pergunta.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "all",
+    "object": "submit_daily_wager",
+    "objkind": "function",
+    "roles": "PUBLIC, anon",
+    "src": "supabase/migrations/20261228280000_uma_aposta_por_dia_e_reabertura_da_pergunta.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "submit_daily_wager",
+    "objkind": "function",
+    "roles": "authenticated, service_role",
+    "src": "supabase/migrations/20261228280000_uma_aposta_por_dia_e_reabertura_da_pergunta.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "all",
+    "object": "save_wager_question",
+    "objkind": "function",
+    "roles": "PUBLIC, anon",
+    "src": "supabase/migrations/20261228300000_fecha_corridas_da_exclusao_de_departamento_e_da_aposta_diaria.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "save_wager_question",
+    "objkind": "function",
+    "roles": "authenticated",
+    "src": "supabase/migrations/20261228300000_fecha_corridas_da_exclusao_de_departamento_e_da_aposta_diaria.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "all",
+    "object": "submit_daily_wager",
+    "objkind": "function",
+    "roles": "PUBLIC, anon",
+    "src": "supabase/migrations/20261228300000_fecha_corridas_da_exclusao_de_departamento_e_da_aposta_diaria.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "submit_daily_wager",
+    "objkind": "function",
+    "roles": "authenticated, service_role",
+    "src": "supabase/migrations/20261228300000_fecha_corridas_da_exclusao_de_departamento_e_da_aposta_diaria.sql"
+   },
+   {
     "kind": "grant",
     "privs": "select, insert, update, delete",
     "object": "public",
@@ -44613,51 +46898,6 @@
     "src": "supabase/migrations/20260727171415_85c57bb0-f886-41ab-bd07-e3a1688256ec.sql"
    },
    {
-    "function": "review_purchase",
-    "msg": "Autenticação obrigatória",
-    "src": "supabase/migrations/20260727183427_72f9c05a-39cb-439b-9460-a965561e3d62.sql"
-   },
-   {
-    "function": "review_purchase",
-    "msg": "Permissão negada",
-    "src": "supabase/migrations/20260727183427_72f9c05a-39cb-439b-9460-a965561e3d62.sql"
-   },
-   {
-    "function": "review_purchase",
-    "msg": "Ação inválida: %",
-    "src": "supabase/migrations/20260727183427_72f9c05a-39cb-439b-9460-a965561e3d62.sql"
-   },
-   {
-    "function": "review_purchase",
-    "msg": "Pedido não encontrado",
-    "src": "supabase/migrations/20260727183427_72f9c05a-39cb-439b-9460-a965561e3d62.sql"
-   },
-   {
-    "function": "review_purchase",
-    "msg": "Pedido já finalizado (%)",
-    "src": "supabase/migrations/20260727183427_72f9c05a-39cb-439b-9460-a965561e3d62.sql"
-   },
-   {
-    "function": "review_purchase",
-    "msg": "Somente pedidos pendentes podem ser aprovados",
-    "src": "supabase/migrations/20260727183427_72f9c05a-39cb-439b-9460-a965561e3d62.sql"
-   },
-   {
-    "function": "review_purchase",
-    "msg": "Pedido de risco elevado exige um segundo aprovador distinto",
-    "src": "supabase/migrations/20260727183427_72f9c05a-39cb-439b-9460-a965561e3d62.sql"
-   },
-   {
-    "function": "review_purchase",
-    "msg": "Somente pedidos aprovados podem ser entregues",
-    "src": "supabase/migrations/20260727183427_72f9c05a-39cb-439b-9460-a965561e3d62.sql"
-   },
-   {
-    "function": "award_campaign_team_split",
-    "msg": "campaign_not_found",
-    "src": "supabase/migrations/20260727184545_b9620ff8-06a2-4ece-9b16-9736d339b3e0.sql"
-   },
-   {
     "function": "spin_lucky_wheel",
     "msg": "Não autenticado",
     "src": "supabase/migrations/20260727200825_a3b9b0a2-130f-4aee-a611-8b630bd0437a.sql"
@@ -44839,11 +47079,6 @@
    },
    {
     "function": "get_card_set_rewards",
-    "msg": "not_authenticated",
-    "src": "supabase/migrations/20260728122626_32e02751-3e63-4896-adef-653b53012bbf.sql"
-   },
-   {
-    "function": "claim_card_set_reward",
     "msg": "not_authenticated",
     "src": "supabase/migrations/20260728122626_32e02751-3e63-4896-adef-653b53012bbf.sql"
    },
@@ -45366,6 +47601,56 @@
     "function": "unblock_board_players",
     "msg": "Apenas administradores podem executar o desbloqueio",
     "src": "supabase/migrations/20261228210000_reaplica_mensagens_funcoes_divergentes.sql"
+   },
+   {
+    "function": "award_campaign_team_split",
+    "msg": "campaign_not_found",
+    "src": "supabase/migrations/20261228290000_paridade_de_triggers_e_retextos_funcionais.sql"
+   },
+   {
+    "function": "claim_card_set_reward",
+    "msg": "not_authenticated",
+    "src": "supabase/migrations/20261228290000_paridade_de_triggers_e_retextos_funcionais.sql"
+   },
+   {
+    "function": "review_purchase",
+    "msg": "Autenticação obrigatória",
+    "src": "supabase/migrations/20261228290000_paridade_de_triggers_e_retextos_funcionais.sql"
+   },
+   {
+    "function": "review_purchase",
+    "msg": "Permissão negada",
+    "src": "supabase/migrations/20261228290000_paridade_de_triggers_e_retextos_funcionais.sql"
+   },
+   {
+    "function": "review_purchase",
+    "msg": "Ação inválida: %",
+    "src": "supabase/migrations/20261228290000_paridade_de_triggers_e_retextos_funcionais.sql"
+   },
+   {
+    "function": "review_purchase",
+    "msg": "Pedido não encontrado",
+    "src": "supabase/migrations/20261228290000_paridade_de_triggers_e_retextos_funcionais.sql"
+   },
+   {
+    "function": "review_purchase",
+    "msg": "Pedido já finalizado (%)",
+    "src": "supabase/migrations/20261228290000_paridade_de_triggers_e_retextos_funcionais.sql"
+   },
+   {
+    "function": "review_purchase",
+    "msg": "Somente pedidos pendentes podem ser aprovados",
+    "src": "supabase/migrations/20261228290000_paridade_de_triggers_e_retextos_funcionais.sql"
+   },
+   {
+    "function": "review_purchase",
+    "msg": "Pedido de risco elevado exige um segundo aprovador distinto",
+    "src": "supabase/migrations/20261228290000_paridade_de_triggers_e_retextos_funcionais.sql"
+   },
+   {
+    "function": "review_purchase",
+    "msg": "Somente pedidos aprovados podem ser entregues",
+    "src": "supabase/migrations/20261228290000_paridade_de_triggers_e_retextos_funcionais.sql"
    }
   ],
   "seed": [],
@@ -52470,7 +54755,7 @@
   {
    "module": "src/services",
    "files": 99,
-   "lines": 22467,
+   "lines": 22469,
    "tables": [
     "achievements",
     "action_plan_items",
@@ -53228,8 +55513,8 @@
   },
   {
    "module": "supabase/migrations",
-   "files": 306,
-   "lines": 37215,
+   "files": 315,
+   "lines": 41989,
    "tables": [],
    "exports": [],
    "docs": [],
@@ -61952,6 +64237,30 @@
    },
    {
     "file": "supabase/migrations/20261228170000_reaplica_funcoes_desatualizadas_em_producao.sql",
+    "value": "manager"
+   },
+   {
+    "file": "supabase/migrations/20261228280000_uma_aposta_por_dia_e_reabertura_da_pergunta.sql",
+    "value": "admin"
+   },
+   {
+    "file": "supabase/migrations/20261228280000_uma_aposta_por_dia_e_reabertura_da_pergunta.sql",
+    "value": "manager"
+   },
+   {
+    "file": "supabase/migrations/20261228290000_paridade_de_triggers_e_retextos_funcionais.sql",
+    "value": "admin"
+   },
+   {
+    "file": "supabase/migrations/20261228290000_paridade_de_triggers_e_retextos_funcionais.sql",
+    "value": "manager"
+   },
+   {
+    "file": "supabase/migrations/20261228300000_fecha_corridas_da_exclusao_de_departamento_e_da_aposta_diaria.sql",
+    "value": "admin"
+   },
+   {
+    "file": "supabase/migrations/20261228300000_fecha_corridas_da_exclusao_de_departamento_e_da_aposta_diaria.sql",
     "value": "manager"
    }
   ],
@@ -73039,6 +75348,11 @@
     "table": "boss_win_rate_goals",
     "column": "updated_at",
     "rule": "default now()"
+   },
+   {
+    "table": "boss_win_rate_goals",
+    "column": "(tabela)",
+    "rule": "constraint boss_win_rate_goals_department_id_fkey FOREIGN KEY (department_id) REFERENCES public.departments(id) ON DELETE CASCADE"
    },
    {
     "table": "memory_decks",
@@ -98727,6 +101041,16 @@
     "src": "supabase/migrations/20261228140000_congela_rls_e_grants_producao.sql"
    },
    {
+    "name": "wager_questions_user_select_own_entries",
+    "table": "wager_questions",
+    "cmd": "SELECT",
+    "roles": "authenticated",
+    "mode": "permissive",
+    "using": "EXISTS ( SELECT 1 FROM public.wager_entries e WHERE e.question_id = wager_questions.id AND e.user_id = auth.uid() )",
+    "check": "",
+    "src": "supabase/migrations/20261228280000_uma_aposta_por_dia_e_reabertura_da_pergunta.sql"
+   },
+   {
     "name": "Managers can create climate surveys",
     "table": "climate_surveys",
     "cmd": "INSERT",
@@ -99643,24 +101967,6 @@
     "src": "supabase/migrations/20260727230544_2dc28ece-3091-4d64-900d-c9af22c8ba3f.sql"
    },
    {
-    "name": "trg_war_hook_trail_enrollments",
-    "when": "AFTER INSERT OR UPDATE OF COMPLETED_AT",
-    "table": "trail_enrollments",
-    "function": "war_hook_trail_enrollments",
-    "condition": "",
-    "each": "row",
-    "src": "supabase/migrations/20260727231914_e85bd74f-7295-4e96-8574-5961a889ed41.sql"
-   },
-   {
-    "name": "trg_war_hook_module_progress",
-    "when": "AFTER INSERT OR UPDATE OF COMPLETED_AT",
-    "table": "module_progress",
-    "function": "war_hook_module_progress",
-    "condition": "",
-    "each": "row",
-    "src": "supabase/migrations/20260727231914_e85bd74f-7295-4e96-8574-5961a889ed41.sql"
-   },
-   {
     "name": "trg_war_hook_quiz_scores",
     "when": "AFTER INSERT",
     "table": "quiz_scores",
@@ -99724,15 +102030,6 @@
     "src": "supabase/migrations/20260728113255_b0c9ae8e-e19d-44ea-ad4d-a0366d453980.sql"
    },
    {
-    "name": "trg_log_prediction_settlement",
-    "when": "AFTER UPDATE OF STATUS",
-    "table": "prediction_markets",
-    "function": "log_prediction_settlement",
-    "condition": "",
-    "each": "row",
-    "src": "supabase/migrations/20260728115201_58fcd8a8-c7ad-4a49-863c-74e07cdbc8e5.sql"
-   },
-   {
     "name": "trg_card_definitions_updated",
     "when": "BEFORE UPDATE",
     "table": "card_definitions",
@@ -99778,24 +102075,6 @@
     "src": "supabase/migrations/20260728122626_32e02751-3e63-4896-adef-653b53012bbf.sql"
    },
    {
-    "name": "trg_card_pack_trail_enrollments",
-    "when": "AFTER INSERT OR UPDATE OF COMPLETED_AT",
-    "table": "trail_enrollments",
-    "function": "card_pack_hook_trail_enrollments",
-    "condition": "",
-    "each": "row",
-    "src": "supabase/migrations/20260728123140_f03388ee-e8bd-41ab-8096-ce007be8f3b2.sql"
-   },
-   {
-    "name": "trg_card_pack_attendance_streaks",
-    "when": "AFTER INSERT OR UPDATE OF CURRENT_STREAK",
-    "table": "attendance_streaks",
-    "function": "card_pack_hook_attendance_streaks",
-    "condition": "",
-    "each": "row",
-    "src": "supabase/migrations/20260728123140_f03388ee-e8bd-41ab-8096-ce007be8f3b2.sql"
-   },
-   {
     "name": "trg_card_pack_notify",
     "when": "AFTER INSERT",
     "table": "card_packs",
@@ -99839,15 +102118,6 @@
     "condition": "",
     "each": "row",
     "src": "supabase/migrations/20260728131056_e5e1de7c-be59-4331-a29c-61de27488ac2.sql"
-   },
-   {
-    "name": "trg_boss_phase_alert",
-    "when": "AFTER UPDATE OF CURRENT_HP",
-    "table": "boss_battles",
-    "function": "boss_phase_alert_hook",
-    "condition": "",
-    "each": "row",
-    "src": "supabase/migrations/20260728131404_48132602-9a07-41dc-895e-fb1188c93bd0.sql"
    },
    {
     "name": "update_boss_win_rate_goals_updated_at",
@@ -99931,15 +102201,6 @@
     "src": "supabase/migrations/20260728170048_6914a662-62a1-4083-8f9c-3acf7ec34b57.sql"
    },
    {
-    "name": "trg_log_wager_integrity_review_event",
-    "when": "AFTER INSERT OR UPDATE",
-    "table": "wager_integrity_reviews",
-    "function": "log_wager_integrity_review_event",
-    "condition": "",
-    "each": "row",
-    "src": "supabase/migrations/20260728171612_1d7a91fb-2bc6-4dbd-b18c-99a6b9ee7326.sql"
-   },
-   {
     "name": "update_board_trails_updated_at",
     "when": "BEFORE UPDATE",
     "table": "board_trails",
@@ -99965,15 +102226,6 @@
     "condition": "",
     "each": "row",
     "src": "supabase/migrations/20260728172534_0b59fa61-90b1-4878-be78-a0c609c9de50.sql"
-   },
-   {
-    "name": "trg_sync_board_blocked_at",
-    "when": "BEFORE INSERT OR UPDATE OF BLOCKED_CHALLENGE_ID",
-    "table": "board_player_states",
-    "function": "sync_board_blocked_at",
-    "condition": "",
-    "each": "row",
-    "src": "supabase/migrations/20260728175346_9062e6fd-34a2-4490-82cd-d4877f2beafd.sql"
    },
    {
     "name": "trg_goal_templates_updated_at",
@@ -100037,27 +102289,99 @@
     "condition": "",
     "each": "row",
     "src": "supabase/migrations/20261228200000_alinha_triggers_department_war_e_auditoria.sql"
+   },
+   {
+    "name": "trg_boss_phase_alert",
+    "when": "AFTER UPDATE OF CURRENT_HP",
+    "table": "boss_battles",
+    "function": "boss_phase_alert_hook",
+    "condition": "",
+    "each": "row",
+    "src": "supabase/migrations/20261228290000_paridade_de_triggers_e_retextos_funcionais.sql"
+   },
+   {
+    "name": "trg_war_hook_module_progress",
+    "when": "AFTER INSERT OR UPDATE OF COMPLETED_AT",
+    "table": "module_progress",
+    "function": "war_hook_module_progress",
+    "condition": "",
+    "each": "row",
+    "src": "supabase/migrations/20261228290000_paridade_de_triggers_e_retextos_funcionais.sql"
+   },
+   {
+    "name": "trg_sync_board_blocked_at",
+    "when": "BEFORE INSERT OR UPDATE OF BLOCKED_CHALLENGE_ID",
+    "table": "board_player_states",
+    "function": "sync_board_blocked_at",
+    "condition": "",
+    "each": "row",
+    "src": "supabase/migrations/20261228290000_paridade_de_triggers_e_retextos_funcionais.sql"
+   },
+   {
+    "name": "trg_log_prediction_settlement",
+    "when": "AFTER UPDATE OF STATUS",
+    "table": "prediction_markets",
+    "function": "log_prediction_settlement",
+    "condition": "",
+    "each": "row",
+    "src": "supabase/migrations/20261228290000_paridade_de_triggers_e_retextos_funcionais.sql"
+   },
+   {
+    "name": "trg_war_hook_trail_enrollments",
+    "when": "AFTER INSERT OR UPDATE OF COMPLETED_AT",
+    "table": "trail_enrollments",
+    "function": "war_hook_trail_enrollments",
+    "condition": "",
+    "each": "row",
+    "src": "supabase/migrations/20261228290000_paridade_de_triggers_e_retextos_funcionais.sql"
+   },
+   {
+    "name": "trg_card_pack_trail_enrollments",
+    "when": "AFTER INSERT OR UPDATE OF COMPLETED_AT",
+    "table": "trail_enrollments",
+    "function": "card_pack_hook_trail_enrollments",
+    "condition": "",
+    "each": "row",
+    "src": "supabase/migrations/20261228290000_paridade_de_triggers_e_retextos_funcionais.sql"
+   },
+   {
+    "name": "trg_card_pack_attendance_streaks",
+    "when": "AFTER INSERT OR UPDATE OF CURRENT_STREAK",
+    "table": "attendance_streaks",
+    "function": "card_pack_hook_attendance_streaks",
+    "condition": "",
+    "each": "row",
+    "src": "supabase/migrations/20261228290000_paridade_de_triggers_e_retextos_funcionais.sql"
+   },
+   {
+    "name": "trg_log_wager_integrity_review_event",
+    "when": "AFTER INSERT OR UPDATE",
+    "table": "wager_integrity_reviews",
+    "function": "log_wager_integrity_review_event",
+    "condition": "",
+    "each": "row",
+    "src": "supabase/migrations/20261228290000_paridade_de_triggers_e_retextos_funcionais.sql"
    }
   ],
   "db_functions": {
    "update_saved_filters_updated_at": {
     "args": "",
-    "returns": "TRIGGER",
+    "returns": "trigger",
     "lang": "plpgsql",
-    "src": "supabase/migrations/20241231000000_saved_filters.sql",
+    "src": "supabase/migrations/20261228290000_paridade_de_triggers_e_retextos_funcionais.sql",
     "security_definer": false,
-    "search_path": false,
+    "search_path": true,
     "body": "BEGIN NEW.updated_at = NOW(); RETURN NEW; END;",
     "raises": [],
     "tables": []
    },
    "ensure_single_default_filter": {
     "args": "",
-    "returns": "TRIGGER",
+    "returns": "trigger",
     "lang": "plpgsql",
-    "src": "supabase/migrations/20241231000000_saved_filters.sql",
+    "src": "supabase/migrations/20261228290000_paridade_de_triggers_e_retextos_funcionais.sql",
     "security_definer": false,
-    "search_path": false,
+    "search_path": true,
     "body": "BEGIN IF NEW.is_default = true THEN UPDATE public.saved_filters SET is_default = false WHERE user_id = NEW.user_id AND entity_type = NEW.entity_type AND id != NEW.id AND is_default = true; END IF; RETURN NEW; END;",
     "raises": [],
     "tables": [
@@ -101874,7 +104198,7 @@
     "args": "_campaign_id uuid",
     "returns": "jsonb",
     "lang": "plpgsql",
-    "src": "supabase/migrations/20260727184545_b9620ff8-06a2-4ece-9b16-9736d339b3e0.sql",
+    "src": "supabase/migrations/20261228290000_paridade_de_triggers_e_retextos_funcionais.sql",
     "security_definer": true,
     "search_path": true,
     "body": "DECLARE _rule JSONB; _mode TEXT; _pool_xp NUMERIC; _pool_coins NUMERIC; _team RECORD; _member RECORD; _teams_awarded INT := 0; _members_awarded INT := 0; _members_skipped INT := 0; _total_xp INT := 0; _total_coins INT := 0; _share NUMERIC; _xp INT; _coins INT; _batch_id UUID; _actor UUID := auth.uid(); _eligible_teams INT := 0; _reason TEXT; _outcome TEXT; _failure TEXT; _profile_exists BOOLEAN; BEGIN PERFORM public._require_manager_or_admin(); PERFORM public.recalc_campaign_teams(_campaign_id); SELECT COALESCE(split_rule, '{}'::jsonb) INTO _rule FROM public.sales_campaigns WHERE id = _campaign_id; IF _rule IS NULL THEN RAISE EXCEPTION 'campaign_not_found' USING ERRCODE = 'P0002'; END IF; _p …",
@@ -101895,10 +104219,10 @@
     ]
    },
    "review_purchase": {
-    "args": "p_purchase_id uuid, p_action text, p_reason text DEFAULT NULL",
+    "args": "p_purchase_id uuid, p_action text, p_reason text DEFAULT NULL::text",
     "returns": "jsonb",
     "lang": "plpgsql",
-    "src": "supabase/migrations/20260727183427_72f9c05a-39cb-439b-9460-a965561e3d62.sql",
+    "src": "supabase/migrations/20261228290000_paridade_de_triggers_e_retextos_funcionais.sql",
     "security_definer": true,
     "search_path": true,
     "body": "DECLARE v_actor uuid := auth.uid(); v_purchase public.shop_purchases%ROWTYPE; v_new_status public.purchase_status; v_logged_action text := p_action; v_stock integer; BEGIN IF v_actor IS NULL THEN RAISE EXCEPTION 'Autenticação obrigatória'; END IF; IF NOT (public.has_role(v_actor, 'admin'::app_role) OR public.has_role(v_actor, 'manager'::app_role)) THEN RAISE EXCEPTION 'Permissão negada'; END IF; IF p_action NOT IN ('approve','reject','deliver','cancel') THEN RAISE EXCEPTION 'Ação inválida: %', p_action; END IF; SELECT * INTO v_purchase FROM public.shop_purchases WHERE id = p_purchase_id FOR UPDATE; IF NOT FOUND THEN RAISE EXCEPTION 'Pedido não encontrado'; END IF; IF v_purchase.status IN ('d …",
@@ -101936,10 +104260,10 @@
     ]
    },
    "revert_campaign_team_split": {
-    "args": "_batch_id UUID, _reason TEXT DEFAULT NULL",
-    "returns": "JSONB",
+    "args": "_batch_id uuid, _reason text DEFAULT NULL::text",
+    "returns": "jsonb",
     "lang": "plpgsql",
-    "src": "supabase/migrations/20260727185702_1a321b62-8515-4c4c-a1e9-20713330fda1.sql",
+    "src": "supabase/migrations/20261228290000_paridade_de_triggers_e_retextos_funcionais.sql",
     "security_definer": true,
     "search_path": true,
     "body": "DECLARE _batch RECORD; _entry RECORD; _members INT := 0; _teams INT := 0; _xp_total INT := 0; _coins_total INT := 0; _actor UUID := auth.uid(); _xp INT; _coins INT; BEGIN PERFORM public._require_manager_or_admin(); SELECT * INTO _batch FROM public.campaign_team_split_batches WHERE id = _batch_id FOR UPDATE; IF NOT FOUND THEN RETURN jsonb_build_object('reverted', false, 'reason', 'batch_not_found'); END IF; IF _batch.reverted_at IS NOT NULL OR _batch.status = 'reverted' THEN RETURN jsonb_build_object('reverted', false, 'reason', 'already_reverted'); END IF; IF NOT EXISTS ( SELECT 1 FROM public.campaign_team_split_entries WHERE batch_id = _batch_id AND outcome = 'paid' AND user_id IS NOT NULL …",
@@ -103128,10 +105452,10 @@
     ]
    },
    "claim_card_set_reward": {
-    "args": "p_set_code TEXT, p_milestone SMALLINT",
-    "returns": "JSONB",
+    "args": "p_set_code text, p_milestone smallint",
+    "returns": "jsonb",
     "lang": "plpgsql",
-    "src": "supabase/migrations/20260728122626_32e02751-3e63-4896-adef-653b53012bbf.sql",
+    "src": "supabase/migrations/20261228290000_paridade_de_triggers_e_retextos_funcionais.sql",
     "security_definer": true,
     "search_path": true,
     "body": "DECLARE v_user UUID := auth.uid(); v_total INTEGER; v_owned INTEGER; v_value INTEGER; v_coins INTEGER; v_xp INTEGER; v_dedupe TEXT; v_existing public.card_set_claims%ROWTYPE; BEGIN IF v_user IS NULL THEN RAISE EXCEPTION 'not_authenticated' USING ERRCODE = '28000'; END IF; IF p_milestone IS NULL OR p_milestone NOT IN (25, 50, 75, 100) THEN RETURN jsonb_build_object('success', false, 'reason', 'invalid_milestone'); END IF; IF p_set_code IS NULL OR length(trim(p_set_code)) = 0 THEN RETURN jsonb_build_object('success', false, 'reason', 'unknown_set'); END IF; v_dedupe := 'card_set:' || v_user::TEXT || ':' || p_set_code || ':' || p_milestone::TEXT; PERFORM pg_advisory_xact_lock(hashtext('card_set …",
@@ -103471,10 +105795,10 @@
     "args": "",
     "returns": "jsonb",
     "lang": "plpgsql",
-    "src": "supabase/migrations/20260728162910_ce6804ee-af74-4b26-a85c-c0b3c83c0965.sql",
+    "src": "supabase/migrations/20261228280000_uma_aposta_por_dia_e_reabertura_da_pergunta.sql",
     "security_definer": true,
     "search_path": true,
-    "body": "DECLARE v_user uuid := auth.uid(); v_today date := (now() AT TIME ZONE 'America/Sao_Paulo')::date; v_q public.wager_questions%ROWTYPE; v_entry public.wager_entries%ROWTYPE; v_balance integer := 0; v_has_entry boolean := false; BEGIN IF v_user IS NULL THEN RETURN jsonb_build_object('success', false, 'reason', 'unauthenticated'); END IF; SELECT * INTO v_q FROM public.wager_questions WHERE is_active AND scheduled_date = v_today LIMIT 1; SELECT COALESCE(coins, 0) INTO v_balance FROM public.profiles WHERE id = v_user; IF v_q.id IS NULL THEN RETURN jsonb_build_object('success', true, 'question', NULL, 'balance', COALESCE(v_balance, 0)); END IF; SELECT * INTO v_entry FROM public.wager_entries WHERE …",
+    "body": "DECLARE v_user uuid := auth.uid(); v_today date := (now() AT TIME ZONE 'America/Sao_Paulo')::date; v_q public.wager_questions%ROWTYPE; v_entry public.wager_entries%ROWTYPE; v_balance integer := 0; v_has_entry boolean := false; BEGIN IF v_user IS NULL THEN RETURN jsonb_build_object('success', false, 'reason', 'unauthenticated'); END IF; SELECT * INTO v_q FROM public.wager_questions WHERE is_active AND scheduled_date = v_today LIMIT 1; SELECT COALESCE(coins, 0) INTO v_balance FROM public.profiles WHERE id = v_user; IF v_q.id IS NOT NULL THEN SELECT * INTO v_entry FROM public.wager_entries WHERE question_id = v_q.id AND user_id = v_user; END IF; IF v_entry.id IS NULL THEN SELECT e.* INTO v_entr …",
     "raises": [],
     "tables": [
      "profiles",
@@ -103489,10 +105813,10 @@
     "args": "p_question_id uuid, p_option text, p_stake integer",
     "returns": "jsonb",
     "lang": "plpgsql",
-    "src": "supabase/migrations/20260728162910_ce6804ee-af74-4b26-a85c-c0b3c83c0965.sql",
+    "src": "supabase/migrations/20261228300000_fecha_corridas_da_exclusao_de_departamento_e_da_aposta_diaria.sql",
     "security_definer": true,
     "search_path": true,
-    "body": "DECLARE v_user uuid := auth.uid(); v_today date := (now() AT TIME ZONE 'America/Sao_Paulo')::date; v_q public.wager_questions%ROWTYPE; v_stake integer; v_balance integer; v_correct boolean; v_delta integer; v_xp integer; v_entry_id uuid; BEGIN IF v_user IS NULL THEN RETURN jsonb_build_object('success', false, 'reason', 'unauthenticated'); END IF; SELECT * INTO v_q FROM public.wager_questions WHERE id = p_question_id AND is_active AND scheduled_date = v_today; IF v_q.id IS NULL THEN RETURN jsonb_build_object('success', false, 'reason', 'not_found'); END IF; IF p_option IS NULL OR NOT EXISTS ( SELECT 1 FROM jsonb_array_elements(v_q.options) o WHERE o->>'id' = p_option ) THEN RETURN jsonb_build …",
+    "body": "DECLARE v_user uuid := auth.uid(); v_today date := (now() AT TIME ZONE 'America/Sao_Paulo')::date; v_q public.wager_questions%ROWTYPE; v_stake integer; v_balance integer; v_correct boolean; v_delta integer; v_xp integer; v_entry_id uuid; BEGIN IF v_user IS NULL THEN RETURN jsonb_build_object('success', false, 'reason', 'unauthenticated'); END IF; SELECT * INTO v_q FROM public.wager_questions WHERE id = p_question_id FOR SHARE; IF v_q.id IS NULL OR NOT v_q.is_active OR v_q.scheduled_date <> v_today THEN RETURN jsonb_build_object('success', false, 'reason', 'not_found'); END IF; IF p_option IS NULL OR NOT EXISTS ( SELECT 1 FROM jsonb_array_elements(v_q.options) o WHERE o->>'id' = p_option ) TH …",
     "raises": [],
     "tables": [
      "jsonb_array_elements",
@@ -103508,7 +105832,7 @@
     "args": "p_question text, p_options jsonb, p_correct_option text, p_scheduled_date date, p_id uuid DEFAULT NULL, p_explanation text DEFAULT NULL, p_difficulty text DEFAULT 'medium', p_multiplier numeric DEFAUL …",
     "returns": "jsonb",
     "lang": "plpgsql",
-    "src": "supabase/migrations/20260728163529_7d985b3e-7991-469f-913b-f0034c9c2b38.sql",
+    "src": "supabase/migrations/20261228300000_fecha_corridas_da_exclusao_de_departamento_e_da_aposta_diaria.sql",
     "security_definer": true,
     "search_path": true,
     "body": "DECLARE v_uid uuid := auth.uid(); v_question text := btrim(coalesce(p_question, '')); v_explanation text := nullif(btrim(coalesce(p_explanation, '')), ''); v_difficulty text := lower(coalesce(p_difficulty, 'medium')); v_multiplier numeric(4,2) := round(coalesce(p_multiplier, 2.00), 2); v_max_stake integer := coalesce(p_max_stake, 100); v_ids text[]; v_count integer; v_entries integer := 0; v_id uuid; BEGIN IF v_uid IS NULL THEN RETURN jsonb_build_object('success', false, 'reason', 'unauthenticated'); END IF; IF NOT (has_role(v_uid, 'admin'::app_role) OR has_role(v_uid, 'manager'::app_role)) THEN RETURN jsonb_build_object('success', false, 'reason', 'forbidden'); END IF; IF length(v_question) …",
@@ -105114,51 +107438,6 @@
     "src": "supabase/migrations/20260727171415_85c57bb0-f886-41ab-bd07-e3a1688256ec.sql"
    },
    {
-    "function": "review_purchase",
-    "msg": "Autenticação obrigatória",
-    "src": "supabase/migrations/20260727183427_72f9c05a-39cb-439b-9460-a965561e3d62.sql"
-   },
-   {
-    "function": "review_purchase",
-    "msg": "Permissão negada",
-    "src": "supabase/migrations/20260727183427_72f9c05a-39cb-439b-9460-a965561e3d62.sql"
-   },
-   {
-    "function": "review_purchase",
-    "msg": "Ação inválida: %",
-    "src": "supabase/migrations/20260727183427_72f9c05a-39cb-439b-9460-a965561e3d62.sql"
-   },
-   {
-    "function": "review_purchase",
-    "msg": "Pedido não encontrado",
-    "src": "supabase/migrations/20260727183427_72f9c05a-39cb-439b-9460-a965561e3d62.sql"
-   },
-   {
-    "function": "review_purchase",
-    "msg": "Pedido já finalizado (%)",
-    "src": "supabase/migrations/20260727183427_72f9c05a-39cb-439b-9460-a965561e3d62.sql"
-   },
-   {
-    "function": "review_purchase",
-    "msg": "Somente pedidos pendentes podem ser aprovados",
-    "src": "supabase/migrations/20260727183427_72f9c05a-39cb-439b-9460-a965561e3d62.sql"
-   },
-   {
-    "function": "review_purchase",
-    "msg": "Pedido de risco elevado exige um segundo aprovador distinto",
-    "src": "supabase/migrations/20260727183427_72f9c05a-39cb-439b-9460-a965561e3d62.sql"
-   },
-   {
-    "function": "review_purchase",
-    "msg": "Somente pedidos aprovados podem ser entregues",
-    "src": "supabase/migrations/20260727183427_72f9c05a-39cb-439b-9460-a965561e3d62.sql"
-   },
-   {
-    "function": "award_campaign_team_split",
-    "msg": "campaign_not_found",
-    "src": "supabase/migrations/20260727184545_b9620ff8-06a2-4ece-9b16-9736d339b3e0.sql"
-   },
-   {
     "function": "spin_lucky_wheel",
     "msg": "Não autenticado",
     "src": "supabase/migrations/20260727200825_a3b9b0a2-130f-4aee-a611-8b630bd0437a.sql"
@@ -105340,11 +107619,6 @@
    },
    {
     "function": "get_card_set_rewards",
-    "msg": "not_authenticated",
-    "src": "supabase/migrations/20260728122626_32e02751-3e63-4896-adef-653b53012bbf.sql"
-   },
-   {
-    "function": "claim_card_set_reward",
     "msg": "not_authenticated",
     "src": "supabase/migrations/20260728122626_32e02751-3e63-4896-adef-653b53012bbf.sql"
    },
@@ -105867,6 +108141,56 @@
     "function": "unblock_board_players",
     "msg": "Apenas administradores podem executar o desbloqueio",
     "src": "supabase/migrations/20261228210000_reaplica_mensagens_funcoes_divergentes.sql"
+   },
+   {
+    "function": "award_campaign_team_split",
+    "msg": "campaign_not_found",
+    "src": "supabase/migrations/20261228290000_paridade_de_triggers_e_retextos_funcionais.sql"
+   },
+   {
+    "function": "claim_card_set_reward",
+    "msg": "not_authenticated",
+    "src": "supabase/migrations/20261228290000_paridade_de_triggers_e_retextos_funcionais.sql"
+   },
+   {
+    "function": "review_purchase",
+    "msg": "Autenticação obrigatória",
+    "src": "supabase/migrations/20261228290000_paridade_de_triggers_e_retextos_funcionais.sql"
+   },
+   {
+    "function": "review_purchase",
+    "msg": "Permissão negada",
+    "src": "supabase/migrations/20261228290000_paridade_de_triggers_e_retextos_funcionais.sql"
+   },
+   {
+    "function": "review_purchase",
+    "msg": "Ação inválida: %",
+    "src": "supabase/migrations/20261228290000_paridade_de_triggers_e_retextos_funcionais.sql"
+   },
+   {
+    "function": "review_purchase",
+    "msg": "Pedido não encontrado",
+    "src": "supabase/migrations/20261228290000_paridade_de_triggers_e_retextos_funcionais.sql"
+   },
+   {
+    "function": "review_purchase",
+    "msg": "Pedido já finalizado (%)",
+    "src": "supabase/migrations/20261228290000_paridade_de_triggers_e_retextos_funcionais.sql"
+   },
+   {
+    "function": "review_purchase",
+    "msg": "Somente pedidos pendentes podem ser aprovados",
+    "src": "supabase/migrations/20261228290000_paridade_de_triggers_e_retextos_funcionais.sql"
+   },
+   {
+    "function": "review_purchase",
+    "msg": "Pedido de risco elevado exige um segundo aprovador distinto",
+    "src": "supabase/migrations/20261228290000_paridade_de_triggers_e_retextos_funcionais.sql"
+   },
+   {
+    "function": "review_purchase",
+    "msg": "Somente pedidos aprovados podem ser entregues",
+    "src": "supabase/migrations/20261228290000_paridade_de_triggers_e_retextos_funcionais.sql"
    }
   ],
   "db_generated": [
@@ -111605,7 +113929,8 @@
     "rls": "enabled",
     "SELECT": [
      "authenticated: has_role(auth.uid(), 'admin'::app_role)",
-     "authenticated: ((is_active = true) OR has_role(auth.uid(), 'admin'::app_role))"
+     "authenticated: ((is_active = true) OR has_role(auth.uid(), 'admin'::app_role))",
+     "authenticated: EXISTS ( SELECT 1 FROM public.wager_entries e WHERE e.question_id = wager_questions.id AND e.user_id = auth.uid() )"
     ],
     "INSERT": [
      "authenticated: has_role(auth.uid(), 'admin'::app_role)"
@@ -111936,7 +114261,9 @@
    "supabase/migrations/20261228130000_recupera_funcoes_e_views_ausentes.sql",
    "supabase/migrations/20261228140000_congela_rls_e_grants_producao.sql",
    "supabase/migrations/20261228170000_reaplica_funcoes_desatualizadas_em_producao.sql",
-   "supabase/migrations/20261228190000_revoga_execute_publico_anon_funcoes.sql"
+   "supabase/migrations/20261228190000_revoga_execute_publico_anon_funcoes.sql",
+   "supabase/migrations/20261228280000_uma_aposta_por_dia_e_reabertura_da_pergunta.sql",
+   "supabase/migrations/20261228300000_fecha_corridas_da_exclusao_de_departamento_e_da_aposta_diaria.sql"
   ],
   "security_definer_fns": [
    "_climate_recompute_pillar_scores",
@@ -121582,6 +123909,86 @@
     "objkind": "function",
     "roles": "PUBLIC, anon, authenticated",
     "src": "supabase/migrations/20261228190000_revoga_execute_publico_anon_funcoes.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "all",
+    "object": "save_wager_question",
+    "objkind": "function",
+    "roles": "PUBLIC, anon",
+    "src": "supabase/migrations/20261228280000_uma_aposta_por_dia_e_reabertura_da_pergunta.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "save_wager_question",
+    "objkind": "function",
+    "roles": "authenticated",
+    "src": "supabase/migrations/20261228280000_uma_aposta_por_dia_e_reabertura_da_pergunta.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "all",
+    "object": "get_daily_wager",
+    "objkind": "function",
+    "roles": "PUBLIC, anon",
+    "src": "supabase/migrations/20261228280000_uma_aposta_por_dia_e_reabertura_da_pergunta.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "get_daily_wager",
+    "objkind": "function",
+    "roles": "authenticated, service_role",
+    "src": "supabase/migrations/20261228280000_uma_aposta_por_dia_e_reabertura_da_pergunta.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "all",
+    "object": "submit_daily_wager",
+    "objkind": "function",
+    "roles": "PUBLIC, anon",
+    "src": "supabase/migrations/20261228280000_uma_aposta_por_dia_e_reabertura_da_pergunta.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "submit_daily_wager",
+    "objkind": "function",
+    "roles": "authenticated, service_role",
+    "src": "supabase/migrations/20261228280000_uma_aposta_por_dia_e_reabertura_da_pergunta.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "all",
+    "object": "save_wager_question",
+    "objkind": "function",
+    "roles": "PUBLIC, anon",
+    "src": "supabase/migrations/20261228300000_fecha_corridas_da_exclusao_de_departamento_e_da_aposta_diaria.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "save_wager_question",
+    "objkind": "function",
+    "roles": "authenticated",
+    "src": "supabase/migrations/20261228300000_fecha_corridas_da_exclusao_de_departamento_e_da_aposta_diaria.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "all",
+    "object": "submit_daily_wager",
+    "objkind": "function",
+    "roles": "PUBLIC, anon",
+    "src": "supabase/migrations/20261228300000_fecha_corridas_da_exclusao_de_departamento_e_da_aposta_diaria.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "submit_daily_wager",
+    "objkind": "function",
+    "roles": "authenticated, service_role",
+    "src": "supabase/migrations/20261228300000_fecha_corridas_da_exclusao_de_departamento_e_da_aposta_diaria.sql"
    },
    {
     "kind": "grant",
@@ -146883,7 +149290,7 @@
   },
   "src/services/departmentsService.ts": {
    "path": "src/services/departmentsService.ts",
-   "lines": 125,
+   "lines": 127,
    "exports": [
     "type Department",
     "type DepartmentInsert",
@@ -161478,6 +163885,56 @@
    "path": "supabase/migrations/20261228220000_alinha_nulabilidade_external_api_keys.sql",
    "lines": 18
   },
+  "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql": {
+   "path": "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql",
+   "lines": 188
+  },
+  "supabase/migrations/20261228231000_reaplica_indices_do_repositorio_em_producao.sql": {
+   "path": "supabase/migrations/20261228231000_reaplica_indices_do_repositorio_em_producao.sql",
+   "lines": 136
+  },
+  "supabase/migrations/20261228240000_traz_constraints_de_producao_para_o_repo.sql": {
+   "path": "supabase/migrations/20261228240000_traz_constraints_de_producao_para_o_repo.sql",
+   "lines": 1223
+  },
+  "supabase/migrations/20261228250000_reaplica_em_producao_constraints_do_repositorio.sql": {
+   "path": "supabase/migrations/20261228250000_reaplica_em_producao_constraints_do_repositorio.sql",
+   "lines": 1630
+  },
+  "supabase/migrations/20261228260000_unifica_definicoes_de_constraints.sql": {
+   "path": "supabase/migrations/20261228260000_unifica_definicoes_de_constraints.sql",
+   "lines": 275
+  },
+  "supabase/migrations/20261228270000_remove_travas_redundantes_que_quebram_fluxos.sql": {
+   "path": "supabase/migrations/20261228270000_remove_travas_redundantes_que_quebram_fluxos.sql",
+   "lines": 35
+  },
+  "supabase/migrations/20261228280000_uma_aposta_por_dia_e_reabertura_da_pergunta.sql": {
+   "path": "supabase/migrations/20261228280000_uma_aposta_por_dia_e_reabertura_da_pergunta.sql",
+   "lines": 359,
+   "role_checks": [
+    "admin",
+    "manager"
+   ],
+   "uses_service_role": true
+  },
+  "supabase/migrations/20261228290000_paridade_de_triggers_e_retextos_funcionais.sql": {
+   "path": "supabase/migrations/20261228290000_paridade_de_triggers_e_retextos_funcionais.sql",
+   "lines": 629,
+   "role_checks": [
+    "admin",
+    "manager"
+   ]
+  },
+  "supabase/migrations/20261228300000_fecha_corridas_da_exclusao_de_departamento_e_da_aposta_diaria.sql": {
+   "path": "supabase/migrations/20261228300000_fecha_corridas_da_exclusao_de_departamento_e_da_aposta_diaria.sql",
+   "lines": 299,
+   "role_checks": [
+    "admin",
+    "manager"
+   ],
+   "uses_service_role": true
+  },
   "supabase/tests/climate/assertions.sql": {
    "path": "supabase/tests/climate/assertions.sql",
    "lines": 404,
@@ -161573,10 +164030,31 @@
   }
  },
  "git": {
-  "sha": "c87b1c92a7ff481a407431b41f368e1da3340170",
+  "sha": "f28d2f6812a48c2ae319595db5b3925917aa6df2",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "commits": [
+   {
+    "sha": "f28d2f6",
+    "date": "2026-11-26",
+    "author": "adm01-debug",
+    "subject": "fix: paridade de indices e constraints com o banco vivo e devolve os fluxos travados (#174)",
+    "files": [
+     "docs/agentes/banco.md",
+     "docs/agentes/mapa-repo.md",
+     "src/services/departmentsService.ts",
+     "src/services/predictionMarketService.ts",
+     "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql",
+     "supabase/migrations/20261228231000_reaplica_indices_do_repositorio_em_producao.sql",
+     "supabase/migrations/20261228240000_traz_constraints_de_producao_para_o_repo.sql",
+     "supabase/migrations/20261228250000_reaplica_em_producao_constraints_do_repositorio.sql",
+     "supabase/migrations/20261228260000_unifica_definicoes_de_constraints.sql",
+     "supabase/migrations/20261228270000_remove_travas_redundantes_que_quebram_fluxos.sql",
+     "supabase/migrations/20261228280000_uma_aposta_por_dia_e_reabertura_da_pergunta.sql",
+     "supabase/migrations/20261228290000_paridade_de_triggers_e_retextos_funcionais.sql",
+     "supabase/migrations/20261228300000_fecha_corridas_da_exclusao_de_departamento_e_da_aposta_diaria.sql"
+    ]
+   },
    {
     "sha": "c87b1c9",
     "date": "2026-11-26",
@@ -161932,25 +164410,16 @@
      "src/services/shopService.ts",
      "src/tests/unit/shop.test.ts"
     ]
-   },
-   {
-    "sha": "82066d7",
-    "date": "2026-11-24",
-    "author": "adm01-debug",
-    "subject": "fix: provisiona segredo do alerta critico e tira URL fixa do trigger (#143)",
-    "files": [
-     "supabase/migrations/20261224120000_dispatch_critical_alert_config.sql"
-    ]
    }
   ],
   "hot_files": [
    [
     "docs/agentes/banco.md",
-    8
+    9
    ],
    [
     "docs/agentes/mapa-repo.md",
-    8
+    9
    ],
    [
     "docs/estado/05-edge-functions.md",
@@ -162009,19 +164478,19 @@
     2
    ],
    [
-    "docs/estado/02-componentes.md",
+    "src/services/departmentsService.ts",
     1
    ],
    [
-    "src/components/PushNotificationGlobalToggle.tsx",
+    "src/services/predictionMarketService.ts",
     1
    ],
    [
-    "src/test/pushNotificationGlobalToggle.test.tsx",
+    "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql",
     1
    ],
    [
-    "supabase/functions/push-outbox-dispatcher/index.ts",
+    "supabase/migrations/20261228231000_reaplica_indices_do_repositorio_em_producao.sql",
     1
    ]
   ]

@@ -6,10 +6,10 @@
   "src/integrations/supabase/types.ts",
   "supabase/migrations"
  ],
- "migrations": 306,
+ "migrations": 315,
  "seeds": [],
  "avisos": [
-  "15 bloco(s) com DDL dinâmico (EXECUTE format/...) não modelado — policies/colunas criadas dinamicamente podem faltar; confira no banco vivo"
+  "16 bloco(s) com DDL dinâmico (EXECUTE format/...) não modelado — policies/colunas criadas dinamicamente podem faltar; confira no banco vivo"
  ],
  "extensoes": [
   "pg_cron",
@@ -1675,7 +1675,18 @@
      "tipo": "permissive"
     }
    ],
-   "indices": [],
+   "indices": [
+    {
+     "nome": "idx_achievements_fts",
+     "colunas": "to_tsvector('portuguese'::regconfig, ((COALESCE(name, ''::text",
+     "unico": false
+    },
+    {
+     "nome": "idx_achievements_name_trgm",
+     "colunas": "name extensions.gin_trgm_ops",
+     "unico": false
+    }
+   ],
    "fks": [],
    "criada_em": "20251213124108_bc29f680-422f-4c61-8b6a-efb7af89d398.sql",
    "colunas_types": {
@@ -1993,7 +2004,13 @@
      "tipo": "permissive"
     }
    ],
-   "indices": [],
+   "indices": [
+    {
+     "nome": "idx_action_plan_updates_plan_id",
+     "colunas": "plan_id",
+     "unico": false
+    }
+   ],
    "fks": [
     "plan_id->action_plans"
    ],
@@ -2232,6 +2249,11 @@
    ],
    "indices": [
     {
+     "nome": "idx_action_plans_department_id",
+     "colunas": "department_id",
+     "unico": false
+    },
+    {
      "nome": "idx_action_plans_factor",
      "colunas": "engagement_factor_id",
      "unico": false
@@ -2249,6 +2271,11 @@
     {
      "nome": "idx_action_plans_owner",
      "colunas": "owner_id",
+     "unico": false
+    },
+    {
+     "nome": "idx_action_plans_related_survey_id",
+     "colunas": "related_survey_id",
      "unico": false
     },
     {
@@ -2696,6 +2723,11 @@
    ],
    "indices": [
     {
+     "nome": "idx_ai_course_jobs_generated_trail_id",
+     "colunas": "generated_trail_id",
+     "unico": false
+    },
+    {
      "nome": "idx_ai_course_jobs_status",
      "colunas": "status",
      "unico": false
@@ -3005,7 +3037,28 @@
      "tipo": "permissive"
     }
    ],
-   "indices": [],
+   "indices": [
+    {
+     "nome": "idx_announcements_author_id",
+     "colunas": "author_id",
+     "unico": false
+    },
+    {
+     "nome": "idx_announcements_department_id",
+     "colunas": "department_id",
+     "unico": false
+    },
+    {
+     "nome": "idx_announcements_fts",
+     "colunas": "to_tsvector('portuguese'::regconfig, ((COALESCE(title, ''::text",
+     "unico": false
+    },
+    {
+     "nome": "idx_announcements_title_trgm",
+     "colunas": "title extensions.gin_trgm_ops",
+     "unico": false
+    }
+   ],
    "fks": [
     "author_id->profiles",
     "department_id->departments"
@@ -3127,7 +3180,13 @@
      "tipo": "permissive"
     }
    ],
-   "indices": [],
+   "indices": [
+    {
+     "nome": "idx_api_request_logs_api_key_id",
+     "colunas": "api_key_id",
+     "unico": false
+    }
+   ],
    "fks": [
     "api_key_id->external_api_keys"
    ],
@@ -3357,7 +3416,13 @@
      "tipo": "permissive"
     }
    ],
-   "indices": [],
+   "indices": [
+    {
+     "nome": "idx_attendance_settings_department_id",
+     "colunas": "department_id",
+     "unico": false
+    }
+   ],
    "fks": [
     "department_id->departments"
    ],
@@ -3553,6 +3618,7 @@
     }
    ],
    "fks": [
+    "actor_id->auth",
     "auction_id->auctions"
    ],
    "criada_em": "20260728111343_cf6a1baa-1658-4bb8-a8ef-0e51e0d8241b.sql",
@@ -3657,8 +3723,13 @@
    ],
    "indices": [
     {
+     "nome": "idx_auction_bids_auction",
+     "colunas": "auction_id, created_at DESC",
+     "unico": false
+    },
+    {
      "nome": "idx_auction_bids_auction_amount",
-     "colunas": "auction_id, amount DESC, created_at ASC",
+     "colunas": "auction_id, amount DESC, created_at",
      "unico": false
     },
     {
@@ -3668,7 +3739,8 @@
     }
    ],
    "fks": [
-    "auction_id->auctions"
+    "auction_id->auctions",
+    "user_id->auth"
    ],
    "criada_em": "20260728103329_1a2a8f0f-b71b-495d-b706-44a4e87e31d1.sql",
    "colunas_types": {
@@ -3844,7 +3916,9 @@
     }
    ],
    "fks": [
-    "reward_id->shop_rewards"
+    "created_by->auth",
+    "reward_id->shop_rewards",
+    "winner_id->auth"
    ],
    "criada_em": "20260728103329_1a2a8f0f-b71b-495d-b706-44a4e87e31d1.sql",
    "colunas_types": {
@@ -4243,6 +4317,11 @@
    ],
    "indices": [
     {
+     "nome": "idx_bingo_board_tasks",
+     "colunas": "board_id, order_index",
+     "unico": false
+    },
+    {
      "nome": "idx_bingo_board_tasks_board",
      "colunas": "board_id, order_index",
      "unico": false
@@ -4505,7 +4584,8 @@
     }
    ],
    "fks": [
-    "board_id->bingo_boards"
+    "board_id->bingo_boards",
+    "user_id->auth"
    ],
    "criada_em": "20260727222655_16b4a067-5707-4794-9cba-be5694907056.sql",
    "colunas_types": {
@@ -4608,7 +4688,8 @@
     }
    ],
    "fks": [
-    "card_id->bingo_cards"
+    "card_id->bingo_cards",
+    "user_id->auth"
    ],
    "criada_em": "20260727222655_16b4a067-5707-4794-9cba-be5694907056.sql",
    "colunas_types": {
@@ -4718,7 +4799,18 @@
      "tipo": "permissive"
     }
    ],
-   "indices": [],
+   "indices": [
+    {
+     "nome": "idx_bitrix24_sync_bitrix_id",
+     "colunas": "bitrix_id",
+     "unico": false
+    },
+    {
+     "nome": "idx_bitrix24_sync_status",
+     "colunas": "sync_status",
+     "unico": false
+    }
+   ],
    "fks": [],
    "criada_em": "20251213235240_d90d4919-c9a1-4cc8-9eeb-698f19ba1fb8.sql",
    "colunas_types": {
@@ -5031,6 +5123,11 @@
    ],
    "indices": [
     {
+     "nome": "idx_blocked_ips_blocked_by",
+     "colunas": "blocked_by",
+     "unico": false
+    },
+    {
      "nome": "idx_blocked_ips_expires",
      "colunas": "expires_at",
      "unico": false
@@ -5192,13 +5289,19 @@
      "unico": false
     },
     {
+     "nome": "idx_board_moves_trail_user",
+     "colunas": "trail_id, user_id, created_at DESC",
+     "unico": false
+    },
+    {
      "nome": "idx_board_moves_user_trail",
      "colunas": "trail_id, user_id, created_at DESC",
      "unico": false
     }
    ],
    "fks": [
-    "trail_id->board_trails"
+    "trail_id->board_trails",
+    "user_id->auth"
    ],
    "criada_em": "20260728172534_0b59fa61-90b1-4878-be78-a0c609c9de50.sql",
    "colunas_types": {
@@ -5351,13 +5454,18 @@
    ],
    "indices": [
     {
+     "nome": "idx_board_player_states",
+     "colunas": "trail_id, \"position\" DESC",
+     "unico": false
+    },
+    {
      "nome": "idx_board_player_states_blocked",
      "colunas": "blocked_at",
      "unico": false
     },
     {
      "nome": "idx_board_player_states_trail_rank",
-     "colunas": "trail_id, position DESC, xp DESC, coins DESC",
+     "colunas": "trail_id, \"position\" DESC, xp DESC, coins DESC",
      "unico": false
     },
     {
@@ -5367,7 +5475,8 @@
     }
    ],
    "fks": [
-    "trail_id->board_trails"
+    "trail_id->board_trails",
+    "user_id->auth"
    ],
    "criada_em": "20260728172534_0b59fa61-90b1-4878-be78-a0c609c9de50.sql",
    "colunas_types": {
@@ -5496,8 +5605,13 @@
    ],
    "indices": [
     {
+     "nome": "idx_board_tiles",
+     "colunas": "trail_id, \"position\"",
+     "unico": false
+    },
+    {
      "nome": "idx_board_tiles_trail",
-     "colunas": "trail_id, position",
+     "colunas": "trail_id, \"position\"",
      "unico": false
     }
    ],
@@ -5613,6 +5727,7 @@
    ],
    "indices": [],
    "fks": [
+    "created_by->auth",
     "department_id->departments"
    ],
    "criada_em": "20260728172534_0b59fa61-90b1-4878-be78-a0c609c9de50.sql",
@@ -5729,8 +5844,18 @@
    ],
    "indices": [
     {
+     "nome": "idx_boss_battle_damage_battle",
+     "colunas": "battle_id, created_at DESC",
+     "unico": false
+    },
+    {
      "nome": "idx_boss_battle_damage_battle_user",
      "colunas": "battle_id, user_id",
+     "unico": false
+    },
+    {
+     "nome": "idx_boss_battle_damage_user",
+     "colunas": "user_id, battle_id",
      "unico": false
     },
     {
@@ -5746,7 +5871,8 @@
    ],
    "fks": [
     "battle_id->boss_battles",
-    "department_id->departments"
+    "department_id->departments",
+    "user_id->auth"
    ],
    "criada_em": "20260728125833_b6b2c15a-1960-4e13-9c2a-0cdff052ea01.sql",
    "colunas_types": {
@@ -5845,9 +5971,16 @@
      "tipo": "permissive"
     }
    ],
-   "indices": [],
+   "indices": [
+    {
+     "nome": "idx_boss_battle_rewards",
+     "colunas": "battle_id",
+     "unico": false
+    }
+   ],
    "fks": [
-    "battle_id->boss_battles"
+    "battle_id->boss_battles",
+    "user_id->auth"
    ],
    "criada_em": "20260728125833_b6b2c15a-1960-4e13-9c2a-0cdff052ea01.sql",
    "colunas_types": {
@@ -6041,6 +6174,7 @@
     }
    ],
    "fks": [
+    "created_by->auth",
     "department_id->departments"
    ],
    "criada_em": "20260728125833_b6b2c15a-1960-4e13-9c2a-0cdff052ea01.sql",
@@ -6168,12 +6302,13 @@
     },
     {
      "nome": "boss_win_rate_goals_global_key",
-     "colunas": "(department_id IS NULL",
+     "colunas": "((department_id IS NULL",
      "unico": true
     }
    ],
    "fks": [
-    "department_id->departments"
+    "department_id->departments",
+    "updated_by->auth"
    ],
    "criada_em": "20260728150404_176dbae6-505f-48df-85d3-80751f60fa73.sql",
    "colunas_types": {
@@ -6806,6 +6941,11 @@
    ],
    "indices": [
     {
+     "nome": "idx_campaign_result_rows_campaign_status",
+     "colunas": "campaign_id, status",
+     "unico": false
+    },
+    {
      "nome": "idx_campaign_result_rows_import",
      "colunas": "import_id, row_number",
      "unico": false
@@ -6906,6 +7046,11 @@
    ],
    "indices": [
     {
+     "nome": "idx_campaign_team_members",
+     "colunas": "team_id",
+     "unico": false
+    },
+    {
      "nome": "idx_campaign_team_members_team",
      "colunas": "team_id",
      "unico": false
@@ -6918,7 +7063,8 @@
    ],
    "fks": [
     "campaign_id->sales_campaigns",
-    "team_id->campaign_teams"
+    "team_id->campaign_teams",
+    "user_id->auth"
    ],
    "criada_em": "20260727171415_85c57bb0-f886-41ab-bd07-e3a1688256ec.sql",
    "colunas_types": {
@@ -7066,13 +7212,20 @@
    ],
    "indices": [
     {
+     "nome": "idx_campaign_team_split_batches",
+     "colunas": "campaign_id, created_at DESC",
+     "unico": false
+    },
+    {
      "nome": "idx_team_split_batches_campaign",
      "colunas": "campaign_id, created_at DESC",
      "unico": false
     }
    ],
    "fks": [
-    "campaign_id->sales_campaigns"
+    "campaign_id->sales_campaigns",
+    "executed_by->auth",
+    "reverted_by->auth"
    ],
    "criada_em": "20260727184545_b9620ff8-06a2-4ece-9b16-9736d339b3e0.sql",
    "colunas_types": {
@@ -7229,6 +7382,11 @@
    ],
    "indices": [
     {
+     "nome": "idx_campaign_team_split_entries",
+     "colunas": "batch_id, user_id",
+     "unico": false
+    },
+    {
      "nome": "idx_team_split_entries_batch",
      "colunas": "batch_id",
      "unico": false
@@ -7245,7 +7403,10 @@
     }
    ],
    "fks": [
-    "batch_id->campaign_team_split_batches"
+    "batch_id->campaign_team_split_batches",
+    "campaign_id->sales_campaigns",
+    "team_id->campaign_teams",
+    "user_id->auth"
    ],
    "criada_em": "20260727184545_b9620ff8-06a2-4ece-9b16-9736d339b3e0.sql",
    "colunas_types": {
@@ -7408,6 +7569,11 @@
    ],
    "indices": [
     {
+     "nome": "idx_campaign_teams",
+     "colunas": "campaign_id, rank_position",
+     "unico": false
+    },
+    {
      "nome": "idx_campaign_teams_campaign",
      "colunas": "campaign_id",
      "unico": false
@@ -7420,6 +7586,7 @@
    ],
    "fks": [
     "campaign_id->sales_campaigns",
+    "created_by->auth",
     "department_id->departments"
    ],
    "criada_em": "20260727171415_85c57bb0-f886-41ab-bd07-e3a1688256ec.sql",
@@ -7545,6 +7712,11 @@
     {
      "nome": "idx_card_definitions_active",
      "colunas": "is_active, rarity",
+     "unico": false
+    },
+    {
+     "nome": "idx_card_definitions_set_code",
+     "colunas": "set_code, rarity",
      "unico": false
     }
    ],
@@ -7676,7 +7848,9 @@
      "unico": false
     }
    ],
-   "fks": [],
+   "fks": [
+    "user_id->auth"
+   ],
    "criada_em": "20260728121542_4ac8cbd1-0d6d-410d-8734-4fd032804ddc.sql",
    "colunas_types": {
     "created_at": "string",
@@ -7956,7 +8130,9 @@
    ],
    "fks": [
     "offered_card_id->card_definitions",
-    "requested_card_id->card_definitions"
+    "proposer_id->auth",
+    "requested_card_id->card_definitions",
+    "responder_id->auth"
    ],
    "criada_em": "20260728121542_4ac8cbd1-0d6d-410d-8734-4fd032804ddc.sql",
    "colunas_types": {
@@ -8092,7 +8268,13 @@
      "tipo": "permissive"
     }
    ],
-   "indices": [],
+   "indices": [
+    {
+     "nome": "idx_celebrations_user_id",
+     "colunas": "user_id",
+     "unico": false
+    }
+   ],
    "fks": [
     "user_id->profiles"
    ],
@@ -8230,7 +8412,18 @@
      "tipo": "permissive"
     }
    ],
-   "indices": [],
+   "indices": [
+    {
+     "nome": "idx_certifications_department_id",
+     "colunas": "department_id",
+     "unico": false
+    },
+    {
+     "nome": "idx_certifications_trail_id",
+     "colunas": "trail_id",
+     "unico": false
+    }
+   ],
    "fks": [
     "department_id->departments",
     "trail_id->learning_trails"
@@ -8486,7 +8679,13 @@
      "tipo": "permissive"
     }
    ],
-   "indices": [],
+   "indices": [
+    {
+     "nome": "idx_checkins_template_id",
+     "colunas": "template_id",
+     "unico": false
+    }
+   ],
    "fks": [
     "template_id->checkin_templates"
    ],
@@ -8747,6 +8946,11 @@
      "unico": true
     },
     {
+     "nome": "idx_climate_pillar_scores_department_id",
+     "colunas": "department_id",
+     "unico": false
+    },
+    {
      "nome": "idx_climate_pillar_scores_survey",
      "colunas": "survey_id",
      "unico": false
@@ -8846,7 +9050,18 @@
      "tipo": "permissive"
     }
    ],
-   "indices": [],
+   "indices": [
+    {
+     "nome": "idx_climate_question_answers_question_id",
+     "colunas": "question_id",
+     "unico": false
+    },
+    {
+     "nome": "idx_climate_question_answers_response_id",
+     "colunas": "response_id",
+     "unico": false
+    }
+   ],
    "fks": [
     "question_id->climate_survey_questions",
     "response_id->climate_survey_responses"
@@ -9275,6 +9490,11 @@
     {
      "nome": "idx_climate_surveys_dates",
      "colunas": "starts_at, ends_at",
+     "unico": false
+    },
+    {
+     "nome": "idx_climate_surveys_department_id",
+     "colunas": "department_id",
      "unico": false
     },
     {
@@ -10371,7 +10591,13 @@
      "tipo": "permissive"
     }
    ],
-   "indices": [],
+   "indices": [
+    {
+     "nome": "idx_department_missions_department_id",
+     "colunas": "department_id",
+     "unico": false
+    }
+   ],
    "fks": [
     "department_id->departments"
    ],
@@ -10605,6 +10831,11 @@
    ],
    "indices": [
     {
+     "nome": "idx_dept_war_contributions_war",
+     "colunas": "war_id, department_id",
+     "unico": false
+    },
+    {
      "nome": "idx_war_contrib_feed",
      "colunas": "war_id, created_at DESC",
      "unico": false
@@ -10622,6 +10853,7 @@
    ],
    "fks": [
     "department_id->departments",
+    "user_id->auth",
     "war_id->department_wars"
    ],
    "criada_em": "20260727230544_2dc28ece-3091-4d64-900d-c9af22c8ba3f.sql",
@@ -10947,8 +11179,13 @@
    ],
    "indices": [
     {
+     "nome": "idx_dept_war_results",
+     "colunas": "war_id, \"position\"",
+     "unico": false
+    },
+    {
      "nome": "idx_war_results_war",
-     "colunas": "war_id, position",
+     "colunas": "war_id, \"position\"",
      "unico": false
     }
    ],
@@ -11136,7 +11373,9 @@
      "unico": false
     }
    ],
-   "fks": [],
+   "fks": [
+    "created_by->auth"
+   ],
    "criada_em": "20260727230544_2dc28ece-3091-4d64-900d-c9af22c8ba3f.sql",
    "colunas_types": {
     "coins_pool": "number",
@@ -11230,7 +11469,23 @@
      "tipo": "permissive"
     }
    ],
-   "indices": [],
+   "indices": [
+    {
+     "nome": "idx_departments_fts",
+     "colunas": "to_tsvector('portuguese'::regconfig, ((COALESCE(name, ''::text",
+     "unico": false
+    },
+    {
+     "nome": "idx_departments_name_btree",
+     "colunas": "name",
+     "unico": false
+    },
+    {
+     "nome": "idx_departments_name_trgm",
+     "colunas": "name extensions.gin_trgm_ops",
+     "unico": false
+    }
+   ],
    "fks": [],
    "criada_em": "20251212193329_5c696f63-c339-422b-ae1a-5164c51e7f44.sql",
    "colunas_types": {
@@ -11403,6 +11658,11 @@
    ],
    "indices": [
     {
+     "nome": "idx_development_plan_actions_competency_id",
+     "colunas": "competency_id",
+     "unico": false
+    },
+    {
      "nome": "idx_plan_actions_plan",
      "colunas": "plan_id",
      "unico": false
@@ -11574,6 +11834,21 @@
     }
    ],
    "indices": [
+    {
+     "nome": "idx_development_plans_created_by",
+     "colunas": "created_by",
+     "unico": false
+    },
+    {
+     "nome": "idx_development_plans_linked_feedback_id",
+     "colunas": "linked_feedback_id",
+     "unico": false
+    },
+    {
+     "nome": "idx_development_plans_linked_nine_box_id",
+     "colunas": "linked_nine_box_id",
+     "unico": false
+    },
     {
      "nome": "idx_development_plans_status",
      "colunas": "status",
@@ -11891,6 +12166,11 @@
    ],
    "indices": [
     {
+     "nome": "idx_engagement_action_playbooks_pillar",
+     "colunas": "pillar, is_active",
+     "unico": false
+    },
+    {
      "nome": "idx_playbooks_pillar",
      "colunas": "pillar, order_index",
      "unico": false
@@ -12060,12 +12340,18 @@
      "nome": "idx_eanswers_user_question",
      "colunas": "user_id, question_id",
      "unico": false
+    },
+    {
+     "nome": "idx_engagement_answers_cycle",
+     "colunas": "cycle_id, department_id",
+     "unico": false
     }
    ],
    "fks": [
     "cycle_id->engagement_cycles",
     "department_id->departments",
-    "question_id->engagement_question_pool"
+    "question_id->engagement_question_pool",
+    "user_id->auth"
    ],
    "criada_em": "20260726155352_df9dcda0-0e2d-450f-b8b2-9b21ac810d32.sql",
    "colunas_types": {
@@ -12186,9 +12472,15 @@
      "nome": "idx_ecycles_status",
      "colunas": "status, ends_at DESC",
      "unico": false
+    },
+    {
+     "nome": "idx_engagement_cycles_status",
+     "colunas": "status, ends_at",
+     "unico": false
     }
    ],
    "fks": [
+    "created_by->auth",
     "department_id->departments"
    ],
    "criada_em": "20260726155352_df9dcda0-0e2d-450f-b8b2-9b21ac810d32.sql",
@@ -12393,6 +12685,11 @@
    ],
    "indices": [
     {
+     "nome": "idx_engagement_question_assignments_cycle_user",
+     "colunas": "cycle_id, user_id",
+     "unico": false
+    },
+    {
      "nome": "idx_eqa_pending",
      "colunas": "user_id",
      "unico": false
@@ -12405,7 +12702,8 @@
    ],
    "fks": [
     "cycle_id->engagement_cycles",
-    "question_id->engagement_question_pool"
+    "question_id->engagement_question_pool",
+    "user_id->auth"
    ],
    "criada_em": "20260726155352_df9dcda0-0e2d-450f-b8b2-9b21ac810d32.sql",
    "colunas_types": {
@@ -12551,6 +12849,11 @@
     }
    ],
    "indices": [
+    {
+     "nome": "idx_engagement_question_pool_pillar",
+     "colunas": "pillar, is_active",
+     "unico": false
+    },
     {
      "nome": "idx_eqp_active",
      "colunas": "is_active",
@@ -12839,6 +13142,11 @@
      "nome": "idx_enps_responses_survey",
      "colunas": "survey_id",
      "unico": false
+    },
+    {
+     "nome": "idx_enps_responses_user_id",
+     "colunas": "user_id",
+     "unico": false
     }
    ],
    "fks": [
@@ -12968,6 +13276,16 @@
     }
    ],
    "indices": [
+    {
+     "nome": "idx_enps_surveys_created_by",
+     "colunas": "created_by",
+     "unico": false
+    },
+    {
+     "nome": "idx_enps_surveys_department_id",
+     "colunas": "department_id",
+     "unico": false
+    },
     {
      "nome": "idx_enps_surveys_status",
      "colunas": "status",
@@ -13639,7 +13957,18 @@
      "tipo": "permissive"
     }
    ],
-   "indices": [],
+   "indices": [
+    {
+     "nome": "idx_external_tasks_api_key_id",
+     "colunas": "api_key_id",
+     "unico": false
+    },
+    {
+     "nome": "idx_external_tasks_status",
+     "colunas": "status",
+     "unico": false
+    }
+   ],
    "fks": [
     "api_key_id->external_api_keys"
    ],
@@ -13830,7 +14159,13 @@
      "tipo": "permissive"
     }
    ],
-   "indices": [],
+   "indices": [
+    {
+     "nome": "idx_feedback_cycles_department_id",
+     "colunas": "department_id",
+     "unico": false
+    }
+   ],
    "fks": [
     "department_id->departments"
    ],
@@ -13969,7 +14304,13 @@
      "tipo": "permissive"
     }
    ],
-   "indices": [],
+   "indices": [
+    {
+     "nome": "idx_feedback_evaluations_cycle_id",
+     "colunas": "cycle_id",
+     "unico": false
+    }
+   ],
    "fks": [
     "cycle_id->feedback_cycles"
    ],
@@ -14114,7 +14455,18 @@
      "tipo": "permissive"
     }
    ],
-   "indices": [],
+   "indices": [
+    {
+     "nome": "idx_feedback_questions_competency_id",
+     "colunas": "competency_id",
+     "unico": false
+    },
+    {
+     "nome": "idx_feedback_questions_cycle_id",
+     "colunas": "cycle_id",
+     "unico": false
+    }
+   ],
    "fks": [
     "competency_id->competencies",
     "cycle_id->feedback_cycles"
@@ -14240,7 +14592,13 @@
      "tipo": "permissive"
     }
    ],
-   "indices": [],
+   "indices": [
+    {
+     "nome": "idx_feedback_requests_cycle_id",
+     "colunas": "cycle_id",
+     "unico": false
+    }
+   ],
    "fks": [
     "cycle_id->feedback_cycles"
    ],
@@ -14354,7 +14712,13 @@
      "tipo": "permissive"
     }
    ],
-   "indices": [],
+   "indices": [
+    {
+     "nome": "idx_feedback_responses_request_id",
+     "colunas": "request_id",
+     "unico": false
+    }
+   ],
    "fks": [
     "request_id->feedback_requests"
    ],
@@ -14495,7 +14859,18 @@
      "tipo": "permissive"
     }
    ],
-   "indices": [],
+   "indices": [
+    {
+     "nome": "idx_feedback_results_competency_id",
+     "colunas": "competency_id",
+     "unico": false
+    },
+    {
+     "nome": "idx_feedback_results_cycle_id",
+     "colunas": "cycle_id",
+     "unico": false
+    }
+   ],
    "fks": [
     "competency_id->competencies",
     "cycle_id->feedback_cycles"
@@ -14858,6 +15233,11 @@
      "nome": "idx_geo_allowed_countries_active",
      "colunas": "is_active",
      "unico": false
+    },
+    {
+     "nome": "idx_geo_allowed_countries_created_by",
+     "colunas": "created_by",
+     "unico": false
     }
    ],
    "fks": [
@@ -15047,7 +15427,13 @@
      "tipo": "permissive"
     }
    ],
-   "indices": [],
+   "indices": [
+    {
+     "nome": "idx_geo_settings_updated_by",
+     "colunas": "updated_by",
+     "unico": false
+    }
+   ],
    "fks": [
     "updated_by->auth"
    ],
@@ -15257,7 +15643,18 @@
      "tipo": "permissive"
     }
    ],
-   "indices": [],
+   "indices": [
+    {
+     "nome": "idx_goal_updates_goal_id",
+     "colunas": "goal_id",
+     "unico": false
+    },
+    {
+     "nome": "idx_goal_updates_key_result_id",
+     "colunas": "key_result_id",
+     "unico": false
+    }
+   ],
    "fks": [
     "goal_id->goals",
     "key_result_id->key_results"
@@ -15443,7 +15840,13 @@
      "tipo": "permissive"
     }
    ],
-   "indices": [],
+   "indices": [
+    {
+     "nome": "idx_goals_department_id",
+     "colunas": "department_id",
+     "unico": false
+    }
+   ],
    "fks": [
     "department_id->departments"
    ],
@@ -15546,7 +15949,13 @@
      "tipo": "permissive"
     }
    ],
-   "indices": [],
+   "indices": [
+    {
+     "nome": "idx_ip_access_logs_user_id",
+     "colunas": "user_id",
+     "unico": false
+    }
+   ],
    "fks": [
     "user_id->auth"
    ],
@@ -15663,6 +16072,11 @@
     {
      "nome": "idx_ip_whitelist_active",
      "colunas": "is_active",
+     "unico": false
+    },
+    {
+     "nome": "idx_ip_whitelist_created_by",
+     "colunas": "created_by",
      "unico": false
     }
    ],
@@ -15796,7 +16210,13 @@
      "tipo": "permissive"
     }
    ],
-   "indices": [],
+   "indices": [
+    {
+     "nome": "idx_key_results_goal_id",
+     "colunas": "goal_id",
+     "unico": false
+    }
+   ],
    "fks": [
     "goal_id->goals"
    ],
@@ -15901,6 +16321,11 @@
     }
    ],
    "indices": [
+    {
+     "nome": "idx_kudos_badge_id",
+     "colunas": "badge_id",
+     "unico": false
+    },
     {
      "nome": "idx_kudos_created_at",
      "colunas": "created_at DESC",
@@ -16144,6 +16569,16 @@
    ],
    "indices": [
     {
+     "nome": "idx_league_history_from_league_id",
+     "colunas": "from_league_id",
+     "unico": false
+    },
+    {
+     "nome": "idx_league_history_to_league_id",
+     "colunas": "to_league_id",
+     "unico": false
+    },
+    {
      "nome": "idx_league_history_user_created",
      "colunas": "user_id, created_at DESC",
      "unico": false
@@ -16295,6 +16730,11 @@
     {
      "nome": "idx_leagues_department",
      "colunas": "department_id",
+     "unico": false
+    },
+    {
+     "nome": "idx_leagues_theme_id",
+     "colunas": "theme_id",
      "unico": false
     }
    ],
@@ -16464,7 +16904,23 @@
      "tipo": "permissive"
     }
    ],
-   "indices": [],
+   "indices": [
+    {
+     "nome": "idx_learning_trails_department_id",
+     "colunas": "department_id",
+     "unico": false
+    },
+    {
+     "nome": "idx_learning_trails_fts",
+     "colunas": "to_tsvector('portuguese'::regconfig, ((COALESCE(title, ''::text",
+     "unico": false
+    },
+    {
+     "nome": "idx_learning_trails_title_trgm",
+     "colunas": "title extensions.gin_trgm_ops",
+     "unico": false
+    }
+   ],
    "fks": [
     "department_id->departments"
    ],
@@ -16592,6 +17048,11 @@
    ],
    "indices": [
     {
+     "nome": "idx_level_configs_rank_id",
+     "colunas": "rank_id",
+     "unico": false
+    },
+    {
      "nome": "idx_level_configs_theme",
      "colunas": "theme_id",
      "unico": false
@@ -16713,6 +17174,11 @@
    ],
    "indices": [
     {
+     "nome": "idx_lightning_quiz_answers_session",
+     "colunas": "session_id",
+     "unico": false
+    },
+    {
      "nome": "lightning_answers_session_idx_uidx",
      "colunas": "session_id, idx",
      "unico": true
@@ -16726,6 +17192,7 @@
    "fks": [
     "question_id->lightning_quiz_questions",
     "session_id->lightning_quiz_sessions",
+    "user_id->auth",
     "user_id->profiles"
    ],
    "criada_em": "20260727221909_f26719a2-a70b-4f38-ab93-5bda56de8d26.sql",
@@ -16832,6 +17299,11 @@
     }
    ],
    "indices": [
+    {
+     "nome": "idx_lightning_quiz_questions_active",
+     "colunas": "is_active, difficulty",
+     "unico": false
+    },
     {
      "nome": "lightning_questions_active_idx",
      "colunas": "is_active, difficulty",
@@ -17002,6 +17474,11 @@
    ],
    "indices": [
     {
+     "nome": "idx_lightning_quiz_sessions_user",
+     "colunas": "user_id, created_at DESC",
+     "unico": false
+    },
+    {
      "nome": "lightning_sessions_user_created_idx",
      "colunas": "user_id, created_at DESC",
      "unico": false
@@ -17013,6 +17490,7 @@
     }
    ],
    "fks": [
+    "user_id->auth",
     "user_id->profiles"
    ],
    "criada_em": "20260727221909_f26719a2-a70b-4f38-ab93-5bda56de8d26.sql",
@@ -17360,6 +17838,11 @@
    ],
    "indices": [
     {
+     "nome": "idx_lucky_wheel_prize_audit_prize",
+     "colunas": "prize_id, changed_at DESC",
+     "unico": false
+    },
+    {
      "nome": "lucky_wheel_prize_audit_changed_at_idx",
      "colunas": "changed_at DESC",
      "unico": false
@@ -17370,7 +17853,10 @@
      "unico": false
     }
    ],
-   "fks": [],
+   "fks": [
+    "changed_by->auth",
+    "prize_id->lucky_wheel_prizes"
+   ],
    "criada_em": "20260727205544_b7279835-115a-4407-9e02-6fed78ac0f63.sql",
    "colunas_types": {
     "after_data": "Json | null",
@@ -17458,7 +17944,13 @@
      "tipo": "permissive"
     }
    ],
-   "indices": [],
+   "indices": [
+    {
+     "nome": "lucky_wheel_prizes_active_idx",
+     "colunas": "is_active",
+     "unico": false
+    }
+   ],
    "fks": [
     "achievement_id->achievements",
     "color->auth"
@@ -17544,7 +18036,9 @@
     }
    ],
    "indices": [],
-   "fks": [],
+   "fks": [
+    "updated_by->auth"
+   ],
    "criada_em": "20260727215945_ba1105ee-36ac-4f9e-88b9-79454b9c6178.sql",
    "colunas_types": {
     "coins_per_spin_budget": "number",
@@ -17620,7 +18114,9 @@
      "unico": false
     }
    ],
-   "fks": [],
+   "fks": [
+    "changed_by->auth"
+   ],
    "criada_em": "20260727220212_7a58639d-4928-43be-a7a8-325c67d39983.sql",
    "colunas_types": {
     "changed_at": "string",
@@ -17666,9 +18162,19 @@
    ],
    "indices": [
     {
+     "nome": "idx_lucky_wheel_spins_user",
+     "colunas": "user_id, spin_date DESC",
+     "unico": false
+    },
+    {
      "nome": "lucky_wheel_spins_dedupe_key_idx",
      "colunas": "user_id, dedupe_key",
      "unico": true
+    },
+    {
+     "nome": "lucky_wheel_spins_user_created_idx",
+     "colunas": "user_id, created_at DESC",
+     "unico": false
     }
    ],
    "fks": [],
@@ -17815,12 +18321,19 @@
    ],
    "indices": [
     {
+     "nome": "idx_lucky_wheel_whatif_snapshots",
+     "colunas": "current_window_start DESC",
+     "unico": false
+    },
+    {
      "nome": "idx_lucky_wheel_whatif_window",
      "colunas": "current_window_end DESC, created_at DESC",
      "unico": false
     }
    ],
-   "fks": [],
+   "fks": [
+    "created_by->auth"
+   ],
    "criada_em": "20260727220922_7fdbfc2a-6a87-42b0-a5c9-818c5a862bb5.sql",
    "colunas_types": {
     "active_budget": "number",
@@ -17926,6 +18439,7 @@
    ],
    "indices": [],
    "fks": [
+    "created_by->auth",
     "department_id->departments"
    ],
    "criada_em": "20260728155537_900a1488-1655-4e15-b4be-26a2b8676126.sql",
@@ -18172,13 +18686,19 @@
      "unico": false
     },
     {
+     "nome": "idx_memory_sessions_user",
+     "colunas": "user_id, session_date DESC",
+     "unico": false
+    },
+    {
      "nome": "idx_memory_sessions_user_date",
      "colunas": "user_id, session_date DESC",
      "unico": false
     }
    ],
    "fks": [
-    "deck_id->memory_decks"
+    "deck_id->memory_decks",
+    "user_id->auth"
    ],
    "criada_em": "20260728155537_900a1488-1655-4e15-b4be-26a2b8676126.sql",
    "colunas_types": {
@@ -18304,7 +18824,13 @@
      "tipo": "permissive"
     }
    ],
-   "indices": [],
+   "indices": [
+    {
+     "nome": "idx_mentorship_mission_progress_mission_id",
+     "colunas": "mission_id",
+     "unico": false
+    }
+   ],
    "fks": [
     "mission_id->mentorship_missions",
     "pair_id->mentorship_pairs"
@@ -18752,7 +19278,13 @@
      "tipo": "permissive"
     }
    ],
-   "indices": [],
+   "indices": [
+    {
+     "nome": "idx_module_progress_module_id",
+     "colunas": "module_id",
+     "unico": false
+    }
+   ],
    "fks": [
     "module_id->trail_modules"
    ],
@@ -18967,6 +19499,11 @@
     }
    ],
    "indices": [
+    {
+     "nome": "idx_new_device_alerts_device_id",
+     "colunas": "device_id",
+     "unico": false
+    },
     {
      "nome": "idx_new_device_alerts_unread",
      "colunas": "user_id, is_read",
@@ -19615,6 +20152,11 @@
      "unico": false
     },
     {
+     "nome": "idx_notifications_user_timeline",
+     "colunas": "user_id, created_at DESC",
+     "unico": false
+    },
+    {
      "nome": "idx_notifications_user_unread",
      "colunas": "user_id, read",
      "unico": false
@@ -19705,6 +20247,11 @@
     }
    ],
    "indices": [
+    {
+     "nome": "idx_nr1_factor_mappings",
+     "colunas": "category_id",
+     "unico": false
+    },
     {
      "nome": "idx_nr1_map_category",
      "colunas": "category_id",
@@ -20021,7 +20568,13 @@
      "tipo": "permissive"
     }
    ],
-   "indices": [],
+   "indices": [
+    {
+     "nome": "idx_opinion_responses_opinion_id",
+     "colunas": "opinion_id",
+     "unico": false
+    }
+   ],
    "fks": [
     "opinion_id->opinions"
    ],
@@ -20092,13 +20645,19 @@
    ],
    "indices": [
     {
+     "nome": "idx_opinion_supports",
+     "colunas": "opinion_id",
+     "unico": false
+    },
+    {
      "nome": "idx_opinion_supports_opinion",
      "colunas": "opinion_id",
      "unico": false
     }
    ],
    "fks": [
-    "opinion_id->opinions"
+    "opinion_id->opinions",
+    "user_id->auth"
    ],
    "criada_em": "20260726182807_60e2ae2c-7399-42d5-80ca-722803ff15c9.sql",
    "colunas_types": {
@@ -20157,7 +20716,13 @@
      "tipo": "permissive"
     }
    ],
-   "indices": [],
+   "indices": [
+    {
+     "nome": "idx_opinion_tags_opinion_id",
+     "colunas": "opinion_id",
+     "unico": false
+    }
+   ],
    "fks": [
     "opinion_id->opinions"
    ],
@@ -20412,7 +20977,22 @@
      "unico": false
     },
     {
+     "nome": "idx_org_members_org_id",
+     "colunas": "org_id",
+     "unico": false
+    },
+    {
+     "nome": "idx_org_members_org_user",
+     "colunas": "org_id, user_id",
+     "unico": true
+    },
+    {
      "nome": "idx_org_members_user",
+     "colunas": "user_id",
+     "unico": false
+    },
+    {
+     "nome": "idx_org_members_user_id",
      "colunas": "user_id",
      "unico": false
     }
@@ -20495,6 +21075,11 @@
     {
      "nome": "idx_org_theme_history_org",
      "colunas": "org_id, created_at DESC",
+     "unico": false
+    },
+    {
+     "nome": "idx_org_theme_history_org_id",
+     "colunas": "org_id",
      "unico": false
     }
    ],
@@ -20621,7 +21206,13 @@
      "tipo": "permissive"
     }
    ],
-   "indices": [],
+   "indices": [
+    {
+     "nome": "idx_organizations_slug",
+     "colunas": "slug",
+     "unico": true
+    }
+   ],
    "fks": [],
    "criada_em": "20260723101331_463fe946-3615-4294-ad69-fb70cdde9cf2.sql",
    "colunas_types": {
@@ -20913,7 +21504,13 @@
      "tipo": "permissive"
     }
    ],
-   "indices": [],
+   "indices": [
+    {
+     "nome": "idx_pdi_checkins_plan_id",
+     "colunas": "plan_id",
+     "unico": false
+    }
+   ],
    "fks": [
     "plan_id->development_plans"
    ],
@@ -21013,7 +21610,13 @@
      "tipo": "permissive"
     }
    ],
-   "indices": [],
+   "indices": [
+    {
+     "nome": "idx_pdi_mentors_plan_id",
+     "colunas": "plan_id",
+     "unico": false
+    }
+   ],
    "fks": [
     "plan_id->development_plans"
    ],
@@ -21597,7 +22200,18 @@
      "tipo": "permissive"
     }
    ],
-   "indices": [],
+   "indices": [
+    {
+     "nome": "idx_position_competencies_competency_id",
+     "colunas": "competency_id",
+     "unico": false
+    },
+    {
+     "nome": "idx_position_competencies_position_id",
+     "colunas": "position_id",
+     "unico": false
+    }
+   ],
    "fks": [
     "competency_id->competencies",
     "position_id->positions"
@@ -21753,7 +22367,13 @@
      "tipo": "permissive"
     }
    ],
-   "indices": [],
+   "indices": [
+    {
+     "nome": "idx_position_task_templates_position_id",
+     "colunas": "position_id",
+     "unico": false
+    }
+   ],
    "fks": [
     "position_id->positions"
    ],
@@ -21862,7 +22482,13 @@
      "tipo": "permissive"
     }
    ],
-   "indices": [],
+   "indices": [
+    {
+     "nome": "idx_positions_department_id",
+     "colunas": "department_id",
+     "unico": false
+    }
+   ],
    "fks": [
     "department_id->departments"
    ],
@@ -21994,6 +22620,11 @@
     {
      "nome": "idx_pm_actions_status_due",
      "colunas": "status, due_date",
+     "unico": false
+    },
+    {
+     "nome": "idx_postmortem_actions_owner_user_id",
+     "colunas": "owner_user_id",
      "unico": false
     }
    ],
@@ -22181,6 +22812,11 @@
      "unico": false
     },
     {
+     "nome": "idx_postmortems_created_by",
+     "colunas": "created_by",
+     "unico": false
+    },
+    {
      "nome": "idx_postmortems_status_created",
      "colunas": "status, created_at DESC",
      "unico": false
@@ -22286,6 +22922,7 @@
     }
    ],
    "fks": [
+    "actor_id->auth",
     "market_id->prediction_markets"
    ],
    "criada_em": "20260728114514_7f6f6bd8-8c0c-4762-9f48-2e4474ed0b2b.sql",
@@ -22451,7 +23088,11 @@
      "unico": false
     }
    ],
-   "fks": [],
+   "fks": [
+    "created_by->auth",
+    "settled_by->auth",
+    "winning_option_id->prediction_options"
+   ],
    "criada_em": "20260728113255_b0c9ae8e-e19d-44ea-ad4d-a0366d453980.sql",
    "colunas_types": {
     "created_at": "string",
@@ -22656,7 +23297,7 @@
     },
     {
      "nome": "idx_prediction_stakes_market",
-     "colunas": "market_id",
+     "colunas": "market_id, option_id",
      "unico": false
     },
     {
@@ -22672,7 +23313,8 @@
    ],
    "fks": [
     "market_id->prediction_markets",
-    "option_id->prediction_options"
+    "option_id->prediction_options",
+    "user_id->auth"
    ],
    "criada_em": "20260728113255_b0c9ae8e-e19d-44ea-ad4d-a0366d453980.sql",
    "colunas_types": {
@@ -22866,7 +23508,38 @@
      "tipo": "permissive"
     }
    ],
-   "indices": [],
+   "indices": [
+    {
+     "nome": "idx_profiles_confirmed",
+     "colunas": "id",
+     "unico": false
+    },
+    {
+     "nome": "idx_profiles_display_name_trgm",
+     "colunas": "display_name extensions.gin_trgm_ops",
+     "unico": false
+    },
+    {
+     "nome": "idx_profiles_display_name_unaccent",
+     "colunas": "to_tsvector('portuguese'::regconfig, COALESCE(display_name, ''::text",
+     "unico": false
+    },
+    {
+     "nome": "idx_profiles_email_trgm",
+     "colunas": "email extensions.gin_trgm_ops",
+     "unico": false
+    },
+    {
+     "nome": "idx_profiles_employee_id",
+     "colunas": "employee_id",
+     "unico": false
+    },
+    {
+     "nome": "idx_profiles_level",
+     "colunas": "level DESC, xp DESC",
+     "unico": false
+    }
+   ],
    "fks": [
     "id->auth"
    ],
@@ -22973,7 +23646,13 @@
      "tipo": "permissive"
     }
    ],
-   "indices": [],
+   "indices": [
+    {
+     "nome": "idx_pulse_responses_survey_id",
+     "colunas": "survey_id",
+     "unico": false
+    }
+   ],
    "fks": [
     "survey_id->pulse_surveys"
    ],
@@ -23097,7 +23776,13 @@
      "tipo": "permissive"
     }
    ],
-   "indices": [],
+   "indices": [
+    {
+     "nome": "idx_pulse_surveys_department_id",
+     "colunas": "department_id",
+     "unico": false
+    }
+   ],
    "fks": [
     "department_id->departments"
    ],
@@ -23217,6 +23902,7 @@
     }
    ],
    "fks": [
+    "actor_id->auth",
     "purchase_id->shop_purchases"
    ],
    "criada_em": "20260727183427_72f9c05a-39cb-439b-9460-a965561e3d62.sql",
@@ -23541,9 +24227,21 @@
      "nome": "idx_push_outbox_pending",
      "colunas": "created_at",
      "unico": false
+    },
+    {
+     "nome": "idx_push_outbox_status",
+     "colunas": "status, created_at",
+     "unico": false
+    },
+    {
+     "nome": "idx_push_outbox_user",
+     "colunas": "user_id",
+     "unico": false
     }
    ],
-   "fks": [],
+   "fks": [
+    "user_id->auth"
+   ],
    "criada_em": "20260728112123_ea25bb13-aa3c-4f75-9892-c58e2785e70b.sql",
    "colunas_types": {
     "attempts": "number",
@@ -23681,6 +24379,11 @@
    "indices": [
     {
      "nome": "idx_push_outbox_health_created",
+     "colunas": "created_at DESC",
+     "unico": false
+    },
+    {
+     "nome": "idx_push_outbox_health_snapshots",
      "colunas": "created_at DESC",
      "unico": false
     }
@@ -23956,6 +24659,11 @@
     }
    ],
    "indices": [
+    {
+     "nome": "idx_push_sync_events_user",
+     "colunas": "user_id, created_at DESC",
+     "unico": false
+    },
     {
      "nome": "push_sync_events_user_recent_idx",
      "colunas": "user_id, created_at DESC",
@@ -24235,6 +24943,11 @@
      "nome": "idx_quest_assignments_user",
      "colunas": "user_id",
      "unico": false
+    },
+    {
+     "nome": "idx_quest_assignments_user_id",
+     "colunas": "user_id",
+     "unico": false
     }
    ],
    "fks": [
@@ -24435,6 +25148,11 @@
     {
      "nome": "idx_quiz_answers_question",
      "colunas": "question_id",
+     "unico": false
+    },
+    {
+     "nome": "idx_quiz_answers_selected_option_id",
+     "colunas": "selected_option_id",
      "unico": false
     },
     {
@@ -24946,6 +25664,11 @@
      "nome": "idx_rate_limit_logs_ip",
      "colunas": "ip_address",
      "unico": false
+    },
+    {
+     "nome": "idx_rate_limit_logs_user_id",
+     "colunas": "user_id",
+     "unico": false
     }
    ],
    "fks": [
@@ -25357,6 +26080,11 @@
      "nome": "idx_runbook_exec_slug",
      "colunas": "runbook_slug, created_at DESC",
      "unico": false
+    },
+    {
+     "nome": "idx_runbook_executions_performed_by",
+     "colunas": "performed_by",
+     "unico": false
     }
    ],
    "fks": [
@@ -25571,8 +26299,23 @@
    ],
    "indices": [
     {
+     "nome": "idx_sales_campaigns_created_by",
+     "colunas": "created_by",
+     "unico": false
+    },
+    {
+     "nome": "idx_sales_campaigns_department_id",
+     "colunas": "department_id",
+     "unico": false
+    },
+    {
      "nome": "idx_sales_campaigns_metric_key",
      "colunas": "metric_key",
+     "unico": false
+    },
+    {
+     "nome": "idx_sales_campaigns_org_id",
+     "colunas": "org_id",
      "unico": false
     },
     {
@@ -25986,6 +26729,11 @@
    ],
    "indices": [
     {
+     "nome": "idx_scratch_cards_user_status",
+     "colunas": "user_id, status",
+     "unico": false
+    },
+    {
      "nome": "scratch_cards_user_dedupe_uidx",
      "colunas": "user_id, dedupe_key",
      "unico": true
@@ -25997,7 +26745,8 @@
     }
    ],
    "fks": [
-    "prize_id->scratch_card_prizes"
+    "prize_id->scratch_card_prizes",
+    "user_id->auth"
    ],
    "criada_em": "20260727221231_aacc3a8b-99f9-4836-85f0-f639d99184f1.sql",
    "colunas_types": {
@@ -26137,7 +26886,13 @@
      "tipo": "permissive"
     }
    ],
-   "indices": [],
+   "indices": [
+    {
+     "nome": "idx_seasonal_challenges_event_id",
+     "colunas": "event_id",
+     "unico": false
+    }
+   ],
    "fks": [
     "event_id->seasonal_events"
    ],
@@ -26441,6 +27196,16 @@
      "unico": false
     },
     {
+     "nome": "idx_security_alerts_acknowledged_by",
+     "colunas": "acknowledged_by",
+     "unico": false
+    },
+    {
+     "nome": "idx_security_alerts_resolved_by",
+     "colunas": "resolved_by",
+     "unico": false
+    },
+    {
      "nome": "idx_security_alerts_severity",
      "colunas": "severity",
      "unico": false
@@ -26451,13 +27216,23 @@
      "unico": false
     },
     {
+     "nome": "idx_security_alerts_type_date",
+     "colunas": "alert_type, created_at DESC",
+     "unico": false
+    },
+    {
      "nome": "idx_security_alerts_unresolved",
      "colunas": "is_resolved",
      "unico": false
     },
     {
+     "nome": "idx_security_alerts_user_id",
+     "colunas": "user_id",
+     "unico": false
+    },
+    {
      "nome": "security_alerts_lucky_wheel_dedupe_idx",
-     "colunas": "alert_type, ((metadata ->> 'ref_date'",
+     "colunas": "alert_type, ((metadata ->> 'ref_date'::text",
      "unico": true
     },
     {
@@ -26625,13 +27400,19 @@
      "unico": false
     },
     {
+     "nome": "idx_sequence_attempts_user",
+     "colunas": "user_id, attempt_date DESC",
+     "unico": false
+    },
+    {
      "nome": "idx_sequence_attempts_user_day",
      "colunas": "user_id, procedure_id, attempt_date",
      "unico": false
     }
    ],
    "fks": [
-    "procedure_id->sequence_procedures"
+    "procedure_id->sequence_procedures",
+    "user_id->auth"
    ],
    "criada_em": "20260728160710_b44a5761-2e2e-411a-87d5-5f4df8341b48.sql",
    "colunas_types": {
@@ -26734,6 +27515,7 @@
    ],
    "indices": [],
    "fks": [
+    "created_by->auth",
     "department_id->departments"
    ],
    "criada_em": "20260728160710_b44a5761-2e2e-411a-87d5-5f4df8341b48.sql",
@@ -27361,13 +28143,24 @@
    ],
    "indices": [
     {
+     "nome": "idx_shop_purchases_reward_id",
+     "colunas": "reward_id",
+     "unico": false
+    },
+    {
      "nome": "idx_shop_purchases_status_risk",
      "colunas": "status, risk_score DESC",
+     "unico": false
+    },
+    {
+     "nome": "idx_shop_purchases_user_id",
+     "colunas": "user_id",
      "unico": false
     }
    ],
    "fks": [
     "approved_by->auth",
+    "first_approver_id->auth",
     "reward_id->shop_rewards",
     "user_id->profiles"
    ],
@@ -27762,7 +28555,13 @@
      "tipo": "permissive"
     }
    ],
-   "indices": [],
+   "indices": [
+    {
+     "nome": "idx_task_penalties_task_score_id",
+     "colunas": "task_score_id",
+     "unico": false
+    }
+   ],
    "fks": [
     "task_score_id->task_scores"
    ],
@@ -27971,7 +28770,28 @@
      "tipo": "permissive"
     }
    ],
-   "indices": [],
+   "indices": [
+    {
+     "nome": "idx_task_scores_status_date",
+     "colunas": "status, assigned_at DESC",
+     "unico": false
+    },
+    {
+     "nome": "idx_task_scores_task_template_id",
+     "colunas": "task_template_id",
+     "unico": false
+    },
+    {
+     "nome": "idx_task_scores_user_deadline",
+     "colunas": "user_id, deadline_at",
+     "unico": false
+    },
+    {
+     "nome": "idx_task_scores_user_status",
+     "colunas": "user_id, status",
+     "unico": false
+    }
+   ],
    "fks": [
     "task_template_id->position_task_templates"
    ],
@@ -28071,7 +28891,13 @@
      "tipo": "permissive"
     }
    ],
-   "indices": [],
+   "indices": [
+    {
+     "nome": "idx_team_members_department_id",
+     "colunas": "department_id",
+     "unico": false
+    }
+   ],
    "fks": [
     "department_id->departments",
     "user_id->auth"
@@ -28206,6 +29032,11 @@
     }
    ],
    "indices": [
+    {
+     "nome": "idx_tournament_matches",
+     "colunas": "tournament_id, round",
+     "unico": false
+    },
     {
      "nome": "idx_tournament_matches_tid",
      "colunas": "tournament_id, round, slot",
@@ -28350,6 +29181,11 @@
    ],
    "indices": [
     {
+     "nome": "idx_tournament_participants",
+     "colunas": "tournament_id, seed",
+     "unico": false
+    },
+    {
      "nome": "idx_tournament_participants_tid",
      "colunas": "tournament_id, seed",
      "unico": false
@@ -28361,7 +29197,8 @@
     }
    ],
    "fks": [
-    "tournament_id->tournaments"
+    "tournament_id->tournaments",
+    "user_id->auth"
    ],
    "criada_em": "20260727225705_3f1a6745-9d47-4f97-aa97-b73f6a05b1da.sql",
    "colunas_types": {
@@ -28569,7 +29406,11 @@
      "unico": false
     }
    ],
-   "fks": [],
+   "fks": [
+    "champion_user_id->auth",
+    "created_by->auth",
+    "runner_up_user_id->auth"
+   ],
    "criada_em": "20260727225705_3f1a6745-9d47-4f97-aa97-b73f6a05b1da.sql",
    "colunas_types": {
     "bracket_size": "number | null",
@@ -28673,7 +29514,13 @@
      "tipo": "permissive"
     }
    ],
-   "indices": [],
+   "indices": [
+    {
+     "nome": "idx_trail_enrollments_trail_id",
+     "colunas": "trail_id",
+     "unico": false
+    }
+   ],
    "fks": [
     "trail_id->learning_trails"
    ],
@@ -28805,7 +29652,13 @@
      "tipo": "permissive"
     }
    ],
-   "indices": [],
+   "indices": [
+    {
+     "nome": "idx_trail_modules_trail_id",
+     "colunas": "trail_id",
+     "unico": false
+    }
+   ],
    "fks": [
     "trail_id->learning_trails"
    ],
@@ -28971,7 +29824,13 @@
      "tipo": "permissive"
     }
    ],
-   "indices": [],
+   "indices": [
+    {
+     "nome": "idx_user_achievements_achievement_id",
+     "colunas": "achievement_id",
+     "unico": false
+    }
+   ],
    "fks": [
     "achievement_id->achievements"
    ],
@@ -29074,7 +29933,33 @@
      "tipo": "permissive"
     }
    ],
-   "indices": [],
+   "indices": [
+    {
+     "nome": "idx_user_avatar_config_selected_accessory",
+     "colunas": "selected_accessory",
+     "unico": false
+    },
+    {
+     "nome": "idx_user_avatar_config_selected_background",
+     "colunas": "selected_background",
+     "unico": false
+    },
+    {
+     "nome": "idx_user_avatar_config_selected_badge_style",
+     "colunas": "selected_badge_style",
+     "unico": false
+    },
+    {
+     "nome": "idx_user_avatar_config_selected_effect",
+     "colunas": "selected_effect",
+     "unico": false
+    },
+    {
+     "nome": "idx_user_avatar_config_selected_frame",
+     "colunas": "selected_frame",
+     "unico": false
+    }
+   ],
    "fks": [
     "selected_accessory->avatar_items",
     "selected_background->avatar_items",
@@ -29157,7 +30042,13 @@
      "tipo": "permissive"
     }
    ],
-   "indices": [],
+   "indices": [
+    {
+     "nome": "idx_user_avatar_items_item_id",
+     "colunas": "item_id",
+     "unico": false
+    }
+   ],
    "fks": [
     "item_id->avatar_items"
    ],
@@ -29253,7 +30144,8 @@
     }
    ],
    "fks": [
-    "card_id->card_definitions"
+    "card_id->card_definitions",
+    "user_id->auth"
    ],
    "criada_em": "20260728121542_4ac8cbd1-0d6d-410d-8734-4fd032804ddc.sql",
    "colunas_types": {
@@ -29406,6 +30298,11 @@
     }
    ],
    "indices": [
+    {
+     "nome": "idx_user_certifications_certification_id",
+     "colunas": "certification_id",
+     "unico": false
+    },
     {
      "nome": "user_certifications_certificate_code_key",
      "colunas": "certificate_code",
@@ -29847,7 +30744,18 @@
      "tipo": "permissive"
     }
    ],
-   "indices": [],
+   "indices": [
+    {
+     "nome": "idx_user_competency_assessments_competency_id",
+     "colunas": "competency_id",
+     "unico": false
+    },
+    {
+     "nome": "idx_user_competency_assessments_feedback_cycle_id",
+     "colunas": "feedback_cycle_id",
+     "unico": false
+    }
+   ],
    "fks": [
     "competency_id->competencies",
     "feedback_cycle_id->feedback_cycles"
@@ -30263,7 +31171,13 @@
      "tipo": "permissive"
     }
    ],
-   "indices": [],
+   "indices": [
+    {
+     "nome": "idx_user_leagues_league_id",
+     "colunas": "league_id",
+     "unico": false
+    }
+   ],
    "fks": [
     "league_id->leagues",
     "user_id->profiles"
@@ -30380,7 +31294,13 @@
      "tipo": "permissive"
     }
    ],
-   "indices": [],
+   "indices": [
+    {
+     "nome": "idx_user_mission_progress_mission_id",
+     "colunas": "mission_id",
+     "unico": false
+    }
+   ],
    "fks": [
     "mission_id->department_missions"
    ],
@@ -30552,7 +31472,13 @@
      "tipo": "permissive"
     }
    ],
-   "indices": [],
+   "indices": [
+    {
+     "nome": "idx_user_positions_position_id",
+     "colunas": "position_id",
+     "unico": false
+    }
+   ],
    "fks": [
     "position_id->positions"
    ],
@@ -30735,7 +31661,13 @@
      "tipo": "permissive"
     }
    ],
-   "indices": [],
+   "indices": [
+    {
+     "nome": "idx_user_seasonal_progress_challenge_id",
+     "colunas": "challenge_id",
+     "unico": false
+    }
+   ],
    "fks": [
     "challenge_id->seasonal_challenges"
    ],
@@ -30821,6 +31753,11 @@
     }
    ],
    "indices": [
+    {
+     "nome": "idx_user_titles_title_id",
+     "colunas": "title_id",
+     "unico": false
+    },
     {
      "nome": "idx_user_titles_user",
      "colunas": "user_id",
@@ -31019,7 +31956,9 @@
     }
    ],
    "indices": [],
-   "fks": [],
+   "fks": [
+    "updated_by->auth"
+   ],
    "criada_em": "20260728165352_0b6b1cf6-d904-4ea9-aa56-39273a7747d4.sql",
    "colunas_types": {
     "created_at": "string",
@@ -31142,6 +32081,11 @@
      "unico": false
     },
     {
+     "nome": "idx_wager_entries_user",
+     "colunas": "user_id, created_at DESC",
+     "unico": false
+    },
+    {
      "nome": "idx_wager_entries_user_created",
      "colunas": "user_id, created_at",
      "unico": false
@@ -31153,7 +32097,8 @@
     }
    ],
    "fks": [
-    "question_id->wager_questions"
+    "question_id->wager_questions",
+    "user_id->auth"
    ],
    "criada_em": "20260728162910_ce6804ee-af74-4b26-a85c-c0b3c83c0965.sql",
    "colunas_types": {
@@ -31269,13 +32214,20 @@
    ],
    "indices": [
     {
+     "nome": "idx_wager_integrity_review_events",
+     "colunas": "review_id, created_at DESC",
+     "unico": false
+    },
+    {
      "nome": "idx_wager_review_events_lookup",
      "colunas": "window_days, target_user_id, anomaly_code, created_at DESC",
      "unico": false
     }
    ],
    "fks": [
-    "review_id->wager_integrity_reviews"
+    "changed_by->auth",
+    "review_id->wager_integrity_reviews",
+    "target_user_id->auth"
    ],
    "criada_em": "20260728171612_1d7a91fb-2bc6-4dbd-b18c-99a6b9ee7326.sql",
    "colunas_types": {
@@ -31394,9 +32346,17 @@
      "nome": "idx_wager_integrity_reviews_lookup",
      "colunas": "window_days, status, updated_at DESC",
      "unico": false
+    },
+    {
+     "nome": "idx_wager_integrity_reviews_user",
+     "colunas": "target_user_id, status",
+     "unico": false
     }
    ],
-   "fks": [],
+   "fks": [
+    "reviewed_by->auth",
+    "target_user_id->auth"
+   ],
    "criada_em": "20260728170048_6914a662-62a1-4083-8f9c-3acf7ec34b57.sql",
    "colunas_types": {
     "anomaly_code": "string",
@@ -31530,16 +32490,29 @@
      "comando": "select",
      "para": "authenticated",
      "tipo": "permissive"
+    },
+    {
+     "nome": "wager_questions_user_select_own_entries",
+     "comando": "select",
+     "para": "authenticated",
+     "tipo": "permissive"
     }
    ],
    "indices": [
+    {
+     "nome": "idx_wager_questions_date",
+     "colunas": "scheduled_date DESC",
+     "unico": false
+    },
     {
      "nome": "uq_wager_questions_date_active",
      "colunas": "scheduled_date",
      "unico": true
     }
    ],
-   "fks": [],
+   "fks": [
+    "created_by->auth"
+   ],
    "criada_em": "20260728162910_ce6804ee-af74-4b26-a85c-c0b3c83c0965.sql",
    "colunas_types": {
     "base_multiplier": "number",
@@ -32154,7 +33127,18 @@
      "tipo": "permissive"
     }
    ],
-   "indices": [],
+   "indices": [
+    {
+     "nome": "idx_webhook_subs_active",
+     "colunas": "is_active",
+     "unico": false
+    },
+    {
+     "nome": "idx_webhook_subscriptions_api_key_id",
+     "colunas": "api_key_id",
+     "unico": false
+    }
+   ],
    "fks": [
     "api_key_id->external_api_keys"
    ],
