@@ -153,13 +153,40 @@ export function deferForQuietHours(item: OutboxItem, until: Date): OutboxItem {
 }
 
 /**
+ * Preferencia atual do dono do item; `undefined` = nao modelada (usa o prazo
+ * salvo). Espelha `push_quiet_hours_until(user_id)` sendo lida no claim.
+ */
+export type QuietHoursLookup = (item: OutboxItem) => QuietHoursPreference | undefined;
+
+/**
  * Devolve para a fila quem ja' venceu a janela. `deferred_until` nulo tambem
  * volta: linha adiada sem prazo ficaria presa para sempre.
+ *
+ * Com `quietHours`, o prazo e' recalculado a partir da preferencia ATUAL antes de
+ * decidir — espelha o `claim_push_outbox`: desligar a janela (ou antecipar o fim)
+ * solta o aviso na hora, e estender a janela empurra o prazo em vez de entregar no
+ * meio do silencio.
  */
-export function releaseDeferred(items: OutboxItem[], now: Date): OutboxItem[] {
+export function releaseDeferred(
+  items: OutboxItem[],
+  now: Date,
+  quietHours?: QuietHoursLookup,
+): OutboxItem[] {
   const limit = now.getTime();
   return items.map((i) => {
     if (i.status !== "deferred") return i;
+
+    if (quietHours) {
+      const pref = quietHours(i);
+      if (pref) {
+        const novo = quietHoursUntil(now, pref);
+        if (novo === null) return { ...i, status: "pending" as const, deferredUntil: null };
+        const prazo = i.deferredUntil ? Date.parse(i.deferredUntil) : Number.NaN;
+        if (novo.getTime() === prazo) return i;
+        return deferForQuietHours(i, novo);
+      }
+    }
+
     const until = i.deferredUntil ? Date.parse(i.deferredUntil) : Number.NaN;
     if (!Number.isNaN(until) && until > limit) return i;
     return { ...i, status: "pending" as const, deferredUntil: null };
@@ -171,8 +198,9 @@ export function claimBatch(
   limit: number,
   stuckIds: ReadonlySet<string> = new Set(),
   now: Date = new Date(0),
+  quietHours?: QuietHoursLookup,
 ): { claimed: OutboxItem[]; next: OutboxItem[] } {
-  const recycled = releaseDeferred(items, now).map((i) =>
+  const recycled = releaseDeferred(items, now, quietHours).map((i) =>
     i.status === "processing" && stuckIds.has(i.id) ? { ...i, status: "pending" as const } : i,
   );
 

@@ -5,6 +5,7 @@ import { createClient } from "npm:@supabase/supabase-js@2";
 import { corsHeaders } from "npm:@supabase/supabase-js@2/cors";
 import webpush from "npm:web-push@3.6.7";
 import { parseJsonBody } from "../_shared/validation.ts";
+import { campaignPushDedupeKey } from "../_shared/campaignPush.ts";
 import { SendCampaignPushRequestSchema } from "../_shared/contracts/send-campaign-push.ts";
 
 Deno.serve(async (req) => {
@@ -57,6 +58,7 @@ Deno.serve(async (req) => {
   const targets: string[] = [];
   const queued: string[] = [];
   let deferredCount = 0;
+  let deduped = 0;
   for (const uid of allowed) {
     const { data: until, error: quietErr } = await supabase.rpc("push_quiet_hours_until", {
       _user_id: uid,
@@ -69,25 +71,31 @@ Deno.serve(async (req) => {
   }
 
   if (queued.length > 0) {
-    const dedupeBase = campaignId ?? `push-${new Date().toISOString().slice(0, 16)}`;
+    // Uma chave por conteudo: 25/50/75% e conclusao saem na mesma campanha e com
+    // o mesmo tipo, entao a chave antiga (`campanha:uid`) engolia o 2o aviso.
+    const dedupe = (uid: string) => campaignPushDedupeKey({ campaignId, type, title, message, url }, uid);
     for (const uid of queued) {
-      const { error: queueErr } = await supabase.rpc("enqueue_push", {
+      const { data: stored, error: queueErr } = await supabase.rpc("enqueue_push", {
         p_user_id: uid,
         p_type: type,
         p_title: title,
         p_message: message,
-        p_dedupe_key: `${dedupeBase}:${uid}`.slice(0, 200),
+        p_dedupe_key: dedupe(uid),
         p_url: url ?? null,
         p_data: data ?? {},
       });
       // Falha ao enfileirar nao pode virar aviso perdido: cai para o envio na hora.
       if (queueErr) targets.push(uid);
-      else deferredCount++;
+      else if (stored === true) deferredCount++;
+      else deduped++;
     }
+    console.log("[send-campaign-push] quiet hours", { deferred: deferredCount, deduped });
   }
 
   if (targets.length === 0) {
-    return json({ sent: 0, deferred: deferredCount, skipped: user_ids.length - allowed.length });
+    // Contrato da funcao: { sent, invalidated, failed }. Nada de contagem de
+    // adiados aqui: isso diria a quem chamou se o destinatario esta em silencio.
+    return json({ sent: 0, invalidated: 0, failed: 0 });
   }
 
   const { data: subs, error: subsErr } = await supabase
@@ -168,7 +176,7 @@ Deno.serve(async (req) => {
     });
   }
 
-  return json({ sent, invalidated: invalidIds.length, failed: failedIds.length, deferred: deferredCount });
+  return json({ sent, invalidated: invalidIds.length, failed: failedIds.length });
 });
 
 function json(body: unknown, status = 200) {

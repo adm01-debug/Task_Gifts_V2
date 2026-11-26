@@ -204,6 +204,58 @@ describe("janela de silêncio (quiet hours)", () => {
     expect(released[0].deferredUntil).toBeNull();
   });
 
+  it("desligar ou encurtar a janela solta o aviso sem esperar o prazo antigo", () => {
+    const until = quietHoursUntil(new Date("2026-11-26T05:00:00Z"), pref())!; // 08:00 BRT
+    const preso = deferForQuietHours(fresh("a"), until);
+
+    // Madrugada, mas a preferencia foi desligada: sai na hora.
+    const desligou = releaseDeferred([preso], new Date("2026-11-26T05:30:00Z"), () =>
+      pref({ enabled: false }),
+    );
+    expect(desligou[0].status).toBe("pending");
+
+    // Janela encurtada para terminar 06:00: o prazo segue a preferencia atual.
+    const encurtou = releaseDeferred([preso], new Date("2026-11-26T05:30:00Z"), () =>
+      pref({ end: "06:00" }),
+    );
+    expect(encurtou[0].status).toBe("deferred");
+    expect(encurtou[0].deferredUntil).toBe("2026-11-26T09:00:00.000Z");
+
+    // 06:00 BRT: a janela encurtada fechou, entrega sem consumir tentativa.
+    const saiu = claimBatch([encurtou[0]], 10, new Set(), new Date("2026-11-26T09:00:00Z"), () =>
+      pref({ end: "06:00" }),
+    );
+    expect(saiu.claimed.map((c) => c.id)).toEqual(["a"]);
+    expect(saiu.claimed[0].attempts).toBe(0);
+  });
+
+  it("estender a janela empurra o prazo em vez de entregar no silencio", () => {
+    const until = quietHoursUntil(new Date("2026-11-26T05:00:00Z"), pref())!; // 2026-11-26T11:00:00Z
+    const preso = deferForQuietHours(fresh("a"), until);
+
+    // Passado o prazo antigo (08:00 BRT), mas a janela agora fecha as 09:00.
+    const estendido = releaseDeferred([preso], new Date("2026-11-26T11:30:00Z"), () =>
+      pref({ end: "09:00" }),
+    );
+    expect(estendido[0].status).toBe("deferred");
+    expect(estendido[0].deferredUntil).toBe("2026-11-26T12:00:00.000Z");
+
+    const saiu = claimBatch(estendido, 10, new Set(), new Date("2026-11-26T12:00:00Z"), () =>
+      pref({ end: "09:00" }),
+    );
+    expect(saiu.claimed.map((c) => c.id)).toEqual(["a"]);
+    expect(saiu.claimed[0].attempts).toBe(0);
+  });
+
+  it("sem preferencia modelada o prazo salvo continua mandando", () => {
+    const until = quietHoursUntil(new Date("2026-11-26T05:00:00Z"), pref())!;
+    const preso = deferForQuietHours(fresh("a"), until);
+    expect(releaseDeferred([preso], new Date("2026-11-26T10:59:00Z"), () => undefined)[0].status).toBe(
+      "deferred",
+    );
+    expect(releaseDeferred([preso], until, () => undefined)[0].status).toBe("pending");
+  });
+
   it("a fila não perde nem duplica avisos que entram e saem da janela", () => {
     const rng = makeRng(1126);
     for (let sim = 0; sim < 60; sim++) {

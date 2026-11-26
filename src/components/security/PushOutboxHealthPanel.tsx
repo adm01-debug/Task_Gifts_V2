@@ -66,7 +66,8 @@ export function PushOutboxHealthPanel() {
   // conta `pending`/`processing`), entao o numero vem de contagem direta. E' o
   // que explica uma fila "vazia" com aviso guardado esperando a hora. A segunda
   // contagem e' o sinal de alerta: adiado com prazo vencido quer dizer que o
-  // despachante parou e ninguem esta drenando a fila.
+  // despachante parou e ninguem esta drenando a fila. A margem de 5 min cobre a
+  // cadencia do cron (1 min) e o relogio de quem esta olhando o painel.
   const deferredQuery = useQuery({
     queryKey: ["push-outbox-deferred-count"],
     queryFn: async () => {
@@ -75,9 +76,10 @@ export function PushOutboxHealthPanel() {
           .from("push_outbox")
           .select("id", { count: "exact", head: true })
           .eq("status", "deferred");
+      const limite = new Date(Date.now() - 5 * 60 * 1000).toISOString();
       const [todos, vencidos] = await Promise.all([
         adiados(),
-        adiados().lte("deferred_until", new Date().toISOString()),
+        adiados().lt("deferred_until", limite),
       ]);
       if (todos.error) throw todos.error;
       if (vencidos.error) throw vencidos.error;
@@ -144,7 +146,7 @@ export function PushOutboxHealthPanel() {
       value: deferredQuery.isError ? "-" : (deferredQuery.data?.adiados ?? 0),
       hint:
         !deferredQuery.isError && (deferredQuery.data?.vencidos ?? 0) > 0
-          ? `${deferredQuery.data?.vencidos} com prazo vencido sem envio`
+          ? `${deferredQuery.data?.vencidos} vencido(s) ha mais de 5 min`
           : undefined,
     },
     { label: "Entregues (24h)", value: data.sent },
