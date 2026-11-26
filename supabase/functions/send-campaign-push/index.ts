@@ -39,11 +39,9 @@ Deno.serve(async (req) => {
   const campaignId = (data && typeof data === "object" && "campaign_id" in (data as Record<string, unknown>))
     ? String((data as Record<string, unknown>).campaign_id)
     : null;
-  // Identidade do aviso: o marco vem do chamador, entao a chave da fila nao muda
-  // quando o texto muda (ajuste de progresso que recrossa o mesmo marco).
-  const marker = (data && typeof data === "object" && "milestone" in (data as Record<string, unknown>))
-    ? ((data as Record<string, unknown>).milestone as string | number | null)
-    : null;
+  // Identidade do aviso: o marco vem do chamador (formato garantido pelo contrato), entao a
+    // chave da fila nao muda quando o texto muda (ajuste de progresso que recrossa o mesmo marco).
+    const marker = data?.milestone ?? null;
 
   // Filtra usuários pela preferência push.
   const allowed: string[] = [];
