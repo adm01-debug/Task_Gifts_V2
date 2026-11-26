@@ -35,6 +35,9 @@ Deno.serve(async (req) => {
   const parsed = await parseJsonBody(req, SendCampaignPushRequestSchema, { headers: corsHeaders });
   if (!parsed.ok) return parsed.response;
   const { user_ids, type, title, message, url, data } = parsed.data;
+  const campaignId = (data && typeof data === "object" && "campaign_id" in (data as Record<string, unknown>))
+    ? String((data as Record<string, unknown>).campaign_id)
+    : null;
 
   // Filtra usuários pela preferência push.
   const allowed: string[] = [];
@@ -47,10 +50,50 @@ Deno.serve(async (req) => {
   }
   if (allowed.length === 0) return json({ sent: 0, skipped: user_ids.length, reason: "prefs" });
 
+  // Janela de silencio (notification_preferences.do_not_disturb_*): quem esta
+  // silenciado agora nao recebe na hora. O aviso entra na fila `push_outbox` e
+  // o despachante entrega quando a janela fechar. Sem a RPC (deploy antes da
+  // migration) o envio segue como sempre foi.
+  const targets: string[] = [];
+  const queued: string[] = [];
+  let deferredCount = 0;
+  for (const uid of allowed) {
+    const { data: until, error: quietErr } = await supabase.rpc("push_quiet_hours_until", {
+      _user_id: uid,
+    });
+    if (!quietErr && typeof until === "string" && until.length > 0) {
+      queued.push(uid);
+    } else {
+      targets.push(uid);
+    }
+  }
+
+  if (queued.length > 0) {
+    const dedupeBase = campaignId ?? `push-${new Date().toISOString().slice(0, 16)}`;
+    for (const uid of queued) {
+      const { error: queueErr } = await supabase.rpc("enqueue_push", {
+        p_user_id: uid,
+        p_type: type,
+        p_title: title,
+        p_message: message,
+        p_dedupe_key: `${dedupeBase}:${uid}`.slice(0, 200),
+        p_url: url ?? null,
+        p_data: data ?? {},
+      });
+      // Falha ao enfileirar nao pode virar aviso perdido: cai para o envio na hora.
+      if (queueErr) targets.push(uid);
+      else deferredCount++;
+    }
+  }
+
+  if (targets.length === 0) {
+    return json({ sent: 0, deferred: deferredCount, skipped: user_ids.length - allowed.length });
+  }
+
   const { data: subs, error: subsErr } = await supabase
     .from("push_subscriptions")
     .select("id, user_id, endpoint, p256dh, auth, device_label")
-    .in("user_id", allowed)
+    .in("user_id", targets)
     .is("disabled_at", null);
   if (subsErr) return json({ error: subsErr.message }, 500);
 
@@ -60,9 +103,6 @@ Deno.serve(async (req) => {
   const failedIds: string[] = [];
   const successIds: string[] = [];
   const logRows: Record<string, unknown>[] = [];
-  const campaignId = (data && typeof data === "object" && "campaign_id" in (data as Record<string, unknown>))
-    ? String((data as Record<string, unknown>).campaign_id)
-    : null;
 
   await Promise.all(
     (subs ?? []).map(async (s) => {
@@ -128,7 +168,7 @@ Deno.serve(async (req) => {
     });
   }
 
-  return json({ sent, invalidated: invalidIds.length, failed: failedIds.length });
+  return json({ sent, invalidated: invalidIds.length, failed: failedIds.length, deferred: deferredCount });
 });
 
 function json(body: unknown, status = 200) {
