@@ -163,4 +163,27 @@ describe("janela de silencio", () => {
     expect(writes[0]).toMatchObject({ user_id: "u1", do_not_disturb_enabled: true, type_preferences: {} });
     expect(existingRow).toBe(true);
   });
+
+  it("campo de hora vazio volta ao horario salvo e o desligamento grava", async () => {
+    row = { ...row, do_not_disturb_enabled: true };
+    render(<NotificationQuietHoursCard />);
+    const toggle = await screen.findByRole("switch", { name: /Silenciar avisos push/i });
+    await waitFor(() => expect(toggle).toHaveAttribute("data-state", "checked"));
+    const inicio = screen.getByLabelText("Inicio do silencio");
+
+    // Limpar o campo e desligar nao pode mandar ":00" (o tipo `time` recusaria).
+    fireEvent.change(inicio, { target: { value: "" } });
+    await userEvent.click(toggle);
+
+    await waitFor(() => expect(writes).toHaveLength(1));
+    expect(writes[0]).toEqual({
+      do_not_disturb_enabled: false,
+      do_not_disturb_start: "22:00:00",
+      do_not_disturb_end: "08:00:00",
+      do_not_disturb_weekends: true,
+    });
+    expect(toast.error).not.toHaveBeenCalled();
+    expect(toggle).toHaveAttribute("data-state", "unchecked");
+    await waitFor(() => expect(screen.getByLabelText("Inicio do silencio")).toHaveValue("22:00"));
+  });
 });

@@ -159,11 +159,20 @@ describe("janela de silêncio (quiet hours)", () => {
     expect(quietHoursUntil(madrugada, pref({ start: "22:00", end: "22:00" }))).toBeNull();
   });
 
-  it("weekends false não silencia sábado nem domingo", () => {
-    // 2026-11-28 é sábado; 02:00 BRT
-    const sabado = new Date("2026-11-28T05:00:00Z");
-    expect(quietHoursUntil(sabado, pref())).not.toBeNull();
-    expect(quietHoursUntil(sabado, pref({ weekends: false }))).toBeNull();
+  it("weekends false: vale o dia em que a janela começou, não o do envio", () => {
+    // 2026-11-28 e' sabado. 05:00Z = sabado 02:00 BRT, madrugada da noite de
+    // sexta: continua silenciado ate' as 08:00.
+    const sabadoMadrugada = new Date("2026-11-28T05:00:00Z");
+    expect(quietHoursUntil(sabadoMadrugada, pref())?.toISOString()).toBe("2026-11-28T11:00:00.000Z");
+    expect(quietHoursUntil(sabadoMadrugada, pref({ weekends: false }))?.toISOString()).toBe(
+      "2026-11-28T11:00:00.000Z",
+    );
+    // Sexta 23:00 BRT = 2026-11-28T02:00Z: a janela começou na sexta, silencia.
+    expect(quietHoursUntil(new Date("2026-11-28T02:00:00Z"), pref({ weekends: false }))).not.toBeNull();
+    // Sabado 23:00 BRT = 2026-11-29T02:00Z: a janela começaria no fim de semana.
+    expect(quietHoursUntil(new Date("2026-11-29T02:00:00Z"), pref({ weekends: false }))).toBeNull();
+    // Segunda 02:00 BRT = 2026-11-30T05:00Z: madrugada da noite de domingo.
+    expect(quietHoursUntil(new Date("2026-11-30T05:00:00Z"), pref({ weekends: false }))).toBeNull();
   });
 
   it("adiar não consome tentativa e a linha volta no fim da janela", () => {
@@ -226,15 +235,21 @@ describe("janela de silêncio (quiet hours)", () => {
         }
       }
 
-      // Passadas 48h, todo adiado venceu: a fila fica vazia e nada some.
+      // Passadas 48h, todo adiado venceu: nada pode continuar adiado, o lote
+      // final tem exatamente o que faltava e cada aviso e' entregue uma vez.
       const fim = claimBatch(items, 500, new Set(), new Date(clock + 48 * 60 * 60 * 1000));
-      expect(fim.next).toHaveLength(size);
-      expect(
-        fim.next.every(
-          (i) => isTerminal(i.status) || i.status === "processing" || i.status === "deferred",
-        ),
-      ).toBe(true);
+      expect(fim.next.filter((i) => i.status === "deferred")).toHaveLength(0);
+      expect(fim.claimed).toHaveLength(size - entregues.size);
+      expect(fim.next.every((i) => i.status === "processing" || isTerminal(i.status))).toBe(true);
       expect(fim.next.filter((i) => i.status === "sent")).toHaveLength(entregues.size);
+      for (const c of fim.claimed) {
+        const entregue = applyDispatch(c, { kind: "delivered" });
+        expect(entregues.has(entregue.id)).toBe(false);
+        entregues.add(entregue.id);
+        items = items.map((i) => (i.id === entregue.id ? entregue : i));
+      }
+      expect(entregues.size).toBe(size);
+      expect(items.every((i) => i.status === "sent")).toBe(true);
     }
   });
 });

@@ -62,15 +62,15 @@ BEGIN
 
   v_local := now() AT TIME ZONE 'America/Sao_Paulo';
 
-  IF NOT v_weekends THEN
-    v_dow := EXTRACT(ISODOW FROM v_local)::integer;
-    IF v_dow >= 6 THEN
-      RETURN NULL;
-    END IF;
-  END IF;
-
+  -- O fim de semana e' conferido no dia em que a janela COMECOU: a madrugada de
+  -- sabado ainda e' a noite de sexta (silencio vale) e a de segunda e' a noite
+  -- de domingo (nao vale). Conferir o dia do envio erra os dois lados.
   IF v_start < v_end THEN
     -- Janela dentro do mesmo dia.
+    v_dow := EXTRACT(ISODOW FROM v_local)::integer;
+    IF NOT v_weekends AND v_dow >= 6 THEN
+      RETURN NULL;
+    END IF;
     IF v_local::time < v_start OR v_local::time >= v_end THEN
       RETURN NULL;
     END IF;
@@ -79,10 +79,18 @@ BEGIN
 
   -- Janela cruzando a meia-noite (ex.: 22:00 -> 08:00).
   IF v_local::time >= v_start THEN
+    v_dow := EXTRACT(ISODOW FROM v_local)::integer;
+    IF NOT v_weekends AND v_dow >= 6 THEN
+      RETURN NULL;
+    END IF;
     RETURN ((v_local::date + 1) + v_end) AT TIME ZONE 'America/Sao_Paulo';
   END IF;
 
   IF v_local::time < v_end THEN
+    v_dow := EXTRACT(ISODOW FROM (v_local - interval '1 day'))::integer;
+    IF NOT v_weekends AND v_dow >= 6 THEN
+      RETURN NULL;
+    END IF;
     RETURN (v_local::date + v_end) AT TIME ZONE 'America/Sao_Paulo';
   END IF;
 
@@ -118,13 +126,36 @@ BEGIN
   WHERE status = 'processing'
     AND updated_at < now() - interval '10 minutes';
 
-  -- Janela de silencio: quem venceu volta para a fila (nao consome tentativa).
-  -- `deferred_until` nulo tambem volta: linha adiada sem prazo ficaria presa.
-  UPDATE public.push_outbox
+  -- Janela de silencio: o prazo da linha ja adiada segue a preferencia ATUAL do
+  -- usuario, entao desligar a janela (ou antecipar o fim) solta o aviso na hora,
+  -- em vez de deixar o aviso preso ao prazo antigo.
+  UPDATE public.push_outbox o
+  SET deferred_until = atual.novo
+  FROM (
+    SELECT x.id,
+           x.deferred_until,
+           public.push_quiet_hours_until(x.user_id) AS novo
+    FROM public.push_outbox x
+    WHERE x.status = 'deferred'
+  ) atual
+  WHERE o.id = atual.id
+    AND o.status = 'deferred'
+    AND atual.novo IS NOT NULL
+    AND atual.novo IS DISTINCT FROM atual.deferred_until;
+
+  -- Quem venceu volta para a fila (nao consome tentativa). `deferred_until` nulo
+  -- tambem volta: linha adiada sem prazo ficaria presa.
+  UPDATE public.push_outbox o
   SET status = 'pending',
       deferred_until = NULL
-  WHERE status = 'deferred'
-    AND (deferred_until IS NULL OR deferred_until <= now());
+  FROM (
+    SELECT x.id, public.push_quiet_hours_until(x.user_id) AS novo
+    FROM public.push_outbox x
+    WHERE x.status = 'deferred'
+  ) atual
+  WHERE o.id = atual.id
+    AND o.status = 'deferred'
+    AND (o.deferred_until IS NULL OR o.deferred_until <= now() OR atual.novo IS NULL);
 
   RETURN QUERY
   WITH claimed AS (

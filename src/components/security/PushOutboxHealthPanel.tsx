@@ -64,16 +64,24 @@ export function PushOutboxHealthPanel() {
 
   // Adiados pela janela de silencio ficam fora de `get_push_outbox_health` (que
   // conta `pending`/`processing`), entao o numero vem de contagem direta. E' o
-  // que explica uma fila "vazia" com aviso guardado esperando a hora.
-  const { data: deferredCount = 0 } = useQuery({
+  // que explica uma fila "vazia" com aviso guardado esperando a hora. A segunda
+  // contagem e' o sinal de alerta: adiado com prazo vencido quer dizer que o
+  // despachante parou e ninguem esta drenando a fila.
+  const deferredQuery = useQuery({
     queryKey: ["push-outbox-deferred-count"],
     queryFn: async () => {
-      const { count, error } = await supabase
-        .from("push_outbox")
-        .select("id", { count: "exact", head: true })
-        .eq("status", "deferred");
-      if (error) throw error;
-      return count ?? 0;
+      const adiados = () =>
+        supabase
+          .from("push_outbox")
+          .select("id", { count: "exact", head: true })
+          .eq("status", "deferred");
+      const [todos, vencidos] = await Promise.all([
+        adiados(),
+        adiados().lte("deferred_until", new Date().toISOString()),
+      ]);
+      if (todos.error) throw todos.error;
+      if (vencidos.error) throw vencidos.error;
+      return { adiados: todos.count ?? 0, vencidos: vencidos.count ?? 0 };
     },
     refetchInterval: 60000,
   });
@@ -130,7 +138,15 @@ export function PushOutboxHealthPanel() {
   const metrics = [
     { label: "Pendentes", value: data.pending },
     { label: "Processando", value: data.processing },
-    { label: "Adiados (silencio)", value: deferredCount },
+    {
+      label: "Adiados (silencio)",
+      // Sem dado (consulta falhou) nao pode aparecer como zero.
+      value: deferredQuery.isError ? "-" : (deferredQuery.data?.adiados ?? 0),
+      hint:
+        !deferredQuery.isError && (deferredQuery.data?.vencidos ?? 0) > 0
+          ? `${deferredQuery.data?.vencidos} com prazo vencido sem envio`
+          : undefined,
+    },
     { label: "Entregues (24h)", value: data.sent },
     { label: "Falhas (24h)", value: data.failed },
   ];
@@ -148,7 +164,12 @@ export function PushOutboxHealthPanel() {
           </CardDescription>
         </div>
         <div className="flex gap-2">
-          <Button variant="outline" size="sm" onClick={() => refetch()} disabled={isFetching}>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => { refetch(); deferredQuery.refetch(); }}
+            disabled={isFetching || deferredQuery.isFetching}
+          >
             <RefreshCw className={cn("mr-2 h-4 w-4", isFetching && "animate-spin")} />
             Atualizar
           </Button>
@@ -174,11 +195,12 @@ export function PushOutboxHealthPanel() {
           <Progress value={report.score} />
         </div>
 
-        <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
+        <div className="grid grid-cols-2 gap-3 md:grid-cols-5">
           {metrics.map((m) => (
             <div key={m.label} className="rounded-lg border bg-card p-3">
               <p className="text-xs text-muted-foreground">{m.label}</p>
               <p className="text-2xl font-bold">{m.value}</p>
+              {m.hint ? <p className="mt-1 text-[11px] text-amber-500">{m.hint}</p> : null}
             </div>
           ))}
         </div>

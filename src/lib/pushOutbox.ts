@@ -101,7 +101,8 @@ function minutesOfDay(value: string | null): number | null {
  * Espelha `public.push_quiet_hours_until(_user_id)`:
  * - `start < end` = janela no mesmo dia; `start > end` cruza a meia-noite;
  * - `start === end` ou horario ausente = janela desligada;
- * - `weekends = false` nao silencia sabado nem domingo.
+ * - `weekends = false` nao silencia sabado nem domingo (na madrugada vale o dia
+ *   em que a janela comecou: a noite de sexta ainda e' sexta).
  */
 export function quietHoursUntil(now: Date, pref: QuietHoursPreference): Date | null {
   if (!pref.enabled) return null;
@@ -111,7 +112,10 @@ export function quietHoursUntil(now: Date, pref: QuietHoursPreference): Date | n
 
   const local = new Date(now.getTime() + SAO_PAULO_OFFSET_MS);
   const minutes = local.getUTCHours() * 60 + local.getUTCMinutes();
-  const weekday = local.getUTCDay();
+  // A madrugada pertence ao dia em que a janela comecou (a noite de sexta
+  // continua sendo sexta). Espelha o SQL.
+  const dayStart = start > end && minutes < end ? new Date(local.getTime() - DAY_MS) : local;
+  const weekday = dayStart.getUTCDay();
   if (!pref.weekends && (weekday === 0 || weekday === 6)) return null;
 
   let endDay = local;

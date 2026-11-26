@@ -36,6 +36,9 @@ const paraInput = (valor: string | null | undefined, padrao: string) => {
 
 const paraBanco = (valor: string) => `${valor}:00`;
 
+/** "HH:MM" completo: o unico formato que o input entrega e o banco aceita. */
+const HORA_VALIDA = /^([01]\d|2[0-3]):[0-5]\d$/;
+
 export function NotificationQuietHoursCard() {
   const { user } = useAuth();
   const [loading, setLoading] = useState(true);
@@ -44,6 +47,8 @@ export function NotificationQuietHoursCard() {
   const [inicio, setInicio] = useState(PADRAO_INICIO);
   const [fim, setFim] = useState(PADRAO_FIM);
   const [weekends, setWeekends] = useState(true);
+  // Ultimo par de horarios realmente gravado: entra quando o campo fica vazio.
+  const [salvo, setSalvo] = useState({ inicio: PADRAO_INICIO, fim: PADRAO_FIM });
   const [loadError, setLoadError] = useState(false);
   const [reloadKey, setReloadKey] = useState(0);
 
@@ -62,8 +67,14 @@ export function NotificationQuietHoursCard() {
         if (error) throw error;
         if (!alive) return;
         setEnabled(data?.do_not_disturb_enabled === true);
-        setInicio(paraInput(data?.do_not_disturb_start ?? data?.quiet_hours_start, PADRAO_INICIO));
-        setFim(paraInput(data?.do_not_disturb_end ?? data?.quiet_hours_end, PADRAO_FIM));
+        const inicioCarregado = paraInput(
+          data?.do_not_disturb_start ?? data?.quiet_hours_start,
+          PADRAO_INICIO,
+        );
+        const fimCarregado = paraInput(data?.do_not_disturb_end ?? data?.quiet_hours_end, PADRAO_FIM);
+        setInicio(inicioCarregado);
+        setFim(fimCarregado);
+        setSalvo({ inicio: inicioCarregado, fim: fimCarregado });
         setWeekends(data?.do_not_disturb_weekends !== false);
         setLoadError(false);
       } catch (err: unknown) {
@@ -103,21 +114,26 @@ export function NotificationQuietHoursCard() {
   const persist = async (parcial: Partial<{ enabled: boolean; inicio: string; fim: string; weekends: boolean }>) => {
     const anterior = { enabled, inicio, fim, weekends };
     const proximo = { ...anterior, ...parcial };
+    // Campo de hora vazio nao pode virar `:00` no banco: o tipo `time` recusa e o
+    // desligamento se perderia. Vazio volta ao ultimo horario salvo.
+    const inicioFinal = HORA_VALIDA.test(proximo.inicio) ? proximo.inicio : salvo.inicio;
+    const fimFinal = HORA_VALIDA.test(proximo.fim) ? proximo.fim : salvo.fim;
     setEnabled(proximo.enabled);
-    setInicio(proximo.inicio);
-    setFim(proximo.fim);
+    setInicio(inicioFinal);
+    setFim(fimFinal);
     setWeekends(proximo.weekends);
     setSaving(true);
     try {
       await gravar({
         do_not_disturb_enabled: proximo.enabled,
-        do_not_disturb_start: paraBanco(proximo.inicio),
-        do_not_disturb_end: paraBanco(proximo.fim),
+        do_not_disturb_start: paraBanco(inicioFinal),
+        do_not_disturb_end: paraBanco(fimFinal),
         do_not_disturb_weekends: proximo.weekends,
       });
+      setSalvo({ inicio: inicioFinal, fim: fimFinal });
       toast.success(
         proximo.enabled
-          ? `Avisos entre ${proximo.inicio} e ${proximo.fim} saem depois da janela`
+          ? `Avisos entre ${inicioFinal} e ${fimFinal} saem depois da janela`
           : "Janela de silencio desligada",
       );
     } catch (err: unknown) {
@@ -210,7 +226,7 @@ export function NotificationQuietHoursCard() {
                   value={inicio}
                   disabled={saving || !enabled}
                   onChange={(e) => setInicio(e.target.value)}
-                  onBlur={() => { if (enabled && inicio !== "" && !saving) persist({ inicio }); }}
+                  onBlur={() => { if (enabled && !saving) persist({ inicio }); }}
                 />
               </div>
               <div className="space-y-1">
@@ -223,7 +239,7 @@ export function NotificationQuietHoursCard() {
                   value={fim}
                   disabled={saving || !enabled}
                   onChange={(e) => setFim(e.target.value)}
-                  onBlur={() => { if (enabled && fim !== "" && !saving) persist({ fim }); }}
+                  onBlur={() => { if (enabled && !saving) persist({ fim }); }}
                 />
               </div>
             </div>
