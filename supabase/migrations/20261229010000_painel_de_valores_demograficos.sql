@@ -10,9 +10,10 @@
 --   1. a policy de SELECT passa a valer so' para administrador; o dono continua
 --      lendo e gravando as proprias linhas pela policy que ja' existia;
 --   2. a view `demographic_values_panel` roda como dona das tabelas e entrega a
---      linha ja' mascarada: valor nulo quando o atributo e' restrito e quem le
---      nao e' admin; metadados nulos quando o atributo esta' inativo (a policy
---      de `demographic_attributes` esconde inativo de nao-admin);
+--      linha ja' mascarada: valor nulo quando o atributo esta' inativo ou e'
+--      restrito e quem le nao e' admin; metadados nulos quando o atributo esta'
+--      inativo (a policy de `demographic_attributes` esconde inativo de
+--      nao-admin);
 --   3. o painel le a view — uma consulta, igual para admin e gestor.
 --
 -- Mascarar na view (e nao com privilegio de coluna) porque privilegio de coluna
@@ -30,10 +31,12 @@ SELECT
   v.attribute_id,
   v.created_at,
   v.updated_at,
-  CASE WHEN q.eh_admin THEN v.value        END AS value,
-  CASE WHEN q.eh_admin THEN v.values_array END AS values_array,
-  CASE WHEN q.eh_admin THEN v.number_value END AS number_value,
-  CASE WHEN q.eh_admin THEN v.date_value   END AS date_value,
+  -- Valor: admin sempre; gestor so' quando o atributo esta' ativo e nao e'
+  -- restrito. Restrito ou desativado fica nulo, e a tela nao tem como exibir.
+  CASE WHEN q.eh_admin OR (a.is_active AND NOT a.is_restricted) THEN v.value        END AS value,
+  CASE WHEN q.eh_admin OR (a.is_active AND NOT a.is_restricted) THEN v.values_array END AS values_array,
+  CASE WHEN q.eh_admin OR (a.is_active AND NOT a.is_restricted) THEN v.number_value END AS number_value,
+  CASE WHEN q.eh_admin OR (a.is_active AND NOT a.is_restricted) THEN v.date_value   END AS date_value,
   CASE WHEN q.eh_admin OR a.is_active THEN a.name                END AS attribute_name,
   CASE WHEN q.eh_admin OR a.is_active THEN a.attribute_type      END AS attribute_type,
   CASE WHEN q.eh_admin OR a.is_active THEN a.is_visible_in_reports END AS attribute_is_visible_in_reports,
