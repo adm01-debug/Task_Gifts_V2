@@ -55,6 +55,22 @@ Deno.serve(async (req) => {
   let skipped = 0;
 
   for (const row of claimed) {
+    // A pausa global pode ter sido ligada depois do enfileiramento: enqueue_push já
+        // filtra na inserção, mas a fila pode ter itens anteriores ao toggle. A RPC cobre
+        // push_enabled e a escolha do tipo, então quem desliga só um tipo também não recebe
+        // o pendente daquele tipo — o alerta de segurança (push-device-revoked) não passa
+        // pela fila. Em erro da RPC seguimos com o envio (mesmo default ligado do banco)
+        // para não perder aviso.
+    const { data: wantsPush, error: wantsErr } = await admin.rpc("user_wants_push_notification", {
+      _user_id: row.user_id,
+      _type: row.type,
+    });
+    if (!wantsErr && wantsPush === false) {
+      await finish(admin, row.id, "skipped", row.attempts + 1, "push_paused_by_user");
+      skipped++;
+      continue;
+    }
+
     const { data: subs } = await admin
       .from("push_subscriptions")
       .select("id, endpoint, p256dh, auth, device_label")
