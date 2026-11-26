@@ -31,7 +31,7 @@ dela que você vá usar como base de um fix precisa ser reconfirmada no código/
 | `tests/` | Playwright: `auth-flow.spec.ts`, `e2e/smoke.spec.ts` (gate do CI), `e2e/happy-paths.spec.ts` (não-bloqueante) |
 | `src/stories/` + `.storybook/` | 30 stories e config válida, **sem script `storybook`/`build-storybook`** no `package.json` — hoje não há como subir nem buildar |
 | `supabase/functions/` | 37 edge functions + `_shared/` |
-| `supabase/migrations/` | 315 arquivos `.sql`, **alinhados 1:1** com as 315 versões do ledger (medido em 2026-11-26); antes eram 314 para 314, e antes 313 para 313, e antes 312 para 312, e antes 311 para 311, e antes disso 306 para 306, 305 para 305, 304 para 304 e 295 para 295 (medido em 2026-11-25 após os merges de #158–#164, a `20261227120000` e a `20261227140000` — ver `banco.md`) |
+| `supabase/migrations/` | 316 arquivos `.sql`, **alinhados 1:1** com as 316 versões do ledger (medido em 2026-11-26): 315 da `main` após a PR #174 mais a `20261228310000_dedup_indices_redundantes` desta PR — as duas **já aplicadas em produção**. Antes eram 315 para 315 (após a #174), e antes 314 para 314, 313 para 313, 312 para 312, 311 para 311, e antes disso 306 para 306, 305 para 305, 304 para 304 e 295 para 295 (medido em 2026-11-25 após os merges de #158–#164, a `20261227120000` e a `20261227140000` — ver `banco.md`) |
 | `supabase/config.toml` | `project_id` **divergente** do projeto em uso + único `verify_jwt=false` |
 | `scripts/ci/` | guardas de repo: `check-claude-md-integrity.mjs` (GA02), `commit-msg-lint.mjs`, e os adaptadores `*.unit.mjs` das automações de contexto |
 | `scripts/ai-context/` | produtor `codigo/` do contexto: rotas, módulos, hooks, edges, grafo, testes, convenções |
