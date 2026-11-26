@@ -2,10 +2,14 @@ import { describe, it, expect } from "vitest";
 import {
   applyDispatch,
   claimBatch,
+  deferForQuietHours,
   isTerminal,
   MAX_PUSH_ATTEMPTS,
+  quietHoursUntil,
+  releaseDeferred,
   type DispatchResult,
   type OutboxItem,
+  type QuietHoursPreference,
 } from "@/lib/pushOutbox";
 
 function makeRng(seed: number) {
@@ -104,6 +108,200 @@ describe("fila de push — máquina de estados", () => {
       expect(items.every((i) => isTerminal(i.status))).toBe(true);
       // Nenhum item perdido.
       expect(items).toHaveLength(size);
+    }
+  });
+});
+
+describe("janela de silêncio (quiet hours)", () => {
+  const pref = (o: Partial<QuietHoursPreference> = {}): QuietHoursPreference => ({
+    enabled: true,
+    start: "22:00",
+    end: "08:00",
+    weekends: true,
+    ...o,
+  });
+
+  it("22:00-08:00 devolve 08:00 de Brasília quando o aviso chega de madrugada", () => {
+    // 2026-11-26 02:00 BRT = 05:00 UTC
+    expect(quietHoursUntil(new Date("2026-11-26T05:00:00Z"), pref())?.toISOString()).toBe(
+      "2026-11-26T11:00:00.000Z",
+    );
+  });
+
+  it("aviso fora da janela sai na hora", () => {
+    // 2026-11-26 12:00 BRT
+    expect(quietHoursUntil(new Date("2026-11-26T15:00:00Z"), pref())).toBeNull();
+  });
+
+  it("janela que cruza a meia-noite vence no dia seguinte", () => {
+    // 2026-11-26 23:00 BRT = 2026-11-27 02:00 UTC
+    expect(quietHoursUntil(new Date("2026-11-27T02:00:00Z"), pref())?.toISOString()).toBe(
+      "2026-11-27T11:00:00.000Z",
+    );
+  });
+
+  it("janela dentro do mesmo dia (13:00-14:00)", () => {
+    const p = pref({ start: "13:00", end: "14:00" });
+    // 12:30 BRT: ainda fora
+    expect(quietHoursUntil(new Date("2026-11-26T15:30:00Z"), p)).toBeNull();
+    // 13:30 BRT: dentro, vence 14:00 BRT
+    expect(quietHoursUntil(new Date("2026-11-26T16:30:00Z"), p)?.toISOString()).toBe(
+      "2026-11-26T17:00:00.000Z",
+    );
+    // 14:00 BRT: já fora
+    expect(quietHoursUntil(new Date("2026-11-26T17:00:00Z"), p)).toBeNull();
+  });
+
+  it("janela desligada, sem horário ou com início igual ao fim não silencia", () => {
+    const madrugada = new Date("2026-11-26T05:00:00Z");
+    expect(quietHoursUntil(madrugada, pref({ enabled: false }))).toBeNull();
+    expect(quietHoursUntil(madrugada, pref({ start: null }))).toBeNull();
+    expect(quietHoursUntil(madrugada, pref({ start: "22:00", end: "22:00" }))).toBeNull();
+  });
+
+  it("weekends false: vale o dia em que a janela começou, não o do envio", () => {
+    // 2026-11-28 e' sabado. 05:00Z = sabado 02:00 BRT, madrugada da noite de
+    // sexta: continua silenciado ate' as 08:00.
+    const sabadoMadrugada = new Date("2026-11-28T05:00:00Z");
+    expect(quietHoursUntil(sabadoMadrugada, pref())?.toISOString()).toBe("2026-11-28T11:00:00.000Z");
+    expect(quietHoursUntil(sabadoMadrugada, pref({ weekends: false }))?.toISOString()).toBe(
+      "2026-11-28T11:00:00.000Z",
+    );
+    // Sexta 23:00 BRT = 2026-11-28T02:00Z: a janela começou na sexta, silencia.
+    expect(quietHoursUntil(new Date("2026-11-28T02:00:00Z"), pref({ weekends: false }))).not.toBeNull();
+    // Sabado 23:00 BRT = 2026-11-29T02:00Z: a janela começaria no fim de semana.
+    expect(quietHoursUntil(new Date("2026-11-29T02:00:00Z"), pref({ weekends: false }))).toBeNull();
+    // Segunda 02:00 BRT = 2026-11-30T05:00Z: madrugada da noite de domingo.
+    expect(quietHoursUntil(new Date("2026-11-30T05:00:00Z"), pref({ weekends: false }))).toBeNull();
+  });
+
+  it("adiar não consome tentativa e a linha volta no fim da janela", () => {
+    const until = quietHoursUntil(new Date("2026-11-26T05:00:00Z"), pref())!;
+    let items: OutboxItem[] = [deferForQuietHours(fresh("a"), until)];
+    expect(items[0].status).toBe("deferred");
+    expect(items[0].attempts).toBe(0);
+
+    // Enquanto a janela não fecha, nada é reivindicado.
+    const dentro = claimBatch(items, 10, new Set(), new Date("2026-11-26T10:59:00Z"));
+    expect(dentro.claimed).toHaveLength(0);
+    items = dentro.next;
+    expect(items[0].status).toBe("deferred");
+
+    // No fim da janela a linha volta com a tentativa intacta e é entregue uma vez.
+    const depois = claimBatch(items, 10, new Set(), until);
+    expect(depois.claimed.map((c) => c.id)).toEqual(["a"]);
+    expect(depois.claimed[0].attempts).toBe(0);
+
+    const entregue = applyDispatch(depois.claimed[0], { kind: "delivered" });
+    const final = depois.next.map((i) => (i.id === "a" ? entregue : i));
+    expect(claimBatch(final, 10, new Set(), until).claimed).toHaveLength(0);
+  });
+
+  it("linha adiada sem prazo é devolvida à fila em vez de ficar presa", () => {
+    const presa: OutboxItem = { ...fresh("a"), status: "deferred", deferredUntil: null };
+    const released = releaseDeferred([presa], new Date("2026-11-26T05:00:00Z"));
+    expect(released[0].status).toBe("pending");
+    expect(released[0].deferredUntil).toBeNull();
+  });
+
+  it("desligar ou encurtar a janela solta o aviso sem esperar o prazo antigo", () => {
+    const until = quietHoursUntil(new Date("2026-11-26T05:00:00Z"), pref())!; // 08:00 BRT
+    const preso = deferForQuietHours(fresh("a"), until);
+
+    // Madrugada, mas a preferencia foi desligada: sai na hora.
+    const desligou = releaseDeferred([preso], new Date("2026-11-26T05:30:00Z"), () =>
+      pref({ enabled: false }),
+    );
+    expect(desligou[0].status).toBe("pending");
+
+    // Janela encurtada para terminar 06:00: o prazo segue a preferencia atual.
+    const encurtou = releaseDeferred([preso], new Date("2026-11-26T05:30:00Z"), () =>
+      pref({ end: "06:00" }),
+    );
+    expect(encurtou[0].status).toBe("deferred");
+    expect(encurtou[0].deferredUntil).toBe("2026-11-26T09:00:00.000Z");
+
+    // 06:00 BRT: a janela encurtada fechou, entrega sem consumir tentativa.
+    const saiu = claimBatch([encurtou[0]], 10, new Set(), new Date("2026-11-26T09:00:00Z"), () =>
+      pref({ end: "06:00" }),
+    );
+    expect(saiu.claimed.map((c) => c.id)).toEqual(["a"]);
+    expect(saiu.claimed[0].attempts).toBe(0);
+  });
+
+  it("estender a janela empurra o prazo em vez de entregar no silencio", () => {
+    const until = quietHoursUntil(new Date("2026-11-26T05:00:00Z"), pref())!; // 2026-11-26T11:00:00Z
+    const preso = deferForQuietHours(fresh("a"), until);
+
+    // Passado o prazo antigo (08:00 BRT), mas a janela agora fecha as 09:00.
+    const estendido = releaseDeferred([preso], new Date("2026-11-26T11:30:00Z"), () =>
+      pref({ end: "09:00" }),
+    );
+    expect(estendido[0].status).toBe("deferred");
+    expect(estendido[0].deferredUntil).toBe("2026-11-26T12:00:00.000Z");
+
+    const saiu = claimBatch(estendido, 10, new Set(), new Date("2026-11-26T12:00:00Z"), () =>
+      pref({ end: "09:00" }),
+    );
+    expect(saiu.claimed.map((c) => c.id)).toEqual(["a"]);
+    expect(saiu.claimed[0].attempts).toBe(0);
+  });
+
+  it("sem preferencia modelada o prazo salvo continua mandando", () => {
+    const until = quietHoursUntil(new Date("2026-11-26T05:00:00Z"), pref())!;
+    const preso = deferForQuietHours(fresh("a"), until);
+    expect(releaseDeferred([preso], new Date("2026-11-26T10:59:00Z"), () => undefined)[0].status).toBe(
+      "deferred",
+    );
+    expect(releaseDeferred([preso], until, () => undefined)[0].status).toBe("pending");
+  });
+
+  it("a fila não perde nem duplica avisos que entram e saem da janela", () => {
+    const rng = makeRng(1126);
+    for (let sim = 0; sim < 60; sim++) {
+      const size = 1 + Math.floor(rng() * 12);
+      let items: OutboxItem[] = Array.from({ length: size }, (_, i) => fresh(`i-${i}`));
+      let clock = new Date("2026-11-26T05:00:00Z").getTime();
+      const entregues = new Set<string>();
+
+      for (let round = 0; round < 10; round++) {
+        const { claimed, next } = claimBatch(
+          items,
+          1 + Math.floor(rng() * 6),
+          new Set(),
+          new Date(clock),
+        );
+        items = next;
+        clock += 90 * 60 * 1000;
+
+        for (const c of claimed) {
+          if (rng() < 0.5) {
+            const adiado = deferForQuietHours(c, new Date(clock + 60 * 60 * 1000));
+            items = items.map((i) => (i.id === adiado.id ? adiado : i));
+            continue;
+          }
+          const entregue = applyDispatch(c, { kind: "delivered" });
+          expect(entregues.has(entregue.id)).toBe(false);
+          entregues.add(entregue.id);
+          items = items.map((i) => (i.id === entregue.id ? entregue : i));
+        }
+      }
+
+      // Passadas 48h, todo adiado venceu: nada pode continuar adiado, o lote
+      // final tem exatamente o que faltava e cada aviso e' entregue uma vez.
+      const fim = claimBatch(items, 500, new Set(), new Date(clock + 48 * 60 * 60 * 1000));
+      expect(fim.next.filter((i) => i.status === "deferred")).toHaveLength(0);
+      expect(fim.claimed).toHaveLength(size - entregues.size);
+      expect(fim.next.every((i) => i.status === "processing" || isTerminal(i.status))).toBe(true);
+      expect(fim.next.filter((i) => i.status === "sent")).toHaveLength(entregues.size);
+      for (const c of fim.claimed) {
+        const entregue = applyDispatch(c, { kind: "delivered" });
+        expect(entregues.has(entregue.id)).toBe(false);
+        entregues.add(entregue.id);
+        items = items.map((i) => (i.id === entregue.id ? entregue : i));
+      }
+      expect(entregues.size).toBe(size);
+      expect(items.every((i) => i.status === "sent")).toBe(true);
     }
   });
 });

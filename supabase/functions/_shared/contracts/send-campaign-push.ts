@@ -1,4 +1,13 @@
-import { defineContract, destinoUrl, jsonRecord, texto, uuid, z } from "./common.ts";
+import { defineContract, destinoUrl, texto, uuid, z } from "./common.ts";
+
+/**
+ * `data` continua livre (o chamador manda `campaign_id`, `url` e outros metadados: `passthrough`
+ * preserva tudo), mas o `milestone` tem formato declarado porque vira parte da chave de
+ * deduplicacao da fila: objeto, array ou fracao aqui gerariam chave lixo ("[object Object]").
+ */
+const campaignPushData = z
+  .object({ milestone: z.union([z.number().int(), texto(32)]).optional() })
+  .passthrough();
 
 /** Chamador: src/services/salesCampaignsService.ts. */
 export const SendCampaignPushRequestSchema = z.object({
@@ -9,7 +18,7 @@ export const SendCampaignPushRequestSchema = z.object({
   // Caminho relativo é o caso real (salesCampaignsService.ts envia "/campanhas/<id>"):
   // com z.string().url() a função devolvia 422 e o push de campanha era descartado em silêncio.
   url: destinoUrl().optional(),
-  data: jsonRecord.optional(),
+  data: campaignPushData.optional(),
 });
 
 export const SendCampaignPushResponseSchema = z.union([

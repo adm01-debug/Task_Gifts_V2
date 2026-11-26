@@ -5,6 +5,7 @@ import { createClient } from "npm:@supabase/supabase-js@2";
 import { corsHeaders } from "npm:@supabase/supabase-js@2/cors";
 import webpush from "npm:web-push@3.6.7";
 import { parseJsonBody } from "../_shared/validation.ts";
+import { campaignPushDedupeKey } from "../_shared/campaignPush.ts";
 import { SendCampaignPushRequestSchema } from "../_shared/contracts/send-campaign-push.ts";
 
 Deno.serve(async (req) => {
@@ -35,6 +36,12 @@ Deno.serve(async (req) => {
   const parsed = await parseJsonBody(req, SendCampaignPushRequestSchema, { headers: corsHeaders });
   if (!parsed.ok) return parsed.response;
   const { user_ids, type, title, message, url, data } = parsed.data;
+  const campaignId = (data && typeof data === "object" && "campaign_id" in (data as Record<string, unknown>))
+    ? String((data as Record<string, unknown>).campaign_id)
+    : null;
+  // Identidade do aviso: o marco vem do chamador (formato garantido pelo contrato), entao a
+    // chave da fila nao muda quando o texto muda (ajuste de progresso que recrossa o mesmo marco).
+    const marker = data?.milestone ?? null;
 
   // Filtra usuários pela preferência push.
   const allowed: string[] = [];
@@ -47,10 +54,58 @@ Deno.serve(async (req) => {
   }
   if (allowed.length === 0) return json({ sent: 0, skipped: user_ids.length, reason: "prefs" });
 
+  // Janela de silencio (notification_preferences.do_not_disturb_*): quem esta
+  // silenciado agora nao recebe na hora. O aviso entra na fila `push_outbox` e
+  // o despachante entrega quando a janela fechar. Sem a RPC (deploy antes da
+  // migration) o envio segue como sempre foi.
+  const targets: string[] = [];
+  const queued: string[] = [];
+  let deferredCount = 0;
+  let deduped = 0;
+  for (const uid of allowed) {
+    const { data: until, error: quietErr } = await supabase.rpc("push_quiet_hours_until", {
+      _user_id: uid,
+    });
+    if (!quietErr && typeof until === "string" && until.length > 0) {
+      queued.push(uid);
+    } else {
+      targets.push(uid);
+    }
+  }
+
+  if (queued.length > 0) {
+    // Uma chave por conteudo: 25/50/75% e conclusao saem na mesma campanha e com
+    // o mesmo tipo, entao a chave antiga (`campanha:uid`) engolia o 2o aviso.
+    const dedupe = (uid: string) =>
+      campaignPushDedupeKey({ campaignId, type, title, message, url, marker }, uid);
+    for (const uid of queued) {
+      const { data: stored, error: queueErr } = await supabase.rpc("enqueue_push", {
+        p_user_id: uid,
+        p_type: type,
+        p_title: title,
+        p_message: message,
+        p_dedupe_key: dedupe(uid),
+        p_url: url ?? null,
+        p_data: data ?? {},
+      });
+      // Falha ao enfileirar nao pode virar aviso perdido: cai para o envio na hora.
+      if (queueErr) targets.push(uid);
+      else if (stored === true) deferredCount++;
+      else deduped++;
+    }
+    console.log("[send-campaign-push] quiet hours", { deferred: deferredCount, deduped });
+  }
+
+  if (targets.length === 0) {
+    // Contrato da funcao: { sent, invalidated, failed }. Nada de contagem de
+    // adiados aqui: isso diria a quem chamou se o destinatario esta em silencio.
+    return json({ sent: 0, invalidated: 0, failed: 0 });
+  }
+
   const { data: subs, error: subsErr } = await supabase
     .from("push_subscriptions")
     .select("id, user_id, endpoint, p256dh, auth, device_label")
-    .in("user_id", allowed)
+    .in("user_id", targets)
     .is("disabled_at", null);
   if (subsErr) return json({ error: subsErr.message }, 500);
 
@@ -60,9 +115,6 @@ Deno.serve(async (req) => {
   const failedIds: string[] = [];
   const successIds: string[] = [];
   const logRows: Record<string, unknown>[] = [];
-  const campaignId = (data && typeof data === "object" && "campaign_id" in (data as Record<string, unknown>))
-    ? String((data as Record<string, unknown>).campaign_id)
-    : null;
 
   await Promise.all(
     (subs ?? []).map(async (s) => {

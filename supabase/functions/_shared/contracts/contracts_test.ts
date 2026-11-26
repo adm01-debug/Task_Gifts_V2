@@ -60,6 +60,28 @@ Deno.test("send-campaign-push aceita caminho do app em url e recusa javascript:"
   }
 });
 
+Deno.test("send-campaign-push valida o formato do marco e mantém data livre", () => {
+  const base = { user_ids: [UUID], type: "campaign_milestone", title: "25%", message: "Marco" };
+  const schema = CONTRACTS["send-campaign-push"].request;
+  for (const data of [{ campaign_id: UUID, milestone: 25 }, { campaign_id: UUID, milestone: "25" }, { campaign_id: UUID, milestone: " 25 " }, { campaign_id: UUID, url: "/campanhas/x" }]) {
+    assert(validateBody(schema, { ...base, data }).ok, `data deveria ser aceita: ${JSON.stringify(data)}`);
+  }
+  for (const milestone of [{}, [], 25.5, true]) {
+    const r = validateBody(schema, { ...base, data: { campaign_id: UUID, milestone } });
+    assert(!r.ok, `deveria recusar marco ${JSON.stringify(milestone)}`);
+    if (!r.ok) assert(r.error.fields[0].field.startsWith("data"), `campo inesperado: ${r.error.fields[0].field}`);
+  }
+    // `passthrough`: o resto do `data` chega intacto e o marco sai aparado (vira chave da fila).
+    const kept = validateBody(schema, { ...base, data: { campaign_id: UUID, milestone: " 25 ", extra: { a: 1 } } });
+    assert(kept.ok);
+    if (kept.ok) {
+      const d = kept.data.data as Record<string, unknown>;
+      assertEquals(d.milestone, "25");
+      assertEquals(d.campaign_id, UUID);
+      assertEquals(d.extra, { a: 1 });
+    }
+});
+
 Deno.test("webhook aceita version v1 explícita e mantém o envelope histórico", () => {
   const r = resolveWebhookDispatch(
     { version: "v1", subscription_id: UUID, event_type: "order.created", payload: { id: 1 } },
