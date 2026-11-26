@@ -9,22 +9,30 @@ import userEvent from "@testing-library/user-event";
  * `push-outbox-dispatcher`, entao sem interruptor na tela o usuario nao tinha como
  * pausar o push sem desinscrever o aparelho.
  *
- * Cobre tambem os dois efeitos colaterais que a revisao apontou: falha de leitura
- * nao pode aparecer como "ligado", e a primeira gravacao nao pode impor o DEFAULT
- * de `type_preferences` (que ja vem com campaign_progress/xp/checkin em push=false).
+ * Cobre tambem os efeitos colaterais apontados na revisao: falha de leitura nao
+ * pode aparecer como "ligado"; a gravacao nao pode apagar as escolhas por tipo
+ * feitas por outro controle depois do carregamento; e a criacao da linha nao pode
+ * impor o DEFAULT de `type_preferences` (que ja traz campaign_progress, xp,
+ * checkin e development_tip em push=false).
  */
 
 let existingRow = false;
 let stored: Record<string, unknown> = {};
 let queryError = false;
-let failNextUpsert = false;
-const upserts: Array<Record<string, unknown>> = [];
+let failNextWrite = false;
+const writes: Array<Record<string, unknown>> = [];
 
 vi.mock("@/hooks/useAuth", () => ({ useAuth: () => ({ user: { id: "u1" } }) }));
 vi.mock("sonner", () => ({ toast: { success: vi.fn(), error: vi.fn() } }));
 vi.mock("@/services/loggingService", () => ({
   logger: { error: vi.fn(), warn: vi.fn(), info: vi.fn() },
 }));
+
+const applyWrite = (row: Record<string, unknown>) => {
+  writes.push(row);
+  stored = { ...stored, ...row };
+};
+
 vi.mock("@/integrations/supabase/client", () => ({
   supabase: {
     from: () => ({
@@ -36,14 +44,30 @@ vi.mock("@/integrations/supabase/client", () => ({
           },
         }),
       }),
-      upsert: async (row: Record<string, unknown>) => {
-        if (failNextUpsert) {
-          failNextUpsert = false;
-          return { error: new Error("falha simulada") };
+      update: (row: Record<string, unknown>) => ({
+        eq: () => {
+          const run = () => {
+            if (failNextWrite) {
+              failNextWrite = false;
+              return { data: null, error: new Error("falha simulada") };
+            }
+            if (!existingRow) return { data: [], error: null };
+            applyWrite(row);
+            return { data: [{ user_id: "u1" }], error: null };
+          };
+          return {
+            select: async () => run(),
+            then: (resolve: (v: unknown) => unknown, reject: (e: unknown) => unknown) =>
+              Promise.resolve().then(run).then(resolve, reject),
+          };
+        },
+      }),
+      insert: async (row: Record<string, unknown>) => {
+        if (existingRow) {
+          return { error: Object.assign(new Error("duplicate key"), { code: "23505" }) };
         }
-        upserts.push(row);
         existingRow = true;
-        stored = { ...stored, ...row };
+        applyWrite(row);
         return { error: null };
       },
     }),
@@ -58,8 +82,8 @@ beforeEach(() => {
   existingRow = false;
   stored = {};
   queryError = false;
-  failNextUpsert = false;
-  upserts.length = 0;
+  failNextWrite = false;
+  writes.length = 0;
 });
 
 afterEach(() => cleanup());
@@ -79,23 +103,37 @@ describe("PushNotificationGlobalToggle", () => {
     expect(screen.getByText(/sao descartados antes do envio/i)).toBeInTheDocument();
   });
 
-  it("primeira gravacao nao impoe os padroes por tipo do banco", async () => {
+  it("primeira gravacao cria a linha sem os padroes por tipo do banco", async () => {
     render(<PushNotificationGlobalToggle />);
     await waitFor(() => expect(toggle()).toBeEnabled());
     await userEvent.click(toggle());
-    await waitFor(() => expect(upserts).toHaveLength(1));
-    expect(upserts[0]).toMatchObject({ user_id: "u1", push_enabled: false });
-    expect(upserts[0].type_preferences).toEqual({});
+    await waitFor(() => expect(writes).toHaveLength(1));
+    expect(writes[0]).toMatchObject({ user_id: "u1", push_enabled: false });
+    expect(writes[0].type_preferences).toEqual({});
   });
 
-  it("com linha existente nao toca em type_preferences", async () => {
+  it("com linha existente atualiza so push_enabled", async () => {
     existingRow = true;
     stored = { push_enabled: true };
     render(<PushNotificationGlobalToggle />);
     await waitFor(() => expect(toggle()).toBeEnabled());
     await userEvent.click(toggle());
-    await waitFor(() => expect(upserts).toHaveLength(1));
-    expect(upserts[0]).not.toHaveProperty("type_preferences");
+    await waitFor(() => expect(writes).toHaveLength(1));
+    expect(writes[0]).toEqual({ push_enabled: false });
+  });
+
+  it("nao apaga escolhas por tipo salvas por outro controle depois do carregamento", async () => {
+    render(<PushNotificationGlobalToggle />);
+    await waitFor(() => expect(toggle()).toBeEnabled());
+
+    // Outro card do perfil cria a linha e salva uma escolha por tipo.
+    existingRow = true;
+    stored = { push_enabled: true, type_preferences: { quest: { push: false } } };
+
+    await userEvent.click(toggle());
+    await waitFor(() => expect(writes).toHaveLength(1));
+    expect(stored.type_preferences).toEqual({ quest: { push: false } });
+    expect(writes[0]).not.toHaveProperty("type_preferences");
   });
 
   it("mostra erro de leitura, esconde o interruptor e recarrega ao tentar de novo", async () => {
@@ -110,10 +148,10 @@ describe("PushNotificationGlobalToggle", () => {
     expect(screen.queryByRole("alert")).not.toBeInTheDocument();
   });
 
-  it("volta o interruptor para o valor anterior quando o upsert falha", async () => {
+  it("volta o interruptor para o valor anterior quando a gravacao falha", async () => {
     existingRow = true;
     stored = { push_enabled: true };
-    failNextUpsert = true;
+    failNextWrite = true;
     render(<PushNotificationGlobalToggle />);
     await waitFor(() => expect(toggle()).toBeEnabled());
     await userEvent.click(toggle());
