@@ -227,11 +227,12 @@ export function DemographicAttributesManager({ podeEditar }: { podeEditar: boole
     ];
 
     const mudancas = reordenados
-      .map((a, indice) => ({ id: a.id, orderIndex: indice }))
-      .filter(({ id, orderIndex }) => {
-        const atual = ordenados.findIndex((a) => a.id === id);
-        return atual !== orderIndex;
-      });
+      .map((a, indice) => ({ id: a.id, orderIndex: indice, atual: a.order_index }))
+      // Compara com o `order_index` gravado, nao com a posicao exibida: lista
+      // com numeros espacados (0, 10, 20) precisa de todos reescritos, senao o
+      // que ficou de fora mantem um numero que o coloca no lugar errado.
+      .filter(({ orderIndex, atual }) => atual !== orderIndex)
+      .map(({ id, orderIndex }) => ({ id, orderIndex }));
 
     try {
       for (const mudanca of mudancas) {

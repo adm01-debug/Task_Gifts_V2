@@ -186,24 +186,39 @@ export const demographicsService = {
       return (data ?? []) as unknown as DemographicValueRow[];
     }
 
-    const [permitidos, restritos] = await Promise.all([
+    // Duas consultas sem dependencia: a primeira entrega as colunas de valor so'
+    // dos atributos nao restritos (o filtro roda no servidor); a segunda entrega
+    // os metadados de **todas** as linhas e nenhuma coluna de valor.
+    //
+    // A segunda e' o que mantem na tela as respostas de atributo desativado: a
+    // policy "Everyone can view active demographic attributes" esconde o
+    // atributo inativo de quem nao e' admin, entao o embed vem nulo — a linha
+    // continua listada (rotulo "indisponivel") e o valor fica escondido, porque
+    // sem o metadado nao da' para saber se o atributo e' restrito.
+    const [permitidos, metadados] = await Promise.all([
       supabase
         .from("user_demographic_values")
         .select(`*, demographic_attributes!inner(${embed})`)
         .eq("demographic_attributes.is_restricted", false),
       supabase
         .from("user_demographic_values")
-        .select(`id, user_id, attribute_id, created_at, updated_at, demographic_attributes!inner(${embed})`)
-        .eq("demographic_attributes.is_restricted", true),
+        .select(
+          `id, user_id, attribute_id, created_at, updated_at, demographic_attributes(${embed})`,
+        ),
     ]);
 
     if (permitidos.error) throw permitidos.error;
-    if (restritos.error) throw restritos.error;
+    if (metadados.error) throw metadados.error;
 
-    return [
-      ...(permitidos.data ?? []),
-      ...(restritos.data ?? []),
-    ] as unknown as DemographicValueRow[];
+    const porId = new Map<string, DemographicValueRow>();
+    ((metadados.data ?? []) as unknown as DemographicValueRow[]).forEach((linha) =>
+      porId.set(linha.id, linha),
+    );
+    // A linha completa sobrescreve a versao sem valor.
+    ((permitidos.data ?? []) as unknown as DemographicValueRow[]).forEach((linha) =>
+      porId.set(linha.id, linha),
+    );
+    return Array.from(porId.values());
   },
 
   async saveValue(input: {

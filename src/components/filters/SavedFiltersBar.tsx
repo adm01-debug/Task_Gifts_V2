@@ -101,13 +101,15 @@ export function SavedFiltersBar({
   // exemplo, nao muda a busca que o usuario esta vendo.
   const primeiraCarga = useRef(false);
   useEffect(() => {
-    if (primeiraCarga.current || isLoading) return;
+    // Erro de consulta nao consome a primeira carga: se "Tentar de novo"
+    // recuperar a lista, o padrao ainda precisa ser aplicado.
+    if (primeiraCarga.current || isLoading || isError) return;
     primeiraCarga.current = true;
     const padrao = filters.find((f) => f.is_default);
     if (!padrao) return;
     setSelectedId(padrao.id);
     applyRef.current((padrao.filters ?? {}) as SavedFilterPayload);
-  }, [filters, isLoading]);
+  }, [filters, isLoading, isError]);
 
   const aplicar = (id: string) => {
     const alvo = filters.find((f) => f.id === id);

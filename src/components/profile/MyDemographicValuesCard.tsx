@@ -240,6 +240,14 @@ export function MyDemographicValuesCard() {
   // Atributos calculados aparecem so' para leitura; o resto e' editavel.
   const visiveis = atributos ?? SEM_ATRIBUTOS;
 
+  // Uma linha no banco conta como resposta mesmo quando o rascunho normalizado
+  // fica vazio — e' o caso da opcao que o administrador removeu depois. Sem
+  // isso o botao "Remover resposta" desaparecia e a linha continuava gravada.
+  const linhasSalvas = useMemo(
+    () => new Set((valores ?? []).map((v) => v.attribute_id)),
+    [valores],
+  );
+
   const editaveis = useMemo(
     () => visiveis.filter((a) => a.attribute_type !== "calculated"),
     [visiveis],
@@ -356,7 +364,9 @@ export function MyDemographicValuesCard() {
           <div className="space-y-4">
             {visiveis.map((atributo) => {
               const r = rascunhos[atributo.id] ?? RASCUNHO_VAZIO;
-              const jaRespondeu = temResposta(originais[atributo.id] ?? RASCUNHO_VAZIO);
+              const jaRespondeu =
+                temResposta(originais[atributo.id] ?? RASCUNHO_VAZIO) ||
+                linhasSalvas.has(atributo.id);
               const calculado = atributo.attribute_type === "calculated";
               return (
                 <div key={atributo.id} className="space-y-2 rounded-lg border border-border/40 p-3">

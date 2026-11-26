@@ -129,7 +129,9 @@ export function DemographicValuesPanel({ ehAdmin }: { ehAdmin: boolean }) {
                     <TableCell className="whitespace-nowrap">{nomeDe(valor.user_id)}</TableCell>
                     <TableCell>
                       <div className="flex items-center gap-2">
-                        <span>{valor.demographic_attributes?.name ?? "Atributo removido"}</span>
+                        <span>
+                          {valor.demographic_attributes?.name ?? "Atributo indisponível"}
+                        </span>
                         {valor.demographic_attributes?.is_visible_in_reports === false && (
                           <Badge variant="outline">Uso interno</Badge>
                         )}

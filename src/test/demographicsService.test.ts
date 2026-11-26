@@ -236,14 +236,71 @@ describe("demographicsService", () => {
     await demographicsService.listAllValues({ ehAdmin: false });
 
     expect(db.records).toHaveLength(2);
-    const [permitidos, restritos] = db.records;
+    const [permitidos, metadados] = db.records;
     expect(permitidos.filters).toEqual([["demographic_attributes.is_restricted", false]]);
-    expect(restritos.filters).toEqual([["demographic_attributes.is_restricted", true]]);
     expect(permitidos.columns).toContain("*");
-    // O select das restritas nao pede nenhuma coluna de valor.
-    expect(restritos.columns).not.toContain("values_array");
-    expect(restritos.columns).not.toContain("number_value");
-    expect(restritos.columns).not.toContain("date_value");
-    expect(restritos.columns).toContain("demographic_attributes!inner");
+    expect(metadados.filters).toEqual([]);
+    // A consulta de metadados nao pede nenhuma coluna de valor.
+    expect(metadados.columns).not.toContain("values_array");
+    expect(metadados.columns).not.toContain("number_value");
+    expect(metadados.columns).not.toContain("date_value");
+    expect(metadados.columns).not.toContain("value,");
+  });
+
+  it("gestor mantem na lista a resposta de atributo que nao consegue enxergar", async () => {
+    const restrito = {
+      id: "v-restrito",
+      user_id: "user-1",
+      attribute_id: "a-restrito",
+      created_at: "2026-01-01T00:00:00Z",
+      updated_at: "2026-01-01T00:00:00Z",
+      demographic_attributes: {
+        name: "Salario",
+        attribute_type: "number",
+        is_visible_in_reports: true,
+        is_restricted: true,
+      },
+    };
+    const desativado = {
+      id: "v-desativado",
+      user_id: "user-1",
+      attribute_id: "a-desativado",
+      created_at: "2026-01-02T00:00:00Z",
+      updated_at: "2026-01-02T00:00:00Z",
+      demographic_attributes: null,
+    };
+    const liberado = {
+      id: "v-liberado",
+      user_id: "user-1",
+      attribute_id: "a-liberado",
+      created_at: "2026-01-03T00:00:00Z",
+      updated_at: "2026-01-03T00:00:00Z",
+      value: "Resposta aberta",
+      demographic_attributes: {
+        name: "Cidade",
+        attribute_type: "text",
+        is_visible_in_reports: true,
+        is_restricted: false,
+      },
+    };
+
+    db.enqueue(
+      "user_demographic_values",
+      "select",
+      ok([liberado]),
+      ok([restrito, desativado]),
+    );
+
+    const linhas = await demographicsService.listAllValues({ ehAdmin: false });
+
+    expect(linhas.map((l) => l.id).sort()).toEqual(["v-desativado", "v-liberado", "v-restrito"]);
+    const porId = new Map(linhas.map((l) => [l.id, l]));
+    // A linha liberada vem da consulta completa, com o valor.
+    expect(porId.get("v-liberado")?.value).toBe("Resposta aberta");
+    // As demais nunca trazem colunas de valor e servem para o rotulo/fail-closed.
+    expect(porId.get("v-restrito")?.value).toBeUndefined();
+    expect(porId.get("v-restrito")?.demographic_attributes?.is_restricted).toBe(true);
+    expect(porId.get("v-desativado")?.value).toBeUndefined();
+    expect(porId.get("v-desativado")?.demographic_attributes).toBeNull();
   });
 });
