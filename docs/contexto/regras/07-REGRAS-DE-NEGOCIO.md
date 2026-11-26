@@ -1,6 +1,6 @@
 # 07 · REGRAS DE NEGÓCIO
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `29b5a15e3f` · branch `main` · 2026-11-25 22:31 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `c87b1c92a7` · branch `main` · 2026-11-26 11:19 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## A. Regras escritas por humanos (`manual/` — prioridade máxima, nunca sobrescrito)
@@ -3330,6 +3330,8 @@ _nenhum item encontrado_
 | Não foi possível salvar a preferência | `src/components/InAppNotificationToggle.tsx` |
 | Ainda sem conexão. Tente novamente. | `src/components/OfflineIndicator.tsx` |
 | Você está offline. Alguns recursos podem estar limitados. | `src/components/OfflineIndicator.tsx` |
+|              className= | `src/components/PushNotificationGlobalToggle.tsx` |
+| Nao foi possivel salvar a preferencia | `src/components/PushNotificationGlobalToggle.tsx` |
 | Resposta inválida do serviço de recomendações. | `src/components/TrailRecommendations.tsx` |
 | Erro ao desfazer ação | `src/components/UndoToast.tsx` |
 | useAccessibility must be used within AccessibilityProvider | `src/components/accessibility/AccessibilityProvider.tsx` |
@@ -3602,9 +3604,7 @@ _nenhum item encontrado_
 | Nenhum dado disponível para exportar. | `src/pages/EngagementReports.tsx` |
 |  aria-live= | `src/pages/ExecutiveMonthlyReport.tsx` |
 | Nada para investigar neste período. | `src/pages/ExecutiveMonthlyReport.tsx` |
-| ; import { ArrowLeft, Mail, CheckCircle2, Loader2, Shield } from  | `src/pages/ForgotPassword.tsx` |
-| Erro ao processar solicitação | `src/pages/ForgotPassword.tsx` |
-| … +189 linhas — lista completa em `context.json` | |
+| … +191 linhas — lista completa em `context.json` | |
 
 ## J. Controle de acesso no código (checagens de perfil/permissão)
 
@@ -3667,7 +3667,7 @@ _nenhum item encontrado_
 | `admin` | `supabase/migrations/20261228170000_reaplica_funcoes_desatualizadas_em_producao.sql` |
 | `manager` | `supabase/migrations/20261228170000_reaplica_funcoes_desatualizadas_em_producao.sql` |
 
-## K. Testes como especificação (2126 testes em 163 arquivos — nomes completos em `context.json`)
+## K. Testes como especificação (2136 testes em 164 arquivos — nomes completos em `context.json`)
 
 | Arquivo | Testes | Exemplos do que o sistema DEVE fazer |
 |---|---|---|
@@ -3763,6 +3763,7 @@ _nenhum item encontrado_
 | `src/test/lightningQuiz.simulation.test.ts` | 10 | Verdadeiro/Falso Relâmpago — motor de recompensa · cobre exaustivamente as 121 combinações de acertos x sequência · é monotônico: mais acertos nunca reduzem a recompensa · não paga nada em rodada zerada e respeita o teto na rodada perfeita … |
 | `src/test/luckyWheelComparisonAlerts.simulation.test.ts` | 10 | decideComparisonAlerts · não alerta em séries estáveis (200 sementes) · alerta regressão de custo quando o custo por giro dobra · alerta estouro de orçamento mesmo sem significância … |
 | `src/test/playerResume.simulation.test.ts` | 10 | retomada do player — simulação · isola a chave por usuário e módulo (400 combinações) · rejeita payloads hostis ou malformados · descarta sessões expiradas e relógios adiantados (300 cenários) … |
+| `src/test/pushNotificationGlobalToggle.test.tsx` | 10 | PushNotificationGlobalToggle · comeca ligado quando a conta nao tem linha (COALESCE default true) · reflete push_enabled=false salvo no banco · primeira gravacao cria a linha sem os padroes por tipo do banco … |
 | `src/tests/unit/profiles.test.ts` | 10 | profilesService · getById · should return profile data on success · addXp … |
 | `supabase/functions/_shared/contracts/registry.contract.spec.ts` | 10 | registro de contratos cobre TODAS as edge functions · cada pasta de supabase/functions tem contrato e fixtures (nenhum endpoint sem validação) · cada contrato é coerente (nome = chave, métodos, auth, schema) · funções com corpo obrigatório têm casos de campo ausente, tipo errado e valor vazio … |
 | `src/test/auctionDelivery.simulation.test.ts` | 9 | resolveAuctionDelivery — casos determinísticos · não entrega nada quando ninguém deu lance · leilão simbólico não mexe em estoque · estoque ilimitado sempre reserva … |
@@ -3899,6 +3900,7 @@ _nenhum item encontrado_
 | Limit to 5 trails | `src/components/AICoachDialog.tsx` |
 | CustomTooltip must be a simple function (not a component receiving refs) | `src/components/CompetencyRadar.tsx` |
 | Fail open: indisponibilidade do verificador não pode travar o acesso. | `src/components/IpAccessGuard.tsx` |
+| outra aba, criando a linha depois que este card carregou — não pode perder nada. | `src/components/PushNotificationGlobalToggle.tsx` |
 | Somente os canais que estes lembretes realmente usam. Os dois tipos chamam | `src/components/SurveyNotificationPreferences.tsx` |
 | Evita disparos concorrentes que estouram o rate limit da edge function. | `src/components/TrailRecommendations.tsx` |
 | momento — o banco guarda apenas o hash, então não há como recuperá-lo depois. | `src/components/admin/IssuedCredentialDialog.tsx` |
@@ -4194,5 +4196,4 @@ _nenhum item encontrado_
 | persiste se um alerta estourou o prazo, então % de resolvidos é o indicador | `supabase/functions/security-weekly-digest/index.ts` |
 | forjado com type=security_weekly_digest não pode ser usado como prova (nem bloquear | `supabase/functions/security-weekly-digest/index.ts` |
 | Máximo de 3 tentativas totais. Backoff base: 500ms, cap 8s. | `supabase/functions/send-campaign-push/index.ts` |
-| Limit response body size | `supabase/functions/webhook-dispatcher/index.ts` |
-| … +2 linhas — lista completa em `context.json` | |
+| … +3 linhas — lista completa em `context.json` | |

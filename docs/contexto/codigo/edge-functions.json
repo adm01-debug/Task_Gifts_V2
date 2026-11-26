@@ -555,7 +555,7 @@
    "nome": "push-outbox-dispatcher",
    "entrada": "supabase/functions/push-outbox-dispatcher/index.ts",
    "arquivos": 1,
-   "linhas": 199,
+   "linhas": 215,
    "verify_jwt": false,
    "metodos": [
     "OPTIONS"
@@ -566,7 +566,8 @@
     "push_subscriptions"
    ],
    "rpcs": [
-    "claim_push_outbox"
+    "claim_push_outbox",
+    "user_wants_push_notification"
    ],
    "env": [
     "SUPABASE_SERVICE_ROLE_KEY",

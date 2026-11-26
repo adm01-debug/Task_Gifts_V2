@@ -597,6 +597,16 @@
    "src/components/ui/textarea.tsx",
    "src/hooks/usePulseSurveys.ts"
   ],
+  "src/components/PushNotificationGlobalToggle.tsx": [
+   "src/components/ui/button.tsx",
+   "src/components/ui/card.tsx",
+   "src/components/ui/label.tsx",
+   "src/components/ui/skeleton.tsx",
+   "src/components/ui/switch.tsx",
+   "src/hooks/useAuth.tsx",
+   "src/integrations/supabase/client.ts",
+   "src/services/loggingService.ts"
+  ],
   "src/components/PushNotificationHistory.tsx": [
    "src/components/ui/badge.tsx",
    "src/components/ui/button.tsx",
@@ -5015,6 +5025,7 @@
    "src/components/MyNineBoxWidget.tsx",
    "src/components/ProfileAvatarSection.tsx",
    "src/components/ProfileKudosSection.tsx",
+   "src/components/PushNotificationGlobalToggle.tsx",
    "src/components/PushNotificationHistory.tsx",
    "src/components/PushNotificationToggle.tsx",
    "src/components/RankingBadge.tsx",

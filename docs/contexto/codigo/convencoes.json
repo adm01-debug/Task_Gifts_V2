@@ -7,7 +7,7 @@
    "src/components (1)"
   ],
   "componentes": [
-   "src/components (438)",
+   "src/components (439)",
    "src/pages (86)",
    "src/contexts (4)"
   ],
@@ -22,7 +22,7 @@
    "src/integrations (3)"
   ],
   "testes": [
-   "co-localizado (*.test) (158)",
+   "co-localizado (*.test) (159)",
    "outro (12)",
    "tests/ (3)"
   ],
@@ -48,7 +48,7 @@
  },
  "barrels_index": 16,
  "extensao_componentes": [
-  ".tsx (531)"
+  ".tsx (532)"
  ],
  "alias_imports": {
   "(raiz)": {
@@ -59,11 +59,11 @@
  "commits": {
   "convencao": "conventional commits (observado)",
   "exemplos": [
+   "feat: interruptor global de push no perfil (#176)",
    "fix: restaura trigger de cadastro, revoga execute publico e alinha triggers e mensagens (#173)",
    "fix(banco): fecha o rebuild - tabelas, colunas, funcoes, views, RLS e grants de producao (#172)",
    "chore(banco): paridade de jobs do cron, matview leaderboard_cache e colunas de profiles (#171)",
-   "fix: destino dos avisos de notificação (51 avisos sem rota)",
-   "feat: interruptor proprio para os avisos de pesquisa no perfil (#169)"
+   "fix: destino dos avisos de notificação (51 avisos sem rota)"
   ]
  },
  "pr_template": ".github/PULL_REQUEST_TEMPLATE.md",

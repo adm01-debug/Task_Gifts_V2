@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "29b5a15e3fb6554d5b0c367b16d723e9d31b4dab",
+  "commit": "c87b1c92a7ff481a407431b41f368e1da3340170",
   "branch": "main",
-  "data_commit": "2026-11-25T19:28:43-03:00",
+  "data_commit": "2026-11-26T08:18:47-03:00",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "ultimos_commits": [
+   {
+    "sha": "c87b1c9",
+    "data": "2026-11-26",
+    "assunto": "feat: interruptor global de push no perfil (#176)"
+   },
    {
     "sha": "29b5a15",
     "data": "2026-11-25",
@@ -126,14 +131,9 @@
     "sha": "fc6ade9",
     "data": "2026-11-24",
     "assunto": "chore(docs): ledger 280x280 e jobs internos medidos (preserva o trabalho da #150) (#151)"
-   },
-   {
-    "sha": "c567ffe",
-    "data": "2026-11-24",
-    "assunto": "docs(edge-functions): corrige o drift do agendamento dos jobs internos e a semeadura de cron_secret (#149)"
    }
   ],
-  "arquivos_mudados_7d": 259,
+  "arquivos_mudados_7d": 261,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "supabase/functions/_shared",
@@ -250,6 +250,10 @@
     "mudancas": 6
    },
    {
+    "arquivo": "docs/estado/02-componentes.md",
+    "mudancas": 5
+   },
+   {
     "arquivo": "docs/pendencias/02-profiles-update-sem-restricao-de-coluna.md",
     "mudancas": 5
    },
@@ -259,6 +263,10 @@
    },
    {
     "arquivo": "scripts/db-audit/migration-baseline.json",
+    "mudancas": 5
+   },
+   {
+    "arquivo": "src/pages/Profile.tsx",
     "mudancas": 5
    },
    {
@@ -288,20 +296,12 @@
    {
     "arquivo": "docs/agentes/github-ci.md",
     "mudancas": 4
-   },
-   {
-    "arquivo": "docs/estado/02-componentes.md",
-    "mudancas": 4
-   },
-   {
-    "arquivo": "scripts/automation.mjs",
-    "mudancas": 4
    }
   ],
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 140
+    "commits": 141
    },
    {
     "autor": "dependabot[bot]",
@@ -310,21 +310,21 @@
   ]
  },
  "contagens": {
-  "arquivos_total": 1606,
-  "arquivos_codigo": 1196,
-  "linhas_codigo": 236866,
+  "arquivos_total": 1608,
+  "arquivos_codigo": 1198,
+  "linhas_codigo": 237247,
   "rotas": 87,
   "rotas_http_backend": 0,
   "vistas_por_id": 0,
   "itens_menu": 65,
   "modulos": 73,
-  "componentes": 531,
+  "componentes": 532,
   "hooks": 155,
   "edge_functions": 23,
   "tabelas": 239,
   "migrations": 306,
   "cron_jobs": 40,
-  "testes": 177,
+  "testes": 178,
   "workflows": 6,
   "scripts": 17,
   "docs_md": 56
@@ -399,8 +399,8 @@
    "linhas": 342
   },
   "src/components": {
-   "arquivos": 468,
-   "linhas": 79297
+   "arquivos": 469,
+   "linhas": 79461
   },
   "src/constants": {
    "arquivos": 1,
@@ -432,7 +432,7 @@
   },
   "src/pages": {
    "arquivos": 86,
-   "linhas": 24960
+   "linhas": 24962
   },
   "src/services": {
    "arquivos": 99,
@@ -443,8 +443,8 @@
    "linhas": 7136
   },
   "src/test": {
-   "arquivos": 139,
-   "linhas": 24357
+   "arquivos": 140,
+   "linhas": 24556
   },
   "src/tests": {
    "arquivos": 17,
@@ -460,7 +460,7 @@
   },
   "supabase/functions": {
    "arquivos": 70,
-   "linhas": 9279
+   "linhas": 9295
   },
   "tailwind.config.ts": {
    "arquivos": 1,

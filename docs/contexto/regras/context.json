@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "29b5a15e3fb6554d5b0c367b16d723e9d31b4dab",
+  "sha": "c87b1c92a7ff481a407431b41f368e1da3340170",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
-  "generated_at": "2026-11-25 22:31 UTC",
-  "files_total": 1617,
-  "code_files": 1510,
-  "code_lines": 276182
+  "generated_at": "2026-11-26 11:19 UTC",
+  "files_total": 1619,
+  "code_files": 1512,
+  "code_lines": 276563
  },
  "version": "1.3.2",
- "facts_hash": "dbd3881360212a88",
+ "facts_hash": "72be590fe13e420d",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -195,7 +195,7 @@
   "package_manager": "bun",
   "languages": {
    ".ts": 587,
-   ".tsx": 583,
+   ".tsx": 585,
    ".sql": 308,
    ".mjs": 21,
    ".js": 5,
@@ -46898,7 +46898,7 @@
      "user_has_passkeys",
      "verify_certificate"
     ],
-    "deps_count": 125
+    "deps_count": 126
    },
    {
     "path": "",
@@ -49022,7 +49022,7 @@
     "file": ".github/workflows/contexto.yml"
    }
   ],
-  "components_count": 473,
+  "components_count": 474,
   "hooks": [
    {
     "name": "useContacts",
@@ -51697,8 +51697,8 @@
   },
   {
    "module": "src/components",
-   "files": 468,
-   "lines": 79297,
+   "files": 469,
+   "lines": 79461,
    "tables": [
     "attendance_records",
     "audit_logs",
@@ -51863,6 +51863,7 @@
     "src/components/ProfileKudosSection.tsx",
     "src/components/Providers.tsx",
     "src/components/PulseSurveyWidget.tsx",
+    "src/components/PushNotificationGlobalToggle.tsx",
     "src/components/PushNotificationHistory.tsx",
     "src/components/PushNotificationToggle.tsx",
     "src/components/RankingBadge.tsx",
@@ -51879,8 +51880,7 @@
     "src/components/TeamChallenges.tsx",
     "src/components/ThemeToggle.tsx",
     "src/components/TrailDependencyTree.tsx",
-    "src/components/TrailRecommendations.tsx",
-    "src/components/UndoToast.tsx"
+    "src/components/TrailRecommendations.tsx"
    ]
   },
   {
@@ -52293,7 +52293,7 @@
   {
    "module": "src/pages",
    "files": 86,
-   "lines": 24960,
+   "lines": 24962,
    "tables": [
     "audit_logs",
     "campaign_participants",
@@ -52851,8 +52851,8 @@
   },
   {
    "module": "src/test",
-   "files": 139,
-   "lines": 24357,
+   "files": 140,
+   "lines": 24556,
    "tables": [
     "kudos",
     "profiles"
@@ -52877,6 +52877,7 @@
     "node:path",
     "react",
     "react-router-dom",
+    "sonner",
     "vitest"
    ],
    "imports_modules": [
@@ -53058,7 +53059,7 @@
   {
    "module": "supabase/functions",
    "files": 70,
-   "lines": 9279,
+   "lines": 9295,
    "tables": [
     "ai_course_jobs",
     "attendance_records",
@@ -54303,12 +54304,19 @@
    "notification_preferences": {
     "select": [
      "src/components/InAppNotificationToggle.tsx",
+     "src/components/PushNotificationGlobalToggle.tsx",
      "src/hooks/useTypePreferences.ts",
      "src/services/salesCampaignsService.ts"
     ],
     "upsert": [
      "src/components/InAppNotificationToggle.tsx",
      "src/hooks/useTypePreferences.ts"
+    ],
+    "update": [
+     "src/components/PushNotificationGlobalToggle.tsx"
+    ],
+    "insert": [
+     "src/components/PushNotificationGlobalToggle.tsx"
     ]
    },
    "notifications": {
@@ -55846,6 +55854,7 @@
    ],
    "notification_preferences": [
     "in_app_enabled",
+    "push_enabled",
     "type_preferences",
     "user_id"
    ],
@@ -57202,6 +57211,7 @@
     "src/services/salesCampaignsService.ts"
    ],
    "user_wants_push_notification": [
+    "supabase/functions/push-outbox-dispatcher/index.ts",
     "supabase/functions/send-campaign-push/index.ts"
    ],
    "validate_reset_token": [
@@ -59859,6 +59869,14 @@
     "msg": "Você está offline. Alguns recursos podem estar limitados."
    },
    {
+    "file": "src/components/PushNotificationGlobalToggle.tsx",
+    "msg": "\n            className="
+   },
+   {
+    "file": "src/components/PushNotificationGlobalToggle.tsx",
+    "msg": "Nao foi possivel salvar a preferencia"
+   },
+   {
     "file": "src/components/TrailRecommendations.tsx",
     "msg": "Resposta inválida do serviço de recomendações."
    },
@@ -61953,6 +61971,10 @@
    {
     "file": "src/components/IpAccessGuard.tsx",
     "text": "Fail open: indisponibilidade do verificador não pode travar o acesso."
+   },
+   {
+    "file": "src/components/PushNotificationGlobalToggle.tsx",
+    "text": "outra aba, criando a linha depois que este card carregou — não pode perder nada."
    },
    {
     "file": "src/components/SurveyNotificationPreferences.tsx",
@@ -90275,6 +90297,46 @@
    {
     "file": "src/test/pushFlow.simulation.test.ts",
     "name": "suíte total roda >=900 asserções combinatórias"
+   },
+   {
+    "file": "src/test/pushNotificationGlobalToggle.test.tsx",
+    "name": "PushNotificationGlobalToggle"
+   },
+   {
+    "file": "src/test/pushNotificationGlobalToggle.test.tsx",
+    "name": "comeca ligado quando a conta nao tem linha (COALESCE default true)"
+   },
+   {
+    "file": "src/test/pushNotificationGlobalToggle.test.tsx",
+    "name": "reflete push_enabled=false salvo no banco"
+   },
+   {
+    "file": "src/test/pushNotificationGlobalToggle.test.tsx",
+    "name": "primeira gravacao cria a linha sem os padroes por tipo do banco"
+   },
+   {
+    "file": "src/test/pushNotificationGlobalToggle.test.tsx",
+    "name": "com linha existente atualiza so push_enabled"
+   },
+   {
+    "file": "src/test/pushNotificationGlobalToggle.test.tsx",
+    "name": "nao apaga escolhas por tipo salvas por outro controle depois do carregamento"
+   },
+   {
+    "file": "src/test/pushNotificationGlobalToggle.test.tsx",
+    "name": "mostra erro de leitura, esconde o interruptor e recarrega ao tentar de novo"
+   },
+   {
+    "file": "src/test/pushNotificationGlobalToggle.test.tsx",
+    "name": "nao confirma a pausa quando nada foi gravado"
+   },
+   {
+    "file": "src/test/pushNotificationGlobalToggle.test.tsx",
+    "name": "confirma a pausa quando outra tela cria a linha no meio do caminho"
+   },
+   {
+    "file": "src/test/pushNotificationGlobalToggle.test.tsx",
+    "name": "volta o interruptor para o valor anterior quando a gravacao falha"
    },
    {
     "file": "src/test/pushOutbox.simulation.test.ts",
@@ -127609,6 +127671,40 @@
     }
    ]
   },
+  "src/components/PushNotificationGlobalToggle.tsx": {
+   "path": "src/components/PushNotificationGlobalToggle.tsx",
+   "lines": 164,
+   "exports": [
+    "function PushNotificationGlobalToggle"
+   ],
+   "tables": [
+    {
+     "table": "notification_preferences",
+     "op": "select"
+    },
+    {
+     "table": "notification_preferences",
+     "op": "select,update"
+    },
+    {
+     "table": "notification_preferences",
+     "op": "insert"
+    }
+   ],
+   "table_cols": {
+    "notification_preferences": [
+     "push_enabled",
+     "user_id"
+    ]
+   },
+   "errors": [
+    "\n            className=",
+    "Nao foi possivel salvar a preferencia"
+   ],
+   "rule_comments": [
+    "outra aba, criando a linha depois que este card carregou — não pode perder nada."
+   ]
+  },
   "src/components/PushNotificationHistory.tsx": {
    "path": "src/components/PushNotificationHistory.tsx",
    "lines": 171,
@@ -143865,7 +143961,7 @@
   },
   "src/pages/Profile.tsx": {
    "path": "src/pages/Profile.tsx",
-   "lines": 248,
+   "lines": 250,
    "exports": [
     "default Profile"
    ],
@@ -155281,6 +155377,38 @@
     "fcm."
    ]
   },
+  "src/test/pushNotificationGlobalToggle.test.tsx": {
+   "path": "src/test/pushNotificationGlobalToggle.test.tsx",
+   "lines": 199,
+   "is_test": true,
+   "errors": [
+    ")).not.toBeInTheDocument();\n  });\n\n  it(",
+    ")).toBeInTheDocument());\n    expect(screen.queryByRole("
+   ],
+   "rule_comments": [
+    "pode aparecer como \"ligado\"; a gravacao nao pode apagar as escolhas por tipo",
+    "feitas por outro controle depois do carregamento; e a criacao da linha nao pode"
+   ],
+   "calc_fns": [
+    {
+     "name": "applyWrite",
+     "params": "row: Record<string, unknown>",
+     "body": "writes.push(row); stored = { ...stored, ...row };"
+    }
+   ],
+   "tests": [
+    "PushNotificationGlobalToggle",
+    "comeca ligado quando a conta nao tem linha (COALESCE default true)",
+    "reflete push_enabled=false salvo no banco",
+    "primeira gravacao cria a linha sem os padroes por tipo do banco",
+    "com linha existente atualiza so push_enabled",
+    "nao apaga escolhas por tipo salvas por outro controle depois do carregamento",
+    "mostra erro de leitura, esconde o interruptor e recarrega ao tentar de novo",
+    "nao confirma a pausa quando nada foi gravado",
+    "confirma a pausa quando outra tela cria a linha no meio do caminho",
+    "volta o interruptor para o valor anterior quando a gravacao falha"
+   ]
+  },
   "src/test/pushOutbox.simulation.test.ts": {
    "path": "src/test/pushOutbox.simulation.test.ts",
    "lines": 110,
@@ -159014,7 +159142,7 @@
   },
   "supabase/functions/push-outbox-dispatcher/index.ts": {
    "path": "supabase/functions/push-outbox-dispatcher/index.ts",
-   "lines": 199,
+   "lines": 215,
    "tables": [
     {
      "table": "push_subscriptions",
@@ -159048,7 +159176,8 @@
     ]
    },
    "rpc": [
-    "claim_push_outbox"
+    "claim_push_outbox",
+    "user_wants_push_notification"
    ],
    "env": [
     "SUPABASE_SERVICE_ROLE_KEY",
@@ -161444,10 +161573,23 @@
   }
  },
  "git": {
-  "sha": "29b5a15e3fb6554d5b0c367b16d723e9d31b4dab",
+  "sha": "c87b1c92a7ff481a407431b41f368e1da3340170",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "commits": [
+   {
+    "sha": "c87b1c9",
+    "date": "2026-11-26",
+    "author": "adm01-debug",
+    "subject": "feat: interruptor global de push no perfil (#176)",
+    "files": [
+     "docs/estado/02-componentes.md",
+     "src/components/PushNotificationGlobalToggle.tsx",
+     "src/pages/Profile.tsx",
+     "src/test/pushNotificationGlobalToggle.test.tsx",
+     "supabase/functions/push-outbox-dispatcher/index.ts"
+    ]
+   },
    {
     "sha": "29b5a15",
     "date": "2026-11-25",
@@ -161799,15 +161941,6 @@
     "files": [
      "supabase/migrations/20261224120000_dispatch_critical_alert_config.sql"
     ]
-   },
-   {
-    "sha": "716355d",
-    "date": "2026-11-24",
-    "author": "adm01-debug",
-    "subject": "feat(clima): agenda ciclo de vida das pesquisas (expira e lembrete) (#141)",
-    "files": [
-     "supabase/migrations/20261224100000_climate_survey_cycle_jobs.sql"
-    ]
    }
   ],
   "hot_files": [
@@ -161836,6 +161969,10 @@
     4
    ],
    [
+    "src/pages/Profile.tsx",
+    3
+   ],
+   [
     "scripts/db-audit/check-migration-drift.mjs",
     3
    ],
@@ -161845,10 +161982,6 @@
    ],
    [
     "supabase/migrations/20251220144518_06856092-4043-44fe-8da4-8f9501335d42.sql",
-    2
-   ],
-   [
-    "src/pages/Profile.tsx",
     2
    ],
    [
@@ -161876,19 +162009,19 @@
     2
    ],
    [
-    "supabase/migrations/20261228180000_restaura_trigger_novo_usuario.sql",
+    "docs/estado/02-componentes.md",
     1
    ],
    [
-    "supabase/migrations/20261228190000_revoga_execute_publico_anon_funcoes.sql",
+    "src/components/PushNotificationGlobalToggle.tsx",
     1
    ],
    [
-    "supabase/migrations/20261228200000_alinha_triggers_department_war_e_auditoria.sql",
+    "src/test/pushNotificationGlobalToggle.test.tsx",
     1
    ],
    [
-    "supabase/migrations/20261228210000_reaplica_mensagens_funcoes_divergentes.sql",
+    "supabase/functions/push-outbox-dispatcher/index.ts",
     1
    ]
   ]

@@ -5,17 +5,17 @@
   "vitest",
   "playwright"
  ],
- "total": 177,
+ "total": 178,
  "por_tipo": {
   "contrato": 3,
   "e2e": 2,
   "pytest": 2,
-  "unit": 168
+  "unit": 169
  },
  "onde_ficam": [
   {
    "padrao": "co-localizado (*.test)",
-   "arquivos": 158
+   "arquivos": 159
   },
   {
    "padrao": "outro",
@@ -1124,6 +1124,15 @@
    "casos": 8
   },
   {
+   "arquivo": "src/test/pushNotificationGlobalToggle.test.tsx",
+   "tipo": "unit",
+   "linhas": 199,
+   "testa": [
+    "src/components/PushNotificationGlobalToggle.tsx"
+   ],
+   "casos": 9
+  },
+  {
    "arquivo": "src/test/pushOutbox.simulation.test.ts",
    "tipo": "unit",
    "linhas": 110,
@@ -1695,6 +1704,7 @@
   "scripts/maintenance/lib.mjs": 1,
   "scripts/maintenance/run.mjs": 1,
   "src/components/NotificationCenter.tsx": 1,
+  "src/components/PushNotificationGlobalToggle.tsx": 1,
   "src/components/SurveyNotificationPreferences.tsx": 1,
   "src/components/accessibility/index.ts": 1,
   "src/components/admin/telemetry/TelemetryCharts.tsx": 1,

@@ -1,7 +1,7 @@
 # Contexto do projeto para agentes de IA
 
 GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.
-Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `29b5a15e3fb6554d5b0c367b16d723e9d31b4dab` (2026-11-25T19:28:43-03:00).
+Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `c87b1c92a7ff481a407431b41f368e1da3340170` (2026-11-26T08:18:47-03:00).
 
 ## Como usar (leia antes de planejar ou executar qualquer tarefa)
 1. **Tela/rota/menu** → `rotas.json` (url/vista/menu → arquivo → hooks → tabelas → edges; `rotas_http_backend` para APIs) e `modulos.json` (módulo inteiro + dependências entre módulos).
@@ -14,7 +14,7 @@ Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR
 Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua tarefa; não carregue tudo.
 
 ## Stack
-- linguagens: TypeScript (1168), SQL (308), Markdown (56), JavaScript (24), JSON (14), YAML (9), Python (5), Shell (5)
+- linguagens: TypeScript (1170), SQL (308), Markdown (56), JavaScript (24), JSON (14), YAML (9), Python (5), Shell (5)
 - linguagem_principal: TypeScript
 - framework: React
 - backend_http: n/d
@@ -34,31 +34,31 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 ## Números
 | item | qtd |
 |---|---|
-| arquivos_total | 1606 |
-| arquivos_codigo | 1196 |
-| linhas_codigo | 236866 |
+| arquivos_total | 1608 |
+| arquivos_codigo | 1198 |
+| linhas_codigo | 237247 |
 | rotas | 87 |
 | rotas_http_backend | 0 |
 | vistas_por_id | 0 |
 | itens_menu | 65 |
 | modulos | 73 |
-| componentes | 531 |
+| componentes | 532 |
 | hooks | 155 |
 | edge_functions | 23 |
 | tabelas | 239 |
 | migrations | 306 |
 | cron_jobs | 40 |
-| testes | 177 |
+| testes | 178 |
 | workflows | 6 |
 | scripts | 17 |
 | docs_md | 56 |
 
 ## Onde ficam as coisas
 - telas: src/pages (85), src/components (1)
-- componentes: src/components (438), src/pages (86), src/contexts (4)
+- componentes: src/components (439), src/pages (86), src/contexts (4)
 - hooks: src/hooks (129), src/components (22), src/contexts (4)
 - servicos_logica: src/lib (107), src/services (99), src/integrations (3)
-- testes: co-localizado (*.test) (158), outro (12), tests/ (3)
+- testes: co-localizado (*.test) (159), outro (12), tests/ (3)
 - edge_functions: supabase/functions
 - migrations: supabase/migrations
 - scripts: scripts/maintenance (4), scripts/ci (3), scripts/regras_negocio (3)
@@ -69,7 +69,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 ## Módulos (menu → domínio)
 | módulo | itens de menu | telas/rotas | arquivos | hooks locais | edges | tabelas |
 |---|---|---|---|---|---|---|
-| components | 0 | 0 | 82 | 217 | 8 | 76 |
+| components | 0 | 0 | 83 | 217 | 8 | 76 |
 | components/accessibility | 0 | 0 | 5 | 2 | 0 | 0 |
 | components/admin | 0 | 0 | 46 | 150 | 4 | 67 |
 | components/analytics | 0 | 0 | 5 | 0 | 0 | 0 |
@@ -271,7 +271,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - env de integração (só nomes): CRON_SECRET, INTERNAL_FUNCTION_SECRET, OPENROUTER_API_KEY, RESEND_API_KEY, SENTRY_DSN, SENTRY_ENV, SLACK_ALERT_WEBHOOK_URL, UPSTASH_REDIS_REST_TOKEN, UPSTASH_REDIS_REST_URL, VITE_BITRIX_WEBHOOK_URL, VITE_SENTRY_DSN, WEBHOOK_HEALTH_MIN_SAMPLE, WEBHOOK_HEALTH_THRESHOLD
 
 ## Permissões / papéis
-- papéis no código: admin (13), alert (12), user (9), manager (8), button (6), system (6), status (5), assistant (3), group (3), grid (2), mentor (2), navigation (2), radio (2), radiogroup (2), Cargos (1), banner (1), contentinfo (1), dialog (1), gridcell (1), img (1), link (1), list (1), listitem (1), long (1), menu (1), menuitem (1), presentation (1), region (1), robot (1), role_assigned (1), separator (1), short (1), tab (1)
+- papéis no código: admin (13), alert (13), user (9), manager (8), button (6), system (6), status (5), assistant (3), group (3), grid (2), mentor (2), navigation (2), radio (2), radiogroup (2), Cargos (1), banner (1), contentinfo (1), dialog (1), gridcell (1), img (1), link (1), list (1), listitem (1), long (1), menu (1), menuitem (1), presentation (1), region (1), robot (1), role_assigned (1), separator (1), short (1), tab (1)
 - enums de papel: app_role: admin|manager|employee
 - guards: src/components/IpAccessGuard.tsx, src/components/engagement/diagnostics/AnonymityGuardNotice.tsx, src/components/rbac/AccessControl.tsx, src/components/rbac/ProtectedRoute.tsx · rotas protegidas: 82 · públicas: /*, /forgot-password, /reset-password, /verificar, /verificar/:code
 - feature flags: nenhuma
@@ -294,8 +294,8 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - possiveis_segredos_no_codigo: 0
 
 ## Grafo de código (graphify)
-- 10570 nós · 29197 arestas · 681 comunidades · grafo do commit `29b5a15e`
-- comunidades maiores: lucide-react (310), react (250), cn (157), AdminPanel.tsx (145), client.ts (132), Mentoria.tsx (131), @tanstack/react-query (98), Nr1Risks.tsx (97), date-fns (96), contracts/index.ts (96), AdminTelemetria.tsx (93), App.tsx (88)
+- 10577 nós · 29235 arestas · 682 comunidades · grafo do commit `c87b1c92`
+- comunidades maiores: lucide-react (349), react (232), ManagerDashboard.tsx (196), cn (118), client.ts (118), sonner (113), button.tsx (108), useToast (101), useAuth (97), Mentoria.tsx (90), mobile/index.ts (89), requestId.ts (87)
 - símbolos mais chamados: cn() (src/lib/utils.ts), useAuth() (src/hooks/useAuth.tsx), useIsMobile() (src/hooks/use-mobile.tsx), q() (scripts/supabase_snapshot/snapshot.py), useDepartments() (src/hooks/useDepartments.ts), useRBAC() (src/hooks/useRBAC.ts), useProfiles() (src/hooks/useProfiles.ts), useToast() (src/hooks/use-toast.ts), useSEO() (src/hooks/useSEO.ts), useSoundEffects() (src/hooks/useSoundEffects.tsx), .collect() (scripts/supabase_snapshot/test_snapshot.py), excluded_sql() (scripts/supabase_snapshot/snapshot.py)
 - consulta local: `graphify query "<pergunta>"`, `graphify path "<A>" "<B>"`, `graphify explain "<X>"`
 
@@ -313,8 +313,8 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - supabase/config.toml (7)
 - scripts/db-audit/check-migration-drift.mjs (6)
 - supabase/functions/_shared/contracts/_fixtures/index.ts (6)
+- docs/estado/02-componentes.md (5)
 - docs/pendencias/02-profiles-update-sem-restricao-de-coluna.md (5)
-- docs/prod-readiness.md (5)
 
 ## Workflows
 - `automation-local.yml` — Automação local (pull_request, push, workflow_dispatch)
@@ -381,6 +381,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 
 
 ## Últimos commits
+- 2026-11-26 `c87b1c9` feat: interruptor global de push no perfil (#176)
 - 2026-11-25 `29b5a15` fix: restaura trigger de cadastro, revoga execute publico e alinha triggers e mensagens (#173)
 - 2026-11-25 `324e51a` fix(banco): fecha o rebuild - tabelas, colunas, funcoes, views, RLS e grants de producao (#172)
 - 2026-11-25 `556ec21` chore(banco): paridade de jobs do cron, matview leaderboard_cache e colunas de profiles (#171)
@@ -395,7 +396,6 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - 2026-11-25 `f41bdee` fix: conserta pedido de reset de senha do usuario deslogado (#159)
 - 2026-11-25 `a6a9bc6` fix: revoga execucao anonima das funcoes SECURITY DEFINER (#158)
 - 2026-11-25 `b9db75d` fix: restringe SELECT de profiles ao allowlist de colunas (LGPD) (#161)
-- 2026-11-25 `0c592ca` fix: painel de certificacoes e entrega do time voltam a carregar (#163)
 
 ## Arquivos deste diretório
 - `docs/contexto/codigo/rotas.json`
