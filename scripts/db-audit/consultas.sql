@@ -269,3 +269,12 @@ SELECT (SELECT count(*) FROM public.cron_job_watch_baseline) AS no_baseline,
 -- devolve o que ele acusaria, sem deixar nada no banco. Um job morto ha semanas nao pode esperar 8 dias.
 BEGIN;
 SELECT * FROM public.check_stale_cron_jobs(true) AS vigia;
+-- nome: corpo_instalado_do_vigia
+-- Fonte exata da funcao que esta rodando agora no banco. Se o INSERT nao tiver "AS b" ou se nao houver
+-- "nome_job", o corpo instalado nao e' o do repositorio (e o 42702 volta no proximo disparo).
+SELECT position('nome_job' IN pg_get_functiondef(p.oid)) > 0 AS tem_nome_job,
+       position('AS b (jobname)' IN pg_get_functiondef(p.oid)) > 0 AS insert_qualificado,
+       length(pg_get_functiondef(p.oid)) AS bytes_fonte
+FROM pg_proc p
+JOIN pg_namespace n ON n.oid = p.pronamespace
+WHERE n.nspname = 'public' AND p.proname = 'check_stale_cron_jobs';
