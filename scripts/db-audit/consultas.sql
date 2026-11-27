@@ -40,15 +40,30 @@ FROM cron.job j
 ORDER BY j.jobid
 
 -- nome: rastros_do_lembrete
--- O que existe no banco sobre o engagement-reminders sem depender do job_run_details.
--- conta: quantos registros de cada tabela nasceram a partir de uma data de corte.
-WITH corte AS (SELECT '2026-11-20 00:00:00+00'::timestamptz AS desde)
+-- Por que o engagement-reminders (segunda 11:00 UTC) nao deixa aviso. Olha a serie inteira desde 01/09,
+-- nao so os 7 dias do job_run_details: o cleanup-job-run-details-7d apaga o historico.
+WITH segundas AS (
+  SELECT min(created_at) AS primeiro, count(*) AS avisos
+  FROM public.notifications
+  WHERE created_at >= '2026-09-01 00:00:00+00'::timestamptz
+    AND (extract(isodow FROM created_at) = 1 OR extract(isodow FROM (created_at AT TIME ZONE 'America/Sao_Paulo')) = 1)
+), janela AS (
+  SELECT count(*) AS avisos_na_hora_do_job
+  FROM public.notifications
+  WHERE created_at >= '2026-09-01 00:00:00+00'::timestamptz
+    AND extract(hour FROM (created_at AT TIME ZONE 'America/Sao_Paulo')) = 8
+)
 SELECT
-  (SELECT count(*) FROM public.notifications n, corte WHERE n.created_at >= corte.desde) AS notificacoes,
-  (SELECT count(*) FROM public.push_outbox o, corte WHERE o.created_at >= corte.desde) AS push_outbox,
-  (SELECT max(n.created_at) FROM public.notifications n) AS ultima_notificacao,
-  (SELECT max(o.created_at) FROM public.push_outbox o) AS ultimo_push
-
+  (SELECT count(*) FROM public.notifications) AS notificacoes_total,
+  (SELECT count(*) FROM public.push_outbox) AS push_outbox_total,
+  (SELECT min(created_at) FROM public.notifications) AS primeira_notificacao,
+  (SELECT max(created_at) FROM public.notifications) AS ultima_notificacao,
+  (SELECT min(created_at) FROM public.push_outbox) AS primeiro_push,
+  (SELECT count(*) FROM public.notifications WHERE created_at >= '2026-09-01 00:00:00+00'::timestamptz) AS notificacoes_desde_setembro,
+  (SELECT avisos FROM segundas) AS em_segundas,
+  (SELECT avisos_na_hora_do_job FROM janela) AS as_8h_de_brasilia,
+  (SELECT count(*) FROM public.notification_preferences WHERE do_not_disturb_enabled) AS silencio_ligado,
+  (SELECT count(*) FROM public.notification_preferences) AS linhas_de_preferencia
 -- nome: jobs_do_usuario
 -- Cobertura da janela de silencio: quantas linhas, quantos usuarios e desde quando.
 SELECT count(*) AS linhas, count(DISTINCT user_id) AS usuarios_cobertos,
