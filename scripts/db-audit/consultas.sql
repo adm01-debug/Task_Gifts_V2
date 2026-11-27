@@ -289,3 +289,14 @@ FROM pg_proc p
 JOIN pg_namespace n ON n.oid = p.pronamespace
 WHERE n.nspname = 'public' AND p.proname = 'check_stale_cron_jobs'
 ORDER BY p.oid;
+-- nome: colunas_do_cron_job
+-- Colunas reais de cron.job e cron.job_run_details na versao instalada do pg_cron. Sem isso o vigia
+-- chuta nomes (min_time nao existe) e so' descobre em producao.
+SELECT c.relname AS relacao,
+       string_agg(a.attname, ', ' ORDER BY a.attname) AS colunas
+FROM pg_class c
+JOIN pg_namespace n ON n.oid = c.relnamespace
+JOIN pg_attribute a ON a.attrelid = c.oid AND a.attnum > 0 AND NOT a.attisdropped
+WHERE n.nspname = 'cron' AND c.relname IN ('job', 'job_run_details')
+GROUP BY c.relname
+ORDER BY c.relname;
