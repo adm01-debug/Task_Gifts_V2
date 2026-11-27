@@ -310,3 +310,15 @@ WITH disparo AS MATERIALIZED (
 )
 SELECT (SELECT acusados FROM disparo) AS acusados,
        (SELECT count(*) FROM public.cron_job_watch_baseline) AS baseline_depois
+-- nome: dono_do_vigia
+-- SECURITY DEFINER roda como o dono da funcao. Se o dono nao for quem aplicou a migration (postgres),
+-- o INSERT do marco zero pode ser barrado por RLS ou por falta de privilegio, e a funcao devolve
+-- linhas sem gravar nada - foi o que aconteceu em producao (acusados=35 | baseline_depois=0).
+SELECT p.prosecdef AS security_definer,
+       pg_get_userbyid(p.proowner) AS dono_da_funcao,
+       (SELECT rolbypassrls FROM pg_roles r WHERE r.rolname = pg_get_userbyid(p.proowner)) AS dono_ignora_rls,
+       has_table_privilege(pg_get_userbyid(p.proowner), 'public.cron_job_watch_baseline', 'INSERT') AS dono_pode_inserir,
+       (SELECT relrowsecurity FROM pg_class c WHERE c.oid = 'public.cron_job_watch_baseline'::regclass) AS tabela_tem_rls,
+       (SELECT count(*) FROM public.cron_job_watch_baseline) AS linhas
+FROM pg_proc p
+WHERE p.proname = 'check_stale_cron_jobs' AND p.pronamespace = 'public'::regnamespace
