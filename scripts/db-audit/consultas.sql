@@ -185,3 +185,9 @@ SELECT
 FROM prefs p
 GROUP BY p.do_not_disturb_enabled, p.quiet_hours_start, p.quiet_hours_end
 ORDER BY pessoas DESC
+-- nome: ensaio_do_lembrete
+-- A funcao depende de dados (perfil confirmado, pergunta sem resposta)? Os elegiveis existem,
+-- entao o runner abre BEGIN e sempre faz ROLLBACK (nada fica gravado mesmo se a funcao
+-- enfileirar avisos), e uma excecao da funcao aparece com a mensagem do Postgres.
+BEGIN;
+SELECT public.send_engagement_reminders() AS retorno;
