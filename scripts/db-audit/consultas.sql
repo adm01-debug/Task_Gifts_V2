@@ -29,3 +29,17 @@ FROM cron.job_run_details
 WHERE jobid IN (SELECT jobid FROM cron.job WHERE jobname ILIKE '.weekly_reminder%')
 ORDER BY start_time DESC
 LIMIT 20
+
+-- nome: jobs_do_cron
+-- Todo job agendado, com o ultimo status conhecido. Serve para achar o nome real do job do lembrete.
+SELECT j.jobid, j.jobname, j.schedule, j.active,
+  (SELECT max(d.start_time) FROM cron.job_run_details d WHERE d.jobid = j.jobid) AS ultima_execucao
+FROM cron.job j
+ORDER BY j.jobid
+
+-- nome: jobs_do_usuario
+-- Quem tem linha em notification_preferences: confirma a cobertura da janela de silencio por id.
+SELECT count(*) AS linhas, count(DISTINCT user_id) AS usuarios_cobertos,
+  count(*) FILTER (WHERE do_not_disturb_enabled) AS silencio_ligado,
+  min(created_at) AS primeira_linha, max(created_at) AS ultima_linha
+FROM public.notification_preferences
