@@ -2,11 +2,31 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "98adc29b27cffbabdd287e8c14deceb54626a7e5",
+  "commit": "f5454f84a9ac6ae6a1e2cd474e5b447c30b292d4",
   "branch": "main",
-  "data_commit": "2026-11-27T15:11:13-03:00",
+  "data_commit": "2026-11-27T15:51:34-03:00",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "ultimos_commits": [
+   {
+    "sha": "f5454f8",
+    "data": "2026-11-27",
+    "assunto": "fix(cron): marco zero do vigia sem coluna ambigua (#218)"
+   },
+   {
+    "sha": "12beb0d",
+    "data": "2026-11-27",
+    "assunto": "feat(auditoria): lista todas as versoes instaladas do vigia (#217)"
+   },
+   {
+    "sha": "14c962d",
+    "data": "2026-11-27",
+    "assunto": "feat(auditoria): mostra se o corpo do vigia no banco e' o do repo (#216)"
+   },
+   {
+    "sha": "09d837b",
+    "data": "2026-11-27",
+    "assunto": "feat(auditoria): ensaio do vigia com argumento e leitura pura (#215)"
+   },
    {
     "sha": "98adc29",
     "data": "2026-11-27",
@@ -111,26 +131,6 @@
     "sha": "296eb76",
     "data": "2026-11-27",
     "assunto": "fix: catalogo para no proximo marcador e remove bloco duplicado da consulta de entregas (#194)"
-   },
-   {
-    "sha": "8cd6f2b",
-    "data": "2026-11-27",
-    "assunto": "fix: consulta de entregas do lembrete sem notification_id em push_outbox (#193)"
-   },
-   {
-    "sha": "5a959b3",
-    "data": "2026-11-27",
-    "assunto": "chore: consulta das entregas recentes do lembrete e das colunas de push_outbox (#192)"
-   },
-   {
-    "sha": "c932a2e",
-    "data": "2026-11-27",
-    "assunto": "chore: rastro do lembrete semanal e marcador de consulta tolerante a texto extra (#191)"
-   },
-   {
-    "sha": "974f5a1",
-    "data": "2026-11-27",
-    "assunto": "chore: consulta do catalogo para provar a entrega do lembrete semanal (#190)"
    }
   ],
   "arquivos_mudados_7d": 297,
@@ -141,7 +141,7 @@
    },
    {
     "pasta": "scripts/db-audit/consultas.sql",
-    "mudancas": 23
+    "mudancas": 26
    },
    {
     "pasta": "package.json",
@@ -188,21 +188,21 @@
     "mudancas": 8
    },
    {
-    "pasta": "src/pages/Profile.tsx",
+    "pasta": "scripts/db-audit/consultar-sql.mjs",
     "mudancas": 7
    },
    {
-    "pasta": "src/tests/unit",
+    "pasta": "src/pages/Profile.tsx",
     "mudancas": 7
    }
   ],
   "arquivos_mais_mudados_90d": [
    {
-    "arquivo": "package.json",
-    "mudancas": 23
+    "arquivo": "scripts/db-audit/consultas.sql",
+    "mudancas": 26
    },
    {
-    "arquivo": "scripts/db-audit/consultas.sql",
+    "arquivo": "package.json",
     "mudancas": 23
    },
    {
@@ -242,6 +242,10 @@
     "mudancas": 8
    },
    {
+    "arquivo": "scripts/db-audit/consultar-sql.mjs",
+    "mudancas": 7
+   },
+   {
     "arquivo": "src/pages/Profile.tsx",
     "mudancas": 7
    },
@@ -255,10 +259,6 @@
    },
    {
     "arquivo": "scripts/db-audit/check-migration-drift.mjs",
-    "mudancas": 6
-   },
-   {
-    "arquivo": "scripts/db-audit/consultar-sql.mjs",
     "mudancas": 6
    },
    {
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 180
+    "commits": 184
    },
    {
     "autor": "dependabot[bot]",
@@ -312,7 +312,7 @@
  "contagens": {
   "arquivos_total": 1643,
   "arquivos_codigo": 1217,
-  "linhas_codigo": 241723,
+  "linhas_codigo": 241731,
   "rotas": 88,
   "rotas_http_backend": 0,
   "vistas_por_id": 0,
@@ -368,7 +368,7 @@
   },
   "scripts/db-audit": {
    "arquivos": 3,
-   "linhas": 995
+   "linhas": 1003
   },
   "scripts/graphify-local.mjs": {
    "arquivos": 1,

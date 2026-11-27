@@ -1,17 +1,17 @@
 # Graph Report - Task_Gifts_V2  (2026-11-27)
 
 ## Corpus Check
-- 1615 files · ~1,130,229 words
+- 1615 files · ~1,130,518 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 13 file(s) not represented in the graph (top: .toml 5, (none) 3, .css 2)
 
 ## Summary
-- 11228 nodes · 30282 edges · 877 communities (556 shown, 321 thin omitted)
+- 11228 nodes · 30283 edges · 877 communities (556 shown, 321 thin omitted)
 - Extraction: 99% EXTRACTED · 1% INFERRED · 0% AMBIGUOUS · INFERRED: 153 edges (avg confidence: 0.87)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `98adc29b`
+- Built from commit: `f5454f84`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -47,7 +47,6 @@
 - mobile/index.ts
 - opinionChannel.ts
 - 20251220144518_06856092-4043-44fe-8da4-8f9501335d42.sql
-- ref_node_fs
 - SEOHead.tsx
 - useENPS.ts
 - lib.mjs
@@ -56,6 +55,7 @@
 - Profile.tsx
 - demographicsService.ts
 - CampaignNotificationPreferences.tsx
+- ref_node_fs
 - luckyWheelBudgetWhatIf.ts
 - graphify-local.mjs
 - cardPackTriggers.ts
@@ -208,6 +208,7 @@
 - wagerIntegrity.ts
 - Postmortems.tsx
 - components.json
+- ref_node_url
 - uniq
 - SnapshotCallerFreshnessTests
 - hooks/use-toast.ts
@@ -327,7 +328,6 @@
 - validationLibraryContracts.test.ts
 - sheet.tsx
 - RELATÓRIO CI — Task_Gifts_V2
-- apply-migrations.mjs
 - ErrorBoundary.tsx
 - usePDIAlerts.ts
 - pushRevocationBroadcast.simulation.test.ts
@@ -922,41 +922,41 @@ Nodes (52): OpinionCardProps, OpinionComposer(), OpinionTreatmentDialog(), Opini
 Cohesion: 0.06
 Nodes (52): idx_geo_access_logs_allowed, idx_geo_access_logs_country, idx_geo_access_logs_created, idx_geo_access_logs_user_id, idx_geo_blocking_rules_allowed, idx_geo_blocking_rules_created_by, idx_user_demographic_values_attribute_id, idx_user_permission_groups_permission_group_id (+44 more)
 
-### Community 31 - "ref_node_fs"
-Cohesion: 0.06
-Nodes (40): ref_node_assert, ref_node_child_process, ref_node_fs, ref_node_os, ref_node_path, ref_node_test, ref_node_url, rel() (+32 more)
-
-### Community 32 - "SEOHead.tsx"
+### Community 31 - "SEOHead.tsx"
 Cohesion: 0.07
 Nodes (39): Announcements, Attendance, DailyQuiz, Leagues, Surveys, useAchievements(), LeagueCard, PageWrapper() (+31 more)
 
-### Community 33 - "useENPS.ts"
+### Community 32 - "useENPS.ts"
 Cohesion: 0.05
 Nodes (42): ENPSSurveyWidget(), getBoxIcon(), MyNineBoxWidget(), useActiveSurveyForUser(), useCreateENPSSurvey(), useSubmitENPSResponse(), useUpdateENPSSurvey(), useCreateNineBoxEvaluation() (+34 more)
 
-### Community 34 - "lib.mjs"
+### Community 33 - "lib.mjs"
 Cohesion: 0.12
 Nodes (49): ref_node_events, ref_node_module, acquire(), activeChildren, checked(), commitWithHooks(), dependencyFingerprint(), digest() (+41 more)
 
-### Community 35 - "passkey-auth/index.ts"
+### Community 34 - "passkey-auth/index.ts"
 Cohesion: 0.07
 Nodes (46): allowedOrigins(), jsonResponse(), originMatches(), readBodyCapped(), readJsonBody(), requiredString(), resolveRpId(), ValidationHttpError (+38 more)
 
-### Community 36 - "Nr1Risks.tsx"
+### Community 35 - "Nr1Risks.tsx"
 Cohesion: 0.09
 Nodes (39): Nr1Risks, AnonymityGuardNotice(), Nr1RiskMatrix(), Nr1RiskMatrixProps, RiskLevelBadge(), RiskLevelBadgeProps, useGenerateNr1ActionPlan(), useNr1RiskMatrix() (+31 more)
 
-### Community 37 - "Profile.tsx"
+### Community 36 - "Profile.tsx"
 Cohesion: 0.07
 Nodes (39): Profile, MyCampaignBadgeCard(), DashboardFooter, DashboardHeader, DashboardHeaderProps, DashboardLeftColumn, LazyWidget, InAppNotificationToggle() (+31 more)
 
-### Community 38 - "demographicsService.ts"
+### Community 37 - "demographicsService.ts"
 Cohesion: 0.06
 Nodes (42): DemographicAttributesManager(), FormState, paraForm(), DemographicValuesPanel(), AtributoCampo(), doValorSalvo(), igual(), MyDemographicValuesCard() (+34 more)
 
-### Community 39 - "CampaignNotificationPreferences.tsx"
+### Community 38 - "CampaignNotificationPreferences.tsx"
 Cohesion: 0.08
 Nodes (40): CampaignNotificationPreferences(), CampaignPrefKey, Channel, CHANNELS, DEFAULTS, FALLBACK, ROWS, TYPES (+32 more)
+
+### Community 39 - "ref_node_fs"
+Cohesion: 0.06
+Nodes (34): ref_node_assert, ref_node_child_process, ref_node_fs, ref_node_os, ref_node_path, ref_node_test, rel(), fixture() (+26 more)
 
 ### Community 40 - "luckyWheelBudgetWhatIf.ts"
 Cohesion: 0.09
@@ -1566,473 +1566,473 @@ Nodes (16): ActionItem, Editor(), fmtDur(), fmtRel(), getSeverityMeta(), Inciden
 Cohesion: 0.12
 Nodes (16): aliases, components, hooks, lib, ui, utils, rsc, $schema (+8 more)
 
-### Community 192 - "uniq"
+### Community 192 - "ref_node_url"
+Cohesion: 0.20
+Nodes (14): ref_node_url, cabecalhoDaMensagem(), main(), SUBJECT_MIN_LENGTH, TIPOS, validarMensagem(), aspas(), consultar() (+6 more)
+
+### Community 193 - "uniq"
 Cohesion: 0.20
 Nodes (17): baseOf(), byCount(), convencoes, flags, git(), gitInfo, gitInfoCommit(), graphify (+9 more)
 
-### Community 193 - "SnapshotCallerFreshnessTests"
+### Community 194 - "SnapshotCallerFreshnessTests"
 Cohesion: 0.20
 Nodes (7): db_stats_case(), recovery_case(), run(), SnapshotCallerFreshnessTests, section(), source_freshness_case(), run()
 
-### Community 194 - "hooks/use-toast.ts"
+### Community 195 - "hooks/use-toast.ts"
 Cohesion: 0.16
 Nodes (15): ToastActionElement, ToastProps, Action, ActionType, actionTypes, addToRemoveQueue(), dispatch(), genId() (+7 more)
 
-### Community 195 - "useExecutiveMetrics.ts"
+### Community 196 - "useExecutiveMetrics.ts"
 Cohesion: 0.18
 Nodes (15): useCompletionTrend(), useWeeklyEngagement(), executiveKeys, useDepartmentMetrics(), useExecutiveMetrics(), useMonthlyTrends(), BIDashboard(), calculateFinancialMetrics() (+7 more)
 
-### Community 196 - "exportReports.ts"
+### Community 197 - "exportReports.ts"
 Cohesion: 0.24
 Nodes (14): createEngagementReport(), createTeamPerformanceReport(), downloadFile(), escapeCSVValue(), ExportOptions, exportReport(), exportToCSV(), exportToExcel() (+6 more)
 
-### Community 197 - "memoryDeckAuthoring.ts"
+### Community 198 - "memoryDeckAuthoring.ts"
 Cohesion: 0.22
 Nodes (14): comparisonKey(), DeckValidation, diffPairs(), isBlank(), MEMORY_CARD_TEXT_MAX, MEMORY_DESCRIPTION_MAX, MEMORY_MAX_PAIRS_PER_DECK, MEMORY_MIN_PAIRS (+6 more)
 
-### Community 198 - "pushOutbox.ts"
+### Community 199 - "pushOutbox.ts"
 Cohesion: 0.23
 Nodes (13): applyDispatch(), claimBatch(), deferForQuietHours(), DispatchResult, isTerminal(), MAX_PUSH_ATTEMPTS, minutesOfDay(), OutboxItem (+5 more)
 
-### Community 199 - "warAutoHooks.simulation.test.ts"
+### Community 200 - "warAutoHooks.simulation.test.ts"
 Cohesion: 0.23
 Nodes (15): AUTO_METRIC_KEYS, AutoMetricKey, deriveWarIntents(), filterNewIntents(), intent(), isUsableId(), justCompleted(), MAX_CONTRIBUTION_AMOUNT (+7 more)
 
-### Community 200 - "behavioralBadges/index.ts"
+### Community 201 - "behavioralBadges/index.ts"
 Cohesion: 0.19
 Nodes (12): BEHAVIORAL_BADGES, AttendanceRow, behavioralBadgesService, CheckinRow, CountResult, DataResult, GoalRow, PdiActionRow (+4 more)
 
-### Community 201 - "Leaderboard.stories.tsx"
+### Community 202 - "Leaderboard.stories.tsx"
 Cohesion: 0.12
 Nodes (10): departmentData, DepartmentRanking, LeaderboardEntry, meta, MiniWidget, mockLeaderboard, MonthlyLeaderboard, Story (+2 more)
 
-### Community 202 - "reward-approval-review/index.ts"
+### Community 203 - "reward-approval-review/index.ts"
 Cohesion: 0.21
 Nodes (14): AI_TOOL_SCHEMA, callAI(), json(), applyAiAdjustment(), assessPurchaseRisk(), clampScore(), DUAL_APPROVAL_THRESHOLD, normalizeSignals() (+6 more)
 
-### Community 203 - "Providers.tsx"
+### Community 204 - "Providers.tsx"
 Cohesion: 0.14
 Nodes (13): next-themes, GlobalMessageContext, GlobalMessageContextType, GlobalMessageProvider(), Message, MessageType, IpAccessGuard(), Providers() (+5 more)
 
-### Community 204 - "render_simple"
+### Community 205 - "render_simple"
 Cohesion: 0.26
 Nodes (16): banner(), callers_status_table(), code(), group(), human_bytes(), md_table(), slug único dentro de um escopo: nomes diferentes que colidem no slug ganham…, render_readme() (+8 more)
 
-### Community 205 - "SnapshotDBStatsTests"
+### Community 206 - "SnapshotDBStatsTests"
 Cohesion: 0.23
 Nodes (3): OfflineConnection, Catálogo e resultados sintéticos; nenhum driver, socket ou banco real., SnapshotDBStatsTests
 
-### Community 206 - "useOrganization"
+### Community 207 - "useOrganization"
 Cohesion: 0.23
 Nodes (13): OrganizationSettings(), SidebarLogo, SidebarLogoProps, apply(), ThemeInjector(), useOrganization(), getContrastRatio(), hexToHslString() (+5 more)
 
-### Community 207 - "bossLeaderboard.ts"
+### Community 208 - "bossLeaderboard.ts"
 Cohesion: 0.19
 Nodes (12): ContributorRow(), initials(), RewardOptions, buildBossLeaderboard(), BuildLeaderboardOptions, fallbackName(), formatShare(), LeaderboardInput (+4 more)
 
-### Community 208 - "bossBattleService.ts"
+### Community 209 - "bossBattleService.ts"
 Cohesion: 0.17
 Nodes (14): BossDamageSourcesCard(), BossDamageSourcesCardProps, SOURCES, BossDamageEvent, BossDamageRules, BossDamageSource, BossBattle, BossBattleDraftPayload (+6 more)
 
-### Community 209 - "bossHistoryTrend.ts"
+### Community 210 - "bossHistoryTrend.ts"
 Cohesion: 0.19
 Nodes (13): BossTrendChart(), BossTrendChartProps, BossTrendOptions, BossTrendPoint, buildBossHistoryTrend(), empty(), label(), monthKey() (+5 more)
 
-### Community 210 - "campaignImportService.ts"
+### Community 211 - "campaignImportService.ts"
 Cohesion: 0.15
 Nodes (13): CampaignReconciliationPanelProps, useCampaignImports(), DirectoryEntry, DirectoryIndex, ParsedResultRow, ParseResult, ReconciliationOverrides, ResolvedResultRow (+5 more)
 
-### Community 211 - "PackList.tsx"
+### Community 212 - "PackList.tsx"
 Cohesion: 0.19
 Nodes (12): CardTile(), RARITY_STYLE, CollectionProgressBar(), CollectionProgressBarProps, PackList(), PackListProps, SOURCE_LABEL, useOpenCardPack() (+4 more)
 
-### Community 212 - "GlobalSearch.tsx"
+### Community 213 - "GlobalSearch.tsx"
 Cohesion: 0.24
 Nodes (11): GlobalSearch(), GlobalSearchProps, CategoryFilter, SearchResultsListProps, clearRecentSearches(), getRecentSearches(), RecentSearch, removeRecentSearch() (+3 more)
 
-### Community 213 - "components/PageTransition.tsx"
+### Community 214 - "components/PageTransition.tsx"
 Cohesion: 0.14
 Nodes (13): desktopTransition, desktopVariants, mobileStaggerContainer, mobileStaggerItem, mobileTransition, mobileVariants, PageTransition(), PageTransitionProps (+5 more)
 
-### Community 214 - "warFeed.ts"
+### Community 215 - "warFeed.ts"
 Cohesion: 0.21
 Nodes (12): WarLiveFeed(), useDepartmentWarFeed(), normalizeFeed(), normalizeFeedItem(), relativeTime(), summarizeFeed(), toFiniteNumber(), toText() (+4 more)
 
-### Community 215 - "ipWhitelistService"
+### Community 216 - "ipWhitelistService"
 Cohesion: 0.16
 Nodes (5): CreateIpWhitelistInput, IpAccessLog, IpWhitelistEntry, ipWhitelistService, UpdateIpWhitelistInput
 
-### Community 216 - "sequenceProcedureStats.ts"
+### Community 217 - "sequenceProcedureStats.ts"
 Cohesion: 0.20
 Nodes (14): asArray(), asRecord(), formatDuration(), Json, parseSequenceProcedureStats(), SequenceDailyPoint, SequenceRecentAttempt, SequenceStatsLeader (+6 more)
 
-### Community 217 - "predictiveFeedbackService.ts"
+### Community 218 - "predictiveFeedbackService.ts"
 Cohesion: 0.23
 Nodes (14): buildHeadline(), buildSuggestions(), clamp(), classifyTrend(), computeConfidence(), computeEngagementScore(), EngagementSignals, EngagementTrend (+6 more)
 
-### Community 218 - "Quests.stories.tsx"
+### Community 219 - "Quests.stories.tsx"
 Cohesion: 0.12
 Nodes (11): ActiveQuest, CompletedQuest, DailyMissionProps, DailyMissionsCard, difficultyConfig, LockedQuest, meta, QuestList (+3 more)
 
-### Community 219 - "20260726182807_60e2ae2c-7399-42d5-80ca-722803ff15c9.sql"
+### Community 220 - "20260726182807_60e2ae2c-7399-42d5-80ca-722803ff15c9.sql"
 Cohesion: 0.19
 Nodes (13): idx_opinion_supports_opinion, idx_opinions_sender, idx_opinions_status_created, public.can_handle_opinion(), public.get_opinion_feed(), public.opinion_supports, public.toggle_opinion_support(), public.departments (+5 more)
 
-### Community 220 - "20260728183324_769cbcc5-0748-41f8-9c78-dc908102506d.sql"
+### Community 221 - "20260728183324_769cbcc5-0748-41f8-9c78-dc908102506d.sql"
 Cohesion: 0.14
 Nodes (4): public.recalc_campaign_progress(), public.recalc_campaign_teams(), pg_namespace, pg_proc
 
-### Community 221 - "compilerOptions"
+### Community 222 - "compilerOptions"
 Cohesion: 0.12
 Nodes (15): compilerOptions, allowImportingTsExtensions, isolatedModules, lib, module, moduleDetection, moduleResolution, noEmit (+7 more)
 
-### Community 222 - "wagerBudgetService.ts"
+### Community 223 - "wagerBudgetService.ts"
 Cohesion: 0.16
 Nodes (12): Fila de notificação, O que "existe" aqui pode não estar ligado, Pergunta do Dia (wager) — orçamento é espelho do banco, Processamento semanal / cron, Regras de domínio que o código não deixa óbvio — referência para agentes, Resgate de recompensa — governança com dupla aprovação, UI, clampBudget() (+4 more)
 
-### Community 223 - "carousel.tsx"
+### Community 224 - "carousel.tsx"
 Cohesion: 0.17
 Nodes (14): embla-carousel-react, Carousel, CarouselApi, CarouselContent, CarouselContext, CarouselContextProps, CarouselItem, CarouselNext (+6 more)
 
-### Community 224 - "CampaignProgressChart.tsx"
+### Community 225 - "CampaignProgressChart.tsx"
 Cohesion: 0.18
 Nodes (12): @radix-ui/react-toggle, @radix-ui/react-toggle-group, CampaignProgressChart(), CampaignProgressChartProps, db, PeriodFilter, ProgressEvent, ToggleGroup (+4 more)
 
-### Community 225 - "readText"
+### Community 226 - "readText"
 Cohesion: 0.16
 Nodes (15): allMatches(), changelogTopo, composes, countLines(), dockerfiles, docsRaiz, docTitle(), envExample (+7 more)
 
-### Community 226 - "MillionaireQuiz.tsx"
+### Community 227 - "MillionaireQuiz.tsx"
 Cohesion: 0.27
 Nodes (13): MagicCardQuiz(), AudienceHelp(), CHECKPOINTS, formatPrize(), GameOverScreen(), PhoneHelp(), PRIZE_LADDER, PrizeLadder() (+5 more)
 
-### Community 227 - "gamified-toast.tsx"
+### Community 228 - "gamified-toast.tsx"
 Cohesion: 0.15
 Nodes (10): gamifiedToast, GamifiedToastOptions, ToastContent(), toastStyles, ToastType, LevelUpCelebration(), GamificationContext, GamificationContextType (+2 more)
 
-### Community 228 - "wagerMonthlyExposure.ts"
+### Community 229 - "wagerMonthlyExposure.ts"
 Cohesion: 0.26
 Nodes (12): MonthRow(), usageTone(), WagerMonthlyExposureCard(), aggregateMonthlyExposure(), budgetUsage(), monthKeyOf(), monthLabel(), questionWorstCase() (+4 more)
 
-### Community 229 - "weeklyChallenge.test.tsx"
+### Community 230 - "weeklyChallenge.test.tsx"
 Cohesion: 0.16
 Nodes (12): WeeklyChallengeCard(), useWeeklyChallenge(), buildChallenge(), createChallengeAndCollectPayloads(), makeWrapper(), mockCreateChallenge, mockCreateNotification, mockGetById (+4 more)
 
-### Community 230 - "bossBattle.ts"
+### Community 231 - "bossBattle.ts"
 Cohesion: 0.25
 Nodes (12): applyDamage(), BossBattleState, bossPhase, computeRawDamage(), ContributorDamage, DamageOutcome, DamageRequest, distributeRewards() (+4 more)
 
-### Community 231 - "XPRewards.stories.tsx"
+### Community 232 - "XPRewards.stories.tsx"
 Cohesion: 0.13
 Nodes (8): AchievementUnlocks, Coins, LevelUp, meta, RewardShop, Story, Streaks, XPBar
 
-### Community 232 - "external-db-bridge.test.ts"
+### Community 233 - "external-db-bridge.test.ts"
 Cohesion: 0.18
 Nodes (8): buildPDFRow(), buildTelemetryRow(), classifySeverity(), formatDuration(), formatTime(), generateCSVContent(), simulateQueryTelemetry(), TimeFilter
 
-### Community 233 - "20251223002456_a5001762-a7bf-4e65-a1be-b366060925b7.sql"
+### Community 234 - "20251223002456_a5001762-a7bf-4e65-a1be-b366060925b7.sql"
 Cohesion: 0.22
 Nodes (13): public.complete_task_score(), public.penalty_rules, public.position_task_templates, public.positions, public.task_penalties, public.task_scores, public.user_positions, public.departments (+5 more)
 
-### Community 234 - "20251223013914_4514f2b9-d08c-4a33-86e1-5d6cc0278616.sql"
+### Community 235 - "20251223013914_4514f2b9-d08c-4a33-86e1-5d6cc0278616.sql"
 Cohesion: 0.24
 Nodes (14): idx_custom_badges_theme, idx_custom_ranks_theme, idx_custom_titles_theme, idx_leagues_department, idx_level_configs_theme, idx_user_titles_user, public.custom_badges, public.custom_ranks (+6 more)
 
-### Community 235 - "20260727221909_f26719a2-a70b-4f38-ab93-5bda56de8d26.sql"
+### Community 236 - "20260727221909_f26719a2-a70b-4f38-ab93-5bda56de8d26.sql"
 Cohesion: 0.25
 Nodes (13): lightning_answers_session_idx_uidx, lightning_answers_user_idx, lightning_questions_active_idx, lightning_questions_updated_at, lightning_sessions_updated_at, lightning_sessions_user_created_idx, lightning_sessions_user_dedupe_uidx, public.finish_lightning_round() (+5 more)
 
-### Community 236 - "20260727221910_f26719a2_lightning_relampago_schema.sql"
+### Community 237 - "20260727221910_f26719a2_lightning_relampago_schema.sql"
 Cohesion: 0.21
 Nodes (12): lightning_answers_session_idx_uidx, lightning_answers_user_idx, lightning_questions_updated_at, lightning_sessions_updated_at, lightning_sessions_user_created_idx, lightning_sessions_user_dedupe_uidx, public.lightning_quiz_answers, public.lightning_quiz_sessions (+4 more)
 
-### Community 237 - "🏆 Relatório de Auditoria de Software Enterprise"
+### Community 238 - "🏆 Relatório de Auditoria de Software Enterprise"
 Cohesion: 0.14
 Nodes (13): 1. Resumo Executivo, 2.1 Módulo Core & Dashboard (Index), 2.2 Módulo de Gamificação Avançada, 2.3 Módulo Administrativo e Business Intelligence, 2.4 Módulo de RH e Talent Management, 2. Inventário de Funcionalidades e Módulos, 3. Matriz de Riscos, 4. Checklist Auditável (Implementado vs. A Implementar) (+5 more)
 
-### Community 238 - "CampaignImportDialog"
+### Community 239 - "CampaignImportDialog"
 Cohesion: 0.14
 Nodes (13): Contexto verificado, Detalhes técnicos, Fora de escopo (a confirmar depois), Item 1 — Motor de ingestão de resultados (planilha + API), Item 2 — Metas coletivas por equipe, Item 3 — Governança de resgate + análise por IA, Item 4 — Validação, Plano — executar um item de cada vez (+5 more)
 
-### Community 239 - "public.validate_department_war"
+### Community 240 - "public.validate_department_war"
 Cohesion: 0.14
 Nodes (13): OLD.coins_pool, OLD.ends_at, OLD.fairness_alpha, OLD.participation_bonus, OLD.per_member_coins_cap, OLD.per_user_cap, OLD.placement_shares, OLD.starts_at (+5 more)
 
-### Community 240 - "tradingCardsService.ts"
+### Community 241 - "tradingCardsService.ts"
 Cohesion: 0.16
 Nodes (13): CardTileProps, TradeInboxProps, CardRarity, CardDefinitionRow, CardPackSource, CardTradeRow, CardTradeStatus, ClaimSetRewardResult (+5 more)
 
-### Community 241 - "GoalBetCountdownBadge.tsx"
+### Community 242 - "GoalBetCountdownBadge.tsx"
 Cohesion: 0.20
 Nodes (10): GoalBetCountdownBadge(), GoalBetCountdownBadgeProps, computeGoalBetCountdown(), COUNTDOWN_SOON_MS, COUNTDOWN_URGENT_MS, CountdownUrgency, GoalBetCountdown, humanize() (+2 more)
 
-### Community 242 - "sequenceGameService.ts"
+### Community 243 - "sequenceGameService.ts"
 Cohesion: 0.21
 Nodes (11): SequenceStepList(), SequenceStepListProps, SequencePlayStep, SequenceAttempt, sequenceGameService, SequenceProcedure, sequenceProcedureAdminService, SequenceProcedureAuthoring (+3 more)
 
-### Community 243 - "wagerScheduleExport.ts"
+### Community 244 - "wagerScheduleExport.ts"
 Cohesion: 0.22
 Nodes (11): WagerMonthlyExposureCardProps, optionKeyAt(), WAGER_MAX_OPTIONS, WagerOptionDraft, buildWagerScheduleCsv(), cell(), DIFFICULTY_CSV, escapeCell() (+3 more)
 
-### Community 244 - "auctionEngine.ts"
+### Community 245 - "auctionEngine.ts"
 Cohesion: 0.24
 Nodes (11): applyBid(), BidOutcome, BidRejection, cancelRefunds(), EngineAuction, EngineBid, escrowDelta(), minNextBid() (+3 more)
 
-### Community 245 - "bossAlerts.ts"
+### Community 246 - "bossAlerts.ts"
 Cohesion: 0.22
 Nodes (11): ALERT_PHASES, applyBossAlert(), BossAlert, BossAlertInput, BossAlertPhase, buildBossAlertDedupeKey(), clampHp(), COPY (+3 more)
 
-### Community 246 - "purchaseRisk.ts"
+### Community 247 - "purchaseRisk.ts"
 Cohesion: 0.31
 Nodes (10): applyAiAdjustment(), assessPurchaseRisk(), clampScore(), DUAL_APPROVAL_THRESHOLD, normalizeSignals(), PurchaseRiskAssessment, PurchaseRiskSignals, riskLevelFromScore() (+2 more)
 
-### Community 247 - "bingoRpc.simulation.test.ts"
+### Community 248 - "bingoRpc.simulation.test.ts"
 Cohesion: 0.21
 Nodes (7): BingoDb, BOARD, BoardModel, CardRow, countLines(), ProfileRow, rpcMock
 
-### Community 248 - "charts.ts"
+### Community 249 - "charts.ts"
 Cohesion: 0.14
 Nodes (13): AchievementRecord, BitrixChatInfo, BitrixTimemanReport, BitrixTimemanSettings, BitrixUnreadCounters, BitrixUserStatus, DepartmentData, ProfileBasic (+5 more)
 
-### Community 249 - "send-campaign-push/index.ts"
+### Community 250 - "send-campaign-push/index.ts"
 Cohesion: 0.22
 Nodes (10): computeBackoff(), parseRetryAfter(), PushOutcome, sendWithRetry(), sleep(), CampaignPushDedupeInput, campaignPushDedupeKey(), MAX_CAMPAIGN_DEDUPE_BASE (+2 more)
 
-### Community 250 - "Any"
+### Community 251 - "Any"
 Cohesion: 0.22
 Nodes (13): Any, approx(), dumps(), fingerprints(), add(), jsonable(), md_cell(), Ordem de grandeza estável: ~0, ~1-9, ~12, ~1.2k, ~34k, ~1.5M. (+5 more)
 
-### Community 251 - "Prod Readiness — TaskGifts (Task_Gifts_V2)"
+### Community 252 - "Prod Readiness — TaskGifts (Task_Gifts_V2)"
 Cohesion: 0.15
 Nodes (12): 1. Inventário de funcionalidades (linha de base), 2 & 3. Qualidade (build/typecheck/lint/testes), 4. GitHub Actions — status em main, 6. Banco de dados e RLS, 7. Produção, 8. Entrega, 9. Pendências / aguardando decisão, Aplicação (+4 more)
 
-### Community 252 - "20260712222316_d8f7eabc-3e3b-437f-b041-70b9f3b88f9b.sql"
+### Community 253 - "20260712222316_d8f7eabc-3e3b-437f-b041-70b9f3b88f9b.sql"
 Cohesion: 0.21
 Nodes (11): public.set_postmortem_action_completed_at, idx_pm_actions_postmortem, idx_pm_actions_status_due, public.check_overdue_postmortem_actions(), public.postmortem_actions, auth.users, public.postmortems, public.security_alerts (+3 more)
 
-### Community 253 - "boardChallenge.ts"
+### Community 254 - "boardChallenge.ts"
 Cohesion: 0.31
 Nodes (11): BOARD_CHALLENGE_MAX_ATTEMPTS, BoardChallengeOutcome, buildChallengeDedupeKey(), challengeRewardFactor(), clampReward(), normalizeAttempt(), resolveChallenge(), toSafeInt() (+3 more)
 
-### Community 254 - "campaignTeamSplitRevert.ts"
+### Community 255 - "campaignTeamSplitRevert.ts"
 Cohesion: 0.22
 Nodes (9): debit(), RevertBalances, RevertBatch, revertCampaignTeamSplit(), RevertEntry, RevertFailure, RevertOutcome, RevertState (+1 more)
 
-### Community 255 - "pushOutboxHealth.ts"
+### Community 256 - "pushOutboxHealth.ts"
 Cohesion: 0.22
 Nodes (9): clamp(), evaluateOutboxHealth(), HealthAlert, HealthSeverity, OUTBOX_THRESHOLDS, OutboxHealthReport, OutboxHealthSnapshot, sanitize() (+1 more)
 
-### Community 256 - "wagerAuthoring.ts"
+### Community 257 - "wagerAuthoring.ts"
 Cohesion: 0.15
 Nodes (12): WAGER_EXPLANATION_MAX, WAGER_MAX_MULTIPLIER, WAGER_MAX_STAKE, WAGER_MIN_MULTIPLIER, WAGER_MIN_OPTIONS, WAGER_MIN_STAKE, WAGER_OPTION_MAX, WAGER_QUESTION_MAX (+4 more)
 
-### Community 257 - "apiKeysService.ts"
+### Community 258 - "apiKeysService.ts"
 Cohesion: 0.22
 Nodes (12): ApiKeysAdmin(), formatDate(), CreateApiKeyInput, deleteApiKey(), ExternalApiKeySummary, keysNeedingRotation(), listApiKeys(), normalizePermissions() (+4 more)
 
-### Community 258 - "xpBalancingService.ts"
+### Community 259 - "xpBalancingService.ts"
 Cohesion: 0.28
 Nodes (11): clamp(), classifyHealth(), computeGini(), EconomyHealth, mean(), median(), recommendBalancing(), XpBalancingRecommendation (+3 more)
 
-### Community 259 - "pushFlow.simulation.test.ts"
+### Community 260 - "pushFlow.simulation.test.ts"
 Cohesion: 0.17
 Nodes (7): Channel, isPreviewHost(), isSupported(), LogStatus, Prefs, SubscribeInputs, SubscribeReason
 
-### Community 260 - "20251223004907_a86e0107-2f15-44d6-a578-ac74fe6e8679.sql"
+### Community 261 - "20251223004907_a86e0107-2f15-44d6-a578-ac74fe6e8679.sql"
 Cohesion: 0.26
 Nodes (11): public.api_request_logs, public.complete_external_task(), public.external_api_keys, public.external_tasks, public.process_external_task(), public.webhook_delivery_logs, public.webhook_subscriptions, public.update_updated_at_column (+3 more)
 
-### Community 261 - "20251225225354_ec3c2c74-d17b-41fd-a580-34d15f079b99.sql"
+### Community 262 - "20251225225354_ec3c2c74-d17b-41fd-a580-34d15f079b99.sql"
 Cohesion: 0.24
 Nodes (12): public.feedback_evaluations, public.feedback_questions, public.feedback_results, public.pdi_checkins, public.pdi_mentors, public.pdi_templates, public.position_competencies, public.user_competency_assessments (+4 more)
 
-### Community 262 - "20260728113255_b0c9ae8e-e19d-44ea-ad4d-a0366d453980.sql"
+### Community 263 - "20260728113255_b0c9ae8e-e19d-44ea-ad4d-a0366d453980.sql"
 Cohesion: 0.27
 Nodes (11): idx_prediction_markets_status, idx_prediction_options_market, idx_prediction_stakes_dedupe, idx_prediction_stakes_market, idx_prediction_stakes_user, public.place_prediction_stake(), public.prediction_markets, public.prediction_options (+3 more)
 
-### Community 263 - "20260728122626_32e02751-3e63-4896-adef-653b53012bbf.sql"
+### Community 264 - "20260728122626_32e02751-3e63-4896-adef-653b53012bbf.sql"
 Cohesion: 0.18
 Nodes (9): idx_card_set_claims_user, public.card_set_claims, public._card_set_milestone_split(), set_card_set_claims_updated_at, auth, auth.users, public.card_definitions, public.update_updated_at_column (+1 more)
 
-### Community 264 - "20260728125833_b6b2c15a-1960-4e13-9c2a-0cdff052ea01.sql"
+### Community 265 - "20260728125833_b6b2c15a-1960-4e13-9c2a-0cdff052ea01.sql"
 Cohesion: 0.24
 Nodes (10): idx_boss_battles_department, idx_boss_battles_status, idx_boss_damage_battle_created, idx_boss_damage_battle_user, public.boss_battle_damage, public.boss_battle_rewards, public.boss_battles, public.departments (+2 more)
 
-### Community 265 - "20260728155537_900a1488-1655-4e15-b4be-26a2b8676126.sql"
+### Community 266 - "20260728155537_900a1488-1655-4e15-b4be-26a2b8676126.sql"
 Cohesion: 0.26
 Nodes (12): idx_memory_pairs_deck, idx_memory_sessions_user_date, public.finish_memory_session(), public.memory_decks, public.memory_pairs, public.memory_sessions, public.start_memory_session(), public.departments (+4 more)
 
-### Community 266 - "20260728160710_b44a5761-2e2e-411a-87d5-5f4df8341b48.sql"
+### Community 267 - "20260728160710_b44a5761-2e2e-411a-87d5-5f4df8341b48.sql"
 Cohesion: 0.27
 Nodes (12): idx_sequence_attempts_leaderboard, idx_sequence_attempts_user_day, idx_sequence_steps_procedure, public.sequence_attempts, public.sequence_procedures, public.sequence_steps, public.submit_sequence_attempt(), public (+4 more)
 
-### Community 267 - "public.advance_board_trail"
+### Community 268 - "public.advance_board_trail"
 Cohesion: 0.17
 Nodes (9): public.advance_board_trail(), public.get_board_trail_leaderboard(), PUBLIC, public.board_moves, public.board_player_states, public.board_tiles, public.board_trails, public.profiles (+1 more)
 
-### Community 268 - "🛡️ Relatório de Auditoria de Confiabilidade e Robustez (Versão 10/10)"
+### Community 269 - "🛡️ Relatório de Auditoria de Confiabilidade e Robustez (Versão 10/10)"
 Cohesion: 0.15
 Nodes (12): 1. Escopo da Auditoria, 2. Diagnóstico de Pontos Críticos, 3. Plano de Correções Exaustivas (Executando...), 4. Checklist de Integridade de Produção, 5. Resultados dos Testes de Stress e Carga, 6. Conclusão da Varredura 10/10, 🛠️ Ação 1: Centralização de Tratamento de Erros nos Serviços, 🛠️ Ação 2: Refatoração de Arquitetura (Service Layer) (+4 more)
 
-### Community 269 - "20260728131056_e5e1de7c-be59-4331-a29c-61de27488ac2.sql"
+### Community 270 - "20260728131056_e5e1de7c-be59-4331-a29c-61de27488ac2.sql"
 Cohesion: 0.17
 Nodes (8): public.boss_hook_attendance_streaks, public.boss_hook_task_scores, public.boss_hook_trail_enrollments, public.apply_boss_damage_internal(), public.boss_battle_damage, trg_boss_damage_attendance_streaks, trg_boss_damage_task_scores, trg_boss_damage_trail_enrollments
 
-### Community 270 - "toast.tsx"
+### Community 271 - "toast.tsx"
 Cohesion: 0.26
 Nodes (10): @radix-ui/react-toast, Toast, ToastAction, ToastClose, ToastDescription, src_components_ui_toast_toastprovider, ToastTitle, toastVariants (+2 more)
 
-### Community 272 - "QuestBuilder.tsx"
+### Community 273 - "QuestBuilder.tsx"
 Cohesion: 0.18
 Nodes (10): QuestBuilder, AdvancedSection(), BasicInfoSection(), StepsSection(), difficultyConfig, QuestPreview(), QuestPreviewProps, QuestStep (+2 more)
 
-### Community 273 - "salesCampaignsService.ts"
+### Community 274 - "salesCampaignsService.ts"
 Cohesion: 0.21
 Nodes (8): CampaignCardProps, CampaignTeamsPanelProps, CampaignInsert, CampaignParticipant, db, SalesCampaign, salesCampaignsService, sendCampaignPush()
 
-### Community 274 - "AnswerInput.tsx"
+### Community 275 - "AnswerInput.tsx"
 Cohesion: 0.18
 Nodes (8): AnswerInput(), AnswerInputProps, CardsAnswer(), EMOJI_LABELS, EmojiAnswer(), EMOJIS, StarsAnswer(), EngagementAnswerFormat
 
-### Community 275 - "usePushDevice.ts"
+### Community 276 - "usePushDevice.ts"
 Cohesion: 0.20
 Nodes (11): PushDeviceList(), PushSyncHistory(), DEVICE_KEY, DEVICES_KEY, ENDPOINT_KEY, SYNC_KEY, usePushDevices(), usePushSyncHistory() (+3 more)
 
-### Community 276 - "StaggeredContainer.tsx"
+### Community 277 - "StaggeredContainer.tsx"
 Cohesion: 0.17
 Nodes (11): containerVariants, itemVariants, slideInLeftVariants, slideInRightVariants, StaggeredContainer(), StaggeredContainerProps, StaggeredGrid(), StaggeredItem() (+3 more)
 
-### Community 277 - "useSecurityPushNotifications.ts"
+### Community 278 - "useSecurityPushNotifications.ts"
 Cohesion: 0.23
 Nodes (10): PushNotificationState, usePushNotifications(), BlockedIP, getSeverityIcon(), LoginAttempt, NewDeviceAlert, SecurityAlert, useSecurityPushNotifications() (+2 more)
 
-### Community 278 - "wagerAdminService.ts"
+### Community 279 - "wagerAdminService.ts"
 Cohesion: 0.27
 Nodes (9): clampMaxStake(), clampMultiplier(), estimateExposure(), parseOptions(), parseQuestion(), toInt(), wagerAdminService, WagerBulkSaveResult (+1 more)
 
-### Community 279 - "auctionService.ts"
+### Community 280 - "auctionService.ts"
 Cohesion: 0.17
 Nodes (10): ADMIN_REASON_LABELS, AuctionAdminAction, AuctionAdminError, AuctionAdminEvent, AuctionAdminReason, AuctionBidStatus, AuctionRpcResult, AuctionStatus (+2 more)
 
-### Community 280 - "EmptyAndErrorStates.stories.tsx"
+### Community 281 - "EmptyAndErrorStates.stories.tsx"
 Cohesion: 0.17
 Nodes (11): EmptyAchievements, EmptyGeneric, EmptyRewards, EmptySearch, EmptyTeam, EmptyWithIllustration, ErrorConnection, ErrorNotFound (+3 more)
 
-### Community 281 - "webhookSecurity.ts"
+### Community 282 - "webhookSecurity.ts"
 Cohesion: 0.23
 Nodes (7): computeHmacSha256(), hexToBytes(), IdempotencyClaim, SignatureCheck, timingSafeEqualBytes(), verifyHmacSha256(), verifySignedWebhook()
 
-### Community 282 - "20241231000000_saved_filters.sql"
+### Community 283 - "20241231000000_saved_filters.sql"
 Cohesion: 0.26
 Nodes (11): ensure_single_default_filter(), idx_saved_filters_default, idx_saved_filters_entity_type, idx_saved_filters_user_entity, idx_saved_filters_user_id, public.saved_filters, auth, auth.users (+3 more)
 
-### Community 283 - "20251212195545_7f624875-5a3e-4a74-a814-2bfd3f005b69.sql"
+### Community 284 - "20251212195545_7f624875-5a3e-4a74-a814-2bfd3f005b69.sql"
 Cohesion: 0.27
 Nodes (11): idx_custom_quests_department, idx_custom_quests_status, idx_quest_assignments_quest, idx_quest_assignments_user, idx_quest_steps_quest, public.custom_quests, public.quest_assignments, public.quest_steps (+3 more)
 
-### Community 284 - "20260726160221_c8b3bb1b-a935-48e0-863b-116196c16a88.sql"
+### Community 285 - "20260726160221_c8b3bb1b-a935-48e0-863b-116196c16a88.sql"
 Cohesion: 0.29
 Nodes (10): public.get_engagement_factor_scores(), public.get_engagement_nps(), public.get_engagement_overview(), public.get_engagement_pillar_correlations(), public.get_engagement_pillar_scores(), public.engagement_answers, public.engagement_factors, public.engagement_question_pool (+2 more)
 
-### Community 285 - "20260727200404_b6247676-84b3-41f8-a725-ac3055868320.sql"
+### Community 286 - "20260727200404_b6247676-84b3-41f8-a725-ac3055868320.sql"
 Cohesion: 0.24
 Nodes (10): lucky_wheel_prizes_active_idx, lucky_wheel_prizes_updated_at, lucky_wheel_spins_one_per_day, lucky_wheel_spins_user_created_idx, public.get_lucky_wheel_status(), public.lucky_wheel_prizes, public.lucky_wheel_spins, auth.users (+2 more)
 
-### Community 286 - "compilerOptions"
+### Community 287 - "compilerOptions"
 Cohesion: 0.17
 Nodes (11): compilerOptions, allowJs, noImplicitAny, noUnusedLocals, noUnusedParameters, paths, skipLibCheck, strict (+3 more)
 
-### Community 287 - "Regras de negócio — preencha o que o código não diz"
+### Community 288 - "Regras de negócio — preencha o que o código não diz"
 Cohesion: 0.18
 Nodes (10): 1. O que o sistema faz e para quem (1 parágrafo), 2. Atores / perfis e o que cada um pode fazer, 3. Entidades principais e o que significam (glossário do negócio), 4. Ciclo de vida / estados e transições permitidas, 5. Regras de cálculo (fórmulas, arredondamento, moeda, impostos, comissões, descontos máximos), 6. Prazos, limites e quotas (ex.: expira em 7 dias, máximo 3 tentativas, limite por plano), 7. Integrações: o que entra, o que sai, o que acontece se falhar, 8. Exceções comerciais e decisões já tomadas (o que NÃO mudar e por quê) (+2 more)
 
-### Community 288 - "02-profiles-update-sem-restricao-de-coluna.md"
+### Community 289 - "02-profiles-update-sem-restricao-de-coluna.md"
 Cohesion: 0.18
 Nodes (10): Acao necessaria, Causa, E-mail corporativo fechado (2026-11-25, PR `fix: e-mail corporativo sai do SELECT aberto`), Impacto no negocio, Leitura de PII fechada (2026-11-25, PR `fix: profiles SELECT por allowlist`), Por que nao feito nesta sessao, Risco residual (nao e regressao introduzida; e o proximo passo de arquitetura), Solucao implementada (+2 more)
 
-### Community 289 - "20261123180000_climate_survey_engine.sql"
+### Community 290 - "20261123180000_climate_survey_engine.sql"
 Cohesion: 0.25
 Nodes (9): public.climate_survey_questions, climate_pillar_scores_global_key, climate_survey_responses_survey_user_key, public._climate_recompute_pillar_scores(), public.climate_submit_response(), public.climate_survey_enps(), public.climate_pillar_scores, public.climate_survey_responses (+1 more)
 
-### Community 290 - "PermissionModuleAccordion.tsx"
+### Community 291 - "PermissionModuleAccordion.tsx"
 Cohesion: 0.24
 Nodes (8): @radix-ui/react-accordion, categoryColors, Permission, PermissionModuleAccordionProps, src_components_ui_accordion_accordion, AccordionContent, AccordionItem, AccordionTrigger
 
-### Community 291 - "exists"
+### Community 292 - "exists"
 Cohesion: 0.18
 Nodes (11): aliasesFor(), componentFile(), dirOf(), edges, exists(), isAliasSpec(), isCurrentSql(), migDir (+3 more)
 
-### Community 293 - "ActionPlans.tsx"
+### Community 294 - "ActionPlans.tsx"
 Cohesion: 0.38
 Nodes (9): ActionPlans, reportError(), useActionPlanItems(), useActionPlans(), useUpdateActionItemStatus(), useUpdateActionPlanStatus(), ActionPlans(), STATUS_OPTIONS (+1 more)
 
-### Community 294 - "pagination.tsx"
+### Community 295 - "pagination.tsx"
 Cohesion: 0.18
 Nodes (10): ButtonProps, Pagination(), PaginationContent, PaginationEllipsis(), PaginationItem, PaginationLink(), PaginationLinkProps, PaginationNext() (+2 more)
 
-### Community 295 - "campaignTeamsService.ts"
+### Community 296 - "campaignTeamsService.ts"
 Cohesion: 0.22
 Nodes (9): CampaignTeam, CampaignTeamInsert, CampaignTeamMember, campaignTeamsService, db, TeamSplitBatch, TeamSplitEntry, TeamSplitResult (+1 more)
 
-### Community 296 - "scratchCardService.ts"
+### Community 297 - "scratchCardService.ts"
 Cohesion: 0.22
 Nodes (8): scratchCardKeys, ScratchCard, scratchCardService, ScratchCardSource, ScratchGrantResult, ScratchPrizeType, ScratchRarity, ScratchRevealResult
 
-### Community 298 - "CSSAnimations.stories.tsx"
+### Community 299 - "CSSAnimations.stories.tsx"
 Cohesion: 0.18
 Nodes (10): CombinedAnimations, FadeAnimations, HoverEffects, LinkUnderline, meta, PulseAnimation, ScaleAnimations, SlideAnimations (+2 more)
 
-### Community 299 - "Charts.stories.tsx"
+### Community 300 - "Charts.stories.tsx"
 Cohesion: 0.18
 Nodes (10): AreaChartEngagement, BarChartDepartments, barData, LineChartXP, lineData, meta, PieChartTasks, pieData (+2 more)
 
-### Community 300 - "LoadingStates.stories.tsx"
+### Community 301 - "LoadingStates.stories.tsx"
 Cohesion: 0.18
 Nodes (10): FullPageLoader, LoadingButtons, meta, ProgressLoading, SkeletonCard, SkeletonDashboard, SkeletonList, SkeletonStats (+2 more)
 
-### Community 301 - "public.generate_engagement_snapshot"
+### Community 302 - "public.generate_engagement_snapshot"
 Cohesion: 0.18
 Nodes (11): profiles, public.get_leaderboard_api(), public.get_user_stats_api(), team_members, public.generate_engagement_snapshot(), public.get_nine_box_distribution(), attendance_records, kudos (+3 more)
 
-### Community 302 - "20251231024333_e62d585a-a5ec-4885-b28a-65ff2d73b23e.sql"
+### Community 303 - "20251231024333_e62d585a-a5ec-4885-b28a-65ff2d73b23e.sql"
 Cohesion: 0.29
 Nodes (10): idx_password_reset_requests_reviewed_by, idx_password_reset_requests_status, idx_password_reset_requests_user_id, public.approve_password_reset(), public.password_reset_requests, public.reject_password_reset(), public.request_password_reset(), auth.users (+2 more)
 
-### Community 303 - "20251231124457_aa8a8f7e-bc42-420d-bfb8-9b569a1ddf59.sql"
+### Community 304 - "20251231124457_aa8a8f7e-bc42-420d-bfb8-9b569a1ddf59.sql"
 Cohesion: 0.29
 Nodes (8): idx_webauthn_challenges_challenge, idx_webauthn_challenges_user_id, idx_webauthn_credentials_credential_id, idx_webauthn_credentials_user_id, public.user_has_passkeys(), public.webauthn_challenges, public.webauthn_credentials, auth.users
 
-### Community 304 - "20260723101331_463fe946-3615-4294-ad69-fb70cdde9cf2.sql"
+### Community 305 - "20260723101331_463fe946-3615-4294-ad69-fb70cdde9cf2.sql"
 Cohesion: 0.31
 Nodes (10): idx_org_members_org, idx_org_members_user, idx_org_theme_history_org, public.is_org_admin(), public.is_org_member(), public.org_members, public.org_theme_history, public.organizations (+2 more)
 
-### Community 305 - "20260728174502_9599d853-7767-44ec-a435-2014f411d00f.sql"
+### Community 306 - "20260728174502_9599d853-7767-44ec-a435-2014f411d00f.sql"
 Cohesion: 0.24
 Nodes (9): idx_board_moves_trail_challenge, idx_board_player_states_trail_rank, public.get_board_trail_leaderboard(), public.resolve_board_challenge(), public.board_moves, public.board_player_states, public.board_tiles, public.profiles (+1 more)
 
-### Community 306 - "AGENTS.md — Task Gifts V2"
+### Community 307 - "AGENTS.md — Task Gifts V2"
 Cohesion: 0.20
 Nodes (9): AGENTS.md — Task Gifts V2, Banco — ler `docs/agentes/banco.md` antes de SQL, migration ou deploy, Bugs e funcionalidades, Comunicação, Fluxo Git — detalhe em `docs/agentes/github-ci.md`, Grafo de código (graphify), Postura, Serviços (+1 more)
 
-### Community 307 - "overrides"
+### Community 308 - "overrides"
 Cohesion: 0.20
 Nodes (10): zod, glob, overrides, chromium-bidi, @joshwooding/vite-plugin-react-docgen-typescript, @tailwindcss/typography, uuid, workbox-build (+2 more)
 
-### Community 308 - "validationLibraryContracts.test.ts"
+### Community 309 - "validationLibraryContracts.test.ts"
 Cohesion: 0.24
 Nodes (9): exceljs, papaparse, excelCellToPrimitive(), parseCampaignResultFile(), emailSchema, getFirstError(), passwordSchema, questTitleSchema (+1 more)
 
-### Community 309 - "sheet.tsx"
+### Community 310 - "sheet.tsx"
 Cohesion: 0.22
 Nodes (9): @radix-ui/react-dialog, SheetContent, SheetContentProps, SheetDescription, SheetFooter(), SheetHeader(), SheetOverlay, SheetTitle (+1 more)
 
-### Community 310 - "RELATÓRIO CI — Task_Gifts_V2"
+### Community 311 - "RELATÓRIO CI — Task_Gifts_V2"
 Cohesion: 0.20
 Nodes (9): 1. Inventário de Workflows, 2. Baseline, 3. Correções CI realizadas (PRs #17–#29), 4. Análise de Segurança (Agente 5), 5. Gaps e Melhorias, Implementadas, Pendentes (documentadas), RELATÓRIO CI — Task_Gifts_V2 (+1 more)
-
-### Community 311 - "apply-migrations.mjs"
-Cohesion: 0.38
-Nodes (8): aspas(), consultar(), lerArgs(), listarLocais(), main(), imprimir(), lerSql(), main()
 
 ### Community 312 - "ErrorBoundary.tsx"
 Cohesion: 0.20

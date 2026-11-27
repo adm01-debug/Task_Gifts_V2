@@ -59,11 +59,11 @@
  "commits": {
   "convencao": "conventional commits (observado)",
   "exemplos": [
-   "feat(auditoria): consultas para provar o vigia do cron (#214)",
-   "fix(infra): --verify enxerga funcao, nao so' tabela (#213)",
-   "feat(infra): modo reaplicar no db-migrate (#212)",
-   "fix(cron): vigia sem referencia ambigua de coluna (#211)",
-   "chore(db-audit): prova do vigia dos jobs do cron em producao (#210)"
+   "fix(cron): marco zero do vigia sem coluna ambigua (#218)",
+   "feat(auditoria): lista todas as versoes instaladas do vigia (#217)",
+   "feat(auditoria): mostra se o corpo do vigia no banco e' o do repo (#216)",
+   "feat(auditoria): ensaio do vigia com argumento e leitura pura (#215)",
+   "feat(auditoria): consultas para provar o vigia do cron (#214)"
   ]
  },
  "pr_template": ".github/PULL_REQUEST_TEMPLATE.md",

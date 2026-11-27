@@ -1,6 +1,6 @@
 # 07 · REGRAS DE NEGÓCIO
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `98adc29b27` · branch `main` · 2026-11-27 18:15 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `f5454f84a9` · branch `main` · 2026-11-27 18:52 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## A. Regras escritas por humanos (`manual/` — prioridade máxima, nunca sobrescrito)
@@ -3364,9 +3364,9 @@ _nenhum item encontrado_
 | nenhuma migration em ${dir} | `scripts/db-audit/apply-migrations.mjs` |
 | nome fora do padrao AAAAAMMDDHHMMSS_slug.sql: ${nome} | `scripts/db-audit/apply-migrations.mjs` |
 | SQL_FILE vazio | `scripts/db-audit/consultar-sql.mjs` |
-| a consulta precisa comecar por SELECT ou WITH | `scripts/db-audit/consultar-sql.mjs` |
 | consulta  | `scripts/db-audit/consultar-sql.mjs` |
-| ensaio permitido apenas para funcoes de envio/agendamento | `scripts/db-audit/consultar-sql.mjs` |
+| ensaio com argumento nao literal nao e | `scripts/db-audit/consultar-sql.mjs` |
+| ensaio permitido apenas para funcoes de envio/agendamento/verificacao | `scripts/db-audit/consultar-sql.mjs` |
 | informe SELECAO_SQL (catalogo) ou SQL_FILE (arquivo avulso) | `scripts/db-audit/consultar-sql.mjs` |
 | palavra de escrita encontrada na consulta | `scripts/db-audit/consultar-sql.mjs` |
 | uma unica instrucao por arquivo (sem ponto e virgula no meio) | `scripts/db-audit/consultar-sql.mjs` |

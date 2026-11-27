@@ -4,10 +4,10 @@
  "presente": true,
  "como_gerar": "uvx --from \"graphifyy[sql]\" graphify update .  (ou: bun run graph:update); saída em graphify-out/ — graph.json e graph.html NÃO são versionados (dezenas de MB); use `graphify query/path/explain` localmente",
  "relatorio": null,
- "commit_do_grafo": "98adc29b27cffbabdd287e8c14deceb54626a7e5",
+ "commit_do_grafo": "f5454f84a9ac6ae6a1e2cd474e5b447c30b292d4",
  "grafo_atual": true,
  "nos": 11228,
- "arestas": 30282,
+ "arestas": 30283,
  "comunidades_total": 877,
  "relacoes": {
   "calls": 3655,
@@ -16,7 +16,7 @@
   "defines": 9,
   "dynamic_import": 123,
   "imports": 8885,
-  "imports_from": 6942,
+  "imports_from": 6943,
   "indexes": 534,
   "indirect_call": 121,
   "inherits": 32,
@@ -28,7 +28,7 @@
   "triggers": 133
  },
  "origem": {
-  "EXTRACTED": 30129,
+  "EXTRACTED": 30130,
   "INFERRED": 153
  },
  "comunidades": [
@@ -530,23 +530,6 @@
   },
   {
    "id": 31,
-   "nome": "ref_node_fs",
-   "nos": 55,
-   "callables": 13,
-   "arquivos": 14,
-   "exemplos_arquivos": [
-    "scripts/ai-context/gerar.mjs",
-    "scripts/ai-context/gerar.unit.mjs",
-    "scripts/ci/check-claude-md-integrity.mjs",
-    "scripts/ci/check-supabase-env.mjs",
-    "scripts/ci/check-supabase-env.unit.mjs",
-    "scripts/ci/commit-msg-lint.mjs",
-    "scripts/ci/contexto-indice.unit.mjs",
-    "scripts/ci/regras-negocio.unit.mjs"
-   ]
-  },
-  {
-   "id": 32,
    "nome": "SEOHead.tsx",
    "nos": 55,
    "callables": 35,
@@ -563,7 +546,7 @@
    ]
   },
   {
-   "id": 33,
+   "id": 32,
    "nome": "useENPS.ts",
    "nos": 55,
    "callables": 37,
@@ -580,7 +563,7 @@
    ]
   },
   {
-   "id": 34,
+   "id": 33,
    "nome": "lib.mjs",
    "nos": 54,
    "callables": 45,
@@ -592,7 +575,7 @@
    ]
   },
   {
-   "id": 35,
+   "id": 34,
    "nome": "passkey-auth/index.ts",
    "nos": 54,
    "callables": 46,
@@ -608,7 +591,7 @@
    ]
   },
   {
-   "id": 36,
+   "id": 35,
    "nome": "Nr1Risks.tsx",
    "nos": 52,
    "callables": 33,
@@ -625,7 +608,7 @@
    ]
   },
   {
-   "id": 37,
+   "id": 36,
    "nome": "Profile.tsx",
    "nos": 52,
    "callables": 30,
@@ -642,7 +625,7 @@
    ]
   },
   {
-   "id": 38,
+   "id": 37,
    "nome": "demographicsService.ts",
    "nos": 51,
    "callables": 39,
@@ -659,7 +642,7 @@
    ]
   },
   {
-   "id": 39,
+   "id": 38,
    "nome": "CampaignNotificationPreferences.tsx",
    "nos": 49,
    "callables": 28,
@@ -673,6 +656,23 @@
     "src/test/notificationPrefsCrossModule.simulation.test.ts",
     "src/test/notificationTypePrefs.simulation.test.ts",
     "src/test/useTypePreferences.test.tsx"
+   ]
+  },
+  {
+   "id": 39,
+   "nome": "ref_node_fs",
+   "nos": 48,
+   "callables": 10,
+   "arquivos": 13,
+   "exemplos_arquivos": [
+    "scripts/ai-context/gerar.mjs",
+    "scripts/ai-context/gerar.unit.mjs",
+    "scripts/ci/check-claude-md-integrity.mjs",
+    "scripts/ci/check-supabase-env.mjs",
+    "scripts/ci/check-supabase-env.unit.mjs",
+    "scripts/ci/contexto-indice.unit.mjs",
+    "scripts/ci/regras-negocio.unit.mjs",
+    "scripts/ci/supabase-snapshot.unit.mjs"
    ]
   },
   {
@@ -2148,7 +2148,7 @@
   "scripts/ci/check-migration-drift.unit.mjs": "check-migration-drift.mjs",
   "scripts/ci/check-supabase-env.mjs": "ref_node_fs",
   "scripts/ci/check-supabase-env.unit.mjs": "ref_node_fs",
-  "scripts/ci/commit-msg-lint.mjs": "ref_node_fs",
+  "scripts/ci/commit-msg-lint.mjs": "ref_node_url",
   "scripts/ci/contexto-indice.unit.mjs": "ref_node_fs",
   "scripts/ci/contexto-publicacao.unit.mjs": "contexto-publicacao.unit.mjs",
   "scripts/ci/regras-negocio.unit.mjs": "ref_node_fs",
@@ -2156,9 +2156,9 @@
   "scripts/climate-sql-check/README.md": "climate-sql-check/README.md",
   "scripts/climate-sql-check/run.sh": "climate-sql-check/run.sh",
   "scripts/db-audit/README.md": "cardPackTriggers.ts",
-  "scripts/db-audit/apply-migrations.mjs": "apply-migrations.mjs",
+  "scripts/db-audit/apply-migrations.mjs": "ref_node_url",
   "scripts/db-audit/check-migration-drift.mjs": "check-migration-drift.mjs",
-  "scripts/db-audit/consultar-sql.mjs": "apply-migrations.mjs",
+  "scripts/db-audit/consultar-sql.mjs": "ref_node_url",
   "scripts/db-audit/consultas.sql": "consultas.sql",
   "scripts/graphify-local.mjs": "graphify-local.mjs",
   "scripts/graphify-local.unit.mjs": "graphify-local.mjs",
