@@ -2,11 +2,21 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "85f9abf737111f0f93e4bff63b24837625b3cbef",
+  "commit": "09b23f13b33146685f42972044a5839ba478612c",
   "branch": "main",
-  "data_commit": "2026-11-27T16:07:10-03:00",
+  "data_commit": "2026-11-27T16:24:02-03:00",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "ultimos_commits": [
+   {
+    "sha": "09b23f1",
+    "data": "2026-11-27",
+    "assunto": "fix(cron): vigia contra o schema real do pg_cron (#222)"
+   },
+   {
+    "sha": "7f78676",
+    "data": "2026-11-27",
+    "assunto": "feat(auditoria): colunas reais de cron.job e job_run_details (#221)"
+   },
    {
     "sha": "85f9abf",
     "data": "2026-11-27",
@@ -121,16 +131,6 @@
     "sha": "8256e16",
     "data": "2026-11-27",
     "assunto": "fix: consulta de segunda-feira agrupa pela expressao inteira nas CTEs (#198)"
-   },
-   {
-    "sha": "c846ac8",
-    "data": "2026-11-27",
-    "assunto": "chore: consulta das entregas de segunda-feira para provar o lembrete semanal (#197)"
-   },
-   {
-    "sha": "7b71251",
-    "data": "2026-11-27",
-    "assunto": "fix: consulta de entregas agrupa o push em CTE propria (#196)"
    }
   ],
   "arquivos_mudados_7d": 297,
@@ -141,7 +141,7 @@
    },
    {
     "pasta": "scripts/db-audit/consultas.sql",
-    "mudancas": 26
+    "mudancas": 27
    },
    {
     "pasta": "package.json",
@@ -199,7 +199,7 @@
   "arquivos_mais_mudados_90d": [
    {
     "arquivo": "scripts/db-audit/consultas.sql",
-    "mudancas": 26
+    "mudancas": 27
    },
    {
     "arquivo": "package.json",
@@ -294,14 +294,14 @@
     "mudancas": 5
    },
    {
-    "arquivo": "vercel.json",
+    "arquivo": "supabase/migrations/20261231100000_vigia_dos_jobs_do_cron.sql",
     "mudancas": 5
    }
   ],
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 186
+    "commits": 188
    },
    {
     "autor": "dependabot[bot]",

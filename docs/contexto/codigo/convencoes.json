@@ -59,11 +59,11 @@
  "commits": {
   "convencao": "conventional commits (observado)",
   "exemplos": [
+   "fix(cron): vigia contra o schema real do pg_cron (#222)",
+   "feat(auditoria): colunas reais de cron.job e job_run_details (#221)",
    "fix(cron): ON CONFLICT por constraint no marco zero do vigia (#220)",
    "fix(infra): verify aceita funcao com argumento default (#219)",
-   "fix(cron): marco zero do vigia sem coluna ambigua (#218)",
-   "feat(auditoria): lista todas as versoes instaladas do vigia (#217)",
-   "feat(auditoria): mostra se o corpo do vigia no banco e' o do repo (#216)"
+   "fix(cron): marco zero do vigia sem coluna ambigua (#218)"
   ]
  },
  "pr_template": ".github/PULL_REQUEST_TEMPLATE.md",

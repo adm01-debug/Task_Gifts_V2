@@ -121,7 +121,7 @@
   {
    "arquivo": "scripts/db-audit/consultas.sql",
    "descricao": null,
-   "linhas": 291,
+   "linhas": 302,
    "env": [],
    "npm_scripts": [],
    "workflows": [],
