@@ -213,3 +213,14 @@ SELECT (SELECT count(*) FROM elegiveis) AS elegiveis,
   (SELECT count(*) FROM elegiveis e WHERE public.user_wants_in_app_notification(e.user_id, 'engagement_survey_reminder')) AS preferencia_in_app,
   (SELECT count(*) FROM public.notifications WHERE type = 'engagement_survey_reminder') AS avisos_existentes,
   (SELECT string_agg(user_id::text || '=' || user_wants_in_app_notification(user_id, 'engagement_survey_reminder')::text, ' ') FROM elegiveis) AS detalhe
+-- nome: duplicata_do_lembrete
+-- porque_o_lembrete_nao_enfileira mostrou avisos_existentes=6: o INSERT do aviso cai no ON CONFLICT
+-- DO NOTHING. Aqui aparece qual constraint esta batendo, isto e, se o aviso ja foi entregue no
+-- mesmo balde semanal ou se a linha ficou presa em outro status.
+SELECT n.created_at, n.read_at, n.data->>'balde' AS balde, n.user_id,
+  (n.data->>'balde') = date_trunc('week', now())::date::text AS mesmo_balde_desta_semana,
+  (SELECT count(*) FROM public.push_outbox o
+    WHERE o.user_id = n.user_id AND o.type = 'engagement_survey_reminder') AS pushes_da_pessoa
+FROM public.notifications n
+WHERE n.type = 'engagement_survey_reminder'
+ORDER BY n.created_at DESC
