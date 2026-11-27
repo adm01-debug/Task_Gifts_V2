@@ -19,16 +19,19 @@ import { valorExibivel } from "@/services/demographicsService";
 import { format } from "date-fns";
 
 /**
- * Leitura das respostas demograficas por colaborador. Atende a policy
- * "Admins and managers can view demographic values".
+ * Leitura das respostas demograficas por colaborador.
+ *
+ * A view `demographic_values_panel` entrega a linha ja' filtrada por papel:
+ * administrador ve tudo; gestor perde o valor de atributo restrito e o
+ * metadado de atributo desativado. Quem nao for admin nem gestor nao recebe
+ * linha nenhuma.
  *
  * `is_visible_in_reports = false` separa o que e' uso interno: essas linhas
- * ficam escondidas ate' ligar "Incluir uso interno". Atributo `is_restricted`
- * tem o valor escondido de quem nao e' administrador — e o valor nem chega ao
- * navegador do gestor, porque a consulta nao pede as colunas.
+ * ficam escondidas ate' ligar "Incluir uso interno", o mesmo tratamento dado
+ * ao valor restrito.
  */
 export function DemographicValuesPanel({ ehAdmin }: { ehAdmin: boolean }) {
-  const { data: valores = [], isLoading, isError, refetch } = useAllDemographicValues(ehAdmin);
+  const { data: valores = [], isLoading, isError, refetch } = useAllDemographicValues();
   const [incluirInternos, setIncluirInternos] = useState(false);
 
   const visiveis = useMemo(

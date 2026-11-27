@@ -11232,6 +11232,54 @@ export type Database = {
       }
     }
     Views: {
+      demographic_values_panel: {
+        Row: {
+          attribute_id: string
+          attribute_is_restricted: boolean | null
+          attribute_is_visible_in_reports: boolean | null
+          attribute_name: string | null
+          attribute_type: string | null
+          created_at: string
+          date_value: string | null
+          id: string
+          number_value: number | null
+          updated_at: string
+          user_id: string
+          value: string | null
+          values_array: Json | null
+        }
+        Insert: {
+          attribute_id: string
+          attribute_is_restricted?: boolean | null
+          attribute_is_visible_in_reports?: boolean | null
+          attribute_name?: string | null
+          attribute_type?: string | null
+          created_at?: string
+          date_value?: string | null
+          id?: string
+          number_value?: number | null
+          updated_at?: string
+          user_id: string
+          value?: string | null
+          values_array?: Json | null
+        }
+        Update: {
+          attribute_id?: string
+          attribute_is_restricted?: boolean | null
+          attribute_is_visible_in_reports?: boolean | null
+          attribute_name?: string | null
+          attribute_type?: string | null
+          created_at?: string
+          date_value?: string | null
+          id?: string
+          number_value?: number | null
+          updated_at?: string
+          user_id?: string
+          value?: string | null
+          values_array?: Json | null
+        }
+        Relationships: []
+      }
       profiles_public: {
         Row: {
           avatar_url: string | null

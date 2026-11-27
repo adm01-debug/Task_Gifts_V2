@@ -1,5 +1,11 @@
 import { supabase } from "@/integrations/supabase/client";
-import type { Json, Tables, TablesInsert, TablesUpdate } from "@/integrations/supabase/types";
+import type {
+  Database,
+  Json,
+  Tables,
+  TablesInsert,
+  TablesUpdate,
+} from "@/integrations/supabase/types";
 
 export type DemographicAttribute = Tables<"demographic_attributes">;
 export type DemographicAttributeInsert = TablesInsert<"demographic_attributes">;
@@ -8,9 +14,9 @@ export type DemographicValue = Tables<"user_demographic_values">;
 
 /**
  * Linha do painel de respostas. Quem nao e' administrador recebe a linha de um
- * atributo restrito **sem as colunas de valor**: a projecao da consulta nao as
- * pede, entao o conteudo nunca chega ao navegador (a policy de SELECT libera a
- * linha para gestor, mas nao obriga a entregar o valor).
+ * atributo restrito **sem as colunas de valor**: o mascaramento acontece no
+ * banco (view `demographic_values_panel`) e o conteudo nunca sai do servidor,
+ * nem para quem pedir `select *` direto da API.
  */
 export type DemographicValueRow = Omit<
   DemographicValue,
@@ -25,6 +31,8 @@ export type DemographicValueRow = Omit<
     "name" | "attribute_type" | "is_visible_in_reports" | "is_restricted"
   > | null;
 };
+
+type PainelRow = Database["public"]["Views"]["demographic_values_panel"]["Row"];
 
 export type DemographicAttributeType =
   | "text"
@@ -172,53 +180,37 @@ export const demographicsService = {
   },
 
   /**
-   * Leitura do painel de respostas. Administrador ve tudo; gestor recebe as
-   * linhas de atributo restrito sem as colunas de valor.
+   * Leitura do painel de respostas, uma consulta so' para admin e gestor: a
+   * view `demographic_values_panel` ja' decide o que cada um pode ver. Admin
+   * recebe valor e metadados completos; gestor recebe valor nulo quando o
+   * atributo e' restrito e metadado nulo quando o atributo esta' desativado —
+   * a tela trata os dois casos como "nao exibir".
    */
-  async listAllValues(options?: { ehAdmin?: boolean }): Promise<DemographicValueRow[]> {
-    const embed = "name, attribute_type, is_visible_in_reports, is_restricted";
-
-    if (options?.ehAdmin) {
-      const { data, error } = await supabase
-        .from("user_demographic_values")
-        .select(`*, demographic_attributes(${embed})`);
-      if (error) throw error;
-      return (data ?? []) as unknown as DemographicValueRow[];
-    }
-
-    // Duas consultas sem dependencia: a primeira entrega as colunas de valor so'
-    // dos atributos nao restritos (o filtro roda no servidor); a segunda entrega
-    // os metadados de **todas** as linhas e nenhuma coluna de valor.
-    //
-    // A segunda e' o que mantem na tela as respostas de atributo desativado: a
-    // policy "Everyone can view active demographic attributes" esconde o
-    // atributo inativo de quem nao e' admin, entao o embed vem nulo — a linha
-    // continua listada (rotulo "indisponivel") e o valor fica escondido, porque
-    // sem o metadado nao da' para saber se o atributo e' restrito.
-    const [permitidos, metadados] = await Promise.all([
-      supabase
-        .from("user_demographic_values")
-        .select(`*, demographic_attributes!inner(${embed})`)
-        .eq("demographic_attributes.is_restricted", false),
-      supabase
-        .from("user_demographic_values")
-        .select(
-          `id, user_id, attribute_id, created_at, updated_at, demographic_attributes(${embed})`,
-        ),
-    ]);
-
-    if (permitidos.error) throw permitidos.error;
-    if (metadados.error) throw metadados.error;
-
-    const porId = new Map<string, DemographicValueRow>();
-    ((metadados.data ?? []) as unknown as DemographicValueRow[]).forEach((linha) =>
-      porId.set(linha.id, linha),
-    );
-    // A linha completa sobrescreve a versao sem valor.
-    ((permitidos.data ?? []) as unknown as DemographicValueRow[]).forEach((linha) =>
-      porId.set(linha.id, linha),
-    );
-    return Array.from(porId.values());
+  async listAllValues(): Promise<DemographicValueRow[]> {
+    const { data, error } = await supabase.from("demographic_values_panel").select("*");
+    if (error) throw error;
+    return ((data ?? []) as PainelRow[]).map((linha) => ({
+      id: linha.id,
+      user_id: linha.user_id,
+      attribute_id: linha.attribute_id,
+      created_at: linha.created_at,
+      updated_at: linha.updated_at,
+      value: linha.value,
+      values_array: linha.values_array,
+      number_value: linha.number_value,
+      date_value: linha.date_value,
+      // Sem nome do atributo a linha e' de atributo desativado: entra sem
+      // metadado, e a tela a trata como restrita e de uso interno.
+      demographic_attributes: linha.attribute_name
+        ? {
+            name: linha.attribute_name,
+            attribute_type: (linha.attribute_type ??
+              "text") as DemographicAttribute["attribute_type"],
+            is_visible_in_reports: linha.attribute_is_visible_in_reports ?? false,
+            is_restricted: linha.attribute_is_restricted ?? true,
+          }
+        : null,
+    }));
   },
 
   async saveValue(input: {
