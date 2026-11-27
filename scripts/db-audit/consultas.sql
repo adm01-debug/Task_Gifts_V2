@@ -264,3 +264,8 @@ SELECT (SELECT count(*) FROM public.cron_job_watch_baseline) AS no_baseline,
        (SELECT count(*) FROM cron.job j WHERE j.active
           AND NOT EXISTS (SELECT 1 FROM cron.job_run_details d WHERE d.jobid = j.jobid)
           AND NOT EXISTS (SELECT 1 FROM public.cron_job_watch_baseline w WHERE w.jobname = j.jobname)) AS ativos_sem_baseline;
+-- nome: ensaio_do_vigia
+-- Roda o vigia de verdade, forcado (ignora a espera), dentro de BEGIN/ROLLBACK: grava o marco zero e
+-- devolve o que ele acusaria, sem deixar nada no banco. Um job morto ha semanas nao pode esperar 8 dias.
+BEGIN;
+SELECT * FROM public.check_stale_cron_jobs(true) AS vigia;

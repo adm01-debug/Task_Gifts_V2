@@ -1,4 +1,4 @@
-// Leitura avulsa no banco vivo pela Management API (mesma porta do apply-migrations).
+﻿// Leitura avulsa no banco vivo pela Management API (mesma porta do apply-migrations).
 // Existe para consultar producao sem depender de SUPABASE_DB_URL, que so vale para o snapshot.
 //
 // Uso: SELECAO_SQL=<nome> node scripts/db-audit/consultar-sql.mjs   (catalogo)
@@ -13,6 +13,7 @@
 
 import { readFileSync } from "node:fs";
 import path from "node:path";
+import { fileURLToPath } from "node:url";
 
 import { consultar } from "./apply-migrations.mjs";
 
@@ -21,13 +22,12 @@ const PROIBIDO = /\b(insert|update|delete|truncate|drop|alter|create|grant|revok
 // Ensaio de funcao: precisa chamar a funcao de verdade para saber se ela quebra, e o unico jeito de
 // nao gravar nada e' rodar dentro de BEGIN e terminar em ROLLBACK. O guarda continua valendo para o
 // que estiver entre o BEGIN e o ROLLBACK (so SELECT), e o ROLLBACK e' acrescentado pelo runner, nao
-// pelo catalogo.
-const ENSAIO = /^begin\s*;\s*select\s+public\.([a-z_]+)\(\)\s+as\s+([a-z_]+)\s*;?$/i;
+const ENSAIO = /^begin\s*;\s*select\s+(\*\s+from\s+)?public\.([a-z_]+)\(([^;]*)\)\s+as\s+([a-z_]+)\s*;?$/i;
 
-function lerSql() {
+export function lerSql() {
   const caminho = path.resolve(process.env.SQL_FILE || path.join("scripts", "db-audit", "consultas.sql"));
   // Caminho A: catalogo versionado, escolhido por nome (o que o workflow usa).
-  // Caminho B: arquivo avulso por SQL_FILE, para investigacao local — sem SELECAO_SQL.
+  // Caminho B: arquivo avulso por SQL_FILE, para investigacao local â€” sem SELECAO_SQL.
   const escolhida = (process.env.SELECAO_SQL || "").trim();
   const avulso = (process.env.SQL_FILE || "").trim();
   let sql;
@@ -61,12 +61,17 @@ function lerSql() {
   }
   if (!SOMENTE_LEITURA.test(sql)) {
     const ensaio = ENSAIO.exec(sql.replace(/\s+/g, " ").trim());
-    if (!ensaio) throw new Error("a consulta precisa comecar por SELECT ou WITH");
-    // Só funcao de envio/agendamento de aviso tem ensaio liberado, e o rollback e' imposto aqui.
-    if (!/^(send|notify|enqueue|dispatch|push|process|run|refresh)_/.test(ensaio[1])) {
-      throw new Error("ensaio permitido apenas para funcoes de envio/agendamento");
+    // So' funcao de envio/agendamento/verificacao tem ensaio liberado, e o rollback e' imposto aqui.
+    // `check_` e' leitura pura: roda dentro do BEGIN e o ROLLBACK descarta o que ela gravar.
+    if (!/^(send|notify|enqueue|dispatch|push|process|run|refresh|check)_/.test(ensaio[2])) {
+      throw new Error("ensaio permitido apenas para funcoes de envio/agendamento/verificacao");
     }
-    return "begin; select public." + ensaio[1] + "() as " + ensaio[2] + "; rollback;";
+    // Argumento do ensaio: so' literal simples (numero, booleano, texto sem aspas internas).
+    const args = (ensaio[3] || "").trim();
+    if (args && !/^([a-z_]+\s*=>\s*)?(\d+|true|false|null|'[^']*')$/i.test(args)) {
+      throw new Error("ensaio com argumento nao literal nao e' aceito");
+    }
+    return "begin; select " + (ensaio[1] ? "* from " : "") + "public." + ensaio[2] + "(" + args + ") as " + ensaio[4] + "; rollback;";
   }
   sql = sql.replace(/;$/, "").trim();
   // Sem isso um "select 1; delete ..." passaria pela checagem do inicio.
@@ -101,10 +106,13 @@ async function main() {
   return 0;
 }
 
+// Só executa como CLI: importado (teste do parser), exporta lerSql sem rodar nada.
+if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
 main()
   .then(function (codigo) { process.exit(codigo || 0); })
   .catch(function (erro) {
     console.error("erro: " + erro.message);
     process.exit(2);
   });
+}
 
