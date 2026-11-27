@@ -224,3 +224,15 @@ SELECT n.created_at, n.read, n.data->>'balde' AS balde, n.user_id,
 FROM public.notifications n
 WHERE n.type = 'engagement_survey_reminder'
 ORDER BY n.created_at DESC
+
+-- nome: comparecimento_do_cron
+-- O lembrete semanal (jobid 65) nunca teve linha em cron.job_run_details, enquanto outros jobs do
+-- mesmo pg_cron rodam. Aqui cada job aparece com o agendamento registrado, quantas execucoes
+-- ficaram na janela retida e a ultima. Job ativo com zero execucao = o agendador nao esta'
+-- disparando aquele job, e nao o codigo dele.
+SELECT j.jobid, j.jobname, j.schedule, j.active, j.username,
+  (SELECT count(*) FROM cron.job_run_details d WHERE d.jobid = j.jobid) AS execucoes,
+  (SELECT max(d.start_time) FROM cron.job_run_details d WHERE d.jobid = j.jobid) AS ultima,
+  left(j.command, 70) AS comando
+FROM cron.job j
+ORDER BY execucoes ASC, j.jobid
