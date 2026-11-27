@@ -1,4 +1,4 @@
--- Vigia dos jobs do pg_cron.
+﻿-- Vigia dos jobs do pg_cron.
 --
 -- Por que existe: medido em producao em 2026-11-27, `engagement-reminders` (jobid 65) e
 -- `exec-monthly-report-generation` (jobid 25) estavam `active = true` e com ZERO linhas em
@@ -56,8 +56,8 @@ BEGIN
   END IF;
 
   -- Job que nunca rodou ganha o marco zero: a espera do vigia conta daqui, nao da criacao.
-  INSERT INTO public.cron_job_watch_baseline (jobname)
-  SELECT j.jobname
+  INSERT INTO public.cron_job_watch_baseline AS b (jobname)
+  SELECT j.jobname AS nome_job
   FROM cron.job j
   WHERE NOT EXISTS (SELECT 1 FROM cron.job_run_details d WHERE d.jobid = j.jobid)
   ON CONFLICT (jobname) DO NOTHING;
