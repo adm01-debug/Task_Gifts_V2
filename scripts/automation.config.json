@@ -186,7 +186,15 @@
       "reason": "Legado mantido no fluxo existente; referências literais: package.json:scripts, .github/workflows/ci.yml. O dispatcher não executa esta operação."
     },
     {
-      "id": "legacy-166d2b1258cd82b5",
+            "id": "legacy-apply-migrations-261126",
+            "kind": "legacy",
+            "files": ["scripts/db-audit/apply-migrations.mjs"],
+            "manual": ["node", "scripts/db-audit/apply-migrations.mjs"],
+            "triggers": ["manual"],
+            "reason": "Aplica e audita migrations contra o banco vivo: exige SUPABASE_ACCESS_TOKEN e escreve no ledger, então nunca roda pelo dispatcher. Disparo só manual, por .github/workflows/db-migrate.yml (mode=check padrão) ou pelo próprio comando."
+          },
+          {
+            "id": "legacy-166d2b1258cd82b5",
       "kind": "legacy",
       "files": ["scripts/graphify/setup.sh"],
       "manual": ["sh", "scripts/graphify/setup.sh"],
