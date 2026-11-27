@@ -127,6 +127,9 @@ pelo script: comeca com select/with, uma unica instrucao, nenhuma palavra de esc
 Pelo workflow: Actions -> Migrations do banco -> Run workflow -> mode consulta, e o nome da
 consulta no campo sql. Para adicionar uma consulta, crie um bloco com o marcador de nome em consultas.sql.
 
+Local, sem workflow: SQL_FILE=consulta.sql SUPABASE_ACCESS_TOKEN=... node scripts/db-audit/consultar-sql.mjs
+(sem SELECAO_SQL o script le o arquivo indicado por SQL_FILE).
+
 Consultas ja prontas:
 
 | nome | o que responde |

@@ -1,9 +1,10 @@
 // Leitura avulsa no banco vivo pela Management API (mesma porta do apply-migrations).
 // Existe para consultar producao sem depender de SUPABASE_DB_URL, que so vale para o snapshot.
 //
-// Uso: SELECAO_SQL=<nome> [SQL_FILE=...] node scripts/db-audit/consultar-sql.mjs
-//   SELECAO_SQL  nome da consulta marcada com `-- nome: <nome>` no catalogo
-//   SQL_FILE     catalogo (padrao scripts/db-audit/consultas.sql)
+// Uso: SELECAO_SQL=<nome> node scripts/db-audit/consultar-sql.mjs   (catalogo)
+//      SQL_FILE=consulta.sql node scripts/db-audit/consultar-sql.mjs   (avulso, local)
+//   SELECAO_SQL  nome da consulta marcada no catalogo scripts/db-audit/consultas.sql
+//   SQL_FILE     arquivo com o proprio SQL; sem SELECAO_SQL le esse arquivo
 //   LIMITE       maximo de linhas impressas (padrao 200)
 //
 // O SQL vem do catalogo versionado, nunca de texto digitado no disparo.
@@ -20,26 +21,34 @@ const PROIBIDO = /\b(insert|update|delete|truncate|drop|alter|create|grant|revok
 
 function lerSql() {
   const caminho = path.resolve(process.env.SQL_FILE || path.join("scripts", "db-audit", "consultas.sql"));
+  // Caminho A: catalogo versionado, escolhido por nome (o que o workflow usa).
+  // Caminho B: arquivo avulso por SQL_FILE, para investigacao local — sem SELECAO_SQL.
   const escolhida = (process.env.SELECAO_SQL || "").trim();
-  if (!escolhida) throw new Error("SELECAO_SQL ausente no ambiente");
-
-  // O catalogo guarda varias consultas; aqui sai so a marcada por '-- nome: X'.
-  const fonte = readFileSync(caminho, "utf8").split(/\r?\n/);
-  let coletando = false;
-  const guardadas = [];
-  for (const linha of fonte) {
-    const marcador = /^--\s*nome:\s*(\S+)\s*$/.exec(linha.trim());
-    if (marcador) {
-      coletando = marcador[1] === escolhida;
-      continue;
+  const avulso = (process.env.SQL_FILE || "").trim();
+  let sql;
+  if (escolhida) {
+    const fonte = readFileSync(caminho, "utf8").split(/\r?\n/);
+    let coletando = false;
+    const guardadas = [];
+    for (const linha of fonte) {
+      const marcador = /^--\s*nome:\s*(\S+)\s*$/.exec(linha.trim());
+      if (marcador) {
+        coletando = marcador[1] === escolhida;
+        continue;
+      }
+      if (coletando) guardadas.push(linha);
     }
-    if (coletando) guardadas.push(linha);
-  }
-  const sql = guardadas.filter(function (l) { return !l.trim().startsWith("--"); }).join("\n").trim().replace(/;$/, "").trim();
-  if (!sql) {
-    const nomes = fonte.map(function (l) { return /^--\s*nome:\s*(\S+)\s*$/.exec(l.trim()); })
-      .filter(Boolean).map(function (m) { return m[1]; });
-    throw new Error("consulta '" + escolhida + "' nao existe em " + path.basename(caminho) + "; disponiveis: " + nomes.join(", "));
+    sql = guardadas.filter(function (l) { return !l.trim().startsWith("--"); }).join("\n").trim().replace(/;$/, "").trim();
+    if (!sql) {
+      const nomes = fonte.map(function (l) { return /^--\s*nome:\s*(\S+)\s*$/.exec(l.trim()); })
+        .filter(Boolean).map(function (m) { return m[1]; });
+      throw new Error("consulta '" + escolhida + "' nao existe em " + path.basename(caminho) + "; disponiveis: " + nomes.join(", "));
+    }
+  } else if (avulso) {
+    sql = readFileSync(avulso, "utf8").trim().replace(/;$/, "").trim();
+    if (!sql) throw new Error("SQL_FILE vazio");
+  } else {
+    throw new Error("informe SELECAO_SQL (catalogo) ou SQL_FILE (arquivo avulso)");
   }
   if (!SOMENTE_LEITURA.test(sql)) throw new Error("a consulta precisa comecar por SELECT ou WITH");
   // Sem isso um "select 1; delete ..." passaria pela checagem do inicio.
