@@ -6,7 +6,7 @@
   "src/integrations/supabase/types.ts",
   "supabase/migrations"
  ],
- "migrations": 318,
+ "migrations": 319,
  "seeds": [],
  "avisos": [
   "17 bloco(s) com DDL dinâmico (EXECUTE format/...) não modelado — policies/colunas criadas dinamicamente podem faltar; confira no banco vivo"
@@ -170,6 +170,7 @@
  "views": [
   "IF",
   "connection_monitor",
+  "demographic_values_panel",
   "index_health_report",
   "profiles_public",
   "query_performance_summary",
@@ -30877,7 +30878,7 @@
    "rls": true,
    "policies": [
     {
-     "nome": "Admins and managers can view demographic values",
+     "nome": "Admins can view demographic values",
      "comando": "select",
      "para": "public",
      "tipo": "permissive"

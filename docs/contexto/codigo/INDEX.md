@@ -1,7 +1,7 @@
 # Contexto do projeto para agentes de IA
 
 GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.
-Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `510674696a221421a17d04f121e7c13d30aa582a` (2026-11-27T07:23:44-03:00).
+Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `fa594f89a47f1cc04088d08cce963fbb391173a5` (2026-11-27T07:24:34-03:00).
 
 ## Como usar (leia antes de planejar ou executar qualquer tarefa)
 1. **Tela/rota/menu** → `rotas.json` (url/vista/menu → arquivo → hooks → tabelas → edges; `rotas_http_backend` para APIs) e `modulos.json` (módulo inteiro + dependências entre módulos).
@@ -14,7 +14,7 @@ Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR
 Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua tarefa; não carregue tudo.
 
 ## Stack
-- linguagens: TypeScript (1186), SQL (320), Markdown (56), JavaScript (25), JSON (14), YAML (10), Python (5), Shell (5)
+- linguagens: TypeScript (1187), SQL (321), Markdown (56), JavaScript (25), JSON (14), YAML (10), Python (5), Shell (5)
 - linguagem_principal: TypeScript
 - framework: React
 - backend_http: n/d
@@ -34,9 +34,9 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 ## Números
 | item | qtd |
 |---|---|
-| arquivos_total | 1638 |
-| arquivos_codigo | 1215 |
-| linhas_codigo | 241369 |
+| arquivos_total | 1640 |
+| arquivos_codigo | 1216 |
+| linhas_codigo | 241531 |
 | rotas | 88 |
 | rotas_http_backend | 0 |
 | vistas_por_id | 0 |
@@ -46,9 +46,9 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 | hooks | 157 |
 | edge_functions | 23 |
 | tabelas | 239 |
-| migrations | 318 |
+| migrations | 319 |
 | cron_jobs | 40 |
-| testes | 182 |
+| testes | 183 |
 | workflows | 7 |
 | scripts | 18 |
 | docs_md | 56 |
@@ -58,7 +58,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - componentes: src/components (444), src/pages (87), src/contexts (4)
 - hooks: src/hooks (131), src/components (22), src/contexts (4)
 - servicos_logica: src/lib (107), src/services (101), src/integrations (3)
-- testes: co-localizado (*.test) (163), outro (12), tests/ (3)
+- testes: co-localizado (*.test) (164), outro (12), tests/ (3)
 - edge_functions: supabase/functions
 - migrations: supabase/migrations
 - scripts: scripts/maintenance (4), scripts/ci (3), scripts/regras_negocio (3)
@@ -71,7 +71,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 |---|---|---|---|---|---|---|
 | components | 0 | 0 | 84 | 217 | 8 | 76 |
 | components/accessibility | 0 | 0 | 5 | 2 | 0 | 0 |
-| components/admin | 0 | 0 | 48 | 160 | 4 | 69 |
+| components/admin | 0 | 0 | 48 | 160 | 4 | 70 |
 | components/analytics | 0 | 0 | 5 | 0 | 0 | 0 |
 | components/auction | 0 | 0 | 7 | 30 | 2 | 10 |
 | components/auth | 0 | 0 | 7 | 6 | 2 | 5 |
@@ -96,10 +96,10 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 | components/sidebar | 0 | 0 | 5 | 20 | 2 | 9 |
 | components/trails | 0 | 0 | 5 | 25 | 3 | 22 |
 | components/ui | 0 | 0 | 67 | 12 | 0 | 0 |
-| hooks | 0 | 0 | 131 | 507 | 10 | 160 |
+| hooks | 0 | 0 | 131 | 507 | 10 | 161 |
 | lib | 0 | 0 | 107 | 0 | 0 | 15 |
-| pages | 48 | 87 | 87 | 518 | 15 | 179 |
-| services | 0 | 0 | 98 | 7 | 9 | 164 |
+| pages | 48 | 87 | 87 | 518 | 15 | 180 |
+| services | 0 | 0 | 98 | 7 | 9 | 165 |
 | stories | 0 | 0 | 29 | 5 | 0 | 0 |
 
 ## Rotas (url → arquivo)
@@ -295,8 +295,8 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - possiveis_segredos_no_codigo: 0
 
 ## Grafo de código (graphify)
-- 11207 nós · 30247 arestas · 864 comunidades · grafo do commit `51067469`
-- comunidades maiores: react (195), skeleton.tsx (190), lucide-react (186), utils.ts (179), cn (142), framer-motion (106), @tanstack/react-query (96), DepartmentWarPage.tsx (95), contracts/index.ts (94), client.ts (93), AdminPanel.tsx (90), mobile/index.ts (88)
+- 11218 nós · 30267 arestas · 862 comunidades · grafo do commit `fa594f89`
+- comunidades maiores: lucide-react (335), react (239), App.tsx (230), ManagerDashboard.tsx (168), Mentoria.tsx (130), cn (128), useProfiles.ts (110), mobile/index.ts (102), useToast (90), DashboardRightColumn.tsx (89), questsService.ts (86), contracts/index.ts (85)
 - símbolos mais chamados: cn() (src/lib/utils.ts), useAuth() (src/hooks/useAuth.tsx), useIsMobile() (src/hooks/use-mobile.tsx), q() (scripts/supabase_snapshot/snapshot.py), useDepartments() (src/hooks/useDepartments.ts), useRBAC() (src/hooks/useRBAC.ts), useProfiles() (src/hooks/useProfiles.ts), useToast() (src/hooks/use-toast.ts), useSEO() (src/hooks/useSEO.ts), useSoundEffects() (src/hooks/useSoundEffects.tsx), .collect() (scripts/supabase_snapshot/test_snapshot.py), excluded_sql() (scripts/supabase_snapshot/snapshot.py)
 - consulta local: `graphify query "<pergunta>"`, `graphify path "<A>" "<B>"`, `graphify explain "<X>"`
 
@@ -383,6 +383,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 
 
 ## Últimos commits
+- 2026-11-27 `fa594f8` feat(db): painel demografico le a view que mascara valor restrito (ex-PR 182) (#183)
 - 2026-11-27 `5106746` chore: cria a linha padrao da janela de silencio para quem nunca abriu a tela (#180)
 - 2026-11-27 `dfe7e3c` infra(migrations): workflow que aplica o que falta e barra divergencia com o ledger (#179)
 - 2026-11-27 `9868b40` fix: valida o nome das functions antes de virar comando no deploy (#178)
@@ -397,7 +398,6 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - 2026-11-25 `a3fb38b` fix: destino dos avisos de notificação (51 avisos sem rota)
 - 2026-11-25 `84e8ba2` feat: interruptor proprio para os avisos de pesquisa no perfil (#169)
 - 2026-11-25 `cc240b7` feat: lembrete semanal de pesquisa de engajamento pendente (#168)
-- 2026-11-25 `ebbb9a0` feat: mostra a foto do premio na loja quando o admin cadastra (#167)
 
 ## Arquivos deste diretório
 - `docs/contexto/codigo/rotas.json`

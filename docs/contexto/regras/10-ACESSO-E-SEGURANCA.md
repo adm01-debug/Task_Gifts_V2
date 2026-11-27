@@ -1,6 +1,6 @@
 # 10 · ACESSO E SEGURANÇA — quem pode o quê
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `510674696a` · branch `main` · 2026-11-27 10:24 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `fa594f89a4` · branch `main` · 2026-11-27 10:25 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## Perfis / roles identificados
@@ -81,6 +81,7 @@
 | `custom_ranks` | enabled | public: has_role(auth.uid(), 'admin'::app_role)<br>public: true | public: has_role(auth.uid(), 'admin'::app_role) | public: has_role(auth.uid(), 'admin'::app_role) | public: has_role(auth.uid(), 'admin'::app_role) |
 | `custom_titles` | enabled | public: has_role(auth.uid(), 'admin'::app_role)<br>public: ((is_active = true) OR has_role(auth.uid(), 'admin'::app_role)) | public: has_role(auth.uid(), 'admin'::app_role) | public: has_role(auth.uid(), 'admin'::app_role) | public: has_role(auth.uid(), 'admin'::app_role) |
 | `demographic_attributes` | enabled | public: has_role(auth.uid(), 'admin'::app_role)<br>public: ((is_active = true) OR has_role(auth.uid(), 'admin'::app_role)) | public: has_role(auth.uid(), 'admin'::app_role) | public: has_role(auth.uid(), 'admin'::app_role) | public: has_role(auth.uid(), 'admin'::app_role) |
+| `demographic_values_panel` | não encontrado | sem RLS | sem RLS | sem RLS | sem RLS |
 | `department_missions` | enabled | public: has_role(auth.uid(), 'admin'::app_role)<br>public: ((is_active = true) OR has_role(auth.uid(), 'admin'::app_role)) | public: has_role(auth.uid(), 'admin'::app_role) | public: has_role(auth.uid(), 'admin'::app_role) | public: has_role(auth.uid(), 'admin'::app_role) |
 | `department_rankings` | enabled | public: true<br>public: has_role(auth.uid(), 'admin'::app_role) | public: has_role(auth.uid(), 'admin'::app_role) | public: has_role(auth.uid(), 'admin'::app_role) | public: has_role(auth.uid(), 'admin'::app_role) |
 | `department_war_contributions` | enabled | authenticated: has_role(auth.uid(), 'admin'::app_role)<br>authenticated: ((user_id = auth.uid()) OR has_role(auth.uid(), 'admin'::app_role) OR has_role(auth.uid(), 'manager'::app_role)) | authenticated: has_role(auth.uid(), 'admin'::app_role) | authenticated: has_role(auth.uid(), 'admin'::app_role) | authenticated: has_role(auth.uid(), 'admin'::app_role) |
@@ -233,7 +234,7 @@
 | `user_challenges` | enabled | public: (auth.uid() = user_id) | authenticated: (auth.uid() = user_id) | public: (auth.uid() = user_id) | — |
 | `user_combos` | enabled | public: (has_role(auth.uid(), 'admin'::app_role) OR has_role(auth.uid(), 'manager'::app_role))<br>public: (auth.uid() = user_id) | public: (auth.uid() = user_id) | public: (auth.uid() = user_id) | — |
 | `user_competency_assessments` | enabled | public: ((auth.uid() = user_id) OR (auth.uid() = assessor_id)) | authenticated: (assessor_id = auth.uid()) | — | — |
-| `user_demographic_values` | enabled | public: (has_role(auth.uid(), 'admin'::app_role) OR has_role(auth.uid(), 'manager'::app_role))<br>public: (auth.uid() = user_id) | public: (auth.uid() = user_id) | public: (auth.uid() = user_id) | public: (auth.uid() = user_id) |
+| `user_demographic_values` | enabled | public: (auth.uid() = user_id)<br>public: public.has_role(auth.uid(), 'admin'::public.app_role) | public: (auth.uid() = user_id) | public: (auth.uid() = user_id) | public: (auth.uid() = user_id) |
 | `user_devices` | enabled | public: (auth.uid() = user_id) | authenticated: (user_id = auth.uid()) | public: (auth.uid() = user_id) | — |
 | `user_leagues` | enabled | public: true<br>public: has_role(auth.uid(), 'admin'::app_role) | public: has_role(auth.uid(), 'admin'::app_role)<br>public: (user_id = auth.uid()) | public: has_role(auth.uid(), 'admin'::app_role) | public: has_role(auth.uid(), 'admin'::app_role) |
 | `user_mission_progress` | enabled | public: ((user_id = auth.uid()) OR has_role(auth.uid(), 'admin'::app_role) OR has_role(auth.uid(), 'manager'::app_role)) | public: (user_id = auth.uid()) | public: (user_id = auth.uid()) | — |
@@ -787,7 +788,7 @@ Middleware matcher (Next.js): nenhum
 | grant | authenticated | insert | `user_challenges` |
 | grant | authenticated | insert, delete | `organizations`, `session_logs` |
 | grant | authenticated | insert, update, delete | `boss_battles`, `boss_win_rate_goals`, `memory_decks`, `memory_pairs`, `api_request_logs`, `auction_admin_events`, `auction_bids`, `bingo_cards`, `bingo_marks`, `board_moves`, `board_player_states`, `boss_battle_damage`, `boss_battle_rewards`, `campaign_team_split_batches`, `campaign_team_split_entries` … +36 |
-| grant | authenticated | select | `push_notification_logs`, `engagement_action_playbooks`, `nr1_risk_categories`, `nr1_factor_mappings`, `purchase_approvals`, `campaign_team_split_batches`, `campaign_team_split_entries`, `lucky_wheel_prize_audit`, `lucky_wheel_payout_snapshots`, `lucky_wheel_settings_audit`, `scratch_card_prizes`, `scratch_cards`, `lightning_quiz_sessions`, `lightning_quiz_answers`, `lightning_quiz_sessions` … +39 |
+| grant | authenticated | select | `push_notification_logs`, `engagement_action_playbooks`, `nr1_risk_categories`, `nr1_factor_mappings`, `purchase_approvals`, `campaign_team_split_batches`, `campaign_team_split_entries`, `lucky_wheel_prize_audit`, `lucky_wheel_payout_snapshots`, `lucky_wheel_settings_audit`, `scratch_card_prizes`, `scratch_cards`, `lightning_quiz_sessions`, `lightning_quiz_answers`, `lightning_quiz_sessions` … +40 |
 | grant | authenticated | select, insert | `runbook_executions`, `org_theme_history`, `campaign_progress_events`, `engagement_answers`, `push_sync_events` |
 | grant | authenticated | select, insert, delete | `opinion_supports` |
 | grant | authenticated | select, insert, update | `ai_course_jobs`, `lucky_wheel_settings`, `lucky_wheel_whatif_snapshots`, `wager_budget_settings`, `board_player_states` |
@@ -804,7 +805,7 @@ Middleware matcher (Next.js): nenhum
 | grant | service_role, authenticated | execute | `get_security_stats`, `log_login_attempt`, `get_nine_box_distribution`, `get_department_metrics`, `get_monthly_trends`, `get_executive_metrics` |
 | revoke | PUBLIC | all | `get_security_digest_history`, `get_reliability_slo`, `get_reliability_timeline`, `acknowledge_security_alert`, `log_runbook_step`, `get_incident_metrics`, `get_incident_metrics`, `recalc_campaign_progress`, `close_expired_sales_campaigns`, `user_wants_in_app_notification`, `close_expired_sales_campaigns`, `user_wants_push_notification`, `user_wants_email_notification`, `enqueue_push`, `claim_push_outbox` … +24 |
 | revoke | PUBLIC | execute | `cleanup_old_security_logs`, `public`, `approve_password_reset`, `reject_password_reset`, `auto_block_ip`, `cleanup_old_security_logs`, `cleanup_old_security_logs`, `cleanup_expired_idempotency_keys`, `cleanup_expired_challenges`, `get_security_stats`, `update_certification_statuses`, `log_ip_access`, `log_geo_access`, `validate_api_key`, `process_external_task` … +29 |
-| revoke | PUBLIC, anon | all | `generate_executive_monthly_report`, `generate_action_plan_from_factor`, `generate_action_plan_from_nr1_category`, `get_engagement_nps_history`, `get_engagement_pillar_benchmark`, `get_engagement_pillar_benchmark`, `trim_push_sync_events`, `revoke_push_device`, `can_handle_opinion`, `get_opinion_feed`, `toggle_opinion_support`, `respond_to_opinion`, `set_opinion_status`, `generate_action_plan_from_opinion`, `revoke_push_device` … +94 |
+| revoke | PUBLIC, anon | all | `generate_executive_monthly_report`, `generate_action_plan_from_factor`, `generate_action_plan_from_nr1_category`, `get_engagement_nps_history`, `get_engagement_pillar_benchmark`, `get_engagement_pillar_benchmark`, `trim_push_sync_events`, `revoke_push_device`, `can_handle_opinion`, `get_opinion_feed`, `toggle_opinion_support`, `respond_to_opinion`, `set_opinion_status`, `generate_action_plan_from_opinion`, `revoke_push_device` … +95 |
 | revoke | PUBLIC, anon | execute | `get_webhook_delivery_stats_24h`, `get_webhook_delivery_hourly_24h`, `get_webhook_delivery_stats_1h`, `get_webhook_delivery_logs`, `get_error_budget_30d`, `get_burn_rate`, `get_burn_rate`, `is_org_admin`, `is_org_member`, `get_active_engagement_cycle`, `assign_engagement_questions`, `submit_engagement_answer`, `get_engagement_cycle_progress`, `engagement_min_respondents`, `get_engagement_pillar_scores` … +20 |
 | revoke | PUBLIC, anon, authenticated | all | `webhook_delivery_stats_24h`, `check_sla_breaches_and_alert`, `auto_create_postmortem_on_resolve`, `check_overdue_postmortem_actions`, `notify_admins_of_monthly_report`, `close_expired_sales_campaigns`, `increment_push_failures`, `reset_push_failures`, `log_lucky_wheel_prize_change`, `chi_square_critical`, `erf_inverse`, `snapshot_lucky_wheel_payout`, `raise_lucky_wheel_window_alerts`, `raise_lucky_wheel_window_alerts`, `log_lucky_wheel_budget_change` … +32 |
 | revoke | PUBLIC, anon, authenticated | execute | `validate_reset_token`, `generate_certificate_code`, `ingest_war_event`, `war_hook_task_scores`, `war_hook_attendance`, `war_hook_trail_enrollments`, `war_hook_module_progress`, `war_hook_quiz_scores`, `war_hook_kudos`, `validate_reset_token`, `claim_push_outbox`, `increment_push_failures`, `reset_push_failures`, `user_wants_push_notification`, `get_passkeys_by_email` … +29 |
@@ -829,6 +830,7 @@ Middleware matcher (Next.js): nenhum
 | Tabela | Problema | Arquivos |
 |---|---|---|
 | `attendance_records` | front faz UPDATE mas nenhuma política RLS permite UPDATE → vai falhar/retornar vazio para usuários | `src/services/attendanceService.ts` |
+| `demographic_values_panel` | acessada do front (1 arquivo(s)) sem RLS (não encontrado) | `src/services/demographicsService.ts` |
 | `development_plans` | front faz DELETE mas nenhuma política RLS permite DELETE → vai falhar/retornar vazio para usuários | `src/services/developmentPlanService.ts` |
 | `lucky_wheel_prizes` | acessada do front (1 arquivo(s)) sem RLS (não encontrado) | `src/services/luckyWheelService.ts` |
 | `lucky_wheel_spins` | acessada do front (1 arquivo(s)) sem RLS (não encontrado) | `src/services/luckyWheelService.ts` |
@@ -1112,6 +1114,7 @@ Middleware matcher (Next.js): nenhum
 | `board_moves` | `created_at` |
 | `goal_templates` | `created_at`, `created_by`, `updated_at` |
 | `lucky_wheel_prizes` | `created_at`, `updated_at` |
+| `demographic_values_panel` | `created_at`, `updated_at` |
 | `profiles_public` | `created_at`, `updated_at` |
 
 ## Dados pessoais / sensíveis (LGPD — cuidado em logs, exports, prompts de IA)

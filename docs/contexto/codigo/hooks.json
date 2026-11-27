@@ -1062,7 +1062,7 @@
     "useState"
    ],
    "canais_realtime": [],
-   "usado_por": 108,
+   "usado_por": 109,
    "usado_por_arquivos": [
     "src/App.tsx",
     "src/components/ActivityComments.tsx",
@@ -1688,12 +1688,13 @@
     "useSetPreferNotAnswer",
     "useUpdateDemographicAttribute"
    ],
-   "linhas": 119,
+   "linhas": 127,
    "dominio": "hooks",
    "tabelas": [],
    "rpcs": [],
    "edges": [],
    "hooks_internos": [
+    "useAuth",
     "useInvalidarTudo",
     "useMutation",
     "useQuery",
@@ -1706,7 +1707,7 @@
     "src/components/admin/DemographicValuesPanel.tsx",
     "src/components/profile/MyDemographicValuesCard.tsx"
    ],
-   "coberto_por_testes": 0
+   "coberto_por_testes": 1
   },
   {
    "arquivo": "src/hooks/useDepartments.ts",

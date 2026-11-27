@@ -344,7 +344,7 @@
     "DemographicValuesPanel"
    ],
    "export_default": "DemographicValuesPanel",
-   "linhas": 171,
+   "linhas": 174,
    "dominio": "components/admin",
    "hooks_locais": [
     "useAllDemographicValues",
@@ -7522,7 +7522,7 @@
    ],
    "tabelas": [],
    "edges": [],
-   "usado_por": 108,
+   "usado_por": 109,
    "orfao": false
   },
   {

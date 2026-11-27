@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "510674696a221421a17d04f121e7c13d30aa582a",
+  "sha": "fa594f89a47f1cc04088d08cce963fbb391173a5",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
-  "generated_at": "2026-11-27 10:24 UTC",
-  "files_total": 1649,
-  "code_files": 1541,
-  "code_lines": 285835
+  "generated_at": "2026-11-27 10:25 UTC",
+  "files_total": 1651,
+  "code_files": 1543,
+  "code_lines": 286057
  },
  "version": "1.3.2",
- "facts_hash": "cac5adbd1adf79c2",
+ "facts_hash": "c19f44b67adb9af0",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -202,8 +202,8 @@
   "package_manager": "bun",
   "languages": {
    ".ts": 595,
-   ".tsx": 593,
-   ".sql": 320,
+   ".tsx": 594,
+   ".sql": 321,
    ".mjs": 22,
    ".js": 5,
    ".py": 5,
@@ -20174,6 +20174,105 @@
     "comment": "",
     "origin": "types.ts"
    },
+   "demographic_values_panel": {
+    "columns": [
+     {
+      "name": "attribute_id",
+      "type": "string not null",
+      "fk": "",
+      "generated": "",
+      "src": "src/integrations/supabase/types.ts"
+     },
+     {
+      "name": "attribute_is_restricted",
+      "type": "boolean | null",
+      "fk": "",
+      "generated": "",
+      "src": "src/integrations/supabase/types.ts"
+     },
+     {
+      "name": "attribute_is_visible_in_reports",
+      "type": "boolean | null",
+      "fk": "",
+      "generated": "",
+      "src": "src/integrations/supabase/types.ts"
+     },
+     {
+      "name": "attribute_name",
+      "type": "string | null",
+      "fk": "",
+      "generated": "",
+      "src": "src/integrations/supabase/types.ts"
+     },
+     {
+      "name": "attribute_type",
+      "type": "string | null",
+      "fk": "",
+      "generated": "",
+      "src": "src/integrations/supabase/types.ts"
+     },
+     {
+      "name": "created_at",
+      "type": "string not null",
+      "fk": "",
+      "generated": "",
+      "src": "src/integrations/supabase/types.ts"
+     },
+     {
+      "name": "date_value",
+      "type": "string | null",
+      "fk": "",
+      "generated": "",
+      "src": "src/integrations/supabase/types.ts"
+     },
+     {
+      "name": "id",
+      "type": "string not null",
+      "fk": "",
+      "generated": "",
+      "src": "src/integrations/supabase/types.ts"
+     },
+     {
+      "name": "number_value",
+      "type": "number | null",
+      "fk": "",
+      "generated": "",
+      "src": "src/integrations/supabase/types.ts"
+     },
+     {
+      "name": "updated_at",
+      "type": "string not null",
+      "fk": "",
+      "generated": "",
+      "src": "src/integrations/supabase/types.ts"
+     },
+     {
+      "name": "user_id",
+      "type": "string not null",
+      "fk": "",
+      "generated": "",
+      "src": "src/integrations/supabase/types.ts"
+     },
+     {
+      "name": "value",
+      "type": "string | null",
+      "fk": "",
+      "generated": "",
+      "src": "src/integrations/supabase/types.ts"
+     },
+     {
+      "name": "values_array",
+      "type": "Json | null",
+      "fk": "",
+      "generated": "",
+      "src": "src/integrations/supabase/types.ts"
+     }
+    ],
+    "constraints": [],
+    "src": "src/integrations/supabase/types.ts",
+    "comment": "",
+    "origin": "types.ts"
+   },
    "profiles_public": {
     "columns": [
      {
@@ -25362,16 +25461,6 @@
     "src": "supabase/migrations/20261228140000_congela_rls_e_grants_producao.sql"
    },
    {
-    "name": "Admins and managers can view demographic values",
-    "table": "user_demographic_values",
-    "cmd": "SELECT",
-    "roles": "public",
-    "mode": "permissive",
-    "using": "(has_role(auth.uid(), 'admin'::app_role) OR has_role(auth.uid(), 'manager'::app_role))",
-    "check": "",
-    "src": "supabase/migrations/20261228140000_congela_rls_e_grants_producao.sql"
-   },
-   {
     "name": "Users can manage own demographic values",
     "table": "user_demographic_values",
     "cmd": "ALL",
@@ -25860,6 +25949,16 @@
     "using": "EXISTS ( SELECT 1 FROM public.wager_entries e WHERE e.question_id = wager_questions.id AND e.user_id = auth.uid() )",
     "check": "",
     "src": "supabase/migrations/20261228280000_uma_aposta_por_dia_e_reabertura_da_pergunta.sql"
+   },
+   {
+    "name": "Admins can view demographic values",
+    "table": "user_demographic_values",
+    "cmd": "SELECT",
+    "roles": "public",
+    "mode": "permissive",
+    "using": "public.has_role(auth.uid(), 'admin'::public.app_role)",
+    "check": "",
+    "src": "supabase/migrations/20261229010000_painel_de_valores_demograficos.sql"
    },
    {
     "name": "Managers can create climate surveys",
@@ -36663,6 +36762,10 @@
    "query_performance_summary": {
     "body": "SELECT \"left\"(query, 200) AS query_snippet, calls, round(total_exec_time::numeric, 2) AS total_ms, round(mean_exec_time::numeric, 2) AS mean_ms, round(stddev_exec_time::numeric, 2) AS stddev_ms, round(min_exec_time::numeric, 2) AS min_ms, round(max_exec_time::numeric, 2) AS max_ms, rows, round(100.0 * shared_blks_hit::numeric / NULLIF(shared_blks_hit + shared_blks_read, 0)::numeric, 2) AS cache_hit_pct, shared_blks_hit, shared_blks_read, shared_blks_written FROM extensions.pg_stat_statements ORDER BY total_exec_time DESC",
     "src": "supabase/migrations/20261228130000_recupera_funcoes_e_views_ausentes.sql"
+   },
+   "demographic_values_panel": {
+    "body": "WITH quem AS ( SELECT public.has_role(auth.uid(), 'admin'::public.app_role) AS eh_admin, public.has_role(auth.uid(), 'manager'::public.app_role) AS eh_gestor ) SELECT v.id, v.user_id, v.attribute_id, v.created_at, v.updated_at, CASE WHEN q.eh_admin OR (a.is_active AND NOT a.is_restricted) THEN v.value END AS value, CASE WHEN q.eh_admin OR (a.is_active AND NOT a.is_restricted) THEN v.values_array END AS values_array, CASE WHEN q.eh_admin OR (a.is_active AND NOT a.is_restricted) THEN v.number_value END AS number_value, CASE WHEN q.eh_admin OR (a.is_active AND NOT a.is_restricted) THEN v.date_val …",
+    "src": "supabase/migrations/20261229010000_painel_de_valores_demograficos.sql"
    }
   },
   "sources": [
@@ -36983,6 +37086,7 @@
    "supabase/migrations/20261228300000_fecha_corridas_da_exclusao_de_departamento_e_da_aposta_diaria.sql",
    "supabase/migrations/20261228310000_dedup_indices_redundantes.sql",
    "supabase/migrations/20261229000000_janela_de_silencio_dos_avisos.sql",
+   "supabase/migrations/20261229010000_painel_de_valores_demograficos.sql",
    "supabase/migrations/20261230090000_backfill_janela_de_silencio_dos_avisos.sql",
    "supabase/tests/climate/assertions.sql",
    "supabase/tests/climate/stubs.sql",
@@ -46731,6 +46835,22 @@
     "src": "supabase/migrations/20261229000000_janela_de_silencio_dos_avisos.sql"
    },
    {
+    "kind": "revoke",
+    "privs": "all",
+    "object": "demographic_values_panel",
+    "objkind": "table",
+    "roles": "PUBLIC, anon",
+    "src": "supabase/migrations/20261229010000_painel_de_valores_demograficos.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "select",
+    "object": "demographic_values_panel",
+    "objkind": "table",
+    "roles": "authenticated",
+    "src": "supabase/migrations/20261229010000_painel_de_valores_demograficos.sql"
+   },
+   {
     "kind": "grant",
     "privs": "select, insert, update, delete",
     "object": "public",
@@ -48545,6 +48665,7 @@
     "tables_transitive": [
      "audit_logs",
      "demographic_attributes",
+     "demographic_values_panel",
      "new_device_alerts",
      "notifications",
      "permissions",
@@ -49247,6 +49368,7 @@
      "certifications",
      "competencies",
      "demographic_attributes",
+     "demographic_values_panel",
      "department_missions",
      "department_rankings",
      "development_plan_actions",
@@ -54173,7 +54295,7 @@
   {
    "module": "src/components",
    "files": 474,
-   "lines": 81347,
+   "lines": 81350,
    "tables": [
     "attendance_records",
     "audit_logs",
@@ -54406,7 +54528,7 @@
   {
    "module": "src/hooks",
    "files": 131,
-   "lines": 14986,
+   "lines": 14994,
    "tables": [
     "certifications",
     "development_plan_actions",
@@ -54589,7 +54711,7 @@
   {
    "module": "src/integrations",
    "files": 3,
-   "lines": 13093,
+   "lines": 13141,
    "tables": [],
    "exports": [
     "index.ts: lovable",
@@ -54946,7 +55068,7 @@
   {
    "module": "src/services",
    "files": 101,
-   "lines": 22830,
+   "lines": 22822,
    "tables": [
     "achievements",
     "action_plan_items",
@@ -54995,6 +55117,7 @@
     "competencies",
     "custom_quests",
     "demographic_attributes",
+    "demographic_values_panel",
     "department_missions",
     "department_rankings",
     "department_war_contributions",
@@ -55330,8 +55453,8 @@
   },
   {
    "module": "src/test",
-   "files": 144,
-   "lines": 25525,
+   "files": 145,
+   "lines": 25636,
    "tables": [
     "kudos",
     "profiles"
@@ -55710,8 +55833,8 @@
   },
   {
    "module": "supabase/migrations",
-   "files": 318,
-   "lines": 42365,
+   "files": 319,
+   "lines": 42425,
    "tables": [],
    "exports": [],
    "docs": [],
@@ -56282,6 +56405,11 @@
      "src/services/demographicsService.ts"
     ],
     "delete": [
+     "src/services/demographicsService.ts"
+    ]
+   },
+   "demographic_values_panel": {
+    "select": [
      "src/services/demographicsService.ts"
     ]
    },
@@ -58775,9 +58903,6 @@
    ],
    "user_demographic_values": [
     "attribute_id",
-    "created_at",
-    "id",
-    "updated_at",
     "user_id"
    ],
    "user_devices": [
@@ -76642,6 +76767,31 @@
     "table": "lucky_wheel_prizes",
     "column": "weight",
     "rule": "obrigatório"
+   },
+   {
+    "table": "demographic_values_panel",
+    "column": "attribute_id",
+    "rule": "obrigatório"
+   },
+   {
+    "table": "demographic_values_panel",
+    "column": "created_at",
+    "rule": "obrigatório"
+   },
+   {
+    "table": "demographic_values_panel",
+    "column": "id",
+    "rule": "obrigatório"
+   },
+   {
+    "table": "demographic_values_panel",
+    "column": "updated_at",
+    "rule": "obrigatório"
+   },
+   {
+    "table": "demographic_values_panel",
+    "column": "user_id",
+    "rule": "obrigatório"
    }
   ],
   "params": [
@@ -89897,15 +90047,19 @@
    },
    {
     "file": "src/test/demographicsService.test.ts",
-    "name": "administrador recebe o valor das respostas restritas"
+    "name": "le o painel pela view, em uma consulta so"
    },
    {
     "file": "src/test/demographicsService.test.ts",
-    "name": "gestor nao pede as colunas de valor das respostas restritas"
+    "name": "entrega o valor que a view liberou para o administrador"
    },
    {
     "file": "src/test/demographicsService.test.ts",
-    "name": "gestor mantem na lista a resposta de atributo que nao consegue enxergar"
+    "name": "linha mascarada pela view chega sem valor e sem metadado sem virar erro"
+   },
+   {
+    "file": "src/test/demographicsService.test.ts",
+    "name": "erro da view sobe para a tela"
    },
    {
     "file": "src/test/departmentWar.simulation.test.ts",
@@ -94430,6 +94584,22 @@
    {
     "file": "src/test/unifiedDevices.simulation.test.ts",
     "name": "propaga a identidade para as entradas da lista"
+   },
+   {
+    "file": "src/test/useDemographicValuesCache.test.tsx",
+    "name": "useAllDemographicValues"
+   },
+   {
+    "file": "src/test/useDemographicValuesCache.test.tsx",
+    "name": "guarda o resultado na chave do usuario logado"
+   },
+   {
+    "file": "src/test/useDemographicValuesCache.test.tsx",
+    "name": "nao reaproveita o cache do admin quando outra conta entra"
+   },
+   {
+    "file": "src/test/useDemographicValuesCache.test.tsx",
+    "name": "sem sessao nao consulta o painel"
    },
    {
     "file": "src/test/useTypePreferences.test.tsx",
@@ -101398,16 +101568,6 @@
     "src": "supabase/migrations/20261228140000_congela_rls_e_grants_producao.sql"
    },
    {
-    "name": "Admins and managers can view demographic values",
-    "table": "user_demographic_values",
-    "cmd": "SELECT",
-    "roles": "public",
-    "mode": "permissive",
-    "using": "(has_role(auth.uid(), 'admin'::app_role) OR has_role(auth.uid(), 'manager'::app_role))",
-    "check": "",
-    "src": "supabase/migrations/20261228140000_congela_rls_e_grants_producao.sql"
-   },
-   {
     "name": "Users can manage own demographic values",
     "table": "user_demographic_values",
     "cmd": "ALL",
@@ -101896,6 +102056,16 @@
     "using": "EXISTS ( SELECT 1 FROM public.wager_entries e WHERE e.question_id = wager_questions.id AND e.user_id = auth.uid() )",
     "check": "",
     "src": "supabase/migrations/20261228280000_uma_aposta_por_dia_e_reabertura_da_pergunta.sql"
+   },
+   {
+    "name": "Admins can view demographic values",
+    "table": "user_demographic_values",
+    "cmd": "SELECT",
+    "roles": "public",
+    "mode": "permissive",
+    "using": "public.has_role(auth.uid(), 'admin'::public.app_role)",
+    "check": "",
+    "src": "supabase/migrations/20261229010000_painel_de_valores_demograficos.sql"
    },
    {
     "name": "Managers can create climate surveys",
@@ -109088,6 +109258,10 @@
    "query_performance_summary": {
     "body": "SELECT \"left\"(query, 200) AS query_snippet, calls, round(total_exec_time::numeric, 2) AS total_ms, round(mean_exec_time::numeric, 2) AS mean_ms, round(stddev_exec_time::numeric, 2) AS stddev_ms, round(min_exec_time::numeric, 2) AS min_ms, round(max_exec_time::numeric, 2) AS max_ms, rows, round(100.0 * shared_blks_hit::numeric / NULLIF(shared_blks_hit + shared_blks_read, 0)::numeric, 2) AS cache_hit_pct, shared_blks_hit, shared_blks_read, shared_blks_written FROM extensions.pg_stat_statements ORDER BY total_exec_time DESC",
     "src": "supabase/migrations/20261228130000_recupera_funcoes_e_views_ausentes.sql"
+   },
+   "demographic_values_panel": {
+    "body": "WITH quem AS ( SELECT public.has_role(auth.uid(), 'admin'::public.app_role) AS eh_admin, public.has_role(auth.uid(), 'manager'::public.app_role) AS eh_gestor ) SELECT v.id, v.user_id, v.attribute_id, v.created_at, v.updated_at, CASE WHEN q.eh_admin OR (a.is_active AND NOT a.is_restricted) THEN v.value END AS value, CASE WHEN q.eh_admin OR (a.is_active AND NOT a.is_restricted) THEN v.values_array END AS values_array, CASE WHEN q.eh_admin OR (a.is_active AND NOT a.is_restricted) THEN v.number_value END AS number_value, CASE WHEN q.eh_admin OR (a.is_active AND NOT a.is_restricted) THEN v.date_val …",
+    "src": "supabase/migrations/20261229010000_painel_de_valores_demograficos.sql"
    }
   },
   "pagination": [
@@ -112370,6 +112544,13 @@
      "public: has_role(auth.uid(), 'admin'::app_role)"
     ]
    },
+   "demographic_values_panel": {
+    "rls": "não encontrado",
+    "SELECT": [],
+    "INSERT": [],
+    "UPDATE": [],
+    "DELETE": []
+   },
    "department_missions": {
     "rls": "enabled",
     "SELECT": [
@@ -114595,8 +114776,8 @@
    "user_demographic_values": {
     "rls": "enabled",
     "SELECT": [
-     "public: (has_role(auth.uid(), 'admin'::app_role) OR has_role(auth.uid(), 'manager'::app_role))",
-     "public: (auth.uid() = user_id)"
+     "public: (auth.uid() = user_id)",
+     "public: public.has_role(auth.uid(), 'admin'::public.app_role)"
     ],
     "INSERT": [
      "public: (auth.uid() = user_id)"
@@ -114926,6 +115107,13 @@
     "issue": "front faz UPDATE mas nenhuma política RLS permite UPDATE → vai falhar/retornar vazio para usuários",
     "files": [
      "src/services/attendanceService.ts"
+    ]
+   },
+   {
+    "table": "demographic_values_panel",
+    "issue": "acessada do front (1 arquivo(s)) sem RLS (não encontrado)",
+    "files": [
+     "src/services/demographicsService.ts"
     ]
    },
    {
@@ -124923,6 +125111,22 @@
     "src": "supabase/migrations/20261229000000_janela_de_silencio_dos_avisos.sql"
    },
    {
+    "kind": "revoke",
+    "privs": "all",
+    "object": "demographic_values_panel",
+    "objkind": "table",
+    "roles": "PUBLIC, anon",
+    "src": "supabase/migrations/20261229010000_painel_de_valores_demograficos.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "select",
+    "object": "demographic_values_panel",
+    "objkind": "table",
+    "roles": "authenticated",
+    "src": "supabase/migrations/20261229010000_painel_de_valores_demograficos.sql"
+   },
+   {
     "kind": "grant",
     "privs": "select, insert, update, delete",
     "object": "public",
@@ -126985,6 +127189,10 @@
     "created_at",
     "updated_at"
    ],
+   "demographic_values_panel": [
+    "created_at",
+    "updated_at"
+   ],
    "profiles_public": [
     "created_at",
     "updated_at"
@@ -127536,6 +127744,13 @@
    },
    {
     "kind": "rls",
+    "msg": "`demographic_values_panel`: acessada do front (1 arquivo(s)) sem RLS (não encontrado)",
+    "where": [
+     "src/services/demographicsService.ts"
+    ]
+   },
+   {
+    "kind": "rls",
     "msg": "`development_plans`: front faz DELETE mas nenhuma política RLS permite DELETE → vai falhar/retornar vazio para usuários",
     "where": [
      "src/services/developmentPlanService.ts"
@@ -127777,7 +127992,7 @@
    "`wager_integrity_review_events.previous_status` é uma coluna de status sem enum/CHECK — os valores válidos e as transições permitidas não estão no banco.",
    "`wager_integrity_review_events.new_status` é uma coluna de status sem enum/CHECK — os valores válidos e as transições permitidas não estão no banco.",
    "`profiles_public.status` é uma coluna de status sem enum/CHECK — os valores válidos e as transições permitidas não estão no banco.",
-   "237/239 tabelas sem `COMMENT ON TABLE` — o significado de negócio não está no schema: `entity_versions`, `profiles`, `user_roles`, `departments`, `team_members`, `custom_quests`, `quest_steps`, `quest_assignments`, `notifications`, `kudos_badges`, `kudos`, `audit_logs` …",
+   "238/240 tabelas sem `COMMENT ON TABLE` — o significado de negócio não está no schema: `entity_versions`, `profiles`, `user_roles`, `departments`, `team_members`, `custom_quests`, `quest_steps`, `quest_assignments`, `notifications`, `kudos_badges`, `kudos`, `audit_logs` …",
    "Há tabelas usadas no código sem migration no repo — o schema real pode ter sido alterado pelo painel."
   ]
  },
@@ -131800,7 +132015,7 @@
   },
   "src/components/admin/DemographicValuesPanel.tsx": {
    "path": "src/components/admin/DemographicValuesPanel.tsx",
-   "lines": 171,
+   "lines": 174,
    "exports": [
     "function DemographicValuesPanel"
    ],
@@ -138599,7 +138814,7 @@
   },
   "src/hooks/useDemographics.ts": {
    "path": "src/hooks/useDemographics.ts",
-   "lines": 119,
+   "lines": 127,
    "exports": [
     "const demographicKeys",
     "function useDemographicAttributes",
@@ -140913,7 +141128,7 @@
   },
   "src/integrations/supabase/types.ts": {
    "path": "src/integrations/supabase/types.ts",
-   "lines": 13037,
+   "lines": 13085,
    "exports": [
     "type Json",
     "type Database",
@@ -150420,7 +150635,7 @@
   },
   "src/services/demographicsService.ts": {
    "path": "src/services/demographicsService.ts",
-   "lines": 273,
+   "lines": 265,
    "exports": [
     "type DemographicAttribute",
     "type DemographicAttributeInsert",
@@ -150463,15 +150678,7 @@
      "op": "select"
     },
     {
-     "table": "user_demographic_values",
-     "op": "select"
-    },
-    {
-     "table": "user_demographic_values",
-     "op": "select"
-    },
-    {
-     "table": "user_demographic_values",
+     "table": "demographic_values_panel",
      "op": "select"
     },
     {
@@ -150489,9 +150696,6 @@
     ],
     "user_demographic_values": [
      "attribute_id",
-     "created_at",
-     "id",
-     "updated_at",
      "user_id"
     ]
    },
@@ -157767,7 +157971,7 @@
   },
   "src/test/demographicsService.test.ts": {
    "path": "src/test/demographicsService.test.ts",
-   "lines": 308,
+   "lines": 328,
    "is_test": true,
    "calc_fns": [
     {
@@ -157791,9 +157995,10 @@
     "excluir atributo apaga pelo id e propaga erro do banco",
     "le as respostas do proprio usuario, nunca as de terceiros",
     "sem sessao nao consulta o proprio perfil",
-    "administrador recebe o valor das respostas restritas",
-    "gestor nao pede as colunas de valor das respostas restritas",
-    "gestor mantem na lista a resposta de atributo que nao consegue enxergar"
+    "le o painel pela view, em uma consulta so",
+    "entrega o valor que a view liberou para o administrador",
+    "linha mascarada pela view chega sem valor e sem metadado sem virar erro",
+    "erro da view sobe para a tela"
    ],
    "side_effects": [
     "enqueue("
@@ -159768,6 +159973,20 @@
     "ignora ruído: vazio, ",
     "nunca lança em nenhuma combinação de entradas hostis",
     "propaga a identidade para as entradas da lista"
+   ]
+  },
+  "src/test/useDemographicValuesCache.test.tsx": {
+   "path": "src/test/useDemographicValuesCache.test.tsx",
+   "lines": 91,
+   "is_test": true,
+   "rule_comments": [
+    "nao pode ver)."
+   ],
+   "tests": [
+    "useAllDemographicValues",
+    "guarda o resultado na chave do usuario logado",
+    "nao reaproveita o cache do admin quando outra conta entra",
+    "sem sessao nao consulta o painel"
    ]
   },
   "src/test/useTypePreferences.test.tsx": {
@@ -165544,6 +165763,10 @@
    ],
    "uses_service_role": true
   },
+  "supabase/migrations/20261229010000_painel_de_valores_demograficos.sql": {
+   "path": "supabase/migrations/20261229010000_painel_de_valores_demograficos.sql",
+   "lines": 60
+  },
   "supabase/migrations/20261230090000_backfill_janela_de_silencio_dos_avisos.sql": {
    "path": "supabase/migrations/20261230090000_backfill_janela_de_silencio_dos_avisos.sql",
    "lines": 25
@@ -165643,10 +165866,25 @@
   }
  },
  "git": {
-  "sha": "510674696a221421a17d04f121e7c13d30aa582a",
+  "sha": "fa594f89a47f1cc04088d08cce963fbb391173a5",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "commits": [
+   {
+    "sha": "fa594f8",
+    "date": "2026-11-27",
+    "author": "adm01-debug",
+    "subject": "feat(db): painel demografico le a view que mascara valor restrito (ex-PR 182) (#183)",
+    "files": [
+     "src/components/admin/DemographicValuesPanel.tsx",
+     "src/hooks/useDemographics.ts",
+     "src/integrations/supabase/types.ts",
+     "src/services/demographicsService.ts",
+     "src/test/demographicsService.test.ts",
+     "src/test/useDemographicValuesCache.test.tsx",
+     "supabase/migrations/20261229010000_painel_de_valores_demograficos.sql"
+    ]
+   },
    {
     "sha": "5106746",
     "date": "2026-11-27",
@@ -166036,38 +166274,19 @@
     "files": [
      "supabase/migrations/20261224140000_climate_reminder_push.sql"
     ]
-   },
-   {
-    "sha": "a2a5bc3",
-    "date": "2026-11-24",
-    "author": "adm01-debug",
-    "subject": "fix(supabase): alinha 20261220000000 ao trigger vivo do alerta critico (#152)",
-    "files": [
-     "AGENTS.md",
-     "docs/agentes/banco.md",
-     "docs/agentes/mapa-repo.md",
-     "docs/estado/05-edge-functions.md",
-     "scripts/db-audit/README.md",
-     "scripts/db-audit/check-migration-drift.mjs",
-     "supabase/migrations/20261220000000_fix_sre_rpcs_and_dispatch_trigger.sql"
-    ]
    }
   ],
   "hot_files": [
    [
     "docs/agentes/banco.md",
-    10
+    9
    ],
    [
     "docs/agentes/mapa-repo.md",
-    10
+    9
    ],
    [
     "src/pages/Profile.tsx",
-    5
-   ],
-   [
-    "scripts/db-audit/README.md",
     5
    ],
    [
@@ -166075,15 +166294,31 @@
     4
    ],
    [
-    "docs/estado/05-edge-functions.md",
+    "scripts/db-audit/README.md",
     4
    ],
    [
-    "AGENTS.md",
+    "src/integrations/supabase/types.ts",
     3
    ],
    [
-    "src/integrations/supabase/types.ts",
+    "docs/estado/05-edge-functions.md",
+    3
+   ],
+   [
+    "src/components/admin/DemographicValuesPanel.tsx",
+    2
+   ],
+   [
+    "src/hooks/useDemographics.ts",
+    2
+   ],
+   [
+    "src/services/demographicsService.ts",
+    2
+   ],
+   [
+    "src/test/demographicsService.test.ts",
     2
    ],
    [
@@ -166121,18 +166356,6 @@
    [
     "src/services/rbacService.ts",
     2
-   ],
-   [
-    "scripts/db-audit/check-migration-drift.mjs",
-    2
-   ],
-   [
-    "supabase/migrations/20261230090000_backfill_janela_de_silencio_dos_avisos.sql",
-    1
-   ],
-   [
-    ".github/workflows/db-migrate.yml",
-    1
    ]
   ]
  }

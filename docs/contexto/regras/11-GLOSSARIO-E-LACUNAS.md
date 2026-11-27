@@ -1,6 +1,6 @@
 # 11 · GLOSSÁRIO, DADOS DE REFERÊNCIA E LACUNAS
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `510674696a` · branch `main` · 2026-11-27 10:24 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `fa594f89a4` · branch `main` · 2026-11-27 10:25 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## Glossário do domínio (entidades do sistema)
@@ -72,6 +72,7 @@
 | `custom_ranks` | _(sem COMMENT ON TABLE — significado não documentado)_ | 16 colunas | migration |
 | `custom_titles` | _(sem COMMENT ON TABLE — significado não documentado)_ | 16 colunas | migration |
 | `demographic_attributes` | _(sem COMMENT ON TABLE — significado não documentado)_ | 14 colunas | migration |
+| `demographic_values_panel` | _(sem COMMENT ON TABLE — significado não documentado)_ | 13 colunas | types.ts |
 | `department_missions` | _(sem COMMENT ON TABLE — significado não documentado)_ | 14 colunas | migration |
 | `department_rankings` | _(sem COMMENT ON TABLE — significado não documentado)_ | 11 colunas | migration |
 | `department_war_contributions` | _(sem COMMENT ON TABLE — significado não documentado)_ | 8 colunas | migration |
@@ -306,8 +307,7 @@
 | `RevertFailure` (TS) | batch_not_found \| already_reverted \| nothing_to_revert |  | `src/lib/campaignTeamSplitRevert.ts` |
 | `CardPackSource` (TS) | task \| training \| quest \| campaign \| manual \| streak |  | `src/lib/cardPackTriggers.ts` |
 | `TaskCompletionStatus` (TS) | pending \| on_time \| late \| rejected \| rework |  | `src/lib/cardPackTriggers.ts` |
-| `SetClaimRejection` (TS) | unknown_set \| empty_set \| not_reached \| already_claimed |  | `src/lib/cardSetRewards.ts` |
-| … +108 linhas — lista completa em `context.json` | | | |
+| … +109 linhas — lista completa em `context.json` | | | |
 
 ## Dados de referência (seed — planos, categorias, perfis fixos)
 
@@ -365,6 +365,7 @@ _nenhum item encontrado_
 | tabela | tabela `tools_runtime` usada no código não existe nas migrations/types do repo | `scripts/ai-context/gerar.unit.mjs` |
 | tabela | tabela `tx` usada no código não existe nas migrations/types do repo | `scripts/ai-context/cenarios.mjs` |
 | rls | `attendance_records`: front faz UPDATE mas nenhuma política RLS permite UPDATE → vai falhar/retornar vazio para usuários | `src/services/attendanceService.ts` |
+| rls | `demographic_values_panel`: acessada do front (1 arquivo(s)) sem RLS (não encontrado) | `src/services/demographicsService.ts` |
 | rls | `development_plans`: front faz DELETE mas nenhuma política RLS permite DELETE → vai falhar/retornar vazio para usuários | `src/services/developmentPlanService.ts` |
 | rls | `lucky_wheel_prizes`: acessada do front (1 arquivo(s)) sem RLS (não encontrado) | `src/services/luckyWheelService.ts` |
 | rls | `lucky_wheel_spins`: acessada do front (1 arquivo(s)) sem RLS (não encontrado) | `src/services/luckyWheelService.ts` |
@@ -420,7 +421,7 @@ _nenhum item encontrado_
 - `wager_integrity_review_events.previous_status` é uma coluna de status sem enum/CHECK — os valores válidos e as transições permitidas não estão no banco.
 - `wager_integrity_review_events.new_status` é uma coluna de status sem enum/CHECK — os valores válidos e as transições permitidas não estão no banco.
 - `profiles_public.status` é uma coluna de status sem enum/CHECK — os valores válidos e as transições permitidas não estão no banco.
-- 237/239 tabelas sem `COMMENT ON TABLE` — o significado de negócio não está no schema: `entity_versions`, `profiles`, `user_roles`, `departments`, `team_members`, `custom_quests`, `quest_steps`, `quest_assignments`, `notifications`, `kudos_badges`, `kudos`, `audit_logs` …
+- 238/240 tabelas sem `COMMENT ON TABLE` — o significado de negócio não está no schema: `entity_versions`, `profiles`, `user_roles`, `departments`, `team_members`, `custom_quests`, `quest_steps`, `quest_assignments`, `notifications`, `kudos_badges`, `kudos`, `audit_logs` …
 - Há tabelas usadas no código sem migration no repo — o schema real pode ter sido alterado pelo painel.
 
 ## Regras manuais presentes

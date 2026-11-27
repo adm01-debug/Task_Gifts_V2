@@ -22,7 +22,7 @@
    "src/integrations (3)"
   ],
   "testes": [
-   "co-localizado (*.test) (163)",
+   "co-localizado (*.test) (164)",
    "outro (12)",
    "tests/ (3)"
   ],
@@ -59,11 +59,11 @@
  "commits": {
   "convencao": "conventional commits (observado)",
   "exemplos": [
+   "feat(db): painel demografico le a view que mascara valor restrito (ex-PR 182) (#183)",
    "chore: cria a linha padrao da janela de silencio para quem nunca abriu a tela (#180)",
    "infra(migrations): workflow que aplica o que falta e barra divergencia com o ledger (#179)",
    "fix: valida o nome das functions antes de virar comando no deploy (#178)",
-   "feat: telas para filtros salvos e perfil demografico (#181)",
-   "feat(avisos): respeita a janela de silencio do usuario no push (#177)"
+   "feat: telas para filtros salvos e perfil demografico (#181)"
   ]
  },
  "pr_template": ".github/PULL_REQUEST_TEMPLATE.md",

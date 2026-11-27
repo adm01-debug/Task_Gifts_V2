@@ -3658,6 +3658,7 @@
    "src/services/dailyWagerService.ts"
   ],
   "src/hooks/useDemographics.ts": [
+   "src/hooks/useAuth.tsx",
    "src/integrations/supabase/types.ts",
    "src/services/demographicsService.ts"
   ],

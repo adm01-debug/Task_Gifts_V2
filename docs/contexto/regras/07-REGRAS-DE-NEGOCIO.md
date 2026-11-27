@@ -1,6 +1,6 @@
 # 07 · REGRAS DE NEGÓCIO
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `510674696a` · branch `main` · 2026-11-27 10:24 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `fa594f89a4` · branch `main` · 2026-11-27 10:25 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## A. Regras escritas por humanos (`manual/` — prioridade máxima, nunca sobrescrito)
@@ -617,7 +617,7 @@ _Nenhum arquivo em `manual/`. Copie `manual/TEMPLATE-regras-de-negocio.md` para 
 | `user_seasonal_progress` | `claimed` | default false |
 | `user_seasonal_progress` | `created_at` | default now() |
 | `user_seasonal_progress` | `updated_at` | default now() |
-| … +1837 linhas — lista completa em `context.json` | | |
+| … +1842 linhas — lista completa em `context.json` | | |
 
 ## D. Automações no banco (triggers e funções — regras que rodam sozinhas)
 
@@ -1982,6 +1982,7 @@ _nenhum item encontrado_
 | `connection_monitor` | `SELECT state, wait_event_type, wait_event, count(*) AS total_connections, count(*) FILTER (WHERE state = 'active'::text) AS active_queries, count(*) FILTER (WHERE state = 'idle'::text) AS idle_connections, count(*) FILTER (WHERE state = 'idle in transaction'::text) AS idle_in_txn, round(count(*)::nu …` |
 | `index_health_report` | `SELECT n.nspname AS schema, t.relname AS table_name, i.relname AS index_name, ix.indisunique AS is_unique, ix.indisprimary AS is_primary, s.idx_scan AS scans_since_reset, s.idx_tup_read AS tuples_read, s.idx_tup_fetch AS tuples_fetched, pg_size_pretty(pg_relation_size(i.oid::regclass)) AS index_size …` |
 | `query_performance_summary` | `SELECT "left"(query, 200) AS query_snippet, calls, round(total_exec_time::numeric, 2) AS total_ms, round(mean_exec_time::numeric, 2) AS mean_ms, round(stddev_exec_time::numeric, 2) AS stddev_ms, round(min_exec_time::numeric, 2) AS min_ms, round(max_exec_time::numeric, 2) AS max_ms, rows, round(100.0 …` |
+| `demographic_values_panel` | `WITH quem AS ( SELECT public.has_role(auth.uid(), 'admin'::public.app_role) AS eh_admin, public.has_role(auth.uid(), 'manager'::public.app_role) AS eh_gestor ) SELECT v.id, v.user_id, v.attribute_id, v.created_at, v.updated_at, CASE WHEN q.eh_admin OR (a.is_active AND NOT a.is_restricted) THEN v.val …` |
 
 ### G.3 Funções de cálculo/decisão no código
 
@@ -3714,7 +3715,7 @@ _nenhum item encontrado_
 | `admin` | `supabase/migrations/20261228300000_fecha_corridas_da_exclusao_de_departamento_e_da_aposta_diaria.sql` |
 | `manager` | `supabase/migrations/20261228300000_fecha_corridas_da_exclusao_de_departamento_e_da_aposta_diaria.sql` |
 
-## K. Testes como especificação (2185 testes em 168 arquivos — nomes completos em `context.json`)
+## K. Testes como especificação (2190 testes em 169 arquivos — nomes completos em `context.json`)
 
 | Arquivo | Testes | Exemplos do que o sistema DEVE fazer |
 |---|---|---|
@@ -3752,6 +3753,7 @@ _nenhum item encontrado_
 | `src/test/purchaseRisk.simulation.test.ts` | 19 | purchaseRisk — invariantes fundamentais · mantém a pontuação sempre entre 0 e 100 em 500 cenários aleatórios · é determinístico: mesma entrada produz sempre a mesma saída · é monotônico no valor do resgate (mantendo os demais sinais) … |
 | `supabase/functions/_shared/contracts/validation.contract.spec.ts` | 19 | destino de notificação (destinoUrl) · aceita caminho relativo do app — é o que salesCampaignsService envia · recusa esquema perigoso e texto que não é rota nem URL · migrate-helper: ?action= vazio cai em ping (compatível com o comportamento antigo) … |
 | `src/test/climateBenchmark.simulation.test.ts` | 18 | normalizeThresholds — monotonicidade garantida · corrige limiares invertidos em centenas de combinações · tolera nulos e lixo · benchmarkPosition — simulação exaustiva score × limiares … |
+| `src/test/demographicsService.test.ts` | 18 | helpers de atributo demografico · le opcoes em lista de strings e no formato {value,label} do Studio · reconhece a marca de preferir nao responder · so tipos de selecao usam a lista de opcoes … |
 | `src/test/departmentWar.simulation.test.ts` | 18 | Guerra de Departamentos - simulacao massiva · mantem invariantes em 400 cenarios aleatorios · e deterministico independentemente da ordem das contribuicoes · nunca distribui mais do que o pool configurado (300 cenarios) … |
 | `src/test/deviceLabel.simulation.test.ts` | 18 | normalizeDeviceLabel · descarta entradas não textuais ou vazias · colapsa espaços e remove caracteres de controle · trunca respeitando o limite e sem deixar espaço final … |
 | `src/test/luckyWheelPayoutHistory.simulation.test.ts` | 18 | buildPayoutTrend — invariantes estruturais · devolve série vazia sem linhas utilizáveis · descarta datas inválidas sem lançar · valida o calendário em isValidDay … |
@@ -3760,7 +3762,6 @@ _nenhum item encontrado_
 | `src/test/warFeed.simulation.test.ts` | 18 | warFeed — normalizacao defensiva · descarta qualquer entrada sem id utilizavel · nunca produz numeros invalidos ou negativos em 900 cenarios aleatorios · blinda campos hostis um a um sem quebrar … |
 | `src/test/warLeadership.simulation.test.ts` | 18 | buildLeadSnapshot — saneamento · descarta lixo e valores hostis · reindexa posicoes por score, com desempate estavel · nao quebra com entrada nao-array … |
 | `src/test/bossBattlePlanner.simulation.test.ts` | 17 | windowDays · retorna 0 para janelas invertidas ou inválidas · arredonda janelas parciais para cima · projectCapacity … |
-| `src/test/demographicsService.test.ts` | 17 | helpers de atributo demografico · le opcoes em lista de strings e no formato {value,label} do Studio · reconhece a marca de preferir nao responder · so tipos de selecao usam a lista de opcoes … |
 | `src/test/memoryDeckAuthoring.simulation.test.ts` | 17 | normalização · colapsa espaços e remove pontas · compara ignorando caixa e acento · validateDeckDraft … |
 | `src/test/mentorshipService.test.ts` | 17 | markMyPart · não concede recompensa duas vezes para a mesma parte · usa o valor da missão do banco e não fecha a missão colaborativa com um lado só · liquida a missão e soma os totais da dupla quando todos os lados exigidos concluem … |
 | `src/test/notificationTypePrefs.simulation.test.ts` | 17 | normalizeTypePrefs · trata entradas invalidas como objeto vazio · descarta canais nao booleanos e prioridade vazia · preserva prioridade valida … |
@@ -3869,6 +3870,7 @@ _nenhum item encontrado_
 | `src/test/nr1Export.simulation.test.ts` | 4 | Exportação NR-1 (simulação combinatória) · nunca emite célula vazia ou  · marca plano obrigatório exatamente para riscos alto e crítico · gera nome de arquivo seguro para recortes com acentos e símbolos |
 | `src/test/passkeysPanel.test.tsx` | 4 | PasskeysPanel — cadastro so quando o login por passkey funciona · libera o cadastro quando a funcao esta publicada e a conta nao exige segundo fator · bloqueia o cadastro e explica quando a conta exige verificacao em duas etapas · bloqueia o cadastro quando a funcao nao esta liberada no ambiente |
 | `src/test/surveyNotificationPreferences.test.tsx` | 4 | SurveyNotificationPreferences · mostra in-app e push dos dois lembretes, ligados por padrao · hidrata o que ja esta salvo sem alterar o outro lembrete · desligar um canal grava so aquele tipo e preserva os demais modulos |
+| `src/test/useDemographicValuesCache.test.tsx` | 4 | useAllDemographicValues · guarda o resultado na chave do usuario logado · nao reaproveita o cache do admin quando outra conta entra · sem sessao nao consulta o painel |
 | `src/test/validationLibraryContracts.test.ts` | 4 | migração de validação preserva mensagens e resultados · mantém mensagem obrigatória em entrada ausente · validateData retorna mensagens Zod 4 sem lançar exceção · XLSX preserva fórmulas/rich text e rejeita erros/booleanos como crédito |
 | `src/tests/unit/access.test.tsx` | 4 | ProtectedRoute · should redirect to login if not authenticated · should show content if authenticated and no RBAC check needed · should show access denied if RBAC check fails |
 | `src/tests/unit/achievements.test.ts` | 4 | achievementsService · unlockAchievement · should award rewards and create notification if not already unlocked · should return alreadyUnlocked if already has it |

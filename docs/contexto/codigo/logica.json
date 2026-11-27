@@ -316,7 +316,7 @@
     "TablesUpdate"
    ],
    "export_default": null,
-   "linhas": 13037,
+   "linhas": 13085,
    "tabelas": [],
    "rpcs": [],
    "edges": [],
@@ -5128,9 +5128,10 @@
     "valorExibivel"
    ],
    "export_default": null,
-   "linhas": 273,
+   "linhas": 265,
    "tabelas": [
     "demographic_attributes",
+    "demographic_values_panel",
     "user_demographic_values"
    ],
    "rpcs": [],
