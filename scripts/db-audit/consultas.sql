@@ -335,3 +335,11 @@ SELECT (SELECT acusados FROM disparo) AS acusados,
        (SELECT count(*) FROM public.notifications
          WHERE type = 'cron_job_parado') AS avisos_do_vigia,
        (SELECT count(*) FROM cron.job WHERE active) AS jobs_ativos
+-- nome: preferencia_do_vigia
+-- O enqueue_push so' grava se user_wants_push_notification(user, 'cron_job_parado') for true. Se o tipo
+-- nao estiver na lista de tipos do painel, a preferencia devolve false e o aviso do vigia morre calado.
+SELECT public.user_wants_push_notification(ur.user_id, 'cron_job_parado') AS admin_aceita_cron_parado,
+       count(*) AS admins
+FROM public.user_roles ur
+WHERE ur.role = 'admin'
+GROUP BY 1
