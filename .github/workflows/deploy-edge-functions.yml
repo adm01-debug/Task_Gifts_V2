@@ -41,10 +41,21 @@ jobs:
           fi
 
       - name: Deploy edge functions
+        env:
+          # Nunca interpolar `inputs.functions` direto no shell: o texto do
+          # disparo viraria comando no runner, que tem o PAT do Supabase no
+          # ambiente. Vai por env e passa por validacao antes de virar argumento.
+          FUNCS_INPUT: ${{ inputs.functions }}
         run: |
-          if [ -n "${{ inputs.functions }}" ]; then
-            IFS=',' read -ra FUNCS <<< "${{ inputs.functions }}"
+          set -uo pipefail
+          if [ -n "$(printf '%s' "$FUNCS_INPUT" | tr -d '[:space:]')" ]; then
+            if ! printf '%s' "$FUNCS_INPUT" | grep -Eq '^[[:space:]]*[a-z0-9][a-z0-9_-]*([[:space:]]*,[[:space:]]*[a-z0-9][a-z0-9_-]*)*[[:space:]]*$'; then
+              echo "::error::inputs.functions invalido: use nomes de function em minusculas (letras, numeros, hifen), separados por virgula."
+              exit 1
+            fi
+            IFS=',' read -ra FUNCS <<< "$FUNCS_INPUT"
             for fn in "${FUNCS[@]}"; do
+              fn="$(printf '%s' "$fn" | tr -d '[:space:]')"
               echo "> deploy $fn"
               supabase functions deploy "$fn" --project-ref "$SUPABASE_PROJECT_ID" --yes
             done
