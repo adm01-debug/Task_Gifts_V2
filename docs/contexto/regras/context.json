@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "0f7fe38bd01af42d806b8a3bc801788c061f6447",
+  "sha": "0b9d3b46223808c801369a3a83189d9795cfef86",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
-  "generated_at": "2026-11-27 16:15 UTC",
+  "generated_at": "2026-11-27 17:12 UTC",
   "files_total": 1653,
   "code_files": 1545,
-  "code_lines": 286396
+  "code_lines": 286450
  },
  "version": "1.3.2",
- "facts_hash": "507498b4fa6ef82b",
+ "facts_hash": "360497b838749386",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -54151,7 +54151,7 @@
   {
    "module": "scripts",
    "files": 30,
-   "lines": 16250,
+   "lines": 16304,
    "tables": [
     "a",
     "contacts",
@@ -62560,6 +62560,10 @@
    {
     "file": "scripts/db-audit/consultar-sql.mjs",
     "msg": "consulta "
+   },
+   {
+    "file": "scripts/db-audit/consultar-sql.mjs",
+    "msg": "ensaio permitido apenas para funcoes de envio/agendamento"
    },
    {
     "file": "scripts/db-audit/consultar-sql.mjs",
@@ -128975,7 +128979,7 @@
   },
   "scripts/db-audit/consultar-sql.mjs": {
    "path": "scripts/db-audit/consultar-sql.mjs",
-   "lines": 97,
+   "lines": 111,
    "env": [
     "LIMITE",
     "SELECAO_SQL",
@@ -128985,6 +128989,7 @@
     "SQL_FILE vazio",
     "a consulta precisa comecar por SELECT ou WITH",
     "consulta ",
+    "ensaio permitido apenas para funcoes de envio/agendamento",
     "informe SELECAO_SQL (catalogo) ou SQL_FILE (arquivo avulso)",
     "palavra de escrita encontrada na consulta",
     "uma unica instrucao por arquivo (sem ponto e virgula no meio)"
@@ -128993,11 +128998,14 @@
     "LIMITE       maximo de linhas impressas (padrao 200)",
     "// Variaveis: SUPABASE_ACCESS_TOKEN, SUPABASE_PROJECT_ID, SQL_FILE, LIMITE"
    ],
-   "doc": "Leitura avulsa no banco vivo pela Management API (mesma porta do apply-migrations). Existe para consultar producao sem depender de SUPABASE_DB_URL, que so vale para o snapshot. Uso: SELECAO_SQL=<nome> node scripts/db-audit/consultar-sql.mjs (catalogo) SQL_FILE=consulta.sql node scripts/db-audit/cons …"
+   "doc": "Leitura avulsa no banco vivo pela Management API (mesma porta do apply-migrations). Existe para consultar producao sem depender de SUPABASE_DB_URL, que so vale para o snapshot. Uso: SELECAO_SQL=<nome> node scripts/db-audit/consultar-sql.mjs (catalogo) SQL_FILE=consulta.sql node scripts/db-audit/cons …",
+   "side_effects": [
+    "notify"
+   ]
   },
   "scripts/db-audit/consultas.sql": {
    "path": "scripts/db-audit/consultas.sql",
-   "lines": 187,
+   "lines": 227,
    "temporal": [
     "WHERE created_at >= now() - interval '14 days') AS avisos_14_dias,"
    ]
@@ -165940,10 +165948,56 @@
   }
  },
  "git": {
-  "sha": "0f7fe38bd01af42d806b8a3bc801788c061f6447",
+  "sha": "0b9d3b46223808c801369a3a83189d9795cfef86",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "commits": [
+   {
+    "sha": "0b9d3b4",
+    "date": "2026-11-27",
+    "author": "adm01-debug",
+    "subject": "fix(db-audit): notifications usa read, nao read_at (#207)",
+    "files": [
+     "scripts/db-audit/consultas.sql"
+    ]
+   },
+   {
+    "sha": "b94118b",
+    "date": "2026-11-27",
+    "author": "adm01-debug",
+    "subject": "chore(db-audit): mostra por que o aviso do lembrete cai no ON CONFLICT (#206)",
+    "files": [
+     "scripts/db-audit/consultas.sql"
+    ]
+   },
+   {
+    "sha": "f698d27",
+    "date": "2026-11-27",
+    "author": "adm01-debug",
+    "subject": "chore(db-audit): separa os filtros que zeram o lembrete semanal (#205)",
+    "files": [
+     "scripts/db-audit/consultas.sql"
+    ]
+   },
+   {
+    "sha": "f3900ae",
+    "date": "2026-11-27",
+    "author": "adm01-debug",
+    "subject": "chore(db-audit): ensaio transacional da funcao do lembrete semanal (#204)",
+    "files": [
+     "scripts/db-audit/consultar-sql.mjs",
+     "scripts/db-audit/consultas.sql"
+    ]
+   },
+   {
+    "sha": "09d022a",
+    "date": "2026-11-27",
+    "author": "adm01-debug",
+    "subject": "fix: consulta do silencio le as colunas que o dispatcher usa (#203)",
+    "files": [
+     "scripts/db-audit/consultas.sql"
+    ]
+   },
    {
     "sha": "0f7fe38",
     "date": "2026-11-27",
@@ -166216,115 +166270,23 @@
      "supabase/functions/send-campaign-push/index.ts",
      "supabase/migrations/20261229000000_janela_de_silencio_dos_avisos.sql"
     ]
-   },
-   {
-    "sha": "abe3168",
-    "date": "2026-11-26",
-    "author": "adm01-debug",
-    "subject": "chore(banco): remove os 46 indices fisicamente redundantes em public (#175)",
-    "files": [
-     "docs/agentes/banco.md",
-     "docs/agentes/mapa-repo.md",
-     "supabase/migrations/20261228310000_dedup_indices_redundantes.sql"
-    ]
-   },
-   {
-    "sha": "f28d2f6",
-    "date": "2026-11-26",
-    "author": "adm01-debug",
-    "subject": "fix: paridade de indices e constraints com o banco vivo e devolve os fluxos travados (#174)",
-    "files": [
-     "docs/agentes/banco.md",
-     "docs/agentes/mapa-repo.md",
-     "src/services/departmentsService.ts",
-     "src/services/predictionMarketService.ts",
-     "supabase/migrations/20261228230000_reaproveita_indices_de_producao.sql",
-     "supabase/migrations/20261228231000_reaplica_indices_do_repositorio_em_producao.sql",
-     "supabase/migrations/20261228240000_traz_constraints_de_producao_para_o_repo.sql",
-     "supabase/migrations/20261228250000_reaplica_em_producao_constraints_do_repositorio.sql",
-     "supabase/migrations/20261228260000_unifica_definicoes_de_constraints.sql",
-     "supabase/migrations/20261228270000_remove_travas_redundantes_que_quebram_fluxos.sql",
-     "supabase/migrations/20261228280000_uma_aposta_por_dia_e_reabertura_da_pergunta.sql",
-     "supabase/migrations/20261228290000_paridade_de_triggers_e_retextos_funcionais.sql",
-     "supabase/migrations/20261228300000_fecha_corridas_da_exclusao_de_departamento_e_da_aposta_diaria.sql"
-    ]
-   },
-   {
-    "sha": "c87b1c9",
-    "date": "2026-11-26",
-    "author": "adm01-debug",
-    "subject": "feat: interruptor global de push no perfil (#176)",
-    "files": [
-     "docs/estado/02-componentes.md",
-     "src/components/PushNotificationGlobalToggle.tsx",
-     "src/pages/Profile.tsx",
-     "src/test/pushNotificationGlobalToggle.test.tsx",
-     "supabase/functions/push-outbox-dispatcher/index.ts"
-    ]
-   },
-   {
-    "sha": "29b5a15",
-    "date": "2026-11-25",
-    "author": "adm01-debug",
-    "subject": "fix: restaura trigger de cadastro, revoga execute publico e alinha triggers e mensagens (#173)",
-    "files": [
-     "docs/agentes/banco.md",
-     "docs/agentes/mapa-repo.md",
-     "scripts/db-audit/migration-baseline.json",
-     "supabase/migrations/20261228180000_restaura_trigger_novo_usuario.sql",
-     "supabase/migrations/20261228190000_revoga_execute_publico_anon_funcoes.sql",
-     "supabase/migrations/20261228200000_alinha_triggers_department_war_e_auditoria.sql",
-     "supabase/migrations/20261228210000_reaplica_mensagens_funcoes_divergentes.sql",
-     "supabase/migrations/20261228220000_alinha_nulabilidade_external_api_keys.sql"
-    ]
-   },
-   {
-    "sha": "324e51a",
-    "date": "2026-11-25",
-    "author": "adm01-debug",
-    "subject": "fix(banco): fecha o rebuild - tabelas, colunas, funcoes, views, RLS e grants de producao (#172)",
-    "files": [
-     "docs/estado/08-migrations.md",
-     "scripts/db-audit/migration-baseline.json",
-     "supabase/config.toml",
-     "supabase/migrations/20251220144518_06856092-4043-44fe-8da4-8f9501335d42.sql",
-     "supabase/migrations/20260306012145_1621918a-fb50-4f2d-8af2-799429f5c8ea.sql",
-     "supabase/migrations/20260727221910_f26719a2_lightning_relampago_schema.sql",
-     "supabase/migrations/20261228130000_recupera_funcoes_e_views_ausentes.sql",
-     "supabase/migrations/20261228140000_congela_rls_e_grants_producao.sql",
-     "supabase/migrations/20261228150000_revoga_privilegios_inertes.sql",
-     "supabase/migrations/20261228160000_habilita_criacao_de_chave_de_api.sql",
-     "supabase/migrations/20261228170000_reaplica_funcoes_desatualizadas_em_producao.sql"
-    ]
    }
   ],
   "hot_files": [
    [
     "scripts/db-audit/consultas.sql",
-    15
+    20
    ],
    [
     "scripts/db-audit/consultar-sql.mjs",
-    5
+    6
    ],
    [
     "scripts/db-audit/apply-migrations.mjs",
     4
    ],
    [
-    "docs/agentes/banco.md",
-    4
-   ],
-   [
-    "docs/agentes/mapa-repo.md",
-    4
-   ],
-   [
     ".github/workflows/db-migrate.yml",
-    3
-   ],
-   [
-    "src/pages/Profile.tsx",
     3
    ],
    [
@@ -166356,11 +166318,7 @@
     2
    ],
    [
-    "supabase/functions/push-outbox-dispatcher/index.ts",
-    2
-   ],
-   [
-    "scripts/db-audit/migration-baseline.json",
+    "src/pages/Profile.tsx",
     2
    ],
    [
@@ -166377,6 +166335,22 @@
    ],
    [
     ".github/workflows/deploy-edge-functions.yml",
+    1
+   ],
+   [
+    "src/App.tsx",
+    1
+   ],
+   [
+    "src/components/admin/DemographicAttributesManager.tsx",
+    1
+   ],
+   [
+    "src/components/filters/SavedFiltersBar.tsx",
+    1
+   ],
+   [
+    "src/components/profile/MyDemographicValuesCard.tsx",
     1
    ]
   ]

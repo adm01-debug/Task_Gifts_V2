@@ -2,11 +2,36 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "0f7fe38bd01af42d806b8a3bc801788c061f6447",
+  "commit": "0b9d3b46223808c801369a3a83189d9795cfef86",
   "branch": "main",
-  "data_commit": "2026-11-27T13:10:54-03:00",
+  "data_commit": "2026-11-27T14:03:48-03:00",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "ultimos_commits": [
+   {
+    "sha": "0b9d3b4",
+    "data": "2026-11-27",
+    "assunto": "fix(db-audit): notifications usa read, nao read_at (#207)"
+   },
+   {
+    "sha": "b94118b",
+    "data": "2026-11-27",
+    "assunto": "chore(db-audit): mostra por que o aviso do lembrete cai no ON CONFLICT (#206)"
+   },
+   {
+    "sha": "f698d27",
+    "data": "2026-11-27",
+    "assunto": "chore(db-audit): separa os filtros que zeram o lembrete semanal (#205)"
+   },
+   {
+    "sha": "f3900ae",
+    "data": "2026-11-27",
+    "assunto": "chore(db-audit): ensaio transacional da funcao do lembrete semanal (#204)"
+   },
+   {
+    "sha": "09d022a",
+    "data": "2026-11-27",
+    "assunto": "fix: consulta do silencio le as colunas que o dispatcher usa (#203)"
+   },
    {
     "sha": "0f7fe38",
     "data": "2026-11-27",
@@ -106,34 +131,9 @@
     "sha": "fa594f8",
     "data": "2026-11-27",
     "assunto": "feat(db): painel demografico le a view que mascara valor restrito (ex-PR 182) (#183)"
-   },
-   {
-    "sha": "5106746",
-    "data": "2026-11-27",
-    "assunto": "chore: cria a linha padrao da janela de silencio para quem nunca abriu a tela (#180)"
-   },
-   {
-    "sha": "dfe7e3c",
-    "data": "2026-11-27",
-    "assunto": "infra(migrations): workflow que aplica o que falta e barra divergencia com o ledger (#179)"
-   },
-   {
-    "sha": "9868b40",
-    "data": "2026-11-27",
-    "assunto": "fix: valida o nome das functions antes de virar comando no deploy (#178)"
-   },
-   {
-    "sha": "613009c",
-    "data": "2026-11-26",
-    "assunto": "feat: telas para filtros salvos e perfil demografico (#181)"
-   },
-   {
-    "sha": "e634962",
-    "data": "2026-11-26",
-    "assunto": "feat(avisos): respeita a janela de silencio do usuario no push (#177)"
    }
   ],
-  "arquivos_mudados_7d": 297,
+  "arquivos_mudados_7d": 296,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "supabase/functions/_shared",
@@ -148,15 +148,15 @@
     "mudancas": 20
    },
    {
+    "pasta": "scripts/db-audit/consultas.sql",
+    "mudancas": 20
+   },
+   {
     "pasta": "docs/agentes/mapa-repo.md",
     "mudancas": 17
    },
    {
     "pasta": "docs/estado/05-edge-functions.md",
-    "mudancas": 15
-   },
-   {
-    "pasta": "scripts/db-audit/consultas.sql",
     "mudancas": 15
    },
    {
@@ -206,15 +206,15 @@
     "mudancas": 20
    },
    {
+    "arquivo": "scripts/db-audit/consultas.sql",
+    "mudancas": 20
+   },
+   {
     "arquivo": "docs/agentes/mapa-repo.md",
     "mudancas": 17
    },
    {
     "arquivo": "docs/estado/05-edge-functions.md",
-    "mudancas": 15
-   },
-   {
-    "arquivo": "scripts/db-audit/consultas.sql",
     "mudancas": 15
    },
    {
@@ -254,6 +254,10 @@
     "mudancas": 6
    },
    {
+    "arquivo": "scripts/db-audit/consultar-sql.mjs",
+    "mudancas": 6
+   },
+   {
     "arquivo": "supabase/functions/_shared/contracts/_fixtures/index.ts",
     "mudancas": 6
    },
@@ -271,10 +275,6 @@
    },
    {
     "arquivo": "scripts/automation.config.json",
-    "mudancas": 5
-   },
-   {
-    "arquivo": "scripts/db-audit/consultar-sql.mjs",
     "mudancas": 5
    },
    {
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 168
+    "commits": 173
    },
    {
     "autor": "dependabot[bot]",
@@ -312,7 +312,7 @@
  "contagens": {
   "arquivos_total": 1642,
   "arquivos_codigo": 1217,
-  "linhas_codigo": 241683,
+  "linhas_codigo": 241697,
   "rotas": 88,
   "rotas_http_backend": 0,
   "vistas_por_id": 0,
@@ -368,7 +368,7 @@
   },
   "scripts/db-audit": {
    "arquivos": 3,
-   "linhas": 955
+   "linhas": 969
   },
   "scripts/graphify-local.mjs": {
    "arquivos": 1,

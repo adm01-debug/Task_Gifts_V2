@@ -1,6 +1,6 @@
 # 07 · REGRAS DE NEGÓCIO
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `0f7fe38bd0` · branch `main` · 2026-11-27 16:15 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `0b9d3b4622` · branch `main` · 2026-11-27 17:12 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## A. Regras escritas por humanos (`manual/` — prioridade máxima, nunca sobrescrito)
@@ -3363,6 +3363,7 @@ _nenhum item encontrado_
 | SQL_FILE vazio | `scripts/db-audit/consultar-sql.mjs` |
 | a consulta precisa comecar por SELECT ou WITH | `scripts/db-audit/consultar-sql.mjs` |
 | consulta  | `scripts/db-audit/consultar-sql.mjs` |
+| ensaio permitido apenas para funcoes de envio/agendamento | `scripts/db-audit/consultar-sql.mjs` |
 | informe SELECAO_SQL (catalogo) ou SQL_FILE (arquivo avulso) | `scripts/db-audit/consultar-sql.mjs` |
 | palavra de escrita encontrada na consulta | `scripts/db-audit/consultar-sql.mjs` |
 | uma unica instrucao por arquivo (sem ponto e virgula no meio) | `scripts/db-audit/consultar-sql.mjs` |
@@ -3644,8 +3645,7 @@ _nenhum item encontrado_
 | User not authenticated | `src/hooks/useTwoFactor.ts` |
 | Não foi possível salvar a preferência | `src/hooks/useTypePreferences.ts` |
 | Não foi possível salvar as preferências | `src/hooks/useTypePreferences.ts` |
-| Usuário não autenticado | `src/hooks/useWebAuthn.ts` |
-| … +226 linhas — lista completa em `context.json` | |
+| … +227 linhas — lista completa em `context.json` | |
 
 ## J. Controle de acesso no código (checagens de perfil/permissão)
 

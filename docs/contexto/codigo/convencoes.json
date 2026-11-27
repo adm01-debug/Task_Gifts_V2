@@ -59,11 +59,11 @@
  "commits": {
   "convencao": "conventional commits (observado)",
   "exemplos": [
-   "chore: consulta o alcance real da janela de silencio (#202)",
-   "chore: consulta quantas pessoas o lembrete semanal deveria atingir agora (#201)",
-   "chore: mede silencio e historico do lembrete semanal desde setembro (#200)",
-   "chore: consulta da ultima execucao por job para separar nunca rodou de registro apagado (#199)",
-   "fix: consulta de segunda-feira agrupa pela expressao inteira nas CTEs (#198)"
+   "fix(db-audit): notifications usa read, nao read_at (#207)",
+   "chore(db-audit): mostra por que o aviso do lembrete cai no ON CONFLICT (#206)",
+   "chore(db-audit): separa os filtros que zeram o lembrete semanal (#205)",
+   "chore(db-audit): ensaio transacional da funcao do lembrete semanal (#204)",
+   "fix: consulta do silencio le as colunas que o dispatcher usa (#203)"
   ]
  },
  "pr_template": ".github/PULL_REQUEST_TEMPLATE.md",
