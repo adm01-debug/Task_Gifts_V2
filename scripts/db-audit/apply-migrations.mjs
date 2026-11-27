@@ -15,13 +15,15 @@
  * Uso:
  *   node scripts/db-audit/apply-migrations.mjs            # check: so relata
  *   node scripts/db-audit/apply-migrations.mjs --apply     # aplica as faltantes
+ *   node scripts/db-audit/apply-migrations.mjs --verify=demo # + confere objeto no banco
  *   node scripts/db-audit/apply-migrations.mjs --dir outro/diretorio
  *
  * Variaveis: SUPABASE_ACCESS_TOKEN, SUPABASE_PROJECT_ID, MIGRATIONS_DIR
  *            (MIGRATIONS_DIR padrao: supabase/migrations)
  *
- * Politica: migration no ledger sem arquivo no repo e' erro (alguem aplicou fora do
- * repo); nome do ledger fora do padrao e' aviso, corrigido no --apply.
+ * Politica: migration no ledger sem arquivo no repo e' divergencia. O check sempre
+ * barra; o --apply so' barra quando nenhuma migration do repo tem aquela versao,
+ * porque a versao cujo arquivo esta' em PR aberta volta a existir no merge.
  *
  * Exit: 0 = nada pendente e nada divergente; 1 = pendencia ou divergencia;
  *       2 = erro de uso/ambiente. Nunca sai 0 sem ter consultado o ledger.
@@ -29,14 +31,33 @@
 import { readdirSync, readFileSync } from "node:fs";
 import path from "node:path";
 
-const USO = "uso: node scripts/db-audit/apply-migrations.mjs [--apply] [--dir <dir>]";
+const USO = "uso: node scripts/db-audit/apply-migrations.mjs [--apply] [--verify <objeto>] [--dir <dir>]";
+
+const IDENTIFICADOR = /^[a-z_][a-z0-9_]*$/i;
 
 function lerArgs(argv) {
-  const opts = { apply: false, dir: process.env.MIGRATIONS_DIR || "supabase/migrations" };
+  const opts = {
+    apply: false,
+    verify: null,
+    dir: process.env.MIGRATIONS_DIR || "supabase/migrations",
+  };
   for (let i = 0; i < argv.length; i += 1) {
     const arg = argv[i];
-    if (arg === "--apply") {
+    // `--verify=objeto` e `--verify objeto`: o workflow passa a forma com `=`.
+    const separado = /^--verify=(.*)$/.exec(arg);
+    if (separado) {
+      if (!IDENTIFICADOR.test(separado[1])) {
+        throw new Error(`--verify exige um nome de objeto (letras, digitos e _)\n${USO}`);
+      }
+      opts.verify = separado[1];
+    } else if (arg === "--apply") {
       opts.apply = true;
+    } else if (arg === "--verify") {
+      i += 1;
+      if (!argv[i] || !IDENTIFICADOR.test(argv[i])) {
+        throw new Error(`--verify exige um nome de objeto (letras, digitos e _)\n${USO}`);
+      }
+      opts.verify = argv[i];
     } else if (arg === "--dir") {
       i += 1;
       if (!argv[i]) throw new Error(`--dir exige um caminho\n${USO}`);
@@ -98,9 +119,9 @@ function aspas(texto) {
 }
 
 async function main() {
+  const opts = lerArgs(process.argv.slice(2));
   if (!token) throw new Error("SUPABASE_ACCESS_TOKEN ausente no ambiente");
   if (!ref) throw new Error("SUPABASE_PROJECT_ID ausente no ambiente");
-  const opts = lerArgs(process.argv.slice(2));
   const local = listarLocais(opts.dir);
 
   const ledger = await consultar(
@@ -127,11 +148,25 @@ async function main() {
   }
   for (const l of orfaos) console.log(`  SEM ARQUIVO ${l.version} ${l.name} (aplicada direto no banco)`);
 
-  if (orfaos.length > 0) {
+  // Registro no ledger sem arquivo no repo: alguem aplicou direto no banco. Se a
+  // migration correspondente esta' no repo (PR aberta), o merge e' a cura, entao
+  // e' aviso e o --apply segue com o resto; se nenhuma migration do repo tem essa
+  // versao, o arquivo se perdeu e nada pode ser aplicado ate' recupera-lo.
+  const versoesDoRepo = new Set(local.map((m) => m.version));
+
+  if (orfaos.length > 0 && !opts.apply) {
     console.log("::error::migration aplicada no banco sem arquivo no repo - traga o arquivo antes de aplicar.");
     process.exit(1);
   }
-  if (pendentes.length === 0 && nomesDivergentes.length === 0) {
+  const semArquivo = orfaos.filter((l) => !versoesDoRepo.has(l.version));
+  if (semArquivo.length > 0) {
+    console.log(
+      "::error::versao no ledger e nenhuma migration do repo com ela: "
+        + `${semArquivo.map((l) => l.version).join(", ")} - recupere o arquivo antes de aplicar.`,
+    );
+    process.exit(1);
+  }
+  if (pendentes.length === 0 && nomesDivergentes.length === 0 && orfaos.length === 0) {
     console.log("nada a aplicar: repo e banco alinhados.");
     process.exit(0);
   }
@@ -170,6 +205,20 @@ async function main() {
     process.exit(1);
   }
   console.log(`aplicadas ${pendentes.length} migration(s); ledger com ${depois.length} registros.`);
+
+  // O apply so' e' prova de que o SQL rodou: quem diz que o efeito esta' no banco
+  // e' uma consulta ao banco vivo. Objeto ausente = ::error (exit 1).
+  if (opts.verify) {
+    const linhas = await consultar(
+      "select to_regclass(" + aspas(`public.${opts.verify}`) + ")::text as objeto;",
+    );
+    const objeto = Array.isArray(linhas) && linhas[0] ? linhas[0].objeto : null;
+    if (!objeto) {
+      console.log(`::error::objeto public.${opts.verify} ausente no banco depois do apply.`);
+      process.exit(1);
+    }
+    console.log(`  verificado: public.${opts.verify} existe no banco (${objeto}).`);
+  }
   process.exit(0);
 }
 
