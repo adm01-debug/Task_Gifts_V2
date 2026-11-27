@@ -65,3 +65,22 @@ JOIN cron.job j ON j.jobid = d.jobid
 WHERE j.jobname = 'engagement-reminders'
 ORDER BY d.start_time DESC
 LIMIT 5
+
+-- nome: entregas_recentes_do_lembrete
+-- O que chegou em notifications e push_outbox desde 20/11, agrupado por hora e tipo, para reconhecer
+-- a entrega do engagement-reminders sem depender de cron.job_run_details.
+SELECT date_trunc('hour', n.created_at) AS hora, n.type, count(*) AS avisos,
+  count(o.id) AS com_push
+FROM public.notifications n
+LEFT JOIN public.push_outbox o ON o.notification_id = n.id
+WHERE n.created_at >= '2026-11-20 00:00:00+00'::timestamptz
+GROUP BY 1, 2
+ORDER BY 1 DESC, 2
+LIMIT 60
+
+-- nome: colunas_do_push_outbox
+-- Nomes e tipos reais das colunas de push_outbox, para saber a ligacao com notifications.
+SELECT column_name, data_type
+FROM information_schema.columns
+WHERE table_schema = 'public' AND table_name = 'push_outbox'
+ORDER BY ordinal_position
