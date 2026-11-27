@@ -1,6 +1,6 @@
 # 07 · REGRAS DE NEGÓCIO
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `9868b40d27` · branch `main` · 2026-11-27 10:17 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `dfe7e3c381` · branch `main` · 2026-11-27 10:18 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## A. Regras escritas por humanos (`manual/` — prioridade máxima, nunca sobrescrito)
@@ -3350,6 +3350,14 @@ _nenhum item encontrado_
 | ${msg}: esperado ${JSON.stringify(b)} obtido ${JSON.stringify(a)} | `scripts/ai-context/cenarios.mjs` |
 | Artifact-id sem arquivo correspondente | `scripts/ci/contexto-publicacao.unit.mjs` |
 | Download simulado falhou: ${failDownload} | `scripts/ci/contexto-publicacao.unit.mjs` |
+| --dir exige um caminho\n${USO} | `scripts/db-audit/apply-migrations.mjs` |
+| Management API ${resposta.status}: ${texto.slice(0, 500)} | `scripts/db-audit/apply-migrations.mjs` |
+| SUPABASE_ACCESS_TOKEN ausente no ambiente | `scripts/db-audit/apply-migrations.mjs` |
+| SUPABASE_PROJECT_ID ausente no ambiente | `scripts/db-audit/apply-migrations.mjs` |
+| argumento desconhecido: ${arg}\n${USO} | `scripts/db-audit/apply-migrations.mjs` |
+| diretorio de migrations ilegivel: ${dir} | `scripts/db-audit/apply-migrations.mjs` |
+| nenhuma migration em ${dir} | `scripts/db-audit/apply-migrations.mjs` |
+| nome fora do padrao AAAAAMMDDHHMMSS_slug.sql: ${nome} | `scripts/db-audit/apply-migrations.mjs` |
 | failed | `scripts/maintenance/lib.mjs` |
 | missing_dependencies | `scripts/maintenance/lib.mjs` |
 | skipped_busy | `scripts/maintenance/lib.mjs` |
@@ -3636,15 +3644,7 @@ _nenhum item encontrado_
 | Sessão expirada — faça login novamente. | `src/lib/luckyWheelBudgetWhatIf.ts` |
 | Erro ao limpar dados antigos | `src/pages/AdminTelemetria.tsx` |
 | ; import { Badge } from  | `src/pages/ApiKeysAdmin.tsx` |
-| ; import { Card, CardContent } from  | `src/pages/AuctionsAdmin.tsx` |
-| Acesso bloqueado: IP não autorizado | `src/pages/Auth.tsx` |
-| Algo deu errado. Tente novamente. | `src/pages/Auth.tsx` |
-| Conta bloqueada por ${Math.ceil(lr.remaining_seconds / 60)} min. | `src/pages/Auth.tsx` |
-| Conta bloqueada. Tente em ${Math.ceil(lockoutStatus.remaining_seconds / 60)} min. | `src/pages/Auth.tsx` |
-| Credenciais incorretas. ${5 - lr.failed_attempts} tentativa(s). | `src/pages/Auth.tsx` |
-| Email ou senha incorretos | `src/pages/Auth.tsx` |
-| Erro ao fazer login com Google | `src/pages/Auth.tsx` |
-| … +211 linhas — lista completa em `context.json` | |
+| … +219 linhas — lista completa em `context.json` | |
 
 ## J. Controle de acesso no código (checagens de perfil/permissão)
 

@@ -59,11 +59,11 @@
  "commits": {
   "convencao": "conventional commits (observado)",
   "exemplos": [
+   "infra(migrations): workflow que aplica o que falta e barra divergencia com o ledger (#179)",
    "fix: valida o nome das functions antes de virar comando no deploy (#178)",
    "feat: telas para filtros salvos e perfil demografico (#181)",
    "feat(avisos): respeita a janela de silencio do usuario no push (#177)",
-   "chore(banco): remove os 46 indices fisicamente redundantes em public (#175)",
-   "fix: paridade de indices e constraints com o banco vivo e devolve os fluxos travados (#174)"
+   "chore(banco): remove os 46 indices fisicamente redundantes em public (#175)"
   ]
  },
  "pr_template": ".github/PULL_REQUEST_TEMPLATE.md",

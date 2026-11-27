@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "9868b40d27f13b0100ee7e33db8389b3630c6a50",
+  "commit": "dfe7e3c3812a9bda8bb0f2f2cd686206f420ed87",
   "branch": "main",
-  "data_commit": "2026-11-27T07:16:58-03:00",
+  "data_commit": "2026-11-27T07:17:04-03:00",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "ultimos_commits": [
+   {
+    "sha": "dfe7e3c",
+    "data": "2026-11-27",
+    "assunto": "infra(migrations): workflow que aplica o que falta e barra divergencia com o ledger (#179)"
+   },
    {
     "sha": "9868b40",
     "data": "2026-11-27",
@@ -126,14 +131,9 @@
     "sha": "52db204",
     "data": "2026-11-24",
     "assunto": "fix: libera cadastro e login por passkey na allowlist de producao (#156)"
-   },
-   {
-    "sha": "ac84238",
-    "data": "2026-11-24",
-    "assunto": "docs: corrige o drift do cron de push e do digest semanal (401 que nao existe) (#155)"
    }
   ],
-  "arquivos_mudados_7d": 293,
+  "arquivos_mudados_7d": 295,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "supabase/functions/_shared",
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 146
+    "commits": 147
    },
    {
     "autor": "dependabot[bot]",
@@ -310,9 +310,9 @@
   ]
  },
  "contagens": {
-  "arquivos_total": 1635,
-  "arquivos_codigo": 1214,
-  "linhas_codigo": 241190,
+  "arquivos_total": 1637,
+  "arquivos_codigo": 1215,
+  "linhas_codigo": 241369,
   "rotas": 88,
   "rotas_http_backend": 0,
   "vistas_por_id": 0,
@@ -325,8 +325,8 @@
   "migrations": 317,
   "cron_jobs": 40,
   "testes": 182,
-  "workflows": 6,
-  "scripts": 17,
+  "workflows": 7,
+  "scripts": 18,
   "docs_md": 56
  },
  "por_pasta": {
@@ -367,8 +367,8 @@
    "linhas": 1572
   },
   "scripts/db-audit": {
-   "arquivos": 1,
-   "linhas": 624
+   "arquivos": 2,
+   "linhas": 803
   },
   "scripts/graphify-local.mjs": {
    "arquivos": 1,
@@ -587,7 +587,7 @@
  ],
  "qualidade": {
   "any": 81,
-  "console_log": 77,
+  "console_log": 90,
   "ts_ignore": 0,
   "eslint_disable": 0,
   "todos": 1,

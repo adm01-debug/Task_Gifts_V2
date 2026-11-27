@@ -1,7 +1,7 @@
 {
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
- "total": 17,
+ "total": 18,
  "scripts": [
   {
    "arquivo": "scripts/automation.mjs",
@@ -70,6 +70,21 @@
     "maintenance:heal"
    ],
    "workflows": [],
+   "orfao": false
+  },
+  {
+   "arquivo": "scripts/db-audit/apply-migrations.mjs",
+   "descricao": "* Aplica em producao as migrations de `supabase/migrations/` que ainda nao",
+   "linhas": 179,
+   "env": [
+    "MIGRATIONS_DIR",
+    "SUPABASE_ACCESS_TOKEN",
+    "SUPABASE_PROJECT_ID"
+   ],
+   "npm_scripts": [],
+   "workflows": [
+    "db-migrate.yml"
+   ],
    "orfao": false
   },
   {

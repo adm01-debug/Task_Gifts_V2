@@ -6,9 +6,9 @@
    "TypeScript (1186)",
    "SQL (319)",
    "Markdown (56)",
-   "JavaScript (24)",
+   "JavaScript (25)",
    "JSON (14)",
-   "YAML (9)",
+   "YAML (10)",
    "Python (5)",
    "Shell (5)"
   ],
@@ -235,6 +235,31 @@
     "actions/download-artifact",
     "actions/setup-node",
     "actions/upload-artifact"
+   ]
+  },
+  {
+   "arquivo": ".github/workflows/db-migrate.yml",
+   "nome": "Migrations do banco",
+   "gatilhos": [
+    "workflow_dispatch"
+   ],
+   "crons": [],
+   "branches": [],
+   "jobs": [
+    "migrate"
+   ],
+   "permissoes": [
+    "contents: read"
+   ],
+   "scripts_usados": [
+    "scripts/db-audit/apply-migrations.mjs"
+   ],
+   "npm_scripts": [],
+   "secrets": [
+    "SUPABASE_ACCESS_TOKEN"
+   ],
+   "actions": [
+    "actions/checkout"
    ]
   },
   {
@@ -606,6 +631,10 @@
    },
    {
     "host": "api.resend.com",
+    "arquivos": 1
+   },
+   {
+    "host": "api.supabase.com",
     "arquivos": 1
    },
    {
