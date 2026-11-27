@@ -20,6 +20,11 @@ on:
         options:
           - check
           - apply
+      verify:
+        description: "opcional: objeto (tabela/view) que deve existir no banco depois do apply"
+        required: false
+        default: ""
+        type: string
 
 permissions:
   contents: read
@@ -44,6 +49,7 @@ jobs:
         env:
           # Nunca interpolar input direto no shell: vai por env e passa por validacao.
           MIGRATION_MODE: ${{ inputs.mode }}
+          VERIFY_OBJECT: ${{ inputs.verify }}
         run: |
           set -uo pipefail
           if [ -z "${SUPABASE_ACCESS_TOKEN:-}" ]; then
@@ -55,4 +61,9 @@ jobs:
             apply) ARGS="--apply" ;;
             *) echo "::error::modo invalido: '${MIGRATION_MODE}' (use check ou apply)"; exit 1 ;;
           esac
-          node scripts/db-audit/apply-migrations.mjs $ARGS
+          # O nome do objeto vai por --verify=, nunca virando palavra solta no shell.
+          if [ -n "${VERIFY_OBJECT:-}" ]; then
+            node scripts/db-audit/apply-migrations.mjs $ARGS --verify="$VERIFY_OBJECT"
+          else
+            node scripts/db-audit/apply-migrations.mjs $ARGS
+          fi
