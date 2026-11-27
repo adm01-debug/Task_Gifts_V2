@@ -111,3 +111,26 @@ Achado é candidato a revisão, **não prova**; ausência de achado **não prova
 `node --test scripts/ci/check-migration-drift.unit.mjs` — **41 casos** com fixtures sintéticas, dos
 quais 14 marcados `REGRESSAO` (cada um reproduz uma falha que a auditoria adversarial encontrou).
 Nenhum toca banco, rede ou credencial.
+
+
+## apply-migrations.mjs e consultar-sql.mjs
+
+apply-migrations.mjs compara supabase/migrations/ com o ledger do banco vivo e, com --apply,
+aplica o que falta. --verify <objeto> prova depois do apply que o objeto existe (to_regclass).
+Toda a conversa com o banco passa pela Management API, com SUPABASE_ACCESS_TOKEN —
+nao precisa de SUPABASE_DB_URL (esse e so do snapshot em scripts/supabase_snapshot/).
+
+consultar-sql.mjs expoe a mesma porta para leitura avulsa. O SQL NAO e digitado no disparo:
+sai do catalogo versionado consultas.sql, escolhido pelo nome (SELECAO_SQL). Regras aplicadas
+pelo script: comeca com select/with, uma unica instrucao, nenhuma palavra de escrita.
+
+Pelo workflow: Actions -> Migrations do banco -> Run workflow -> mode consulta, e o nome da
+consulta no campo sql. Para adicionar uma consulta, crie um bloco com o marcador de nome em consultas.sql.
+
+Consultas ja prontas:
+
+| nome | o que responde |
+|---|---|
+| janela_de_silencio | quantos usuarios tem silencio ligado e quantos tem a janela padrao 22h-08h |
+| usuarios_sem_preferencia | quem nao tem linha em notification_preferences (sem silencio nem filtro de tipo) |
+| lembrete_semanal_cron | ultimas execucoes do cron do lembrete semanal |

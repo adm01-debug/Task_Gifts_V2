@@ -13,13 +13,19 @@ on:
   workflow_dispatch:
     inputs:
       mode:
-        description: "check = so relata (nao escreve); apply = aplica o que falta"
+        description: "check = so relata (nao escreve); apply = aplica o que falta; consulta = roda a consulta escolhida"
         required: true
         default: check
         type: choice
         options:
           - check
           - apply
+          - consulta
+      sql:
+        description: "modo consulta: nome da consulta em scripts/db-audit/consultas.sql"
+        required: false
+        default: ""
+        type: string
       verify:
         description: "opcional: objeto (tabela/view) que deve existir no banco depois do apply"
         required: false
@@ -50,11 +56,21 @@ jobs:
           # Nunca interpolar input direto no shell: vai por env e passa por validacao.
           MIGRATION_MODE: ${{ inputs.mode }}
           VERIFY_OBJECT: ${{ inputs.verify }}
+          SELECAO_SQL: ${{ inputs.sql }}
         run: |
           set -uo pipefail
           if [ -z "${SUPABASE_ACCESS_TOKEN:-}" ]; then
             echo "::error::SUPABASE_ACCESS_TOKEN ausente nos secrets. Use um PAT https://supabase.com/dashboard/account/tokens com acesso a eidsaqymojyuhprobfpn."
             exit 1
+          fi
+          # modo consulta: le so o SELECT escolhido numa lista fechada; nada de SQL digitado livre.
+          if [ "${MIGRATION_MODE}" = "consulta" ]; then
+            if [ -z "${SELECAO_SQL:-}" ]; then
+              echo "::error::modo consulta exige o input sql (uma das consultas do scripts/db-audit/consultas.sql)"
+              exit 1
+            fi
+            SQL_FILE=scripts/db-audit/consultas.sql SELECAO_SQL="${SELECAO_SQL}" node scripts/db-audit/consultar-sql.mjs
+            exit $?
           fi
           case "${MIGRATION_MODE}" in
             check) ARGS="" ;;
