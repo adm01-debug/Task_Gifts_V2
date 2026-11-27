@@ -2,11 +2,46 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "4c6f12a59b91ef8731ce093f0fbbb5e5a2b66a67",
+  "commit": "7917a7236e38f28bfb64103ecd160635aeddf132",
   "branch": "main",
-  "data_commit": "2026-11-27T17:06:58-03:00",
+  "data_commit": "2026-11-27T18:03:17-03:00",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "ultimos_commits": [
+   {
+    "sha": "7917a72",
+    "data": "2026-11-27",
+    "assunto": "feat(auditoria): avisos do vigia no outbox certo (#233)"
+   },
+   {
+    "sha": "822c3a7",
+    "data": "2026-11-27",
+    "assunto": "feat(auditoria): preferencia dos admins para o aviso do vigia (#232)"
+   },
+   {
+    "sha": "94d7864",
+    "data": "2026-11-27",
+    "assunto": "feat(auditoria): dispara o vigia de verdade e mostra o resultado (#231)"
+   },
+   {
+    "sha": "69f62e9",
+    "data": "2026-11-27",
+    "assunto": "fix(auditoria): privilegio do dono via aclexplode (#229)"
+   },
+   {
+    "sha": "e78bde3",
+    "data": "2026-11-27",
+    "assunto": "fix(auditoria): cast texto no privilegio do dono do vigia (#228)"
+   },
+   {
+    "sha": "9d46d7b",
+    "data": "2026-11-27",
+    "assunto": "fix(auditoria): privilegio por OID, sem palavra bloqueada (#227)"
+   },
+   {
+    "sha": "d2f6fd4",
+    "data": "2026-11-27",
+    "assunto": "feat(auditoria): mostra quem e' o dono do vigia e se ele pode gravar (#226)"
+   },
    {
     "sha": "4c6f12a",
     "data": "2026-11-27",
@@ -96,41 +131,6 @@
     "sha": "b51a5c0",
     "data": "2026-11-27",
     "assunto": "chore(db-audit): lista jobs do cron ativos sem nenhuma execucao registrada (#208)"
-   },
-   {
-    "sha": "0b9d3b4",
-    "data": "2026-11-27",
-    "assunto": "fix(db-audit): notifications usa read, nao read_at (#207)"
-   },
-   {
-    "sha": "b94118b",
-    "data": "2026-11-27",
-    "assunto": "chore(db-audit): mostra por que o aviso do lembrete cai no ON CONFLICT (#206)"
-   },
-   {
-    "sha": "f698d27",
-    "data": "2026-11-27",
-    "assunto": "chore(db-audit): separa os filtros que zeram o lembrete semanal (#205)"
-   },
-   {
-    "sha": "f3900ae",
-    "data": "2026-11-27",
-    "assunto": "chore(db-audit): ensaio transacional da funcao do lembrete semanal (#204)"
-   },
-   {
-    "sha": "09d022a",
-    "data": "2026-11-27",
-    "assunto": "fix: consulta do silencio le as colunas que o dispatcher usa (#203)"
-   },
-   {
-    "sha": "0f7fe38",
-    "data": "2026-11-27",
-    "assunto": "chore: consulta o alcance real da janela de silencio (#202)"
-   },
-   {
-    "sha": "4f57680",
-    "data": "2026-11-27",
-    "assunto": "chore: consulta quantas pessoas o lembrete semanal deveria atingir agora (#201)"
    }
   ],
   "arquivos_mudados_7d": 297,
@@ -141,7 +141,7 @@
    },
    {
     "pasta": "scripts/db-audit/consultas.sql",
-    "mudancas": 29
+    "mudancas": 36
    },
    {
     "pasta": "package.json",
@@ -199,7 +199,7 @@
   "arquivos_mais_mudados_90d": [
    {
     "arquivo": "scripts/db-audit/consultas.sql",
-    "mudancas": 29
+    "mudancas": 36
    },
    {
     "arquivo": "package.json",
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 191
+    "commits": 198
    },
    {
     "autor": "dependabot[bot]",

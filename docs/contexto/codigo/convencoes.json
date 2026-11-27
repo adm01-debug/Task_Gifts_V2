@@ -59,11 +59,11 @@
  "commits": {
   "convencao": "conventional commits (observado)",
   "exemplos": [
-   "fix(auditoria): prova do vigia cabe numa unica instrucao (#225)",
-   "fix(auditoria): ensaio aceita varios SELECTs, sem regex que trava (#224)",
-   "feat(auditoria): prova se o ROLLBACK do ensaio e' respeitado (#223)",
-   "fix(cron): vigia contra o schema real do pg_cron (#222)",
-   "feat(auditoria): colunas reais de cron.job e job_run_details (#221)"
+   "feat(auditoria): avisos do vigia no outbox certo (#233)",
+   "feat(auditoria): preferencia dos admins para o aviso do vigia (#232)",
+   "feat(auditoria): dispara o vigia de verdade e mostra o resultado (#231)",
+   "fix(auditoria): privilegio do dono via aclexplode (#229)",
+   "fix(auditoria): cast texto no privilegio do dono do vigia (#228)"
   ]
  },
  "pr_template": ".github/PULL_REQUEST_TEMPLATE.md",

@@ -1,7 +1,7 @@
 # Contexto do projeto para agentes de IA
 
 GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.
-Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `4c6f12a59b91ef8731ce093f0fbbb5e5a2b66a67` (2026-11-27T17:06:58-03:00).
+Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `7917a7236e38f28bfb64103ecd160635aeddf132` (2026-11-27T18:03:17-03:00).
 
 ## Como usar (leia antes de planejar ou executar qualquer tarefa)
 1. **Tela/rota/menu** → `rotas.json` (url/vista/menu → arquivo → hooks → tabelas → edges; `rotas_http_backend` para APIs) e `modulos.json` (módulo inteiro + dependências entre módulos).
@@ -296,13 +296,13 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - possiveis_segredos_no_codigo: 0
 
 ## Grafo de código (graphify)
-- 11228 nós · 30283 arestas · 877 comunidades · grafo do commit `4c6f12a5`
+- 11228 nós · 30283 arestas · 877 comunidades · grafo do commit `7917a723`
 - comunidades maiores: react (262), lucide-react (250), badge.tsx (203), Mentoria.tsx (136), skeleton.tsx (127), cn (116), contracts/index.ts (94), client.ts (92), requestId.ts (89), RolePermissionsManager.tsx (88), DashboardRightColumn.tsx (86), AdminPanel.tsx (79)
 - símbolos mais chamados: cn() (src/lib/utils.ts), useAuth() (src/hooks/useAuth.tsx), useIsMobile() (src/hooks/use-mobile.tsx), q() (scripts/supabase_snapshot/snapshot.py), useDepartments() (src/hooks/useDepartments.ts), useRBAC() (src/hooks/useRBAC.ts), useProfiles() (src/hooks/useProfiles.ts), useToast() (src/hooks/use-toast.ts), useSEO() (src/hooks/useSEO.ts), useSoundEffects() (src/hooks/useSoundEffects.tsx), .collect() (scripts/supabase_snapshot/test_snapshot.py), excluded_sql() (scripts/supabase_snapshot/snapshot.py)
 - consulta local: `graphify query "<pergunta>"`, `graphify path "<A>" "<B>"`, `graphify explain "<X>"`
 
 ## Hotspots (arquivos mais alterados, 90 dias)
-- scripts/db-audit/consultas.sql (29)
+- scripts/db-audit/consultas.sql (36)
 - package.json (23)
 - docs/agentes/banco.md (20)
 - docs/agentes/mapa-repo.md (17)
@@ -384,6 +384,13 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 
 
 ## Últimos commits
+- 2026-11-27 `7917a72` feat(auditoria): avisos do vigia no outbox certo (#233)
+- 2026-11-27 `822c3a7` feat(auditoria): preferencia dos admins para o aviso do vigia (#232)
+- 2026-11-27 `94d7864` feat(auditoria): dispara o vigia de verdade e mostra o resultado (#231)
+- 2026-11-27 `69f62e9` fix(auditoria): privilegio do dono via aclexplode (#229)
+- 2026-11-27 `e78bde3` fix(auditoria): cast texto no privilegio do dono do vigia (#228)
+- 2026-11-27 `9d46d7b` fix(auditoria): privilegio por OID, sem palavra bloqueada (#227)
+- 2026-11-27 `d2f6fd4` feat(auditoria): mostra quem e' o dono do vigia e se ele pode gravar (#226)
 - 2026-11-27 `4c6f12a` fix(auditoria): prova do vigia cabe numa unica instrucao (#225)
 - 2026-11-27 `93630c6` fix(auditoria): ensaio aceita varios SELECTs, sem regex que trava (#224)
 - 2026-11-27 `3001a86` feat(auditoria): prova se o ROLLBACK do ensaio e' respeitado (#223)
@@ -392,13 +399,6 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - 2026-11-27 `85f9abf` fix(cron): ON CONFLICT por constraint no marco zero do vigia (#220)
 - 2026-11-27 `a4ae6cf` fix(infra): verify aceita funcao com argumento default (#219)
 - 2026-11-27 `f5454f8` fix(cron): marco zero do vigia sem coluna ambigua (#218)
-- 2026-11-27 `12beb0d` feat(auditoria): lista todas as versoes instaladas do vigia (#217)
-- 2026-11-27 `14c962d` feat(auditoria): mostra se o corpo do vigia no banco e' o do repo (#216)
-- 2026-11-27 `09d837b` feat(auditoria): ensaio do vigia com argumento e leitura pura (#215)
-- 2026-11-27 `98adc29` feat(auditoria): consultas para provar o vigia do cron (#214)
-- 2026-11-27 `076d318` fix(infra): --verify enxerga funcao, nao so' tabela (#213)
-- 2026-11-27 `36c9638` feat(infra): modo reaplicar no db-migrate (#212)
-- 2026-11-27 `d28797c` fix(cron): vigia sem referencia ambigua de coluna (#211)
 
 ## Arquivos deste diretório
 - `docs/contexto/codigo/rotas.json`
