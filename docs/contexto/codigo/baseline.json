@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "613009c549ef6118e9ea55da27388ab88b3a74a7",
+  "commit": "9868b40d27f13b0100ee7e33db8389b3630c6a50",
   "branch": "main",
-  "data_commit": "2026-11-26T17:40:36-03:00",
+  "data_commit": "2026-11-27T07:16:58-03:00",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "ultimos_commits": [
+   {
+    "sha": "9868b40",
+    "data": "2026-11-27",
+    "assunto": "fix: valida o nome das functions antes de virar comando no deploy (#178)"
+   },
    {
     "sha": "613009c",
     "data": "2026-11-26",
@@ -126,11 +131,6 @@
     "sha": "ac84238",
     "data": "2026-11-24",
     "assunto": "docs: corrige o drift do cron de push e do digest semanal (401 que nao existe) (#155)"
-   },
-   {
-    "sha": "e681a89",
-    "data": "2026-11-24",
-    "assunto": "chore: sobe o ledger para 282 nas docs (#154)"
    }
   ],
   "arquivos_mudados_7d": 293,
@@ -290,18 +290,18 @@
     "mudancas": 4
    },
    {
-    "arquivo": "RELATORIO_CI.md",
+    "arquivo": ".github/workflows/deploy-edge-functions.yml",
     "mudancas": 4
    },
    {
-    "arquivo": "docs/agentes/github-ci.md",
+    "arquivo": "RELATORIO_CI.md",
     "mudancas": 4
    }
   ],
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 145
+    "commits": 146
    },
    {
     "autor": "dependabot[bot]",

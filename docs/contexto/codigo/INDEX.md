@@ -1,7 +1,7 @@
 # Contexto do projeto para agentes de IA
 
 GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.
-Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `613009c549ef6118e9ea55da27388ab88b3a74a7` (2026-11-26T17:40:36-03:00).
+Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `9868b40d27f13b0100ee7e33db8389b3630c6a50` (2026-11-27T07:16:58-03:00).
 
 ## Como usar (leia antes de planejar ou executar qualquer tarefa)
 1. **Tela/rota/menu** → `rotas.json` (url/vista/menu → arquivo → hooks → tabelas → edges; `rotas_http_backend` para APIs) e `modulos.json` (módulo inteiro + dependências entre módulos).
@@ -295,7 +295,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - possiveis_segredos_no_codigo: 0
 
 ## Grafo de código (graphify)
-- 11200 nós · 30236 arestas · 872 comunidades · grafo do commit `613009c5`
+- 11200 nós · 30236 arestas · 872 comunidades · grafo do commit `9868b40d`
 - comunidades maiores: lucide-react (364), react (235), QuizAdmin.tsx (144), sonner (128), AdminPanel.tsx (127), cn (123), client.ts (111), contracts/index.ts (107), navigation/index.ts (103), useToast (92), PersonalStats.tsx (91), useAuth (83)
 - símbolos mais chamados: cn() (src/lib/utils.ts), useAuth() (src/hooks/useAuth.tsx), useIsMobile() (src/hooks/use-mobile.tsx), q() (scripts/supabase_snapshot/snapshot.py), useDepartments() (src/hooks/useDepartments.ts), useRBAC() (src/hooks/useRBAC.ts), useProfiles() (src/hooks/useProfiles.ts), useToast() (src/hooks/use-toast.ts), useSEO() (src/hooks/useSEO.ts), useSoundEffects() (src/hooks/useSoundEffects.tsx), .collect() (scripts/supabase_snapshot/test_snapshot.py), excluded_sql() (scripts/supabase_snapshot/snapshot.py)
 - consulta local: `graphify query "<pergunta>"`, `graphify path "<A>" "<B>"`, `graphify explain "<X>"`
@@ -382,6 +382,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 
 
 ## Últimos commits
+- 2026-11-27 `9868b40` fix: valida o nome das functions antes de virar comando no deploy (#178)
 - 2026-11-26 `613009c` feat: telas para filtros salvos e perfil demografico (#181)
 - 2026-11-26 `e634962` feat(avisos): respeita a janela de silencio do usuario no push (#177)
 - 2026-11-26 `abe3168` chore(banco): remove os 46 indices fisicamente redundantes em public (#175)
@@ -396,7 +397,6 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - 2026-11-25 `ebbb9a0` feat: mostra a foto do premio na loja quando o admin cadastra (#167)
 - 2026-11-25 `f61144b` security: engajamento com score validado e anon fora das tabelas de escrita (#166)
 - 2026-11-25 `b5c751f` chore: alinha a documentacao do ledger com os 293 arquivos da main (#165)
-- 2026-11-25 `220d1d6` fix: e-mail corporativo sai do SELECT aberto de profiles (LGPD) (#164)
 
 ## Arquivos deste diretório
 - `docs/contexto/codigo/rotas.json`

@@ -1,9 +1,9 @@
 {
  "meta": {
-  "sha": "613009c549ef6118e9ea55da27388ab88b3a74a7",
+  "sha": "9868b40d27f13b0100ee7e33db8389b3630c6a50",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
-  "generated_at": "2026-11-26 20:42 UTC",
+  "generated_at": "2026-11-27 10:17 UTC",
   "files_total": 1646,
   "code_files": 1539,
   "code_lines": 285631
@@ -165567,10 +165567,19 @@
   }
  },
  "git": {
-  "sha": "613009c549ef6118e9ea55da27388ab88b3a74a7",
+  "sha": "9868b40d27f13b0100ee7e33db8389b3630c6a50",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "commits": [
+   {
+    "sha": "9868b40",
+    "date": "2026-11-27",
+    "author": "adm01-debug",
+    "subject": "fix: valida o nome das functions antes de virar comando no deploy (#178)",
+    "files": [
+     ".github/workflows/deploy-edge-functions.yml"
+    ]
+   },
    {
     "sha": "613009c",
     "date": "2026-11-26",
@@ -165969,15 +165978,6 @@
      "scripts/db-audit/README.md",
      "scripts/db-audit/check-migration-drift.mjs"
     ]
-   },
-   {
-    "sha": "c567ffe",
-    "date": "2026-11-24",
-    "author": "adm01-debug",
-    "subject": "docs(edge-functions): corrige o drift do agendamento dos jobs internos e a semeadura de cron_secret (#149)",
-    "files": [
-     "docs/estado/05-edge-functions.md"
-    ]
    }
   ],
   "hot_files": [
@@ -165994,11 +165994,11 @@
     6
    ],
    [
-    "docs/estado/05-edge-functions.md",
-    6
+    "src/pages/Profile.tsx",
+    5
    ],
    [
-    "src/pages/Profile.tsx",
+    "docs/estado/05-edge-functions.md",
     5
    ],
    [
@@ -166054,11 +166054,11 @@
     2
    ],
    [
-    "src/App.tsx",
+    ".github/workflows/deploy-edge-functions.yml",
     1
    ],
    [
-    "src/components/admin/DemographicAttributesManager.tsx",
+    "src/App.tsx",
     1
    ]
   ]
