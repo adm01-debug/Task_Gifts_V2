@@ -278,3 +278,14 @@ SELECT position('nome_job' IN pg_get_functiondef(p.oid)) > 0 AS tem_nome_job,
 FROM pg_proc p
 JOIN pg_namespace n ON n.oid = p.pronamespace
 WHERE n.nspname = 'public' AND p.proname = 'check_stale_cron_jobs';
+-- nome: versoes_da_funcao_do_vigia
+-- Uma linha por versao instalada. Duas linhas = overload: o Postgres escolhe pela assinatura e a
+-- versao errada continua sendo chamada mesmo depois do CREATE OR REPLACE na outra.
+SELECT p.oid::regprocedure AS assinatura,
+       position('nome_job' IN pg_get_functiondef(p.oid)) > 0 AS tem_nome_job,
+       position('AS b (jobname)' IN pg_get_functiondef(p.oid)) > 0 AS insert_qualificado,
+       length(pg_get_functiondef(p.oid)) AS bytes_fonte
+FROM pg_proc p
+JOIN pg_namespace n ON n.oid = p.pronamespace
+WHERE n.nspname = 'public' AND p.proname = 'check_stale_cron_jobs'
+ORDER BY p.oid;
