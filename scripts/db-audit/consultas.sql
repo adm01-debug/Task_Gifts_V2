@@ -343,3 +343,11 @@ SELECT public.user_wants_push_notification(ur.user_id, 'cron_job_parado') AS adm
 FROM public.user_roles ur
 WHERE ur.role = 'admin'
 GROUP BY 1
+-- nome: avisos_do_vigia_no_outbox
+-- enqueue_push grava em push_outbox, nao em notifications (o dispatcher e' que entrega). A consulta
+-- disparar_o_vigia contava notifications e por isso lia 0 com tudo funcionando.
+SELECT type, dedupe_key, title, created_at
+FROM public.push_outbox
+WHERE type = 'cron_job_parado'
+ORDER BY created_at DESC
+LIMIT 20
