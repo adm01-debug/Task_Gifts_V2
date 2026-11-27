@@ -163,7 +163,8 @@ SELECT (SELECT count(*) FROM public.engagement_cycles) AS ciclos_total,
 -- de fato chegariam entre 22h e 8h se a regra fosse aplicada hoje. O dispatcher foi agendado antes
 -- da janela entrar no codigo, entao o teste final e um push as 22h.
 WITH prefs AS (
-  SELECT user_id, do_not_disturb_enabled, quiet_hours_start, quiet_hours_end
+  SELECT user_id, do_not_disturb_enabled, do_not_disturb_start AS quiet_hours_start,
+    do_not_disturb_end AS quiet_hours_end
   FROM public.notification_preferences
 ), agora AS (
   SELECT (now() AT TIME ZONE 'America/Sao_Paulo')::time AS hora_local
