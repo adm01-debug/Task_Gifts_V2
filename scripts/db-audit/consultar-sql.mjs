@@ -18,6 +18,11 @@ import { consultar } from "./apply-migrations.mjs";
 
 const SOMENTE_LEITURA = /^\s*(select|with)\b/i;
 const PROIBIDO = /\b(insert|update|delete|truncate|drop|alter|create|grant|revoke|copy|call|do)\b/i;
+// Ensaio de funcao: precisa chamar a funcao de verdade para saber se ela quebra, e o unico jeito de
+// nao gravar nada e' rodar dentro de BEGIN e terminar em ROLLBACK. O guarda continua valendo para o
+// que estiver entre o BEGIN e o ROLLBACK (so SELECT), e o ROLLBACK e' acrescentado pelo runner, nao
+// pelo catalogo.
+const ENSAIO = /^begin\s*;\s*select\s+public\.([a-z_]+)\(\)\s+as\s+([a-z_]+)\s*;?$/i;
 
 function lerSql() {
   const caminho = path.resolve(process.env.SQL_FILE || path.join("scripts", "db-audit", "consultas.sql"));
@@ -42,7 +47,7 @@ function lerSql() {
       // parar na primeira linha de dados (run 46022198719 enviou so a primeira linha).
       if (coletando) { guardadas.push(linha); if (linha.trim() !== "" && !linha.trim().startsWith("--")) sqlComecou = true; }
     }
-    sql = guardadas.filter(function (l) { return !l.trim().startsWith("--"); }).join("\n").trim().replace(/;$/, "").trim();
+    sql = guardadas.filter(function (l) { return !l.trim().startsWith("--"); }).join("\n").trim();
     if (!sql) {
       const nomes = fonte.map(function (l) { return /^--\s*nome:\s*(\S+)\s*$/.exec(l.trim()); })
         .filter(Boolean).map(function (m) { return m[1]; });
@@ -54,7 +59,16 @@ function lerSql() {
   } else {
     throw new Error("informe SELECAO_SQL (catalogo) ou SQL_FILE (arquivo avulso)");
   }
-  if (!SOMENTE_LEITURA.test(sql)) throw new Error("a consulta precisa comecar por SELECT ou WITH");
+  if (!SOMENTE_LEITURA.test(sql)) {
+    const ensaio = ENSAIO.exec(sql.replace(/\s+/g, " ").trim());
+    if (!ensaio) throw new Error("a consulta precisa comecar por SELECT ou WITH");
+    // Só funcao de envio/agendamento de aviso tem ensaio liberado, e o rollback e' imposto aqui.
+    if (!/^(send|notify|enqueue|dispatch|push|process|run|refresh)_/.test(ensaio[1])) {
+      throw new Error("ensaio permitido apenas para funcoes de envio/agendamento");
+    }
+    return "begin; select public." + ensaio[1] + "() as " + ensaio[2] + "; rollback;";
+  }
+  sql = sql.replace(/;$/, "").trim();
   // Sem isso um "select 1; delete ..." passaria pela checagem do inicio.
   if (sql.includes(";")) throw new Error("uma unica instrucao por arquivo (sem ponto e virgula no meio)");
   if (PROIBIDO.test(sql)) throw new Error("palavra de escrita encontrada na consulta");
