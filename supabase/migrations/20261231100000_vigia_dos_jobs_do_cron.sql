@@ -29,6 +29,7 @@ ALTER TABLE public.cron_job_watch_baseline ENABLE ROW LEVEL SECURITY;
 REVOKE ALL ON public.cron_job_watch_baseline FROM PUBLIC, anon, authenticated;
 GRANT SELECT ON public.cron_job_watch_baseline TO service_role;
 
+
 CREATE OR REPLACE FUNCTION public.check_stale_cron_jobs(
   p_force boolean DEFAULT false
 )
@@ -45,7 +46,6 @@ SET search_path = public
 AS $function$
 DECLARE
   v_user uuid;
-  v_avisados integer := 0;
   r record;
 BEGIN
   -- Cron e service_role chegam aqui com auth.uid() NULL: so' a chamada pela interface exige admin.
@@ -53,59 +53,41 @@ BEGIN
     PERFORM public._require_admin();
   END IF;
 
-  CREATE TEMP TABLE IF NOT EXISTS _vigia (
-    jobname text, schedule text, minuto text, hora text, diames text, mes text, diasemana text,
-    ativo boolean, criado timestamptz, linha timestamptz, ultima timestamptz, desde timestamptz,
-    espera_horas numeric
-  ) ON COMMIT DROP;
-  TRUNCATE _vigia;
-
-  INSERT INTO _vigia
-  SELECT j.jobname,
-         j.schedule,
-         split_part(j.schedule, ' ', 1),
-         split_part(j.schedule, ' ', 2),
-         split_part(j.schedule, ' ', 3),
-         split_part(j.schedule, ' ', 4),
-         split_part(j.schedule, ' ', 5),
-         j.active,
-         j.min_time,
-         d.linha,
-         d.ultima,
-         GREATEST(COALESCE(j.min_time, '-infinity'::timestamptz), COALESCE(b.visto_em, '-infinity'::timestamptz)),
-         CASE
-           WHEN split_part(j.schedule, ' ', 1) ~ '^\*' OR split_part(j.schedule, ' ', 2) ~ '^\*' THEN 2
-           WHEN split_part(j.schedule, ' ', 3) ~ '^\*' AND split_part(j.schedule, ' ', 5) ~ '^[0-9]' THEN 8 * 24
-           WHEN split_part(j.schedule, ' ', 3) ~ '^\*' THEN 26
-           ELSE 40 * 24
-         END
-  FROM cron.job j
-  LEFT JOIN public.cron_job_watch_baseline b ON b.jobname = j.jobname
-  LEFT JOIN LATERAL (
-    SELECT max(d2.start_time) AS ultima, count(*) AS linha
-    FROM cron.job_run_details d2
-    WHERE d2.jobid = j.jobid
-  ) d ON true;
-
   -- Job que o vigia acabou de conhecer ganha o marco zero: a espera conta daqui, nao da criacao.
   INSERT INTO public.cron_job_watch_baseline (jobname)
-  SELECT v.jobname FROM _vigia v
-  WHERE v.linha = 0
+  SELECT j.jobname
+  FROM cron.job j
+  WHERE NOT EXISTS (SELECT 1 FROM cron.job_run_details d WHERE d.jobid = j.jobid)
   ON CONFLICT (jobname) DO NOTHING;
 
   FOR r IN
-    -- `criado` nulo = job sem min_time: nunca se sabe quando comecou, entao so' entra no forcado.
+    -- `desde` nulo = job sem min_time e sem marco zero: nao se sabe quando comecou, entao so' entra no forcado.
     SELECT v.jobname, v.schedule, v.ultima, v.espera_horas,
            ROUND(EXTRACT(EPOCH FROM (now() - COALESCE(v.ultima, v.desde))) / 3600.0, 1) AS atraso_horas
-    FROM _vigia v
-    WHERE v.ativo
-      AND (p_force OR v.desde IS NOT NULL)
-      AND (p_force OR v.desde < now() - make_interval(hours => v.espera_horas::int))
-      AND (p_force OR now() - COALESCE(v.ultima, v.desde) > make_interval(hours => v.espera_horas::int))
+    FROM (
+      SELECT j.jobname, j.schedule,
+             d.ultima,
+             GREATEST(COALESCE(j.min_time, '-infinity'::timestamptz),
+                       COALESCE(w.visto_em, '-infinity'::timestamptz)) AS desde,
+             CASE
+               WHEN split_part(j.schedule, ' ', 1) ~ '^\*' OR split_part(j.schedule, ' ', 2) ~ '^\*' THEN 2
+               WHEN split_part(j.schedule, ' ', 3) ~ '^\*' AND split_part(j.schedule, ' ', 5) ~ '^[0-9]' THEN 8 * 24
+               WHEN split_part(j.schedule, ' ', 3) ~ '^\*' THEN 26
+               ELSE 40 * 24
+             END AS espera_horas
+      FROM cron.job j
+      LEFT JOIN public.cron_job_watch_baseline w ON w.jobname = j.jobname
+      LEFT JOIN LATERAL (
+        SELECT max(d2.start_time) AS ultima
+        FROM cron.job_run_details d2
+        WHERE d2.jobid = j.jobid
+      ) d ON true
+      WHERE j.active
+    ) v
+    WHERE p_force OR (v.desde IS NOT NULL AND now() - COALESCE(v.ultima, v.desde) > make_interval(hours => v.espera_horas::int))
     ORDER BY COALESCE(v.ultima, v.desde) NULLS FIRST
   LOOP
     -- Um aviso por admin por job por dia: o vigia roda varias vezes ao dia e nao pode virar spam.
-    v_avisados := v_avisados + 1;
     FOR v_user IN
       SELECT DISTINCT ur.user_id FROM public.user_roles ur WHERE ur.role = 'admin'
     LOOP
