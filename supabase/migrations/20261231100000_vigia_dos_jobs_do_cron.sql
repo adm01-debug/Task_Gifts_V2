@@ -60,7 +60,7 @@ BEGIN
   SELECT j.jobname AS nome_job
   FROM cron.job j
   WHERE NOT EXISTS (SELECT 1 FROM cron.job_run_details d WHERE d.jobid = j.jobid)
-  ON CONFLICT (jobname) DO NOTHING;
+  ON CONFLICT ON CONSTRAINT cron_job_watch_baseline_pkey DO NOTHING;
 
   FOR r IN
     -- `desde` nulo = job sem min_time e sem marco zero: nao se sabe quando comecou, so' entra no forcado.
