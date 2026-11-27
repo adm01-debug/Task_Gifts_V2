@@ -301,10 +301,12 @@ WHERE n.nspname = 'cron' AND c.relname IN ('job', 'job_run_details')
 GROUP BY c.relname
 ORDER BY c.relname;
 -- nome: prova_do_rollback
--- A Management API executa tudo numa transacao so'? Roda o vigia (que grava o marco zero) dentro de
--- BEGIN/ROLLBACK e depois conta as linhas. Se a contagem mudar, o ROLLBACK foi aplicado.
--- Esperado: antes e depois iguais.
-BEGIN;
-SELECT (SELECT count(*) FROM public.cron_job_watch_baseline) AS antes,
-       (SELECT count(*) FROM public.check_stale_cron_jobs(true)) AS acusados;
-ROLLBACK;
+-- A Management API executa so' a PRIMEIRA instrucao do lote: o BEGIN/ROLLBACK anterior nunca chegou
+-- ao banco (run 46060242692 devolveu so' "antes", e o baseline continuou em 0). Aqui tudo cabe numa
+-- instrucao so': a CTE dispara o vigia (que grava o marco zero) e a leitura do contador vem depois
+-- do efeito, na mesma consulta. Sem transacao aberta, nada fica pendente.
+WITH disparo AS MATERIALIZED (
+  SELECT count(*) AS acusados FROM public.check_stale_cron_jobs(true)
+)
+SELECT (SELECT acusados FROM disparo) AS acusados,
+       (SELECT count(*) FROM public.cron_job_watch_baseline) AS baseline_depois
