@@ -317,7 +317,7 @@ SELECT (SELECT acusados FROM disparo) AS acusados,
 SELECT p.prosecdef AS security_definer,
        pg_get_userbyid(p.proowner) AS dono_da_funcao,
        (SELECT rolbypassrls FROM pg_roles r WHERE r.rolname = pg_get_userbyid(p.proowner)) AS dono_ignora_rls,
-       has_table_privilege(pg_get_userbyid(p.proowner), 'public.cron_job_watch_baseline', 'INSERT') AS dono_pode_inserir,
+       has_table_privilege(pg_get_userbyid(p.proowner), 'public.cron_job_watch_baseline', 8) AS dono_pode_inserir,
        (SELECT relrowsecurity FROM pg_class c WHERE c.oid = 'public.cron_job_watch_baseline'::regclass) AS tabela_tem_rls,
        (SELECT count(*) FROM public.cron_job_watch_baseline) AS linhas
 FROM pg_proc p
