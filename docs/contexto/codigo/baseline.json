@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "33eb05adee03383a09f0d18a482aa55b94606051",
+  "commit": "fb2b5cb6ad0f573a1161bb576dec05f7e3be9b2e",
   "branch": "main",
-  "data_commit": "2026-11-27T07:27:19-03:00",
+  "data_commit": "2026-11-27T07:35:48-03:00",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "ultimos_commits": [
+   {
+    "sha": "fb2b5cb",
+    "data": "2026-11-27",
+    "assunto": "fix(db-audit): --verify roda mesmo quando o ledger ja esta alinhado (#185)"
+   },
    {
     "sha": "33eb05a",
     "data": "2026-11-27",
@@ -126,11 +131,6 @@
     "sha": "b9db75d",
     "data": "2026-11-25",
     "assunto": "fix: restringe SELECT de profiles ao allowlist de colunas (LGPD) (#161)"
-   },
-   {
-    "sha": "0c592ca",
-    "data": "2026-11-25",
-    "assunto": "fix: painel de certificacoes e entrega do time voltam a carregar (#163)"
    }
   ],
   "arquivos_mudados_7d": 298,
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 150
+    "commits": 151
    },
    {
     "autor": "dependabot[bot]",

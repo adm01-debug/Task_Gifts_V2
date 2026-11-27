@@ -1,9 +1,9 @@
 {
  "meta": {
-  "sha": "33eb05adee03383a09f0d18a482aa55b94606051",
+  "sha": "fb2b5cb6ad0f573a1161bb576dec05f7e3be9b2e",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
-  "generated_at": "2026-11-27 10:27 UTC",
+  "generated_at": "2026-11-27 10:38 UTC",
   "files_total": 1651,
   "code_files": 1543,
   "code_lines": 286106
@@ -165871,10 +165871,19 @@
   }
  },
  "git": {
-  "sha": "33eb05adee03383a09f0d18a482aa55b94606051",
+  "sha": "fb2b5cb6ad0f573a1161bb576dec05f7e3be9b2e",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "commits": [
+   {
+    "sha": "fb2b5cb",
+    "date": "2026-11-27",
+    "author": "adm01-debug",
+    "subject": "fix(db-audit): --verify roda mesmo quando o ledger ja esta alinhado (#185)",
+    "files": [
+     "scripts/db-audit/apply-migrations.mjs"
+    ]
+   },
    {
     "sha": "33eb05a",
     "date": "2026-11-27",
@@ -166266,30 +166275,16 @@
      "docs/estado/05-edge-functions.md",
      "docs/estado/06-integracoes.md"
     ]
-   },
-   {
-    "sha": "e681a89",
-    "date": "2026-11-24",
-    "author": "adm01-debug",
-    "subject": "chore: sobe o ledger para 282 nas docs (#154)",
-    "files": [
-     "AGENTS.md",
-     "docs/agentes/banco.md",
-     "docs/agentes/mapa-repo.md",
-     "docs/estado/05-edge-functions.md",
-     "scripts/db-audit/README.md",
-     "scripts/db-audit/check-migration-drift.mjs"
-    ]
    }
   ],
   "hot_files": [
    [
     "docs/agentes/banco.md",
-    9
+    8
    ],
    [
     "docs/agentes/mapa-repo.md",
-    9
+    8
    ],
    [
     "src/pages/Profile.tsx",
@@ -166300,23 +166295,19 @@
     4
    ],
    [
-    "scripts/db-audit/README.md",
-    4
+    "scripts/db-audit/apply-migrations.mjs",
+    3
    ],
    [
     "src/integrations/supabase/types.ts",
     3
    ],
    [
-    "docs/estado/05-edge-functions.md",
+    "scripts/db-audit/README.md",
     3
    ],
    [
     ".github/workflows/db-migrate.yml",
-    2
-   ],
-   [
-    "scripts/db-audit/apply-migrations.mjs",
     2
    ],
    [
@@ -166361,6 +166352,10 @@
    ],
    [
     "src/services/passwordResetService.ts",
+    2
+   ],
+   [
+    "src/services/profilesService.ts",
     2
    ]
   ]
