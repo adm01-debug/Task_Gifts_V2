@@ -157,3 +157,30 @@ SELECT (SELECT count(*) FROM public.engagement_cycles) AS ciclos_total,
   (SELECT count(*) FROM public.engagement_question_assignments WHERE answered_at IS NULL) AS sem_resposta,
   (SELECT count(*) FROM pendentes) AS pessoas_elegiveis,
   (SELECT coalesce(sum(perguntas), 0) FROM pendentes) AS perguntas_pendentes
+
+-- nome: alcance_do_silencio
+-- Janela de silencio com a regra que o dispatcher usa (America/Sao_Paulo por padrao) + os tipos que
+-- de fato chegariam entre 22h e 8h se a regra fosse aplicada hoje. O dispatcher foi agendado antes
+-- da janela entrar no codigo, entao o teste final e um push as 22h.
+WITH prefs AS (
+  SELECT user_id, do_not_disturb_enabled, quiet_hours_start, quiet_hours_end
+  FROM public.notification_preferences
+), agora AS (
+  SELECT (now() AT TIME ZONE 'America/Sao_Paulo')::time AS hora_local
+)
+SELECT
+  p.do_not_disturb_enabled, p.quiet_hours_start, p.quiet_hours_end, count(*) AS pessoas,
+  (SELECT hora_local FROM agora) AS hora_local_agora,
+  CASE WHEN p.quiet_hours_start > p.quiet_hours_end
+    THEN (SELECT hora_local FROM agora) >= p.quiet_hours_start
+         OR (SELECT hora_local FROM agora) < p.quiet_hours_end
+    ELSE (SELECT hora_local FROM agora) >= p.quiet_hours_start
+         AND (SELECT hora_local FROM agora) < p.quiet_hours_end
+  END AS em_silencio_agora,
+  (SELECT count(*) FROM public.notifications
+    WHERE created_at >= now() - interval '14 days') AS avisos_14_dias,
+  (SELECT count(*) FROM public.push_outbox
+    WHERE status = 'pending') AS push_pendentes
+FROM prefs p
+GROUP BY p.do_not_disturb_enabled, p.quiet_hours_start, p.quiet_hours_end
+ORDER BY pessoas DESC
