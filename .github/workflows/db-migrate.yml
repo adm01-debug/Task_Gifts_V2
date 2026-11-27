@@ -31,6 +31,11 @@ on:
         required: false
         default: ""
         type: string
+      reaplicar:
+        description: "opcional: versao (ex 20261231100000) de uma migration JA registrada no ledger que precisa rodar de novo - use quando o arquivo foi corrigido com CREATE OR REPLACE"
+        required: false
+        default: ""
+        type: string
 
 permissions:
   contents: read
@@ -57,6 +62,7 @@ jobs:
           MIGRATION_MODE: ${{ inputs.mode }}
           VERIFY_OBJECT: ${{ inputs.verify }}
           SELECAO_SQL: ${{ inputs.sql }}
+          REAPLICAR_VERSAO: ${{ inputs.reaplicar }}
         run: |
           set -uo pipefail
           if [ -z "${SUPABASE_ACCESS_TOKEN:-}" ]; then
@@ -78,6 +84,18 @@ jobs:
             *) echo "::error::modo invalido: '${MIGRATION_MODE}' (use check ou apply)"; exit 1 ;;
           esac
           # O nome do objeto vai por --verify=, nunca virando palavra solta no shell.
+          if [ -n "${REAPLICAR_VERSAO:-}" ]; then
+            if ! printf '%s' "${REAPLICAR_VERSAO}" | grep -Eq '^[0-9]{14}$'; then
+              echo "::error::input reaplicar deve ser a versao de 14 digitos (ex 20261231100000)"
+              exit 1
+            fi
+            if ! ls "supabase/migrations/${REAPLICAR_VERSAO}"*.sql >/dev/null 2>&1; then
+              echo "::error::nao ha arquivo supabase/migrations/${REAPLICAR_VERSAO}*.sql no repo"
+              exit 1
+            fi
+            echo "reaplicando a versao ${REAPLICAR_VERSAO} (ja registrada no ledger)"
+            ARGS="$ARGS --reaplicar=${REAPLICAR_VERSAO}"
+          fi
           if [ -n "${VERIFY_OBJECT:-}" ]; then
             node scripts/db-audit/apply-migrations.mjs $ARGS --verify="$VERIFY_OBJECT"
           else

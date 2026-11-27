@@ -32,21 +32,31 @@ import { readdirSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
 
-const USO = "uso: node scripts/db-audit/apply-migrations.mjs [--apply] [--verify <objeto>] [--dir <dir>]";
+const USO = "uso: node scripts/db-audit/apply-migrations.mjs [--apply] [--verify <objeto>] [--reaplicar <versao>] [--dir <dir>]";
 
 const IDENTIFICADOR = /^[a-z_][a-z0-9_]*$/i;
+const VERSAO = /^\d{14}$/;
 
 function lerArgs(argv) {
   const opts = {
     apply: false,
     verify: null,
+    reaplicar: null,
     dir: process.env.MIGRATIONS_DIR || "supabase/migrations",
   };
   for (let i = 0; i < argv.length; i += 1) {
     const arg = argv[i];
     // `--verify=objeto` e `--verify objeto`: o workflow passa a forma com `=`.
     const separado = /^--verify=(.*)$/.exec(arg);
-    if (separado) {
+    // Reaplica uma versao JA registrada no ledger: so' para arquivo corrigido com
+    // CREATE OR REPLACE, quando o banco ficou com a versao quebrada da funcao.
+    const reaplicar = /^--reaplicar=(.*)$/.exec(arg);
+    if (reaplicar) {
+      if (!VERSAO.test(reaplicar[1])) {
+        throw new Error(`--reaplicar exige a versao de 14 digitos\n${USO}`);
+      }
+      opts.reaplicar = reaplicar[1];
+    } else if (separado) {
       if (!IDENTIFICADOR.test(separado[1])) {
         throw new Error(`--verify exige um nome de objeto (letras, digitos e _)\n${USO}`);
       }
@@ -145,6 +155,17 @@ export async function main(argv = process.argv.slice(2)) {
       `| no banco sem arquivo: ${orfaos.length}`,
   );
   for (const m of pendentes) console.log(`  PENDENTE    ${m.version} ${m.name} (${m.nome})`);
+  if (opts.reaplicar) {
+    const alvo = local.find((m) => m.version === opts.reaplicar);
+    if (!alvo) throw new Error(`--reaplicar: versao ${opts.reaplicar} nao existe em ${opts.dir}`);
+    if (!porVersao.has(alvo.version)) {
+      throw new Error(
+        `--reaplicar: versao ${alvo.version} ainda nao esta no ledger; use --apply (o arquivo roda sozinho)`,
+      );
+    }
+    pendentes.push(alvo);
+    console.log(`  REAPLICAR   ${alvo.version} ${alvo.name} (${alvo.nome})`);
+  }
   for (const m of nomesDivergentes) {
     console.log(`  NOME        ${m.version}: repo="${m.name}" banco="${porVersao.get(m.version)}"`);
   }
