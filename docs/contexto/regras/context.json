@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "dfe7e3c3812a9bda8bb0f2f2cd686206f420ed87",
+  "sha": "510674696a221421a17d04f121e7c13d30aa582a",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
-  "generated_at": "2026-11-27 10:18 UTC",
-  "files_total": 1648,
-  "code_files": 1540,
-  "code_lines": 285810
+  "generated_at": "2026-11-27 10:24 UTC",
+  "files_total": 1649,
+  "code_files": 1541,
+  "code_lines": 285835
  },
  "version": "1.3.2",
- "facts_hash": "28fde0417e8f3429",
+ "facts_hash": "cac5adbd1adf79c2",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -203,7 +203,7 @@
   "languages": {
    ".ts": 595,
    ".tsx": 593,
-   ".sql": 319,
+   ".sql": 320,
    ".mjs": 22,
    ".js": 5,
    ".py": 5,
@@ -36983,6 +36983,7 @@
    "supabase/migrations/20261228300000_fecha_corridas_da_exclusao_de_departamento_e_da_aposta_diaria.sql",
    "supabase/migrations/20261228310000_dedup_indices_redundantes.sql",
    "supabase/migrations/20261229000000_janela_de_silencio_dos_avisos.sql",
+   "supabase/migrations/20261230090000_backfill_janela_de_silencio_dos_avisos.sql",
    "supabase/tests/climate/assertions.sql",
    "supabase/tests/climate/stubs.sql",
    "src/integrations/supabase/types.ts"
@@ -55709,8 +55710,8 @@
   },
   {
    "module": "supabase/migrations",
-   "files": 317,
-   "lines": 42340,
+   "files": 318,
+   "lines": 42365,
    "tables": [],
    "exports": [],
    "docs": [],
@@ -165543,6 +165544,10 @@
    ],
    "uses_service_role": true
   },
+  "supabase/migrations/20261230090000_backfill_janela_de_silencio_dos_avisos.sql": {
+   "path": "supabase/migrations/20261230090000_backfill_janela_de_silencio_dos_avisos.sql",
+   "lines": 25
+  },
   "supabase/tests/climate/assertions.sql": {
    "path": "supabase/tests/climate/assertions.sql",
    "lines": 404,
@@ -165638,10 +165643,19 @@
   }
  },
  "git": {
-  "sha": "dfe7e3c3812a9bda8bb0f2f2cd686206f420ed87",
+  "sha": "510674696a221421a17d04f121e7c13d30aa582a",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "commits": [
+   {
+    "sha": "5106746",
+    "date": "2026-11-27",
+    "author": "adm01-debug",
+    "subject": "chore: cria a linha padrao da janela de silencio para quem nunca abriu a tela (#180)",
+    "files": [
+     "supabase/migrations/20261230090000_backfill_janela_de_silencio_dos_avisos.sql"
+    ]
+   },
    {
     "sha": "dfe7e3c",
     "date": "2026-11-27",
@@ -166037,15 +166051,6 @@
      "scripts/db-audit/check-migration-drift.mjs",
      "supabase/migrations/20261220000000_fix_sre_rpcs_and_dispatch_trigger.sql"
     ]
-   },
-   {
-    "sha": "88e4b45",
-    "date": "2026-11-24",
-    "author": "adm01-debug",
-    "subject": "fix(clima): antecipa o fim da pesquisa ativa para 30/11 e destrava o lembrete (#148)",
-    "files": [
-     "supabase/migrations/20261224130000_climate_antecipa_fim_pesquisa.sql"
-    ]
    }
   ],
   "hot_files": [
@@ -166122,11 +166127,11 @@
     2
    ],
    [
-    ".github/workflows/db-migrate.yml",
+    "supabase/migrations/20261230090000_backfill_janela_de_silencio_dos_avisos.sql",
     1
    ],
    [
-    "scripts/automation.config.json",
+    ".github/workflows/db-migrate.yml",
     1
    ]
   ]

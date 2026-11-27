@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "dfe7e3c3812a9bda8bb0f2f2cd686206f420ed87",
+  "commit": "510674696a221421a17d04f121e7c13d30aa582a",
   "branch": "main",
-  "data_commit": "2026-11-27T07:17:04-03:00",
+  "data_commit": "2026-11-27T07:23:44-03:00",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "ultimos_commits": [
+   {
+    "sha": "5106746",
+    "data": "2026-11-27",
+    "assunto": "chore: cria a linha padrao da janela de silencio para quem nunca abriu a tela (#180)"
+   },
    {
     "sha": "dfe7e3c",
     "data": "2026-11-27",
@@ -126,14 +131,9 @@
     "sha": "c941b10",
     "data": "2026-11-24",
     "assunto": "docs: corrige o nome da migration que reagenda o job 33 (#157)"
-   },
-   {
-    "sha": "52db204",
-    "data": "2026-11-24",
-    "assunto": "fix: libera cadastro e login por passkey na allowlist de producao (#156)"
    }
   ],
-  "arquivos_mudados_7d": 295,
+  "arquivos_mudados_7d": 296,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "supabase/functions/_shared",
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 147
+    "commits": 148
    },
    {
     "autor": "dependabot[bot]",
@@ -310,7 +310,7 @@
   ]
  },
  "contagens": {
-  "arquivos_total": 1637,
+  "arquivos_total": 1638,
   "arquivos_codigo": 1215,
   "linhas_codigo": 241369,
   "rotas": 88,
@@ -322,7 +322,7 @@
   "hooks": 157,
   "edge_functions": 23,
   "tabelas": 239,
-  "migrations": 317,
+  "migrations": 318,
   "cron_jobs": 40,
   "testes": 182,
   "workflows": 7,
