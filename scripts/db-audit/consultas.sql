@@ -245,3 +245,22 @@ SELECT (SELECT count(*) FROM cron.job WHERE active) AS jobs_ativos,
   (SELECT count(*) FROM cron.job WHERE jobname = 'cron-jobs-parados') AS vigia_agendado,
   (SELECT schedule FROM cron.job WHERE jobname = 'cron-jobs-parados') AS vigia_schedule,
   (SELECT count(*) FROM public.check_stale_cron_jobs(true)) AS parados
+
+-- nome: verificar_vigia
+-- Mostra se a funcao instalada em producao e' a versao corrigida. Se tem_apelido = false, o banco
+-- ainda tem o codigo antigo que estoura 42702 - prova de que a migration nao chegou.
+SELECT p.proname,
+       pg_get_function_identity_arguments(p.oid) AS argumentos,
+       p.prosecdef AS security_definer,
+       (pg_get_functiondef(p.oid) LIKE '%nome_job%') AS tem_apelido
+FROM pg_proc p
+JOIN pg_namespace n ON n.oid = p.pronamespace
+WHERE n.nspname = 'public' AND p.proname = 'check_stale_cron_jobs';
+
+-- nome: vigia_no_baseline
+-- Quantas linhas o marco zero gravou e se sobrou job ativo sem execucao e sem marco zero.
+SELECT (SELECT count(*) FROM public.cron_job_watch_baseline) AS no_baseline,
+       (SELECT count(*) FROM cron.job WHERE active) AS jobs_ativos,
+       (SELECT count(*) FROM cron.job j WHERE j.active
+          AND NOT EXISTS (SELECT 1 FROM cron.job_run_details d WHERE d.jobid = j.jobid)
+          AND NOT EXISTS (SELECT 1 FROM public.cron_job_watch_baseline w WHERE w.jobname = j.jobname)) AS ativos_sem_baseline;
