@@ -56,8 +56,8 @@ BEGIN
   END IF;
 
   -- Job que nunca rodou ganha o marco zero: a espera do vigia conta daqui, nao da criacao.
-  INSERT INTO public.cron_job_watch_baseline (jobname)
-  SELECT j.jobname
+  INSERT INTO public.cron_job_watch_baseline AS b (jobname)
+  SELECT j.jobname AS nome_job
   FROM cron.job j
   WHERE NOT EXISTS (SELECT 1 FROM cron.job_run_details d WHERE d.jobid = j.jobid)
   ON CONFLICT (jobname) DO NOTHING;
