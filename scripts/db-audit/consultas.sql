@@ -322,3 +322,16 @@ SELECT p.prosecdef AS security_definer,
        (SELECT count(*) FROM public.cron_job_watch_baseline) AS linhas
 FROM pg_proc p
 WHERE p.proname = 'check_stale_cron_jobs' AND p.pronamespace = 'public'::regnamespace
+-- nome: disparar_o_vigia
+-- Executa o vigia de verdade (sem ROLLBACK) e mostra o que saiu. Serve para provar o caminho completo:
+-- marco zero gravado, jobs parados acusados e aviso enfileirado para cada admin.
+-- `MATERIALIZED` obriga o disparo antes das leituras; tudo numa instrucao so' porque a Management API
+-- executa apenas a primeira.
+WITH disparo AS MATERIALIZED (
+  SELECT count(*) AS acusados FROM public.check_stale_cron_jobs(true)
+)
+SELECT (SELECT acusados FROM disparo) AS acusados,
+       (SELECT count(*) FROM public.cron_job_watch_baseline) AS baseline,
+       (SELECT count(*) FROM public.notifications
+         WHERE type = 'cron_job_parado') AS avisos_do_vigia,
+       (SELECT count(*) FROM cron.job WHERE active) AS jobs_ativos
