@@ -236,3 +236,12 @@ SELECT j.jobid, j.jobname, j.schedule, j.active, j.username,
   left(j.command, 70) AS comando
 FROM cron.job j
 ORDER BY execucoes ASC, j.jobid
+-- nome: prova_do_vigia
+-- Prova em producao que o vigia enxerga o que deveria: jobs ativos, o marco zero criado para quem
+-- nunca rodou, e o que check_stale_cron_jobs(p_force => true) devolve. `p_force` ignora a espera
+-- (um job morto ha semanas nao espere 8 dias para aparecer), mas nao cria job nem apaga nada.
+SELECT (SELECT count(*) FROM cron.job WHERE active) AS jobs_ativos,
+  (SELECT count(*) FROM public.cron_job_watch_baseline) AS marcos_zero,
+  (SELECT count(*) FROM cron.job WHERE jobname = 'cron-jobs-parados') AS vigia_agendado,
+  (SELECT schedule FROM cron.job WHERE jobname = 'cron-jobs-parados') AS vigia_schedule,
+  (SELECT count(*) FROM public.check_stale_cron_jobs(true)) AS parados
