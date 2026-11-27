@@ -75,7 +75,7 @@
   {
    "arquivo": "scripts/db-audit/apply-migrations.mjs",
    "descricao": "* Aplica em producao as migrations de `supabase/migrations/` que ainda nao",
-   "linhas": 234,
+   "linhas": 255,
    "env": [
     "MIGRATIONS_DIR",
     "SUPABASE_ACCESS_TOKEN",

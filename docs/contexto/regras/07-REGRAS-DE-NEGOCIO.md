@@ -1,6 +1,6 @@
 # 07 · REGRAS DE NEGÓCIO
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `d28797c9b1` · branch `main` · 2026-11-27 17:46 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `36c9638f53` · branch `main` · 2026-11-27 17:55 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## A. Regras escritas por humanos (`manual/` — prioridade máxima, nunca sobrescrito)
@@ -3352,6 +3352,9 @@ _nenhum item encontrado_
 | Artifact-id sem arquivo correspondente | `scripts/ci/contexto-publicacao.unit.mjs` |
 | Download simulado falhou: ${failDownload} | `scripts/ci/contexto-publicacao.unit.mjs` |
 | --dir exige um caminho\n${USO} | `scripts/db-audit/apply-migrations.mjs` |
+| --reaplicar exige a versao de 14 digitos\n${USO} | `scripts/db-audit/apply-migrations.mjs` |
+| --reaplicar: versao ${alvo.version} ainda nao esta no ledger; use --apply (o arquivo roda sozinho) | `scripts/db-audit/apply-migrations.mjs` |
+| --reaplicar: versao ${opts.reaplicar} nao existe em ${opts.dir} | `scripts/db-audit/apply-migrations.mjs` |
 | --verify exige um nome de objeto (letras, digitos e _)\n${USO} | `scripts/db-audit/apply-migrations.mjs` |
 | Management API ${resposta.status}: ${texto.slice(0, 500)} | `scripts/db-audit/apply-migrations.mjs` |
 | SUPABASE_ACCESS_TOKEN ausente no ambiente | `scripts/db-audit/apply-migrations.mjs` |
@@ -3642,10 +3645,7 @@ _nenhum item encontrado_
 | Erro ao configurar 2FA | `src/hooks/useTwoFactor.ts` |
 | Erro ao desativar 2FA | `src/hooks/useTwoFactor.ts` |
 | Erro ao verificar código | `src/hooks/useTwoFactor.ts` |
-| User not authenticated | `src/hooks/useTwoFactor.ts` |
-| Não foi possível salvar a preferência | `src/hooks/useTypePreferences.ts` |
-| Não foi possível salvar as preferências | `src/hooks/useTypePreferences.ts` |
-| … +227 linhas — lista completa em `context.json` | |
+| … +230 linhas — lista completa em `context.json` | |
 
 ## J. Controle de acesso no código (checagens de perfil/permissão)
 

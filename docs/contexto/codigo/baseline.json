@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "d28797c9b128805dc0ff62bcfa760cd8e5f4c3a1",
+  "commit": "36c9638f53ddf0207b0c5636a74b190bcb78107f",
   "branch": "main",
-  "data_commit": "2026-11-27T14:46:03-03:00",
+  "data_commit": "2026-11-27T14:55:22-03:00",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "ultimos_commits": [
+   {
+    "sha": "36c9638",
+    "data": "2026-11-27",
+    "assunto": "feat(infra): modo reaplicar no db-migrate (#212)"
+   },
    {
     "sha": "d28797c",
     "data": "2026-11-27",
@@ -126,11 +131,6 @@
     "sha": "99d1db8",
     "data": "2026-11-27",
     "assunto": "fix: consulta do lembrete semanal aponta para o job engagement-reminders (#188)"
-   },
-   {
-    "sha": "833ce53",
-    "data": "2026-11-27",
-    "assunto": "chore: consultas do catalogo para achar o job do cron e conferir cobertura de preferencias (#187)"
    }
   ],
   "arquivos_mudados_7d": 297,
@@ -278,6 +278,10 @@
     "mudancas": 5
    },
    {
+    "arquivo": "scripts/db-audit/apply-migrations.mjs",
+    "mudancas": 5
+   },
+   {
     "arquivo": "scripts/db-audit/migration-baseline.json",
     "mudancas": 5
    },
@@ -292,16 +296,12 @@
    {
     "arquivo": "vercel.json",
     "mudancas": 5
-   },
-   {
-    "arquivo": ".env.example",
-    "mudancas": 4
    }
   ],
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 177
+    "commits": 178
    },
    {
     "autor": "dependabot[bot]",
@@ -312,7 +312,7 @@
  "contagens": {
   "arquivos_total": 1643,
   "arquivos_codigo": 1217,
-  "linhas_codigo": 241697,
+  "linhas_codigo": 241718,
   "rotas": 88,
   "rotas_http_backend": 0,
   "vistas_por_id": 0,
@@ -368,7 +368,7 @@
   },
   "scripts/db-audit": {
    "arquivos": 3,
-   "linhas": 969
+   "linhas": 990
   },
   "scripts/graphify-local.mjs": {
    "arquivos": 1,
@@ -587,7 +587,7 @@
  ],
  "qualidade": {
   "any": 81,
-  "console_log": 97,
+  "console_log": 98,
   "ts_ignore": 0,
   "eslint_disable": 0,
   "todos": 1,
