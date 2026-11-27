@@ -67,14 +67,23 @@ ORDER BY d.start_time DESC
 LIMIT 5
 
 -- nome: entregas_recentes_do_lembrete
--- O que chegou em notifications e push_outbox desde 20/11, agrupado por hora e tipo, para reconhecer
--- a entrega do engagement-reminders sem depender de cron.job_run_details. push_outbox nao tem
--- notification_id: a ligacao pelo conteudo e type + created_at na mesma hora.
-SELECT date_trunc('hour', n.created_at) AS hora, n.type, count(*) AS avisos,
-  (SELECT count(*) FROM public.push_outbox o
-    WHERE o.type = n.type AND date_trunc('hour', o.created_at) = date_trunc('hour', n.created_at)) AS pushes_na_mesma_hora
-FROM public.notifications n
-WHERE n.created_at >= '2026-11-20 00:00:00+00'::timestamptz
-GROUP BY 1, 2
-ORDER BY 1 DESC, 2
+-- O que chegou em notifications e push_outbox desde 20/11, para reconhecer a entrega do
+-- engagement-reminders sem depender de cron.job_run_details. push_outbox nao tem o id do aviso:
+-- a ligacao possivel e por type + mesma hora, feita em CTE (subquery com coluna da consulta externa
+-- e proibida dentro de GROUP BY: erro 42803 no run 46023668003).
+WITH avisos AS (
+  SELECT date_trunc('hour', created_at) AS hora, type, count(*) AS avisos
+  FROM public.notifications
+  WHERE created_at >= '2026-11-20 00:00:00+00'::timestamptz
+  GROUP BY 1, 2
+), pushes AS (
+  SELECT date_trunc('hour', created_at) AS hora, type, count(*) AS pushes
+  FROM public.push_outbox
+  WHERE created_at >= '2026-11-20 00:00:00+00'::timestamptz
+  GROUP BY 1, 2
+)
+SELECT a.hora, a.type, a.avisos, coalesce(p.pushes, 0) AS pushes_na_mesma_hora
+FROM avisos a
+LEFT JOIN pushes p ON p.hora = a.hora AND p.type = a.type
+ORDER BY a.hora DESC, a.type
 LIMIT 60
