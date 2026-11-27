@@ -1,6 +1,6 @@
 # 07 · REGRAS DE NEGÓCIO
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `09b23f13b3` · branch `main` · 2026-11-27 19:24 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `4c6f12a59b` · branch `main` · 2026-11-27 20:14 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## A. Regras escritas por humanos (`manual/` — prioridade máxima, nunca sobrescrito)
@@ -3365,10 +3365,12 @@ _nenhum item encontrado_
 | nome fora do padrao AAAAAMMDDHHMMSS_slug.sql: ${nome} | `scripts/db-audit/apply-migrations.mjs` |
 | SQL_FILE vazio | `scripts/db-audit/consultar-sql.mjs` |
 | consulta  | `scripts/db-audit/consultar-sql.mjs` |
+| ensaio aceita apenas SELECT entre BEGIN e ROLLBACK | `scripts/db-audit/consultar-sql.mjs` |
 | ensaio com argumento nao literal nao e | `scripts/db-audit/consultar-sql.mjs` |
-| ensaio permitido apenas para funcoes de envio/agendamento/verificacao | `scripts/db-audit/consultar-sql.mjs` |
+| ensaio permitido apenas para funcoes de envio/agendamento/verificacao ( | `scripts/db-audit/consultar-sql.mjs` |
 | informe SELECAO_SQL (catalogo) ou SQL_FILE (arquivo avulso) | `scripts/db-audit/consultar-sql.mjs` |
 | palavra de escrita encontrada na consulta | `scripts/db-audit/consultar-sql.mjs` |
+| para escrever, a consulta precisa ser BEGIN; SELECT ...; com SELECTs simples | `scripts/db-audit/consultar-sql.mjs` |
 | uma unica instrucao por arquivo (sem ponto e virgula no meio) | `scripts/db-audit/consultar-sql.mjs` |
 | failed | `scripts/maintenance/lib.mjs` |
 | missing_dependencies | `scripts/maintenance/lib.mjs` |
@@ -3643,9 +3645,7 @@ _nenhum item encontrado_
 | Erro ao criar trilha | `src/hooks/useTrails.ts` |
 | Código inválido | `src/hooks/useTwoFactor.ts` |
 | Erro ao configurar 2FA | `src/hooks/useTwoFactor.ts` |
-| Erro ao desativar 2FA | `src/hooks/useTwoFactor.ts` |
-| Erro ao verificar código | `src/hooks/useTwoFactor.ts` |
-| … +230 linhas — lista completa em `context.json` | |
+| … +232 linhas — lista completa em `context.json` | |
 
 ## J. Controle de acesso no código (checagens de perfil/permissão)
 

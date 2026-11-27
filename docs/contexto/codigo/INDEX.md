@@ -1,7 +1,7 @@
 # Contexto do projeto para agentes de IA
 
 GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.
-Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `09b23f13b33146685f42972044a5839ba478612c` (2026-11-27T16:24:02-03:00).
+Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `4c6f12a59b91ef8731ce093f0fbbb5e5a2b66a67` (2026-11-27T17:06:58-03:00).
 
 ## Como usar (leia antes de planejar ou executar qualquer tarefa)
 1. **Tela/rota/menu** → `rotas.json` (url/vista/menu → arquivo → hooks → tabelas → edges; `rotas_http_backend` para APIs) e `modulos.json` (módulo inteiro + dependências entre módulos).
@@ -36,7 +36,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 |---|---|
 | arquivos_total | 1643 |
 | arquivos_codigo | 1217 |
-| linhas_codigo | 241734 |
+| linhas_codigo | 241749 |
 | rotas | 88 |
 | rotas_http_backend | 0 |
 | vistas_por_id | 0 |
@@ -296,13 +296,13 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - possiveis_segredos_no_codigo: 0
 
 ## Grafo de código (graphify)
-- 11228 nós · 30283 arestas · 877 comunidades · grafo do commit `09b23f13`
+- 11228 nós · 30283 arestas · 877 comunidades · grafo do commit `4c6f12a5`
 - comunidades maiores: react (262), lucide-react (250), badge.tsx (203), Mentoria.tsx (136), skeleton.tsx (127), cn (116), contracts/index.ts (94), client.ts (92), requestId.ts (89), RolePermissionsManager.tsx (88), DashboardRightColumn.tsx (86), AdminPanel.tsx (79)
 - símbolos mais chamados: cn() (src/lib/utils.ts), useAuth() (src/hooks/useAuth.tsx), useIsMobile() (src/hooks/use-mobile.tsx), q() (scripts/supabase_snapshot/snapshot.py), useDepartments() (src/hooks/useDepartments.ts), useRBAC() (src/hooks/useRBAC.ts), useProfiles() (src/hooks/useProfiles.ts), useToast() (src/hooks/use-toast.ts), useSEO() (src/hooks/useSEO.ts), useSoundEffects() (src/hooks/useSoundEffects.tsx), .collect() (scripts/supabase_snapshot/test_snapshot.py), excluded_sql() (scripts/supabase_snapshot/snapshot.py)
 - consulta local: `graphify query "<pergunta>"`, `graphify path "<A>" "<B>"`, `graphify explain "<X>"`
 
 ## Hotspots (arquivos mais alterados, 90 dias)
-- scripts/db-audit/consultas.sql (27)
+- scripts/db-audit/consultas.sql (29)
 - package.json (23)
 - docs/agentes/banco.md (20)
 - docs/agentes/mapa-repo.md (17)
@@ -312,9 +312,9 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - AGENTS.md (11)
 - scripts/db-audit/README.md (11)
 - docs/estado/03-hooks-services-lib.md (8)
+- scripts/db-audit/consultar-sql.mjs (8)
 - src/App.tsx (8)
 - scripts/db-audit/apply-migrations.mjs (7)
-- scripts/db-audit/consultar-sql.mjs (7)
 - src/pages/Profile.tsx (7)
 - supabase/config.toml (7)
 
@@ -384,6 +384,9 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 
 
 ## Últimos commits
+- 2026-11-27 `4c6f12a` fix(auditoria): prova do vigia cabe numa unica instrucao (#225)
+- 2026-11-27 `93630c6` fix(auditoria): ensaio aceita varios SELECTs, sem regex que trava (#224)
+- 2026-11-27 `3001a86` feat(auditoria): prova se o ROLLBACK do ensaio e' respeitado (#223)
 - 2026-11-27 `09b23f1` fix(cron): vigia contra o schema real do pg_cron (#222)
 - 2026-11-27 `7f78676` feat(auditoria): colunas reais de cron.job e job_run_details (#221)
 - 2026-11-27 `85f9abf` fix(cron): ON CONFLICT por constraint no marco zero do vigia (#220)
@@ -396,9 +399,6 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - 2026-11-27 `076d318` fix(infra): --verify enxerga funcao, nao so' tabela (#213)
 - 2026-11-27 `36c9638` feat(infra): modo reaplicar no db-migrate (#212)
 - 2026-11-27 `d28797c` fix(cron): vigia sem referencia ambigua de coluna (#211)
-- 2026-11-27 `17b4eaf` chore(db-audit): prova do vigia dos jobs do cron em producao (#210)
-- 2026-11-27 `5b6b412` feat(cron): vigia que avisa admin quando uma tarefa automatica para (#209)
-- 2026-11-27 `b51a5c0` chore(db-audit): lista jobs do cron ativos sem nenhuma execucao registrada (#208)
 
 ## Arquivos deste diretório
 - `docs/contexto/codigo/rotas.json`

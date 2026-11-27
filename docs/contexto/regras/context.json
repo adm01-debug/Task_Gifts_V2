@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "09b23f13b33146685f42972044a5839ba478612c",
+  "sha": "4c6f12a59b91ef8731ce093f0fbbb5e5a2b66a67",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
-  "generated_at": "2026-11-27 19:24 UTC",
+  "generated_at": "2026-11-27 20:14 UTC",
   "files_total": 1654,
   "code_files": 1546,
-  "code_lines": 286698
+  "code_lines": 286723
  },
  "version": "1.3.2",
- "facts_hash": "98b77c399a9d0f88",
+ "facts_hash": "6ce5fc23809da9b9",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -54230,7 +54230,7 @@
   {
    "module": "scripts",
    "files": 30,
-   "lines": 16416,
+   "lines": 16441,
    "tables": [
     "a",
     "contacts",
@@ -62652,11 +62652,15 @@
    },
    {
     "file": "scripts/db-audit/consultar-sql.mjs",
+    "msg": "ensaio aceita apenas SELECT entre BEGIN e ROLLBACK"
+   },
+   {
+    "file": "scripts/db-audit/consultar-sql.mjs",
     "msg": "ensaio com argumento nao literal nao e"
    },
    {
     "file": "scripts/db-audit/consultar-sql.mjs",
-    "msg": "ensaio permitido apenas para funcoes de envio/agendamento/verificacao"
+    "msg": "ensaio permitido apenas para funcoes de envio/agendamento/verificacao ("
    },
    {
     "file": "scripts/db-audit/consultar-sql.mjs",
@@ -62665,6 +62669,10 @@
    {
     "file": "scripts/db-audit/consultar-sql.mjs",
     "msg": "palavra de escrita encontrada na consulta"
+   },
+   {
+    "file": "scripts/db-audit/consultar-sql.mjs",
+    "msg": "para escrever, a consulta precisa ser BEGIN; SELECT ...; com SELECTs simples"
    },
    {
     "file": "scripts/db-audit/consultar-sql.mjs",
@@ -129143,7 +129151,7 @@
   },
   "scripts/db-audit/consultar-sql.mjs": {
    "path": "scripts/db-audit/consultar-sql.mjs",
-   "lines": 119,
+   "lines": 134,
    "exports": [
     "function lerSql"
    ],
@@ -129155,15 +129163,18 @@
    "errors": [
     "SQL_FILE vazio",
     "consulta ",
+    "ensaio aceita apenas SELECT entre BEGIN e ROLLBACK",
     "ensaio com argumento nao literal nao e",
-    "ensaio permitido apenas para funcoes de envio/agendamento/verificacao",
+    "ensaio permitido apenas para funcoes de envio/agendamento/verificacao (",
     "informe SELECAO_SQL (catalogo) ou SQL_FILE (arquivo avulso)",
     "palavra de escrita encontrada na consulta",
+    "para escrever, a consulta precisa ser BEGIN; SELECT ...; com SELECTs simples",
     "uma unica instrucao por arquivo (sem ponto e virgula no meio)"
    ],
    "rule_comments": [
     "LIMITE       maximo de linhas impressas (padrao 200)",
-    "// Variaveis: SUPABASE_ACCESS_TOKEN, SUPABASE_PROJECT_ID, SQL_FILE, LIMITE"
+    "// Variaveis: SUPABASE_ACCESS_TOKEN, SUPABASE_PROJECT_ID, SQL_FILE, LIMITE",
+    "depois), todas chamando no maximo uma funcao de escrita cada. Cada parte e' extraida separadamente."
    ],
    "doc": "Leitura avulsa no banco vivo pela Management API (mesma porta do apply-migrations). Existe para consultar producao sem depender de SUPABASE_DB_URL, que so vale para o snapshot. Uso: SELECAO_SQL=<nome> node scripts/db-audit/consultar-sql.mjs (catalogo) SQL_FILE=consulta.sql node scripts/db-audit/cons …",
    "side_effects": [
@@ -129172,7 +129183,7 @@
   },
   "scripts/db-audit/consultas.sql": {
    "path": "scripts/db-audit/consultas.sql",
-   "lines": 302,
+   "lines": 312,
    "temporal": [
     "WHERE created_at >= now() - interval '14 days') AS avisos_14_dias,"
    ]
@@ -166120,10 +166131,37 @@
   }
  },
  "git": {
-  "sha": "09b23f13b33146685f42972044a5839ba478612c",
+  "sha": "4c6f12a59b91ef8731ce093f0fbbb5e5a2b66a67",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "commits": [
+   {
+    "sha": "4c6f12a",
+    "date": "2026-11-27",
+    "author": "adm01-debug",
+    "subject": "fix(auditoria): prova do vigia cabe numa unica instrucao (#225)",
+    "files": [
+     "scripts/db-audit/consultas.sql"
+    ]
+   },
+   {
+    "sha": "93630c6",
+    "date": "2026-11-27",
+    "author": "adm01-debug",
+    "subject": "fix(auditoria): ensaio aceita varios SELECTs, sem regex que trava (#224)",
+    "files": [
+     "scripts/db-audit/consultar-sql.mjs"
+    ]
+   },
+   {
+    "sha": "3001a86",
+    "date": "2026-11-27",
+    "author": "adm01-debug",
+    "subject": "feat(auditoria): prova se o ROLLBACK do ensaio e' respeitado (#223)",
+    "files": [
+     "scripts/db-audit/consultas.sql"
+    ]
+   },
    {
     "sha": "09b23f1",
     "date": "2026-11-27",
@@ -166369,34 +166407,6 @@
     "files": [
      "scripts/db-audit/consultas.sql"
     ]
-   },
-   {
-    "sha": "bbd21be",
-    "date": "2026-11-27",
-    "author": "adm01-debug",
-    "subject": "fix: bloco do catalogo termina na linha em branco seguinte ao SQL (#195)",
-    "files": [
-     "scripts/db-audit/consultar-sql.mjs"
-    ]
-   },
-   {
-    "sha": "296eb76",
-    "date": "2026-11-27",
-    "author": "adm01-debug",
-    "subject": "fix: catalogo para no proximo marcador e remove bloco duplicado da consulta de entregas (#194)",
-    "files": [
-     "scripts/db-audit/consultar-sql.mjs",
-     "scripts/db-audit/consultas.sql"
-    ]
-   },
-   {
-    "sha": "8cd6f2b",
-    "date": "2026-11-27",
-    "author": "adm01-debug",
-    "subject": "fix: consulta de entregas do lembrete sem notification_id em push_outbox (#193)",
-    "files": [
-     "scripts/db-audit/consultas.sql"
-    ]
    }
   ],
   "hot_files": [
@@ -166410,7 +166420,7 @@
    ],
    [
     "scripts/db-audit/consultar-sql.mjs",
-    4
+    3
    ],
    [
     "scripts/db-audit/apply-migrations.mjs",

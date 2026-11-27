@@ -2,11 +2,26 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "09b23f13b33146685f42972044a5839ba478612c",
+  "commit": "4c6f12a59b91ef8731ce093f0fbbb5e5a2b66a67",
   "branch": "main",
-  "data_commit": "2026-11-27T16:24:02-03:00",
+  "data_commit": "2026-11-27T17:06:58-03:00",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "ultimos_commits": [
+   {
+    "sha": "4c6f12a",
+    "data": "2026-11-27",
+    "assunto": "fix(auditoria): prova do vigia cabe numa unica instrucao (#225)"
+   },
+   {
+    "sha": "93630c6",
+    "data": "2026-11-27",
+    "assunto": "fix(auditoria): ensaio aceita varios SELECTs, sem regex que trava (#224)"
+   },
+   {
+    "sha": "3001a86",
+    "data": "2026-11-27",
+    "assunto": "feat(auditoria): prova se o ROLLBACK do ensaio e' respeitado (#223)"
+   },
    {
     "sha": "09b23f1",
     "data": "2026-11-27",
@@ -116,21 +131,6 @@
     "sha": "4f57680",
     "data": "2026-11-27",
     "assunto": "chore: consulta quantas pessoas o lembrete semanal deveria atingir agora (#201)"
-   },
-   {
-    "sha": "bb9cd4a",
-    "data": "2026-11-27",
-    "assunto": "chore: mede silencio e historico do lembrete semanal desde setembro (#200)"
-   },
-   {
-    "sha": "a029aad",
-    "data": "2026-11-27",
-    "assunto": "chore: consulta da ultima execucao por job para separar nunca rodou de registro apagado (#199)"
-   },
-   {
-    "sha": "8256e16",
-    "data": "2026-11-27",
-    "assunto": "fix: consulta de segunda-feira agrupa pela expressao inteira nas CTEs (#198)"
    }
   ],
   "arquivos_mudados_7d": 297,
@@ -141,7 +141,7 @@
    },
    {
     "pasta": "scripts/db-audit/consultas.sql",
-    "mudancas": 27
+    "mudancas": 29
    },
    {
     "pasta": "package.json",
@@ -184,22 +184,22 @@
     "mudancas": 8
    },
    {
+    "pasta": "scripts/db-audit/consultar-sql.mjs",
+    "mudancas": 8
+   },
+   {
     "pasta": "src/App.tsx",
     "mudancas": 8
    },
    {
     "pasta": "scripts/db-audit/apply-migrations.mjs",
     "mudancas": 7
-   },
-   {
-    "pasta": "scripts/db-audit/consultar-sql.mjs",
-    "mudancas": 7
    }
   ],
   "arquivos_mais_mudados_90d": [
    {
     "arquivo": "scripts/db-audit/consultas.sql",
-    "mudancas": 27
+    "mudancas": 29
    },
    {
     "arquivo": "package.json",
@@ -238,15 +238,15 @@
     "mudancas": 8
    },
    {
+    "arquivo": "scripts/db-audit/consultar-sql.mjs",
+    "mudancas": 8
+   },
+   {
     "arquivo": "src/App.tsx",
     "mudancas": 8
    },
    {
     "arquivo": "scripts/db-audit/apply-migrations.mjs",
-    "mudancas": 7
-   },
-   {
-    "arquivo": "scripts/db-audit/consultar-sql.mjs",
     "mudancas": 7
    },
    {
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 188
+    "commits": 191
    },
    {
     "autor": "dependabot[bot]",
@@ -312,7 +312,7 @@
  "contagens": {
   "arquivos_total": 1643,
   "arquivos_codigo": 1217,
-  "linhas_codigo": 241734,
+  "linhas_codigo": 241749,
   "rotas": 88,
   "rotas_http_backend": 0,
   "vistas_por_id": 0,
@@ -368,7 +368,7 @@
   },
   "scripts/db-audit": {
    "arquivos": 3,
-   "linhas": 1006
+   "linhas": 1021
   },
   "scripts/graphify-local.mjs": {
    "arquivos": 1,
