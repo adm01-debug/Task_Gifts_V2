@@ -217,7 +217,7 @@ SELECT (SELECT count(*) FROM elegiveis) AS elegiveis,
 -- porque_o_lembrete_nao_enfileira mostrou avisos_existentes=6: o INSERT do aviso cai no ON CONFLICT
 -- DO NOTHING. Aqui aparece qual constraint esta batendo, isto e, se o aviso ja foi entregue no
 -- mesmo balde semanal ou se a linha ficou presa em outro status.
-SELECT n.created_at, n.read_at, n.data->>'balde' AS balde, n.user_id,
+SELECT n.created_at, n.read, n.data->>'balde' AS balde, n.user_id,
   (n.data->>'balde') = date_trunc('week', now())::date::text AS mesmo_balde_desta_semana,
   (SELECT count(*) FROM public.push_outbox o
     WHERE o.user_id = n.user_id AND o.type = 'engagement_survey_reminder') AS pushes_da_pessoa
