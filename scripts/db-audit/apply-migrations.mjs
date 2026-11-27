@@ -233,7 +233,12 @@ export async function main(argv = process.argv.slice(2)) {
   // e' uma consulta ao banco vivo. Objeto ausente = ::error (exit 1).
   if (opts.verify) {
     const linhas = await consultar(
-      "select to_regclass(" + aspas(`public.${opts.verify}`) + ")::text as objeto;",
+      // to_regprocedure enxerga funcao; to_regclass so' cobre tabela/view quando o nome
+      // existe como relacao. O fallback mantem o comportamento antigo para tabela/view.
+      "select coalesce("
+        + "to_regclass(" + aspas(`public.${opts.verify}`) + ")::text, "
+        + "to_regprocedure(" + aspas(`public.${opts.verify}`) + ")::text"
+        + ") as objeto;",
     );
     const objeto = Array.isArray(linhas) && linhas[0] ? linhas[0].objeto : null;
     if (!objeto) {
