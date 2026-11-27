@@ -43,3 +43,13 @@ SELECT count(*) AS linhas, count(DISTINCT user_id) AS usuarios_cobertos,
   count(*) FILTER (WHERE do_not_disturb_enabled) AS silencio_ligado,
   min(created_at) AS primeira_linha, max(created_at) AS ultima_linha
 FROM public.notification_preferences
+
+-- nome: ultima_entrega_do_lembrete
+-- O que a ultima execucao do engagement-reminders realmente entregou.
+SELECT d.jobid, d.status, d.return_message, d.start_time, d.end_time,
+  (SELECT count(*) FROM public.notifications n WHERE n.created_at >= d.start_time) AS avisos_criados_desde
+FROM cron.job_run_details d
+JOIN cron.job j ON j.jobid = d.jobid
+WHERE j.jobname = 'engagement-reminders'
+ORDER BY d.start_time DESC
+LIMIT 5
