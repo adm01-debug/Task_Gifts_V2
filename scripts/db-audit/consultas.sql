@@ -300,3 +300,11 @@ JOIN pg_attribute a ON a.attrelid = c.oid AND a.attnum > 0 AND NOT a.attisdroppe
 WHERE n.nspname = 'cron' AND c.relname IN ('job', 'job_run_details')
 GROUP BY c.relname
 ORDER BY c.relname;
+-- nome: prova_do_rollback
+-- A Management API executa tudo numa transacao so'? Roda o vigia (que grava o marco zero) dentro de
+-- BEGIN/ROLLBACK e depois conta as linhas. Se a contagem mudar, o ROLLBACK foi aplicado.
+-- Esperado: antes e depois iguais.
+BEGIN;
+SELECT (SELECT count(*) FROM public.cron_job_watch_baseline) AS antes,
+       (SELECT count(*) FROM public.check_stale_cron_jobs(true)) AS acusados;
+ROLLBACK;
