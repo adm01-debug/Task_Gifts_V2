@@ -194,6 +194,14 @@
             "reason": "Aplica e audita migrations contra o banco vivo: exige SUPABASE_ACCESS_TOKEN e escreve no ledger, então nunca roda pelo dispatcher. Disparo só manual, por .github/workflows/db-migrate.yml (mode=check padrão) ou pelo próprio comando."
           },
           {
+            "id": "legacy-consultar-sql-271127",
+            "kind": "legacy",
+            "files": ["scripts/db-audit/consultar-sql.mjs"],
+            "manual": ["node", "scripts/db-audit/consultar-sql.mjs"],
+            "triggers": ["manual"],
+            "reason": "Leitura avulsa no banco vivo pela Management API: exige SUPABASE_ACCESS_TOKEN e o SQL vem do catálogo scripts/db-audit/consultas.sql (SELECAO_SQL), nunca de texto livre. Nunca roda pelo dispatcher; disparo só por .github/workflows/db-migrate.yml (mode=consulta) ou pelo próprio comando."
+          },
+          {
             "id": "legacy-166d2b1258cd82b5",
       "kind": "legacy",
       "files": ["scripts/graphify/setup.sh"],
