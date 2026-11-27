@@ -9,7 +9,7 @@
 -- avisa o admin por push (`enqueue_push`, que respeita a preferencia e a janela de silencio).
 --
 -- Duas fontes de tolerancia, porque job novo nunca rodou e isso NORMAL, nao e' falha:
---   * `cron.job.min_time` (quando o job foi criado);
+--   * o marco zero em public.cron_job_watch_baseline (cron.job nao tem data de criacao);
 --   * `public.cron_job_watch_baseline` (data em que o vigia passou a enxergar o job).
 -- O relogio de atraso so' comeca depois do mais recente dos dois.
 --
@@ -63,14 +63,14 @@ BEGIN
   ON CONFLICT ON CONSTRAINT cron_job_watch_baseline_pkey DO NOTHING;
 
   FOR r IN
-    -- `desde` nulo = job sem min_time e sem marco zero: nao se sabe quando comecou, so' entra no forcado.
+    -- `desde` nulo = job sem marco zero: nao se sabe quando comecou, so' entra no forcado.
     SELECT v.nome_job, v.cron_expr, v.ultima_execucao, v.espera,
            ROUND(EXTRACT(EPOCH FROM (now() - COALESCE(v.ultima_execucao, v.desde))) / 3600.0, 1) AS atraso
     FROM (
       SELECT j.jobname AS nome_job,
              j.schedule AS cron_expr,
              d.ultima AS ultima_execucao,
-             GREATEST(COALESCE(j.min_time, '-infinity'::timestamptz),
+             GREATEST('-infinity'::timestamptz,
                       COALESCE(w.visto_em, '-infinity'::timestamptz)) AS desde,
              CASE
                WHEN split_part(j.schedule, ' ', 1) ~ '^\*' OR split_part(j.schedule, ' ', 2) ~ '^\*' THEN 2
