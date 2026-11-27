@@ -29,6 +29,7 @@ function lerSql() {
   if (escolhida) {
     const fonte = readFileSync(caminho, "utf8").split(/\r?\n/);
     let coletando = false;
+    let sqlComecou = false;
     const guardadas = [];
     for (const linha of fonte) {
       const marcador = /^--\s*nome:\s*(\S+)\s*/i.exec(linha.trim());
@@ -36,10 +37,10 @@ function lerSql() {
         coletando = marcador[1] === escolhida;
         continue;
       }
-      // Nome repetido no catalogo: vence o bloco que estiver mais adiante. Parar no marcador
-      // seguinte e obrigatorio, senao sobram dois SELECT colados e o Postgres recusa a consulta.
-      if (coletando && guardadas.some(function (g) { return /^\s*select\b|^\s*with\b/i.test(g); })) break;
-      if (coletando) guardadas.push(linha);
+      // O bloco termina na primeira linha em branco depois do SQL: nome repetido no catalogo resolve
+      // pelo bloco seguinte, e um SELECT que comeca com WITH tem subquery dentro, entao nao serve
+      // parar na primeira linha de dados (run 46022198719 enviou so a primeira linha).
+      if (coletando) { guardadas.push(linha); if (linha.trim() !== "" && !linha.trim().startsWith("--")) sqlComecou = true; }
     }
     sql = guardadas.filter(function (l) { return !l.trim().startsWith("--"); }).join("\n").trim().replace(/;$/, "").trim();
     if (!sql) {
