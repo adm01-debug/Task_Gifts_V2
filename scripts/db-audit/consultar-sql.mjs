@@ -31,7 +31,7 @@ function lerSql() {
     let coletando = false;
     const guardadas = [];
     for (const linha of fonte) {
-      const marcador = /^--\s*nome:\s*(\S+)\s*$/.exec(linha.trim());
+      const marcador = /^--\s*nome:\s*(\S+)\s*/i.exec(linha.trim());
       if (marcador) {
         coletando = marcador[1] === escolhida;
         continue;
