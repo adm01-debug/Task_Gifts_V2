@@ -191,3 +191,25 @@ ORDER BY pessoas DESC
 -- enfileirar avisos), e uma excecao da funcao aparece com a mensagem do Postgres.
 BEGIN;
 SELECT public.send_engagement_reminders() AS retorno;
+-- nome: porque_o_lembrete_nao_enfileira
+-- O ensaio devolveu 0 mesmo com 6 elegiveis: a funcao roda, mas nenhuma linha passa pelos filtros.
+-- Cada contagem abaixo e' a mesma condicao do send_engagement_reminders, separada, para apontar
+-- qual delas zera. `preferencia_in_app` e' a condicao do IF que envolve o INSERT do aviso.
+WITH elegiveis AS (
+  SELECT c.id AS cycle_id, c.title AS cycle_title, a.user_id, count(*) AS pendentes
+  FROM public.engagement_question_assignments a
+  JOIN public.engagement_cycles c ON c.id = a.cycle_id
+  JOIN public.profiles p ON p.id = a.user_id AND p.status = 'confirmed'
+  WHERE a.answered_at IS NULL
+    AND c.status = 'active'
+    AND c.starts_at <= now()
+    AND c.ends_at > now()
+  GROUP BY c.id, c.title, a.user_id
+)
+SELECT (SELECT count(*) FROM elegiveis) AS elegiveis,
+  (SELECT count(*) FROM public.profiles WHERE status = 'confirmed') AS perfis_confirmados,
+  (SELECT count(*) FROM public.engagement_cycles WHERE status = 'active') AS ciclos_ativos,
+  (SELECT count(*) FROM public.engagement_question_assignments WHERE answered_at IS NULL) AS pendentes_ativas,
+  (SELECT count(*) FROM elegiveis e WHERE public.user_wants_in_app_notification(e.user_id, 'engagement_survey_reminder')) AS preferencia_in_app,
+  (SELECT count(*) FROM public.notifications WHERE type = 'engagement_survey_reminder') AS avisos_existentes,
+  (SELECT string_agg(user_id::text || '=' || user_wants_in_app_notification(user_id, 'engagement_survey_reminder')::text, ' ') FROM elegiveis) AS detalhe
