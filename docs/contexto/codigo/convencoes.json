@@ -59,11 +59,11 @@
  "commits": {
   "convencao": "conventional commits (observado)",
   "exemplos": [
+   "fix(cron): vigia sem referencia ambigua de coluna (#211)",
+   "chore(db-audit): prova do vigia dos jobs do cron em producao (#210)",
    "feat(cron): vigia que avisa admin quando uma tarefa automatica para (#209)",
    "chore(db-audit): lista jobs do cron ativos sem nenhuma execucao registrada (#208)",
-   "fix(db-audit): notifications usa read, nao read_at (#207)",
-   "chore(db-audit): mostra por que o aviso do lembrete cai no ON CONFLICT (#206)",
-   "chore(db-audit): separa os filtros que zeram o lembrete semanal (#205)"
+   "fix(db-audit): notifications usa read, nao read_at (#207)"
   ]
  },
  "pr_template": ".github/PULL_REQUEST_TEMPLATE.md",

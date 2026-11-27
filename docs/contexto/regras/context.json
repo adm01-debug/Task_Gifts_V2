@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "5b6b412dc2c628f5ea8f35a27714a0837153fd55",
+  "sha": "d28797c9b128805dc0ff62bcfa760cd8e5f4c3a1",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
-  "generated_at": "2026-11-27 17:31 UTC",
+  "generated_at": "2026-11-27 17:46 UTC",
   "files_total": 1654,
   "code_files": 1546,
-  "code_lines": 286593
+  "code_lines": 286606
  },
  "version": "1.3.2",
- "facts_hash": "6c0bac8eb1b9d1a6",
+ "facts_hash": "f0375e4f163b40ca",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -31835,7 +31835,7 @@
     "src": "supabase/migrations/20261231100000_vigia_dos_jobs_do_cron.sql",
     "security_definer": true,
     "search_path": true,
-    "body": "DECLARE v_user uuid; r record; BEGIN IF auth.uid() IS NOT NULL THEN PERFORM public._require_admin(); END IF; INSERT INTO public.cron_job_watch_baseline (jobname) SELECT j.jobname FROM cron.job j WHERE NOT EXISTS (SELECT 1 FROM cron.job_run_details d WHERE d.jobid = j.jobid) ON CONFLICT (jobname) DO NOTHING; FOR r IN SELECT v.jobname, v.schedule, v.ultima, v.espera_horas, ROUND(EXTRACT(EPOCH FROM (now() - COALESCE(v.ultima, v.desde))) / 3600.0, 1) AS atraso_horas FROM ( SELECT j.jobname, j.schedule, d.ultima, GREATEST(COALESCE(j.min_time, '-infinity'::timestamptz), COALESCE(w.visto_em, '-infinity'::timestamptz)) AS desde, CASE WHEN split_part(j.schedule, ' ', 1) ~ '^\\*' OR split_part(j.schedu …",
+    "body": "DECLARE v_user uuid; r record; BEGIN IF auth.uid() IS NOT NULL THEN PERFORM public._require_admin(); END IF; INSERT INTO public.cron_job_watch_baseline (jobname) SELECT j.jobname FROM cron.job j WHERE NOT EXISTS (SELECT 1 FROM cron.job_run_details d WHERE d.jobid = j.jobid) ON CONFLICT (jobname) DO NOTHING; FOR r IN SELECT v.nome_job, v.cron_expr, v.ultima_execucao, v.espera, ROUND(EXTRACT(EPOCH FROM (now() - COALESCE(v.ultima_execucao, v.desde))) / 3600.0, 1) AS atraso FROM ( SELECT j.jobname AS nome_job, j.schedule AS cron_expr, d.ultima AS ultima_execucao, GREATEST(COALESCE(j.min_time, '-infinity'::timestamptz), COALESCE(w.visto_em, '-infinity'::timestamptz)) AS desde, CASE WHEN split_par …",
     "raises": [],
     "tables": [
      "LATERAL",
@@ -54230,7 +54230,7 @@
   {
    "module": "scripts",
    "files": 30,
-   "lines": 16316,
+   "lines": 16325,
    "tables": [
     "a",
     "contacts",
@@ -55916,7 +55916,7 @@
   {
    "module": "supabase/migrations",
    "files": 320,
-   "lines": 42556,
+   "lines": 42560,
    "tables": [],
    "exports": [],
    "docs": [],
@@ -108054,7 +108054,7 @@
     "src": "supabase/migrations/20261231100000_vigia_dos_jobs_do_cron.sql",
     "security_definer": true,
     "search_path": true,
-    "body": "DECLARE v_user uuid; r record; BEGIN IF auth.uid() IS NOT NULL THEN PERFORM public._require_admin(); END IF; INSERT INTO public.cron_job_watch_baseline (jobname) SELECT j.jobname FROM cron.job j WHERE NOT EXISTS (SELECT 1 FROM cron.job_run_details d WHERE d.jobid = j.jobid) ON CONFLICT (jobname) DO NOTHING; FOR r IN SELECT v.jobname, v.schedule, v.ultima, v.espera_horas, ROUND(EXTRACT(EPOCH FROM (now() - COALESCE(v.ultima, v.desde))) / 3600.0, 1) AS atraso_horas FROM ( SELECT j.jobname, j.schedule, d.ultima, GREATEST(COALESCE(j.min_time, '-infinity'::timestamptz), COALESCE(w.visto_em, '-infinity'::timestamptz)) AS desde, CASE WHEN split_part(j.schedule, ' ', 1) ~ '^\\*' OR split_part(j.schedu …",
+    "body": "DECLARE v_user uuid; r record; BEGIN IF auth.uid() IS NOT NULL THEN PERFORM public._require_admin(); END IF; INSERT INTO public.cron_job_watch_baseline (jobname) SELECT j.jobname FROM cron.job j WHERE NOT EXISTS (SELECT 1 FROM cron.job_run_details d WHERE d.jobid = j.jobid) ON CONFLICT (jobname) DO NOTHING; FOR r IN SELECT v.nome_job, v.cron_expr, v.ultima_execucao, v.espera, ROUND(EXTRACT(EPOCH FROM (now() - COALESCE(v.ultima_execucao, v.desde))) / 3600.0, 1) AS atraso FROM ( SELECT j.jobname AS nome_job, j.schedule AS cron_expr, d.ultima AS ultima_execucao, GREATEST(COALESCE(j.min_time, '-infinity'::timestamptz), COALESCE(w.visto_em, '-infinity'::timestamptz)) AS desde, CASE WHEN split_par …",
     "raises": [],
     "tables": [
      "LATERAL",
@@ -129153,7 +129153,7 @@
   },
   "scripts/db-audit/consultas.sql": {
    "path": "scripts/db-audit/consultas.sql",
-   "lines": 239,
+   "lines": 248,
    "temporal": [
     "WHERE created_at >= now() - interval '14 days') AS avisos_14_dias,"
    ]
@@ -166003,7 +166003,7 @@
   },
   "supabase/migrations/20261231100000_vigia_dos_jobs_do_cron.sql": {
    "path": "supabase/migrations/20261231100000_vigia_dos_jobs_do_cron.sql",
-   "lines": 131,
+   "lines": 135,
    "uses_service_role": true
   },
   "supabase/tests/climate/assertions.sql": {
@@ -166101,10 +166101,28 @@
   }
  },
  "git": {
-  "sha": "5b6b412dc2c628f5ea8f35a27714a0837153fd55",
+  "sha": "d28797c9b128805dc0ff62bcfa760cd8e5f4c3a1",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "commits": [
+   {
+    "sha": "d28797c",
+    "date": "2026-11-27",
+    "author": "adm01-debug",
+    "subject": "fix(cron): vigia sem referencia ambigua de coluna (#211)",
+    "files": [
+     "supabase/migrations/20261231100000_vigia_dos_jobs_do_cron.sql"
+    ]
+   },
+   {
+    "sha": "17b4eaf",
+    "date": "2026-11-27",
+    "author": "adm01-debug",
+    "subject": "chore(db-audit): prova do vigia dos jobs do cron em producao (#210)",
+    "files": [
+     "scripts/db-audit/consultas.sql"
+    ]
+   },
    {
     "sha": "5b6b412",
     "date": "2026-11-27",
@@ -166372,32 +166390,12 @@
     "files": [
      "supabase/migrations/20261230090000_backfill_janela_de_silencio_dos_avisos.sql"
     ]
-   },
-   {
-    "sha": "dfe7e3c",
-    "date": "2026-11-27",
-    "author": "adm01-debug",
-    "subject": "infra(migrations): workflow que aplica o que falta e barra divergencia com o ledger (#179)",
-    "files": [
-     ".github/workflows/db-migrate.yml",
-     "scripts/automation.config.json",
-     "scripts/db-audit/apply-migrations.mjs"
-    ]
-   },
-   {
-    "sha": "9868b40",
-    "date": "2026-11-27",
-    "author": "adm01-debug",
-    "subject": "fix: valida o nome das functions antes de virar comando no deploy (#178)",
-    "files": [
-     ".github/workflows/deploy-edge-functions.yml"
-    ]
    }
   ],
   "hot_files": [
    [
     "scripts/db-audit/consultas.sql",
-    21
+    22
    ],
    [
     "scripts/db-audit/consultar-sql.mjs",
@@ -166405,22 +166403,22 @@
    ],
    [
     "scripts/db-audit/apply-migrations.mjs",
-    4
+    3
    ],
    [
-    ".github/workflows/db-migrate.yml",
-    3
+    "supabase/migrations/20261231100000_vigia_dos_jobs_do_cron.sql",
+    2
    ],
    [
     "scripts/db-audit/README.md",
     2
    ],
    [
-    "scripts/automation.config.json",
+    ".github/workflows/db-migrate.yml",
     2
    ],
    [
-    "supabase/migrations/20261231100000_vigia_dos_jobs_do_cron.sql",
+    "scripts/automation.config.json",
     1
    ],
    [
@@ -166453,10 +166451,6 @@
    ],
    [
     "supabase/migrations/20261230090000_backfill_janela_de_silencio_dos_avisos.sql",
-    1
-   ],
-   [
-    ".github/workflows/deploy-edge-functions.yml",
     1
    ]
   ]

@@ -1,7 +1,7 @@
 # Contexto do projeto para agentes de IA
 
 GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.
-Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `5b6b412dc2c628f5ea8f35a27714a0837153fd55` (2026-11-27T14:31:10-03:00).
+Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `d28797c9b128805dc0ff62bcfa760cd8e5f4c3a1` (2026-11-27T14:46:03-03:00).
 
 ## Como usar (leia antes de planejar ou executar qualquer tarefa)
 1. **Tela/rota/menu** → `rotas.json` (url/vista/menu → arquivo → hooks → tabelas → edges; `rotas_http_backend` para APIs) e `modulos.json` (módulo inteiro + dependências entre módulos).
@@ -296,14 +296,14 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - possiveis_segredos_no_codigo: 0
 
 ## Grafo de código (graphify)
-- 11228 nós · 30282 arestas · 877 comunidades · grafo do commit `5b6b412d`
+- 11228 nós · 30282 arestas · 877 comunidades · grafo do commit `d28797c9`
 - comunidades maiores: react (262), lucide-react (250), badge.tsx (203), Mentoria.tsx (136), skeleton.tsx (127), cn (116), contracts/index.ts (94), client.ts (92), requestId.ts (89), RolePermissionsManager.tsx (88), DashboardRightColumn.tsx (86), AdminPanel.tsx (79)
 - símbolos mais chamados: cn() (src/lib/utils.ts), useAuth() (src/hooks/useAuth.tsx), useIsMobile() (src/hooks/use-mobile.tsx), q() (scripts/supabase_snapshot/snapshot.py), useDepartments() (src/hooks/useDepartments.ts), useRBAC() (src/hooks/useRBAC.ts), useProfiles() (src/hooks/useProfiles.ts), useToast() (src/hooks/use-toast.ts), useSEO() (src/hooks/useSEO.ts), useSoundEffects() (src/hooks/useSoundEffects.tsx), .collect() (scripts/supabase_snapshot/test_snapshot.py), excluded_sql() (scripts/supabase_snapshot/snapshot.py)
 - consulta local: `graphify query "<pergunta>"`, `graphify path "<A>" "<B>"`, `graphify explain "<X>"`
 
 ## Hotspots (arquivos mais alterados, 90 dias)
 - package.json (23)
-- scripts/db-audit/consultas.sql (21)
+- scripts/db-audit/consultas.sql (22)
 - docs/agentes/banco.md (20)
 - docs/agentes/mapa-repo.md (17)
 - docs/estado/05-edge-functions.md (15)
@@ -384,6 +384,8 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 
 
 ## Últimos commits
+- 2026-11-27 `d28797c` fix(cron): vigia sem referencia ambigua de coluna (#211)
+- 2026-11-27 `17b4eaf` chore(db-audit): prova do vigia dos jobs do cron em producao (#210)
 - 2026-11-27 `5b6b412` feat(cron): vigia que avisa admin quando uma tarefa automatica para (#209)
 - 2026-11-27 `b51a5c0` chore(db-audit): lista jobs do cron ativos sem nenhuma execucao registrada (#208)
 - 2026-11-27 `0b9d3b4` fix(db-audit): notifications usa read, nao read_at (#207)
@@ -397,8 +399,6 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - 2026-11-27 `a029aad` chore: consulta da ultima execucao por job para separar nunca rodou de registro apagado (#199)
 - 2026-11-27 `8256e16` fix: consulta de segunda-feira agrupa pela expressao inteira nas CTEs (#198)
 - 2026-11-27 `c846ac8` chore: consulta das entregas de segunda-feira para provar o lembrete semanal (#197)
-- 2026-11-27 `7b71251` fix: consulta de entregas agrupa o push em CTE propria (#196)
-- 2026-11-27 `bbd21be` fix: bloco do catalogo termina na linha em branco seguinte ao SQL (#195)
 
 ## Arquivos deste diretório
 - `docs/contexto/codigo/rotas.json`

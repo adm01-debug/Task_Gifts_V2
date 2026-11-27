@@ -2,11 +2,21 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "5b6b412dc2c628f5ea8f35a27714a0837153fd55",
+  "commit": "d28797c9b128805dc0ff62bcfa760cd8e5f4c3a1",
   "branch": "main",
-  "data_commit": "2026-11-27T14:31:10-03:00",
+  "data_commit": "2026-11-27T14:46:03-03:00",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "ultimos_commits": [
+   {
+    "sha": "d28797c",
+    "data": "2026-11-27",
+    "assunto": "fix(cron): vigia sem referencia ambigua de coluna (#211)"
+   },
+   {
+    "sha": "17b4eaf",
+    "data": "2026-11-27",
+    "assunto": "chore(db-audit): prova do vigia dos jobs do cron em producao (#210)"
+   },
    {
     "sha": "5b6b412",
     "data": "2026-11-27",
@@ -121,16 +131,6 @@
     "sha": "833ce53",
     "data": "2026-11-27",
     "assunto": "chore: consultas do catalogo para achar o job do cron e conferir cobertura de preferencias (#187)"
-   },
-   {
-    "sha": "7cd126f",
-    "data": "2026-11-27",
-    "assunto": "infra: modo consulta no workflow de migrations para ler o banco vivo (#186)"
-   },
-   {
-    "sha": "fb2b5cb",
-    "data": "2026-11-27",
-    "assunto": "fix(db-audit): --verify roda mesmo quando o ledger ja esta alinhado (#185)"
    }
   ],
   "arquivos_mudados_7d": 297,
@@ -140,11 +140,11 @@
     "mudancas": 73
    },
    {
-    "pasta": "package.json",
-    "mudancas": 21
+    "pasta": "scripts/db-audit/consultas.sql",
+    "mudancas": 22
    },
    {
-    "pasta": "scripts/db-audit/consultas.sql",
+    "pasta": "package.json",
     "mudancas": 21
    },
    {
@@ -203,7 +203,7 @@
    },
    {
     "arquivo": "scripts/db-audit/consultas.sql",
-    "mudancas": 21
+    "mudancas": 22
    },
    {
     "arquivo": "docs/agentes/banco.md",
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 175
+    "commits": 177
    },
    {
     "autor": "dependabot[bot]",
