@@ -1,4 +1,4 @@
-﻿-- Vigia dos jobs do pg_cron.
+-- Vigia dos jobs do pg_cron.
 --
 -- Por que existe: medido em producao em 2026-11-27, `engagement-reminders` (jobid 65) e
 -- `exec-monthly-report-generation` (jobid 25) estavam `active = true` e com ZERO linhas em
