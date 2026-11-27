@@ -84,3 +84,16 @@ SELECT column_name, data_type
 FROM information_schema.columns
 WHERE table_schema = 'public' AND table_name = 'push_outbox'
 ORDER BY ordinal_position
+
+-- nome: entregas_recentes_do_lembrete
+-- O que chegou em notifications e push_outbox desde 20/11, agrupado por hora e tipo, para reconhecer
+-- a entrega do engagement-reminders sem depender de cron.job_run_details. push_outbox nao tem
+-- notification_id: a ligacao pelo conteudo e type + created_at na mesma hora.
+SELECT date_trunc('hour', n.created_at) AS hora, n.type, count(*) AS avisos,
+  (SELECT count(*) FROM public.push_outbox o
+    WHERE o.type = n.type AND date_trunc('hour', o.created_at) = date_trunc('hour', n.created_at)) AS pushes_na_mesma_hora
+FROM public.notifications n
+WHERE n.created_at >= '2026-11-20 00:00:00+00'::timestamptz
+GROUP BY 1, 2
+ORDER BY 1 DESC, 2
+LIMIT 60
