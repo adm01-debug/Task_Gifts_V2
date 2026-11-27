@@ -2,11 +2,21 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "36c9638f53ddf0207b0c5636a74b190bcb78107f",
+  "commit": "98adc29b27cffbabdd287e8c14deceb54626a7e5",
   "branch": "main",
-  "data_commit": "2026-11-27T14:55:22-03:00",
+  "data_commit": "2026-11-27T15:11:13-03:00",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "ultimos_commits": [
+   {
+    "sha": "98adc29",
+    "data": "2026-11-27",
+    "assunto": "feat(auditoria): consultas para provar o vigia do cron (#214)"
+   },
+   {
+    "sha": "076d318",
+    "data": "2026-11-27",
+    "assunto": "fix(infra): --verify enxerga funcao, nao so' tabela (#213)"
+   },
    {
     "sha": "36c9638",
     "data": "2026-11-27",
@@ -121,16 +131,6 @@
     "sha": "974f5a1",
     "data": "2026-11-27",
     "assunto": "chore: consulta do catalogo para provar a entrega do lembrete semanal (#190)"
-   },
-   {
-    "sha": "3071eba",
-    "data": "2026-11-27",
-    "assunto": "chore: consultar-sql aceita arquivo avulso para investigacao local (#189)"
-   },
-   {
-    "sha": "99d1db8",
-    "data": "2026-11-27",
-    "assunto": "fix: consulta do lembrete semanal aponta para o job engagement-reminders (#188)"
    }
   ],
   "arquivos_mudados_7d": 297,
@@ -141,7 +141,7 @@
    },
    {
     "pasta": "scripts/db-audit/consultas.sql",
-    "mudancas": 22
+    "mudancas": 23
    },
    {
     "pasta": "package.json",
@@ -203,7 +203,7 @@
    },
    {
     "arquivo": "scripts/db-audit/consultas.sql",
-    "mudancas": 22
+    "mudancas": 23
    },
    {
     "arquivo": "docs/agentes/banco.md",
@@ -250,6 +250,10 @@
     "mudancas": 7
    },
    {
+    "arquivo": "scripts/db-audit/apply-migrations.mjs",
+    "mudancas": 6
+   },
+   {
     "arquivo": "scripts/db-audit/check-migration-drift.mjs",
     "mudancas": 6
    },
@@ -278,10 +282,6 @@
     "mudancas": 5
    },
    {
-    "arquivo": "scripts/db-audit/apply-migrations.mjs",
-    "mudancas": 5
-   },
-   {
     "arquivo": "scripts/db-audit/migration-baseline.json",
     "mudancas": 5
    },
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 178
+    "commits": 180
    },
    {
     "autor": "dependabot[bot]",
@@ -312,7 +312,7 @@
  "contagens": {
   "arquivos_total": 1643,
   "arquivos_codigo": 1217,
-  "linhas_codigo": 241718,
+  "linhas_codigo": 241723,
   "rotas": 88,
   "rotas_http_backend": 0,
   "vistas_por_id": 0,
@@ -368,7 +368,7 @@
   },
   "scripts/db-audit": {
    "arquivos": 3,
-   "linhas": 990
+   "linhas": 995
   },
   "scripts/graphify-local.mjs": {
    "arquivos": 1,

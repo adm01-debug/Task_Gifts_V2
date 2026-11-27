@@ -59,11 +59,11 @@
  "commits": {
   "convencao": "conventional commits (observado)",
   "exemplos": [
+   "feat(auditoria): consultas para provar o vigia do cron (#214)",
+   "fix(infra): --verify enxerga funcao, nao so' tabela (#213)",
    "feat(infra): modo reaplicar no db-migrate (#212)",
    "fix(cron): vigia sem referencia ambigua de coluna (#211)",
-   "chore(db-audit): prova do vigia dos jobs do cron em producao (#210)",
-   "feat(cron): vigia que avisa admin quando uma tarefa automatica para (#209)",
-   "chore(db-audit): lista jobs do cron ativos sem nenhuma execucao registrada (#208)"
+   "chore(db-audit): prova do vigia dos jobs do cron em producao (#210)"
   ]
  },
  "pr_template": ".github/PULL_REQUEST_TEMPLATE.md",
