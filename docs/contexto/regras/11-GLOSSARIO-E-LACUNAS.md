@@ -1,6 +1,6 @@
 # 11 · GLOSSÁRIO, DADOS DE REFERÊNCIA E LACUNAS
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `0b9d3b4622` · branch `main` · 2026-11-27 17:12 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `5b6b412dc2` · branch `main` · 2026-11-27 17:31 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## Glossário do domínio (entidades do sistema)
@@ -67,6 +67,7 @@
 | `climate_survey_responses` | _(sem COMMENT ON TABLE — significado não documentado)_ | 8 colunas | migration |
 | `climate_surveys` | _(sem COMMENT ON TABLE — significado não documentado)_ | 17 colunas | migration |
 | `competencies` | _(sem COMMENT ON TABLE — significado não documentado)_ | 8 colunas | migration |
+| `cron_job_watch_baseline` | Primeira vez que o vigia dos jobs viu cada job. Job sem linha aqui nunca foi observado, entao nao e' tratado como parado. | 2 colunas | migration |
 | `custom_badges` | _(sem COMMENT ON TABLE — significado não documentado)_ | 15 colunas | migration |
 | `custom_quests` | _(sem COMMENT ON TABLE — significado não documentado)_ | 16 colunas | migration |
 | `custom_ranks` | _(sem COMMENT ON TABLE — significado não documentado)_ | 16 colunas | migration |
@@ -306,8 +307,7 @@
 | `TeamShareMode` (TS) | proportional \| equal |  | `src/lib/campaignTeamSplit.ts` |
 | `RevertFailure` (TS) | batch_not_found \| already_reverted \| nothing_to_revert |  | `src/lib/campaignTeamSplitRevert.ts` |
 | `CardPackSource` (TS) | task \| training \| quest \| campaign \| manual \| streak |  | `src/lib/cardPackTriggers.ts` |
-| `TaskCompletionStatus` (TS) | pending \| on_time \| late \| rejected \| rework |  | `src/lib/cardPackTriggers.ts` |
-| … +109 linhas — lista completa em `context.json` | | | |
+| … +110 linhas — lista completa em `context.json` | | | |
 
 ## Dados de referência (seed — planos, categorias, perfis fixos)
 
@@ -421,7 +421,7 @@ _nenhum item encontrado_
 - `wager_integrity_review_events.previous_status` é uma coluna de status sem enum/CHECK — os valores válidos e as transições permitidas não estão no banco.
 - `wager_integrity_review_events.new_status` é uma coluna de status sem enum/CHECK — os valores válidos e as transições permitidas não estão no banco.
 - `profiles_public.status` é uma coluna de status sem enum/CHECK — os valores válidos e as transições permitidas não estão no banco.
-- 238/240 tabelas sem `COMMENT ON TABLE` — o significado de negócio não está no schema: `entity_versions`, `profiles`, `user_roles`, `departments`, `team_members`, `custom_quests`, `quest_steps`, `quest_assignments`, `notifications`, `kudos_badges`, `kudos`, `audit_logs` …
+- 238/241 tabelas sem `COMMENT ON TABLE` — o significado de negócio não está no schema: `entity_versions`, `profiles`, `user_roles`, `departments`, `team_members`, `custom_quests`, `quest_steps`, `quest_assignments`, `notifications`, `kudos_badges`, `kudos`, `audit_logs` …
 - Há tabelas usadas no código sem migration no repo — o schema real pode ter sido alterado pelo painel.
 
 ## Regras manuais presentes

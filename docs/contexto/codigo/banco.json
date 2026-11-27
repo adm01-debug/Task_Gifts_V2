@@ -6,7 +6,7 @@
   "src/integrations/supabase/types.ts",
   "supabase/migrations"
  ],
- "migrations": 319,
+ "migrations": 320,
  "seeds": [],
  "avisos": [
   "17 bloco(s) com DDL dinâmico (EXECUTE format/...) não modelado — policies/colunas criadas dinamicamente podem faltar; confira no banco vivo"
@@ -224,6 +224,7 @@
   "check_overdue_postmortem_actions",
   "check_prediction_markets_health",
   "check_sla_breaches_and_alert",
+  "check_stale_cron_jobs",
   "check_webhook_sla_and_alert",
   "chi_square_critical",
   "claim_card_set_reward",
@@ -1453,6 +1454,11 @@
    "nome": "close-expired-sales-campaigns",
    "agenda": "15 0 * * *",
    "migration": "20260723150852_6048cf0f-c3a4-48e7-9f40-e2b293b020b9.sql"
+  },
+  {
+   "nome": "cron-jobs-parados",
+   "agenda": "20 */6 * * *",
+   "migration": "20261231100000_vigia_dos_jobs_do_cron.sql"
   },
   {
    "nome": "daily-cleanup-idempotency",
@@ -9642,6 +9648,34 @@
    "triggers": [],
    "sem_rls": false,
    "nao_usada": false
+  },
+  "cron_job_watch_baseline": {
+   "colunas": {
+    "jobname": {
+     "tipo": "text",
+     "nn": false,
+     "pk": true,
+     "default": null,
+     "ref": null
+    },
+    "visto_em": {
+     "tipo": "timestamptz",
+     "nn": true,
+     "pk": false,
+     "default": "now()",
+     "ref": null
+    }
+   },
+   "rls": true,
+   "policies": [],
+   "indices": [],
+   "fks": [],
+   "criada_em": "20261231100000_vigia_dos_jobs_do_cron.sql",
+   "usada_no_front": 0,
+   "usada_em_edges": [],
+   "triggers": [],
+   "sem_rls": false,
+   "nao_usada": true
   },
   "custom_badges": {
    "colunas": {

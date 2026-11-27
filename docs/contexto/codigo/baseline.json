@@ -2,11 +2,21 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "0b9d3b46223808c801369a3a83189d9795cfef86",
+  "commit": "5b6b412dc2c628f5ea8f35a27714a0837153fd55",
   "branch": "main",
-  "data_commit": "2026-11-27T14:03:48-03:00",
+  "data_commit": "2026-11-27T14:31:10-03:00",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "ultimos_commits": [
+   {
+    "sha": "5b6b412",
+    "data": "2026-11-27",
+    "assunto": "feat(cron): vigia que avisa admin quando uma tarefa automatica para (#209)"
+   },
+   {
+    "sha": "b51a5c0",
+    "data": "2026-11-27",
+    "assunto": "chore(db-audit): lista jobs do cron ativos sem nenhuma execucao registrada (#208)"
+   },
    {
     "sha": "0b9d3b4",
     "data": "2026-11-27",
@@ -121,19 +131,9 @@
     "sha": "fb2b5cb",
     "data": "2026-11-27",
     "assunto": "fix(db-audit): --verify roda mesmo quando o ledger ja esta alinhado (#185)"
-   },
-   {
-    "sha": "33eb05a",
-    "data": "2026-11-27",
-    "assunto": "fix(db-audit): apply segue quando a versao orfa ja esta no repo e prova por consulta (#184)"
-   },
-   {
-    "sha": "fa594f8",
-    "data": "2026-11-27",
-    "assunto": "feat(db): painel demografico le a view que mascara valor restrito (ex-PR 182) (#183)"
    }
   ],
-  "arquivos_mudados_7d": 296,
+  "arquivos_mudados_7d": 297,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "supabase/functions/_shared",
@@ -144,11 +144,11 @@
     "mudancas": 21
    },
    {
-    "pasta": "docs/agentes/banco.md",
-    "mudancas": 20
+    "pasta": "scripts/db-audit/consultas.sql",
+    "mudancas": 21
    },
    {
-    "pasta": "scripts/db-audit/consultas.sql",
+    "pasta": "docs/agentes/banco.md",
     "mudancas": 20
    },
    {
@@ -202,11 +202,11 @@
     "mudancas": 23
    },
    {
-    "arquivo": "docs/agentes/banco.md",
-    "mudancas": 20
+    "arquivo": "scripts/db-audit/consultas.sql",
+    "mudancas": 21
    },
    {
-    "arquivo": "scripts/db-audit/consultas.sql",
+    "arquivo": "docs/agentes/banco.md",
     "mudancas": 20
    },
    {
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 173
+    "commits": 175
    },
    {
     "autor": "dependabot[bot]",
@@ -310,7 +310,7 @@
   ]
  },
  "contagens": {
-  "arquivos_total": 1642,
+  "arquivos_total": 1643,
   "arquivos_codigo": 1217,
   "linhas_codigo": 241697,
   "rotas": 88,
@@ -321,9 +321,9 @@
   "componentes": 538,
   "hooks": 157,
   "edge_functions": 23,
-  "tabelas": 239,
-  "migrations": 319,
-  "cron_jobs": 40,
+  "tabelas": 240,
+  "migrations": 320,
+  "cron_jobs": 41,
   "testes": 183,
   "workflows": 7,
   "scripts": 20,

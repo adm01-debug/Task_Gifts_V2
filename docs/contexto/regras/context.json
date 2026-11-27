@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "0b9d3b46223808c801369a3a83189d9795cfef86",
+  "sha": "5b6b412dc2c628f5ea8f35a27714a0837153fd55",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
-  "generated_at": "2026-11-27 17:12 UTC",
-  "files_total": 1653,
-  "code_files": 1545,
-  "code_lines": 286450
+  "generated_at": "2026-11-27 17:31 UTC",
+  "files_total": 1654,
+  "code_files": 1546,
+  "code_lines": 286593
  },
  "version": "1.3.2",
- "facts_hash": "360497b838749386",
+ "facts_hash": "6c0bac8eb1b9d1a6",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -203,7 +203,7 @@
   "languages": {
    ".ts": 595,
    ".tsx": 594,
-   ".sql": 322,
+   ".sql": 323,
    ".mjs": 23,
    ".js": 5,
    ".py": 5,
@@ -20082,6 +20082,28 @@
     "comment": "",
     "origin": "migration"
    },
+   "cron_job_watch_baseline": {
+    "columns": [
+     {
+      "name": "jobname",
+      "type": "text PRIMARY KEY",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20261231100000_vigia_dos_jobs_do_cron.sql"
+     },
+     {
+      "name": "visto_em",
+      "type": "timestamptz NOT NULL DEFAULT now()",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20261231100000_vigia_dos_jobs_do_cron.sql"
+     }
+    ],
+    "constraints": [],
+    "src": "supabase/migrations/20261231100000_vigia_dos_jobs_do_cron.sql",
+    "comment": "Primeira vez que o vigia dos jobs viu cada job. Job sem linha aqui nunca foi observado, entao nao e' tratado como parado.",
+    "origin": "migration"
+   },
    "lucky_wheel_prizes": {
     "columns": [
      {
@@ -31806,6 +31828,22 @@
      "v_local"
     ]
    },
+   "check_stale_cron_jobs": {
+    "args": "p_force boolean DEFAULT false",
+    "returns": "TABLE (\n  jobname text,\n  schedule text,\n  atraso_horas numeric,\n  espera_horas numeric,\n  ultima timestamptz\n)",
+    "lang": "plpgsql",
+    "src": "supabase/migrations/20261231100000_vigia_dos_jobs_do_cron.sql",
+    "security_definer": true,
+    "search_path": true,
+    "body": "DECLARE v_user uuid; r record; BEGIN IF auth.uid() IS NOT NULL THEN PERFORM public._require_admin(); END IF; INSERT INTO public.cron_job_watch_baseline (jobname) SELECT j.jobname FROM cron.job j WHERE NOT EXISTS (SELECT 1 FROM cron.job_run_details d WHERE d.jobid = j.jobid) ON CONFLICT (jobname) DO NOTHING; FOR r IN SELECT v.jobname, v.schedule, v.ultima, v.espera_horas, ROUND(EXTRACT(EPOCH FROM (now() - COALESCE(v.ultima, v.desde))) / 3600.0, 1) AS atraso_horas FROM ( SELECT j.jobname, j.schedule, d.ultima, GREATEST(COALESCE(j.min_time, '-infinity'::timestamptz), COALESCE(w.visto_em, '-infinity'::timestamptz)) AS desde, CASE WHEN split_part(j.schedule, ' ', 1) ~ '^\\*' OR split_part(j.schedu …",
+    "raises": [],
+    "tables": [
+     "LATERAL",
+     "cron",
+     "cron_job_watch_baseline",
+     "user_roles"
+    ]
+   },
    "Args": {
     "args": "",
     "returns": "?",
@@ -36740,6 +36778,12 @@
     "schedule": "0 2 * * 0",
     "body": "ANALYZE",
     "src": "supabase/migrations/20261228120000_cron_jobs_e_leaderboard_cache.sql"
+   },
+   {
+    "job": "cron-jobs-parados",
+    "schedule": "20 */6 * * *",
+    "body": "SELECT * FROM public.check_stale_cron_jobs()",
+    "src": "supabase/migrations/20261231100000_vigia_dos_jobs_do_cron.sql"
    }
   ],
   "views": {
@@ -37088,6 +37132,7 @@
    "supabase/migrations/20261229000000_janela_de_silencio_dos_avisos.sql",
    "supabase/migrations/20261229010000_painel_de_valores_demograficos.sql",
    "supabase/migrations/20261230090000_backfill_janela_de_silencio_dos_avisos.sql",
+   "supabase/migrations/20261231100000_vigia_dos_jobs_do_cron.sql",
    "supabase/tests/climate/assertions.sql",
    "supabase/tests/climate/stubs.sql",
    "src/integrations/supabase/types.ts"
@@ -37327,7 +37372,8 @@
    "board_player_states": "enabled",
    "board_moves": "enabled",
    "goal_templates": "enabled",
-   "_internal.dispatch_config": "enabled"
+   "_internal.dispatch_config": "enabled",
+   "cron_job_watch_baseline": "enabled"
   },
   "grants": [
    {
@@ -46851,6 +46897,38 @@
     "src": "supabase/migrations/20261229010000_painel_de_valores_demograficos.sql"
    },
    {
+    "kind": "revoke",
+    "privs": "all",
+    "object": "cron_job_watch_baseline",
+    "objkind": "table",
+    "roles": "PUBLIC, anon, authenticated",
+    "src": "supabase/migrations/20261231100000_vigia_dos_jobs_do_cron.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "select",
+    "object": "cron_job_watch_baseline",
+    "objkind": "table",
+    "roles": "service_role",
+    "src": "supabase/migrations/20261231100000_vigia_dos_jobs_do_cron.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "all",
+    "object": "check_stale_cron_jobs",
+    "objkind": "function",
+    "roles": "PUBLIC, anon",
+    "src": "supabase/migrations/20261231100000_vigia_dos_jobs_do_cron.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "check_stale_cron_jobs",
+    "objkind": "function",
+    "roles": "authenticated, service_role",
+    "src": "supabase/migrations/20261231100000_vigia_dos_jobs_do_cron.sql"
+   },
+   {
     "kind": "grant",
     "privs": "select, insert, update, delete",
     "object": "public",
@@ -47864,7 +47942,8 @@
    "column:saved_filters.is_default": "Se true, este filtro é aplicado automaticamente ao abrir a página",
    "table:lucky_wheel_prize_audit": "Trilha imutavel de calibracao da Roleta da Sorte. Escrita apenas por trigger SECURITY DEFINER.",
    "column:board_moves.challenge_correct": "TRUE/FALSE apenas para jogadas de resolução de desafio; NULL para jogadas normais de dado.",
-   "column:push_outbox.deferred_until": "Fim da janela de silencio do usuario (notification_preferences.do_not_disturb_*). Preenchido apenas com status = deferred; claim_push_outbox devolve a linha para pending quando vence."
+   "column:push_outbox.deferred_until": "Fim da janela de silencio do usuario (notification_preferences.do_not_disturb_*). Preenchido apenas com status = deferred; claim_push_outbox devolve a linha para pending quando vence.",
+   "table:cron_job_watch_baseline": "Primeira vez que o vigia dos jobs viu cada job. Job sem linha aqui nunca foi observado, entao nao e' tratado como parado."
   },
   "types_file": "src/integrations/supabase/types.ts"
  },
@@ -54151,7 +54230,7 @@
   {
    "module": "scripts",
    "files": 30,
-   "lines": 16304,
+   "lines": 16316,
    "tables": [
     "a",
     "contacts",
@@ -55836,8 +55915,8 @@
   },
   {
    "module": "supabase/migrations",
-   "files": 319,
-   "lines": 42425,
+   "files": 320,
+   "lines": 42556,
    "tables": [],
    "exports": [],
    "docs": [],
@@ -60410,6 +60489,7 @@
    "card_set_claims",
    "climate_benchmarks",
    "climate_question_answers",
+   "cron_job_watch_baseline",
    "custom_badges",
    "custom_ranks",
    "custom_titles",
@@ -76756,6 +76836,16 @@
     "table": "_internal.dispatch_config",
     "column": "key",
     "rule": "PK"
+   },
+   {
+    "table": "cron_job_watch_baseline",
+    "column": "jobname",
+    "rule": "PK"
+   },
+   {
+    "table": "cron_job_watch_baseline",
+    "column": "visto_em",
+    "rule": "default now()"
    },
    {
     "table": "lucky_wheel_prizes",
@@ -107957,6 +108047,22 @@
      "v_local"
     ]
    },
+   "check_stale_cron_jobs": {
+    "args": "p_force boolean DEFAULT false",
+    "returns": "TABLE (\n  jobname text,\n  schedule text,\n  atraso_horas numeric,\n  espera_horas numeric,\n  ultima timestamptz\n)",
+    "lang": "plpgsql",
+    "src": "supabase/migrations/20261231100000_vigia_dos_jobs_do_cron.sql",
+    "security_definer": true,
+    "search_path": true,
+    "body": "DECLARE v_user uuid; r record; BEGIN IF auth.uid() IS NOT NULL THEN PERFORM public._require_admin(); END IF; INSERT INTO public.cron_job_watch_baseline (jobname) SELECT j.jobname FROM cron.job j WHERE NOT EXISTS (SELECT 1 FROM cron.job_run_details d WHERE d.jobid = j.jobid) ON CONFLICT (jobname) DO NOTHING; FOR r IN SELECT v.jobname, v.schedule, v.ultima, v.espera_horas, ROUND(EXTRACT(EPOCH FROM (now() - COALESCE(v.ultima, v.desde))) / 3600.0, 1) AS atraso_horas FROM ( SELECT j.jobname, j.schedule, d.ultima, GREATEST(COALESCE(j.min_time, '-infinity'::timestamptz), COALESCE(w.visto_em, '-infinity'::timestamptz)) AS desde, CASE WHEN split_part(j.schedule, ' ', 1) ~ '^\\*' OR split_part(j.schedu …",
+    "raises": [],
+    "tables": [
+     "LATERAL",
+     "cron",
+     "cron_job_watch_baseline",
+     "user_roles"
+    ]
+   },
    "Args": {
     "args": "",
     "returns": "?",
@@ -112509,6 +112615,13 @@
      "public: has_role(auth.uid(), 'admin'::app_role)"
     ]
    },
+   "cron_job_watch_baseline": {
+    "rls": "enabled",
+    "SELECT": [],
+    "INSERT": [],
+    "UPDATE": [],
+    "DELETE": []
+   },
    "custom_badges": {
     "rls": "enabled",
     "SELECT": [
@@ -115378,7 +115491,8 @@
    "supabase/migrations/20261228190000_revoga_execute_publico_anon_funcoes.sql",
    "supabase/migrations/20261228280000_uma_aposta_por_dia_e_reabertura_da_pergunta.sql",
    "supabase/migrations/20261228300000_fecha_corridas_da_exclusao_de_departamento_e_da_aposta_diaria.sql",
-   "supabase/migrations/20261229000000_janela_de_silencio_dos_avisos.sql"
+   "supabase/migrations/20261229000000_janela_de_silencio_dos_avisos.sql",
+   "supabase/migrations/20261231100000_vigia_dos_jobs_do_cron.sql"
   ],
   "security_definer_fns": [
    "_climate_recompute_pillar_scores",
@@ -115426,6 +115540,7 @@
    "check_overdue_postmortem_actions",
    "check_prediction_markets_health",
    "check_sla_breaches_and_alert",
+   "check_stale_cron_jobs",
    "check_webhook_sla_and_alert",
    "claim_card_set_reward",
    "claim_push_outbox",
@@ -125171,6 +125286,38 @@
     "src": "supabase/migrations/20261229010000_painel_de_valores_demograficos.sql"
    },
    {
+    "kind": "revoke",
+    "privs": "all",
+    "object": "cron_job_watch_baseline",
+    "objkind": "table",
+    "roles": "PUBLIC, anon, authenticated",
+    "src": "supabase/migrations/20261231100000_vigia_dos_jobs_do_cron.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "select",
+    "object": "cron_job_watch_baseline",
+    "objkind": "table",
+    "roles": "service_role",
+    "src": "supabase/migrations/20261231100000_vigia_dos_jobs_do_cron.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "all",
+    "object": "check_stale_cron_jobs",
+    "objkind": "function",
+    "roles": "PUBLIC, anon",
+    "src": "supabase/migrations/20261231100000_vigia_dos_jobs_do_cron.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "check_stale_cron_jobs",
+    "objkind": "function",
+    "roles": "authenticated, service_role",
+    "src": "supabase/migrations/20261231100000_vigia_dos_jobs_do_cron.sql"
+   },
+   {
     "kind": "grant",
     "privs": "select, insert, update, delete",
     "object": "public",
@@ -127229,6 +127376,7 @@
     "updated_at"
    ],
    "_internal.dispatch_config": [],
+   "cron_job_watch_baseline": [],
    "lucky_wheel_prizes": [
     "created_at",
     "updated_at"
@@ -128036,7 +128184,7 @@
    "`wager_integrity_review_events.previous_status` é uma coluna de status sem enum/CHECK — os valores válidos e as transições permitidas não estão no banco.",
    "`wager_integrity_review_events.new_status` é uma coluna de status sem enum/CHECK — os valores válidos e as transições permitidas não estão no banco.",
    "`profiles_public.status` é uma coluna de status sem enum/CHECK — os valores válidos e as transições permitidas não estão no banco.",
-   "238/240 tabelas sem `COMMENT ON TABLE` — o significado de negócio não está no schema: `entity_versions`, `profiles`, `user_roles`, `departments`, `team_members`, `custom_quests`, `quest_steps`, `quest_assignments`, `notifications`, `kudos_badges`, `kudos`, `audit_logs` …",
+   "238/241 tabelas sem `COMMENT ON TABLE` — o significado de negócio não está no schema: `entity_versions`, `profiles`, `user_roles`, `departments`, `team_members`, `custom_quests`, `quest_steps`, `quest_assignments`, `notifications`, `kudos_badges`, `kudos`, `audit_logs` …",
    "Há tabelas usadas no código sem migration no repo — o schema real pode ter sido alterado pelo painel."
   ]
  },
@@ -129005,7 +129153,7 @@
   },
   "scripts/db-audit/consultas.sql": {
    "path": "scripts/db-audit/consultas.sql",
-   "lines": 227,
+   "lines": 239,
    "temporal": [
     "WHERE created_at >= now() - interval '14 days') AS avisos_14_dias,"
    ]
@@ -165853,6 +166001,11 @@
    "path": "supabase/migrations/20261230090000_backfill_janela_de_silencio_dos_avisos.sql",
    "lines": 25
   },
+  "supabase/migrations/20261231100000_vigia_dos_jobs_do_cron.sql": {
+   "path": "supabase/migrations/20261231100000_vigia_dos_jobs_do_cron.sql",
+   "lines": 131,
+   "uses_service_role": true
+  },
   "supabase/tests/climate/assertions.sql": {
    "path": "supabase/tests/climate/assertions.sql",
    "lines": 404,
@@ -165948,10 +166101,28 @@
   }
  },
  "git": {
-  "sha": "0b9d3b46223808c801369a3a83189d9795cfef86",
+  "sha": "5b6b412dc2c628f5ea8f35a27714a0837153fd55",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "commits": [
+   {
+    "sha": "5b6b412",
+    "date": "2026-11-27",
+    "author": "adm01-debug",
+    "subject": "feat(cron): vigia que avisa admin quando uma tarefa automatica para (#209)",
+    "files": [
+     "supabase/migrations/20261231100000_vigia_dos_jobs_do_cron.sql"
+    ]
+   },
+   {
+    "sha": "b51a5c0",
+    "date": "2026-11-27",
+    "author": "adm01-debug",
+    "subject": "chore(db-audit): lista jobs do cron ativos sem nenhuma execucao registrada (#208)",
+    "files": [
+     "scripts/db-audit/consultas.sql"
+    ]
+   },
    {
     "sha": "0b9d3b4",
     "date": "2026-11-27",
@@ -166221,61 +166392,12 @@
     "files": [
      ".github/workflows/deploy-edge-functions.yml"
     ]
-   },
-   {
-    "sha": "613009c",
-    "date": "2026-11-26",
-    "author": "adm01-debug",
-    "subject": "feat: telas para filtros salvos e perfil demografico (#181)",
-    "files": [
-     "src/App.tsx",
-     "src/components/admin/DemographicAttributesManager.tsx",
-     "src/components/admin/DemographicValuesPanel.tsx",
-     "src/components/filters/SavedFiltersBar.tsx",
-     "src/components/profile/MyDemographicValuesCard.tsx",
-     "src/hooks/useDemographics.ts",
-     "src/hooks/useSavedFilters.ts",
-     "src/integrations/supabase/types.ts",
-     "src/pages/AdminPanel.tsx",
-     "src/pages/AuditLogs.tsx",
-     "src/pages/DemographicAttributesAdmin.tsx",
-     "src/pages/ManagerDashboard.tsx",
-     "src/pages/Profile.tsx",
-     "src/services/demographicsService.ts",
-     "src/services/savedFiltersService.ts",
-     "src/test/demographicValuesPanel.test.tsx",
-     "src/test/demographicsService.test.ts",
-     "src/test/savedFiltersService.test.ts"
-    ]
-   },
-   {
-    "sha": "e634962",
-    "date": "2026-11-26",
-    "author": "adm01-debug",
-    "subject": "feat(avisos): respeita a janela de silencio do usuario no push (#177)",
-    "files": [
-     "docs/agentes/banco.md",
-     "docs/agentes/mapa-repo.md",
-     "src/components/NotificationQuietHoursCard.tsx",
-     "src/components/security/PushOutboxHealthPanel.tsx",
-     "src/lib/pushOutbox.ts",
-     "src/pages/Profile.tsx",
-     "src/test/notificationQuietHoursCard.test.tsx",
-     "src/test/pushOutbox.simulation.test.ts",
-     "supabase/functions/_shared/campaignPush.ts",
-     "supabase/functions/_shared/campaignPush_test.ts",
-     "supabase/functions/_shared/contracts/contracts_test.ts",
-     "supabase/functions/_shared/contracts/send-campaign-push.ts",
-     "supabase/functions/push-outbox-dispatcher/index.ts",
-     "supabase/functions/send-campaign-push/index.ts",
-     "supabase/migrations/20261229000000_janela_de_silencio_dos_avisos.sql"
-    ]
    }
   ],
   "hot_files": [
    [
     "scripts/db-audit/consultas.sql",
-    20
+    21
    ],
    [
     "scripts/db-audit/consultar-sql.mjs",
@@ -166298,28 +166420,28 @@
     2
    ],
    [
+    "supabase/migrations/20261231100000_vigia_dos_jobs_do_cron.sql",
+    1
+   ],
+   [
     "src/components/admin/DemographicValuesPanel.tsx",
-    2
+    1
    ],
    [
     "src/hooks/useDemographics.ts",
-    2
+    1
    ],
    [
     "src/integrations/supabase/types.ts",
-    2
+    1
    ],
    [
     "src/services/demographicsService.ts",
-    2
+    1
    ],
    [
     "src/test/demographicsService.test.ts",
-    2
-   ],
-   [
-    "src/pages/Profile.tsx",
-    2
+    1
    ],
    [
     "src/test/useDemographicValuesCache.test.tsx",
@@ -166335,22 +166457,6 @@
    ],
    [
     ".github/workflows/deploy-edge-functions.yml",
-    1
-   ],
-   [
-    "src/App.tsx",
-    1
-   ],
-   [
-    "src/components/admin/DemographicAttributesManager.tsx",
-    1
-   ],
-   [
-    "src/components/filters/SavedFiltersBar.tsx",
-    1
-   ],
-   [
-    "src/components/profile/MyDemographicValuesCard.tsx",
     1
    ]
   ]

@@ -1,7 +1,7 @@
 # Contexto do projeto para agentes de IA
 
 GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.
-Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `0b9d3b46223808c801369a3a83189d9795cfef86` (2026-11-27T14:03:48-03:00).
+Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `5b6b412dc2c628f5ea8f35a27714a0837153fd55` (2026-11-27T14:31:10-03:00).
 
 ## Como usar (leia antes de planejar ou executar qualquer tarefa)
 1. **Tela/rota/menu** → `rotas.json` (url/vista/menu → arquivo → hooks → tabelas → edges; `rotas_http_backend` para APIs) e `modulos.json` (módulo inteiro + dependências entre módulos).
@@ -14,7 +14,7 @@ Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR
 Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua tarefa; não carregue tudo.
 
 ## Stack
-- linguagens: TypeScript (1187), SQL (322), Markdown (56), JavaScript (26), JSON (14), YAML (10), Python (5), Shell (5)
+- linguagens: TypeScript (1187), SQL (323), Markdown (56), JavaScript (26), JSON (14), YAML (10), Python (5), Shell (5)
 - linguagem_principal: TypeScript
 - framework: React
 - backend_http: n/d
@@ -34,7 +34,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 ## Números
 | item | qtd |
 |---|---|
-| arquivos_total | 1642 |
+| arquivos_total | 1643 |
 | arquivos_codigo | 1217 |
 | linhas_codigo | 241697 |
 | rotas | 88 |
@@ -45,9 +45,9 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 | componentes | 538 |
 | hooks | 157 |
 | edge_functions | 23 |
-| tabelas | 239 |
-| migrations | 319 |
-| cron_jobs | 40 |
+| tabelas | 240 |
+| migrations | 320 |
+| cron_jobs | 41 |
 | testes | 183 |
 | workflows | 7 |
 | scripts | 20 |
@@ -242,6 +242,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - `close-expired-auctions` */5 * * * * (20260728103701_298e9bca-0b39-4dba-aef0-058a9b24a556.sql)
 - `close-expired-campaigns` 30 * * * * (20261228120000_cron_jobs_e_leaderboard_cache.sql)
 - `close-expired-sales-campaigns` 15 0 * * * (20260723150852_6048cf0f-c3a4-48e7-9f40-e2b293b020b9.sql)
+- `cron-jobs-parados` 20 */6 * * * (20261231100000_vigia_dos_jobs_do_cron.sql)
 - `daily-cleanup-idempotency` 25 3 * * * (20260712115320_24a903a0-f49b-4374-b87b-b0775838c874.sql)
 - `daily-cleanup-security-logs-30d` 20 3 * * * (20260712115320_24a903a0-f49b-4374-b87b-b0775838c874.sql)
 - `daily-cleanup-security-logs-90d` 15 3 * * * (20260712115320_24a903a0-f49b-4374-b87b-b0775838c874.sql)
@@ -295,15 +296,15 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - possiveis_segredos_no_codigo: 0
 
 ## Grafo de código (graphify)
-- 11224 nós · 30279 arestas · 885 comunidades · grafo do commit `0b9d3b46`
-- comunidades maiores: lucide-react (307), react (232), skeleton.tsx (172), utils.ts (166), client.ts (126), AdminPanel.tsx (120), cn (108), Shop.tsx (95), contracts/index.ts (89), useIsMobile (87), gerar.mjs (79), generate.py (75)
+- 11228 nós · 30282 arestas · 877 comunidades · grafo do commit `5b6b412d`
+- comunidades maiores: react (262), lucide-react (250), badge.tsx (203), Mentoria.tsx (136), skeleton.tsx (127), cn (116), contracts/index.ts (94), client.ts (92), requestId.ts (89), RolePermissionsManager.tsx (88), DashboardRightColumn.tsx (86), AdminPanel.tsx (79)
 - símbolos mais chamados: cn() (src/lib/utils.ts), useAuth() (src/hooks/useAuth.tsx), useIsMobile() (src/hooks/use-mobile.tsx), q() (scripts/supabase_snapshot/snapshot.py), useDepartments() (src/hooks/useDepartments.ts), useRBAC() (src/hooks/useRBAC.ts), useProfiles() (src/hooks/useProfiles.ts), useToast() (src/hooks/use-toast.ts), useSEO() (src/hooks/useSEO.ts), useSoundEffects() (src/hooks/useSoundEffects.tsx), .collect() (scripts/supabase_snapshot/test_snapshot.py), excluded_sql() (scripts/supabase_snapshot/snapshot.py)
 - consulta local: `graphify query "<pergunta>"`, `graphify path "<A>" "<B>"`, `graphify explain "<X>"`
 
 ## Hotspots (arquivos mais alterados, 90 dias)
 - package.json (23)
+- scripts/db-audit/consultas.sql (21)
 - docs/agentes/banco.md (20)
-- scripts/db-audit/consultas.sql (20)
 - docs/agentes/mapa-repo.md (17)
 - docs/estado/05-edge-functions.md (15)
 - bun.lock (14)
@@ -383,6 +384,8 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 
 
 ## Últimos commits
+- 2026-11-27 `5b6b412` feat(cron): vigia que avisa admin quando uma tarefa automatica para (#209)
+- 2026-11-27 `b51a5c0` chore(db-audit): lista jobs do cron ativos sem nenhuma execucao registrada (#208)
 - 2026-11-27 `0b9d3b4` fix(db-audit): notifications usa read, nao read_at (#207)
 - 2026-11-27 `b94118b` chore(db-audit): mostra por que o aviso do lembrete cai no ON CONFLICT (#206)
 - 2026-11-27 `f698d27` chore(db-audit): separa os filtros que zeram o lembrete semanal (#205)
@@ -396,8 +399,6 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - 2026-11-27 `c846ac8` chore: consulta das entregas de segunda-feira para provar o lembrete semanal (#197)
 - 2026-11-27 `7b71251` fix: consulta de entregas agrupa o push em CTE propria (#196)
 - 2026-11-27 `bbd21be` fix: bloco do catalogo termina na linha em branco seguinte ao SQL (#195)
-- 2026-11-27 `296eb76` fix: catalogo para no proximo marcador e remove bloco duplicado da consulta de entregas (#194)
-- 2026-11-27 `8cd6f2b` fix: consulta de entregas do lembrete sem notification_id em push_outbox (#193)
 
 ## Arquivos deste diretório
 - `docs/contexto/codigo/rotas.json`
