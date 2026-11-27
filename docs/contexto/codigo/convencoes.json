@@ -29,9 +29,9 @@
   "edge_functions": "supabase/functions",
   "migrations": "supabase/migrations",
   "scripts": [
+   "scripts/db-audit (4)",
    "scripts/maintenance (4)",
-   "scripts/ci (3)",
-   "scripts/regras_negocio (3)"
+   "scripts/ci (3)"
   ],
   "docs": [
    "(raiz) (15)",
@@ -59,11 +59,11 @@
  "commits": {
   "convencao": "conventional commits (observado)",
   "exemplos": [
+   "infra: modo consulta no workflow de migrations para ler o banco vivo (#186)",
    "fix(db-audit): --verify roda mesmo quando o ledger ja esta alinhado (#185)",
    "fix(db-audit): apply segue quando a versao orfa ja esta no repo e prova por consulta (#184)",
    "feat(db): painel demografico le a view que mascara valor restrito (ex-PR 182) (#183)",
-   "chore: cria a linha padrao da janela de silencio para quem nunca abriu a tela (#180)",
-   "infra(migrations): workflow que aplica o que falta e barra divergencia com o ledger (#179)"
+   "chore: cria a linha padrao da janela de silencio para quem nunca abriu a tela (#180)"
   ]
  },
  "pr_template": ".github/PULL_REQUEST_TEMPLATE.md",

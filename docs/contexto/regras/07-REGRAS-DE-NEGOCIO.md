@@ -1,6 +1,6 @@
 # 07 · REGRAS DE NEGÓCIO
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `fb2b5cb6ad` · branch `main` · 2026-11-27 10:38 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `7cd126f173` · branch `main` · 2026-11-27 13:59 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## A. Regras escritas por humanos (`manual/` — prioridade máxima, nunca sobrescrito)
@@ -3360,6 +3360,11 @@ _nenhum item encontrado_
 | diretorio de migrations ilegivel: ${dir} | `scripts/db-audit/apply-migrations.mjs` |
 | nenhuma migration em ${dir} | `scripts/db-audit/apply-migrations.mjs` |
 | nome fora do padrao AAAAAMMDDHHMMSS_slug.sql: ${nome} | `scripts/db-audit/apply-migrations.mjs` |
+| SELECAO_SQL ausente no ambiente | `scripts/db-audit/consultar-sql.mjs` |
+| a consulta precisa comecar por SELECT ou WITH | `scripts/db-audit/consultar-sql.mjs` |
+| consulta  | `scripts/db-audit/consultar-sql.mjs` |
+| palavra de escrita encontrada na consulta | `scripts/db-audit/consultar-sql.mjs` |
+| uma unica instrucao por arquivo (sem ponto e virgula no meio) | `scripts/db-audit/consultar-sql.mjs` |
 | failed | `scripts/maintenance/lib.mjs` |
 | missing_dependencies | `scripts/maintenance/lib.mjs` |
 | skipped_busy | `scripts/maintenance/lib.mjs` |
@@ -3640,12 +3645,7 @@ _nenhum item encontrado_
 | Não foi possível salvar as preferências | `src/hooks/useTypePreferences.ts` |
 | Usuário não autenticado | `src/hooks/useWebAuthn.ts` |
 | A planilha nao possui abas legiveis. | `src/lib/campaignImport.ts` |
-| Coluna de valor nao encontrada (ex.: valor, quantidade, total). | `src/lib/campaignImport.ts` |
-| Coluna de vendedor nao encontrada (ex.: email, matricula, vendedor). | `src/lib/campaignImport.ts` |
-| Nao foi possivel identificar o cabecalho do arquivo. | `src/lib/campaignImport.ts` |
-| Sessão expirada — faça login novamente. | `src/lib/luckyWheelBudgetWhatIf.ts` |
-| Erro ao limpar dados antigos | `src/pages/AdminTelemetria.tsx` |
-| … +220 linhas — lista completa em `context.json` | |
+| … +225 linhas — lista completa em `context.json` | |
 
 ## J. Controle de acesso no código (checagens de perfil/permissão)
 

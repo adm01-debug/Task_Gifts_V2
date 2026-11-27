@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "fb2b5cb6ad0f573a1161bb576dec05f7e3be9b2e",
+  "commit": "7cd126f1731d7667f9a13cf3819c725d852a0861",
   "branch": "main",
-  "data_commit": "2026-11-27T07:35:48-03:00",
+  "data_commit": "2026-11-27T10:58:44-03:00",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "ultimos_commits": [
+   {
+    "sha": "7cd126f",
+    "data": "2026-11-27",
+    "assunto": "infra: modo consulta no workflow de migrations para ler o banco vivo (#186)"
+   },
    {
     "sha": "fb2b5cb",
     "data": "2026-11-27",
@@ -126,14 +131,9 @@
     "sha": "a6a9bc6",
     "data": "2026-11-25",
     "assunto": "fix: revoga execucao anonima das funcoes SECURITY DEFINER (#158)"
-   },
-   {
-    "sha": "b9db75d",
-    "data": "2026-11-25",
-    "assunto": "fix: restringe SELECT de profiles ao allowlist de colunas (LGPD) (#161)"
    }
   ],
-  "arquivos_mudados_7d": 298,
+  "arquivos_mudados_7d": 300,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "supabase/functions/_shared",
@@ -173,7 +173,7 @@
    },
    {
     "pasta": "scripts/db-audit/README.md",
-    "mudancas": 9
+    "mudancas": 10
    },
    {
     "pasta": "docs/estado/03-hooks-services-lib.md",
@@ -227,7 +227,7 @@
    },
    {
     "arquivo": "scripts/db-audit/README.md",
-    "mudancas": 9
+    "mudancas": 10
    },
    {
     "arquivo": "docs/estado/03-hooks-services-lib.md",
@@ -266,6 +266,10 @@
     "mudancas": 5
    },
    {
+    "arquivo": "scripts/automation.config.json",
+    "mudancas": 5
+   },
+   {
     "arquivo": "scripts/db-audit/migration-baseline.json",
     "mudancas": 5
    },
@@ -292,16 +296,12 @@
    {
     "arquivo": ".github/workflows/deploy-edge-functions.yml",
     "mudancas": 4
-   },
-   {
-    "arquivo": "RELATORIO_CI.md",
-    "mudancas": 4
    }
   ],
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 151
+    "commits": 152
    },
    {
     "autor": "dependabot[bot]",
@@ -310,9 +310,9 @@
   ]
  },
  "contagens": {
-  "arquivos_total": 1640,
-  "arquivos_codigo": 1216,
-  "linhas_codigo": 241580,
+  "arquivos_total": 1642,
+  "arquivos_codigo": 1217,
+  "linhas_codigo": 241670,
   "rotas": 88,
   "rotas_http_backend": 0,
   "vistas_por_id": 0,
@@ -326,7 +326,7 @@
   "cron_jobs": 40,
   "testes": 183,
   "workflows": 7,
-  "scripts": 18,
+  "scripts": 20,
   "docs_md": 56
  },
  "por_pasta": {
@@ -367,8 +367,8 @@
    "linhas": 1572
   },
   "scripts/db-audit": {
-   "arquivos": 2,
-   "linhas": 852
+   "arquivos": 3,
+   "linhas": 942
   },
   "scripts/graphify-local.mjs": {
    "arquivos": 1,
@@ -587,7 +587,7 @@
  ],
  "qualidade": {
   "any": 81,
-  "console_log": 93,
+  "console_log": 97,
   "ts_ignore": 0,
   "eslint_disable": 0,
   "todos": 1,

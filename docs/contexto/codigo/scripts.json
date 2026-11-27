@@ -1,7 +1,7 @@
 {
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
- "total": 18,
+ "total": 20,
  "scripts": [
   {
    "arquivo": "scripts/automation.mjs",
@@ -75,7 +75,7 @@
   {
    "arquivo": "scripts/db-audit/apply-migrations.mjs",
    "descricao": "* Aplica em producao as migrations de `supabase/migrations/` que ainda nao",
-   "linhas": 228,
+   "linhas": 234,
    "env": [
     "MIGRATIONS_DIR",
     "SUPABASE_ACCESS_TOKEN",
@@ -101,6 +101,30 @@
    "workflows": [
     "ci.yml"
    ],
+   "orfao": false
+  },
+  {
+   "arquivo": "scripts/db-audit/consultar-sql.mjs",
+   "descricao": "Leitura avulsa no banco vivo pela Management API (mesma porta do apply-migrations). Existe para consultar producao sem depender de SUPABASE_DB_URL, que so vale para o snapshot.",
+   "linhas": 84,
+   "env": [
+    "LIMITE",
+    "SELECAO_SQL",
+    "SQL_FILE"
+   ],
+   "npm_scripts": [],
+   "workflows": [
+    "db-migrate.yml"
+   ],
+   "orfao": false
+  },
+  {
+   "arquivo": "scripts/db-audit/consultas.sql",
+   "descricao": null,
+   "linhas": 31,
+   "env": [],
+   "npm_scripts": [],
+   "workflows": [],
    "orfao": false
   },
   {
