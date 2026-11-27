@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "296eb76a82275e0c0d1010ded77a797cac37d95e",
+  "sha": "0f7fe38bd01af42d806b8a3bc801788c061f6447",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
-  "generated_at": "2026-11-27 15:13 UTC",
+  "generated_at": "2026-11-27 16:15 UTC",
   "files_total": 1653,
   "code_files": 1545,
-  "code_lines": 286289
+  "code_lines": 286396
  },
  "version": "1.3.2",
- "facts_hash": "9279c9c684f0a32b",
+ "facts_hash": "507498b4fa6ef82b",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -54151,7 +54151,7 @@
   {
    "module": "scripts",
    "files": 30,
-   "lines": 16143,
+   "lines": 16250,
    "tables": [
     "a",
     "contacts",
@@ -128975,7 +128975,7 @@
   },
   "scripts/db-audit/consultar-sql.mjs": {
    "path": "scripts/db-audit/consultar-sql.mjs",
-   "lines": 96,
+   "lines": 97,
    "env": [
     "LIMITE",
     "SELECAO_SQL",
@@ -128997,7 +128997,10 @@
   },
   "scripts/db-audit/consultas.sql": {
    "path": "scripts/db-audit/consultas.sql",
-   "lines": 81
+   "lines": 187,
+   "temporal": [
+    "WHERE created_at >= now() - interval '14 days') AS avisos_14_dias,"
+   ]
   },
   "scripts/maintenance/lib.mjs": {
    "path": "scripts/maintenance/lib.mjs",
@@ -165937,10 +165940,82 @@
   }
  },
  "git": {
-  "sha": "296eb76a82275e0c0d1010ded77a797cac37d95e",
+  "sha": "0f7fe38bd01af42d806b8a3bc801788c061f6447",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "commits": [
+   {
+    "sha": "0f7fe38",
+    "date": "2026-11-27",
+    "author": "adm01-debug",
+    "subject": "chore: consulta o alcance real da janela de silencio (#202)",
+    "files": [
+     "scripts/db-audit/consultas.sql"
+    ]
+   },
+   {
+    "sha": "4f57680",
+    "date": "2026-11-27",
+    "author": "adm01-debug",
+    "subject": "chore: consulta quantas pessoas o lembrete semanal deveria atingir agora (#201)",
+    "files": [
+     "scripts/db-audit/consultas.sql"
+    ]
+   },
+   {
+    "sha": "bb9cd4a",
+    "date": "2026-11-27",
+    "author": "adm01-debug",
+    "subject": "chore: mede silencio e historico do lembrete semanal desde setembro (#200)",
+    "files": [
+     "scripts/db-audit/consultas.sql"
+    ]
+   },
+   {
+    "sha": "a029aad",
+    "date": "2026-11-27",
+    "author": "adm01-debug",
+    "subject": "chore: consulta da ultima execucao por job para separar nunca rodou de registro apagado (#199)",
+    "files": [
+     "scripts/db-audit/consultas.sql"
+    ]
+   },
+   {
+    "sha": "8256e16",
+    "date": "2026-11-27",
+    "author": "adm01-debug",
+    "subject": "fix: consulta de segunda-feira agrupa pela expressao inteira nas CTEs (#198)",
+    "files": [
+     "scripts/db-audit/consultas.sql"
+    ]
+   },
+   {
+    "sha": "c846ac8",
+    "date": "2026-11-27",
+    "author": "adm01-debug",
+    "subject": "chore: consulta das entregas de segunda-feira para provar o lembrete semanal (#197)",
+    "files": [
+     "scripts/db-audit/consultas.sql"
+    ]
+   },
+   {
+    "sha": "7b71251",
+    "date": "2026-11-27",
+    "author": "adm01-debug",
+    "subject": "fix: consulta de entregas agrupa o push em CTE propria (#196)",
+    "files": [
+     "scripts/db-audit/consultas.sql"
+    ]
+   },
+   {
+    "sha": "bbd21be",
+    "date": "2026-11-27",
+    "author": "adm01-debug",
+    "subject": "fix: bloco do catalogo termina na linha em branco seguinte ao SQL (#195)",
+    "files": [
+     "scripts/db-audit/consultar-sql.mjs"
+    ]
+   },
    {
     "sha": "296eb76",
     "date": "2026-11-27",
@@ -166221,133 +166296,27 @@
      "supabase/migrations/20261228160000_habilita_criacao_de_chave_de_api.sql",
      "supabase/migrations/20261228170000_reaplica_funcoes_desatualizadas_em_producao.sql"
     ]
-   },
-   {
-    "sha": "556ec21",
-    "date": "2026-11-25",
-    "author": "adm01-debug",
-    "subject": "chore(banco): paridade de jobs do cron, matview leaderboard_cache e colunas de profiles (#171)",
-    "files": [
-     "docs/estado/08-migrations.md",
-     "supabase/migrations/20251220144518_06856092-4043-44fe-8da4-8f9501335d42.sql",
-     "supabase/migrations/20260806141640_user_challenges_insert_policy.sql",
-     "supabase/migrations/20261228120000_cron_jobs_e_leaderboard_cache.sql"
-    ]
-   },
-   {
-    "sha": "a3fb38b",
-    "date": "2026-11-25",
-    "author": "adm01-debug",
-    "subject": "fix: destino dos avisos de notificação (51 avisos sem rota)",
-    "files": [
-     "src/components/NotificationCenter.tsx",
-     "src/lib/notificationUrl.ts",
-     "src/test/notificationCenterKeyboard.test.tsx",
-     "src/test/notificationUrl.test.ts"
-    ]
-   },
-   {
-    "sha": "84e8ba2",
-    "date": "2026-11-25",
-    "author": "adm01-debug",
-    "subject": "feat: interruptor proprio para os avisos de pesquisa no perfil (#169)",
-    "files": [
-     "src/components/SurveyNotificationPreferences.tsx",
-     "src/pages/Profile.tsx",
-     "src/test/surveyNotificationPreferences.test.tsx"
-    ]
-   },
-   {
-    "sha": "cc240b7",
-    "date": "2026-11-25",
-    "author": "adm01-debug",
-    "subject": "feat: lembrete semanal de pesquisa de engajamento pendente (#168)",
-    "files": [
-     "docs/agentes/banco.md",
-     "docs/agentes/mapa-repo.md",
-     "supabase/migrations/20261227140000_engagement_reminder.sql"
-    ]
-   },
-   {
-    "sha": "ebbb9a0",
-    "date": "2026-11-25",
-    "author": "adm01-debug",
-    "subject": "feat: mostra a foto do premio na loja quando o admin cadastra (#167)",
-    "files": [
-     "src/components/shop/RewardCard.tsx",
-     "src/components/shop/__tests__/RewardCardImage.test.tsx"
-    ]
-   },
-   {
-    "sha": "f61144b",
-    "date": "2026-11-25",
-    "author": "adm01-debug",
-    "subject": "security: engajamento com score validado e anon fora das tabelas de escrita (#166)",
-    "files": [
-     "docs/agentes/banco.md",
-     "docs/agentes/mapa-repo.md",
-     "scripts/db-audit/README.md",
-     "scripts/db-audit/migration-baseline.json",
-     "supabase/migrations/20261227120000_engagement_integridade_e_anon.sql"
-    ]
-   },
-   {
-    "sha": "b5c751f",
-    "date": "2026-11-25",
-    "author": "adm01-debug",
-    "subject": "chore: alinha a documentacao do ledger com os 293 arquivos da main (#165)",
-    "files": [
-     "docs/agentes/banco.md",
-     "docs/agentes/mapa-repo.md",
-     "scripts/db-audit/README.md"
-    ]
-   },
-   {
-    "sha": "220d1d6",
-    "date": "2026-11-25",
-    "author": "adm01-debug",
-    "subject": "fix: e-mail corporativo sai do SELECT aberto de profiles (LGPD) (#164)",
-    "files": [
-     "docs/pendencias/02-profiles-update-sem-restricao-de-coluna.md",
-     "src/components/manager/TeamCompetencyDashboard.tsx",
-     "src/pages/Profile.tsx",
-     "src/services/highPotentialService.ts",
-     "src/services/passwordResetService.ts",
-     "src/services/profilesService.ts",
-     "src/services/rbacService.ts",
-     "src/services/shopService.ts",
-     "src/test/rls.test.ts",
-     "supabase/migrations/20261226210000_profiles_email_fora_do_allowlist.sql"
-    ]
    }
   ],
   "hot_files": [
    [
     "scripts/db-audit/consultas.sql",
-    8
-   ],
-   [
-    "docs/agentes/banco.md",
-    7
-   ],
-   [
-    "docs/agentes/mapa-repo.md",
-    7
-   ],
-   [
-    "src/pages/Profile.tsx",
-    5
+    15
    ],
    [
     "scripts/db-audit/consultar-sql.mjs",
-    4
-   ],
-   [
-    "scripts/db-audit/README.md",
-    4
+    5
    ],
    [
     "scripts/db-audit/apply-migrations.mjs",
+    4
+   ],
+   [
+    "docs/agentes/banco.md",
+    4
+   ],
+   [
+    "docs/agentes/mapa-repo.md",
     4
    ],
    [
@@ -166355,8 +166324,12 @@
     3
    ],
    [
-    "scripts/db-audit/migration-baseline.json",
+    "src/pages/Profile.tsx",
     3
+   ],
+   [
+    "scripts/db-audit/README.md",
+    2
    ],
    [
     "scripts/automation.config.json",
@@ -166387,11 +166360,7 @@
     2
    ],
    [
-    "docs/estado/08-migrations.md",
-    2
-   ],
-   [
-    "supabase/migrations/20251220144518_06856092-4043-44fe-8da4-8f9501335d42.sql",
+    "scripts/db-audit/migration-baseline.json",
     2
    ],
    [
@@ -166400,6 +166369,14 @@
    ],
    [
     "supabase/migrations/20261229010000_painel_de_valores_demograficos.sql",
+    1
+   ],
+   [
+    "supabase/migrations/20261230090000_backfill_janela_de_silencio_dos_avisos.sql",
+    1
+   ],
+   [
+    ".github/workflows/deploy-edge-functions.yml",
     1
    ]
   ]

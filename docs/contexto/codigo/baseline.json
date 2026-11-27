@@ -2,11 +2,51 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "296eb76a82275e0c0d1010ded77a797cac37d95e",
+  "commit": "0f7fe38bd01af42d806b8a3bc801788c061f6447",
   "branch": "main",
-  "data_commit": "2026-11-27T12:08:09-03:00",
+  "data_commit": "2026-11-27T13:10:54-03:00",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "ultimos_commits": [
+   {
+    "sha": "0f7fe38",
+    "data": "2026-11-27",
+    "assunto": "chore: consulta o alcance real da janela de silencio (#202)"
+   },
+   {
+    "sha": "4f57680",
+    "data": "2026-11-27",
+    "assunto": "chore: consulta quantas pessoas o lembrete semanal deveria atingir agora (#201)"
+   },
+   {
+    "sha": "bb9cd4a",
+    "data": "2026-11-27",
+    "assunto": "chore: mede silencio e historico do lembrete semanal desde setembro (#200)"
+   },
+   {
+    "sha": "a029aad",
+    "data": "2026-11-27",
+    "assunto": "chore: consulta da ultima execucao por job para separar nunca rodou de registro apagado (#199)"
+   },
+   {
+    "sha": "8256e16",
+    "data": "2026-11-27",
+    "assunto": "fix: consulta de segunda-feira agrupa pela expressao inteira nas CTEs (#198)"
+   },
+   {
+    "sha": "c846ac8",
+    "data": "2026-11-27",
+    "assunto": "chore: consulta das entregas de segunda-feira para provar o lembrete semanal (#197)"
+   },
+   {
+    "sha": "7b71251",
+    "data": "2026-11-27",
+    "assunto": "fix: consulta de entregas agrupa o push em CTE propria (#196)"
+   },
+   {
+    "sha": "bbd21be",
+    "data": "2026-11-27",
+    "assunto": "fix: bloco do catalogo termina na linha em branco seguinte ao SQL (#195)"
+   },
    {
     "sha": "296eb76",
     "data": "2026-11-27",
@@ -91,46 +131,6 @@
     "sha": "e634962",
     "data": "2026-11-26",
     "assunto": "feat(avisos): respeita a janela de silencio do usuario no push (#177)"
-   },
-   {
-    "sha": "abe3168",
-    "data": "2026-11-26",
-    "assunto": "chore(banco): remove os 46 indices fisicamente redundantes em public (#175)"
-   },
-   {
-    "sha": "f28d2f6",
-    "data": "2026-11-26",
-    "assunto": "fix: paridade de indices e constraints com o banco vivo e devolve os fluxos travados (#174)"
-   },
-   {
-    "sha": "c87b1c9",
-    "data": "2026-11-26",
-    "assunto": "feat: interruptor global de push no perfil (#176)"
-   },
-   {
-    "sha": "29b5a15",
-    "data": "2026-11-25",
-    "assunto": "fix: restaura trigger de cadastro, revoga execute publico e alinha triggers e mensagens (#173)"
-   },
-   {
-    "sha": "324e51a",
-    "data": "2026-11-25",
-    "assunto": "fix(banco): fecha o rebuild - tabelas, colunas, funcoes, views, RLS e grants de producao (#172)"
-   },
-   {
-    "sha": "556ec21",
-    "data": "2026-11-25",
-    "assunto": "chore(banco): paridade de jobs do cron, matview leaderboard_cache e colunas de profiles (#171)"
-   },
-   {
-    "sha": "a3fb38b",
-    "data": "2026-11-25",
-    "assunto": "fix: destino dos avisos de notificação (51 avisos sem rota)"
-   },
-   {
-    "sha": "84e8ba2",
-    "data": "2026-11-25",
-    "assunto": "feat: interruptor proprio para os avisos de pesquisa no perfil (#169)"
    }
   ],
   "arquivos_mudados_7d": 297,
@@ -156,6 +156,10 @@
     "mudancas": 15
    },
    {
+    "pasta": "scripts/db-audit/consultas.sql",
+    "mudancas": 15
+   },
+   {
     "pasta": "src/components/admin",
     "mudancas": 14
    },
@@ -177,10 +181,6 @@
    },
    {
     "pasta": "docs/estado/03-hooks-services-lib.md",
-    "mudancas": 8
-   },
-   {
-    "pasta": "scripts/db-audit/consultas.sql",
     "mudancas": 8
    },
    {
@@ -214,6 +214,10 @@
     "mudancas": 15
    },
    {
+    "arquivo": "scripts/db-audit/consultas.sql",
+    "mudancas": 15
+   },
+   {
     "arquivo": "bun.lock",
     "mudancas": 14
    },
@@ -231,10 +235,6 @@
    },
    {
     "arquivo": "docs/estado/03-hooks-services-lib.md",
-    "mudancas": 8
-   },
-   {
-    "arquivo": "scripts/db-audit/consultas.sql",
     "mudancas": 8
    },
    {
@@ -274,6 +274,10 @@
     "mudancas": 5
    },
    {
+    "arquivo": "scripts/db-audit/consultar-sql.mjs",
+    "mudancas": 5
+   },
+   {
     "arquivo": "scripts/db-audit/migration-baseline.json",
     "mudancas": 5
    },
@@ -292,16 +296,12 @@
    {
     "arquivo": ".env.example",
     "mudancas": 4
-   },
-   {
-    "arquivo": ".github/workflows/contexto.yml",
-    "mudancas": 4
    }
   ],
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 160
+    "commits": 168
    },
    {
     "autor": "dependabot[bot]",
@@ -312,7 +312,7 @@
  "contagens": {
   "arquivos_total": 1642,
   "arquivos_codigo": 1217,
-  "linhas_codigo": 241682,
+  "linhas_codigo": 241683,
   "rotas": 88,
   "rotas_http_backend": 0,
   "vistas_por_id": 0,
@@ -368,7 +368,7 @@
   },
   "scripts/db-audit": {
    "arquivos": 3,
-   "linhas": 954
+   "linhas": 955
   },
   "scripts/graphify-local.mjs": {
    "arquivos": 1,

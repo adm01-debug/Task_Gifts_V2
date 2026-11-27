@@ -59,11 +59,11 @@
  "commits": {
   "convencao": "conventional commits (observado)",
   "exemplos": [
-   "fix: catalogo para no proximo marcador e remove bloco duplicado da consulta de entregas (#194)",
-   "fix: consulta de entregas do lembrete sem notification_id em push_outbox (#193)",
-   "chore: consulta das entregas recentes do lembrete e das colunas de push_outbox (#192)",
-   "chore: rastro do lembrete semanal e marcador de consulta tolerante a texto extra (#191)",
-   "chore: consulta do catalogo para provar a entrega do lembrete semanal (#190)"
+   "chore: consulta o alcance real da janela de silencio (#202)",
+   "chore: consulta quantas pessoas o lembrete semanal deveria atingir agora (#201)",
+   "chore: mede silencio e historico do lembrete semanal desde setembro (#200)",
+   "chore: consulta da ultima execucao por job para separar nunca rodou de registro apagado (#199)",
+   "fix: consulta de segunda-feira agrupa pela expressao inteira nas CTEs (#198)"
   ]
  },
  "pr_template": ".github/PULL_REQUEST_TEMPLATE.md",
