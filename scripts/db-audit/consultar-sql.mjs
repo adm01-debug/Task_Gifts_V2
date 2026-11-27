@@ -36,6 +36,9 @@ function lerSql() {
         coletando = marcador[1] === escolhida;
         continue;
       }
+      // Nome repetido no catalogo: vence o bloco que estiver mais adiante. Parar no marcador
+      // seguinte e obrigatorio, senao sobram dois SELECT colados e o Postgres recusa a consulta.
+      if (coletando && guardadas.some(function (g) { return /^\s*select\b|^\s*with\b/i.test(g); })) break;
       if (coletando) guardadas.push(linha);
     }
     sql = guardadas.filter(function (l) { return !l.trim().startsWith("--"); }).join("\n").trim().replace(/;$/, "").trim();
