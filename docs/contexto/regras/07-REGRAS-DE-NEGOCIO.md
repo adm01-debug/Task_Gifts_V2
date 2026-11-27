@@ -1,6 +1,6 @@
 # 07 · REGRAS DE NEGÓCIO
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `fa594f89a4` · branch `main` · 2026-11-27 10:25 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `33eb05adee` · branch `main` · 2026-11-27 10:27 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## A. Regras escritas por humanos (`manual/` — prioridade máxima, nunca sobrescrito)
@@ -3352,6 +3352,7 @@ _nenhum item encontrado_
 | Artifact-id sem arquivo correspondente | `scripts/ci/contexto-publicacao.unit.mjs` |
 | Download simulado falhou: ${failDownload} | `scripts/ci/contexto-publicacao.unit.mjs` |
 | --dir exige um caminho\n${USO} | `scripts/db-audit/apply-migrations.mjs` |
+| --verify exige um nome de objeto (letras, digitos e _)\n${USO} | `scripts/db-audit/apply-migrations.mjs` |
 | Management API ${resposta.status}: ${texto.slice(0, 500)} | `scripts/db-audit/apply-migrations.mjs` |
 | SUPABASE_ACCESS_TOKEN ausente no ambiente | `scripts/db-audit/apply-migrations.mjs` |
 | SUPABASE_PROJECT_ID ausente no ambiente | `scripts/db-audit/apply-migrations.mjs` |
@@ -3644,8 +3645,7 @@ _nenhum item encontrado_
 | Nao foi possivel identificar o cabecalho do arquivo. | `src/lib/campaignImport.ts` |
 | Sessão expirada — faça login novamente. | `src/lib/luckyWheelBudgetWhatIf.ts` |
 | Erro ao limpar dados antigos | `src/pages/AdminTelemetria.tsx` |
-| ; import { Badge } from  | `src/pages/ApiKeysAdmin.tsx` |
-| … +219 linhas — lista completa em `context.json` | |
+| … +220 linhas — lista completa em `context.json` | |
 
 ## J. Controle de acesso no código (checagens de perfil/permissão)
 

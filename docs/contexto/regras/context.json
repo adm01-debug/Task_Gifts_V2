@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "fa594f89a47f1cc04088d08cce963fbb391173a5",
+  "sha": "33eb05adee03383a09f0d18a482aa55b94606051",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
-  "generated_at": "2026-11-27 10:25 UTC",
+  "generated_at": "2026-11-27 10:27 UTC",
   "files_total": 1651,
   "code_files": 1543,
-  "code_lines": 286057
+  "code_lines": 286106
  },
  "version": "1.3.2",
- "facts_hash": "c19f44b67adb9af0",
+ "facts_hash": "aa7c46bdacef609a",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -54151,7 +54151,7 @@
   {
    "module": "scripts",
    "files": 28,
-   "lines": 15911,
+   "lines": 15960,
    "tables": [
     "a",
     "contacts",
@@ -62504,6 +62504,10 @@
    {
     "file": "scripts/db-audit/apply-migrations.mjs",
     "msg": "--dir exige um caminho\\n${USO}"
+   },
+   {
+    "file": "scripts/db-audit/apply-migrations.mjs",
+    "msg": "--verify exige um nome de objeto (letras, digitos e _)\\n${USO}"
    },
    {
     "file": "scripts/db-audit/apply-migrations.mjs",
@@ -128865,7 +128869,7 @@
   },
   "scripts/db-audit/apply-migrations.mjs": {
    "path": "scripts/db-audit/apply-migrations.mjs",
-   "lines": 179,
+   "lines": 228,
    "external_urls": [
     "https://api.supabase.com/v1/projects/${ref}/database/…"
    ],
@@ -128876,6 +128880,7 @@
    ],
    "errors": [
     "--dir exige um caminho\\n${USO}",
+    "--verify exige um nome de objeto (letras, digitos e _)\\n${USO}",
     "Management API ${resposta.status}: ${texto.slice(0, 500)}",
     "SUPABASE_ACCESS_TOKEN ausente no ambiente",
     "SUPABASE_PROJECT_ID ausente no ambiente",
@@ -165866,10 +165871,20 @@
   }
  },
  "git": {
-  "sha": "fa594f89a47f1cc04088d08cce963fbb391173a5",
+  "sha": "33eb05adee03383a09f0d18a482aa55b94606051",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "commits": [
+   {
+    "sha": "33eb05a",
+    "date": "2026-11-27",
+    "author": "adm01-debug",
+    "subject": "fix(db-audit): apply segue quando a versao orfa ja esta no repo e prova por consulta (#184)",
+    "files": [
+     ".github/workflows/db-migrate.yml",
+     "scripts/db-audit/apply-migrations.mjs"
+    ]
+   },
    {
     "sha": "fa594f8",
     "date": "2026-11-27",
@@ -166265,15 +166280,6 @@
      "scripts/db-audit/README.md",
      "scripts/db-audit/check-migration-drift.mjs"
     ]
-   },
-   {
-    "sha": "d9f0718",
-    "date": "2026-11-24",
-    "author": "adm01-debug",
-    "subject": "feat: envia lembrete de clima por push alem do in-app (#153)",
-    "files": [
-     "supabase/migrations/20261224140000_climate_reminder_push.sql"
-    ]
    }
   ],
   "hot_files": [
@@ -166304,6 +166310,14 @@
    [
     "docs/estado/05-edge-functions.md",
     3
+   ],
+   [
+    ".github/workflows/db-migrate.yml",
+    2
+   ],
+   [
+    "scripts/db-audit/apply-migrations.mjs",
+    2
    ],
    [
     "src/components/admin/DemographicValuesPanel.tsx",
@@ -166347,14 +166361,6 @@
    ],
    [
     "src/services/passwordResetService.ts",
-    2
-   ],
-   [
-    "src/services/profilesService.ts",
-    2
-   ],
-   [
-    "src/services/rbacService.ts",
     2
    ]
   ]

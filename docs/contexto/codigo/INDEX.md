@@ -1,7 +1,7 @@
 # Contexto do projeto para agentes de IA
 
 GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.
-Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `fa594f89a47f1cc04088d08cce963fbb391173a5` (2026-11-27T07:24:34-03:00).
+Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `33eb05adee03383a09f0d18a482aa55b94606051` (2026-11-27T07:27:19-03:00).
 
 ## Como usar (leia antes de planejar ou executar qualquer tarefa)
 1. **Tela/rota/menu** → `rotas.json` (url/vista/menu → arquivo → hooks → tabelas → edges; `rotas_http_backend` para APIs) e `modulos.json` (módulo inteiro + dependências entre módulos).
@@ -36,7 +36,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 |---|---|
 | arquivos_total | 1640 |
 | arquivos_codigo | 1216 |
-| linhas_codigo | 241531 |
+| linhas_codigo | 241580 |
 | rotas | 88 |
 | rotas_http_backend | 0 |
 | vistas_por_id | 0 |
@@ -295,7 +295,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - possiveis_segredos_no_codigo: 0
 
 ## Grafo de código (graphify)
-- 11218 nós · 30267 arestas · 862 comunidades · grafo do commit `fa594f89`
+- 11218 nós · 30267 arestas · 862 comunidades · grafo do commit `33eb05ad`
 - comunidades maiores: lucide-react (335), react (239), App.tsx (230), ManagerDashboard.tsx (168), Mentoria.tsx (130), cn (128), useProfiles.ts (110), mobile/index.ts (102), useToast (90), DashboardRightColumn.tsx (89), questsService.ts (86), contracts/index.ts (85)
 - símbolos mais chamados: cn() (src/lib/utils.ts), useAuth() (src/hooks/useAuth.tsx), useIsMobile() (src/hooks/use-mobile.tsx), q() (scripts/supabase_snapshot/snapshot.py), useDepartments() (src/hooks/useDepartments.ts), useRBAC() (src/hooks/useRBAC.ts), useProfiles() (src/hooks/useProfiles.ts), useToast() (src/hooks/use-toast.ts), useSEO() (src/hooks/useSEO.ts), useSoundEffects() (src/hooks/useSoundEffects.tsx), .collect() (scripts/supabase_snapshot/test_snapshot.py), excluded_sql() (scripts/supabase_snapshot/snapshot.py)
 - consulta local: `graphify query "<pergunta>"`, `graphify path "<A>" "<B>"`, `graphify explain "<X>"`
@@ -383,6 +383,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 
 
 ## Últimos commits
+- 2026-11-27 `33eb05a` fix(db-audit): apply segue quando a versao orfa ja esta no repo e prova por consulta (#184)
 - 2026-11-27 `fa594f8` feat(db): painel demografico le a view que mascara valor restrito (ex-PR 182) (#183)
 - 2026-11-27 `5106746` chore: cria a linha padrao da janela de silencio para quem nunca abriu a tela (#180)
 - 2026-11-27 `dfe7e3c` infra(migrations): workflow que aplica o que falta e barra divergencia com o ledger (#179)
@@ -397,7 +398,6 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - 2026-11-25 `556ec21` chore(banco): paridade de jobs do cron, matview leaderboard_cache e colunas de profiles (#171)
 - 2026-11-25 `a3fb38b` fix: destino dos avisos de notificação (51 avisos sem rota)
 - 2026-11-25 `84e8ba2` feat: interruptor proprio para os avisos de pesquisa no perfil (#169)
-- 2026-11-25 `cc240b7` feat: lembrete semanal de pesquisa de engajamento pendente (#168)
 
 ## Arquivos deste diretório
 - `docs/contexto/codigo/rotas.json`

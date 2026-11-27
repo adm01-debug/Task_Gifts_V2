@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "fa594f89a47f1cc04088d08cce963fbb391173a5",
+  "commit": "33eb05adee03383a09f0d18a482aa55b94606051",
   "branch": "main",
-  "data_commit": "2026-11-27T07:24:34-03:00",
+  "data_commit": "2026-11-27T07:27:19-03:00",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "ultimos_commits": [
+   {
+    "sha": "33eb05a",
+    "data": "2026-11-27",
+    "assunto": "fix(db-audit): apply segue quando a versao orfa ja esta no repo e prova por consulta (#184)"
+   },
    {
     "sha": "fa594f8",
     "data": "2026-11-27",
@@ -126,11 +131,6 @@
     "sha": "0c592ca",
     "data": "2026-11-25",
     "assunto": "fix: painel de certificacoes e entrega do time voltam a carregar (#163)"
-   },
-   {
-    "sha": "8430c1b",
-    "data": "2026-11-25",
-    "assunto": "fix: lista de usuarios por papel e painel de alto potencial voltam a carregar (#162)"
    }
   ],
   "arquivos_mudados_7d": 298,
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 149
+    "commits": 150
    },
    {
     "autor": "dependabot[bot]",
@@ -312,7 +312,7 @@
  "contagens": {
   "arquivos_total": 1640,
   "arquivos_codigo": 1216,
-  "linhas_codigo": 241531,
+  "linhas_codigo": 241580,
   "rotas": 88,
   "rotas_http_backend": 0,
   "vistas_por_id": 0,
@@ -368,7 +368,7 @@
   },
   "scripts/db-audit": {
    "arquivos": 2,
-   "linhas": 803
+   "linhas": 852
   },
   "scripts/graphify-local.mjs": {
    "arquivos": 1,
@@ -587,7 +587,7 @@
  ],
  "qualidade": {
   "any": 81,
-  "console_log": 90,
+  "console_log": 93,
   "ts_ignore": 0,
   "eslint_disable": 0,
   "todos": 1,
