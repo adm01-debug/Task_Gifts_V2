@@ -22,7 +22,10 @@ const PROIBIDO = /\b(insert|update|delete|truncate|drop|alter|create|grant|revok
 // Ensaio de funcao: precisa chamar a funcao de verdade para saber se ela quebra, e o unico jeito de
 // nao gravar nada e' rodar dentro de BEGIN e terminar em ROLLBACK. O guarda continua valendo para o
 // que estiver entre o BEGIN e o ROLLBACK (so SELECT), e o ROLLBACK e' acrescentado pelo runner, nao
-const ENSAIO = /^begin\s*;\s*select\s+(\*\s+from\s+)?public\.([a-z_]+)\(([^;]*)\)\s+as\s+([a-z_]+)\s*;?$/i;
+// O ensaio pode ter varias instrucoes SELECT entre o BEGIN e o fim (ex.: contar a tabela antes e
+// depois), todas chamando no maximo uma funcao de escrita cada. Cada parte e' extraida separadamente.
+const ENSAIO = /^begin\b(.*)$/is;
+const CHAMADA = /public\.([a-z_]+)\(([^;)]*)\)/gi;
 
 export function lerSql() {
   const caminho = path.resolve(process.env.SQL_FILE || path.join("scripts", "db-audit", "consultas.sql"));
@@ -61,17 +64,29 @@ export function lerSql() {
   }
   if (!SOMENTE_LEITURA.test(sql)) {
     const ensaio = ENSAIO.exec(sql.replace(/\s+/g, " ").trim());
+    if (!ensaio) throw new Error("para escrever, a consulta precisa ser BEGIN; SELECT ...; com SELECTs simples");
     // So' funcao de envio/agendamento/verificacao tem ensaio liberado, e o rollback e' imposto aqui.
     // `check_` e' leitura pura: roda dentro do BEGIN e o ROLLBACK descarta o que ela gravar.
-    if (!/^(send|notify|enqueue|dispatch|push|process|run|refresh|check)_/.test(ensaio[2])) {
-      throw new Error("ensaio permitido apenas para funcoes de envio/agendamento/verificacao");
+    const corpo = ensaio[1].replace(/\brollback\s*;?\s*$/i, "");
+    const partes = corpo.split(";").map(function (p) { return p.trim(); }).filter(Boolean);
+    for (const parte of partes) {
+      // Cada parte tem que ser um SELECT: o guarda de escrita nao vale para o corpo do ensaio.
+      if (!/^select\b/i.test(parte)) throw new Error("ensaio aceita apenas SELECT entre BEGIN e ROLLBACK");
+      if (PROIBIDO.test(parte)) throw new Error("palavra de escrita encontrada na consulta");
+      CHAMADA.lastIndex = 0;
+      let chamada;
+      while ((chamada = CHAMADA.exec(parte)) !== null) {
+        if (!/^(send|notify|enqueue|dispatch|push|process|run|refresh|check)_/.test(chamada[1])) {
+          throw new Error("ensaio permitido apenas para funcoes de envio/agendamento/verificacao (" + chamada[1] + ")");
+        }
+        // Argumento do ensaio: so' literal simples (numero, booleano, texto sem aspas internas).
+        const args = (chamada[2] || "").trim();
+        if (args && !/^([a-z_]+\s*=>\s*)?(\d+|true|false|null|'[^']*')$/i.test(args)) {
+          throw new Error("ensaio com argumento nao literal nao e' aceito");
+        }
+      }
     }
-    // Argumento do ensaio: so' literal simples (numero, booleano, texto sem aspas internas).
-    const args = (ensaio[3] || "").trim();
-    if (args && !/^([a-z_]+\s*=>\s*)?(\d+|true|false|null|'[^']*')$/i.test(args)) {
-      throw new Error("ensaio com argumento nao literal nao e' aceito");
-    }
-    return "begin; select " + (ensaio[1] ? "* from " : "") + "public." + ensaio[2] + "(" + args + ") as " + ensaio[4] + "; rollback;";
+    return "begin; " + partes.join("; ") + "; rollback;";
   }
   sql = sql.replace(/;$/, "").trim();
   // Sem isso um "select 1; delete ..." passaria pela checagem do inicio.
