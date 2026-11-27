@@ -237,7 +237,10 @@ export async function main(argv = process.argv.slice(2)) {
       // existe como relacao. O fallback mantem o comportamento antigo para tabela/view.
       "select coalesce("
         + "to_regclass(" + aspas(`public.${opts.verify}`) + ")::text, "
-        + "to_regprocedure(" + aspas(`public.${opts.verify}`) + ")::text"
+        // Qualquer assinatura em public: a funcao pode ter argumento com default, e o
+        // to_regprocedure de um nome so nao resolve para ela.
+        + "(select p.oid::regprocedure::text from pg_proc p "
+        + "where p.proname = " + aspas(opts.verify) + " and p.pronamespace = 'public'::regnamespace limit 1)"
         + ") as objeto;",
     );
     const objeto = Array.isArray(linhas) && linhas[0] ? linhas[0].objeto : null;
