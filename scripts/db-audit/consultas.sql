@@ -92,20 +92,21 @@ LIMIT 60
 -- Entrega do engagement-reminders (segunda, 0 11 * * 1): avisos por data e tipo em toda segunda desde 01/09.
 -- O job_run_details nao guarda essa execucao, entao a prova de entrega vem do efeito em notifications
 -- e do push enfileirado na mesma hora e do mesmo tipo.
+-- Colunas com nome de tabela (created_at) dentro da CTE precisam de GROUP BY pela expressao inteira.
 WITH avisos AS (
-  SELECT date_trunc('day', created_at) AS dia, type, count(*) AS avisos, min(created_at) AS primeiro
-  FROM public.notifications
-  WHERE extract(isodow FROM created_at) = 1 AND created_at >= '2026-09-01 00:00:00+00'::timestamptz
-  GROUP BY 1, 2
+  SELECT date_trunc('day', n.created_at) AS dia, n.type AS tipo, count(*) AS qtd, min(n.created_at) AS primeiro
+  FROM public.notifications n
+  WHERE extract(isodow FROM n.created_at) = 1 AND n.created_at >= '2026-09-01 00:00:00+00'::timestamptz
+  GROUP BY date_trunc('day', n.created_at), n.type
 ), pushes AS (
-  SELECT date_trunc('hour', created_at) AS hora, type, count(*) AS pushes
-  FROM public.push_outbox
-  WHERE extract(isodow FROM created_at) = 1
+  SELECT date_trunc('hour', o.created_at) AS hora, o.type AS tipo, count(*) AS qtd
+  FROM public.push_outbox o
+  WHERE extract(isodow FROM o.created_at) = 1
+  GROUP BY date_trunc('hour', o.created_at), o.type
 )
-SELECT a.dia, a.type, a.avisos, a.primeiro,
-  coalesce(sum(p.pushes), 0) AS pushes_do_dia
+SELECT a.dia, a.tipo, a.qtd AS avisos, a.primeiro, coalesce(sum(p.qtd), 0) AS pushes_do_dia
 FROM avisos a
-LEFT JOIN pushes p ON p.type = a.type AND p.hora = date_trunc('hour', a.primeiro)
-GROUP BY 1, 2, 3, 4
-ORDER BY a.dia DESC, a.type
+LEFT JOIN pushes p ON p.tipo = a.tipo AND p.hora = date_trunc('hour', a.primeiro)
+GROUP BY a.dia, a.tipo, a.qtd, a.primeiro
+ORDER BY a.dia DESC, a.tipo
 LIMIT 40
