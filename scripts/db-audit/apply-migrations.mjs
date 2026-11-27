@@ -166,7 +166,7 @@ async function main() {
     );
     process.exit(1);
   }
-  if (pendentes.length === 0 && nomesDivergentes.length === 0 && orfaos.length === 0) {
+  if (pendentes.length === 0 && orfaos.length === 0 && !opts.verify) {
     console.log("nada a aplicar: repo e banco alinhados.");
     process.exit(0);
   }
