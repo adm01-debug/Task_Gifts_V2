@@ -30,6 +30,7 @@
  */
 import { readdirSync, readFileSync } from "node:fs";
 import path from "node:path";
+import { pathToFileURL } from "node:url";
 
 const USO = "uso: node scripts/db-audit/apply-migrations.mjs [--apply] [--verify <objeto>] [--dir <dir>]";
 
@@ -64,7 +65,7 @@ function lerArgs(argv) {
       opts.dir = argv[i];
     } else if (arg === "--help" || arg === "-h") {
       console.log(USO);
-      process.exit(0);
+      return 0;
     } else {
       throw new Error(`argumento desconhecido: ${arg}\n${USO}`);
     }
@@ -91,7 +92,9 @@ function listarLocais(dir) {
 const ref = process.env.SUPABASE_PROJECT_ID;
 const token = process.env.SUPABASE_ACCESS_TOKEN;
 
-async function consultar(sql) {
+// Mesma porta da Management API, reaproveitada pelo consultar-sql.mjs para
+// leituras avulsas no banco vivo sem precisar de SUPABASE_DB_URL.
+export async function consultar(sql) {
   const resposta = await fetch(
     `https://api.supabase.com/v1/projects/${ref}/database/query`,
     {
@@ -113,13 +116,12 @@ async function consultar(sql) {
     return texto;
   }
 }
-
 function aspas(texto) {
   return `'${String(texto).replace(/'/g, "''")}'`;
 }
 
-async function main() {
-  const opts = lerArgs(process.argv.slice(2));
+export async function main(argv = process.argv.slice(2)) {
+  const opts = lerArgs(argv);
   if (!token) throw new Error("SUPABASE_ACCESS_TOKEN ausente no ambiente");
   if (!ref) throw new Error("SUPABASE_PROJECT_ID ausente no ambiente");
   const local = listarLocais(opts.dir);
@@ -156,7 +158,7 @@ async function main() {
 
   if (orfaos.length > 0 && !opts.apply) {
     console.log("::error::migration aplicada no banco sem arquivo no repo - traga o arquivo antes de aplicar.");
-    process.exit(1);
+    return 1;
   }
   const semArquivo = orfaos.filter((l) => !versoesDoRepo.has(l.version));
   if (semArquivo.length > 0) {
@@ -164,15 +166,15 @@ async function main() {
       "::error::versao no ledger e nenhuma migration do repo com ela: "
         + `${semArquivo.map((l) => l.version).join(", ")} - recupere o arquivo antes de aplicar.`,
     );
-    process.exit(1);
+    return 1;
   }
   if (pendentes.length === 0 && orfaos.length === 0 && !opts.verify) {
     console.log("nada a aplicar: repo e banco alinhados.");
-    process.exit(0);
+    return 0;
   }
   if (!opts.apply) {
     console.log("modo check: nada foi escrito. Rode com --apply para aplicar as pendentes.");
-    process.exit(1);
+    return 1;
   }
 
   for (const m of nomesDivergentes) {
@@ -202,7 +204,7 @@ async function main() {
     .map((m) => m.version);
   if (faltam.length > 0) {
     console.log(`::error::ainda faltam no ledger: ${faltam.join(", ")}`);
-    process.exit(1);
+    return 1;
   }
   console.log(`aplicadas ${pendentes.length} migration(s); ledger com ${depois.length} registros.`);
 
@@ -215,14 +217,18 @@ async function main() {
     const objeto = Array.isArray(linhas) && linhas[0] ? linhas[0].objeto : null;
     if (!objeto) {
       console.log(`::error::objeto public.${opts.verify} ausente no banco depois do apply.`);
-      process.exit(1);
+      return 1;
     }
     console.log(`  verificado: public.${opts.verify} existe no banco (${objeto}).`);
   }
-  process.exit(0);
+  return 0;
 }
 
-main().catch((erro) => {
-  console.error(`erro: ${erro.message}`);
-  process.exit(2);
-});
+if (import.meta.url === pathToFileURL(process.argv[1]).href) {
+  main()
+    .then((codigo) => process.exit(codigo ?? 0))
+    .catch((erro) => {
+      console.error(`erro: ${erro.message}`);
+      process.exit(2);
+    });
+}
