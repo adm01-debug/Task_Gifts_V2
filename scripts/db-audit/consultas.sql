@@ -135,3 +135,25 @@ FROM cron.job_run_details d
 JOIN cron.job j ON j.jobid = d.jobid
 GROUP BY d.jobid, j.jobname
 ORDER BY max(d.start_time) DESC
+
+-- nome: elegiveis_do_lembrete
+-- Quantas pessoas a regra do send_engagement_reminders deveria atingir agora: ciclo ativo, dentro da
+-- janela e pergunta nao respondida. Zero aqui explica o job 65 sem linha em job_run_details.
+WITH ativos AS (
+  SELECT id, title, ends_at FROM public.engagement_cycles WHERE status = 'active'
+    AND starts_at <= now() AND ends_at > now()
+), pendentes AS (
+  SELECT a.user_id, count(*) AS perguntas
+  FROM public.engagement_question_assignments a
+  JOIN ativos c ON c.id = a.cycle_id
+  JOIN public.profiles p ON p.id = a.user_id AND p.status = 'confirmed'
+  WHERE a.answered_at IS NULL
+  GROUP BY a.user_id
+)
+SELECT (SELECT count(*) FROM public.engagement_cycles) AS ciclos_total,
+  (SELECT count(*) FROM ativos) AS ciclos_ativos,
+  (SELECT count(*) FROM public.engagement_cycles WHERE status = 'active') AS marcados_ativos,
+  (SELECT count(*) FROM public.engagement_question_assignments) AS atribuicoes_total,
+  (SELECT count(*) FROM public.engagement_question_assignments WHERE answered_at IS NULL) AS sem_resposta,
+  (SELECT count(*) FROM pendentes) AS pessoas_elegiveis,
+  (SELECT coalesce(sum(perguntas), 0) FROM pendentes) AS perguntas_pendentes
