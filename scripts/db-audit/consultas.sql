@@ -26,7 +26,7 @@ ORDER BY u.created_at
 -- Ultimas execucoes do job do lembrete semanal, para provar que saiu sem toque humano.
 SELECT jobid, status, return_message, start_time, end_time
 FROM cron.job_run_details
-WHERE jobid IN (SELECT jobid FROM cron.job WHERE jobname ILIKE '.weekly_reminder%')
+WHERE jobid IN (SELECT jobid FROM cron.job WHERE jobname = 'engagement-reminders')
 ORDER BY start_time DESC
 LIMIT 20
 
