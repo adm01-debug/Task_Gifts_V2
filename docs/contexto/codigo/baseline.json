@@ -2,11 +2,21 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "f5454f84a9ac6ae6a1e2cd474e5b447c30b292d4",
+  "commit": "85f9abf737111f0f93e4bff63b24837625b3cbef",
   "branch": "main",
-  "data_commit": "2026-11-27T15:51:34-03:00",
+  "data_commit": "2026-11-27T16:07:10-03:00",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "ultimos_commits": [
+   {
+    "sha": "85f9abf",
+    "data": "2026-11-27",
+    "assunto": "fix(cron): ON CONFLICT por constraint no marco zero do vigia (#220)"
+   },
+   {
+    "sha": "a4ae6cf",
+    "data": "2026-11-27",
+    "assunto": "fix(infra): verify aceita funcao com argumento default (#219)"
+   },
    {
     "sha": "f5454f8",
     "data": "2026-11-27",
@@ -121,16 +131,6 @@
     "sha": "7b71251",
     "data": "2026-11-27",
     "assunto": "fix: consulta de entregas agrupa o push em CTE propria (#196)"
-   },
-   {
-    "sha": "bbd21be",
-    "data": "2026-11-27",
-    "assunto": "fix: bloco do catalogo termina na linha em branco seguinte ao SQL (#195)"
-   },
-   {
-    "sha": "296eb76",
-    "data": "2026-11-27",
-    "assunto": "fix: catalogo para no proximo marcador e remove bloco duplicado da consulta de entregas (#194)"
    }
   ],
   "arquivos_mudados_7d": 297,
@@ -188,11 +188,11 @@
     "mudancas": 8
    },
    {
-    "pasta": "scripts/db-audit/consultar-sql.mjs",
+    "pasta": "scripts/db-audit/apply-migrations.mjs",
     "mudancas": 7
    },
    {
-    "pasta": "src/pages/Profile.tsx",
+    "pasta": "scripts/db-audit/consultar-sql.mjs",
     "mudancas": 7
    }
   ],
@@ -242,6 +242,10 @@
     "mudancas": 8
    },
    {
+    "arquivo": "scripts/db-audit/apply-migrations.mjs",
+    "mudancas": 7
+   },
+   {
     "arquivo": "scripts/db-audit/consultar-sql.mjs",
     "mudancas": 7
    },
@@ -252,10 +256,6 @@
    {
     "arquivo": "supabase/config.toml",
     "mudancas": 7
-   },
-   {
-    "arquivo": "scripts/db-audit/apply-migrations.mjs",
-    "mudancas": 6
    },
    {
     "arquivo": "scripts/db-audit/check-migration-drift.mjs",
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 184
+    "commits": 186
    },
    {
     "autor": "dependabot[bot]",
@@ -312,7 +312,7 @@
  "contagens": {
   "arquivos_total": 1643,
   "arquivos_codigo": 1217,
-  "linhas_codigo": 241731,
+  "linhas_codigo": 241734,
   "rotas": 88,
   "rotas_http_backend": 0,
   "vistas_por_id": 0,
@@ -368,7 +368,7 @@
   },
   "scripts/db-audit": {
    "arquivos": 3,
-   "linhas": 1003
+   "linhas": 1006
   },
   "scripts/graphify-local.mjs": {
    "arquivos": 1,

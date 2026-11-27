@@ -1,7 +1,7 @@
 # Contexto do projeto para agentes de IA
 
 GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.
-Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `f5454f84a9ac6ae6a1e2cd474e5b447c30b292d4` (2026-11-27T15:51:34-03:00).
+Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `85f9abf737111f0f93e4bff63b24837625b3cbef` (2026-11-27T16:07:10-03:00).
 
 ## Como usar (leia antes de planejar ou executar qualquer tarefa)
 1. **Tela/rota/menu** → `rotas.json` (url/vista/menu → arquivo → hooks → tabelas → edges; `rotas_http_backend` para APIs) e `modulos.json` (módulo inteiro + dependências entre módulos).
@@ -36,7 +36,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 |---|---|
 | arquivos_total | 1643 |
 | arquivos_codigo | 1217 |
-| linhas_codigo | 241731 |
+| linhas_codigo | 241734 |
 | rotas | 88 |
 | rotas_http_backend | 0 |
 | vistas_por_id | 0 |
@@ -296,7 +296,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - possiveis_segredos_no_codigo: 0
 
 ## Grafo de código (graphify)
-- 11228 nós · 30283 arestas · 877 comunidades · grafo do commit `f5454f84`
+- 11228 nós · 30283 arestas · 877 comunidades · grafo do commit `85f9abf7`
 - comunidades maiores: react (262), lucide-react (250), badge.tsx (203), Mentoria.tsx (136), skeleton.tsx (127), cn (116), contracts/index.ts (94), client.ts (92), requestId.ts (89), RolePermissionsManager.tsx (88), DashboardRightColumn.tsx (86), AdminPanel.tsx (79)
 - símbolos mais chamados: cn() (src/lib/utils.ts), useAuth() (src/hooks/useAuth.tsx), useIsMobile() (src/hooks/use-mobile.tsx), q() (scripts/supabase_snapshot/snapshot.py), useDepartments() (src/hooks/useDepartments.ts), useRBAC() (src/hooks/useRBAC.ts), useProfiles() (src/hooks/useProfiles.ts), useToast() (src/hooks/use-toast.ts), useSEO() (src/hooks/useSEO.ts), useSoundEffects() (src/hooks/useSoundEffects.tsx), .collect() (scripts/supabase_snapshot/test_snapshot.py), excluded_sql() (scripts/supabase_snapshot/snapshot.py)
 - consulta local: `graphify query "<pergunta>"`, `graphify path "<A>" "<B>"`, `graphify explain "<X>"`
@@ -313,10 +313,10 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - scripts/db-audit/README.md (11)
 - docs/estado/03-hooks-services-lib.md (8)
 - src/App.tsx (8)
+- scripts/db-audit/apply-migrations.mjs (7)
 - scripts/db-audit/consultar-sql.mjs (7)
 - src/pages/Profile.tsx (7)
 - supabase/config.toml (7)
-- scripts/db-audit/apply-migrations.mjs (6)
 
 ## Workflows
 - `automation-local.yml` — Automação local (pull_request, push, workflow_dispatch)
@@ -384,6 +384,8 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 
 
 ## Últimos commits
+- 2026-11-27 `85f9abf` fix(cron): ON CONFLICT por constraint no marco zero do vigia (#220)
+- 2026-11-27 `a4ae6cf` fix(infra): verify aceita funcao com argumento default (#219)
 - 2026-11-27 `f5454f8` fix(cron): marco zero do vigia sem coluna ambigua (#218)
 - 2026-11-27 `12beb0d` feat(auditoria): lista todas as versoes instaladas do vigia (#217)
 - 2026-11-27 `14c962d` feat(auditoria): mostra se o corpo do vigia no banco e' o do repo (#216)
@@ -397,8 +399,6 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - 2026-11-27 `b51a5c0` chore(db-audit): lista jobs do cron ativos sem nenhuma execucao registrada (#208)
 - 2026-11-27 `0b9d3b4` fix(db-audit): notifications usa read, nao read_at (#207)
 - 2026-11-27 `b94118b` chore(db-audit): mostra por que o aviso do lembrete cai no ON CONFLICT (#206)
-- 2026-11-27 `f698d27` chore(db-audit): separa os filtros que zeram o lembrete semanal (#205)
-- 2026-11-27 `f3900ae` chore(db-audit): ensaio transacional da funcao do lembrete semanal (#204)
 
 ## Arquivos deste diretório
 - `docs/contexto/codigo/rotas.json`
