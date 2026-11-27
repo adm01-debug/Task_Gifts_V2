@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "7cd126f1731d7667f9a13cf3819c725d852a0861",
+  "sha": "296eb76a82275e0c0d1010ded77a797cac37d95e",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
-  "generated_at": "2026-11-27 13:59 UTC",
+  "generated_at": "2026-11-27 15:13 UTC",
   "files_total": 1653,
   "code_files": 1545,
-  "code_lines": 286227
+  "code_lines": 286289
  },
  "version": "1.3.2",
- "facts_hash": "9a2ec33ef1f05f35",
+ "facts_hash": "9279c9c684f0a32b",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -54151,7 +54151,7 @@
   {
    "module": "scripts",
    "files": 30,
-   "lines": 16081,
+   "lines": 16143,
    "tables": [
     "a",
     "contacts",
@@ -62551,7 +62551,7 @@
    },
    {
     "file": "scripts/db-audit/consultar-sql.mjs",
-    "msg": "SELECAO_SQL ausente no ambiente"
+    "msg": "SQL_FILE vazio"
    },
    {
     "file": "scripts/db-audit/consultar-sql.mjs",
@@ -62560,6 +62560,10 @@
    {
     "file": "scripts/db-audit/consultar-sql.mjs",
     "msg": "consulta "
+   },
+   {
+    "file": "scripts/db-audit/consultar-sql.mjs",
+    "msg": "informe SELECAO_SQL (catalogo) ou SQL_FILE (arquivo avulso)"
    },
    {
     "file": "scripts/db-audit/consultar-sql.mjs",
@@ -128971,16 +128975,17 @@
   },
   "scripts/db-audit/consultar-sql.mjs": {
    "path": "scripts/db-audit/consultar-sql.mjs",
-   "lines": 84,
+   "lines": 96,
    "env": [
     "LIMITE",
     "SELECAO_SQL",
     "SQL_FILE"
    ],
    "errors": [
-    "SELECAO_SQL ausente no ambiente",
+    "SQL_FILE vazio",
     "a consulta precisa comecar por SELECT ou WITH",
     "consulta ",
+    "informe SELECAO_SQL (catalogo) ou SQL_FILE (arquivo avulso)",
     "palavra de escrita encontrada na consulta",
     "uma unica instrucao por arquivo (sem ponto e virgula no meio)"
    ],
@@ -128988,11 +128993,11 @@
     "LIMITE       maximo de linhas impressas (padrao 200)",
     "// Variaveis: SUPABASE_ACCESS_TOKEN, SUPABASE_PROJECT_ID, SQL_FILE, LIMITE"
    ],
-   "doc": "Leitura avulsa no banco vivo pela Management API (mesma porta do apply-migrations). Existe para consultar producao sem depender de SUPABASE_DB_URL, que so vale para o snapshot. Uso: SELECAO_SQL=<nome> [SQL_FILE=...] node scripts/db-audit/consultar-sql.mjs SELECAO_SQL nome da consulta marcada com `-- …"
+   "doc": "Leitura avulsa no banco vivo pela Management API (mesma porta do apply-migrations). Existe para consultar producao sem depender de SUPABASE_DB_URL, que so vale para o snapshot. Uso: SELECAO_SQL=<nome> node scripts/db-audit/consultar-sql.mjs (catalogo) SQL_FILE=consulta.sql node scripts/db-audit/cons …"
   },
   "scripts/db-audit/consultas.sql": {
    "path": "scripts/db-audit/consultas.sql",
-   "lines": 31
+   "lines": 81
   },
   "scripts/maintenance/lib.mjs": {
    "path": "scripts/maintenance/lib.mjs",
@@ -165932,10 +165937,85 @@
   }
  },
  "git": {
-  "sha": "7cd126f1731d7667f9a13cf3819c725d852a0861",
+  "sha": "296eb76a82275e0c0d1010ded77a797cac37d95e",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "commits": [
+   {
+    "sha": "296eb76",
+    "date": "2026-11-27",
+    "author": "adm01-debug",
+    "subject": "fix: catalogo para no proximo marcador e remove bloco duplicado da consulta de entregas (#194)",
+    "files": [
+     "scripts/db-audit/consultar-sql.mjs",
+     "scripts/db-audit/consultas.sql"
+    ]
+   },
+   {
+    "sha": "8cd6f2b",
+    "date": "2026-11-27",
+    "author": "adm01-debug",
+    "subject": "fix: consulta de entregas do lembrete sem notification_id em push_outbox (#193)",
+    "files": [
+     "scripts/db-audit/consultas.sql"
+    ]
+   },
+   {
+    "sha": "5a959b3",
+    "date": "2026-11-27",
+    "author": "adm01-debug",
+    "subject": "chore: consulta das entregas recentes do lembrete e das colunas de push_outbox (#192)",
+    "files": [
+     "scripts/db-audit/consultas.sql"
+    ]
+   },
+   {
+    "sha": "c932a2e",
+    "date": "2026-11-27",
+    "author": "adm01-debug",
+    "subject": "chore: rastro do lembrete semanal e marcador de consulta tolerante a texto extra (#191)",
+    "files": [
+     "scripts/db-audit/consultar-sql.mjs",
+     "scripts/db-audit/consultas.sql"
+    ]
+   },
+   {
+    "sha": "974f5a1",
+    "date": "2026-11-27",
+    "author": "adm01-debug",
+    "subject": "chore: consulta do catalogo para provar a entrega do lembrete semanal (#190)",
+    "files": [
+     "scripts/db-audit/consultas.sql"
+    ]
+   },
+   {
+    "sha": "3071eba",
+    "date": "2026-11-27",
+    "author": "adm01-debug",
+    "subject": "chore: consultar-sql aceita arquivo avulso para investigacao local (#189)",
+    "files": [
+     "scripts/db-audit/README.md",
+     "scripts/db-audit/consultar-sql.mjs"
+    ]
+   },
+   {
+    "sha": "99d1db8",
+    "date": "2026-11-27",
+    "author": "adm01-debug",
+    "subject": "fix: consulta do lembrete semanal aponta para o job engagement-reminders (#188)",
+    "files": [
+     "scripts/db-audit/consultas.sql"
+    ]
+   },
+   {
+    "sha": "833ce53",
+    "date": "2026-11-27",
+    "author": "adm01-debug",
+    "subject": "chore: consultas do catalogo para achar o job do cron e conferir cobertura de preferencias (#187)",
+    "files": [
+     "scripts/db-audit/consultas.sql"
+    ]
+   },
    {
     "sha": "7cd126f",
     "date": "2026-11-27",
@@ -166239,121 +166319,28 @@
      "src/test/rls.test.ts",
      "supabase/migrations/20261226210000_profiles_email_fora_do_allowlist.sql"
     ]
-   },
-   {
-    "sha": "bef27bd",
-    "date": "2026-11-25",
-    "author": "adm01-debug",
-    "subject": "feat: cadastro de templates de PDI com policy de escrita para admin (#160)",
-    "files": [
-     "src/pages/Pdi.tsx",
-     "supabase/migrations/20261226190000_pdi_templates_escrita_admin.sql"
-    ]
-   },
-   {
-    "sha": "f41bdee",
-    "date": "2026-11-25",
-    "author": "adm01-debug",
-    "subject": "fix: conserta pedido de reset de senha do usuario deslogado (#159)",
-    "files": [
-     "AGENTS.md",
-     "docs/agentes/banco.md",
-     "docs/agentes/mapa-repo.md",
-     "docs/estado/01-paginas-e-rotas.md",
-     "docs/estado/03-hooks-services-lib.md",
-     "docs/estado/07-infra-ci-testes.md",
-     "scripts/db-audit/README.md",
-     "scripts/db-audit/migration-baseline.json",
-     "src/components/admin/PasswordResetApprovalPanel.tsx",
-     "src/components/auth/AuthFormContent.tsx",
-     "src/integrations/supabase/types.ts",
-     "src/pages/Auth.tsx",
-     "src/pages/ForgotPassword.tsx",
-     "src/pages/ManagerDashboard.tsx",
-     "src/pages/ResetPassword.tsx",
-     "src/services/passwordResetService.ts",
-     "supabase/migrations/20261226130000_reset_senha_por_email.sql",
-     "supabase/migrations/20261226150000_reset_senha_fluxo_completo.sql",
-     "supabase/migrations/20261226160000_reset_senha_guardas_aprovacao.sql",
-     "supabase/migrations/20261226170000_reset_senha_busca_auth_users.sql",
-     "supabase/migrations/20261226195000_reset_senha_consistencia.sql"
-    ]
-   },
-   {
-    "sha": "a6a9bc6",
-    "date": "2026-11-25",
-    "author": "adm01-debug",
-    "subject": "fix: revoga execucao anonima das funcoes SECURITY DEFINER (#158)",
-    "files": [
-     "supabase/migrations/20261226120000_revoga_execute_anon_security_definer.sql",
-     "supabase/migrations/20261226140000_corrige_grants_rls_e_rpcs_internos.sql",
-     "supabase/migrations/20261226180000_escopo_gestor_rpcs_relatorio.sql"
-    ]
-   },
-   {
-    "sha": "b9db75d",
-    "date": "2026-11-25",
-    "author": "adm01-debug",
-    "subject": "fix: restringe SELECT de profiles ao allowlist de colunas (LGPD) (#161)",
-    "files": [
-     "docs/pendencias/02-profiles-update-sem-restricao-de-coluna.md",
-     "src/services/engagementReportsService.ts",
-     "src/services/profilesService.ts",
-     "supabase/migrations/20261226200000_profiles_select_colunas_sensiveis.sql"
-    ]
-   },
-   {
-    "sha": "0c592ca",
-    "date": "2026-11-25",
-    "author": "adm01-debug",
-    "subject": "fix: painel de certificacoes e entrega do time voltam a carregar (#163)",
-    "files": [
-     "src/services/attendanceService.ts",
-     "src/services/certificationsService.ts"
-    ]
-   },
-   {
-    "sha": "8430c1b",
-    "date": "2026-11-25",
-    "author": "adm01-debug",
-    "subject": "fix: lista de usuarios por papel e painel de alto potencial voltam a carregar (#162)",
-    "files": [
-     "src/services/highPotentialService.ts",
-     "src/services/rbacService.ts"
-    ]
-   },
-   {
-    "sha": "c941b10",
-    "date": "2026-11-24",
-    "author": "adm01-debug",
-    "subject": "docs: corrige o nome da migration que reagenda o job 33 (#157)",
-    "files": [
-     "docs/estado/05-edge-functions.md"
-    ]
-   },
-   {
-    "sha": "52db204",
-    "date": "2026-11-24",
-    "author": "adm01-debug",
-    "subject": "fix: libera cadastro e login por passkey na allowlist de producao (#156)",
-    "files": [
-     "src/lib/edgeAvailability.ts",
-     "src/test/edgeAvailability.test.ts"
-    ]
    }
   ],
   "hot_files": [
    [
-    "docs/agentes/banco.md",
+    "scripts/db-audit/consultas.sql",
     8
    ],
    [
+    "docs/agentes/banco.md",
+    7
+   ],
+   [
     "docs/agentes/mapa-repo.md",
-    8
+    7
    ],
    [
     "src/pages/Profile.tsx",
     5
+   ],
+   [
+    "scripts/db-audit/consultar-sql.mjs",
+    4
    ],
    [
     "scripts/db-audit/README.md",
@@ -166364,15 +166351,11 @@
     4
    ],
    [
-    "scripts/db-audit/migration-baseline.json",
-    4
-   ],
-   [
     ".github/workflows/db-migrate.yml",
     3
    ],
    [
-    "src/integrations/supabase/types.ts",
+    "scripts/db-audit/migration-baseline.json",
     3
    ],
    [
@@ -166388,15 +166371,15 @@
     2
    ],
    [
+    "src/integrations/supabase/types.ts",
+    2
+   ],
+   [
     "src/services/demographicsService.ts",
     2
    ],
    [
     "src/test/demographicsService.test.ts",
-    2
-   ],
-   [
-    "src/pages/ManagerDashboard.tsx",
     2
    ],
    [
@@ -166412,16 +166395,12 @@
     2
    ],
    [
-    "docs/pendencias/02-profiles-update-sem-restricao-de-coluna.md",
-    2
+    "src/test/useDemographicValuesCache.test.tsx",
+    1
    ],
    [
-    "src/services/highPotentialService.ts",
-    2
-   ],
-   [
-    "src/services/passwordResetService.ts",
-    2
+    "supabase/migrations/20261229010000_painel_de_valores_demograficos.sql",
+    1
    ]
   ]
  }

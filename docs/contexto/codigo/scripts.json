@@ -106,7 +106,7 @@
   {
    "arquivo": "scripts/db-audit/consultar-sql.mjs",
    "descricao": "Leitura avulsa no banco vivo pela Management API (mesma porta do apply-migrations). Existe para consultar producao sem depender de SUPABASE_DB_URL, que so vale para o snapshot.",
-   "linhas": 84,
+   "linhas": 96,
    "env": [
     "LIMITE",
     "SELECAO_SQL",
@@ -121,7 +121,7 @@
   {
    "arquivo": "scripts/db-audit/consultas.sql",
    "descricao": null,
-   "linhas": 31,
+   "linhas": 81,
    "env": [],
    "npm_scripts": [],
    "workflows": [],

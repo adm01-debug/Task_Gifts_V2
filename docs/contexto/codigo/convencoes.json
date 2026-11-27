@@ -59,11 +59,11 @@
  "commits": {
   "convencao": "conventional commits (observado)",
   "exemplos": [
-   "infra: modo consulta no workflow de migrations para ler o banco vivo (#186)",
-   "fix(db-audit): --verify roda mesmo quando o ledger ja esta alinhado (#185)",
-   "fix(db-audit): apply segue quando a versao orfa ja esta no repo e prova por consulta (#184)",
-   "feat(db): painel demografico le a view que mascara valor restrito (ex-PR 182) (#183)",
-   "chore: cria a linha padrao da janela de silencio para quem nunca abriu a tela (#180)"
+   "fix: catalogo para no proximo marcador e remove bloco duplicado da consulta de entregas (#194)",
+   "fix: consulta de entregas do lembrete sem notification_id em push_outbox (#193)",
+   "chore: consulta das entregas recentes do lembrete e das colunas de push_outbox (#192)",
+   "chore: rastro do lembrete semanal e marcador de consulta tolerante a texto extra (#191)",
+   "chore: consulta do catalogo para provar a entrega do lembrete semanal (#190)"
   ]
  },
  "pr_template": ".github/PULL_REQUEST_TEMPLATE.md",

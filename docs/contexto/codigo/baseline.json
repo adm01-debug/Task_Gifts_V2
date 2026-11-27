@@ -2,11 +2,51 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "7cd126f1731d7667f9a13cf3819c725d852a0861",
+  "commit": "296eb76a82275e0c0d1010ded77a797cac37d95e",
   "branch": "main",
-  "data_commit": "2026-11-27T10:58:44-03:00",
+  "data_commit": "2026-11-27T12:08:09-03:00",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "ultimos_commits": [
+   {
+    "sha": "296eb76",
+    "data": "2026-11-27",
+    "assunto": "fix: catalogo para no proximo marcador e remove bloco duplicado da consulta de entregas (#194)"
+   },
+   {
+    "sha": "8cd6f2b",
+    "data": "2026-11-27",
+    "assunto": "fix: consulta de entregas do lembrete sem notification_id em push_outbox (#193)"
+   },
+   {
+    "sha": "5a959b3",
+    "data": "2026-11-27",
+    "assunto": "chore: consulta das entregas recentes do lembrete e das colunas de push_outbox (#192)"
+   },
+   {
+    "sha": "c932a2e",
+    "data": "2026-11-27",
+    "assunto": "chore: rastro do lembrete semanal e marcador de consulta tolerante a texto extra (#191)"
+   },
+   {
+    "sha": "974f5a1",
+    "data": "2026-11-27",
+    "assunto": "chore: consulta do catalogo para provar a entrega do lembrete semanal (#190)"
+   },
+   {
+    "sha": "3071eba",
+    "data": "2026-11-27",
+    "assunto": "chore: consultar-sql aceita arquivo avulso para investigacao local (#189)"
+   },
+   {
+    "sha": "99d1db8",
+    "data": "2026-11-27",
+    "assunto": "fix: consulta do lembrete semanal aponta para o job engagement-reminders (#188)"
+   },
+   {
+    "sha": "833ce53",
+    "data": "2026-11-27",
+    "assunto": "chore: consultas do catalogo para achar o job do cron e conferir cobertura de preferencias (#187)"
+   },
    {
     "sha": "7cd126f",
     "data": "2026-11-27",
@@ -91,49 +131,9 @@
     "sha": "84e8ba2",
     "data": "2026-11-25",
     "assunto": "feat: interruptor proprio para os avisos de pesquisa no perfil (#169)"
-   },
-   {
-    "sha": "cc240b7",
-    "data": "2026-11-25",
-    "assunto": "feat: lembrete semanal de pesquisa de engajamento pendente (#168)"
-   },
-   {
-    "sha": "ebbb9a0",
-    "data": "2026-11-25",
-    "assunto": "feat: mostra a foto do premio na loja quando o admin cadastra (#167)"
-   },
-   {
-    "sha": "f61144b",
-    "data": "2026-11-25",
-    "assunto": "security: engajamento com score validado e anon fora das tabelas de escrita (#166)"
-   },
-   {
-    "sha": "b5c751f",
-    "data": "2026-11-25",
-    "assunto": "chore: alinha a documentacao do ledger com os 293 arquivos da main (#165)"
-   },
-   {
-    "sha": "220d1d6",
-    "data": "2026-11-25",
-    "assunto": "fix: e-mail corporativo sai do SELECT aberto de profiles (LGPD) (#164)"
-   },
-   {
-    "sha": "bef27bd",
-    "data": "2026-11-25",
-    "assunto": "feat: cadastro de templates de PDI com policy de escrita para admin (#160)"
-   },
-   {
-    "sha": "f41bdee",
-    "data": "2026-11-25",
-    "assunto": "fix: conserta pedido de reset de senha do usuario deslogado (#159)"
-   },
-   {
-    "sha": "a6a9bc6",
-    "data": "2026-11-25",
-    "assunto": "fix: revoga execucao anonima das funcoes SECURITY DEFINER (#158)"
    }
   ],
-  "arquivos_mudados_7d": 300,
+  "arquivos_mudados_7d": 297,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "supabase/functions/_shared",
@@ -173,10 +173,14 @@
    },
    {
     "pasta": "scripts/db-audit/README.md",
-    "mudancas": 10
+    "mudancas": 11
    },
    {
     "pasta": "docs/estado/03-hooks-services-lib.md",
+    "mudancas": 8
+   },
+   {
+    "pasta": "scripts/db-audit/consultas.sql",
     "mudancas": 8
    },
    {
@@ -189,10 +193,6 @@
    },
    {
     "pasta": "src/tests/unit",
-    "mudancas": 7
-   },
-   {
-    "pasta": "supabase/config.toml",
     "mudancas": 7
    }
   ],
@@ -227,10 +227,14 @@
    },
    {
     "arquivo": "scripts/db-audit/README.md",
-    "mudancas": 10
+    "mudancas": 11
    },
    {
     "arquivo": "docs/estado/03-hooks-services-lib.md",
+    "mudancas": 8
+   },
+   {
+    "arquivo": "scripts/db-audit/consultas.sql",
     "mudancas": 8
    },
    {
@@ -292,16 +296,12 @@
    {
     "arquivo": ".github/workflows/contexto.yml",
     "mudancas": 4
-   },
-   {
-    "arquivo": ".github/workflows/deploy-edge-functions.yml",
-    "mudancas": 4
    }
   ],
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 152
+    "commits": 160
    },
    {
     "autor": "dependabot[bot]",
@@ -312,7 +312,7 @@
  "contagens": {
   "arquivos_total": 1642,
   "arquivos_codigo": 1217,
-  "linhas_codigo": 241670,
+  "linhas_codigo": 241682,
   "rotas": 88,
   "rotas_http_backend": 0,
   "vistas_por_id": 0,
@@ -368,7 +368,7 @@
   },
   "scripts/db-audit": {
    "arquivos": 3,
-   "linhas": 942
+   "linhas": 954
   },
   "scripts/graphify-local.mjs": {
    "arquivos": 1,

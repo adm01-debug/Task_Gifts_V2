@@ -1,7 +1,7 @@
 # Contexto do projeto para agentes de IA
 
 GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.
-Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `7cd126f1731d7667f9a13cf3819c725d852a0861` (2026-11-27T10:58:44-03:00).
+Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `296eb76a82275e0c0d1010ded77a797cac37d95e` (2026-11-27T12:08:09-03:00).
 
 ## Como usar (leia antes de planejar ou executar qualquer tarefa)
 1. **Tela/rota/menu** → `rotas.json` (url/vista/menu → arquivo → hooks → tabelas → edges; `rotas_http_backend` para APIs) e `modulos.json` (módulo inteiro + dependências entre módulos).
@@ -36,7 +36,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 |---|---|
 | arquivos_total | 1642 |
 | arquivos_codigo | 1217 |
-| linhas_codigo | 241670 |
+| linhas_codigo | 241682 |
 | rotas | 88 |
 | rotas_http_backend | 0 |
 | vistas_por_id | 0 |
@@ -295,7 +295,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - possiveis_segredos_no_codigo: 0
 
 ## Grafo de código (graphify)
-- 11224 nós · 30279 arestas · 885 comunidades · grafo do commit `7cd126f1`
+- 11224 nós · 30279 arestas · 885 comunidades · grafo do commit `296eb76a`
 - comunidades maiores: lucide-react (307), react (232), skeleton.tsx (172), utils.ts (166), client.ts (126), AdminPanel.tsx (120), cn (108), Shop.tsx (95), contracts/index.ts (89), useIsMobile (87), gerar.mjs (79), generate.py (75)
 - símbolos mais chamados: cn() (src/lib/utils.ts), useAuth() (src/hooks/useAuth.tsx), useIsMobile() (src/hooks/use-mobile.tsx), q() (scripts/supabase_snapshot/snapshot.py), useDepartments() (src/hooks/useDepartments.ts), useRBAC() (src/hooks/useRBAC.ts), useProfiles() (src/hooks/useProfiles.ts), useToast() (src/hooks/use-toast.ts), useSEO() (src/hooks/useSEO.ts), useSoundEffects() (src/hooks/useSoundEffects.tsx), .collect() (scripts/supabase_snapshot/test_snapshot.py), excluded_sql() (scripts/supabase_snapshot/snapshot.py)
 - consulta local: `graphify query "<pergunta>"`, `graphify path "<A>" "<B>"`, `graphify explain "<X>"`
@@ -308,14 +308,14 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - bun.lock (14)
 - .github/workflows/ci.yml (12)
 - AGENTS.md (11)
-- scripts/db-audit/README.md (10)
+- scripts/db-audit/README.md (11)
 - docs/estado/03-hooks-services-lib.md (8)
+- scripts/db-audit/consultas.sql (8)
 - src/App.tsx (8)
 - src/pages/Profile.tsx (7)
 - supabase/config.toml (7)
 - scripts/db-audit/check-migration-drift.mjs (6)
 - supabase/functions/_shared/contracts/_fixtures/index.ts (6)
-- docs/estado/02-componentes.md (5)
 
 ## Workflows
 - `automation-local.yml` — Automação local (pull_request, push, workflow_dispatch)
@@ -383,6 +383,14 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 
 
 ## Últimos commits
+- 2026-11-27 `296eb76` fix: catalogo para no proximo marcador e remove bloco duplicado da consulta de entregas (#194)
+- 2026-11-27 `8cd6f2b` fix: consulta de entregas do lembrete sem notification_id em push_outbox (#193)
+- 2026-11-27 `5a959b3` chore: consulta das entregas recentes do lembrete e das colunas de push_outbox (#192)
+- 2026-11-27 `c932a2e` chore: rastro do lembrete semanal e marcador de consulta tolerante a texto extra (#191)
+- 2026-11-27 `974f5a1` chore: consulta do catalogo para provar a entrega do lembrete semanal (#190)
+- 2026-11-27 `3071eba` chore: consultar-sql aceita arquivo avulso para investigacao local (#189)
+- 2026-11-27 `99d1db8` fix: consulta do lembrete semanal aponta para o job engagement-reminders (#188)
+- 2026-11-27 `833ce53` chore: consultas do catalogo para achar o job do cron e conferir cobertura de preferencias (#187)
 - 2026-11-27 `7cd126f` infra: modo consulta no workflow de migrations para ler o banco vivo (#186)
 - 2026-11-27 `fb2b5cb` fix(db-audit): --verify roda mesmo quando o ledger ja esta alinhado (#185)
 - 2026-11-27 `33eb05a` fix(db-audit): apply segue quando a versao orfa ja esta no repo e prova por consulta (#184)
@@ -390,14 +398,6 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - 2026-11-27 `5106746` chore: cria a linha padrao da janela de silencio para quem nunca abriu a tela (#180)
 - 2026-11-27 `dfe7e3c` infra(migrations): workflow que aplica o que falta e barra divergencia com o ledger (#179)
 - 2026-11-27 `9868b40` fix: valida o nome das functions antes de virar comando no deploy (#178)
-- 2026-11-26 `613009c` feat: telas para filtros salvos e perfil demografico (#181)
-- 2026-11-26 `e634962` feat(avisos): respeita a janela de silencio do usuario no push (#177)
-- 2026-11-26 `abe3168` chore(banco): remove os 46 indices fisicamente redundantes em public (#175)
-- 2026-11-26 `f28d2f6` fix: paridade de indices e constraints com o banco vivo e devolve os fluxos travados (#174)
-- 2026-11-26 `c87b1c9` feat: interruptor global de push no perfil (#176)
-- 2026-11-25 `29b5a15` fix: restaura trigger de cadastro, revoga execute publico e alinha triggers e mensagens (#173)
-- 2026-11-25 `324e51a` fix(banco): fecha o rebuild - tabelas, colunas, funcoes, views, RLS e grants de producao (#172)
-- 2026-11-25 `556ec21` chore(banco): paridade de jobs do cron, matview leaderboard_cache e colunas de profiles (#171)
 
 ## Arquivos deste diretório
 - `docs/contexto/codigo/rotas.json`
