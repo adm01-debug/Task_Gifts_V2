@@ -31,21 +31,33 @@ ORDER BY start_time DESC
 LIMIT 20
 
 -- nome: jobs_do_cron
--- Todo job agendado, com o ultimo status conhecido. Serve para achar o nome real do job do lembrete.
+-- Todo job agendado, com o ultimo status conhecido. A "ultima execucao" so vale se o cleanup de
+-- 7 dias (cleanup-job-run-details-7d) tambem estiver com execucao recente; senao a tabela pode
+-- estar vazia e o NULL significa "sem registro", nao "nunca rodou".
 SELECT j.jobid, j.jobname, j.schedule, j.active,
   (SELECT max(d.start_time) FROM cron.job_run_details d WHERE d.jobid = j.jobid) AS ultima_execucao
 FROM cron.job j
 ORDER BY j.jobid
 
+-- nome: rastros_do_lembrete
+-- O que existe no banco sobre o engagement-reminders sem depender do job_run_details.
+-- conta: quantos registros de cada tabela nasceram a partir de uma data de corte.
+WITH corte AS (SELECT '2026-11-20 00:00:00+00'::timestamptz AS desde)
+SELECT
+  (SELECT count(*) FROM public.notifications n, corte WHERE n.created_at >= corte.desde) AS notificacoes,
+  (SELECT count(*) FROM public.push_outbox o, corte WHERE o.created_at >= corte.desde) AS push_outbox,
+  (SELECT max(n.created_at) FROM public.notifications n) AS ultima_notificacao,
+  (SELECT max(o.created_at) FROM public.push_outbox o) AS ultimo_push
+
 -- nome: jobs_do_usuario
--- Quem tem linha em notification_preferences: confirma a cobertura da janela de silencio por id.
+-- Cobertura da janela de silencio: quantas linhas, quantos usuarios e desde quando.
 SELECT count(*) AS linhas, count(DISTINCT user_id) AS usuarios_cobertos,
   count(*) FILTER (WHERE do_not_disturb_enabled) AS silencio_ligado,
   min(created_at) AS primeira_linha, max(created_at) AS ultima_linha
 FROM public.notification_preferences
 
 -- nome: ultima_entrega_do_lembrete
--- O que a ultima execucao do engagement-reminders realmente entregou.
+-- O que a ultima execucao do engagement-reminders entregou. Vazio quando o job_run_details foi limpo.
 SELECT d.jobid, d.status, d.return_message, d.start_time, d.end_time,
   (SELECT count(*) FROM public.notifications n WHERE n.created_at >= d.start_time) AS avisos_criados_desde
 FROM cron.job_run_details d
