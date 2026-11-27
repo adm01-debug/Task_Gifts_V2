@@ -110,3 +110,13 @@ LEFT JOIN pushes p ON p.tipo = a.tipo AND p.hora = date_trunc('hour', a.primeiro
 GROUP BY a.dia, a.tipo, a.qtd, a.primeiro
 ORDER BY a.dia DESC, a.tipo
 LIMIT 40
+
+-- nome: ultima_execucao_por_job
+-- Data da ultima linha de cada job em cron.job_run_details e quanto dessa tabela ainda existe.
+-- Serve para separar "job nunca rodou" de "registro apagado pelo cleanup de 7 dias".
+SELECT d.jobid, j.jobname, max(d.start_time) AS ultima_linha, count(*) AS linhas,
+  min(d.start_time) AS linha_mais_velha
+FROM cron.job_run_details d
+JOIN cron.job j ON j.jobid = d.jobid
+GROUP BY d.jobid, j.jobname
+ORDER BY max(d.start_time) DESC
