@@ -48,3 +48,7 @@ __pycache__/
 
 # Gerado por `deno` (bunx deno test/check); o repo nao versiona lockfile Deno de proposito (ver .github/workflows/deno.yml)
 deno.lock
+
+# Canal MCP de administracao: contem token de acesso total ao banco.
+# Nao versionar; crie localmente com a URL completa (ver .mcp.example.json).
+.mcp.json

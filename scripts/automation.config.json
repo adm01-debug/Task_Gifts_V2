@@ -122,6 +122,17 @@
       "reason": "Legado mantido no fluxo existente; referências literais: package.json:scripts, .github/workflows/ci.yml, .github/workflows/contexto.yml. O dispatcher não executa esta operação."
     },
     {
+      "id": "legacy-mcp-secret-guard",
+      "kind": "legacy",
+      "files": [
+        "scripts/ci/check-mcp-secret.mjs",
+        "scripts/ci/check-mcp-secret.unit.mjs"
+      ],
+      "manual": ["node", "scripts/ci/check-mcp-secret.mjs"],
+      "triggers": ["manual"],
+      "reason": "Guarda contra .mcp.json versionado (token de admin do banco). Roda no CI (.github/workflows/ci.yml, job quality) e tem suite em check-mcp-secret.unit.mjs."
+    },
+    {
       "id": "legacy-cfb6af160a6179d3",
       "kind": "legacy",
       "files": ["scripts/ci/check-claude-md-integrity.mjs"],
@@ -186,23 +197,23 @@
       "reason": "Legado mantido no fluxo existente; referências literais: package.json:scripts, .github/workflows/ci.yml. O dispatcher não executa esta operação."
     },
     {
-            "id": "legacy-apply-migrations-261126",
-            "kind": "legacy",
-            "files": ["scripts/db-audit/apply-migrations.mjs"],
-            "manual": ["node", "scripts/db-audit/apply-migrations.mjs"],
-            "triggers": ["manual"],
-            "reason": "Aplica e audita migrations contra o banco vivo: exige SUPABASE_ACCESS_TOKEN e escreve no ledger, então nunca roda pelo dispatcher. Disparo só manual, por .github/workflows/db-migrate.yml (mode=check padrão) ou pelo próprio comando."
-          },
-          {
-            "id": "legacy-consultar-sql-271127",
-            "kind": "legacy",
-            "files": ["scripts/db-audit/consultar-sql.mjs"],
-            "manual": ["node", "scripts/db-audit/consultar-sql.mjs"],
-            "triggers": ["manual"],
-            "reason": "Leitura avulsa no banco vivo pela Management API: exige SUPABASE_ACCESS_TOKEN e o SQL vem do catálogo scripts/db-audit/consultas.sql (SELECAO_SQL), nunca de texto livre. Nunca roda pelo dispatcher; disparo só por .github/workflows/db-migrate.yml (mode=consulta) ou pelo próprio comando."
-          },
-          {
-            "id": "legacy-166d2b1258cd82b5",
+      "id": "legacy-apply-migrations-261126",
+      "kind": "legacy",
+      "files": ["scripts/db-audit/apply-migrations.mjs"],
+      "manual": ["node", "scripts/db-audit/apply-migrations.mjs"],
+      "triggers": ["manual"],
+      "reason": "Aplica e audita migrations contra o banco vivo: exige SUPABASE_ACCESS_TOKEN e escreve no ledger, então nunca roda pelo dispatcher. Disparo só manual, por .github/workflows/db-migrate.yml (mode=check padrão) ou pelo próprio comando."
+    },
+    {
+      "id": "legacy-consultar-sql-271127",
+      "kind": "legacy",
+      "files": ["scripts/db-audit/consultar-sql.mjs"],
+      "manual": ["node", "scripts/db-audit/consultar-sql.mjs"],
+      "triggers": ["manual"],
+      "reason": "Leitura avulsa no banco vivo pela Management API: exige SUPABASE_ACCESS_TOKEN e o SQL vem do catálogo scripts/db-audit/consultas.sql (SELECAO_SQL), nunca de texto livre. Nunca roda pelo dispatcher; disparo só por .github/workflows/db-migrate.yml (mode=consulta) ou pelo próprio comando."
+    },
+    {
+      "id": "legacy-166d2b1258cd82b5",
       "kind": "legacy",
       "files": ["scripts/graphify/setup.sh"],
       "manual": ["sh", "scripts/graphify/setup.sh"],

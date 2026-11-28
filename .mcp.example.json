@@ -1,0 +1,7 @@
+{
+  "mcpServers": {
+    "supabase": {
+      "url": "https://supabase-<projeto>-mcp.adm01.workers.dev/<TOKEN>/mcp"
+    }
+  }
+}
