@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "485698aa0354b8f8775b849188157f5a9b52bf60",
+  "commit": "6f2c9d6fd0aa1c9996d4d957c207e000fedbb1d0",
   "branch": "main",
-  "data_commit": "2026-11-28T08:40:03-03:00",
+  "data_commit": "2026-11-28T09:08:44-03:00",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "ultimos_commits": [
+   {
+    "sha": "6f2c9d6",
+    "data": "2026-11-28",
+    "assunto": "feat(auditoria): estado de entrega dos avisos do vigia (#234)"
+   },
    {
     "sha": "485698a",
     "data": "2026-11-28",
@@ -126,14 +131,9 @@
     "sha": "17b4eaf",
     "data": "2026-11-27",
     "assunto": "chore(db-audit): prova do vigia dos jobs do cron em producao (#210)"
-   },
-   {
-    "sha": "5b6b412",
-    "data": "2026-11-27",
-    "assunto": "feat(cron): vigia que avisa admin quando uma tarefa automatica para (#209)"
    }
   ],
-  "arquivos_mudados_7d": 292,
+  "arquivos_mudados_7d": 293,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "supabase/functions/_shared",
@@ -141,7 +141,7 @@
    },
    {
     "pasta": "scripts/db-audit/consultas.sql",
-    "mudancas": 36
+    "mudancas": 37
    },
    {
     "pasta": "package.json",
@@ -199,7 +199,7 @@
   "arquivos_mais_mudados_90d": [
    {
     "arquivo": "scripts/db-audit/consultas.sql",
-    "mudancas": 36
+    "mudancas": 37
    },
    {
     "arquivo": "package.json",
@@ -258,16 +258,16 @@
     "mudancas": 7
    },
    {
+    "arquivo": ".github/workflows/contexto.yml",
+    "mudancas": 6
+   },
+   {
     "arquivo": "scripts/db-audit/check-migration-drift.mjs",
     "mudancas": 6
    },
    {
     "arquivo": "supabase/functions/_shared/contracts/_fixtures/index.ts",
     "mudancas": 6
-   },
-   {
-    "arquivo": ".github/workflows/contexto.yml",
-    "mudancas": 5
    },
    {
     "arquivo": "docs/estado/02-componentes.md",
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 199
+    "commits": 200
    },
    {
     "autor": "dependabot[bot]",
@@ -312,7 +312,7 @@
  "contagens": {
   "arquivos_total": 1643,
   "arquivos_codigo": 1217,
-  "linhas_codigo": 241855,
+  "linhas_codigo": 241924,
   "rotas": 88,
   "rotas_http_backend": 0,
   "vistas_por_id": 0,
@@ -392,7 +392,7 @@
   },
   "scripts/supabase_snapshot": {
    "arquivos": 2,
-   "linhas": 2782
+   "linhas": 2851
   },
   "src/App.tsx": {
    "arquivos": 1,
@@ -494,7 +494,7 @@
   },
   {
    "arquivo": "scripts/supabase_snapshot/snapshot.py",
-   "linhas": 1904
+   "linhas": 1936
   },
   {
    "arquivo": "scripts/graphify-local.mjs",

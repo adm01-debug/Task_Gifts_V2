@@ -121,7 +121,7 @@
   {
    "arquivo": "scripts/db-audit/consultas.sql",
    "descricao": null,
-   "linhas": 353,
+   "linhas": 367,
    "env": [],
    "npm_scripts": [],
    "workflows": [],
@@ -238,7 +238,7 @@
   {
    "arquivo": "scripts/supabase_snapshot/snapshot.py",
    "descricao": "Somente leitura no banco (sessão read-only, statement_timeout, lock_timeout). Nunca grava linhas de tabelas, valores de segredos, chaves, senhas ou DSN.",
-   "linhas": 1904,
+   "linhas": 1936,
    "env": [],
    "npm_scripts": [],
    "workflows": [
