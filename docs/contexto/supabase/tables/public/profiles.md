@@ -118,4 +118,28 @@
 
 ## Grants
 
-_nenhum_
+| role | privilégios |
+|---|---|
+| authenticated | DELETE, INSERT |
+| service_role | DELETE, INSERT, REFERENCES, SELECT, TRIGGER, TRUNCATE, UPDATE |
+
+
+Grants por coluna:
+
+| coluna | role | privilégios |
+|---|---|---|
+| avatar_url | authenticated | SELECT, UPDATE |
+| best_streak | authenticated | SELECT |
+| birth_date | authenticated | SELECT, UPDATE |
+| coins | authenticated | SELECT |
+| created_at | authenticated | SELECT |
+| display_name | authenticated | SELECT, UPDATE |
+| hire_date | authenticated | SELECT, UPDATE |
+| id | authenticated | SELECT |
+| last_access_at | authenticated | SELECT |
+| level | authenticated | SELECT |
+| quests_completed | authenticated | SELECT |
+| status | authenticated | SELECT |
+| streak | authenticated | SELECT |
+| updated_at | authenticated | SELECT |
+| xp | authenticated | SELECT |

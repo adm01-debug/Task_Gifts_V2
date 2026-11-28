@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "7aae1bcdfaee6532aaf55bd2504436b378995e12",
+  "sha": "6ff726dceda7e6c6fac1a84aeae6272a84d60f30",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
-  "generated_at": "2026-11-28 13:46 UTC",
+  "generated_at": "2026-11-28 13:59 UTC",
   "files_total": 1654,
   "code_files": 1546,
-  "code_lines": 286956
+  "code_lines": 286961
  },
  "version": "1.3.2",
- "facts_hash": "8e58d14da662d800",
+ "facts_hash": "ade2e83ffd6d9eda",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -54230,7 +54230,7 @@
   {
    "module": "scripts",
    "files": 30,
-   "lines": 16674,
+   "lines": 16679,
    "tables": [
     "a",
     "contacts",
@@ -129433,7 +129433,7 @@
   },
   "scripts/supabase_snapshot/snapshot.py": {
    "path": "scripts/supabase_snapshot/snapshot.py",
-   "lines": 1939,
+   "lines": 1944,
    "exports": [
     "def env_int",
     "def log",
@@ -166150,10 +166150,19 @@
   }
  },
  "git": {
-  "sha": "7aae1bcdfaee6532aaf55bd2504436b378995e12",
+  "sha": "6ff726dceda7e6c6fac1a84aeae6272a84d60f30",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "commits": [
+   {
+    "sha": "6ff726d",
+    "date": "2026-11-28",
+    "author": "adm01-debug",
+    "subject": "fix(contexto): grants.columns sem timeout e custom_hostname sem falso erro (#239)",
+    "files": [
+     "scripts/supabase_snapshot/snapshot.py"
+    ]
+   },
    {
     "sha": "7aae1bc",
     "date": "2026-11-28",
@@ -166421,25 +166430,16 @@
     "files": [
      "supabase/migrations/20261231100000_vigia_dos_jobs_do_cron.sql"
     ]
-   },
-   {
-    "sha": "17b4eaf",
-    "date": "2026-11-27",
-    "author": "adm01-debug",
-    "subject": "chore(db-audit): prova do vigia dos jobs do cron em producao (#210)",
-    "files": [
-     "scripts/db-audit/consultas.sql"
-    ]
    }
   ],
   "hot_files": [
    [
     "scripts/db-audit/consultas.sql",
-    16
+    15
    ],
    [
     "scripts/supabase_snapshot/snapshot.py",
-    6
+    7
    ],
    [
     ".github/workflows/contexto.yml",

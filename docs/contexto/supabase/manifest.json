@@ -1,17 +1,8 @@
 {
   "carried": [],
   "entrada": "README.md",
-  "erros": [
-    {
-      "error": "HTTP Error 400: Bad Request",
-      "section": "grants"
-    },
-    {
-      "error": "HTTP 400 em /projects/eidsaqymojyuhprobfpn/custom-hostname",
-      "section": "api.custom_hostname"
-    }
-  ],
-  "gerado_em": "2026-11-28T13:49:37Z",
+  "erros": [],
+  "gerado_em": "2026-11-28T14:00:15Z",
   "gerador": "scripts/supabase_snapshot/snapshot.py",
   "produtor": "supabase-snapshot"
 }

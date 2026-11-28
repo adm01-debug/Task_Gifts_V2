@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "7aae1bcdfaee6532aaf55bd2504436b378995e12",
+  "commit": "6ff726dceda7e6c6fac1a84aeae6272a84d60f30",
   "branch": "main",
-  "data_commit": "2026-11-28T10:46:22-03:00",
+  "data_commit": "2026-11-28T10:59:26-03:00",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "ultimos_commits": [
+   {
+    "sha": "6ff726d",
+    "data": "2026-11-28",
+    "assunto": "fix(contexto): grants.columns sem timeout e custom_hostname sem falso erro (#239)"
+   },
    {
     "sha": "7aae1bc",
     "data": "2026-11-28",
@@ -126,11 +131,6 @@
     "sha": "14c962d",
     "data": "2026-11-27",
     "assunto": "feat(auditoria): mostra se o corpo do vigia no banco e' o do repo (#216)"
-   },
-   {
-    "sha": "09d837b",
-    "data": "2026-11-27",
-    "assunto": "feat(auditoria): ensaio do vigia com argumento e leitura pura (#215)"
    }
   ],
   "arquivos_mudados_7d": 289,
@@ -144,11 +144,11 @@
     "mudancas": 37
    },
    {
-    "pasta": "package.json",
-    "mudancas": 21
+    "pasta": "docs/agentes/banco.md",
+    "mudancas": 20
    },
    {
-    "pasta": "docs/agentes/banco.md",
+    "pasta": "package.json",
     "mudancas": 20
    },
    {
@@ -165,7 +165,7 @@
    },
    {
     "pasta": "bun.lock",
-    "mudancas": 13
+    "mudancas": 12
    },
    {
     "pasta": ".github/workflows/ci.yml",
@@ -180,6 +180,10 @@
     "mudancas": 11
    },
    {
+    "pasta": "scripts/supabase_snapshot/snapshot.py",
+    "mudancas": 9
+   },
+   {
     "pasta": ".github/workflows/contexto.yml",
     "mudancas": 8
    },
@@ -189,10 +193,6 @@
    },
    {
     "pasta": "scripts/db-audit/consultar-sql.mjs",
-    "mudancas": 8
-   },
-   {
-    "pasta": "scripts/supabase_snapshot/snapshot.py",
     "mudancas": 8
    }
   ],
@@ -234,6 +234,10 @@
     "mudancas": 11
    },
    {
+    "arquivo": "scripts/supabase_snapshot/snapshot.py",
+    "mudancas": 9
+   },
+   {
     "arquivo": ".github/workflows/contexto.yml",
     "mudancas": 8
    },
@@ -243,10 +247,6 @@
    },
    {
     "arquivo": "scripts/db-audit/consultar-sql.mjs",
-    "mudancas": 8
-   },
-   {
-    "arquivo": "scripts/supabase_snapshot/snapshot.py",
     "mudancas": 8
    },
    {
@@ -316,7 +316,7 @@
  "contagens": {
   "arquivos_total": 1643,
   "arquivos_codigo": 1217,
-  "linhas_codigo": 241927,
+  "linhas_codigo": 241932,
   "rotas": 88,
   "rotas_http_backend": 0,
   "vistas_por_id": 0,
@@ -396,7 +396,7 @@
   },
   "scripts/supabase_snapshot": {
    "arquivos": 2,
-   "linhas": 2854
+   "linhas": 2859
   },
   "src/App.tsx": {
    "arquivos": 1,
@@ -498,7 +498,7 @@
   },
   {
    "arquivo": "scripts/supabase_snapshot/snapshot.py",
-   "linhas": 1939
+   "linhas": 1944
   },
   {
    "arquivo": "scripts/graphify-local.mjs",
