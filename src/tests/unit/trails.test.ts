@@ -67,7 +67,10 @@ describe('trailsService', () => {
       const result = await trailsService.completeModule(userId, moduleId, undefined, xpReward);
 
       expect(comboService.registerAction).toHaveBeenCalledWith(userId, xpReward);
-      expect(profilesService.addXp).toHaveBeenCalledWith(userId, 150, 'module_completed');
+      expect(profilesService.addXp).toHaveBeenCalledWith(userId, 150, 'module_completed', {
+        kind: 'trail',
+        sourceId: moduleId,
+      });
       expect(result.comboResult.multiplier).toBe(1.5);
     });
   });

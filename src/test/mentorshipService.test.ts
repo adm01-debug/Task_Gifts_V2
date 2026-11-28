@@ -137,8 +137,14 @@ describe("markMyPart", () => {
 
     const result = await mentorshipService.markMyPart(pair, "mission-1", "mentor");
 
-    expect(profiles.addXp).toHaveBeenCalledWith("mentor-1", 150, "mentorship_mission_mission-1");
-    expect(profiles.addCoins).toHaveBeenCalledWith("mentor-1", 75);
+    expect(profiles.addXp).toHaveBeenCalledWith("mentor-1", 150, "mentorship_mission_mission-1", {
+      kind: "mentoring",
+      sourceId: expect.any(String),
+    });
+    expect(profiles.addCoins).toHaveBeenCalledWith("mentor-1", 75, {
+      kind: "mentoring",
+      sourceId: expect.any(String),
+    });
     expect(result.xpAwarded).toBe(150);
     expect(result.missionSettled).toBe(false);
     expect(db.records.some((record) => record.table === "mentorship_pairs")).toBe(false);

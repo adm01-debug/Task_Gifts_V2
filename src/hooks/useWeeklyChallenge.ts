@@ -214,8 +214,8 @@ export function useWeeklyChallenge() {
           localStorage.setItem(victoryKey, "true");
 
           // Award rewards
-          profilesService.addXp(user.id, challenge.xp_reward, "weekly_challenge_victory");
-          profilesService.addCoins(user.id, challenge.coin_reward);
+          profilesService.addXp(user.id, challenge.xp_reward, "weekly_challenge_victory", { kind: 'weekly', sourceId: challenge.id });
+          profilesService.addCoins(user.id, challenge.coin_reward, { kind: 'weekly', sourceId: challenge.id });
 
           // Send notification
           notificationsService.create({

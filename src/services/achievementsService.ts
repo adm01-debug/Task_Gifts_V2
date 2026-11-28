@@ -99,8 +99,8 @@ export const achievementsService = {
     if (xp > 0) {
       const { error: xpError } = await (supabase as any).rpc("add_xp", {
         p_user_id: userId,
-        p_amount: xp,
-        p_source: `achievement:${achievementKey}`,
+        p_kind: "achiev",
+        p_source_id: achievementKey,
       });
       if (xpError) {
         logger.apiError("Error awarding achievement XP", xpError, "achievementsService");
@@ -111,7 +111,8 @@ export const achievementsService = {
     if (coins > 0) {
       const { error: coinsError } = await (supabase as any).rpc("add_coins", {
         p_user_id: userId,
-        p_amount: coins,
+        p_kind: "achiev",
+        p_source_id: achievementKey,
       });
       if (coinsError) {
         logger.apiError("Error awarding achievement coins", coinsError, "achievementsService");

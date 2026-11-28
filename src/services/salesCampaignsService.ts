@@ -409,14 +409,14 @@ export const salesCampaignsService = {
       const rule = campaign.split_rule ?? { type: "proportional" };
       const xp = Math.max(campaign.xp_reward, Math.round((rule.xp_per_unit ?? 0) * next));
       const coins = Math.max(campaign.coin_reward, Math.round((rule.coin_per_unit ?? 0) * next));
-      if (xp > 0) await profilesService.addXp(uid, xp, `campaign_${campaign.metric_key}`);
-      if (coins > 0) await profilesService.addCoins(uid, coins);
-
       const completedAt = new Date().toISOString();
       await db
         .from("campaign_participants")
         .update({ xp_earned: xp, coins_earned: coins, completed_at: completedAt })
         .eq("id", participantRow.id);
+
+      if (xp > 0) await profilesService.addXp(uid, xp, `campaign_${campaign.metric_key}`, { kind: 'campaign', sourceId: participantRow.id });
+      if (coins > 0) await profilesService.addCoins(uid, coins, { kind: 'campaign', sourceId: participantRow.id });
 
       try {
         const allowed = await userWantsNotification(uid, "campaign_completed");

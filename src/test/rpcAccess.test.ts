@@ -81,8 +81,8 @@ describeIf('RPC Access Control — Sensitive per-user functions', () => {
 
   describeIf('RPC Access Control — Economy functions (pendência 02)', () => {
     const economyRpcs = [
-      ['add_xp', { p_user_id: '00000000-0000-0000-0000-000000000000', p_amount: 10, p_reason: 'test' }],
-      ['add_coins', { p_user_id: '00000000-0000-0000-0000-000000000000', p_amount: 10 }],
+      ['add_xp', { p_user_id: '00000000-0000-0000-0000-000000000000', p_kind: 'quest', p_source_id: 'sem_evento' }],
+      ['add_coins', { p_user_id: '00000000-0000-0000-0000-000000000000', p_kind: 'quest', p_source_id: 'sem_evento' }],
       ['spend_coins', { p_user_id: '00000000-0000-0000-0000-000000000000', p_amount: 10 }],
       ['increment_streak', { p_user_id: '00000000-0000-0000-0000-000000000000' }],
       ['increment_quests_completed', { p_user_id: '00000000-0000-0000-0000-000000000000' }],

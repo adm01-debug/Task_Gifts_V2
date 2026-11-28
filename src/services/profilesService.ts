@@ -16,6 +16,33 @@ export interface PublicProfile {
 }
 
 /**
+ * Evento de economia que autoriza um crédito.
+ *
+ * O valor NÃO é escolhido pelo cliente: `kind` + `sourceId` identificam o fato
+ * já registrado no banco (conquista desbloqueada, quest concluída, kudos
+ * enviado, check-in pontual...) e a função `economy_reward_source` resolve
+ * quanto creditar. Ver `supabase/migrations/20261230000000_economia_valor_no_servidor.sql`.
+ */
+export interface EconomyEvent {
+  kind:
+    | "achiev"
+    | "seasonal"
+    | "quest"
+    | "mission"
+    | "checkin"
+    | "kudos"
+    | "onboard"
+    | "mentoring"
+    | "trail"
+    | "campaign"
+    | "weekly"
+    | "challenge";
+  sourceId: string;
+  /** Bônus de combo em XP; o banco limita ao valor autorizado do evento. */
+  bonus?: number;
+}
+
+/**
  * Colunas de `profiles` legíveis por qualquer usuário autenticado.
  *
  * CPF, e-mail pessoal, telefone, matrícula e tipo de contrato foram removidos
@@ -135,12 +162,21 @@ export const profilesService = {
   /**
    * Soma XP via RPC `add_xp` (SECURITY DEFINER). Preserva o contrato do
    * hook `useAddXp`: {@link { profile, leveledUp, newLevel }}.
+   *
+   * O valor NAO vem do cliente: `kind`/`sourceId` identificam o evento e o
+   * banco resolve o quanto creditar (20261230000000). `xpAmount` fica apenas
+   * como registro de auditoria/notificacao e nao e enviado ao servidor.
    */
-  async addXp(id: string, xpAmount: number, source?: string): Promise<{ profile: Profile; leveledUp: boolean; newLevel?: number }> {
+  async addXp(id: string, xpAmount: number, source?: string, event?: EconomyEvent): Promise<{ profile: Profile; leveledUp: boolean; newLevel?: number }> {
       // Lê o perfil ANTES da RPC para comparar o nível pré-incremento
       const oldProfile = await this.getById(id);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const { data, error } = await (supabase as any).rpc("add_xp", { p_user_id: id, p_amount: xpAmount, p_source: source ?? null });
+    const { data, error } = await (supabase as any).rpc("add_xp", {
+      p_user_id: id,
+      p_kind: event?.kind ?? "legacy",
+      p_source_id: event?.sourceId ?? source ?? "sem_evento",
+      p_bonus: event?.bonus ?? 0,
+    });
     if (error) throw error;
     const row = (data ?? [])[0] as { id: string; xp: number; level: number } | undefined;
     if (!row) throw new Error("Profile not found");
@@ -148,9 +184,11 @@ export const profilesService = {
     const oldLevel = oldProfile?.level ?? row.level;
     const newLevel = row.level;
     const leveledUp = newLevel > oldLevel;
+    const credited = (row.xp ?? 0) - (oldProfile?.xp ?? 0);
+    const earned = credited > 0 ? credited : 0;
 
-    auditService.logXpGain(id, xpAmount, source || "atividade").catch(() => {});
-    notificationsService.notifyXpGain(id, xpAmount, source || "atividade").catch(() => {});
+    auditService.logXpGain(id, earned, source || "atividade").catch(() => {});
+    notificationsService.notifyXpGain(id, earned, source || "atividade").catch(() => {});
 
     if (leveledUp) {
       auditService.logLevelUp(id, oldLevel, newLevel).catch(() => {});
@@ -160,13 +198,39 @@ export const profilesService = {
 
     return { profile: { id: row.id, xp: row.xp, level: row.level } as unknown as Profile, leveledUp, newLevel: leveledUp ? newLevel : undefined };
   },
-  async addCoins(id: string, coinsAmount: number): Promise<Profile> {
+  async addCoins(id: string, coinsAmount: number, event?: EconomyEvent): Promise<Profile> {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const { data, error } = await (supabase as any).rpc("add_coins", { p_user_id: id, p_amount: coinsAmount });
+    const { data, error } = await (supabase as any).rpc("add_coins", {
+      p_user_id: id,
+      p_kind: event?.kind ?? "legacy",
+      p_source_id: event?.sourceId ?? "sem_evento",
+    });
     if (error) throw error;
     const row = (data ?? [])[0] as { id: string; coins: number } | undefined;
     if (!row) throw new Error("Profile not found");
     return { id: row.id, coins: row.coins } as unknown as Profile;
+  },
+
+  /**
+   * Fecha a quest e credita XP+coins no banco, em um passo atomico
+   * (`complete_quest_assignment`), evitando creditar sem fato previo.
+   */
+  async completeQuestAssignment(assignmentId: string): Promise<{ xp: number; level: number; coins: number; already: boolean }> {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { data, error } = await (supabase as any).rpc("complete_quest_assignment", { p_assignment_id: assignmentId });
+    if (error) throw error;
+    const row = (data ?? [])[0] as { xp: number; level: number; coins: number; already: boolean } | undefined;
+    if (!row) throw new Error("Assignment not found");
+    return { xp: row.xp, level: row.level, coins: row.coins, already: row.already };
+  },
+
+  async claimSeasonalReward(challengeId: string): Promise<{ xp: number; level: number; coins: number; already: boolean }> {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { data, error } = await (supabase as any).rpc("claim_seasonal_reward", { p_challenge_id: challengeId });
+    if (error) throw error;
+    const row = (data ?? [])[0] as { xp: number; level: number; coins: number; already: boolean } | undefined;
+    if (!row) throw new Error("Challenge not found");
+    return { xp: row.xp, level: row.level, coins: row.coins, already: row.already };
   },
 
   async incrementStreak(id: string): Promise<Profile> {

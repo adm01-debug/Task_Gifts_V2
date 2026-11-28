@@ -214,10 +214,10 @@ export const missionsService = {
 
     // Add rewards
     if (mission.xp_reward > 0) {
-      await profilesService.addXp(userId, mission.xp_reward, `mission_${mission.metric_key}`);
+      await profilesService.addXp(userId, mission.xp_reward, `mission_${mission.metric_key}`, { kind: 'mission', sourceId: progressId });
     }
     if (mission.coin_reward > 0) {
-      await profilesService.addCoins(userId, mission.coin_reward);
+      await profilesService.addCoins(userId, mission.coin_reward, { kind: 'mission', sourceId: progressId });
     }
 
     return { xp: mission.xp_reward, coins: mission.coin_reward };

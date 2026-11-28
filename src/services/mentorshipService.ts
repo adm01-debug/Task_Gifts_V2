@@ -442,11 +442,11 @@ export const mentorshipService = {
 
     try {
       if (mission.xp_reward > 0) {
-        await profilesService.addXp(actorId, mission.xp_reward, `mentorship_mission_${mission.id}`);
+        await profilesService.addXp(actorId, mission.xp_reward, `mentorship_mission_${mission.id}`, { kind: 'mentoring', sourceId: progress.id });
         xpAwarded = mission.xp_reward;
       }
       if (mission.coin_reward > 0) {
-        await profilesService.addCoins(actorId, mission.coin_reward);
+        await profilesService.addCoins(actorId, mission.coin_reward, { kind: 'mentoring', sourceId: progress.id });
         coinsAwarded = mission.coin_reward;
       }
     } catch (error) {
