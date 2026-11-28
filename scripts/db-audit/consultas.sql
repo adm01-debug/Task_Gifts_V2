@@ -351,3 +351,17 @@ FROM public.push_outbox
 WHERE type = 'cron_job_parado'
 ORDER BY created_at DESC
 LIMIT 20
+-- nome: entrega_do_push_do_vigia
+-- O aviso existir no outbox nao quer dizer que chegou no aparelho. O dispatcher marca sent_at/failed_at/
+-- attempts em push_outbox. Esta consulta mostra o ciclo completo de cada aviso do vigia.
+SELECT o.dedupe_key,
+       o.status,
+       o.attempts AS tentativas,
+       o.last_error AS ultimo_erro,
+       o.processed_at AS processado,
+       o.created_at AS criado,
+       (SELECT count(*) FROM public.push_subscriptions s WHERE s.user_id = o.user_id) AS aparelhos
+FROM public.push_outbox o
+WHERE o.type = 'cron_job_parado'
+ORDER BY o.created_at DESC
+LIMIT 20
