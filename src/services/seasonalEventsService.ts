@@ -1,4 +1,5 @@
 import { supabase } from "@/integrations/supabase/client";
+import { profilesService } from "./profilesService";
 
 export interface SeasonalEvent {
   id: string;
@@ -154,47 +155,12 @@ export const seasonalEventsService = {
   },
 
   async claimReward(userId: string, challengeId: string): Promise<{ xp: number; coins: number }> {
-    // Get challenge rewards
-    const { data: challenge } = await supabase
-      .from("seasonal_challenges")
-      .select("xp_reward, coin_reward, badge_name, badge_icon")
-      .eq("id", challengeId)
-      .maybeSingle();
+    // A RPC marca `claimed` e credita XP+coins atomicamente, com o valor do
+    // banco como fonte de verdade (20261230000000).
+    const credit = await profilesService.claimSeasonalReward(challengeId);
 
-    if (!challenge) throw new Error("Challenge not found");
-
-    // Mark as claimed
-    const { error } = await supabase
-      .from("user_seasonal_progress")
-      .update({ claimed: true, updated_at: new Date().toISOString() })
-      .eq("user_id", userId)
-      .eq("challenge_id", challengeId);
-
-    if (error) throw error;
-
-    // Update user profile with rewards via RPCs (SECURITY DEFINER) — UPDATE
-    // direto em xp/coins é bloqueado pela REVOKE table-level (pendência 02).
-    // updated_at é mantido pelo trigger update_profiles_updated_at.
-
-    if (challenge.xp_reward > 0) {
-      const { error: xpError } = await (supabase as any).rpc("add_xp", {
-        p_user_id: userId,
-        p_amount: challenge.xp_reward,
-        p_source: `seasonal:${challengeId}`,
-      });
-      if (xpError) throw xpError;
-    }
-
-    if (challenge.coin_reward > 0) {
-      const { error: coinsError } = await (supabase as any).rpc("add_coins", {
-        p_user_id: userId,
-        p_amount: challenge.coin_reward,
-      });
-      if (coinsError) throw coinsError;
-    }
-
-    return { xp: challenge.xp_reward, coins: challenge.coin_reward };
-      },
+    return { xp: credit.xp, coins: credit.coins };
+  },
 
   async incrementByMetricKey(userId: string, metricKey: string, amount: number = 1): Promise<void> {
     const now = new Date().toISOString();

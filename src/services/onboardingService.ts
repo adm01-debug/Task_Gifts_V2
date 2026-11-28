@@ -202,12 +202,13 @@ export const onboardingService = {
       return false;
     }
 
-    // Award XP and coins via RPC (SECURITY DEFINER)
+    // Award XP and coins via RPC (SECURITY DEFINER). O valor vem do catalogo
+    // `onboarding_step_rewards()` no banco, nao do constante do front.
     const [{ error: xpError }, { error: coinsError }] = await Promise.all([
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (supabase as any).rpc("add_xp", { p_user_id: userId, p_amount: step.xpReward }),
+      (supabase as any).rpc("add_xp", { p_user_id: userId, p_kind: "onboard", p_source_id: stepId }),
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (supabase as any).rpc("add_coins", { p_user_id: userId, p_amount: step.coinReward }),
+      (supabase as any).rpc("add_coins", { p_user_id: userId, p_kind: "onboard", p_source_id: stepId }),
     ]);
 
     if (xpError || coinsError) {

@@ -33,9 +33,10 @@ export function useAutoChallenges() {
         await profilesService.addXp(
           user.id,
           result.challenge.xp_reward,
-          `Desafio: ${result.challenge.title}`
+          `Desafio: ${result.challenge.title}`,
+          { kind: 'challenge', sourceId: result.challenge.id }
         );
-        await profilesService.addCoins(user.id, result.challenge.coin_reward);
+        await profilesService.addCoins(user.id, result.challenge.coin_reward, { kind: 'challenge', sourceId: result.challenge.id });
 
         toast({
           title: `🎉 Desafio Completado!`,

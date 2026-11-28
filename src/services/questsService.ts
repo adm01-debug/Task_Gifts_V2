@@ -220,11 +220,14 @@ export const questsService = {
     quest: Quest | null;
     comboResult: { finalXp: number; bonusXp: number; multiplier: number } | null;
   }> {
+    // A RPC fecha o fato e credita XP+coins de uma vez; o valor do banco e a
+    // unica fonte de verdade (20261230000000).
+    const credit = await profilesService.completeQuestAssignment(assignmentId);
+
     const { data, error } = await supabase
       .from("quest_assignments")
-      .update({ completed_at: new Date().toISOString() })
-      .eq("id", assignmentId)
       .select()
+      .eq("id", assignmentId)
       .maybeSingle();
     
     if (error) throw error;
@@ -238,22 +241,16 @@ export const questsService = {
       quest = await this.getById(data.quest_id);
       if (quest) {
         // Audit quest completion
-        await auditService.logQuestCompleted(data.user_id, quest.id, quest.xp_reward, quest.coin_reward);
+        await auditService.logQuestCompleted(data.user_id, quest.id, credit.xp, credit.coins);
 
-        // Apply combo multiplier to quest XP reward
-        const result = await comboService.registerAction(data.user_id, quest.xp_reward);
+        // XP ja creditado pelo banco; aqui so atualizamos o combo da UI.
+        const result = await comboService.registerAction(data.user_id, 0);
         comboResult = {
-          finalXp: result.finalXp,
-          bonusXp: result.bonusXp,
+          finalXp: credit.xp,
+          bonusXp: 0,
           multiplier: result.combo?.current_multiplier || 1.0,
         };
-        await profilesService.addXp(data.user_id, result.finalXp, `Quest: ${quest.title}`);
-        
-        // Add coins (no combo multiplier for coins)
-        if (quest.coin_reward > 0) {
-          await profilesService.addCoins(data.user_id, quest.coin_reward);
-        }
-        
+
         // Increment quests completed counter
         await profilesService.incrementQuestsCompleted(data.user_id);
 
@@ -265,9 +262,9 @@ export const questsService = {
           data: { 
             questId: quest.id, 
             questTitle: quest.title,
-            xpReward: result.finalXp,
-            bonusXp: result.bonusXp,
-            coinReward: quest.coin_reward
+            xpReward: credit.xp,
+            bonusXp: 0,
+            coinReward: credit.coins
           },
         });
 

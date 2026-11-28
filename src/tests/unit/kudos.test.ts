@@ -82,7 +82,10 @@ describe('kudosService', () => {
       const result = await kudosService.giveKudos(kudosInput);
 
       expect(comboService.registerAction).toHaveBeenCalledWith(toId, 25);
-      expect(profilesService.addXp).toHaveBeenCalledWith(toId, 30, 'Kudos: Reconhecimento');
+      expect(profilesService.addXp).toHaveBeenCalledWith(toId, 30, 'Kudos: Reconhecimento', {
+        kind: 'kudos',
+        sourceId: 'k1',
+      });
       expect(result.comboResult?.multiplier).toBe(1.2);
     });
   });

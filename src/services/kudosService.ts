@@ -219,7 +219,7 @@ export const kudosService = {
         bonusXp: result.bonusXp,
         multiplier: result.combo?.current_multiplier || 1.0,
       };
-      await profilesService.addXp(kudos.to_user_id, result.finalXp, `Kudos: ${badgeName}`);
+      await profilesService.addXp(kudos.to_user_id, result.finalXp, `Kudos: ${badgeName}`, { kind: 'kudos', sourceId: data.id });
     } catch (e) {
       logger.apiError("Failed to add XP for kudos", e, "kudosService");
     }

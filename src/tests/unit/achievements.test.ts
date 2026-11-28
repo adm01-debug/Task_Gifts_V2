@@ -50,12 +50,13 @@ describe('achievementsService', () => {
       expect(mockInsert).toHaveBeenCalledTimes(2); // 1 for user_achievement, 1 for notification
             expect(mockRpc).toHaveBeenCalledWith("add_xp", {
               p_user_id: userId,
-              p_amount: 100,
-              p_source: `achievement:${achievementKey}`,
+              p_kind: "achiev",
+              p_source_id: achievementKey,
             });
             expect(mockRpc).toHaveBeenCalledWith("add_coins", {
               p_user_id: userId,
-              p_amount: 50,
+              p_kind: "achiev",
+              p_source_id: achievementKey,
             });
     });
 

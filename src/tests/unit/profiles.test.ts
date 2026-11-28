@@ -62,12 +62,13 @@ describe('profilesService', () => {
       mockMaybeSingle.mockResolvedValue({ data: oldProfile, error: null });
       mockRpc.mockResolvedValue({ data: [{ id: '123', xp: 1100, level: 2 }], error: null });
 
-      const result = await profilesService.addXp('123', 300, 'teste');
+      const result = await profilesService.addXp('123', 300, 'teste', { kind: 'quest', sourceId: 'q1', bonus: 60 });
 
       expect(mockRpc).toHaveBeenCalledWith('add_xp', {
         p_user_id: '123',
-        p_amount: 300,
-        p_source: 'teste',
+        p_kind: 'quest',
+        p_source_id: 'q1',
+        p_bonus: 60,
       });
       expect(result.leveledUp).toBe(true);
       expect(result.newLevel).toBe(2);
@@ -92,11 +93,12 @@ describe('profilesService', () => {
     it('should call add_coins RPC', async () => {
       mockRpc.mockResolvedValue({ data: [{ id: '123', coins: 15 }], error: null });
 
-      const result = await profilesService.addCoins('123', 5);
+      const result = await profilesService.addCoins('123', 5, { kind: 'checkin', sourceId: 'a1' });
 
       expect(mockRpc).toHaveBeenCalledWith('add_coins', {
         p_user_id: '123',
-        p_amount: 5,
+        p_kind: 'checkin',
+        p_source_id: 'a1',
       });
       expect(result.id).toBe('123');
       expect(result.coins).toBe(15);

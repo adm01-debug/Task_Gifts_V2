@@ -234,7 +234,7 @@ export const attendanceService = {
         bonusXp = comboResult.bonusXp;
         comboMultiplier = comboResult.combo?.current_multiplier || 1.0;
         
-        await profilesService.addXp(userId, xpEarned, 'punctual_checkin');
+        await profilesService.addXp(userId, xpEarned, 'punctual_checkin', { kind: 'checkin', sourceId: record.id });
       }
 
       // Auto-update mission progress for punctual check-in

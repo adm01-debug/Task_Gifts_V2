@@ -258,7 +258,7 @@ export const trailsService = {
         bonusXp: result.bonusXp,
         multiplier: result.combo?.current_multiplier || 1.0,
       };
-      await profilesService.addXp(userId, result.finalXp, 'module_completed');
+      await profilesService.addXp(userId, result.finalXp, 'module_completed', { kind: 'trail', sourceId: moduleId });
     } catch (e) {
       logger.apiError("Failed to add XP for module completion", e, "trailsService");
     }

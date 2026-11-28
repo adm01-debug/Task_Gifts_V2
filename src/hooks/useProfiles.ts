@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { profilesService, type Profile, type ProfileUpdate } from "@/services/profilesService";
+import { profilesService, type Profile, type ProfileUpdate, type EconomyEvent } from "@/services/profilesService";
 import { useAuth } from "./useAuth";
 import { useSoundEffects } from "./useSoundEffects";
 import { useAchievementNotification } from "@/contexts/AchievementNotificationContext";
@@ -84,8 +84,8 @@ export function useAddXp() {
   const { triggerLevelUp } = useAchievementNotification();
 
   return useMutation({
-    mutationFn: ({ id, xpAmount, source }: { id: string; xpAmount: number; source?: string }) =>
-      profilesService.addXp(id, xpAmount, source),
+    mutationFn: ({ id, kind, sourceId, bonus }: { id: string; kind: EconomyEvent["kind"]; sourceId: string; bonus?: number }) =>
+      profilesService.addXp(id, 0, undefined, { kind, sourceId, bonus }),
     onSuccess: (data) => {
       queryClient.setQueryData(profileKeys.detail(data.profile.id), data.profile);
       if (user?.id === data.profile.id) {
@@ -110,8 +110,8 @@ export function useAddCoins() {
   const { user } = useAuth();
 
   return useMutation({
-    mutationFn: ({ id, coinsAmount }: { id: string; coinsAmount: number }) =>
-      profilesService.addCoins(id, coinsAmount),
+    mutationFn: ({ id, kind, sourceId }: { id: string; kind: EconomyEvent["kind"]; sourceId: string }) =>
+      profilesService.addCoins(id, 0, { kind, sourceId }),
     onSuccess: (data) => {
       queryClient.setQueryData(profileKeys.detail(data.id), data);
       if (user?.id === data.id) {
