@@ -662,14 +662,16 @@ def get_grants(conn):
         FROM information_schema.role_table_grants
         WHERE grantee NOT IN ({sys_roles}) AND ({excluded_sql('table_schema')} OR table_schema IN ('storage'))
         GROUP BY 1, 2, 3 ORDER BY 1, 2, 3""")
+    # NOT IN (tupla) em vez de NOT EXISTS correlacionado: o NOT EXISTS roda a subconsulta por
+    # linha e estourava o statement_timeout da Management API (57014), derrubando a coleta inteira.
     columns = q(conn, f"""
-        SELECT table_schema AS schema, table_name AS "table", column_name AS "column", grantee,
-               string_agg(privilege_type, ', ' ORDER BY privilege_type) AS privileges
+        SELECT cp.table_schema AS schema, cp.table_name AS "table", cp.column_name AS "column", cp.grantee,
+               string_agg(cp.privilege_type, ', ' ORDER BY cp.privilege_type) AS privileges
         FROM information_schema.column_privileges cp
-        WHERE grantee NOT IN ({sys_roles}) AND {excluded_sql('table_schema')}
-          AND NOT EXISTS (SELECT 1 FROM information_schema.role_table_grants g
-                          WHERE g.table_schema = cp.table_schema AND g.table_name = cp.table_name
-                            AND g.grantee = cp.grantee AND g.privilege_type = cp.privilege_type)
+        WHERE cp.grantee NOT IN ({sys_roles}) AND {excluded_sql('cp.table_schema')}
+          AND (cp.table_schema, cp.table_name, cp.grantee, cp.privilege_type) NOT IN (
+                SELECT g.table_schema, g.table_name, g.grantee, g.privilege_type
+                FROM information_schema.role_table_grants g)
         GROUP BY 1, 2, 3, 4 ORDER BY 1, 2, 3, 4""")
     sequences = q(conn, f"""
         SELECT n.nspname AS schema, c.relname AS sequence, r.rolname AS grantee,
@@ -1069,13 +1071,14 @@ def api(path: str) -> Any:
         return json.loads(body.decode("utf-8")) if body else None
 
 
-def api_section(name: str, path: str, transform=lambda x: x, optional: bool = False):
+def api_section(name: str, path: str, transform=lambda x: x, optional: bool = False,
+                benign_codes: tuple[int, ...] = (403, 404)):
     try:
         data = transform(api(path))
         log(f"api {name}: ok")
         return data
     except urllib.error.HTTPError as e:
-        if optional and e.code in (403, 404):
+        if optional and e.code in benign_codes:
             log(f"api {name}: indisponível ({e.code}), ignorado")
             return None
         record_error(f"api.{name}", f"HTTP {e.code} em {path}")
@@ -1108,7 +1111,9 @@ def introspect_api(previous_api: dict | None) -> tuple[dict[str, Any], dict[str,
     out["storage_config"] = api_section("storage_config", f"/projects/{ref}/config/storage", redact, optional=True)
     out["network_restrictions"] = api_section("network_restrictions", f"/projects/{ref}/network-restrictions", redact, optional=True)
     out["ssl_enforcement"] = api_section("ssl_enforcement", f"/projects/{ref}/ssl-enforcement", redact, optional=True)
-    out["custom_hostname"] = api_section("custom_hostname", f"/projects/{ref}/custom-hostname", redact, optional=True)
+    # optional+4xx: projeto sem dominio proprio devolve 400 em /custom-hostname, nao e' falha de coleta.
+    out["custom_hostname"] = api_section("custom_hostname", f"/projects/{ref}/custom-hostname", redact,
+                                         optional=True, benign_codes=(400, 403, 404))
     out["branches"] = api_section("branches", f"/projects/{ref}/branches",
                                   lambda bs: [keep(b, ("id", "name", "git_branch", "status", "is_default", "persistent")) for b in bs], optional=True)
     backups = api_section("backups", f"/projects/{ref}/database/backups", redact, optional=True)
