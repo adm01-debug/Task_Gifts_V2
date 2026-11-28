@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "c0f126efe440bd92658bc347d8b7d21e99cd4432",
+  "commit": "93847fb3a78a90c6b516198ac6337e1a5a0de63c",
   "branch": "main",
-  "data_commit": "2026-11-28T09:55:56-03:00",
+  "data_commit": "2026-11-28T10:22:11-03:00",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "ultimos_commits": [
+   {
+    "sha": "93847fb",
+    "data": "2026-11-28",
+    "assunto": "chore: diagnostico temporario (reverter)"
+   },
    {
     "sha": "c0f126e",
     "data": "2026-11-28",
@@ -126,14 +131,9 @@
     "sha": "98adc29",
     "data": "2026-11-27",
     "assunto": "feat(auditoria): consultas para provar o vigia do cron (#214)"
-   },
-   {
-    "sha": "076d318",
-    "data": "2026-11-27",
-    "assunto": "fix(infra): --verify enxerga funcao, nao so' tabela (#213)"
    }
   ],
-  "arquivos_mudados_7d": 292,
+  "arquivos_mudados_7d": 290,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "supabase/functions/_shared",
@@ -254,6 +254,10 @@
     "mudancas": 7
    },
    {
+    "arquivo": "scripts/supabase_snapshot/snapshot.py",
+    "mudancas": 7
+   },
+   {
     "arquivo": "src/pages/Profile.tsx",
     "mudancas": 7
    },
@@ -263,10 +267,6 @@
    },
    {
     "arquivo": "scripts/db-audit/check-migration-drift.mjs",
-    "mudancas": 6
-   },
-   {
-    "arquivo": "scripts/supabase_snapshot/snapshot.py",
     "mudancas": 6
    },
    {
@@ -306,13 +306,17 @@
    {
     "autor": "dependabot[bot]",
     "commits": 15
+   },
+   {
+    "autor": "diag",
+    "commits": 1
    }
   ]
  },
  "contagens": {
   "arquivos_total": 1643,
   "arquivos_codigo": 1217,
-  "linhas_codigo": 241927,
+  "linhas_codigo": 241987,
   "rotas": 88,
   "rotas_http_backend": 0,
   "vistas_por_id": 0,
@@ -392,7 +396,7 @@
   },
   "scripts/supabase_snapshot": {
    "arquivos": 2,
-   "linhas": 2854
+   "linhas": 2914
   },
   "src/App.tsx": {
    "arquivos": 1,
@@ -494,7 +498,7 @@
   },
   {
    "arquivo": "scripts/supabase_snapshot/snapshot.py",
-   "linhas": 1939
+   "linhas": 1999
   },
   {
    "arquivo": "scripts/graphify-local.mjs",

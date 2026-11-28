@@ -59,11 +59,11 @@
  "commits": {
   "convencao": "conventional commits (observado)",
   "exemplos": [
+   "chore: diagnostico temporario (reverter)",
    "fix(contexto): guard de segredo nao acusa mais a propria redacao (#237)",
    "fix(contexto): snapshot da Management API passa pelo redact antes de serializar (#236)",
    "fix(contexto): guard de segredo diz o arquivo e grants nao estoura timeout (#235)",
-   "feat(auditoria): estado de entrega dos avisos do vigia (#234)",
-   "feat(contexto): mapa do banco sem depender de SUPABASE_DB_URL (#230)"
+   "feat(auditoria): estado de entrega dos avisos do vigia (#234)"
   ]
  },
  "pr_template": ".github/PULL_REQUEST_TEMPLATE.md",
