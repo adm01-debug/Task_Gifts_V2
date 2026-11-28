@@ -133,7 +133,7 @@
     "assunto": "feat(cron): vigia que avisa admin quando uma tarefa automatica para (#209)"
    }
   ],
-  "arquivos_mudados_7d": 299,
+  "arquivos_mudados_7d": 292,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "supabase/functions/_shared",
