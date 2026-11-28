@@ -653,6 +653,64 @@ def get_sequences(conn):
         FROM pg_sequences s WHERE {excluded_sql('s.schemaname')} ORDER BY 1, 2""")
 
 
+
+
+def _diag_grants():
+    """TEMPORARIO: isola qual SELECT de grants devolve 400."""
+    sys_roles = ", ".join("'" + r + "'" for r in sorted(SYSTEM_ROLES))
+    casos = {
+        "tables": f"""
+        SELECT table_schema AS schema, table_name AS "table", grantee,
+               string_agg(privilege_type, ', ' ORDER BY privilege_type) AS privileges
+        FROM information_schema.role_table_grants
+        WHERE grantee NOT IN ({sys_roles}) AND ({excluded_sql('table_schema')} OR table_schema IN ('storage'))
+        GROUP BY 1, 2, 3 ORDER BY 1, 2, 3""",
+        "columns": f"""
+        SELECT table_schema AS schema, table_name AS "table", column_name AS "column", grantee,
+               string_agg(privilege_type, ', ' ORDER BY privilege_type) AS privileges
+        FROM information_schema.column_privileges cp
+        WHERE grantee NOT IN ({sys_roles}) AND {excluded_sql('table_schema')}
+          AND NOT EXISTS (SELECT 1 FROM information_schema.role_table_grants g
+                          WHERE g.table_schema = cp.table_schema AND g.table_name = cp.table_name
+                            AND g.grantee = cp.grantee AND g.privilege_type = cp.privilege_type)
+        GROUP BY 1, 2, 3, 4 ORDER BY 1, 2, 3, 4""",
+        "sequences": f"""
+        SELECT n.nspname AS schema, c.relname AS sequence, r.rolname AS grantee,
+               concat_ws(', ', CASE WHEN has_sequence_privilege(r.oid, c.oid, 'USAGE') THEN 'USAGE' END,
+                               CASE WHEN has_sequence_privilege(r.oid, c.oid, 'SELECT') THEN 'SELECT' END,
+                               CASE WHEN has_sequence_privilege(r.oid, c.oid, 'UPDATE') THEN 'UPDATE' END) AS privileges
+        FROM pg_class c JOIN pg_namespace n ON n.oid = c.relnamespace
+        CROSS JOIN pg_roles r
+        WHERE c.relkind = 'S' AND r.rolname IN ('anon','authenticated','service_role') AND {excluded_sql()}
+          AND (has_sequence_privilege(r.oid, c.oid, 'USAGE') OR has_sequence_privilege(r.oid, c.oid, 'SELECT') OR has_sequence_privilege(r.oid, c.oid, 'UPDATE'))
+        ORDER BY 1, 2, 3""",
+        "defaults": """
+        SELECT COALESCE(n.nspname, '(global)') AS schema, pg_get_userbyid(d.defaclrole) AS owner_role,
+               CASE d.defaclobjtype WHEN 'r' THEN 'tables' WHEN 'S' THEN 'sequences' WHEN 'f' THEN 'functions'
+                    WHEN 'T' THEN 'types' WHEN 'n' THEN 'schemas' END AS object_type,
+               d.defaclacl::text[] AS acl
+        FROM pg_default_acl d LEFT JOIN pg_namespace n ON n.oid = d.defaclnamespace ORDER BY 1, 2, 3""",
+    }
+    for nome, sql in casos.items():
+        try:
+            linhas = api_consulta(sql)
+            print(f"DIAG grants.{nome}: ok ({len(linhas)} linhas)", flush=True)
+        except Exception as exc:
+            print(f"DIAG grants.{nome}: FALHOU {type(exc).__name__}: {str(exc)[:400]}", flush=True)
+
+
+def _diag_api():
+    """TEMPORARIO: isola quais endpoints da Management API devolvem erro."""
+    ref = PROJECT_REF
+    for nome, path in [("custom_hostname", f"/projects/{ref}/custom-hostname"),
+                       ("vanity_subdomain", f"/projects/{ref}/custom-hostname/vanity-subdomain")]:
+        try:
+            api(path)
+            print(f"DIAG api.{nome}: ok", flush=True)
+        except Exception as exc:
+            print(f"DIAG api.{nome}: FALHOU {type(exc).__name__}: {str(exc)[:300]}", flush=True)
+
+
 @section("grants")
 def get_grants(conn):
     sys_roles = ", ".join("'" + r + "'" for r in sorted(SYSTEM_ROLES))
@@ -1869,6 +1927,8 @@ def main() -> int:
         except Exception:  # noqa: BLE001
             previous = None
 
+    _diag_grants()
+    _diag_api()
     db, stats = introspect_db((previous or {}).get("db"))
     if all(v is None for v in db.values()):
         log("Banco inteiro indisponível — nada será sobrescrito.")
