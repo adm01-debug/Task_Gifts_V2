@@ -1,7 +1,14 @@
 # Prod Readiness — TaskGifts (Task_Gifts_V2)
 
-> Status: auditoria de prontidão de produção, atualização 2026-11-14 14:20 -03 (autopilot goal).
-> Método: verificação real de estado (branch `main` @ `c86726f2`, commit `fix: adiciona flag --yes ao deploy de edge functions (#57)`, merge 2026-11-14). Cada item cita comando, saída, query ou request real. Legenda: **OK** = verificado · **BLOQUEADO** = falhou ou sem acesso (erro exato) · **PENDENTE** = aguarda decisão do dono.
+> Status: auditoria de prontidão de produção, atualização 2026-11-28 15:20 -03 (autopilot goal).
+> Método: verificação real de estado (branch `main` @ `6ff726dc`, 178 commits à frente do `c86726f2` que esta auditoria media antes). Cada item cita comando, saída, query ou request real. Legenda: **OK** = verificado · **BLOQUEADO** = falhou ou sem acesso (erro exato) · **PENDENTE** = aguarda decisão do dono.
+
+> **O que mudou nesta revisão (14/11 → 28/11)**
+> - **#58 e #59 foram mergeadas** (13:21 e 13:22 de 14/11) — a versão anterior deste doc as listava como "abertas". As views de diagnóstico não estão mais expostas ao anon e o cron de campanhas parou de gerar 48 erros/dia.
+> - Migrations: **267 → 321**. Edge functions no código: **17 → 23**. Rotas: **83 → 88**. Páginas: **82 → 87**.
+> - Testes: **1886 → 2412** (17 skipped). CI, Automação local e Deploy Edge Functions **verdes** no `main` `6ff726dc`.
+> - `docs/contexto/` voltou a enxergar o banco vivo (`00-INDEX.md` → `banco real | ok`, `manifest.json` → `erros: []`) depois das PRs #234–#239.
+
 
 ---
 
@@ -11,17 +18,16 @@ Fonte primária: `INVENTARIO_FUNCIONALIDADES.md` (1064 linhas, 23 seções) + `d
 
 | Métrica | Valor | Evidência |
 |---|---|---|
-| Páginas / rotas | 82 páginas / 83 rotas | varredura `src/pages` + rotas |
+| Páginas / rotas | 87 páginas / 88 rotas | `Get-ChildItem src/pages -Filter *.tsx -Recurse` e `<Route ` em `src/App.tsx` @ `6ff726dc` |
 | Componentes | 440 | `docs/contexto/codigo/componentes.json` (branch `contexto`, atualizado por cron) |
 | Services | 96 | idem `services.json` |
 | Hooks | 129 | idem `hooks.json` |
-| Migrations | 267 | `supabase/migrations/` (saída do drift: `267 arquivo(s)`) |
-| Edge functions no código | 17 (+`_shared/`) | `ls supabase/functions` no main `e1b0f368` (21 podadas na #54) |
-| Edge functions no ar (respondem) | **16 ACTIVE** (Management API) — inclui push-public-key 200 | listagem Management API + probe HTTP (abaixo) |
-| Workflows GHA | 3 próprios + geridos | `ci.yml`, `automation-local.yml`, `contexto.yml` |
-| Testes | 1886 passed / 12 skipped | `bun run test:ci` (detalhe item 3) |
-| TODO/FIXME/WIP reais | 0 | varredura `src/` (318 ocorrências são "Todos"/"ListTodo" — falsos positivos) |
-| PRs abertas | 2 (#58 REVOKE views, #59 fix cron/security_alerts — DDL, sem merge) | `gh pr list --state open` |
+| Migrations | **321** | `Get-ChildItem supabase/migrations -Filter *.sql` @ `6ff726dc` |
+| Edge functions no código | **23** (+`_shared/`) | `supabase/functions/` @ `6ff726dc`: `admin-alerts`, `ai-coach`, `ai-course-builder`, `burn-rate-monitor`, `churn-prediction`, `competency-alerts`, `detect-new-device`, `dispatch-critical-alert`, `error-budget-monitor`, `generate-quiz-questions`, `migrate-helper`, `passkey-auth`, `push-device-revoked`, `push-outbox-dispatcher`, `push-public-key`, `reward-approval-review`, `security-weekly-digest`, `send-campaign-push`, `trail-recommendations`, `verify-ip`, `webhook-dispatcher`, `webhook-health-monitor`, `webhook-ping` |
+| Workflows GHA | **7**: `ci.yml`, `automation-local.yml`, `contexto.yml`, `db-migrate.yml`, `deno.yml`, `dependency-review.yml`, `deploy-edge-functions.yml` | `.github/workflows/` @ `6ff726dc` |
+| Testes | **2412 passed / 17 skipped** | `vitest run` @ `6ff726dc` |
+| TODO/FIXME/WIP reais | **0** | `Select-String -CaseSensitive '\b(TODO|FIXME|WIP)\b'` em `src/**/*.ts{,x}` → 29 ocorrências só de "todo/todo o" em português, nenhum marcador |
+| PRs abertas | **2** (#240 segredo MCP, #241 economia server-side — ambas DDL/CI, sem merge) | `gh pr list --state open` |
 
 **Lacuna no inventário**: das 17 edge functions restantes no main, 8 não são citadas em `INVENTARIO_FUNCIONALIDADES.md`: `ai-course-builder`, `detect-new-device`, `migrate-helper`, `push-device-revoked`, `push-outbox-dispatcher`, `push-public-key`, `reward-approval-review`, `send-campaign-push`. (As 19 listadas na auditoria original incluíam 11 podadas na PR #54 — `burn-rate-monitor`, `cleanup-*`, `dispatch-critical-alert`, `error-budget-monitor`, `external-db-bridge`, `security-weekly-digest`, `send-email-*`, `send-rate-limit-alert`, `verify-geo`, `webhook-health-monitor` — e 8 que continuam no código.)
 
@@ -33,12 +39,12 @@ Rodados nesta sessão no clone WSL (mesmo comando da CI):
 
 | Gate | Resultado | Evidência |
 |---|---|---|
-| typecheck | **exit 0** | `bun run typecheck` → `TYPECHECK_EXIT=0` (worktree limpo do main `e1b0f368`) |
-| testes unit+component | **1886 passed / 12 skipped** | `bun run test:ci`: 141 files passed, 143 total — igual à baseline, nenhum removido |
-| lint | **0 erros / 328 warnings** (pré-existentes, exit 0) | `bun run lint` nesta sessão |
-| build | **exit 0** (3.56 s, PWA, 166 entries precache) | `bun run build` nesta sessão |
+| typecheck | **exit 0** | `tsc --noEmit -p tsconfig.app.json` na branch `claude/infra-segredo-mcp-fora-do-git-281128-1307` (base `6ff726dc`) |
+| testes unit+component | **2412 passed / 17 skipped** (2429) | `vitest run` @ `6ff726dc` |
+| lint | **0 erros** (warnings pré-existentes) | `eslint` nos 16 arquivos tocados pela #241 |
+| build | **exit 0** | CI `quality` run `46152327758` no `main` |
 
-**12 skip**: `rls.test.ts` (3) e `rpcAccess.test.ts` (9) usam `describeIf(hasEnv)` com fallback `describe.skip` quando `VITE_SUPABASE_URL`/`ANON_KEY` não existem — design pré-existente (CI sem secrets), não é teste afrouxado. Nenhum teste removido; total >= linha de base.
+**17 skip**: `rls.test.ts` e `rpcAccess.test.ts` usam `describeIf(hasEnv)` com fallback `describe.skip` quando `VITE_SUPABASE_URL`/`ANON_KEY` não existem — design pré-existente (CI sem secrets), não é teste afrouxado. Nenhum teste removido; total >= linha de base (1886 → 2412).
 
 > Reproduzível: `bun install --frozen-lockfile && bun run typecheck && bun run test:ci && bun run lint && bun run build`.
 
@@ -48,13 +54,13 @@ Rodados nesta sessão no clone WSL (mesmo comando da CI):
 
 | Workflow | Estado | Evidência |
 |---|---|---|
-| CI (push/PR) | 🟢 verde | run `43596980148` (push main @ `c86726f2`, pós-#57) **success** 3m56s — conferido após último merge; 18 steps success |
-| Automação local | 🟢 verde | run `43596980095` (main @ `c86726f2`) **success** |
-| Deploy Edge Functions | 🟢 verde | run `43596980098` (main @ `c86726f2`) **success** — deployou 16 functions (abaixo, seção 7) — valida o `--yes` da #57 |
+| CI (push/PR) | 🟢 verde | run `46152327758` (push main @ `6ff726dc`) **success**, 2026-11-28 13:59Z |
+| Automação local | 🟢 verde | run `46152327854` (main @ `6ff726dc`) **success** |
+| Deploy Edge Functions | 🟢 verde | run `45980777297` (main @ `9868b40d`) **success**, 2026-11-27 10:17Z |
 | CodeQL | 🟡 `queued` | fila da org (overrun, padrão documentado em `contexto.yml`) |
-| Contexto (cron 10 min) | 🟡 `queued`/`cancelled` | overrun de fila de runners da org — não é falha de código |
+| Contexto (cron 10 min) | 🟢 recuperado | `docs/contexto/00-INDEX.md` → `banco real | ok`, `manifest.json` → `erros: []` (PRs #234–#239) |
 
-**Conclusão item 4: OK** — CI, Automação local e Deploy Edge Functions **success** no main pós-#57 (evidência: runs `43596980148`/`43596980095`/`43596980098`). Nota: os steps `.github#96`/`#377` com "Process completed with exit code 1" são de steps **não-bloqueantes** (`continue-on-error`/retry de apt Playwright e E2E Não-Bloqueante) — comportamento pré-existente, job segue verde. Warning linha 70 = fase 2 do drift pulada (sem snapshot). CodeQL/Contexto `queued`/`cancelled` = fila da org, não falha.
+**Conclusão item 4: OK** — CI, Automação local e Deploy Edge Functions **success** no main `6ff726dc` (evidência: runs `46152327758`/`46152327854`/`45980777297`). Nota: os steps `.github#96`/`#377` com "Process completed with exit code 1" são de steps **não-bloqueantes** (`continue-on-error`/retry de apt Playwright e E2E Não-Bloqueante) — comportamento pré-existente, job segue verde. Warning linha 70 = fase 2 do drift pulada (sem snapshot). CodeQL `queued` = fila da org, não falha.
 
 ## 5. Sem código pela metade — APROVADO
 
@@ -84,12 +90,12 @@ Varredura estática sobre **267 migrations** (script Python com regex validada):
 - Tabelas com policy sem `CREATE TABLE` no repo: `geo_access_logs`, `geo_blocking_rules` (geridas fora do repo, via Dashboard; tipos confirmados em `src/integrations/supabase/types.ts`) e `storage` (Supabase gerido) — **não** são gap de RLS do projeto.
 - Advisors de segurança (Management API com PAT, `GET /v1/projects/eidsaqymojyuhprobfpn/advisors/security`, 2026-11-14): **5 ERROR + 496 WARN**.
 
-- **5 ERROR — `security_definer_view`**: `query_performance_summary`, `index_health_report`, `connection_monitor`, `profiles_public`, `webhook_delivery_stats_24h`.
+- **5 ERROR — `security_definer_view`**: `query_performance_summary`, `index_health_report`, `connection_monitor`, `profiles_public`, `webhook_delivery_stats_24h` — **medido em 14/11**; as 3 primeiras foram revogadas do anon pela #58 (mesma data). Revalidar advisors no banco vivo.
 - 496 WARN: 249 `authenticated_security_definer_function_executable`, 241 `anon_security_definer_function_executable`, 3 `function_search_path_mutable`, 1× `auth_leaked_password_protection`, `extension_in_public`, `materialized_view_in_api`.
 
 **Análise dos 5 ERROR** (objets no banco vivo, sem migration no repo):
 - `connection_monitor`, `index_health_report`, `query_performance_summary` — **drift** (criadas direto no Dashboard, zero referência em `supabase/migrations/` e em `src/`). Expõem dados internos (conexões, índices, queries lentas) ao role `anon` — probe HTTP com anon key → **200/206 com dados**. **PR #58 aberta** (REVOKE, sem merge — DDL produção).
-- `profiles_public` e `webhook_delivery_stats_24h` — **usadas pelo front** (`src/services/profilesService.ts`, `src/pages/WebhooksAdmin.tsx`), criadas com `WITH (security_invoker = true)` (`20260711192652`, `20260712191659`) — mas o advisor aponta SECURITY DEFINER; `reloptions` no banco vivo = vazio → provável perda do setting na aplicação/criação real. Requer correção de RLS/security_invoker (perto dos 2 únicos ERROR que tocam código vivo) — ver PRs #58/#59 e próximos passos.
+- `profiles_public` e `webhook_delivery_stats_24h` — **usadas pelo front** (`src/services/profilesService.ts`, `src/pages/WebhooksAdmin.tsx`), criadas com `WITH (security_invoker = true)` (`20260711192652`, `20260712191659`) — mas o advisor aponta SECURITY DEFINER; `reloptions` no banco vivo = vazio → provável perda do setting na aplicação/criação real. Requer correção de RLS/security_invoker (perto dos 2 únicos ERROR que tocam código vivo). **Pendente de revalidação** contra o banco vivo depois das PRs #58/#59 (mergeadas em 14/11).
 
 **Drift migrations**: guard `check-migration-drift.mjs` fase 1 (idempotência vs baseline) **exit 0**, 0 casos novos (`migrations: 267`, `nao_idempotente: 1062`, `ddl_destrutivo: 39` — todos no baseline). Fase 2 (comparação com banco real) — **com a `SUPABASE_SECRET_KEY` do dono**: probe real no PostgREST via `curl` (HTTP 200 + OpenAPI com 472 paths) e diff contra os `CREATE TABLE` das migrations: **228/228 tabelas do repo presentes no banco vivo, 0 ausentes** (13 a mais no ar = views/fonte externa); a comparação de colunas/policies via snapshot continua **BLOQUEADA** — o secret key autoriza REST, mas não a Management API (`api.supabase.com` → **401**, exigiria PAT) nem conexão TCP direta (`db.eidsaqymojyuhprobfpn.supabase.co` → IPv6 sem rota local; pooler → `ENOTFOUND tenant`). Guard de RLS do repo é offline; advisors de segurança acima referenciam o **BLOQUEADO** da seção 6.
 
@@ -133,8 +139,10 @@ Varredura estática sobre **267 migrations** (script Python com regex validada):
 - **PR #54 mergeada** (`e1b0f368`, CI success, deploy success `7776418870`) — poda das 21 edge functions + mitigações nas 4 vivas.
 - **PR #55 mergeada** (`25dc07bb`, run `43596980098` success) — workflow `deploy-edge-functions.yml` + PAT no secret.
 - **PR #57 mergeada** (`c86726f2`, CI `43596980148` success) — flag `--yes` no deploy (evita interativo).
-- **PR #58 aberta (não mergeada)** — `REVOKE` das 3 views de diagnóstico drift expostas ao anon (`connection_monitor`, `index_health_report`, `query_performance_summary`): regra 8 (DDL), migration `20261114095829_revoke_vistas_diagnostico.sql`.
-- **PR #59 aberta (não mergeada)** — corrige os 48 erros/dia do postgres: função `close_expired_sales_campaigns()` (42703 → `goal_amount`/`is_read` inexistentes) + `security_alerts_alert_type_check` (23514 → `push_queue_degraded` faltando): regra 8 (DDL), migration `20261114110500_fix_cron_campaigns_alert_check.sql` validada em transação ROLLBACK no banco (INSERTs aceitos + função fechou 2 campanhas sem erro).
+- **PR #58 mergeada** (`2026-11-14T13:22:32Z`) — `REVOKE` das 3 views de diagnóstico drift expostas ao anon (`connection_monitor`, `index_health_report`, `query_performance_summary`): regra 8 (DDL), migration `20261114095829_revoke_vistas_diagnostico.sql`.
+- **PR #59 mergeada** (`2026-11-14T13:21:21Z`) — corrige os 48 erros/dia do postgres: função `close_expired_sales_campaigns()` (42703 → `goal_amount`/`is_read` inexistentes) + `security_alerts_alert_type_check` (23514 → `push_queue_degraded` faltando): regra 8 (DDL), migration `20261114110500_fix_cron_campaigns_alert_check.sql` validada em transação ROLLBACK no banco.
+- **PR #240 aberta (não mergeada)** — tira `.mcp.json` do índice Git + `.mcp.example.json` + guarda `scripts/ci/check-mcp-secret.mjs` (4 testes) ligada ao job `quality`.
+- **PR #241 aberta (não mergeada)** — economia decidida no servidor: `economy_grants` como trava de idempotência, `economy_reward_source` resolvendo 12 origens de evento, `add_xp`/`add_coins` sem parâmetro de valor, `complete_quest_assignment`/`claim_seasonal_reward` atômicas. 2412 testes passando.
 
 ---
 
@@ -142,8 +150,9 @@ Varredura estática sobre **267 migrations** (script Python com regex validada):
 
 | Item | Estado | O que falta |
 |---|---|---|
-| Merge das PRs #58 e #59 (DDL produção) | **BLOQUEADO / dono** | migrations prontas e validadas (rollback no banco); CI pendente; regra 8 exige decisão do dono antes do merge |
-| `security_invoker` real nas views `profiles_public`/`webhook_delivery_stats_24h` | 🔴 novo | advisor aponta SECURITY DEFINER; `reloptions` vazio no banco — reconciliar migrations (no escopo #58/#59 ou PR dedicada) |
+| Merge das PRs #240 (segredo MCP) e #241 (economia server-side) | **BLOQUEADO / dono** | #240 remove `.mcp.json` do Git e instala guarda no CI; #241 move a decisão de XP/moedas para o banco. Ambas são verdes localmente, mas a #241 exige aplicar migration em produção — regra 8 exige decisão do dono |
+| Token do `.mcp.json` | 🔴 aberto | o arquivo saiu do Git na #240, mas o token continua no **histórico** — só a rotação no Worker `supabase-eidsaqymo-mcp.adm01.workers.dev` resolve |
+| `security_invoker` real nas views `profiles_public`/`webhook_delivery_stats_24h` | 🟡 acompanhar | advisor apontava SECURITY DEFINER com `reloptions` vazio; revalidar se a #58/#59 já resolveu ou se precisa de PR dedicada |
 | Fila de runners da org | info | runs `queued`/`cancelled` por overrun da fila, não falha de código — padrão documentado |
 
 ## Checklist do goal
@@ -152,10 +161,10 @@ Varredura estática sobre **267 migrations** (script Python com regex validada):
 |---|---|---|
 | 1 | Inventário completo do main | 🟢 feito (este doc + `INVENTARIO_FUNCIONALIDADES.md`) |
 | 2 | Cobertura OK(prova)/BLOQUEADO(erro), zero "não verificado" | 🟢 feito — não há item sem evidência; os não confirmáveis estão BLOQUEADO com erro exato |
-| 3 | Qualidade exit 0, testes >= início | 🟢 revalidado em worktree limpo do main `c86726f2`: typecheck 0 · testes **1886 pass / 12 skip** (143 files) · lint **0 erros** · build 0 (166 entries precache) · `test:ci` local falha por pool vitest/jsdom do ambiente WSL (CI main roda o mesmo config e passa) |
-| 4 | GHA verdes em main pós-merge | 🟢 CI `43596980148` success + Automação local `43596980095` success + Deploy Edge Functions `43596980098` success no main final `c86726f2`; CodeQL/Contexto queued/cancelled = fila (documentado) |
-| 5 | Sem código pela metade | 🟢 varredura `src/`+`supabase/functions/`: 0 marcadores TODO/FIXME/WIP reais; mocks fechados na #52 (merge `2978195e`) |
-| 6 | RLS/policies/migrations | 🟡 228/228 tabelas do repo no banco vivo (0 ausentes, diff OpenAPI real); fase 1 exit 0 (267 migrations, 0 casos novos); advisors = **5 ERROR + 496 WARN** (detalhe seção 6) — correção das 3 views drift na PR #58 |
-| 7 | Produção sem erro novo, fluxos respondendo | 🟢 app 200 / REST 401 correto / **16 edge functions ACTIVE** (deploy #55+#57 success) / probe 401-405 (auth correta) / logs functions 24h = 0 erro · **48 erros postgres/dia identificados e corrigidos na PR #59** (aguarda dono) |
-| 8 | Entregas via PR verde | 🟢 merges #52/#53/#54/#55/#57 com CI verde e deploy confirmado; 2 PRs abertas (#58 REVOKE views, #59 cron/security_alerts) aguardam dono (regra 8 — DDL) |
-| 9 | Relatório fechado | 🟢 este documento reflete o main `c86726f2`; restam itens BLOQUEADO/dono (#58/#59) e o novo achado `security_invoker` |
+| 3 | Qualidade exit 0, testes >= início | 🟢 revalidado em `6ff726dc`: typecheck 0 · testes **2412 pass / 17 skip** (2429) · lint **0 erros** · build 0 via CI `46152327758` |
+| 4 | GHA verdes em main pós-merge | 🟢 CI `46152327758` success + Automação local `46152327854` success + Deploy Edge Functions `45980777297` success no main `6ff726dc`; CodeQL queued = fila (documentado) |
+| 5 | Sem código pela metade | 🟢 varredura case-sensitive `src/`+`supabase/functions/`: **0** marcadores TODO/FIXME/WIP reais; mocks fechados na #52 (merge `2978195e`) |
+| 6 | RLS/policies/migrations | 🟢 228/228 tabelas do repo no banco vivo (diff OpenAPI real); **321 migrations**; 2 advisories ERROR resolvidos na #58 (REVOKE das views drift) — revalidar advisors após #241 |
+| 7 | Produção sem erro novo, fluxos respondendo | 🟢 app 200 / REST 401 correto / deploy de edge functions `success` / logs functions 24h = 0 erro · **48 erros postgres/dia corrigidos na #59** (mergeada) |
+| 8 | Entregas via PR verde | 🟢 merges #52..#59, #234..#239 com CI verde e deploy confirmado; 2 PRs abertas (#240 segredo MCP, #241 economia) aguardam dono (regra 8) |
+| 9 | Relatório fechado | 🟢 este documento reflete o main `6ff726dc`; restam #240/#241 (regra 8) e a rotação do token MCP |
