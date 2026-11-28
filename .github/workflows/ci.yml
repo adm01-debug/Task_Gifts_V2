@@ -64,7 +64,12 @@ jobs:
           python3 -m pip install --quiet --break-system-packages --only-binary :all: -r scripts/supabase_snapshot/requirements.txt
           node --test scripts/ai-context/gerar.unit.mjs scripts/ci/contexto-indice.unit.mjs \
             scripts/ci/contexto-publicacao.unit.mjs scripts/ci/regras-negocio.unit.mjs \
-            scripts/ci/supabase-snapshot.unit.mjs
+            scripts/ci/supabase-snapshot.unit.mjs scripts/ci/check-mcp-secret.unit.mjs
+
+      - name: Guarda do segredo do MCP (nao versionar .mcp.json)
+        # .mcp.json carrega token de acesso total ao banco, fora da RLS.
+        # Detalhe em docs/pendencias/01-mcp-json-com-segredo.md.
+        run: node scripts/ci/check-mcp-secret.mjs
 
       - name: Guarda das migrations (idempotencia + drift contra o banco)
         # Fase 1 sempre roda. Fase 2 compara com o snapshot do banco publicado na

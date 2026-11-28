@@ -1,4 +1,4 @@
-﻿# Pendencias — .mcp.json versionado com segredo (risco #0)
+# Pendencias — .mcp.json versionado com segredo (risco #0)
 
 Estado: **AGUARDANDO HUMANO** (remocao de segredo = mudanca de infra/seguranca = regra 8)
 
@@ -15,3 +15,13 @@ Se o repo vazou ou e compartilhado, um atacante pode invocar o MCP Supabase e le
 
 ## Por que nao feito nesta sessao
 Remover `.mcp.json` e rotacionar segredo afeta a infratestrutura de automacao da fazenda (outros repos/agentes usam o mesmo padrao) e exige coordenacao com a equipe que opera o Worker. Nao posso rotacionar externamente o segredo. Regra 8.
+
+## Solucao implementada (2026-11-28)
+- .mcp.json saiu do indice (git rm --cached) e entrou no .gitignore; o arquivo continua no disco local do dono, entao o canal MCP segue funcionando para quem ja o tem.
+- .mcp.example.json versionado, sem token, documenta o formato exigido.
+- Guarda nova scripts/ci/check-mcp-secret.mjs + suite check-mcp-secret.unit.mjs (4 testes): falha se .mcp.json voltar a ser rastreado **ou** se qualquer arquivo rastreado contiver URL *-mcp.adm01.workers.dev/<hex>/mcp. Roda no job quality (.github/workflows/ci.yml) e esta registrada em scripts/automation.config.json.
+- Registro em scripts/automation.config.json (id legacy-mcp-secret-guard); utomation.mjs doctor sem o achado script sem registro/gatilho.
+
+## Pendente de acao humana (nao resolvivel por codigo)
+- **Rotacionar o token do Worker.** O token saiu da ponta (HEAD) mas continua no historico do Git a partir de df2d2d5d; quem tem clone antigo ainda o possui. Enquanto nao for trocado no Worker, ele segue valido.
+- Opcional: reescrever o historico (git filter-repo) se o repositorio ja foi compartilhado externamente.
