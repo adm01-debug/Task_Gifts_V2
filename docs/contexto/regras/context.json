@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "bc7214ebf0e8a3e8e2a3e8218168012ce3440473",
+  "sha": "de79f20c170e5223a8ed5d68a357470fe182a223",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
-  "generated_at": "2026-11-28 12:21 UTC",
+  "generated_at": "2026-11-28 12:35 UTC",
   "files_total": 1654,
   "code_files": 1546,
-  "code_lines": 286953
+  "code_lines": 286956
  },
  "version": "1.3.2",
- "facts_hash": "e04d770f08b7dff0",
+ "facts_hash": "8e58d14da662d800",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -54230,7 +54230,7 @@
   {
    "module": "scripts",
    "files": 30,
-   "lines": 16671,
+   "lines": 16674,
    "tables": [
     "a",
     "contacts",
@@ -129433,7 +129433,7 @@
   },
   "scripts/supabase_snapshot/snapshot.py": {
    "path": "scripts/supabase_snapshot/snapshot.py",
-   "lines": 1936,
+   "lines": 1939,
    "exports": [
     "def env_int",
     "def log",
@@ -166150,10 +166150,19 @@
   }
  },
  "git": {
-  "sha": "bc7214ebf0e8a3e8e2a3e8218168012ce3440473",
+  "sha": "de79f20c170e5223a8ed5d68a357470fe182a223",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "commits": [
+   {
+    "sha": "de79f20",
+    "date": "2026-11-28",
+    "author": "adm01-debug",
+    "subject": "fix(contexto): snapshot da Management API passa pelo redact antes de serializar (#236)",
+    "files": [
+     "scripts/supabase_snapshot/snapshot.py"
+    ]
+   },
    {
     "sha": "bc7214e",
     "date": "2026-11-28",
@@ -166421,32 +166430,23 @@
     "files": [
      "scripts/db-audit/consultas.sql"
     ]
-   },
-   {
-    "sha": "b94118b",
-    "date": "2026-11-27",
-    "author": "adm01-debug",
-    "subject": "chore(db-audit): mostra por que o aviso do lembrete cai no ON CONFLICT (#206)",
-    "files": [
-     "scripts/db-audit/consultas.sql"
-    ]
    }
   ],
   "hot_files": [
    [
     "scripts/db-audit/consultas.sql",
-    19
+    18
    ],
    [
     "supabase/migrations/20261231100000_vigia_dos_jobs_do_cron.sql",
     5
    ],
    [
-    ".github/workflows/contexto.yml",
-    3
+    "scripts/supabase_snapshot/snapshot.py",
+    4
    ],
    [
-    "scripts/supabase_snapshot/snapshot.py",
+    ".github/workflows/contexto.yml",
     3
    ],
    [

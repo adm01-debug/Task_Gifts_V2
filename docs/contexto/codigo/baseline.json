@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "bc7214ebf0e8a3e8e2a3e8218168012ce3440473",
+  "commit": "de79f20c170e5223a8ed5d68a357470fe182a223",
   "branch": "main",
-  "data_commit": "2026-11-28T09:21:08-03:00",
+  "data_commit": "2026-11-28T09:34:40-03:00",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "ultimos_commits": [
+   {
+    "sha": "de79f20",
+    "data": "2026-11-28",
+    "assunto": "fix(contexto): snapshot da Management API passa pelo redact antes de serializar (#236)"
+   },
    {
     "sha": "bc7214e",
     "data": "2026-11-28",
@@ -126,11 +131,6 @@
     "sha": "36c9638",
     "data": "2026-11-27",
     "assunto": "feat(infra): modo reaplicar no db-migrate (#212)"
-   },
-   {
-    "sha": "d28797c",
-    "data": "2026-11-27",
-    "assunto": "fix(cron): vigia sem referencia ambigua de coluna (#211)"
    }
   ],
   "arquivos_mudados_7d": 293,
@@ -266,6 +266,10 @@
     "mudancas": 6
    },
    {
+    "arquivo": "scripts/supabase_snapshot/snapshot.py",
+    "mudancas": 6
+   },
+   {
     "arquivo": "supabase/functions/_shared/contracts/_fixtures/index.ts",
     "mudancas": 6
    },
@@ -290,10 +294,6 @@
     "mudancas": 5
    },
    {
-    "arquivo": "scripts/supabase_snapshot/snapshot.py",
-    "mudancas": 5
-   },
-   {
     "arquivo": "supabase/functions/_shared/contracts/_fixtures/responses.ts",
     "mudancas": 5
    }
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 201
+    "commits": 202
    },
    {
     "autor": "dependabot[bot]",
@@ -312,7 +312,7 @@
  "contagens": {
   "arquivos_total": 1643,
   "arquivos_codigo": 1217,
-  "linhas_codigo": 241924,
+  "linhas_codigo": 241927,
   "rotas": 88,
   "rotas_http_backend": 0,
   "vistas_por_id": 0,
@@ -392,7 +392,7 @@
   },
   "scripts/supabase_snapshot": {
    "arquivos": 2,
-   "linhas": 2851
+   "linhas": 2854
   },
   "src/App.tsx": {
    "arquivos": 1,
@@ -494,7 +494,7 @@
   },
   {
    "arquivo": "scripts/supabase_snapshot/snapshot.py",
-   "linhas": 1936
+   "linhas": 1939
   },
   {
    "arquivo": "scripts/graphify-local.mjs",
