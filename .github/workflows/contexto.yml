@@ -255,8 +255,17 @@ jobs:
       - name: Guard — nenhum segredo na saída
         if: env.SNAPSHOT_SKIPPED != '1'
         run: |
-          if grep -rIEl 'eyJ[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,}|sb_secret_|sb_publishable_|postgres(ql)?://[^ ]*:[^ @]+@' "$SNAPSHOT_DIR"; then
-            echo "::error::Possível segredo detectado no snapshot — publicação abortada"; exit 1
+          # Nomeia o arquivo culpado: sem isso o job falha com "possível segredo" e ninguém sabe onde.
+          # O valor casado nunca vai para o log — só o arquivo e o campo.
+          PADRAO='eyJ[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,}|sb_secret_|sb_publishable_|postgres(ql)?://[^ ]*:[^ @]+@'
+          culpados="$(grep -rIEl "$PADRAO" "$SNAPSHOT_DIR" || true)"
+          if [ -n "$culpados" ]; then
+            echo "Arquivos com possível segredo (valor mascarado):"
+            printf '%s\n' "$culpados" | while IFS= read -r f; do
+              echo "  $f: $(grep -oEn "$PADRAO" "$f" | head -3 | sed -E 's/(:\s*).*/\1<MASCARADO>/')"
+            done
+            echo "::error::Possível segredo detectado no snapshot — publicação abortada"
+            exit 1
           fi
 
       - name: Reportar seções com erro (não falha o job)
