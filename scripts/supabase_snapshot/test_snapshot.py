@@ -820,6 +820,43 @@ class SnapshotDBStatsTests(SnapshotFixture):
         self.assertEqual(errors, {"db_stats"})
 
 
+class SnapshotApiParameterTests(unittest.TestCase):
+    """A Management API nao aceita placeholders: %s cru virava HTTP 400 em toda secao filtrada."""
+
+    def setUp(self):
+        script = pathlib.Path(__file__).with_name("snapshot.py")
+        driver = types.ModuleType("psycopg")
+        driver.connect = mock.Mock(side_effect=AssertionError("conexao proibida"))
+        rows = types.ModuleType("psycopg.rows")
+        rows.dict_row = object()
+        spec = importlib.util.spec_from_file_location("snapshot_api_params", script)
+        self.snapshot = importlib.util.module_from_spec(spec)
+        with mock.patch.dict(sys.modules, {"psycopg": driver, "psycopg.rows": rows}):
+            with mock.patch.dict(os.environ, {"SUPABASE_DB_URL": "offline-fixture"}, clear=True):
+                spec.loader.exec_module(self.snapshot)
+
+    def test_texto_vira_literal_entre_aspas(self):
+        self.assertEqual(self.snapshot._interpolar("WHERE extname = %s", ("pg_cron",)),
+                         "WHERE extname = 'pg_cron'")
+
+    def test_aspa_simples_e_escapada(self):
+        self.assertEqual(self.snapshot._interpolar("WHERE x = %s", ("it's",)), "WHERE x = 'it''s'")
+
+    def test_numero_sai_sem_aspas(self):
+        self.assertEqual(self.snapshot._interpolar("WHERE rn <= %s", (3,)), "WHERE rn <= 3")
+
+    def test_percentual_do_like_e_preservado(self):
+        self.assertEqual(self.snapshot._interpolar("WHERE a LIKE 'pg_%%'", ()), "WHERE a LIKE 'pg_%'")
+
+    def test_lista_vira_array(self):
+        self.assertEqual(self.snapshot._interpolar("WHERE a IN %s", (["a", "b"],)),
+                         "WHERE a IN ARRAY['a', 'b']")
+
+    def test_contagem_divergente_de_parametros_falha(self):
+        with self.assertRaises(RuntimeError):
+            self.snapshot._interpolar("WHERE a = %s AND b = %s", ("so um",))
+
+
 class SnapshotConfigurationTests(unittest.TestCase):
     def test_invalid_integer_environment_is_reported_without_traceback(self):
         script = pathlib.Path(__file__).with_name("snapshot.py")
