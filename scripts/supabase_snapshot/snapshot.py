@@ -1013,7 +1013,7 @@ def api_consulta(sql: str) -> list[dict[str, Any]]:
         },
         method="POST",
     )
-    with urllib.request.urlopen(req, timeout=120) as resp:
+    with urllib.request.urlopen(req, timeout=300) as resp:
         data = json.loads(resp.read().decode("utf-8"))
     if not isinstance(data, list):
         raise RuntimeError(f"Management API devolveu {type(data).__name__}, esperado lista")
