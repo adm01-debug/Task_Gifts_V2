@@ -37,6 +37,7 @@ Variáveis de ambiente:
 
 from __future__ import annotations
 
+import contextlib
 import datetime as dt
 import hashlib
 import json
@@ -347,9 +348,23 @@ def q(conn: psycopg.Connection, sql: str, params: tuple | None = None) -> list[d
     # params=None -> psycopg não interpreta '%' como placeholder (LIKE 'pg_%' funciona sem escapar).
     # Todo texto que sai do banco passa pelo scrub: pg_cron chamando edge function com service_role no
     # header, migration com senha, trigger http_request com apikey — tudo isso existe na prática.
-    with conn.cursor(row_factory=dict_row) as cur:
-        cur.execute(sql, params or None)
-        return [{k: scrub_value(v) for k, v in dict(r).items()} for r in cur.fetchall()]
+    with _cursor_para(conn, sql) as cur:
+        if isinstance(conn, ApiConnection):
+            linhas = cur.fetchall()
+        else:
+            cur.execute(sql, params or None)
+            linhas = cur.fetchall()
+        return [{k: scrub_value(v) for k, v in dict(r).items()} for r in linhas]
+
+
+@contextlib.contextmanager
+def _cursor_para(conn, sql: str):
+    # A Management API não tem sessão: o cursor nasce com o SQL. psycopg recebe execute() depois.
+    if isinstance(conn, ApiConnection):
+        yield conn.cursor(sql=sql)
+    else:
+        with conn.cursor(row_factory=dict_row) as cur:
+            yield cur
 
 
 def has_ext(conn, name: str) -> bool:
@@ -898,9 +913,100 @@ DB_SECTIONS: list[Callable] = [
 ]
 
 
+class _ApiCursor:
+    # Só o que o q() usa: execute + fetchall de dicionários já com o scrub aplicado.
+    def __init__(self, rows: list[dict[str, Any]]):
+        self._rows = rows
+
+    def execute(self, sql, params=None):  # noqa: ANN001
+        raise RuntimeError("ApiConnection não executa SQL direto: use q()/cursor()")
+
+    def fetchall(self) -> list[dict[str, Any]]:
+        return self._rows
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *exc):
+        return False
+
+
+class ApiConnection:
+    """Conexão de leitura sobre a Management API, para quando não há SUPABASE_DB_URL.
+
+    Mesma porta do scripts/db-audit/apply-migrations.mjs (POST /v1/projects/{ref}/database/query),
+    que já está provada em produção. Sem sessão, não há transação: `SET`, `rollback` e afins são
+    no-op; toda seção do snapshot é read-only por construção.
+    """
+
+    def __init__(self) -> None:
+        self._pending = ""
+
+    def execute(self, sql: str, params=None):  # noqa: ANN001
+        self._pending = sql
+        return self
+
+    def fetchall(self) -> list[dict[str, Any]]:
+        raise RuntimeError("ApiConnection: use cursor() para ler")
+
+    def cursor(self, row_factory=None, sql: str | None = None):  # noqa: ANN001
+        consulta, self._pending = sql or self._pending, ""
+        if not consulta:
+            raise RuntimeError("cursor() sem SQL: passe sql= ou chame execute() antes")
+        return _ApiCursor(api_consulta(consulta))
+
+    def rollback(self) -> None:
+        return None
+
+    def commit(self) -> None:
+        return None
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *exc):
+        return False
+
+
+def api_consulta(sql: str) -> list[dict[str, Any]]:
+    """Roda um SELECT pelo endpoint /database/query e devolve as linhas com o scrub aplicado."""
+    payload = json.dumps({"query": sql}).encode("utf-8")
+    req = urllib.request.Request(
+        f"{MGMT_API}/projects/{PROJECT_REF}/database/query",
+        data=payload,
+        headers={
+            "Authorization": f"Bearer {ACCESS_TOKEN}",
+            "Content-Type": "application/json",
+            "User-Agent": "supabase-snapshot/2",
+        },
+        method="POST",
+    )
+    with urllib.request.urlopen(req, timeout=120) as resp:
+        data = json.loads(resp.read().decode("utf-8"))
+    if not isinstance(data, list):
+        raise RuntimeError(f"Management API devolveu {type(data).__name__}, esperado lista")
+    return [{k: scrub_value(v) for k, v in dict(r).items()} for r in data]
+
+
 def introspect_db(previous_db: dict | None) -> tuple[dict[str, Any], dict[str, Any]]:
     db: dict[str, Any] = {}
     stats: dict[str, Any] = {}
+    if not DB_URL:
+        # Sem a string de conexão, a leitura vai pela Management API — o mesmo caminho que o
+        # db-migrate usa com SUPABASE_ACCESS_TOKEN. Antes isto abortava a coleta inteira.
+        log("SUPABASE_DB_URL ausente: introspecção via Management API")
+        conn = ApiConnection()
+        for fn in DB_SECTIONS:
+            data = fn(conn)
+            if getattr(fn, "volatile", False):
+                stats[fn.__name__] = data
+            elif data is None and previous_db and previous_db.get(fn.__name__) is not None:
+                db[fn.__name__] = previous_db[fn.__name__]
+                CARRIED.append(fn.__name__)
+                log(f"{fn.__name__}: reaproveitado da coleta anterior")
+            else:
+                db[fn.__name__] = data
+        return db, stats
     # prepare_threshold=None: compatível com pooler em transaction mode (sem prepared statements).
     with psycopg.connect(DB_URL, connect_timeout=30, application_name="supabase-snapshot",
                          prepare_threshold=None, autocommit=True) as conn:
@@ -1712,8 +1818,8 @@ def main() -> int:
     if CONFIG_ERRORS:
         print("Configuração inválida: " + "; ".join(CONFIG_ERRORS), file=sys.stderr)
         return 2
-    if not DB_URL:
-        print("SUPABASE_DB_URL não definido", file=sys.stderr)
+    if not DB_URL and not (PROJECT_REF and ACCESS_TOKEN):
+        print("Sem SUPABASE_DB_URL e sem SUPABASE_PROJECT_REF/SUPABASE_ACCESS_TOKEN: não há como ler o banco", file=sys.stderr)
         return 2
     try:
         prepare_output_directory()
