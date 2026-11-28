@@ -1705,7 +1705,7 @@ def render_simple(db: dict, api_: dict, caller_sources: dict[str, str] | None = 
             ["projeto", (api_.get("project") or {}).get("name")], ["região", (api_.get("project") or {}).get("region")], ["URL", api_["url"]],
             ["schemas expostos (PostgREST)", pr.get("db_schema")], ["max_rows (PostgREST)", pr.get("max_rows")],
             ["extra_search_path", pr.get("db_extra_search_path")], ["PITR", (api_.get("backups_config") or {}).get("pitr_enabled")],
-            ["branches", len(api_.get("branches") or [])]]) + "\n```json\n" + dumps(cfg) + "\n```\n")
+            ["branches", len(api_.get("branches") or [])]]) + "\n```json\n" + dumps(scrub_value(redact(cfg))) + "\n```\n")
     else:
         write(OUT / "edge-functions.md", "# Edge Functions\n\n_Management API desabilitada: defina SUPABASE_PROJECT_REF e SUPABASE_ACCESS_TOKEN._\n")
         write(OUT / "project-config.md", "# Configuração do projeto\n\n_Management API desabilitada._\n")
@@ -1876,6 +1876,9 @@ def main() -> int:
 
     caller_sources = build_function_callers(db)
     api_, api_stats = introspect_api((previous or {}).get("api"))
+    # dumps() não redige: a Management API devolve DSN do pooler, jwt_secret e afins. Passar pelo
+    # redact+scrub antes de serializar é o que impede o guard de segredo barrar a publicação.
+    api_ = scrub_value(redact(api_))
     schema_sql = run_pg_dump()
     types_ts = run_gen_types()
     # Se pg_dump/gen types falharam, mantém a versão anterior (com aviso em errors.md) em vez de apagar.
