@@ -344,11 +344,43 @@ def scrub_value(v: Any) -> Any:
     return v
 
 
+def _sql_literal(valor: Any) -> str:
+    """Literal SQL para interpolar na Management API, que não aceita placeholders."""
+    if valor is None:
+        return "NULL"
+    if isinstance(valor, bool):
+        return "TRUE" if valor else "FALSE"
+    if isinstance(valor, (int, float)):
+        return str(valor)
+    if isinstance(valor, (list, tuple)):
+        return "ARRAY[" + ", ".join(_sql_literal(v) for v in valor) + "]"
+    return "'" + str(valor).replace("'", "''") + "'"
+
+
+def _interpolar(sql: str, params: tuple) -> str:
+    """Troca cada %s pelo literal correspondente, ignorando %% (escape de percentual do psycopg)."""
+    partes = re.split(r"(%%|%s)", sql)
+    saida, i = [], 0
+    for parte in partes:
+        if parte == "%%":
+            saida.append("%")
+        elif parte == "%s":
+            if i >= len(params):
+                raise RuntimeError(f"q(): {sql.count('%s')} placeholders para {len(params)} parametros")
+            saida.append(_sql_literal(params[i]))
+            i += 1
+        else:
+            saida.append(parte)
+    if i != len(params):
+        raise RuntimeError(f"q(): {len(params)} parametros para {i} placeholders")
+    return "".join(saida)
+
+
 def q(conn: psycopg.Connection, sql: str, params: tuple | None = None) -> list[dict]:
     # params=None -> psycopg não interpreta '%' como placeholder (LIKE 'pg_%' funciona sem escapar).
     # Todo texto que sai do banco passa pelo scrub: pg_cron chamando edge function com service_role no
     # header, migration com senha, trigger http_request com apikey — tudo isso existe na prática.
-    with _cursor_para(conn, sql) as cur:
+    with _cursor_para(conn, _interpolar(sql, params) if params else sql) as cur:
         if isinstance(conn, ApiConnection):
             linhas = cur.fetchall()
         else:
