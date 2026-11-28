@@ -1,7 +1,7 @@
 # Contexto do projeto para agentes de IA
 
 GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.
-Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `7917a7236e38f28bfb64103ecd160635aeddf132` (2026-11-27T18:03:17-03:00).
+Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `485698aa0354b8f8775b849188157f5a9b52bf60` (2026-11-28T08:40:03-03:00).
 
 ## Como usar (leia antes de planejar ou executar qualquer tarefa)
 1. **Tela/rota/menu** → `rotas.json` (url/vista/menu → arquivo → hooks → tabelas → edges; `rotas_http_backend` para APIs) e `modulos.json` (módulo inteiro + dependências entre módulos).
@@ -36,7 +36,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 |---|---|
 | arquivos_total | 1643 |
 | arquivos_codigo | 1217 |
-| linhas_codigo | 241749 |
+| linhas_codigo | 241855 |
 | rotas | 88 |
 | rotas_http_backend | 0 |
 | vistas_por_id | 0 |
@@ -296,8 +296,8 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - possiveis_segredos_no_codigo: 0
 
 ## Grafo de código (graphify)
-- 11228 nós · 30283 arestas · 877 comunidades · grafo do commit `7917a723`
-- comunidades maiores: react (262), lucide-react (250), badge.tsx (203), Mentoria.tsx (136), skeleton.tsx (127), cn (116), contracts/index.ts (94), client.ts (92), requestId.ts (89), RolePermissionsManager.tsx (88), DashboardRightColumn.tsx (86), AdminPanel.tsx (79)
+- 11247 nós · 30313 arestas · 868 comunidades · grafo do commit `485698aa`
+- comunidades maiores: button.tsx (258), lucide-react (256), react (218), badge.tsx (215), AdminPanel.tsx (158), cn (142), Mentoria.tsx (120), useToast (116), supabase (109), contracts/index.ts (107), client.ts (104), date-fns (103)
 - símbolos mais chamados: cn() (src/lib/utils.ts), useAuth() (src/hooks/useAuth.tsx), useIsMobile() (src/hooks/use-mobile.tsx), q() (scripts/supabase_snapshot/snapshot.py), useDepartments() (src/hooks/useDepartments.ts), useRBAC() (src/hooks/useRBAC.ts), useProfiles() (src/hooks/useProfiles.ts), useToast() (src/hooks/use-toast.ts), useSEO() (src/hooks/useSEO.ts), useSoundEffects() (src/hooks/useSoundEffects.tsx), .collect() (scripts/supabase_snapshot/test_snapshot.py), excluded_sql() (scripts/supabase_snapshot/snapshot.py)
 - consulta local: `graphify query "<pergunta>"`, `graphify path "<A>" "<B>"`, `graphify explain "<X>"`
 
@@ -384,6 +384,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 
 
 ## Últimos commits
+- 2026-11-28 `485698a` feat(contexto): mapa do banco sem depender de SUPABASE_DB_URL (#230)
 - 2026-11-27 `7917a72` feat(auditoria): avisos do vigia no outbox certo (#233)
 - 2026-11-27 `822c3a7` feat(auditoria): preferencia dos admins para o aviso do vigia (#232)
 - 2026-11-27 `94d7864` feat(auditoria): dispara o vigia de verdade e mostra o resultado (#231)
@@ -398,7 +399,6 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - 2026-11-27 `7f78676` feat(auditoria): colunas reais de cron.job e job_run_details (#221)
 - 2026-11-27 `85f9abf` fix(cron): ON CONFLICT por constraint no marco zero do vigia (#220)
 - 2026-11-27 `a4ae6cf` fix(infra): verify aceita funcao com argumento default (#219)
-- 2026-11-27 `f5454f8` fix(cron): marco zero do vigia sem coluna ambigua (#218)
 
 ## Arquivos deste diretório
 - `docs/contexto/codigo/rotas.json`

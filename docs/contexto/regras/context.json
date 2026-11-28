@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "7917a7236e38f28bfb64103ecd160635aeddf132",
+  "sha": "485698aa0354b8f8775b849188157f5a9b52bf60",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
-  "generated_at": "2026-11-27 21:12 UTC",
+  "generated_at": "2026-11-28 11:40 UTC",
   "files_total": 1654,
   "code_files": 1546,
-  "code_lines": 286764
+  "code_lines": 286870
  },
  "version": "1.3.2",
- "facts_hash": "5ded4b34e3b871ac",
+ "facts_hash": "27d006bc95548111",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -54230,7 +54230,7 @@
   {
    "module": "scripts",
    "files": 30,
-   "lines": 16482,
+   "lines": 16588,
    "tables": [
     "a",
     "contacts",
@@ -62701,6 +62701,18 @@
    {
     "file": "scripts/maintenance/run.mjs",
     "msg": "pending_patch"
+   },
+   {
+    "file": "scripts/supabase_snapshot/snapshot.py",
+    "msg": "ApiConnection não executa SQL direto: use q()/cursor()"
+   },
+   {
+    "file": "scripts/supabase_snapshot/snapshot.py",
+    "msg": "ApiConnection: use cursor() para ler"
+   },
+   {
+    "file": "scripts/supabase_snapshot/snapshot.py",
+    "msg": "cursor() sem SQL: passe sql= ou chame execute() antes"
    },
    {
     "file": "scripts/supabase_snapshot/test_snapshot.py",
@@ -129421,7 +129433,7 @@
   },
   "scripts/supabase_snapshot/snapshot.py": {
    "path": "scripts/supabase_snapshot/snapshot.py",
-   "lines": 1798,
+   "lines": 1904,
    "exports": [
     "def env_int",
     "def log",
@@ -129445,6 +129457,7 @@
     "def scrub",
     "def scrub_value",
     "def q",
+    "def _cursor_para",
     "def has_ext",
     "def has_table",
     "def section",
@@ -129476,13 +129489,12 @@
     "def get_table_stats",
     "def get_index_stats",
     "def get_db_stats",
+    "class _ApiCursor",
+    "class ApiConnection",
+    "def api_consulta",
     "def introspect_db",
     "def api",
-    "def api_section",
-    "def introspect_api",
-    "def run_pg_dump",
-    "def run_gen_types",
-    "def is_caller_source"
+    "def api_section"
    ],
    "rpc": [
     "fn",
@@ -129524,6 +129536,11 @@
      "path": "statement_timeout"
     }
    ],
+   "errors": [
+    "ApiConnection não executa SQL direto: use q()/cursor()",
+    "ApiConnection: use cursor() para ler",
+    "cursor() sem SQL: passe sql= ou chame execute() antes"
+   ],
    "rule_comments": [
     "Somente leitura no banco (sessão read-only, statement_timeout, lock_timeout).",
     "Role sem SELECT em auth.* (ex.: role de leitura do workflow) nao pode derrubar a secao inteira:",
@@ -129538,6 +129555,7 @@
     "FROM cron.job_run_details WHERE start_time > now() - interval '7 days') t",
     "res = subprocess.run(cmd, capture_output=True, text=True, timeout=600, check=False)",
     "with psycopg.connect(DB_URL, connect_timeout=30, application_name=\"supabase-snapshot\",",
+    "with urllib.request.urlopen(req, timeout=120) as resp:",
     "with urllib.request.urlopen(req, timeout=60) as resp:"
    ],
    "uses_service_role": true
@@ -166131,10 +166149,20 @@
   }
  },
  "git": {
-  "sha": "7917a7236e38f28bfb64103ecd160635aeddf132",
+  "sha": "485698aa0354b8f8775b849188157f5a9b52bf60",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "commits": [
+   {
+    "sha": "485698a",
+    "date": "2026-11-28",
+    "author": "adm01-debug",
+    "subject": "feat(contexto): mapa do banco sem depender de SUPABASE_DB_URL (#230)",
+    "files": [
+     ".github/workflows/contexto.yml",
+     "scripts/supabase_snapshot/snapshot.py"
+    ]
+   },
    {
     "sha": "7917a72",
     "date": "2026-11-27",
@@ -166398,21 +166426,12 @@
      "scripts/db-audit/consultar-sql.mjs",
      "scripts/db-audit/consultas.sql"
     ]
-   },
-   {
-    "sha": "09d022a",
-    "date": "2026-11-27",
-    "author": "adm01-debug",
-    "subject": "fix: consulta do silencio le as colunas que o dispatcher usa (#203)",
-    "files": [
-     "scripts/db-audit/consultas.sql"
-    ]
    }
   ],
   "hot_files": [
    [
     "scripts/db-audit/consultas.sql",
-    21
+    20
    ],
    [
     "supabase/migrations/20261231100000_vigia_dos_jobs_do_cron.sql",
@@ -166425,6 +166444,14 @@
    [
     "scripts/db-audit/apply-migrations.mjs",
     3
+   ],
+   [
+    ".github/workflows/contexto.yml",
+    1
+   ],
+   [
+    "scripts/supabase_snapshot/snapshot.py",
+    1
    ],
    [
     ".github/workflows/db-migrate.yml",

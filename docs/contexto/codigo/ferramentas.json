@@ -227,6 +227,7 @@
    ],
    "npm_scripts": [],
    "secrets": [
+    "SUPABASE_ACCESS_TOKEN",
     "SUPABASE_DB_URL"
    ],
    "actions": [

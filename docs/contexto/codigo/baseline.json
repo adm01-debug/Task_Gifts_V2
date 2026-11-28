@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "7917a7236e38f28bfb64103ecd160635aeddf132",
+  "commit": "485698aa0354b8f8775b849188157f5a9b52bf60",
   "branch": "main",
-  "data_commit": "2026-11-27T18:03:17-03:00",
+  "data_commit": "2026-11-28T08:40:03-03:00",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "ultimos_commits": [
+   {
+    "sha": "485698a",
+    "data": "2026-11-28",
+    "assunto": "feat(contexto): mapa do banco sem depender de SUPABASE_DB_URL (#230)"
+   },
    {
     "sha": "7917a72",
     "data": "2026-11-27",
@@ -126,14 +131,9 @@
     "sha": "5b6b412",
     "data": "2026-11-27",
     "assunto": "feat(cron): vigia que avisa admin quando uma tarefa automatica para (#209)"
-   },
-   {
-    "sha": "b51a5c0",
-    "data": "2026-11-27",
-    "assunto": "chore(db-audit): lista jobs do cron ativos sem nenhuma execucao registrada (#208)"
    }
   ],
-  "arquivos_mudados_7d": 297,
+  "arquivos_mudados_7d": 299,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "supabase/functions/_shared",
@@ -266,6 +266,10 @@
     "mudancas": 6
    },
    {
+    "arquivo": ".github/workflows/contexto.yml",
+    "mudancas": 5
+   },
+   {
     "arquivo": "docs/estado/02-componentes.md",
     "mudancas": 5
    },
@@ -292,16 +296,12 @@
    {
     "arquivo": "supabase/functions/_shared/contracts/index.ts",
     "mudancas": 5
-   },
-   {
-    "arquivo": "supabase/migrations/20261231100000_vigia_dos_jobs_do_cron.sql",
-    "mudancas": 5
    }
   ],
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 198
+    "commits": 199
    },
    {
     "autor": "dependabot[bot]",
@@ -312,7 +312,7 @@
  "contagens": {
   "arquivos_total": 1643,
   "arquivos_codigo": 1217,
-  "linhas_codigo": 241749,
+  "linhas_codigo": 241855,
   "rotas": 88,
   "rotas_http_backend": 0,
   "vistas_por_id": 0,
@@ -392,7 +392,7 @@
   },
   "scripts/supabase_snapshot": {
    "arquivos": 2,
-   "linhas": 2676
+   "linhas": 2782
   },
   "src/App.tsx": {
    "arquivos": 1,
@@ -494,7 +494,7 @@
   },
   {
    "arquivo": "scripts/supabase_snapshot/snapshot.py",
-   "linhas": 1798
+   "linhas": 1904
   },
   {
    "arquivo": "scripts/graphify-local.mjs",

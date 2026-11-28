@@ -121,7 +121,9 @@
    "arquivo": "scripts/supabase_snapshot/snapshot.py",
    "camada": "python",
    "exports": [
+    "_cursor_para",
     "api",
+    "api_consulta",
     "api_section",
     "approx",
     "banner",
@@ -195,9 +197,11 @@
     "update_changelog",
     "uslug",
     "valid_previous_snapshot",
-    "write"
+    "write",
+    "ApiConnection",
+    "_ApiCursor"
    ],
-   "linhas": 1798,
+   "linhas": 1904,
    "tabelas": [],
    "rpcs": [],
    "edges": [],
@@ -217,6 +221,7 @@
    ],
    "externos": [
     "__future__",
+    "contextlib",
     "datetime",
     "decimal",
     "hashlib",

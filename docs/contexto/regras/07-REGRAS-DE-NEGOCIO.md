@@ -1,6 +1,6 @@
 # 07 · REGRAS DE NEGÓCIO
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `7917a7236e` · branch `main` · 2026-11-27 21:12 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `485698aa03` · branch `main` · 2026-11-28 11:40 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## A. Regras escritas por humanos (`manual/` — prioridade máxima, nunca sobrescrito)
@@ -3378,6 +3378,9 @@ _nenhum item encontrado_
 | formatter fixture failed | `scripts/maintenance/maintenance.unit.mjs` |
 | blocked_network_sandbox | `scripts/maintenance/run.mjs` |
 | pending_patch | `scripts/maintenance/run.mjs` |
+| ApiConnection não executa SQL direto: use q()/cursor() | `scripts/supabase_snapshot/snapshot.py` |
+| ApiConnection: use cursor() para ler | `scripts/supabase_snapshot/snapshot.py` |
+| cursor() sem SQL: passe sql= ou chame execute() antes | `scripts/supabase_snapshot/snapshot.py` |
 | O teste offline não permite consultas ao banco | `scripts/supabase_snapshot/test_snapshot.py` |
 | banco indisponível na fixture | `scripts/supabase_snapshot/test_snapshot.py` |
 | catálogo indisponível na fixture | `scripts/supabase_snapshot/test_snapshot.py` |
@@ -3642,10 +3645,7 @@ _nenhum item encontrado_
 | useTheme must be used within a ThemeProvider | `src/hooks/useTheme.tsx` |
 | Erro ao adicionar pré-requisito | `src/hooks/useTrails.ts` |
 | Erro ao completar módulo | `src/hooks/useTrails.ts` |
-| Erro ao criar trilha | `src/hooks/useTrails.ts` |
-| Código inválido | `src/hooks/useTwoFactor.ts` |
-| Erro ao configurar 2FA | `src/hooks/useTwoFactor.ts` |
-| … +232 linhas — lista completa em `context.json` | |
+| … +235 linhas — lista completa em `context.json` | |
 
 ## J. Controle de acesso no código (checagens de perfil/permissão)
 

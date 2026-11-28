@@ -59,11 +59,11 @@
  "commits": {
   "convencao": "conventional commits (observado)",
   "exemplos": [
+   "feat(contexto): mapa do banco sem depender de SUPABASE_DB_URL (#230)",
    "feat(auditoria): avisos do vigia no outbox certo (#233)",
    "feat(auditoria): preferencia dos admins para o aviso do vigia (#232)",
    "feat(auditoria): dispara o vigia de verdade e mostra o resultado (#231)",
-   "fix(auditoria): privilegio do dono via aclexplode (#229)",
-   "fix(auditoria): cast texto no privilegio do dono do vigia (#228)"
+   "fix(auditoria): privilegio do dono via aclexplode (#229)"
   ]
  },
  "pr_template": ".github/PULL_REQUEST_TEMPLATE.md",
