@@ -255,14 +255,21 @@ jobs:
       - name: Guard — nenhum segredo na saída
         if: env.SNAPSHOT_SKIPPED != '1'
         run: |
-          # Nomeia o arquivo culpado: sem isso o job falha com "possível segredo" e ninguém sabe onde.
-          # O valor casado nunca vai para o log — só o arquivo e o campo.
-          PADRAO='eyJ[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,}|sb_secret_|sb_publishable_|postgres(ql)?://[^ ]*:[^ @]+@'
-          culpados="$(grep -rIEl "$PADRAO" "$SNAPSHOT_DIR" || true)"
-          if [ -n "$culpados" ]; then
+          # O DSN ja redigido (`postgresql://user:[REDACTED]@host`) casaria o padrao de DSN com senha:
+          # o guard acusava a propria redacao e travava toda publicacao. `[REDACTED]@` e' permitido.
+          # 1) JWT/sb_secret barram sempre; 2) DSN com senha barra so' se a senha nao for [REDACTED].
+          culpados="$(grep -rIEl 'eyJ[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,}|sb_secret_|sb_publishable_|postgres(ql)?://[^ ]*:[^ @]+@' "$SNAPSHOT_DIR" || true)"
+          reais=""
+          for f in $culpados; do
+            if grep -qE 'eyJ[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,}|sb_secret_|sb_publishable_' "$f" \
+               || grep -E 'postgres(ql)?://[^ ]*:[^ @]+@' "$f" | grep -qvE 'postgres(ql)?://[^ ]*:\[REDACTED\]@'; then
+              reais="$reais $f"
+            fi
+          done
+          if [ -n "$reais" ]; then
             echo "Arquivos com possível segredo (valor mascarado):"
-            printf '%s\n' "$culpados" | while IFS= read -r f; do
-              echo "  $f: $(grep -oEn "$PADRAO" "$f" | head -3 | sed -E 's/(:\s*).*/\1<MASCARADO>/')"
+            for f in $reais; do
+              echo "  $f: $(grep -oEn 'eyJ[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,}|sb_secret_|sb_publishable_|postgres(ql)?://[^ ]*:[^ @]+@' "$f" | head -3 | sed -E 's/(:\s*).*/\1<MASCARADO>/')"
             done
             echo "::error::Possível segredo detectado no snapshot — publicação abortada"
             exit 1
