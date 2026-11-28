@@ -1,0 +1,10 @@
+CREATE OR REPLACE FUNCTION public.get_account_devices()
+ RETURNS TABLE(device_key text, fingerprint text, subscription_id uuid, endpoint text, device_label text, user_agent text, browser text, os text, device_type text, is_trusted boolean, push_active boolean, last_seen_at timestamp with time zone, last_used_at timestamp with time zone, created_at timestamp with time zone, disabled_at timestamp with time zone, disabled_reason text, failure_count integer)
+ LANGUAGE sql
+ STABLE SECURITY DEFINER
+ SET search_path TO 'public'
+AS $function$
+  WITH subs AS (SELECT DISTINCT ON (COALESCE(ps.device_fingerprint, ps.endpoint)) COALESCE(ps.device_fingerprint, ps.endpoint) AS key, ps.device_fingerprint, ps.id, ps.endpoint, ps.device_label, ps.user_agent, ps.last_used_at, ps.created_at, ps.disabled_at, ps.disabled_reason, ps.failure_count FROM public.push_subscriptions ps WHERE ps.user_id = auth.uid() ORDER BY COALESCE(ps.device_fingerprint, ps.endpoint), (ps.disabled_at IS NULL) DESC, ps.last_used_at DESC NULLS LAST, ps.created_at DESC),
+  devs AS (SELECT DISTINCT ON (ud.device_fingerprint) ud.device_fingerprint, ud.user_agent, ud.browser, ud.os, ud.device_type, ud.is_trusted, ud.last_seen_at, ud.created_at, ud.revoked_at, ud.revoked_reason FROM public.user_devices ud WHERE ud.user_id = auth.uid() ORDER BY ud.device_fingerprint, ud.last_seen_at DESC)
+  SELECT COALESCE(s.key, d.device_fingerprint)::text, COALESCE(s.device_fingerprint, d.device_fingerprint)::text, s.id, s.endpoint, s.device_label, COALESCE(s.user_agent, d.user_agent), d.browser, d.os, d.device_type, COALESCE(d.is_trusted, false), (s.id IS NOT NULL AND s.disabled_at IS NULL), d.last_seen_at, s.last_used_at, LEAST(COALESCE(s.created_at, d.created_at), COALESCE(d.created_at, s.created_at)), COALESCE(s.disabled_at, d.revoked_at), COALESCE(s.disabled_reason, d.revoked_reason), COALESCE(s.failure_count, 0) FROM subs s FULL OUTER JOIN devs d ON d.device_fingerprint = s.device_fingerprint ORDER BY 12 DESC NULLS LAST, 13 DESC NULLS LAST;
+$function$

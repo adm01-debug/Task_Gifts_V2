@@ -1,6 +1,6 @@
 # CONTEXTO PARA AGENTES DE IA — ÍNDICE ÚNICO
 
-> Gerado automaticamente por indice.py · 2026-11-28 12:37 UTC · HEAD `de79f20c17` · Não edite à mão.
+> Gerado automaticamente por indice.py · 2026-11-28 12:59 UTC · HEAD `c0f126efe4` · Não edite à mão.
 
 Um sistema, três fontes de verdade, três produtores independentes. **Leia este arquivo e vá direto à fonte certa.** Cada fato tem um dono: se duas fontes discordarem, vale o dono.
 
@@ -8,8 +8,8 @@ Um sistema, três fontes de verdade, três produtores independentes. **Leia este
 
 | Preciso de… | Fonte (dona do fato) | Onde ler | Estado |
 |---|---|---|---|
-| Regras que não podem ser quebradas: RLS por operação, estados e transições, validações, fórmulas, prazos, erros de negócio, testes como especificação, inconsistências código×schema (NÃO VERIFICADO) e regras humanas (`manual/`) | **regras de negócio** | `docs/contexto/regras/07-REGRAS-DE-NEGOCIO.md` | ok · 2 min atrás |
-| Tabelas, colunas, RLS/políticas, funções, triggers, cron, storage, lints — **como está em produção agora** | **banco real** | `docs/contexto/supabase/` (ainda não existe — o produtor não rodou) | ainda não gerado |
+| Regras que não podem ser quebradas: RLS por operação, estados e transições, validações, fórmulas, prazos, erros de negócio, testes como especificação, inconsistências código×schema (NÃO VERIFICADO) e regras humanas (`manual/`) | **regras de negócio** | `docs/contexto/regras/07-REGRAS-DE-NEGOCIO.md` | ok · 3 min atrás |
+| Tabelas, colunas, RLS/políticas, funções, triggers, cron, storage, lints — **como está em produção agora** | **banco real** | `docs/contexto/supabase/README.md` | parcial · 0 min atrás · ⚠️ 2 erro(s) de coleta no manifest (erros); 2 seção(ões) com erro em errors.md |
 | Rotas, telas, módulos, hooks, edge functions, grafo de dependências, testes, scripts, convenções | **código** | `docs/contexto/codigo/INDEX.md` | ok · 2 min atrás |
 
 ## Ordem de leitura antes de qualquer tarefa ou planejamento
@@ -25,6 +25,92 @@ Um sistema, três fontes de verdade, três produtores independentes. **Leia este
 - Pode fazer isso? Qual estado vem depois? Qual o limite? → **regras de negócio** (inclui `manual/`, escrito por humanos, prioridade máxima).
 - Item listado como **NÃO VERIFICADO** ou **inconsistência** em qualquer fonte: confirme na fonte dona antes de assumir.
 - Nada aqui é editado à mão. Para registrar uma regra que só o negócio sabe, escreva em `manual/` da fonte de regras.
+
+<details><summary>Arquivos de <b>banco real</b> (`docs/contexto/supabase/`)</summary>
+
+- `docs/contexto/supabase/CHANGELOG.md`
+- `docs/contexto/supabase/README.md`
+- `docs/contexto/supabase/auth.md`
+- `docs/contexto/supabase/cron-runs.md`
+- `docs/contexto/supabase/cron.md`
+- `docs/contexto/supabase/edge-functions.md`
+- `docs/contexto/supabase/edge-functions/admin-alerts/README.md`
+- `docs/contexto/supabase/edge-functions/ai-coach/README.md`
+- `docs/contexto/supabase/edge-functions/ai-course-builder/README.md`
+- `docs/contexto/supabase/edge-functions/burn-rate-monitor/README.md`
+- `docs/contexto/supabase/edge-functions/churn-prediction/README.md`
+- `docs/contexto/supabase/edge-functions/competency-alerts/README.md`
+- `docs/contexto/supabase/edge-functions/detect-new-device/README.md`
+- `docs/contexto/supabase/edge-functions/dispatch-critical-alert/README.md`
+- `docs/contexto/supabase/edge-functions/error-budget-monitor/README.md`
+- `docs/contexto/supabase/edge-functions/generate-quiz-questions/README.md`
+- `docs/contexto/supabase/edge-functions/migrate-helper/README.md`
+- `docs/contexto/supabase/edge-functions/passkey-auth/README.md`
+- `docs/contexto/supabase/edge-functions/push-device-revoked/README.md`
+- `docs/contexto/supabase/edge-functions/push-outbox-dispatcher/README.md`
+- `docs/contexto/supabase/edge-functions/push-public-key/README.md`
+- `docs/contexto/supabase/edge-functions/reward-approval-review/README.md`
+- `docs/contexto/supabase/edge-functions/security-weekly-digest/README.md`
+- `docs/contexto/supabase/edge-functions/send-campaign-push/README.md`
+- `docs/contexto/supabase/edge-functions/trail-recommendations/README.md`
+- `docs/contexto/supabase/edge-functions/verify-ip/README.md`
+- `docs/contexto/supabase/edge-functions/webhook-dispatcher/README.md`
+- `docs/contexto/supabase/edge-functions/webhook-health-monitor/README.md`
+- `docs/contexto/supabase/edge-functions/webhook-ping/README.md`
+- `docs/contexto/supabase/errors.md`
+- `docs/contexto/supabase/extensions.md`
+- `docs/contexto/supabase/foreign-servers.md`
+- `docs/contexto/supabase/functions.md`
+- `docs/contexto/supabase/grants.md`
+- `docs/contexto/supabase/indexes.md`
+- `docs/contexto/supabase/lints.md`
+- `docs/contexto/supabase/manifest.json`
+- `docs/contexto/supabase/migrations.md`
+- `docs/contexto/supabase/policies.md`
+- `docs/contexto/supabase/project-config.md`
+- `docs/contexto/supabase/queues.md`
+- `docs/contexto/supabase/realtime.md`
+- `docs/contexto/supabase/relationships.md`
+- `docs/contexto/supabase/roles.md`
+- `docs/contexto/supabase/schemas.md`
+- `docs/contexto/supabase/sequences.md`
+- `docs/contexto/supabase/snapshot.json`
+- `docs/contexto/supabase/stats.json`
+- `docs/contexto/supabase/stats.md`
+- `docs/contexto/supabase/storage.md`
+- `docs/contexto/supabase/tables.md`
+- `docs/contexto/supabase/tables/_supabase_internal_triggers.md`
+- `docs/contexto/supabase/tables/internal/dispatch_config.md`
+- `docs/contexto/supabase/tables/public/achievements.md`
+- `docs/contexto/supabase/tables/public/action_plan_items.md`
+- `docs/contexto/supabase/tables/public/action_plan_updates.md`
+- `docs/contexto/supabase/tables/public/action_plans.md`
+- `docs/contexto/supabase/tables/public/activity_comments.md`
+- `docs/contexto/supabase/tables/public/activity_reactions.md`
+- `docs/contexto/supabase/tables/public/ai_coach_messages.md`
+- `docs/contexto/supabase/tables/public/ai_course_jobs.md`
+- `docs/contexto/supabase/tables/public/announcement_reactions.md`
+- `docs/contexto/supabase/tables/public/announcement_reads.md`
+- `docs/contexto/supabase/tables/public/announcements.md`
+- `docs/contexto/supabase/tables/public/api_request_logs.md`
+- `docs/contexto/supabase/tables/public/attendance_records.md`
+- `docs/contexto/supabase/tables/public/attendance_settings.md`
+- `docs/contexto/supabase/tables/public/attendance_streaks.md`
+- `docs/contexto/supabase/tables/public/auction_admin_events.md`
+- `docs/contexto/supabase/tables/public/auction_bids.md`
+- `docs/contexto/supabase/tables/public/auctions.md`
+- `docs/contexto/supabase/tables/public/audit_logs.md`
+- `docs/contexto/supabase/tables/public/avatar_items.md`
+- `docs/contexto/supabase/tables/public/bingo_board_tasks.md`
+- `docs/contexto/supabase/tables/public/bingo_boards.md`
+- `docs/contexto/supabase/tables/public/bingo_cards.md`
+- `docs/contexto/supabase/tables/public/bingo_marks.md`
+- `docs/contexto/supabase/tables/public/bitrix24_sync_mappings.md`
+- `docs/contexto/supabase/tables/public/bitrix24_tokens.md`
+- `docs/contexto/supabase/tables/public/bitrix24_webhook_logs.md`
+- … +215
+
+</details>
 
 <details><summary>Arquivos de <b>código</b> (`docs/contexto/codigo/`)</summary>
 

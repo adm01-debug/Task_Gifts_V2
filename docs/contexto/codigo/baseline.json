@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "de79f20c170e5223a8ed5d68a357470fe182a223",
+  "commit": "c0f126efe440bd92658bc347d8b7d21e99cd4432",
   "branch": "main",
-  "data_commit": "2026-11-28T09:34:40-03:00",
+  "data_commit": "2026-11-28T09:55:56-03:00",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "ultimos_commits": [
+   {
+    "sha": "c0f126e",
+    "data": "2026-11-28",
+    "assunto": "fix(contexto): guard de segredo nao acusa mais a propria redacao (#237)"
+   },
    {
     "sha": "de79f20",
     "data": "2026-11-28",
@@ -126,14 +131,9 @@
     "sha": "076d318",
     "data": "2026-11-27",
     "assunto": "fix(infra): --verify enxerga funcao, nao so' tabela (#213)"
-   },
-   {
-    "sha": "36c9638",
-    "data": "2026-11-27",
-    "assunto": "feat(infra): modo reaplicar no db-migrate (#212)"
    }
   ],
-  "arquivos_mudados_7d": 293,
+  "arquivos_mudados_7d": 292,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "supabase/functions/_shared",
@@ -180,6 +180,10 @@
     "mudancas": 11
    },
    {
+    "pasta": ".github/workflows/contexto.yml",
+    "mudancas": 8
+   },
+   {
     "pasta": "docs/estado/03-hooks-services-lib.md",
     "mudancas": 8
    },
@@ -190,10 +194,6 @@
    {
     "pasta": "src/App.tsx",
     "mudancas": 8
-   },
-   {
-    "pasta": ".github/workflows/contexto.yml",
-    "mudancas": 7
    }
   ],
   "arquivos_mais_mudados_90d": [
@@ -234,6 +234,10 @@
     "mudancas": 11
    },
    {
+    "arquivo": ".github/workflows/contexto.yml",
+    "mudancas": 8
+   },
+   {
     "arquivo": "docs/estado/03-hooks-services-lib.md",
     "mudancas": 8
    },
@@ -244,10 +248,6 @@
    {
     "arquivo": "src/App.tsx",
     "mudancas": 8
-   },
-   {
-    "arquivo": ".github/workflows/contexto.yml",
-    "mudancas": 7
    },
    {
     "arquivo": "scripts/db-audit/apply-migrations.mjs",
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 202
+    "commits": 203
    },
    {
     "autor": "dependabot[bot]",

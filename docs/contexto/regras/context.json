@@ -1,9 +1,9 @@
 {
  "meta": {
-  "sha": "de79f20c170e5223a8ed5d68a357470fe182a223",
+  "sha": "c0f126efe440bd92658bc347d8b7d21e99cd4432",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
-  "generated_at": "2026-11-28 12:35 UTC",
+  "generated_at": "2026-11-28 12:56 UTC",
   "files_total": 1654,
   "code_files": 1546,
   "code_lines": 286956
@@ -166150,10 +166150,19 @@
   }
  },
  "git": {
-  "sha": "de79f20c170e5223a8ed5d68a357470fe182a223",
+  "sha": "c0f126efe440bd92658bc347d8b7d21e99cd4432",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "commits": [
+   {
+    "sha": "c0f126e",
+    "date": "2026-11-28",
+    "author": "adm01-debug",
+    "subject": "fix(contexto): guard de segredo nao acusa mais a propria redacao (#237)",
+    "files": [
+     ".github/workflows/contexto.yml"
+    ]
+   },
    {
     "sha": "de79f20",
     "date": "2026-11-28",
@@ -166421,33 +166430,24 @@
     "files": [
      "scripts/db-audit/consultas.sql"
     ]
-   },
-   {
-    "sha": "0b9d3b4",
-    "date": "2026-11-27",
-    "author": "adm01-debug",
-    "subject": "fix(db-audit): notifications usa read, nao read_at (#207)",
-    "files": [
-     "scripts/db-audit/consultas.sql"
-    ]
    }
   ],
   "hot_files": [
    [
     "scripts/db-audit/consultas.sql",
-    18
+    17
    ],
    [
     "supabase/migrations/20261231100000_vigia_dos_jobs_do_cron.sql",
     5
    ],
    [
-    "scripts/supabase_snapshot/snapshot.py",
+    ".github/workflows/contexto.yml",
     4
    ],
    [
-    ".github/workflows/contexto.yml",
-    3
+    "scripts/supabase_snapshot/snapshot.py",
+    4
    ],
    [
     "scripts/db-audit/apply-migrations.mjs",

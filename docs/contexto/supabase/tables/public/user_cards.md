@@ -1,0 +1,80 @@
+# public.user_cards
+
+| propriedade | valor |
+|---|---|
+| tipo | table |
+| owner | postgres |
+| RLS habilitado | sim |
+| RLS forçado (owner) | não |
+| policies | 2 |
+| realtime (publication) | não |
+| replica identity | default |
+| vem de extensão | não |
+
+
+## Colunas
+
+| # | coluna | tipo | nullable | default | identity/generated | comentário |
+|---|---|---|---|---|---|---|
+| 1 | `id` | `uuid` | não | `gen_random_uuid()` |  |  |
+| 2 | `user_id` | `uuid` | não |  |  |  |
+| 3 | `card_id` | `uuid` | não |  |  |  |
+| 4 | `quantity` | `integer` | não | `1` |  |  |
+| 5 | `first_obtained_at` | `timestamp with time zone` | não | `now()` |  |  |
+| 6 | `created_at` | `timestamp with time zone` | não | `now()` |  |  |
+| 7 | `updated_at` | `timestamp with time zone` | não | `now()` |  |  |
+
+
+## Constraints
+
+| nome | tipo | definição | on delete | on update | validada |
+|---|---|---|---|---|---|
+| user_cards_card_id_fkey | FOREIGN KEY | `FOREIGN KEY (card_id) REFERENCES card_definitions(id) ON DELETE CASCADE` | CASCADE | NO ACTION | sim |
+| user_cards_pkey | PRIMARY KEY | `PRIMARY KEY (id)` |  |  | sim |
+| user_cards_quantity_check | CHECK | `CHECK (quantity >= 0)` |  |  | sim |
+| user_cards_unique | UNIQUE | `UNIQUE (user_id, card_id)` |  |  | sim |
+| user_cards_user_id_fkey | FOREIGN KEY | `FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE` | CASCADE | NO ACTION | sim |
+
+
+## Índices
+
+| nome | método | colunas | único | válido | predicado | definição |
+|---|---|---|---|---|---|---|
+| idx_user_cards_user | btree | {user_id,card_id} | não | sim |  | `CREATE INDEX idx_user_cards_user ON public.user_cards USING btree (user_id, card_id)` |
+| user_cards_pkey | btree | {id} | sim | sim |  | `CREATE UNIQUE INDEX user_cards_pkey ON public.user_cards USING btree (id)` |
+| user_cards_unique | btree | {user_id,card_id} | sim | sim |  | `CREATE UNIQUE INDEX user_cards_unique ON public.user_cards USING btree (user_id, card_id)` |
+
+
+## Policies (RLS)
+
+### `user_cards_admin_select`
+
+| campo | valor |
+|---|---|
+| comando | SELECT |
+| tipo | PERMISSIVE |
+| roles | {authenticated} |
+| USING | `has_role(auth.uid(), 'admin'::app_role)` |
+| WITH CHECK |  |
+
+### `user_cards_user_all`
+
+| campo | valor |
+|---|---|
+| comando | ALL |
+| tipo | PERMISSIVE |
+| roles | {authenticated} |
+| USING | `(user_id = auth.uid())` |
+| WITH CHECK | `(user_id = auth.uid())` |
+
+
+## Triggers
+
+| nome | timing | eventos | nível | status | função |
+|---|---|---|---|---|---|
+| user_cards_updated_at | BEFORE | UPDATE | ROW | enabled | public.update_updated_at_column |
+
+
+## Grants
+
+_nenhum_
