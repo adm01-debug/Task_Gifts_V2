@@ -340,7 +340,7 @@ _nenhum_
       "connected_cluster": 0,
       "db_connected": false,
       "healthy": true,
-      "node": "realtime@2600:1f18:67fc:ac02:6499:35bc:2ca0:27ab",
+      "node": "realtime@2600:1f18:67fc:ac00:8565:4c83:279a:2a81",
       "region": "us-east-1",
       "replication_connected": false
     },

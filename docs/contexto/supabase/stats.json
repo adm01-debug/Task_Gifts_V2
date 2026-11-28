@@ -34,7 +34,7 @@
           "connected_cluster": 0,
           "db_connected": false,
           "healthy": true,
-          "node": "realtime@2600:1f18:67fc:ac02:6499:35bc:2ca0:27ab",
+          "node": "realtime@2600:1f18:67fc:ac00:8565:4c83:279a:2a81",
           "region": "us-east-1",
           "replication_connected": false
         },
@@ -10137,7 +10137,7 @@
         "last_autovacuum": null,
         "name": "api_request_logs",
         "schema": "public",
-        "seq_scan": 6578,
+        "seq_scan": 6582,
         "total_bytes": 24576
       },
       {
@@ -10761,7 +10761,7 @@
         "last_autovacuum": null,
         "name": "webhook_delivery_logs",
         "schema": "public",
-        "seq_scan": 6788,
+        "seq_scan": 6792,
         "total_bytes": 24576
       },
       {
