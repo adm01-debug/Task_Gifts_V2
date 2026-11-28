@@ -59,11 +59,11 @@
  "commits": {
   "convencao": "conventional commits (observado)",
   "exemplos": [
+   "fix(contexto): guard de segredo diz o arquivo e grants nao estoura timeout (#235)",
    "feat(auditoria): estado de entrega dos avisos do vigia (#234)",
    "feat(contexto): mapa do banco sem depender de SUPABASE_DB_URL (#230)",
    "feat(auditoria): avisos do vigia no outbox certo (#233)",
-   "feat(auditoria): preferencia dos admins para o aviso do vigia (#232)",
-   "feat(auditoria): dispara o vigia de verdade e mostra o resultado (#231)"
+   "feat(auditoria): preferencia dos admins para o aviso do vigia (#232)"
   ]
  },
  "pr_template": ".github/PULL_REQUEST_TEMPLATE.md",

@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "6f2c9d6fd0aa1c9996d4d957c207e000fedbb1d0",
+  "commit": "bc7214ebf0e8a3e8e2a3e8218168012ce3440473",
   "branch": "main",
-  "data_commit": "2026-11-28T09:08:44-03:00",
+  "data_commit": "2026-11-28T09:21:08-03:00",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "ultimos_commits": [
+   {
+    "sha": "bc7214e",
+    "data": "2026-11-28",
+    "assunto": "fix(contexto): guard de segredo diz o arquivo e grants nao estoura timeout (#235)"
+   },
    {
     "sha": "6f2c9d6",
     "data": "2026-11-28",
@@ -126,11 +131,6 @@
     "sha": "d28797c",
     "data": "2026-11-27",
     "assunto": "fix(cron): vigia sem referencia ambigua de coluna (#211)"
-   },
-   {
-    "sha": "17b4eaf",
-    "data": "2026-11-27",
-    "assunto": "chore(db-audit): prova do vigia dos jobs do cron em producao (#210)"
    }
   ],
   "arquivos_mudados_7d": 293,
@@ -192,7 +192,7 @@
     "mudancas": 8
    },
    {
-    "pasta": "scripts/db-audit/apply-migrations.mjs",
+    "pasta": ".github/workflows/contexto.yml",
     "mudancas": 7
    }
   ],
@@ -246,6 +246,10 @@
     "mudancas": 8
    },
    {
+    "arquivo": ".github/workflows/contexto.yml",
+    "mudancas": 7
+   },
+   {
     "arquivo": "scripts/db-audit/apply-migrations.mjs",
     "mudancas": 7
    },
@@ -256,10 +260,6 @@
    {
     "arquivo": "supabase/config.toml",
     "mudancas": 7
-   },
-   {
-    "arquivo": ".github/workflows/contexto.yml",
-    "mudancas": 6
    },
    {
     "arquivo": "scripts/db-audit/check-migration-drift.mjs",
@@ -290,18 +290,18 @@
     "mudancas": 5
    },
    {
-    "arquivo": "supabase/functions/_shared/contracts/_fixtures/responses.ts",
+    "arquivo": "scripts/supabase_snapshot/snapshot.py",
     "mudancas": 5
    },
    {
-    "arquivo": "supabase/functions/_shared/contracts/index.ts",
+    "arquivo": "supabase/functions/_shared/contracts/_fixtures/responses.ts",
     "mudancas": 5
    }
   ],
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 200
+    "commits": 201
    },
    {
     "autor": "dependabot[bot]",

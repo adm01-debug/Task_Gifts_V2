@@ -1,7 +1,7 @@
 # Contexto do projeto para agentes de IA
 
 GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.
-Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `6f2c9d6fd0aa1c9996d4d957c207e000fedbb1d0` (2026-11-28T09:08:44-03:00).
+Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `bc7214ebf0e8a3e8e2a3e8218168012ce3440473` (2026-11-28T09:21:08-03:00).
 
 ## Como usar (leia antes de planejar ou executar qualquer tarefa)
 1. **Tela/rota/menu** → `rotas.json` (url/vista/menu → arquivo → hooks → tabelas → edges; `rotas_http_backend` para APIs) e `modulos.json` (módulo inteiro + dependências entre módulos).
@@ -296,7 +296,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - possiveis_segredos_no_codigo: 0
 
 ## Grafo de código (graphify)
-- 11260 nós · 30330 arestas · 877 comunidades · grafo do commit `6f2c9d6f`
+- 11260 nós · 30330 arestas · 877 comunidades · grafo do commit `bc7214eb`
 - comunidades maiores: lucide-react (345), react (250), badge.tsx (228), Skeleton (142), cn (133), profilesService.ts (110), App.tsx (100), contracts/index.ts (98), mobile/index.ts (91), useToast (82), DashboardRightColumn.tsx (80), gerar.mjs (79)
 - símbolos mais chamados: cn() (src/lib/utils.ts), useAuth() (src/hooks/useAuth.tsx), useIsMobile() (src/hooks/use-mobile.tsx), q() (scripts/supabase_snapshot/snapshot.py), useDepartments() (src/hooks/useDepartments.ts), useRBAC() (src/hooks/useRBAC.ts), useProfiles() (src/hooks/useProfiles.ts), useToast() (src/hooks/use-toast.ts), useSEO() (src/hooks/useSEO.ts), useSoundEffects() (src/hooks/useSoundEffects.tsx), .collect() (scripts/supabase_snapshot/test_snapshot.py), excluded_sql() (scripts/supabase_snapshot/snapshot.py)
 - consulta local: `graphify query "<pergunta>"`, `graphify path "<A>" "<B>"`, `graphify explain "<X>"`
@@ -314,9 +314,9 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - docs/estado/03-hooks-services-lib.md (8)
 - scripts/db-audit/consultar-sql.mjs (8)
 - src/App.tsx (8)
+- .github/workflows/contexto.yml (7)
 - scripts/db-audit/apply-migrations.mjs (7)
 - src/pages/Profile.tsx (7)
-- supabase/config.toml (7)
 
 ## Workflows
 - `automation-local.yml` — Automação local (pull_request, push, workflow_dispatch)
@@ -384,6 +384,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 
 
 ## Últimos commits
+- 2026-11-28 `bc7214e` fix(contexto): guard de segredo diz o arquivo e grants nao estoura timeout (#235)
 - 2026-11-28 `6f2c9d6` feat(auditoria): estado de entrega dos avisos do vigia (#234)
 - 2026-11-28 `485698a` feat(contexto): mapa do banco sem depender de SUPABASE_DB_URL (#230)
 - 2026-11-27 `7917a72` feat(auditoria): avisos do vigia no outbox certo (#233)
@@ -398,7 +399,6 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - 2026-11-27 `3001a86` feat(auditoria): prova se o ROLLBACK do ensaio e' respeitado (#223)
 - 2026-11-27 `09b23f1` fix(cron): vigia contra o schema real do pg_cron (#222)
 - 2026-11-27 `7f78676` feat(auditoria): colunas reais de cron.job e job_run_details (#221)
-- 2026-11-27 `85f9abf` fix(cron): ON CONFLICT por constraint no marco zero do vigia (#220)
 
 ## Arquivos deste diretório
 - `docs/contexto/codigo/rotas.json`

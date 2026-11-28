@@ -1,9 +1,9 @@
 {
  "meta": {
-  "sha": "6f2c9d6fd0aa1c9996d4d957c207e000fedbb1d0",
+  "sha": "bc7214ebf0e8a3e8e2a3e8218168012ce3440473",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
-  "generated_at": "2026-11-28 12:09 UTC",
+  "generated_at": "2026-11-28 12:21 UTC",
   "files_total": 1654,
   "code_files": 1546,
   "code_lines": 286953
@@ -129555,7 +129555,7 @@
     "FROM cron.job_run_details WHERE start_time > now() - interval '7 days') t",
     "res = subprocess.run(cmd, capture_output=True, text=True, timeout=600, check=False)",
     "with psycopg.connect(DB_URL, connect_timeout=30, application_name=\"supabase-snapshot\",",
-    "with urllib.request.urlopen(req, timeout=120) as resp:",
+    "with urllib.request.urlopen(req, timeout=300) as resp:",
     "with urllib.request.urlopen(req, timeout=60) as resp:"
    ],
    "uses_service_role": true
@@ -166150,10 +166150,20 @@
   }
  },
  "git": {
-  "sha": "6f2c9d6fd0aa1c9996d4d957c207e000fedbb1d0",
+  "sha": "bc7214ebf0e8a3e8e2a3e8218168012ce3440473",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "commits": [
+   {
+    "sha": "bc7214e",
+    "date": "2026-11-28",
+    "author": "adm01-debug",
+    "subject": "fix(contexto): guard de segredo diz o arquivo e grants nao estoura timeout (#235)",
+    "files": [
+     ".github/workflows/contexto.yml",
+     "scripts/supabase_snapshot/snapshot.py"
+    ]
+   },
    {
     "sha": "6f2c9d6",
     "date": "2026-11-28",
@@ -166420,37 +166430,28 @@
     "files": [
      "scripts/db-audit/consultas.sql"
     ]
-   },
-   {
-    "sha": "f698d27",
-    "date": "2026-11-27",
-    "author": "adm01-debug",
-    "subject": "chore(db-audit): separa os filtros que zeram o lembrete semanal (#205)",
-    "files": [
-     "scripts/db-audit/consultas.sql"
-    ]
    }
   ],
   "hot_files": [
    [
     "scripts/db-audit/consultas.sql",
-    20
+    19
    ],
    [
     "supabase/migrations/20261231100000_vigia_dos_jobs_do_cron.sql",
     5
    ],
    [
-    "scripts/db-audit/apply-migrations.mjs",
+    ".github/workflows/contexto.yml",
     3
    ],
    [
-    ".github/workflows/contexto.yml",
-    2
+    "scripts/supabase_snapshot/snapshot.py",
+    3
    ],
    [
-    "scripts/supabase_snapshot/snapshot.py",
-    2
+    "scripts/db-audit/apply-migrations.mjs",
+    3
    ],
    [
     "scripts/db-audit/consultar-sql.mjs",
