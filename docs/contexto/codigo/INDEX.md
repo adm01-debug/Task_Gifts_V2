@@ -1,7 +1,7 @@
 # Contexto do projeto para agentes de IA
 
 GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.
-Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `93847fb3a78a90c6b516198ac6337e1a5a0de63c` (2026-11-28T10:22:11-03:00).
+Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `7aae1bcdfaee6532aaf55bd2504436b378995e12` (2026-11-28T10:46:22-03:00).
 
 ## Como usar (leia antes de planejar ou executar qualquer tarefa)
 1. **Tela/rota/menu** → `rotas.json` (url/vista/menu → arquivo → hooks → tabelas → edges; `rotas_http_backend` para APIs) e `modulos.json` (módulo inteiro + dependências entre módulos).
@@ -36,7 +36,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 |---|---|
 | arquivos_total | 1643 |
 | arquivos_codigo | 1217 |
-| linhas_codigo | 241987 |
+| linhas_codigo | 241927 |
 | rotas | 88 |
 | rotas_http_backend | 0 |
 | vistas_por_id | 0 |
@@ -296,9 +296,9 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - possiveis_segredos_no_codigo: 0
 
 ## Grafo de código (graphify)
-- 11264 nós · 30343 arestas · 869 comunidades · grafo do commit `93847fb3`
-- comunidades maiores: lucide-react (284), react (261), App.tsx (197), badge.tsx (163), client.ts (156), skeleton.tsx (143), cn (136), mobile/index.ts (104), StatsGrid.tsx (93), useAuth (89), contracts/index.ts (89), useToast (85)
-- símbolos mais chamados: cn() (src/lib/utils.ts), useAuth() (src/hooks/useAuth.tsx), useIsMobile() (src/hooks/use-mobile.tsx), q() (scripts/supabase_snapshot/snapshot.py), useDepartments() (src/hooks/useDepartments.ts), useRBAC() (src/hooks/useRBAC.ts), useProfiles() (src/hooks/useProfiles.ts), useToast() (src/hooks/use-toast.ts), useSEO() (src/hooks/useSEO.ts), useSoundEffects() (src/hooks/useSoundEffects.tsx), excluded_sql() (scripts/supabase_snapshot/snapshot.py), .collect() (scripts/supabase_snapshot/test_snapshot.py)
+- 11260 nós · 30334 arestas · 886 comunidades · grafo do commit `7aae1bcd`
+- comunidades maiores: lucide-react (388), react (277), App.tsx (244), skeleton.tsx (153), cn (144), profilesService.ts (108), ManagerDashboard.tsx (103), contracts/index.ts (95), mobile/index.ts (92), useToast (91), useAuth (86), DashboardRightColumn.tsx (80)
+- símbolos mais chamados: cn() (src/lib/utils.ts), useAuth() (src/hooks/useAuth.tsx), useIsMobile() (src/hooks/use-mobile.tsx), q() (scripts/supabase_snapshot/snapshot.py), useDepartments() (src/hooks/useDepartments.ts), useRBAC() (src/hooks/useRBAC.ts), useProfiles() (src/hooks/useProfiles.ts), useToast() (src/hooks/use-toast.ts), useSEO() (src/hooks/useSEO.ts), useSoundEffects() (src/hooks/useSoundEffects.tsx), .collect() (scripts/supabase_snapshot/test_snapshot.py), excluded_sql() (scripts/supabase_snapshot/snapshot.py)
 - consulta local: `graphify query "<pergunta>"`, `graphify path "<A>" "<B>"`, `graphify explain "<X>"`
 
 ## Hotspots (arquivos mais alterados, 90 dias)
@@ -314,9 +314,9 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - .github/workflows/contexto.yml (8)
 - docs/estado/03-hooks-services-lib.md (8)
 - scripts/db-audit/consultar-sql.mjs (8)
+- scripts/supabase_snapshot/snapshot.py (8)
 - src/App.tsx (8)
 - scripts/db-audit/apply-migrations.mjs (7)
-- scripts/supabase_snapshot/snapshot.py (7)
 
 ## Workflows
 - `automation-local.yml` — Automação local (pull_request, push, workflow_dispatch)
@@ -384,6 +384,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 
 
 ## Últimos commits
+- 2026-11-28 `7aae1bc` Revert "chore: diagnostico temporario (reverter)" (#238)
 - 2026-11-28 `93847fb` chore: diagnostico temporario (reverter)
 - 2026-11-28 `c0f126e` fix(contexto): guard de segredo nao acusa mais a propria redacao (#237)
 - 2026-11-28 `de79f20` fix(contexto): snapshot da Management API passa pelo redact antes de serializar (#236)
@@ -398,7 +399,6 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - 2026-11-27 `9d46d7b` fix(auditoria): privilegio por OID, sem palavra bloqueada (#227)
 - 2026-11-27 `d2f6fd4` feat(auditoria): mostra quem e' o dono do vigia e se ele pode gravar (#226)
 - 2026-11-27 `4c6f12a` fix(auditoria): prova do vigia cabe numa unica instrucao (#225)
-- 2026-11-27 `93630c6` fix(auditoria): ensaio aceita varios SELECTs, sem regex que trava (#224)
 
 ## Arquivos deste diretório
 - `docs/contexto/codigo/rotas.json`

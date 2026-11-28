@@ -43,9 +43,9 @@
 
 | início (UTC) | status | duração (s) | mensagem |
 |---|---|---|---|
+| 2026-11-28 13:30:00 | succeeded | 0.09 | 0 rows |
 | 2026-11-28 12:30:00 | succeeded | 0.06 | 0 rows |
 | 2026-11-28 11:30:00 | succeeded | 0.06 | 0 rows |
-| 2026-11-28 10:30:00 | succeeded | 0.07 | 0 rows |
 
 
 ## 6 · check-overdue-postmortems
@@ -86,45 +86,45 @@
 
 | início (UTC) | status | duração (s) | mensagem |
 |---|---|---|---|
-| 2026-11-28 13:25:00 | succeeded | 0.15 | REFRESH MATERIALIZED VIEW |
-| 2026-11-28 13:20:00 | succeeded | 0.07 | REFRESH MATERIALIZED VIEW |
-| 2026-11-28 13:15:00 | succeeded | 0.17 | REFRESH MATERIALIZED VIEW |
+| 2026-11-28 13:45:01 | succeeded | 0.28 | REFRESH MATERIALIZED VIEW |
+| 2026-11-28 13:40:00 | succeeded | 0.07 | REFRESH MATERIALIZED VIEW |
+| 2026-11-28 13:35:00 | succeeded | 0.19 | REFRESH MATERIALIZED VIEW |
 
 
 ## 13 · auto-lock-prediction-markets
 
 | início (UTC) | status | duração (s) | mensagem |
 |---|---|---|---|
-| 2026-11-28 13:25:00 | succeeded | 0.02 | 1 row |
-| 2026-11-28 13:20:00 | succeeded | 0.01 | 1 row |
-| 2026-11-28 13:15:00 | succeeded | 0.05 | 1 row |
+| 2026-11-28 13:45:01 | succeeded | 0.06 | 1 row |
+| 2026-11-28 13:40:00 | succeeded | 0.01 | 1 row |
+| 2026-11-28 13:35:00 | succeeded | 0.03 | 1 row |
 
 
 ## 14 · close-expired-auctions
 
 | início (UTC) | status | duração (s) | mensagem |
 |---|---|---|---|
-| 2026-11-28 13:25:00 | succeeded | 0.03 | 1 row |
-| 2026-11-28 13:20:00 | succeeded | 0.02 | 1 row |
-| 2026-11-28 13:15:00 | succeeded | 0.01 | 1 row |
+| 2026-11-28 13:45:01 | succeeded | 0.05 | 1 row |
+| 2026-11-28 13:40:00 | succeeded | 0.01 | 1 row |
+| 2026-11-28 13:35:00 | succeeded | 0.04 | 1 row |
 
 
 ## 15 · push-outbox-health-snapshot
 
 | início (UTC) | status | duração (s) | mensagem |
 |---|---|---|---|
+| 2026-11-28 13:45:01 | succeeded | 0.11 | 1 row |
+| 2026-11-28 13:30:00 | succeeded | 0.06 | 1 row |
 | 2026-11-28 13:15:00 | succeeded | 0.05 | 1 row |
-| 2026-11-28 13:00:00 | succeeded | 0.06 | 1 row |
-| 2026-11-28 12:45:00 | succeeded | 0.08 | 1 row |
 
 
 ## 16 · check-prediction-markets-health
 
 | início (UTC) | status | duração (s) | mensagem |
 |---|---|---|---|
+| 2026-11-28 13:45:01 | succeeded | 0.05 | 1 row |
+| 2026-11-28 13:30:00 | succeeded | 0.03 | 1 row |
 | 2026-11-28 13:15:00 | succeeded | 0.04 | 1 row |
-| 2026-11-28 13:00:00 | succeeded | 0.07 | 1 row |
-| 2026-11-28 12:45:00 | succeeded | 0.03 | 1 row |
 
 
 ## 17 · lucky-wheel-payout-snapshot
@@ -231,18 +231,18 @@ _nenhum_
 
 | início (UTC) | status | duração (s) | mensagem |
 |---|---|---|---|
-| 2026-11-28 13:27:00 | succeeded | 0.01 | 1 row |
-| 2026-11-28 13:26:00 | succeeded | 0.02 | 1 row |
-| 2026-11-28 13:25:00 | succeeded | 0.02 | 1 row |
+| 2026-11-28 13:49:00 | succeeded | 0.03 | 1 row |
+| 2026-11-28 13:48:00 | succeeded | 0.02 | 1 row |
+| 2026-11-28 13:47:00 | succeeded | 0.02 | 1 row |
 
 
 ## 31 · burn-rate-monitor-5min
 
 | início (UTC) | status | duração (s) | mensagem |
 |---|---|---|---|
-| 2026-11-28 13:25:00 | succeeded | 0.03 | 1 row |
-| 2026-11-28 13:20:00 | succeeded | 0.01 | 1 row |
-| 2026-11-28 13:15:00 | succeeded | 0.01 | 1 row |
+| 2026-11-28 13:45:01 | succeeded | 0.07 | 1 row |
+| 2026-11-28 13:40:00 | succeeded | 0.02 | 1 row |
+| 2026-11-28 13:35:00 | succeeded | 0.05 | 1 row |
 
 
 ## 32 · error-budget-monitor-daily
@@ -265,18 +265,18 @@ _nenhum_
 
 | início (UTC) | status | duração (s) | mensagem |
 |---|---|---|---|
+| 2026-11-28 13:45:01 | succeeded | 0.08 | 1 row |
+| 2026-11-28 13:30:00 | succeeded | 0.02 | 1 row |
 | 2026-11-28 13:15:00 | succeeded | 0.02 | 1 row |
-| 2026-11-28 13:00:00 | succeeded | 0.02 | 1 row |
-| 2026-11-28 12:45:00 | succeeded | 0.05 | 1 row |
 
 
 ## 35 · expire-climate-surveys
 
 | início (UTC) | status | duração (s) | mensagem |
 |---|---|---|---|
+| 2026-11-28 13:45:01 | succeeded | 0.06 | 1 row |
+| 2026-11-28 13:30:00 | succeeded | 0.03 | 1 row |
 | 2026-11-28 13:15:00 | succeeded | 0.02 | 1 row |
-| 2026-11-28 13:00:00 | succeeded | 0.02 | 1 row |
-| 2026-11-28 12:45:00 | succeeded | 0.07 | 1 row |
 
 
 ## 36 · climate-survey-reminders

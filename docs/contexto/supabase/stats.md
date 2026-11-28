@@ -17,8 +17,8 @@ Valores aproximados de propósito, para não gerar commits a cada coleta. Fora d
 |---|---|---|---|---|---|---|---|---|
 | public.login_attempts | ~400 | 376.0 KB | 120.0 KB | 224.0 KB | 1 | ~490 | ~4.2k |  |
 | public.push_outbox_health_snapshots | ~1.4k | 344.0 KB | 152.0 KB | 152.0 KB | 0 | ~40 | ~2.7k | 2026-11-26 |
-| public.push_outbox | ~80 | 248.0 KB | 104.0 KB | 104.0 KB | ~20 | ~14k | ~51.9k | 2026-11-27 |
-| public.notifications | ~30 | 184.0 KB | 32.0 KB | 120.0 KB | ~20 | ~670 | ~760 |  |
+| public.push_outbox | ~80 | 248.0 KB | 104.0 KB | 104.0 KB | ~20 | ~14.1k | ~52.2k | 2026-11-27 |
+| public.notifications | ~30 | 184.0 KB | 32.0 KB | 120.0 KB | ~20 | ~670 | ~770 |  |
 | public.profiles | 6 | 184.0 KB | 8.0 KB | 168.0 KB | ~50 | ~36.8k | ~40 |  |
 | public.security_alerts | 0 | 184.0 KB | 8.0 KB | 168.0 KB | ~10 | ~7.2k | 0 |  |
 | public.sales_campaigns | 5 | 128.0 KB | 8.0 KB | 112.0 KB | 6 | ~400 | 0 |  |
@@ -105,7 +105,7 @@ Valores aproximados de propósito, para não gerar commits a cada coleta. Fora d
 | public.lucky_wheel_prizes | ~10 | 48.0 KB | 8.0 KB | 32.0 KB | 0 | ~110 | ~40 |  |
 | public.memory_pairs | ~20 | 48.0 KB | 8.0 KB | 32.0 KB | 0 | 6 | 3 |  |
 | public.nr1_risk_categories | 8 | 48.0 KB | 8.0 KB | 32.0 KB | 0 | ~30 | 9 |  |
-| public.onboarding_progress | 3 | 48.0 KB | 8.0 KB | 32.0 KB | 0 | ~370 | 1 |  |
+| public.onboarding_progress | 3 | 48.0 KB | 8.0 KB | 32.0 KB | 0 | ~380 | 1 |  |
 | public.opinions | 0 | 48.0 KB | 0 B | 40.0 KB | 0 | ~10 | 1 |  |
 | public.postmortems | 0 | 48.0 KB | 0 B | 40.0 KB | 0 | ~40 | 0 |  |
 | public.pulse_responses | ~10 | 48.0 KB | 8.0 KB | 32.0 KB | 0 | ~80 | 0 |  |
@@ -125,14 +125,14 @@ Valores aproximados de propósito, para não gerar commits a cada coleta. Fora d
 | public.development_plan_actions | 0 | 40.0 KB | 0 B | 32.0 KB | 0 | ~20 | 0 |  |
 | public.engagement_action_playbooks | 0 | 40.0 KB | 0 B | 32.0 KB | 0 | 8 | 1 |  |
 | public.enps_responses | 0 | 40.0 KB | 0 B | 32.0 KB | 0 | ~30 | 0 |  |
-| public.enps_surveys | 0 | 40.0 KB | 0 B | 32.0 KB | 0 | ~380 | 0 |  |
+| public.enps_surveys | 0 | 40.0 KB | 0 B | 32.0 KB | 0 | ~390 | 0 |  |
 | public.entity_versions | 0 | 40.0 KB | 0 B | 32.0 KB | 0 | ~30 | 0 |  |
 | public.external_tasks | 0 | 40.0 KB | 0 B | 32.0 KB | 0 | 8 | 0 |  |
 | public.geo_settings | 1 | 40.0 KB | 8.0 KB | 32.0 KB | 0 | ~30 | 0 |  |
-| public.ip_whitelist | 0 | 40.0 KB | 0 B | 32.0 KB | 0 | ~1.2k | 0 |  |
+| public.ip_whitelist | 0 | 40.0 KB | 0 B | 32.0 KB | 0 | ~1.3k | 0 |  |
 | public.lucky_wheel_whatif_snapshots | 0 | 40.0 KB | 0 B | 32.0 KB | 0 | ~30 | 0 |  |
 | public.nine_box_evaluations | 0 | 40.0 KB | 0 B | 32.0 KB | 0 | ~60 | 0 |  |
-| public.org_members | 0 | 40.0 KB | 0 B | 32.0 KB | 0 | ~570 | 1 |  |
+| public.org_members | 0 | 40.0 KB | 0 B | 32.0 KB | 0 | ~580 | 1 |  |
 | public.postmortem_actions | 0 | 40.0 KB | 0 B | 32.0 KB | 0 | ~150 | 0 |  |
 | public.push_notification_logs | 0 | 40.0 KB | 0 B | 32.0 KB | 0 | ~20 | 0 |  |
 | public.runbook_executions | 0 | 40.0 KB | 0 B | 32.0 KB | 0 | ~40 | 0 |  |
@@ -186,7 +186,7 @@ Valores aproximados de propósito, para não gerar commits a cada coleta. Fora d
 | public.webauthn_challenges | 0 | 32.0 KB | 0 B | 24.0 KB | 0 | ~2.9k | 0 |  |
 | public.webauthn_credentials | 0 | 32.0 KB | 0 B | 24.0 KB | 0 | ~10 | ~20 |  |
 | public.webhook_subscriptions | 0 | 32.0 KB | 0 B | 24.0 KB | 0 | ~590 | 0 |  |
-| public.weekly_challenges | 5 | 32.0 KB | 8.0 KB | 16.0 KB | 1 | ~810 | 0 |  |
+| public.weekly_challenges | 5 | 32.0 KB | 8.0 KB | 16.0 KB | 1 | ~820 | 0 |  |
 | public.action_plan_items | 0 | 24.0 KB | 0 B | 16.0 KB | 0 | 8 | 0 |  |
 | public.action_plan_updates | 0 | 24.0 KB | 0 B | 16.0 KB | 0 | 8 | 0 |  |
 | public.activity_reactions | 0 | 24.0 KB | 0 B | 16.0 KB | 0 | ~40 | 0 |  |
@@ -197,7 +197,7 @@ Valores aproximados de propósito, para não gerar commits a cada coleta. Fora d
 | public.bitrix24_webhook_logs | 0 | 24.0 KB | 0 B | 16.0 KB | 0 | ~10 | 0 |  |
 | public.campaign_result_imports | 0 | 24.0 KB | 0 B | 16.0 KB | 0 | ~30 | 1 |  |
 | public.campaign_team_split_batches | 0 | 24.0 KB | 0 B | 16.0 KB | 0 | ~50 | 2 |  |
-| public.celebrations | 0 | 24.0 KB | 0 B | 16.0 KB | 0 | ~850 | 0 |  |
+| public.celebrations | 0 | 24.0 KB | 0 B | 16.0 KB | 0 | ~860 | 0 |  |
 | public.checkins | 0 | 24.0 KB | 0 B | 16.0 KB | 0 | ~40 | 0 |  |
 | public.competencies | 0 | 24.0 KB | 0 B | 16.0 KB | 0 | ~20 | 0 |  |
 | public.custom_badges | 0 | 24.0 KB | 0 B | 16.0 KB | 0 | 6 | 0 |  |
@@ -212,7 +212,7 @@ Valores aproximados de propósito, para não gerar commits a cada coleta. Fora d
 | public.lucky_wheel_settings_audit | 0 | 24.0 KB | 0 B | 16.0 KB | 0 | ~20 | 0 |  |
 | public.mentorship_mission_progress | 0 | 24.0 KB | 0 B | 24.0 KB | 0 | 8 | 0 |  |
 | public.mentorship_pairs | 0 | 24.0 KB | 0 B | 16.0 KB | 0 | ~30 | 0 |  |
-| public.mood_entries | 0 | 24.0 KB | 0 B | 16.0 KB | 0 | ~780 | 0 |  |
+| public.mood_entries | 0 | 24.0 KB | 0 B | 16.0 KB | 0 | ~790 | 0 |  |
 | public.notification_templates | 0 | 24.0 KB | 0 B | 16.0 KB | 0 | 9 | 0 |  |
 | public.opinion_responses | 0 | 24.0 KB | 0 B | 16.0 KB | 0 | 5 | 0 |  |
 | public.opinion_supports | 0 | 24.0 KB | 0 B | 24.0 KB | 0 | ~30 | 0 |  |
@@ -252,7 +252,7 @@ Valores aproximados de propósito, para não gerar commits a cada coleta. Fora d
 | public.penalty_rules | 0 | 16.0 KB | 0 B | 8.0 KB | 0 | 3 | 0 |  |
 | public.permission_groups | 0 | 16.0 KB | 0 B | 8.0 KB | 0 | 9 | 0 |  |
 | public.rate_limit_rules | 0 | 16.0 KB | 0 B | 8.0 KB | 0 | 4 | 0 |  |
-| public.seasonal_events | 0 | 16.0 KB | 0 B | 8.0 KB | 0 | ~380 | 0 |  |
+| public.seasonal_events | 0 | 16.0 KB | 0 B | 8.0 KB | 0 | ~390 | 0 |  |
 
 
 ## Índices nunca usados (candidatos a remoção; ignore PK/UNIQUE)
@@ -283,20 +283,20 @@ _nenhum_
 | role | chamadas (~) | total ms (~) | média ms | query |
 |---|---|---|---|---|
 | postgres | ~153.3k | ~1M | 6.84 | `SELECT net.http_post(url:=$1,headers:=$2::jsonb,body:=$3::jsonb)` |
-| postgres | ~25.3k | ~292k | 11.53 | `SELECT public.close_expired_auctions()` |
+| postgres | ~25.3k | ~292.1k | 11.53 | `SELECT public.close_expired_auctions()` |
 | authenticator | ~710 | ~275.7k | 388.26 | `SELECT name FROM pg_timezone_names` |
-| postgres | ~25.3k | ~250.1k | 9.88 | `SELECT public.auto_lock_prediction_markets()` |
+| postgres | ~25.3k | ~250.2k | 9.88 | `SELECT public.auto_lock_prediction_markets()` |
 | postgres | ~330 | ~184.6k | 552.66 | `SELECT e.name, n.nspname AS schema, e.default_version, x.extversion AS installed_version, e.comment, ev.schema AS default_version_schema FROM pg_available_extensions e LEFT JOIN pg_extension x ON e.name = x.extname LEFT ` |
-| postgres | ~8.4k | ~149.6k | 17.72 | `SELECT public.check_prediction_markets_health()` |
+| postgres | ~8.4k | ~149.7k | 17.72 | `SELECT public.check_prediction_markets_health()` |
 | authenticator | ~710 | ~106.6k | 150.11 | `WITH -- Recursively get the base types of domains base_types AS ( WITH RECURSIVE recurse AS ( SELECT oid, typbasetype, typnamespace AS base_namespace, COALESCE(NULLIF(typbasetype, $2), oid) AS base_type FROM pg_type UNIO` |
 | postgres | ~30 | ~105.8k | 3305.25 | `with page as ( select c.oid, c.relname, c.relrowsecurity, c.relforcerowsecurity, c.relreplident, nc.nspname as schema, -- Computed once here so the final select can reference it for both the -- raw byte count and pg_size` |
-| postgres | ~1.4k | ~101.6k | 71.68 | `SELECT public.snapshot_push_outbox_health()` |
-| postgres | ~7.2k | ~80.8k | 11.28 | `SELECT net.http_post( url := (SELECT value FROM _internal.dispatch_config WHERE key = $1) \|\| $2, headers := jsonb_build_object( $3, $4, $5, (SELECT value FROM _internal.dispatch_config WHERE key = $6) ), body := $7::json` |
+| postgres | ~1.4k | ~101.8k | 71.67 | `SELECT public.snapshot_push_outbox_health()` |
+| postgres | ~7.2k | ~81.2k | 11.29 | `SELECT net.http_post( url := (SELECT value FROM _internal.dispatch_config WHERE key = $1) \|\| $2, headers := jsonb_build_object( $3, $4, $5, (SELECT value FROM _internal.dispatch_config WHERE key = $6) ), body := $7::json` |
 | service_role | ~3.5k | ~79k | 22.26 | `WITH pgrst_source AS (SELECT pgrst_call.pgrst_scalar FROM (SELECT $1 AS json_data) pgrst_payload, LATERAL (SELECT "query" FROM json_to_record(pgrst_payload.json_data) AS _("query" text) LIMIT $4) pgrst_body , LATERAL (SE` |
 | postgres | ~90 | ~73.6k | 836.88 | `DELETE FROM cron.job_run_details WHERE start_time < now() - interval $1` |
-| service_role | ~6.5k | ~50.7k | 7.77 | `WITH pgrst_source AS (SELECT pgrst_call.pgrst_scalar FROM (SELECT $1 AS json_data) pgrst_payload, LATERAL (SELECT "_minutes", "_slo" FROM json_to_record(pgrst_payload.json_data) AS _("_minutes" integer, "_slo" numeric) L` |
+| service_role | ~6.5k | ~50.8k | 7.77 | `WITH pgrst_source AS (SELECT pgrst_call.pgrst_scalar FROM (SELECT $1 AS json_data) pgrst_payload, LATERAL (SELECT "_minutes", "_slo" FROM json_to_record(pgrst_payload.json_data) AS _("_minutes" integer, "_slo" numeric) L` |
 | postgres | ~140 | ~49.1k | 355.77 | `with f as ( -- CTE with sane arg_modes, arg_names, and arg_types. -- All three are always of the same length. -- All three include all args, including OUT and TABLE args. with functions as ( select *, -- proargmodes is n` |
-| service_role | ~7.3k | ~46.2k | 6.29 | `WITH pgrst_source AS (SELECT "pgrst_call".* FROM (SELECT $1 AS json_data) pgrst_payload, LATERAL (SELECT "p_limit" FROM json_to_record(pgrst_payload.json_data) AS _("p_limit" integer) LIMIT $4) pgrst_body , LATERAL "publ` |
+| service_role | ~7.4k | ~46.4k | 6.29 | `WITH pgrst_source AS (SELECT "pgrst_call".* FROM (SELECT $1 AS json_data) pgrst_payload, LATERAL (SELECT "p_limit" FROM json_to_record(pgrst_payload.json_data) AS _("p_limit" integer) LIMIT $4) pgrst_body , LATERAL "publ` |
 
 
 ## Conexões
@@ -304,9 +304,11 @@ _nenhum_
 |---|---|---|
 | authenticator | idle | 11 |
 | pgbouncer | idle | 1 |
-| postgres | active | 2 |
-| supabase_admin | idle | 3 |
+| postgres | active | 1 |
+| supabase_admin | active | 1 |
+| supabase_admin | idle | 9 |
 | supabase_admin |  | 1 |
+| supabase_auth_admin | idle | 1 |
 | supabase_storage_admin | idle | 1 |
 
 
@@ -337,11 +339,11 @@ _nenhum_
     "healthy": true,
     "info": {
       "connected_cluster": 0,
-      "db_connected": false,
+      "db_connected": true,
       "healthy": true,
-      "node": "realtime@2600:1f1c:c90:ad00:1059:af86:c71f:c6b",
+      "node": "realtime@2600:1f1c:c90:ad01:665c:291b:b45c:e0c0",
       "region": "us-west-1",
-      "replication_connected": false
+      "replication_connected": true
     },
     "name": "realtime",
     "status": "ACTIVE_HEALTHY"

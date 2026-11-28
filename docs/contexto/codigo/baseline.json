@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "93847fb3a78a90c6b516198ac6337e1a5a0de63c",
+  "commit": "7aae1bcdfaee6532aaf55bd2504436b378995e12",
   "branch": "main",
-  "data_commit": "2026-11-28T10:22:11-03:00",
+  "data_commit": "2026-11-28T10:46:22-03:00",
   "remote": "https://github.com/adm01-debug/Task_Gifts_V2",
   "ultimos_commits": [
+   {
+    "sha": "7aae1bc",
+    "data": "2026-11-28",
+    "assunto": "Revert \"chore: diagnostico temporario (reverter)\" (#238)"
+   },
    {
     "sha": "93847fb",
     "data": "2026-11-28",
@@ -126,14 +131,9 @@
     "sha": "09d837b",
     "data": "2026-11-27",
     "assunto": "feat(auditoria): ensaio do vigia com argumento e leitura pura (#215)"
-   },
-   {
-    "sha": "98adc29",
-    "data": "2026-11-27",
-    "assunto": "feat(auditoria): consultas para provar o vigia do cron (#214)"
    }
   ],
-  "arquivos_mudados_7d": 290,
+  "arquivos_mudados_7d": 289,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "supabase/functions/_shared",
@@ -192,7 +192,7 @@
     "mudancas": 8
    },
    {
-    "pasta": "src/App.tsx",
+    "pasta": "scripts/supabase_snapshot/snapshot.py",
     "mudancas": 8
    }
   ],
@@ -246,15 +246,15 @@
     "mudancas": 8
    },
    {
+    "arquivo": "scripts/supabase_snapshot/snapshot.py",
+    "mudancas": 8
+   },
+   {
     "arquivo": "src/App.tsx",
     "mudancas": 8
    },
    {
     "arquivo": "scripts/db-audit/apply-migrations.mjs",
-    "mudancas": 7
-   },
-   {
-    "arquivo": "scripts/supabase_snapshot/snapshot.py",
     "mudancas": 7
    },
    {
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 203
+    "commits": 204
    },
    {
     "autor": "dependabot[bot]",
@@ -316,7 +316,7 @@
  "contagens": {
   "arquivos_total": 1643,
   "arquivos_codigo": 1217,
-  "linhas_codigo": 241987,
+  "linhas_codigo": 241927,
   "rotas": 88,
   "rotas_http_backend": 0,
   "vistas_por_id": 0,
@@ -396,7 +396,7 @@
   },
   "scripts/supabase_snapshot": {
    "arquivos": 2,
-   "linhas": 2914
+   "linhas": 2854
   },
   "src/App.tsx": {
    "arquivos": 1,
@@ -498,7 +498,7 @@
   },
   {
    "arquivo": "scripts/supabase_snapshot/snapshot.py",
-   "linhas": 1999
+   "linhas": 1939
   },
   {
    "arquivo": "scripts/graphify-local.mjs",

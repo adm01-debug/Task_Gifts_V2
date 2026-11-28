@@ -122,8 +122,6 @@
    "camada": "python",
    "exports": [
     "_cursor_para",
-    "_diag_api",
-    "_diag_grants",
     "_interpolar",
     "_sql_literal",
     "api",
@@ -205,7 +203,7 @@
     "ApiConnection",
     "_ApiCursor"
    ],
-   "linhas": 1999,
+   "linhas": 1939,
    "tabelas": [],
    "rpcs": [],
    "edges": [],
